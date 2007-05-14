@@ -51,7 +51,7 @@ public class JmsBindingGenerator implements
     public JmsWireSourceDefinition generateWireSource(LogicalBinding<JmsBindingDefinition> logicalBinding,
                                                       GeneratorContext generatorContext,
                                                       ServiceDefinition serviceDefinition) throws GenerationException {
-        return new JmsWireSourceDefinition(logicalBinding.getBinding().getMetadata());
+        return new JmsWireSourceDefinition();
     }
 
     /**
@@ -62,7 +62,7 @@ public class JmsBindingGenerator implements
     public JmsWireTargetDefinition generateWireTarget(LogicalBinding<JmsBindingDefinition> logicalBinding,
                                                       GeneratorContext generatorContext,
                                                       ReferenceDefinition referenceDefinition) throws GenerationException {
-        return new JmsWireTargetDefinition(logicalBinding.getBinding().getMetadata());
+        return new JmsWireTargetDefinition();
     }
 
 }

@@ -18,44 +18,10 @@
  */
 package org.fabric3.binding.jms.model.physical;
 
-import org.fabric3.binding.jms.model.JmsBindingMetadata;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 
 /**
  * @version $Revision$ $Date$
  */
 public class JmsWireTargetDefinition extends PhysicalWireTargetDefinition {
-    
-    /**
-     * JSM metadata.
-     */
-    private JmsBindingMetadata metadata;
-    
-    /**
-     * Default constructor.
-     */
-    public JmsWireTargetDefinition() {
-    }
-
-    /**
-     * @param metadata Metadata to initialize.
-     */
-    public JmsWireTargetDefinition(JmsBindingMetadata metadata) {
-        this.metadata = metadata;
-    }
-
-    /**
-     * @return the metadata
-     */
-    public JmsBindingMetadata getMetadata() {
-        return metadata;
-    }
-
-    /**
-     * @param metadata the metadata to set
-     */
-    public void setMetadata(JmsBindingMetadata metadata) {
-        this.metadata = metadata;
-    }
-
 }

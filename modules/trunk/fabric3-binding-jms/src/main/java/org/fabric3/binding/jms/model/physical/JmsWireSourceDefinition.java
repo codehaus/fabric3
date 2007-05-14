@@ -18,7 +18,6 @@
  */
 package org.fabric3.binding.jms.model.physical;
 
-import org.fabric3.binding.jms.model.JmsBindingMetadata;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 
 /**
@@ -26,36 +25,6 @@ import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
  */
 public class JmsWireSourceDefinition extends PhysicalWireSourceDefinition {
     
-    /**
-     * JSM metadata.
-     */
-    private JmsBindingMetadata metadata;
     
-    /**
-     * Default constructor.
-     */
-    public JmsWireSourceDefinition() {
-    }
-
-    /**
-     * @param metadata Metadata to initialize.
-     */
-    public JmsWireSourceDefinition(JmsBindingMetadata metadata) {
-        this.metadata = metadata;
-    }
-
-    /**
-     * @return Metadata to initialize.
-     */
-    public JmsBindingMetadata getMetadata() {
-        return metadata;
-    }
-
-    /**
-     * @param metadata the metadata to set
-     */
-    public void setMetadata(JmsBindingMetadata metadata) {
-        this.metadata = metadata;
-    }
 
 }
