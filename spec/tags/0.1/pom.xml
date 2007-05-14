@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3.spec</groupId>
     <artifactId>sca-api-r1.0</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.1</version>
     <name>SCA API Version 1.0</name>
     <description>Service Component Architecture V1.0 Java API and Annotations</description>
 
