@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with this work for information
+ regarding copyright ownership.  This file is licensed
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
+<project>
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.codehaus.fabric3</groupId>
+        <artifactId>fabric</artifactId>
+        <version>1-SNAPSHOT</version>
+    </parent>
+    <groupId>org.codehaus.fabric3.standalone</groupId>
+    <artifactId>standalone-parent</artifactId>
+    <version>0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>Fabric3 Standalone Runtime</name>
+    <description>Fabric3 Standalone Runtime.</description>
+
+    <properties>
+        <standaloneVersion>0.1-SNAPSHOT</standaloneVersion>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.codehaus.fabric3.spec</groupId>
+                <artifactId>sca-api-r1.0</artifactId>
+                <version>0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.fabric3</groupId>
+                <artifactId>fabric3-host-api</artifactId>
+                <version>0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.fabric3</groupId>
+                <artifactId>fabric3-fabric</artifactId>
+                <version>0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.fabric3</groupId>
+                <artifactId>fabric3-jmx</artifactId>
+                <version>0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.fabric3</groupId>
+                <artifactId>fabric3-maven</artifactId>
+                <version>0.1-SNAPSHOT</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.codehaus.fabric3.standalone</groupId>
+                <artifactId>standalone-api</artifactId>
+                <version>${standaloneVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.fabric3.standalone</groupId>
+                <artifactId>standalone-host</artifactId>
+                <version>${standaloneVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.fabric3.standalone</groupId>
+                <artifactId>launcher</artifactId>
+                <version>${standaloneVersion}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>stax</groupId>
+                <artifactId>stax-api</artifactId>
+                <version>1.0</version>
+                <scope>provided</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <modules>
+        <module>../../../modules/trunk/fabric3-api</module>
+        <module>../../../modules/trunk/fabric3-host-api</module>
+        <module>../../../modules/trunk/fabric3-spi</module>
+        <module>../../../modules/trunk/fabric3-extension</module>
+        <module>../../../modules/trunk/fabric3-transform</module>
+        <module>../../../modules/trunk/fabric3-pojo</module>
+        <module>../../../modules/trunk/fabric3-fabric</module>
+
+        <module>../../../modules/trunk/fabric3-maven</module>
+        <module>../../../modules/trunk/fabric3-jmx</module>
+
+        <module>standalone-api</module>
+        <module>standalone-host</module>
+        <module>launcher</module>
+        <module>server.start</module>
+        <module>server.shutdown</module>
+        <module>assembly</module>
+        <module>smoketest</module>
+    </modules>
+</project>
