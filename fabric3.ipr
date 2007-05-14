@@ -327,7 +327,6 @@
       <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/itest/plugin/itest-plugin.iml" filepath="$PROJECT_DIR$/runtimes/trunk/itest/plugin/itest-plugin.iml" group="itest" />
       <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/itest/smoketest/itest-smoketest.iml" filepath="$PROJECT_DIR$/runtimes/trunk/itest/smoketest/itest-smoketest.iml" group="itest" />
       <module fileurl="file://$PROJECT_DIR$/parent-pom/trunk/parent-pom.iml" filepath="$PROJECT_DIR$/parent-pom/trunk/parent-pom.iml" />
-      <module fileurl="file://$PROJECT_DIR$/resources/trunk/resources.iml" filepath="$PROJECT_DIR$/resources/trunk/resources.iml" />
       <module fileurl="file://$PROJECT_DIR$/spec/trunk/sca-spec.iml" filepath="$PROJECT_DIR$/spec/trunk/sca-spec.iml" />
       <module fileurl="file:///Users/jboynes/scdl4j/scdl4j.iml" filepath="/Users/jboynes/scdl4j/scdl4j.iml" />
       <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/standalone/standalone-api/standalone-api.iml" filepath="$PROJECT_DIR$/runtimes/trunk/standalone/standalone-api/standalone-api.iml" group="standalone" />
