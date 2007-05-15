@@ -55,6 +55,7 @@ import org.fabric3.spi.model.type.ResourceDescription;
 import org.fabric3.spi.model.type.ServiceDefinition;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.util.UriHelper;
 
 /**
  * Base class for abstract assemblies
@@ -69,6 +70,7 @@ public abstract class AbstractAssembly implements Assembly {
     protected final RoutingService routingService;
     protected final MetaDataStore metadataStore;
     protected LogicalComponent<CompositeImplementation> domain;
+    protected Map<URI, LogicalComponent<?>> domainMap;
     protected Map<String, RuntimeInfo> runtimes;
 
     public AbstractAssembly(URI domainUri,
@@ -81,6 +83,7 @@ public abstract class AbstractAssembly implements Assembly {
         this.wireResolver = wireResolver;
         this.routingService = routingService;
         this.metadataStore = metadataStore;
+        domainMap = new ConcurrentHashMap<URI, LogicalComponent<?>>();
         domain = createDomain();
         runtimes = new ConcurrentHashMap<String, RuntimeInfo>();
     }
@@ -112,12 +115,14 @@ public abstract class AbstractAssembly implements Assembly {
                 // TODO only add when the service nodes have acked
                 for (LogicalComponent<?> child : component.getComponents()) {
                     domain.addComponent(child);
+                    domainMap.put(child.getUri(), child);
                 }
             } else {
                 URI baseUri = URI.create(domainUri + "/" + definition.getName());
                 component = instantiate(baseUri, domain, definition);
                 // TODO only add when the service nodes have acked
                 domain.addComponent(component);
+                domainMap.put(component.getUri(), component);
             }
             // resolve wires in the logical component
             wireResolver.resolve(domain, component);
@@ -129,6 +134,22 @@ public abstract class AbstractAssembly implements Assembly {
             throw new IncludeException(e);
         } catch (GenerationException e) {
             throw new IncludeException(e);
+        }
+    }
+
+    public void bindService(URI serviceName, LogicalBinding binding) throws BindException {
+        LogicalService service = null;
+        URI defragmentedUri = UriHelper.getDefragmentedName(serviceName);
+        LogicalComponent targetComponent = domainMap.get(defragmentedUri);
+        if (targetComponent == null) {
+            throw new BindException("Component not found", defragmentedUri.toString());
+        }
+        PhysicalChangeSet changeSet = new PhysicalChangeSet();
+        GeneratorContext context = new DefaultGeneratorContext(changeSet);
+        try {
+            generatorRegistry.generateBoundServiceWire(service, binding, targetComponent, context);
+        } catch (GenerationException e) {
+            throw new BindException("Error binding service", serviceName.toString(), e);
         }
     }
 

@@ -68,4 +68,16 @@
         -->
     </component>
 
+    <component name="ClientBindingGenerator">
+        <system:implementation.system class="org.fabric3.runtime.development.host.ClientBindingGenerator"/>
+	</component>
+
+    <component name="ClientWireCache">
+        <system:implementation.system class="org.fabric3.runtime.development.host.ClientWireCacheImpl"/>
+	</component>
+
+    <component name="ClientWireAttacher">
+        <system:implementation.system class="org.fabric3.runtime.development.host.ClientWireAttacher"/>
+	</component>
+
 </composite>

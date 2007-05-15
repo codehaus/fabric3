@@ -1,15 +1,24 @@
 package org.fabric3.runtime.development.host;
 
+import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
+import java.util.Map;
+
+import org.osoa.sca.ServiceUnavailableException;
 
 import org.fabric3.api.annotation.LogLevel;
 import org.fabric3.extension.component.SimpleWorkContext;
+import org.fabric3.fabric.assembly.BindException;
 import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.loader.LoaderContextImpl;
 import org.fabric3.fabric.monitor.JavaLoggingMonitorFactory;
 import org.fabric3.fabric.runtime.AbstractRuntime;
-import org.fabric3.fabric.runtime.ComponentNames;
+import static org.fabric3.fabric.runtime.ComponentNames.CLASSLOADER_REGISTRY_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.LOADER_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_NAME;
+import org.fabric3.fabric.wire.WireUtils;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
@@ -18,21 +27,30 @@ import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.CompositeImplementation;
 import org.fabric3.spi.model.type.Scope;
+import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.wire.InvocationChain;
+import org.fabric3.spi.wire.ProxyService;
+import org.fabric3.spi.wire.Wire;
 
 /**
  * @version $Rev$ $Date$
  */
 public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo> implements DevelopmentRuntime {
     public static final URI DOMAIN_URI = URI.create("fabric3://./domain/main/");
-    private JavaLoggingMonitorFactory monitorFactory;
+    private static final String DOMAIN_STRING = DOMAIN_URI.toString();
+    private static final URI WIRE_CACHE_URI = URI.create(RUNTIME_NAME + "/main/ClientWireCache");
+    private static final URI PROXY_SERVICE_URI = URI.create(RUNTIME_NAME + "/main/proxyService");
     private DevelopmentMonitor monitor;
     private ScopeContainer<URI> scopeContainer;
-    boolean started;
+    private boolean started;
+    private DistributedAssembly assembly;
+    private ClientWireCache wireCache;
+    private ProxyService proxyService;
 
     public DevelopmentRuntimeImpl() {
         super(DevelopmentHostInfo.class);
-        monitorFactory = new JavaLoggingMonitorFactory();
+        JavaLoggingMonitorFactory monitorFactory = new JavaLoggingMonitorFactory();
         setMonitorFactory(monitorFactory);
         monitor = monitorFactory.getMonitor(DevelopmentMonitor.class);
     }
@@ -50,11 +68,12 @@ public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo>
                 new ComponentDefinition<CompositeImplementation>("main", impl);
         try {
             ClassLoaderRegistry classLoaderRegistry =
-                    getSystemComponent(ClassLoaderRegistry.class, ComponentNames.CLASSLOADER_REGISTRY_URI);
+                    getSystemComponent(ClassLoaderRegistry.class, CLASSLOADER_REGISTRY_URI);
             classLoaderRegistry.register(URI.create("sca://./applicationClassLoader"), getHostClassLoader());
-            LoaderRegistry loader = getSystemComponent(LoaderRegistry.class, ComponentNames.LOADER_URI);
-            DistributedAssembly assembly = getSystemComponent(DistributedAssembly.class,
-                                                              ComponentNames.DISTRIBUTED_ASSEMBLY_URI);
+            LoaderRegistry loader = getSystemComponent(LoaderRegistry.class, LOADER_URI);
+            assembly = getSystemComponent(DistributedAssembly.class, DISTRIBUTED_ASSEMBLY_URI);
+            wireCache = getSystemComponent(ClientWireCache.class, WIRE_CACHE_URI);
+            proxyService = getSystemComponent(ProxyService.class, PROXY_SERVICE_URI);
             LoaderContext loaderContext = new LoaderContextImpl(getHostClassLoader(), null);
             loader.loadComponentType(impl, loaderContext);
             assembly.activate(definition, false);
@@ -70,14 +89,33 @@ public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo>
     }
 
     public void stop() {
-        WorkContext workContext = new SimpleWorkContext();
-        workContext.setScopeIdentifier(Scope.COMPOSITE, DOMAIN_URI);
-        scopeContainer.stopContext(workContext);
-        started = false;
+        if (started) {
+            WorkContext workContext = new SimpleWorkContext();
+            workContext.setScopeIdentifier(Scope.COMPOSITE, DOMAIN_URI);
+            scopeContainer.stopContext(workContext);
+            scopeContainer = null;
+            wireCache = null;
+            assembly = null;
+            proxyService = null;
+            started = false;
+        }
     }
 
-    public <T> T locateService(Class<T> interfaze, URI compositeURI, String name) {
-        throw new UnsupportedOperationException();
+    public <T> T connectTo(Class<T> interfaze, String serviceUri) {
+        URI uri = URI.create(DOMAIN_STRING + serviceUri);
+        try {
+            Wire wire = wireCache.getWire(uri);
+            if (wire == null) {
+                ClientBindingDefinition definition = new ClientBindingDefinition();
+                LogicalBinding<?> binding = new LogicalBinding<ClientBindingDefinition>(definition);
+                assembly.bindService(uri, binding);
+            }
+            wire = wireCache.getWire(uri);
+            Map<Method, InvocationChain> mappings = WireUtils.createInterfaceToWireMapping(interfaze, wire);
+            return proxyService.createProxy(interfaze, false, wire, mappings);
+        } catch (BindException e) {
+            throw new ServiceUnavailableException(e);
+        }
     }
 
     public interface DevelopmentMonitor {

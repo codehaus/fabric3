@@ -19,9 +19,11 @@
 package org.fabric3.fabric.assembly;
 
 import java.util.Collection;
+import java.net.URI;
 import javax.xml.namespace.QName;
 
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.CompositeImplementation;
 
@@ -67,6 +69,8 @@ public interface Assembly {
      */
     void activate(QName deployable, boolean include) throws IncludeException;
 
+    void bindService(URI serviceName, LogicalBinding binding) throws BindException;
+    
     /**
      * Registers a runtime service node with the Assembly
      *

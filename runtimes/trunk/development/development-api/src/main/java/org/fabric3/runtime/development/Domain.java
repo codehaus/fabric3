@@ -8,8 +8,8 @@ import java.net.URLClassLoader;
 
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.ScdlBootstrapper;
-import org.fabric3.runtime.development.host.DevelopmentRuntime;
 import org.fabric3.runtime.development.host.DevelopmentHostInfoImpl;
+import org.fabric3.runtime.development.host.DevelopmentRuntime;
 
 /**
  * Client API for instantiating a local Fabric3 development domain environment. Usage is as follows:
@@ -59,8 +59,11 @@ public class Domain {
         runtime = null;
     }
 
-    public <T> T locateService(Class<T> interfaze, URI compositeURI, String name) {
-        throw new UnsupportedOperationException();
+    public <T> T connectTo(Class<T> interfaze, String componentUri) {
+        if (runtime == null) {
+            throw new IllegalStateException("No composite is activated");
+        }
+        return runtime.connectTo(interfaze, componentUri);
     }
 
     private void bootRuntime() {
