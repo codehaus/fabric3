@@ -19,7 +19,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>parent</artifactId>
-    <version>3-SNAPSHOT</version>
+    <version>2</version>
     <packaging>pom</packaging>
     <name>Fabric3 Project Parent</name>
     <description>Parent POM defining project wide settings.</description>
