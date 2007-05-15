@@ -318,6 +318,7 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-jetty/fabric3-jetty.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-jetty/fabric3-jetty.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-jmx/fabric3-jmx.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-jmx/fabric3-jmx.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-maven/fabric3-maven.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-maven/fabric3-maven.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-messaging-jms/fabric3-messaging-jms.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-messaging-jms/fabric3-messaging-jms.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-messaging-jxta/fabric3-messaging-jxta.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-messaging-jxta/fabric3-messaging-jxta.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-pojo/fabric3-pojo.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-pojo/fabric3-pojo.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-scdl4j/fabric3-scdl4j.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-scdl4j/fabric3-scdl4j.iml" />
