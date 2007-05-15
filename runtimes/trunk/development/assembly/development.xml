@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with this work for information
+ regarding copyright ownership.  This file is licensed
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+<assembly>
+    <id>bin</id>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <formats>
+        <format>zip</format>
+        <format>tar.gz</format>
+    </formats>
+
+    <files>
+        <!-- include legal and other files -->
+        <file>
+            <source>LICENSE.txt</source>
+            <outputDirectory>/</outputDirectory>
+        </file>
+        <file>
+            <source>NOTICE.txt</source>
+            <outputDirectory>/</outputDirectory>
+            <filtered>true</filtered>
+        </file>
+    </files>
+
+    <fileSets>
+        <!-- include assembly files -->
+        <fileSet>
+            <directory>src/main/assembly</directory>
+            <outputDirectory>/system</outputDirectory>
+        </fileSet>
+    </fileSets>
+
+    <dependencySets>
+        <!-- copy dependencies used by the executable commands to the lib directory -->
+        <dependencySet>
+            <includes>
+                <include>org.codehaus.fabric3.development:development-api</include>
+                <include>org.codehaus.fabric3.spec:sca-api-r1.0</include>
+                <include>org.codehaus.fabric3:fabric3-api</include>
+                <include>org.codehaus.fabric3:fabric3-host-api</include>
+            </includes>
+            <outputDirectory>lib</outputDirectory>
+            <outputFileNameMapping>${artifactId}-${baseVersion}.${extension}</outputFileNameMapping>
+        </dependencySet>
+
+        <dependencySet>
+            <includes>
+                <include>org.codehaus.fabric3.development:development-host</include>
+                <include>org.codehaus.fabric3:fabric3-maven</include>
+                <include>org.codehaus.woodstox:wstx-asl</include>
+                <include>org.apache.tuscany:commonj-api_r1.1</include>
+            </includes>
+            <excludes>
+                <exclude>org.codehaus.fabric3.development:development-api</exclude>
+            </excludes>
+            <outputDirectory>boot</outputDirectory>
+        </dependencySet>
+    </dependencySets>
+</assembly>
+
