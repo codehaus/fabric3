@@ -24,7 +24,7 @@ import org.osoa.sca.RequestContext;
 import org.osoa.sca.ServiceReference;
 import org.osoa.sca.ServiceRuntimeException;
 
-import org.fabric3.api.Fabric3RuntimeException;
+import org.fabric3.host.Fabric3RuntimeException;
 import org.fabric3.spi.ObjectCreationException;
 
 /**

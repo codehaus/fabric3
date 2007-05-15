@@ -27,7 +27,7 @@ import org.osoa.sca.annotations.Destroy;
 import org.fabric3.host.monitor.ExceptionFormatter;
 import org.fabric3.host.monitor.FormatterRegistry;
 import org.fabric3.host.Fabric3Exception;
-import org.fabric3.api.Fabric3RuntimeException;
+import org.fabric3.host.Fabric3RuntimeException;
 import org.fabric3.spi.component.GroupInitializationException;
 
 /**

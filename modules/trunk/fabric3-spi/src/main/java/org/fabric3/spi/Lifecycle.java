@@ -18,7 +18,7 @@
  */
 package org.fabric3.spi;
 
-import org.fabric3.api.Fabric3RuntimeException;
+import org.fabric3.host.Fabric3RuntimeException;
 
 /**
  * Implementations adhere to runtime lifecycle semantics
@@ -53,14 +53,14 @@ public interface Lifecycle {
     /**
      * Starts the Lifecycle.
      *
-     * @throws Fabric3RuntimeException if a runtime exception occurs during start
+     * @throws org.fabric3.host.Fabric3RuntimeException if a runtime exception occurs during start
      */
     void start() throws Fabric3RuntimeException;
 
     /**
      * Stops the Lifecycle.
      *
-     * @throws Fabric3RuntimeException if a runtime exception occurs during stop
+     * @throws org.fabric3.host.Fabric3RuntimeException if a runtime exception occurs during stop
      */
     void stop() throws Fabric3RuntimeException;
 }

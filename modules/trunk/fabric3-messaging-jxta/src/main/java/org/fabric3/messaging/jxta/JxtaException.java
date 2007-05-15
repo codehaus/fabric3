@@ -18,7 +18,7 @@
  */
 package org.fabric3.messaging.jxta;
 
-import org.fabric3.api.Fabric3RuntimeException;
+import org.fabric3.host.Fabric3RuntimeException;
 
 /**
  * Exception that translates unexpected JXTA exceptions to tuscany runtime exceptions.

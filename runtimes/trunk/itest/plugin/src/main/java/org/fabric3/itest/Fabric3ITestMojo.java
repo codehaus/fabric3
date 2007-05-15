@@ -52,7 +52,7 @@ import org.apache.maven.surefire.report.ReporterManager;
 import org.apache.maven.surefire.suite.SurefireTestSuite;
 import org.apache.maven.surefire.testset.TestSetFailedException;
 
-import org.fabric3.api.Fabric3RuntimeException;
+import org.fabric3.host.Fabric3RuntimeException;
 import org.fabric3.api.annotation.LogLevel;
 import org.fabric3.fabric.loader.LoaderContextImpl;
 import static org.fabric3.fabric.runtime.ComponentNames.LOADER_URI;

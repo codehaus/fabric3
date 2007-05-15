@@ -18,7 +18,7 @@
  */
 package org.fabric3.runtime.webapp;
 
-import org.fabric3.api.Fabric3RuntimeException;
+import org.fabric3.host.Fabric3RuntimeException;
 
 /**
  * Thrown when an error is encountered booting the runtme in a web app environment

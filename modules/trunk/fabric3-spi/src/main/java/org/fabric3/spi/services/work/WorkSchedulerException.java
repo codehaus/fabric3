@@ -18,7 +18,7 @@
  */
 package org.fabric3.spi.services.work;
 
-import org.fabric3.api.Fabric3RuntimeException;
+import org.fabric3.host.Fabric3RuntimeException;
 
 /**
  * Exception thrown by the work scheduler in case of unexpected exceptions.

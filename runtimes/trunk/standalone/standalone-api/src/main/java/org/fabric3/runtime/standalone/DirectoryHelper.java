@@ -31,7 +31,6 @@ import java.net.URLClassLoader;
 import java.util.Properties;
 import java.util.jar.JarFile;
 
-import org.fabric3.api.Fabric3RuntimeException;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 

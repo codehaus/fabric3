@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.api;
+package org.fabric3.host;
 
 import java.io.PrintWriter;
 

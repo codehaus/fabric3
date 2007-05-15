@@ -18,7 +18,7 @@
  */
 package org.fabric3.runtime.standalone.server;
 
-import org.fabric3.api.Fabric3RuntimeException;
+import org.fabric3.host.Fabric3RuntimeException;
 
 /**
  * Exception thrown by the Fabric3 server during startup and shutdown.

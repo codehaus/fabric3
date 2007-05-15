@@ -18,7 +18,7 @@
  */
 package org.fabric3.spi.wire;
 
-import org.fabric3.api.Fabric3RuntimeException;
+import org.fabric3.host.Fabric3RuntimeException;
 
 /**
  * Denotes an error creating a proxy

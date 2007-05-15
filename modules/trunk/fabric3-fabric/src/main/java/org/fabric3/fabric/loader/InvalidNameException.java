@@ -18,7 +18,7 @@
  */
 package org.fabric3.fabric.loader;
 
-import org.fabric3.api.Fabric3RuntimeException;
+import org.fabric3.host.Fabric3RuntimeException;
 
 /**
  * Denotes an invalid name

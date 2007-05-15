@@ -18,7 +18,7 @@
  */
 package org.fabric3.jmx.instrument;
 
-import org.fabric3.api.Fabric3RuntimeException;
+import org.fabric3.host.Fabric3RuntimeException;
 
 /**
  * Excpetion thrown when there is an instrumentation error.

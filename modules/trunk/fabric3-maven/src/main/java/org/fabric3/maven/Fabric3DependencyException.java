@@ -18,7 +18,7 @@
  */
 package org.fabric3.maven;
 
-import org.fabric3.api.Fabric3RuntimeException;
+import org.fabric3.host.Fabric3RuntimeException;
 
 /**
  * Exception thrown in case of an artifact error.

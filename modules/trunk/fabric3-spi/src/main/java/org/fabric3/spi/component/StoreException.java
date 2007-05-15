@@ -16,7 +16,7 @@
  */
 package org.fabric3.spi.component;
 
-import org.fabric3.api.Fabric3RuntimeException;
+import org.fabric3.host.Fabric3RuntimeException;
 
 /**
  * @version $Rev$ $Date$
