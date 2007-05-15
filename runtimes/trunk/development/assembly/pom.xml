@@ -34,11 +34,6 @@
             <artifactId>development-host</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.fabric3.development</groupId>
-            <artifactId>launcher</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-maven</artifactId>
         </dependency>
