@@ -51,12 +51,12 @@
 
     <distributionManagement>
         <repository>
-            <id>codehaus.org</id>
+            <id>dav.codehaus.org</id>
             <name>Fabric3 Release Repository</name>
             <url>dav:https://dav.codehaus.org/repository/fabric3/</url>
         </repository>
         <snapshotRepository>
-            <id>codehaus.org</id>
+            <id>dav.codehaus.org</id>
             <name>Fabric3 Snapshot Repository</name>
             <url>dav:https://dav.codehaus.org/snapshots.repository/fabric3/</url>
         </snapshotRepository>
@@ -64,7 +64,7 @@
 
     <repositories>
         <repository>
-            <id>codehaus.org</id>
+            <id>repository.codehaus.org</id>
             <name>Fabric3 Releases</name>
             <url>http://repository.codehaus.org/</url>
             <releases>
@@ -75,7 +75,7 @@
             </snapshots>
         </repository>
         <repository>
-            <id>codehaus.org</id>
+            <id>snapshots.repository.codehaus.org</id>
             <name>Fabric3 Snapshots</name>
             <url>http://snapshots.repository.codehaus.org/</url>
             <releases>
@@ -89,7 +89,7 @@
 
     <pluginRepositories>
         <pluginRepository>
-            <id>codehaus.org</id>
+            <id>repository.codehaus.org</id>
             <name>Fabric3 Releases</name>
             <url>http://repository.codehaus.org/</url>
             <releases>
@@ -100,7 +100,7 @@
             </snapshots>
         </pluginRepository>
         <pluginRepository>
-            <id>codehaus.org</id>
+            <id>snapshots.repository.codehaus.org</id>
             <name>Fabric3 Snapshots</name>
             <url>http://snapshots.repository.codehaus.org/</url>
             <releases>
