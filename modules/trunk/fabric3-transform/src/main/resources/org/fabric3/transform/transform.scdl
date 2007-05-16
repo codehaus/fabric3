@@ -28,13 +28,28 @@
         <system:implementation.system class="org.fabric3.transform.DefaultTransformerRegistry"/>
     </component>
 
-    <component name="Node2Int">
-        <system:implementation.system class="org.fabric3.transform.dom2java.Node2Int"/>
+    <component name="String2Byte">
+        <system:implementation.system class="org.fabric3.transform.dom2java.String2Byte"/>
         <reference name="registry" target="pullTransformerRegistry"/>
     </component>
 
-    <component name="Node2String">
-        <system:implementation.system class="org.fabric3.transform.dom2java.Node2String"/>
+    <component name="String2Short">
+        <system:implementation.system class="org.fabric3.transform.dom2java.String2Short"/>
+        <reference name="registry" target="pullTransformerRegistry"/>
+    </component>
+
+    <component name="String2Integer">
+        <system:implementation.system class="org.fabric3.transform.dom2java.String2Integer"/>
+        <reference name="registry" target="pullTransformerRegistry"/>
+    </component>
+
+    <component name="String2Long">
+        <system:implementation.system class="org.fabric3.transform.dom2java.String2Long"/>
+        <reference name="registry" target="pullTransformerRegistry"/>
+    </component>
+
+    <component name="String2String">
+        <system:implementation.system class="org.fabric3.transform.dom2java.String2String"/>
         <reference name="registry" target="pullTransformerRegistry"/>
     </component>
 

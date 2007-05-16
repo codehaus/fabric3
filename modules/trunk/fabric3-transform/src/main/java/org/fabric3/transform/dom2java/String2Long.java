@@ -18,18 +18,18 @@ package org.fabric3.transform.dom2java;
 
 import org.w3c.dom.Node;
 
-import org.fabric3.spi.model.type.DataType;
-import org.fabric3.spi.model.type.JavaClass;
-import org.fabric3.spi.model.type.XSDSimpleType;
-import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.transform.AbstractPullTransformer;
+import org.fabric3.spi.model.type.XSDSimpleType;
+import org.fabric3.spi.model.type.JavaClass;
+import org.fabric3.spi.model.type.DataType;
+import org.fabric3.spi.transform.TransformationException;
 
 /**
  * @version $Rev$ $Date$
  */
-public class Node2String extends AbstractPullTransformer<Node, String> {
+public class String2Long extends AbstractPullTransformer<Node, Long> {
     private static final XSDSimpleType SOURCE = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
-    private static final JavaClass<String> TARGET = new JavaClass<String>(String.class);
+    private static final JavaClass<Long> TARGET = new JavaClass<Long>(Long.class);
 
     public DataType<?> getSourceType() {
         return SOURCE;
@@ -39,7 +39,7 @@ public class Node2String extends AbstractPullTransformer<Node, String> {
         return TARGET;
     }
 
-    public String transform(Node node) throws TransformationException {
-        return node.getTextContent();
+    public Long transform(Node node) throws TransformationException {
+        return Long.valueOf(node.getTextContent());
     }
 }

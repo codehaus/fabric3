@@ -23,7 +23,7 @@ import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.model.type.XSDSimpleType;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
-import org.fabric3.transform.dom2java.Node2Int;
+import org.fabric3.transform.dom2java.String2Integer;
 
 /**
  * @version $Rev$ $Date$
@@ -32,7 +32,7 @@ public class DefaultTransformerRegistryTestCase extends TestCase {
     private TransformerRegistry<PullTransformer<?,?>> registry;
 
     public void testRegistration() {
-        PullTransformer<?,?> transformer = new Node2Int();
+        PullTransformer<?,?> transformer = new String2Integer();
         registry.register(transformer);
         XSDSimpleType source = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
         JavaClass<Integer> target = new JavaClass<Integer>(Integer.class);

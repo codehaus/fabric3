@@ -23,13 +23,22 @@ import org.osoa.sca.annotations.Property;
  */
 public class PropertyTypesImpl implements PropertyTypes {
     @Property public String string;
-    @Property public Integer integer;
+    @Property public Byte byteValue;
+    @Property public Short shortValue;
+    @Property public Integer integerValue;
+    @Property public Long longValue;
 
     public <T> T getPropertyValue(Class<T> type) {
         if (String.class.equals(type)) {
             return type.cast(string);
+        } else if (Byte.class.equals(type)) {
+            return type.cast(byteValue);
+        } else if (Short.class.equals(type)) {
+            return type.cast(shortValue);
         } else if (Integer.class.equals(type)) {
-            return type.cast(integer);
+            return type.cast(integerValue);
+        } else if (Long.class.equals(type)) {
+            return type.cast(longValue);
         }
         throw new AssertionError();
     }

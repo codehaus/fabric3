@@ -30,7 +30,19 @@ public class PropertyTypeTest extends TestCase {
         assertEquals("Hello World", service.getPropertyValue(String.class));
     }
 
-    public void testInteger() {
-        assertEquals(Integer.valueOf(1234), service.getPropertyValue(Integer.class));
+    public void testByteValue() {
+        assertEquals(Byte.valueOf((byte)12), service.getPropertyValue(Byte.class));
+    }
+
+    public void testShortValue() {
+        assertEquals(Short.valueOf((short)1234), service.getPropertyValue(Short.class));
+    }
+
+    public void testIntegerValue() {
+        assertEquals(Integer.valueOf(12345678), service.getPropertyValue(Integer.class));
+    }
+
+    public void testLongValue() {
+        assertEquals(Long.valueOf(123451234512345l), service.getPropertyValue(Long.class));
     }
 }
