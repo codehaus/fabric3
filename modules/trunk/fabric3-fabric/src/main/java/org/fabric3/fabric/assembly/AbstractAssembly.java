@@ -137,23 +137,23 @@ public abstract class AbstractAssembly implements Assembly {
         }
     }
 
-    public void bindService(URI serviceName, LogicalBinding binding) throws BindException {
-        URI defragmentedUri = UriHelper.getDefragmentedName(serviceName);
+    public void bindService(URI serviceUri, LogicalBinding binding) throws BindException {
+        URI defragmentedUri = UriHelper.getDefragmentedName(serviceUri);
         LogicalComponent<?> targetComponent = domainMap.get(defragmentedUri);
         if (targetComponent == null) {
             throw new BindException("Component not found", defragmentedUri.toString());
         }
-        String fragment = serviceName.getFragment();
+        String fragment = serviceUri.getFragment();
         LogicalService service;
         if (fragment == null) {
             if (targetComponent.getServices().size() != 1) {
-                throw new BindException("Component implements must implement one service if no service name specified",
-                                        serviceName.toString());
+                String uri = serviceUri.toString();
+                throw new BindException("Component must implement one service if no service name specified", uri);
             }
             Collection<LogicalService> services = targetComponent.getServices();
             service = services.iterator().next();
         } else {
-            service = targetComponent.getService(serviceName.getFragment());
+            service = targetComponent.getService(serviceUri.getFragment());
             if (service == null) {
                 throw new BindException("Service not found", defragmentedUri.toString());
             }
@@ -163,15 +163,13 @@ public abstract class AbstractAssembly implements Assembly {
         GeneratorContext context = new DefaultGeneratorContext(changeSet);
         try {
             generatorRegistry.generateBoundServiceWire(service, binding, targetComponent, context);
-        } catch (GenerationException e) {
-            throw new BindException("Error binding service", serviceName.toString(), e);
-        }
-        try {
             routingService.route(targetComponent.getRuntimeId(), changeSet);
+            service.addBinding(binding);
+        } catch (GenerationException e) {
+            throw new BindException("Error binding service", serviceUri.toString(), e);
         } catch (RoutingException e) {
             throw new BindException(e);
         }
-        service.addBinding(binding);
     }
 
     public void registerRuntime(RuntimeInfo info) throws RuntimeRegistrationException {
@@ -421,6 +419,11 @@ public abstract class AbstractAssembly implements Assembly {
         return new LogicalComponent<CompositeImplementation>(domainUri, domainUri, definition);
     }
 
+    /**
+     * Recursively adds a logical component and its children to the component map
+     *
+     * @param component the component to add
+     */
     protected void addToDomainMap(LogicalComponent<?> component) {
         domainMap.put(component.getUri(), component);
         for (LogicalComponent<?> child : component.getComponents()) {

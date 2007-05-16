@@ -18,12 +18,12 @@
  */
 package org.fabric3.fabric.assembly;
 
-import java.util.Collection;
 import java.net.URI;
+import java.util.Collection;
 import javax.xml.namespace.QName;
 
-import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalBinding;
+import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.CompositeImplementation;
 
@@ -69,8 +69,15 @@ public interface Assembly {
      */
     void activate(QName deployable, boolean include) throws IncludeException;
 
-    void bindService(URI serviceName, LogicalBinding binding) throws BindException;
-    
+    /**
+     * Binds a service.
+     *
+     * @param serviceURI the absolute URI of the service
+     * @param binding    the binding information
+     * @throws BindException if an error occurs binding the service
+     */
+    void bindService(URI serviceURI, LogicalBinding binding) throws BindException;
+
     /**
      * Registers a runtime service node with the Assembly
      *
