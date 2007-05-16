@@ -21,6 +21,13 @@
 
     <component name="PropertyTypesImpl">
         <implementation.java class="org.fabric3.tests.function.properties.PropertyTypesImpl"/>
+        <property name="booleanPrimitive">true</property>
+        <property name="bytePrimitive">12</property>
+        <property name="shortPrimitive">1234</property>
+        <property name="intPrimitive">12345678</property>
+        <property name="longPrimitive">123451234512345</property>
+        <property name="floatPrimitive">1.2345</property>
+        <property name="doublePrimitive">1.2345e10</property>
         <property name="string">Hello World</property>
         <property name="booleanValue">true</property>
         <property name="byteValue">12</property>

@@ -23,4 +23,18 @@ package org.fabric3.tests.function.properties;
  */
 public interface PropertyTypes {
     <T> T getPropertyValue(Class<T> type);
+
+    boolean getBoolean();
+
+    byte getByte();
+
+    short getShort();
+
+    int getInt();
+
+    long getLong();
+
+    float getFloat();
+
+    double getDouble();
 }

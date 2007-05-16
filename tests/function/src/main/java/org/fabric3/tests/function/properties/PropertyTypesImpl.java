@@ -22,6 +22,14 @@ import org.osoa.sca.annotations.Property;
  * @version $Rev$ $Date$
  */
 public class PropertyTypesImpl implements PropertyTypes {
+    @Property public boolean booleanPrimitive;
+    @Property public byte bytePrimitive;
+    @Property public short shortPrimitive;
+    @Property public int intPrimitive;
+    @Property public long longPrimitive;
+    @Property public float floatPrimitive;
+    @Property public double doublePrimitive;
+
     @Property public String string;
     @Property public Boolean booleanValue;
     @Property public Byte byteValue;
@@ -31,6 +39,34 @@ public class PropertyTypesImpl implements PropertyTypes {
     @Property public Float floatValue;
     @Property public Double doubleValue;
     @Property public Class<?> classValue;
+
+    public boolean getBoolean() {
+        return booleanPrimitive;
+    }
+
+    public byte getByte() {
+        return bytePrimitive;
+    }
+
+    public short getShort() {
+        return shortPrimitive;
+    }
+
+    public int getInt() {
+        return intPrimitive;
+    }
+
+    public long getLong() {
+        return longPrimitive;
+    }
+
+    public float getFloat() {
+        return floatPrimitive;
+    }
+
+    public double getDouble() {
+        return doublePrimitive;
+    }
 
     public <T> T getPropertyValue(Class<T> type) {
         if (String.class.equals(type)) {

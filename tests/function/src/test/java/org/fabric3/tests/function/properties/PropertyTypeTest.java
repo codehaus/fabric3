@@ -26,6 +26,34 @@ public class PropertyTypeTest extends TestCase {
     @Reference
     public PropertyTypes service;
 
+    public void testBoolean() {
+        assertEquals(true, service.getBoolean());
+    }
+
+    public void testByte() {
+        assertEquals((byte)12, service.getByte());
+    }
+
+    public void testShort() {
+        assertEquals((short)1234, service.getShort());
+    }
+
+    public void testInteger() {
+        assertEquals(12345678, service.getInt());
+    }
+
+    public void testLong() {
+        assertEquals(123451234512345l, service.getLong());
+    }
+
+    public void testFloat() {
+        assertEquals(1.2345f, service.getFloat());
+    }
+
+    public void testDouble() {
+        assertEquals(1.2345e10, service.getDouble());
+    }
+
     public void testString() {
         assertEquals("Hello World", service.getPropertyValue(String.class));
     }
@@ -51,11 +79,11 @@ public class PropertyTypeTest extends TestCase {
     }
 
     public void testFloatValue() {
-        assertEquals(Float.valueOf(1.2345f), service.getPropertyValue(Float.class));
+        assertEquals(1.2345f, service.getPropertyValue(Float.class));
     }
 
     public void testDoubleValue() {
-        assertEquals(Double.valueOf(1.2345e10), service.getPropertyValue(Double.class));
+        assertEquals(1.2345e10, service.getPropertyValue(Double.class));
     }
 
     public void testClassValue() {

@@ -19,6 +19,7 @@
 package org.fabric3.fabric.implementation.pojo;
 
 import java.util.Map;
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.w3c.dom.Document;
@@ -58,7 +59,19 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
     protected final ClassLoaderRegistry classLoaderRegistry;
     protected final ComponentManager manager;
     protected final TransformerRegistry<PullTransformer<?,?>> transformerRegistry;
+
     private static final XSDSimpleType SOURCE_TYPE = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
+    private static final Map<Class<?>, Class<?>> OBJECT_TYPES;
+    static {
+        OBJECT_TYPES = new HashMap<Class<?>, Class<?>>();
+        OBJECT_TYPES.put(Boolean.TYPE, Boolean.class);
+        OBJECT_TYPES.put(Byte.TYPE, Byte.class);
+        OBJECT_TYPES.put(Short.TYPE, Short.class);
+        OBJECT_TYPES.put(Integer.TYPE, Integer.class);
+        OBJECT_TYPES.put(Long.TYPE, Long.class);
+        OBJECT_TYPES.put(Float.TYPE, Float.class);
+        OBJECT_TYPES.put(Double.TYPE, Double.class);
+    }
 
     protected PojoComponentBuilder(
             ComponentBuilderRegistry builderRegistry,
@@ -100,6 +113,9 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
                     throw new PropertyTransformException(e.getMessage(), className, e);
                 }
             } else {
+                if (memberType.isPrimitive()) {
+                    memberType = OBJECT_TYPES.get(memberType);
+                }
                 objectFactory = createObjectFactory(name, memberType, element);
             }
             provider.setObjectFactory(source, objectFactory);
