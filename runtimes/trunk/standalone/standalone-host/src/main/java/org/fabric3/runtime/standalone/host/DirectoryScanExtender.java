@@ -39,12 +39,12 @@ import org.fabric3.runtime.standalone.StandaloneHostInfo;
  */
 @EagerInit
 public class DirectoryScanExtender extends AbstractExtensionDeployer implements VoidService {
-    private final StandaloneHostInfo runtimeInfo;
+    private final StandaloneHostInfo hostInfo;
     private final String path;
 
-    public DirectoryScanExtender(@Reference StandaloneHostInfo runtimeInfo,
+    public DirectoryScanExtender(@Reference StandaloneHostInfo hostInfo,
                                  @Property(name = "path")String path) {
-        this.runtimeInfo = runtimeInfo;
+        this.hostInfo = hostInfo;
         this.path = path;
     }
 
@@ -52,15 +52,15 @@ public class DirectoryScanExtender extends AbstractExtensionDeployer implements 
      * @Deprecated JFM FIXME remove when properties working
      */
     @Constructor
-    public DirectoryScanExtender(@Reference StandaloneHostInfo runtimeInfo) {
-        this.runtimeInfo = runtimeInfo;
+    public DirectoryScanExtender(@Reference StandaloneHostInfo hostInfo) {
+        this.hostInfo = hostInfo;
         this.path = "extensions";
     }
 
     @Init
     public void init() throws IllegalSCDLNameException {
-        assert runtimeInfo != null;
-        File extensionDir = new File(runtimeInfo.getInstallDirectory(), path);
+        assert hostInfo != null;
+        File extensionDir = new File(hostInfo.getInstallDirectory(), path);
         if (!extensionDir.isDirectory()) {
             // we don't have an extension directory, there's nothing to do
             return;

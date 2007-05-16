@@ -13,8 +13,8 @@ import org.fabric3.spi.services.artifact.ArtifactRepository;
 public class MavenDelegateArtifactRepository implements ArtifactRepository {
     private final ArtifactRepository artifactRepository;
 
-    public MavenDelegateArtifactRepository(@Reference MavenHostInfo runtimeInfo) {
-        artifactRepository = runtimeInfo.getArtifactRepository();
+    public MavenDelegateArtifactRepository(@Reference MavenHostInfo hostInfo) {
+        artifactRepository = hostInfo.getArtifactRepository();
     }
 
     public void resolve(Artifact artifact) {

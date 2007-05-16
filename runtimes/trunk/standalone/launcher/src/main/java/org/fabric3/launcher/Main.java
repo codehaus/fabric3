@@ -71,7 +71,7 @@ public class Main {
         // get profile to use, defaulting to "launcher"
         String profile = System.getProperty("fabric3.profile", "launcher");
 
-        StandaloneHostInfo hostInfo = DirectoryHelper.createRuntimeInfo(installDir, profile);
+        StandaloneHostInfo hostInfo = DirectoryHelper.createHostInfo(installDir, profile);
         StandaloneRuntime runtime = DirectoryHelper.createRuntime(hostInfo);
 
         URL applicationJar = applicationFile.toURL();

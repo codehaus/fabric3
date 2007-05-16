@@ -83,10 +83,8 @@ public class MavenHelper {
     /**
      * Initialize the remote repository URLs.
      * 
-     * @param remoteRepositoryUrls
-     *            Remote repository URLS.
-     * @param runtimeInfo
-     *            Runtime information.
+     * @param remoteRepositoryUrl Remote repository URLS.
+     * @param online whether the runtime is online or not
      */
     public MavenHelper(String remoteRepositoryUrl, boolean online) {
         this.remoteRepositoryUrls = remoteRepositoryUrl.split(",");
@@ -168,15 +166,17 @@ public class MavenHelper {
     /**
      * Resolves the dependencies transitively.
      * 
-     * @param artifact
-     *            Artifact whose dependencies need to be resolved.
-     * @throws Fabric3DependencyException
-     *             If unable to resolve the dependencies.
+     * @param rootArtifact Artifact whose dependencies need to be resolved.
+     * @throws Fabric3DependencyException If unable to resolve the dependencies.
      */
     public boolean resolveTransitively(Artifact rootArtifact) throws Fabric3DependencyException {
 
-        org.apache.maven.artifact.Artifact mavenRootArtifact = artifactFactory.createArtifact(rootArtifact.getGroup(), rootArtifact.getName(),
-                rootArtifact.getVersion(), org.apache.maven.artifact.Artifact.SCOPE_RUNTIME, rootArtifact.getType());
+        org.apache.maven.artifact.Artifact mavenRootArtifact;
+        mavenRootArtifact = artifactFactory.createArtifact(rootArtifact.getGroup(),
+                                                           rootArtifact.getName(),
+                                                           rootArtifact.getVersion(),
+                                                           org.apache.maven.artifact.Artifact.SCOPE_RUNTIME,
+                                                           rootArtifact.getType());
 
         try {
 

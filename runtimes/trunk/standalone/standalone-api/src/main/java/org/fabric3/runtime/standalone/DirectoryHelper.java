@@ -259,7 +259,7 @@ public final class DirectoryHelper {
         }
     }
 
-    public static StandaloneHostInfo createRuntimeInfo(File installDir, String profile) throws IOException {
+    public static StandaloneHostInfo createHostInfo(File installDir, String profile) throws IOException {
         File profileDir = getProfileDirectory(installDir, profile);
 
         // load properties for this runtime
@@ -313,16 +313,16 @@ public final class DirectoryHelper {
         return runtime;
     }
 
-    public static Bootstrapper createBootstrapper(StandaloneHostInfo runtimeInfo) throws Exception {
+    public static Bootstrapper createBootstrapper(StandaloneHostInfo hostInfo) throws Exception {
         // locate the system SCDL
-        File profileDir = runtimeInfo.getProfileDirectory();
+        File profileDir = hostInfo.getProfileDirectory();
         URL profileURL = toURL(profileDir);
-        URL systemSCDL = new URL(profileURL, runtimeInfo.getProperty("fabric3.systemSCDL", "system.scdl"));
+        URL systemSCDL = new URL(profileURL, hostInfo.getProperty("fabric3.systemSCDL", "system.scdl"));
 
         // locate the implementation
-        String className = runtimeInfo.getProperty("fabric3.bootstrapperClass",
+        String className = hostInfo.getProperty("fabric3.bootstrapperClass",
                                                    "org.fabric3.fabric.runtime.ScdlBootstrapperImpl");
-        Class<?> implClass = Class.forName(className, true, runtimeInfo.getBootClassLoader());
+        Class<?> implClass = Class.forName(className, true, hostInfo.getBootClassLoader());
         ScdlBootstrapper bootstrapper = (ScdlBootstrapper) implClass.newInstance();
         bootstrapper.setScdlLocation(systemSCDL);
         return bootstrapper;

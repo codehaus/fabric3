@@ -116,7 +116,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
         try {
             final MBeanServer mBeanServer = agent.getMBeanServer();
             final ManagementService<?> managementService = new JmxManagementService(mBeanServer, profileName);
-            final StandaloneHostInfo hostInfo = DirectoryHelper.createRuntimeInfo(installDirectory, profileName);
+            final StandaloneHostInfo hostInfo = DirectoryHelper.createHostInfo(installDirectory, profileName);
             final Fabric3Runtime<?> runtime = DirectoryHelper.createRuntime(hostInfo);
             final Bootstrapper bootstrapper = DirectoryHelper.createBootstrapper(hostInfo);
             runtime.setManagementService(managementService);

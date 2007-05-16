@@ -35,18 +35,18 @@ import org.fabric3.fabric.services.extension.AbstractExtensionDeployer;
  */
 @EagerInit
 public class WebResourceScanExtender extends AbstractExtensionDeployer {
-    private final WebappHostInfo runtimeInfo;
+    private final WebappHostInfo hostInfo;
     private final String path;
 
-    public WebResourceScanExtender(@Reference WebappHostInfo runtimeInfo,
+    public WebResourceScanExtender(@Reference WebappHostInfo hostInfo,
                                    @Property(name = "path")String path) {
-        this.runtimeInfo = runtimeInfo;
+        this.hostInfo = hostInfo;
         this.path = path;
     }
 
     @Init
     public void init() {
-        ServletContext servletContext = runtimeInfo.getServletContext();
+        ServletContext servletContext = hostInfo.getServletContext();
         Set extensions = servletContext.getResourcePaths(path);
         if (extensions == null || extensions.isEmpty()) {
             // no extensions in this webapp

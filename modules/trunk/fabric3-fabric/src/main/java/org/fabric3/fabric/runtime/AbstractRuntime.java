@@ -48,7 +48,7 @@ import org.fabric3.spi.ObjectCreationException;
 public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runtime<I> {
     private String applicationName;
     private URL applicationScdl;
-    private Class<I> runtimeInfoType;
+    private Class<I> hostInfoType;
     private ManagementService<?> managementService;
 
     /**
@@ -76,7 +76,7 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
     }
 
     protected AbstractRuntime(Class<I> runtimeInfoType, MonitorFactory monitorFactory) {
-        this.runtimeInfoType = runtimeInfoType;
+        this.hostInfoType = runtimeInfoType;
         this.monitorFactory = monitorFactory;
     }
 
@@ -104,8 +104,8 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
         this.hostClassLoader = hostClassLoader;
     }
 
-    public Class<I> getRuntimeInfoType() {
-        return runtimeInfoType;
+    public Class<I> getHostInfoType() {
+        return hostInfoType;
     }
 
     public I getHostInfo() {
