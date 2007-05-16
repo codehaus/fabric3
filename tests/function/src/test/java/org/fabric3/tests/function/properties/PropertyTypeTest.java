@@ -57,4 +57,8 @@ public class PropertyTypeTest extends TestCase {
     public void testDoubleValue() {
         assertEquals(Double.valueOf(1.2345e10), service.getPropertyValue(Double.class));
     }
+
+    public void testClassValue() {
+        assertEquals(PropertyTypes.class, service.getPropertyValue(Class.class));
+    }
 }

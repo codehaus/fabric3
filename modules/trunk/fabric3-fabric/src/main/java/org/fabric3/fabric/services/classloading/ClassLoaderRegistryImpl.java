@@ -21,6 +21,9 @@ package org.fabric3.fabric.services.classloading;
 import java.net.URI;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
+import java.util.HashMap;
+import java.util.Arrays;
+import java.lang.reflect.Array;
 
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.classloading.DuplicateClassLoaderException;
@@ -32,6 +35,18 @@ import org.fabric3.spi.services.classloading.DuplicateClassLoaderException;
  */
 public class ClassLoaderRegistryImpl implements ClassLoaderRegistry {
     private final Map<URI, ClassLoader> registry = new ConcurrentHashMap<URI, ClassLoader>();
+    private static final Map<String, Class<?>> PRIMITIVES;
+
+    static {
+        PRIMITIVES = new HashMap<String, Class<?>>();
+        PRIMITIVES.put("boolean", Boolean.TYPE);
+        PRIMITIVES.put("byte", Byte.TYPE);
+        PRIMITIVES.put("short", Short.TYPE);
+        PRIMITIVES.put("int", Integer.TYPE);
+        PRIMITIVES.put("long", Long.TYPE);
+        PRIMITIVES.put("float", Float.TYPE);
+        PRIMITIVES.put("double", Double.TYPE);
+    }
 
     public synchronized void register(URI id, ClassLoader classLoader) throws DuplicateClassLoaderException {
         if (registry.containsKey(id)) {
@@ -40,11 +55,20 @@ public class ClassLoaderRegistryImpl implements ClassLoaderRegistry {
         registry.put(id, classLoader);
     }
 
+    public ClassLoader unregister(URI id) {
+        return registry.remove(id);
+    }
+
     public ClassLoader getClassLoader(URI id) {
         return registry.get(id);
     }
 
-    public ClassLoader unregister(URI id) {
-        return registry.remove(id);
+    public Class<?> loadClass(URI classLoaderId, String className) throws ClassNotFoundException {
+        Class<?> clazz = PRIMITIVES.get(className);
+        if (clazz == null) {
+            ClassLoader cl = getClassLoader(classLoaderId);
+            clazz = Class.forName(className, true, cl);
+        }
+        return clazz;
     }
 }

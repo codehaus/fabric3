@@ -30,6 +30,7 @@ public class PropertyTypesImpl implements PropertyTypes {
     @Property public Long longValue;
     @Property public Float floatValue;
     @Property public Double doubleValue;
+    @Property public Class<?> classValue;
 
     public <T> T getPropertyValue(Class<T> type) {
         if (String.class.equals(type)) {
@@ -48,6 +49,8 @@ public class PropertyTypesImpl implements PropertyTypes {
             return type.cast(floatValue);
         } else if (Double.class.equals(type)) {
             return type.cast(doubleValue);
+        } else if (Class.class.equals(type)) {
+            return type.cast(classValue);
         }
         throw new AssertionError();
     }

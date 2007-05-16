@@ -36,6 +36,14 @@ public interface ClassLoaderRegistry {
     void register(URI id, ClassLoader classLoader) throws DuplicateClassLoaderException;
 
     /**
+     * Unregister the specified classloader from the system.
+     *
+     * @param id the id for the classloader
+     * @return the classloader that was registed with the id, or null if none
+     */
+    ClassLoader unregister(URI id);
+
+    /**
      * Returns the classloader registered with the supplied id, or null if none is registered.
      *
      * @param id the id for the classloader
@@ -44,10 +52,12 @@ public interface ClassLoaderRegistry {
     ClassLoader getClassLoader(URI id);
 
     /**
-     * Unregister the specified classloader from the system.
+     * Load and define a class from a specific classloader.
      *
-     * @param id the id for the classloader
-     * @return the classloader that was registed with the id, or null if none
+     * @param classLoaderId the id of the ClassLoader to use
+     * @param className the name of the class
+     * @return the class
+     * @throws ClassNotFoundException if the class could not be found by that classloader
      */
-    ClassLoader unregister(URI id);
+    Class<?> loadClass(URI classLoaderId, String className) throws ClassNotFoundException;
 }

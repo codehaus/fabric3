@@ -23,6 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import org.w3c.dom.Element;
 
 import org.fabric3.fabric.component.InstanceFactoryProvider;
 import org.fabric3.fabric.component.instancefactory.IFProviderBuilderRegistry;
@@ -86,31 +87,37 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
         for (Map.Entry<String, Document> entry : propertyValues.entrySet()) {
             String name = entry.getKey();
             Document value = entry.getValue();
+            Element element = value.getDocumentElement();
             ValueSource source = new ValueSource(ValueSource.ValueSourceType.PROPERTY, name);
             Class<?> memberType = provider.getMemberType(source);
-            ObjectFactory<?> objectFactory = createObjectFactory(name, memberType, value);
+            ObjectFactory<?> objectFactory;
+            if (Class.class.equals(memberType)) {
+                String className = element.getTextContent();
+                try {
+                    Class<?> clazz = classLoaderRegistry.loadClass(definition.getClassLoaderId(), className);
+                    objectFactory = new SingletonObjectFactory<Class<?>>(clazz);
+                } catch (ClassNotFoundException e) {
+                    throw new PropertyTransformException(e.getMessage(), className, e);
+                }
+            } else {
+                objectFactory = createObjectFactory(name, memberType, element);
+            }
             provider.setObjectFactory(source, objectFactory);
             factories.put(name, objectFactory);
         }
         return factories;
     }
 
-    protected <T> ObjectFactory<T> createObjectFactory(String name, Class<T> type, Document value)
+    protected <T> ObjectFactory<T> createObjectFactory(String name, Class<T> type, Element value)
             throws BuilderException {
-        JavaClass<T> targetType = createJavaClass(type);
+        JavaClass<T> targetType = new JavaClass<T>(type);
         PullTransformer<Node, T> transformer = getTransformer(SOURCE_TYPE, targetType);
         try {
-            Node source = value.getDocumentElement();
-            T instance = type.cast(transformer.transform(source));
+            T instance = type.cast(transformer.transform(value));
             return new SingletonObjectFactory<T>(instance);
         } catch (Exception e) {
             throw new PropertyTransformException("Unable to transform property value", name, e);
         }
-    }
-
-    private <T> JavaClass<T> createJavaClass(Class<T> type) {
-        // TODO should we handle primitives here or in the generator?
-        return new JavaClass<T>(type);
     }
 
     @SuppressWarnings("unchecked")
