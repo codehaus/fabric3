@@ -100,6 +100,11 @@ import org.fabric3.spi.model.type.CompositeImplementation;
 import org.fabric3.spi.model.type.Scope;
 import org.fabric3.spi.model.type.ServiceContract;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.transform.TransformerRegistry;
+import org.fabric3.spi.transform.PullTransformer;
+import org.fabric3.transform.DefaultTransformerRegistry;
+import org.fabric3.transform.dom2java.Node2String;
+import org.fabric3.transform.dom2java.Node2Int;
 
 /**
  * Bootstrapper that initializes a runtime by reading a system SCDL file.
@@ -373,12 +378,17 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         IFProviderBuilderRegistry providerRegistry = new DefaultIFProviderBuilderRegistry();
         ReflectiveIFProviderBuilder provider = new ReflectiveIFProviderBuilder();
         provider.setBuilderRegistry(providerRegistry);
+        TransformerRegistry<PullTransformer<?,?>> transformerRegistry =
+                new DefaultTransformerRegistry<PullTransformer<?,?>>();
+        transformerRegistry.register(new Node2String());
+        transformerRegistry.register(new Node2Int());
         SystemComponentBuilder<?> builder = new SystemComponentBuilder<Object>(registry,
                                                                                componentManager,
                                                                                wireAttacherRegistry,
                                                                                scopeRegistry,
                                                                                providerRegistry,
-                                                                               classLoaderRegistry);
+                                                                               classLoaderRegistry,
+                                                                               transformerRegistry);
         builder.init();
         deployer.setBuilderRegistry(registry);
         deployer.setComponentManager(componentManager);

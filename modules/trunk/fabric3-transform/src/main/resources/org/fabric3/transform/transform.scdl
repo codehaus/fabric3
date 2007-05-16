@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with this work for information
+ regarding copyright ownership.  This file is licensed
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           name="org.fabric3.transform.Transformers"
+           autowire="true">
+
+    <component name="pushTransformerRegistry">
+        <system:implementation.system class="org.fabric3.transform.DefaultTransformerRegistry"/>
+    </component>
+
+    <component name="pullTransformerRegistry">
+        <system:implementation.system class="org.fabric3.transform.DefaultTransformerRegistry"/>
+    </component>
+
+    <component name="Node2Int">
+        <system:implementation.system class="org.fabric3.transform.dom2java.Node2Int"/>
+        <reference name="registry" target="pullTransformerRegistry"/>
+    </component>
+
+    <component name="Node2String">
+        <system:implementation.system class="org.fabric3.transform.dom2java.Node2String"/>
+        <reference name="registry" target="pullTransformerRegistry"/>
+    </component>
+
+<!--
+    <component name="Element2Stream">
+        <system:implementation.system class="org.fabric3.transform.xml.Element2Stream"/>
+        <reference name="registry" target="pullTransformerRegistry"/>
+    </component>
+
+    <component name="Stream2Stream">
+        <system:implementation.system class="org.fabric3.transform.xml.Stream2Stream"/>
+        <reference name="registry" target="pushTransformerRegistry"/>
+    </component>
+
+    <component name="Stream2Element">
+        <system:implementation.system class="org.fabric3.transform.xml.Stream2Element"/>
+        <reference name="registry" target="pushTransformerRegistry"/>
+    </component>
+-->
+
+</composite>

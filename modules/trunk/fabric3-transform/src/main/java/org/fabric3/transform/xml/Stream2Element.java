@@ -16,7 +16,6 @@
  */
 package org.fabric3.transform.xml;
 
-import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
@@ -24,12 +23,12 @@ import javax.xml.stream.XMLStreamWriter;
 import org.w3c.dom.Element;
 
 import org.fabric3.spi.model.type.DataType;
-import org.fabric3.spi.transform.PushTransformer;
+import org.fabric3.transform.AbstractPushTransformer;
 
 /**
  * @version $Rev$ $Date$
  */
-public class Stream2Element implements PushTransformer<XMLStreamReader, Element> {
+public class Stream2Element extends AbstractPushTransformer<XMLStreamReader, Element> {
     private final Stream2Stream streamTransformer;
 
 

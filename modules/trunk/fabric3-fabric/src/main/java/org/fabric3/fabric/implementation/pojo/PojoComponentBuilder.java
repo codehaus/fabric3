@@ -21,9 +21,8 @@ package org.fabric3.fabric.implementation.pojo;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import org.fabric3.fabric.component.InstanceFactoryProvider;
 import org.fabric3.fabric.component.instancefactory.IFProviderBuilderRegistry;
@@ -37,12 +36,11 @@ import org.fabric3.spi.component.Component;
 import org.fabric3.spi.component.ComponentManager;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.model.instance.ValueSource;
-import org.fabric3.spi.model.type.DataType;
 import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.model.type.XSDSimpleType;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.transform.PullTransformer;
-import org.fabric3.transform.dom2java.Node2String;
+import org.fabric3.spi.transform.TransformerRegistry;
 
 /**
  * Base class for ComponentBuilders that build components based on POJOs.
@@ -58,21 +56,24 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
     protected final IFProviderBuilderRegistry providerBuilders;
     protected final ClassLoaderRegistry classLoaderRegistry;
     protected final ComponentManager manager;
-    private static final XSDSimpleType SOURCE_TYPE = new XSDSimpleType(Element.class, XSDSimpleType.STRING);
+    protected final TransformerRegistry<PullTransformer<?,?>> transformerRegistry;
+    private static final XSDSimpleType SOURCE_TYPE = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
 
     protected PojoComponentBuilder(
-            @Reference ComponentBuilderRegistry builderRegistry,
-            @Reference ComponentManager manager,
-            @Reference WireAttacherRegistry wireAttacherRegistry,
-            @Reference ScopeRegistry scopeRegistry,
-            @Reference IFProviderBuilderRegistry providerBuilders,
-            @Reference ClassLoaderRegistry classLoaderRegistry) {
+            ComponentBuilderRegistry builderRegistry,
+            ComponentManager manager,
+            WireAttacherRegistry wireAttacherRegistry,
+            ScopeRegistry scopeRegistry,
+            IFProviderBuilderRegistry providerBuilders,
+            ClassLoaderRegistry classLoaderRegistry,
+            TransformerRegistry<PullTransformer<?,?>> transformerRegistry) {
         this.builderRegistry = builderRegistry;
         this.wireAttacherRegistry = wireAttacherRegistry;
         this.manager = manager;
         this.scopeRegistry = scopeRegistry;
         this.providerBuilders = providerBuilders;
         this.classLoaderRegistry = classLoaderRegistry;
+        this.transformerRegistry = transformerRegistry;
     }
 
     protected Map<String, ObjectFactory<?>> createPropertyFactories(PCD definition,
@@ -96,17 +97,24 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
 
     protected <T> ObjectFactory<T> createObjectFactory(String name, Class<T> type, Document value)
             throws BuilderException {
-        JavaClass<T> targetType = new JavaClass<T>(type);
-        PullTransformer transformer = getTransformer(SOURCE_TYPE, targetType);
+        JavaClass<T> targetType = createJavaClass(type);
+        PullTransformer<Node, T> transformer = getTransformer(SOURCE_TYPE, targetType);
         try {
-            T instance = type.cast(transformer.transform(value.getDocumentElement()));
+            Node source = value.getDocumentElement();
+            T instance = type.cast(transformer.transform(source));
             return new SingletonObjectFactory<T>(instance);
         } catch (Exception e) {
             throw new PropertyTransformException("Unable to transform property value", name, e);
         }
     }
 
-    protected PullTransformer getTransformer(DataType<?> source, JavaClass<?> target) {
-        return new Node2String();
+    private <T> JavaClass<T> createJavaClass(Class<T> type) {
+        // TODO should we handle primitives here or in the generator?
+        return new JavaClass<T>(type);
+    }
+
+    @SuppressWarnings("unchecked")
+    protected <T> PullTransformer<Node,T> getTransformer(XSDSimpleType source, JavaClass<T> target) {
+        return (PullTransformer<Node,T>) transformerRegistry.getTransformer(source, target);
     }
 }

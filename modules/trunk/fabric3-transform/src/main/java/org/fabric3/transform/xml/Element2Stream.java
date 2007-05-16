@@ -16,21 +16,21 @@
  */
 package org.fabric3.transform.xml;
 
-import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.dom.DOMSource;
 
 import org.w3c.dom.Element;
 
-import org.fabric3.spi.transform.PullTransformer;
-import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.model.type.DataType;
+import org.fabric3.spi.transform.TransformationException;
+import org.fabric3.transform.AbstractPullTransformer;
 
 /**
  * @version $Rev$ $Date$
  */
-public class Element2Stream implements PullTransformer<Element, XMLStreamReader> {
+public class Element2Stream extends AbstractPullTransformer<Element, XMLStreamReader> {
     private final XMLInputFactory xmlFactory;
 
     public Element2Stream(XMLInputFactory xmlFactory) {

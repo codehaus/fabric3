@@ -18,16 +18,16 @@ package org.fabric3.transform.dom2java;
 
 import org.w3c.dom.Node;
 
-import org.fabric3.spi.transform.PullTransformer;
-import org.fabric3.spi.transform.TransformationException;
-import org.fabric3.spi.model.type.XSDSimpleType;
-import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.model.type.DataType;
+import org.fabric3.spi.model.type.JavaClass;
+import org.fabric3.spi.model.type.XSDSimpleType;
+import org.fabric3.spi.transform.TransformationException;
+import org.fabric3.transform.AbstractPullTransformer;
 
 /**
  * @version $Rev$ $Date$
  */
-public class Node2Int implements PullTransformer<Node, Integer> {
+public class Node2Int extends AbstractPullTransformer<Node, Integer> {
     private static final XSDSimpleType SOURCE = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
     private static final JavaClass<Integer> TARGET = new JavaClass<Integer>(Integer.class);
 

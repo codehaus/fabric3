@@ -16,13 +16,13 @@
  */
 package org.fabric3.transform.xml;
 
+import javax.xml.namespace.NamespaceContext;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import javax.xml.namespace.NamespaceContext;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 /**
  * @version $Rev$ $Date$
@@ -136,7 +136,7 @@ public class DOMStreamWriter implements XMLStreamWriter {
             throws XMLStreamException {
         if (node instanceof Element) {
             Element element = (Element) node;
-            element.setAttributeNS(namespaceURI, prefix + ':' +localName, value);
+            element.setAttributeNS(namespaceURI, prefix + ':' + localName, value);
         } else {
             throw new IllegalStateException();
         }

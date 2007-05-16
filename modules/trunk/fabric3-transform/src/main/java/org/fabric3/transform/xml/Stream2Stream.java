@@ -32,12 +32,12 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
 import org.fabric3.spi.model.type.DataType;
-import org.fabric3.spi.transform.PushTransformer;
+import org.fabric3.transform.AbstractPushTransformer;
 
 /**
  * @version $Rev$ $Date$
  */
-public class Stream2Stream implements PushTransformer<XMLStreamReader, XMLStreamWriter> {
+public class Stream2Stream extends AbstractPushTransformer<XMLStreamReader, XMLStreamWriter> {
     public DataType<?> getSourceType() {
         return null;
     }

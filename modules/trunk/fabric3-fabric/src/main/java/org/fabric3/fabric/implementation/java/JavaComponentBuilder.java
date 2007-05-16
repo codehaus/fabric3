@@ -34,6 +34,8 @@ import org.fabric3.fabric.implementation.pojo.PojoComponentBuilder;
 import org.fabric3.fabric.injection.CallbackWireObjectFactory;
 import org.fabric3.fabric.wire.WireObjectFactory;
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.transform.PullTransformer;
+import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilder;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
@@ -78,8 +80,15 @@ public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaCompone
                                 @Reference WireAttacherRegistry wireAttacherRegistry,
                                 @Reference ScopeRegistry scopeRegistry,
                                 @Reference IFProviderBuilderRegistry providerBuilders,
-                                @Reference ClassLoaderRegistry classLoaderRegistry) {
-        super(builderRegistry, manager, wireAttacherRegistry, scopeRegistry, providerBuilders, classLoaderRegistry);
+                                @Reference ClassLoaderRegistry classLoaderRegistry,
+                                @Reference TransformerRegistry<PullTransformer<?,?>> transformerRegistry) {
+        super(builderRegistry,
+              manager,
+              wireAttacherRegistry,
+              scopeRegistry,
+              providerBuilders,
+              classLoaderRegistry,
+              transformerRegistry);
     }
 
     @Reference

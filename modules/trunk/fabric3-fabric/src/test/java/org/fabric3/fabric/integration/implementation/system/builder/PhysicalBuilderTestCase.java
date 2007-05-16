@@ -165,7 +165,8 @@ public class PhysicalBuilderTestCase extends TestCase {
                                              wireAttacherRegistry,
                                              scopeRegistry,
                                              providerBuilders,
-                                             classLoaderRegistry);
+                                             classLoaderRegistry,
+                                             null);
         builder.init();
 
         connector = new ConnectorImpl(null, wireAttacherRegistry);

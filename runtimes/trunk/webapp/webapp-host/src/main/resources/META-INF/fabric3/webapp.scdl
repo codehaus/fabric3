@@ -60,6 +60,9 @@
     <!-- include deployment configuration -->
     <include name="org.fabric3.fabric.Deployment" scdlResource="org/fabric3/fabric/deployment.scdl"/>
 
+    <!-- include transform configuration -->
+    <include name="org.fabric3.transform.Transform" scdlResource="org/fabric3/transform/transform.scdl"/>
+
     <component name="artifactRepository">
         <system:implementation.system class="org.fabric3.maven.MavenArtifactRepository"/>
         <!-- JFM FIXME

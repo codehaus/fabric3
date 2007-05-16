@@ -78,7 +78,8 @@ public class SystemPhysicalComponentBuilderTestCase<T> extends TestCase {
                                                 null,
                                                 scopeRegistry,
                                                 providerBuilders,
-                                                classLoaderRegistry);
+                                                classLoaderRegistry,
+                                                null);
 
         definition = new SystemComponentDefinition();
         definition.setGroupId(groupId);
