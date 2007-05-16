@@ -166,7 +166,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         loader = createLoader(introspector);
         GeneratorRegistry generatorRegistry = createGeneratorRegistry();
         Deployer deployer = createFederatedDeployer();
-        RuntimeRoutingService routingService = new RuntimeRoutingService(deployer, runtime.getRuntimeInfo());
+        RuntimeRoutingService routingService = new RuntimeRoutingService(deployer, runtime.getHostInfo());
         runtimeAssembly = new RuntimeAssemblyImpl(generatorRegistry, resolver, routingService);
     }
 
@@ -179,7 +179,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         registerSystemComponent(COMPONENT_MGR_URI, ComponentManager.class, componentManager);
         registerSystemComponent(WIRE_RESOLVER_URI, WireResolver.class, resolver);
         registerSystemComponent(SCOPE_REGISTRY_URI, ScopeRegistry.class, scopeRegistry);
-        registerSystemComponent(RUNTIME_INFO_URI, runtime.getRuntimeInfoType(), runtime.getRuntimeInfo());
+        registerSystemComponent(RUNTIME_INFO_URI, runtime.getRuntimeInfoType(), runtime.getHostInfo());
         registerSystemComponent(RUNTIME_ASSEMBLY_URI, RuntimeAssembly.class, runtimeAssembly);
         registerSystemComponent(XML_INPUT_FACTORY_URI, XMLInputFactory.class, xmlFactory);
 

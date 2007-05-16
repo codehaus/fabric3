@@ -299,17 +299,17 @@ public final class DirectoryHelper {
 
     }
 
-    public static StandaloneRuntime createRuntime(StandaloneHostInfo runtimeInfo) throws Exception {
+    public static StandaloneRuntime createRuntime(StandaloneHostInfo hostInfo) throws Exception {
         ClassLoader hostClassLoader = ClassLoader.getSystemClassLoader();
 
         // locate the implementation
-        String className = runtimeInfo.getProperty("fabric3.runtimeClass",
-                                                   "org.fabric3.runtime.standalone.host.StandaloneRuntimeImpl");
-        Class<?> implClass = Class.forName(className, true, runtimeInfo.getBootClassLoader());
+        String className = hostInfo.getProperty("fabric3.runtimeClass",
+                                                "org.fabric3.runtime.standalone.host.StandaloneRuntimeImpl");
+        Class<?> implClass = Class.forName(className, true, hostInfo.getBootClassLoader());
 
         StandaloneRuntime runtime = (StandaloneRuntime) implClass.newInstance();
         runtime.setHostClassLoader(hostClassLoader);
-        runtime.setRuntimeInfo(runtimeInfo);
+        runtime.setHostInfo(hostInfo);
         return runtime;
     }
 

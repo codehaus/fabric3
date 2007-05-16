@@ -361,12 +361,12 @@ public class Fabric3ITestMojo extends AbstractMojo {
                                                                                                  metadataSource,
                                                                                                  localRepository,
                                                                                                  remoteRepositories);
-        MavenHostInfoImpl runtimeInfo = new MavenHostInfoImpl(URI.create(testDomain), artifactRepository);
+        MavenHostInfoImpl hostInfo = new MavenHostInfoImpl(URI.create(testDomain), artifactRepository);
         MavenMonitorFactory monitorFactory = new MavenMonitorFactory(getLog());
 
         MavenEmbeddedRuntime runtime = new MavenEmbeddedRuntime();
         runtime.setMonitorFactory(monitorFactory);
-        runtime.setRuntimeInfo(runtimeInfo);
+        runtime.setHostInfo(hostInfo);
         runtime.setHostClassLoader(hostClassLoader);
         return runtime;
     }

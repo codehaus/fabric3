@@ -94,7 +94,7 @@ public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implement
             // deploy the components
             assembly.activate(definition, false);
             URI reslvedUri =
-                    URI.create(getRuntimeInfo().getDomain().toString() + "/" + compositeId + "/" + componentId);
+                    URI.create(getHostInfo().getDomain().toString() + "/" + compositeId + "/" + componentId);
             WebappComponent webapp =
                     (WebappComponent) getComponentManager().getComponent(reslvedUri);
             if (webapp == null) {

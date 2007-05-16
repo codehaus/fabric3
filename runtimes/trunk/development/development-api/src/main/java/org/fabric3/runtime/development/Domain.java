@@ -98,7 +98,7 @@ public class Domain {
             Class<?> runtimeClass = cl.loadClass("org.fabric3.runtime.development.host.DevelopmentRuntimeImpl");
             runtime = (DevelopmentRuntime) runtimeClass.newInstance();
             URL baseDirUrl = baseDir.toURI().toURL();
-            runtime.setRuntimeInfo(new DevelopmentHostInfoImpl(DOMAIN_URI, baseDirUrl, baseDir, cl, cl));
+            runtime.setHostInfo(new DevelopmentHostInfoImpl(DOMAIN_URI, baseDirUrl, baseDir, cl, cl));
             runtime.setHostClassLoader(cl);
             bootstrapper.bootstrap(runtime, cl);
         } catch (InstantiationException e) {

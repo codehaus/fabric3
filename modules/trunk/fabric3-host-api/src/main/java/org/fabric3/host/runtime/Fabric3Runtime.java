@@ -49,14 +49,14 @@ public interface Fabric3Runtime<I extends HostInfo> {
      *
      * @return the info this runtime will make available to service components
      */
-    I getRuntimeInfo();
+    I getHostInfo();
 
     /**
      * Sets the info this runtime should make available to service components.
      *
-     * @param runtimeInfo the information this runtime should make available to service components
+     * @param hostInfo the information this runtime should make available to service components
      */
-    void setRuntimeInfo(I runtimeInfo);
+    void setHostInfo(I hostInfo);
 
     /**
      * Returns the MonitorFactory that this runtime is using.

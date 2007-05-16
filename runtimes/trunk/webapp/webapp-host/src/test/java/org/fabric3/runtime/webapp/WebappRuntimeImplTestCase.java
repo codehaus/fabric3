@@ -87,7 +87,7 @@ public class WebappRuntimeImplTestCase extends TestCase {
         context = createMock(ServletContext.class);
 
         runtime = new WebappRuntimeImpl();
-        runtime.setRuntimeInfo(new WebappHostInfoImpl(context, URI.create("fabric3://./domain"), null, false));
+        runtime.setHostInfo(new WebappHostInfoImpl(context, URI.create("fabric3://./domain"), null, false));
         runtime.setMonitorFactory(new NullMonitorFactory());
         runtime.setHostClassLoader(getClass().getClassLoader());
         runtime.setServletContext(context);

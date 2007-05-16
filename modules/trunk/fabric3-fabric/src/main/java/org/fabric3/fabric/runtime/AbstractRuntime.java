@@ -54,7 +54,7 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
     /**
      * Information provided by the host about its runtime environment.
      */
-    private I runtimeInfo;
+    private I hostInfo;
 
     /**
      * MonitorFactory provided by the host for directing events to its management framework.
@@ -108,12 +108,12 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
         return runtimeInfoType;
     }
 
-    public I getRuntimeInfo() {
-        return runtimeInfo;
+    public I getHostInfo() {
+        return hostInfo;
     }
 
-    public void setRuntimeInfo(I runtimeInfo) {
-        this.runtimeInfo = runtimeInfo;
+    public void setHostInfo(I hostInfo) {
+        this.hostInfo = hostInfo;
     }
 
     public MonitorFactory getMonitorFactory() {

@@ -77,7 +77,7 @@ public class Fabric3ContextListenerTestCase extends TestCase {
         expect(listener.getUtils(context)).andReturn(utils);
         replay(listener);
         runtime.setServletContext(context);
-        runtime.setRuntimeInfo(isA(WebappHostInfo.class));
+        runtime.setHostInfo(isA(WebappHostInfo.class));
         runtime.setHostClassLoader(cl);
         bootstrapper.bootstrap(runtime, bootClassLoader);
         runtime.deploy(URI.create(compositeId), scdl, URI.create(contextName));

@@ -116,11 +116,11 @@ public class Fabric3Server implements Fabric3ServerMBean {
         try {
             final MBeanServer mBeanServer = agent.getMBeanServer();
             final ManagementService<?> managementService = new JmxManagementService(mBeanServer, profileName);
-            final StandaloneHostInfo runtimeInfo = DirectoryHelper.createRuntimeInfo(installDirectory, profileName);
-            final Fabric3Runtime<?> runtime = DirectoryHelper.createRuntime(runtimeInfo);
-            final Bootstrapper bootstrapper = DirectoryHelper.createBootstrapper(runtimeInfo);
+            final StandaloneHostInfo hostInfo = DirectoryHelper.createRuntimeInfo(installDirectory, profileName);
+            final Fabric3Runtime<?> runtime = DirectoryHelper.createRuntime(hostInfo);
+            final Bootstrapper bootstrapper = DirectoryHelper.createBootstrapper(hostInfo);
             runtime.setManagementService(managementService);
-            bootstrapper.bootstrap(runtime, runtimeInfo.getBootClassLoader());
+            bootstrapper.bootstrap(runtime, hostInfo.getBootClassLoader());
             // FIXME the classloader for the application should be in the PCS
             ClassLoaderRegistry classLoaderRegistry =
                     runtime.getSystemComponent(ClassLoaderRegistry.class, URI.create("sca://root.system/main/ClassLoaderRegistry"));

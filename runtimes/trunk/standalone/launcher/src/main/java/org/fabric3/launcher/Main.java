@@ -71,8 +71,8 @@ public class Main {
         // get profile to use, defaulting to "launcher"
         String profile = System.getProperty("fabric3.profile", "launcher");
 
-        StandaloneHostInfo runtimeInfo = DirectoryHelper.createRuntimeInfo(installDir, profile);
-        StandaloneRuntime runtime = DirectoryHelper.createRuntime(runtimeInfo);
+        StandaloneHostInfo hostInfo = DirectoryHelper.createRuntimeInfo(installDir, profile);
+        StandaloneRuntime runtime = DirectoryHelper.createRuntime(hostInfo);
 
         URL applicationJar = applicationFile.toURL();
         ClassLoader applicationClassLoader =
@@ -85,8 +85,8 @@ public class Main {
         }
 
         // boot the runtime
-        Bootstrapper bootstrapper = DirectoryHelper.createBootstrapper(runtimeInfo);
-        bootstrapper.bootstrap(runtime, runtimeInfo.getBootClassLoader());
+        Bootstrapper bootstrapper = DirectoryHelper.createBootstrapper(hostInfo);
+        bootstrapper.bootstrap(runtime, hostInfo.getBootClassLoader());
 
         int status = runtime.deployAndRun(applicationScdlURL, applicationClassLoader, appArgs);
         System.exit(status);
