@@ -45,8 +45,6 @@
     </dependencyManagement>
 
     <modules>
-        <module>../../../modules/trunk/fabric3-api</module>
-        <module>../../../modules/trunk/fabric3-host-api</module>
         <module>../../../modules/trunk/fabric3-spi</module>
         <module>../../../modules/trunk/fabric3-extension</module>
         <module>../../../modules/trunk/fabric3-transform</module>
