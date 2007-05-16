@@ -21,7 +21,6 @@ import org.fabric3.spi.model.type.ServiceDefinition;
 @EagerInit
 public class ClientBindingGenerator implements
         BindingGenerator<ClientWireSourceDefinition, PhysicalWireTargetDefinition, ClientBindingDefinition> {
-
     private GeneratorRegistry registry;
 
     public ClientBindingGenerator(@Reference GeneratorRegistry registry) {

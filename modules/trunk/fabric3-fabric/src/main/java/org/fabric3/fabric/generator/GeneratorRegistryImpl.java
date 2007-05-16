@@ -106,9 +106,10 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
 
     @SuppressWarnings({"unchecked"})
     public <C extends LogicalComponent<?>> void generateBoundServiceWire(LogicalService service,
-                                                             LogicalBinding binding,
-                                                             C component,
-                                                             GeneratorContext context) throws GenerationException {
+                                                                         LogicalBinding binding,
+                                                                         C component,
+                                                                         GeneratorContext context)
+            throws GenerationException {
 
         ServiceContract<?> contract = service.getDefinition().getServiceContract();
         PhysicalWireDefinition wireDefinition = createWireDefinition(contract, context);
@@ -117,7 +118,15 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         if (targetGenerator == null) {
             throw new GeneratorNotFoundException(type);
         }
-        LogicalService targetService = component.getService(service.getTargetUri().getFragment());
+        URI targetUri = service.getTargetUri();
+        LogicalService targetService;
+        if (targetUri == null) {
+            // the service is on the component
+            targetService = service;
+        } else {
+            // service is defined on a composite and wired to a component service
+            targetService = component.getService(targetUri.getFragment());
+        }
         PhysicalWireTargetDefinition targetDefinition =
                 targetGenerator.generateWireTarget(targetService, component, context);
         wireDefinition.setTarget(targetDefinition);
@@ -125,7 +134,9 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         if (sourceGenerator == null) {
             throw new GeneratorNotFoundException(type);
         }
-        PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(binding, context, service.getDefinition());
+        PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(binding,
+                                                                                           context,
+                                                                                           service.getDefinition());
         wireDefinition.setSource(sourceDefinition);
         context.getPhysicalChangeSet().addWireDefinition(wireDefinition);
 
@@ -134,9 +145,9 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
     @SuppressWarnings({"unchecked"})
     public <C extends LogicalComponent<?>>
     void generateBoundReferenceWire(C source,
-                      LogicalReference reference,
-                      LogicalBinding bindingDefinition,
-                      GeneratorContext context) throws GenerationException {
+                                    LogicalReference reference,
+                                    LogicalBinding bindingDefinition,
+                                    GeneratorContext context) throws GenerationException {
 
         ServiceContract<?> contract = reference.getDefinition().getServiceContract();
         PhysicalWireDefinition wireDefinition = createWireDefinition(contract, context);
@@ -145,7 +156,8 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         if (targetGenerator == null) {
             throw new GeneratorNotFoundException(type);
         }
-        PhysicalWireTargetDefinition targetDefinition = targetGenerator.generateWireTarget(bindingDefinition, context, reference.getDefinition());
+        PhysicalWireTargetDefinition targetDefinition =
+                targetGenerator.generateWireTarget(bindingDefinition, context, reference.getDefinition());
         wireDefinition.setTarget(targetDefinition);
 
         type = source.getDefinition().getImplementation().getClass();
@@ -163,10 +175,10 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
     @SuppressWarnings({"unchecked"})
     public <S extends LogicalComponent<?>, T extends LogicalComponent<?>>
     void generateUnboundWire(S source,
-                      LogicalReference reference,
-                      LogicalService service,
-                      T target,
-                      GeneratorContext context) throws GenerationException {
+                             LogicalReference reference,
+                             LogicalService service,
+                             T target,
+                             GeneratorContext context) throws GenerationException {
         ReferenceDefinition referenceDefinition = reference.getDefinition();
         ServiceContract<?> contract = referenceDefinition.getServiceContract();
         PhysicalWireDefinition wireDefinition = createWireDefinition(contract, context);

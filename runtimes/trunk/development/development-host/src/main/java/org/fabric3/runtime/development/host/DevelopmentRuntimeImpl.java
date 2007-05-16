@@ -18,22 +18,33 @@ import static org.fabric3.fabric.runtime.ComponentNames.CLASSLOADER_REGISTRY_URI
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.LOADER_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_NAME;
+import org.fabric3.fabric.util.JavaIntrospectionHelper;
 import org.fabric3.fabric.wire.WireUtils;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderRegistry;
+import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.CompositeImplementation;
 import org.fabric3.spi.model.type.Scope;
-import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.ProxyService;
 import org.fabric3.spi.wire.Wire;
 
 /**
+ * Default implementation of the development runtime. The runtime is booted in a child classloader to the
+ * development-api module, which contains the client {@link org.fabric3.runtime.development.Domain} API.
+ * <p/>
+ * Composite activation via <code>Domain#activate</code> is transient and lasts for the length of the Domain instance.
+ * <p/>
+ * <code>Domain#connectTo</code> is delegated to {@link #connectTo(Class,String)}, which generates wires to target
+ * services. The generated wires are bound to a special client binding and cached in {@link ClientWireCache} by the
+ * {@link ClientWireAttacher} for subsequent requests. As a final step, a proxy fronting the wire is created and
+ * returned to the client.
+ *
  * @version $Rev$ $Date$
  */
 public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo> implements DevelopmentRuntime {
@@ -103,6 +114,10 @@ public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo>
 
     public <T> T connectTo(Class<T> interfaze, String serviceUri) {
         URI uri = URI.create(DOMAIN_STRING + serviceUri);
+        if (uri.getFragment() == null) {
+            // no service name specified, calculate from the interface
+            uri = URI.create(uri.toString() + "#" + JavaIntrospectionHelper.getBaseName(interfaze));
+        }
         try {
             Wire wire = wireCache.getWire(uri);
             if (wire == null) {

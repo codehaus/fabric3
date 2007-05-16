@@ -7,6 +7,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.fabric3.spi.wire.Wire;
 
 /**
+ * Default implementation of the ClientWireCache
+ *
  * @version $Rev$ $Date$
  */
 public class ClientWireCacheImpl implements ClientWireCache {

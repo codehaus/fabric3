@@ -12,6 +12,8 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.wire.Wire;
 
 /**
+ * WireAttacher for the client binding
+ *
  * @version $Rev$ $Date$
  */
 @EagerInit

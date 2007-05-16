@@ -20,14 +20,7 @@ public interface DevelopmentRuntime extends Fabric3Runtime<DevelopmentHostInfo> 
      */
     void activate(URL file);
 
-//    /**
-//     * Activates a composite from the given input stream.
-//     *
-//     * @param stream the composite input stream
-//     */
-//    void activate(InputStream stream);
-
-    public <T> T connectTo(Class<T> interfaze, String serviceUri);
+    <T> T connectTo(Class<T> interfaze, String serviceUri);
 
     /**
      * Stops the runtime instance/

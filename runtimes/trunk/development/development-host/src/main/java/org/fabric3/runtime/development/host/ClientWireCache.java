@@ -5,8 +5,7 @@ import java.net.URI;
 import org.fabric3.spi.wire.Wire;
 
 /**
- * Caches wires from client code to services created by {@link org.fabric3.runtime.development.Domain#connectTo(Class,
- *String)}
+ * Caches wires from client code to services created by {@link DevelopmentRuntimeImpl#connectTo(Class,String)}
  *
  * @version $Rev$ $Date$
  */

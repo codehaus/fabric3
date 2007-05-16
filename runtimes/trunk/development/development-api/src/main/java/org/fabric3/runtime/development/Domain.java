@@ -6,6 +6,8 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 
+import org.osoa.sca.ServiceUnavailableException;
+
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.runtime.development.host.DevelopmentHostInfoImpl;
@@ -90,12 +92,13 @@ public class Domain {
         }
         try {
             ClassLoader cl = new URLClassLoader(urls, getClass().getClassLoader());
+            getClass().getClassLoader().loadClass("org.osoa.sca.ServiceUnavailableException");
             URL systemSCDL = new File(baseDir, SYSTEM_SCDL).toURI().toURL();
-            Class<?> implClass = cl.loadClass("org.fabric3.fabric.runtime.ScdlBootstrapperImpl");
-            ScdlBootstrapper bootstrapper = (ScdlBootstrapper) implClass.newInstance();
+            Class<?> bootstrapperClass = cl.loadClass("org.fabric3.fabric.runtime.ScdlBootstrapperImpl");
+            ScdlBootstrapper bootstrapper = (ScdlBootstrapper) bootstrapperClass.newInstance();
             bootstrapper.setScdlLocation(systemSCDL);
-            Class<?> clazz = cl.loadClass("org.fabric3.runtime.development.host.DevelopmentRuntimeImpl");
-            runtime = (DevelopmentRuntime) clazz.newInstance();
+            Class<?> runtimeClass = cl.loadClass("org.fabric3.runtime.development.host.DevelopmentRuntimeImpl");
+            runtime = (DevelopmentRuntime) runtimeClass.newInstance();
             URL baseDirUrl = baseDir.toURI().toURL();
             runtime.setRuntimeInfo(new DevelopmentHostInfoImpl(DOMAIN_URI, baseDirUrl, baseDir, cl, cl));
             runtime.setHostClassLoader(cl);
