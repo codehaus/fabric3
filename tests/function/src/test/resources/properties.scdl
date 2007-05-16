@@ -22,10 +22,13 @@
     <component name="PropertyTypesImpl">
         <implementation.java class="org.fabric3.tests.function.properties.PropertyTypesImpl"/>
         <property name="string">Hello World</property>
+        <property name="booleanValue">true</property>
         <property name="byteValue">12</property>
         <property name="shortValue">1234</property>
         <property name="integerValue">12345678</property>
         <property name="longValue">123451234512345</property>
+        <property name="floatValue">1.2345</property>
+        <property name="doubleValue">1.2345e10</property>
     </component>
 
     <component name="PropertyTypesTest">

@@ -23,14 +23,19 @@ import org.osoa.sca.annotations.Property;
  */
 public class PropertyTypesImpl implements PropertyTypes {
     @Property public String string;
+    @Property public Boolean booleanValue;
     @Property public Byte byteValue;
     @Property public Short shortValue;
     @Property public Integer integerValue;
     @Property public Long longValue;
+    @Property public Float floatValue;
+    @Property public Double doubleValue;
 
     public <T> T getPropertyValue(Class<T> type) {
         if (String.class.equals(type)) {
             return type.cast(string);
+        } else if (Boolean.class.equals(type)) {
+            return type.cast(booleanValue);
         } else if (Byte.class.equals(type)) {
             return type.cast(byteValue);
         } else if (Short.class.equals(type)) {
@@ -39,6 +44,10 @@ public class PropertyTypesImpl implements PropertyTypes {
             return type.cast(integerValue);
         } else if (Long.class.equals(type)) {
             return type.cast(longValue);
+        } else if (Float.class.equals(type)) {
+            return type.cast(floatValue);
+        } else if (Double.class.equals(type)) {
+            return type.cast(doubleValue);
         }
         throw new AssertionError();
     }

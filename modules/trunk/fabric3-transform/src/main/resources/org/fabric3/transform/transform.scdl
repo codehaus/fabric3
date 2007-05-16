@@ -28,6 +28,11 @@
         <system:implementation.system class="org.fabric3.transform.DefaultTransformerRegistry"/>
     </component>
 
+    <component name="String2Boolean">
+        <system:implementation.system class="org.fabric3.transform.dom2java.String2Boolean"/>
+        <reference name="registry" target="pullTransformerRegistry"/>
+    </component>
+
     <component name="String2Byte">
         <system:implementation.system class="org.fabric3.transform.dom2java.String2Byte"/>
         <reference name="registry" target="pullTransformerRegistry"/>
@@ -45,6 +50,16 @@
 
     <component name="String2Long">
         <system:implementation.system class="org.fabric3.transform.dom2java.String2Long"/>
+        <reference name="registry" target="pullTransformerRegistry"/>
+    </component>
+
+    <component name="String2Float">
+        <system:implementation.system class="org.fabric3.transform.dom2java.String2Float"/>
+        <reference name="registry" target="pullTransformerRegistry"/>
+    </component>
+
+    <component name="String2Double">
+        <system:implementation.system class="org.fabric3.transform.dom2java.String2Double"/>
         <reference name="registry" target="pullTransformerRegistry"/>
     </component>
 
