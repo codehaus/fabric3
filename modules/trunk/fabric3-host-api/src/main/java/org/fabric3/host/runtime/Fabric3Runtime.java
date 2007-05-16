@@ -20,8 +20,6 @@ package org.fabric3.host.runtime;
 
 import java.net.URI;
 
-import org.osoa.sca.ComponentContext;
-
 import org.fabric3.host.management.ManagementService;
 import org.fabric3.host.monitor.MonitorFactory;
 
@@ -99,14 +97,6 @@ public interface Fabric3Runtime<I extends HostInfo> {
      * @throws ShutdownException if there is an error destroying the runtime
      */
     void destroy() throws ShutdownException;
-
-    /**
-     * Returns the ComponentContext for the designated component.
-     *
-     * @param componentId the id of the component whose context should be returned
-     * @return the ComponentContext for the designated component
-     */
-    ComponentContext getComponentContext(URI componentId);
 
     /**
      * Returns the system component providing the designated service.

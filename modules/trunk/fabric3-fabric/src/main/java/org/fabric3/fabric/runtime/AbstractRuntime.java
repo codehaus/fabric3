@@ -147,14 +147,6 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
         }
     }
 
-    public ComponentContext getComponentContext(URI componentId) {
-        Component component = componentManager.getComponent(componentId);
-        if (component == null) {
-            return null;
-        }
-        return component.getComponentContext();
-    }
-
     public <I> I getSystemComponent(Class<I> service, URI uri) {
         // JFM FIXME WorkContext should be moved down to host-api and should be created by the host
         URI parent = uri.resolve(".");

@@ -31,6 +31,11 @@
     <dependencies>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-api</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-host-api</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>

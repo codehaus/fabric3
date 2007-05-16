@@ -35,6 +35,10 @@
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-host-api</artifactId>
         </dependency>
 
