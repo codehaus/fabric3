@@ -6,8 +6,6 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 
-import org.osoa.sca.ServiceUnavailableException;
-
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.runtime.development.host.DevelopmentHostInfoImpl;
