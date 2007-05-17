@@ -25,12 +25,12 @@
 
     <service name="calculatorRemote" promote="calculator">
         <interface.java interface="calculator.CalculatorService"/>
-        <hessian:binding.hessian serviceUri="/calculator" />
+        <hessian:binding.hessian uri="/calculator" />
     </service>
 
     <reference name="client" promote="testComponent/calculator">
         <interface.java interface="calculator.CalculatorService"/>
-        <hessian:binding.hessian referenceUrl="http://localhost:8100/calculator"/>
+        <hessian:binding.hessian uri="http://localhost:8100/calculator"/>
     </reference>
 
     <component name="testComponent">
