@@ -328,6 +328,7 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-scdl4j/fabric3-scdl4j.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-scdl4j/fabric3-scdl4j.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-spi/fabric3-spi.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-spi/fabric3-spi.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-transform/fabric3-transform.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-transform/fabric3-transform.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/fabric3-webapp-plugin/trunk/fabric3-webapp-plugin.iml" filepath="$PROJECT_DIR$/modules/fabric3-webapp-plugin/trunk/fabric3-webapp-plugin.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/function/function-tests.iml" filepath="$PROJECT_DIR$/tests/function/function-tests.iml" />
       <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/itest/plugin/itest-plugin.iml" filepath="$PROJECT_DIR$/runtimes/trunk/itest/plugin/itest-plugin.iml" group="itest" />
       <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/itest/smoketest/itest-smoketest.iml" filepath="$PROJECT_DIR$/runtimes/trunk/itest/smoketest/itest-smoketest.iml" group="itest" />
@@ -343,7 +344,6 @@
       <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/standalone/server.start/standalone-start.iml" filepath="$PROJECT_DIR$/runtimes/trunk/standalone/server.start/standalone-start.iml" group="standalone" />
       <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/webapp/webapp-api/webapp-api.iml" filepath="$PROJECT_DIR$/runtimes/trunk/webapp/webapp-api/webapp-api.iml" group="webapp" />
       <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/webapp/webapp-host/webapp-host.iml" filepath="$PROJECT_DIR$/runtimes/trunk/webapp/webapp-host/webapp-host.iml" group="webapp" />
-      <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/webapp/plugin.war/webapp-plugin.war.iml" filepath="$PROJECT_DIR$/runtimes/trunk/webapp/plugin.war/webapp-plugin.war.iml" group="webapp" />
       <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/webapp/smoketest/webapp-smoketest.iml" filepath="$PROJECT_DIR$/runtimes/trunk/webapp/smoketest/webapp-smoketest.iml" group="webapp" />
     </modules>
   </component>

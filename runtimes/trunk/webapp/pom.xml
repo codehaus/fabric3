@@ -112,7 +112,6 @@
 
         <module>webapp-api</module>
         <module>webapp-host</module>
-        <module>plugin.war</module>
         <module>smoketest</module>
     </modules>
 </project>
