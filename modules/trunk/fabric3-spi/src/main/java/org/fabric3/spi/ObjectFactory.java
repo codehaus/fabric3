@@ -24,12 +24,11 @@ package org.fabric3.spi;
  * @version $Rev$ $Date$
  */
 public interface ObjectFactory<T> {
-
     /**
      * Return a instance of the type that this factory creates.
      *
      * @return a instance from this factory
+     * @throws ObjectCreationException if there was a problem creating the instance
      */
     T getInstance() throws ObjectCreationException;
-
 }
