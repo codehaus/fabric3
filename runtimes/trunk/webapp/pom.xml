@@ -108,8 +108,6 @@
         <module>../../../modules/trunk/fabric3-pojo</module>
         <module>../../../modules/trunk/fabric3-fabric</module>
 
-        <module>../../../modules/trunk/fabric3-maven</module>
-
         <module>webapp-api</module>
         <module>webapp-host</module>
         <module>smoketest</module>
