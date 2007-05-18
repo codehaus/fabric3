@@ -29,15 +29,21 @@ import java.util.Map;
 import org.fabric3.fabric.injection.EventInvoker;
 import org.fabric3.fabric.injection.FieldInjector;
 import org.fabric3.fabric.injection.Injector;
-import org.fabric3.fabric.injection.MethodInjector;
 import org.fabric3.fabric.injection.MethodEventInvoker;
-import org.fabric3.spi.model.instance.ValueSource;
+import org.fabric3.fabric.injection.MethodInjector;
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.model.instance.ValueSource;
 
 /**
  * @version $Rev$ $Date$
  */
 public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProvider<T> {
+    private static final ObjectFactory<?> NULL_FACTORY = new ObjectFactory<Object>() {
+        public Object getInstance() {
+            return null;
+        }
+    };
+
     private final Class<T> implementationClass;
     private final Constructor<T> constructor;
     private final List<ValueSource> constructorNames;
@@ -95,7 +101,9 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
         for (int i = 0; i < initArgs.length; i++) {
             ValueSource name = constructorNames.get(i);
             ObjectFactory<?> factory = factories.get(name);
-            assert factory != null;
+            if (factory == null) {
+                factory = NULL_FACTORY;
+            }
             initArgs[i] = factory;
         }
         return initArgs;
