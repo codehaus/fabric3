@@ -21,8 +21,8 @@ package org.fabric3.fabric.services.deployment.fs;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -41,7 +41,6 @@ import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.spi.services.VoidService;
-import org.fabric3.spi.services.contribution.MetaDataStore;
 
 /**
  * Periodically scans a deployment directory for file-based contributions
@@ -52,13 +51,13 @@ public class DirectoryScanner {
     private final ContributionService contributionService;
     private final DirectoryScannerMonitor monitor;
     private final Assembly assembly;
+    private DeploymentResourceFactory deploymentResourceFactory;
     private String path = "deploy";
 
     private long delay = 5000;
     private ScheduledExecutorService executor;
 
     public DirectoryScanner(@Reference ContributionService contributionService,
-                            @Reference MetaDataStore metaDataStore,
                             @Reference DistributedAssembly assembly,
                             @Property(name = "path")String path,
                             @Property(name = "delay")long delay,
@@ -68,6 +67,7 @@ public class DirectoryScanner {
         this.path = path;
         this.delay = delay;
         this.monitor = monitor;
+//        this.deploymentResourceFactory = deploymentResourceFactory;
     }
 
 
@@ -80,6 +80,7 @@ public class DirectoryScanner {
         this.contributionService = contributionService;
         this.assembly = assembly;
         this.monitor = factory.getMonitor(DirectoryScannerMonitor.class);
+//        this.deploymentResourceFactory = deploymentResourceFactory;
     }
 
     @Init
@@ -96,9 +97,8 @@ public class DirectoryScanner {
 
     private class Scanner implements Runnable {
         // previously contributed directories
-        private List<File> contributed = new ArrayList<File>();
-        // directories that raised an error during contribution
-        private List<File> contributionErrors = new ArrayList<File>();
+        private Map<String, DeploymentResource> contributed = new HashMap<String, DeploymentResource>();
+        private Map<String, DeploymentResource> cache = new HashMap<String, DeploymentResource>();
 
         public void run() {
             File extensionDir = new File(path);
@@ -111,29 +111,47 @@ public class DirectoryScanner {
             for (File file : files) {
                 try {
                     if (file.isDirectory()) {
-                        int deployIndex = contributed.indexOf(file);
-                        if (deployIndex > 0) {
-                            File deployedFile = contributed.get(deployIndex);
-                            if (file.lastModified() <= deployedFile.lastModified()) {
+//                        int deployIndex = contributed.indexOf(file);
+//                        if (deployIndex > 0) {
+//                            File deployedFile = contributed.get(deployIndex);
+//                            if (file.lastModified() <= deployedFile.lastModified()) {
+//                                continue;
+//                            }
+//                        }
+//                        // TODO contribute here assumes an update
+//                        URI uri = contributionService.contribute(file.toURL());
+//                        contributed.add(file);
+                    } else {
+                        String name = file.getName();
+                        DeploymentResource contribution = cache.get(name);
+                        if (contribution == null) {
+                            DeploymentResource resource = deploymentResourceFactory.createResource(file);
+                            if (resource == null) {
+                                // not a known type, ignore
                                 continue;
                             }
-                        }
-                        int errorIndex = contributionErrors.indexOf(file);
-                        if (errorIndex > 0) {
-                            File ignoreFile = contributionErrors.get(errorIndex);
-                            if (file.lastModified() <= ignoreFile.lastModified()) {
+                            // cache the resource and wait to the next run to see if it has changed
+                            cache.put(name, resource);
+                        } else {
+                            // cached
+                            if (contribution.isChanged()) {
+                                // contents are still being updated, wait until next run
                                 continue;
                             }
+                            cache.remove(name);
+                            // check if it is in the store
+                            contribution = contributed.get(name);
+                            if (contribution == null) {
+                                // add the contribution
+//                                URI uri = contributionService.contribute(file.toURL());
+//                                contributed.add(file);
+
+                            }
                         }
-                        // TODO contribute here assumes an update
-                        URI uri = contributionService.contribute(file.toURL());
-                        contributed.add(file);
                     }
-                } catch (ContributionException e) {
-                    contributionErrors.add(file);
-                    monitor.contributionError(e);
+//                } catch (ContributionException e) {
+//                    monitor.contributionError(e);
                 } catch (IOException e) {
-                    contributionErrors.add(file);
                     monitor.contributionError(e);
                 }
             }
