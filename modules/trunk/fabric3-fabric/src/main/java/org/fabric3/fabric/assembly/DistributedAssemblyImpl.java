@@ -23,6 +23,7 @@ import java.net.URI;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.fabric.assembly.normalizer.PromotionNormalizer;
 import org.fabric3.fabric.assembly.resolver.WireResolver;
 import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.host.runtime.HostInfo;
@@ -42,10 +43,11 @@ import org.fabric3.spi.util.UriHelper;
 public class DistributedAssemblyImpl extends AbstractAssembly implements DistributedAssembly {
     public DistributedAssemblyImpl(@Reference GeneratorRegistry generatorRegistry,
                                    @Reference WireResolver wireResolver,
-                                   @Reference(name = "routingService") RoutingService routingService,
+                                   @Reference PromotionNormalizer normalizer,
+                                   @Reference RoutingService routingService,
                                    @Reference MetaDataStore metaDataStore,
                                    @Reference HostInfo hostInfo) {
-        super(hostInfo.getDomain(), generatorRegistry, wireResolver, routingService, metaDataStore);
+        super(hostInfo.getDomain(), generatorRegistry, wireResolver, normalizer, routingService, metaDataStore);
     }
 
     @Override

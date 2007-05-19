@@ -30,6 +30,7 @@ import javax.xml.namespace.QName;
 
 import static org.osoa.sca.Constants.SCA_NS;
 
+import org.fabric3.fabric.assembly.normalizer.PromotionNormalizer;
 import org.fabric3.fabric.assembly.resolver.WireResolver;
 import org.fabric3.fabric.generator.DefaultGeneratorContext;
 import org.fabric3.fabric.services.routing.RoutingException;
@@ -69,6 +70,7 @@ public abstract class AbstractAssembly implements Assembly {
     protected final WireResolver wireResolver;
     protected final RoutingService routingService;
     protected final MetaDataStore metadataStore;
+    protected PromotionNormalizer promotionNormalizer;
     protected LogicalComponent<CompositeImplementation> domain;
     protected Map<URI, LogicalComponent<?>> domainMap;
     protected Map<String, RuntimeInfo> runtimes;
@@ -76,6 +78,7 @@ public abstract class AbstractAssembly implements Assembly {
     public AbstractAssembly(URI domainUri,
                             GeneratorRegistry generatorRegistry,
                             WireResolver wireResolver,
+                            PromotionNormalizer normalizer,
                             RoutingService routingService,
                             MetaDataStore metadataStore) {
         this.domainUri = domainUri;
@@ -86,6 +89,7 @@ public abstract class AbstractAssembly implements Assembly {
         domainMap = new ConcurrentHashMap<URI, LogicalComponent<?>>();
         domain = createDomain();
         runtimes = new ConcurrentHashMap<String, RuntimeInfo>();
+        this.promotionNormalizer = normalizer;
     }
 
     public LogicalComponent<CompositeImplementation> getDomain() {
@@ -126,8 +130,9 @@ public abstract class AbstractAssembly implements Assembly {
             }
             // resolve wires in the logical component
             wireResolver.resolve(domain, component);
+            normalize(component);
             // perform the inclusion, which will result in the generation of change sets provisioned to service nodes
-            generateAndProvision(domain, component, true);
+            generateAndProvision(domain, component, include);
         } catch (ResolutionException e) {
             throw new IncludeException(e);
         } catch (RoutingException e) {
@@ -225,7 +230,7 @@ public abstract class AbstractAssembly implements Assembly {
             URI serviceUri = baseUri.resolve(service.getUri());
             LogicalService logicalService = new LogicalService(serviceUri, service);
             if (service.getTarget() != null) {
-                logicalService.setTargetUri(baseUri.resolve(service.getTarget()));
+                logicalService.setTargetUri(URI.create(baseUri.toString() + "/" + service.getTarget()));
             }
             for (BindingDefinition binding : service.getBindings()) {
                 logicalService.addBinding(new LogicalBinding(binding));
@@ -238,9 +243,30 @@ public abstract class AbstractAssembly implements Assembly {
             for (BindingDefinition binding : reference.getBindings()) {
                 logicalReference.addBinding(new LogicalBinding(binding));
             }
+            for (URI promotedUri : reference.getPromoted()) {
+                URI resolvedUri = URI.create(baseUri.toString() + "/" + promotedUri.toString());
+                logicalReference.addPromotedUri(resolvedUri);
+            }
             component.addReference(logicalReference);
         }
         return component;
+    }
+
+    /**
+     * Normalizes the component and any children
+     *
+     * @param component the component to normalize
+     */
+    protected void normalize(LogicalComponent<?> component) {
+        Implementation<?> implementation = component.getDefinition().getImplementation();
+        ComponentType<?, ?, ?> type = implementation.getComponentType();
+        if (CompositeComponentType.class.isInstance(type)) {
+            for (LogicalComponent<?> child : component.getComponents()) {
+                normalize(child);
+            }
+        } else {
+            promotionNormalizer.normalize(component);
+        }
     }
 
     /**
@@ -316,19 +342,21 @@ public abstract class AbstractAssembly implements Assembly {
                                          LogicalComponent<?> component,
                                          Map<URI, GeneratorContext> contexts)
             throws GenerationException, ResolutionException {
+        URI componentId = component.getRuntimeId();
+        GeneratorContext context = contexts.get(componentId);
+        if (context == null) {
+            PhysicalChangeSet changeSet = new PhysicalChangeSet();
+            context = new DefaultGeneratorContext(changeSet);
+            contexts.put(componentId, context);
+        }
         for (LogicalReference entry : component.getReferences()) {
-            URI id = component.getRuntimeId();
-            GeneratorContext context = contexts.get(id);
-            if (context == null) {
-                PhysicalChangeSet changeSet = new PhysicalChangeSet();
-                context = new DefaultGeneratorContext(changeSet);
-                contexts.put(id, context);
-            }
-
-            String referenceName = entry.getUri().getFragment();
-            List<URI> targets = entry.getTargetUris();
-            for (URI uri : targets) {
+            for (URI uri : entry.getTargetUris()) {
                 Referenceable target = resolveTarget(uri, parent);
+                if (target == null) {
+                    String refUri = entry.getUri().toString();
+                    throw new TargetNotFoundException("Target not found for reference " + refUri,
+                                                      uri.toString());
+                }
                 if (target instanceof LogicalReference) {
                     // TODO this should be extensible and moved out
                     LogicalReference logicalReference = ((LogicalReference) target);
@@ -337,7 +365,7 @@ public abstract class AbstractAssembly implements Assembly {
                 } else if (target instanceof LogicalComponent) {
                     LogicalComponent<?> targetComponent = (LogicalComponent) target;
                     String serviceName = uri.getFragment();
-                    LogicalReference reference = component.getReference(referenceName);
+                    LogicalReference reference = component.getReference(entry.getUri().getFragment());
                     LogicalService targetService = null;
                     if (serviceName != null) {
                         targetService = targetComponent.getService(serviceName);
@@ -357,29 +385,20 @@ public abstract class AbstractAssembly implements Assembly {
                                                          entry.getUri(),
                                                          uri);
                 }
+
             }
+
         }
         // generate changesets for bound service wires
         for (LogicalService service : component.getServices()) {
-            if (service.getBindings().isEmpty()) {
+            List<LogicalBinding> bindings = service.getBindings();
+            if (bindings.isEmpty()) {
                 // service is not bound, skip
                 continue;
             }
-            URI uri = service.getTargetUri();
-            Referenceable target = resolveTarget(uri, parent);
-            assert target instanceof LogicalComponent;
-            LogicalComponent<?> targetComponent = (LogicalComponent<?>) target;
-            URI id = targetComponent.getRuntimeId();
-            GeneratorContext context = contexts.get(id);
-            if (context == null) {
-                PhysicalChangeSet changeSet = new PhysicalChangeSet();
-                context = new DefaultGeneratorContext(changeSet);
-                contexts.put(id, context);
-            }
             for (LogicalBinding binding : service.getBindings()) {
-                generatorRegistry.generateBoundServiceWire(service, binding, targetComponent, context);
+                generatorRegistry.generateBoundServiceWire(service, binding, component, context);
             }
-
         }
     }
 

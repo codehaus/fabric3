@@ -45,6 +45,11 @@ public class LogicalService extends Referenceable {
         return definition;
     }
 
+    public void overrideBindings(List<LogicalBinding> bindings) {
+        this.bindings.clear();
+        this.bindings.addAll(bindings);
+    }
+
     public List<LogicalBinding> getBindings() {
         return Collections.unmodifiableList(bindings);
     }

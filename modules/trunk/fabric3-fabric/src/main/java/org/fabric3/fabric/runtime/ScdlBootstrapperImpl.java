@@ -12,6 +12,8 @@ import org.fabric3.fabric.assembly.IncludeException;
 import org.fabric3.fabric.assembly.InstantiationException;
 import org.fabric3.fabric.assembly.RuntimeAssembly;
 import org.fabric3.fabric.assembly.RuntimeAssemblyImpl;
+import org.fabric3.fabric.assembly.normalizer.PromotionNormalizer;
+import org.fabric3.fabric.assembly.normalizer.PromotionNormalizerImpl;
 import org.fabric3.fabric.assembly.resolver.DefaultWireResolver;
 import org.fabric3.fabric.assembly.resolver.WireResolver;
 import org.fabric3.fabric.builder.Connector;
@@ -167,7 +169,8 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         GeneratorRegistry generatorRegistry = createGeneratorRegistry();
         Deployer deployer = createFederatedDeployer();
         RuntimeRoutingService routingService = new RuntimeRoutingService(deployer, runtime.getHostInfo());
-        runtimeAssembly = new RuntimeAssemblyImpl(generatorRegistry, resolver, routingService);
+        PromotionNormalizer normalizer = new PromotionNormalizerImpl();
+        runtimeAssembly = new RuntimeAssemblyImpl(generatorRegistry, resolver, normalizer, routingService);
     }
 
     protected void initializeRuntime(Fabric3Runtime runtime) throws InitializationException {
@@ -378,8 +381,8 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         IFProviderBuilderRegistry providerRegistry = new DefaultIFProviderBuilderRegistry();
         ReflectiveIFProviderBuilder provider = new ReflectiveIFProviderBuilder();
         provider.setBuilderRegistry(providerRegistry);
-        TransformerRegistry<PullTransformer<?,?>> transformerRegistry =
-                new DefaultTransformerRegistry<PullTransformer<?,?>>();
+        TransformerRegistry<PullTransformer<?, ?>> transformerRegistry =
+                new DefaultTransformerRegistry<PullTransformer<?, ?>>();
         transformerRegistry.register(new String2String());
         transformerRegistry.register(new String2Integer());
         SystemComponentBuilder<?> builder = new SystemComponentBuilder<Object>(registry,

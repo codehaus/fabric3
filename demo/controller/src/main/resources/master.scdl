@@ -41,6 +41,10 @@
         <system:implementation.system class="org.fabric3.fabric.assembly.resolver.DefaultWireResolver"/>
     </component>
 
+    <component name="promotionNormalizer">
+        <system:implementation.system class="org.fabric3.fabric.assembly.normalizer.PromotionNormalizerImpl"/>
+    </component>
+
     <component name="runtimeRoutingService">
         <system:implementation.system class="org.fabric3.fabric.services.routing.RuntimeRoutingService"/>
     </component>

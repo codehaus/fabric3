@@ -34,12 +34,14 @@ public class LogicalReference extends Referenceable {
     private final List<LogicalBinding> bindings;
     private final ReferenceDefinition definition;
     private List<URI> targets;
+    private List<URI> promoted;
 
     public LogicalReference(URI uri, ReferenceDefinition definition) {
         super(uri);
         this.definition = definition;
         bindings = new ArrayList<LogicalBinding>();
         targets = new ArrayList<URI>();
+        promoted = new ArrayList<URI>();
     }
 
     public ReferenceDefinition getDefinition() {
@@ -54,6 +56,11 @@ public class LogicalReference extends Referenceable {
         bindings.add(binding);
     }
 
+    public void overrideBindings(List<LogicalBinding> bindings) {
+        this.bindings.clear();
+        this.bindings.addAll(bindings);
+    }
+
     public List<URI> getTargetUris() {
         return Collections.unmodifiableList(targets);
     }
@@ -62,4 +69,16 @@ public class LogicalReference extends Referenceable {
         targets.add(uri);
     }
 
+    public void overrideTargets(List<URI> targets) {
+        this.targets.clear();
+        this.targets.addAll(targets);
+    }
+
+    public List<URI> getPromotedUris() {
+        return Collections.unmodifiableList(promoted);
+    }
+
+    public void addPromotedUri(URI uri) {
+        promoted.add(uri);
+    }
 }
