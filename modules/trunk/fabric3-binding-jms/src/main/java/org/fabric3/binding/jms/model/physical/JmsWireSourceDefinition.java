@@ -24,7 +24,5 @@ import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
  * @version $Revision$ $Date$
  */
 public class JmsWireSourceDefinition extends PhysicalWireSourceDefinition {
-    
-    
 
 }

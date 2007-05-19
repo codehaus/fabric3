@@ -18,7 +18,6 @@
  */
 package org.fabric3.binding.jms.model;
 
-
 /**
  * JMS connection factory definition.
  * 

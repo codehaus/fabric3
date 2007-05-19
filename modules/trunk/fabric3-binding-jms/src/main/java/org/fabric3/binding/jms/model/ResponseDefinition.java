@@ -24,40 +24,40 @@ import org.fabric3.spi.model.type.ModelObject;
  * @version $Revision$ $Date$
  */
 public class ResponseDefinition extends ModelObject {
-    
+
     /**
      * Destination.
      */
     private DestinationDefinition destination;
-    
+
     /**
      * Connection factory.
      */
     private ConnectionFactoryDefinition connectionFactory;
 
     /**
-     * @return the connectionFactory
+     * @see org.fabric3.binding.jms.model.ConnectionFactoryAware#getConnectionFactory()
      */
     public ConnectionFactoryDefinition getConnectionFactory() {
         return connectionFactory;
     }
 
     /**
-     * @param connectionFactory the connectionFactory to set
+     * @see org.fabric3.binding.jms.model.ConnectionFactoryAware#setConnectionFactory(org.fabric3.binding.jms.model.ConnectionFactoryDefinition)
      */
     public void setConnectionFactory(ConnectionFactoryDefinition connectionFactory) {
         this.connectionFactory = connectionFactory;
     }
 
     /**
-     * @return the destination
+     * @see org.fabric3.binding.jms.model.DestinationAware#getDestination()
      */
     public DestinationDefinition getDestination() {
         return destination;
     }
 
     /**
-     * @param destination the destination to set
+     * @see org.fabric3.binding.jms.model.DestinationAware#setDestination(org.fabric3.binding.jms.model.DestinationDefinition)
      */
     public void setDestination(DestinationDefinition destination) {
         this.destination = destination;

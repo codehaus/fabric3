@@ -39,10 +39,11 @@ public class JmsBindingGenerator implements
      * 
      * @param generatorRegistry Generator registry.
      */
-    public JmsBindingGenerator(@Reference GeneratorRegistry generatorRegistry) {
+    public JmsBindingGenerator(@Reference
+    GeneratorRegistry generatorRegistry) {
         generatorRegistry.register(JmsBindingDefinition.class, this);
     }
-    
+
     /**
      * @see org.fabric3.spi.generator.BindingGenerator#generateWireSource(org.fabric3.spi.model.instance.LogicalBinding,
      *      org.fabric3.spi.generator.GeneratorContext,
@@ -61,7 +62,8 @@ public class JmsBindingGenerator implements
      */
     public JmsWireTargetDefinition generateWireTarget(LogicalBinding<JmsBindingDefinition> logicalBinding,
                                                       GeneratorContext generatorContext,
-                                                      ReferenceDefinition referenceDefinition) throws GenerationException {
+                                                      ReferenceDefinition referenceDefinition)
+        throws GenerationException {
         return new JmsWireTargetDefinition();
     }
 

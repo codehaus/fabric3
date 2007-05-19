@@ -22,7 +22,7 @@ package org.fabric3.binding.jms.model;
  * @version $Revision$ $Date$
  */
 public enum CreateDestination {
-    
+
     always, never, ifnotexist;
 
 }

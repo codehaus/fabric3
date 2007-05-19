@@ -22,20 +22,31 @@ import org.fabric3.binding.jms.model.JmsBindingMetadata;
 import org.fabric3.spi.model.type.BindingDefinition;
 
 /**
- * Logical model object for JMS binding definition. 
- * 
- * TODO Support for overriding request connection, response connection 
- * and operation properties from a definition document as well as 
- * activation spec and resource adaptor.
+ * Logical model object for JMS binding definition. TODO Support for overriding
+ * request connection, response connection and operation properties from a
+ * definition document as well as activation spec and resource adaptor.
  * 
  * @version $Revision$ $Date$
  */
 public class JmsBindingDefinition extends BindingDefinition {
-    
+
     /**
      * JMS binding metadata shared between logical and physical.
      */
     private JmsBindingMetadata metadata;
+
+    /**
+     * Default constructor.
+     */
+    public JmsBindingDefinition() {
+    }
+
+    /**
+     * @param metadata Metadata to be initialized.
+     */
+    public JmsBindingDefinition(JmsBindingMetadata metadata) {
+        this.metadata = metadata;
+    }
 
     /**
      * @return the metadata
@@ -50,6 +61,5 @@ public class JmsBindingDefinition extends BindingDefinition {
     public void setMetadata(JmsBindingMetadata metadata) {
         this.metadata = metadata;
     }
-    
 
 }

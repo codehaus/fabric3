@@ -18,61 +18,47 @@
  */
 package org.fabric3.binding.jms.model;
 
-import java.util.List;
-
 import org.fabric3.spi.model.type.BindingDefinition;
 
 /**
- * Logical model object for JMS binding definition. 
- * 
- * TODO Support for overriding request connection, response connection 
- * and operation properties from a definition document as well as 
- * activation spec and resource adaptor.
+ * Logical model object for JMS binding definition. TODO Support for overriding
+ * request connection, response connection and operation properties from a
+ * definition document as well as activation spec and resource adaptor.
  * 
  * @version $Revision$ $Date$
  */
 public class JmsBindingMetadata extends BindingDefinition {
-    
+
     /**
      * Correlation scheme.
      */
-    private CorrelationScheme correlationScheme;
-    
+    private CorrelationScheme correlationScheme = CorrelationScheme.RequestMsgIDToCorrelID;
+
     /**
      * JNDI initial context factory.
      */
     private String initialContextFactory;
-    
+
     /**
      * Provider URL.
      */
     private String jndiUrl;
-    
+
     /**
-     * Destination used for receiving service requests and dispatching 
-     * reference invocations.
+     * Destination used for receiving service requests and dispatching reference
+     * invocations.
      */
     private DestinationDefinition destination;
-    
+
     /**
      * Connection factory definition.
      */
     private ConnectionFactoryDefinition connectionFactory;
-    
+
     /**
      * Response definition.
      */
-    private ResponseDefinition responseDefinition;
-    
-    /**
-     * Headers.
-     */
-    private HeaderDefinition header;
-    
-    /**
-     * Operation definitions.
-     */
-    private List<OperationPropertiesDefinition> operations;
+    private ResponseDefinition response;
 
     /**
      * @return the connectionFactory
@@ -117,20 +103,6 @@ public class JmsBindingMetadata extends BindingDefinition {
     }
 
     /**
-     * @return the header
-     */
-    public HeaderDefinition getHeader() {
-        return header;
-    }
-
-    /**
-     * @param header the header to set
-     */
-    public void setHeader(HeaderDefinition header) {
-        this.header = header;
-    }
-
-    /**
      * @return the initialContextFactory
      */
     public String getInitialContextFactory() {
@@ -159,32 +131,17 @@ public class JmsBindingMetadata extends BindingDefinition {
     }
 
     /**
-     * @return the operations
+     * @return Definition fro sending responses.
      */
-    public List<OperationPropertiesDefinition> getOperations() {
-        return operations;
+    public ResponseDefinition getResponse() {
+        return response;
     }
 
     /**
-     * @param operations the operations to set
+     * @param responseDefinition Definition fro sending responses.
      */
-    public void setOperations(List<OperationPropertiesDefinition> operations) {
-        this.operations = operations;
+    public void setResponse(ResponseDefinition response) {
+        this.response = response;
     }
-
-	/**
-	 * @return Definition fro sending responses.
-	 */
-	public ResponseDefinition getResponseDefinition() {
-		return responseDefinition;
-	}
-
-	/**
-	 * @param responseDefinition Definition fro sending responses.
-	 */
-	public void setResponseDefinition(ResponseDefinition responseDefinition) {
-		this.responseDefinition = responseDefinition;
-	}
-    
 
 }

@@ -18,8 +18,6 @@
  */
 package org.fabric3.binding.jms.model;
 
-import java.util.Properties;
-
 import org.fabric3.spi.model.type.ModelObject;
 
 /**
@@ -28,26 +26,21 @@ import org.fabric3.spi.model.type.ModelObject;
  * @version $Revision$ $Date$
  */
 public class AdministeredObjectDefinition extends ModelObject {
-    
+
     /**
      * Destination type.
      */
     private DestinationType type;
-    
+
     /**
      * Destination name (can be JNDI name or simple name)
      */
     private String name;
-    
+
     /**
      * Destination creation.
      */
-    private CreateDestination create;
-    
-    /**
-     * Destination properties.
-     */
-    private Properties props;
+    private CreateDestination create = CreateDestination.ifnotexist;
 
     /**
      * @return the create
@@ -75,20 +68,6 @@ public class AdministeredObjectDefinition extends ModelObject {
      */
     public void setName(String name) {
         this.name = name;
-    }
-
-    /**
-     * @return the props
-     */
-    public Properties getProps() {
-        return props;
-    }
-
-    /**
-     * @param props the props to set
-     */
-    public void setProps(Properties props) {
-        this.props = props;
     }
 
     /**
