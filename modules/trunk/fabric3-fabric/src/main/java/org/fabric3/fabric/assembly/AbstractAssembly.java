@@ -116,23 +116,25 @@ public abstract class AbstractAssembly implements Assembly {
             LogicalComponent<?> component;
             if (include) {
                 component = instantiate(domainUri, domain, definition);
-                // TODO only add when the service nodes have acked
-                for (LogicalComponent<?> child : component.getComponents()) {
-                    domain.addComponent(child);
-                    addToDomainMap(child);
-                }
             } else {
                 URI baseUri = URI.create(domainUri + "/" + definition.getName());
                 component = instantiate(baseUri, domain, definition);
-                // TODO only add when the service nodes have acked
-                domain.addComponent(component);
-                addToDomainMap(component);
             }
             // resolve wires in the logical component
             wireResolver.resolve(domain, component);
             normalize(component);
             // perform the inclusion, which will result in the generation of change sets provisioned to service nodes
             generateAndProvision(domain, component, include);
+            // TODO only add when the service nodes have acked
+            if (include) {
+                for (LogicalComponent<?> child : component.getComponents()) {
+                    domain.addComponent(child);
+                    addToDomainMap(child);
+                }
+            } else {
+                domain.addComponent(component);
+                addToDomainMap(component);
+            }
         } catch (ResolutionException e) {
             throw new IncludeException(e);
         } catch (RoutingException e) {
