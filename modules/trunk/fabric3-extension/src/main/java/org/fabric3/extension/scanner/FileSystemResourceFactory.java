@@ -7,7 +7,7 @@ import java.io.File;
  *
  * @version $Rev$ $Date$
  */
-public interface DeploymentResourceFactory {
+public interface FileSystemResourceFactory {
 
     /**
      * Creates a deployment resource for the given file
@@ -15,6 +15,6 @@ public interface DeploymentResourceFactory {
      * @param file the file to create the resource for
      * @return the deployment resource
      */
-    DeploymentResource createResource(File file);
+    FileSystemResource createResource(File file);
 
 }

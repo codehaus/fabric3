@@ -7,7 +7,7 @@ import java.io.IOException;
  *
  * @version $Rev$ $Date$
  */
-public interface DeploymentResource {
+public interface FileSystemResource {
 
     String getName();
 

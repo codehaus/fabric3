@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.net.JarURLConnection;
 import java.net.URL;
 
-import org.fabric3.extension.scanner.DeploymentResource;
-import org.fabric3.extension.scanner.DeploymentResourceFactory;
+import org.fabric3.extension.scanner.FileSystemResource;
+import org.fabric3.extension.scanner.FileSystemResourceFactory;
 import org.fabric3.extension.scanner.resource.FileResource;
 
 /**
@@ -14,9 +14,9 @@ import org.fabric3.extension.scanner.resource.FileResource;
  *
  * @version $Rev$ $Date$
  */
-public class JarResourceFactory implements DeploymentResourceFactory {
+public class JarResourceFactory implements FileSystemResourceFactory {
 
-    public DeploymentResource createResource(File file) {
+    public FileSystemResource createResource(File file) {
         if (!file.getName().endsWith(".jar")) {
             return null;
         }

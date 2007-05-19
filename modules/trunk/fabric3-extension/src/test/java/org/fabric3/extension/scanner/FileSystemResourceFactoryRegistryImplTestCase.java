@@ -8,12 +8,12 @@ import org.easymock.EasyMock;
 /**
  * @version $Rev$ $Date$
  */
-public class DeploymentResourceFactoryRegistryImplTestCase extends TestCase {
+public class FileSystemResourceFactoryRegistryImplTestCase extends TestCase {
 
     public void testDispatch() {
-        DeploymentResourceFactoryRegistryImpl registry = new DeploymentResourceFactoryRegistryImpl();
-        DeploymentResourceFactory factory = EasyMock.createMock(DeploymentResourceFactory.class);
-        DeploymentResource resource = EasyMock.createMock(DeploymentResource.class);
+        FileSystemResourceFactoryRegistryImpl registry = new FileSystemResourceFactoryRegistryImpl();
+        FileSystemResourceFactory factory = EasyMock.createMock(FileSystemResourceFactory.class);
+        FileSystemResource resource = EasyMock.createMock(FileSystemResource.class);
         EasyMock.expect(factory.createResource(EasyMock.isA(File.class))).andReturn(resource);
         EasyMock.replay(factory);
         registry.register(factory);

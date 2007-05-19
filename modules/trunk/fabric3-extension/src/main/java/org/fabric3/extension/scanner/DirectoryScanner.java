@@ -29,11 +29,9 @@ import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
-import org.fabric3.api.annotation.Monitor;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.spi.services.VoidService;
@@ -46,7 +44,7 @@ import org.fabric3.spi.services.VoidService;
 public class DirectoryScanner {
     private final ContributionService contributionService;
     private final DirectoryScannerMonitor monitor;
-    private DeploymentResourceFactory deploymentResourceFactory;
+    private FileSystemResourceFactory fileSystemResourceFactory;
     private String path = "deploy";
 
     private long delay = 5000;
@@ -83,8 +81,8 @@ public class DirectoryScanner {
 
     private class Scanner implements Runnable {
         // previously contributed directories
-        private Map<String, DeploymentResource> contributed = new HashMap<String, DeploymentResource>();
-        private Map<String, DeploymentResource> cache = new HashMap<String, DeploymentResource>();
+        private Map<String, FileSystemResource> contributed = new HashMap<String, FileSystemResource>();
+        private Map<String, FileSystemResource> cache = new HashMap<String, FileSystemResource>();
 
         public void run() {
             File extensionDir = new File(path);
@@ -109,9 +107,9 @@ public class DirectoryScanner {
 //                        contributed.add(file);
                     } else {
                         String name = file.getName();
-                        DeploymentResource contribution = cache.get(name);
+                        FileSystemResource contribution = cache.get(name);
                         if (contribution == null) {
-                            DeploymentResource resource = deploymentResourceFactory.createResource(file);
+                            FileSystemResource resource = fileSystemResourceFactory.createResource(file);
                             if (resource == null) {
                                 // not a known type, ignore
                                 continue;

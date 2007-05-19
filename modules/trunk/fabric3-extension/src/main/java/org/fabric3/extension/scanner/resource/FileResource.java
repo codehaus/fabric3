@@ -7,14 +7,14 @@ import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import org.fabric3.extension.scanner.DeploymentResource;
+import org.fabric3.extension.scanner.FileSystemResource;
 
 /**
  * Represents a file that is to be contributed to a domain
  *
  * @version $Rev$ $Date$
  */
-public class FileResource implements DeploymentResource {
+public class FileResource implements FileSystemResource {
     private File file;
     private byte[] checksumValue;
 

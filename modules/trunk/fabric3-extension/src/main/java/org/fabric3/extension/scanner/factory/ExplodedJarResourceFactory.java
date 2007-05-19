@@ -2,8 +2,8 @@ package org.fabric3.extension.scanner.factory;
 
 import java.io.File;
 
-import org.fabric3.extension.scanner.DeploymentResource;
-import org.fabric3.extension.scanner.DeploymentResourceFactory;
+import org.fabric3.extension.scanner.FileSystemResource;
+import org.fabric3.extension.scanner.FileSystemResourceFactory;
 import org.fabric3.extension.scanner.resource.DirectoryResource;
 import org.fabric3.extension.scanner.resource.FileResource;
 
@@ -12,9 +12,9 @@ import org.fabric3.extension.scanner.resource.FileResource;
  *
  * @version $Rev$ $Date$
  */
-public class ExplodedJarResourceFactory implements DeploymentResourceFactory {
+public class ExplodedJarResourceFactory implements FileSystemResourceFactory {
 
-    public DeploymentResource createResource(File file) {
+    public FileSystemResource createResource(File file) {
         if (!file.isDirectory()) {
             return null;
         }
