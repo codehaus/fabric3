@@ -1,9 +1,9 @@
-package org.fabric3.fabric.services.deployment.fs.resource;
+package org.fabric3.extension.scanner.resource;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
-import org.fabric3.fabric.services.deployment.fs.DeploymentResource;
+import org.fabric3.extension.scanner.DeploymentResource;
 
 /**
  * @version $Rev$ $Date$

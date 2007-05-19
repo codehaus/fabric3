@@ -1,13 +1,13 @@
-package org.fabric3.fabric.services.deployment.fs.factory;
+package org.fabric3.extension.scanner.factory;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.JarURLConnection;
 import java.net.URL;
 
-import org.fabric3.fabric.services.deployment.fs.DeploymentResource;
-import org.fabric3.fabric.services.deployment.fs.DeploymentResourceFactory;
-import org.fabric3.fabric.services.deployment.fs.resource.FileResource;
+import org.fabric3.extension.scanner.DeploymentResource;
+import org.fabric3.extension.scanner.DeploymentResourceFactory;
+import org.fabric3.extension.scanner.resource.FileResource;
 
 /**
  * Creates a FileResource for SCA contribution jars

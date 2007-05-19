@@ -16,11 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.services.deployment.fs;
+package org.fabric3.extension.scanner;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -35,9 +34,6 @@ import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
 import org.fabric3.api.annotation.Monitor;
-import org.fabric3.fabric.assembly.Assembly;
-import org.fabric3.fabric.assembly.DistributedAssembly;
-import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.spi.services.VoidService;
@@ -50,35 +46,17 @@ import org.fabric3.spi.services.VoidService;
 public class DirectoryScanner {
     private final ContributionService contributionService;
     private final DirectoryScannerMonitor monitor;
-    private final Assembly assembly;
     private DeploymentResourceFactory deploymentResourceFactory;
     private String path = "deploy";
 
     private long delay = 5000;
     private ScheduledExecutorService executor;
 
-    public DirectoryScanner(@Reference ContributionService contributionService,
-                            @Reference DistributedAssembly assembly,
-                            @Property(name = "path")String path,
-                            @Property(name = "delay")long delay,
-                            @Monitor DirectoryScannerMonitor monitor) {
-        this.contributionService = contributionService;
-        this.assembly = assembly;
-        this.path = path;
-        this.delay = delay;
-        this.monitor = monitor;
-//        this.deploymentResourceFactory = deploymentResourceFactory;
-    }
-
-
     @Constructor
-    @Deprecated
     // JFM FIXME when properties are supported
     public DirectoryScanner(@Reference ContributionService contributionService,
-                            @Reference Assembly assembly,
                             @Reference MonitorFactory factory) {
         this.contributionService = contributionService;
-        this.assembly = assembly;
         this.monitor = factory.getMonitor(DirectoryScannerMonitor.class);
 //        this.deploymentResourceFactory = deploymentResourceFactory;
     }
@@ -93,6 +71,14 @@ public class DirectoryScanner {
     @Destroy
     public void destroy() {
         executor.shutdownNow();
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public void setDelay(long delay) {
+        this.delay = delay;
     }
 
     private class Scanner implements Runnable {

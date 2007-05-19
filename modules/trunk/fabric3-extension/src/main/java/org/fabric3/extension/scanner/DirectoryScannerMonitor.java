@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.services.deployment.fs;
+package org.fabric3.extension.scanner;
 
 /**
  * Monitoring interface for the DirectoryScanner
