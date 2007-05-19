@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Stream drainer used for draining the out and err streams of an external 
@@ -43,13 +44,16 @@ public class ProcessDrainer {
     private int timeout = DEFAULT_TIMEOUT;
     
     // Executor that is scheduling the draining
-    private ExecutorService executor = Executors.newFixedThreadPool(2);
+    private ExecutorService executor = Executors.newSingleThreadExecutor();
+    
+    // Std out data
+    private String data;
     
     /*
      * Initializes the process to drained.
      */
     private ProcessDrainer(Process process) {
-        this.process = process;
+        this(process, DEFAULT_TIMEOUT);
     }
     
     /*
@@ -84,16 +88,36 @@ public class ProcessDrainer {
      */
     public void drain() {
         
-        executor.execute(new StreamDrainer(process.getErrorStream()));
-        executor.execute(new StreamDrainer(process.getInputStream()));
+    	StreamDrainer drainer = new StreamDrainer(process.getInputStream());
+        executor.execute(drainer);
+        
+        /*while(!errDrainer.isDone()) {
+        }
+        
+        while(!outDrainer.isDone()) {
+        }*/
         
         executor.shutdown();
+        
         try {
+        	
             executor.awaitTermination(timeout, TimeUnit.SECONDS);
+            
+            data = drainer.getData();
+            
+            //System.err.println("Data:" + data);
+            
         } catch (InterruptedException ex) {
             return;
         }
         
+    }
+    
+    /**
+     * @return Gets the std err/out data.
+     */
+    public String getData() {
+    	return data;
     }
     
     /*
@@ -103,6 +127,12 @@ public class ProcessDrainer {
         
         // Stream to be drained
         private final InputStream inputStream;
+        
+        // Data
+        private StringBuffer data = new StringBuffer();
+        
+        // Completion flag
+        private AtomicBoolean done = new AtomicBoolean();
         
         /*
          * Initializes the stream to drained.
@@ -120,10 +150,28 @@ public class ProcessDrainer {
                 byte[] buffer = new byte[4096];
                 count = inputStream.read(buffer);
                 while (count != -1) {
+                	data.append(new String(buffer, 0, count));
                     count = inputStream.read(buffer);
                 }
+                inputStream.close();
             } catch (IOException ex) {
+            	throw new RuntimeException(ex);
             }
+            done.set(true);
+        }
+        
+        /*
+         * Returns the data.
+         */
+        public String getData() {
+        	return data.toString();
+        }
+        
+        /*
+         * Checks whether stream reading is done.
+         */
+        public boolean isDone() {
+        	return done.get();
         }
         
     }

@@ -43,7 +43,7 @@ public abstract class CommandTestCase extends TestCase {
         return readStream(is);
     }
 
-    public String readStream(InputStream is) throws IOException {
+    private String readStream(InputStream is) throws IOException {
         assertNotNull(is);
         StringBuilder sb = new StringBuilder();
         is = new BufferedInputStream(is);

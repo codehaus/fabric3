@@ -24,7 +24,7 @@ import java.io.File;
  * @version $Rev$ $Date$
  */
 public class SmokeTestLauncher extends CommandTestCase {
-    private static final String LF = System.getProperty("line.separator");
+
     private File launcher;
     private File testJar;
 
@@ -35,13 +35,15 @@ public class SmokeTestLauncher extends CommandTestCase {
     public void testLauncherUsage() throws Exception {
         ProcessBuilder pb = new ProcessBuilder("java", "-jar", launcher.getAbsolutePath());
         pb.directory(installDir);
+        pb.redirectErrorStream(true);
         Process process = pb.start();
         try {
-            compareOutput(loadResource("LauncherUsage.txt"), process.getErrorStream());
             ProcessDrainer drainer = ProcessDrainer.newInstance(process);
             drainer.drain();
             process.waitFor();
             assertEquals(1, process.exitValue());
+            String launcherUsage = loadResource("LauncherUsage.txt");
+            assertEquals(launcherUsage, drainer.getData());
         } finally {
             process.destroy();
         }
@@ -50,13 +52,14 @@ public class SmokeTestLauncher extends CommandTestCase {
     public void testLauncherWithNoArgs() throws Exception {
         ProcessBuilder pb = new ProcessBuilder("java", "-jar", launcher.getAbsolutePath(), testJar.getAbsolutePath());
         pb.directory(installDir);
+        pb.redirectErrorStream();
         Process process = pb.start();
         try {
-            compareOutput("No Args" + LF, process.getInputStream());
             ProcessDrainer drainer = ProcessDrainer.newInstance(process);
             drainer.drain();
             process.waitFor();
             assertEquals(0, process.exitValue());
+            assertEquals("No Args" + System.getProperty("line.separator"), drainer.getData());
         } finally {
             process.destroy();
         }
@@ -69,12 +72,14 @@ public class SmokeTestLauncher extends CommandTestCase {
                                                testJar.getAbsolutePath(),
                                                "testReference");
         pb.directory(installDir);
+        pb.redirectErrorStream();
         Process process = pb.start();
         try {
             ProcessDrainer drainer = ProcessDrainer.newInstance(process);
             drainer.drain();
             process.waitFor();
             assertEquals(0, process.exitValue());
+            assertEquals("", drainer.getData());
         } finally {
             process.destroy();
         }
