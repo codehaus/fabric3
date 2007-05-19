@@ -60,6 +60,11 @@ public class JmsBindingMetadata extends BindingDefinition {
     private ConnectionFactoryDefinition connectionFactory;
     
     /**
+     * Response definition.
+     */
+    private ResponseDefinition responseDefinition;
+    
+    /**
      * Headers.
      */
     private HeaderDefinition header;
@@ -166,6 +171,20 @@ public class JmsBindingMetadata extends BindingDefinition {
     public void setOperations(List<OperationPropertiesDefinition> operations) {
         this.operations = operations;
     }
+
+	/**
+	 * @return Definition fro sending responses.
+	 */
+	public ResponseDefinition getResponseDefinition() {
+		return responseDefinition;
+	}
+
+	/**
+	 * @param responseDefinition Definition fro sending responses.
+	 */
+	public void setResponseDefinition(ResponseDefinition responseDefinition) {
+		this.responseDefinition = responseDefinition;
+	}
     
 
 }
