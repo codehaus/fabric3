@@ -25,5 +25,24 @@ package org.fabric3.binding.jms.model;
  * @version $Revision$ $Date$
  */
 public class DestinationDefinition extends AdministeredObjectDefinition {
+    
+    /**
+     * Destination definition.
+     */
+    private DestinationType destinationType = DestinationType.queue;
+
+    /**
+     * @return Destination type.
+     */
+    public DestinationType getDestinationType() {
+        return destinationType;
+    }
+
+    /**
+     * @param destinationType Destination type.
+     */
+    public void setDestinationType(DestinationType destinationType) {
+        this.destinationType = destinationType;
+    }
 
 }

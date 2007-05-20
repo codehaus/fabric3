@@ -143,5 +143,19 @@ public class JmsBindingMetadata extends BindingDefinition {
     public void setResponse(ResponseDefinition response) {
         this.response = response;
     }
+    
+    /**
+     * @return Response destination definition.
+     */
+    public DestinationDefinition getResponseDestination() {
+        return response.getDestination();
+    }
+    
+    /**
+     * @return Response destination definition.
+     */
+    public ConnectionFactoryDefinition getResponseConnectionFactory() {
+        return response.getConnectionFactory();
+    }
 
 }

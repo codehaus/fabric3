@@ -29,6 +29,7 @@ import org.fabric3.binding.jms.model.ConnectionFactoryDefinition;
 import org.fabric3.binding.jms.model.CorrelationScheme;
 import org.fabric3.binding.jms.model.CreateDestination;
 import org.fabric3.binding.jms.model.DestinationDefinition;
+import org.fabric3.binding.jms.model.DestinationType;
 import org.fabric3.binding.jms.model.JmsBindingMetadata;
 import org.fabric3.binding.jms.model.ResponseDefinition;
 import org.fabric3.extension.loader.LoaderExtension;
@@ -171,9 +172,15 @@ public class JmsBindingLoader extends LoaderExtension<Object, JmsBindingDefiniti
         DestinationDefinition destination = new DestinationDefinition();
 
         destination.setName(reader.getAttributeValue(null, "name"));
+        
         String create = reader.getAttributeValue(null, "create");
         if (create != null) {
             destination.setCreate(CreateDestination.valueOf(create));
+        }
+        
+        String type = reader.getAttributeValue(null, "type");
+        if(type != null) {
+            destination.setDestinationType(DestinationType.valueOf(type));
         }
         
         return destination;

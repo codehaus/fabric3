@@ -39,8 +39,7 @@ public class JmsBindingGenerator implements
      * 
      * @param generatorRegistry Generator registry.
      */
-    public JmsBindingGenerator(@Reference
-    GeneratorRegistry generatorRegistry) {
+    public JmsBindingGenerator(@Reference GeneratorRegistry generatorRegistry) {
         generatorRegistry.register(JmsBindingDefinition.class, this);
     }
 
@@ -52,7 +51,7 @@ public class JmsBindingGenerator implements
     public JmsWireSourceDefinition generateWireSource(LogicalBinding<JmsBindingDefinition> logicalBinding,
                                                       GeneratorContext generatorContext,
                                                       ServiceDefinition serviceDefinition) throws GenerationException {
-        return new JmsWireSourceDefinition();
+        return new JmsWireSourceDefinition(logicalBinding.getBinding().getMetadata());
     }
 
     /**
@@ -64,7 +63,7 @@ public class JmsBindingGenerator implements
                                                       GeneratorContext generatorContext,
                                                       ReferenceDefinition referenceDefinition)
         throws GenerationException {
-        return new JmsWireTargetDefinition();
+        return new JmsWireTargetDefinition(logicalBinding.getBinding().getMetadata());
     }
 
 }

@@ -16,46 +16,28 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.binding.jms.model.physical;
-
-import org.fabric3.binding.jms.model.JmsBindingMetadata;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+package org.fabric3.binding.jms;
 
 /**
+ * Runtime exception thrown with unexpected JMS errors.
+ * 
  * @version $Revision$ $Date$
  */
-public class JmsWireTargetDefinition extends PhysicalWireTargetDefinition {
-    
-    /**
-     * Metadata.
-     */
-    private JmsBindingMetadata metadata;
-    
-    /**
-     * Default constructor.
-     */
-    public JmsWireTargetDefinition() {
-    }
-    
-    /**
-     * @param metadata Metadata to be initialized.
-     */
-    public JmsWireTargetDefinition(JmsBindingMetadata metadata) {
-        this.metadata = metadata;
-    }
+public class Fabric3JmsException extends RuntimeException {
 
     /**
-     * @return JMS metadata.
+     * Serial version UID.
      */
-    public JmsBindingMetadata getMetadata() {
-        return metadata;
-    }
+    private static final long serialVersionUID = -1584475278512639999L;
 
     /**
-     * @param metadata JMS metadata.
+     * Initializes the message and the cause.
+     * 
+     * @param message Message for the exception.
+     * @param cause Cause for the exception.
      */
-    public void setMetadata(JmsBindingMetadata metadata) {
-        this.metadata = metadata;
+    public Fabric3JmsException(String message, Throwable cause) {
+        super(message, cause);
     }
 
 }
