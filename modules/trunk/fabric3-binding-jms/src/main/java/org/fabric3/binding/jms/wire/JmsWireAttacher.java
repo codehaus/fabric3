@@ -134,7 +134,6 @@ public class JmsWireAttacher implements WireAttacher<JmsWireSourceDefinition, Jm
         ConnectionFactory resCf =
             ConnectionFactoryHelper.getConnectionFactory(metadata.getResponseConnectionFactory(), jndiUrl, ctxFactory);
 
-        // try {
         for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
             
             PhysicalOperationDefinition op = entry.getKey();
