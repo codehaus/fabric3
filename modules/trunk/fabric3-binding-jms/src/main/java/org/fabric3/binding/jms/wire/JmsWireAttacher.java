@@ -18,7 +18,6 @@
  */
 package org.fabric3.binding.jms.wire;
 
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
