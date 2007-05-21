@@ -72,13 +72,6 @@
             <scope>test</scope>
         </dependency>
         
-        <dependency>
-            <groupId>org.apache.activemq</groupId>
-            <artifactId>activemq-core</artifactId>
-            <version>4.1.0-incubator</version>
-            <scope>test</scope>
-        </dependency>
-        
     </dependencies>
     
 </project>
