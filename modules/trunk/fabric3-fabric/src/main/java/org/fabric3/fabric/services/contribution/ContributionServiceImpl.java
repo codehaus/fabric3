@@ -66,7 +66,7 @@ public class ContributionServiceImpl implements ContributionService, DirectorySc
         this.processorRegistry = processorRegistry;
     }
 
-    public URI contribute(URL url, byte[] checksum) throws ContributionException, IOException {
+    public URI contribute(URL url, byte[] checksum, long timestamp) throws ContributionException, IOException {
         URI source;
         try {
             source = url.toURI();
@@ -86,18 +86,18 @@ public class ContributionServiceImpl implements ContributionService, DirectorySc
         }
         InputStream is = urlConnection.getInputStream();
         try {
-            return contribute(source, contentType, checksum, is);
+            return contribute(source, contentType, checksum, timestamp, is);
         } finally {
             is.close();
         }
     }
 
-    public URI contribute(URI sourceUri, String contentType, byte[] checksum, InputStream contributionStream)
+    public URI contribute(URI sourceUri, String contentType, byte[] checksum, long timestamp, InputStream contributionStream)
             throws ContributionException, IOException {
         // store the contribution
         URI contributionUri = URI.create(Constants.URI_PREFIX + UUID.randomUUID());
         URL locationURL = archiveStore.store(sourceUri, contributionStream);
-        Contribution contribution = new Contribution(contributionUri, locationURL, checksum);
+        Contribution contribution = new Contribution(contributionUri, locationURL, checksum, timestamp);
         //process the contribution
         InputStream stream = locationURL.openStream();
         processorRegistry.processContent(contribution, contentType, contributionUri, stream);
@@ -124,9 +124,9 @@ public class ContributionServiceImpl implements ContributionService, DirectorySc
         throw new UnsupportedOperationException();
     }
 
-    public URI addResource(URL location, byte[] checksum) throws DestinationException {
+    public URI addResource(URL location, byte[] checksum, long timestamp) throws DestinationException {
         try {
-            return contribute(location, checksum);
+            return contribute(location, checksum, timestamp);
         } catch (ContributionException e) {
             throw new DestinationException(e);
         } catch (IOException e) {
@@ -134,7 +134,8 @@ public class ContributionServiceImpl implements ContributionService, DirectorySc
         }
     }
 
-    public void updateResource(URI artifactUri, URL location, byte[] checksum) throws DestinationException {
+    public void updateResource(URI artifactUri, URL location, byte[] checksum, long timestamp)
+            throws DestinationException {
         throw new UnsupportedOperationException();
     }
 
@@ -152,6 +153,14 @@ public class ContributionServiceImpl implements ContributionService, DirectorySc
             return null;
         }
         return contribution.getChecksum();
+    }
+
+    public long getResourceTimestamp(URI uri) {
+        Contribution contribution = metaDataStore.find(uri);
+        if (contribution == null) {
+            return -1;
+        }
+        return contribution.getTimestamp();
     }
 
     public <T> T resolve(URI contributionUri, Class<T> definitionType, QName name) {

@@ -1,6 +1,7 @@
 package org.fabric3.fabric.services.contribution.processor;
 
 import java.net.URI;
+import java.net.URL;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.namespace.QName;
@@ -26,7 +27,10 @@ public class JarContributionProcessorTestCase extends TestCase {
     public void testProcess() throws Exception {
         URI uri = URI.create("test");
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        Contribution contribution = new Contribution(uri, cl.getResource("./repository/test.jar"), "test".getBytes());
+        URL location = cl.getResource("./repository/test.jar");
+        byte[] checksum = "test".getBytes();
+        long timestamp = System.currentTimeMillis();
+        Contribution contribution = new Contribution(uri, location, checksum, timestamp);
         processor.processContent(contribution, uri, cl.getResourceAsStream("./repository/test.jar"));
         EasyMock.verify(loaderRegistry);
         assertNotNull(contribution.getManifest());

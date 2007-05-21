@@ -40,6 +40,7 @@ public class Contribution implements Serializable {
     private final URI uri;
     private URL location;
     private byte[] checksum;
+    private long timestamp;
     private ContributionManifest manifest;
     private Map<QName, Map<Object, CompositeComponentType>> types =
             new HashMap<QName, Map<Object, CompositeComponentType>>();
@@ -51,14 +52,16 @@ public class Contribution implements Serializable {
     /**
      * Instantiates a new Contribution instance
      *
-     * @param uri      the contribution URI
-     * @param location a dereferenceble URL for the contribution archive
-     * @param checksum the checksum for the contribution artifact
+     * @param uri       the contribution URI
+     * @param location  a dereferenceble URL for the contribution archive
+     * @param checksum  the checksum for the contribution artifact
+     * @param timestamp the time stamp of the contribution artifact
      */
-    public Contribution(URI uri, URL location, byte[] checksum) {
+    public Contribution(URI uri, URL location, byte[] checksum, long timestamp) {
         this.uri = uri;
         this.location = location;
         this.checksum = checksum;
+        this.timestamp = timestamp;
     }
 
     /**
@@ -86,6 +89,15 @@ public class Contribution implements Serializable {
      */
     public byte[] getChecksum() {
         return checksum;
+    }
+
+    /**
+     * Returns the timestamp of the most recent update to the artifact.
+     *
+     * @return the timestamp of the most recent update to the artifact
+     */
+    public long getTimestamp() {
+        return timestamp;
     }
 
     /**

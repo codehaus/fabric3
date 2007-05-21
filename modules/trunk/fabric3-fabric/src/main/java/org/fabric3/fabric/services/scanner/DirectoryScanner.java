@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -56,7 +57,7 @@ import org.fabric3.spi.services.VoidService;
  */
 @Service(VoidService.class)
 @EagerInit
-public class DirectoryScanner {
+public class DirectoryScanner implements Runnable {
     private final Map<String, FileSystemResource> cache = new HashMap<String, FileSystemResource>();
     private final Map<String, FileSystemResource> errorCache = new HashMap<String, FileSystemResource>();
     private final DirectoryScannerDestination destination;
@@ -85,8 +86,7 @@ public class DirectoryScanner {
     @Init
     public void init() {
         executor = Executors.newSingleThreadScheduledExecutor();
-        // TODO temporarily disabled
-        // executor.scheduleWithFixedDelay(new Scanner(), 10, delay, TimeUnit.MILLISECONDS);
+//        executor.scheduleWithFixedDelay(this, 10, delay, TimeUnit.MILLISECONDS);
     }
 
     @Destroy
@@ -102,104 +102,128 @@ public class DirectoryScanner {
         this.delay = delay;
     }
 
-    private class Scanner implements Runnable {
-        // previously contributed directories
-        public synchronized void run() {
-            File extensionDir = new File(path);
-            if (!extensionDir.isDirectory()) {
-                // we don't have an extension directory, there's nothing to do
-                return;
-            }
-
+    public synchronized void run() {
+        File extensionDir = new File(path);
+        if (!extensionDir.isDirectory()) {
+            // we don't have an extension directory, there's nothing to do
+            return;
+        }
+        try {
             File[] files = extensionDir.listFiles();
-            // checked for removed items
-            Map<String, File> index = new HashMap<String, File>(files.length);
-            for (File file : files) {
-                index.put(file.getName(), file);
-            }
-            List<String> removed = new ArrayList<String>();
+            remove(files);
+            addAndUpdate(files);
+            // persist changes
+            save();
+        } catch (FileNotFoundException e) {
+            monitor.error("Error persisting scanner state", e);
+        }
 
-            for (Map.Entry<String, URI> entry : processed.entrySet()) {
-                String filename = entry.getKey();
-                URI destinUri = entry.getValue();
-                if (index.get(filename) == null) {
-                    // removed
-                    try {
-                        destination.removeResource(destinUri);
-                    } catch (DestinationException e) {
-                        monitor.error("Error removing artifact", filename, e);
-                    }
-                }
-                removed.add(filename);
-            }
-            for (String removedName : removed) {
-                processed.remove(removedName);
-            }
+    }
 
-            for (File file : files) {
-                try {
-                    String name = file.getName();
-
-                    FileSystemResource cached;
-                    FileSystemResource resource = null;
-                    cached = errorCache.get(name);
-                    if (cached != null) {
-                        resource = registry.createResource(file);
-                        assert resource != null;
-                        if (cached.getChecksum().equals(resource)) {
-                            // corrupt file from a previous run, continue
-                            continue;
-                        } else {
-                            // file has changed since the error was reported, retry
-                            errorCache.remove(name);
-                        }
-                    }
-                    cached = cache.get(name);
-                    if (cached == null) {
-                        if (resource == null) {
-                            resource = registry.createResource(file);
-                        }
-                        if (resource == null) {
-                            // not a known type, ignore
-                            continue;
-                        }
-                        // cache the resource and wait to the next run to see if it has changed
-                        cache.put(name, resource);
-                    } else {
-                        // cached
-                        if (cached.isChanged()) {
-                            // contents are still being updated, wait until next run
-                            continue;
-                        }
-                        cache.remove(name);
-                        // check if it is in the store
-                        URI artifactUri = processed.get(name);
-                        if (artifactUri != null) {
-                            // updated
-                            destination.updateResource(artifactUri, file.toURI().toURL(), cached.getChecksum());
-                        } else {
-                            // added
-                            destination.addResource(file.toURI().toURL(), cached.getChecksum());
-                        }
-
-                    }
-                } catch (IOException e) {
-                    monitor.error(e);
-                } catch (DestinationException e) {
-                    monitor.error(e);
-                }
-            }
+    private void addAndUpdate(File[] files) {
+        for (File file : files) {
             try {
-                save();
-            } catch (FileNotFoundException e) {
-                monitor.error("Error persisting scanner state", e);
-            }
+                String name = file.getName();
+                FileSystemResource cached;
+                FileSystemResource resource = null;
+                cached = errorCache.get(name);
+                if (cached != null) {
+                    resource = registry.createResource(file);
+                    assert resource != null;
+                    if (cached.getChecksum().equals(resource)) {
+                        // corrupt file from a previous run, continue
+                        continue;
+                    } else {
+                        // file has changed since the error was reported, retry
+                        errorCache.remove(name);
+                    }
+                }
+                cached = cache.get(name);
+                if (cached == null) {
+                    if (resource == null) {
+                        resource = registry.createResource(file);
+                    }
+                    if (resource == null) {
+                        // not a known type, ignore
+                        continue;
+                    }
+                    resource.reset();
+                    // cache the resource and wait to the next run to see if it has changed
+                    cache.put(name, resource);
+                } else {
+                    // cached
+                    if (cached.isChanged()) {
+                        // contents are still being updated, wait until next run
+                        continue;
+                    }
+                    cache.remove(name);
+                    // check if it is in the store
+                    URI artifactUri = processed.get(name);
+                    if (artifactUri != null) {
+                        // updated
+                        URL location = file.toURI().toURL();
+                        byte[] checksum = cached.getChecksum();
+                        long timestamp = file.lastModified();
+                        long archivedTimestamp = destination.getResourceTimestamp(artifactUri);
+                        assert archivedTimestamp != -1;
+                        if (timestamp >= archivedTimestamp) {
+                            
+                            destination.updateResource(artifactUri, location, checksum, timestamp);
+                        }
+                    } else {
+                        // added
+                        URL location = file.toURI().toURL();
+                        byte[] checksum = cached.getChecksum();
+                        long timestamp = file.lastModified();
+                        URI addedUri = destination.addResource(location, checksum, timestamp);
+                        processed.put(name, addedUri);
+                    }
 
+                }
+            } catch (IOException e) {
+                monitor.error(e);
+            } catch (DestinationException e) {
+                monitor.error(e);
+            }
+        }
+    }
+
+    private void remove(File[] files) {
+        Map<String, File> index = new HashMap<String, File>(files.length);
+        for (File file : files) {
+            index.put(file.getName(), file);
+        }
+
+        List<String> removed = new ArrayList<String>();
+        for (Map.Entry<String, URI> entry : processed.entrySet()) {
+            String filename = entry.getKey();
+            URI destinationUri = entry.getValue();
+            if (index.get(filename) == null) {
+                // removed
+                try {
+                    if (destination.getResourceChecksum(destinationUri) != null) {
+                        // during recovery, check that the resurce was not deleted by another process
+                        destination.removeResource(destinationUri);
+                    }
+                    removed.add(filename);
+                } catch (DestinationException e) {
+                    monitor.error("Error removing artifact", filename, e);
+                }
+            }
+        }
+        for (String removedName : removed) {
+            processed.remove(removedName);
         }
     }
 
     @SuppressWarnings({"unchecked"})
     private synchronized void recover() throws FileNotFoundException {
+        File extensionDir = new File(path);
+        if (!extensionDir.isDirectory()) {
+            // we don't have an extension directory, there's nothing to do
+            return;
+        }
+
         InputStream is = null;
         try {
             is = new BufferedInputStream(new FileInputStream(processedIndex));
@@ -213,6 +237,14 @@ public class DirectoryScanner {
                 monitor.error(e);
             }
         }
+        File[] files = extensionDir.listFiles();
+        remove(files);
+        processed.clear();
+        // check for updates and additions
+        addAndUpdate(files);
+        save();
+
+
     }
 
     /**
@@ -225,6 +257,7 @@ public class DirectoryScanner {
         try {
             os = new BufferedOutputStream(new FileOutputStream(processedIndex));
             xstream.toXML(processed, os);
+
         } finally {
             if (os != null) {
                 try {

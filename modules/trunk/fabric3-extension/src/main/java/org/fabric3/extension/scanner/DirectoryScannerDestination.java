@@ -14,12 +14,13 @@ public interface DirectoryScannerDestination {
      * Notifies the destination of a resource added to the directory. Destinations must process the added resource in a
      * blocking fashion.
      *
-     * @param location the dereferenceable URL of the resource
-     * @param checksum the resource checksum
+     * @param location  the dereferenceable URL of the resource
+     * @param checksum  the resource checksum
+     * @param timestamp the artifact timestamp
      * @return a URI the destination uses to identify the resource
      * @throws DestinationException if an error occurs processing the resource
      */
-    URI addResource(URL location, byte[] checksum) throws DestinationException;
+    URI addResource(URL location, byte[] checksum, long timestamp) throws DestinationException;
 
     /**
      * Notifies the destination of a resource update. Destinations must process the update in a blocking fashion.
@@ -27,9 +28,10 @@ public interface DirectoryScannerDestination {
      * @param artifactUri the URI used by the destination to identify the resource
      * @param location    the dereferenceable URL of the updated resource
      * @param checksum    the resource checksum
+     * @param timestamp   the artifact timestamp
      * @throws DestinationException if an error occurs processing the resource
      */
-    void updateResource(URI artifactUri, URL location, byte[] checksum) throws DestinationException;
+    void updateResource(URI artifactUri, URL location, byte[] checksum, long timestamp) throws DestinationException;
 
     /**
      * Notifies the destination of a resource removal. Destinations must process the removal in a blocking fashion.
@@ -51,8 +53,16 @@ public interface DirectoryScannerDestination {
      * Returns the checksum value for the artifact identified by the given URI.
      *
      * @param uri the artifact URI
-     * @return the checksum value for the artifact identified by the given URI
+     * @return the checksum value for the artifact identified by the given URI or null if the artifact does not exist
      */
     byte[] getResourceChecksum(URI uri);
+
+    /**
+     * Returns the timestamp for the artifact identified by the given URI.
+     *
+     * @param uri the artifact URI
+     * @return the timestamp for the artifact identified by the given URI or -1 if the artifact does not exist
+     */
+    long getResourceTimestamp(URI uri);
 
 }
