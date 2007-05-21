@@ -19,11 +19,11 @@
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            name="BurlapTestComposite">
 
-    <service name="HelloBurlapService" promote="HelloService">
-        <interface.java interface="org.fabric3.binding.burlap.HelloService"/>
+    <service name="HelloJmsService" promote="HelloService">
+        <interface.java interface="org.fabric3.binding.jms.HelloService"/>
         <binding.jms 
             correlationScheme="RequestMsgIDToCorrelID" 
-            jndiUrl="vm://localhost" 
+            jndiURL="vm://localhost" 
             initialContextFactory="org.apache.activemq.jndi.ActiveMQInitialContextFactory">
             <destination name="serviceQueue" type="queue" create="never"/>
             <connectionFactory name="connectionFactory" create="never"/>
@@ -34,11 +34,11 @@
         </binding.jms>
     </service>
 
-    <reference name="HelloBurlapReference" promote="HelloClient/helloService">
-        <interface.java interface="org.fabric3.binding.burlap.HelloService"/>
+    <reference name="HelloJmsReference" promote="HelloClient/helloService">
+        <interface.java interface="org.fabric3.binding.jms.HelloService"/>
         <binding.jms 
             correlationScheme="RequestMsgIDToCorrelID" 
-            jndiUrl="vm://localhost" 
+            jndiURL="vm://localhost" 
             initialContextFactory="org.apache.activemq.jndi.ActiveMQInitialContextFactory">
             <destination name="clientQueue" type="queue" create="never"/>
             <connectionFactory name="connectionFactory" create="never"/>
@@ -50,17 +50,18 @@
     </reference>
     
     <component name="HelloTest">
-        <f3:junit class="org.fabric3.binding.burlap.HelloTest"/>
+        <f3:junit class="org.fabric3.binding.jms.HelloTest"/>
         <reference name="helloClient" target="HelloClient"/>
     </component>
 
     <!-- Hello Client -->
     <component name="HelloClient">
-        <implementation.java class="org.fabric3.binding.burlap.HelloClientImpl"/>
+        <implementation.java class="org.fabric3.binding.jms.HelloClientImpl"/>
     </component>
 
     <!-- Hello Service -->
     <component name="HelloService">
-        <implementation.java class="org.fabric3.binding.burlap.HelloServiceImpl"/>
+        <implementation.java class="org.fabric3.binding.jms.HelloServiceImpl"/>
     </component>
+    
 </composite>
