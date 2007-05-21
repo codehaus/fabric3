@@ -44,10 +44,10 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
-import org.fabric3.extension.scanner.DestinationException;
-import org.fabric3.extension.scanner.DirectoryScannerDestination;
-import org.fabric3.extension.scanner.FileSystemResource;
-import org.fabric3.extension.scanner.FileSystemResourceFactoryRegistry;
+import org.fabric3.spi.services.scanner.DestinationException;
+import org.fabric3.spi.services.scanner.DirectoryScannerDestination;
+import org.fabric3.spi.services.scanner.FileSystemResource;
+import org.fabric3.spi.services.scanner.FileSystemResourceFactoryRegistry;
 import org.fabric3.fabric.services.xstream.XStreamFactory;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.spi.services.VoidService;

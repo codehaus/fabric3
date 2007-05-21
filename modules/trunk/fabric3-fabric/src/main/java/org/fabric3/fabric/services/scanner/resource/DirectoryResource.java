@@ -6,8 +6,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.fabric3.extension.scanner.FileSystemResource;
-import org.fabric3.extension.scanner.AbstractResource;
+import org.fabric3.spi.services.scanner.FileSystemResource;
+import org.fabric3.fabric.services.scanner.AbstractResource;
 
 /**
  * Represents a directory that is to be contributed to a domain

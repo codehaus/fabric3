@@ -1,8 +1,8 @@
-package org.fabric3.extension.scanner;
+package org.fabric3.fabric.services.scanner;
 
 import java.io.IOException;
 
-import org.fabric3.extension.scanner.FileSystemResource;
+import org.fabric3.spi.services.scanner.FileSystemResource;
 
 /**
  * Base file system resource implementation

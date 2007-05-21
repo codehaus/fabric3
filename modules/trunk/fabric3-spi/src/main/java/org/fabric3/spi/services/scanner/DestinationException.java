@@ -1,4 +1,4 @@
-package org.fabric3.extension.scanner;
+package org.fabric3.spi.services.scanner;
 
 import org.fabric3.host.Fabric3Exception;
 

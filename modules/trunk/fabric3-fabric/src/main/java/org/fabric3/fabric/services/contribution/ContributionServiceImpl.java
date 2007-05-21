@@ -33,8 +33,8 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
-import org.fabric3.extension.scanner.DestinationException;
-import org.fabric3.extension.scanner.DirectoryScannerDestination;
+import org.fabric3.spi.services.scanner.DestinationException;
+import org.fabric3.spi.services.scanner.DirectoryScannerDestination;
 import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionNotFoundException;

@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.net.JarURLConnection;
 import java.net.URL;
 
-import org.fabric3.extension.scanner.FileSystemResource;
-import org.fabric3.extension.scanner.FileSystemResourceFactory;
+import org.fabric3.spi.services.scanner.FileSystemResource;
+import org.fabric3.spi.services.scanner.FileSystemResourceFactory;
 import org.fabric3.fabric.services.scanner.resource.FileResource;
 
 /**

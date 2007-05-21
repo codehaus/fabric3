@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import org.fabric3.extension.scanner.AbstractResource;
+import org.fabric3.fabric.services.scanner.AbstractResource;
 
 /**
  * Represents a file that is to be contributed to a domain

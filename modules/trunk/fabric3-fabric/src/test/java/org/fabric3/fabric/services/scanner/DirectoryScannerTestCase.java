@@ -7,11 +7,11 @@ import java.net.URI;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
-import org.fabric3.extension.scanner.DirectoryScannerDestination;
-import org.fabric3.extension.scanner.FileSystemResource;
-import org.fabric3.extension.scanner.FileSystemResourceFactory;
-import org.fabric3.extension.scanner.FileSystemResourceFactoryRegistry;
-import org.fabric3.extension.scanner.FileSystemResourceFactoryRegistryImpl;
+import org.fabric3.spi.services.scanner.DirectoryScannerDestination;
+import org.fabric3.spi.services.scanner.FileSystemResource;
+import org.fabric3.spi.services.scanner.FileSystemResourceFactory;
+import org.fabric3.spi.services.scanner.FileSystemResourceFactoryRegistry;
+import org.fabric3.fabric.services.scanner.FileSystemResourceFactoryRegistryImpl;
 import org.fabric3.fabric.services.scanner.resource.FileResource;
 import org.fabric3.fabric.services.xstream.XStreamFactoryImpl;
 import org.fabric3.fabric.util.FileHelper;

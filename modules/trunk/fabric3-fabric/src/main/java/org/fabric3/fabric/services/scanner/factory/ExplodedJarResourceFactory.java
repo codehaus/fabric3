@@ -2,8 +2,8 @@ package org.fabric3.fabric.services.scanner.factory;
 
 import java.io.File;
 
-import org.fabric3.extension.scanner.FileSystemResource;
-import org.fabric3.extension.scanner.FileSystemResourceFactory;
+import org.fabric3.spi.services.scanner.FileSystemResource;
+import org.fabric3.spi.services.scanner.FileSystemResourceFactory;
 import org.fabric3.fabric.services.scanner.resource.DirectoryResource;
 import org.fabric3.fabric.services.scanner.resource.FileResource;
 

@@ -3,7 +3,7 @@ package org.fabric3.fabric.services.scanner.resource;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
-import org.fabric3.extension.scanner.FileSystemResource;
+import org.fabric3.spi.services.scanner.FileSystemResource;
 
 /**
  * @version $Rev$ $Date$

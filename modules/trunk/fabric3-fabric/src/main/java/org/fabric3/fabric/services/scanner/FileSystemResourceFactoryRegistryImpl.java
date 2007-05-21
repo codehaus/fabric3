@@ -1,8 +1,12 @@
-package org.fabric3.extension.scanner;
+package org.fabric3.fabric.services.scanner;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.fabric3.spi.services.scanner.FileSystemResourceFactoryRegistry;
+import org.fabric3.spi.services.scanner.FileSystemResourceFactory;
+import org.fabric3.spi.services.scanner.FileSystemResource;
 
 /**
  * Default implementation of the DeploymentResourceFactoryRegistry.

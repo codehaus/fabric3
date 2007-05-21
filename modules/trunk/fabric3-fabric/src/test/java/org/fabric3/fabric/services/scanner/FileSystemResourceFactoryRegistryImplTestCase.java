@@ -1,9 +1,12 @@
-package org.fabric3.extension.scanner;
+package org.fabric3.fabric.services.scanner;
 
 import java.io.File;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
+
+import org.fabric3.spi.services.scanner.FileSystemResource;
+import org.fabric3.spi.services.scanner.FileSystemResourceFactory;
 
 /**
  * @version $Rev$ $Date$
