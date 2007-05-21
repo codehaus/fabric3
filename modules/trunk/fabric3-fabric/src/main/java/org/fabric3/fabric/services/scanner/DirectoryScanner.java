@@ -44,13 +44,14 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
+import org.fabric3.fabric.services.xstream.XStreamFactory;
+import org.fabric3.host.monitor.MonitorFactory;
+import org.fabric3.spi.services.VoidService;
 import org.fabric3.spi.services.scanner.DestinationException;
 import org.fabric3.spi.services.scanner.DirectoryScannerDestination;
 import org.fabric3.spi.services.scanner.FileSystemResource;
 import org.fabric3.spi.services.scanner.FileSystemResourceFactoryRegistry;
-import org.fabric3.fabric.services.xstream.XStreamFactory;
-import org.fabric3.host.monitor.MonitorFactory;
-import org.fabric3.spi.services.VoidService;
+import org.fabric3.spi.services.scanner.ResourceMetaData;
 
 /**
  * Periodically scans a directory for files
@@ -84,8 +85,13 @@ public class DirectoryScanner implements Runnable {
     }
 
     @Init
-    public void init() {
+    public void init() throws DestinationException {
         executor = Executors.newSingleThreadScheduledExecutor();
+//        try {
+//            recover();
+//        } catch (FileNotFoundException e) {
+//            throw new DestinationException(e);
+//        }
 //        executor.scheduleWithFixedDelay(this, 10, delay, TimeUnit.MILLISECONDS);
     }
 
@@ -120,6 +126,36 @@ public class DirectoryScanner implements Runnable {
 
     }
 
+    @SuppressWarnings({"unchecked"})
+    synchronized void recover() throws FileNotFoundException {
+        File extensionDir = new File(path);
+        if (!extensionDir.isDirectory()) {
+            // we don't have an extension directory, there's nothing to do
+            return;
+        }
+
+        InputStream is = null;
+        try {
+            is = new BufferedInputStream(new FileInputStream(processedIndex));
+            processed = (HashMap<String, URI>) xstream.fromXML(is);
+        } finally {
+            try {
+                if (is != null) {
+                    is.close();
+                }
+            } catch (IOException e) {
+                monitor.error(e);
+            }
+        }
+        File[] files = extensionDir.listFiles();
+        remove(files);
+        // check for updates and additions
+        addAndUpdate(files);
+        save();
+
+
+    }
+    
     private void addAndUpdate(File[] files) {
         for (File file : files) {
             try {
@@ -164,10 +200,12 @@ public class DirectoryScanner implements Runnable {
                         URL location = file.toURI().toURL();
                         byte[] checksum = cached.getChecksum();
                         long timestamp = file.lastModified();
-                        long archivedTimestamp = destination.getResourceTimestamp(artifactUri);
-                        assert archivedTimestamp != -1;
-                        if (timestamp >= archivedTimestamp) {
-                            
+                        ResourceMetaData metaData = destination.getResourceMetaData(artifactUri);
+                        assert metaData != null;
+                        long archivedTimestamp = metaData.getTimestamp();
+                        if (timestamp > archivedTimestamp) {
+                            destination.updateResource(artifactUri, location, checksum, timestamp);
+                        } else if (timestamp == archivedTimestamp && checksum.equals(metaData.getChecksum())) {
                             destination.updateResource(artifactUri, location, checksum, timestamp);
                         }
                     } else {
@@ -199,10 +237,10 @@ public class DirectoryScanner implements Runnable {
             String filename = entry.getKey();
             URI destinationUri = entry.getValue();
             if (index.get(filename) == null) {
-                // removed
+                // artifact was removed
                 try {
-                    if (destination.getResourceChecksum(destinationUri) != null) {
-                        // during recovery, check that the resurce was not deleted by another process
+                    // check that the resurce was not deleted by another process
+                    if (destination.resourceExists(destinationUri)) {
                         destination.removeResource(destinationUri);
                     }
                     removed.add(filename);
@@ -214,37 +252,6 @@ public class DirectoryScanner implements Runnable {
         for (String removedName : removed) {
             processed.remove(removedName);
         }
-    }
-
-    @SuppressWarnings({"unchecked"})
-    private synchronized void recover() throws FileNotFoundException {
-        File extensionDir = new File(path);
-        if (!extensionDir.isDirectory()) {
-            // we don't have an extension directory, there's nothing to do
-            return;
-        }
-
-        InputStream is = null;
-        try {
-            is = new BufferedInputStream(new FileInputStream(processedIndex));
-            processed = (HashMap<String, URI>) xstream.fromXML(is);
-        } finally {
-            try {
-                if (is != null) {
-                    is.close();
-                }
-            } catch (IOException e) {
-                monitor.error(e);
-            }
-        }
-        File[] files = extensionDir.listFiles();
-        remove(files);
-        processed.clear();
-        // check for updates and additions
-        addAndUpdate(files);
-        save();
-
-
     }
 
     /**

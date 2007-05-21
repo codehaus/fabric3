@@ -35,6 +35,7 @@ import org.osoa.sca.annotations.Service;
 
 import org.fabric3.spi.services.scanner.DestinationException;
 import org.fabric3.spi.services.scanner.DirectoryScannerDestination;
+import org.fabric3.spi.services.scanner.ResourceMetaData;
 import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionNotFoundException;
@@ -147,20 +148,12 @@ public class ContributionServiceImpl implements ContributionService, DirectorySc
         return metaDataStore.find(uri) != null;
     }
 
-    public byte[] getResourceChecksum(URI uri) {
+    public ResourceMetaData getResourceMetaData(URI uri) {
         Contribution contribution = metaDataStore.find(uri);
         if (contribution == null) {
             return null;
         }
-        return contribution.getChecksum();
-    }
-
-    public long getResourceTimestamp(URI uri) {
-        Contribution contribution = metaDataStore.find(uri);
-        if (contribution == null) {
-            return -1;
-        }
-        return contribution.getTimestamp();
+        return contribution;
     }
 
     public <T> T resolve(URI contributionUri, Class<T> definitionType, QName name) {

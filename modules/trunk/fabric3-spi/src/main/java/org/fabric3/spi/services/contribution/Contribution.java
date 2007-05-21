@@ -28,6 +28,7 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.fabric3.spi.model.type.CompositeComponentType;
+import org.fabric3.spi.services.scanner.ResourceMetaData;
 
 /**
  * The base representation of a deployed contribution
@@ -35,7 +36,7 @@ import org.fabric3.spi.model.type.CompositeComponentType;
  * @version $Rev$ $Date$
  */
 @SuppressWarnings({"SerializableHasSerializationMethods"})
-public class Contribution implements Serializable {
+public class Contribution implements ResourceMetaData, Serializable {
     private static final long serialVersionUID = 2511879480122631196L;
     private final URI uri;
     private URL location;

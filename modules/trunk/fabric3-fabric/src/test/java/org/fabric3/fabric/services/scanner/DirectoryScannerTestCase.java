@@ -3,28 +3,34 @@ package org.fabric3.fabric.services.scanner;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.net.URI;
+import java.net.URL;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
-import org.fabric3.spi.services.scanner.DirectoryScannerDestination;
-import org.fabric3.spi.services.scanner.FileSystemResource;
-import org.fabric3.spi.services.scanner.FileSystemResourceFactory;
-import org.fabric3.spi.services.scanner.FileSystemResourceFactoryRegistry;
-import org.fabric3.fabric.services.scanner.FileSystemResourceFactoryRegistryImpl;
 import org.fabric3.fabric.services.scanner.resource.FileResource;
 import org.fabric3.fabric.services.xstream.XStreamFactoryImpl;
 import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.host.monitor.MonitorFactory;
+import org.fabric3.spi.services.scanner.DirectoryScannerDestination;
+import org.fabric3.spi.services.scanner.FileSystemResource;
+import org.fabric3.spi.services.scanner.FileSystemResourceFactory;
+import org.fabric3.spi.services.scanner.FileSystemResourceFactoryRegistry;
+import org.fabric3.spi.services.scanner.ResourceMetaData;
 
 /**
  * @version $Rev$ $Date$
  */
 public class DirectoryScannerTestCase extends TestCase {
     public static final URI ARTIFACT_URI = URI.create("test");
+    public static final URI ARTIFACT_URI2 = URI.create("test2");
+    public static final URI ARTIFACT_URI3 = URI.create("test3");
     private DirectoryScanner scanner;
     private DirectoryScannerDestination destination;
     private File directory;
+    private XStreamFactoryImpl xstreamFactory;
+    private FileSystemResourceFactoryRegistry registry;
+    private MonitorFactory monitorFactory;
 
     public void testAddResource() throws Exception {
         File artifact = new File(directory, "test.txt");
@@ -63,10 +69,12 @@ public class DirectoryScannerTestCase extends TestCase {
 
     public void testUpdateResource() throws Exception {
         File artifact = new File(directory, "test.txt");
+        ResourceMetaData metaData = EasyMock.createNiceMock(ResourceMetaData.class);
+        EasyMock.replay(metaData);
         EasyMock.expect(destination.addResource(EasyMock.eq(artifact.toURI().toURL()),
                                                 EasyMock.isA(byte[].class),
                                                 EasyMock.anyLong())).andReturn(ARTIFACT_URI);
-        EasyMock.expect(destination.getResourceTimestamp(EasyMock.eq(ARTIFACT_URI))).andReturn(0L);
+        EasyMock.expect(destination.getResourceMetaData(EasyMock.eq(ARTIFACT_URI))).andReturn(metaData);
         destination.updateResource(EasyMock.eq(ARTIFACT_URI),
                                    EasyMock.eq(artifact.toURI().toURL()),
                                    EasyMock.isA(byte[].class),
@@ -89,10 +97,14 @@ public class DirectoryScannerTestCase extends TestCase {
 
     public void testRemoveResource() throws Exception {
         File artifact = new File(directory, "test.txt");
+        ResourceMetaData metaData = EasyMock.createNiceMock(ResourceMetaData.class);
+        EasyMock.expect(metaData.getChecksum()).andReturn(new byte[]{}).anyTimes();
+        EasyMock.replay(metaData);
+
         EasyMock.expect(destination.addResource(EasyMock.eq(artifact.toURI().toURL()),
                                                 EasyMock.isA(byte[].class),
                                                 EasyMock.anyLong())).andReturn(ARTIFACT_URI);
-        EasyMock.expect(destination.getResourceChecksum(EasyMock.eq(ARTIFACT_URI))).andReturn(new byte[]{});
+        EasyMock.expect(destination.resourceExists(EasyMock.eq(ARTIFACT_URI))).andReturn(true);
         destination.removeResource(EasyMock.eq(ARTIFACT_URI));
         EasyMock.replay(destination);
         // deploy a file
@@ -106,21 +118,113 @@ public class DirectoryScannerTestCase extends TestCase {
         EasyMock.verify(destination);
     }
 
+    /**
+     * Verifies a recovery scenario where a resource is added to the destination, the scanner becomes inactive, the
+     * artifact is deleted from the scanner directory, and a new scanner is created. Recovery is initiated and the
+     * destination should be notified of the removal.
+     */
+    public void testRemoveRecover() throws Exception {
+        File artifact = new File(directory, "test.txt");
+        ResourceMetaData metaData = EasyMock.createNiceMock(ResourceMetaData.class);
+        EasyMock.expect(metaData.getChecksum()).andReturn(new byte[]{}).anyTimes();
+        EasyMock.replay(metaData);
+
+        EasyMock.expect(destination.addResource(EasyMock.eq(artifact.toURI().toURL()),
+                                                EasyMock.isA(byte[].class),
+                                                EasyMock.anyLong())).andReturn(ARTIFACT_URI);
+        EasyMock.expect(destination.resourceExists(ARTIFACT_URI)).andReturn(true);
+        destination.removeResource(EasyMock.eq(ARTIFACT_URI));
+        EasyMock.replay(destination);
+        // deploy the artifact
+        artifact.createNewFile();
+        // simulate two runs since the first run will just cache entries
+        scanner.run();
+        scanner.run();
+        artifact.delete();
+        DirectoryScanner recoveredScanner = new DirectoryScanner(registry, destination, xstreamFactory, monitorFactory);
+        recoveredScanner.recover();
+        EasyMock.verify(destination);
+    }
+
+    /**
+     * Verifies a recovery scenario where a resource is added to the destination, the scanner becomes inactive, the
+     * artifact is updated , and a new scanner is created. Recovery is initiated and the destination should be notified
+     * of the update.
+     */
+    public void testUpdateRecover() throws Exception {
+        File artifact = new File(directory, "test.txt");
+        ResourceMetaData metaData = EasyMock.createNiceMock(ResourceMetaData.class);
+        EasyMock.expect(metaData.getChecksum()).andReturn(new byte[]{}).anyTimes();
+        EasyMock.replay(metaData);
+
+        URL url = artifact.toURI().toURL();
+        EasyMock.expect(destination.addResource(EasyMock.eq(url),
+                                                EasyMock.isA(byte[].class),
+                                                EasyMock.anyLong())).andReturn(ARTIFACT_URI);
+        EasyMock.expect(destination.getResourceMetaData(EasyMock.eq(ARTIFACT_URI))).andReturn(metaData);
+        destination.updateResource(EasyMock.eq(ARTIFACT_URI),
+                                   EasyMock.eq(url),
+                                   EasyMock.isA(byte[].class),
+                                   EasyMock.anyLong());
+        EasyMock.replay(destination);
+        // deploy the artifact
+        artifact.createNewFile();
+        // simulate two runs since the first run will just cache entries
+        scanner.run();
+        scanner.run();
+        FileOutputStream stream = new FileOutputStream(artifact);
+        stream.write("test".getBytes());
+        stream.close();
+        DirectoryScanner recoveredScanner = new DirectoryScanner(registry, destination, xstreamFactory, monitorFactory);
+        recoveredScanner.recover();
+        // initiate a second scan since the recover will cache the added file
+        recoveredScanner.run();
+        EasyMock.verify(destination);
+    }
+
+    /**
+     * Verifies a recovery scenario no resources exist, the scanner becomes inactive, the artifact created in the
+     * directory, and a new scanner is created. Recovery is initiated and the destination should be notified of the
+     * update.
+     */
+    public void testAddRecover() throws Exception {
+        File artifact = new File(directory, "test.txt");
+        ResourceMetaData metaData = EasyMock.createNiceMock(ResourceMetaData.class);
+        EasyMock.expect(metaData.getChecksum()).andReturn(new byte[]{}).anyTimes();
+        EasyMock.replay(metaData);
+
+        URL url = artifact.toURI().toURL();
+        EasyMock.expect(destination.addResource(EasyMock.eq(url),
+                                                EasyMock.isA(byte[].class),
+                                                EasyMock.anyLong())).andReturn(ARTIFACT_URI);
+        EasyMock.replay(destination);
+        // simulate two runs since the first run will just cache entries
+        scanner.run();
+        scanner.run();
+        // deploy the artifact
+        artifact.createNewFile();
+        DirectoryScanner recoveredScanner = new DirectoryScanner(registry, destination, xstreamFactory, monitorFactory);
+        recoveredScanner.recover();
+        // initiate a second scan since the recover will cache the added file
+        recoveredScanner.run();
+        EasyMock.verify(destination);
+    }
 
     protected void setUp() throws Exception {
         super.setUp();
-        FileSystemResourceFactoryRegistry registry = new FileSystemResourceFactoryRegistryImpl();
+        registry = new FileSystemResourceFactoryRegistryImpl();
         registry.register(new TestResourceFactory());
-        XStreamFactoryImpl xstreamFactory = new XStreamFactoryImpl();
+        xstreamFactory = new XStreamFactoryImpl();
         DirectoryScannerMonitor monitor = EasyMock.createMock(DirectoryScannerMonitor.class);
         EasyMock.replay(monitor);
-        MonitorFactory monitorFactory = EasyMock.createMock(MonitorFactory.class);
-        EasyMock.expect(monitorFactory.getMonitor(DirectoryScannerMonitor.class)).andReturn(monitor);
+        monitorFactory = EasyMock.createMock(MonitorFactory.class);
+        EasyMock.expect(monitorFactory.getMonitor(DirectoryScannerMonitor.class)).andReturn(monitor).anyTimes();
         EasyMock.replay(monitorFactory);
         destination = EasyMock.createMock(DirectoryScannerDestination.class);
         scanner = new DirectoryScanner(registry, destination, xstreamFactory, monitorFactory);
         directory = new File("deploy");
         directory.mkdir();
+        FileHelper.cleanDirectory(directory);
     }
 
 

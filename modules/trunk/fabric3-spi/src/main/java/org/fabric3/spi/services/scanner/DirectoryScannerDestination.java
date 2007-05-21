@@ -50,19 +50,11 @@ public interface DirectoryScannerDestination {
     boolean resourceExists(URI artifactUri);
 
     /**
-     * Returns the checksum value for the artifact identified by the given URI.
+     * Returns the ResourceMetaData for the artifact identified by the given URI.
      *
      * @param uri the artifact URI
-     * @return the checksum value for the artifact identified by the given URI or null if the artifact does not exist
+     * @return the ResourceMetaData for the artifact identified by the given URI or null if the artifact does not exist
      */
-    byte[] getResourceChecksum(URI uri);
-
-    /**
-     * Returns the timestamp for the artifact identified by the given URI.
-     *
-     * @param uri the artifact URI
-     * @return the timestamp for the artifact identified by the given URI or -1 if the artifact does not exist
-     */
-    long getResourceTimestamp(URI uri);
+    ResourceMetaData getResourceMetaData(URI uri);
 
 }
