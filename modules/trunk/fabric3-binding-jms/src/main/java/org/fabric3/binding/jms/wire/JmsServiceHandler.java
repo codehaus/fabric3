@@ -30,6 +30,7 @@ import javax.jms.MessageListener;
 import javax.jms.Session;
 
 import org.fabric3.binding.jms.Fabric3JmsException;
+import org.fabric3.binding.jms.wire.helper.JmsHelper;
 
 /**
  * Service handler for JMS.
@@ -110,15 +111,10 @@ public class JmsServiceHandler {
      */
     public void stop() {
 
-        try {
-            for (Session session : sessions) {
-                session.close();
-            }
-            connection.stop();
-            connection.close();
-        } catch (JMSException ex) {
-            throw new Fabric3JmsException("Unable to activate service", ex);
+        for (Session session : sessions) {
+            JmsHelper.closeQuietly(session);
         }
+        JmsHelper.closeQuietly(connection);
 
     }
 

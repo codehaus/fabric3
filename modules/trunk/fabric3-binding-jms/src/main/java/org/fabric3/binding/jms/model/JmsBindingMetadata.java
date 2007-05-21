@@ -18,6 +18,10 @@
  */
 package org.fabric3.binding.jms.model;
 
+import java.util.Hashtable;
+
+import javax.naming.Context;
+
 import org.fabric3.spi.model.type.BindingDefinition;
 
 /**
@@ -156,6 +160,20 @@ public class JmsBindingMetadata extends BindingDefinition {
      */
     public ConnectionFactoryDefinition getResponseConnectionFactory() {
         return response.getConnectionFactory();
+    }
+    
+    /**
+     * @return The JNDI environment to use.
+     */
+    public Hashtable<String, String> getEnv() {
+        
+        Hashtable<String, String> props = new Hashtable<String, String>();
+        
+        props.put(Context.PROVIDER_URL, getJndiUrl());
+        props.put(Context.INITIAL_CONTEXT_FACTORY, getInitialContextFactory());
+        
+        return props;
+        
     }
 
 }

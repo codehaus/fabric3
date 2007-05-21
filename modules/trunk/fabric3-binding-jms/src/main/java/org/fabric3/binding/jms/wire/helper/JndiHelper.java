@@ -23,39 +23,36 @@ import java.util.Hashtable;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
+import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
 
 import org.fabric3.binding.jms.Fabric3JmsException;
 
 /**
- * Helper class for looking up administered.
- * 
- * @version $Revison$ $Date$
+ * Helper class for JNDI lookup.
  */
-public class AdministeredObjectHelper {
+public class JndiHelper {
     
     /**
      * Utility class constructor.
      */
-    protected AdministeredObjectHelper() {
+    private JndiHelper() {
     }
 
     /*
      * Looks up the administered object.
      */
-    protected static Object lookup(String name, String providerUrl, String ctxFactory) {
+    public static Object lookup(String name, Hashtable<String, String> env) {
         
         Context ctx = null;
-        
-        Hashtable<String, String> env = new Hashtable<String, String>();
-        env.put(Context.PROVIDER_URL, providerUrl);
-        env.put(Context.INITIAL_CONTEXT_FACTORY, ctxFactory);
-        
+                
         try {
             
             ctx = new InitialContext(env);
             return ctx.lookup(name);
             
+        } catch(NameNotFoundException ex) {
+            return null;
         } catch(NamingException ex) {
             throw new Fabric3JmsException("Unable to lookup administered object", ex);
         } finally {
@@ -67,6 +64,7 @@ public class AdministeredObjectHelper {
                 throw new Fabric3JmsException("Unable to lookup administered object", ex);
             }
         }
+        
     }
 
 }

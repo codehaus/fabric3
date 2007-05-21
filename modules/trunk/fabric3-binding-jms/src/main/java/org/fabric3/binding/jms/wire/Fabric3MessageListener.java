@@ -35,6 +35,7 @@ import javax.jms.Session;
 
 import org.fabric3.binding.jms.Fabric3JmsException;
 import org.fabric3.binding.jms.model.CorrelationScheme;
+import org.fabric3.binding.jms.wire.helper.JmsHelper;
 import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.wire.Interceptor;
@@ -131,13 +132,7 @@ public class Fabric3MessageListener implements MessageListener {
         } catch(JMSException ex) {
             throw new Fabric3JmsException("Unable to send response", ex);
         } finally {
-            try {
-                if(connection != null) {
-                    connection.stop();
-                }
-            } catch(JMSException ex) {
-                throw new Fabric3JmsException("Unable to close connection", ex);
-            }
+            JmsHelper.closeQuietly(connection);
         }
     }
 

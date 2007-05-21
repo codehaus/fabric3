@@ -19,6 +19,8 @@
 
 package org.fabric3.binding.jms.wire.helper;
 
+import java.util.Hashtable;
+
 import javax.jms.ConnectionFactory;
 
 import org.fabric3.binding.jms.model.ConnectionFactoryDefinition;
@@ -28,7 +30,7 @@ import org.fabric3.binding.jms.model.ConnectionFactoryDefinition;
  * 
  * @version $Revison$ $Date$
  */
-public class ConnectionFactoryHelper extends AdministeredObjectHelper {
+public class ConnectionFactoryHelper {
     
     /**
      * Utility class constructor.
@@ -44,12 +46,12 @@ public class ConnectionFactoryHelper extends AdministeredObjectHelper {
      * @param ctxFactory Initial context factory.
      * @return JMS destination.
      */
-    public static ConnectionFactory getConnectionFactory(ConnectionFactoryDefinition definition, String providerUrl, String ctxFactory) {
+    public static ConnectionFactory getConnectionFactory(ConnectionFactoryDefinition definition, Hashtable<String, String> env) {
         
         switch(definition.getCreate()) {
             case ifnotexist:
             case never:
-                return  (ConnectionFactory) lookup(definition.getName(), providerUrl, ctxFactory);
+                return  (ConnectionFactory) JndiHelper.lookup(definition.getName(), env);
             case always:
                 throw new UnsupportedOperationException("Not supported yet");
             default:

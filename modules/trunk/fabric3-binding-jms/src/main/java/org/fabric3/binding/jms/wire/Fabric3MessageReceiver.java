@@ -28,6 +28,7 @@ import javax.jms.MessageConsumer;
 import javax.jms.Session;
 
 import org.fabric3.binding.jms.Fabric3JmsException;
+import org.fabric3.binding.jms.wire.helper.JmsHelper;
 
 /**
  * Message listeher for service requests.
@@ -83,13 +84,7 @@ public class Fabric3MessageReceiver {
         } catch(JMSException ex) {
             throw new Fabric3JmsException("Unable to receive response", ex);
         } finally {
-            try {
-                if(connection != null) {
-                    connection.stop();
-                }
-            } catch(JMSException ex) {
-                throw new Fabric3JmsException("Unable to close connection", ex);
-            }
+            JmsHelper.closeQuietly(connection);
         }
         
     }

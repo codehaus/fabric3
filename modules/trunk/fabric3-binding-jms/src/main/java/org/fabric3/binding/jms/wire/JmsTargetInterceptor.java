@@ -30,6 +30,7 @@ import javax.jms.Session;
 
 import org.fabric3.binding.jms.Fabric3JmsException;
 import org.fabric3.binding.jms.model.CorrelationScheme;
+import org.fabric3.binding.jms.wire.helper.JmsHelper;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.spi.wire.MessageImpl;
@@ -133,11 +134,7 @@ public class JmsTargetInterceptor implements Interceptor {
         } catch(JMSException ex) {
             throw new Fabric3JmsException("Unable to receive response", ex);
         } finally {
-            try {
-                connection.stop();
-            } catch(JMSException ex) {
-                throw new Fabric3JmsException("Unable to close connection", ex);
-            }
+            JmsHelper.closeQuietly(connection);
         }
         
     }
