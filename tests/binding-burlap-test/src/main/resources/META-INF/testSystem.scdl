@@ -27,12 +27,6 @@
 
     <!-- Include burlap extension SCDL -->
     <include name="org.fabric3.binding.BurlapExtension"
-             scdlResource="META-INF/burlap.scdl"/>
-             
-    <!-- Jetty service -->
-    <component name="JettyService">
-            <system:implementation.system class="org.fabric3.jetty.JettyServiceImpl"/>
-    </component>
-    
+             scdlResource="META-INF/jms.scdl"/>
              
 </composite>
