@@ -41,7 +41,7 @@ under the License.
 		<dependency>
 			<groupId>org.apache.activemq</groupId>
 			<artifactId>activemq-core</artifactId>
-			<version>4.1.0-incubator</version>
+			<version>4.1.1</version>
 		</dependency>
 		
 	</dependencies>
@@ -93,7 +93,7 @@ under the License.
 						<dependency>
 							<groupId>org.apache.activemq</groupId>
 							<artifactId>activemq-core</artifactId>
-							<version>4.1.0-incubator</version>
+							<version>4.1.1</version>
 						</dependency>
 					</extensions>
 				</configuration>
