@@ -33,6 +33,7 @@
     <!-- JMS Wire Attacher -->
     <component name="JmsWireAttacher">
         <system:implementation.system class="org.fabric3.binding.jms.wire.JmsWireAttacher"/>
+        <property name="receiverThreads">10</property>
     </component>
     
 </composite>
