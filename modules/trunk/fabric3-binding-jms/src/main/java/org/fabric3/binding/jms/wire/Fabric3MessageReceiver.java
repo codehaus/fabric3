@@ -70,12 +70,12 @@ public class Fabric3MessageReceiver {
         try {
             
             connection = connectionFactory.createConnection();
-            Session session = connection.createSession(true, Session.AUTO_ACKNOWLEDGE);
+            Session session = connection.createSession(true, Session.SESSION_TRANSACTED);
             
             String selector = "JMSCorrelationID = '" + correlationId + "'";
             MessageConsumer consumer = session.createConsumer(destination, selector);
             connection.start();
-            
+
             Message message = consumer.receive();
             session.commit();
             

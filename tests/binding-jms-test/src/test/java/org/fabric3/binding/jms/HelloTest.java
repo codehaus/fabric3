@@ -18,34 +18,14 @@
  */
 package org.fabric3.binding.jms;
 
-import org.apache.activemq.broker.BrokerService;
-import org.fabric3.binding.jms.HelloClient;
-import org.osoa.sca.annotations.Reference;
-
 import junit.framework.TestCase;
+
+import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Revision$ $Date$
  */
 public class HelloTest extends TestCase {
-
-    private BrokerService brokerService;
-    /**
-     * @see junit.framework.TestCase#setUp()
-     */
-    @Override
-    protected void setUp() throws Exception {
-        brokerService = new BrokerService();
-        brokerService.start();
-    }
-
-    /**
-     * @see junit.framework.TestCase#tearDown()
-     */
-    @Override
-    protected void tearDown() throws Exception {
-        brokerService.stop();
-    }
 
     private @Reference HelloClient helloClient;
 

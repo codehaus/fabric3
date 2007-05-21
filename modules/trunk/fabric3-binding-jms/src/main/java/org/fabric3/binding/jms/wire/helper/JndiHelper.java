@@ -53,6 +53,7 @@ public class JndiHelper {
             Thread.currentThread().setContextClassLoader(JndiHelper.class.getClassLoader());
             
             ctx = new InitialContext(env);
+            
             return ctx.lookup(name);
             
         } catch(NameNotFoundException ex) {

@@ -25,11 +25,11 @@
             correlationScheme="RequestMsgIDToCorrelID" 
             jndiURL="vm://localhost" 
             initialContextFactory="org.apache.activemq.jndi.ActiveMQInitialContextFactory">
-            <destination name="serviceQueue" type="queue" create="never"/>
-            <connectionFactory name="connectionFactory" create="never"/>
+            <destination name="serviceQueue" type="queue" create="always"/>
+            <connectionFactory name="QueueConnectionFactory" create="never"/>
             <response>
-                <destination name="clientQueue" type="queue" create="never"/>
-                <connectionFactory name="connectionFactory" create="never"/>
+                <destination name="clientQueue" type="queue" create="always"/>
+                <connectionFactory name="QueueConnectionFactory" create="never"/>
             </response>
         </binding.jms>
     </service>
@@ -40,11 +40,11 @@
             correlationScheme="RequestMsgIDToCorrelID" 
             jndiURL="vm://localhost" 
             initialContextFactory="org.apache.activemq.jndi.ActiveMQInitialContextFactory">
-            <destination name="clientQueue" type="queue" create="never"/>
-            <connectionFactory name="connectionFactory" create="never"/>
+            <destination name="serviceQueue" type="queue" create="always"/>
+            <connectionFactory name="QueueConnectionFactory" create="never"/>
             <response>
-                <destination name="serviceQueue" type="queue" create="never"/>
-                <connectionFactory name="connectionFactory" create="never"/>
+                <destination name="clientQueue" type="queue" create="always"/>
+                <connectionFactory name="QueueConnectionFactory" create="never"/>
             </response>
         </binding.jms>
     </reference>

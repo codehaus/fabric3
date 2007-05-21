@@ -100,7 +100,7 @@ public class Fabric3MessageListener implements MessageListener {
         Connection connection = null;
         
         try {
-            
+
             String opName = request.getStringProperty("scaOperationName");
             Interceptor interceptor = ops.get(opName).getValue().getHeadInterceptor();
             
@@ -110,7 +110,7 @@ public class Fabric3MessageListener implements MessageListener {
             org.fabric3.spi.wire.Message outMessage = interceptor.invoke(inMessage);
             
             connection = connectionFactory.createConnection();
-            Session session = connection.createSession(true, Session.AUTO_ACKNOWLEDGE);
+            Session session = connection.createSession(true, Session.SESSION_TRANSACTED);
             
             MessageProducer producer = session.createProducer(destination);
             Message response = session.createObjectMessage((Serializable) outMessage.getBody());

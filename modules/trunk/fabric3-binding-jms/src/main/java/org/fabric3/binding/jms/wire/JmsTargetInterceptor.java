@@ -106,7 +106,7 @@ public class JmsTargetInterceptor implements Interceptor {
         try {
             
             connection = connectionFactory.createConnection();
-            Session session = connection.createSession(true, Session.AUTO_ACKNOWLEDGE);
+            Session session = connection.createSession(true, Session.SESSION_TRANSACTED);
             
             MessageProducer producer = session.createProducer(destination);
             

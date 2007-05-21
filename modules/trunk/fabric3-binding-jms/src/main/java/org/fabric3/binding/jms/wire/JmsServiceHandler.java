@@ -94,7 +94,7 @@ public class JmsServiceHandler {
 
             connection = connectionFactory.createConnection();
             for (int i = 0; i < receiverThreads; i++) {
-                Session session = connection.createSession(true, Session.AUTO_ACKNOWLEDGE);
+                Session session = connection.createSession(true, Session.SESSION_TRANSACTED);
                 MessageConsumer consumer = session.createConsumer(destination);
                 consumer.setMessageListener(messageListener);
                 sessions.add(session);

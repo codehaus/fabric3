@@ -38,11 +38,6 @@ under the License.
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.activemq</groupId>
-			<artifactId>activemq-core</artifactId>
-			<version>4.1.1</version>
-		</dependency>	
 	</dependencies>
 	
 	<build>
@@ -93,16 +88,6 @@ under the License.
 							<groupId>org.apache.activemq</groupId>
 							<artifactId>activemq-core</artifactId>
 							<version>4.1.1</version>
-						</dependency>
-						<dependency>
-							<groupId>commons-logging</groupId>
-							<artifactId>commons-logging</artifactId>
-							<version>1.1</version>
-						</dependency>
-						<dependency>
-							<groupId>log4j</groupId>
-							<artifactId>log4j</artifactId>
-							<version>1.2.8</version>
 						</dependency>
 					</extensions>
 				</configuration>
