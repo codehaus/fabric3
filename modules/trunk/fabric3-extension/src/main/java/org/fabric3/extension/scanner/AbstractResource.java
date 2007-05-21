@@ -1,11 +1,11 @@
-package org.fabric3.extension.scanner.resource;
+package org.fabric3.extension.scanner;
 
 import java.io.IOException;
 
 import org.fabric3.extension.scanner.FileSystemResource;
 
 /**
- * Base resource implementation
+ * Base file system resource implementation
  *
  * @version $Rev$ $Date$
  */

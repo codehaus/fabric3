@@ -1,14 +1,14 @@
-package org.fabric3.extension.scanner.factory;
+package org.fabric3.fabric.services.scanner.factory;
 
 import java.io.File;
 
 import org.fabric3.extension.scanner.FileSystemResource;
 import org.fabric3.extension.scanner.FileSystemResourceFactory;
-import org.fabric3.extension.scanner.resource.DirectoryResource;
-import org.fabric3.extension.scanner.resource.FileResource;
+import org.fabric3.fabric.services.scanner.resource.DirectoryResource;
+import org.fabric3.fabric.services.scanner.resource.FileResource;
 
 /**
- * Creates a FileResource for SCA contribution jars
+ * Creates a FileResource for exploded SCA contribution jars
  *
  * @version $Rev$ $Date$
  */

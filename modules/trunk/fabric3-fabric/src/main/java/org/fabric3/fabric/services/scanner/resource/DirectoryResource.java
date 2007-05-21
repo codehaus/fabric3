@@ -1,4 +1,4 @@
-package org.fabric3.extension.scanner.resource;
+package org.fabric3.fabric.services.scanner.resource;
 
 import java.io.IOException;
 import java.security.MessageDigest;
@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.fabric3.extension.scanner.FileSystemResource;
+import org.fabric3.extension.scanner.AbstractResource;
 
 /**
  * Represents a directory that is to be contributed to a domain

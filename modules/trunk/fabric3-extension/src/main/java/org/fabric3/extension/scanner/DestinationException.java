@@ -3,6 +3,8 @@ package org.fabric3.extension.scanner;
 import org.fabric3.host.Fabric3Exception;
 
 /**
+ * Indicates an error processing an event by a DirectoryScannerDestination
+ *
  * @version $Rev$ $Date$
  */
 public class DestinationException extends Fabric3Exception {

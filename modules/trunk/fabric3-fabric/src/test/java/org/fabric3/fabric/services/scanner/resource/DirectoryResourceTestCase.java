@@ -1,4 +1,4 @@
-package org.fabric3.extension.scanner.resource;
+package org.fabric3.fabric.services.scanner.resource;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
@@ -13,8 +13,6 @@ public class DirectoryResourceTestCase extends TestCase {
     /**
      * Tests tracking changes. Simulates an underlying file remaining unchanged for the first check and changing for the
      * second.
-     *
-     * @throws Exception
      */
     public void testChanges() throws Exception {
         DirectoryResource resource = new DirectoryResource("test");

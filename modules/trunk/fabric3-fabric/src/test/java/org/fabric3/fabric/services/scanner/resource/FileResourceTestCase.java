@@ -1,4 +1,4 @@
-package org.fabric3.extension.scanner.resource;
+package org.fabric3.fabric.services.scanner.resource;
 
 import java.io.File;
 import java.io.FileOutputStream;

@@ -45,7 +45,6 @@ import org.osoa.sca.annotations.Service;
 
 import org.fabric3.extension.scanner.DestinationException;
 import org.fabric3.extension.scanner.DirectoryScannerDestination;
-import org.fabric3.extension.scanner.DirectoryScannerMonitor;
 import org.fabric3.extension.scanner.FileSystemResource;
 import org.fabric3.extension.scanner.FileSystemResourceFactoryRegistry;
 import org.fabric3.fabric.services.xstream.XStreamFactory;
