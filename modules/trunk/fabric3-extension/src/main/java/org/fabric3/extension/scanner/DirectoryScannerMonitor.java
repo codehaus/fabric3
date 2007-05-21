@@ -26,9 +26,27 @@ package org.fabric3.extension.scanner;
 public interface DirectoryScannerMonitor {
 
     /**
-     * Called when an error is encountered processing a contribution
+     * Called when an error is encountered processing an entry
      *
      * @param e the error
      */
-    void contributionError(Throwable e);
+    void error(Throwable e);
+
+    /**
+     * Called when an error is encountered processing an entry
+     *
+     * @param message the error-specific message
+     * @param e       the error
+     */
+    void error(String message, Throwable e);
+
+    /**
+     * Called when an error is encountered processing an entry
+     *
+     * @param message    the error-specific message
+     * @param identifier an identifier
+     * @param e          the error
+     */
+    void error(String message, String identifier, Throwable e);
+
 }

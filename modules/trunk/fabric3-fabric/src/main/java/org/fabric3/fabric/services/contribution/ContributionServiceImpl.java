@@ -31,7 +31,10 @@ import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Service;
 
+import org.fabric3.extension.scanner.DestinationException;
+import org.fabric3.extension.scanner.DirectoryScannerDestination;
 import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionNotFoundException;
@@ -47,8 +50,9 @@ import org.fabric3.spi.services.contribution.MetaDataStore;
  *
  * @version $Rev$ $Date$
  */
+@Service(ContributionService.class)
 @EagerInit
-public class ContributionServiceImpl implements ContributionService {
+public class ContributionServiceImpl implements ContributionService, DirectoryScannerDestination {
     private final ArchiveStore archiveStore;
     private final MetaDataStore metaDataStore;
     private final ContributionProcessorRegistry processorRegistry;
@@ -62,7 +66,7 @@ public class ContributionServiceImpl implements ContributionService {
         this.processorRegistry = processorRegistry;
     }
 
-    public URI contribute(URL url) throws ContributionException, IOException {
+    public URI contribute(URL url, byte[] checksum) throws ContributionException, IOException {
         URI source;
         try {
             source = url.toURI();
@@ -75,25 +79,25 @@ public class ContributionServiceImpl implements ContributionService {
             // FIXME this should be extensible
             if (url.toExternalForm().endsWith(".jar")) {
                 contentType = Constants.JAR_CONTENT_TYPE;
-            }else {
+            } else {
                 throw new AssertionError();
             }
 
         }
         InputStream is = urlConnection.getInputStream();
         try {
-            return contribute(source, contentType, is);
+            return contribute(source, contentType, checksum, is);
         } finally {
             is.close();
         }
     }
 
-    public URI contribute(URI sourceUri, String contentType, InputStream contributionStream)
+    public URI contribute(URI sourceUri, String contentType, byte[] checksum, InputStream contributionStream)
             throws ContributionException, IOException {
-        // store the contribution 
+        // store the contribution
         URI contributionUri = URI.create(Constants.URI_PREFIX + UUID.randomUUID());
         URL locationURL = archiveStore.store(sourceUri, contributionStream);
-        Contribution contribution = new Contribution(contributionUri, locationURL);
+        Contribution contribution = new Contribution(contributionUri, locationURL, checksum);
         //process the contribution
         InputStream stream = locationURL.openStream();
         processorRegistry.processContent(contribution, contentType, contributionUri, stream);
@@ -118,6 +122,36 @@ public class ContributionServiceImpl implements ContributionService {
 
     public void remove(URI contributionUri) throws ContributionException {
         throw new UnsupportedOperationException();
+    }
+
+    public URI addResource(URL location, byte[] checksum) throws DestinationException {
+        try {
+            return contribute(location, checksum);
+        } catch (ContributionException e) {
+            throw new DestinationException(e);
+        } catch (IOException e) {
+            throw new DestinationException(e);
+        }
+    }
+
+    public void updateResource(URI artifactUri, URL location, byte[] checksum) throws DestinationException {
+        throw new UnsupportedOperationException();
+    }
+
+    public void removeResource(URI contributionUri) throws DestinationException {
+        throw new UnsupportedOperationException();
+    }
+
+    public boolean resourceExists(URI uri) {
+        return metaDataStore.find(uri) != null;
+    }
+
+    public byte[] getResourceChecksum(URI uri) {
+        Contribution contribution = metaDataStore.find(uri);
+        if (contribution == null) {
+            return null;
+        }
+        return contribution.getChecksum();
     }
 
     public <T> T resolve(URI contributionUri, Class<T> definitionType, QName name) {

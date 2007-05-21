@@ -28,7 +28,7 @@
 
     <!-- Contribution Service -->
     <component name="contributionDirectoryWatcher" initLevel="100">
-        <system:implementation.system class="org.fabric3.extension.scanner.DirectoryScanner"/>
+        <system:implementation.system class="org.fabric3.fabric.services.scanner.DirectoryScanner"/>
         <property name="path">target/deployables</property>
     </component>
     <component name="contributionService" initLevel="90">

@@ -25,9 +25,8 @@ public class JarContributionProcessorTestCase extends TestCase {
 
     public void testProcess() throws Exception {
         URI uri = URI.create("test");
-        Contribution contribution = new Contribution(uri);
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        contribution.setLocation(cl.getResource("./repository/test.jar"));
+        Contribution contribution = new Contribution(uri, cl.getResource("./repository/test.jar"), "test".getBytes());
         processor.processContent(contribution, uri, cl.getResourceAsStream("./repository/test.jar"));
         EasyMock.verify(loaderRegistry);
         assertNotNull(contribution.getManifest());

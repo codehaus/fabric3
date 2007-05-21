@@ -37,25 +37,28 @@ public interface ContributionService {
      * resource or, if that is undefined, by some implementation-specific means (such as mapping an extension in the
      * URL's path).
      *
-     * @param source the location of the resource containing the artifact
+     * @param source   the location of the resource containing the artifact
+     * @param checksum the resource checksum
      * @return a URI that uniquely identifies this contribution within the SCA Domain
      * @throws ContributionException if there was a problem with the contribution
      * @throws IOException           if there was a problem reading the resource
      */
-    URI contribute(URL source) throws ContributionException, IOException;
+    URI contribute(URL source, byte[] checksum) throws ContributionException, IOException;
 
     /**
      * Contribute an artifact to the SCA Domain.
      *
      * @param sourceUri   an identifier for the source of this contribution
      * @param contentType the content type to process
+     * @param checksum    the resource checksum
      * @param stream      a stream containing the resource being contributed; the stream will not be closed but the read
      *                    position after the call is undefined
      * @return a URI that uniquely identifies this contribution within the SCA Domain
      * @throws ContributionException if there was a problem with the contribution
      * @throws IOException           if there was a problem reading the stream
      */
-    URI contribute(URI sourceUri, String contentType, InputStream stream) throws ContributionException, IOException;
+    URI contribute(URI sourceUri, String contentType, byte[] checksum, InputStream stream)
+            throws ContributionException, IOException;
 
     /**
      * Returns a list of deployable URIs in a contribution

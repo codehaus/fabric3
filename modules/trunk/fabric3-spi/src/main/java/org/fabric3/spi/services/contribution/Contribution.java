@@ -39,6 +39,7 @@ public class Contribution implements Serializable {
     private static final long serialVersionUID = 2511879480122631196L;
     private final URI uri;
     private URL location;
+    private byte[] checksum;
     private ContributionManifest manifest;
     private Map<QName, Map<Object, CompositeComponentType>> types =
             new HashMap<QName, Map<Object, CompositeComponentType>>();
@@ -47,9 +48,17 @@ public class Contribution implements Serializable {
         this.uri = uri;
     }
 
-    public Contribution(URI uri, URL location) {
+    /**
+     * Instantiates a new Contribution instance
+     *
+     * @param uri      the contribution URI
+     * @param location a dereferenceble URL for the contribution archive
+     * @param checksum the checksum for the contribution artifact
+     */
+    public Contribution(URI uri, URL location, byte[] checksum) {
         this.uri = uri;
         this.location = location;
+        this.checksum = checksum;
     }
 
     /**
@@ -71,12 +80,12 @@ public class Contribution implements Serializable {
     }
 
     /**
-     * Sets the dereferenceable URL for the contribution artifact
+     * Returns the contribution artifact checksum.
      *
-     * @param location a dereferenceable URL for the contribution artifact
+     * @return the contribution artifact checksum
      */
-    public void setLocation(URL location) {
-        this.location = location;
+    public byte[] getChecksum() {
+        return checksum;
     }
 
     /**

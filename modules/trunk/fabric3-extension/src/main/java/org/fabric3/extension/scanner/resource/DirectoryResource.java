@@ -1,6 +1,8 @@
 package org.fabric3.extension.scanner.resource;
 
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +13,7 @@ import org.fabric3.extension.scanner.FileSystemResource;
  *
  * @version $Rev$ $Date$
  */
-public class DirectoryResource implements FileSystemResource {
+public class DirectoryResource extends AbstractResource {
     private final String name;
     // the list of resources to track changes against
     private List<FileSystemResource> resources;
@@ -25,22 +27,27 @@ public class DirectoryResource implements FileSystemResource {
         return name;
     }
 
-    public boolean isChanged() throws IOException {
-        for (FileSystemResource resource : resources) {
-            if (resource.isChanged()) {
-                return true;
-            }
-        }
-        return false;
+    public void addResource(FileSystemResource resource) {
+        resources.add(resource);
     }
 
     public void reset() throws IOException {
         for (FileSystemResource resource : resources) {
             resource.reset();
         }
+        checksumValue = checksum();
     }
 
-    public void addResource(FileSystemResource resource) {
-        resources.add(resource);
+    protected byte[] checksum() {
+        try {
+            MessageDigest checksum = MessageDigest.getInstance("MD5");
+            for (FileSystemResource resource : resources) {
+                checksum.update(resource.getChecksum());
+            }
+            return checksum.digest();
+        } catch (NoSuchAlgorithmException e) {
+            throw new AssertionError();
+        }
     }
+
 }
