@@ -23,7 +23,9 @@ import java.util.Hashtable;
 
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
+import javax.naming.NameNotFoundException;
 
+import org.fabric3.binding.jms.Fabric3JmsException;
 import org.fabric3.binding.jms.model.DestinationDefinition;
 import org.fabric3.binding.jms.wire.helper.JndiHelper;
 
@@ -39,7 +41,11 @@ public class NeverDestinationStrategy implements DestinationStrategy {
     public Destination getDestination(DestinationDefinition definition,
                                       ConnectionFactory cf,
                                       Hashtable<String, String> env) {
-        return (Destination) JndiHelper.lookup(definition.getName(), env);
+        try {
+            return (Destination) JndiHelper.lookup(definition.getName(), env);
+        } catch(NameNotFoundException ex) {
+            throw new Fabric3JmsException(definition.getName() + " not found", ex);
+        }
     }
 
 }

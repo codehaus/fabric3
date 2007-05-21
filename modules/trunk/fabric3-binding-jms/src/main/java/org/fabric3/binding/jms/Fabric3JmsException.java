@@ -40,4 +40,13 @@ public class Fabric3JmsException extends RuntimeException {
         super(message, cause);
     }
 
+    /**
+     * Initializes the message.
+     * 
+     * @param message Message for the exception.
+     */
+    public Fabric3JmsException(String message) {
+        super(message);
+    }
+
 }

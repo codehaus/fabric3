@@ -23,17 +23,16 @@ import java.util.Hashtable;
 
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
+import javax.naming.NameNotFoundException;
 
 import org.fabric3.binding.jms.model.DestinationDefinition;
+import org.fabric3.binding.jms.wire.helper.JndiHelper;
 
 /**
  * The destination is looked up, if not found it is created.
  *
  */
 public class IfNotExistDestinationStrategy implements DestinationStrategy {
-    
-    /** Never strategy. */
-    private DestinationStrategy never = new NeverDestinationStrategy();
     
     /** Always strategy. */
     private DestinationStrategy always = new AlwaysDestinationStrategy();
@@ -44,13 +43,11 @@ public class IfNotExistDestinationStrategy implements DestinationStrategy {
     public Destination getDestination(DestinationDefinition definition,
                                       ConnectionFactory cf,
                                       Hashtable<String, String> env) {
-        
-        Destination destination = never.getDestination(definition, cf, env);
-        if(destination == null) {
-            destination = always.getDestination(definition, cf, env);
+        try {
+            return (Destination) JndiHelper.lookup(definition.getName(), env);
+        } catch(NameNotFoundException ex) {
+            return always.getDestination(definition, cf, env);
         }
-        
-        return destination;
         
     }
 

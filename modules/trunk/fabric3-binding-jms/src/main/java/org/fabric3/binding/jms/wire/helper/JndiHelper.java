@@ -42,20 +42,25 @@ public class JndiHelper {
     /*
      * Looks up the administered object.
      */
-    public static Object lookup(String name, Hashtable<String, String> env) {
+    public static Object lookup(String name, Hashtable<String, String> env) throws NameNotFoundException {
+        
+        ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
         
         Context ctx = null;
                 
         try {
             
+            Thread.currentThread().setContextClassLoader(JndiHelper.class.getClassLoader());
+            
             ctx = new InitialContext(env);
             return ctx.lookup(name);
             
         } catch(NameNotFoundException ex) {
-            return null;
+            throw ex;
         } catch(NamingException ex) {
             throw new Fabric3JmsException("Unable to lookup administered object", ex);
         } finally {
+            Thread.currentThread().setContextClassLoader(oldCl);
             try {
                 if(ctx != null) {
                     ctx.close();

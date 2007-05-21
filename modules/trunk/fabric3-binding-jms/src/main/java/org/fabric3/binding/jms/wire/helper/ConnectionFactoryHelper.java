@@ -22,7 +22,9 @@ package org.fabric3.binding.jms.wire.helper;
 import java.util.Hashtable;
 
 import javax.jms.ConnectionFactory;
+import javax.naming.NameNotFoundException;
 
+import org.fabric3.binding.jms.Fabric3JmsException;
 import org.fabric3.binding.jms.model.ConnectionFactoryDefinition;
 
 /**
@@ -48,14 +50,18 @@ public class ConnectionFactoryHelper {
      */
     public static ConnectionFactory getConnectionFactory(ConnectionFactoryDefinition definition, Hashtable<String, String> env) {
         
-        switch(definition.getCreate()) {
-            case ifnotexist:
-            case never:
-                return  (ConnectionFactory) JndiHelper.lookup(definition.getName(), env);
-            case always:
-                throw new UnsupportedOperationException("Not supported yet");
-            default:
-                throw new IllegalArgumentException("Unexpected create option");
+        try {
+            switch(definition.getCreate()) {
+                case ifnotexist:
+                case never:
+                    return  (ConnectionFactory) JndiHelper.lookup(definition.getName(), env);
+                case always:
+                    throw new UnsupportedOperationException("Not supported yet");
+                default:
+                    throw new IllegalArgumentException("Unexpected create option");
+            }
+        } catch(NameNotFoundException ex) {
+            throw new Fabric3JmsException(definition.getName() + " not found", ex);
         }
         
     }
