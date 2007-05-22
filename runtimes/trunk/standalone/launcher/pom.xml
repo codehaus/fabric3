@@ -32,6 +32,14 @@
             <groupId>org.codehaus.fabric3.standalone</groupId>
             <artifactId>standalone-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.fabric3.spec</groupId>
+            <artifactId>sca-api-r1.0</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
