@@ -102,7 +102,7 @@ public class Fabric3MessageListener implements MessageListener {
         try {
 
             String opName = request.getStringProperty("scaOperationName");
-            Interceptor interceptor = ops.get(opName).getValue().getHeadInterceptor();
+            Interceptor interceptor = getInterceptor(opName);
             
             Object payload = ((ObjectMessage) request).getObject();
             
@@ -134,6 +134,23 @@ public class Fabric3MessageListener implements MessageListener {
         } finally {
             JmsHelper.closeQuietly(connection);
         }
+    }
+
+    /*
+     * Finds the matching interceptor.
+     */
+    private Interceptor getInterceptor(String opName) {
+        
+        if(ops.size() == 1) {
+            return ops.values().iterator().next().getValue().getHeadInterceptor();
+        } else if(opName != null && ops.containsKey(opName)) {
+            return ops.get(opName).getValue().getHeadInterceptor();
+        } else if(ops.containsKey("onMessage")) {
+            return ops.get("onMessage").getValue().getHeadInterceptor();
+        } else {
+            throw new Fabric3JmsException("Unable to match operation on the service contract");
+        }
+        
     }
 
 }
