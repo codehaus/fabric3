@@ -18,8 +18,6 @@
  */
 package org.fabric3.binding.jms.wire;
 
-import java.io.Serializable;
-
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
@@ -110,7 +108,8 @@ public class JmsTargetInterceptor implements Interceptor {
             
             MessageProducer producer = session.createProducer(destination);
             
-            javax.jms.Message jmsMessage = session.createObjectMessage((Serializable) message.getBody());
+            Object[] payload = (Object[]) message.getBody();
+            javax.jms.Message jmsMessage = session.createObjectMessage(payload);
             jmsMessage.setStringProperty("scaOperationName", methodName);
             
             producer.send(jmsMessage);

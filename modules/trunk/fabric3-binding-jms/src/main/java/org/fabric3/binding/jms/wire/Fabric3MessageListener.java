@@ -104,7 +104,8 @@ public class Fabric3MessageListener implements MessageListener {
             String opName = request.getStringProperty("scaOperationName");
             Interceptor interceptor = getInterceptor(opName);
             
-            Object payload = ((ObjectMessage) request).getObject();
+            ObjectMessage objectMessage = (ObjectMessage) request;
+            Object[] payload = (Object[]) objectMessage.getObject();
             
             org.fabric3.spi.wire.Message inMessage = new MessageImpl(payload, false, new SimpleWorkContext(), wire);
             org.fabric3.spi.wire.Message outMessage = interceptor.invoke(inMessage);
