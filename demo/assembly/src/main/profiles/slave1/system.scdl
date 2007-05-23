@@ -27,117 +27,14 @@
            name="org.fabric3.launcher.System"
            autowire="true">
 
-    <!-- Component that provides the Deployer service -->
-    <component name="deployer">
-        <system:implementation.system class="org.fabric3.fabric.deployer.DeployerImpl"/>
-    </component>
+    <!-- include physical deployment configuration -->
+    <include name="org.fabric3.fabric.Common" scdlResource="org/fabric3/fabric/common.scdl"/>
 
-    <component name="distributedAssembly">
-        <system:implementation.system class="org.fabric3.fabric.assembly.DistributedAssemblyImpl"/>
-    </component>
+    <!-- include exception formatters  -->
+    <include name="org.fabric3.fabric.Formatters" scdlResource="org/fabric3/fabric/formatters.scdl"/>
 
-    <component name="wireResolver">
-        <system:implementation.system class="org.fabric3.fabric.assembly.resolver.DefaultWireResolver"/>
-    </component>
-
-    <component name="promotionNormalizer">
-        <system:implementation.system class="org.fabric3.fabric.assembly.normalizer.PromotionNormalizerImpl"/>
-    </component>
-
-    <component name="runtimeRoutingService">
-        <system:implementation.system class="org.fabric3.fabric.services.routing.RuntimeRoutingService"/>
-    </component>
-
-    <component name="runtimeRoutingService">
-        <system:implementation.system class="org.fabric3.fabric.services.routing.RuntimeRoutingService"/>
-    </component>
-
-    <component name="generatorRegistry">
-        <system:implementation.system class="org.fabric3.fabric.generator.GeneratorRegistryImpl"/>
-    </component>
-
-    <component name="javaGenerator">
-        <system:implementation.system class="org.fabric3.fabric.implementation.java.JavaComponentGenerator"/>
-    </component>
-
-    <component name="launchedGenerator">
-        <system:implementation.system
-                class="org.fabric3.runtime.standalone.host.implementation.launched.LaunchedComponentGenerator"/>
-    </component>
-
-    <component name="physicalComponentBuilderRegistry">
-        <system:implementation.system
-                class="org.fabric3.fabric.builder.component.DefaultComponentBuilderRegistry"/>
-    </component>
-
-    <component name="javaPhysicalComponentBuilder">
-        <system:implementation.system class="org.fabric3.fabric.implementation.java.JavaComponentBuilder"/>
-    </component>
-
-    <component name="wireAttacherRegistryImpl">
-        <system:implementation.system class="org.fabric3.fabric.builder.component.WireAttacherRegistryImpl"/>
-    </component>
-
-    <component name="defaultIFProviderBuilderRegistry">
-        <system:implementation.system
-                class="org.fabric3.fabric.component.instancefactory.impl.DefaultIFProviderBuilderRegistry"/>
-    </component>
-
-    <component name="reflectiveIFProviderBuilder">
-        <system:implementation.system
-                class="org.fabric3.fabric.component.instancefactory.impl.ReflectiveIFProviderBuilder"/>
-    </component>
-
-    <!-- JXTA Messaging Service -->
-    <component name="jxtaMessagingService">
-        <system:implementation.system class="org.fabric3.messaging.jxta.JxtaMessagingService"/>  
-        <property name="tcpPort">2001</property>
-    </component>
-    
-    <!-- JXTA Network Configurator -->
-    <component name="jxtaNetworkConfigurator">
-        <system:implementation.system class="net.jxta.platform.NetworkConfigurator"/>
-    </component>
-
-    <!-- Wire service -->
-    <component name="proxyService">
-        <system:implementation.system class="org.fabric3.fabric.wire.jdk.JDKProxyService"/>
-    </component>
-
-    <!-- Resource host registry -->
-    <component name="resourceHostRegistry">
-        <system:implementation.system class="org.fabric3.fabric.services.host.DelegatingResourceHostRegistry"/>
-    </component>
-
-    <!-- Loader and LoaderRegistry -->
-    <component name="loader">
-        <system:implementation.system class="org.fabric3.fabric.loader.LoaderRegistryImpl"/>
-    </component>
-
-    <!-- Introspector and IntrospectionRegistry -->
-    <component name="interfaceProcessorRegistry">
-        <system:implementation.system class="org.fabric3.fabric.implementation.IntrospectionRegistryImpl"/>
-    </component>
-
-    <!-- Connector infrastructure -->
-    <component name="connector">
-        <system:implementation.system class="org.fabric3.fabric.builder.ConnectorImpl"/>
-    </component>
-
-    <component name="interceptorBuilderRegistry">
-        <system:implementation.system
-                class="org.fabric3.fabric.builder.interceptor.InterceptorBuilderRegistryImpl"/>
-    </component>
-
-    <component name="wireAttacherRegistry">
-        <system:implementation.system
-                class="org.fabric3.fabric.builder.component.WireAttacherRegistryImpl"/>
-    </component>
-
-    <!-- Default scopes -->
-    <component name="scope.stateless">
-        <system:implementation.system class="org.fabric3.fabric.component.scope.StatelessScopeContainer"/>
-    </component>
+    <!-- include physical deployment configuration -->
+    <include name="org.fabric3.fabric.Physical" scdlResource="org/fabric3/fabric/physical.scdl"/>
 
     <!-- include loader configuration -->
     <include name="org.fabric3.fabric.Loader" scdlResource="org/fabric3/fabric/loader.scdl"/>
@@ -151,18 +48,33 @@
     <!-- include omposite implementation type -->
     <include name="org.fabric3.fabric.Composite" scdlResource="org/fabric3/fabric/composite.scdl"/>
 
-    <!-- System implementation type -->
-    <include name="org.fabric3.fabric.SystemImplementation" scdlResource="org/fabric3/fabric/systemImplementation.scdl"/>
-
     <!-- Pojo implementation type -->
     <include name="org.fabric3.fabric.PojoImplementation" scdlResource="org/fabric3/fabric/pojoImplementation.scdl"/>
+
+    <!-- System implementation type -->
+    <include name="org.fabric3.fabric.SystemImplementation" scdlResource="org/fabric3/fabric/systemImplementation.scdl"/>
 
     <!-- Java implementation type -->
     <include name="org.fabric3.fabric.JavaImplementation" scdlResource="org/fabric3/fabric/javaImplementation.scdl"/>
 
     <!-- include deployment configuration -->
     <include name="org.fabric3.fabric.Deployment" scdlResource="org/fabric3/fabric/deployment.scdl"/>
+
+    <!-- include transform configuration -->
+    <include name="org.fabric3.transform.Transform" scdlResource="org/fabric3/transform/transform.scdl"/>
+
+    <!-- JXTA Messaging Service -->
+    <component name="jxtaMessagingService">
+        <system:implementation.system class="org.fabric3.messaging.jxta.JxtaMessagingService"/>  
+        <property name="tcpPort">2001</property>
+    </component>
     
+    <!-- JXTA Network Configurator -->
+    <component name="jxtaNetworkConfigurator">
+        <system:implementation.system class="net.jxta.platform.NetworkConfigurator"/>
+    </component>
+
+
     <!-- service for resolving artifacts using Maven repositories -->
     <component name="artifactRepository">
         <system:implementation.system class="org.fabric3.maven.MavenArtifactRepository"/>
@@ -171,32 +83,6 @@
         -->
     </component>
 
-    <!-- WorkScheduler service -->
-    <component name="workManager">
-        <system:implementation.system
-                class="org.fabric3.fabric.services.work.jsr237.workmanager.ThreadPoolWorkManager"/>
-        <!-- JFM FIXME
-        <property name="poolSize">10</property>   -->
-    </component>
-
-    <component name="workSchCompositeContextImplTestCaseeduler">
-        <system:implementation.system class="org.fabric3.fabric.services.work.jsr237.Jsr237WorkScheduler"/>
-    </component>
-
-    <!-- component that scans the extension directory -->
-    <component name="directoryScanExtender" initLevel="90">
-        <system:implementation.system class="org.fabric3.runtime.standalone.host.DirectoryScanExtender"/>
-        <!-- JFM FIXME
-        <property name="path">extensions</property>
-        -->
-    </component>
-
-    <component name="artifactRepository">
-        <system:implementation.system class="org.fabric3.fabric.services.artifact.LocalMavenRepository"/>
-        <!-- JFM FIXME
-        <property name="repository">.m2/repository</property>
-        -->
-    </component>
 
     <component name="launchedLoader">
         <system:implementation.system class="org.fabric3.runtime.standalone.host.implementation.launched.LaunchedLoader"/>
@@ -204,10 +90,6 @@
 
     <component name="launchedComponentLoader">
         <system:implementation.system class="org.fabric3.runtime.standalone.host.implementation.launched.LaunchedComponentTypeLoader"/>
-    </component>
-
-    <component name="wiringExceptionFormatter">
-        <system:implementation.system class="org.fabric3.fabric.builder.WiringExceptionFormatter"/>
     </component>
 
     <component name="wiringExceptionFormatter">

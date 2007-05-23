@@ -103,19 +103,13 @@
     <component name="wiringExceptionFormatter">
         <system:implementation.system class="org.fabric3.fabric.builder.WiringExceptionFormatter"/>
     </component>
-
-    <component name="wiringExceptionFormatter">
-        <system:implementation.system class="org.fabric3.fabric.builder.WiringExceptionFormatter"/>
-    </component>
-
-    <component name="loaderExceptionFormatter">
-        <system:implementation.system class="org.fabric3.fabric.loader.LoaderExceptionFormatter"/>
-    </component>
-
-    <component name="incompatibleServiceContractExceptionFormatter">
-        <system:implementation.system class="org.fabric3.fabric.wire.IncompatibleServiceContractExceptionFormatter"/>
-    </component>
     
+    <!-- Marshhaler registry-->
+    <component name="marshallerRegistry">
+        <system:implementation.system
+                class="org.fabric3.fabric.marshaller.xstream.XStreamMarshallerRegistry"/>
+    </component>
+
     <!-- Console -->
     <include name="org.apache.tuscany.sca.console" scdlResource="org/fabric3/console/console.scdl"/>
     
