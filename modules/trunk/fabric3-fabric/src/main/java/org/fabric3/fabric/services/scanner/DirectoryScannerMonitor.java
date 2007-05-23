@@ -18,6 +18,8 @@
  */
 package org.fabric3.fabric.services.scanner;
 
+import org.fabric3.api.annotation.LogLevel;
+
 /**
  * Monitoring interface for the DirectoryScanner
  *
@@ -26,10 +28,43 @@ package org.fabric3.fabric.services.scanner;
 public interface DirectoryScannerMonitor {
 
     /**
+     * Called when a destination is notified of a new resource
+     *
+     * @param name the name of the resource
+     */
+    @LogLevel("DEBUG")
+    void add(String name);
+
+    /**
+     * Called when a destination is notified of a resource removal
+     *
+     * @param name the name of the resource
+     */
+    @LogLevel("DEBUG")
+    void remove(String name);
+
+    /**
+     * Called when a destination is notified of a resource update
+     *
+     * @param name the name of the resource
+     */
+    @LogLevel("DEBUG")
+    void update(String name);
+
+    /**
+     * Called when a resource has been processed
+     *
+     * @param name the name of the resource
+     */
+    @LogLevel("DEBUG")
+    void processed(String name);
+
+    /**
      * Called when an error is encountered processing an entry
      *
      * @param e the error
      */
+    @LogLevel("SEVERE")
     void error(Throwable e);
 
     /**
@@ -38,6 +73,7 @@ public interface DirectoryScannerMonitor {
      * @param message the error-specific message
      * @param e       the error
      */
+    @LogLevel("SEVERE")
     void error(String message, Throwable e);
 
     /**
@@ -47,6 +83,7 @@ public interface DirectoryScannerMonitor {
      * @param identifier an identifier
      * @param e          the error
      */
+    @LogLevel("SEVERE")
     void error(String message, String identifier, Throwable e);
 
 }
