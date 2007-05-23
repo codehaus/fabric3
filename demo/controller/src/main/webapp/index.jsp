@@ -25,7 +25,7 @@
 <%
     WebappRuntimeImpl runtime = (WebappRuntimeImpl) application.getAttribute("fabric3.runtime");
     Assembly assembly = runtime.getSystemComponent(Assembly.class,
-                                                   URI.create("sca://root.system/main/distributedAssembly"));
+                                                   URI.create("fabric3://./runtime/main/distributedAssembly"));
     LogicalComponent<CompositeImplementation> domain = assembly.getDomain();
 %>
 <html>

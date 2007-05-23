@@ -20,6 +20,7 @@ public final class ContributionUtil {
      * @return the filesystem path
      */
     public static String getDomainPath(URI uri) {
+        assert uri.getScheme() != null;
         StringBuilder buf = new StringBuilder(uri.getScheme());
         StringTokenizer path = new StringTokenizer(uri.getPath(), "/");
         while (path.hasMoreTokens()) {

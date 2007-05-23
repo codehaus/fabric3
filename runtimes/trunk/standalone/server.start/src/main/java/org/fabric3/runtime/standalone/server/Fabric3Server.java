@@ -123,7 +123,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
             bootstrapper.bootstrap(runtime, hostInfo.getBootClassLoader());
             // FIXME the classloader for the application should be in the PCS
             ClassLoaderRegistry classLoaderRegistry =
-                    runtime.getSystemComponent(ClassLoaderRegistry.class, URI.create("sca://root.system/main/ClassLoaderRegistry"));
+                    runtime.getSystemComponent(ClassLoaderRegistry.class, URI.create("fabric3://./runtime/main/ClassLoaderRegistry"));
             ClassLoader systemClassLoader = classLoaderRegistry.getClassLoader(URI.create("sca://./bootClassLoader"));
             classLoaderRegistry.register(URI.create("sca://./applicationClassLoader"), systemClassLoader);
             bootedRuntimes.put(profileName, runtime);

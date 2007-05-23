@@ -75,6 +75,7 @@
                 <include>org.codehaus.fabric3:fabric3-spi</include>
                 <include>javax.servlet:servlet-api</include>
                 <include>org.codehaus.woodstox:wstx-asl</include>
+                <include>stax:stax-api</include>
             </includes>
             <outputDirectory>lib</outputDirectory>
             <outputFileNameMapping>${artifactId}-${baseVersion}.${extension}</outputFileNameMapping>

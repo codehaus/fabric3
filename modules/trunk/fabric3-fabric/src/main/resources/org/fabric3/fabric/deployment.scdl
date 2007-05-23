@@ -27,50 +27,66 @@
            autowire="true">
 
     <!-- Contribution Service -->
-    <component name="contributionDirectoryWatcher" initLevel="100">
-        <system:implementation.system class="org.fabric3.fabric.services.scanner.DirectoryScanner"/>
-        <property name="path">target/deployables</property>
-    </component>
-    <component name="contributionService" initLevel="90">
+    <component name="ContributionService" initLevel="90">
         <system:implementation.system class="org.fabric3.fabric.services.contribution.ContributionServiceImpl"/>
     </component>
-    <component name="archiveStore" initLevel="40">
+    <component name="ArchiveStore" initLevel="40">
         <system:implementation.system class="org.fabric3.fabric.services.contribution.ArchiveStoreImpl"/>
         <property name="repository">target/repository</property>
     </component>
-    <component name="metadataStore" initLevel="40">
+    <component name="MetadataStore" initLevel="40">
         <system:implementation.system class="org.fabric3.fabric.services.contribution.MetaDataStoreImpl"/>
         <property name="repository">target/repository</property>
     </component>
 
-    <component name="contributionProcessorRegistry" initLevel="35">
+    <component name="ContributionProcessorRegistry" initLevel="35">
         <system:implementation.system
-            class="org.fabric3.fabric.services.contribution.ContributionProcessorRegistryImpl"/>
+                class="org.fabric3.fabric.services.contribution.ContributionProcessorRegistryImpl"/>
     </component>
     <component name="JarContributionProcessor" initLevel="30">
         <system:implementation.system
-            class="org.fabric3.fabric.services.contribution.processor.JarContributionProcessor"/>
+                class="org.fabric3.fabric.services.contribution.processor.JarContributionProcessor"/>
     </component>
 
     <component name="ContributionElementLoader">
         <system:implementation.system
-            class="org.fabric3.fabric.services.contribution.manifest.ContributionElementLoader"/>
+                class="org.fabric3.fabric.services.contribution.manifest.ContributionElementLoader"/>
     </component>
 
     <component name="DeployableLoader">
         <system:implementation.system
-            class="org.fabric3.fabric.services.contribution.manifest.DeployableLoader"/>
+                class="org.fabric3.fabric.services.contribution.manifest.DeployableLoader"/>
     </component>
 
     <component name="QNameExportLoader">
         <system:implementation.system
-            class="org.fabric3.fabric.services.contribution.manifest.QNameExportLoader"/>
+                class="org.fabric3.fabric.services.contribution.manifest.QNameExportLoader"/>
     </component>
 
     <component name="QNameImportLoader">
         <system:implementation.system
-            class="org.fabric3.fabric.services.contribution.manifest.QNameImportLoader"/>
+                class="org.fabric3.fabric.services.contribution.manifest.QNameImportLoader"/>
     </component>
 
+
+    <!-- Directory Scanner infrastructure -->
+    <component name="DirectoryScanner" initLevel="100">
+        <system:implementation.system class="org.fabric3.fabric.services.scanner.DirectoryScanner"/>
+        <property name="path">target/deployables</property>
+    </component>
+
+    <component name="FileSystemResourceFactoryRegistry">
+        <system:implementation.system class="org.fabric3.fabric.services.scanner.FileSystemResourceFactoryRegistryImpl"/>
+        <property name="path">target/deployables</property>
+    </component>
+
+    <component name="JarResourceFactory">
+        <system:implementation.system class="org.fabric3.fabric.services.scanner.factory.JarResourceFactory"/>
+        <property name="path">target/deployables</property>
+    </component>
+    <component name="ExplodedJarResourceFactory">
+        <system:implementation.system class="org.fabric3.fabric.services.scanner.factory.ExplodedJarResourceFactory"/>
+        <property name="path">target/deployables</property>
+    </component>
 
 </composite>

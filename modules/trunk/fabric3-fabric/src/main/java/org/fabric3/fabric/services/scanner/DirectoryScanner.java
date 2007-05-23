@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import com.thoughtworks.xstream.XStream;
 import org.osoa.sca.annotations.Constructor;
@@ -87,12 +88,12 @@ public class DirectoryScanner implements Runnable {
     @Init
     public void init() throws DestinationException {
         executor = Executors.newSingleThreadScheduledExecutor();
-//        try {
-//            recover();
-//        } catch (FileNotFoundException e) {
-//            throw new DestinationException(e);
-//        }
-//        executor.scheduleWithFixedDelay(this, 10, delay, TimeUnit.MILLISECONDS);
+        try {
+            recover();
+        } catch (FileNotFoundException e) {
+            throw new DestinationException(e);
+        }
+        executor.scheduleWithFixedDelay(this, 10, delay, TimeUnit.MILLISECONDS);
     }
 
     @Destroy
@@ -155,7 +156,7 @@ public class DirectoryScanner implements Runnable {
 
 
     }
-    
+
     private void addAndUpdate(File[] files) {
         for (File file : files) {
             try {
