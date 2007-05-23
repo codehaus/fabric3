@@ -27,7 +27,7 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.binding.jms.model.ConnectionFactoryDefinition;
 import org.fabric3.binding.jms.model.CorrelationScheme;
-import org.fabric3.binding.jms.model.CreateDestination;
+import org.fabric3.binding.jms.model.CreateOption;
 import org.fabric3.binding.jms.model.DestinationDefinition;
 import org.fabric3.binding.jms.model.DestinationType;
 import org.fabric3.binding.jms.model.JmsBindingMetadata;
@@ -157,7 +157,7 @@ public class JmsBindingLoader extends LoaderExtension<Object, JmsBindingDefiniti
         
         String create = reader.getAttributeValue(null, "create");
         if (create != null) {
-            connectionFactory.setCreate(CreateDestination.valueOf(create));
+            connectionFactory.setCreate(CreateOption.valueOf(create));
         }
         
         return connectionFactory;
@@ -175,7 +175,7 @@ public class JmsBindingLoader extends LoaderExtension<Object, JmsBindingDefiniti
         
         String create = reader.getAttributeValue(null, "create");
         if (create != null) {
-            destination.setCreate(CreateDestination.valueOf(create));
+            destination.setCreate(CreateOption.valueOf(create));
         }
         
         String type = reader.getAttributeValue(null, "type");

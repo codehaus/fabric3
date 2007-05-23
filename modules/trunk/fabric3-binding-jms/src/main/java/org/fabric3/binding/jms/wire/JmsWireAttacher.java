@@ -26,17 +26,21 @@ import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.MessageListener;
 
+import org.fabric3.binding.jms.model.ConnectionFactoryDefinition;
 import org.fabric3.binding.jms.model.CorrelationScheme;
-import org.fabric3.binding.jms.model.CreateDestination;
+import org.fabric3.binding.jms.model.CreateOption;
 import org.fabric3.binding.jms.model.DestinationDefinition;
 import org.fabric3.binding.jms.model.JmsBindingMetadata;
 import org.fabric3.binding.jms.model.physical.JmsWireSourceDefinition;
 import org.fabric3.binding.jms.model.physical.JmsWireTargetDefinition;
-import org.fabric3.binding.jms.wire.helper.ConnectionFactoryHelper;
-import org.fabric3.binding.jms.wire.lookup.AlwaysDestinationStrategy;
-import org.fabric3.binding.jms.wire.lookup.DestinationStrategy;
-import org.fabric3.binding.jms.wire.lookup.IfNotExistDestinationStrategy;
-import org.fabric3.binding.jms.wire.lookup.NeverDestinationStrategy;
+import org.fabric3.binding.jms.wire.lookup.connectionfactory.AlwaysConnectionFactoryStrategy;
+import org.fabric3.binding.jms.wire.lookup.connectionfactory.ConnectionFactoryStrategy;
+import org.fabric3.binding.jms.wire.lookup.connectionfactory.IfNotExistConnectionFactoryStrategy;
+import org.fabric3.binding.jms.wire.lookup.connectionfactory.NeverConnectionFactoryStrategy;
+import org.fabric3.binding.jms.wire.lookup.destination.AlwaysDestinationStrategy;
+import org.fabric3.binding.jms.wire.lookup.destination.DestinationStrategy;
+import org.fabric3.binding.jms.wire.lookup.destination.IfNotExistDestinationStrategy;
+import org.fabric3.binding.jms.wire.lookup.destination.NeverDestinationStrategy;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.WireAttacher;
 import org.fabric3.spi.builder.component.WireAttacherRegistry;
@@ -66,7 +70,14 @@ public class JmsWireAttacher implements WireAttacher<JmsWireSourceDefinition, Jm
     /**
      * Destination strategies.
      */
-    private Map<CreateDestination, DestinationStrategy> destinationStrategies = new HashMap<CreateDestination, DestinationStrategy>();
+    private Map<CreateOption, DestinationStrategy> destinationStrategies = 
+        new HashMap<CreateOption, DestinationStrategy>();
+    
+    /**
+     * Connection factory strategies.
+     */
+    private Map<CreateOption, ConnectionFactoryStrategy> connectionFactoryStrategies = 
+        new HashMap<CreateOption, ConnectionFactoryStrategy>();
 
     /**
      * Injects the wire attacher registry and servlet host.
@@ -81,9 +92,13 @@ public class JmsWireAttacher implements WireAttacher<JmsWireSourceDefinition, Jm
         wireAttacherRegistry.register(JmsWireTargetDefinition.class, this);
         this.receiverThreads = receiverThreads;
         
-        destinationStrategies.put(CreateDestination.always, new AlwaysDestinationStrategy());
-        destinationStrategies.put(CreateDestination.never, new NeverDestinationStrategy());
-        destinationStrategies.put(CreateDestination.ifnotexist, new IfNotExistDestinationStrategy());
+        destinationStrategies.put(CreateOption.always, new AlwaysDestinationStrategy());
+        destinationStrategies.put(CreateOption.never, new NeverDestinationStrategy());
+        destinationStrategies.put(CreateOption.ifnotexist, new IfNotExistDestinationStrategy());
+        
+        connectionFactoryStrategies.put(CreateOption.always, new AlwaysConnectionFactoryStrategy());
+        connectionFactoryStrategies.put(CreateOption.never, new NeverConnectionFactoryStrategy());
+        connectionFactoryStrategies.put(CreateOption.ifnotexist, new IfNotExistConnectionFactoryStrategy());
         
     }
 
@@ -108,16 +123,21 @@ public class JmsWireAttacher implements WireAttacher<JmsWireSourceDefinition, Jm
         Hashtable<String, String> env = metadata.getEnv();
         CorrelationScheme correlationScheme = metadata.getCorrelationScheme();
 
-        ConnectionFactory reqCf = ConnectionFactoryHelper.getConnectionFactory(metadata.getConnectionFactory(), env);
-        ConnectionFactory resCf = ConnectionFactoryHelper.getConnectionFactory(metadata.getResponseConnectionFactory(), env);
+        ConnectionFactoryDefinition connectionFactoryDefinition = metadata.getConnectionFactory();
+        CreateOption create = connectionFactoryDefinition.getCreate();        
+        ConnectionFactory reqCf = connectionFactoryStrategies.get(create).getConnectionFactory(connectionFactoryDefinition, env);
+        
+        connectionFactoryDefinition = metadata.getResponseConnectionFactory();
+        create = connectionFactoryDefinition.getCreate();        
+        ConnectionFactory resCf = connectionFactoryStrategies.get(create).getConnectionFactory(connectionFactoryDefinition, env);
 
         DestinationDefinition destinationDefinition = metadata.getDestination();
-        CreateDestination createDestination = destinationDefinition.getCreate();
-        Destination reqDestination = destinationStrategies.get(createDestination).getDestination(destinationDefinition, reqCf, env);
+        create = destinationDefinition.getCreate();
+        Destination reqDestination = destinationStrategies.get(create).getDestination(destinationDefinition, reqCf, env);
 
         destinationDefinition = metadata.getResponseDestination();
-        createDestination = destinationDefinition.getCreate();
-        Destination resDestination = destinationStrategies.get(createDestination).getDestination(destinationDefinition, resCf, env);
+        create = destinationDefinition.getCreate();
+        Destination resDestination = destinationStrategies.get(create).getDestination(destinationDefinition, resCf, env);
         
         MessageListener messageListener = new Fabric3MessageListener(resDestination, resCf, ops, correlationScheme, wire);
         JmsServiceHandler serviceHandler = new JmsServiceHandler(reqCf, reqDestination, receiverThreads, messageListener);
@@ -140,16 +160,21 @@ public class JmsWireAttacher implements WireAttacher<JmsWireSourceDefinition, Jm
         Hashtable<String, String> env = metadata.getEnv();
         CorrelationScheme correlationScheme = metadata.getCorrelationScheme();
 
-        ConnectionFactory reqCf = ConnectionFactoryHelper.getConnectionFactory(metadata.getConnectionFactory(), env);
-        ConnectionFactory resCf = ConnectionFactoryHelper.getConnectionFactory(metadata.getResponseConnectionFactory(), env);
+        ConnectionFactoryDefinition connectionFactoryDefinition = metadata.getConnectionFactory();
+        CreateOption create = connectionFactoryDefinition.getCreate();        
+        ConnectionFactory reqCf = connectionFactoryStrategies.get(create).getConnectionFactory(connectionFactoryDefinition, env);
+        
+        connectionFactoryDefinition = metadata.getResponseConnectionFactory();
+        create = connectionFactoryDefinition.getCreate();        
+        ConnectionFactory resCf = connectionFactoryStrategies.get(create).getConnectionFactory(connectionFactoryDefinition, env);
 
         DestinationDefinition destinationDefinition = metadata.getDestination();
-        CreateDestination createDestination = destinationDefinition.getCreate();
-        Destination reqDestination = destinationStrategies.get(createDestination).getDestination(destinationDefinition, reqCf, env);
+        create = destinationDefinition.getCreate();
+        Destination reqDestination = destinationStrategies.get(create).getDestination(destinationDefinition, reqCf, env);
 
         destinationDefinition = metadata.getResponseDestination();
-        createDestination = destinationDefinition.getCreate();
-        Destination resDestination = destinationStrategies.get(createDestination).getDestination(destinationDefinition, resCf, env);
+        create = destinationDefinition.getCreate();
+        Destination resDestination = destinationStrategies.get(create).getDestination(destinationDefinition, resCf, env);
 
         for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
             

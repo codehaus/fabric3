@@ -40,19 +40,19 @@ public class AdministeredObjectDefinition extends ModelObject {
     /**
      * Destination creation.
      */
-    private CreateDestination create = CreateDestination.ifnotexist;
+    private CreateOption create = CreateOption.ifnotexist;
 
     /**
      * @return the create
      */
-    public CreateDestination getCreate() {
+    public CreateOption getCreate() {
         return create;
     }
 
     /**
      * @param create the create to set
      */
-    public void setCreate(CreateDestination create) {
+    public void setCreate(CreateOption create) {
         this.create = create;
     }
 

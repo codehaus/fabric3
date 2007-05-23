@@ -17,7 +17,7 @@
  * under the License.    
  */
 
-package org.fabric3.binding.jms.wire.lookup;
+package org.fabric3.binding.jms.wire.lookup.destination;
 
 import java.util.Hashtable;
 
@@ -40,7 +40,7 @@ import org.fabric3.binding.jms.wire.helper.JmsHelper;
 public class AlwaysDestinationStrategy implements DestinationStrategy {
 
     /**
-     * @see org.fabric3.binding.jms.wire.lookup.DestinationStrategy#getDestination(org.fabric3.binding.jms.model.DestinationDefinition, javax.jms.ConnectionFactory, java.util.Hashtable)
+     * @see org.fabric3.binding.jms.wire.lookup.destination.DestinationStrategy#getDestination(org.fabric3.binding.jms.model.DestinationDefinition, javax.jms.ConnectionFactory, java.util.Hashtable)
      */
     public Destination getDestination(DestinationDefinition definition,
                                       ConnectionFactory cf,

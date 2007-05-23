@@ -21,7 +21,7 @@ package org.fabric3.binding.jms.model;
 /**
  * @version $Revision$ $Date$
  */
-public enum CreateDestination {
+public enum CreateOption {
 
     always, never, ifnotexist;
 
