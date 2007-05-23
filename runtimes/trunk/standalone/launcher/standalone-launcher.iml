@@ -11,6 +11,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="standalone-api" />
+    <orderEntry type="module" module-name="fabric3-api" />
     <orderEntryProperties />
   </component>
 </module>

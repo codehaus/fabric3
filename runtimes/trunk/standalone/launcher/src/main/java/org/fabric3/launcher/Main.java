@@ -24,28 +24,26 @@ import java.net.URLClassLoader;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
-import org.fabric3.runtime.standalone.DirectoryHelper;
-import org.fabric3.runtime.standalone.StandaloneRuntime;
-import org.fabric3.runtime.standalone.StandaloneHostInfo;
+import org.fabric3.api.annotation.LogLevel;
 import org.fabric3.host.runtime.Bootstrapper;
+import org.fabric3.host.runtime.InitializationException;
+import org.fabric3.runtime.standalone.DirectoryHelper;
+import org.fabric3.runtime.standalone.StandaloneHostInfo;
+import org.fabric3.runtime.standalone.StandaloneRuntime;
 
 /**
- * Main class for launcher runtime environment. <code>
- * usage: java [jvm-options] -jar launcher.jar <componentURI>
- * </code>
- * where the componentURI identifies a component in the assembly that should be
- * called.
- * 
+ * Main class for launcher runtime environment. <code> usage: java [jvm-options] -jar launcher.jar <componentURI>
+ * </code> where the componentURI identifies a component in the assembly that should be called.
+ *
  * @version $Rev$ $Date$
  */
 public class Main {
 
     /**
      * Main method.
-     * 
+     *
      * @param args the command line args
-     * @throws Throwable if there are problems launching the runtime or
-     *             application
+     * @throws Throwable if there are problems launching the runtime or application
      */
     public static void main(String[] args) throws Throwable {
 
@@ -61,7 +59,7 @@ public class Main {
         }
 
         String[] appArgs = new String[0];
-        if(args.length > 1) {
+        if (args.length > 1) {
             appArgs = new String[args.length - 1];
             System.arraycopy(args, 1, appArgs, 0, appArgs.length);
         }
@@ -76,7 +74,7 @@ public class Main {
 
         URL applicationJar = applicationFile.toURL();
         ClassLoader applicationClassLoader =
-            new URLClassLoader(new URL[] {applicationJar}, runtime.getHostClassLoader());
+                new URLClassLoader(new URL[]{applicationJar}, runtime.getHostClassLoader());
         String applicationScdl = System.getProperty("launcher.scdl", "META-INF/sca/default.scdl");
         URL applicationScdlURL = applicationClassLoader.getResource(applicationScdl);
         if (applicationScdlURL == null) {
@@ -86,10 +84,15 @@ public class Main {
 
         // boot the runtime
         Bootstrapper bootstrapper = DirectoryHelper.createBootstrapper(hostInfo);
-        bootstrapper.bootstrap(runtime, hostInfo.getBootClassLoader());
-
-        int status = runtime.deployAndRun(applicationScdlURL, applicationClassLoader, appArgs);
-        System.exit(status);
+        LauncherMonitor monitor = runtime.getMonitorFactory().getMonitor(LauncherMonitor.class);
+        try {
+            bootstrapper.bootstrap(runtime, hostInfo.getBootClassLoader());
+            int status = runtime.deployAndRun(applicationScdlURL, applicationClassLoader, appArgs);
+            System.exit(status);
+        } catch (Exception e) {
+            monitor.runError(e);
+            System.exit(-1);
+        }
     }
 
     private static void usage() {
@@ -102,4 +105,10 @@ public class Main {
         String message = bundle.getString(id);
         return MessageFormat.format(message, params);
     }
+
+    public interface LauncherMonitor {
+        @LogLevel("SEVERE")
+        void runError(Exception e);
+    }
+
 }

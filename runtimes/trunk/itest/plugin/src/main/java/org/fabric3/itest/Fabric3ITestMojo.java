@@ -214,6 +214,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
             bootstrapper.setScdlLocation(systemScdl);
             bootstrapper.bootstrap(runtime, cl);
         } catch (InitializationException e) {
+            monitor.runError(e);
             throw new MojoExecutionException("Error initializing Fabric3 Runtime", e);
         }
 

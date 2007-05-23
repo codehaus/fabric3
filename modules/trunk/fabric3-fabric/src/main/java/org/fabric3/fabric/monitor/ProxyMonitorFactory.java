@@ -18,27 +18,30 @@
  */
 package org.fabric3.fabric.monitor;
 
-import java.util.Map;
-import java.util.Properties;
-import java.util.HashMap;
-import java.util.ResourceBundle;
-import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.WeakHashMap;
-import java.util.logging.Level;
-import java.lang.ref.WeakReference;
-import java.lang.reflect.Method;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Proxy;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.ref.WeakReference;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.MissingResourceException;
+import java.util.Properties;
+import java.util.ResourceBundle;
+import java.util.WeakHashMap;
+import java.util.logging.Level;
 
-import org.fabric3.host.monitor.MonitorFactory;
-import org.fabric3.host.monitor.FormatterRegistry;
-import org.fabric3.host.monitor.ExceptionFormatter;
 import org.fabric3.api.annotation.LogLevel;
+import org.fabric3.host.GroupException;
+import org.fabric3.host.Fabric3Exception;
+import org.fabric3.host.Fabric3RuntimeException;
+import org.fabric3.host.monitor.ExceptionFormatter;
+import org.fabric3.host.monitor.FormatterRegistry;
+import org.fabric3.host.monitor.MonitorFactory;
 
 /**
  * @version $Rev$ $Date$
@@ -46,10 +49,15 @@ import org.fabric3.api.annotation.LogLevel;
 public abstract class ProxyMonitorFactory implements MonitorFactory, FormatterRegistry {
     protected String bundleName;
     protected final List<ExceptionFormatter> formatters = new ArrayList<ExceptionFormatter>();
-    protected final ExceptionFormatter<Throwable> defaultFormatter = new DefaultExceptionFormatter();
+    protected final ExceptionFormatter<Throwable> defaultFormatter;
     protected Level defaultLevel;
     protected Map<String, Level> levels;
     private final Map<Class<?>, WeakReference<?>> proxies = new WeakHashMap<Class<?>, WeakReference<?>>();
+
+
+    protected ProxyMonitorFactory() {
+        defaultFormatter = new DefaultExceptionFormatter();
+    }
 
     public void initialize(Map<String, Object> configProperties) {
         if (configProperties == null) {
@@ -162,7 +170,7 @@ public abstract class ProxyMonitorFactory implements MonitorFactory, FormatterRe
     }
 
     protected abstract <T> InvocationHandler createInvocationHandler(Class<T> monitorInterface,
-                                                                 Map<String, Level> levels);
+                                                                     Map<String, Level> levels);
 
     protected <T extends Throwable> String formatException(T e) {
         ExceptionFormatter<? super T> formatter = getFormatter(e);
@@ -197,8 +205,8 @@ public abstract class ProxyMonitorFactory implements MonitorFactory, FormatterRe
     }
 
     protected <T extends Throwable> void printStackTraceAsCause(PrintWriter pw,
-                                        T throwable,
-                                        StackTraceElement[] causedTrace) {
+                                                                T throwable,
+                                                                StackTraceElement[] causedTrace) {
 
         // Compute number of frames in common between this and caused
         StackTraceElement[] trace = throwable.getStackTrace();
@@ -208,24 +216,42 @@ public abstract class ProxyMonitorFactory implements MonitorFactory, FormatterRe
             m--;
             n--;
         }
-        int framesInCommon = trace.length - 1 - m;
+        if (throwable instanceof GroupException) {
+            GroupException groupException = (GroupException) throwable;
+            groupException.appendBaseMessage(pw);
+            List<Exception> causes = groupException.getCauses();
+            for (Exception cause : causes) {
+                if (cause instanceof Fabric3Exception) {
+                    Fabric3Exception f3ex = (Fabric3Exception) cause;
+                    pw.println("\n"+ f3ex.getIdentifier() + " caused:");
+                } else if (cause instanceof Fabric3RuntimeException) {
+                    Fabric3RuntimeException f3ex = (Fabric3RuntimeException) cause;
+                    pw.println("\n"+ f3ex.getIdentifier() + " caused:");
+                } else {
+                    pw.println("Caused by:");
+                }
+                format(pw, cause);
+            }
 
-        pw.println("Caused by: " + throwable.getClass().getName());
+        } else {
+            int framesInCommon = trace.length - 1 - m;
 
-        ExceptionFormatter<? super T> formatter = getFormatter(throwable);
-        formatter.write(pw, throwable);
+            pw.println("Caused by: " + throwable.getClass().getName());
 
-        for (int i = 0; i <= m; i++) {
-            pw.println("\tat " + trace[i]);
-        }
-        if (framesInCommon != 0) {
-            pw.println("\t... " + framesInCommon + " more");
-        }
+            ExceptionFormatter<? super T> formatter = getFormatter(throwable);
+            formatter.write(pw, throwable);
 
-        // Recurse if we have a cause
-        Throwable ourCause = throwable.getCause();
-        if (ourCause != null) {
-            printStackTraceAsCause(pw, ourCause, trace);
+            for (int i = 0; i <= m; i++) {
+                pw.println("\tat " + trace[i]);
+            }
+            if (framesInCommon != 0) {
+                pw.println("\t... " + framesInCommon + " more");
+            }
+            // Recurse if we have a cause
+            Throwable ourCause = throwable.getCause();
+            if (ourCause != null) {
+                printStackTraceAsCause(pw, ourCause, trace);
+            }
         }
     }
 }

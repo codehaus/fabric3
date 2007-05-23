@@ -20,20 +20,22 @@ package org.fabric3.spi.component;
 
 import java.util.List;
 
+import org.fabric3.host.GroupException;
+
 /**
  * @version $Rev$ $Date$
  */
-public class GroupInitializationException extends TargetResolutionException {
+public class GroupInitializationException extends TargetResolutionException implements GroupException {
     private final List<Exception> causes;
 
     /**
      * Exception indicating a problem initializing a group of components.
      *
      * @param contextId an identified for the context being initialized
-     * @param causes the individual exceptions that occurred
+     * @param causes    the individual exceptions that occurred
      */
     public GroupInitializationException(String contextId, List<Exception> causes) {
-        super(contextId);
+        super("Error initializing components in group", contextId);
         this.causes = causes;
     }
 

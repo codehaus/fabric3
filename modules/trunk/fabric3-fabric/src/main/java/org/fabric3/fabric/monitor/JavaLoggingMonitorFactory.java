@@ -83,8 +83,7 @@ public class JavaLoggingMonitorFactory extends ProxyMonitorFactory {
 
         public LoggingHandler(Logger logger,
                               Map<String, Level> methodLevels,
-                              ResourceBundle bundle
-        ) {
+                              ResourceBundle bundle) {
             this.logger = logger;
             this.methodLevels = methodLevels;
             this.bundle = bundle;

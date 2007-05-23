@@ -50,5 +50,4 @@ public class DefaultExceptionFormatter implements ExceptionFormatter<Throwable> 
         return writer;
     }
 
-
 }
