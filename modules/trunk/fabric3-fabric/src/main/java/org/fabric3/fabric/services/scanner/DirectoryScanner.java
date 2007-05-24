@@ -134,7 +134,10 @@ public class DirectoryScanner implements Runnable {
             // we don't have an extension directory, there's nothing to do
             return;
         }
-
+        if (!processedIndex.exists()) {
+            // no index which means there is nothing t recover
+            return;
+        }
         InputStream is = null;
         try {
             is = new BufferedInputStream(new FileInputStream(processedIndex));
