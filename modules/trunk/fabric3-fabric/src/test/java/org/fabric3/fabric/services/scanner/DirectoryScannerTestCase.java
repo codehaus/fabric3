@@ -222,7 +222,7 @@ public class DirectoryScannerTestCase extends TestCase {
         EasyMock.replay(monitorFactory);
         destination = EasyMock.createMock(DirectoryScannerDestination.class);
         scanner = new DirectoryScanner(registry, destination, xstreamFactory, monitorFactory);
-        directory = new File("deploy");
+        directory = new File("../deploy");
         directory.mkdir();
         FileHelper.cleanDirectory(directory);
     }

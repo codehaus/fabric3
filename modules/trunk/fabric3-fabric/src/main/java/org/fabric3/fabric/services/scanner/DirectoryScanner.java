@@ -68,7 +68,7 @@ public class DirectoryScanner implements Runnable {
     private final File processedIndex;
     private Map<String, URI> processed = new HashMap<String, URI>();
     private FileSystemResourceFactoryRegistry registry;
-    private String path = "deploy";
+    private String path = "../deploy";
 
     private long delay = 5000;
     private ScheduledExecutorService executor;
