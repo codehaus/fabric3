@@ -22,6 +22,7 @@ import java.net.URI;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Service;
 
 import org.fabric3.fabric.assembly.normalizer.PromotionNormalizer;
 import org.fabric3.fabric.assembly.resolver.WireResolver;
@@ -39,6 +40,7 @@ import org.fabric3.spi.util.UriHelper;
  *
  * @version $Rev$ $Date$
  */
+@Service(DistributedAssembly.class)
 @EagerInit
 public class DistributedAssemblyImpl extends AbstractAssembly implements DistributedAssembly {
     public DistributedAssemblyImpl(@Reference GeneratorRegistry generatorRegistry,

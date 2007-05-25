@@ -1,13 +1,16 @@
 package org.fabric3.fabric.services.scanner.resource;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.fabric3.spi.services.scanner.FileSystemResource;
 import org.fabric3.fabric.services.scanner.AbstractResource;
+import org.fabric3.spi.services.scanner.FileSystemResource;
 
 /**
  * Represents a directory that is to be contributed to a domain
@@ -15,17 +18,29 @@ import org.fabric3.fabric.services.scanner.AbstractResource;
  * @version $Rev$ $Date$
  */
 public class DirectoryResource extends AbstractResource {
-    private final String name;
+    private final File root;
     // the list of resources to track changes against
     private List<FileSystemResource> resources;
 
-    public DirectoryResource(String name) {
-        this.name = name;
+    public DirectoryResource(File root) {
+        this.root = root;
         resources = new ArrayList<FileSystemResource>();
     }
 
     public String getName() {
-        return name;
+        return root.getName();
+    }
+
+    public URL getLocation() {
+        try {
+            return root.toURI().normalize().toURL();
+        } catch (MalformedURLException e) {
+            throw new AssertionError(e);
+        }
+    }
+
+    public long getTimestamp() {
+        return root.lastModified();
     }
 
     public void addResource(FileSystemResource resource) {

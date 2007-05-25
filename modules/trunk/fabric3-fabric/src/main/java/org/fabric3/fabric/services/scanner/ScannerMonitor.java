@@ -25,7 +25,7 @@ import org.fabric3.api.annotation.LogLevel;
  *
  * @version $Rev$ $Date$
  */
-public interface DirectoryScannerMonitor {
+public interface ScannerMonitor {
 
     /**
      * Called when a destination is notified of a new resource

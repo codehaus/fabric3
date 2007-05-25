@@ -1,5 +1,7 @@
 package org.fabric3.fabric.services.scanner.resource;
 
+import java.io.File;
+
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
@@ -15,7 +17,7 @@ public class DirectoryResourceTestCase extends TestCase {
      * second.
      */
     public void testChanges() throws Exception {
-        DirectoryResource resource = new DirectoryResource("test");
+        DirectoryResource resource = new DirectoryResource(new File("test"));
         FileSystemResource fileSystemResource = EasyMock.createMock(FileSystemResource.class);
         fileSystemResource.reset();
         EasyMock.expect(fileSystemResource.getChecksum()).andReturn("test".getBytes());

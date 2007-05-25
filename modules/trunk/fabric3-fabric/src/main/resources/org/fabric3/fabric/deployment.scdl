@@ -70,8 +70,8 @@
 
 
     <!-- Directory Scanner infrastructure -->
-    <component name="DirectoryScanner" initLevel="100">
-        <system:implementation.system class="org.fabric3.fabric.services.scanner.DirectoryScanner"/>
+    <component name="ContributionDirectoryScanner" initLevel="100">
+        <system:implementation.system class="org.fabric3.fabric.services.scanner.ContributionDirectoryScanner"/>
         <property name="path">target/deployables</property>
     </component>
 
@@ -82,11 +82,9 @@
 
     <component name="JarResourceFactory">
         <system:implementation.system class="org.fabric3.fabric.services.scanner.factory.JarResourceFactory"/>
-        <property name="path">target/deployables</property>
     </component>
     <component name="ExplodedJarResourceFactory">
         <system:implementation.system class="org.fabric3.fabric.services.scanner.factory.ExplodedJarResourceFactory"/>
-        <property name="path">target/deployables</property>
     </component>
 
 </composite>

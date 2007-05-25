@@ -4,6 +4,8 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -23,6 +25,18 @@ public class FileResource extends AbstractResource {
 
     public String getName() {
         return file.getName();
+    }
+
+    public URL getLocation() {
+        try {
+            return file.toURI().normalize().toURL();
+        } catch (MalformedURLException e) {
+            throw new AssertionError(e);
+        }
+    }
+
+    public long getTimestamp() {
+        return file.lastModified();
     }
 
     public void reset() throws IOException {

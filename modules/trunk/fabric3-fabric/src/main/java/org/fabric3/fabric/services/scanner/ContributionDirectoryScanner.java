@@ -1,21 +1,3 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.    
- */
 package org.fabric3.fabric.services.scanner;
 
 import java.io.BufferedInputStream;
@@ -36,6 +18,7 @@ import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import javax.xml.namespace.QName;
 
 import com.thoughtworks.xstream.XStream;
 import org.osoa.sca.annotations.Constructor;
@@ -45,27 +28,30 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
+import org.fabric3.fabric.assembly.DistributedAssembly;
+import org.fabric3.fabric.assembly.IncludeException;
 import org.fabric3.fabric.services.xstream.XStreamFactory;
+import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.spi.services.VoidService;
 import org.fabric3.spi.services.scanner.DestinationException;
-import org.fabric3.spi.services.scanner.DirectoryScannerDestination;
 import org.fabric3.spi.services.scanner.FileSystemResource;
 import org.fabric3.spi.services.scanner.FileSystemResourceFactoryRegistry;
-import org.fabric3.spi.services.scanner.ResourceMetaData;
 
 /**
  * Periodically scans a directory for files
  */
 @Service(VoidService.class)
 @EagerInit
-public class DirectoryScanner implements Runnable {
+public class ContributionDirectoryScanner implements Runnable {
     private final Map<String, FileSystemResource> cache = new HashMap<String, FileSystemResource>();
     private final Map<String, FileSystemResource> errorCache = new HashMap<String, FileSystemResource>();
-    private final DirectoryScannerDestination destination;
-    private final DirectoryScannerMonitor monitor;
+    private final ContributionService contributionService;
+    private final ScannerMonitor monitor;
     private final XStream xstream;
     private final File processedIndex;
+    private final DistributedAssembly assembly;
     private Map<String, URI> processed = new HashMap<String, URI>();
     private FileSystemResourceFactoryRegistry registry;
     private String path = "../deploy";
@@ -74,14 +60,16 @@ public class DirectoryScanner implements Runnable {
     private ScheduledExecutorService executor;
 
     @Constructor
-    public DirectoryScanner(@Reference FileSystemResourceFactoryRegistry registry,
-                            @Reference DirectoryScannerDestination contributionService,
-                            @Reference XStreamFactory xStreamFactory,
-                            @Reference MonitorFactory factory) {
+    public ContributionDirectoryScanner(@Reference FileSystemResourceFactoryRegistry registry,
+                                        @Reference ContributionService contributionService,
+                                        @Reference DistributedAssembly assembly,
+                                        @Reference XStreamFactory xStreamFactory,
+                                        @Reference MonitorFactory factory) {
         this.registry = registry;
-        this.destination = contributionService;
+        this.contributionService = contributionService;
+        this.assembly = assembly;
         this.xstream = xStreamFactory.createInstance();
-        this.monitor = factory.getMonitor(DirectoryScannerMonitor.class);
+        this.monitor = factory.getMonitor(ScannerMonitor.class);
         processedIndex = new File(path + "/.processed");
     }
 
@@ -123,6 +111,9 @@ public class DirectoryScanner implements Runnable {
             save();
         } catch (FileNotFoundException e) {
             monitor.error("Error persisting scanner state", e);
+        } catch (RuntimeException e) {
+            monitor.error(e);
+            throw e;
         }
 
     }
@@ -199,32 +190,32 @@ public class DirectoryScanner implements Runnable {
                     cache.remove(name);
                     // check if it is in the store
                     URI artifactUri = processed.get(name);
+                    URL location = file.toURI().normalize().toURL();
+                    byte[] checksum = cached.getChecksum();
+                    long timestamp = file.lastModified();
                     if (artifactUri != null) {
                         // updated
-                        URL location = file.toURI().toURL();
-                        byte[] checksum = cached.getChecksum();
-                        long timestamp = file.lastModified();
-                        ResourceMetaData metaData = destination.getResourceMetaData(artifactUri);
-                        assert metaData != null;
-                        long archivedTimestamp = metaData.getTimestamp();
-                        if (timestamp > archivedTimestamp) {
-                            destination.updateResource(artifactUri, location, checksum, timestamp);
-                        } else if (timestamp == archivedTimestamp && checksum.equals(metaData.getChecksum())) {
-                            destination.updateResource(artifactUri, location, checksum, timestamp);
+                        long previousTimestamp = contributionService.getContributionTimestamp(artifactUri);
+                        if (timestamp > previousTimestamp) {
+                            contributionService.update(artifactUri, checksum, timestamp, location);
                         }
                     } else {
                         // added
-                        URL location = file.toURI().toURL();
-                        byte[] checksum = cached.getChecksum();
-                        long timestamp = file.lastModified();
-                        URI addedUri = destination.addResource(location, checksum, timestamp);
+                        URI addedUri = contributionService.contribute(location, checksum, timestamp);
+                        List<QName> deployables = contributionService.getDeployables(addedUri);
+                        for (QName deployable : deployables) {
+                            // include deployables at the domain level
+                            assembly.activate(deployable, true);
+                        }
                         processed.put(name, addedUri);
-                    }
 
+                    }
                 }
             } catch (IOException e) {
                 monitor.error(e);
-            } catch (DestinationException e) {
+            } catch (ContributionException e) {
+                monitor.error(e);
+            } catch (IncludeException e) {
                 monitor.error(e);
             }
         }
@@ -239,16 +230,16 @@ public class DirectoryScanner implements Runnable {
         List<String> removed = new ArrayList<String>();
         for (Map.Entry<String, URI> entry : processed.entrySet()) {
             String filename = entry.getKey();
-            URI destinationUri = entry.getValue();
+            URI uri = entry.getValue();
             if (index.get(filename) == null) {
                 // artifact was removed
                 try {
                     // check that the resurce was not deleted by another process
-                    if (destination.resourceExists(destinationUri)) {
-                        destination.removeResource(destinationUri);
+                    if (contributionService.exists(uri)) {
+                        contributionService.remove(uri);
                     }
                     removed.add(filename);
-                } catch (DestinationException e) {
+                } catch (ContributionException e) {
                     monitor.error("Error removing artifact", filename, e);
                 }
             }
@@ -261,7 +252,7 @@ public class DirectoryScanner implements Runnable {
     /**
      * Persists the list of processed resources for recovery
      *
-     * @throws FileNotFoundException if an error occurs opening the persisted file
+     * @throws java.io.FileNotFoundException if an error occurs opening the persisted file
      */
     private synchronized void save() throws FileNotFoundException {
         OutputStream os = null;

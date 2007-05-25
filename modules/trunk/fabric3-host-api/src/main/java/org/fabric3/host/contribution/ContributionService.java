@@ -63,6 +63,50 @@ public interface ContributionService {
             throws ContributionException, IOException;
 
     /**
+     * Updates a previously contributed artifact if its timestamp and checksum have changed
+     *
+     * @param uri         the contribution URI
+     * @param contentType the contribution content type
+     * @param checksum    the artifact checksum
+     * @param timestamp   the artifact timestamp
+     * @param stream      the source input stream
+     * @throws ContributionException if an error occurs during the update procecedure, for example, a previuous
+     *                               contribution is not found
+     * @throws IOException           if an error occurs reading
+     */
+    void update(URI uri, String contentType, byte[] checksum, long timestamp, InputStream stream)
+            throws ContributionException, IOException;
+
+    /**
+     * Updates a previously contributed artifact if its timestamp and checksum have changed
+     *
+     * @param uri       the contribution URI
+     * @param checksum  the artifact checksum
+     * @param timestamp the artifact timestamp
+     * @param url       the source URL
+     * @throws ContributionException if an error occurs during the update procecedure, for example, a previuous
+     *                               contribution is not found
+     * @throws IOException           if an error occurs reading
+     */
+    void update(URI uri, byte[] checksum, long timestamp, URL url) throws ContributionException, IOException;
+
+    /**
+     * Returns true if a contribution for the given URI exists.
+     *
+     * @param uri the contribution URI
+     * @return true if a contribution for the given URI exists
+     */
+    boolean exists(URI uri);
+
+    /**
+     * Returns the contribution timestamp
+     *
+     * @param uri the contribution URI
+     * @return the timestamp or -1 if no contribution was found
+     */
+    long getContributionTimestamp(URI uri);
+
+    /**
      * Returns a list of deployable URIs in a contribution
      *
      * @param contributionUri the URI of the contribution to search

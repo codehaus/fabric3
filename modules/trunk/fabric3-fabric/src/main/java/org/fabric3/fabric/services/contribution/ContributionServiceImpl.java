@@ -31,11 +31,7 @@ import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
-import org.osoa.sca.annotations.Service;
 
-import org.fabric3.spi.services.scanner.DestinationException;
-import org.fabric3.spi.services.scanner.DirectoryScannerDestination;
-import org.fabric3.spi.services.scanner.ResourceMetaData;
 import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionNotFoundException;
@@ -51,9 +47,8 @@ import org.fabric3.spi.services.contribution.MetaDataStore;
  *
  * @version $Rev$ $Date$
  */
-@Service(ContributionService.class)
 @EagerInit
-public class ContributionServiceImpl implements ContributionService, DirectoryScannerDestination {
+public class ContributionServiceImpl implements ContributionService {
     private final ArchiveStore archiveStore;
     private final MetaDataStore metaDataStore;
     private final ContributionProcessorRegistry processorRegistry;
@@ -75,6 +70,16 @@ public class ContributionServiceImpl implements ContributionService, DirectorySc
             throw new InvalidContributionUriException(url.toString(), e);
         }
         URLConnection urlConnection = url.openConnection();
+        String contentType = getContentType(urlConnection, url);
+        InputStream is = urlConnection.getInputStream();
+        try {
+            return contribute(source, contentType, checksum, timestamp, is);
+        } finally {
+            is.close();
+        }
+    }
+
+    private String getContentType(URLConnection urlConnection, URL url) {
         String contentType = urlConnection.getContentType();
         if (contentType == null || Constants.CONTENT_UNKONWN.equals(contentType)) {
             // FIXME this should be extensible
@@ -85,19 +90,14 @@ public class ContributionServiceImpl implements ContributionService, DirectorySc
             }
 
         }
-        InputStream is = urlConnection.getInputStream();
-        try {
-            return contribute(source, contentType, checksum, timestamp, is);
-        } finally {
-            is.close();
-        }
+        return contentType;
     }
 
-    public URI contribute(URI sourceUri, String contentType, byte[] checksum, long timestamp, InputStream contributionStream)
+    public URI contribute(URI sourceUri, String contentType, byte[] checksum, long timestamp, InputStream sourceStream)
             throws ContributionException, IOException {
         // store the contribution
         URI contributionUri = URI.create(Constants.URI_PREFIX + UUID.randomUUID());
-        URL locationURL = archiveStore.store(sourceUri, contributionStream);
+        URL locationURL = archiveStore.store(sourceUri, sourceStream);
         Contribution contribution = new Contribution(contributionUri, locationURL, checksum, timestamp);
         //process the contribution
         InputStream stream = locationURL.openStream();
@@ -107,6 +107,45 @@ public class ContributionServiceImpl implements ContributionService, DirectorySc
         metaDataStore.store(contribution);
         //store the contribution in the memory cache
         return contributionUri;
+    }
+
+    public boolean exists(URI uri) {
+        return metaDataStore.find(uri) != null;
+    }
+
+    public void update(URI uri, byte[] checksum, long timestamp, URL url) throws ContributionException, IOException {
+        URLConnection urlConnection = url.openConnection();
+        String contentType = getContentType(urlConnection, url);
+        InputStream is = urlConnection.getInputStream();
+        try {
+            update(uri, contentType, checksum, timestamp, is);
+        } finally {
+            is.close();
+        }
+
+    }
+
+    public void update(URI uri, String contentType, byte[] checksum, long timestamp, InputStream stream)
+            throws ContributionException, IOException {
+        Contribution contribution = metaDataStore.find(uri);
+        if (contribution == null) {
+            throw new ContributionNotFoundException("Contribution not found for ", uri.toString());
+        }
+        long archivedTimestamp = contribution.getTimestamp();
+        if (timestamp > archivedTimestamp) {
+            // TODO update
+        } else if (timestamp == archivedTimestamp && checksum.equals(contribution.getChecksum())) {
+            // TODO update
+        }
+
+    }
+
+    public long getContributionTimestamp(URI uri) {
+        Contribution contribution = metaDataStore.find(uri);
+        if (contribution == null) {
+            return -1;
+        }
+        return contribution.getTimestamp();
     }
 
     public List<QName> getDeployables(URI contributionUri) throws ContributionNotFoundException {
@@ -123,37 +162,6 @@ public class ContributionServiceImpl implements ContributionService, DirectorySc
 
     public void remove(URI contributionUri) throws ContributionException {
         throw new UnsupportedOperationException();
-    }
-
-    public URI addResource(URL location, byte[] checksum, long timestamp) throws DestinationException {
-        try {
-            return contribute(location, checksum, timestamp);
-        } catch (ContributionException e) {
-            throw new DestinationException(e);
-        } catch (IOException e) {
-            throw new DestinationException(e);
-        }
-    }
-
-    public void updateResource(URI artifactUri, URL location, byte[] checksum, long timestamp)
-            throws DestinationException {
-        throw new UnsupportedOperationException();
-    }
-
-    public void removeResource(URI contributionUri) throws DestinationException {
-        throw new UnsupportedOperationException();
-    }
-
-    public boolean resourceExists(URI uri) {
-        return metaDataStore.find(uri) != null;
-    }
-
-    public ResourceMetaData getResourceMetaData(URI uri) {
-        Contribution contribution = metaDataStore.find(uri);
-        if (contribution == null) {
-            return null;
-        }
-        return contribution;
     }
 
     public <T> T resolve(URI contributionUri, Class<T> definitionType, QName name) {
