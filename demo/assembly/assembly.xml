@@ -84,7 +84,7 @@
         <!-- copy boot dependencies to master profile -->
         <dependencySet>
             <includes>
-                <exclude>org.codehaus.fabric3:fabric3-extension</exclude>
+                <exclude>org.codehaus.fabric3:fabric3-extension</exclude>  
                 <include>org.codehaus.fabric3:fabric3-fabric</include>
                 <include>org.codehaus.fabric3.standalone:standalone-host</include>
                 <include>org.codehaus.fabric3:fabric3-jetty</include>
