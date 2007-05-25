@@ -113,7 +113,6 @@ public class ContributionDirectoryScanner implements Runnable {
             monitor.error("Error persisting scanner state", e);
         } catch (RuntimeException e) {
             monitor.error(e);
-            throw e;
         }
 
     }
