@@ -54,7 +54,7 @@
         CompositeImplementation implementation = new CompositeImplementation();
         implementation.setComponentType(componentType);
         ComponentDefinition component = new ComponentDefinition(componentURI.toString(), implementation);
-        assembly.activate(component, false);
+        assembly.activate(component, true);
 
         ScopeContainer<URI> container = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
         WorkContext workContext = new SimpleWorkContext();
