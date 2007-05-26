@@ -23,12 +23,14 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.fabric3.fabric.model.NonBlockingIntentDefinition;
 import org.fabric3.spi.generator.BindingGenerator;
+import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
@@ -64,7 +66,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
     private Map<Class<?>, BindingGenerator> bindingGenerators;
     private Map<Class<?>, InterceptorGenerator<? extends IntentDefinition>> interceptorGenerators;
     private Map<Class<?>, ResourceGenerator> resourceGenerators;
-
+    private List<CommandGenerator> commandGenerators = new ArrayList<CommandGenerator>();
 
     public GeneratorRegistryImpl() {
         componentGenerators =
@@ -85,6 +87,10 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
 
     public void register(Class<?> clazz, ResourceGenerator generator) {
         resourceGenerators.put(clazz, generator);
+    }
+
+    public void register(CommandGenerator generator) {
+        commandGenerators.add(generator);
     }
 
     public <T extends Implementation<?>> void register(Class<T> clazz,
@@ -221,6 +227,13 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         return generator.generate(definition, context);
     }
 
+    public void generatorCommandSet(LogicalComponent<?> component, GeneratorContext context)
+            throws GenerationException {
+        for (CommandGenerator generator : commandGenerators) {
+            generator.generate(component, context);
+        }
+
+    }
 
     @SuppressWarnings({"unchecked"})
     private PhysicalOperationDefinition mapOperation(Operation o) {

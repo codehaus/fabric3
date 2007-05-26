@@ -72,6 +72,13 @@ public interface GeneratorRegistry {
     void register(Class<?> clazz, ResourceGenerator generator);
 
     /**
+     * Registers a command generator
+     *
+     * @param generator the generator to register
+     */
+    void register(CommandGenerator generator);
+
+    /**
      * Generates a PhysicalComponentDefinition from the logical component. A physical change set for the runtime the
      * component will be provisioned to is updated with the physical component definition.
      *
@@ -144,5 +151,14 @@ public interface GeneratorRegistry {
      * @throws GenerationException if an error ocurrs during generation
      */
     URI generateResource(ResourceDefinition definition, GeneratorContext context) throws GenerationException;
+
+    /**
+     * Generates a CommandSet for provisioning the logical component
+     *
+     * @param component the logical component to generate the command set from
+     * @param context   the generator context
+     * @throws GenerationException if an error ocurrs during generation
+     */
+    void generatorCommandSet(LogicalComponent<?> component, GeneratorContext context) throws GenerationException;
 
 }

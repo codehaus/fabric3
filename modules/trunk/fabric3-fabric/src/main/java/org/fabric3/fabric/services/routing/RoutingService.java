@@ -22,6 +22,7 @@ import java.net.URI;
 import java.util.Set;
 
 import org.fabric3.spi.model.physical.PhysicalChangeSet;
+import org.fabric3.spi.command.CommandSet;
 
 /**
  * Implementations route physical change sets to a runtime node.
@@ -38,6 +39,15 @@ public interface RoutingService {
      * @throws RoutingException if an exception occurs during routing
      */
     void route(URI runtimeId, PhysicalChangeSet set) throws RoutingException;
+
+    /**
+     * Routes a command set to a runtime node
+     *
+     * @param runtimeId the runtime node id
+     * @param set       the command set
+     * @throws RoutingException if an exception occurs during routing
+     */
+    void route(URI runtimeId, CommandSet set) throws RoutingException;
 
     /**
      * Returns the available runtimes in the current domain.

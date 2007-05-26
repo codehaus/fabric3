@@ -53,6 +53,14 @@
         <system:implementation.system class="org.fabric3.fabric.services.messaging.NullMessagingService"/>
     </component>
 
+    <component name="commandExecutorRegistry">
+        <system:implementation.system class="org.fabric3.fabric.command.CommandExecutorRegistryImpl"/>
+    </component>
+
+    <component name="startCommandExecutor">
+        <system:implementation.system class="org.fabric3.fabric.command.StartContextCommandExecutor"/>
+    </component>
+
     <component name="proxyService">
         <system:implementation.system class="org.fabric3.fabric.wire.jdk.JDKProxyService"/>
     </component>

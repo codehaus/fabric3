@@ -16,31 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.generator;
-
-import org.fabric3.spi.generator.GeneratorContext;
-import org.fabric3.spi.model.physical.PhysicalChangeSet;
-import org.fabric3.spi.command.CommandSet;
+package org.fabric3.fabric.command;
 
 /**
- * The default implementation of a GeneratorContext
- *
  * @version $Rev$ $Date$
  */
-public class DefaultGeneratorContext implements GeneratorContext {
-    private PhysicalChangeSet changeSet;
-    private CommandSet commandSet;
+public interface CommandListenerMonitor {
 
-    public DefaultGeneratorContext(PhysicalChangeSet changeSet, CommandSet commandSet) {
-        this.changeSet = changeSet;
-        this.commandSet = commandSet;
-    }
-
-    public PhysicalChangeSet getPhysicalChangeSet() {
-        return changeSet;
-    }
-
-    public CommandSet getCommandSet() {
-        return commandSet;
-    }
+    void error(Exception exception);
 }

@@ -26,6 +26,7 @@ import org.fabric3.spi.implementation.java.PojoComponentType;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.physical.PhysicalChangeSet;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
+import org.fabric3.spi.command.CommandSet;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.Scope;
 
@@ -176,6 +177,10 @@ public class JavaPhysicalComponentGeneratorTestCase extends TestCase {
 
         public PhysicalChangeSet getPhysicalChangeSet() {
             return changSet;
+        }
+
+        public CommandSet getCommandSet() {
+            return null;
         }
     }
 

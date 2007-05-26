@@ -30,14 +30,18 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.fabric.deployer.Deployer;
+import org.fabric3.spi.builder.BuilderException;
+import org.fabric3.spi.command.CommandExecutorRegistry;
+import org.fabric3.spi.command.CommandSet;
+import org.fabric3.spi.command.Command;
+import org.fabric3.spi.command.ExecutionException;
+import org.fabric3.spi.component.RegistrationException;
 import org.fabric3.spi.marshaller.MarshalException;
 import org.fabric3.spi.marshaller.MarshallerRegistry;
 import org.fabric3.spi.model.physical.PhysicalChangeSet;
 import org.fabric3.spi.services.messaging.MessagingException;
 import org.fabric3.spi.services.messaging.MessagingService;
-import org.fabric3.spi.builder.BuilderException;
-import org.fabric3.spi.component.RegistrationException;
-import org.fabric3.fabric.deployer.Deployer;
 
 /**
  * A routing service implementation that routes physical changesets across a domain
@@ -48,13 +52,16 @@ public class FederatedRoutingService implements RoutingService {
     private final MarshallerRegistry marshallerRegistry;
     private final MessagingService messagingService;
     private final Deployer deployer;
+    private final CommandExecutorRegistry executorRegistry;
 
     public FederatedRoutingService(@Reference Deployer deployer,
                                    @Reference MarshallerRegistry marshallerRegistry,
-                                   @Reference MessagingService messagingService) {
+                                   @Reference MessagingService messagingService,
+                                   @Reference CommandExecutorRegistry executorRegistry) {
         this.deployer = deployer;
         this.marshallerRegistry = marshallerRegistry;
         this.messagingService = messagingService;
+        this.executorRegistry = executorRegistry;
     }
 
     public void route(URI runtimeId, PhysicalChangeSet pcs) throws RoutingException {
@@ -68,24 +75,53 @@ public class FederatedRoutingService implements RoutingService {
             }
 
         } else {
-            try {
-                ByteArrayOutputStream out = new ByteArrayOutputStream();
-                XMLStreamWriter pcsWriter = XMLOutputFactory.newInstance().createXMLStreamWriter(out);
-                marshallerRegistry.marshall(pcs, pcsWriter);
-                ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
-                XMLStreamReader pcsReader = XMLInputFactory.newInstance().createXMLStreamReader(in);
-                messagingService.sendMessage(runtimeId.toASCIIString(), pcsReader);
-            } catch (XMLStreamException e) {
-                throw new RoutingException("Error routing change set", e);
-            } catch (MarshalException e) {
-                throw new RoutingException("Error routing change set", e);
-            } catch (MessagingException e) {
-                throw new RoutingException("Error routing change set", e);
-            }
+            routeToDestination(runtimeId, pcs);
+        }
+    }
+
+    public void route(URI runtimeId, CommandSet commandSet) throws RoutingException {
+        if (runtimeId == null) {
+            routeLocally(commandSet);
+        } else {
+            routeToDestination(runtimeId, commandSet);
         }
     }
 
     public Set<String> getRuntimeIds() {
         return messagingService.getRuntimeIds();
+    }
+
+    private void routeLocally(CommandSet set) throws RoutingException {
+        try {
+            for (Command command : set.getCommands(CommandSet.Phase.FIRST)) {
+                executorRegistry.execute(command);
+            }
+            for (Command command : set.getCommands(CommandSet.Phase.STANDARD)) {
+                executorRegistry.execute(command);
+            }
+            for (Command command : set.getCommands(CommandSet.Phase.LAST)) {
+                executorRegistry.execute(command);
+            }
+        } catch (ExecutionException e) {
+            throw new RoutingException(e);
+        }
+    }
+
+    private void routeToDestination(URI runtimeId, Object commandSet) throws RoutingException {
+        try {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            XMLStreamWriter writer = XMLOutputFactory.newInstance().createXMLStreamWriter(out);
+            marshallerRegistry.marshall(commandSet, writer);
+            ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
+            XMLStreamReader pcsReader = XMLInputFactory.newInstance().createXMLStreamReader(in);
+            messagingService.sendMessage(runtimeId.toASCIIString(), pcsReader);
+        } catch (XMLStreamException e) {
+            throw new RoutingException("Routing error", e);
+        } catch (MarshalException e) {
+            throw new RoutingException("Routing error", e);
+        } catch (MessagingException e) {
+            throw new RoutingException("Routing error", e);
+        }
+
     }
 }

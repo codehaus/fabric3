@@ -20,6 +20,10 @@ import org.fabric3.fabric.builder.Connector;
 import org.fabric3.fabric.builder.ConnectorImpl;
 import org.fabric3.fabric.builder.component.DefaultComponentBuilderRegistry;
 import org.fabric3.fabric.builder.component.WireAttacherRegistryImpl;
+import org.fabric3.fabric.command.CommandExecutorRegistryImpl;
+import org.fabric3.fabric.command.CommandListenerMonitor;
+import org.fabric3.fabric.command.StartContextCommand;
+import org.fabric3.fabric.command.StartContextCommandExecutor;
 import org.fabric3.fabric.component.GroupInitializationExceptionFormatter;
 import org.fabric3.fabric.component.instancefactory.IFProviderBuilderRegistry;
 import org.fabric3.fabric.component.instancefactory.impl.DefaultIFProviderBuilderRegistry;
@@ -81,6 +85,7 @@ import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.builder.component.WireAttacherRegistry;
+import org.fabric3.spi.command.CommandExecutorRegistry;
 import org.fabric3.spi.component.ComponentException;
 import org.fabric3.spi.component.ComponentManager;
 import org.fabric3.spi.component.RegistrationException;
@@ -170,7 +175,9 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         loader = createLoader(introspector);
         GeneratorRegistry generatorRegistry = createGeneratorRegistry();
         Deployer deployer = createFederatedDeployer();
-        RuntimeRoutingService routingService = new RuntimeRoutingService(deployer, runtime.getHostInfo());
+        CommandExecutorRegistry commandRegistry = createCommandExecutorRegistry(scopeRegistry);
+        HostInfo info = runtime.getHostInfo();
+        RuntimeRoutingService routingService = new RuntimeRoutingService(deployer, commandRegistry, info);
         PromotionNormalizer normalizer = new PromotionNormalizerImpl();
         runtimeAssembly = new RuntimeAssemblyImpl(generatorRegistry, resolver, normalizer, routingService);
     }
@@ -286,6 +293,15 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         } catch (IncludeException e) {
             throw new InitializationException(e);
         }
+    }
+
+    protected CommandExecutorRegistry createCommandExecutorRegistry(ScopeRegistry scopeRegistry) {
+        CommandExecutorRegistryImpl commandRegistry = new CommandExecutorRegistryImpl();
+        CommandListenerMonitor monitor = monitorFactory.getMonitor(CommandListenerMonitor.class);
+        StartContextCommandExecutor executor =
+                new StartContextCommandExecutor(commandRegistry, scopeRegistry, monitor);
+        commandRegistry.register(StartContextCommand.class, executor);
+        return commandRegistry;
     }
 
     protected Introspector createIntrospector(JavaInterfaceProcessorRegistry registry) {

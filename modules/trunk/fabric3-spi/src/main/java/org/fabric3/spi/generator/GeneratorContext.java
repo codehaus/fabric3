@@ -18,6 +18,7 @@
  */
 package org.fabric3.spi.generator;
 
+import org.fabric3.spi.command.CommandSet;
 import org.fabric3.spi.model.physical.PhysicalChangeSet;
 
 /**
@@ -34,4 +35,10 @@ public interface GeneratorContext {
      */
     PhysicalChangeSet getPhysicalChangeSet();
 
+    /**
+     * Returns the current command set.
+     *
+     * @return the current command set
+     */
+    CommandSet getCommandSet();
 }

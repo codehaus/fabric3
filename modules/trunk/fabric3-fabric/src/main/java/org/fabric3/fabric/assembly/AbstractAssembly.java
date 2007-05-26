@@ -35,6 +35,7 @@ import org.fabric3.fabric.assembly.resolver.WireResolver;
 import org.fabric3.fabric.generator.DefaultGeneratorContext;
 import org.fabric3.fabric.services.routing.RoutingException;
 import org.fabric3.fabric.services.routing.RoutingService;
+import org.fabric3.spi.command.CommandSet;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
@@ -167,7 +168,8 @@ public abstract class AbstractAssembly implements Assembly {
         }
 
         PhysicalChangeSet changeSet = new PhysicalChangeSet();
-        GeneratorContext context = new DefaultGeneratorContext(changeSet);
+        CommandSet commandSet = new CommandSet();
+        GeneratorContext context = new DefaultGeneratorContext(changeSet, commandSet);
         try {
             generatorRegistry.generateBoundServiceWire(service, binding, targetComponent, context);
             routingService.route(targetComponent.getRuntimeId(), changeSet);
@@ -298,8 +300,17 @@ public abstract class AbstractAssembly implements Assembly {
             for (LogicalComponent<?> child : component.getComponents()) {
                 generateChangeSets(composite, child, contexts);
             }
+            for (LogicalComponent<?> child : component.getComponents()) {
+                GeneratorContext context = contexts.get(child.getRuntimeId());
+                assert context != null;
+                generatorRegistry.generatorCommandSet(child, context);
+            }
+
         } else {
             generateChangeSets(parent, component, contexts);
+            GeneratorContext context = contexts.get(component.getRuntimeId());
+            assert context != null;
+            generatorRegistry.generatorCommandSet(component, context);
         }
         // route the change sets to service nodes
         for (Map.Entry<URI, GeneratorContext> entry : contexts.entrySet()) {
@@ -344,12 +355,13 @@ public abstract class AbstractAssembly implements Assembly {
                                          LogicalComponent<?> component,
                                          Map<URI, GeneratorContext> contexts)
             throws GenerationException, ResolutionException {
-        URI componentId = component.getRuntimeId();
-        GeneratorContext context = contexts.get(componentId);
+        URI runtimeId = component.getRuntimeId();
+        GeneratorContext context = contexts.get(runtimeId);
         if (context == null) {
             PhysicalChangeSet changeSet = new PhysicalChangeSet();
-            context = new DefaultGeneratorContext(changeSet);
-            contexts.put(componentId, context);
+            CommandSet commandSet = new CommandSet();
+            context = new DefaultGeneratorContext(changeSet, commandSet);
+            contexts.put(runtimeId, context);
         }
         for (LogicalReference entry : component.getReferences()) {
             for (URI uri : entry.getTargetUris()) {
@@ -420,7 +432,8 @@ public abstract class AbstractAssembly implements Assembly {
         GeneratorContext context = contexts.get(id);
         if (context == null) {
             PhysicalChangeSet changeSet = new PhysicalChangeSet();
-            context = new DefaultGeneratorContext(changeSet);
+            CommandSet commandSet = new CommandSet();
+            context = new DefaultGeneratorContext(changeSet, commandSet);
             contexts.put(id, context);
         }
         generatorRegistry.generatePhysicalComponent(component, context);

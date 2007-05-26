@@ -24,30 +24,32 @@ import javax.xml.stream.XMLStreamWriter;
 
 /**
  * A registry for model object marshallers.
- * 
+ *
  * @version $Rev$ $Date$
  */
 public interface MarshallerRegistry {
 
     /**
-     * Registers a model object marshaller.
-     * 
-     * @param modelClass Model obejct class.
-     * @param xmlName Qualified name of the root element of the marshalled XML.
-     * @param marshaller Model object marshaller.
+     * Registers an object marshaller.
+     *
+     * @param clazz      object class.
+     * @param xmlName    qualified name of the root element of the marshalled XML.
+     * @param marshaller object marshaller.
      */
-    void registerMarshaller(Class<?> modelClass, QName xmlName, Marshaller marshaller);
-    
+    void registerMarshaller(Class<?> clazz, QName xmlName, Marshaller marshaller);
+
     /**
-     * Gets the marshaller capable of marshalling the specified model object class.
-     * @param modelClass Model object class.
-     * @return Marshaller for marshalling the model object.
+     * Gets the marshaller capable of marshalling the specified object class.
+     *
+     * @param clazz object class.
+     * @return Marshaller for marshalling the object.
      * @throws MarshalException If the marshaller is not found.
      */
-    Marshaller getMarshaller(Class<?> modelClass) throws MarshalException;
-    
+    Marshaller getMarshaller(Class<?> clazz) throws MarshalException;
+
     /**
      * Gets the marshaller capable of unmarshalling the XML element.
+     *
      * @param xmlName Qualified naem of the XML element.
      * @return Marshaller for unmarshalling the XML element.
      * @throws MarshalException If the marshaller is not found.
@@ -55,18 +57,20 @@ public interface MarshallerRegistry {
     Marshaller getMarshaller(QName xmlName) throws MarshalException;
 
     /**
-     * Marshalls a model object.
-     * 
-     * @param modelObject Model object to be marshalled.
+     * Marshalls an object.
+     *
+     * @param object object to be marshalled.
      * @param writer Writer to which marshalled information is written.
+     * @throws MarshalException if an error is encountered marshalling
      */
-    void marshall(Object modelObject, XMLStreamWriter writer) throws MarshalException;
+    void marshall(Object object, XMLStreamWriter writer) throws MarshalException;
 
     /**
-     * Unmarshalls an XML stream to a model object.
-     * 
+     * Unmarshalls an XML stream to an object.
+     *
      * @param reader Reader from which marshalled information is read.
-     * @return Model object from the marshalled stream.
+     * @return object from the marshalled stream.
+     * @throws MarshalException if an error is encountered unmarshalling
      */
     Object unmarshall(XMLStreamReader reader) throws MarshalException;
 
