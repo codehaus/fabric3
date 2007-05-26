@@ -38,7 +38,7 @@
     </component>
     
     <component name="runtimeRoutingService">
-        <system:implementation.system class="org.fabric3.fabric.services.routing.RuntimeRoutingService"/>
+        <system:implementation.system class="org.fabric3.fabric.services.routing.FederatedRoutingService"/>
     </component>
 
     <component name="generatorRegistry">

@@ -110,13 +110,12 @@
                 class="org.fabric3.fabric.marshaller.xstream.XStreamMarshallerRegistry"/>
     </component> 
 
-<!--
+
     <include scdlResource="META-INF/hessian.scdl"/>
 
     <component name="JettyService">
         <system:implementation.system class="org.fabric3.jetty.JettyServiceImpl"/>
         <property name="httpPort">8101</property>
     </component>
--->
 
 </composite>

@@ -23,7 +23,7 @@
 
     <reference name="client" promote="testComponent/calculator">
         <interface.java interface="calculator.CalculatorService"/>
-        <hessian:binding.hessian referenceUrl="http://localhost:8101/calculator"/>
+        <hessian:binding.hessian uri="http://localhost:8101/calculator"/>
     </reference>
 
     <component name="testComponent">
