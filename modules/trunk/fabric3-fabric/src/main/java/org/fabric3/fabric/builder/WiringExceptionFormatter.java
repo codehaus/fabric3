@@ -24,10 +24,10 @@ import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.builder.WiringException;
-
+import org.fabric3.extension.monitor.FormatterHelper;
 import org.fabric3.host.monitor.ExceptionFormatter;
 import org.fabric3.host.monitor.FormatterRegistry;
+import org.fabric3.spi.builder.WiringException;
 
 /**
  * Formats {@link WiringException}s
@@ -36,10 +36,10 @@ import org.fabric3.host.monitor.FormatterRegistry;
  */
 @EagerInit
 public class WiringExceptionFormatter implements ExceptionFormatter<WiringException> {
-    private FormatterRegistry factory;
+    private FormatterRegistry registry;
 
     public WiringExceptionFormatter(@Reference FormatterRegistry factory) {
-        this.factory = factory;
+        this.registry = factory;
         factory.register(this);
     }
 
@@ -49,10 +49,10 @@ public class WiringExceptionFormatter implements ExceptionFormatter<WiringExcept
 
     @Destroy
     public void destroy() {
-        factory.unregister(this);
+        registry.unregister(this);
     }
 
-    public PrintWriter write(PrintWriter writer, WiringException e) {
+    public void write(PrintWriter writer, WiringException e) {
         e.appendBaseMessage(writer);
         if (e.getSourceUri() != null) {
             writer.write("\nSource : " + e.getSourceUri());
@@ -60,6 +60,17 @@ public class WiringExceptionFormatter implements ExceptionFormatter<WiringExcept
         if (e.getTargetUri() != null) {
             writer.write("\nTarget : " + e.getTargetUri());
         }
-        return writer;
+        writer.append("\n");
+        Throwable cause = e.getCause();
+        if (cause != null) {
+            FormatterHelper.writeStackTrace(writer, e, cause);
+            writer.println("Caused by:");
+            registry.formatException(writer, cause);
+        } else {
+            StackTraceElement[] trace = e.getStackTrace();
+            for (StackTraceElement aTrace : trace) {
+                writer.println("\tat " + aTrace);
+            }
+        }
     }
 }

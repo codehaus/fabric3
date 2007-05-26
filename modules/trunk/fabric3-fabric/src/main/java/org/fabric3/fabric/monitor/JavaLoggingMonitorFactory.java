@@ -18,6 +18,8 @@
  */
 package org.fabric3.fabric.monitor;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -30,8 +32,8 @@ import java.util.logging.Logger;
 
 import org.osoa.sca.annotations.Service;
 
-import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.host.monitor.FormatterRegistry;
+import org.fabric3.host.monitor.MonitorFactory;
 
 /**
  * A factory for monitors that forwards events to a {@link java.util.logging.Logger Java Logging (JSR47) Logger}.
@@ -105,7 +107,10 @@ public class JavaLoggingMonitorFactory extends ProxyMonitorFactory {
                 if (args != null) {
                     for (Object o : args) {
                         if (o instanceof Throwable) {
-                            logRecord.setMessage(formatException((Throwable) o));
+                            StringWriter sw = new StringWriter();
+                            PrintWriter pw = new PrintWriter(sw);
+                            formatException(pw, (Throwable) o);
+                            logRecord.setMessage(sw.toString());
                             break;
                         }
                     }

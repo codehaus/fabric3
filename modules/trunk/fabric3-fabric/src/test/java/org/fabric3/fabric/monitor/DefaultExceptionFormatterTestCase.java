@@ -22,6 +22,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import junit.framework.TestCase;
+
 import org.fabric3.host.Fabric3Exception;
 import org.fabric3.host.Fabric3RuntimeException;
 
@@ -29,7 +30,7 @@ import org.fabric3.host.Fabric3RuntimeException;
  * @version $Rev$ $Date$
  */
 public class DefaultExceptionFormatterTestCase extends TestCase {
-    private DefaultExceptionFormatter formatter = new DefaultExceptionFormatter();
+    private DefaultExceptionFormatter formatter = new DefaultExceptionFormatter(null);
 
     public void testFabric3ExceptionFormat() throws Exception {
         StringWriter writer = new StringWriter();

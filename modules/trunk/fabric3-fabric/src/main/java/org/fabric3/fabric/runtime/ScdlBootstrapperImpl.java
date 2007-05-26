@@ -20,6 +20,7 @@ import org.fabric3.fabric.builder.Connector;
 import org.fabric3.fabric.builder.ConnectorImpl;
 import org.fabric3.fabric.builder.component.DefaultComponentBuilderRegistry;
 import org.fabric3.fabric.builder.component.WireAttacherRegistryImpl;
+import org.fabric3.fabric.component.GroupInitializationExceptionFormatter;
 import org.fabric3.fabric.component.instancefactory.IFProviderBuilderRegistry;
 import org.fabric3.fabric.component.instancefactory.impl.DefaultIFProviderBuilderRegistry;
 import org.fabric3.fabric.component.instancefactory.impl.ReflectiveIFProviderBuilder;
@@ -102,11 +103,11 @@ import org.fabric3.spi.model.type.CompositeImplementation;
 import org.fabric3.spi.model.type.Scope;
 import org.fabric3.spi.model.type.ServiceContract;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
-import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.spi.transform.PullTransformer;
+import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.transform.DefaultTransformerRegistry;
-import org.fabric3.transform.dom2java.String2String;
 import org.fabric3.transform.dom2java.String2Integer;
+import org.fabric3.transform.dom2java.String2String;
 
 /**
  * Bootstrapper that initializes a runtime by reading a system SCDL file.
@@ -159,6 +160,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         ClassLoader cl = getClass().getClassLoader();
         xmlFactory = XMLInputFactory.newInstance("javax.xml.stream.XMLInputFactory", cl);
         monitorFactory = runtime.getMonitorFactory();
+        monitorFactory.register(new GroupInitializationExceptionFormatter(monitorFactory));
         // create the ClassLoaderRegistry
         classLoaderRegistry = new ClassLoaderRegistryImpl();
         componentManager = ((AbstractRuntime<?>) runtime).getComponentManager();

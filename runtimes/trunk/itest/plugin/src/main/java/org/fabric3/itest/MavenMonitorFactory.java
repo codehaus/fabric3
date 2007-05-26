@@ -18,13 +18,15 @@
  */
 package org.fabric3.itest;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.HashMap;
 import java.util.logging.Level;
-import java.text.MessageFormat;
 
 import org.apache.maven.plugin.logging.Log;
 
@@ -65,7 +67,7 @@ public class MavenMonitorFactory extends ProxyMonitorFactory {
             if (level == Level.OFF) {
                 return null;
             }
-            
+
             int value = level.intValue();
             if (isLogEnabled(value)) {
                 String key = monitorName + '#' + sourceMethod;
@@ -82,8 +84,12 @@ public class MavenMonitorFactory extends ProxyMonitorFactory {
                     builder.append(key).append(":");
                     for (Object o : objects) {
                         builder.append(' ');
-                        if (o instanceof Throwable) {
-                            builder.append(formatException((Throwable) o));
+                        if (o instanceof Exception) {
+                            StringWriter sw = new StringWriter();
+                            PrintWriter pw = new PrintWriter(sw);
+                            formatException(pw, (Exception) o);
+                            builder.append(sw.toString());
+                            pw.close();
                         } else {
                             builder.append(String.valueOf(o));
                         }
@@ -119,9 +125,9 @@ public class MavenMonitorFactory extends ProxyMonitorFactory {
 
         private boolean isLogEnabled(int value) {
             return log.isDebugEnabled() && value >= Level.FINEST.intValue()
-                || log.isInfoEnabled() && value >= Level.INFO.intValue()
-                || log.isWarnEnabled() && value >= Level.WARNING.intValue()
-                || log.isErrorEnabled() && value >= Level.SEVERE.intValue();
+                    || log.isInfoEnabled() && value >= Level.INFO.intValue()
+                    || log.isWarnEnabled() && value >= Level.WARNING.intValue()
+                    || log.isErrorEnabled() && value >= Level.SEVERE.intValue();
         }
 
         private Throwable getFirstException(Object[] objects) {

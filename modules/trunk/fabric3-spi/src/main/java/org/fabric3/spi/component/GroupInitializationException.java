@@ -20,12 +20,10 @@ package org.fabric3.spi.component;
 
 import java.util.List;
 
-import org.fabric3.host.GroupException;
-
 /**
  * @version $Rev$ $Date$
  */
-public class GroupInitializationException extends TargetResolutionException implements GroupException {
+public class GroupInitializationException extends TargetResolutionException {
     private final List<Exception> causes;
 
     /**

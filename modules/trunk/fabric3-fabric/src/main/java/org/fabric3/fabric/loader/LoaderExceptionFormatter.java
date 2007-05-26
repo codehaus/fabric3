@@ -24,10 +24,10 @@ import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.loader.LoaderException;
-
+import org.fabric3.extension.monitor.FormatterHelper;
 import org.fabric3.host.monitor.ExceptionFormatter;
 import org.fabric3.host.monitor.FormatterRegistry;
+import org.fabric3.spi.loader.LoaderException;
 
 /**
  * Formats {@link org.fabric3.spi.loader.LoaderException} events
@@ -36,10 +36,10 @@ import org.fabric3.host.monitor.FormatterRegistry;
  */
 @EagerInit
 public class LoaderExceptionFormatter<T extends LoaderException> implements ExceptionFormatter<T> {
-    private FormatterRegistry factory;
+    private FormatterRegistry registry;
 
     public LoaderExceptionFormatter(@Reference FormatterRegistry factory) {
-        this.factory = factory;
+        this.registry = factory;
         factory.register(this);
     }
 
@@ -49,10 +49,10 @@ public class LoaderExceptionFormatter<T extends LoaderException> implements Exce
 
     @Destroy
     public void destroy() {
-        factory.unregister(this);
+        registry.unregister(this);
     }
 
-    public PrintWriter write(PrintWriter writer, T e) {
+    public void write(PrintWriter writer, T e) {
         e.appendBaseMessage(writer);
         if (e.getLine() != LoaderException.UNDEFINED) {
             writer.write("\nLine: " + e.getLine() + "\n");
@@ -60,6 +60,17 @@ public class LoaderExceptionFormatter<T extends LoaderException> implements Exce
         } else {
             writer.write("\n");
         }
-        return writer;
+        writer.append("\n");
+        Throwable cause = e.getCause();
+        if (cause != null) {
+            FormatterHelper.writeStackTrace(writer, e, cause);
+            writer.println("Caused by:");
+            registry.formatException(writer, cause);
+        } else {
+            StackTraceElement[] trace = e.getStackTrace();
+            for (StackTraceElement aTrace : trace) {
+                writer.println("\tat " + aTrace);
+            }
+        }
     }
 }

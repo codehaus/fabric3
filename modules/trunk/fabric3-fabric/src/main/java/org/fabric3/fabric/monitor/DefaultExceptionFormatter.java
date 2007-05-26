@@ -20,9 +20,13 @@ package org.fabric3.fabric.monitor;
 
 import java.io.PrintWriter;
 
+import org.osoa.sca.annotations.Reference;
+
+import org.fabric3.extension.monitor.FormatterHelper;
 import org.fabric3.host.Fabric3Exception;
 import org.fabric3.host.Fabric3RuntimeException;
 import org.fabric3.host.monitor.ExceptionFormatter;
+import org.fabric3.host.monitor.FormatterRegistry;
 
 /**
  * Performs basics formatting of exceptions for JDK logging
@@ -30,15 +34,18 @@ import org.fabric3.host.monitor.ExceptionFormatter;
  * @version $Rev$ $Date$
  */
 public class DefaultExceptionFormatter implements ExceptionFormatter<Throwable> {
+    private FormatterRegistry registry;
 
-    public DefaultExceptionFormatter() {
+    public DefaultExceptionFormatter(@Reference FormatterRegistry registry) {
+        this.registry = registry;
     }
 
     public boolean canFormat(Class<?> type) {
         return Throwable.class.isAssignableFrom(type);
     }
 
-    public PrintWriter write(PrintWriter writer, Throwable exception) {
+    public void write(PrintWriter writer, Throwable exception) {
+        writer.append(exception.getClass().getName()).append(": ");
         if (exception instanceof Fabric3Exception) {
             Fabric3Exception e = (Fabric3Exception) exception;
             e.appendBaseMessage(writer);
@@ -47,7 +54,17 @@ public class DefaultExceptionFormatter implements ExceptionFormatter<Throwable> 
             e.appendBaseMessage(writer);
         }
         writer.append("\n");
-        return writer;
+        Throwable cause = exception.getCause();
+        if (cause != null) {
+            FormatterHelper.writeStackTrace(writer, exception, cause);
+            writer.println("Caused by:");
+            registry.formatException(writer, cause);
+        } else {
+            StackTraceElement[] trace = exception.getStackTrace();
+            for (StackTraceElement aTrace : trace) {
+                writer.println("\tat " + aTrace);
+            }
+        }
     }
 
 }

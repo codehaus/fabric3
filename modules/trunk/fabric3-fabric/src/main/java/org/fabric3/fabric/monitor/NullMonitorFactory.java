@@ -22,6 +22,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Map;
+import java.io.PrintWriter;
 
 import org.osoa.sca.annotations.EagerInit;
 
@@ -64,5 +65,9 @@ public class NullMonitorFactory implements MonitorFactory {
 
     public void unregister(ExceptionFormatter formatter) {
 
+    }
+
+    public <T extends Throwable> PrintWriter formatException(PrintWriter writer, T e) {
+        return writer;
     }
 }

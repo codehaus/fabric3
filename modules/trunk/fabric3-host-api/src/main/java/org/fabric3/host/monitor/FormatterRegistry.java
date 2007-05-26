@@ -18,6 +18,8 @@
  */
 package org.fabric3.host.monitor;
 
+import java.io.PrintWriter;
+
 /**
  * A registry for exception formatters
  *
@@ -38,5 +40,7 @@ public interface FormatterRegistry {
      * @param formatter the formatter to de-register
      */
     void unregister(ExceptionFormatter formatter);
+
+    public <T extends Throwable> PrintWriter formatException(PrintWriter writer, T e);
 
 }

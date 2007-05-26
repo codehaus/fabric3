@@ -24,12 +24,11 @@ import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.model.type.Operation;
-import org.fabric3.spi.model.type.ServiceContract;
-import org.fabric3.fabric.wire.IncompatibleServiceContractException;
-
 import org.fabric3.host.monitor.ExceptionFormatter;
 import org.fabric3.host.monitor.FormatterRegistry;
+import org.fabric3.spi.model.type.Operation;
+import org.fabric3.spi.model.type.ServiceContract;
+import org.fabric3.extension.monitor.FormatterHelper;
 
 /**
  * Formats {@link IncompatibleServiceContractException} for JDK logging
@@ -38,10 +37,10 @@ import org.fabric3.host.monitor.FormatterRegistry;
  */
 @EagerInit
 public class IncompatibleServiceContractExceptionFormatter implements ExceptionFormatter<IncompatibleServiceContractException> {
-    private FormatterRegistry factory;
+    private FormatterRegistry registry;
 
     public IncompatibleServiceContractExceptionFormatter(@Reference FormatterRegistry factory) {
-        this.factory = factory;
+        this.registry = factory;
         factory.register(this);
     }
 
@@ -51,10 +50,10 @@ public class IncompatibleServiceContractExceptionFormatter implements ExceptionF
 
     @Destroy
     public void destroy() {
-        factory.unregister(this);
+        registry.unregister(this);
     }
 
-    public PrintWriter write(PrintWriter writer, IncompatibleServiceContractException e) {
+    public void write(PrintWriter writer, IncompatibleServiceContractException e) {
         e.appendBaseMessage(writer);
         ServiceContract<?> source = e.getSource();
         String sourceContractName = null;
@@ -87,6 +86,17 @@ public class IncompatibleServiceContractExceptionFormatter implements ExceptionF
             writer.write("\nTarget Contract: " + targetContractName + "/" + targetOpName + "\n");
 
         }
-        return writer;
+        writer.append("\n");
+        Throwable cause = e.getCause();
+        if (cause != null) {
+            FormatterHelper.writeStackTrace(writer, e, cause);
+            writer.println("Caused by:");
+            registry.formatException(writer, cause);
+        } else {
+            StackTraceElement[] trace = e.getStackTrace();
+            for (StackTraceElement aTrace : trace) {
+                writer.println("\tat " + aTrace);
+            }
+        }
     }
 }

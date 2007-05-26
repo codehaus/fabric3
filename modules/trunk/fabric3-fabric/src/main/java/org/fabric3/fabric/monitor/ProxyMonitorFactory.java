@@ -19,7 +19,6 @@
 package org.fabric3.fabric.monitor;
 
 import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -36,9 +35,6 @@ import java.util.WeakHashMap;
 import java.util.logging.Level;
 
 import org.fabric3.api.annotation.LogLevel;
-import org.fabric3.host.GroupException;
-import org.fabric3.host.Fabric3Exception;
-import org.fabric3.host.Fabric3RuntimeException;
 import org.fabric3.host.monitor.ExceptionFormatter;
 import org.fabric3.host.monitor.FormatterRegistry;
 import org.fabric3.host.monitor.MonitorFactory;
@@ -56,7 +52,7 @@ public abstract class ProxyMonitorFactory implements MonitorFactory, FormatterRe
 
 
     protected ProxyMonitorFactory() {
-        defaultFormatter = new DefaultExceptionFormatter();
+        defaultFormatter = new DefaultExceptionFormatter(this);
     }
 
     public void initialize(Map<String, Object> configProperties) {
@@ -169,18 +165,14 @@ public abstract class ProxyMonitorFactory implements MonitorFactory, FormatterRe
         formatters.remove(formatter);
     }
 
+    public <T extends Throwable> PrintWriter formatException(PrintWriter pw, T e) {
+        ExceptionFormatter<? super T> formatter = getFormatter(e);
+        formatter.write(pw, e);
+        return pw;
+    }
+
     protected abstract <T> InvocationHandler createInvocationHandler(Class<T> monitorInterface,
                                                                      Map<String, Level> levels);
-
-    protected <T extends Throwable> String formatException(T e) {
-        ExceptionFormatter<? super T> formatter = getFormatter(e);
-        StringWriter writer = new StringWriter();
-        PrintWriter pw = new PrintWriter(writer);
-        formatter.write(pw, e);
-        format(pw, e);
-        pw.close();
-        return writer.toString();
-    }
 
     private <T extends Throwable> ExceptionFormatter<? super T> getFormatter(T e) {
         for (ExceptionFormatter<?> candidate : formatters) {
@@ -191,67 +183,4 @@ public abstract class ProxyMonitorFactory implements MonitorFactory, FormatterRe
         return defaultFormatter;
     }
 
-    protected void format(PrintWriter writer, Throwable throwable) {
-        writer.println(throwable.getClass().getName());
-        StackTraceElement[] trace = throwable.getStackTrace();
-        for (StackTraceElement aTrace : trace) {
-            writer.println("\tat " + aTrace);
-        }
-        Throwable ourCause = throwable.getCause();
-
-        if (ourCause != null) {
-            printStackTraceAsCause(writer, ourCause, trace);
-        }
-    }
-
-    protected <T extends Throwable> void printStackTraceAsCause(PrintWriter pw,
-                                                                T throwable,
-                                                                StackTraceElement[] causedTrace) {
-
-        // Compute number of frames in common between this and caused
-        StackTraceElement[] trace = throwable.getStackTrace();
-        int m = trace.length - 1;
-        int n = causedTrace.length - 1;
-        while (m >= 0 && n >= 0 && trace[m].equals(causedTrace[n])) {
-            m--;
-            n--;
-        }
-        if (throwable instanceof GroupException) {
-            GroupException groupException = (GroupException) throwable;
-            groupException.appendBaseMessage(pw);
-            List<Exception> causes = groupException.getCauses();
-            for (Exception cause : causes) {
-                if (cause instanceof Fabric3Exception) {
-                    Fabric3Exception f3ex = (Fabric3Exception) cause;
-                    pw.println("\n"+ f3ex.getIdentifier() + " caused:");
-                } else if (cause instanceof Fabric3RuntimeException) {
-                    Fabric3RuntimeException f3ex = (Fabric3RuntimeException) cause;
-                    pw.println("\n"+ f3ex.getIdentifier() + " caused:");
-                } else {
-                    pw.println("Caused by:");
-                }
-                format(pw, cause);
-            }
-
-        } else {
-            int framesInCommon = trace.length - 1 - m;
-
-            pw.println("Caused by: " + throwable.getClass().getName());
-
-            ExceptionFormatter<? super T> formatter = getFormatter(throwable);
-            formatter.write(pw, throwable);
-
-            for (int i = 0; i <= m; i++) {
-                pw.println("\tat " + trace[i]);
-            }
-            if (framesInCommon != 0) {
-                pw.println("\t... " + framesInCommon + " more");
-            }
-            // Recurse if we have a cause
-            Throwable ourCause = throwable.getCause();
-            if (ourCause != null) {
-                printStackTraceAsCause(pw, ourCause, trace);
-            }
-        }
-    }
 }

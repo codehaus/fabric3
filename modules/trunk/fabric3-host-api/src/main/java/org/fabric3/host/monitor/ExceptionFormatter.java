@@ -29,6 +29,6 @@ public interface ExceptionFormatter<T extends Throwable> {
 
     boolean canFormat(Class<?> type);
 
-    PrintWriter write(PrintWriter writer, T exception);
+    void write(PrintWriter writer, T exception);
 
 }
