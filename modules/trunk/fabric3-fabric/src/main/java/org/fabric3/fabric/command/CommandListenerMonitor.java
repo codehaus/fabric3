@@ -19,6 +19,8 @@
 package org.fabric3.fabric.command;
 
 /**
+ * Receives command events
+ *
  * @version $Rev$ $Date$
  */
 public interface CommandListenerMonitor {

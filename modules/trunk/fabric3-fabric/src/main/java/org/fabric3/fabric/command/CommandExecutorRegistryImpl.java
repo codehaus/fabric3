@@ -27,6 +27,8 @@ import org.fabric3.spi.command.CommandExecutorRegistry;
 import org.fabric3.spi.command.ExecutionException;
 
 /**
+ * Default implementation of the CommandExecutorRegistry
+ *
  * @version $Rev$ $Date$
  */
 @EagerInit

@@ -21,10 +21,7 @@ package org.fabric3.fabric.runtime;
 import java.net.URI;
 import java.net.URL;
 
-import org.osoa.sca.ComponentContext;
-
 import org.fabric3.extension.component.SimpleWorkContext;
-import org.fabric3.spi.component.ComponentManager;
 import org.fabric3.fabric.component.ComponentManagerImpl;
 import org.fabric3.fabric.deployer.Deployer;
 import org.fabric3.fabric.implementation.pojo.PojoWorkContextTunnel;
@@ -32,15 +29,16 @@ import org.fabric3.fabric.monitor.NullMonitorFactory;
 import org.fabric3.host.management.ManagementService;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.host.runtime.Fabric3Runtime;
-import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.HostInfo;
+import org.fabric3.host.runtime.InitializationException;
+import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.Component;
+import org.fabric3.spi.component.ComponentManager;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.model.type.Scope;
 import org.fabric3.spi.services.management.Fabric3ManagementService;
-import org.fabric3.spi.ObjectCreationException;
 
 /**
  * @version $Rev$ $Date$

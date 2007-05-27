@@ -316,6 +316,11 @@ public abstract class AbstractAssembly implements Assembly {
         for (Map.Entry<URI, GeneratorContext> entry : contexts.entrySet()) {
             routingService.route(entry.getKey(), entry.getValue().getPhysicalChangeSet());
         }
+        // route command sets
+        for (Map.Entry<URI, GeneratorContext> entry : contexts.entrySet()) {
+            routingService.route(entry.getKey(), entry.getValue().getCommandSet());
+        }
+
     }
 
     protected void generateChangeSets(LogicalComponent<CompositeImplementation> parent,

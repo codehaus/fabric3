@@ -58,7 +58,11 @@
     </component>
 
     <component name="startCommandExecutor">
-        <system:implementation.system class="org.fabric3.fabric.command.StartContextCommandExecutor"/>
+        <system:implementation.system class="org.fabric3.fabric.command.StartCompositeContextExecutor"/>
+    </component>
+
+    <component name="startCommandGenerator">
+        <system:implementation.system class="org.fabric3.fabric.command.StartCompositeContextGenerator"/>
     </component>
 
     <component name="proxyService">

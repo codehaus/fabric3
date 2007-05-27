@@ -20,6 +20,7 @@ import java.net.URI;
 import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.Constructor;
+import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
@@ -40,10 +41,13 @@ import org.fabric3.spi.services.messaging.MessagingService;
 import org.fabric3.spi.services.messaging.RequestListener;
 
 /**
+ * Executes a {@link org.fabric3.fabric.command.StartCompositeContextCommand}
+ *
  * @version $Rev$ $Date$
  */
 @Service(CommandExecutor.class)
-public class StartContextCommandExecutor implements CommandExecutor<StartContextCommand>, RequestListener {
+@EagerInit
+public class StartCompositeContextExecutor implements CommandExecutor<StartCompositeContextCommand>, RequestListener {
     private MessagingService messagingService;
     private MarshallerRegistry marshallerRegistry;
     private CommandListenerMonitor monitor;
@@ -51,11 +55,11 @@ public class StartContextCommandExecutor implements CommandExecutor<StartContext
     private CommandExecutorRegistry commandExecutorRegistry;
 
     @Constructor
-    public StartContextCommandExecutor(@Reference MessagingService messagingService,
-                                       @Reference MarshallerRegistry marshallerRegistry,
-                                       @Reference CommandExecutorRegistry commandExecutorRegistry,
-                                       @Reference ScopeRegistry scopeRegistry,
-                                       @Reference MonitorFactory factory) {
+    public StartCompositeContextExecutor(@Reference MessagingService messagingService,
+                                         @Reference MarshallerRegistry marshallerRegistry,
+                                         @Reference CommandExecutorRegistry commandExecutorRegistry,
+                                         @Reference ScopeRegistry scopeRegistry,
+                                         @Reference MonitorFactory factory) {
         this.messagingService = messagingService;
         this.marshallerRegistry = marshallerRegistry;
         this.monitor = factory.getMonitor(CommandListenerMonitor.class);
@@ -63,9 +67,9 @@ public class StartContextCommandExecutor implements CommandExecutor<StartContext
         this.container = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
     }
 
-    public StartContextCommandExecutor(CommandExecutorRegistry commandExecutorRegistry,
-                                       ScopeRegistry scopeRegistry,
-                                       CommandListenerMonitor monitor) {
+    public StartCompositeContextExecutor(CommandExecutorRegistry commandExecutorRegistry,
+                                         ScopeRegistry scopeRegistry,
+                                         CommandListenerMonitor monitor) {
         this.commandExecutorRegistry = commandExecutorRegistry;
         this.monitor = monitor;
         this.container = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
@@ -74,14 +78,14 @@ public class StartContextCommandExecutor implements CommandExecutor<StartContext
     @Init
     public void init() {
         if (messagingService != null) {
-            messagingService.registerRequestListener(StartContextCommand.QNAME, this);
+            messagingService.registerRequestListener(StartCompositeContextCommand.QNAME, this);
         }
-        commandExecutorRegistry.register(StartContextCommand.class, this);
+        commandExecutorRegistry.register(StartCompositeContextCommand.class, this);
     }
 
     public XMLStreamReader onRequest(XMLStreamReader reader) {
         try {
-            StartContextCommand command = (StartContextCommand) marshallerRegistry.unmarshall(reader);
+            StartCompositeContextCommand command = (StartCompositeContextCommand) marshallerRegistry.unmarshall(reader);
             execute(command);
         } catch (MarshalException e) {
             monitor.error(e);
@@ -92,7 +96,7 @@ public class StartContextCommandExecutor implements CommandExecutor<StartContext
         return null;
     }
 
-    public void execute(StartContextCommand command) throws ExecutionException {
+    public void execute(StartCompositeContextCommand command) throws ExecutionException {
         WorkContext workContext = new SimpleWorkContext();
         URI id = command.getGroupId();
         workContext.setScopeIdentifier(Scope.COMPOSITE, id);

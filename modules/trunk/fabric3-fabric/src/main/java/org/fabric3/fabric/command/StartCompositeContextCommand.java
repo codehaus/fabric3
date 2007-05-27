@@ -23,14 +23,16 @@ import org.fabric3.spi.Constants;
 import org.fabric3.spi.command.Command;
 
 /**
+ * Starts a context with the composite container
+ *
  * @version $Rev$ $Date$
  */
-public class StartContextCommand implements Command {
+public class StartCompositeContextCommand implements Command {
     public static final QName QNAME = new QName(Constants.FABRIC3_NS, "startContextCommand");
 
     private final URI groupId;
 
-    public StartContextCommand(URI groupId) {
+    public StartCompositeContextCommand(URI groupId) {
         this.groupId = groupId;
     }
 

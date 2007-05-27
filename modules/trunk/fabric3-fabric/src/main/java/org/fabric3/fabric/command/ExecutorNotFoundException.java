@@ -19,6 +19,8 @@ package org.fabric3.fabric.command;
 import org.fabric3.spi.command.ExecutionException;
 
 /**
+ * Thrown when an CommandExecutor cannot be found for a corresponding Command
+ *
  * @version $Rev$ $Date$
  */
 public class ExecutorNotFoundException extends ExecutionException {

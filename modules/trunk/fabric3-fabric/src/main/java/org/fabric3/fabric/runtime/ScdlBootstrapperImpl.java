@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.stream.XMLInputFactory;
 
-import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.fabric.assembly.IncludeException;
 import org.fabric3.fabric.assembly.InstantiationException;
@@ -22,8 +21,9 @@ import org.fabric3.fabric.builder.component.DefaultComponentBuilderRegistry;
 import org.fabric3.fabric.builder.component.WireAttacherRegistryImpl;
 import org.fabric3.fabric.command.CommandExecutorRegistryImpl;
 import org.fabric3.fabric.command.CommandListenerMonitor;
-import org.fabric3.fabric.command.StartContextCommand;
-import org.fabric3.fabric.command.StartContextCommandExecutor;
+import org.fabric3.fabric.command.StartCompositeContextCommand;
+import org.fabric3.fabric.command.StartCompositeContextExecutor;
+import org.fabric3.fabric.command.StartCompositeContextGenerator;
 import org.fabric3.fabric.component.GroupInitializationExceptionFormatter;
 import org.fabric3.fabric.component.instancefactory.IFProviderBuilderRegistry;
 import org.fabric3.fabric.component.instancefactory.impl.DefaultIFProviderBuilderRegistry;
@@ -86,12 +86,9 @@ import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.builder.component.WireAttacherRegistry;
 import org.fabric3.spi.command.CommandExecutorRegistry;
-import org.fabric3.spi.component.ComponentException;
 import org.fabric3.spi.component.ComponentManager;
 import org.fabric3.spi.component.RegistrationException;
-import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.idl.InvalidServiceContractException;
 import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
@@ -105,7 +102,6 @@ import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.CompositeImplementation;
-import org.fabric3.spi.model.type.Scope;
 import org.fabric3.spi.model.type.ServiceContract;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.transform.PullTransformer;
@@ -171,6 +167,11 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         componentManager = ((AbstractRuntime<?>) runtime).getComponentManager();
         resolver = new DefaultWireResolver();
         scopeRegistry = new ScopeRegistryImpl();
+        // create and register COMPOSITE ScopeContainer
+        CompositeScopeContainer scopeContainer = new CompositeScopeContainer(monitorFactory);
+        scopeContainer.setScopeRegistry(scopeRegistry);
+        scopeContainer.start();
+
         Introspector introspector = createIntrospector(interfaceProcessorRegistry);
         loader = createLoader(introspector);
         GeneratorRegistry generatorRegistry = createGeneratorRegistry();
@@ -204,10 +205,6 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         classLoaderRegistry.register(HOST_CLASSLOADER_ID, runtime.getHostClassLoader());
         registerSystemComponent(CLASSLOADER_REGISTRY_URI, ClassLoaderRegistry.class, classLoaderRegistry);
 
-        // create and register COMPOSITE ScopeContainer
-        CompositeScopeContainer scopeContainer = new CompositeScopeContainer(monitorFactory);
-        scopeContainer.setScopeRegistry(scopeRegistry);
-        scopeContainer.start();
     }
 
     protected <S, I extends S> void registerSystemComponent(URI uri, Class<S> type, I instance)
@@ -269,7 +266,6 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     }
 
     protected void deploySystemScdl(AbstractRuntime<?> runtime) throws InitializationException {
-        URI groupId = URI.create(RUNTIME_NAME + "/main/");
         CompositeImplementation impl = new CompositeImplementation();
         impl.setScdlLocation(scdlLocation);
         impl.setClassLoader(classLoaderRegistry.getClassLoader(BOOT_CLASSLOADER_ID));
@@ -281,14 +277,8 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
             // load system extensions
             loader.loadComponentType(impl, loaderContext);
             runtimeAssembly.activate(definition, false);
-            WorkContext workContext = new SimpleWorkContext();
-            workContext.setScopeIdentifier(Scope.COMPOSITE, groupId);
-            ScopeContainer<URI> scopeContainer = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
-            scopeContainer.startContext(workContext, groupId);
 
         } catch (LoaderException e) {
-            throw new InitializationException(e);
-        } catch (ComponentException e) {
             throw new InitializationException(e);
         } catch (IncludeException e) {
             throw new InitializationException(e);
@@ -298,9 +288,9 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     protected CommandExecutorRegistry createCommandExecutorRegistry(ScopeRegistry scopeRegistry) {
         CommandExecutorRegistryImpl commandRegistry = new CommandExecutorRegistryImpl();
         CommandListenerMonitor monitor = monitorFactory.getMonitor(CommandListenerMonitor.class);
-        StartContextCommandExecutor executor =
-                new StartContextCommandExecutor(commandRegistry, scopeRegistry, monitor);
-        commandRegistry.register(StartContextCommand.class, executor);
+        StartCompositeContextExecutor executor =
+                new StartCompositeContextExecutor(commandRegistry, scopeRegistry, monitor);
+        commandRegistry.register(StartCompositeContextCommand.class, executor);
         return commandRegistry;
     }
 
@@ -353,6 +343,8 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         GeneratorRegistry registry = new GeneratorRegistryImpl();
         new SystemComponentGenerator(registry, new HelperImpl());
         new SingletonGenerator(registry);
+        StartCompositeContextGenerator contextGenerator = new StartCompositeContextGenerator(registry);
+        contextGenerator.init();
         return registry;
     }
 

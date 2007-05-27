@@ -56,6 +56,7 @@ public class RuntimeRoutingService implements RoutingService {
     public void route(URI runtimeId, PhysicalChangeSet set) throws RoutingException {
         try {
             deployer.applyChangeSet(set);
+
         } catch (BuilderException e) {
             throw new RoutingException(e);
         } catch (RegistrationException e) {

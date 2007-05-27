@@ -16,10 +16,17 @@
  */
 package org.fabric3.fabric.command;
 
+import java.net.URI;
+
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.spi.command.CommandSet;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
+import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.type.ComponentType;
 import org.fabric3.spi.model.type.CompositeComponentType;
@@ -30,7 +37,18 @@ import org.fabric3.spi.model.type.Implementation;
  *
  * @version $Rev$ $Date$
  */
-public class StartContextCommandGenerator implements CommandGenerator {
+@EagerInit
+public class StartCompositeContextGenerator implements CommandGenerator {
+    private GeneratorRegistry registry;
+
+    public StartCompositeContextGenerator(@Reference GeneratorRegistry registry) {
+        this.registry = registry;
+    }
+
+    @Init
+    public void init() {
+        registry.register(this);
+    }
 
     public void generate(LogicalComponent<?> component, GeneratorContext context) throws GenerationException {
         Implementation<?> implementation = component.getDefinition().getImplementation();
@@ -40,6 +58,9 @@ public class StartContextCommandGenerator implements CommandGenerator {
         }
         CommandSet commandSet = context.getCommandSet();
         assert commandSet != null;
-        commandSet.add(CommandSet.Phase.FIRST, new StartContextCommand(component.getUri()));
+        // @FIXME a trailing slash is needed since group ids are set on ComponentDefinitions using URI#resolve(",")
+        // This should be revisited
+        URI groupId = URI.create(component.getUri().toString() + "/");
+        commandSet.add(CommandSet.Phase.FIRST, new StartCompositeContextCommand(groupId));
     }
 }
