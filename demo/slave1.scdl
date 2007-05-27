@@ -23,7 +23,7 @@
 
     <service name="calculatorRemote" promote="calculator">
         <interface.java interface="calculator.CalculatorService"/>
-        <hessian:binding.hessian serviceUri="/calculator" />
+        <hessian:binding.hessian uri="/calculator" />
     </service>
 
     <component name="calculator" runtimeId="slave1">
