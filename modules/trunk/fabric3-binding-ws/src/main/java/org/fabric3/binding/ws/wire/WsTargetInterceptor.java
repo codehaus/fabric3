@@ -74,7 +74,7 @@ public class WsTargetInterceptor implements Interceptor {
             result.setBody(method.invoke(proxy, message.getBody()));
             return result;
 
-        } catch (Throwable ex) {
+        } catch (Exception ex) {
             throw new ServiceUnavailableException(ex);
         }
 
