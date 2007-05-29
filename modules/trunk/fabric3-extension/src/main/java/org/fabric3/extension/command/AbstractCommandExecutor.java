@@ -56,7 +56,6 @@ public abstract class AbstractCommandExecutor<T extends Command> implements Comm
                                    @Reference MonitorFactory factory) {
         this.messagingService = messagingService;
         this.marshallerRegistry = marshallerRegistry;
-        this.monitor = factory.getMonitor(CommandListenerMonitor.class);
         this.commandExecutorRegistry = commandExecutorRegistry;
     }
 

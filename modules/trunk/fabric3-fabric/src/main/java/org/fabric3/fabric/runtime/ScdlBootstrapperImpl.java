@@ -21,7 +21,6 @@ import org.fabric3.fabric.builder.ConnectorImpl;
 import org.fabric3.fabric.builder.component.DefaultComponentBuilderRegistry;
 import org.fabric3.fabric.builder.component.WireAttacherRegistryImpl;
 import org.fabric3.fabric.command.CommandExecutorRegistryImpl;
-import org.fabric3.extension.command.CommandListenerMonitor;
 import org.fabric3.fabric.command.StartCompositeContextCommand;
 import org.fabric3.fabric.command.StartCompositeContextExecutor;
 import org.fabric3.fabric.command.StartCompositeContextGenerator;
@@ -309,9 +308,8 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
     protected CommandExecutorRegistry createCommandExecutorRegistry(ScopeRegistry scopeRegistry) {
         CommandExecutorRegistryImpl commandRegistry = new CommandExecutorRegistryImpl();
-        CommandListenerMonitor monitor = monitorFactory.getMonitor(CommandListenerMonitor.class);
         StartCompositeContextExecutor executor =
-                new StartCompositeContextExecutor(commandRegistry, scopeRegistry, monitor);
+                new StartCompositeContextExecutor(commandRegistry, scopeRegistry, monitorFactory);
         commandRegistry.register(StartCompositeContextCommand.class, executor);
         return commandRegistry;
     }
