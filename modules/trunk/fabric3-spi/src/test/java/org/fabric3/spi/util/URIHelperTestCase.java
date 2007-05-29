@@ -52,6 +52,11 @@ public class URIHelperTestCase extends TestCase {
         assertEquals("#foo", UriHelper.getBaseName(uri));
     }
 
+    public void testParentName() throws Exception {
+        URI uri = new URI("sca://./grandparent/parent/child");
+        assertEquals("sca://./grandparent/parent", UriHelper.getParentName(uri));
+    }
+
     public void testDefragmentedNameScheme() throws Exception {
         URI uri = new URI("sca://foo/bar#bar");
         assertEquals("sca://foo/bar", UriHelper.getDefragmentedName(uri).toString());

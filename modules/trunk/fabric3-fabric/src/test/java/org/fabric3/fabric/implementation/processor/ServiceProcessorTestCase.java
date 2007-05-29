@@ -92,6 +92,11 @@ public class ServiceProcessorTestCase extends TestCase {
         }
     }
 
+    public void testSpecifiedOnSuperClass() throws Exception {
+        processor.visitClass(ServiceOnSuper.class, type, null);
+        assertEquals(1, type.getServices().size());
+    }
+
     protected void setUp() throws Exception {
         super.setUp();
         JavaInterfaceProcessorRegistryImpl registry = new JavaInterfaceProcessorRegistryImpl();
@@ -143,6 +148,10 @@ public class ServiceProcessorTestCase extends TestCase {
 
     @Service()
     private class BadDefinition extends FooSingle {
+
+    }
+
+    private class ServiceOnSuper extends FooSingle{
 
     }
 

@@ -27,6 +27,10 @@
         <reference name="multiplyService" autowire="true"/>
         <reference name="divideService" autowire="true"/>
     </component>
+    
+    <component name="eagerCalculator">
+        <implementation.java class="calculator.EagerCalculator"/>
+    </component>
 
     <component name="adder">
         <implementation.java class="calculator.AddServiceImpl"/>

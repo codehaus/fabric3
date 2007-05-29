@@ -17,10 +17,19 @@
 package org.fabric3.spi.command;
 
 /**
+ * CommandExecutors are responsible for executing {@link Command}s sent to a service node, typically by performing an
+ * operation or set of operations.
+ *
  * @version $Rev$ $Date$
  */
 public interface CommandExecutor<T extends Command> {
 
+    /**
+     * Execute the command
+     *
+     * @param command the command to execute
+     * @throws ExecutionException if there is an error executing the command
+     */
     void execute(T command) throws ExecutionException;
 
 }

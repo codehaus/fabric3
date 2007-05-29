@@ -29,4 +29,8 @@ public class ExecutionException extends Fabric3Exception {
     public ExecutionException(String message, Throwable cause) {
         super(message, cause);
     }
+
+    public ExecutionException(String message, String identifier, Throwable cause) {
+        super(message, identifier, cause);
+    }
 }

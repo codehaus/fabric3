@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.stream.XMLInputFactory;
 
+import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.fabric.assembly.IncludeException;
 import org.fabric3.fabric.assembly.InstantiationException;
@@ -20,7 +21,7 @@ import org.fabric3.fabric.builder.ConnectorImpl;
 import org.fabric3.fabric.builder.component.DefaultComponentBuilderRegistry;
 import org.fabric3.fabric.builder.component.WireAttacherRegistryImpl;
 import org.fabric3.fabric.command.CommandExecutorRegistryImpl;
-import org.fabric3.fabric.command.CommandListenerMonitor;
+import org.fabric3.extension.command.CommandListenerMonitor;
 import org.fabric3.fabric.command.StartCompositeContextCommand;
 import org.fabric3.fabric.command.StartCompositeContextExecutor;
 import org.fabric3.fabric.command.StartCompositeContextGenerator;
@@ -87,8 +88,11 @@ import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.builder.component.WireAttacherRegistry;
 import org.fabric3.spi.command.CommandExecutorRegistry;
 import org.fabric3.spi.component.ComponentManager;
+import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.RegistrationException;
+import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.idl.InvalidServiceContractException;
 import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
@@ -102,6 +106,7 @@ import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.CompositeImplementation;
+import org.fabric3.spi.model.type.Scope;
 import org.fabric3.spi.model.type.ServiceContract;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.transform.PullTransformer;
@@ -153,7 +158,24 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         createBootstrapComponents(runtime);
         registerBootstrapComponents((AbstractRuntime<?>) runtime);
         classLoaderRegistry.register(BOOT_CLASSLOADER_ID, bootClassLoader);
+        try {
+            // FIXME come up with a better alternative: the domain context needs to be started so system services such 
+            // as the contribution service that operate on it may be initialized as system components
+            startDomainContext(runtime);
+        } catch (GroupInitializationException e) {
+            throw new InitializationException(e);
+        }
         deploySystemScdl((AbstractRuntime<?>) runtime);
+    }
+
+    protected void startDomainContext(Fabric3Runtime runtime) throws GroupInitializationException {
+        // start the domain context
+        ScopeContainer<URI> container = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
+        WorkContext workContext = new SimpleWorkContext();
+        URI domainUri = runtime.getHostInfo().getDomain();
+        URI groupId = URI.create(domainUri.toString() + "/");
+        workContext.setScopeIdentifier(Scope.COMPOSITE, groupId);
+        container.startContext(workContext, groupId);
     }
 
     protected void createBootstrapComponents(Fabric3Runtime runtime) throws InitializationException {

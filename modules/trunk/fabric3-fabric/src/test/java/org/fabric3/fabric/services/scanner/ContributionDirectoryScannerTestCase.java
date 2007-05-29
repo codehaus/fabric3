@@ -250,7 +250,7 @@ public class ContributionDirectoryScannerTestCase extends TestCase {
         registry = new FileSystemResourceFactoryRegistryImpl();
         registry.register(new TestResourceFactory());
         xstreamFactory = new XStreamFactoryImpl();
-        ScannerMonitor monitor = EasyMock.createMock(ScannerMonitor.class);
+        ScannerMonitor monitor = EasyMock.createNiceMock(ScannerMonitor.class);
         EasyMock.replay(monitor);
         monitorFactory = EasyMock.createMock(MonitorFactory.class);
         EasyMock.expect(monitorFactory.getMonitor(ScannerMonitor.class)).andReturn(monitor).anyTimes();

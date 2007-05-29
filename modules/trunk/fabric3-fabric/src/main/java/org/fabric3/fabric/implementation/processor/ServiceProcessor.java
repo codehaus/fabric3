@@ -26,17 +26,16 @@ import org.osoa.sca.annotations.Callback;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Remotable;
 
-import org.fabric3.spi.loader.LoaderContext;
+import static org.fabric3.fabric.util.JavaIntrospectionHelper.getAllInterfaces;
+import static org.fabric3.fabric.util.JavaIntrospectionHelper.toPropertyName;
 import org.fabric3.spi.idl.InvalidServiceContractException;
 import org.fabric3.spi.implementation.java.ImplementationProcessorExtension;
 import org.fabric3.spi.implementation.java.ImplementationProcessorService;
 import org.fabric3.spi.implementation.java.JavaMappedService;
 import org.fabric3.spi.implementation.java.PojoComponentType;
 import org.fabric3.spi.implementation.java.ProcessingException;
+import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.model.type.ServiceContract;
-
-import static org.fabric3.fabric.util.JavaIntrospectionHelper.getAllInterfaces;
-import static org.fabric3.fabric.util.JavaIntrospectionHelper.toPropertyName;
 
 /**
  * Processes an {@link org.osoa.sca.annotations.Service} annotation and updates the component type with corresponding
@@ -57,20 +56,31 @@ public class ServiceProcessor extends ImplementationProcessorExtension {
                                LoaderContext context) throws ProcessingException {
         org.osoa.sca.annotations.Service annotation = clazz.getAnnotation(org.osoa.sca.annotations.Service.class);
         if (annotation == null) {
-            // scan intefaces for remotable
-            Set<Class> interfaces = getAllInterfaces(clazz);
-            for (Class<?> interfaze : interfaces) {
-                if (interfaze.isAnnotationPresent(Remotable.class) || interfaze.isAnnotationPresent(Callback.class)) {
-                    JavaMappedService service;
-                    try {
-                        service = implService.createService(interfaze);
-                    } catch (InvalidServiceContractException e) {
-                        throw new ProcessingException(e);
-                    }
-                    type.getServices().put(service.getUri().getFragment(), service);
+            Class<?> superClass = clazz.getSuperclass();
+            while (superClass != null && !superClass.equals(Object.class)) {
+                // scan superclasses
+                annotation = superClass.getAnnotation(org.osoa.sca.annotations.Service.class);
+                if (annotation != null) {
+                    break;
                 }
+                superClass = superClass.getSuperclass();
             }
-            return;
+            if (annotation == null) {
+                // scan intefaces for remotable
+                Set<Class> interfaces = getAllInterfaces(clazz);
+                for (Class<?> interfaze : interfaces) {
+                    if (interfaze.isAnnotationPresent(Remotable.class) || interfaze.isAnnotationPresent(Callback.class)) {
+                        JavaMappedService service;
+                        try {
+                            service = implService.createService(interfaze);
+                        } catch (InvalidServiceContractException e) {
+                            throw new ProcessingException(e);
+                        }
+                        type.getServices().put(service.getUri().getFragment(), service);
+                    }
+                }
+                return;
+            }
         }
         Class<?>[] interfaces = annotation.interfaces();
         if (interfaces.length == 0) {
@@ -98,9 +108,9 @@ public class ServiceProcessor extends ImplementationProcessorExtension {
 
 
     public void visitMethod(
-        Method method,
-        PojoComponentType type,
-        LoaderContext context) throws ProcessingException {
+            Method method,
+            PojoComponentType type,
+            LoaderContext context) throws ProcessingException {
 
         Callback annotation = method.getAnnotation(Callback.class);
         if (annotation == null) {

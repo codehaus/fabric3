@@ -23,17 +23,23 @@ import org.fabric3.spi.Constants;
 import org.fabric3.spi.command.Command;
 
 /**
- * Starts a context with the composite container
+ * A command to initialize a composite scoped component on a service node that is included in an activated composite.
+ * For example, composite-scoped components included at the domain level.
  *
  * @version $Rev$ $Date$
  */
-public class StartCompositeContextCommand implements Command {
-    public static final QName QNAME = new QName(Constants.FABRIC3_NS, "startCompositeContextCommand");
-
+public class InitializeComponentCommand implements Command {
+    public static final QName QNAME = new QName(Constants.FABRIC3_NS, "initializeComponentCommand");
+    private final URI uri;
     private final URI groupId;
 
-    public StartCompositeContextCommand(URI groupId) {
+    public InitializeComponentCommand(URI uri, URI groupId) {
+        this.uri = uri;
         this.groupId = groupId;
+    }
+
+    public URI getUri() {
+        return uri;
     }
 
     public URI getGroupId() {

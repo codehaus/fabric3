@@ -39,6 +39,7 @@ import static org.fabric3.fabric.runtime.ComponentNames.LOADER_URI;
 import org.fabric3.runtime.standalone.StandaloneHostInfo;
 import org.fabric3.runtime.standalone.StandaloneRuntime;
 import org.fabric3.runtime.standalone.host.implementation.launched.Launched;
+import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
@@ -52,7 +53,6 @@ import org.fabric3.spi.model.type.Scope;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.spi.wire.MessageImpl;
-import org.fabric3.spi.ObjectCreationException;
 
 /**
  * @version $Rev$ $Date$
@@ -67,6 +67,7 @@ public class StandaloneRuntimeImpl extends AbstractRuntime<StandaloneHostInfo> i
         setMonitorFactory(monitorFactory);
         monitor = monitorFactory.getMonitor(StandaloneMonitor.class);
     }
+
 
     /**
      * Deploys the specified application SCDL and runs the lauched component within the deployed composite.

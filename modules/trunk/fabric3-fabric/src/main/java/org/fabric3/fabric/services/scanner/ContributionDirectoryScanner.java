@@ -40,7 +40,22 @@ import org.fabric3.spi.services.scanner.FileSystemResource;
 import org.fabric3.spi.services.scanner.FileSystemResourceFactoryRegistry;
 
 /**
- * Periodically scans a directory for files
+ * Periodically scans a directory for new, updated, or removed contributions. New contributions are added to the domain
+ * and any deployable components activated. Updated components will trigger re-activation of previously deployed
+ * components. Removal will remove the contribution from the domain and de-activate any associated deployed components.
+ * <p/>
+ * The scanner watches the deployment directory at a fixed-delay interval. Files are tracked as a {@link
+ * FileSystemResource}, which provides a consistent metadata view across various types such as jars and exploded
+ * directories. Unknown file types are ignored. At the specified interval, removed files are determined by comparing the
+ * current directory contents with the contents from the previous pass. Changes or additions are also determined by
+ * comparing the current directory state with that of the previous pass. Detected changes and additions are cached for
+ * the following interval. Detected changes and additions from the previous interval are then checked using a checksum
+ * to see if they have changed again. If so, they remain cached. If they have not changed, they are processed,
+ * contributed via the ContributionService and activated in the domain.
+ * <p/>
+ * The scanner is persistent and supports recovery on re-start.
+ * <p/>
+ * Note update and remove are not fully implemented.
  */
 @Service(VoidService.class)
 @EagerInit
@@ -125,7 +140,7 @@ public class ContributionDirectoryScanner implements Runnable {
             return;
         }
         if (!processedIndex.exists()) {
-            // no index which means there is nothing t recover
+            // no index which means there is nothing to recover
             return;
         }
         InputStream is = null;
@@ -146,8 +161,6 @@ public class ContributionDirectoryScanner implements Runnable {
         // check for updates and additions
         addAndUpdate(files);
         save();
-
-
     }
 
     private void addAndUpdate(File[] files) {
@@ -186,35 +199,50 @@ public class ContributionDirectoryScanner implements Runnable {
                         // contents are still being updated, wait until next run
                         continue;
                     }
-                    cache.remove(name);
-                    // check if it is in the store
-                    URI artifactUri = processed.get(name);
-                    URL location = file.toURI().normalize().toURL();
-                    byte[] checksum = cached.getChecksum();
-                    long timestamp = file.lastModified();
-                    if (artifactUri != null) {
-                        // updated
-                        long previousTimestamp = contributionService.getContributionTimestamp(artifactUri);
-                        if (timestamp > previousTimestamp) {
-                            contributionService.update(artifactUri, checksum, timestamp, location);
-                        }
-                    } else {
-                        // added
-                        URI addedUri = contributionService.contribute(location, checksum, timestamp);
-                        List<QName> deployables = contributionService.getDeployables(addedUri);
-                        for (QName deployable : deployables) {
-                            // include deployables at the domain level
-                            assembly.activate(deployable, true);
-                        }
-                        processed.put(name, addedUri);
-
-                    }
+                    processCachedResource(name, file, cached);
                 }
             } catch (IOException e) {
                 monitor.error(e);
+            }
+        }
+    }
+
+    private void processCachedResource(String name, File file, FileSystemResource cached) throws IOException {
+        cache.remove(name);
+        // check if it is in the store
+        URI artifactUri = processed.get(name);
+        URL location = file.toURI().normalize().toURL();
+        byte[] checksum = cached.getChecksum();
+        long timestamp = file.lastModified();
+        if (artifactUri != null) {
+            // updated
+            long previousTimestamp = contributionService.getContributionTimestamp(artifactUri);
+            if (timestamp > previousTimestamp) {
+                try {
+                    contributionService.update(artifactUri, checksum, timestamp, location);
+                } catch (ContributionException e) {
+                    errorCache.put(name, cached);
+                    monitor.error(e);
+                }
+            }
+            monitor.update(location.toString());
+            // TODO undeploy and redeploy
+        } else {
+            // added
+            try {
+                URI addedUri = contributionService.contribute(location, checksum, timestamp);
+                List<QName> deployables = contributionService.getDeployables(addedUri);
+                for (QName deployable : deployables) {
+                    // include deployables at the domain level
+                    assembly.activate(deployable, true);
+                }
+                processed.put(name, addedUri);
+                monitor.add(location.toString());
             } catch (ContributionException e) {
+                errorCache.put(name, cached);
                 monitor.error(e);
             } catch (IncludeException e) {
+                errorCache.put(name, cached);
                 monitor.error(e);
             }
         }
@@ -238,6 +266,7 @@ public class ContributionDirectoryScanner implements Runnable {
                         contributionService.remove(uri);
                     }
                     removed.add(filename);
+                    monitor.remove(filename);
                 } catch (ContributionException e) {
                     monitor.error("Error removing artifact", filename, e);
                 }

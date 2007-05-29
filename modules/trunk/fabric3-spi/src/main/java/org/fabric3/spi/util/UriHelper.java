@@ -46,6 +46,17 @@ public final class UriHelper {
         }
     }
 
+    public static String getParentName(URI uri) {
+        String s = uri.toString();
+        int pos = s.lastIndexOf('/');
+        if (pos > -1) {
+            return s.substring(0, pos);
+        } else {
+            return "";
+        }
+    }
+
+
     public static URI getDefragmentedName(URI uri) {
         if (uri.getFragment() == null) {
             return uri;

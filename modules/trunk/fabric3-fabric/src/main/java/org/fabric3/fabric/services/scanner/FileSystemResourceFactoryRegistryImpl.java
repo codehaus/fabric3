@@ -9,7 +9,7 @@ import org.fabric3.spi.services.scanner.FileSystemResourceFactory;
 import org.fabric3.spi.services.scanner.FileSystemResource;
 
 /**
- * Default implementation of the DeploymentResourceFactoryRegistry.
+ * Default implementation of the FileSystemResourceFactoryRegistry.
  *
  * @version $Rev$ $Date$
  */

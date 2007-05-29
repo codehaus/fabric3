@@ -28,21 +28,21 @@ import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.ComponentType;
 import org.fabric3.spi.model.type.CompositeComponentType;
 import org.fabric3.spi.model.type.Implementation;
 
 /**
- * Generates a command to start the composite context on a service node. Child composite contexts will also be started
- * in a depth-first traversal order.
+ * Generates a command to initialize a composite-scoped component on a service node.
  *
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class StartCompositeContextGenerator implements CommandGenerator {
+public class InitializeComponentGenerator implements CommandGenerator {
     private GeneratorRegistry registry;
 
-    public StartCompositeContextGenerator(@Reference GeneratorRegistry registry) {
+    public InitializeComponentGenerator(@Reference GeneratorRegistry registry) {
         this.registry = registry;
     }
 
@@ -52,30 +52,33 @@ public class StartCompositeContextGenerator implements CommandGenerator {
     }
 
     public void generate(LogicalComponent<?> component, GeneratorContext context) throws GenerationException {
-        if (!isComposite(component)) {
+        if (isComposite(component) || !isEagerInit(component)) {
+            // do nothing if a composite or the component is lazy-init
             return;
         }
+
         CommandSet commandSet = context.getCommandSet();
         assert commandSet != null;
-        addToCommandSet(component, commandSet);
-    }
-
-    private void addToCommandSet(LogicalComponent<?> component, CommandSet commandSet) {
-        // perform depth-first traversal
-        for (LogicalComponent<?> child : component.getComponents()) {
-            if (isComposite(child)) {
-                addToCommandSet(child, commandSet);
-            }
-        }
+        URI uri = component.getUri();
         // @FIXME a trailing slash is needed since group ids are set on ComponentDefinitions using URI#resolve(",")
         // This should be revisited
-        URI groupId = URI.create(component.getUri().toString() + "/");
-        commandSet.add(CommandSet.Phase.FIRST, new StartCompositeContextCommand(groupId));
+        URI groupId = URI.create(component.getParent().getUri().toString() + "/");
+        InitializeComponentCommand command = new InitializeComponentCommand(uri, groupId);
+        commandSet.add(CommandSet.Phase.LAST, command);
     }
 
     private boolean isComposite(LogicalComponent<?> component) {
         Implementation<?> implementation = component.getDefinition().getImplementation();
         ComponentType<?, ?, ?> type = implementation.getComponentType();
         return CompositeComponentType.class.isInstance(type);
+    }
+
+    private boolean isEagerInit(LogicalComponent<?> component) {
+        ComponentDefinition<? extends Implementation<?>> definition = component.getDefinition();
+        Integer level = definition.getInitLevel();
+        if (level != null) {
+            return level > 0;
+        }
+        return definition.getImplementation().getComponentType().getInitLevel() > 0;
     }
 }

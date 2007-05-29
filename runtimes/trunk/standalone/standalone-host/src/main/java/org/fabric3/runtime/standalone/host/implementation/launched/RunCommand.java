@@ -14,12 +14,31 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.command;
+package org.fabric3.runtime.standalone.host.implementation.launched;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.fabric3.spi.command.Command;
 
 /**
- * Represents a command to be executed on a service node
+ * Runs <code>implementation.launched</code> components on a service node
  *
  * @version $Rev$ $Date$
  */
-public interface Command {
+public class RunCommand implements Command {
+    private List<URI> components = new ArrayList<URI>();
+
+    public RunCommand() {
+    }
+
+    public void addComponentUri(URI uri) {
+        components.add(uri);
+    }
+
+    public List<URI> getComponentUris() {
+        return Collections.unmodifiableList(components);
+    }
 }

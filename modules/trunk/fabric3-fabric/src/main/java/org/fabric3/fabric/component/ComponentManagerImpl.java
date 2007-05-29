@@ -26,7 +26,6 @@ import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.Component;
 import org.fabric3.spi.component.ComponentManager;
 import org.fabric3.spi.component.RegistrationException;
-import org.fabric3.fabric.component.DuplicateNameException;
 import org.fabric3.spi.services.management.Fabric3ManagementService;
 
 /**
@@ -49,6 +48,7 @@ public class ComponentManagerImpl implements ComponentManager {
 
     public synchronized void register(Component component) throws RegistrationException {
         URI uri = component.getUri();
+
         assert uri != null;
         assert !uri.toString().endsWith("/");
         if (components.containsKey(uri)) {

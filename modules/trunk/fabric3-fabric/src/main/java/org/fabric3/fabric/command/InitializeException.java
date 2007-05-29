@@ -14,12 +14,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.command;
+package org.fabric3.fabric.command;
+
+import org.fabric3.spi.command.ExecutionException;
 
 /**
- * Represents a command to be executed on a service node
+ * Denotes an error executing the {@link InitializeComponentCommand}
  *
  * @version $Rev$ $Date$
  */
-public interface Command {
+public class InitializeException extends ExecutionException {
+
+    public InitializeException(String message, String identifier) {
+        super(message, identifier);
+    }
+
+    public InitializeException(String message, String identifier, Throwable cause) {
+        super(message, identifier, cause);
+    }
 }

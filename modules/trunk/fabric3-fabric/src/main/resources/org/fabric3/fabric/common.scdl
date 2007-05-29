@@ -53,18 +53,6 @@
         <system:implementation.system class="org.fabric3.fabric.services.messaging.NullMessagingService"/>
     </component>
 
-    <component name="commandExecutorRegistry">
-        <system:implementation.system class="org.fabric3.fabric.command.CommandExecutorRegistryImpl"/>
-    </component>
-
-    <component name="startCommandExecutor">
-        <system:implementation.system class="org.fabric3.fabric.command.StartCompositeContextExecutor"/>
-    </component>
-
-    <component name="startCommandGenerator">
-        <system:implementation.system class="org.fabric3.fabric.command.StartCompositeContextGenerator"/>
-    </component>
-
     <component name="proxyService">
         <system:implementation.system class="org.fabric3.fabric.wire.jdk.JDKProxyService"/>
     </component>
@@ -107,6 +95,28 @@
 
     <component name="workScheduler">
         <system:implementation.system class="org.fabric3.fabric.services.work.jsr237.Jsr237WorkScheduler"/>
+    </component>
+
+
+    <component name="commandExecutorRegistry">
+        <system:implementation.system class="org.fabric3.fabric.command.CommandExecutorRegistryImpl"/>
+    </component>
+
+    <!-- default commands -->
+    <component name="startCommandExecutor">
+        <system:implementation.system class="org.fabric3.fabric.command.StartCompositeContextExecutor"/>
+    </component>
+
+    <component name="startCommandGenerator">
+        <system:implementation.system class="org.fabric3.fabric.command.StartCompositeContextGenerator"/>
+    </component>
+
+    <component name="initializeCommandExecutor">
+        <system:implementation.system class="org.fabric3.fabric.command.InitializeComponentExecutor"/>
+    </component>
+
+    <component name="initializeCommandGenerator">
+        <system:implementation.system class="org.fabric3.fabric.command.InitializeComponentGenerator"/>
     </component>
 
 </composite>

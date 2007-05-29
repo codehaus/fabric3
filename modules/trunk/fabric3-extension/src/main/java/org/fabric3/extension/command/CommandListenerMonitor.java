@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.command;
+package org.fabric3.extension.command;
 
 /**
  * Receives command events
@@ -25,5 +25,10 @@ package org.fabric3.fabric.command;
  */
 public interface CommandListenerMonitor {
 
+    /**
+     * Reports an error generating a command
+     *
+     * @param exception the error
+     */
     void error(Exception exception);
 }

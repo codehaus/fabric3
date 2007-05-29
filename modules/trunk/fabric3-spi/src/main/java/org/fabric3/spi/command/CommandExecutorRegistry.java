@@ -17,11 +17,25 @@
 package org.fabric3.spi.command;
 
 /**
+ * A registry of {@link CommandExecutor}s.
+ *
  * @version $Rev$ $Date$
  */
 public interface CommandExecutorRegistry {
 
+    /**
+     * Register the command executor
+     *
+     * @param type     the type of command the executor handles
+     * @param executor the executor
+     */
     <T extends Command> void register(Class<T> type, CommandExecutor<T> executor);
 
+    /**
+     * Dispatches a command to an exececutor.
+     *
+     * @param command the command to dispatch
+     * @throws ExecutionException if there is an error executing the command
+     */
     <T extends Command> void execute(T command) throws ExecutionException;
 }
