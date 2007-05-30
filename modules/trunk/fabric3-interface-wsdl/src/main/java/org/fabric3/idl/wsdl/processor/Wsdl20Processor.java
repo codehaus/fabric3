@@ -20,11 +20,26 @@
 package org.fabric3.idl.wsdl.processor;
 
 import java.net.URL;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.apache.woden.WSDLException;
+import org.apache.woden.WSDLFactory;
+import org.apache.woden.WSDLReader;
+import org.apache.woden.schema.Schema;
+import org.apache.woden.wsdl20.Description;
+import org.apache.woden.wsdl20.ElementDeclaration;
+import org.apache.woden.wsdl20.Interface;
+import org.apache.woden.wsdl20.InterfaceFaultReference;
+import org.apache.woden.wsdl20.InterfaceMessageReference;
+import org.apache.woden.wsdl20.InterfaceOperation;
+import org.apache.woden.wsdl20.enumeration.Direction;
+import org.apache.ws.commons.schema.XmlSchema;
+import org.apache.ws.commons.schema.XmlSchemaType;
 import org.fabric3.idl.wsdl.version.WsdlVersionChecker.WsdlVersion;
+import org.fabric3.spi.model.type.DataType;
 import org.fabric3.spi.model.type.Operation;
 
 /**
@@ -32,7 +47,7 @@ import org.fabric3.spi.model.type.Operation;
  * 
  * @version $Revsion$ $Date$
  */
-public class Wsdl20Processor implements WsdlProcessor {
+public class Wsdl20Processor extends AbstractWsdlProcessor implements WsdlProcessor {
     
     /**
      * @param wsdlProcessorRegistry Injected default processor.
@@ -45,8 +60,103 @@ public class Wsdl20Processor implements WsdlProcessor {
      * @see @see org.fabric3.idl.wsdl.processor.WsdlProcessor#getOperations(javax.xml.namespace.QName, java.net.URL)
      */
     public List<Operation<?>> getOperations(QName portTypeOrInterfaceName, URL wsdlUrl) {
-        // Implement using woden
-        throw new UnsupportedOperationException("Not supported yet");
+        
+        try {
+            
+            List<Operation<?>> operations = new LinkedList<Operation<?>>();
+            
+            WSDLReader reader = WSDLFactory.newInstance().newWSDLReader();
+            
+            Description description = reader.readWSDL(wsdlUrl.toExternalForm());
+            Interface interfaze = description.getInterface(portTypeOrInterfaceName);
+            
+            if(interfaze == null) {
+                throw new WsdlProcessorException("Interface not found " + portTypeOrInterfaceName);
+            }
+            
+            List<XmlSchema> xmlSchemas = getXmlSchemas(description);
+            
+            for(InterfaceOperation operation : interfaze.getAllInterfaceOperations()) {
+                Operation<XmlSchemaType> op = getOperation(xmlSchemas, operation);                
+                operations.add(op);                
+            }
+            
+            return operations;
+            
+        } catch (WSDLException ex) {
+            throw new WsdlProcessorException("Unable to parse WSDL " + wsdlUrl, ex);
+        }
+        
+    }
+
+    /*
+     * Creates F3 operation from WSDL 2.0 operation.
+     */
+    private Operation<XmlSchemaType> getOperation(List<XmlSchema> xmlSchemas, InterfaceOperation operation) {
+        
+        String name = operation.getName().getLocalPart();
+        
+        InterfaceMessageReference[] messageReferences = operation.getInterfaceMessageReferences();
+        
+        List<DataType<XmlSchemaType>> faultTypes = getFaultTypes(xmlSchemas, operation);
+        
+        List<DataType<XmlSchemaType>> inputTypes = new LinkedList<DataType<XmlSchemaType>>();
+        DataType<XmlSchemaType> outputType = null;
+        
+        for(InterfaceMessageReference messageReference : messageReferences) {
+            ElementDeclaration elementDeclaration = messageReference.getElementDeclaration();
+            QName qName = elementDeclaration.getName();
+            DataType<XmlSchemaType> dataType = getDataType(qName, xmlSchemas);
+            if(dataType != null) {
+                if(messageReference.getDirection().equals(Direction.IN)) {
+                    inputTypes.add(dataType);
+                } else if(messageReference.getDirection().equals(Direction.OUT)) {
+                    if(outputType != null) {
+                        throw new WsdlProcessorException("Multipart output is not supported");
+                    }
+                    outputType = dataType;
+                }
+                // TODO What about in out?
+            }
+        }
+        
+        DataType<List<DataType<XmlSchemaType>>> inputType = new DataType<List<DataType<XmlSchemaType>>>(Object.class, inputTypes);
+        
+        return new Operation<XmlSchemaType>(name, inputType, outputType, faultTypes);
+    }
+
+    /*
+     * Gets the fault types.
+     */
+    private List<DataType<XmlSchemaType>> getFaultTypes(List<XmlSchema> xmlSchemas, InterfaceOperation operation) {
+        
+        InterfaceFaultReference[] faultReferences = operation.getInterfaceFaultReferences();
+        List<DataType<XmlSchemaType>> faultTypes = new LinkedList<DataType<XmlSchemaType>>();
+        for(InterfaceFaultReference faultReference : faultReferences) {
+            ElementDeclaration elementDeclaration = faultReference.getInterfaceFault().getElementDeclaration();
+            QName qName = elementDeclaration.getName();
+            DataType<XmlSchemaType> dataType = getDataType(qName, xmlSchemas);
+            if(dataType != null) {
+                faultTypes.add(dataType);
+            }
+        }
+        return faultTypes;
+        
+    }
+
+    /*
+     * Get all the inline schemas.
+     */
+    private List<XmlSchema> getXmlSchemas(Description description) {
+        
+        Schema[] schemas = description.toElement().getTypesElement().getSchemas();
+        List<XmlSchema> xmlSchemas = new LinkedList<XmlSchema>();
+        for(Schema schema : schemas) {
+            xmlSchemas.add(schema.getSchemaDefinition());
+        }
+        
+        return xmlSchemas;
+        
     }
 
 }

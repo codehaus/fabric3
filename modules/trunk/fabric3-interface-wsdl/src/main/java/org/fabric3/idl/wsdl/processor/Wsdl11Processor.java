@@ -39,7 +39,6 @@ import javax.wsdl.xml.WSDLReader;
 import javax.xml.namespace.QName;
 
 import org.apache.ws.commons.schema.XmlSchema;
-import org.apache.ws.commons.schema.XmlSchemaElement;
 import org.apache.ws.commons.schema.XmlSchemaType;
 import org.fabric3.idl.wsdl.version.WsdlVersionChecker.WsdlVersion;
 import org.fabric3.spi.model.type.DataType;
@@ -50,7 +49,7 @@ import org.fabric3.spi.model.type.Operation;
  * 
  * @version $Revsion$ $Date$
  */
-public class Wsdl11Processor implements WsdlProcessor {
+public class Wsdl11Processor extends AbstractWsdlProcessor implements WsdlProcessor {
     
     /**
      * @param wsdlProcessorRegistry Injected default processor.
@@ -68,8 +67,7 @@ public class Wsdl11Processor implements WsdlProcessor {
             
             List<Operation<?>> operations = new LinkedList<Operation<?>>();
             
-            WSDLFactory wsdlFactory = WSDLFactory.newInstance();
-            WSDLReader reader = wsdlFactory.newWSDLReader();
+            WSDLReader reader = WSDLFactory.newInstance().newWSDLReader();
             
             Definition definition = reader.readWSDL(wsdlUrl.toExternalForm());
             PortType portType = definition.getPortType(portTypeOrInterfaceName);
@@ -124,7 +122,7 @@ public class Wsdl11Processor implements WsdlProcessor {
         for(Fault fault : (Collection<Fault>) faults.values()) {
             
             Part part = (Part) fault.getMessage().getOrderedParts(null).get(0);  
-            DataType<XmlSchemaType> dataType = getDataType(part, xmlSchemas);
+            DataType<XmlSchemaType> dataType = getDataType(part.getElementName(), xmlSchemas);
             if(dataType != null) {
                 types.add(dataType);
             }        
@@ -145,7 +143,7 @@ public class Wsdl11Processor implements WsdlProcessor {
         Message message = output.getMessage();
         Part part = (Part) message.getOrderedParts(null).get(0);
         
-        return getDataType(part, xmlSchemas);
+        return getDataType(part.getElementName(), xmlSchemas);
         
     }
 
@@ -163,29 +161,13 @@ public class Wsdl11Processor implements WsdlProcessor {
         List<DataType<XmlSchemaType>> types = new LinkedList<DataType<XmlSchemaType>>();
         
         for(Part part : parts) {    
-            DataType<XmlSchemaType> dataType = getDataType(part, xmlSchemas);
+            DataType<XmlSchemaType> dataType = getDataType(part.getElementName(), xmlSchemas);
             if(dataType != null) {
                 types.add(dataType);
             }        
         }
         
         return new DataType<List<DataType<XmlSchemaType>>>(Object.class, types);
-        
-    }
-    
-    /*
-     * Create a data type with the XML type for the part.
-     */
-    private DataType<XmlSchemaType> getDataType(Part part, List<XmlSchema> xmlSchemas) {
-        
-        QName qName = part.getElementName();     
-        for(XmlSchema xmlSchema : xmlSchemas) {
-            XmlSchemaElement element = xmlSchema.getElementByName(qName);
-            if(element != null) {
-                return new DataType<XmlSchemaType>(Object.class, element.getSchemaType());
-            }
-        } 
-        return null;
         
     }
 
