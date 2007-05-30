@@ -20,20 +20,29 @@
 package org.fabric3.idl.wsdl.processor;
 
 import java.net.URL;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import javax.wsdl.Definition;
+import javax.wsdl.Fault;
 import javax.wsdl.Input;
+import javax.wsdl.Message;
 import javax.wsdl.Output;
+import javax.wsdl.Part;
 import javax.wsdl.PortType;
+import javax.wsdl.Types;
 import javax.wsdl.WSDLException;
 import javax.wsdl.factory.WSDLFactory;
 import javax.wsdl.xml.WSDLReader;
 import javax.xml.namespace.QName;
 
+import org.apache.ws.commons.schema.XmlSchema;
+import org.apache.ws.commons.schema.XmlSchemaElement;
+import org.apache.ws.commons.schema.XmlSchemaType;
 import org.fabric3.idl.wsdl.version.WsdlVersionChecker.WsdlVersion;
+import org.fabric3.spi.model.type.DataType;
 import org.fabric3.spi.model.type.Operation;
 
 /**
@@ -57,7 +66,7 @@ public class Wsdl11Processor implements WsdlProcessor {
         
         try {
             
-            List<Operation<?>> oepartions = new LinkedList<Operation<?>>();
+            List<Operation<?>> opeartions = new LinkedList<Operation<?>>();
             
             WSDLFactory wsdlFactory = WSDLFactory.newInstance();
             WSDLReader reader = wsdlFactory.newWSDLReader();
@@ -69,19 +78,127 @@ public class Wsdl11Processor implements WsdlProcessor {
                 throw new WsdlProcessorException("Port type not found " + portTypeOrInterfaceName);
             }
             
-            for(Object op : portType.getOperations()) {
-                javax.wsdl.Operation operation = (javax.wsdl.Operation) op;
+            List<XmlSchema> xmlSchemas = getXmlSchemas(definition);
+            
+            for(Object obj : portType.getOperations()) {
+                
+                javax.wsdl.Operation operation = (javax.wsdl.Operation) obj;
+                
                 Input input = operation.getInput();
                 Output output = operation.getOutput();
                 Map faults = operation.getFaults();
-                // TODO Populate the f3 operation
+                
+                String name = operation.getName();
+                DataType<List<DataType<XmlSchemaType>>> inputType = getInputType(input, xmlSchemas);
+                DataType<XmlSchemaType> outputType = getOutputType(output, xmlSchemas);
+                List<DataType<XmlSchemaType>> faultTypes = getFaultTypes(faults, xmlSchemas);
+                
+                opeartions.add(new Operation<XmlSchemaType>(name, inputType, outputType, faultTypes));
+                
             }
             
-            return oepartions;
+            return opeartions;
             
         } catch (WSDLException ex) {
             throw new WsdlProcessorException("Unable to parse WSDL " + wsdlUrl, ex);
         }
+        
+    }
+    
+    /*
+     * Gets the fault types.
+     */
+    @SuppressWarnings("unchecked")
+    private List<DataType<XmlSchemaType>> getFaultTypes(Map faults, List<XmlSchema> xmlSchemas) {
+        
+        List<DataType<XmlSchemaType>> types = new LinkedList<DataType<XmlSchemaType>>();
+        
+        for(Fault fault : (Collection<Fault>) faults.values()) {
+            
+            Part part = (Part) fault.getMessage().getOrderedParts(null).get(0);    
+            QName qName = part.getElementName();     
+            for(XmlSchema xmlSchema : xmlSchemas) {
+                XmlSchemaElement element = xmlSchema.getElementByName(qName);
+                if(element != null) {
+                    XmlSchemaType type = element.getSchemaType();
+                    types.add(new DataType<XmlSchemaType>(Object.class, type));
+                }
+            }            
+            
+        }
+        
+        return types;
+        
+    }
+
+    /*
+     * Get the output type.
+     */
+    private DataType<XmlSchemaType> getOutputType(Output output, List<XmlSchema> xmlSchemas) {
+        
+        if(output == null) return null;
+        
+        Message message = output.getMessage();
+        Part part = (Part) message.getOrderedParts(null).get(0);
+        
+        QName qName = part.getElementName();
+        
+        for(XmlSchema xmlSchema : xmlSchemas) {
+            XmlSchemaElement element = xmlSchema.getElementByName(qName);
+            if(element != null) {
+                XmlSchemaType type = element.getSchemaType();
+                return new DataType<XmlSchemaType>(Object.class, type);
+            }
+        }
+        
+        throw new WsdlProcessorException("Unable to get the output type");
+        
+    }
+
+    /*
+     * Get the input type.
+     */
+    @SuppressWarnings("unchecked")
+    private DataType<List<DataType<XmlSchemaType>>> getInputType(Input input, List<XmlSchema> xmlSchemas) {
+        
+        if(input == null) return null;
+        
+        Message message = input.getMessage();
+        List<Part> parts = message.getOrderedParts(null);
+        
+        List<DataType<XmlSchemaType>> types = new LinkedList<DataType<XmlSchemaType>>();
+        
+        for(Part part : parts) {       
+            QName qName = part.getElementName();     
+            for(XmlSchema xmlSchema : xmlSchemas) {
+                XmlSchemaElement element = xmlSchema.getElementByName(qName);
+                if(element != null) {
+                    XmlSchemaType type = element.getSchemaType();
+                    types.add(new DataType<XmlSchemaType>(Object.class, type));
+                }
+            }            
+        }
+        
+        return new DataType<List<DataType<XmlSchemaType>>>(Object.class, types);
+        
+    }
+
+    /*
+     * Get all the inline schemas.
+     */
+    private List<XmlSchema> getXmlSchemas(Definition definition) {
+        
+        List<XmlSchema> xmlSchemas = new LinkedList<XmlSchema>();
+        
+        Types types = definition.getTypes();
+        for(Object obj : types.getExtensibilityElements()) {
+            if(obj instanceof XmlSchema) {
+                xmlSchemas.add((XmlSchema) obj);
+            }
+        }
+        
+        return xmlSchemas;
+        
     }
 
 }
