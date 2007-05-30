@@ -71,21 +71,40 @@ public class InterfaceWsdlLoader extends LoaderExtension<Object, WsdlContract> i
     /**
      * @see org.fabric3.spi.loader.StAXElementLoader#load(java.lang.Object, javax.xml.stream.XMLStreamReader, org.fabric3.spi.loader.LoaderContext)
      */
-    @SuppressWarnings("unchecked")
     public WsdlContract load(Object input, XMLStreamReader reader, LoaderContext context) throws XMLStreamException, LoaderException {
         
         WsdlContract wsdlContract = new WsdlContract();
         
-        String wsdlLocation = reader.getAttributeValue(null, "wsdlLocation");
-        if(wsdlLocation == null) {
-            // We don't support auto dereferecing of namespace URI
-            throw new LoaderException("WSDL Location is required");
+        URL wsdlUrl = resolveWsdl(reader);
+        
+        processInterface(reader, wsdlContract, wsdlUrl);
+        
+        processCallbackInterface(reader, wsdlContract, wsdlUrl);        
+        
+        return wsdlContract;
+        
+    }
+
+    /*
+     * Processes the callback interface.
+     */
+    @SuppressWarnings("unchecked")
+    private void processCallbackInterface(XMLStreamReader reader, WsdlContract wsdlContract, URL wsdlUrl) {
+        
+        String callbackInterfaze = reader.getAttributeValue(null, "callbackInterface");
+        if(callbackInterfaze != null) {
+            QName callbackInterfaceQName = getQName(callbackInterfaze);
+            wsdlContract.setCallbackQname(callbackInterfaceQName);
+            wsdlContract.setCallbackOperations(processor.getOperations(callbackInterfaceQName, wsdlUrl));
         }
-        URL wsdlUrl = getWsdlUrl(wsdlLocation);
-        if(wsdlUrl == null) {
-            throw new LoaderException("Unable to locate WSDL " + wsdlLocation);
-            
-        }
+        
+    }
+
+    /*
+     * Processes the interface.
+     */
+    @SuppressWarnings("unchecked")
+    private void processInterface(XMLStreamReader reader, WsdlContract wsdlContract, URL wsdlUrl) throws LoaderException {
         
         String interfaze = reader.getAttributeValue(null, "interface");
         if(interfaze == null) {
@@ -95,14 +114,23 @@ public class InterfaceWsdlLoader extends LoaderExtension<Object, WsdlContract> i
         wsdlContract.setQname(interfaceQName);
         wsdlContract.setOperations(processor.getOperations(interfaceQName, wsdlUrl));
         
-        String callbackInterfaze = reader.getAttributeValue(null, "callbackInterface");
-        if(callbackInterfaze != null) {
-            QName callbackInterfaceQName = getQName(callbackInterfaze);
-            wsdlContract.setCallbackQname(callbackInterfaceQName);
-            wsdlContract.setCallbackOperations(processor.getOperations(callbackInterfaceQName, wsdlUrl));
-        }        
+    }
+
+    /*
+     * Resolves the WSDL.
+     */
+    private URL resolveWsdl(XMLStreamReader reader) throws LoaderException {
         
-        return wsdlContract;
+        String wsdlLocation = reader.getAttributeValue(null, "wsdlLocation");
+        if(wsdlLocation == null) {
+            // We don't support auto dereferecing of namespace URI
+            throw new LoaderException("WSDL Location is required");
+        }
+        URL wsdlUrl = getWsdlUrl(wsdlLocation);
+        if(wsdlUrl == null) {
+            throw new LoaderException("Unable to locate WSDL " + wsdlLocation);
+        }
+        return wsdlUrl;
         
     }
 
