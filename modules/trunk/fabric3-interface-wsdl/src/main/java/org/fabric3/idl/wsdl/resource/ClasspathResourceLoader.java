@@ -29,10 +29,10 @@ import java.io.InputStream;
 public class ClasspathResourceLoader extends TypedResourceLoader {
     
     /**
-     * @param defaultResourceLoader Default resource loader registry.
+     * @param resourceLoaderRegistry Default resource loader registry.
      */
-    public ClasspathResourceLoader(DefaultResourceLoader defaultResourceLoader) {
-        super(defaultResourceLoader);
+    public ClasspathResourceLoader(ResourceLoaderRegistry resourceLoaderRegistry) {
+        super(resourceLoaderRegistry);
     }
 
     /**

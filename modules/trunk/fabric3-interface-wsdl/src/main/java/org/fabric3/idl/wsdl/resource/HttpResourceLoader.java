@@ -27,10 +27,10 @@ package org.fabric3.idl.wsdl.resource;
 public class HttpResourceLoader extends UrlResourceLoader {
     
     /**
-     * @param defaultResourceLoader Default resource loader registry.
+     * @param resourceLoaderRegistry Default resource loader registry.
      */
-    public HttpResourceLoader(DefaultResourceLoader defaultResourceLoader) {
-        super(defaultResourceLoader);
+    public HttpResourceLoader(ResourceLoaderRegistry resourceLoaderRegistry) {
+        super(resourceLoaderRegistry);
     }
 
     /**

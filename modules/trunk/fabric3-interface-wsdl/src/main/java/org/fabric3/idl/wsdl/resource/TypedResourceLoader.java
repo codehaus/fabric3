@@ -27,10 +27,10 @@ package org.fabric3.idl.wsdl.resource;
 public abstract class TypedResourceLoader implements ResourceLoader {
     
     /**
-     * @param defaultResourceLoader Default resource loader registry.
+     * @param resourceLoaderRegistry Default resource loader registry.
      */
-    public TypedResourceLoader(DefaultResourceLoader defaultResourceLoader) {
-        defaultResourceLoader.register(getType(), this);
+    public TypedResourceLoader(ResourceLoaderRegistry resourceLoaderRegistry) {
+        resourceLoaderRegistry.register(getType(), this);
     }
 
     /**

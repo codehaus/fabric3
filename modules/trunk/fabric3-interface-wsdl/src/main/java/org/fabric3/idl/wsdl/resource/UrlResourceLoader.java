@@ -32,10 +32,10 @@ import java.net.URL;
 public abstract class UrlResourceLoader extends TypedResourceLoader {
     
     /**
-     * @param defaultResourceLoader Default resource loader registry.
+     * @param resourceLoaderRegistry Default resource loader registry.
      */
-    public UrlResourceLoader(DefaultResourceLoader defaultResourceLoader) {
-        super(defaultResourceLoader);
+    public UrlResourceLoader(ResourceLoaderRegistry resourceLoaderRegistry) {
+        super(resourceLoaderRegistry);
     }
 
     /**

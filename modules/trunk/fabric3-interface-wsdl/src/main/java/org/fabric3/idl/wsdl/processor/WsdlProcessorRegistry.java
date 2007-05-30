@@ -31,7 +31,7 @@ import org.fabric3.idl.wsdl.version.WsdlVersionChecker.WsdlVersion;
  * 
  * @version $Revsion$ $Date$
  */
-public class DefaultWsdlProcessor implements WsdlProcessor {
+public class WsdlProcessorRegistry implements WsdlProcessor {
     
     /**
      * WSDL processors.

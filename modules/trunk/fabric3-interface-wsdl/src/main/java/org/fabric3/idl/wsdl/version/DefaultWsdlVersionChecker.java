@@ -31,11 +31,6 @@ import javax.xml.stream.XMLStreamReader;
  * Default implementation of the WSDL version checker.
  */
 public class DefaultWsdlVersionChecker implements WsdlVersionChecker {
-    
-    /**
-     * WSDL 2.0 Namespace.
-     */
-    private static final String WSDL_20_NS = "http://www.w3.org/ns/wsdl";
 
     /**
      * @see org.fabric3.idl.wsdl.version.WsdlVersionChecker#getVersion(java.io.InputStream)
@@ -47,9 +42,14 @@ public class DefaultWsdlVersionChecker implements WsdlVersionChecker {
             while(true) {
                 switch(reader.next()) {
                     case START_ELEMENT:
-                        String nsUri = reader.getName().getNamespaceURI();
-                        return nsUri.equals(WSDL_20_NS) ? WsdlVersion.VERSION_1_1 : WsdlVersion.VERSION_2_0;
+                        String localPart = reader.getName().getLocalPart();
+                        if("portType".equals(localPart)) {
+                            return WsdlVersion.VERSION_1_1;
+                        } else if("interface".equals(localPart)) {
+                            return WsdlVersion.VERSION_2_0;
+                        }
                 }
+                throw new WsdlVersionCheckerException("Unable to determine WSDL version");
             }
         } catch(XMLStreamException ex) {
             throw new WsdlVersionCheckerException("Unable to read stream", ex);

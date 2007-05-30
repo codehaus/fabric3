@@ -26,7 +26,7 @@ import java.util.Map;
 /**
  * Default implementation for the resource loader. This tries to load from 
  */
-public class DefaultResourceLoader implements ResourceLoader {
+public class ResourceLoaderRegistry implements ResourceLoader {
 
     /**
      * Cache of resource loaders.
@@ -37,6 +37,10 @@ public class DefaultResourceLoader implements ResourceLoader {
      * @see org.fabric3.idl.wsdl.resource.ResourceLoader#loadResource(java.lang.String, java.lang.ClassLoader)
      */
     public InputStream loadResource(String resourcePath, ClassLoader cl) throws ResourceLoaderException {
+        
+        if(resourcePath.indexOf(":") < -1) {
+            throw new ResourceLoaderException("Invalid resource path format " + resourcePath);
+        }
         
         String type = resourcePath.split(":")[0];
         if(!resourceLoaders.containsKey(type)) {

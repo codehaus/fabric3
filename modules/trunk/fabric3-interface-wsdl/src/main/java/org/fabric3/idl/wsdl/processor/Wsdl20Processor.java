@@ -32,10 +32,10 @@ import org.fabric3.idl.wsdl.version.WsdlVersionChecker.WsdlVersion;
 public class Wsdl20Processor implements WsdlProcessor {
     
     /**
-     * @param defaultWsdlProcessor Injected default processor.
+     * @param wsdlProcessorRegistry Injected default processor.
      */
-    public Wsdl20Processor(DefaultWsdlProcessor defaultWsdlProcessor) {
-        defaultWsdlProcessor.registerProcessor(WsdlVersion.VERSION_2_0, this);
+    public Wsdl20Processor(WsdlProcessorRegistry wsdlProcessorRegistry) {
+        wsdlProcessorRegistry.registerProcessor(WsdlVersion.VERSION_2_0, this);
     }
 
     /**
