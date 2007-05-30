@@ -19,6 +19,7 @@
 
 package org.fabric3.idl.wsdl.loader;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.xml.namespace.QName;
@@ -28,7 +29,6 @@ import javax.xml.stream.XMLStreamReader;
 import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.idl.wsdl.WsdlContract;
 import org.fabric3.idl.wsdl.processor.WsdlProcessor;
-import org.fabric3.idl.wsdl.resource.ResourceLoader;
 import org.fabric3.idl.wsdl.version.WsdlVersionChecker;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
@@ -48,11 +48,6 @@ public class InterfaceWsdlLoader extends LoaderExtension<Object, WsdlContract> i
     private static final QName QNAME = new QName(SCA_NS, "interface.wsdl");
     
     /**
-     * Resource loader.
-     */
-    private ResourceLoader resourceLoader;
-    
-    /**
      * Version checker.
      */
     private WsdlVersionChecker versionChecker;
@@ -69,11 +64,9 @@ public class InterfaceWsdlLoader extends LoaderExtension<Object, WsdlContract> i
      * @param wsdlProcessor WSDL processor.
      */
     protected InterfaceWsdlLoader(LoaderRegistry loaderRegistry,
-                                  ResourceLoader resourceLoader,
                                   WsdlVersionChecker versionChecker,
                                   WsdlProcessor processor) {
         super(loaderRegistry);
-        this.resourceLoader = resourceLoader;
         this.versionChecker = versionChecker;
         this.processor = processor;
     }
@@ -98,7 +91,11 @@ public class InterfaceWsdlLoader extends LoaderExtension<Object, WsdlContract> i
             // We don't support auto dereferecing of namespace URI
             throw new LoaderException("WSDL Location is required");
         }
-        URL wsdlUrl = resourceLoader.loadResource(wsdlLocation, getClass().getClassLoader());
+        URL wsdlUrl = getWsdlUrl(wsdlLocation);
+        if(wsdlUrl == null) {
+            throw new LoaderException("Unable to locate WSDL " + wsdlLocation);
+            
+        }
         
         String interfaze = reader.getAttributeValue(null, "interface");
         if(interfaze == null) {
@@ -124,6 +121,18 @@ public class InterfaceWsdlLoader extends LoaderExtension<Object, WsdlContract> i
      */
     private QName getQName(String interfaze) {
         throw new UnsupportedOperationException("Not supported yet");
+    }
+    
+    /*
+     * Gets the WSDL URL.
+     */
+    private URL getWsdlUrl(String wsdlPath) {
+        
+        try {
+            return new URL(wsdlPath);
+        } catch(MalformedURLException ex) {
+            return getClass().getClassLoader().getResource(wsdlPath);
+        }
     }
 
 }
