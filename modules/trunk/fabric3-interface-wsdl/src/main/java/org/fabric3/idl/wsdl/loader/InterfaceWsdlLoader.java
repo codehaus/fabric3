@@ -29,7 +29,6 @@ import javax.xml.stream.XMLStreamReader;
 import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.idl.wsdl.WsdlContract;
 import org.fabric3.idl.wsdl.processor.WsdlProcessor;
-import org.fabric3.idl.wsdl.version.WsdlVersionChecker;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
@@ -48,26 +47,16 @@ public class InterfaceWsdlLoader extends LoaderExtension<Object, WsdlContract> i
     private static final QName QNAME = new QName(SCA_NS, "interface.wsdl");
     
     /**
-     * Version checker.
-     */
-    private WsdlVersionChecker versionChecker;
-    
-    /**
      * WSDL processor.
      */
     private WsdlProcessor processor;
 
     /**
      * @param loaderRegistry Loader registry.
-     * @param resourceLoader Resource loader.
-     * @param versionChecker WSDL version checker.
      * @param wsdlProcessor WSDL processor.
      */
-    protected InterfaceWsdlLoader(LoaderRegistry loaderRegistry,
-                                  WsdlVersionChecker versionChecker,
-                                  WsdlProcessor processor) {
+    protected InterfaceWsdlLoader(LoaderRegistry loaderRegistry, WsdlProcessor processor) {
         super(loaderRegistry);
-        this.versionChecker = versionChecker;
         this.processor = processor;
     }
 
@@ -82,6 +71,7 @@ public class InterfaceWsdlLoader extends LoaderExtension<Object, WsdlContract> i
     /**
      * @see org.fabric3.spi.loader.StAXElementLoader#load(java.lang.Object, javax.xml.stream.XMLStreamReader, org.fabric3.spi.loader.LoaderContext)
      */
+    @SuppressWarnings("unchecked")
     public WsdlContract load(Object input, XMLStreamReader reader, LoaderContext context) throws XMLStreamException, LoaderException {
         
         WsdlContract wsdlContract = new WsdlContract();
@@ -101,19 +91,19 @@ public class InterfaceWsdlLoader extends LoaderExtension<Object, WsdlContract> i
         if(interfaze == null) {
             throw new LoaderException("Interface is required");
         }
-        QName interfaceQname = getQName(interfaze);
-        wsdlContract.setQname(interfaceQname);
+        QName interfaceQName = getQName(interfaze);
+        wsdlContract.setQname(interfaceQName);
+        wsdlContract.setOperations(processor.getOperations(interfaceQName, wsdlUrl));
         
         String callbackInterfaze = reader.getAttributeValue(null, "callbackInterface");
         if(callbackInterfaze != null) {
-            QName callbackInterfaceQname = getQName(callbackInterfaze);
-            wsdlContract.setCallbackQname(callbackInterfaceQname);
-        }
+            QName callbackInterfaceQName = getQName(callbackInterfaze);
+            wsdlContract.setCallbackQname(callbackInterfaceQName);
+            wsdlContract.setCallbackOperations(processor.getOperations(callbackInterfaceQName, wsdlUrl));
+        }        
         
-        wsdlContract.setWsdlVersion(versionChecker.getVersion(wsdlUrl));        
-        processor.processWsdl(wsdlContract, wsdlUrl);        
+        return wsdlContract;
         
-        return null;
     }
 
     /*

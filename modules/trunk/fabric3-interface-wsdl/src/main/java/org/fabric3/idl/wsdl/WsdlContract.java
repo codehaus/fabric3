@@ -21,7 +21,6 @@ package org.fabric3.idl.wsdl;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.idl.wsdl.version.WsdlVersionChecker.WsdlVersion;
 import org.fabric3.spi.model.type.ServiceContract;
 
 /**
@@ -30,11 +29,6 @@ import org.fabric3.spi.model.type.ServiceContract;
  * @version $Revsion$ $Date$
  */
 public class WsdlContract extends ServiceContract {
-    
-    /**
-     * WSDL Vesrion.
-     */
-    private WsdlVersion wsdlVersion;
     
     /**
      * QName for the port type/interface.
@@ -58,20 +52,6 @@ public class WsdlContract extends ServiceContract {
      */
     public void setQname(QName qname) {
         this.qname = qname;
-    }
-
-    /**
-     * @return WSDL Vesrion.
-     */
-    public WsdlVersion getWsdlVersion() {
-        return wsdlVersion;
-    }
-
-    /**
-     * @param wsdlVersion WSDL Version.
-     */
-    public void setWsdlVersion(WsdlVersion wsdlVersion) {
-        this.wsdlVersion = wsdlVersion;
     }
 
     /**

@@ -21,10 +21,14 @@ package org.fabric3.idl.wsdl.processor;
 
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import org.fabric3.idl.wsdl.WsdlContract;
+import javax.xml.namespace.QName;
+
+import org.fabric3.idl.wsdl.version.WsdlVersionChecker;
 import org.fabric3.idl.wsdl.version.WsdlVersionChecker.WsdlVersion;
+import org.fabric3.spi.model.type.Operation;
 
 /**
  * Default WSDL processor implementation.
@@ -37,17 +41,29 @@ public class WsdlProcessorRegistry implements WsdlProcessor {
      * WSDL processors.
      */
     private Map<WsdlVersion, WsdlProcessor> wsdlProcessors = new HashMap<WsdlVersion, WsdlProcessor>();
+    
+    /**
+     * WSDL version checker.
+     */
+    private WsdlVersionChecker versionChecker;
+
+    /**
+     * @param versionChecker Injected WSDL version checker.
+     */
+    public WsdlProcessorRegistry(WsdlVersionChecker versionChecker) {
+        this.versionChecker = versionChecker;
+    }
 
     /**
      * @see org.fabric3.idl.wsdl.processor.WsdlProcessor#processWsdl(org.fabric3.idl.wsdl.WsdlContract, java.net.URL)
      */
-    public void processWsdl(WsdlContract wsdlContract, URL wsdl) {
+    public List<Operation<?>> getOperations(QName portTypeOrInterfaceName, URL wsdlUrl) {
 
-        WsdlVersion wsdlVersion = wsdlContract.getWsdlVersion();
+        WsdlVersion wsdlVersion = versionChecker.getVersion(wsdlUrl);
         if(!wsdlProcessors.containsKey(wsdlVersion)) {
             throw new WsdlProcessorException("No processor registered for version " + wsdlVersion);
         }
-        wsdlProcessors.get(wsdlVersion).processWsdl(wsdlContract, wsdl);
+        return wsdlProcessors.get(wsdlVersion).getOperations(portTypeOrInterfaceName, wsdlUrl);
 
     }
 

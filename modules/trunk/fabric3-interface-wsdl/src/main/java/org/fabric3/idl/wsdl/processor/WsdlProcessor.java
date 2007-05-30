@@ -20,8 +20,11 @@
 package org.fabric3.idl.wsdl.processor;
 
 import java.net.URL;
+import java.util.List;
 
-import org.fabric3.idl.wsdl.WsdlContract;
+import javax.xml.namespace.QName;
+
+import org.fabric3.spi.model.type.Operation;
 
 /**
  * Abstraction for processing WSDL.
@@ -30,6 +33,13 @@ import org.fabric3.idl.wsdl.WsdlContract;
  */
 public interface WsdlProcessor {
 
-    void processWsdl(WsdlContract wsdlContract, URL wsdlUrl);
+    /**
+     * Get the list of operations from a WSDL 1.1 port type or WSDL 2.0 interface.
+     * 
+     * @param portTypeOrInterfaceName Qualified name of the WSDL 1.1 port type or WSDL 2.0 interface.
+     * @param wsdlUrl The URL to the WSDL.
+     * @return List of operations.
+     */
+    List<Operation<?>> getOperations(QName portTypeOrInterfaceName, URL wsdlUrl);
 
 }

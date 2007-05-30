@@ -20,9 +20,12 @@
 package org.fabric3.idl.wsdl.processor;
 
 import java.net.URL;
+import java.util.List;
 
-import org.fabric3.idl.wsdl.WsdlContract;
+import javax.xml.namespace.QName;
+
 import org.fabric3.idl.wsdl.version.WsdlVersionChecker.WsdlVersion;
+import org.fabric3.spi.model.type.Operation;
 
 /**
  * WSDL 1.1 processor implementation.
@@ -39,9 +42,9 @@ public class Wsdl11Processor implements WsdlProcessor {
     }
 
     /**
-     * @see org.fabric3.idl.wsdl.processor.WsdlProcessor#processWsdl(org.fabric3.idl.wsdl.WsdlContract, java.net.URL)
+     * @see @see org.fabric3.idl.wsdl.processor.WsdlProcessor#getOperations(javax.xml.namespace.QName, java.net.URL)
      */
-    public void processWsdl(WsdlContract wsdlContract, URL wsdl) {
+    public List<Operation<?>> getOperations(QName portTypeOrInterfaceName, URL wsdlUrl) {
         // Implement using wsdl4j
         throw new UnsupportedOperationException("Not supported yet");
     }
