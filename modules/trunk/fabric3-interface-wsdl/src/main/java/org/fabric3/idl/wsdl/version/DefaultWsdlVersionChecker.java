@@ -50,9 +50,9 @@ public class DefaultWsdlVersionChecker implements WsdlVersionChecker {
                 switch(reader.next()) {
                     case START_ELEMENT:
                         String localPart = reader.getName().getLocalPart();
-                        if("portType".equals(localPart)) {
+                        if("definitions".equals(localPart)) {
                             return WsdlVersion.VERSION_1_1;
-                        } else if("interface".equals(localPart)) {
+                        } else if("description".equals(localPart)) {
                             return WsdlVersion.VERSION_2_0;
                         }
                 }
