@@ -19,8 +19,7 @@
 
 package org.fabric3.idl.wsdl.loader;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.net.URL;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
@@ -99,6 +98,7 @@ public class InterfaceWsdlLoader extends LoaderExtension<Object, WsdlContract> i
             // We don't support auto dereferecing of namespace URI
             throw new LoaderException("WSDL Location is required");
         }
+        URL wsdlUrl = resourceLoader.loadResource(wsdlLocation, getClass().getClassLoader());
         
         String interfaze = reader.getAttributeValue(null, "interface");
         if(interfaze == null) {
@@ -113,8 +113,8 @@ public class InterfaceWsdlLoader extends LoaderExtension<Object, WsdlContract> i
             wsdlContract.setCallbackQname(callbackInterfaceQname);
         }
         
-        setWsdlVersion(wsdlContract, wsdlLocation);
-        processWsdl(wsdlContract, wsdlLocation);
+        wsdlContract.setWsdlVersion(versionChecker.getVersion(wsdlUrl));        
+        processor.processWsdl(wsdlContract, wsdlUrl);        
         
         return null;
     }
@@ -124,44 +124,6 @@ public class InterfaceWsdlLoader extends LoaderExtension<Object, WsdlContract> i
      */
     private QName getQName(String interfaze) {
         throw new UnsupportedOperationException("Not supported yet");
-    }
-    
-    /*
-     * Sets the WSDL version.
-     */
-    private void setWsdlVersion(WsdlContract wsdlContract, String wsdlLocation) {
-        
-        InputStream wsdlStream = resourceLoader.loadResource(wsdlLocation, getClass().getClassLoader());
-        try {
-            wsdlContract.setWsdlVersion(versionChecker.getVersion(wsdlStream));
-        } finally {
-            try {
-                if(wsdlStream != null) {
-                    wsdlStream.close();
-                }
-            }  catch(IOException ignore) {
-            }
-        }
-        
-    }
-    
-    /*
-     * Sets the WSDL version.
-     */
-    private void processWsdl(WsdlContract wsdlContract, String wsdlLocation) {
-        
-        InputStream wsdlStream = resourceLoader.loadResource(wsdlLocation, getClass().getClassLoader());
-        try {
-            processor.processWsdl(wsdlContract, wsdlStream);
-        } finally {
-            try {
-                if(wsdlStream != null) {
-                    wsdlStream.close();
-                }
-            }  catch(IOException ignore) {
-            }
-        }
-        
     }
 
 }

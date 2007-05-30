@@ -19,7 +19,7 @@
 
 package org.fabric3.idl.wsdl.processor;
 
-import java.io.InputStream;
+import java.net.URL;
 
 import org.fabric3.idl.wsdl.WsdlContract;
 import org.fabric3.idl.wsdl.version.WsdlVersionChecker.WsdlVersion;
@@ -39,9 +39,9 @@ public class Wsdl20Processor implements WsdlProcessor {
     }
 
     /**
-     * @see org.fabric3.idl.wsdl.processor.WsdlProcessor#processWsdl(org.fabric3.idl.wsdl.WsdlContract, java.io.InputStream)
+     * @see org.fabric3.idl.wsdl.processor.WsdlProcessor#processWsdl(org.fabric3.idl.wsdl.WsdlContract, java.net.URL)
      */
-    public void processWsdl(WsdlContract wsdlContract, InputStream wsdl) {
+    public void processWsdl(WsdlContract wsdlContract, URL wsdl) {
         // Implement using woden
         throw new UnsupportedOperationException("Not supported yet");
     }

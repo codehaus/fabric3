@@ -19,7 +19,7 @@
 
 package org.fabric3.idl.wsdl.resource;
 
-import java.io.InputStream;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,7 +36,7 @@ public class ResourceLoaderRegistry implements ResourceLoader {
     /**
      * @see org.fabric3.idl.wsdl.resource.ResourceLoader#loadResource(java.lang.String, java.lang.ClassLoader)
      */
-    public InputStream loadResource(String resourcePath, ClassLoader cl) throws ResourceLoaderException {
+    public URL loadResource(String resourcePath, ClassLoader cl) throws ResourceLoaderException {
         
         if(resourcePath.indexOf(":") < -1) {
             throw new ResourceLoaderException("Invalid resource path format " + resourcePath);

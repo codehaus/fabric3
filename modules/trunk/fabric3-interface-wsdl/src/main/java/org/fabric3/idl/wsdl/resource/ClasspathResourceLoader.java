@@ -6,28 +6,28 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License.    
+ * under the License.
  */
 
 package org.fabric3.idl.wsdl.resource;
 
-import java.io.InputStream;
+import java.net.URL;
 
 /**
  * Loads a resource from the classpath.
- * 
+ *
  * @version $Revision$ $Date$
  */
 public class ClasspathResourceLoader extends TypedResourceLoader {
-    
+
     /**
      * @param resourceLoaderRegistry Default resource loader registry.
      */
@@ -46,19 +46,19 @@ public class ClasspathResourceLoader extends TypedResourceLoader {
     /**
      * @see org.fabric3.idl.wsdl.resource.ResourceLoader#loadResource(java.lang.String, java.lang.ClassLoader)
      */
-    public InputStream loadResource(String resourcePath, ClassLoader cl) {
-        
+    public URL loadResource(String resourcePath, ClassLoader cl) {
+
         resourcePath = resourcePath.split(":")[1];
-        InputStream in = cl.getResourceAsStream(resourcePath);
-        if(in == null) {
-            in = getClass().getClassLoader().getResourceAsStream(resourcePath);
+        URL url = cl.getResource(resourcePath);
+        if(url == null) {
+            url = getClass().getClassLoader().getResource(resourcePath);
         }
-        
-        if(in == null) {
+
+        if(url == null) {
             throw new ResourceLoaderException("Unable to load resource " + resourcePath);
         }
-        return in;
-        
+        return url;
+
     }
 
 }
