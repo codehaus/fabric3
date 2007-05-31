@@ -72,10 +72,10 @@ public class WsdlProcessorRegistryTest extends TestCase {
         XmlSchemaType inputPartLogical = inputPart.getLogical();
         
         assertNotNull(inputPartLogical);
-        assertEquals("TradePriceRequest", inputPartLogical.getName());
+        assertEquals("string", inputPartLogical.getName());
         
         DataType<XmlSchemaType> outputType = operation.getOutputType();
-        assertEquals("TradePrice", outputType.getLogical().getName());
+        assertEquals("float", outputType.getLogical().getName());
 
     }
 
