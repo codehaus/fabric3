@@ -9,20 +9,16 @@ targetNamespace="http://example.com/stockquote.wsdl"
 
     <types>
        <schema targetNamespace="http://example.com/stockquote.xsd" xmlns="http://www.w3.org/2001/XMLSchema">
-           <element name="TradePrice">
-              <complexType>
-                  <all>
-                      <element name="price" type="float"/>
-                  </all>
-              </complexType>
-           </element>
-           <element name="TradePriceRequest">
-              <complexType>
-                  <all>
-                      <element name="tickerSymbol" type="string"/>
-                  </all>
-              </complexType>
-           </element>
+           <complexType name="TradePrice">
+               <all>
+                   <element name="price" type="float"/>
+               </all>
+           </complexType>
+           <complexType name="TradePriceRequest">
+               <all>
+                   <element name="tickerSymbol" type="string"/>
+              </all>
+           </complexType>
        </schema>
     </types>
 
