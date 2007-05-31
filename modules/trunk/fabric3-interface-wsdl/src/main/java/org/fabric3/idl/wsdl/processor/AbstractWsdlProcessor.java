@@ -19,8 +19,6 @@
 
 package org.fabric3.idl.wsdl.processor;
 
-import java.util.List;
-
 import javax.xml.namespace.QName;
 
 import org.apache.ws.commons.schema.XmlSchema;
@@ -39,14 +37,12 @@ public abstract class AbstractWsdlProcessor {
     /*
      * Create a data type with the XML type for the part.
      */
-    protected DataType<XmlSchemaType> getDataType(QName qName, List<XmlSchema> xmlSchemas) {
+    protected DataType<XmlSchemaType> getDataType(QName qName, XmlSchema xmlSchema) {
 
-        for(XmlSchema xmlSchema : xmlSchemas) {
-            XmlSchemaElement element = xmlSchema.getElementByName(qName);
-            if(element != null) {
-                return new DataType<XmlSchemaType>(Object.class, element.getSchemaType());
-            }
-        } 
+        XmlSchemaElement element = xmlSchema.getElementByName(qName);
+        if(element != null) {
+            return new DataType<XmlSchemaType>(Object.class, element.getSchemaType());
+        }
         return null;
         
     }

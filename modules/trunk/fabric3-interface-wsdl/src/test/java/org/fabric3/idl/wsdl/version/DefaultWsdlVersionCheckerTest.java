@@ -25,6 +25,9 @@ import org.fabric3.idl.wsdl.version.WsdlVersionChecker.WsdlVersion;
 
 import junit.framework.TestCase;
 
+/**
+ * @version $Revision$ $Date$
+ */
 public class DefaultWsdlVersionCheckerTest extends TestCase {
     
     private WsdlVersionChecker versionChecker = new DefaultWsdlVersionChecker();
@@ -35,7 +38,6 @@ public class DefaultWsdlVersionCheckerTest extends TestCase {
     public void testGetVersion1_1() {        
         URL url = getClass().getClassLoader().getResource("example_1_1.wsdl");
         assertEquals(WsdlVersion.VERSION_1_1, versionChecker.getVersion(url));
-
     }
 
     /**

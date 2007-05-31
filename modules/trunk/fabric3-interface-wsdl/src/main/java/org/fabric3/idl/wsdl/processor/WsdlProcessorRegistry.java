@@ -26,6 +26,7 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.apache.ws.commons.schema.XmlSchemaType;
 import org.fabric3.idl.wsdl.version.WsdlVersionChecker;
 import org.fabric3.idl.wsdl.version.WsdlVersionChecker.WsdlVersion;
 import org.fabric3.spi.model.type.Operation;
@@ -57,7 +58,7 @@ public class WsdlProcessorRegistry implements WsdlProcessor {
     /**
      * @see org.fabric3.idl.wsdl.processor.WsdlProcessor#processWsdl(org.fabric3.idl.wsdl.WsdlContract, java.net.URL)
      */
-    public List<Operation<?>> getOperations(QName portTypeOrInterfaceName, URL wsdlUrl) {
+    public List<Operation<XmlSchemaType>> getOperations(QName portTypeOrInterfaceName, URL wsdlUrl) {
 
         WsdlVersion wsdlVersion = versionChecker.getVersion(wsdlUrl);
         if(!wsdlProcessors.containsKey(wsdlVersion)) {
