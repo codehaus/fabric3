@@ -76,9 +76,20 @@ public class WsdlProcessorRegistryTest extends TestCase {
         
         DataType<XmlSchemaType> outputType = operation.getOutputType();
         assertEquals("TradePrice", outputType.getLogical().getName());
-        
-        
 
+    }
+
+    /**
+     * Checks for version 1.1
+     */
+    public void testGetVersion2_0() {    
+        
+        URL url = getClass().getClassLoader().getResource("example_2_0.wsdl");
+        QName portTypeQName = new QName("http://greath.example.com/2004/wsdl/resSvc", "reservationInterface");
+        
+        List<Operation<XmlSchemaType>> operations = processorRegistry.getOperations(portTypeQName, url);
+        assertEquals(1, operations.size());
+        
     }
 
 }

@@ -28,6 +28,7 @@ import javax.xml.namespace.QName;
 import org.apache.woden.WSDLException;
 import org.apache.woden.WSDLFactory;
 import org.apache.woden.WSDLReader;
+import org.apache.woden.schema.Schema;
 import org.apache.woden.wsdl20.Description;
 import org.apache.woden.wsdl20.ElementDeclaration;
 import org.apache.woden.wsdl20.Interface;
@@ -148,11 +149,10 @@ public class Wsdl20Processor extends AbstractWsdlProcessor implements WsdlProces
      */
     private XmlSchema getXmlSchema(Description description) {
         
-        /*Schema[] schemas = description.toElement().getTypesElement().getSchemas();
-        List<XmlSchema> xmlSchemas = new LinkedList<XmlSchema>();
+        Schema[] schemas = description.toElement().getTypesElement().getSchemas();
         for(Schema schema : schemas) {
-            xmlSchemas.add(schema.getSchemaDefinition());
-        }*/
+            return schema.getSchemaDefinition();
+        }
         
         return null;
         

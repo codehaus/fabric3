@@ -22,6 +22,7 @@ package org.fabric3.idl.wsdl.processor;
 import javax.xml.namespace.QName;
 
 import org.apache.ws.commons.schema.XmlSchema;
+import org.apache.ws.commons.schema.XmlSchemaElement;
 import org.apache.ws.commons.schema.XmlSchemaType;
 import org.fabric3.spi.model.type.DataType;
 
@@ -41,6 +42,11 @@ public abstract class AbstractWsdlProcessor {
         XmlSchemaType type = xmlSchema.getTypeByName(qName);
         if(type != null) {
             return new DataType<XmlSchemaType>(Object.class, type);
+        } else {
+            XmlSchemaElement element = xmlSchema.getElementByName(qName);
+            if(element != null) {
+                return new DataType<XmlSchemaType>(Object.class, element.getSchemaType());
+            }
         }
         throw new WsdlProcessorException("Unable to find type " + qName);
         
