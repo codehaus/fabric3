@@ -21,7 +21,7 @@ package org.fabric3.idl.wsdl.processor;
 
 import javax.xml.namespace.QName;
 
-import org.apache.ws.commons.schema.XmlSchema;
+import org.apache.ws.commons.schema.XmlSchemaCollection;
 import org.apache.ws.commons.schema.XmlSchemaElement;
 import org.apache.ws.commons.schema.XmlSchemaType;
 import org.fabric3.spi.model.type.DataType;
@@ -37,13 +37,13 @@ public abstract class AbstractWsdlProcessor {
     /*
      * Create a data type with the XML type for the part.
      */
-    protected DataType<XmlSchemaType> getDataType(QName qName, XmlSchema xmlSchema) {
+    protected DataType<XmlSchemaType> getDataType(QName qName, XmlSchemaCollection xmlSchema) {
 
-        XmlSchemaType type = xmlSchema.getTypeByName(qName);
+        XmlSchemaType type = xmlSchema.getTypeByQName(qName);
         if(type != null) {
             return new DataType<XmlSchemaType>(Object.class, type);
         } else {
-            XmlSchemaElement element = xmlSchema.getElementByName(qName);
+            XmlSchemaElement element = xmlSchema.getElementByQName(qName);
             if(element != null) {
                 return new DataType<XmlSchemaType>(Object.class, element.getSchemaType());
             }

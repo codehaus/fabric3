@@ -36,11 +36,12 @@ import org.apache.woden.wsdl20.InterfaceFaultReference;
 import org.apache.woden.wsdl20.InterfaceMessageReference;
 import org.apache.woden.wsdl20.InterfaceOperation;
 import org.apache.woden.wsdl20.enumeration.Direction;
-import org.apache.ws.commons.schema.XmlSchema;
+import org.apache.ws.commons.schema.XmlSchemaCollection;
 import org.apache.ws.commons.schema.XmlSchemaType;
 import org.fabric3.idl.wsdl.version.WsdlVersionChecker.WsdlVersion;
 import org.fabric3.spi.model.type.DataType;
 import org.fabric3.spi.model.type.Operation;
+import org.w3c.dom.Document;
 
 /**
  * WSDL 2.0 processor implementation.
@@ -74,7 +75,7 @@ public class Wsdl20Processor extends AbstractWsdlProcessor implements WsdlProces
                 throw new WsdlProcessorException("Interface not found " + portTypeOrInterfaceName);
             }
             
-            XmlSchema xmlSchema = getXmlSchema(description);
+            XmlSchemaCollection xmlSchema = getXmlSchema(description);
             
             for(InterfaceOperation operation : interfaze.getAllInterfaceOperations()) {
                 Operation<XmlSchemaType> op = getOperation(xmlSchema, operation);                
@@ -92,7 +93,7 @@ public class Wsdl20Processor extends AbstractWsdlProcessor implements WsdlProces
     /*
      * Creates F3 operation from WSDL 2.0 operation.
      */
-    private Operation<XmlSchemaType> getOperation(XmlSchema xmlSchema, InterfaceOperation operation) {
+    private Operation<XmlSchemaType> getOperation(XmlSchemaCollection xmlSchema, InterfaceOperation operation) {
         
         String name = operation.getName().getLocalPart();
         
@@ -128,7 +129,7 @@ public class Wsdl20Processor extends AbstractWsdlProcessor implements WsdlProces
     /*
      * Gets the fault types.
      */
-    private List<DataType<XmlSchemaType>> getFaultTypes(XmlSchema xmlSchema, InterfaceOperation operation) {
+    private List<DataType<XmlSchemaType>> getFaultTypes(XmlSchemaCollection xmlSchema, InterfaceOperation operation) {
         
         InterfaceFaultReference[] faultReferences = operation.getInterfaceFaultReferences();
         List<DataType<XmlSchemaType>> faultTypes = new LinkedList<DataType<XmlSchemaType>>();
@@ -147,14 +148,18 @@ public class Wsdl20Processor extends AbstractWsdlProcessor implements WsdlProces
     /*
      * Get all the inline schemas.
      */
-    private XmlSchema getXmlSchema(Description description) {
+    private XmlSchemaCollection getXmlSchema(Description description) {
+        
+        XmlSchemaCollection collection = new XmlSchemaCollection();
         
         Schema[] schemas = description.toElement().getTypesElement().getSchemas();
         for(Schema schema : schemas) {
-            return schema.getSchemaDefinition();
+            for(Document doc : schema.getSchemaDefinition().getAllSchemas()) {
+                collection.read(doc.getDocumentElement());
+            }
         }
         
-        return null;
+        return collection;
         
     }
 

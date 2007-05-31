@@ -39,7 +39,6 @@ import javax.wsdl.factory.WSDLFactory;
 import javax.wsdl.xml.WSDLReader;
 import javax.xml.namespace.QName;
 
-import org.apache.ws.commons.schema.XmlSchema;
 import org.apache.ws.commons.schema.XmlSchemaCollection;
 import org.apache.ws.commons.schema.XmlSchemaType;
 import org.fabric3.idl.wsdl.version.WsdlVersionChecker.WsdlVersion;
@@ -81,7 +80,7 @@ public class Wsdl11Processor extends AbstractWsdlProcessor implements WsdlProces
                 throw new WsdlProcessorException("Port type not found " + portTypeOrInterfaceName);
             }
             
-            XmlSchema xmlSchema = getXmlSchema(definition);
+            XmlSchemaCollection xmlSchema = getXmlSchema(definition);
             
             for(Object obj : portType.getOperations()) {                
                 Operation<XmlSchemaType> op = getOperation(xmlSchema, obj);                
@@ -99,7 +98,7 @@ public class Wsdl11Processor extends AbstractWsdlProcessor implements WsdlProces
     /*
      * Creates an F3 operation from a WSDL operation.
      */
-    private Operation<XmlSchemaType> getOperation(XmlSchema xmlSchema, Object obj) {
+    private Operation<XmlSchemaType> getOperation(XmlSchemaCollection xmlSchema, Object obj) {
         
         javax.wsdl.Operation operation = (javax.wsdl.Operation) obj;
         
@@ -120,7 +119,7 @@ public class Wsdl11Processor extends AbstractWsdlProcessor implements WsdlProces
      * Gets the fault types.
      */
     @SuppressWarnings("unchecked")
-    private List<DataType<XmlSchemaType>> getFaultTypes(Map faults, XmlSchema xmlSchema) {
+    private List<DataType<XmlSchemaType>> getFaultTypes(Map faults, XmlSchemaCollection xmlSchema) {
         
         List<DataType<XmlSchemaType>> types = new LinkedList<DataType<XmlSchemaType>>();
         
@@ -141,7 +140,7 @@ public class Wsdl11Processor extends AbstractWsdlProcessor implements WsdlProces
     /*
      * Get the output type.
      */
-    private DataType<XmlSchemaType> getOutputType(Output output, XmlSchema xmlSchema) {
+    private DataType<XmlSchemaType> getOutputType(Output output, XmlSchemaCollection xmlSchema) {
         
         if(output == null) return null;
         
@@ -156,7 +155,7 @@ public class Wsdl11Processor extends AbstractWsdlProcessor implements WsdlProces
      * Get the input type.
      */
     @SuppressWarnings("unchecked")
-    private DataType<List<DataType<XmlSchemaType>>> getInputType(Input input, XmlSchema xmlSchema) {
+    private DataType<List<DataType<XmlSchemaType>>> getInputType(Input input, XmlSchemaCollection xmlSchema) {
         
         if(input == null) return null;
         
@@ -179,7 +178,7 @@ public class Wsdl11Processor extends AbstractWsdlProcessor implements WsdlProces
     /*
      * Get all the inline schemas.
      */
-    private XmlSchema getXmlSchema(Definition definition) {
+    private XmlSchemaCollection getXmlSchema(Definition definition) {
         
         XmlSchemaCollection collection = new XmlSchemaCollection();
         Types types = definition.getTypes();
@@ -188,10 +187,10 @@ public class Wsdl11Processor extends AbstractWsdlProcessor implements WsdlProces
                 Schema schema = (Schema) obj;
                 Element element = schema.getElement();
                 collection.setBaseUri(schema.getDocumentBaseURI());
-                return collection.read(element);
+                collection.read(element);
             }
         }
-        return null;
+        return collection;
         
     }
 
