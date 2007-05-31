@@ -43,7 +43,7 @@ public abstract class AbstractWsdlProcessor {
         if(element != null) {
             return new DataType<XmlSchemaType>(Object.class, element.getSchemaType());
         }
-        return null;
+        throw new WsdlProcessorException("Unable to find type " + qName);
         
     }
 

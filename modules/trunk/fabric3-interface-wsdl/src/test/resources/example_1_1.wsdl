@@ -8,8 +8,7 @@ targetNamespace="http://example.com/stockquote.wsdl"
           xmlns="http://schemas.xmlsoap.org/wsdl/">
 
     <types>
-       <schema targetNamespace="http://example.com/stockquote.xsd"
-              xmlns="http://www.w3.org/2000/10/XMLSchema">
+       <schema targetNamespace="http://example.com/stockquote.xsd" xmlns="http://www.w3.org/2001/XMLSchema">
            <element name="TradePrice">
               <complexType>
                   <all>
@@ -18,13 +17,6 @@ targetNamespace="http://example.com/stockquote.wsdl"
               </complexType>
            </element>
            <element name="TradePriceRequest">
-              <complexType>
-                  <all>
-                      <element name="tickerSymbol" type="string"/>
-                  </all>
-              </complexType>
-           </element>
-           <element name="TradePriceRequest1">
               <complexType>
                   <all>
                       <element name="tickerSymbol" type="string"/>
