@@ -39,37 +39,38 @@ public class DefaultWsdlVersionChecker implements WsdlVersionChecker {
      */
     public WsdlVersion getVersion(URL wsdlUrl) {
 
-		InputStream wsdlStream = null;
+        InputStream wsdlStream = null;
 
         try {
 
-			wsdlStream = wsdlUrl.openConnection().getInputStream();
+            wsdlStream = wsdlUrl.openConnection().getInputStream();
 
             XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(wsdlStream);
-            while(true) {
-                switch(reader.next()) {
-                    case START_ELEMENT:
-                        String localPart = reader.getName().getLocalPart();
-                        if("definitions".equals(localPart)) {
-                            return WsdlVersion.VERSION_1_1;
-                        } else if("description".equals(localPart)) {
-                            return WsdlVersion.VERSION_2_0;
-                        }
+            
+            // Get to the document element
+            while(reader.next() != START_ELEMENT) {
+            }
+            String localPart = reader.getName().getLocalPart();
+            if ("definitions".equals(localPart)) {
+                return WsdlVersion.VERSION_1_1;
+            } else if ("description".equals(localPart)) {
+                return WsdlVersion.VERSION_2_0;
+            } else {
+                throw new WsdlVersionCheckerException("Unknown document element " + localPart);
+            }
+            
+        } catch (XMLStreamException ex) {
+            throw new WsdlVersionCheckerException("Unable to read stream", ex);
+        } catch (IOException ex) {
+            throw new WsdlVersionCheckerException("Unable to read stream", ex);
+        } finally {
+            try {
+                if (wsdlStream != null) {
+                    wsdlStream.close();
                 }
-                throw new WsdlVersionCheckerException("Unable to determine WSDL version");
+            } catch (IOException ignore) {
             }
-        } catch(XMLStreamException ex) {
-            throw new WsdlVersionCheckerException("Unable to read stream", ex);
-        } catch(IOException ex) {
-            throw new WsdlVersionCheckerException("Unable to read stream", ex);
-		} finally {
-			try {
-				if(wsdlStream != null) {
-					wsdlStream.close();
-				}
-			} catch(IOException ignore) {
-            }
-		}
+        }
 
     }
 
