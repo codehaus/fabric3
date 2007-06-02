@@ -25,17 +25,20 @@ import java.util.Map;
 
 import org.apache.cxf.frontend.ClientProxyFactoryBean;
 import org.apache.cxf.frontend.ServerFactoryBean;
+import org.apache.cxf.transport.servlet.CXFServlet;
 import org.fabric3.binding.ws.model.physical.WsWireSourceDefinition;
 import org.fabric3.binding.ws.model.physical.WsWireTargetDefinition;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.WireAttacher;
 import org.fabric3.spi.builder.component.WireAttacherRegistry;
+import org.fabric3.spi.host.ServletHost;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
+import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 /**
@@ -46,13 +49,26 @@ import org.osoa.sca.annotations.Reference;
 public class WsWireAttacher implements WireAttacher<WsWireSourceDefinition, WsWireTargetDefinition> {
 
     /**
+     * CXF Servlet that serves the request.
+     */
+    private CXFServlet cxfServlet = new CXFServlet();
+    
+    /**
      * Injects the wire attacher registry and servlet host.
      * 
      * @param wireAttacherRegistry Wire attacher registry.
+     * @param servletHost Servlet host for running CXF.
+     * @param contextPath Context path from which the web services are provisioned.
      */
-    public WsWireAttacher(@Reference WireAttacherRegistry wireAttacherRegistry) {
+    public WsWireAttacher(@Reference WireAttacherRegistry wireAttacherRegistry,
+                          @Reference ServletHost servletHost,
+                          @Property String contextPath) {
+        
         wireAttacherRegistry.register(WsWireSourceDefinition.class, this);
         wireAttacherRegistry.register(WsWireTargetDefinition.class, this);
+        
+        servletHost.registerMapping(contextPath, cxfServlet);
+        
     }
 
     /**
@@ -71,9 +87,13 @@ public class WsWireAttacher implements WireAttacher<WsWireSourceDefinition, WsWi
         Class<?> service = sourceDefinition.getServiceInterface();
         Object implementor = ServiceProxyHandler.newInstance(service, headInterceptors, wire);
         
-        ServerFactoryBean serverFactory = new ServerFactoryBean();
-        serverFactory.setAddress(sourceDefinition.getUri().toASCIIString());
-        serverFactory.setServiceBean(implementor);
+        ServerFactoryBean serverFactoryBean = new ServerFactoryBean();
+        serverFactoryBean.setAddress(sourceDefinition.getUri().toASCIIString());
+        serverFactoryBean.setServiceClass(service);
+        serverFactoryBean.setServiceBean(implementor);
+ 
+        serverFactoryBean.setBus(cxfServlet.getBus());
+        serverFactoryBean.create();
 
     }
 
