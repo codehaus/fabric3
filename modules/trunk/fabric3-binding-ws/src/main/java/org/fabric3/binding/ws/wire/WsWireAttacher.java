@@ -35,7 +35,6 @@ import org.fabric3.spi.host.ServletHost;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
-import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 import org.osoa.sca.annotations.EagerInit;
@@ -79,10 +78,11 @@ public class WsWireAttacher implements WireAttacher<WsWireSourceDefinition, WsWi
                                PhysicalWireTargetDefinition targetDefinition,
                                Wire wire) throws WiringException {
         
-        Map<String, Interceptor> headInterceptors = new HashMap<String, Interceptor>();
+        Map<String, InvocationChain> headInterceptors = new HashMap<String, InvocationChain>();
     
         for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
-            headInterceptors.put(entry.getKey().getName(), entry.getValue().getHeadInterceptor());
+            System.err.println(entry.getKey().getName() + ":" + entry.getValue().getHeadInterceptor());
+            headInterceptors.put(entry.getKey().getName(), entry.getValue());
         }
             
         Class<?> service = sourceDefinition.getServiceInterface();

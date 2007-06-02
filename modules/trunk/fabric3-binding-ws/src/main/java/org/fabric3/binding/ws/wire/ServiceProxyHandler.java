@@ -26,6 +26,7 @@ import java.util.Map;
 
 import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.spi.wire.Interceptor;
+import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.spi.wire.MessageImpl;
 import org.fabric3.spi.wire.Wire;
@@ -45,14 +46,14 @@ class ServiceProxyHandler implements InvocationHandler {
     /**
      * Map of op names to head interceptors.
      */
-    private Map<String, Interceptor> headInterceptors;
+    private Map<String, InvocationChain> invocationChains;
     
     /*
      * Creates a new proxy handler.
      */
-    private ServiceProxyHandler(Wire wire, Map<String, Interceptor> headInterceptors) {
+    private ServiceProxyHandler(Wire wire, Map<String, InvocationChain> invocationChains) {
         this.wire = wire;
-        this.headInterceptors = headInterceptors;
+        this.invocationChains = invocationChains;
     }
 
     /**
@@ -62,10 +63,13 @@ class ServiceProxyHandler implements InvocationHandler {
         
         String methodName = method.getName();
         
-        Interceptor head = headInterceptors.get(methodName);
+        Interceptor head = invocationChains.get(methodName).getHeadInterceptor();
         
         Message input = new MessageImpl(args, false, new SimpleWorkContext(), wire);
-        return head.invoke(input).getBody(); 
+        Message output = head.invoke(input);
+        
+        System.err.println("Output is null:" + (output == null));
+        return output.getBody(); 
         
     }
     
@@ -79,10 +83,10 @@ class ServiceProxyHandler implements InvocationHandler {
      * @return Proxied service.
      */
     @SuppressWarnings("unchecked")
-    public static <T> T  newInstance(Class<T> intf, Map<String, Interceptor> headInterceptors, Wire wire) {
+    public static <T> T  newInstance(Class<T> intf, Map<String, InvocationChain> invocationChains, Wire wire) {
         //ClassLoader cl = ServiceProxyHandler.class.getClassLoader();
         ClassLoader cl = intf.getClassLoader();
-        InvocationHandler handler = new ServiceProxyHandler(wire, headInterceptors);
+        InvocationHandler handler = new ServiceProxyHandler(wire, invocationChains);
         return (T) Proxy.newProxyInstance(cl, new Class<?>[] {intf}, handler);
     }
 
