@@ -18,22 +18,21 @@
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
-           name="WsTransportBinding">
+           name="WsTestSystemScdl"
+           autowire="true">
+           
+    <!-- Include system SCDL -->
+    <include name="org.fabric3.fabric.SystemImplementation"
+             scdlResource="META-INF/fabric3/embeddedMaven.scdl"/>
 
-    <!-- Ws Binding Loader -->
-    <component name="WsBindingLoader">
-        <system:implementation.system class="org.fabric3.binding.ws.model.logical.WsBindingLoader"/>
-    </component>
-
-    <!-- Ws Binding Generator -->
-    <component name="WsBindingGenerator">
-        <system:implementation.system class="org.fabric3.binding.ws.model.physical.WsBindingGenerator"/>
-    </component>
-
-    <!-- Ws Wire Attacher -->
-    <component name="WsWireAttacher">
-        <system:implementation.system class="org.fabric3.binding.ws.wire.WsWireAttacher"/>
-        <property name="contextPath">/services/*</property>
+    <!-- Include hessian extension SCDL -->
+    <include name="org.fabric3.binding.WsExtension"
+             scdlResource="META-INF/ws.scdl"/>
+             
+    <!-- Jetty service -->
+    <component name="JettyService">
+            <system:implementation.system class="org.fabric3.jetty.JettyServiceImpl"/>
     </component>
     
+             
 </composite>

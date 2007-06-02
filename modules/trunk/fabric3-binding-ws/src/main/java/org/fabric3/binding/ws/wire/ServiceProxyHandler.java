@@ -80,7 +80,8 @@ class ServiceProxyHandler implements InvocationHandler {
      */
     @SuppressWarnings("unchecked")
     public static <T> T  newInstance(Class<T> intf, Map<String, Interceptor> headInterceptors, Wire wire) {
-        ClassLoader cl = ServiceProxyHandler.class.getClassLoader();
+        //ClassLoader cl = ServiceProxyHandler.class.getClassLoader();
+        ClassLoader cl = intf.getClassLoader();
         InvocationHandler handler = new ServiceProxyHandler(wire, headInterceptors);
         return (T) Proxy.newProxyInstance(cl, new Class<?>[] {intf}, handler);
     }

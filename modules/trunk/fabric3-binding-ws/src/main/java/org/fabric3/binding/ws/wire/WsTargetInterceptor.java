@@ -69,9 +69,10 @@ public class WsTargetInterceptor implements Interceptor {
     public Message invoke(Message message) {
 
         try {
-
+            
             Message result = new MessageImpl();
-            result.setBody(method.invoke(proxy, message.getBody()));
+            Object[] args = (Object[]) message.getBody();
+            result.setBody(method.invoke(proxy, args[0]));
             return result;
 
         } catch (Exception ex) {

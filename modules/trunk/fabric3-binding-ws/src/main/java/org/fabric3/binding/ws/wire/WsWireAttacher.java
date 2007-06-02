@@ -38,6 +38,7 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
+import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
@@ -46,6 +47,7 @@ import org.osoa.sca.annotations.Reference;
  * 
  * @version $Revision$ $Date$
  */
+@EagerInit
 public class WsWireAttacher implements WireAttacher<WsWireSourceDefinition, WsWireTargetDefinition> {
 
     /**
@@ -62,11 +64,10 @@ public class WsWireAttacher implements WireAttacher<WsWireSourceDefinition, WsWi
      */
     public WsWireAttacher(@Reference WireAttacherRegistry wireAttacherRegistry,
                           @Reference ServletHost servletHost,
-                          @Property String contextPath) {
+                          @Property(name="contextPath") String contextPath) {
         
         wireAttacherRegistry.register(WsWireSourceDefinition.class, this);
         wireAttacherRegistry.register(WsWireTargetDefinition.class, this);
-        
         servletHost.registerMapping(contextPath, cxfServlet);
         
     }
@@ -77,21 +78,21 @@ public class WsWireAttacher implements WireAttacher<WsWireSourceDefinition, WsWi
     public void attachToSource(WsWireSourceDefinition sourceDefinition,
                                PhysicalWireTargetDefinition targetDefinition,
                                Wire wire) throws WiringException {
-
+        
         Map<String, Interceptor> headInterceptors = new HashMap<String, Interceptor>();
-
+    
         for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
             headInterceptors.put(entry.getKey().getName(), entry.getValue().getHeadInterceptor());
         }
-        
+            
         Class<?> service = sourceDefinition.getServiceInterface();
         Object implementor = ServiceProxyHandler.newInstance(service, headInterceptors, wire);
-        
+            
         ServerFactoryBean serverFactoryBean = new ServerFactoryBean();
         serverFactoryBean.setAddress(sourceDefinition.getUri().toASCIIString());
         serverFactoryBean.setServiceClass(service);
         serverFactoryBean.setServiceBean(implementor);
- 
+     
         serverFactoryBean.setBus(cxfServlet.getBus());
         serverFactoryBean.create();
 
@@ -108,10 +109,10 @@ public class WsWireAttacher implements WireAttacher<WsWireSourceDefinition, WsWi
         
         ClientProxyFactoryBean factory = new ClientProxyFactoryBean();
         factory.setServiceClass(referenceClass);
-        factory.setAddress(targetDefinition.getUri().toASCIIString());
-        
+        factory.setAddress(targetDefinition.getUri().toString());
+            
         Object proxy = factory.create();
-        
+            
         for(Method method : referenceClass.getDeclaredMethods()) {
             for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
                 PhysicalOperationDefinition op = entry.getKey();
