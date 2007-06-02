@@ -202,6 +202,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
         }
 
         ClassLoader cl = createHostClassLoader(getClass().getClassLoader(), extensions);
+        Thread.currentThread().setContextClassLoader(cl);
         if (systemScdl == null) {
             systemScdl = cl.getResource("META-INF/fabric3/embeddedMaven.scdl");
         }
