@@ -67,8 +67,6 @@ class ServiceProxyHandler implements InvocationHandler {
         
         Message input = new MessageImpl(args, false, new SimpleWorkContext(), wire);
         Message output = head.invoke(input);
-        
-        System.err.println("Output is null:" + (output == null));
         return output.getBody(); 
         
     }
@@ -84,7 +82,6 @@ class ServiceProxyHandler implements InvocationHandler {
      */
     @SuppressWarnings("unchecked")
     public static <T> T  newInstance(Class<T> intf, Map<String, InvocationChain> invocationChains, Wire wire) {
-        //ClassLoader cl = ServiceProxyHandler.class.getClassLoader();
         ClassLoader cl = intf.getClassLoader();
         InvocationHandler handler = new ServiceProxyHandler(wire, invocationChains);
         return (T) Proxy.newProxyInstance(cl, new Class<?>[] {intf}, handler);
