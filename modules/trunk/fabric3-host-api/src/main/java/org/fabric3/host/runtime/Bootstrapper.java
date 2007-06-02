@@ -9,9 +9,9 @@ public interface Bootstrapper {
     /**
      * Bootstrap the supplied runtime.
      *
-     * @param runtime the runtime to boot
-     * @param bootClassLoader
+     * @param runtime         the runtime to boot
+     * @param bootClassLoader the bootstrap classloader
      * @throws InitializationException if there was a problem bootstrapping the runtime
      */
-    void bootstrap(Fabric3Runtime runtime, ClassLoader bootClassLoader) throws InitializationException;
+    void bootstrap(Fabric3Runtime<?> runtime, ClassLoader bootClassLoader) throws InitializationException;
 }

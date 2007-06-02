@@ -85,11 +85,19 @@ public interface Fabric3Runtime<I extends HostInfo> {
     ManagementService<?> getManagementService();
 
     /**
-     * Initialize a runtime.
+     * Initialize a runtime. An initialized runtime has has completed core service initialization, recovery operations,
+     * and is ready to be started.
      *
      * @throws InitializationException if there is an error initializing the runtime
      */
     void initialize() throws InitializationException;
+
+    /**
+     * Starts the runtime.A runtime is ready to process requests when it has been started.
+     *
+     * @throws StartException if there is an error starting the runtime
+     */
+    void start() throws StartException;
 
     /**
      * Destroy the runtime. Any further invocations should result in an error.

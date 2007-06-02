@@ -25,8 +25,9 @@ import java.util.Map;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.assembly.resolver.WireResolver;
 import org.fabric3.fabric.assembly.normalizer.PromotionNormalizer;
+import org.fabric3.fabric.assembly.store.AssemblyStore;
+import org.fabric3.fabric.assembly.resolver.WireResolver;
 import org.fabric3.fabric.runtime.ComponentNames;
 import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.spi.generator.GeneratorRegistry;
@@ -48,8 +49,15 @@ public class RuntimeAssemblyImpl extends AbstractAssembly implements RuntimeAsse
     public RuntimeAssemblyImpl(@Reference GeneratorRegistry generatorRegistry,
                                @Reference WireResolver wireResolver,
                                @Reference PromotionNormalizer normalizer,
-                               @Reference RoutingService routingService) {
-        super(ComponentNames.RUNTIME_URI, generatorRegistry, wireResolver, normalizer, routingService, null);
+                               @Reference RoutingService routingService,
+                               @Reference AssemblyStore store) {
+        super(ComponentNames.RUNTIME_URI,
+              generatorRegistry,
+              wireResolver,
+              normalizer,
+              routingService,
+              store,
+              null);
         this.hostComponents = new HashMap<URI, LogicalComponent<?>>();
     }
 

@@ -86,7 +86,7 @@ public class InstantiationTestCase extends TestCase {
     private class MockAssembly extends AbstractAssembly {
 
         public MockAssembly() {
-            super(URI.create("sca://./domain"), null, null, null, null, null);
+            super(URI.create("sca://./domain"), null, null, null, null, null, null);
 
         }
 
@@ -95,8 +95,7 @@ public class InstantiationTestCase extends TestCase {
             return null;
         }
 
-        public void activate(ComponentDefinition<?> definition, boolean include) throws IncludeException {
-
+        public void activate(ComponentDefinition<?> definition, boolean include) throws ActivateException {
         }
     }
 

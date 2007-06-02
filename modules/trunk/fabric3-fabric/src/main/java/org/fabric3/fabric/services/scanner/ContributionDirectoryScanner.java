@@ -28,14 +28,17 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
+import org.fabric3.fabric.assembly.ActivateException;
 import org.fabric3.fabric.assembly.DistributedAssembly;
-import org.fabric3.fabric.assembly.IncludeException;
 import org.fabric3.fabric.services.xstream.XStreamFactory;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.spi.services.VoidService;
-import org.fabric3.spi.services.scanner.DestinationException;
+import org.fabric3.spi.services.event.EventService;
+import org.fabric3.spi.services.event.Fabric3Event;
+import org.fabric3.spi.services.event.Fabric3EventListener;
+import org.fabric3.spi.services.event.RuntimeStart;
 import org.fabric3.spi.services.scanner.FileSystemResource;
 import org.fabric3.spi.services.scanner.FileSystemResourceFactoryRegistry;
 
@@ -59,10 +62,11 @@ import org.fabric3.spi.services.scanner.FileSystemResourceFactoryRegistry;
  */
 @Service(VoidService.class)
 @EagerInit
-public class ContributionDirectoryScanner implements Runnable {
+public class ContributionDirectoryScanner implements Runnable, Fabric3EventListener {
     private final Map<String, FileSystemResource> cache = new HashMap<String, FileSystemResource>();
     private final Map<String, FileSystemResource> errorCache = new HashMap<String, FileSystemResource>();
     private final ContributionService contributionService;
+    private final EventService eventService;
     private final ScannerMonitor monitor;
     private final XStream xstream;
     private final File processedIndex;
@@ -79,24 +83,32 @@ public class ContributionDirectoryScanner implements Runnable {
                                         @Reference ContributionService contributionService,
                                         @Reference DistributedAssembly assembly,
                                         @Reference XStreamFactory xStreamFactory,
+                                        @Reference EventService eventService,
                                         @Reference MonitorFactory factory) {
         this.registry = registry;
         this.contributionService = contributionService;
         this.assembly = assembly;
+        this.eventService = eventService;
         this.xstream = xStreamFactory.createInstance();
         this.monitor = factory.getMonitor(ScannerMonitor.class);
         processedIndex = new File(path + "/.processed");
     }
 
     @Init
-    public void init() throws DestinationException {
+    public void init() {
+        // register to be notified when the runtime starts so the scanner thread can be initialized
+        eventService.subscribe(RuntimeStart.class, this);
+    }
+
+
+    public void onEvent(Fabric3Event event) {
         executor = Executors.newSingleThreadScheduledExecutor();
         try {
             recover();
+            executor.scheduleWithFixedDelay(this, 10, delay, TimeUnit.MILLISECONDS);
         } catch (FileNotFoundException e) {
-            throw new DestinationException(e);
+            monitor.error("Error during recovery", e);
         }
-        executor.scheduleWithFixedDelay(this, 10, delay, TimeUnit.MILLISECONDS);
     }
 
     @Destroy
@@ -241,7 +253,7 @@ public class ContributionDirectoryScanner implements Runnable {
             } catch (ContributionException e) {
                 errorCache.put(name, cached);
                 monitor.error(e);
-            } catch (IncludeException e) {
+            } catch (ActivateException e) {
                 errorCache.put(name, cached);
                 monitor.error(e);
             }
@@ -263,6 +275,7 @@ public class ContributionDirectoryScanner implements Runnable {
                 try {
                     // check that the resurce was not deleted by another process
                     if (contributionService.exists(uri)) {
+                        // TODO get Deployables and remove from assembly
                         contributionService.remove(uri);
                     }
                     removed.add(filename);

@@ -25,6 +25,7 @@ import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
 import org.fabric3.fabric.assembly.normalizer.PromotionNormalizer;
+import org.fabric3.fabric.assembly.store.AssemblyStore;
 import org.fabric3.fabric.assembly.resolver.WireResolver;
 import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.host.runtime.HostInfo;
@@ -47,9 +48,16 @@ public class DistributedAssemblyImpl extends AbstractAssembly implements Distrib
                                    @Reference WireResolver wireResolver,
                                    @Reference PromotionNormalizer normalizer,
                                    @Reference RoutingService routingService,
+                                   @Reference AssemblyStore store,
                                    @Reference MetaDataStore metaDataStore,
                                    @Reference HostInfo hostInfo) {
-        super(hostInfo.getDomain(), generatorRegistry, wireResolver, normalizer, routingService, metaDataStore);
+        super(hostInfo.getDomain(),
+              generatorRegistry,
+              wireResolver,
+              normalizer,
+              routingService,
+              store,
+              metaDataStore);
     }
 
     @Override

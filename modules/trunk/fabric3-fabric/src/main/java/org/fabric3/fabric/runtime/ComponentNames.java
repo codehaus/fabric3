@@ -49,6 +49,8 @@ public final class ComponentNames {
 
     public static final URI CLASSLOADER_REGISTRY_URI = URI.create(RUNTIME_NAME + "/main/ClassLoaderRegistry");
 
+    public static final URI EVENT_SERVICE_URI = URI.create(RUNTIME_NAME + "/main/eventService");
+
     private ComponentNames() {
     }
 

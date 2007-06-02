@@ -1,8 +1,6 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
+ * See the NOTICE file distributed with this work for information
+ * regarding copyright ownership.  This file is licensed
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
@@ -16,20 +14,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.assembly;
+package org.fabric3.spi.services.event;
 
 /**
- * Denotes an error during an include operation
+ * Implementations are notified of runtime events after they have subscribed with the {@link EventService} for a
+ * particular event type or types.
  *
  * @version $Rev$ $Date$
  */
-public class IncludeException extends AssemblyException {
+public interface Fabric3EventListener {
 
-    public IncludeException(String message, String identifier) {
-        super(message, identifier);
-    }
+    /**
+     * Notifies the listener of an event. The listener must not throw an exception as all listeners are notified on the
+     * same thread.
+     *
+     * @param event the event
+     */
+    void onEvent(Fabric3Event event);
 
-    public IncludeException(Throwable cause) {
-        super(cause);
-    }
 }

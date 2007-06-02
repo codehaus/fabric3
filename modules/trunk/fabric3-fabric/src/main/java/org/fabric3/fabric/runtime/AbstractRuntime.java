@@ -26,11 +26,13 @@ import org.fabric3.fabric.component.ComponentManagerImpl;
 import org.fabric3.fabric.deployer.Deployer;
 import org.fabric3.fabric.implementation.pojo.PojoWorkContextTunnel;
 import org.fabric3.fabric.monitor.NullMonitorFactory;
+import static org.fabric3.fabric.runtime.ComponentNames.EVENT_SERVICE_URI;
 import org.fabric3.host.management.ManagementService;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
+import org.fabric3.host.runtime.StartException;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.Component;
@@ -38,6 +40,8 @@ import org.fabric3.spi.component.ComponentManager;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.model.type.Scope;
+import org.fabric3.spi.services.event.EventService;
+import org.fabric3.spi.services.event.RuntimeStart;
 import org.fabric3.spi.services.management.Fabric3ManagementService;
 
 /**
@@ -132,6 +136,13 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
 
     public void initialize() throws InitializationException {
         componentManager = new ComponentManagerImpl((Fabric3ManagementService) getManagementService());
+    }
+
+
+    public void start() throws StartException {
+        // starts the runtime by publishing a start event
+        EventService eventService = getSystemComponent(EventService.class, EVENT_SERVICE_URI);
+        eventService.publish(new RuntimeStart());
     }
 
     public void destroy() {

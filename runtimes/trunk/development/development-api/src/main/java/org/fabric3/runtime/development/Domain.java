@@ -8,6 +8,7 @@ import java.net.URLClassLoader;
 
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.ScdlBootstrapper;
+import org.fabric3.host.runtime.StartException;
 import org.fabric3.runtime.development.host.DevelopmentHostInfoImpl;
 import org.fabric3.runtime.development.host.DevelopmentRuntime;
 
@@ -101,6 +102,7 @@ public class Domain {
             runtime.setHostInfo(new DevelopmentHostInfoImpl(DOMAIN_URI, baseDirUrl, baseDir, cl, cl));
             runtime.setHostClassLoader(cl);
             bootstrapper.bootstrap(runtime, cl);
+            runtime.start();
         } catch (InstantiationException e) {
             throw new InvalidConfigurationException("Error instantiating runtime classes are missing", e);
         } catch (IllegalAccessException e) {
@@ -110,6 +112,8 @@ public class Domain {
         } catch (InitializationException e) {
             throw new InvalidConfigurationException("Error initializing runtime", e);
         } catch (MalformedURLException e) {
+            throw new InvalidConfigurationException("Error initializing runtime", e);
+        } catch (StartException e) {
             throw new InvalidConfigurationException("Error initializing runtime", e);
         }
 

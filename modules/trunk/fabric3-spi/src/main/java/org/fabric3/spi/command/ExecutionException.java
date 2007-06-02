@@ -26,11 +26,11 @@ public class ExecutionException extends Fabric3Exception {
         super(message, identifier);
     }
 
-    public ExecutionException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
     public ExecutionException(String message, String identifier, Throwable cause) {
         super(message, identifier, cause);
+    }
+
+    public ExecutionException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

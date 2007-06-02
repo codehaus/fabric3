@@ -82,4 +82,9 @@
         -->
     </component>
 
+    <!-- no recovery for the launcher runtime -->
+    <component name="assemblyRecoveryService">
+        <system:implementation.system class="org.fabric3.fabric.assembly.store.AssemblyStoreImpl"/>
+    </component>
+
 </composite>

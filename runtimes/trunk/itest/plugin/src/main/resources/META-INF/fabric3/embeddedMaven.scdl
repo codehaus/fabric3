@@ -83,4 +83,10 @@
         <system:implementation.system class="org.fabric3.itest.MavenDelegateArtifactRepository"/>
     </component>
 
+    <!-- no recovery for the iTest runtime   -->
+    <component name="assemblyRecoveryService">
+        <system:implementation.system class="org.fabric3.fabric.assembly.store.NonPersistentAssemblyStore"/>
+    </component>
+
+
 </composite>

@@ -165,7 +165,7 @@ public class ContributionDirectoryScannerTestCase extends TestCase {
                                                  contributionService,
                                                  assembly,
                                                  xstreamFactory,
-                                                 monitorFactory);
+                                                 null, monitorFactory);
         recoveredScanner.recover();
         EasyMock.verify(contributionService);
         EasyMock.verify(assembly);
@@ -204,7 +204,7 @@ public class ContributionDirectoryScannerTestCase extends TestCase {
                                                  contributionService,
                                                  assembly,
                                                  xstreamFactory,
-                                                 monitorFactory);
+                                                 null, monitorFactory);
         recoveredScanner.recover();
         // initiate a second scan since the recover will cache the added file
         recoveredScanner.run();
@@ -237,7 +237,7 @@ public class ContributionDirectoryScannerTestCase extends TestCase {
                                                  contributionService,
                                                  assembly,
                                                  xstreamFactory,
-                                                 monitorFactory);
+                                                 null, monitorFactory);
         recoveredScanner.recover();
         // initiate a second scan since the recover will cache the added file
         recoveredScanner.run();
@@ -262,7 +262,7 @@ public class ContributionDirectoryScannerTestCase extends TestCase {
 
         assembly = EasyMock.createMock(DistributedAssembly.class);
         scanner = new ContributionDirectoryScanner(registry,
-                                                   contributionService, assembly, xstreamFactory, monitorFactory);
+                                                   contributionService, assembly, xstreamFactory, null, monitorFactory);
         directory = new File("../deploy");
         directory.mkdir();
         FileHelper.cleanDirectory(directory);

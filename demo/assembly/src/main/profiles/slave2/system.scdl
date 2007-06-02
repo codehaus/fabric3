@@ -102,5 +102,8 @@
                 class="org.fabric3.fabric.marshaller.xstream.XStreamMarshallerRegistry"/>
     </component> 
 
+	 <component name="assemblyRecoveryService">
+        <system:implementation.system class="org.fabric3.fabric.assembly.store.NonPersistentAssemblyStore"/>
+    </component>
 
 </composite>

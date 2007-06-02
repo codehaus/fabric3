@@ -59,6 +59,7 @@ import static org.fabric3.fabric.runtime.ComponentNames.LOADER_URI;
 import org.fabric3.fabric.runtime.ScdlBootstrapperImpl;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.ScdlBootstrapper;
+import org.fabric3.host.runtime.StartException;
 import org.fabric3.itest.implementation.junit.ImplementationJUnit;
 import org.fabric3.spi.deployer.CompositeClassLoader;
 import org.fabric3.spi.loader.LoaderContext;
@@ -214,9 +215,13 @@ public class Fabric3ITestMojo extends AbstractMojo {
             ScdlBootstrapper bootstrapper = new ScdlBootstrapperImpl();
             bootstrapper.setScdlLocation(systemScdl);
             bootstrapper.bootstrap(runtime, cl);
+            runtime.start();
         } catch (InitializationException e) {
             monitor.runError(e);
             throw new MojoExecutionException("Error initializing Fabric3 Runtime", e);
+        } catch (StartException e) {
+            monitor.runError(e);
+            throw new MojoExecutionException("Error starting Fabric3 Runtime", e);
         }
 
         try {

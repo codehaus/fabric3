@@ -126,6 +126,8 @@ public class Fabric3Server implements Fabric3ServerMBean {
                                                URI.create("fabric3://./runtime/main/ClassLoaderRegistry"));
             ClassLoader systemClassLoader = classLoaderRegistry.getClassLoader(URI.create("sca://./bootClassLoader"));
             classLoaderRegistry.register(URI.create("sca://./applicationClassLoader"), systemClassLoader);
+            // start the runtime receiving requests
+            runtime.start();
             bootedRuntimes.put(profileName, runtime);
             System.err.println("Started " + profileName);
         } catch (Exception ex) {

@@ -36,7 +36,7 @@
     <component name="promotionNormalizer">
         <system:implementation.system class="org.fabric3.fabric.assembly.normalizer.PromotionNormalizerImpl"/>
     </component>
-    
+
     <component name="runtimeRoutingService">
         <system:implementation.system class="org.fabric3.fabric.services.routing.FederatedRoutingService"/>
     </component>
@@ -88,7 +88,7 @@
     <!-- WorkScheduler service -->
     <component name="workManager">
         <system:implementation.system
-            class="org.fabric3.fabric.services.work.jsr237.workmanager.ThreadPoolWorkManager"/>
+                class="org.fabric3.fabric.services.work.jsr237.workmanager.ThreadPoolWorkManager"/>
         <!-- JFM FIXME
         <property name="poolSize">10</property>   -->
     </component>
@@ -97,6 +97,9 @@
         <system:implementation.system class="org.fabric3.fabric.services.work.jsr237.Jsr237WorkScheduler"/>
     </component>
 
+    <component name="eventService">
+        <system:implementation.system class="org.fabric3.fabric.services.event.EventServiceImpl"/>
+    </component>
 
     <component name="commandExecutorRegistry">
         <system:implementation.system class="org.fabric3.fabric.command.CommandExecutorRegistryImpl"/>

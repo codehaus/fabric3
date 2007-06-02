@@ -26,7 +26,6 @@ import java.util.ResourceBundle;
 
 import org.fabric3.api.annotation.LogLevel;
 import org.fabric3.host.runtime.Bootstrapper;
-import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.runtime.standalone.DirectoryHelper;
 import org.fabric3.runtime.standalone.StandaloneHostInfo;
 import org.fabric3.runtime.standalone.StandaloneRuntime;
@@ -87,6 +86,7 @@ public class Main {
         LauncherMonitor monitor = runtime.getMonitorFactory().getMonitor(LauncherMonitor.class);
         try {
             bootstrapper.bootstrap(runtime, hostInfo.getBootClassLoader());
+            runtime.start();
             int status = runtime.deployAndRun(applicationScdlURL, applicationClassLoader, appArgs);
             System.exit(status);
         } catch (Exception e) {

@@ -18,32 +18,22 @@
  */
 package org.fabric3.fabric.assembly;
 
-import org.fabric3.host.Fabric3Exception;
-
 /**
- * Base exception for the assembly package
+ * Denotes an error during an activate operation
  *
  * @version $Rev$ $Date$
  */
-public class AssemblyException extends Fabric3Exception {
+public class ActivateException extends AssemblyException {
 
-    protected AssemblyException(String message) {
-        super(message);
-    }
-
-    protected AssemblyException(String message, String identifier) {
+    public ActivateException(String message, String identifier) {
         super(message, identifier);
     }
 
-    protected AssemblyException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    protected AssemblyException(String message, String identifier, Throwable cause) {
+    public ActivateException(String message, String identifier, Throwable cause) {
         super(message, identifier, cause);
     }
 
-    protected AssemblyException(Throwable cause) {
+    public ActivateException(Throwable cause) {
         super(cause);
     }
 }

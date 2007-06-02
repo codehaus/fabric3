@@ -35,6 +35,13 @@ import org.fabric3.spi.model.type.CompositeImplementation;
 public interface Assembly {
 
     /**
+     * Initializes the assembly.
+     *
+     * @throws AssemblyException if an error occurs initializing the assembly
+     */
+    void initialize() throws AssemblyException;
+
+    /**
      * Returns the domain.
      *
      * @return the domain
@@ -54,9 +61,9 @@ public interface Assembly {
      * @param definition the definition f the component to activate
      * @param include    if true, a domain-level inclusion is performed. That is, for composites, childrent will be
      *                   directly included in the domain and the containing composite will be discarded.
-     * @throws IncludeException if an error is encountered during activation
+     * @throws ActivateException if an error is encountered during activation
      */
-    void activate(ComponentDefinition<?> definition, boolean include) throws IncludeException;
+    void activate(ComponentDefinition<?> definition, boolean include) throws ActivateException;
 
     /**
      * Activates a component at the domain level corresponding to the deployable QName by provisioning physical
@@ -65,9 +72,9 @@ public interface Assembly {
      * @param deployable the deployable QName to activate
      * @param include    if true, a domain-level inclusion is performed. That is, for composites, childrent will be
      *                   directly included in the domain and the containing composite will be discarded.
-     * @throws IncludeException if an error is encountered during activation
+     * @throws ActivateException if an error is encountered during activation
      */
-    void activate(QName deployable, boolean include) throws IncludeException;
+    void activate(QName deployable, boolean include) throws ActivateException;
 
     /**
      * Binds a service.

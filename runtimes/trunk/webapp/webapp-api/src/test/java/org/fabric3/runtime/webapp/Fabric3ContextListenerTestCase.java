@@ -80,6 +80,7 @@ public class Fabric3ContextListenerTestCase extends TestCase {
         runtime.setHostInfo(isA(WebappHostInfo.class));
         runtime.setHostClassLoader(cl);
         bootstrapper.bootstrap(runtime, bootClassLoader);
+        runtime.start();
         runtime.deploy(URI.create(compositeId), scdl, URI.create(contextName));
         replay(runtime);
 

@@ -1,8 +1,6 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
+ * See the NOTICE file distributed with this work for information
+ * regarding copyright ownership.  This file is licensed
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
@@ -16,19 +14,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.assembly;
+package org.fabric3.host.runtime;
+
+import org.fabric3.host.Fabric3Exception;
 
 /**
- * Denotes an exception instanitating a LogicalComponent
+ * Denotes an error starting the runtime
  *
  * @version $Rev$ $Date$
  */
-public class InstantiationException extends ActivateException {
-    public InstantiationException(String message, String identifier) {
-        super(message, identifier);
-    }
-
-    public InstantiationException(Throwable cause) {
-        super(cause);
-    }
+public class StartException extends Fabric3Exception {
 }

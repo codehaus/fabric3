@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSessionEvent;
 
 import org.fabric3.fabric.assembly.DistributedAssembly;
-import org.fabric3.fabric.assembly.IncludeException;
+import org.fabric3.fabric.assembly.ActivateException;
 import org.fabric3.fabric.loader.LoaderContextImpl;
 import org.fabric3.fabric.runtime.AbstractRuntime;
 import static org.fabric3.fabric.runtime.ComponentNames.CLASSLOADER_REGISTRY_URI;
@@ -104,7 +104,7 @@ public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implement
 
         } catch (LoaderException e) {
             throw new InitializationException(e);
-        } catch (IncludeException e) {
+        } catch (ActivateException e) {
             throw new InitializationException(e);
         } catch (ObjectCreationException e) {
             throw new InitializationException(e);

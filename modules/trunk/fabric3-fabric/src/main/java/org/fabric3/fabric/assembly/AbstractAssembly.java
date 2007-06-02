@@ -32,6 +32,8 @@ import static org.osoa.sca.Constants.SCA_NS;
 
 import org.fabric3.fabric.assembly.normalizer.PromotionNormalizer;
 import org.fabric3.fabric.assembly.resolver.WireResolver;
+import org.fabric3.fabric.assembly.store.AssemblyStore;
+import org.fabric3.fabric.assembly.store.RecordException;
 import org.fabric3.fabric.generator.DefaultGeneratorContext;
 import org.fabric3.fabric.services.routing.RoutingException;
 import org.fabric3.fabric.services.routing.RoutingService;
@@ -75,29 +77,51 @@ public abstract class AbstractAssembly implements Assembly {
     protected LogicalComponent<CompositeImplementation> domain;
     protected Map<URI, LogicalComponent<?>> domainMap;
     protected Map<String, RuntimeInfo> runtimes;
+    protected AssemblyStore assemblyStore;
 
     public AbstractAssembly(URI domainUri,
                             GeneratorRegistry generatorRegistry,
                             WireResolver wireResolver,
                             PromotionNormalizer normalizer,
                             RoutingService routingService,
+                            AssemblyStore assemblyStore,
                             MetaDataStore metadataStore) {
         this.domainUri = domainUri;
         this.generatorRegistry = generatorRegistry;
         this.wireResolver = wireResolver;
         this.routingService = routingService;
+        this.assemblyStore = assemblyStore;
         this.metadataStore = metadataStore;
         domainMap = new ConcurrentHashMap<URI, LogicalComponent<?>>();
-        domain = createDomain();
         runtimes = new ConcurrentHashMap<String, RuntimeInfo>();
         this.promotionNormalizer = normalizer;
+    }
+
+    public void initialize() throws AssemblyException {
+        // read the logical model from the store
+        domain = assemblyStore.read();
+        // reindex the model
+        for (LogicalComponent<?> child : domain.getComponents()) {
+            addToDomainMap(child);
+        }
+        // regenerate the domain components
+        // TODO handle re-provisioning. For now, just regenerate everything and reprovision
+        if (!domain.getComponents().isEmpty()) {
+            try {
+                generateAndProvision(null, domain, true);
+            } catch (GenerationException e) {
+                throw new AssemblyException(e);
+            } catch (RoutingException e) {
+                throw new AssemblyException(e);
+            }
+        }
     }
 
     public LogicalComponent<CompositeImplementation> getDomain() {
         return domain;
     }
 
-    public void activate(QName deployable, boolean include) throws IncludeException {
+    public void activate(QName deployable, boolean include) throws ActivateException {
         Contribution contribution = metadataStore.resolve(deployable);
         if (contribution == null) {
             throw new ArtifactNotFoundException("Deployable composite not found for", deployable.toString());
@@ -109,9 +133,15 @@ public abstract class AbstractAssembly implements Assembly {
         ComponentDefinition<CompositeImplementation> definition =
                 new ComponentDefinition<CompositeImplementation>("type", impl);
         activate(definition, include);
+        try {
+            // record the operation
+            assemblyStore.store(domain);
+        } catch (RecordException e) {
+            throw new ActivateException("Error activating deployable", deployable.toString(), e);
+        }
     }
 
-    public void activate(ComponentDefinition<?> definition, boolean include) throws IncludeException {
+    public void activate(ComponentDefinition<?> definition, boolean include) throws ActivateException {
         try {
             // instantiate a logical component from the definition
             LogicalComponent<?> component;
@@ -137,11 +167,11 @@ public abstract class AbstractAssembly implements Assembly {
                 addToDomainMap(component);
             }
         } catch (ResolutionException e) {
-            throw new IncludeException(e);
+            throw new ActivateException(e);
         } catch (RoutingException e) {
-            throw new IncludeException(e);
+            throw new ActivateException(e);
         } catch (GenerationException e) {
-            throw new IncludeException(e);
+            throw new ActivateException(e);
         }
     }
 
@@ -174,6 +204,7 @@ public abstract class AbstractAssembly implements Assembly {
             generatorRegistry.generateBoundServiceWire(service, binding, targetComponent, context);
             routingService.route(targetComponent.getRuntimeId(), changeSet);
             service.addBinding(binding);
+            // TODO record to recovery service
         } catch (GenerationException e) {
             throw new BindException("Error binding service", serviceUri.toString(), e);
         } catch (RoutingException e) {
@@ -442,20 +473,6 @@ public abstract class AbstractAssembly implements Assembly {
             contexts.put(id, context);
         }
         generatorRegistry.generatePhysicalComponent(component, context);
-    }
-
-    /**
-     * Bootstraps the logical component representing the domain.
-     *
-     * @return the logical component representing the domain
-     */
-    protected LogicalComponent<CompositeImplementation> createDomain() {
-        CompositeComponentType type = new CompositeComponentType();
-        CompositeImplementation impl = new CompositeImplementation();
-        impl.setComponentType(type);
-        ComponentDefinition<CompositeImplementation> definition =
-                new ComponentDefinition<CompositeImplementation>(domainUri.toString(), impl);
-        return new LogicalComponent<CompositeImplementation>(domainUri, domainUri, definition);
     }
 
     /**

@@ -8,7 +8,9 @@ import javax.xml.stream.XMLInputFactory;
 
 import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.extension.loader.LoaderExtension;
-import org.fabric3.fabric.assembly.IncludeException;
+import org.fabric3.fabric.assembly.ActivateException;
+import org.fabric3.fabric.assembly.AssemblyException;
+import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.assembly.InstantiationException;
 import org.fabric3.fabric.assembly.RuntimeAssembly;
 import org.fabric3.fabric.assembly.RuntimeAssemblyImpl;
@@ -16,6 +18,8 @@ import org.fabric3.fabric.assembly.normalizer.PromotionNormalizer;
 import org.fabric3.fabric.assembly.normalizer.PromotionNormalizerImpl;
 import org.fabric3.fabric.assembly.resolver.DefaultWireResolver;
 import org.fabric3.fabric.assembly.resolver.WireResolver;
+import org.fabric3.fabric.assembly.store.AssemblyStore;
+import org.fabric3.fabric.assembly.store.NonPersistentAssemblyStore;
 import org.fabric3.fabric.builder.Connector;
 import org.fabric3.fabric.builder.ConnectorImpl;
 import org.fabric3.fabric.builder.component.DefaultComponentBuilderRegistry;
@@ -71,6 +75,7 @@ import org.fabric3.fabric.loader.ReferenceLoader;
 import org.fabric3.fabric.loader.ServiceLoader;
 import org.fabric3.fabric.marshaller.MarshallerLoader;
 import static org.fabric3.fabric.runtime.ComponentNames.CLASSLOADER_REGISTRY_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_NAME;
 import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
@@ -152,7 +157,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         this.scdlLocation = scdlLocation;
     }
 
-    public void bootstrap(Fabric3Runtime runtime, ClassLoader bootClassLoader) throws InitializationException {
+    public void bootstrap(Fabric3Runtime<?> runtime, ClassLoader bootClassLoader) throws InitializationException {
         initializeRuntime(runtime);
         createBootstrapComponents(runtime);
         registerBootstrapComponents((AbstractRuntime<?>) runtime);
@@ -161,10 +166,19 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
             // FIXME come up with a better alternative: the domain context needs to be started so system services such 
             // as the contribution service that operate on it may be initialized as system components
             startDomainContext(runtime);
+            deploySystemScdl((AbstractRuntime<?>) runtime);
+            recoverDomain(runtime);
         } catch (GroupInitializationException e) {
             throw new InitializationException(e);
+        } catch (AssemblyException e) {
+            throw new InitializationException(e);
         }
-        deploySystemScdl((AbstractRuntime<?>) runtime);
+    }
+
+    protected void recoverDomain(Fabric3Runtime<?> runtime) throws AssemblyException {
+        DistributedAssembly assembly =
+                runtime.getSystemComponent(DistributedAssembly.class, DISTRIBUTED_ASSEMBLY_URI);
+        assembly.initialize();
     }
 
     protected void startDomainContext(Fabric3Runtime runtime) throws GroupInitializationException {
@@ -201,7 +215,14 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         HostInfo info = runtime.getHostInfo();
         RuntimeRoutingService routingService = new RuntimeRoutingService(deployer, commandRegistry, info);
         PromotionNormalizer normalizer = new PromotionNormalizerImpl();
-        runtimeAssembly = new RuntimeAssemblyImpl(generatorRegistry, resolver, normalizer, routingService);
+        AssemblyStore store = new NonPersistentAssemblyStore(info);
+        runtimeAssembly =
+                new RuntimeAssemblyImpl(generatorRegistry, resolver, normalizer, routingService, store);
+        try {
+            runtimeAssembly.initialize();
+        } catch (AssemblyException e) {
+            throw new InitializationException(e);
+        }
     }
 
     protected void initializeRuntime(Fabric3Runtime runtime) throws InitializationException {
@@ -301,7 +322,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
         } catch (LoaderException e) {
             throw new InitializationException(e);
-        } catch (IncludeException e) {
+        } catch (ActivateException e) {
             throw new InitializationException(e);
         }
     }
