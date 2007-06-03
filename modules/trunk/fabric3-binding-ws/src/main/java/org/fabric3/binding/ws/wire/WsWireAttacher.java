@@ -81,7 +81,6 @@ public class WsWireAttacher implements WireAttacher<WsWireSourceDefinition, WsWi
         Map<String, InvocationChain> headInterceptors = new HashMap<String, InvocationChain>();
     
         for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
-            System.err.println(entry.getKey().getName() + ":" + entry.getValue().getHeadInterceptor());
             headInterceptors.put(entry.getKey().getName(), entry.getValue());
         }
             
