@@ -42,11 +42,11 @@
             </snapshots>
         </repository>
         <repository>
-            <id>apache-incubator</id>
+            <id>apache-ws</id>
             <name>Apache WS Zones</name>
             <url>http://ws.zones.apache.org/repository/</url>
             <releases>
-                <enabled>false</enabled>
+                <enabled>true</enabled>
             </releases>
             <snapshots>
                 <enabled>true</enabled>
