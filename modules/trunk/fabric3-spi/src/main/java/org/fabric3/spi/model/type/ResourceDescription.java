@@ -24,29 +24,17 @@ package org.fabric3.spi.model.type;
  *
  * @version $Rev$ $Date$
  */
-public class ResourceDescription {
-    private String type;
-    private Object identifier;
+public abstract class ResourceDescription<I> {
+    private I identifier;
     private String version;
 
-    public ResourceDescription(String type, Object identifier) {
-        this.type = type;
+    public ResourceDescription(I identifier) {
         this.identifier = identifier;
     }
 
-    public ResourceDescription(String type, Object identifier, String version) {
-        this.type = type;
+    public ResourceDescription(I identifier, String version) {
         this.identifier = identifier;
         this.version = version;
-    }
-
-    /**
-     * Returns the resource type.
-     *
-     * @return the resource type
-     */
-    public String getType() {
-        return type;
     }
 
     /**
@@ -54,7 +42,7 @@ public class ResourceDescription {
      *
      * @return the resource identifier
      */
-    public Object getIdentifier() {
+    public I getIdentifier() {
         return identifier;
     }
 

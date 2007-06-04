@@ -20,10 +20,9 @@ package org.fabric3.spi.builder.resource;
 
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.model.physical.PhysicalResourceContainerDefinition;
-import org.fabric3.spi.resource.ResourceContainer;
 
 /**
- * A registry of resource container builders
+ * A registry of ResourceContainerBuilders.
  *
  * @version $Rev$ $Date$
  */
@@ -40,10 +39,9 @@ public interface ResourceContainerBuilderRegistry {
     /**
      * Dispatches to a builder to create a resource container
      *
-     * @param parent     the parent container or null
      * @param definition the container definition to build from
      * @throws BuilderException if an error occurs during build
      */
-    void build(ResourceContainer parent, PhysicalResourceContainerDefinition definition) throws BuilderException;
+    <T extends PhysicalResourceContainerDefinition> void build(T definition) throws BuilderException;
 
 }

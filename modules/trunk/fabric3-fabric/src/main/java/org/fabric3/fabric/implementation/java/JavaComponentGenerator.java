@@ -25,6 +25,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.implementation.pojo.PojoGenerationHelper;
 import org.fabric3.fabric.model.physical.instancefactory.ReflectiveIFProviderDefinition;
+import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
@@ -45,14 +46,18 @@ import org.fabric3.spi.model.type.ComponentDefinition;
 @EagerInit
 public class JavaComponentGenerator implements ComponentGenerator<LogicalComponent<JavaImplementation>> {
     private final PojoGenerationHelper helper;
+    private final ClassLoaderGenerator classLoaderGenerator;
 
     public JavaComponentGenerator(@Reference GeneratorRegistry registry,
+                                  @Reference ClassLoaderGenerator classLoaderGenerator,
                                   @Reference PojoGenerationHelper helper) {
+        this.classLoaderGenerator = classLoaderGenerator;
         registry.register(JavaImplementation.class, this);
         this.helper = helper;
     }
 
-    public void generate(LogicalComponent<JavaImplementation> component, GeneratorContext context) {
+    public void generate(LogicalComponent<JavaImplementation> component, GeneratorContext context)
+            throws GenerationException {
         ComponentDefinition<JavaImplementation> definition = component.getDefinition();
         JavaImplementation implementation = definition.getImplementation();
         @SuppressWarnings({"unchecked"})
@@ -74,13 +79,13 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
         JavaComponentDefinition physical = new JavaComponentDefinition();
         physical.setComponentId(componentId);
         physical.setGroupId(componentId.resolve("."));
-        // TODO set the classloader id temporarily until contribution service
-        physical.setClassLoaderId(URI.create("sca://./applicationClassLoader"));
         physical.setScope(type.getImplementationScope());
         physical.setInitLevel(helper.getInitLevel(definition, type));
         physical.setInstanceFactoryProviderDefinition(providerDefinition);
         helper.processProperties(physical, definition);
-
+        // generate the classloader resource definition
+        URI classLoaderId = classLoaderGenerator.generate(component, context);
+        physical.setClassLoaderId(classLoaderId);
         context.getPhysicalChangeSet().addComponentDefinition(physical);
     }
 

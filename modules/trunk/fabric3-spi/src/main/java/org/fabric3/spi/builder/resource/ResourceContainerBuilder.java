@@ -20,11 +20,9 @@ package org.fabric3.spi.builder.resource;
 
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.model.physical.PhysicalResourceContainerDefinition;
-import org.fabric3.spi.resource.ResourceContainer;
 
 /**
- * Implementations are responsible for building runtime resource containers used by components. A resource container is
- * typically added to its parent container or the {@link org.fabric3.spi.resource.ResourceContainerManager}
+ * Implementations are responsible for building runtime resource containers used by components.
  *
  * @version $Rev$ $Date$
  */
@@ -33,9 +31,8 @@ public interface ResourceContainerBuilder<T extends PhysicalResourceContainerDef
     /**
      * Creates the resource container associated with the physical resource container definition
      *
-     * @param parent     the parent container or null
      * @param definition the physical resource container definition
      * @throws BuilderException if an error building the container is encountered
      */
-    void build(ResourceContainer parent, T definition) throws BuilderException;
+    void build(T definition) throws BuilderException;
 }

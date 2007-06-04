@@ -20,23 +20,23 @@ package org.fabric3.spi.generator;
 
 import java.net.URI;
 
-import org.fabric3.spi.model.type.ResourceDefinition;
+import org.fabric3.spi.model.instance.LogicalComponent;
 
 /**
- * Implementations generate physical resource definitions
+ * Implementations generate physical resource definitions for components.
  *
  * @version $Rev$ $Date$
  */
-public interface ResourceGenerator {
+public interface ComponentResourceGenerator {
 
     /**
      * Updates the change set with a physical resource definition
      *
-     * @param definition the logical resource definition to generate the physical definition from
-     * @param context    the current generator context
+     * @param component the logical resource definition to generate the physical definition from
+     * @param context   the current generator context
      * @return the id of the physical resource
      * @throws GenerationException if an error occurs during the generation process
      */
-    URI generate(ResourceDefinition definition, GeneratorContext context) throws GenerationException;
+    URI generate(LogicalComponent<?> component, GeneratorContext context) throws GenerationException;
 
 }

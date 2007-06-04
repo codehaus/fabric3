@@ -42,8 +42,7 @@ public class Contribution implements Serializable {
     private byte[] checksum;
     private long timestamp;
     private ContributionManifest manifest;
-    private Map<QName, Map<Object, CompositeComponentType>> types =
-            new HashMap<QName, Map<Object, CompositeComponentType>>();
+    private Map<QName, CompositeComponentType> types = new HashMap<QName, CompositeComponentType>();
 
     public Contribution(URI uri) {
         this.uri = uri;
@@ -121,38 +120,23 @@ public class Contribution implements Serializable {
     /**
      * Adds metadata from a composite component type introspected in the contribution
      *
-     * @param implementationType the implementation type the component type is associated with, e.g.
-     *                           implementation.java
-     * @param key                a key representing the implementation artifact the component type represents, e.g. a
-     *                           fully qualified Java class name
-     * @param type               the component type
+     * @param type the component type
      */
-    public void addComponentType(QName implementationType, Object key, CompositeComponentType type) {
-        Map<Object, CompositeComponentType> map = types.get(implementationType);
-        if (map == null) {
-            map = new HashMap<Object, CompositeComponentType>();
-            types.put(implementationType, map);
-        }
-        map.put(key, type);
+    public void addComponentType(CompositeComponentType type) {
+        types.put(type.getName(), type);
     }
 
-    public Map<QName, Map<Object, CompositeComponentType>> getComponentTypes() {
+    public Map<QName, CompositeComponentType> getComponentTypes() {
         return Collections.unmodifiableMap(types);
     }
 
     /**
      * Returns the introspected component type for corresponding to the implementation artifact key
      *
-     * @param implementationType the component implementation type, e.g. implementation.java
-     * @param key                a key representing the implementation artifact the component type represents, e.g. a
-     *                           fully qualified Java class name
+     * @param key the component type QName
      * @return the component type or null
      */
-    public CompositeComponentType getComponentType(QName implementationType, Object key) {
-        Map<Object, CompositeComponentType> map = types.get(implementationType);
-        if (map == null) {
-            return null;
-        }
-        return map.get(key);
+    public CompositeComponentType getComponentType(QName key) {
+        return types.get(key);
     }
 }

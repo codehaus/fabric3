@@ -26,7 +26,6 @@ import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.resource.ResourceContainerBuilder;
 import org.fabric3.spi.builder.resource.ResourceContainerBuilderRegistry;
 import org.fabric3.spi.model.physical.PhysicalResourceContainerDefinition;
-import org.fabric3.spi.resource.ResourceContainer;
 
 /**
  * Default implementation of ResourceContainerBuilderRegistry
@@ -43,13 +42,13 @@ public class ResourceContainerBuilderRegistryImpl implements ResourceContainerBu
     }
 
     @SuppressWarnings({"unchecked"})
-    public void build(ResourceContainer parent, PhysicalResourceContainerDefinition definition)
+    public <T extends PhysicalResourceContainerDefinition> void build(T definition)
             throws BuilderException {
         Class<? extends PhysicalResourceContainerDefinition> key = definition.getClass();
-        ResourceContainerBuilder builder = builders.get(key);
+        ResourceContainerBuilder<T> builder = (ResourceContainerBuilder<T>) builders.get(key);
         if (builder == null) {
             throw new BuilderConfigException("Builder not found for", key.getClass().getName());
         }
-        builder.build(parent, definition);
+        builder.build(definition);
     }
 }

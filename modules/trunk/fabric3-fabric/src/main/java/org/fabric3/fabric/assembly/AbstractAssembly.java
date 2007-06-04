@@ -126,7 +126,7 @@ public abstract class AbstractAssembly implements Assembly {
         if (contribution == null) {
             throw new ArtifactNotFoundException("Deployable composite not found for", deployable.toString());
         }
-        CompositeComponentType type = contribution.getComponentType(COMPOSITE, deployable);
+        CompositeComponentType type = contribution.getComponentType(deployable);
         assert type != null;
         CompositeImplementation impl = new CompositeImplementation();
         impl.setComponentType(type);
@@ -334,14 +334,14 @@ public abstract class AbstractAssembly implements Assembly {
             for (LogicalComponent<?> child : component.getComponents()) {
                 GeneratorContext context = contexts.get(child.getRuntimeId());
                 assert context != null;
-                generatorRegistry.generatorCommandSet(child, context);
+                generatorRegistry.generateCommandSet(child, context);
             }
 
         } else {
             generateChangeSets(parent, component, contexts);
             GeneratorContext context = contexts.get(component.getRuntimeId());
             assert context != null;
-            generatorRegistry.generatorCommandSet(component, context);
+            generatorRegistry.generateCommandSet(component, context);
         }
         // route the change sets to service nodes
         for (Map.Entry<URI, GeneratorContext> entry : contexts.entrySet()) {

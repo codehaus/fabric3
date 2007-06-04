@@ -32,11 +32,11 @@ import org.fabric3.fabric.model.NonBlockingIntentDefinition;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
+import org.fabric3.spi.generator.ComponentResourceGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.InterceptorGenerator;
-import org.fabric3.spi.generator.ResourceGenerator;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
@@ -53,7 +53,7 @@ import org.fabric3.spi.model.type.Implementation;
 import org.fabric3.spi.model.type.IntentDefinition;
 import org.fabric3.spi.model.type.Operation;
 import org.fabric3.spi.model.type.ReferenceDefinition;
-import org.fabric3.spi.model.type.ResourceDefinition;
+import org.fabric3.spi.model.type.ResourceDescription;
 import org.fabric3.spi.model.type.ServiceContract;
 
 /**
@@ -65,7 +65,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
             ComponentGenerator<? extends LogicalComponent<? extends Implementation>>> componentGenerators;
     private Map<Class<?>, BindingGenerator> bindingGenerators;
     private Map<Class<?>, InterceptorGenerator<? extends IntentDefinition>> interceptorGenerators;
-    private Map<Class<?>, ResourceGenerator> resourceGenerators;
+    private Map<Class<?>, ComponentResourceGenerator> resourceGenerators;
     private List<CommandGenerator> commandGenerators = new ArrayList<CommandGenerator>();
 
     public GeneratorRegistryImpl() {
@@ -73,7 +73,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
                 new ConcurrentHashMap<Class<?>,
                         ComponentGenerator<? extends LogicalComponent<? extends Implementation>>>();
         bindingGenerators = new ConcurrentHashMap<Class<?>, BindingGenerator>();
-        resourceGenerators = new ConcurrentHashMap<Class<?>, ResourceGenerator>();
+        resourceGenerators = new ConcurrentHashMap<Class<?>, ComponentResourceGenerator>();
         interceptorGenerators = new ConcurrentHashMap<Class<?>, InterceptorGenerator<? extends IntentDefinition>>();
     }
 
@@ -85,7 +85,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         interceptorGenerators.put(clazz, generator);
     }
 
-    public void register(Class<?> clazz, ResourceGenerator generator) {
+    public void register(Class<?> clazz, ComponentResourceGenerator generator) {
         resourceGenerators.put(clazz, generator);
     }
 
@@ -218,16 +218,18 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         context.getPhysicalChangeSet().addWireDefinition(wireDefinition);
     }
 
-    public URI generateResource(ResourceDefinition definition, GeneratorContext context) throws GenerationException {
-        Class<?> type = definition.getClass();
-        ResourceGenerator generator = resourceGenerators.get(type);
-        if (generator == null) {
-            throw new GeneratorNotFoundException(type);
-        }
-        return generator.generate(definition, context);
+    public URI generateResource(ResourceDescription description, LogicalComponent<?> component, GeneratorContext context)
+            throws GenerationException {
+        throw new UnsupportedOperationException();
+//        Class<?> type = definition.getClass();
+//        ComponentResourceGenerator generator = resourceGenerators.get(type);
+//        if (generator == null) {
+//            throw new GeneratorNotFoundException(type);
+//        }
+//        return generator.generate(definition, context);
     }
 
-    public void generatorCommandSet(LogicalComponent<?> component, GeneratorContext context)
+    public void generateCommandSet(LogicalComponent<?> component, GeneratorContext context)
             throws GenerationException {
         for (CommandGenerator generator : commandGenerators) {
             generator.generate(component, context);

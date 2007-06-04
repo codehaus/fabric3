@@ -18,6 +18,8 @@
  */
 package org.fabric3.spi.model.physical;
 
+import java.net.URI;
+
 /**
  * Base class for physical resource container definitions.  PhysicalResourceContainerDefinitions are marshalled to the
  * service nodes where they result in the creation of resource containers.
@@ -25,4 +27,19 @@ package org.fabric3.spi.model.physical;
  * @version $Rev$ $Date$
  */
 public abstract class PhysicalResourceContainerDefinition {
+    protected URI uri;
+
+    protected PhysicalResourceContainerDefinition(URI name) {
+        this.uri = name;
+    }
+
+    /**
+     * Returns the classloader uri.
+     *
+     * @return the classloader uri
+     */
+    public URI getUri() {
+        return uri;
+    }
+
 }

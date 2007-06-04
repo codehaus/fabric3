@@ -129,7 +129,7 @@ public class MetaDataStoreImpl implements MetaDataStore {
 
     public Contribution resolve(QName deployable) {
         for (Contribution contribution : cache.values()) {
-            Map<Object, CompositeComponentType> map = contribution.getComponentTypes().get(COMPOSITE);
+            Map<QName, CompositeComponentType> map = contribution.getComponentTypes();
             if (map == null) {
                 continue;
             }

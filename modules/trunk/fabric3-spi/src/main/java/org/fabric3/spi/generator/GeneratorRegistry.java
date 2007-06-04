@@ -27,12 +27,12 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.type.BindingDefinition;
 import org.fabric3.spi.model.type.Implementation;
 import org.fabric3.spi.model.type.IntentDefinition;
-import org.fabric3.spi.model.type.ResourceDefinition;
+import org.fabric3.spi.model.type.ResourceDescription;
 
 /**
  * A registry for {@link ComponentGenerator}s, {@link BindingGenerator}s, {@link InterceptorGenerator}s and {@link
- * ResourceGenerator}s. Generators are responsible for producing physical model objects that are provisioned to service
- * nodes from their logical counterparts.
+ * ComponentResourceGenerator}s. Generators are responsible for producing physical model objects that are provisioned to
+ * service nodes from their logical counterparts.
  *
  * @version $Rev$ $Date$
  */
@@ -69,7 +69,7 @@ public interface GeneratorRegistry {
      * @param clazz     the resource type the generator handles
      * @param generator the generator to register
      */
-    void register(Class<?> clazz, ResourceGenerator generator);
+    void register(Class<?> clazz, ComponentResourceGenerator generator);
 
     /**
      * Registers a command generator
@@ -145,12 +145,12 @@ public interface GeneratorRegistry {
      * Generates a PhysicalResourceContainerDefinition from a ResourceDefinition. A physical change set for the runtime
      * the component will be provisioned to is updated with the physical resource definition
      *
-     * @param definition the resource definition to generate frm
-     * @param context    the generator context
+     * @param context the generator context
      * @return a URI representing the unique identifier for the physical  resource
      * @throws GenerationException if an error ocurrs during generation
      */
-    URI generateResource(ResourceDefinition definition, GeneratorContext context) throws GenerationException;
+    URI generateResource(ResourceDescription description, LogicalComponent<?> component, GeneratorContext context)
+            throws GenerationException;
 
     /**
      * Generates a CommandSet for provisioning the logical component
@@ -159,6 +159,6 @@ public interface GeneratorRegistry {
      * @param context   the generator context
      * @throws GenerationException if an error ocurrs during generation
      */
-    void generatorCommandSet(LogicalComponent<?> component, GeneratorContext context) throws GenerationException;
+    void generateCommandSet(LogicalComponent<?> component, GeneratorContext context) throws GenerationException;
 
 }

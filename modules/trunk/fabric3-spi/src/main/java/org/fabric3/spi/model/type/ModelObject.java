@@ -38,7 +38,7 @@ public abstract class ModelObject {
      *
      * @return the collection of resource descriptions for the type
      */
-    public List<ResourceDescription> getResourceDescription() {
+    public List<ResourceDescription> getResourceDescriptions() {
         if (resources == null) {
             return Collections.emptyList();
         }

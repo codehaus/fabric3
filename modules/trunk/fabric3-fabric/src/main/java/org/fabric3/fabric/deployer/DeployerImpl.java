@@ -29,12 +29,14 @@ import org.fabric3.fabric.builder.Connector;
 import org.fabric3.spi.component.ComponentManager;
 import org.fabric3.spi.component.RegistrationException;
 import org.fabric3.spi.builder.BuilderException;
+import org.fabric3.spi.builder.resource.ResourceContainerBuilderRegistry;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.component.Component;
 import org.fabric3.spi.marshaller.MarshallerRegistry;
 import org.fabric3.spi.model.physical.PhysicalChangeSet;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
+import org.fabric3.spi.model.physical.PhysicalResourceContainerDefinition;
 import org.fabric3.spi.services.messaging.MessagingService;
 import org.fabric3.spi.services.messaging.RequestListener;
 import org.osoa.sca.annotations.EagerInit;
@@ -58,7 +60,12 @@ public class DeployerImpl implements RequestListener, Deployer {
     /**
      * Physical component builder registry.
      */
-    private ComponentBuilderRegistry builderRegistry;
+    private ComponentBuilderRegistry componentBuilderRegistry;
+
+    /**
+     * Resource builder registry.
+     */
+    private ResourceContainerBuilderRegistry resourceBuilderRegistry;
 
     /**
      * Component manager.
@@ -95,8 +102,11 @@ public class DeployerImpl implements RequestListener, Deployer {
     public void applyChangeSet(PhysicalChangeSet changeSet) throws BuilderException, RegistrationException {
         Set<PhysicalComponentDefinition> componentDefinitions = changeSet.getComponentDefinitions();
         List<Component> components = new ArrayList<Component>(componentDefinitions.size());
+        for (PhysicalResourceContainerDefinition definition : changeSet.getAllResourceDefinitions()) {
+            resourceBuilderRegistry.build(definition);
+        }
         for (PhysicalComponentDefinition pcd : componentDefinitions) {
-            final Component component = builderRegistry.build(pcd);
+            final Component component = componentBuilderRegistry.build(pcd);
             components.add(component);
         }
         for (Component component : components) {
@@ -138,7 +148,13 @@ public class DeployerImpl implements RequestListener, Deployer {
      */
     @Reference
     public void setBuilderRegistry(ComponentBuilderRegistry builderRegistry) {
-        this.builderRegistry = builderRegistry;
+        this.componentBuilderRegistry = builderRegistry;
+    }
+
+
+    @Reference
+    public void setResourceBuilderRegistry(ResourceContainerBuilderRegistry registry) {
+        this.resourceBuilderRegistry = registry;
     }
 
     /**

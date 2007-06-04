@@ -36,6 +36,11 @@ import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionNotFoundException;
 import org.fabric3.host.contribution.ContributionService;
+import org.fabric3.spi.model.type.ComponentDefinition;
+import org.fabric3.spi.model.type.CompositeComponentType;
+import org.fabric3.spi.model.type.CompositeImplementation;
+import org.fabric3.spi.model.type.ContributionResourceDescription;
+import org.fabric3.spi.model.type.Implementation;
 import org.fabric3.spi.services.contribution.ArchiveStore;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionProcessorRegistry;
@@ -104,6 +109,7 @@ public class ContributionServiceImpl implements ContributionService {
         processorRegistry.processContent(contribution, contentType, contributionUri, stream);
         // TODO rollback storage if an error processing contribution
         // index the contribution
+        addContributionDescription(contribution);
         metaDataStore.store(contribution);
         //store the contribution in the memory cache
         return contributionUri;
@@ -172,5 +178,35 @@ public class ContributionServiceImpl implements ContributionService {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Recursively adds a resource description pointing to the contribution artifact on contained components.
+     *
+     * @param contribution the contribution the resource description requires
+     */
+    private void addContributionDescription(Contribution contribution) {
+        ContributionResourceDescription description = new ContributionResourceDescription(contribution.getLocation());
+        for (CompositeComponentType type : contribution.getComponentTypes().values()) {
+            addContributionDescription(description, type);
+        }
+    }
+
+    /**
+     * Adds the given resource description pointing to the contribution artifact on contained components.
+     *
+     * @param description the resource description
+     * @param type        the component type to introspect
+     */
+    private void addContributionDescription(ContributionResourceDescription description, CompositeComponentType type) {
+        for (ComponentDefinition<?> definition : type.getComponents().values()) {
+            Implementation<?> implementation = definition.getImplementation();
+            if (CompositeImplementation.class.isInstance(implementation)) {
+                CompositeImplementation compositeImplementation = CompositeImplementation.class.cast(implementation);
+                CompositeComponentType componentType = compositeImplementation.getComponentType();
+                addContributionDescription(description, componentType);
+            } else {
+                implementation.addResourceDescription(description);
+            }
+        }
+    }
 
 }

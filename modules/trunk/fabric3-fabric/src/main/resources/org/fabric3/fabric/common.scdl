@@ -122,4 +122,16 @@
         <system:implementation.system class="org.fabric3.fabric.command.InitializeComponentGenerator"/>
     </component>
 
+    <component name="classLoaderGenerator">
+        <system:implementation.system class="org.fabric3.fabric.classloader.ClassLoaderGeneratorImpl"/>
+    </component>
+
+    <component name="resourceBuilderRegistry">
+        <system:implementation.system class="org.fabric3.fabric.builder.resource.ResourceContainerBuilderRegistryImpl"/>
+    </component>
+
+    <component name="classLaoderBuilder">
+        <system:implementation.system class="org.fabric3.fabric.classloader.ClassLoaderBuilder"/>
+    </component>
+
 </composite>
