@@ -28,11 +28,11 @@ import org.w3c.dom.Node;
 
 import junit.framework.TestCase;
 
-public class StringToMapTestCase extends TestCase {
+public class String2MapTestCase extends TestCase {
 
     public void testTransform() throws Exception {
 
-        StringToMap stringToMap = new StringToMap();
+        String2Map string2Map = new String2Map();
 
         String xml = "<value><apple>yellow</apple><lime>green</lime><grape>black</grape></value>";
 
@@ -42,7 +42,7 @@ public class StringToMapTestCase extends TestCase {
                 .parse(new ByteArrayInputStream(xml.getBytes()))
                 .getDocumentElement();
         
-        Map<String, String> map = stringToMap.transform(node);
+        Map<String, String> map = string2Map.transform(node);
 
         assertEquals(3, map.size());
         assertEquals("yellow", map.get("apple"));

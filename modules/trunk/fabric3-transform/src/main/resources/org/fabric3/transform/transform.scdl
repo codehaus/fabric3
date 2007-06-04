@@ -69,7 +69,7 @@
     </component>
 
     <component name="Dom2Map">
-        <system:implementation.system class="org.fabric3.transform.dom2java.DomToMap"/>
+        <system:implementation.system class="org.fabric3.transform.dom2java.String2Map"/>
         <reference name="registry" target="pullTransformerRegistry"/>
     </component>
 

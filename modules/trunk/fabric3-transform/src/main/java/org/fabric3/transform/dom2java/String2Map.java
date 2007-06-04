@@ -38,7 +38,7 @@ import org.fabric3.spi.transform.TransformationException;
  * </code>
  * @version $Rev$ $Date$
  */
-public class StringToMap extends AbstractPullTransformer<Node, Map<String, String>> {
+public class String2Map extends AbstractPullTransformer<Node, Map<String, String>> {
     private static final XSDSimpleType SOURCE = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
     private static final JavaClass<Map> TARGET = new JavaClass<Map>(Map.class);
 
