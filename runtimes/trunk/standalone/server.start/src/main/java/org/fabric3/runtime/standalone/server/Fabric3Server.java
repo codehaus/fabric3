@@ -20,7 +20,6 @@ package org.fabric3.runtime.standalone.server;
 
 import java.io.File;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.management.MBeanServer;
@@ -35,7 +34,6 @@ import org.fabric3.jmx.agent.Agent;
 import org.fabric3.jmx.agent.RmiAgent;
 import org.fabric3.runtime.standalone.DirectoryHelper;
 import org.fabric3.runtime.standalone.StandaloneHostInfo;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 
 /**
  * This class provides the commandline interface for starting the Fabric3 standalone server.
@@ -119,13 +117,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
             final ManagementService<?> managementService = new JmxManagementService(mBeanServer, profileName);
             final Bootstrapper bootstrapper = DirectoryHelper.createBootstrapper(hostInfo);
             runtime.setManagementService(managementService);
-            bootstrapper.bootstrap(runtime, hostInfo.getBootClassLoader());
-            // FIXME the classloader for the application should be in the PCS
-            ClassLoaderRegistry classLoaderRegistry =
-                    runtime.getSystemComponent(ClassLoaderRegistry.class,
-                                               URI.create("fabric3://./runtime/main/ClassLoaderRegistry"));
-            ClassLoader systemClassLoader = classLoaderRegistry.getClassLoader(URI.create("sca://./bootClassLoader"));
-            classLoaderRegistry.register(URI.create("sca://./applicationClassLoader"), systemClassLoader);
+            bootstrapper.bootstrap(runtime, hostInfo.getBootClassLoader(), hostInfo.getHostClassLoader());
             // start the runtime receiving requests
             runtime.start();
             bootedRuntimes.put(profileName, runtime);

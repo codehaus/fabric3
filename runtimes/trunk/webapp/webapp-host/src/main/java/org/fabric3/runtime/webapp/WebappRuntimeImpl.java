@@ -79,9 +79,9 @@ public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implement
             impl.setClassLoader(getHostClassLoader());
 
             // FIXME JFM this is a horrible hack until the contribution service is in place
-            ClassLoaderRegistry classLoaderRegistry =
-                    getSystemComponent(ClassLoaderRegistry.class, CLASSLOADER_REGISTRY_URI);
-            classLoaderRegistry.register(URI.create("sca://./applicationClassLoader"), getHostClassLoader());
+//            ClassLoaderRegistry classLoaderRegistry =
+//                    getSystemComponent(ClassLoaderRegistry.class, CLASSLOADER_REGISTRY_URI);
+//            classLoaderRegistry.register(URI.create("sca://./applicationClassLoader"), getHostClassLoader());
 
             ComponentDefinition<CompositeImplementation> definition =
                     new ComponentDefinition<CompositeImplementation>(compositeId.toString(), impl);

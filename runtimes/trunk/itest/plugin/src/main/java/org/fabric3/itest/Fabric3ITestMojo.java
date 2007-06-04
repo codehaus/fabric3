@@ -52,19 +52,19 @@ import org.apache.maven.surefire.report.ReporterManager;
 import org.apache.maven.surefire.suite.SurefireTestSuite;
 import org.apache.maven.surefire.testset.TestSetFailedException;
 
-import org.fabric3.host.Fabric3RuntimeException;
 import org.fabric3.api.annotation.LogLevel;
 import org.fabric3.fabric.loader.LoaderContextImpl;
 import static org.fabric3.fabric.runtime.ComponentNames.LOADER_URI;
 import org.fabric3.fabric.runtime.ScdlBootstrapperImpl;
+import org.fabric3.host.Fabric3RuntimeException;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.host.runtime.StartException;
 import org.fabric3.itest.implementation.junit.ImplementationJUnit;
 import org.fabric3.spi.deployer.CompositeClassLoader;
-import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.implementation.java.JavaMappedService;
 import org.fabric3.spi.implementation.java.PojoComponentType;
+import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.CompositeComponentType;
@@ -211,10 +211,12 @@ public class Fabric3ITestMojo extends AbstractMojo {
         log.info("Starting Embedded Fabric3 Runtime ...");
         MavenEmbeddedRuntime runtime = createRuntime(cl);
         MojoMonitor monitor = runtime.getMonitorFactory().getMonitor(MojoMonitor.class);
+        // FIXME this should probably be an isolated classloader
+        ClassLoader testClassLoader = createTestClassLoader(getClass().getClassLoader());
         try {
             ScdlBootstrapper bootstrapper = new ScdlBootstrapperImpl();
             bootstrapper.setScdlLocation(systemScdl);
-            bootstrapper.bootstrap(runtime, cl);
+            bootstrapper.bootstrap(runtime, cl, testClassLoader);
             runtime.start();
         } catch (InitializationException e) {
             monitor.runError(e);
@@ -230,11 +232,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
             try {
                 // XML loading is externalized for the Mojo...this should be cleaned up to use the DSL when
                 // it becomes available
-                // FIXME this should probably be an isolated classloader
-                ClassLoader testClassLoader = createTestClassLoader(getClass().getClassLoader());
-
                 URI domain = URI.create(testDomain);
-                URI uriBase = domain;
 
                 CompositeImplementation impl = new CompositeImplementation();
                 impl.setScdlLocation(testScdl.toURI().toURL());
@@ -243,15 +241,14 @@ public class Fabric3ITestMojo extends AbstractMojo {
                 ComponentDefinition<CompositeImplementation> definition =
                         new ComponentDefinition<CompositeImplementation>(testComponentName, impl);
 
-                // xcv check the classloader
                 LoaderRegistry loader = runtime.getSystemComponent(LoaderRegistry.class, LOADER_URI);
 
                 LoaderContext loaderContext = new LoaderContextImpl(null, null);
                 loader.loadComponentType(impl, loaderContext);
 
                 runtime.deploy(definition);
-                testSuite = createTestSuite(runtime, definition, uriBase);
-                runtime.startContext(uriBase);
+                testSuite = createTestSuite(runtime, definition, domain);
+                runtime.startContext(domain);
             } catch (Exception e) {
                 monitor.runError(e);
                 throw new MojoExecutionException("Error deploying test component " + testScdl, e);

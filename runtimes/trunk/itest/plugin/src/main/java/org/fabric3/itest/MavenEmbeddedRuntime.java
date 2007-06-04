@@ -29,7 +29,6 @@ import org.fabric3.fabric.implementation.java.JavaComponent;
 import org.fabric3.fabric.implementation.java.JavaInvokerInterceptor;
 import org.fabric3.fabric.implementation.pojo.PojoWorkContextTunnel;
 import org.fabric3.fabric.runtime.AbstractRuntime;
-import static org.fabric3.fabric.runtime.ComponentNames.CLASSLOADER_REGISTRY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.component.GroupInitializationException;
@@ -39,7 +38,6 @@ import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.CompositeImplementation;
 import org.fabric3.spi.model.type.Operation;
 import org.fabric3.spi.model.type.Scope;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.spi.wire.MessageImpl;
 
@@ -51,13 +49,7 @@ public class MavenEmbeddedRuntime extends AbstractRuntime<MavenHostInfo> {
         super(MavenHostInfo.class);
     }
 
-    public void deploy(ComponentDefinition<CompositeImplementation> definition)
-            throws Exception {
-        ClassLoader testClassLoader = definition.getImplementation().getClassLoader();
-        // FIXME JFM this is a horrible hack until the contribution service is in place
-        ClassLoaderRegistry classLoaderRegistry =
-                getSystemComponent(ClassLoaderRegistry.class, CLASSLOADER_REGISTRY_URI);
-        classLoaderRegistry.register(URI.create("sca://./applicationClassLoader"), testClassLoader);
+    public void deploy(ComponentDefinition<CompositeImplementation> definition) throws Exception {
         DistributedAssembly assembly = getSystemComponent(DistributedAssembly.class, DISTRIBUTED_ASSEMBLY_URI);
         // deploy the components
         assembly.activate(definition, true);

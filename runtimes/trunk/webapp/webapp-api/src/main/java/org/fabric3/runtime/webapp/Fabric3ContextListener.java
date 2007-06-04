@@ -82,7 +82,7 @@ public class Fabric3ContextListener implements ServletContextListener {
             runtime.setHostClassLoader(webappClassLoader);
             ScdlBootstrapper bootstrapper = utils.getBootstrapper(bootClassLoader);
             bootstrapper.setScdlLocation(systemScdl);
-            bootstrapper.bootstrap(runtime, bootClassLoader);
+            bootstrapper.bootstrap(runtime, bootClassLoader, webappClassLoader);
             runtime.start();
             servletContext.setAttribute(RUNTIME_ATTRIBUTE, runtime);
 

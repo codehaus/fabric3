@@ -14,7 +14,6 @@ import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.loader.LoaderContextImpl;
 import org.fabric3.fabric.monitor.JavaLoggingMonitorFactory;
 import org.fabric3.fabric.runtime.AbstractRuntime;
-import static org.fabric3.fabric.runtime.ComponentNames.CLASSLOADER_REGISTRY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.LOADER_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_NAME;
@@ -29,7 +28,6 @@ import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.CompositeImplementation;
 import org.fabric3.spi.model.type.Scope;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.ProxyService;
 import org.fabric3.spi.wire.Wire;
@@ -78,9 +76,6 @@ public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo>
         ComponentDefinition<CompositeImplementation> definition =
                 new ComponentDefinition<CompositeImplementation>("main", impl);
         try {
-            ClassLoaderRegistry classLoaderRegistry =
-                    getSystemComponent(ClassLoaderRegistry.class, CLASSLOADER_REGISTRY_URI);
-            classLoaderRegistry.register(URI.create("sca://./applicationClassLoader"), getHostClassLoader());
             LoaderRegistry loader = getSystemComponent(LoaderRegistry.class, LOADER_URI);
             assembly = getSystemComponent(DistributedAssembly.class, DISTRIBUTED_ASSEMBLY_URI);
             wireCache = getSystemComponent(ClientWireCache.class, WIRE_CACHE_URI);

@@ -33,7 +33,6 @@ import org.fabric3.fabric.implementation.pojo.PojoWorkContextTunnel;
 import org.fabric3.fabric.loader.LoaderContextImpl;
 import org.fabric3.fabric.monitor.JavaLoggingMonitorFactory;
 import org.fabric3.fabric.runtime.AbstractRuntime;
-import static org.fabric3.fabric.runtime.ComponentNames.CLASSLOADER_REGISTRY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.LOADER_URI;
 import org.fabric3.runtime.standalone.StandaloneHostInfo;
@@ -50,7 +49,6 @@ import org.fabric3.spi.model.type.CompositeComponentType;
 import org.fabric3.spi.model.type.CompositeImplementation;
 import org.fabric3.spi.model.type.Implementation;
 import org.fabric3.spi.model.type.Scope;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.spi.wire.MessageImpl;
 
@@ -87,14 +85,9 @@ public class StandaloneRuntimeImpl extends AbstractRuntime<StandaloneHostInfo> i
         ComponentDefinition<CompositeImplementation> definition =
                 new ComponentDefinition<CompositeImplementation>("main", impl);
         try {
-            // FIXME JFM this is a horrible hack until the contribution service is in place
-            ClassLoaderRegistry classLoaderRegistry =
-                    getSystemComponent(ClassLoaderRegistry.class, CLASSLOADER_REGISTRY_URI);
-            classLoaderRegistry.register(URI.create("sca://./applicationClassLoader"), applicationClassLoader);
             LoaderRegistry loader = getSystemComponent(LoaderRegistry.class, LOADER_URI);
             DistributedAssembly assembly = getSystemComponent(DistributedAssembly.class, DISTRIBUTED_ASSEMBLY_URI);
             // deploy the components
-
             LoaderContext loaderContext = new LoaderContextImpl(null, null);
             loader.loadComponentType(impl, loaderContext);
             assembly.activate(definition, false);

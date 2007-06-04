@@ -101,7 +101,7 @@ public class Domain {
             URL baseDirUrl = baseDir.toURI().toURL();
             runtime.setHostInfo(new DevelopmentHostInfoImpl(DOMAIN_URI, baseDirUrl, baseDir, cl, cl));
             runtime.setHostClassLoader(cl);
-            bootstrapper.bootstrap(runtime, cl);
+            bootstrapper.bootstrap(runtime, cl, cl);
             runtime.start();
         } catch (InstantiationException e) {
             throw new InvalidConfigurationException("Error instantiating runtime classes are missing", e);

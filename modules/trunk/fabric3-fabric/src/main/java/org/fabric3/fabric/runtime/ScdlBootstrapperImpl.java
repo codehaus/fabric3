@@ -132,6 +132,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     private static final URI RUNTIME_INFO_URI = URI.create(RUNTIME_NAME + "/HostInfo");
     private static final URI HOST_CLASSLOADER_ID = URI.create("sca://./hostClassLoader");
     private static final URI BOOT_CLASSLOADER_ID = URI.create("sca://./bootClassLoader");
+    private static final URI APPLICATION_CLASSLOADER_ID = URI.create("sca://./applicationClassLoader");
 
     private JavaInterfaceProcessorRegistry interfaceProcessorRegistry;
 
@@ -157,11 +158,13 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         this.scdlLocation = scdlLocation;
     }
 
-    public void bootstrap(Fabric3Runtime<?> runtime, ClassLoader bootClassLoader) throws InitializationException {
+    public void bootstrap(Fabric3Runtime<?> runtime, ClassLoader bootClassLoader, ClassLoader applicationClassLoader)
+            throws InitializationException {
         initializeRuntime(runtime);
         createBootstrapComponents(runtime);
         registerBootstrapComponents((AbstractRuntime<?>) runtime);
         classLoaderRegistry.register(BOOT_CLASSLOADER_ID, bootClassLoader);
+        classLoaderRegistry.register(APPLICATION_CLASSLOADER_ID, applicationClassLoader);
         try {
             // FIXME come up with a better alternative: the domain context needs to be started so system services such 
             // as the contribution service that operate on it may be initialized as system components

@@ -85,7 +85,7 @@ public class Main {
         Bootstrapper bootstrapper = DirectoryHelper.createBootstrapper(hostInfo);
         LauncherMonitor monitor = runtime.getMonitorFactory().getMonitor(LauncherMonitor.class);
         try {
-            bootstrapper.bootstrap(runtime, hostInfo.getBootClassLoader());
+            bootstrapper.bootstrap(runtime, hostInfo.getBootClassLoader(), applicationClassLoader);
             runtime.start();
             int status = runtime.deployAndRun(applicationScdlURL, applicationClassLoader, appArgs);
             System.exit(status);
