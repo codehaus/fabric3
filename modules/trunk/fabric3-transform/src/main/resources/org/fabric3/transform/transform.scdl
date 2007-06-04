@@ -68,6 +68,11 @@
         <reference name="registry" target="pullTransformerRegistry"/>
     </component>
 
+    <component name="Dom2Map">
+        <system:implementation.system class="org.fabric3.transform.dom2java.DomToMap"/>
+        <reference name="registry" target="pullTransformerRegistry"/>
+    </component>
+
 <!--
     <component name="Element2Stream">
         <system:implementation.system class="org.fabric3.transform.xml.Element2Stream"/>
