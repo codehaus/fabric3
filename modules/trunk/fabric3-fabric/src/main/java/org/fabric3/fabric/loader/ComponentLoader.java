@@ -56,6 +56,7 @@ import org.fabric3.spi.model.type.PropertyValue;
 import org.fabric3.spi.model.type.ReferenceTarget;
 import org.fabric3.spi.model.type.XSDSimpleType;
 import org.fabric3.transform.xml.Stream2Element;
+import org.fabric3.transform.xml.Stream2Element2;
 import org.fabric3.transform.xml.Stream2Stream;
 
 /**
@@ -68,14 +69,14 @@ public class ComponentLoader extends LoaderExtension<ComponentType<?, ?, ?>, Com
     private static final QName PROPERTY = new QName(SCA_NS, "property");
     private static final QName REFERENCE = new QName(SCA_NS, "reference");
 
-    private final Stream2Element stream2Element;
+    private final Stream2Element2 stream2Element;
     private final DocumentBuilderFactory documentBuilderFactory;
 
     @Constructor
     public ComponentLoader(@Reference LoaderRegistry registry) {
         super(registry);
         // TODO get the transformers by injection
-        stream2Element = new Stream2Element(new Stream2Stream());
+        stream2Element = new Stream2Element2(PROPERTY);
         documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setNamespaceAware(true);
     }
@@ -107,7 +108,7 @@ public class ComponentLoader extends LoaderExtension<ComponentType<?, ?, ?>, Com
                 if (PROPERTY.equals(qname)) {
                     PropertyValue value = loadPropertyValue(reader, context);
                     componentDefinition.add(value);
-                    reader.next();
+                    // reader.next();
                 } else if (REFERENCE.equals(qname)) {
                     loadReference(reader, componentDefinition, context);
                     reader.next();
@@ -196,7 +197,7 @@ public class ComponentLoader extends LoaderExtension<ComponentType<?, ?, ?>, Com
         } else {
             propertyValue = loadInlinePropertyValue(name, reader);
         }
-        LoaderUtil.skipToEndElement(reader);
+        // LoaderUtil.skipToEndElement(reader);
         return propertyValue;
     }
 
