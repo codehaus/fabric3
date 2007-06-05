@@ -45,6 +45,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.services.contribution.ArchiveStore;
+import org.fabric3.spi.services.contribution.ContributionStoreRegistry;
 
 /**
  * The default implementation of ContributionStore
@@ -53,18 +54,25 @@ import org.fabric3.spi.services.contribution.ArchiveStore;
  */
 @EagerInit
 public class ArchiveStoreImpl implements ArchiveStore {
+    private final ContributionStoreRegistry registry;
     private final File root;
     private Map<URI, URL> contributionUriToUrl;
+    private String storeId = DEFAULT_STORE;
 
     /**
      * Creates a new repository service instance
      *
      * @param repository the repository location
-     * @param hostInfo the host info for the runtime
+     * @param registry   the contribution store registry this store will register with
+     * @param hostInfo   the host info for the runtime
      * @throws java.io.IOException if an error occurs initializing the repository
      */
-    public ArchiveStoreImpl(@Property(name = "repository")String repository, @Reference HostInfo hostInfo)
+    public ArchiveStoreImpl(
+            @Property(name = "repository")String repository,
+            @Reference ContributionStoreRegistry registry,
+            @Reference HostInfo hostInfo)
             throws IOException {
+        this.registry = registry;
         if (repository == null) {
             final String domain = ContributionUtil.getDomainPath(hostInfo.getDomain());
             repository = AccessController.doPrivileged(new PrivilegedAction<String>() {
@@ -86,7 +94,9 @@ public class ArchiveStoreImpl implements ArchiveStore {
     @Constructor
     @Deprecated
     // JFM FIXME remove when properties work
-    public ArchiveStoreImpl(@Reference HostInfo hostInfo) throws IOException {
+    public ArchiveStoreImpl(@Reference HostInfo hostInfo, @Reference ContributionStoreRegistry registry)
+            throws IOException {
+        this.registry = registry;
         // FIXME repository mapping should include the domain name
         final String domain = ContributionUtil.getDomainPath(hostInfo.getDomain());
         String repository = AccessController.doPrivileged(new PrivilegedAction<String>() {
@@ -103,6 +113,20 @@ public class ArchiveStoreImpl implements ArchiveStore {
             throw new IOException("The repository location is not a directory: " + repository);
         }
         contributionUriToUrl = new ConcurrentHashMap<URI, URL>();
+    }
+
+    @Property(required = false)
+    public void setId(String storeId) {
+        this.storeId = storeId;
+    }
+
+    public String getId() {
+        return storeId;
+    }
+
+    @Init
+    public void init() {
+        registry.register(this);
     }
 
     public URL store(URI uri, InputStream stream) throws IOException {
@@ -147,10 +171,6 @@ public class ArchiveStoreImpl implements ArchiveStore {
 
     public List<URI> list() {
         return new ArrayList<URI>(contributionUriToUrl.keySet());
-    }
-
-    @Init
-    public void init() {
     }
 
     /**

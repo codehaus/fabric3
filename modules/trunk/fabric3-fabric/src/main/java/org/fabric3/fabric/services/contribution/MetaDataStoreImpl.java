@@ -36,6 +36,7 @@ import javax.xml.namespace.QName;
 import com.thoughtworks.xstream.XStream;
 import org.osoa.sca.Constants;
 import org.osoa.sca.annotations.Constructor;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
@@ -44,6 +45,7 @@ import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.model.type.CompositeComponentType;
 import org.fabric3.spi.services.contribution.Contribution;
+import org.fabric3.spi.services.contribution.ContributionStoreRegistry;
 import org.fabric3.spi.services.contribution.Export;
 import org.fabric3.spi.services.contribution.Import;
 import org.fabric3.spi.services.contribution.MetaDataStore;
@@ -55,16 +57,20 @@ import org.fabric3.spi.services.contribution.MetaDataStore;
  */
 public class MetaDataStoreImpl implements MetaDataStore {
     public static final QName COMPOSITE = new QName(Constants.SCA_NS, "composite");
+    private final ContributionStoreRegistry registry;
     private final XStream xstream;
     private final File root;
     private Map<URI, Contribution> cache = new ConcurrentHashMap<URI, Contribution>();
     private Map<QName, Map<Export, Contribution>> exportsToContributionCache =
             new ConcurrentHashMap<QName, Map<Export, Contribution>>();
+    private String storeId = DEFAULT_STORE;
 
     public MetaDataStoreImpl(@Property(name = "repository", required = false)String repository,
                              @Reference HostInfo hostInfo,
+                             @Reference ContributionStoreRegistry registry,
                              @Reference XStreamFactory xstreamFactory) throws IOException {
-        xstream = xstreamFactory.createInstance();
+        this.registry = registry;
+        this.xstream = xstreamFactory.createInstance();
         if (repository == null) {
             final String domain = ContributionUtil.getDomainPath(hostInfo.getDomain());
             repository = AccessController.doPrivileged(new PrivilegedAction<String>() {
@@ -87,8 +93,11 @@ public class MetaDataStoreImpl implements MetaDataStore {
     @Deprecated
     // JFM FIXME remove when properties work
     public MetaDataStoreImpl(@Reference HostInfo hostInfo,
+                             @Reference ContributionStoreRegistry registry,
                              @Reference XStreamFactory xstreamFactory) throws IOException {
-        xstream = xstreamFactory.createInstance();
+
+        this.registry = registry;
+        this.xstream = xstreamFactory.createInstance();
         final String domain = ContributionUtil.getDomainPath(hostInfo.getDomain());
         String repository = AccessController.doPrivileged(new PrivilegedAction<String>() {
             public String run() {
@@ -103,6 +112,20 @@ public class MetaDataStoreImpl implements MetaDataStore {
             throw new IOException("The repository location is not a directory: " + repository);
         }
         recover();
+    }
+
+    @Property(required = false)
+    public void setId(String storeId) {
+        this.storeId = storeId;
+    }
+
+    @Init
+    public void init() {
+        registry.register(this);
+    }
+
+    public String getId() {
+        return storeId;
     }
 
     public void store(Contribution contribution) throws IOException {

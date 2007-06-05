@@ -25,14 +25,18 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Service;
 
 import org.fabric3.host.contribution.Constants;
+import static org.fabric3.host.contribution.Constants.URI_PREFIX;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionNotFoundException;
 import org.fabric3.host.contribution.ContributionService;
@@ -44,6 +48,7 @@ import org.fabric3.spi.model.type.Implementation;
 import org.fabric3.spi.services.contribution.ArchiveStore;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionProcessorRegistry;
+import org.fabric3.spi.services.contribution.ContributionStoreRegistry;
 import org.fabric3.spi.services.contribution.Deployable;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 
@@ -52,22 +57,38 @@ import org.fabric3.spi.services.contribution.MetaDataStore;
  *
  * @version $Rev$ $Date$
  */
+@Service(interfaces = {ContributionService.class, ContributionStoreRegistry.class})
 @EagerInit
-public class ContributionServiceImpl implements ContributionService {
-    private final ArchiveStore archiveStore;
-    private final MetaDataStore metaDataStore;
+public class ContributionServiceImpl implements ContributionService, ContributionStoreRegistry {
     private final ContributionProcessorRegistry processorRegistry;
+    private Map<String, ArchiveStore> archiveStores;
+    private Map<String, MetaDataStore> metaDataStores;
 
-    public ContributionServiceImpl(@Reference MetaDataStore metaDataStore,
-                                   @Reference ArchiveStore archiveStore,
-                                   @Reference ContributionProcessorRegistry processorRegistry)
+    public ContributionServiceImpl(@Reference ContributionProcessorRegistry processorRegistry)
             throws IOException, ClassNotFoundException {
-        this.metaDataStore = metaDataStore;
-        this.archiveStore = archiveStore;
         this.processorRegistry = processorRegistry;
+        archiveStores = new HashMap<String, ArchiveStore>();
+        metaDataStores = new HashMap<String, MetaDataStore>();
     }
 
-    public URI contribute(URL url, byte[] checksum, long timestamp) throws ContributionException, IOException {
+    public void register(ArchiveStore store) {
+        archiveStores.put(store.getId(), store);
+    }
+
+    public void unregister(ArchiveStore store) {
+        metaDataStores.remove(store.getId());
+    }
+
+    public void register(MetaDataStore store) {
+        metaDataStores.put(store.getId(), store);
+    }
+
+    public void unregister(MetaDataStore store) {
+        metaDataStores.remove(store.getId());
+    }
+
+    public URI contribute(String id, URL url, byte[] checksum, long timestamp)
+            throws ContributionException, IOException {
         URI source;
         try {
             source = url.toURI();
@@ -78,30 +99,20 @@ public class ContributionServiceImpl implements ContributionService {
         String contentType = getContentType(urlConnection, url);
         InputStream is = urlConnection.getInputStream();
         try {
-            return contribute(source, contentType, checksum, timestamp, is);
+            return contribute(id, source, contentType, checksum, timestamp, is);
         } finally {
             is.close();
         }
     }
 
-    private String getContentType(URLConnection urlConnection, URL url) {
-        String contentType = urlConnection.getContentType();
-        if (contentType == null || Constants.CONTENT_UNKONWN.equals(contentType)) {
-            // FIXME this should be extensible
-            if (url.toExternalForm().endsWith(".jar")) {
-                contentType = Constants.JAR_CONTENT_TYPE;
-            } else {
-                throw new AssertionError();
-            }
-
-        }
-        return contentType;
-    }
-
-    public URI contribute(URI sourceUri, String contentType, byte[] checksum, long timestamp, InputStream sourceStream)
+    public URI contribute(String id, URI sourceUri, String contentType, byte[] checksum, long timestamp, InputStream sourceStream)
             throws ContributionException, IOException {
         // store the contribution
-        URI contributionUri = URI.create(Constants.URI_PREFIX + UUID.randomUUID());
+        URI contributionUri = URI.create(URI_PREFIX + UUID.randomUUID());
+        ArchiveStore archiveStore = archiveStores.get(id);
+        if (archiveStore == null) {
+            throw new StoreNotFundException("Archive store not found", id);
+        }
         URL locationURL = archiveStore.store(sourceUri, sourceStream);
         Contribution contribution = new Contribution(contributionUri, locationURL, checksum, timestamp);
         //process the contribution
@@ -110,12 +121,22 @@ public class ContributionServiceImpl implements ContributionService {
         // TODO rollback storage if an error processing contribution
         // index the contribution
         addContributionDescription(contribution);
+        MetaDataStore metaDataStore = metaDataStores.get(id);
+        if (metaDataStore == null) {
+            throw new StoreNotFundException("MetaData store not found", id);
+        }
+
         metaDataStore.store(contribution);
         //store the contribution in the memory cache
         return contributionUri;
     }
 
-    public boolean exists(URI uri) {
+    public boolean exists(String id, URI uri) {
+        MetaDataStore metaDataStore = metaDataStores.get(id);
+        if (metaDataStore == null) {
+            return false;
+        }
+
         return metaDataStore.find(uri) != null;
     }
 
@@ -133,6 +154,11 @@ public class ContributionServiceImpl implements ContributionService {
 
     public void update(URI uri, String contentType, byte[] checksum, long timestamp, InputStream stream)
             throws ContributionException, IOException {
+        String id = parseStoreId(uri);
+        MetaDataStore metaDataStore = metaDataStores.get(id);
+        if (metaDataStore == null) {
+            throw new StoreNotFundException("MetaData store not found", id);
+        }
         Contribution contribution = metaDataStore.find(uri);
         if (contribution == null) {
             throw new ContributionNotFoundException("Contribution not found for ", uri.toString());
@@ -146,7 +172,11 @@ public class ContributionServiceImpl implements ContributionService {
 
     }
 
-    public long getContributionTimestamp(URI uri) {
+    public long getContributionTimestamp(String id, URI uri) {
+        MetaDataStore metaDataStore = metaDataStores.get(id);
+        if (metaDataStore == null) {
+            return -1;
+        }
         Contribution contribution = metaDataStore.find(uri);
         if (contribution == null) {
             return -1;
@@ -154,7 +184,12 @@ public class ContributionServiceImpl implements ContributionService {
         return contribution.getTimestamp();
     }
 
-    public List<QName> getDeployables(URI contributionUri) throws ContributionNotFoundException {
+    public List<QName> getDeployables(URI contributionUri) throws ContributionException {
+        String id = parseStoreId(contributionUri);
+        MetaDataStore metaDataStore = metaDataStores.get(id);
+        if (metaDataStore == null) {
+            throw new StoreNotFundException("MetaData store not found", id);
+        }
         Contribution contribution = metaDataStore.find(contributionUri);
         if (contribution == null) {
             throw new ContributionNotFoundException("No contribution found for URI", contributionUri.toString());
@@ -176,6 +211,20 @@ public class ContributionServiceImpl implements ContributionService {
 
     public URL resolve(URI contribution, String namespace, URI uri, URI baseURI) {
         throw new UnsupportedOperationException();
+    }
+
+    private String getContentType(URLConnection urlConnection, URL url) {
+        String contentType = urlConnection.getContentType();
+        if (contentType == null || Constants.CONTENT_UNKONWN.equals(contentType)) {
+            // FIXME this should be extensible
+            if (url.toExternalForm().endsWith(".jar")) {
+                contentType = Constants.JAR_CONTENT_TYPE;
+            } else {
+                throw new AssertionError();
+            }
+
+        }
+        return contentType;
     }
 
     /**
@@ -207,6 +256,13 @@ public class ContributionServiceImpl implements ContributionService {
                 implementation.addResourceDescription(description);
             }
         }
+    }
+
+    private String parseStoreId(URI uri) {
+        String s = uri.toString();
+        assert s.length() > URI_PREFIX.length();
+        s = s.substring(URI_PREFIX.length());
+        return s.substring(0, s.indexOf("/"));
     }
 
 }

@@ -32,23 +32,27 @@ import javax.xml.namespace.QName;
  * @version $Rev$ $Date$
  */
 public interface ContributionService {
+
     /**
-     * Contribute an artifact to the domain. The type of the contribution is determined by the Content-Type of the
-     * resource or, if that is undefined, by some implementation-specific means (such as mapping an extension in the
-     * URL's path).
+     * Contribute an artifact to the domain, placing it in the specified store. The type of the contribution is
+     * determined by the Content-Type of the resource or, if that is undefined, by some implementation-specific means
+     * (such as mapping an extension in the URL's path).
      *
      * @param source    the location of the resource containing the artifact
      * @param checksum  the resource checksum
      * @param timestamp the artifact timestamp
+     * @param storeId   the id of the store which will hold the contribution artifact
      * @return a URI that uniquely identifies this contribution within the SCA Domain
      * @throws ContributionException if there was a problem with the contribution
      * @throws IOException           if there was a problem reading the resource
      */
-    URI contribute(URL source, byte[] checksum, long timestamp) throws ContributionException, IOException;
+    URI contribute(String storeId, URL source, byte[] checksum, long timestamp)
+            throws ContributionException, IOException;
 
     /**
-     * Contribute an artifact to the SCA Domain.
+     * Contribute an artifact to the SCA Domain, placing it in the specified store.
      *
+     * @param storeId     the id of the store which will hold the contribution artifact
      * @param sourceUri   an identifier for the source of this contribution
      * @param contentType the content type to process
      * @param checksum    the resource checksum
@@ -59,7 +63,7 @@ public interface ContributionService {
      * @throws ContributionException if there was a problem with the contribution
      * @throws IOException           if there was a problem reading the stream
      */
-    URI contribute(URI sourceUri, String contentType, byte[] checksum, long timestamp, InputStream stream)
+    URI contribute(String storeId, URI sourceUri, String contentType, byte[] checksum, long timestamp, InputStream stream)
             throws ContributionException, IOException;
 
     /**
@@ -93,18 +97,20 @@ public interface ContributionService {
     /**
      * Returns true if a contribution for the given URI exists.
      *
-     * @param uri the contribution URI
+     * @param storeId the id of the store which will hold the contribution artifact
+     * @param uri     the contribution URI
      * @return true if a contribution for the given URI exists
      */
-    boolean exists(URI uri);
+    boolean exists(String storeId, URI uri);
 
     /**
      * Returns the contribution timestamp
      *
-     * @param uri the contribution URI
+     * @param storeId the id of the store which will hold the contribution artifact
+     * @param uri     the contribution URI
      * @return the timestamp or -1 if no contribution was found
      */
-    long getContributionTimestamp(URI uri);
+    long getContributionTimestamp(String storeId, URI uri);
 
     /**
      * Returns a list of deployable URIs in a contribution
@@ -113,7 +119,7 @@ public interface ContributionService {
      * @return a list of deployable URIs in a contribution. If no deployables are found, an empty list is returned.
      * @throws ContributionNotFoundException if a contribution corresponding to the URI is not found
      */
-    public List<QName> getDeployables(URI contributionUri) throws ContributionNotFoundException;
+    public List<QName> getDeployables(URI contributionUri) throws ContributionException;
 
     /**
      * Remove a contribution from the SCA domain

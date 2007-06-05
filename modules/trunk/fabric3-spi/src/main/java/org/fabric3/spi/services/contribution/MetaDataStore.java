@@ -28,6 +28,14 @@ import javax.xml.namespace.QName;
  * @version $Rev$ $Date$
  */
 public interface MetaDataStore {
+    String DEFAULT_STORE = "DefaultStore";
+
+    /**
+     * Returns the store id.
+     *
+     * @return the store id
+     */
+    String getId();
 
     /**
      * Stores the contribution metadata

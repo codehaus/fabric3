@@ -6,16 +6,16 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
+import org.easymock.EasyMock;
 
 import org.fabric3.fabric.services.xstream.XStreamFactoryImpl;
 import org.fabric3.fabric.util.FileHelper;
+import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
+import org.fabric3.spi.services.contribution.ContributionStoreRegistry;
 import org.fabric3.spi.services.contribution.QNameExport;
 import org.fabric3.spi.services.contribution.QNameImport;
-import org.fabric3.host.runtime.HostInfo;
-
-import org.easymock.EasyMock;
 
 /**
  * @version $Rev$ $Date$
@@ -28,9 +28,10 @@ public class MetaDataStoreImplTestCase extends TestCase {
     private static final QName IMPORT_EXPORT_QNAME2 = new QName("test2", "test2");
     private MetaDataStoreImpl store;
     private HostInfo info;
+    private ContributionStoreRegistry registry;
 
     public void testRecoverAndResolve() throws Exception {
-        MetaDataStoreImpl store2 = new MetaDataStoreImpl(REPOSITORY, info, new XStreamFactoryImpl());
+        MetaDataStoreImpl store2 = new MetaDataStoreImpl(REPOSITORY, info, registry, new XStreamFactoryImpl());
         QNameImport imprt = new QNameImport(IMPORT_EXPORT_QNAME);
         Contribution contribution = store2.resolve(imprt);
         assertEquals(RESOURCE_URI, contribution.getUri());
@@ -57,7 +58,10 @@ public class MetaDataStoreImplTestCase extends TestCase {
         info = EasyMock.createMock(HostInfo.class);
         EasyMock.expect(info.getDomain()).andReturn(URI.create("fabric3://./domain/")).anyTimes();
         EasyMock.replay(info);
-        store = new MetaDataStoreImpl(REPOSITORY, info, new XStreamFactoryImpl());
+        registry = EasyMock.createNiceMock(ContributionStoreRegistry.class);
+        EasyMock.replay(registry);
+
+        store = new MetaDataStoreImpl(REPOSITORY, info, registry, new XStreamFactoryImpl());
         Contribution contribution = new Contribution(RESOURCE_URI);
         ContributionManifest manifest = new ContributionManifest();
         QNameExport export = new QNameExport(IMPORT_EXPORT_QNAME);

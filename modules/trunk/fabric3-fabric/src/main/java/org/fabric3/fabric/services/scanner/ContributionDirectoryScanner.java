@@ -25,6 +25,7 @@ import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
@@ -35,6 +36,7 @@ import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.spi.services.VoidService;
+import static org.fabric3.spi.services.contribution.ArchiveStore.DEFAULT_STORE;
 import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.services.event.Fabric3Event;
 import org.fabric3.spi.services.event.Fabric3EventListener;
@@ -74,6 +76,7 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
     private Map<String, URI> processed = new HashMap<String, URI>();
     private FileSystemResourceFactoryRegistry registry;
     private String path = "../deploy";
+    private String storeId = DEFAULT_STORE;
 
     private long delay = 5000;
     private ScheduledExecutorService executor;
@@ -92,6 +95,16 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
         this.xstream = xStreamFactory.createInstance();
         this.monitor = factory.getMonitor(ScannerMonitor.class);
         processedIndex = new File(path + "/.processed");
+    }
+
+    /**
+     * Configures the store id to contribute to
+     *
+     * @param storeId the store id
+     */
+    @Property(required = false)
+    public void setStoreId(String storeId) {
+        this.storeId = storeId;
     }
 
     @Init
@@ -228,7 +241,7 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
         long timestamp = file.lastModified();
         if (artifactUri != null) {
             // updated
-            long previousTimestamp = contributionService.getContributionTimestamp(artifactUri);
+            long previousTimestamp = contributionService.getContributionTimestamp(DEFAULT_STORE, artifactUri);
             if (timestamp > previousTimestamp) {
                 try {
                     contributionService.update(artifactUri, checksum, timestamp, location);
@@ -242,7 +255,7 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
         } else {
             // added
             try {
-                URI addedUri = contributionService.contribute(location, checksum, timestamp);
+                URI addedUri = contributionService.contribute(storeId, location, checksum, timestamp);
                 List<QName> deployables = contributionService.getDeployables(addedUri);
                 for (QName deployable : deployables) {
                     // include deployables at the domain level
@@ -274,7 +287,7 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
                 // artifact was removed
                 try {
                     // check that the resurce was not deleted by another process
-                    if (contributionService.exists(uri)) {
+                    if (contributionService.exists(DEFAULT_STORE, uri)) {
                         // TODO get Deployables and remove from assembly
                         contributionService.remove(uri);
                     }

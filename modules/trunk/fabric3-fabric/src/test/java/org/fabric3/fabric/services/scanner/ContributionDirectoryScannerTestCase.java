@@ -40,7 +40,8 @@ public class ContributionDirectoryScannerTestCase extends TestCase {
 
     public void testContributeAndActivate() throws Exception {
         File artifact = new File(directory, "test.txt");
-        EasyMock.expect(contributionService.contribute(EasyMock.eq(artifact.toURI().normalize().toURL()),
+        EasyMock.expect(contributionService.contribute(EasyMock.eq("DefaultStore"),
+                                                       EasyMock.eq(artifact.toURI().normalize().toURL()),
                                                        EasyMock.isA(byte[].class),
                                                        EasyMock.anyLong())).andReturn(ARTIFACT_URI);
         EasyMock.replay(contributionService);
@@ -62,7 +63,8 @@ public class ContributionDirectoryScannerTestCase extends TestCase {
      */
     public void testNoChangeResource() throws Exception {
         File artifact = new File(directory, "test.txt");
-        EasyMock.expect(contributionService.contribute(EasyMock.eq(artifact.toURI().normalize().toURL()),
+        EasyMock.expect(contributionService.contribute(EasyMock.eq("DefaultStore"),
+                                                       EasyMock.eq(artifact.toURI().normalize().toURL()),
                                                        EasyMock.isA(byte[].class),
                                                        EasyMock.anyLong())).andReturn(ARTIFACT_URI);
         EasyMock.replay(contributionService);
@@ -82,10 +84,11 @@ public class ContributionDirectoryScannerTestCase extends TestCase {
 
     public void testUpdateResource() throws Exception {
         File artifact = new File(directory, "test.txt");
-        EasyMock.expect(contributionService.contribute(EasyMock.eq(artifact.toURI().normalize().toURL()),
+        EasyMock.expect(contributionService.contribute(EasyMock.eq("DefaultStore"),
+                                                       EasyMock.eq(artifact.toURI().normalize().toURL()),
                                                        EasyMock.isA(byte[].class),
                                                        EasyMock.anyLong())).andReturn(ARTIFACT_URI);
-        EasyMock.expect(contributionService.getContributionTimestamp(ARTIFACT_URI)).andReturn(0L);
+        EasyMock.expect(contributionService.getContributionTimestamp("DefaultStore", ARTIFACT_URI)).andReturn(0L);
         contributionService.update(EasyMock.eq(ARTIFACT_URI),
                                    EasyMock.isA(byte[].class),
                                    EasyMock.anyLong(),
@@ -115,10 +118,12 @@ public class ContributionDirectoryScannerTestCase extends TestCase {
         EasyMock.expect(metaData.getChecksum()).andReturn(new byte[]{}).anyTimes();
         EasyMock.replay(metaData);
 
-        EasyMock.expect(contributionService.contribute(EasyMock.eq(artifact.toURI().normalize().toURL()),
+        EasyMock.expect(contributionService.contribute(EasyMock.eq("DefaultStore"),
+                                                       EasyMock.eq(artifact.toURI().normalize().toURL()),
                                                        EasyMock.isA(byte[].class),
                                                        EasyMock.anyLong())).andReturn(ARTIFACT_URI);
-        EasyMock.expect(contributionService.exists(EasyMock.eq(ARTIFACT_URI))).andReturn(true);
+        EasyMock.expect(contributionService.exists(EasyMock.eq("DefaultStore"), EasyMock.eq(ARTIFACT_URI))).andReturn(
+                true);
         contributionService.remove(EasyMock.eq(ARTIFACT_URI));
         EasyMock.replay(contributionService);
         assembly.activate(DEPLOYABLE, true);
@@ -146,10 +151,11 @@ public class ContributionDirectoryScannerTestCase extends TestCase {
         EasyMock.expect(metaData.getChecksum()).andReturn(new byte[]{}).anyTimes();
         EasyMock.replay(metaData);
 
-        EasyMock.expect(contributionService.contribute(EasyMock.eq(artifact.toURI().normalize().toURL()),
+        EasyMock.expect(contributionService.contribute(EasyMock.eq("DefaultStore"),
+                                                       EasyMock.eq(artifact.toURI().normalize().toURL()),
                                                        EasyMock.isA(byte[].class),
                                                        EasyMock.anyLong())).andReturn(ARTIFACT_URI);
-        EasyMock.expect(contributionService.exists(ARTIFACT_URI)).andReturn(true);
+        EasyMock.expect(contributionService.exists("DefaultStore", ARTIFACT_URI)).andReturn(true);
         contributionService.remove(EasyMock.eq(ARTIFACT_URI));
         EasyMock.replay(contributionService);
         assembly.activate(DEPLOYABLE, true);
@@ -180,10 +186,11 @@ public class ContributionDirectoryScannerTestCase extends TestCase {
         File artifact = new File(directory, "test.txt");
 
         URL url = artifact.toURI().normalize().toURL();
-        EasyMock.expect(contributionService.contribute(EasyMock.eq(artifact.toURI().normalize().toURL()),
+        EasyMock.expect(contributionService.contribute(EasyMock.eq("DefaultStore"),
+                                                       EasyMock.eq(artifact.toURI().normalize().toURL()),
                                                        EasyMock.isA(byte[].class),
                                                        EasyMock.anyLong())).andReturn(ARTIFACT_URI);
-        EasyMock.expect(contributionService.getContributionTimestamp(ARTIFACT_URI)).andReturn(0L);
+        EasyMock.expect(contributionService.getContributionTimestamp("DefaultStore", ARTIFACT_URI)).andReturn(0L);
         contributionService.update(EasyMock.eq(ARTIFACT_URI),
                                    EasyMock.isA(byte[].class),
                                    EasyMock.anyLong(),
@@ -221,7 +228,8 @@ public class ContributionDirectoryScannerTestCase extends TestCase {
         File artifact = new File(directory, "test.txt");
 
         URL url = artifact.toURI().normalize().toURL();
-        EasyMock.expect(contributionService.contribute(EasyMock.eq(url),
+        EasyMock.expect(contributionService.contribute(EasyMock.eq("DefaultStore"),
+                                                       EasyMock.eq(url),
                                                        EasyMock.isA(byte[].class),
                                                        EasyMock.anyLong())).andReturn(ARTIFACT_URI);
         EasyMock.replay(contributionService);

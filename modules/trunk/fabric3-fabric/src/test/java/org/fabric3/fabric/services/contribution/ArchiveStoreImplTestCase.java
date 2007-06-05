@@ -30,6 +30,7 @@ import org.easymock.EasyMock;
 
 import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.host.runtime.HostInfo;
+import org.fabric3.spi.services.contribution.ContributionStoreRegistry;
 
 public class ArchiveStoreImplTestCase extends TestCase {
     private ArchiveStoreImpl repository;
@@ -61,7 +62,9 @@ public class ArchiveStoreImplTestCase extends TestCase {
         HostInfo info = EasyMock.createMock(HostInfo.class);
         EasyMock.expect(info.getDomain()).andReturn(URI.create("fabric3://./domain/")).anyTimes();
         EasyMock.replay(info);
-        this.repository = new ArchiveStoreImpl("target/repository/", info);
+        ContributionStoreRegistry registry = EasyMock.createNiceMock(ContributionStoreRegistry.class);
+        EasyMock.replay(registry);
+        this.repository = new ArchiveStoreImpl("target/repository/", registry, info);
         repository.init();
     }
 

@@ -29,6 +29,14 @@ import java.util.List;
  * Implementations store conribution artifacts
  */
 public interface ArchiveStore {
+    String DEFAULT_STORE = "DefaultStore";
+
+    /**
+     * Returns the store id.
+     *
+     * @return the store id.
+     */
+    String getId();
 
     /**
      * Copies a contribution artifact to the store.
