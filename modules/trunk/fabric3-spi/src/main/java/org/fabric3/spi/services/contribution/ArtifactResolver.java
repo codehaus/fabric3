@@ -17,7 +17,7 @@
  * under the License.    
  */
 
-package org.fabric3.spi.deployer;
+package org.fabric3.spi.services.contribution;
 
 import java.net.URL;
 import java.util.Map;
