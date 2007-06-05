@@ -55,9 +55,11 @@ import org.fabric3.spi.services.contribution.ContributionStoreRegistry;
 @EagerInit
 public class ArchiveStoreImpl implements ArchiveStore {
     private final ContributionStoreRegistry registry;
-    private final File root;
+    private File root;
     private Map<URI, URL> contributionUriToUrl;
     private String storeId = DEFAULT_STORE;
+    private String domain;
+    private String repository;
 
     /**
      * Creates a new repository service instance
@@ -73,8 +75,34 @@ public class ArchiveStoreImpl implements ArchiveStore {
             @Reference HostInfo hostInfo)
             throws IOException {
         this.registry = registry;
+        this.repository = repository;
+        this.domain = hostInfo.getDomain().toString();
+        contributionUriToUrl = new ConcurrentHashMap<URI, URL>();
+    }
+
+    @Constructor
+    @Deprecated
+    // JFM FIXME remove when properties work
+    public ArchiveStoreImpl(@Reference HostInfo hostInfo, @Reference ContributionStoreRegistry registry)
+            throws IOException {
+        this.domain = hostInfo.getDomain().toString();
+        this.registry = registry;
+        this.contributionUriToUrl = new ConcurrentHashMap<URI, URL>();
+
+    }
+
+    @Property(required = false)
+    public void setId(String storeId) {
+        this.storeId = storeId;
+    }
+
+    public String getId() {
+        return storeId;
+    }
+
+    @Init
+    public void init() throws IOException {
         if (repository == null) {
-            final String domain = ContributionUtil.getDomainPath(hostInfo.getDomain());
             repository = AccessController.doPrivileged(new PrivilegedAction<String>() {
                 public String run() {
                     // Default to <user.home>/.fabric3/domains/<domain>/
@@ -88,44 +116,6 @@ public class ArchiveStoreImpl implements ArchiveStore {
         if (!root.exists() || !this.root.isDirectory() || !root.canRead()) {
             throw new IOException("The repository location is not a directory: " + repository);
         }
-        contributionUriToUrl = new ConcurrentHashMap<URI, URL>();
-    }
-
-    @Constructor
-    @Deprecated
-    // JFM FIXME remove when properties work
-    public ArchiveStoreImpl(@Reference HostInfo hostInfo, @Reference ContributionStoreRegistry registry)
-            throws IOException {
-        this.registry = registry;
-        // FIXME repository mapping should include the domain name
-        final String domain = ContributionUtil.getDomainPath(hostInfo.getDomain());
-        String repository = AccessController.doPrivileged(new PrivilegedAction<String>() {
-            public String run() {
-                // Default to <user.home>/.fabric3/domains/<domain>/
-                String userHome = System.getProperty("user.home");
-                return userHome + separator + ".fabric3" + separator + "domains" + separator + domain + separator;
-            }
-        });
-
-        root = new File(repository);
-        FileHelper.forceMkdir(root);
-        if (!root.exists() || !this.root.isDirectory() || !root.canRead()) {
-            throw new IOException("The repository location is not a directory: " + repository);
-        }
-        contributionUriToUrl = new ConcurrentHashMap<URI, URL>();
-    }
-
-    @Property(required = false)
-    public void setId(String storeId) {
-        this.storeId = storeId;
-    }
-
-    public String getId() {
-        return storeId;
-    }
-
-    @Init
-    public void init() {
         registry.register(this);
     }
 

@@ -59,34 +59,22 @@ public class MetaDataStoreImpl implements MetaDataStore {
     public static final QName COMPOSITE = new QName(Constants.SCA_NS, "composite");
     private final ContributionStoreRegistry registry;
     private final XStream xstream;
-    private final File root;
+    private File root;
+    private String repository;
     private Map<URI, Contribution> cache = new ConcurrentHashMap<URI, Contribution>();
     private Map<QName, Map<Export, Contribution>> exportsToContributionCache =
             new ConcurrentHashMap<QName, Map<Export, Contribution>>();
     private String storeId = DEFAULT_STORE;
+    private String domain;
 
     public MetaDataStoreImpl(@Property(name = "repository", required = false)String repository,
                              @Reference HostInfo hostInfo,
                              @Reference ContributionStoreRegistry registry,
                              @Reference XStreamFactory xstreamFactory) throws IOException {
+        this.repository = repository;
         this.registry = registry;
         this.xstream = xstreamFactory.createInstance();
-        if (repository == null) {
-            final String domain = ContributionUtil.getDomainPath(hostInfo.getDomain());
-            repository = AccessController.doPrivileged(new PrivilegedAction<String>() {
-                public String run() {
-                    // Default to <user.home>/.fabric3/domains/<domain>/
-                    String userHome = System.getProperty("user.home");
-                    return userHome + separator + ".fabric3" + separator + "domains" + separator + domain + separator;
-                }
-            });
-        }
-        root = new File(repository);
-        FileHelper.forceMkdir(root);
-        if (!root.exists() || !this.root.isDirectory() || !root.canRead()) {
-            throw new IOException("The repository location is not a directory: " + repository);
-        }
-        recover();
+        domain = ContributionUtil.getDomainPath(hostInfo.getDomain());
     }
 
     @Constructor
@@ -98,20 +86,7 @@ public class MetaDataStoreImpl implements MetaDataStore {
 
         this.registry = registry;
         this.xstream = xstreamFactory.createInstance();
-        final String domain = ContributionUtil.getDomainPath(hostInfo.getDomain());
-        String repository = AccessController.doPrivileged(new PrivilegedAction<String>() {
-            public String run() {
-                // Default to <user.home>/.fabric3/domains/local/
-                String userHome = System.getProperty("user.home");
-                return userHome + separator + ".fabric3" + separator + "domains" + separator + domain + separator;
-            }
-        });
-        root = new File(repository);
-        FileHelper.forceMkdir(root);
-        if (!root.exists() || !this.root.isDirectory() || !root.canRead()) {
-            throw new IOException("The repository location is not a directory: " + repository);
-        }
-        recover();
+        domain = ContributionUtil.getDomainPath(hostInfo.getDomain());
     }
 
     @Property(required = false)
@@ -120,7 +95,22 @@ public class MetaDataStoreImpl implements MetaDataStore {
     }
 
     @Init
-    public void init() {
+    public void init() throws IOException {
+        if (repository == null) {
+            repository = AccessController.doPrivileged(new PrivilegedAction<String>() {
+                public String run() {
+                    // Default to <user.home>/.fabric3/domains/<domain>/
+                    String userHome = System.getProperty("user.home");
+                    return userHome + separator + ".fabric3" + separator + "domains" + separator + domain + separator;
+                }
+            });
+        }
+        root = new File(repository + separator + "index" + separator);
+        FileHelper.forceMkdir(root);
+        if (!root.exists() || !this.root.isDirectory() || !root.canRead()) {
+            throw new IOException("The repository location is not a directory: " + repository);
+        }
+        recover();
         registry.register(this);
     }
 
@@ -131,7 +121,7 @@ public class MetaDataStoreImpl implements MetaDataStore {
     public void store(Contribution contribution) throws IOException {
         FileOutputStream fos = null;
         try {
-            File directory = new File(root, "index" + separator + contribution.getUri().getPath());
+            File directory = new File(root, contribution.getUri().getPath());
             FileHelper.forceMkdir(directory);
             File index = new File(directory, "contribution.ser");
             fos = new FileOutputStream(index);
@@ -218,7 +208,7 @@ public class MetaDataStoreImpl implements MetaDataStore {
      * @throws java.io.IOException if an error occurs reading from disk
      */
     private void recover() throws IOException {
-        File directory = new File(root, "index");
+        File directory = new File(root, storeId);
         File[] files = directory.listFiles();
         if (files == null) {
             return;

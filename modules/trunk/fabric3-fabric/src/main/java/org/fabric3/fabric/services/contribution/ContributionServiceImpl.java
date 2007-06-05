@@ -21,7 +21,6 @@ package org.fabric3.fabric.services.contribution;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -89,17 +88,11 @@ public class ContributionServiceImpl implements ContributionService, Contributio
 
     public URI contribute(String id, URL url, byte[] checksum, long timestamp)
             throws ContributionException, IOException {
-        URI source;
-        try {
-            source = url.toURI();
-        } catch (URISyntaxException e) {
-            throw new InvalidContributionUriException(url.toString(), e);
-        }
         URLConnection urlConnection = url.openConnection();
         String contentType = getContentType(urlConnection, url);
         InputStream is = urlConnection.getInputStream();
         try {
-            return contribute(id, source, contentType, checksum, timestamp, is);
+            return processMetaData(id, url, contentType, checksum, timestamp);
         } finally {
             is.close();
         }
@@ -107,28 +100,12 @@ public class ContributionServiceImpl implements ContributionService, Contributio
 
     public URI contribute(String id, URI sourceUri, String contentType, byte[] checksum, long timestamp, InputStream sourceStream)
             throws ContributionException, IOException {
-        // store the contribution
-        URI contributionUri = URI.create(URI_PREFIX + UUID.randomUUID());
         ArchiveStore archiveStore = archiveStores.get(id);
         if (archiveStore == null) {
             throw new StoreNotFundException("Archive store not found", id);
         }
-        URL locationURL = archiveStore.store(sourceUri, sourceStream);
-        Contribution contribution = new Contribution(contributionUri, locationURL, checksum, timestamp);
-        //process the contribution
-        InputStream stream = locationURL.openStream();
-        processorRegistry.processContent(contribution, contentType, contributionUri, stream);
-        // TODO rollback storage if an error processing contribution
-        // index the contribution
-        addContributionDescription(contribution);
-        MetaDataStore metaDataStore = metaDataStores.get(id);
-        if (metaDataStore == null) {
-            throw new StoreNotFundException("MetaData store not found", id);
-        }
-
-        metaDataStore.store(contribution);
-        //store the contribution in the memory cache
-        return contributionUri;
+        URL locationUrl = archiveStore.store(sourceUri, sourceStream);
+        return processMetaData(id, locationUrl, contentType, checksum, timestamp);
     }
 
     public boolean exists(String id, URI uri) {
@@ -136,7 +113,6 @@ public class ContributionServiceImpl implements ContributionService, Contributio
         if (metaDataStore == null) {
             return false;
         }
-
         return metaDataStore.find(uri) != null;
     }
 
@@ -213,6 +189,27 @@ public class ContributionServiceImpl implements ContributionService, Contributio
         throw new UnsupportedOperationException();
     }
 
+    private URI processMetaData(String id, URL locationUrl, String contentType, byte[] checksum, long timestamp)
+            throws ContributionException, IOException {
+        // store the contribution
+        URI contributionUri = URI.create(URI_PREFIX + id + "/" + UUID.randomUUID());
+        Contribution contribution = new Contribution(contributionUri, locationUrl, checksum, timestamp);
+        //process the contribution
+        InputStream stream = locationUrl.openStream();
+        processorRegistry.processContent(contribution, contentType, contributionUri, stream);
+        // TODO rollback storage if an error processing contribution
+        // index the contribution
+        addContributionDescription(contribution);
+        MetaDataStore metaDataStore = metaDataStores.get(id);
+        if (metaDataStore == null) {
+            throw new StoreNotFundException("MetaData store not found", id);
+        }
+
+        metaDataStore.store(contribution);
+        //store the contribution in the memory cache
+        return contributionUri;
+    }
+
     private String getContentType(URLConnection urlConnection, URL url) {
         String contentType = urlConnection.getContentType();
         if (contentType == null || Constants.CONTENT_UNKONWN.equals(contentType)) {
@@ -258,11 +255,23 @@ public class ContributionServiceImpl implements ContributionService, Contributio
         }
     }
 
+    /**
+     * Parses the store id from a contribution URI of the form <code>sca://contribution/<store id>/</code>
+     *
+     * @param uri the URI to parse
+     * @return the store id
+     */
     private String parseStoreId(URI uri) {
         String s = uri.toString();
         assert s.length() > URI_PREFIX.length();
         s = s.substring(URI_PREFIX.length());
-        return s.substring(0, s.indexOf("/"));
+        int index = s.indexOf("/");
+        if (index > 0) {
+            return s.substring(0, index);
+        } else {
+            return s;
+        }
+
     }
 
 }
