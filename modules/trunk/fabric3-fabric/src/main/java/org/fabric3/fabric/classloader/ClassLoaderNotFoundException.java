@@ -23,7 +23,7 @@ import org.fabric3.spi.builder.BuilderException;
  *
  * @version $Rev$ $Date$
  */
-public class ClassLoaderNotFoundException extends BuilderException {
+public class ClassLoaderNotFoundException extends ClassLoaderBuilderException {
 
     public ClassLoaderNotFoundException(String message, String identifier) {
         super(message, identifier);

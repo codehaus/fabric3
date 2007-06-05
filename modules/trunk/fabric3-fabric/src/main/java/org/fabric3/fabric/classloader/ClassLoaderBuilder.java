@@ -25,11 +25,12 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.runtime.HostInfo;
-import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.resource.ResourceContainerBuilder;
 import org.fabric3.spi.builder.resource.ResourceContainerBuilderRegistry;
 import org.fabric3.spi.deployer.CompositeClassLoader;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.services.contribution.ArtifactResolverRegistry;
+import org.fabric3.spi.services.contribution.ResolutionException;
 
 /**
  * ResourceContainerBuilder implementation that creates multi-parent classloaders from {@link
@@ -46,13 +47,16 @@ public class ClassLoaderBuilder implements ResourceContainerBuilder<PhysicalClas
 
     private ResourceContainerBuilderRegistry builderRegistry;
     private ClassLoaderRegistry classLoaderRegistry;
+    private ArtifactResolverRegistry artifactResolverRegistry;
     private URI domainUri;
 
     public ClassLoaderBuilder(@Reference ResourceContainerBuilderRegistry builderRegistry,
                               @Reference ClassLoaderRegistry classLoaderRegistry,
+                              @Reference ArtifactResolverRegistry artifactResolverRegistry,
                               @Reference HostInfo info) {
         this.builderRegistry = builderRegistry;
         this.classLoaderRegistry = classLoaderRegistry;
+        this.artifactResolverRegistry = artifactResolverRegistry;
         domainUri = info.getDomain();
     }
 
@@ -61,14 +65,24 @@ public class ClassLoaderBuilder implements ResourceContainerBuilder<PhysicalClas
         builderRegistry.register(PhysicalClassLoaderDefinition.class, this);
     }
 
-    public void build(PhysicalClassLoaderDefinition definition) throws BuilderException {
+    public void build(PhysicalClassLoaderDefinition definition) throws ClassLoaderBuilderException {
         URI name = definition.getUri();
         if (classLoaderRegistry.getClassLoader(name) != null) {
             // classloader is already provisioned
             return;
         }
-        Set<URL> urls = definition.getUrls();
-        URL[] classpath = urls.toArray(new URL[urls.size()]);
+        Set<URI> uris = definition.getUris();
+        URL[] classpath = new URL[uris.size()];
+        int i = 0;
+        for (URI uri : uris) {
+            try {
+                classpath[i] = artifactResolverRegistry.resolve(uri);
+            } catch (ResolutionException e) {
+                throw new ClassLoaderBuilderException("Error resolving artifact", e);
+            }
+            i++;
+        }
+
         CompositeClassLoader loader = new CompositeClassLoader(name, classpath, null);
         for (URI uri : definition.getParentClassLoaders()) {
             ClassLoader parent = classLoaderRegistry.getClassLoader(uri);

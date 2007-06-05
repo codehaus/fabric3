@@ -17,7 +17,6 @@
 package org.fabric3.fabric.classloader;
 
 import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -34,28 +33,28 @@ import org.fabric3.spi.model.physical.PhysicalResourceContainerDefinition;
  */
 public class PhysicalClassLoaderDefinition extends PhysicalResourceContainerDefinition {
     private List<URI> parentClassLoaders = new ArrayList<URI>();
-    private Set<URL> urls = new LinkedHashSet<URL>();
+    private Set<URI> uris = new LinkedHashSet<URI>();
 
     protected PhysicalClassLoaderDefinition(URI name) {
         super(name);
     }
 
     /**
-     * Adds a URL to the end of the classpath.
+     * Adds a URI to the end of the classpath.
      *
-     * @param url the url to add
+     * @param uri the URI to add
      */
-    public void addUrl(URL url) {
-        urls.add(url);
+    public void addUri(URI uri) {
+        uris.add(uri);
     }
 
     /**
-     * Returns the classpath as an ordered Set. Order is guaranteed for set iteration.
+     * Returns the classpath URIs as an ordered Set. Order is guaranteed for set iteration.
      *
-     * @return he classpath as an ordered Set
+     * @return the classpath URIs as an ordered Set
      */
-    public Set<URL> getUrls() {
-        return Collections.unmodifiableSet(urls);
+    public Set<URI> getUris() {
+        return Collections.unmodifiableSet(uris);
     }
 
     /**

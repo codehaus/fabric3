@@ -35,7 +35,7 @@ import org.fabric3.spi.services.contribution.ResolutionException;
  */
 @EagerInit
 public class FileSystemResolver implements ArtifactResolver {
-    public static final String FILE_SCHEME = "file://";
+    public static final String FILE_SCHEME = "file";
 
     private ArtifactResolverRegistry registry;
 

@@ -21,6 +21,7 @@ package org.fabric3.fabric.services.contribution;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -230,7 +231,13 @@ public class ContributionServiceImpl implements ContributionService, Contributio
      * @param contribution the contribution the resource description requires
      */
     private void addContributionDescription(Contribution contribution) {
-        ContributionResourceDescription description = new ContributionResourceDescription(contribution.getLocation());
+        URI identifier;
+        try {
+            identifier = contribution.getLocation().toURI();
+        } catch (URISyntaxException e) {
+            throw new AssertionError();
+        }
+        ContributionResourceDescription description = new ContributionResourceDescription(identifier);
         for (CompositeComponentType type : contribution.getComponentTypes().values()) {
             addContributionDescription(description, type);
         }

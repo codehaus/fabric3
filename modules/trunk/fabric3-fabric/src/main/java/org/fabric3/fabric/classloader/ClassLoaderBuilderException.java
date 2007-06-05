@@ -14,23 +14,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.model.type;
+package org.fabric3.fabric.classloader;
 
-import java.net.URI;
+import org.fabric3.spi.builder.BuilderException;
 
 /**
- * Denotes a requirement on a contribution artifact.
- *
  * @version $Rev$ $Date$
  */
-public class ContributionResourceDescription extends ResourceDescription<URI> {
-
-    public ContributionResourceDescription(URI identifier) {
-        super(identifier);
+public class ClassLoaderBuilderException extends BuilderException {
+    public ClassLoaderBuilderException(String message, String identifier) {
+        super(message, identifier);
     }
 
-    public ContributionResourceDescription(URI identifier, String version) {
-        super(identifier, version);
+    public ClassLoaderBuilderException(String message, Throwable cause) {
+        super(message, cause);
     }
-
 }
