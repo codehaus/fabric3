@@ -16,70 +16,26 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-
 package org.fabric3.spi.services.contribution;
 
+import java.net.URI;
 import java.net.URL;
-import java.util.Map;
-
-import org.fabric3.spi.services.contribution.Contribution;
-import org.fabric3.spi.loader.LoaderContext;
 
 
 /**
- * SCA Assemblies reference many artifacts of a wide variety of types. These
- * include:
- * <ul>
- * <li> Reference from one SCA composite to another SCA composite
- * <li> Reference to PolicySet files
- * <li> Reference to interface definition files, either WSDL or Java interfaces
- * <li> Reference to XSD files
- * <li> Reference to any of a wide variety of implementation artifact files,
- * including Java classes, BPEL scripts, C++ DLLs and classes, PHP scripts
- * </ul>
- * In the SCA assemblies, these various artifacts are referenced using either
- * QNames or URIs that do not point to a specific entity. Resolution of these
- * references to concrete artifacts is necessary as part of the operation of the
- * SCA domain.
- * 
+ * Implementations resolve contribution artifacts to a local destination
+ *
  * @version $Rev$ $Date$
  */
 public interface ArtifactResolver {
+
     /**
-     * Resolve an artifact by the qualified name
-     * 
-     * @param contribution the model of the contribution
-     * @param modelClass The java type of the artifact 
-     * @param namespace The namespace of the artifact
-     * @param name The name of the artifact
-     * @param attributes Additional attributes that can be used to constrain the
-     *            resolution
-     * @param context The deployment context
-     * @return The resolved artifact
+     * Resolves the contribution artifact, returning a local URL where is may be dereferenced
+     *
+     * @param contributionURI the contribution URI
+     * @return the local dereferenceable URL for the artifact
+     * @throws ResolutionException if an error occurs resolving the artifact
      */
-    <T> T resolve(Contribution contribution,
-                  Class<T> modelClass,
-                  String namespace,
-                  String name,
-                  Map attributes,
-                  LoaderContext context);
-    
-    /**
-     * Resolve an artifact by the URI. Some typical use cases are:
-     * <ul>
-     * <li>Reference a XML schema using
-     * {http://www.w3.org/2001/XMLSchema-instance}schemaLocation or
-     * <li>Reference a list of WSDLs using
-     * {http://www.w3.org/2004/08/wsdl-instance}wsdlLocation
-     * </ul>
-     * @param targetNamespace The target namespace of the referenced artifact,
-     *            if the targetNamespace is null, then it's not specified
-     * @param location The URI of the referenced artifact, it can be absolute or
-     *            relative
-     * @param baseURI The URI of the owning artifact
-     * 
-     * @return The URI of the resolved artifact
-     */
-    URL resolve(Contribution contribution, String targetNamespace, String location, String baseURI);
+    URL resolve(URI contributionURI) throws ResolutionException;
 
 }

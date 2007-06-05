@@ -22,24 +22,17 @@ package org.fabric3.spi.services.contribution;
 
 /**
  * Registry for artifact resolvers
- * 
+ *
  * @version $Rev$ $Date$
  */
 public interface ArtifactResolverRegistry extends ArtifactResolver {
     /**
-     * Register a resolver by the type of artifacts. For example, you can 
-     * register a resolver to resolve WSDL model objects and other resolver
-     * for java classes
-     * 
-     * @param modelClass The java type of the model object
-     * @param resolver The resolver 
+     * Register a resolver by reslution scheme
+     *
+     * @param scheme   the resolution scheme
+     * @param resolver The resolver
      */
-    void registerResolver(Class<?> modelClass, ArtifactResolver resolver);
+    void register(String scheme, ArtifactResolver resolver);
 
-    /**
-     * Unregister all resolvers for the given model class
-     * 
-     * @param modelClass
-     */
-    void unregisterResolver(Class<?> modelClass);
+    void unregister(String scheme);
 }
