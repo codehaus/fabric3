@@ -40,6 +40,12 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
+    
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>sample-hello-common</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
         
     </dependencies>
 

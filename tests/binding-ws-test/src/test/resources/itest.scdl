@@ -20,27 +20,27 @@
            name="WsTestComposite">
 
     <service name="HelloWsService" promote="HelloService">
-        <interface.java interface="org.fabric3.binding.ws.HelloService"/>
+        <interface.java interface="org.fabric3.sample.hello.HelloService"/>
         <binding.ws uri="/hello" />
     </service>
 
     <reference name="HelloWsReference" promote="HelloClient/helloService">
-        <interface.java interface="org.fabric3.binding.ws.HelloService"/>
+        <interface.java interface="org.fabric3.sample.hello.HelloService"/>
         <binding.ws uri="http://localhost:8080/services/hello"/>
     </reference>
     
     <component name="HelloTest">
-        <f3:junit class="org.fabric3.binding.ws.HelloTest"/>
+        <f3:junit class="org.fabric3.sample.hello.HelloTest"/>
         <reference name="helloClient" target="HelloClient"/>
     </component>
 
     <!-- Hello Client -->
     <component name="HelloClient">
-        <implementation.java class="org.fabric3.binding.ws.HelloClientImpl"/>
+        <implementation.java class="org.fabric3.sample.hello.HelloClientImpl"/>
     </component>
 
     <!-- Hello Service -->
     <component name="HelloService">
-        <implementation.java class="org.fabric3.binding.ws.HelloServiceImpl"/>
+        <implementation.java class="org.fabric3.sample.hello.HelloServiceImpl"/>
     </component>
 </composite>

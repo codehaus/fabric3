@@ -21,27 +21,27 @@
            name="HessianTestComposite">
 
     <service name="HelloHessianService" promote="HelloService">
-        <interface.java interface="org.fabric3.binding.hessian.HelloService"/>
+        <interface.java interface="org.fabric3.sample.hello.HelloService"/>
         <hessian:binding.hessian uri="/helloService" />
     </service>
 
     <reference name="HelloHessianReference" promote="HelloClient/helloService">
-        <interface.java interface="org.fabric3.binding.hessian.HelloService"/>
+        <interface.java interface="org.fabric3.sample.hello.HelloService"/>
         <hessian:binding.hessian uri="http://localhost:8080/helloService"/>
     </reference>
     
     <component name="HelloTest">
-        <f3:junit class="org.fabric3.binding.hessian.HelloTest"/>
+        <f3:junit class="org.fabric3.sample.hello.HelloTest"/>
         <reference name="helloClient" target="HelloClient"/>
     </component>
 
     <!-- Hello Client -->
     <component name="HelloClient">
-        <implementation.java class="org.fabric3.binding.hessian.HelloClientImpl"/>
+        <implementation.java class="org.fabric3.sample.hello.HelloClientImpl"/>
     </component>
 
     <!-- Hello Service -->
     <component name="HelloService">
-        <implementation.java class="org.fabric3.binding.hessian.HelloServiceImpl"/>
+        <implementation.java class="org.fabric3.sample.hello.HelloServiceImpl"/>
     </component>
 </composite>

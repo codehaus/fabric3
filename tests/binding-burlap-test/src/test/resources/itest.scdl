@@ -21,27 +21,28 @@
            name="BurlapTestComposite">
 
     <service name="HelloBurlapService" promote="HelloService">
-        <interface.java interface="org.fabric3.binding.burlap.HelloService"/>
+        <interface.java interface="org.fabric3.sample.hello.HelloService"/>
         <burlap:binding.burlap uri="/helloService" />
     </service>
 
     <reference name="HelloBurlapReference" promote="HelloClient/helloService">
-        <interface.java interface="org.fabric3.binding.burlap.HelloService"/>
+        <interface.java interface="org.fabric3.sample.hello.HelloService"/>
         <burlap:binding.burlap uri="http://localhost:8080/helloService"/>
     </reference>
     
     <component name="HelloTest">
-        <f3:junit class="org.fabric3.binding.burlap.HelloTest"/>
+        <f3:junit class="org.fabric3.sample.hello.HelloTest"/>
         <reference name="helloClient" target="HelloClient"/>
     </component>
 
     <!-- Hello Client -->
     <component name="HelloClient">
-        <implementation.java class="org.fabric3.binding.burlap.HelloClientImpl"/>
+        <implementation.java class="org.fabric3.sample.hello.HelloClientImpl"/>
     </component>
 
     <!-- Hello Service -->
     <component name="HelloService">
-        <implementation.java class="org.fabric3.binding.burlap.HelloServiceImpl"/>
+        <implementation.java class="org.fabric3.sample.hello.HelloServiceImpl"/>
     </component>
+    
 </composite>
