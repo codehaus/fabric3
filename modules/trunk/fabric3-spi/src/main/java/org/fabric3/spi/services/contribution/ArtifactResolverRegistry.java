@@ -27,12 +27,17 @@ package org.fabric3.spi.services.contribution;
  */
 public interface ArtifactResolverRegistry extends ArtifactResolver {
     /**
-     * Register a resolver by reslution scheme
+     * Register a resolver by resolution scheme
      *
      * @param scheme   the resolution scheme
      * @param resolver The resolver
      */
     void register(String scheme, ArtifactResolver resolver);
 
+    /**
+     * Deregister a resolver that was registered for the given scheme
+     *
+     * @param scheme the scheme to deregister
+     */
     void unregister(String scheme);
 }
