@@ -1,8 +1,6 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
+ * See the NOTICE file distributed with this work for information
+ * regarding copyright ownership.  This file is licensed
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
@@ -16,11 +14,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
-package org.fabric3.fabric.services.contribution;
+package org.fabric3.fabric.services.archive;
 
 import java.io.File;
-import static java.io.File.separator;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
@@ -36,7 +32,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
@@ -44,53 +39,38 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.host.runtime.HostInfo;
-import org.fabric3.spi.services.contribution.ArchiveStore;
-import org.fabric3.spi.services.contribution.ContributionStoreRegistry;
+import org.fabric3.spi.services.archive.ArchiveStore;
 
 /**
- * The default implementation of ContributionStore
+ * The default implementation of ArchiveStore
  *
  * @version $Rev$ $Date$
  */
 @EagerInit
 public class ArchiveStoreImpl implements ArchiveStore {
-    private final ContributionStoreRegistry registry;
-    private File root;
-    private Map<URI, URL> contributionUriToUrl;
-    private String storeId = DEFAULT_STORE;
-    private String domain;
-    private String repository;
+    protected File root;
+    protected Map<URI, URL> archiveUriToUrl;
+    protected String storeId;
+    protected String domain;
+    protected String repository;
 
     /**
-     * Creates a new repository service instance
+     * Creates a new archive store service instance
      *
      * @param repository the repository location
-     * @param registry   the contribution store registry this store will register with
      * @param hostInfo   the host info for the runtime
      * @throws java.io.IOException if an error occurs initializing the repository
      */
-    public ArchiveStoreImpl(
-            @Property(name = "repository")String repository,
-            @Reference ContributionStoreRegistry registry,
-            @Reference HostInfo hostInfo)
+    public ArchiveStoreImpl(@Property(name = "repository")String repository, @Reference HostInfo hostInfo)
             throws IOException {
-        this.registry = registry;
         this.repository = repository;
-        this.domain = hostInfo.getDomain().toString();
-        this.domain = this.domain.substring(this.domain.lastIndexOf("/"));
-        contributionUriToUrl = new ConcurrentHashMap<URI, URL>();
+        domain = FileHelper.getDomainPath(hostInfo.getDomain());
+        archiveUriToUrl = new ConcurrentHashMap<URI, URL>();
     }
 
-    @Constructor
-    @Deprecated
-    // JFM FIXME remove when properties work
-    public ArchiveStoreImpl(@Reference HostInfo hostInfo, @Reference ContributionStoreRegistry registry)
+    public ArchiveStoreImpl(HostInfo hostInfo)
             throws IOException {
-        this.domain = hostInfo.getDomain().toString();
-        this.domain = this.domain.substring(this.domain.lastIndexOf("/"));
-        this.registry = registry;
-        this.contributionUriToUrl = new ConcurrentHashMap<URI, URL>();
-
+        this(null, hostInfo);
     }
 
     @Property(required = false)
@@ -109,7 +89,8 @@ public class ArchiveStoreImpl implements ArchiveStore {
                 public String run() {
                     // Default to <user.home>/.fabric3/domains/<domain>/
                     String userHome = System.getProperty("user.home");
-                    return userHome + separator + ".fabric3" + separator + "domains" + separator + domain + separator;
+                    return userHome + File.separator + ".fabric3" + File.separator + "domains"
+                            + File.separator + domain + File.separator;
 
                 }
             });
@@ -119,7 +100,6 @@ public class ArchiveStoreImpl implements ArchiveStore {
         if (!root.exists() || !this.root.isDirectory() || !root.canRead()) {
             throw new IOException("The repository location is not a directory: " + repository);
         }
-        registry.register(this);
     }
 
     public URL store(URI uri, InputStream stream) throws IOException {
@@ -128,7 +108,7 @@ public class ArchiveStoreImpl implements ArchiveStore {
         FileHelper.forceMkdir(location.getParentFile());
         write(stream, location);
         URL locationUrl = location.toURL();
-        contributionUriToUrl.put(uri, locationUrl);
+        archiveUriToUrl.put(uri, locationUrl);
         return locationUrl;
     }
 
@@ -149,13 +129,13 @@ public class ArchiveStoreImpl implements ArchiveStore {
             FileHelper.forceMkdir(location);
             FileHelper.copyDirectory(source, location);
             URL locationUrl = location.toURL();
-            contributionUriToUrl.put(uri, locationUrl);
+            archiveUriToUrl.put(uri, locationUrl);
             return location.toURL();
         }
     }
 
     public URL find(URI uri) {
-        return contributionUriToUrl.get(uri);
+        return archiveUriToUrl.get(uri);
     }
 
     public void remove(URI uri) {
@@ -163,7 +143,7 @@ public class ArchiveStoreImpl implements ArchiveStore {
     }
 
     public List<URI> list() {
-        return new ArrayList<URI>(contributionUriToUrl.keySet());
+        return new ArrayList<URI>(archiveUriToUrl.keySet());
     }
 
     /**
@@ -175,7 +155,7 @@ public class ArchiveStoreImpl implements ArchiveStore {
      */
     private File mapToFile(URI uri) {
         // FIXME: Map the contribution URI to a file?
-        return new File(root, "contributions" + separator + uri.getPath());
+        return new File(root, uri.getPath());
     }
 
     private void write(InputStream source, File target) throws IOException {

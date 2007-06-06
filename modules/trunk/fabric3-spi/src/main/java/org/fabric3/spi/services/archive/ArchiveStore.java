@@ -17,7 +17,7 @@
  * under the License.    
  */
 
-package org.fabric3.spi.services.contribution;
+package org.fabric3.spi.services.archive;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,10 +26,9 @@ import java.net.URL;
 import java.util.List;
 
 /**
- * Implementations store conribution artifacts
+ * Implementations store artifacts
  */
 public interface ArchiveStore {
-    String DEFAULT_STORE = "DefaultStore";
 
     /**
      * Returns the store id.
@@ -39,44 +38,44 @@ public interface ArchiveStore {
     String getId();
 
     /**
-     * Copies a contribution artifact to the store.
+     * Copies an artifact to the store.
      *
-     * @param uri    A URI pointing to the contribution being copied to the store
+     * @param uri    A URI pointing to the artifact being copied to the store
      * @param stream InputStream with the content of the distribution
      * @return a URL pointing to the stored artifact
-     * @throws IOException if an error occurs retrieving or storing the contribution artifact
+     * @throws IOException if an error occurs retrieving or storing the artifact
      */
     URL store(URI uri, InputStream stream) throws IOException;
 
     /**
-     * Copy a contribution artifact from the source URL to the store
+     * Copy an artifact from the source URL to the store
      *
-     * @param contributionUri the URI of contribution artifact to store
-     * @param sourceURL       the source URL of the contribution artifact
+     * @param contributionUri the URI of the artifact
+     * @param sourceURL       the source URL of the artifact
      * @return a URL pointing to the stored artifact
-     * @throws IOException if an error occurs retrieving or storing the contribution artifact
+     * @throws IOException if an error occurs retrieving or storing the artifact
      */
     URL store(URI contributionUri, URL sourceURL) throws IOException;
 
     /**
      * Look up the artifact URL by URI
      *
-     * @param uri The URI of the contribution
-     * @return A URL pointing to the contribution artifact or null if the contribution cannot be found
+     * @param uri The URI of the artifact
+     * @return A URL pointing to the artifact or null if the artifact cannot be found
      */
     URL find(URI uri);
 
     /**
-     * Remove a contribution artifact from the store
+     * Remove an artifact from the store
      *
      * @param uri The URI of the contribution to be removed
      */
     void remove(URI uri);
 
     /**
-     * Get list of URIs for all the contribution artifacts in the store
+     * Get list of URIs for all the artifacts in the store
      *
-     * @return A list of contribution URIs
+     * @return A list of artifact URIs
      */
     List<URI> list();
 }

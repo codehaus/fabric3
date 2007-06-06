@@ -26,7 +26,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.net.URI;
 import java.util.regex.Pattern;
+import java.util.StringTokenizer;
 
 public class FileHelper {
     /**
@@ -222,6 +224,22 @@ public class FileHelper {
 
     public static FileFilter getFileFilter(String regExp, boolean ignoreCase) {
         return new RegExpFilter(regExp, ignoreCase);
+    }
+
+    /**
+     * Calculates a filesystem path based on the domain URI
+     *
+     * @param uri the domain URI
+     * @return the filesystem path
+     */
+    public static String getDomainPath(URI uri) {
+        assert uri.getScheme() != null;
+        StringBuilder buf = new StringBuilder(uri.getScheme());
+        StringTokenizer path = new StringTokenizer(uri.getPath(), "/");
+        while (path.hasMoreTokens()) {
+            buf.append("/").append(path.nextToken());
+        }
+        return buf.toString();
     }
 
     /**

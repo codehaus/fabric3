@@ -74,7 +74,7 @@ public class MetaDataStoreImpl implements MetaDataStore {
         this.repository = repository;
         this.registry = registry;
         this.xstream = xstreamFactory.createInstance();
-        domain = ContributionUtil.getDomainPath(hostInfo.getDomain());
+        domain = FileHelper.getDomainPath(hostInfo.getDomain());
     }
 
     @Constructor
@@ -86,7 +86,7 @@ public class MetaDataStoreImpl implements MetaDataStore {
 
         this.registry = registry;
         this.xstream = xstreamFactory.createInstance();
-        domain = ContributionUtil.getDomainPath(hostInfo.getDomain());
+        domain = FileHelper.getDomainPath(hostInfo.getDomain());
     }
 
     @Property(required = false)

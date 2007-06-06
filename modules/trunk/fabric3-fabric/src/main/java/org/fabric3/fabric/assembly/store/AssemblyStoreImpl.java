@@ -31,7 +31,6 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
-import org.fabric3.fabric.services.contribution.ContributionUtil;
 import org.fabric3.fabric.services.xstream.XStreamFactory;
 import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.host.runtime.HostInfo;
@@ -58,7 +57,7 @@ public class AssemblyStoreImpl implements AssemblyStore {
         domainUri = hostInfo.getDomain();
         xstream = factory.createInstance();
         // TODO refactor utility method
-        final String domain = ContributionUtil.getDomainPath(hostInfo.getDomain());
+        final String domain = FileHelper.getDomainPath(hostInfo.getDomain());
         String repository = AccessController.doPrivileged(new PrivilegedAction<String>() {
             public String run() {
                 String userHome = System.getProperty("user.home");

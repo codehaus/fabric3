@@ -16,6 +16,8 @@
  */
 package org.fabric3.spi.services.contribution;
 
+import org.fabric3.spi.services.archive.ArchiveStore;
+
 /**
  * A registry of persistent stores used by a contribution service
  *

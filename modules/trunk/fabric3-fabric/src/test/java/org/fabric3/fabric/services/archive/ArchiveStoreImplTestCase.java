@@ -17,7 +17,7 @@
  * under the License.    
  */
 
-package org.fabric3.fabric.services.contribution;
+package org.fabric3.fabric.services.archive;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -29,27 +29,28 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
 import org.fabric3.fabric.util.FileHelper;
+import org.fabric3.fabric.services.contribution.ContributionStoreImpl;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.services.contribution.ContributionStoreRegistry;
 
 public class ArchiveStoreImplTestCase extends TestCase {
-    private ArchiveStoreImpl repository;
+    private ContributionStoreImpl repository;
 
     public void testStoreAndFind() throws Exception {
-        URI contribution = URI.create("test-resource");
-        InputStream contributionStream = new ByteArrayInputStream("test".getBytes());
-        repository.store(contribution, contributionStream);
-        URL contributionURL = repository.find(contribution);
+        URI uri = URI.create("test-resource");
+        InputStream archiveStream = new ByteArrayInputStream("test".getBytes());
+        repository.store(uri, archiveStream);
+        URL contributionURL = repository.find(uri);
         assertNotNull(contributionURL);
     }
 
     public void testList() throws Exception {
-        URI contribution = URI.create("test-resource");
-        InputStream contributionStream = new ByteArrayInputStream("test".getBytes());
-        repository.store(contribution, contributionStream);
+        URI archiveUri = URI.create("test-resource");
+        InputStream archiveStream = new ByteArrayInputStream("test".getBytes());
+        repository.store(archiveUri, archiveStream);
         boolean found = false;
         for (URI uri : repository.list()) {
-            if (uri.equals(contribution)) {
+            if (uri.equals(archiveUri)) {
                 found = true;
                 break;
             }
@@ -60,11 +61,11 @@ public class ArchiveStoreImplTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         HostInfo info = EasyMock.createMock(HostInfo.class);
-        EasyMock.expect(info.getDomain()).andReturn(URI.create("fabric3://./domain/")).anyTimes();
+        EasyMock.expect(info.getDomain()).andReturn(URI.create("fabric3://./fabric3/")).anyTimes();
         EasyMock.replay(info);
         ContributionStoreRegistry registry = EasyMock.createNiceMock(ContributionStoreRegistry.class);
         EasyMock.replay(registry);
-        this.repository = new ArchiveStoreImpl("target/repository/", registry, info);
+        this.repository = new ContributionStoreImpl("target/repository/", info, registry);
         repository.init();
     }
 

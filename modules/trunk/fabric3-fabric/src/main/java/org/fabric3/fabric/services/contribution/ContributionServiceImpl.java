@@ -44,7 +44,7 @@ import org.fabric3.spi.model.type.CompositeComponentType;
 import org.fabric3.spi.model.type.CompositeImplementation;
 import org.fabric3.spi.model.type.ContributionResourceDescription;
 import org.fabric3.spi.model.type.Implementation;
-import org.fabric3.spi.services.contribution.ArchiveStore;
+import org.fabric3.spi.services.archive.ArchiveStore;
 import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionProcessorRegistry;

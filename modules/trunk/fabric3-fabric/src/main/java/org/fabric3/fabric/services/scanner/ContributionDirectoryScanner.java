@@ -36,7 +36,7 @@ import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.spi.services.VoidService;
-import static org.fabric3.spi.services.contribution.ArchiveStore.DEFAULT_STORE;
+import static org.fabric3.spi.services.contribution.ContributionConstants.DEFAULT_STORE;
 import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.services.event.Fabric3Event;
 import org.fabric3.spi.services.event.Fabric3EventListener;
@@ -241,7 +241,7 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
         long timestamp = file.lastModified();
         if (artifactUri != null) {
             // updated
-            long previousTimestamp = contributionService.getContributionTimestamp(DEFAULT_STORE, artifactUri);
+            long previousTimestamp = contributionService.getContributionTimestamp(storeId, artifactUri);
             if (timestamp > previousTimestamp) {
                 try {
                     contributionService.update(artifactUri, checksum, timestamp, location);
@@ -287,7 +287,7 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
                 // artifact was removed
                 try {
                     // check that the resurce was not deleted by another process
-                    if (contributionService.exists(DEFAULT_STORE, uri)) {
+                    if (contributionService.exists(storeId, uri)) {
                         // TODO get Deployables and remove from assembly
                         contributionService.remove(uri);
                     }
