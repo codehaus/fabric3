@@ -61,7 +61,7 @@ public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {
             if (description instanceof ContributionResourceDescription) {
                 ContributionResourceDescription contribDescription = (ContributionResourceDescription) description;
                 // add the contribution to the classpath
-                definition.addUri(contribDescription.getIdentifier());
+                definition.addResourceUrl(contribDescription.getIdentifier());
             } else if (description instanceof ExtensionResourceDescription) {
                 // TODO support
             }

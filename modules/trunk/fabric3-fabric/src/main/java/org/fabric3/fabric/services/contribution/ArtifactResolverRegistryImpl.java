@@ -16,7 +16,6 @@
  */
 package org.fabric3.fabric.services.contribution;
 
-import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,12 +40,12 @@ public class ArtifactResolverRegistryImpl implements ArtifactResolverRegistry {
         resolvers.remove(scheme);
     }
 
-    public URL resolve(URI uri) throws ResolutionException {
-        String scheme = uri.getScheme();
+    public URL resolve(URL url) throws ResolutionException {
+        String scheme = url.getProtocol();
         ArtifactResolver resolver = resolvers.get(scheme);
         if (resolver == null) {
             throw new ArtifactResolverNotFoundException("Resolver not found for scheme", scheme);
         }
-        return resolver.resolve(uri);
+        return resolver.resolve(url);
     }
 }

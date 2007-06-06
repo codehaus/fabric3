@@ -73,6 +73,11 @@
                 class="org.fabric3.fabric.services.contribution.ArtifactResolverRegistryImpl"/>
     </component>
 
+    <component name="FSArtifactLocationEncoder">
+        <system:implementation.system
+                class="org.fabric3.fabric.services.contribution.FSArtifactLocationEncoder"/>
+    </component>
+
     <component name="FileSystemResolver">
         <system:implementation.system
                 class="org.fabric3.fabric.services.contribution.FileSystemResolver"/>

@@ -58,11 +58,9 @@ public class ContributionProcessorRegistryImpl implements ContributionProcessorR
 
     public void processContent(Contribution contribution, String contentType, URI source, InputStream inputStream)
             throws ContributionException, IOException {
-
-        URL locationURL = contribution.getLocation();
         ContributionProcessor processor = this.registry.get(contentType);
         if (processor == null) {
-            throw new UnsupportedContentTypeException(contentType, locationURL.getPath());
+            throw new UnsupportedContentTypeException(contentType, source.toString());
         }
 
         processor.processContent(contribution, source, inputStream);

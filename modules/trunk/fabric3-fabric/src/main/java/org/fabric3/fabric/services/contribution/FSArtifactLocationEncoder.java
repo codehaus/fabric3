@@ -14,23 +14,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.model.type;
+package org.fabric3.fabric.services.contribution;
 
 import java.net.URL;
 
+import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
+
 /**
- * Denotes a requirement on a contribution artifact.
+ * Enocdes an internal contribution URL using the filesystem protocol.
  *
  * @version $Rev$ $Date$
  */
-public class ContributionResourceDescription extends ResourceDescription<URL> {
+public class FSArtifactLocationEncoder implements ArtifactLocationEncoder {
 
-    public ContributionResourceDescription(URL identifier) {
-        super(identifier);
+    public URL encode(URL url) {
+        return url;
     }
-
-    public ContributionResourceDescription(URL identifier, String version) {
-        super(identifier, version);
-    }
-
 }

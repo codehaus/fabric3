@@ -18,24 +18,23 @@
  */
 package org.fabric3.spi.services.contribution;
 
-import java.net.URI;
 import java.net.URL;
 
 
 /**
- * Implementations resolve contribution artifacts to a local destination
+ * Implementations resolve contribution artifacts to a local cache
  *
  * @version $Rev$ $Date$
  */
 public interface ArtifactResolver {
 
     /**
-     * Resolves the contribution artifact, returning a local URL where is may be dereferenced
+     * Resolves the contribution artifact, returning a local URL where it may be dereferenced 
      *
-     * @param contributionURI the contribution URI
+     * @param contributionURL the contribution URL
      * @return the local dereferenceable URL for the artifact
      * @throws ResolutionException if an error occurs resolving the artifact
      */
-    URL resolve(URI contributionURI) throws ResolutionException;
+    URL resolve(URL contributionURL) throws ResolutionException;
 
 }

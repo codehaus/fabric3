@@ -73,7 +73,7 @@ public class Contribution implements Serializable {
     }
 
     /**
-     * Returns the dereferenceable URL for the contribution artifact.
+     * Returns the locally dereferenceable URL for the contribution artifact.
      *
      * @return the dereferenceable URL for the contribution artifact
      */
@@ -126,12 +126,17 @@ public class Contribution implements Serializable {
         types.put(type.getName(), type);
     }
 
+    /**
+     * Returns the introspected component types by QName for the contribution
+     *
+     * @return the introspected component types
+     */
     public Map<QName, CompositeComponentType> getComponentTypes() {
         return Collections.unmodifiableMap(types);
     }
 
     /**
-     * Returns the introspected component type for corresponding to the implementation artifact key
+     * Returns the introspected component type for corresponding to the QName key
      *
      * @param key the component type QName
      * @return the component type or null

@@ -21,7 +21,10 @@ package org.fabric3.spi.services.contribution;
 
 
 /**
- * Registry for artifact resolvers
+ * A registry for artifact resolvers. Artifact resolvers are responsible for dereferencing remote resource URLs for a
+ * given scheme/protocol and returning a URL where they can be accessed locally. For example, a contribution in an SCA
+ * Domain may be available from a remote archive over HTTP. An HTTP artifact resolver would be responsible for obtaining
+ * the contribution, caching it, and returning a local URL for accessing it.
  *
  * @version $Rev$ $Date$
  */

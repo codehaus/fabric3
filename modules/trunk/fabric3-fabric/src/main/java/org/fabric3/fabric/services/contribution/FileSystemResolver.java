@@ -16,8 +16,6 @@
  */
 package org.fabric3.fabric.services.contribution;
 
-import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 
 import org.osoa.sca.annotations.EagerInit;
@@ -29,7 +27,8 @@ import org.fabric3.spi.services.contribution.ArtifactResolverRegistry;
 import org.fabric3.spi.services.contribution.ResolutionException;
 
 /**
- * Resolves artifacts for the <code>file://</code> scheme.
+ * Resolves artifacts for the <code>file://</code> scheme. Since a file system is accessible as a "local" resource, this
+ * implementation simply returns the artifact URL.
  *
  * @version $Rev$ $Date$
  */
@@ -48,11 +47,7 @@ public class FileSystemResolver implements ArtifactResolver {
         registry.register(FILE_SCHEME, this);
     }
 
-    public URL resolve(URI uri) throws ResolutionException {
-        try {
-            return uri.toURL();
-        } catch (MalformedURLException e) {
-            throw new ResolutionException("Invalid URL", e);
-        }
+    public URL resolve(URL url) throws ResolutionException {
+        return url;
     }
 }

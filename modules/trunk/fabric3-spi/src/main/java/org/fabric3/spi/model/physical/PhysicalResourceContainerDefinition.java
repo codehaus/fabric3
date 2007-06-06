@@ -34,9 +34,9 @@ public abstract class PhysicalResourceContainerDefinition {
     }
 
     /**
-     * Returns the classloader uri.
+     * Returns the resource container uri.
      *
-     * @return the classloader uri
+     * @return the resource container uri
      */
     public URI getUri() {
         return uri;

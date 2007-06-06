@@ -21,7 +21,6 @@ package org.fabric3.fabric.services.contribution;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -32,11 +31,11 @@ import java.util.UUID;
 import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
 import org.fabric3.host.contribution.Constants;
-import static org.fabric3.host.contribution.Constants.URI_PREFIX;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionNotFoundException;
 import org.fabric3.host.contribution.ContributionService;
@@ -46,6 +45,7 @@ import org.fabric3.spi.model.type.CompositeImplementation;
 import org.fabric3.spi.model.type.ContributionResourceDescription;
 import org.fabric3.spi.model.type.Implementation;
 import org.fabric3.spi.services.contribution.ArchiveStore;
+import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionProcessorRegistry;
 import org.fabric3.spi.services.contribution.ContributionStoreRegistry;
@@ -60,15 +60,27 @@ import org.fabric3.spi.services.contribution.MetaDataStore;
 @Service(interfaces = {ContributionService.class, ContributionStoreRegistry.class})
 @EagerInit
 public class ContributionServiceImpl implements ContributionService, ContributionStoreRegistry {
-    private final ContributionProcessorRegistry processorRegistry;
+    /**
+     * The contribution prefix. Default is to map directly to the file system, which assumes nodes have access to it
+     */
+    private String uriPrefix = "file://contribution/";
+    private ContributionProcessorRegistry processorRegistry;
+    private ArtifactLocationEncoder encoder;
     private Map<String, ArchiveStore> archiveStores;
     private Map<String, MetaDataStore> metaDataStores;
 
-    public ContributionServiceImpl(@Reference ContributionProcessorRegistry processorRegistry)
+    public ContributionServiceImpl(@Reference ContributionProcessorRegistry processorRegistry,
+                                   @Reference ArtifactLocationEncoder encoder)
             throws IOException, ClassNotFoundException {
         this.processorRegistry = processorRegistry;
+        this.encoder = encoder;
         archiveStores = new HashMap<String, ArchiveStore>();
         metaDataStores = new HashMap<String, MetaDataStore>();
+    }
+
+    @Property(required = false)
+    public void setUriPrefix(String uriPrefix) {
+        this.uriPrefix = uriPrefix;
     }
 
     public void register(ArchiveStore store) {
@@ -111,10 +123,7 @@ public class ContributionServiceImpl implements ContributionService, Contributio
 
     public boolean exists(String id, URI uri) {
         MetaDataStore metaDataStore = metaDataStores.get(id);
-        if (metaDataStore == null) {
-            return false;
-        }
-        return metaDataStore.find(uri) != null;
+        return metaDataStore != null && metaDataStore.find(uri) != null;
     }
 
     public void update(URI uri, byte[] checksum, long timestamp, URL url) throws ContributionException, IOException {
@@ -126,7 +135,6 @@ public class ContributionServiceImpl implements ContributionService, Contributio
         } finally {
             is.close();
         }
-
     }
 
     public void update(URI uri, String contentType, byte[] checksum, long timestamp, InputStream stream)
@@ -193,7 +201,7 @@ public class ContributionServiceImpl implements ContributionService, Contributio
     private URI processMetaData(String id, URL locationUrl, String contentType, byte[] checksum, long timestamp)
             throws ContributionException, IOException {
         // store the contribution
-        URI contributionUri = URI.create(URI_PREFIX + id + "/" + UUID.randomUUID());
+        URI contributionUri = URI.create(uriPrefix + id + "/" + UUID.randomUUID());
         Contribution contribution = new Contribution(contributionUri, locationUrl, checksum, timestamp);
         //process the contribution
         InputStream stream = locationUrl.openStream();
@@ -231,12 +239,8 @@ public class ContributionServiceImpl implements ContributionService, Contributio
      * @param contribution the contribution the resource description requires
      */
     private void addContributionDescription(Contribution contribution) {
-        URI identifier;
-        try {
-            identifier = contribution.getLocation().toURI();
-        } catch (URISyntaxException e) {
-            throw new AssertionError();
-        }
+        // encode the contribution URL so it can be de-referenced remotely
+        URL identifier = encoder.encode(contribution.getLocation());
         ContributionResourceDescription description = new ContributionResourceDescription(identifier);
         for (CompositeComponentType type : contribution.getComponentTypes().values()) {
             addContributionDescription(description, type);
@@ -270,8 +274,8 @@ public class ContributionServiceImpl implements ContributionService, Contributio
      */
     private String parseStoreId(URI uri) {
         String s = uri.toString();
-        assert s.length() > URI_PREFIX.length();
-        s = s.substring(URI_PREFIX.length());
+        assert s.length() > uriPrefix.length();
+        s = s.substring(uriPrefix.length());
         int index = s.indexOf("/");
         if (index > 0) {
             return s.substring(0, index);

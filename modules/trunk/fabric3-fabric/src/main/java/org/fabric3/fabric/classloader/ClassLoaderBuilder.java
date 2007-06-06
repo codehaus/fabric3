@@ -71,18 +71,19 @@ public class ClassLoaderBuilder implements ResourceContainerBuilder<PhysicalClas
             // classloader is already provisioned
             return;
         }
-        Set<URI> uris = definition.getUris();
-        URL[] classpath = new URL[uris.size()];
+        Set<URL> urls = definition.getResourceUrls();
+        URL[] classpath = new URL[urls.size()];
         int i = 0;
-        for (URI uri : uris) {
+        for (URL uri : urls) {
             try {
+                // resolve the remote artifact URLs and cache them locally
                 classpath[i] = artifactResolverRegistry.resolve(uri);
             } catch (ResolutionException e) {
                 throw new ClassLoaderBuilderException("Error resolving artifact", e);
             }
             i++;
         }
-
+        // build the classloader using the locally cached resources
         CompositeClassLoader loader = new CompositeClassLoader(name, classpath, null);
         for (URI uri : definition.getParentClassLoaders()) {
             ClassLoader parent = classLoaderRegistry.getClassLoader(uri);
