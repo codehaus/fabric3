@@ -6,15 +6,15 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License.    
+ * under the License.
  */
 
 package org.fabric3.fabric.services.contribution;
@@ -77,6 +77,7 @@ public class ArchiveStoreImpl implements ArchiveStore {
         this.registry = registry;
         this.repository = repository;
         this.domain = hostInfo.getDomain().toString();
+        this.domain = this.domain.substring(this.domain.lastIndexOf("/"));
         contributionUriToUrl = new ConcurrentHashMap<URI, URL>();
     }
 
@@ -86,6 +87,7 @@ public class ArchiveStoreImpl implements ArchiveStore {
     public ArchiveStoreImpl(@Reference HostInfo hostInfo, @Reference ContributionStoreRegistry registry)
             throws IOException {
         this.domain = hostInfo.getDomain().toString();
+        this.domain = this.domain.substring(this.domain.lastIndexOf("/"));
         this.registry = registry;
         this.contributionUriToUrl = new ConcurrentHashMap<URI, URL>();
 
@@ -108,6 +110,7 @@ public class ArchiveStoreImpl implements ArchiveStore {
                     // Default to <user.home>/.fabric3/domains/<domain>/
                     String userHome = System.getProperty("user.home");
                     return userHome + separator + ".fabric3" + separator + "domains" + separator + domain + separator;
+
                 }
             });
         }
