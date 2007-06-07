@@ -58,10 +58,12 @@ public class AssemblyStoreImpl implements AssemblyStore {
         xstream = factory.createInstance();
         // TODO refactor utility method
         final String domain = FileHelper.getDomainPath(hostInfo.getDomain());
+        final String id = hostInfo.getRuntimeId();
         String repository = AccessController.doPrivileged(new PrivilegedAction<String>() {
             public String run() {
                 String userHome = System.getProperty("user.home");
-                return userHome + separator + ".fabric3" + separator + "domains" + separator + domain + separator;
+                return userHome + separator + ".fabric3" + separator + "domains" + separator
+                        + domain + separator + id + separator;
             }
         });
         File root = new File(repository);

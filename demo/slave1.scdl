@@ -20,7 +20,7 @@
            xmlns:hessian="http://www.fabric3.org/binding/hessian/0.1-SNAPSHOT"
            name="CalculatorComposite"
            autowire="true">
-
+ 
     <service name="calculatorRemote" promote="calculator">
         <interface.java interface="calculator.CalculatorService"/>
         <hessian:binding.hessian uri="/calculator" />

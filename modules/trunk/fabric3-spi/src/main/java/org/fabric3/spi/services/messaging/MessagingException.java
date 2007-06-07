@@ -37,6 +37,17 @@ public class MessagingException extends Fabric3Exception {
         super(message);
     }
 
+
+    /**
+     * Initialises the exception message.
+     *
+     * @param message Message for the exception.
+     * @param cause   Root cause for the exception.
+     */
+    public MessagingException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
     /**
      * Initialises the exception root cause.
      *

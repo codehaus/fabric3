@@ -22,26 +22,22 @@ import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import junit.framework.TestCase;
 import net.jxta.platform.NetworkConfigurator;
 
 import org.fabric3.host.runtime.HostInfo;
-import org.fabric3.messaging.jxta.JxtaException;
 import org.fabric3.spi.services.messaging.RequestListener;
 import org.fabric3.spi.services.messaging.ResponseListener;
 import org.fabric3.spi.services.work.NotificationListener;
 import org.fabric3.spi.services.work.WorkScheduler;
 import org.fabric3.spi.util.stax.StaxUtil;
 
-import junit.framework.TestCase;
-
 /**
  * @version $Revision$ $Date$
- *
  */
 public class JxtaDiscoveryServiceTestCase extends TestCase {
 
@@ -60,14 +56,14 @@ public class JxtaDiscoveryServiceTestCase extends TestCase {
         JxtaMessagingService discoveryService = getMessagingService("runtime-1", "domain");
 
         discoveryService.start();
-        while(!discoveryService.isStarted()) {
+        while (!discoveryService.isStarted()) {
         }
 
         RequestListener requestListener = new RequestListener() {
             public XMLStreamReader onRequest(XMLStreamReader content) {
                 try {
                     return StaxUtil.createReader("<response/>");
-                } catch(XMLStreamException ex) {
+                } catch (XMLStreamException ex) {
                     throw new JxtaException(ex);
                 }
             }
@@ -95,9 +91,11 @@ public class JxtaDiscoveryServiceTestCase extends TestCase {
             public File getApplicationRootDirectory() {
                 return null;
             }
+
             public URL getBaseURL() {
                 return null;
             }
+
             public URI getDomain() {
                 try {
                     return new URI(domain);
@@ -105,9 +103,11 @@ public class JxtaDiscoveryServiceTestCase extends TestCase {
                     throw new RuntimeException(ex);
                 }
             }
+
             public String getRuntimeId() {
                 return runtimeId;
             }
+
             public boolean isOnline() {
                 return false;
             }
@@ -126,12 +126,13 @@ public class JxtaDiscoveryServiceTestCase extends TestCase {
                     public void run() {
                         try {
                             work.run();
-                        } catch(Exception ex) {
+                        } catch (Exception ex) {
                             listener.workFailed(work, ex);
                         }
                     }
                 }.start();
             }
+
             public <T extends Runnable> void scheduleWork(final T work) {
                 new Thread() {
                     public void run() {

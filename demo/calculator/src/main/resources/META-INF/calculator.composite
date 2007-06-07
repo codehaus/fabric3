@@ -15,12 +15,13 @@
  specific language governing permissions and limitations
  under the License.
 -->
+<!--
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:fabric3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:hessian="http://www.fabric3.org/binding/hessian/0.1-SNAPSHOT"
            name="CalculatorComposite">
 
-    <component name="calculator">
+    <component name="calculator" runtimeId="slave1">
         <implementation.java class="calculator.CalculatorServiceImpl"/>
         <reference name="addService" autowire="true"/>
         <reference name="subtractService" autowire="true"/>
@@ -28,23 +29,55 @@
         <reference name="divideService" autowire="true"/>
     </component>
     
-    <component name="eagerCalculator">
+    <component name="eagerCalculator" runtimeId="slave1">
         <implementation.java class="calculator.EagerCalculator"/>
     </component>
 
-    <component name="adder">
+    <component name="adder" runtimeId="slave1">
         <implementation.java class="calculator.AddServiceImpl"/>
     </component>
 
-    <component name="subtractor">
+    <component name="subtractor" runtimeId="slave1">
         <implementation.java class="calculator.SubtractServiceImpl"/>
     </component>
 
-    <component name="multiplier">
+    <component name="multiplier" runtimeId="slave1">
         <implementation.java class="calculator.MultiplyServiceImpl"/>
     </component>
 
-    <component name="divider">
+    <component name="divider" runtimeId="slave1">
+        <implementation.java class="calculator.DivideServiceImpl"/>
+    </component>
+</composite>           -->
+
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:fabric3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:hessian="http://www.fabric3.org/binding/hessian/0.1-SNAPSHOT"
+           name="CalculatorComposite"
+           autowire="true">
+
+    <service name="calculatorRemote" promote="calculator">
+        <interface.java interface="calculator.CalculatorService"/>
+        <hessian:binding.hessian uri="/calculator" />
+    </service>
+
+    <component name="calculator" runtimeId="slave1">
+        <implementation.java class="calculator.CalculatorServiceImpl"/>
+    </component>
+
+    <component name="adder" runtimeId="slave1">
+        <implementation.java class="calculator.AddServiceImpl"/>
+    </component>
+
+    <component name="subtractor" runtimeId="slave1">
+        <implementation.java class="calculator.SubtractServiceImpl"/>
+    </component>
+
+    <component name="multiplier" runtimeId="slave1">
+        <implementation.java class="calculator.MultiplyServiceImpl"/>
+    </component>
+
+    <component name="divider" runtimeId="slave1">
         <implementation.java class="calculator.DivideServiceImpl"/>
     </component>
 </composite>

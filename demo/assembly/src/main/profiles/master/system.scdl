@@ -122,5 +122,6 @@
         <system:implementation.system class="org.fabric3.fabric.assembly.store.AssemblyStoreImpl"/>
     </component>
 
+	<include scdlResource="META-INF/hessian.scdl"/>
     
 </composite>

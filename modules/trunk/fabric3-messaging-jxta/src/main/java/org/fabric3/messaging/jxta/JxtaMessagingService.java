@@ -21,9 +21,10 @@ package org.fabric3.messaging.jxta;
 import java.io.File;
 import java.io.IOException;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import javax.security.cert.CertificateException;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -42,6 +43,8 @@ import net.jxta.platform.NetworkConfigurator;
 import net.jxta.protocol.ModuleImplAdvertisement;
 import net.jxta.resolver.QueryHandler;
 import net.jxta.resolver.ResolverService;
+import org.osoa.sca.annotations.Property;
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.extension.messaging.AbstractMessagingService;
 import org.fabric3.messaging.jxta.pdp.PeerListener;
@@ -51,54 +54,78 @@ import org.fabric3.spi.services.work.NotificationListener;
 import org.fabric3.spi.services.work.NotificationListenerAdaptor;
 import org.fabric3.spi.services.work.WorkScheduler;
 import org.fabric3.spi.util.stax.StaxUtil;
-import org.omg.CORBA.Any;
-import org.osoa.sca.annotations.Property;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Messaging service implemented using JXTA.
  *
  * @version $Revision$ $Date$
- *
  */
 public class JxtaMessagingService extends AbstractMessagingService {
 
-    /** Well known peer group id. */
+    /**
+     * Well known peer group id.
+     */
     private static final Fabric3PeerGroupID PEER_GROUP_ID =
-        new Fabric3PeerGroupID(new UUID("aea468a4-6450-47dc-a288-a7f1bbcc5927"));
+            new Fabric3PeerGroupID(new UUID("aea468a4-6450-47dc-a288-a7f1bbcc5927"));
 
-    /** Default Messaging interval. */
+    /**
+     * Default Messaging interval.
+     */
     private static long DEFAULT_INTERVAL = 10000L;
 
-    /** Peer listener. */
+    /**
+     * Latch to block send operations until peer communications have been established
+     */
+    private CountDownLatch latch = new CountDownLatch(1);
+
+    /**
+     * Peer listener.
+     */
     private PeerListener peerListener;
 
-    /** Resolver service. */
+    /**
+     * Resolver service.
+     */
     private ResolverService resolverService;
 
-    /** Domain group. */
+    /**
+     * Domain group.
+     */
     private PeerGroup domainGroup;
 
-    /** Network platform configurator. */
+    /**
+     * Network platform configurator.
+     */
     private NetworkConfigurator configurator;
 
-    /** Work scheduler. */
+    /**
+     * Work scheduler.
+     */
     private WorkScheduler workScheduler;
 
-    /** Interval for sending discivery messages .*/
+    /**
+     * Interval for sending discivery messages .
+     */
     private long interval = DEFAULT_INTERVAL;
 
-    /** Started flag. */
+    /**
+     * Started flag.
+     */
     private final AtomicBoolean started = new AtomicBoolean();
 
-    /** Message id generator. */
+    /**
+     * Message id generator.
+     */
     private final AtomicInteger messageIdGenerator = new AtomicInteger();
-    
-    /** TCP Port */
+
+    /**
+     * TCP Port
+     */
     private int tcpPort;
 
     /**
      * Adds a network configurator for this service.
+     *
      * @param configurator Network configurator.
      */
     @Reference
@@ -108,6 +135,7 @@ public class JxtaMessagingService extends AbstractMessagingService {
 
     /**
      * Adds a work scheduler for runningbackground Messaging operations.
+     *
      * @param workScheduler Work scheduler.
      */
     @Reference
@@ -122,6 +150,7 @@ public class JxtaMessagingService extends AbstractMessagingService {
 
     /**
      * Sets the interval at which Messaging messages are sent.
+     *
      * @param interval Interval at which Messaging messages are sent.
      */
     // @Property
@@ -131,7 +160,8 @@ public class JxtaMessagingService extends AbstractMessagingService {
 
     /**
      * Starts the Messaging service.
-     * @throws Any unexpected JXTA exception to bubble up the call stack.
+     *
+     * @throws MessagingException any unexpected JXTA exception to bubble up the call stack.
      */
     @Override
     public void onStart() throws MessagingException {
@@ -140,7 +170,7 @@ public class JxtaMessagingService extends AbstractMessagingService {
             public void run() {
                 try {
                     startService();
-                } catch(MessagingException ex) {
+                } catch (MessagingException ex) {
                     throw new JxtaException(ex);
                 }
             }
@@ -153,6 +183,8 @@ public class JxtaMessagingService extends AbstractMessagingService {
 
     /**
      * Rusn the Messaging service in a different thread.
+     *
+     * @throws MessagingException any unexpected JXTA exception to bubble up the call stack.
      */
     private void startService() throws MessagingException {
 
@@ -165,8 +197,8 @@ public class JxtaMessagingService extends AbstractMessagingService {
             setupResolver();
 
             started.set(true);
+            latch.countDown();
             peerListener.start();
-
         } catch (PeerGroupException ex) {
             throw new MessagingException(ex);
         } catch (IOException ex) {
@@ -180,30 +212,33 @@ public class JxtaMessagingService extends AbstractMessagingService {
     /**
      * Sends a message to the specified runtime.
      *
-     * @param runtimeId Runtime id of recipient. If null, the message is
-     * broadcasted to all runtimes in the domain.
-     * @param content Message content.
+     * @param runtimeId Runtime id of recipient. If null, the message is broadcasted to all runtimes in the domain.
+     * @param content   Message content.
      * @return The message id.
      * @throws MessagingException In case of Messaging errors.
      */
     public int sendMessage(final String runtimeId, final XMLStreamReader content) throws MessagingException {
 
-        if(content == null) {
+        if (content == null) {
             throw new IllegalArgumentException("Content id is null");
         }
-
+        try {
+            latch.await(10000, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            throw new MessagingException("Error waiting for JXTA messaging service to start", e);
+        }
         PeerID peerID = null;
-        if(runtimeId != null) {
+        if (runtimeId != null) {
             peerID = peerListener.getPeerId(runtimeId);
-            if(peerID == null) {
+            if (peerID == null) {
                 throw new MessagingException("Unrecognized runtime " + runtimeId);
             }
         }
 
-        String message = null;
+        String message;
         try {
             message = StaxUtil.serialize(content);
-        } catch(XMLStreamException ex) {
+        } catch (XMLStreamException ex) {
             throw new MessagingException(ex);
         }
 
@@ -214,7 +249,7 @@ public class JxtaMessagingService extends AbstractMessagingService {
         query.setQuery(message);
         query.setSrc(domainGroup.getPeerID().toString());
 
-        if(peerID == null) {
+        if (peerID == null) {
             resolverService.sendQuery(null, query);
         } else {
             resolverService.sendQuery(peerID.toString(), query);
@@ -223,9 +258,10 @@ public class JxtaMessagingService extends AbstractMessagingService {
         return messageId;
 
     }
-    
+
     /**
      * Returns the available runtimes in the current domain.
+     *
      * @return List of available runtimes.
      */
     public Set<String> getRuntimeIds() {
@@ -234,6 +270,7 @@ public class JxtaMessagingService extends AbstractMessagingService {
 
     /**
      * Checks whether the service is started.
+     *
      * @return True if the service is started.
      */
     public boolean isStarted() {
@@ -252,6 +289,7 @@ public class JxtaMessagingService extends AbstractMessagingService {
     /**
      * Configures the platform.
      *
+     * @throws MessagingException any unexpected JXTA exception to bubble up the call stack.
      */
     private void configure() throws MessagingException {
 
@@ -262,7 +300,7 @@ public class JxtaMessagingService extends AbstractMessagingService {
             configurator.setName(runtimeId);
             configurator.setHome(new File(runtimeId));
             configurator.setTcpPort(tcpPort);
-            
+
             // FIXME Once property support is available
             configurator.setPassword("test-password");
             configurator.setPrincipal("test-principal");
@@ -285,6 +323,7 @@ public class JxtaMessagingService extends AbstractMessagingService {
 
     /**
      * Creates and joins the domain peer group.
+     *
      * @throws Exception In case of unexpected JXTA exceptions.
      */
     private void createAndJoinDomainGroup() throws Exception {
@@ -299,7 +338,7 @@ public class JxtaMessagingService extends AbstractMessagingService {
         MembershipService membership = domainGroup.getMembershipService();
         Authenticator auth = membership.apply(authCred);
 
-        if (auth.isReadyForJoin()){
+        if (auth.isReadyForJoin()) {
             membership.join(auth);
         } else {
             throw new MessagingException("Unable to join domain group");
