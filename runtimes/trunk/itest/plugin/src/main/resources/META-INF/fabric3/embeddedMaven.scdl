@@ -63,21 +63,8 @@
     <!-- include transform configuration -->
     <include name="org.fabric3.transform.Transform" scdlResource="org/fabric3/transform/transform.scdl"/>
 
-    <component name="org.fabric3.itest.implementation.junit.ImplementationJUnitLoader">
-        <system:implementation.system class="org.fabric3.itest.implementation.junit.ImplementationJUnitLoader"/>
-    </component>
-
-    <component name="org.fabric3.itest.implementation.junit.JUnitComponentTypeLoader">
-        <system:implementation.system class="org.fabric3.itest.implementation.junit.JUnitComponentTypeLoader"/>
-    </component>
-
-    <component name="jUnitGenerator">
-        <system:implementation.system class="org.fabric3.itest.implementation.junit.JUnitComponentGenerator"/>
-    </component>
-
-    <component name="jUnitIFProviderBuilder">
-        <system:implementation.system class="org.fabric3.itest.implementation.junit.JnitIFProviderBuilder"/>
-    </component>
+    <!-- include JUnit implementation type -->
+    <include name="org.fabric3.itest.JunitImplementation" scdlLocation="junitImplementation.scdl"/>
 
     <component name="org.fabric3.itest.ArtifactRepository">
         <system:implementation.system class="org.fabric3.itest.MavenDelegateArtifactRepository"/>

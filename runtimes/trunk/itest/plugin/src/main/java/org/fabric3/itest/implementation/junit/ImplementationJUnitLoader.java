@@ -23,13 +23,15 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Constructor;
 
 import org.fabric3.extension.loader.LoaderExtension;
+import org.fabric3.spi.Constants;
+import org.fabric3.spi.loader.ComponentTypeLoader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
-import org.fabric3.spi.Constants;
 
 /**
  * @version $Rev$ $Date$
@@ -37,8 +39,13 @@ import org.fabric3.spi.Constants;
 public class ImplementationJUnitLoader extends LoaderExtension<ImplementationJUnit, ImplementationJUnit> {
     private static final QName JUNIT = new QName(Constants.FABRIC3_NS, "junit");
 
-    public ImplementationJUnitLoader(@Reference LoaderRegistry registry) {
+    private final ComponentTypeLoader<ImplementationJUnit> componentTypeLoader;
+
+    @Constructor({"loaderRegistry", "componentTypeLoader"})
+    public ImplementationJUnitLoader(@Reference LoaderRegistry registry,
+                                     @Reference ComponentTypeLoader<ImplementationJUnit> componentTypeLoader) {
         super(registry);
+        this.componentTypeLoader = componentTypeLoader;
     }
 
     public QName getXMLType() {
@@ -49,9 +56,9 @@ public class ImplementationJUnitLoader extends LoaderExtension<ImplementationJUn
             throws XMLStreamException, LoaderException {
         String className = reader.getAttributeValue(null, "class");
         LoaderUtil.skipToEndElement(reader);
-        
+
         ImplementationJUnit impl = new ImplementationJUnit(className);
-        registry.loadComponentType(impl, loaderContext);
+        componentTypeLoader.load(impl, loaderContext);
         return impl;
     }
 }
