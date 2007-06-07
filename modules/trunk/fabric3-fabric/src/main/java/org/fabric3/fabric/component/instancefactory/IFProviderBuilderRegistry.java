@@ -35,7 +35,7 @@ public interface IFProviderBuilderRegistry {
      * @param ifpdClass Instance factory provider definition class.
      * @param builder Instance factory provider builder.
      */
-    <IFPD extends InstanceFactoryProviderDefinition> void register(Class<IFPD> ifpdClass,
+    <IFPD extends InstanceFactoryProviderDefinition> void register(Class<?> ifpdClass,
                                                                    IFProviderBuilder<?, IFPD> builder);
 
     /**

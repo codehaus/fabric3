@@ -62,7 +62,7 @@ public class DefaultIFProviderBuilderRegistry implements IFProviderBuilderRegist
     /**
      * Registers the builder.
      */
-    public <IFPD extends InstanceFactoryProviderDefinition> void register(Class<IFPD> ifpdClass,
+    public <IFPD extends InstanceFactoryProviderDefinition> void register(Class<?> ifpdClass,
                                                                           IFProviderBuilder<?, IFPD> builder) {
         registry.put(ifpdClass, builder);
     }

@@ -37,7 +37,7 @@ public abstract class AbstractIFProviderBuilder<IFP extends InstanceFactoryProvi
      *
      * @return the InstanceFactoryProviderDefinition the implementation handles.
      */
-    protected abstract Class<IFPD> getIfpdClass();
+    protected abstract Class<?> getIfpdClass();
 
     /**
      * Injects the builder registry.

@@ -47,7 +47,7 @@ public class ReflectiveIFProviderBuilder<T> extends
         AbstractIFProviderBuilder<ReflectiveInstanceFactoryProvider<T>, ReflectiveIFProviderDefinition> {
 
     @Override
-    protected Class<ReflectiveIFProviderDefinition> getIfpdClass() {
+    protected Class<?> getIfpdClass() {
         return ReflectiveIFProviderDefinition.class;
     }
 
