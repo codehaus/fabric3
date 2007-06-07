@@ -25,17 +25,17 @@
            name="org.fabric3.fabric.standlone.host.LaunchedImplementation"
            autowire="true">
 
-    <component name="launchedLoader">
+    <component name="org.fabric3.runtime.standalone.host.implementation.launched.LaunchedLoader">
         <system:implementation.system class="org.fabric3.runtime.standalone.host.implementation.launched.LaunchedLoader"/>
+        <reference name="componentTypeLoader" target="org.fabric3.runtime.standalone.host.implementation.launched.LaunchedComponentTypeLoader"/>
     </component>
 
-    <component name="launchedComponentLoader">
+    <component name="org.fabric3.runtime.standalone.host.implementation.launched.LaunchedComponentTypeLoader">
         <system:implementation.system class="org.fabric3.runtime.standalone.host.implementation.launched.LaunchedComponentTypeLoader"/>
     </component>
 
     <component name="launchedGenerator">
-        <system:implementation.system
-                class="org.fabric3.runtime.standalone.host.implementation.launched.LaunchedComponentGenerator"/>
+        <system:implementation.system class="org.fabric3.runtime.standalone.host.implementation.launched.LaunchedComponentGenerator"/>
     </component>
 
 </composite>

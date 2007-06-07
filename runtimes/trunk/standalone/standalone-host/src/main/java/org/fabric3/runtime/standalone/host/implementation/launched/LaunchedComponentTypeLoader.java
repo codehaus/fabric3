@@ -26,15 +26,14 @@ import java.util.List;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.loader.LoaderContext;
-import org.fabric3.extension.loader.ComponentTypeLoaderExtension;
 import org.fabric3.spi.implementation.java.IntrospectionRegistry;
 import org.fabric3.spi.implementation.java.Introspector;
 import org.fabric3.spi.implementation.java.JavaMappedService;
 import org.fabric3.spi.implementation.java.PojoComponentType;
 import org.fabric3.spi.implementation.java.ProcessingException;
+import org.fabric3.spi.loader.ComponentTypeLoader;
+import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.MissingResourceException;
 import org.fabric3.spi.model.type.DataType;
 import org.fabric3.spi.model.type.Operation;
@@ -44,24 +43,15 @@ import org.fabric3.spi.model.type.ServiceContract;
 /**
  * @version $Revision$ $Date$
  */
-public class LaunchedComponentTypeLoader extends ComponentTypeLoaderExtension<Launched> {
+public class LaunchedComponentTypeLoader implements ComponentTypeLoader<Launched> {
     private static final URI SERVICE_NAME = URI.create("#main");
-    private Introspector introspector;
+    private final Introspector introspector;
 
-    public LaunchedComponentTypeLoader(@Reference LoaderRegistry loaderRegistry,
-                                       @Reference IntrospectionRegistry introspector) {
-        super(loaderRegistry);
+    public LaunchedComponentTypeLoader(@Reference IntrospectionRegistry introspector) {
         this.introspector = introspector;
     }
 
-    @Override
-    protected Class<Launched> getImplementationClass() {
-        return Launched.class;
-    }
-
-    public void load(
-            Launched implementation,
-            LoaderContext loaderContext) throws LoaderException {
+    public void load(Launched implementation, LoaderContext loaderContext) throws LoaderException {
         String className = implementation.getClassName();
         Class<?> implClass;
         try {
