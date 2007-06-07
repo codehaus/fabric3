@@ -15,7 +15,7 @@ import org.fabric3.fabric.loader.LoaderContextImpl;
 import org.fabric3.fabric.monitor.JavaLoggingMonitorFactory;
 import org.fabric3.fabric.runtime.AbstractRuntime;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.LOADER_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.COMPOSITE_LOADER_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_NAME;
 import org.fabric3.fabric.util.JavaIntrospectionHelper;
 import org.fabric3.fabric.wire.WireUtils;
@@ -23,7 +23,7 @@ import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.loader.LoaderContext;
-import org.fabric3.spi.loader.LoaderRegistry;
+import org.fabric3.spi.loader.ComponentTypeLoader;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.CompositeImplementation;
@@ -76,12 +76,14 @@ public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo>
         ComponentDefinition<CompositeImplementation> definition =
                 new ComponentDefinition<CompositeImplementation>("main", impl);
         try {
-            LoaderRegistry loader = getSystemComponent(LoaderRegistry.class, LOADER_URI);
+            @SuppressWarnings("unchecked")
+            ComponentTypeLoader<CompositeImplementation> loader =
+                    getSystemComponent(ComponentTypeLoader.class, COMPOSITE_LOADER_URI);
             assembly = getSystemComponent(DistributedAssembly.class, DISTRIBUTED_ASSEMBLY_URI);
             wireCache = getSystemComponent(ClientWireCache.class, WIRE_CACHE_URI);
             proxyService = getSystemComponent(ProxyService.class, PROXY_SERVICE_URI);
             LoaderContext loaderContext = new LoaderContextImpl(getHostClassLoader(), null);
-            loader.loadComponentType(impl, loaderContext);
+            loader.load(impl, loaderContext);
             assembly.activate(definition, false);
             ScopeRegistry scopeRegistry = getScopeRegistry();
             scopeContainer = scopeRegistry.getScopeContainer(Scope.COMPOSITE);

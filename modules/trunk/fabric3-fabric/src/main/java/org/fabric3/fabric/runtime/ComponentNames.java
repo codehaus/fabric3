@@ -43,6 +43,8 @@ public final class ComponentNames {
 
     public static final URI LOADER_URI = URI.create(RUNTIME_NAME + "/main/loader");
 
+    public static final URI COMPOSITE_LOADER_URI = URI.create(RUNTIME_NAME + "/main/composite.componentTypeLoader");
+
     public static final URI DISTRIBUTED_ASSEMBLY_URI = URI.create(RUNTIME_NAME + "/main/distributedAssembly");
 
     public static final URI RUNTIME_ASSEMBLY_URI = URI.create(RUNTIME_NAME + "/main/RuntimeAssembly");

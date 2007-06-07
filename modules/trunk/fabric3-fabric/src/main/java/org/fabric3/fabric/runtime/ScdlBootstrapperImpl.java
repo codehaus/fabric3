@@ -63,7 +63,6 @@ import org.fabric3.fabric.implementation.singleton.SingletonWireTargetDefinition
 import org.fabric3.fabric.implementation.system.SystemComponentBuilder;
 import org.fabric3.fabric.implementation.system.SystemComponentGenerator;
 import org.fabric3.fabric.implementation.system.SystemComponentTypeLoader;
-import org.fabric3.fabric.implementation.system.SystemImplementation;
 import org.fabric3.fabric.implementation.system.SystemImplementationLoader;
 import org.fabric3.fabric.loader.ComponentLoader;
 import org.fabric3.fabric.loader.ComponentTypeElementLoader;
@@ -311,20 +310,25 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     }
 
     protected void deploySystemScdl(AbstractRuntime<?> runtime) throws InitializationException {
-        CompositeImplementation impl = new CompositeImplementation();
-        impl.setScdlLocation(scdlLocation);
-        impl.setClassLoader(classLoaderRegistry.getClassLoader(BOOT_CLASSLOADER_ID));
-        ComponentDefinition<CompositeImplementation> definition =
-                new ComponentDefinition<CompositeImplementation>("main", impl);
-        try {
-            LoaderContext loaderContext =
-                    new LoaderContextImpl(null, null);
-            // load system extensions
-            loader.loadComponentType(impl, loaderContext);
-            runtimeAssembly.activate(definition, false);
+        CompositeImplementation impl;
 
+        // load system composite
+        try {
+            impl = new CompositeImplementation();
+            impl.setScdlLocation(scdlLocation);
+            impl.setClassLoader(classLoaderRegistry.getClassLoader(BOOT_CLASSLOADER_ID));
+            CompositeComponentTypeLoader compositeTypeLoader = new CompositeComponentTypeLoader(loader);
+            LoaderContext loaderContext = new LoaderContextImpl(null, null);
+            compositeTypeLoader.load(impl, loaderContext);
         } catch (LoaderException e) {
             throw new InitializationException(e);
+        }
+
+        // active system components
+        try {
+            ComponentDefinition<CompositeImplementation> definition =
+                    new ComponentDefinition<CompositeImplementation>("main", impl);
+            runtimeAssembly.activate(definition, false);
         } catch (ActivateException e) {
             throw new InitializationException(e);
         }
@@ -359,12 +363,6 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     protected LoaderRegistry createLoader(Introspector introspector) {
         LoaderRegistryImpl loaderRegistry = new LoaderRegistryImpl(monitorFactory, xmlFactory);
 
-        // register component type loaders
-        SystemComponentTypeLoader componentTypeLoader = new SystemComponentTypeLoader(introspector);
-        loaderRegistry.registerLoader(SystemImplementation.class, componentTypeLoader);
-        CompositeComponentTypeLoader compositeTypeLoader = new CompositeComponentTypeLoader(loaderRegistry);
-        loaderRegistry.registerLoader(CompositeImplementation.class, compositeTypeLoader);
-
         // register element loaders
         registerLoader(loaderRegistry, new ComponentLoader(loaderRegistry));
         registerLoader(loaderRegistry, new ComponentTypeElementLoader(loaderRegistry));
@@ -374,6 +372,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         registerLoader(loaderRegistry, new PropertyLoader(loaderRegistry));
         registerLoader(loaderRegistry, new ReferenceLoader(loaderRegistry));
         registerLoader(loaderRegistry, new ServiceLoader(loaderRegistry));
+        SystemComponentTypeLoader componentTypeLoader = new SystemComponentTypeLoader(introspector);
         registerLoader(loaderRegistry, new SystemImplementationLoader(loaderRegistry, componentTypeLoader));
         registerLoader(loaderRegistry, new MarshallerLoader(loaderRegistry, introspector));
         return loaderRegistry;

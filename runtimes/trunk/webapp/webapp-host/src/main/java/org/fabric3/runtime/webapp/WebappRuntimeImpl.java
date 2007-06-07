@@ -24,22 +24,20 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSessionEvent;
 
-import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.assembly.ActivateException;
+import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.loader.LoaderContextImpl;
 import org.fabric3.fabric.runtime.AbstractRuntime;
-import static org.fabric3.fabric.runtime.ComponentNames.CLASSLOADER_REGISTRY_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.COMPOSITE_LOADER_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.LOADER_URI;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.runtime.webapp.implementation.webapp.WebappComponent;
 import org.fabric3.spi.ObjectCreationException;
+import org.fabric3.spi.loader.ComponentTypeLoader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.CompositeImplementation;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 
 /**
  * Bootstrapper for the Fabric3 runtime in a web application host. This listener manages one runtime per servlet
@@ -83,12 +81,15 @@ public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implement
 //                    getSystemComponent(ClassLoaderRegistry.class, CLASSLOADER_REGISTRY_URI);
 //            classLoaderRegistry.register(URI.create("sca://./applicationClassLoader"), getHostClassLoader());
 
+            @SuppressWarnings("unchecked")
+            ComponentTypeLoader<CompositeImplementation> loader =
+                    getSystemComponent(ComponentTypeLoader.class, COMPOSITE_LOADER_URI);
+            LoaderContext loaderContext = new LoaderContextImpl(null, null);
+            loader.load(impl, loaderContext);
+
             ComponentDefinition<CompositeImplementation> definition =
                     new ComponentDefinition<CompositeImplementation>(compositeId.toString(), impl);
-            LoaderRegistry loader = getSystemComponent(LoaderRegistry.class, LOADER_URI);
 
-            LoaderContext loaderContext = new LoaderContextImpl(null, null);
-            loader.loadComponentType(impl, loaderContext);
             DistributedAssembly assembly = getSystemComponent(DistributedAssembly.class, DISTRIBUTED_ASSEMBLY_URI);
             // deploy the components
             assembly.activate(definition, false);

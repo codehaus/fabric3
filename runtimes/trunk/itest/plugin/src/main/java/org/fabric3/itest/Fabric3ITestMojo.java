@@ -54,7 +54,7 @@ import org.apache.maven.surefire.testset.TestSetFailedException;
 
 import org.fabric3.api.annotation.LogLevel;
 import org.fabric3.fabric.loader.LoaderContextImpl;
-import static org.fabric3.fabric.runtime.ComponentNames.LOADER_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.COMPOSITE_LOADER_URI;
 import org.fabric3.fabric.runtime.ScdlBootstrapperImpl;
 import org.fabric3.host.Fabric3RuntimeException;
 import org.fabric3.host.runtime.InitializationException;
@@ -64,8 +64,8 @@ import org.fabric3.itest.implementation.junit.ImplementationJUnit;
 import org.fabric3.spi.deployer.CompositeClassLoader;
 import org.fabric3.spi.implementation.java.JavaMappedService;
 import org.fabric3.spi.implementation.java.PojoComponentType;
+import org.fabric3.spi.loader.ComponentTypeLoader;
 import org.fabric3.spi.loader.LoaderContext;
-import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.CompositeComponentType;
 import org.fabric3.spi.model.type.CompositeImplementation;
@@ -241,10 +241,12 @@ public class Fabric3ITestMojo extends AbstractMojo {
                 ComponentDefinition<CompositeImplementation> definition =
                         new ComponentDefinition<CompositeImplementation>(testComponentName, impl);
 
-                LoaderRegistry loader = runtime.getSystemComponent(LoaderRegistry.class, LOADER_URI);
+                @SuppressWarnings("unchecked")
+                ComponentTypeLoader<CompositeImplementation> loader =
+                        runtime.getSystemComponent(ComponentTypeLoader.class, COMPOSITE_LOADER_URI);
 
                 LoaderContext loaderContext = new LoaderContextImpl(null, null);
-                loader.loadComponentType(impl, loaderContext);
+                loader.load(impl, loaderContext);
 
                 runtime.deploy(definition);
                 testSuite = createTestSuite(runtime, definition, domain);
