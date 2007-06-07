@@ -18,19 +18,12 @@
  */
 package org.fabric3.fabric.implementation.system;
 
-import java.net.URL;
-
-import org.osoa.sca.annotations.Reference;
-
-import org.fabric3.extension.loader.ComponentTypeLoaderExtension;
-import org.fabric3.fabric.util.JavaIntrospectionHelper;
-import org.fabric3.spi.loader.LoaderContext;
-import org.fabric3.spi.implementation.java.IntrospectionRegistry;
 import org.fabric3.spi.implementation.java.Introspector;
 import org.fabric3.spi.implementation.java.PojoComponentType;
 import org.fabric3.spi.implementation.java.ProcessingException;
+import org.fabric3.spi.loader.ComponentTypeLoader;
+import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.model.type.Scope;
 
 /**
@@ -38,57 +31,25 @@ import org.fabric3.spi.model.type.Scope;
  *
  * @version $Rev$ $Date$
  */
-public class SystemComponentTypeLoader extends ComponentTypeLoaderExtension<SystemImplementation> {
-    private Introspector introspector;
-
-    public SystemComponentTypeLoader() {
-    }
+public class SystemComponentTypeLoader implements ComponentTypeLoader<SystemImplementation> {
+    private final Introspector introspector;
 
     public SystemComponentTypeLoader(Introspector introspector) {
         this.introspector = introspector;
     }
 
-    public SystemComponentTypeLoader(LoaderRegistry loaderRegistry, Introspector introspector) {
-        super(loaderRegistry);
-        this.introspector = introspector;
-    }
-
-    @Reference
-    public void setIntrospector(IntrospectionRegistry introspector) {
-        this.introspector = introspector;
-    }
-
-    public void load(
-        SystemImplementation implementation,
-        LoaderContext loaderContext) throws LoaderException {
-        Class<?> implClass = implementation.getImplementationClass();
-        URL sidefile = implClass.getResource(JavaIntrospectionHelper.getBaseName(implClass) + ".componentType");
-        PojoComponentType componentType;
-        if (sidefile == null) {
-            componentType = loadByIntrospection(implementation, loaderContext);
-        } else {
-            componentType = loadFromSidefile(sidefile, loaderContext);
-        }
+    public void load(SystemImplementation implementation, LoaderContext loaderContext) throws LoaderException {
+        PojoComponentType componentType = loadByIntrospection(implementation, loaderContext);
         // this means system components are always composite scoped
         componentType.setImplementationScope(Scope.COMPOSITE);
         implementation.setComponentType(componentType);
     }
 
-    protected Class<SystemImplementation> getImplementationClass() {
-        return SystemImplementation.class;
-    }
-
     protected PojoComponentType loadByIntrospection(SystemImplementation implementation, LoaderContext context)
-        throws ProcessingException {
-        PojoComponentType componentType =
-            new PojoComponentType();
+            throws ProcessingException {
+        PojoComponentType componentType = new PojoComponentType();
         Class<?> implClass = implementation.getImplementationClass();
         introspector.introspect(implClass, componentType, context);
         return componentType;
-    }
-
-
-    protected PojoComponentType loadFromSidefile(URL url, LoaderContext loaderContext) throws LoaderException {
-        return loaderRegistry.load(null, url, PojoComponentType.class, loaderContext);
     }
 }

@@ -374,7 +374,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         registerLoader(loaderRegistry, new PropertyLoader(loaderRegistry));
         registerLoader(loaderRegistry, new ReferenceLoader(loaderRegistry));
         registerLoader(loaderRegistry, new ServiceLoader(loaderRegistry));
-        registerLoader(loaderRegistry, new SystemImplementationLoader(loaderRegistry));
+        registerLoader(loaderRegistry, new SystemImplementationLoader(loaderRegistry, componentTypeLoader));
         registerLoader(loaderRegistry, new MarshallerLoader(loaderRegistry, introspector));
         return loaderRegistry;
     }

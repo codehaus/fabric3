@@ -19,19 +19,19 @@
 package org.fabric3.fabric.implementation.system;
 
 import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Constructor;
 
 import org.fabric3.extension.loader.LoaderExtension;
+import org.fabric3.spi.Constants;
+import org.fabric3.spi.loader.ComponentTypeLoader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
-import org.fabric3.spi.loader.UnrecognizedElementException;
-import org.fabric3.spi.Constants;
 
 /**
  * Loads information for a system implementation
@@ -41,26 +41,26 @@ import org.fabric3.spi.Constants;
 public class SystemImplementationLoader extends LoaderExtension<Object, SystemImplementation> {
     public static final QName SYSTEM_IMPLEMENTATION = new QName(Constants.FABRIC3_SYSTEM_NS, "implementation.system");
 
-    public SystemImplementationLoader(@Reference LoaderRegistry registry) {
+    private final ComponentTypeLoader<SystemImplementation> componentTypeLoader;
+
+    @Constructor({"loaderRegistry", "componentTypeLoader"})
+    public SystemImplementationLoader(@Reference LoaderRegistry registry,
+                                      @Reference ComponentTypeLoader<SystemImplementation> componentTypeLoader) {
         super(registry);
+        this.componentTypeLoader = componentTypeLoader;
     }
 
     public SystemImplementation load(Object type, XMLStreamReader reader, LoaderContext loaderContext)
             throws XMLStreamException, LoaderException {
         assert SYSTEM_IMPLEMENTATION.equals(reader.getName());
-        SystemImplementation implementation = new SystemImplementation();
         String implClass = reader.getAttributeValue(null, "class");
+        LoaderUtil.skipToEndElement(reader);
+
         Class<?> implementationClass = LoaderUtil.loadClass(implClass, loaderContext.getClassLoader());
+        SystemImplementation implementation = new SystemImplementation();
         implementation.setImplementationClass(implementationClass);
-        registry.loadComponentType(implementation, loaderContext);
-        while (true) {
-            int code = reader.next();
-            if (code == XMLStreamConstants.START_ELEMENT) {
-                throw new UnrecognizedElementException(reader.getName());
-            } else if (code == XMLStreamConstants.END_ELEMENT) {
-                return implementation;
-            }
-        }
+        componentTypeLoader.load(implementation, loaderContext);
+        return implementation;
     }
 
     public QName getXMLType() {

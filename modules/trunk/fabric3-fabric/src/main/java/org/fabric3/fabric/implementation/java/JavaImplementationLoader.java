@@ -55,13 +55,13 @@ public class JavaImplementationLoader extends LoaderExtension<Object, JavaImplem
             throws XMLStreamException, LoaderException {
         assert IMPLEMENTATION_JAVA.equals(reader.getName());
         String implClass = reader.getAttributeValue(null, "class");
-        Class<?> implementationClass = LoaderUtil.loadClass(implClass, loaderContext.getClassLoader());
+        LoaderUtil.skipToEndElement(reader);
 
+        Class<?> implementationClass = LoaderUtil.loadClass(implClass, loaderContext.getClassLoader());
         JavaImplementation implementation = new JavaImplementation();
         implementation.setClassName(implClass);
         implementation.setImplementationClass(implementationClass);
         componentTypeLoader.load(implementation,  loaderContext);
-        LoaderUtil.skipToEndElement(reader);
         return implementation;
     }
 

@@ -19,7 +19,6 @@
 package org.fabric3.fabric.implementation.system;
 
 import javax.xml.namespace.QName;
-import javax.xml.stream.Location;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 
@@ -27,9 +26,9 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
 import org.fabric3.spi.Constants;
+import org.fabric3.spi.loader.ComponentTypeLoader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.loader.UnrecognizedElementException;
 
 /**
  * @version $Rev$ $Date$
@@ -37,69 +36,41 @@ import org.fabric3.spi.loader.UnrecognizedElementException;
 public class SystemImplementationLoaderTestCase extends TestCase {
 
     public static final QName SYSTEM_IMPLEMENTATION = new QName(Constants.FABRIC3_SYSTEM_NS, "implementation.system");
+    private LoaderRegistry registry;
+    private LoaderContext context;
+    private XMLStreamReader reader;
+    private ComponentTypeLoader<SystemImplementation> componentTypeLoader;
+    private SystemImplementationLoader loader;
 
     public void testLoad() throws Exception {
-        LoaderRegistry registry = EasyMock.createNiceMock(LoaderRegistry.class);
         EasyMock.replay(registry);
-        LoaderContext context = EasyMock.createMock(LoaderContext.class);
-        EasyMock.expect(context.getClassLoader()).andReturn(getClass().getClassLoader());
-        EasyMock.replay(context);
-        XMLStreamReader reader = EasyMock.createMock(XMLStreamReader.class);
+        componentTypeLoader.load(EasyMock.isA(SystemImplementation.class), EasyMock.eq(context));
+        EasyMock.replay(componentTypeLoader);
+
         EasyMock.expect(reader.getName()).andReturn(SYSTEM_IMPLEMENTATION);
-        EasyMock.expect(reader.getAttributeValue((String) EasyMock.isNull(), EasyMock.eq("class")))
-                .andReturn(getClass().getName());
+        EasyMock.expect(reader.getAttributeValue(null, "class")).andReturn(getClass().getName());
         EasyMock.expect(reader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
         EasyMock.replay(reader);
-        SystemImplementationLoader loader = new SystemImplementationLoader(registry);
+
         SystemImplementation impl = loader.load(null, reader, context);
         assertEquals(getClass(), impl.getImplementationClass());
         EasyMock.verify(reader);
         EasyMock.verify(context);
+        EasyMock.verify(componentTypeLoader);
     }
 
-    public void testUnrecognizedElement() throws Exception {
-        LoaderRegistry registry = EasyMock.createNiceMock(LoaderRegistry.class);
-        EasyMock.replay(registry);
-        LoaderContext context = EasyMock.createMock(LoaderContext.class);
+    @SuppressWarnings("unchecked")
+    protected void setUp() throws Exception {
+        super.setUp();
+        registry = EasyMock.createMock(LoaderRegistry.class);
+        componentTypeLoader = EasyMock.createMock(ComponentTypeLoader.class);
+
+        context = EasyMock.createMock(LoaderContext.class);
         EasyMock.expect(context.getClassLoader()).andReturn(getClass().getClassLoader());
         EasyMock.replay(context);
-        XMLStreamReader reader = EasyMock.createMock(XMLStreamReader.class);
-        EasyMock.expect(reader.getName()).andReturn(SYSTEM_IMPLEMENTATION).atLeastOnce();
-        EasyMock.expect(reader.getAttributeValue((String) EasyMock.isNull(), EasyMock.eq("class")))
-                .andReturn(getClass().getName());
-        EasyMock.expect(reader.next()).andReturn(XMLStreamConstants.START_ELEMENT);
-        EasyMock.expect(reader.getLocation()).andReturn(new MockLocation());
-        EasyMock.replay(reader);
-        SystemImplementationLoader loader = new SystemImplementationLoader(registry);
-        try {
-            loader.load(null, reader, context);
-            fail();
-        } catch (UnrecognizedElementException e) {
-            // expected
-        }
+
+        reader = EasyMock.createMock(XMLStreamReader.class);
+
+        loader = new SystemImplementationLoader(registry, componentTypeLoader);
     }
-
-    private class MockLocation implements Location {
-
-        public int getLineNumber() {
-            return 0;
-        }
-
-        public int getColumnNumber() {
-            return 0;
-        }
-
-        public int getCharacterOffset() {
-            return 0;
-        }
-
-        public String getPublicId() {
-            return null;
-        }
-
-        public String getSystemId() {
-            return null;
-        }
-    }
-
 }
