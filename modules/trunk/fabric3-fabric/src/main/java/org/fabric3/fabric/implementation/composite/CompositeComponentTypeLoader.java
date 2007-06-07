@@ -21,9 +21,12 @@ package org.fabric3.fabric.implementation.composite;
 import java.net.URI;
 import java.net.URL;
 
-import org.fabric3.extension.loader.ComponentTypeLoaderExtension;
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.fabric.loader.LoaderContextImpl;
 import org.fabric3.spi.deployer.CompositeClassLoader;
+import org.fabric3.spi.loader.ComponentTypeLoader;
+import org.fabric3.spi.loader.Loader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
@@ -35,16 +38,11 @@ import org.fabric3.spi.model.type.CompositeImplementation;
  *
  * @version $Rev$ $Date$
  */
-public class CompositeComponentTypeLoader extends ComponentTypeLoaderExtension<CompositeImplementation> {
-    public CompositeComponentTypeLoader() {
-    }
+public class CompositeComponentTypeLoader implements ComponentTypeLoader<CompositeImplementation> {
+    private final Loader loader;
 
-    public CompositeComponentTypeLoader(LoaderRegistry loaderRegistry) {
-        super(loaderRegistry);
-    }
-
-    protected Class<CompositeImplementation> getImplementationClass() {
-        return CompositeImplementation.class;
+    public CompositeComponentTypeLoader(@Reference LoaderRegistry loaderRegistry) {
+        this.loader = loaderRegistry;
     }
 
     public void load(CompositeImplementation implementation, LoaderContext context) throws LoaderException {
@@ -61,6 +59,6 @@ public class CompositeComponentTypeLoader extends ComponentTypeLoaderExtension<C
     }
 
     protected CompositeComponentType loadFromSidefile(URL url, LoaderContext context) throws LoaderException {
-        return loaderRegistry.load(null, url, CompositeComponentType.class, context);
+        return loader.load(null, url, CompositeComponentType.class, context);
     }
 }

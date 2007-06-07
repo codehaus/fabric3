@@ -20,8 +20,6 @@ package org.fabric3.spi.loader;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.spi.model.type.Implementation;
-
 /**
  * Registry for XML loaders that can parse a StAX input stream and return model objects.
  * <p/>
@@ -50,19 +48,4 @@ public interface LoaderRegistry extends Loader {
      * @param loader  a loader that should no longer be used
      */
     void unregisterLoader(QName element, StAXElementLoader<?, ?> loader);
-
-    /**
-     * Regsiter a component type loader.
-     *
-     * @param key    a type of implementation this loader can load component types for
-     * @param loader the loader that is being contributed to the system
-     */
-    <I extends Implementation<?>> void registerLoader(Class<I> key, ComponentTypeLoader<I> loader);
-
-    /**
-     * Unregister a component type loader form the system.
-     *
-     * @param key a type of implementation whose loader should be unregistered
-     */
-    <I extends Implementation<?>> void unregisterLoader(Class<I> key);
 }

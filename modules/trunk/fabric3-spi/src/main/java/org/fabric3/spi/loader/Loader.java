@@ -59,17 +59,4 @@ public interface Loader {
      */
     <INPUT, OUTPUT> OUTPUT load(INPUT configuration, URL url, Class<OUTPUT> type, LoaderContext context)
             throws LoaderException;
-
-    /**
-     * Load the component type definition for a given implementation. How the component type information is located is
-     * defined by the implementation specification. It may include loading from an XML sidefile, introspection of some
-     * artifact related to the implementation, some combination of those techniques or any other implementation-defined
-     * mechanism.
-     *
-     * @param implementation the implementation whose component type should be loaded
-     * @param context        the current loader context
-     * @throws LoaderException if there was a problem loading the component type definition
-     */
-    <I extends Implementation<?>> void loadComponentType(I implementation, LoaderContext context)
-            throws LoaderException;
 }

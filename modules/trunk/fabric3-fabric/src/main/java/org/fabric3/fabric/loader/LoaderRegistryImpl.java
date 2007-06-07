@@ -34,15 +34,12 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.monitor.MonitorFactory;
-import org.fabric3.spi.loader.ComponentTypeLoader;
 import org.fabric3.spi.loader.InvalidConfigurationException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.StAXElementLoader;
-import org.fabric3.spi.loader.UnrecognizedComponentTypeException;
 import org.fabric3.spi.loader.UnrecognizedElementException;
-import org.fabric3.spi.model.type.Implementation;
 
 /**
  * The default implementation of a loader registry
@@ -54,9 +51,6 @@ public class LoaderRegistryImpl implements LoaderRegistry {
     private Monitor monitor;
     private final XMLInputFactory xmlFactory;
     private final Map<QName, StAXElementLoader<?, ?>> loaders = new HashMap<QName, StAXElementLoader<?, ?>>();
-    private final Map<Class<? extends Implementation<?>>,
-            ComponentTypeLoader<? extends Implementation<?>>> componentTypeLoaders =
-            new HashMap<Class<? extends Implementation<?>>, ComponentTypeLoader<? extends Implementation<?>>>();
 
     @Constructor
     public LoaderRegistryImpl(@Reference MonitorFactory monitorFactory, @Reference XMLInputFactory factory) {
@@ -137,25 +131,6 @@ public class LoaderRegistryImpl implements LoaderRegistry {
         } catch (XMLStreamException e) {
             throw new InvalidConfigurationException("Invalid or missing resource", url.toString(), e);
         }
-    }
-
-    public <I extends Implementation<?>> void registerLoader(Class<I> key, ComponentTypeLoader<I> loader) {
-        componentTypeLoaders.put(key, loader);
-    }
-
-    public <I extends Implementation<?>> void unregisterLoader(Class<I> key) {
-        componentTypeLoaders.remove(key);
-    }
-
-    @SuppressWarnings("unchecked")
-    public <I extends Implementation<?>> void loadComponentType(I implementation, LoaderContext loaderContext)
-            throws LoaderException {
-        Class<I> key = (Class<I>) implementation.getClass();
-        ComponentTypeLoader<I> loader = (ComponentTypeLoader<I>) componentTypeLoaders.get(key);
-        if (loader == null) {
-            throw new UnrecognizedComponentTypeException(key);
-        }
-        loader.load(implementation, loaderContext);
     }
 
     public static interface Monitor {
