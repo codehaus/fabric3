@@ -39,7 +39,7 @@ public class JavaImplementationLoader extends LoaderExtension<Object, JavaImplem
     private final ComponentTypeLoader<JavaImplementation> componentTypeLoader;
 
 
-    @Constructor
+    @Constructor({"loader", "componentTypeLoader"})
     public JavaImplementationLoader(@Reference LoaderRegistry registry,
                                     @Reference ComponentTypeLoader<JavaImplementation> componentTypeLoader) {
         super(registry);

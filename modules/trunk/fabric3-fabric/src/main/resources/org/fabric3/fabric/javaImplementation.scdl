@@ -30,6 +30,7 @@
 
     <component name="java.implementationLoader">
         <system:implementation.system class="org.fabric3.fabric.implementation.java.JavaImplementationLoader"/>
+        <reference name="componentTypeLoader" target="java.componentTypeLoader"/>
     </component>
 
     <component name="java.componentTypeLoader">
