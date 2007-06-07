@@ -25,6 +25,10 @@
     </listener>
 
     <context-param>
+        <param-name>fabric3.domain</param-name>
+        <param-value>fabric3://./federation-demo</param-value>
+    </context-param>
+    <context-param>
         <param-name>fabric3.systemScdlPath</param-name>
         <param-value>master.scdl</param-value>
     </context-param>
