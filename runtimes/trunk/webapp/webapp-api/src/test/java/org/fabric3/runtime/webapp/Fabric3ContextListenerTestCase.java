@@ -49,6 +49,7 @@ public class Fabric3ContextListenerTestCase extends TestCase {
     private URL scdl;
     private WebappUtil utils;
     private String compositeId;
+    private String domain;
 
     public void testInitializationUsingDefaults() throws Exception {
         ServletContextEvent event = createMock(ServletContextEvent.class);
@@ -58,6 +59,7 @@ public class Fabric3ContextListenerTestCase extends TestCase {
         WebappRuntime runtime = createMock(WebappRuntime.class);
         ScdlBootstrapper bootstrapper = createMock(ScdlBootstrapper.class);
         expect(utils.getBootClassLoader(cl)).andReturn(bootClassLoader);
+        expect(utils.getInitParameter("fabric3.domain", domain)).andReturn(domain);
         expect(utils.getInitParameter("fabric3.composite", compositeId)).andReturn(compositeId);
         expect(utils.getInitParameter("fabric3.component", contextName)).andReturn(contextName);
         expect(utils.getInitParameter("fabric3.online", "true")).andReturn("true");
@@ -112,5 +114,6 @@ public class Fabric3ContextListenerTestCase extends TestCase {
         scdl = new URL("file:/app.scdl");
         contextName = "webapp";
         compositeId = "webapp";
+        domain = "fabric3://./domain";
     }
 }

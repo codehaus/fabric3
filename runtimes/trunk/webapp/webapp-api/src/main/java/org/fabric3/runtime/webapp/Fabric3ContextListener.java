@@ -18,6 +18,8 @@
  */
 package org.fabric3.runtime.webapp;
 
+import static org.fabric3.runtime.webapp.Constants.DOMAIN_PARAM;
+
 import java.net.URI;
 import java.net.URL;
 import javax.servlet.ServletContext;
@@ -61,7 +63,7 @@ public class Fabric3ContextListener implements ServletContextListener {
         WebappUtil utils = getUtils(servletContext);
         try {
             // FIXME work this out from the servlet context
-            URI domain = URI.create("fabric3://./domain");
+            URI domain = new URI(utils.getInitParameter(DOMAIN_PARAM, "fabric3://./domain"));
             String defaultComposite = "webapp";
             URI compositeId = new URI(utils.getInitParameter(COMPOSITE_PARAM, defaultComposite));
             URI componentId = new URI(utils.getInitParameter(COMPONENT_PARAM, "webapp"));
