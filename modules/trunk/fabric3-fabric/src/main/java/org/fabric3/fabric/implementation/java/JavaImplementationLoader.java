@@ -27,6 +27,7 @@ import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.extension.loader.LoaderExtension;
+import org.fabric3.spi.loader.ComponentTypeLoader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
@@ -35,9 +36,14 @@ import org.fabric3.spi.loader.LoaderUtil;
 public class JavaImplementationLoader extends LoaderExtension<Object, JavaImplementation> {
     public static final QName IMPLEMENTATION_JAVA = new QName(SCA_NS, "implementation.java");
 
+    private final ComponentTypeLoader<JavaImplementation> componentTypeLoader;
+
+
     @Constructor
-    public JavaImplementationLoader(@Reference LoaderRegistry registry) {
+    public JavaImplementationLoader(@Reference LoaderRegistry registry,
+                                    @Reference ComponentTypeLoader<JavaImplementation> componentTypeLoader) {
         super(registry);
+        this.componentTypeLoader = componentTypeLoader;
     }
 
     @Override
@@ -54,7 +60,7 @@ public class JavaImplementationLoader extends LoaderExtension<Object, JavaImplem
         JavaImplementation implementation = new JavaImplementation();
         implementation.setClassName(implClass);
         implementation.setImplementationClass(implementationClass);
-        registry.loadComponentType(implementation, loaderContext);
+        componentTypeLoader.load(implementation,  loaderContext);
         LoaderUtil.skipToEndElement(reader);
         return implementation;
     }

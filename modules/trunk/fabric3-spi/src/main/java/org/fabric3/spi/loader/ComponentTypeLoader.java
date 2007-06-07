@@ -18,7 +18,6 @@
  */
 package org.fabric3.spi.loader;
 
-import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.model.type.Implementation;
 
 /**

@@ -23,13 +23,14 @@ import java.net.URL;
 import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.extension.loader.ComponentTypeLoaderExtension;
 import org.fabric3.fabric.util.JavaIntrospectionHelper;
-import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.implementation.java.IntrospectionRegistry;
 import org.fabric3.spi.implementation.java.Introspector;
 import org.fabric3.spi.implementation.java.PojoComponentType;
 import org.fabric3.spi.implementation.java.ProcessingException;
+import org.fabric3.spi.loader.ComponentTypeLoader;
+import org.fabric3.spi.loader.Loader;
+import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.model.type.Scope;
@@ -37,24 +38,19 @@ import org.fabric3.spi.model.type.Scope;
 /**
  * @version $Rev$ $Date$
  */
-public class JavaComponentTypeLoader extends ComponentTypeLoaderExtension<JavaImplementation> {
-    private Introspector introspector;
+public class JavaComponentTypeLoader implements ComponentTypeLoader<JavaImplementation> {
+    private final Loader loader;
+    private final Introspector introspector;
+
 
     @Constructor({"registry", "introspector"})
     public JavaComponentTypeLoader(@Reference LoaderRegistry loaderRegistry,
                                    @Reference IntrospectionRegistry introspector) {
-        super(loaderRegistry);
+        this.loader = loaderRegistry;
         this.introspector = introspector;
     }
 
-    @Override
-    protected Class<JavaImplementation> getImplementationClass() {
-        return JavaImplementation.class;
-    }
-
-    public void load(
-        JavaImplementation implementation,
-        LoaderContext loaderContext) throws LoaderException {
+    public void load(JavaImplementation implementation, LoaderContext loaderContext) throws LoaderException {
         Class<?> implClass = implementation.getImplementationClass();
         URL resource = implClass.getResource(JavaIntrospectionHelper.getBaseName(implClass) + ".componentType");
         PojoComponentType componentType;
@@ -70,17 +66,15 @@ public class JavaComponentTypeLoader extends ComponentTypeLoaderExtension<JavaIm
     }
 
     protected PojoComponentType loadByIntrospection(JavaImplementation implementation, LoaderContext context)
-        throws ProcessingException {
-        PojoComponentType componentType =
-            new PojoComponentType();
+            throws ProcessingException {
+        PojoComponentType componentType = new PojoComponentType();
         Class<?> implClass = implementation.getImplementationClass();
         introspector.introspect(implClass, componentType, context);
         return componentType;
     }
 
     protected PojoComponentType loadFromSidefile(URL url, LoaderContext loaderContext) throws LoaderException {
-        PojoComponentType componentType =
-            new PojoComponentType();
-        return loaderRegistry.load(componentType, url, PojoComponentType.class, loaderContext);
+        PojoComponentType componentType = new PojoComponentType();
+        return loader.load(componentType, url, PojoComponentType.class, loaderContext);
     }
 }
