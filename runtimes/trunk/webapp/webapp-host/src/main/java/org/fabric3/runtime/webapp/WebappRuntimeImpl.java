@@ -87,16 +87,13 @@ public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implement
                     new ComponentDefinition<CompositeImplementation>(compositeId.toString(), impl);
             LoaderRegistry loader = getSystemComponent(LoaderRegistry.class, LOADER_URI);
 
-            LoaderContext loaderContext =
-                    new LoaderContextImpl(null, null);
+            LoaderContext loaderContext = new LoaderContextImpl(null, null);
             loader.loadComponentType(impl, loaderContext);
             DistributedAssembly assembly = getSystemComponent(DistributedAssembly.class, DISTRIBUTED_ASSEMBLY_URI);
             // deploy the components
             assembly.activate(definition, false);
-            URI reslvedUri =
-                    URI.create(getHostInfo().getDomain().toString() + "/" + compositeId + "/" + componentId);
-            WebappComponent webapp =
-                    (WebappComponent) getComponentManager().getComponent(reslvedUri);
+            URI reslvedUri = URI.create(getHostInfo().getDomain().toString() + "/" + compositeId + "/" + componentId);
+            WebappComponent webapp = (WebappComponent) getComponentManager().getComponent(reslvedUri);
             if (webapp == null) {
                 throw new Fabric3InitException("No component found with id " + componentId, componentId.toString());
             }

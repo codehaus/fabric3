@@ -68,10 +68,6 @@
         <system:implementation.system class="org.fabric3.runtime.webapp.implementation.webapp.WebappLoader"/>
     </component>
 
-    <component name="webappComponentTypeLoader">
-        <system:implementation.system class="org.fabric3.runtime.webapp.implementation.webapp.WebappComponentTypeLoader"/>
-    </component>
-
     <component name="webappPhysicalComponentBuilder">
         <system:implementation.system class="org.fabric3.runtime.webapp.implementation.webapp.WebAppComponentBuilder"/>
     </component>
