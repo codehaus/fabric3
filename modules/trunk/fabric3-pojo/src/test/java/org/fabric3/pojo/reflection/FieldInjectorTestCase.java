@@ -16,11 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.injection;
+package org.fabric3.pojo.reflection;
 
 import java.lang.reflect.Field;
 
 import junit.framework.TestCase;
+import org.easymock.EasyMock;
+
+import org.fabric3.spi.ObjectFactory;
 
 /**
  * @version $Rev$ $Date$
@@ -28,18 +31,25 @@ import junit.framework.TestCase;
 public class FieldInjectorTestCase extends TestCase {
 
     protected Field protectedField;
+    private ObjectFactory<String> objectFactory;
+    private Foo foo;
 
     public void testIllegalAccess() throws Exception {
-        FieldInjector<Foo> injector = new FieldInjector<Foo>(protectedField, new SingletonObjectFactory<String>("foo"));
-        Foo foo = new Foo();
+        String value = "foo";
+        EasyMock.expect(objectFactory.getInstance()).andReturn(value);
+        EasyMock.replay(objectFactory);
+
+        FieldInjector<Foo> injector = new FieldInjector<Foo>(protectedField, objectFactory);
         injector.inject(foo);
-        assertEquals("foo", foo.hidden);
+        assertEquals(value, foo.hidden);
     }
 
 
     protected void setUp() throws Exception {
         super.setUp();
         protectedField = Foo.class.getDeclaredField("hidden");
+        objectFactory = EasyMock.createMock(ObjectFactory.class);
+        foo = new Foo();
     }
 
     private class Foo {

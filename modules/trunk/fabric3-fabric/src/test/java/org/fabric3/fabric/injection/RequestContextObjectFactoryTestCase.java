@@ -18,11 +18,11 @@
  */
 package org.fabric3.fabric.injection;
 
-import org.fabric3.spi.component.WorkContext;
-import org.fabric3.spi.ObjectCreationException;
-
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
+
+import org.fabric3.spi.ObjectCreationException;
+import org.fabric3.spi.component.WorkContext;
 
 /**
  * @version $Rev$ $Date$

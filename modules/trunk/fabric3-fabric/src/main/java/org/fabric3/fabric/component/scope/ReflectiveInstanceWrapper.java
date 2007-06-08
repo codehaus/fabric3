@@ -20,7 +20,8 @@ package org.fabric3.fabric.component.scope;
 
 import org.fabric3.spi.component.TargetInitializationException;
 import org.fabric3.spi.component.TargetDestructionException;
-import org.fabric3.fabric.injection.EventInvoker;
+import org.fabric3.pojo.reflection.EventInvoker;
+import org.fabric3.pojo.reflection.ObjectCallbackException;
 
 /**
  * @version $Rev$ $Date$
@@ -37,7 +38,11 @@ public class ReflectiveInstanceWrapper<T> extends InstanceWrapperBase<T> {
 
     public void start() throws TargetInitializationException {
         if (initInvoker != null) {
-            initInvoker.invokeEvent(instance);
+            try {
+                initInvoker.invokeEvent(instance);
+            } catch (ObjectCallbackException e) {
+                throw new TargetInitializationException(e.getMessage(), e);
+            }
         }
         super.start();
     }
@@ -46,7 +51,11 @@ public class ReflectiveInstanceWrapper<T> extends InstanceWrapperBase<T> {
     public void stop() throws TargetDestructionException {
         super.stop();
         if (destroyInvoker != null) {
-            destroyInvoker.invokeEvent(instance);
+            try {
+                destroyInvoker.invokeEvent(instance);
+            } catch (ObjectCallbackException e) {
+                throw new TargetDestructionException(e.getMessage(), e);
+            }
         }
     }
 }

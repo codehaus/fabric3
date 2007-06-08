@@ -16,14 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.injection;
+package org.fabric3.pojo.reflection;
 
 import java.lang.reflect.Method;
 
+import junit.framework.TestCase;
+import org.easymock.EasyMock;
+
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
-
-import junit.framework.TestCase;
 
 /**
  * @version $Rev$ $Date$
@@ -32,10 +33,12 @@ public class MethodInjectorTestCase extends TestCase {
     private Method fooMethod;
     private Method privateMethod;
     private Method exceptionMethod;
+    private ObjectFactory objectFactory;
 
     public void testIllegalArgument() throws Exception {
-        ObjectFactory<Object> factory = new SingletonObjectFactory<Object>(new Object());
-        MethodInjector<Foo> injector = new MethodInjector<Foo>(fooMethod, factory);
+        EasyMock.expect(objectFactory.getInstance()).andReturn(new Object());
+        EasyMock.replay(objectFactory);
+        MethodInjector<Foo> injector = new MethodInjector<Foo>(fooMethod, objectFactory);
         try {
             injector.inject(new Foo());
             fail();
@@ -45,8 +48,9 @@ public class MethodInjectorTestCase extends TestCase {
     }
 
     public void testException() throws Exception {
-        ObjectFactory<Object> factory = new SingletonObjectFactory<Object>("foo");
-        MethodInjector<Foo> injector = new MethodInjector<Foo>(exceptionMethod, factory);
+        EasyMock.expect(objectFactory.getInstance()).andReturn("foo");
+        EasyMock.replay(objectFactory);
+        MethodInjector<Foo> injector = new MethodInjector<Foo>(exceptionMethod, objectFactory);
         try {
             injector.inject(new Foo());
             fail();
@@ -60,7 +64,7 @@ public class MethodInjectorTestCase extends TestCase {
         fooMethod = Foo.class.getMethod("foo", String.class);
         privateMethod = Foo.class.getDeclaredMethod("hidden", String.class);
         exceptionMethod = Foo.class.getDeclaredMethod("exception", String.class);
-
+        objectFactory = EasyMock.createMock(ObjectFactory.class);
     }
 
     private class Foo {

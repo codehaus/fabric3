@@ -26,11 +26,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.fabric3.fabric.injection.EventInvoker;
-import org.fabric3.fabric.injection.FieldInjector;
-import org.fabric3.fabric.injection.Injector;
-import org.fabric3.fabric.injection.MethodEventInvoker;
-import org.fabric3.fabric.injection.MethodInjector;
+import org.fabric3.pojo.reflection.EventInvoker;
+import org.fabric3.pojo.reflection.FieldInjector;
+import org.fabric3.pojo.reflection.Injector;
+import org.fabric3.pojo.reflection.MethodEventInvoker;
+import org.fabric3.pojo.reflection.MethodInjector;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.model.instance.ValueSource;
 

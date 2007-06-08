@@ -16,33 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.injection;
+package org.fabric3.pojo.reflection;
+
+import org.fabric3.spi.ObjectCreationException;
 
 /**
- * Denotes an error when invoking on an object
+ * Implementations inject a pre-configured value on an instance
  *
  * @version $Rev$ $Date$
  */
-public class ObjectCallbackException extends InjectionRuntimeException {
+public interface Injector<T> {
 
-    public ObjectCallbackException() {
-        super();
-    }
-
-    public ObjectCallbackException(String message) {
-        super(message);
-    }
-
-    public ObjectCallbackException(String message, String identifier) {
-        super(message, identifier);
-    }
-
-    public ObjectCallbackException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public ObjectCallbackException(Throwable cause) {
-        super(cause);
-    }
+    /**
+     * Inject a value on the given instance
+     */
+    void inject(T instance) throws ObjectCreationException;
 
 }

@@ -16,40 +16,40 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.injection;
+package org.fabric3.pojo.reflection;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.fabric3.spi.ObjectCreationException;
+import org.fabric3.spi.ObjectFactory;
+
 /**
- * Performs an wire on a method of a given instance
+ * Injects a value created by an {@link org.fabric3.spi.ObjectFactory} using a given method
  *
  * @version $Rev$ $Date$
  */
-public class MethodEventInvoker<T> implements EventInvoker<T> {
+public class MethodInjector<T> implements Injector<T> {
     private final Method method;
+    private final ObjectFactory<?> objectFactory;
 
-    /**
-     * Intantiates an  invoker for the given method
-     */
-    public MethodEventInvoker(Method method) {
+    public MethodInjector(Method method, ObjectFactory<?> objectFactory) {
         assert method != null;
+        assert objectFactory != null;
         this.method = method;
+        this.method.setAccessible(true);
+        this.objectFactory = objectFactory;
     }
 
-    public void invokeEvent(T instance) throws ObjectCallbackException {
+    public void inject(T instance) throws ObjectCreationException {
         try {
-            method.invoke(instance);
-        } catch (IllegalArgumentException e) {
-            String name = method.getName();
-            throw new ObjectCallbackException("Exception thrown by callback method [" + name + "]", e.getCause());
+            method.invoke(instance, objectFactory.getInstance());
         } catch (IllegalAccessException e) {
-            String name = method.getName();
-            throw new AssertionError("Method is not accessible [" + name + "]");
+            throw new AssertionError("Method is not accessible [" + method + "]");
+        } catch (IllegalArgumentException e) {
+            throw new ObjectCreationException("Exception thrown by setter", method.getName(), e);
         } catch (InvocationTargetException e) {
-            String name = method.getName();
-            throw new ObjectCallbackException("Exception thrown by callback method [" + name + "]", e.getCause());
+            throw new ObjectCreationException("Exception thrown by setter", method.getName(), e);
         }
     }
-
 }

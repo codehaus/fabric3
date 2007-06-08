@@ -30,9 +30,9 @@ import java.util.Map;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
-import org.fabric3.fabric.injection.FieldInjector;
-import org.fabric3.fabric.injection.Injector;
-import org.fabric3.fabric.injection.MethodInjector;
+import org.fabric3.pojo.reflection.FieldInjector;
+import org.fabric3.pojo.reflection.Injector;
+import org.fabric3.pojo.reflection.MethodInjector;
 import org.fabric3.spi.model.instance.ValueSource;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.ObjectCreationException;

@@ -19,10 +19,11 @@
 package org.fabric3.fabric.component.scope;
 
 import junit.framework.TestCase;
-import static org.easymock.EasyMock.createMock;
 import org.easymock.EasyMock;
+import static org.easymock.EasyMock.createMock;
 
-import org.fabric3.fabric.injection.EventInvoker;
+import org.fabric3.pojo.reflection.EventInvoker;
+import org.fabric3.pojo.reflection.ObjectCallbackException;
 import org.fabric3.spi.component.TargetDestructionException;
 import org.fabric3.spi.component.TargetInitializationException;
 
@@ -49,10 +50,10 @@ public class ReflectiveInstanceWrapperTestCase extends TestCase {
         }
     }
 
-    public void testWithStartCallback() {
+    public void testWithStartCallback() throws ObjectCallbackException {
         initInvoker.invokeEvent(instance);
         EasyMock.replay(initInvoker);
-            wrapper = new ReflectiveInstanceWrapper<Object>(instance, initInvoker, null);
+        wrapper = new ReflectiveInstanceWrapper<Object>(instance, initInvoker, null);
         try {
             wrapper.start();
         } catch (TargetInitializationException e) {
@@ -61,10 +62,10 @@ public class ReflectiveInstanceWrapperTestCase extends TestCase {
         EasyMock.verify(initInvoker);
     }
 
-    public void testWithStopCallback() {
+    public void testWithStopCallback() throws ObjectCallbackException {
         destroyInvoker.invokeEvent(instance);
         EasyMock.replay(destroyInvoker);
-            wrapper = new ReflectiveInstanceWrapper<Object>(instance, null, destroyInvoker);
+        wrapper = new ReflectiveInstanceWrapper<Object>(instance, null, destroyInvoker);
         try {
             wrapper.stop();
         } catch (TargetDestructionException e) {

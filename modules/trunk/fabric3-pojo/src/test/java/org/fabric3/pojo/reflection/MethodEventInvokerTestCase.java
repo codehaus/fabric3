@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.injection;
+package org.fabric3.pojo.reflection;
 
 import java.lang.reflect.Method;
 
@@ -29,22 +29,24 @@ public class MethodEventInvokerTestCase extends TestCase {
     private Method privateMethod;
     private Method exceptionMethod;
 
-    public void testIllegalAccess() throws Exception {
+    public void testIllegalAccess() {
         MethodEventInvoker<MethodEventInvokerTestCase.Foo> injector = new MethodEventInvoker<Foo>(privateMethod);
         try {
             injector.invokeEvent(new Foo());
             fail();
         } catch (AssertionError e) {
             // expected
+        } catch (ObjectCallbackException e) {
+            fail();
         }
     }
 
-    public void testException() throws Exception {
+    public void testException() {
         MethodEventInvoker<MethodEventInvokerTestCase.Foo> injector = new MethodEventInvoker<Foo>(exceptionMethod);
         try {
             injector.invokeEvent(new Foo());
             fail();
-        } catch (RuntimeException e) {
+        } catch (ObjectCallbackException e) {
             // expected
         }
     }
