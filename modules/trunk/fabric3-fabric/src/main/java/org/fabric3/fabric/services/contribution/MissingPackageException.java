@@ -14,25 +14,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.pojo.contribution;
+package org.fabric3.fabric.services.contribution;
 
-import junit.framework.TestCase;
+import org.fabric3.spi.loader.LoaderException;
 
 /**
+ * Thrown when a package name on <code>import.java</code> or <code>export.java</code> is not specified
+ *
  * @version $Rev$ $Date$
  */
-public class JavaExportMatchTestCase extends TestCase {
+public class MissingPackageException extends LoaderException {
 
-    public void testPackageMultiLevelMatch() {
-        JavaExport jexport = new JavaExport("com.foo");
-        JavaImport jimport = new JavaImport("com.foo.bar.Baz");
-        assertEquals(JavaExport.EXACT_MATCH, jexport.match(jimport));
+    public MissingPackageException(String message) {
+        super(message);
     }
-
-    public void testNoSubPackageMatch() {
-        JavaExport jexport = new JavaExport("com.foo.bar");
-        JavaImport jimport = new JavaImport("com.foo");
-        assertEquals(JavaExport.NO_MATCH, jexport.match(jimport));
-    }
-
 }

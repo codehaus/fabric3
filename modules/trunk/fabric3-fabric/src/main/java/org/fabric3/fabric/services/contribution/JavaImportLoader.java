@@ -14,13 +14,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.pojo.contribution;
+package org.fabric3.fabric.services.contribution;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import static org.osoa.sca.Constants.SCA_NS;
+import org.osoa.sca.Constants;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.extension.loader.LoaderExtension;
@@ -29,25 +29,32 @@ import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 
 /**
+ * Processes a Java-based <code>import</code> element in a contribution manifest
+ *
  * @version $Rev$ $Date$
  */
-public class JavaExportLoader extends LoaderExtension<Object, JavaExport> {
-    private static final QName EXPORT = new QName(SCA_NS, "export.java");
+public class JavaImportLoader extends LoaderExtension<Object, JavaImport> {
+    private static final QName IMPORT = new QName(Constants.SCA_NS, "import.java");
 
-    public JavaExportLoader(@Reference LoaderRegistry registry) {
+    /**
+     * Constructor specifies the registry to register with.
+     *
+     * @param registry the LoaderRegistry this loader should register with
+     */
+    public JavaImportLoader(@Reference LoaderRegistry registry) {
         super(registry);
     }
 
     public QName getXMLType() {
-        return EXPORT;
+        return IMPORT;
     }
 
-    public JavaExport load(Object configuration, XMLStreamReader reader, LoaderContext context)
-            throws XMLStreamException, LoaderException {
+    public JavaImport load(Object object, XMLStreamReader reader, LoaderContext context)
+            throws LoaderException, XMLStreamException {
         String packageName = reader.getAttributeValue(null, "package");
         if (packageName == null) {
             throw new MissingPackageException("No package name specified");
         }
-        return new JavaExport(packageName);
+        return new JavaImport(packageName);
     }
 }

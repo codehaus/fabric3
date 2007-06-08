@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.pojo.contribution;
+package org.fabric3.fabric.services.contribution;
 
 import javax.xml.namespace.QName;
 

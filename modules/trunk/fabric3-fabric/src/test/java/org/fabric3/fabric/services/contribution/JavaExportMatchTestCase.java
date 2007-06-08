@@ -14,30 +14,25 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.pojo.contribution;
-
-import javax.xml.stream.XMLStreamReader;
+package org.fabric3.fabric.services.contribution;
 
 import junit.framework.TestCase;
-import org.easymock.EasyMock;
 
 /**
  * @version $Rev$ $Date$
  */
-public class JavaImportLoaderTestCase extends TestCase {
-    private JavaImportLoader loader = new JavaImportLoader(null);
-    private XMLStreamReader reader;
+public class JavaExportMatchTestCase extends TestCase {
 
-    public void testRead() throws Exception {
-        JavaImport jimport = loader.load(null, reader, null);
-        assertEquals("foo.bar.baz", jimport.getPackageName());
+    public void testPackageMultiLevelMatch() {
+        JavaExport jexport = new JavaExport("com.foo");
+        JavaImport jimport = new JavaImport("com.foo.bar.Baz");
+        assertEquals(JavaExport.EXACT_MATCH, jexport.match(jimport));
     }
 
-
-    protected void setUp() throws Exception {
-        super.setUp();
-        reader = EasyMock.createMock(XMLStreamReader.class);
-        EasyMock.expect(reader.getAttributeValue(null, "package")).andReturn("foo.bar.baz");
-        EasyMock.replay(reader);
+    public void testNoSubPackageMatch() {
+        JavaExport jexport = new JavaExport("com.foo.bar");
+        JavaImport jimport = new JavaImport("com.foo");
+        assertEquals(JavaExport.NO_MATCH, jexport.match(jimport));
     }
+
 }
