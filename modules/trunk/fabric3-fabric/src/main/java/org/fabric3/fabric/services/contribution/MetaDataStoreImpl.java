@@ -89,6 +89,7 @@ public class MetaDataStoreImpl implements MetaDataStore {
         this.registry = registry;
         this.xstream = xstreamFactory.createInstance();
         domain = FileHelper.getDomainPath(hostInfo.getDomain());
+        runtimeId = hostInfo.getRuntimeId();
     }
 
     @Property(required = false)
