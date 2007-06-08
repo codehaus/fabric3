@@ -20,7 +20,7 @@ import java.net.URI;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.component.InstanceFactoryProvider;
+import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.fabric.component.instancefactory.IFProviderBuilderRegistry;
 import org.fabric3.fabric.implementation.pojo.PojoComponentBuilder;
 import org.fabric3.spi.builder.BuilderException;

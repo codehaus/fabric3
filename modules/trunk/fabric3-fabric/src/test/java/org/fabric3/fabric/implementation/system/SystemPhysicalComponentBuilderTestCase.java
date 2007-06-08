@@ -23,7 +23,7 @@ import java.net.URI;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
-import org.fabric3.fabric.component.InstanceFactoryProvider;
+import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.fabric.component.instancefactory.IFProviderBuilderRegistry;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.component.ScopeRegistry;

@@ -23,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.component.InstanceFactory;
 import org.fabric3.fabric.component.scope.ReflectiveInstanceWrapper;
 import org.fabric3.pojo.reflection.EventInvoker;
 import org.fabric3.pojo.reflection.Injector;

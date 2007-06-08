@@ -16,10 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.component;
+package org.fabric3.spi.component;
 
 import org.fabric3.spi.ObjectFactory;
-
 import org.fabric3.spi.model.instance.ValueSource;
 
 /**

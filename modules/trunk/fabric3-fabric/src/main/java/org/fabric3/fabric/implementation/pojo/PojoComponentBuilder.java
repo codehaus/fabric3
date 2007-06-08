@@ -26,7 +26,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 
-import org.fabric3.fabric.component.InstanceFactoryProvider;
+import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.fabric.component.instancefactory.IFProviderBuilderRegistry;
 import org.fabric3.fabric.injection.SingletonObjectFactory;
 import org.fabric3.spi.ObjectFactory;

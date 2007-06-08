@@ -32,6 +32,8 @@ import org.fabric3.pojo.reflection.Injector;
 import org.fabric3.pojo.reflection.MethodEventInvoker;
 import org.fabric3.pojo.reflection.MethodInjector;
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.component.InstanceFactory;
+import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.model.instance.ValueSource;
 
 /**

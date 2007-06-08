@@ -18,7 +18,7 @@
  */
 package org.fabric3.fabric.component.instancefactory.impl;
 
-import org.fabric3.fabric.component.InstanceFactoryProvider;
+import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.fabric.component.instancefactory.IFProviderBuilder;
 import org.fabric3.fabric.component.instancefactory.IFProviderBuilderRegistry;
 import org.fabric3.spi.model.physical.InstanceFactoryProviderDefinition;

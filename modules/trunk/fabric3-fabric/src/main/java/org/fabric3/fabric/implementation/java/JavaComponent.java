@@ -25,7 +25,7 @@ import org.osoa.sca.CallableReference;
 import org.osoa.sca.ServiceReference;
 
 import org.fabric3.fabric.component.ComponentContextProvider;
-import org.fabric3.fabric.component.InstanceFactoryProvider;
+import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.fabric.implementation.pojo.PojoComponent;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.wire.ProxyService;

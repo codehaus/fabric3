@@ -38,6 +38,7 @@ import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.TargetInitializationException;
+import org.fabric3.spi.component.InstanceFactory;
 
 /**
  * @version $Rev$ $Date$

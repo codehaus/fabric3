@@ -21,7 +21,7 @@ package org.fabric3.fabric.component.instancefactory.impl;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.fabric3.fabric.component.InstanceFactoryProvider;
+import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.fabric.component.instancefactory.IFProviderBuilder;
 import org.fabric3.fabric.component.instancefactory.IFProviderBuilderException;
 import org.fabric3.fabric.component.instancefactory.IFProviderBuilderRegistry;
