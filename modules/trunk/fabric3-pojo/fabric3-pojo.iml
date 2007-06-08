@@ -11,6 +11,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="fabric3-spi" exported="" />
     <orderEntry type="library" name="junit-3.8.1" level="application" />
     <orderEntry type="library" name="easymock-2.2" level="application" />
     <orderEntryProperties />
