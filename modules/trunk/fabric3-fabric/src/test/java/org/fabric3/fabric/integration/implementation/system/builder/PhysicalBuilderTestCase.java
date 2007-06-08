@@ -36,7 +36,7 @@ import org.fabric3.fabric.component.instancefactory.impl.ReflectiveIFProviderBui
 import org.fabric3.fabric.component.scope.CompositeScopeContainer;
 import org.fabric3.fabric.deployer.DeployerImpl;
 import org.fabric3.fabric.deployer.DeployerMonitor;
-import org.fabric3.fabric.implementation.pojo.PojoWorkContextTunnel;
+import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.fabric.implementation.system.SystemComponentBuilder;
 import org.fabric3.fabric.implementation.system.SystemComponentDefinition;
 import org.fabric3.fabric.implementation.system.SystemWireSourceDefinition;

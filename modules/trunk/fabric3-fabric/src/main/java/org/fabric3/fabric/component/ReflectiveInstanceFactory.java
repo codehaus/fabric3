@@ -26,7 +26,7 @@ import org.fabric3.spi.component.WorkContext;
 import org.fabric3.fabric.component.scope.ReflectiveInstanceWrapper;
 import org.fabric3.fabric.injection.EventInvoker;
 import org.fabric3.fabric.injection.Injector;
-import org.fabric3.fabric.implementation.pojo.PojoWorkContextTunnel;
+import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 

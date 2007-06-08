@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.implementation.pojo;
+package org.fabric3.pojo;
 
 import org.fabric3.spi.component.WorkContext;
 

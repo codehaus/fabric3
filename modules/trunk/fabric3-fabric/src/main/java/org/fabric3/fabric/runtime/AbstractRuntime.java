@@ -24,7 +24,7 @@ import java.net.URL;
 import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.fabric.component.ComponentManagerImpl;
 import org.fabric3.fabric.deployer.Deployer;
-import org.fabric3.fabric.implementation.pojo.PojoWorkContextTunnel;
+import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.fabric.monitor.NullMonitorFactory;
 import static org.fabric3.fabric.runtime.ComponentNames.EVENT_SERVICE_URI;
 import org.fabric3.host.management.ManagementService;

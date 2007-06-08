@@ -27,7 +27,7 @@ import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.implementation.java.JavaComponent;
 import org.fabric3.fabric.implementation.java.JavaInvokerInterceptor;
-import org.fabric3.fabric.implementation.pojo.PojoWorkContextTunnel;
+import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.fabric.runtime.AbstractRuntime;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
 import org.fabric3.spi.ObjectCreationException;

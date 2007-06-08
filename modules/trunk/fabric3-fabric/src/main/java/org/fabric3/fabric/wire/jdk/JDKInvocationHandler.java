@@ -9,7 +9,7 @@ import java.util.UUID;
 import org.osoa.sca.Conversation;
 import org.osoa.sca.ServiceReference;
 
-import org.fabric3.fabric.implementation.pojo.PojoWorkContextTunnel;
+import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.fabric.wire.NoMethodForOperationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.TargetInvocationException;

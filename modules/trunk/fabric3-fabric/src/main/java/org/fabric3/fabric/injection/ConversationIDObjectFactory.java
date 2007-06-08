@@ -18,7 +18,7 @@
  */
 package org.fabric3.fabric.injection;
 
-import org.fabric3.fabric.implementation.pojo.PojoWorkContextTunnel;
+import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.model.type.Scope;

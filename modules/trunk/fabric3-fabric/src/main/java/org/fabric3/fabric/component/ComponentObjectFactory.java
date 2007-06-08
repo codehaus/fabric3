@@ -24,7 +24,7 @@ import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.TargetResolutionException;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.fabric.implementation.pojo.PojoWorkContextTunnel;
+import org.fabric3.pojo.PojoWorkContextTunnel;
 
 /**
  * @version $Rev$ $Date$

@@ -40,7 +40,7 @@ import org.fabric3.fabric.implementation.java.JavaComponentBuilder;
 import org.fabric3.fabric.implementation.java.JavaComponentDefinition;
 import org.fabric3.fabric.implementation.java.JavaWireSourceDefinition;
 import org.fabric3.fabric.implementation.java.JavaWireTargetDefinition;
-import org.fabric3.fabric.implementation.pojo.PojoWorkContextTunnel;
+import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.fabric.model.physical.instancefactory.InjectionSiteMapping;
 import org.fabric3.fabric.model.physical.instancefactory.MemberSite;
 import org.fabric3.fabric.model.physical.instancefactory.ReflectiveIFProviderDefinition;
