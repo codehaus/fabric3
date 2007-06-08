@@ -237,11 +237,28 @@ public class ContributionServiceImpl implements ContributionService, Contributio
      * Recursively adds a resource description pointing to the contribution artifact on contained components.
      *
      * @param contribution the contribution the resource description requires
+     * @throws StoreNotFundException if no store can be found for a contribution import
+     * @throws ContributionNotFoundException if a required imported contribution is not found
      */
-    private void addContributionDescription(Contribution contribution) {
-        // encode the contribution URL so it can be de-referenced remotely
+    private void addContributionDescription(Contribution contribution)
+            throws StoreNotFundException, ContributionNotFoundException {
+        // encode the contribution URL so it can be dereferenced remotely
         URL identifier = encoder.encode(contribution.getLocation());
         ContributionResourceDescription description = new ContributionResourceDescription(identifier);
+        // Obtain local URLs for imported contributions and encode them for remote dereferencing
+        for (URI uri : contribution.getResolvedImportUris()) {
+            String key = parseStoreId(uri);
+            MetaDataStore store = metaDataStores.get(key);
+            if (store == null) {
+                throw new StoreNotFundException("No store for id", key);
+            }
+            Contribution imported = store.find(uri);
+            if (imported == null) {
+                throw new ContributionNotFoundException("Imported contribution not found", uri.toString());
+            }
+            URL importedUrl = encoder.encode(imported.getLocation());
+            description.addArtifactUrl(importedUrl);
+        }
         for (CompositeComponentType type : contribution.getComponentTypes().values()) {
             addContributionDescription(description, type);
         }

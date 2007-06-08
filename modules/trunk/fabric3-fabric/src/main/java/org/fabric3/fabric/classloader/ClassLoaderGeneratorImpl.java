@@ -17,6 +17,7 @@
 package org.fabric3.fabric.classloader;
 
 import java.net.URI;
+import java.net.URL;
 import java.util.List;
 
 import org.osoa.sca.annotations.EagerInit;
@@ -62,6 +63,10 @@ public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {
                 ContributionResourceDescription contribDescription = (ContributionResourceDescription) description;
                 // add the contribution to the classpath
                 definition.addResourceUrl(contribDescription.getIdentifier());
+                for (URL url : contribDescription.getImportedArtifactUrls()) {
+                    // add imported artifacts to the classpath
+                    definition.addResourceUrl(url);
+                }
             } else if (description instanceof ExtensionResourceDescription) {
                 // TODO support
             }

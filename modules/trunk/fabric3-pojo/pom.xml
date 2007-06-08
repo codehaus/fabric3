@@ -31,12 +31,23 @@
     <dependencies>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-spi</artifactId>
+            <artifactId>fabric3-extension</artifactId>
             <version>0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.woodstox</groupId>
+            <artifactId>wstx-asl</artifactId>
+            <version>3.2.0</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymockclassextension</artifactId>
+        </dependency>
+
     </dependencies>
 </project>

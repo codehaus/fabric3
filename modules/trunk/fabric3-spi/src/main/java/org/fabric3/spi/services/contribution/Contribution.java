@@ -22,8 +22,10 @@ package org.fabric3.spi.services.contribution;
 import java.io.Serializable;
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.xml.namespace.QName;
 
@@ -43,6 +45,7 @@ public class Contribution implements Serializable {
     private long timestamp;
     private ContributionManifest manifest;
     private Map<QName, CompositeComponentType> types = new HashMap<QName, CompositeComponentType>();
+    private List<URI> resolvedImports = new ArrayList<URI>();
 
     public Contribution(URI uri) {
         this.uri = uri;
@@ -143,5 +146,23 @@ public class Contribution implements Serializable {
      */
     public CompositeComponentType getComponentType(QName key) {
         return types.get(key);
+    }
+
+    /**
+     * Adds a contribution URI for a resolved import.
+     *
+     * @param uri the contribution URI
+     */
+    public void addResolvedImportUri(URI uri) {
+        resolvedImports.add(uri);
+    }
+
+    /**
+     * Returns the list of contribution URIs matching resolved imports.
+     *
+     * @return the list of contribution URIs matching resolved imports
+     */
+    public List<URI> getResolvedImportUris() {
+        return Collections.unmodifiableList(resolvedImports);
     }
 }

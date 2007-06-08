@@ -59,6 +59,6 @@ public class JarContributionProcessorTestCase extends TestCase {
         EasyMock.expect(classLoaderRegistry.getClassLoader(EasyMock.isA(URI.class))).andReturn(cl);
         EasyMock.replay(classLoaderRegistry);
         XMLInputFactory xmlFactory = XMLInputFactory.newInstance("javax.xml.stream.XMLInputFactory", cl);
-        processor = new JarContributionProcessor(loaderRegistry, classLoaderRegistry, xmlFactory);
+        processor = new JarContributionProcessor(loaderRegistry, classLoaderRegistry, xmlFactory, null);
     }
 }

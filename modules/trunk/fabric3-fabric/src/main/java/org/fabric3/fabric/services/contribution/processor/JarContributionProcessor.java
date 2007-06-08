@@ -50,6 +50,9 @@ import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.ContributionProcessor;
+import org.fabric3.spi.services.contribution.Import;
+import org.fabric3.spi.services.contribution.MatchingExportNotFoundException;
+import org.fabric3.spi.services.contribution.MetaDataStore;
 
 /**
  * Processes a JAR contribution
@@ -59,14 +62,17 @@ public class JarContributionProcessor extends ContributionProcessorExtension imp
     private static final URI HOST_CLASSLOADER = URI.create("sca://./hostClassLoader");
     private final LoaderRegistry loaderRegistry;
     private final XMLInputFactory xmlFactory;
+    private final MetaDataStore metaDataStore;
     private final ClassLoaderRegistry classLoaderRegistry;
 
     public JarContributionProcessor(@Reference LoaderRegistry loaderRegistry,
                                     @Reference ClassLoaderRegistry classLoaderRegistry,
-                                    @Reference XMLInputFactory xmlFactory) {
+                                    @Reference XMLInputFactory xmlFactory,
+                                    @Reference MetaDataStore metaDataStore) {
         this.loaderRegistry = loaderRegistry;
         this.classLoaderRegistry = classLoaderRegistry;
         this.xmlFactory = xmlFactory;
+        this.metaDataStore = metaDataStore;
     }
 
     public String getContentType() {
@@ -81,12 +87,25 @@ public class JarContributionProcessor extends ContributionProcessorExtension imp
         contribution.setManifest(manifest);
         // process .composite files
         List<URL> artifactUrls = getCompositeUrls(inputStream, toJarURL(sourceUrl));
+        // Build a classloader to perform the contribution introspection. The classpath will contain the contribution
+        // jar and resolved imports
         // FIXME for now, add the jar to the system classloader
         ClassLoader cl = classLoaderRegistry.getClassLoader(HOST_CLASSLOADER);
         CompositeClassLoader loader = new CompositeClassLoader(contribution.getUri(), cl);
         loader.addURL(sourceUrl);
+        for (Import imprt : manifest.getImports()) {
+            Contribution imported = metaDataStore.resolve(imprt);
+            if (imported == null) {
+                throw new MatchingExportNotFoundException(imprt.toString());
+            }
+            // add the resolved URI to the contribution
+            contribution.addResolvedImportUri(imported.getUri());
+            // add the jar to the classpath
+            loader.addURL(imported.getLocation());
+        }
         ClassLoader oldClassloader = Thread.currentThread().getContextClassLoader();
         try {
+            // set the classloader on the current context so artifacts in the contribution can be introspected
             Thread.currentThread().setContextClassLoader(loader);
             for (URL artifactUrl : artifactUrls) {
                 CompositeComponentType componentType = processComponentType(artifactUrl, loader);

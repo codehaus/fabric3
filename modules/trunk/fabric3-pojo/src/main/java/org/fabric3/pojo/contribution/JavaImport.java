@@ -14,34 +14,35 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.model.type;
+package org.fabric3.pojo.contribution;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import javax.xml.namespace.QName;
+
+import org.fabric3.spi.Constants;
+import org.fabric3.spi.services.contribution.Import;
 
 /**
- * Denotes a requirement on a contribution artifact.
- *
  * @version $Rev$ $Date$
  */
-public class ContributionResourceDescription extends ResourceDescription<URL> {
-    private List<URL> importedArtifacts = new ArrayList<URL>();
+public class JavaImport extends Import {
+    private static final long serialVersionUID = -7863768515125756048L;
+    private static final QName TYPE = new QName(Constants.FABRIC3_NS, "java");
+    private String packageName;
 
-    public ContributionResourceDescription(URL identifier) {
-        super(identifier);
+    public JavaImport(String namespace) {
+        this.packageName = namespace;
     }
 
-    public ContributionResourceDescription(URL identifier, String version) {
-        super(identifier, version);
+    public String getPackageName() {
+        return packageName;
     }
 
-    public void addArtifactUrl(URL url) {
-        importedArtifacts.add(url);
+    public QName getType() {
+        return TYPE;
     }
 
-    public List<URL> getImportedArtifactUrls() {
-        return Collections.unmodifiableList(importedArtifacts);
+
+    public String toString() {
+        return "Import package [" + packageName + "]";
     }
 }

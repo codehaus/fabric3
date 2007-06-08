@@ -44,4 +44,9 @@ public class QNameImport extends Import {
     public QName getType() {
         return TYPE;
     }
+
+    public String toString() {
+        return "Import qname [" + namespace + "]";
+    }
+
 }
