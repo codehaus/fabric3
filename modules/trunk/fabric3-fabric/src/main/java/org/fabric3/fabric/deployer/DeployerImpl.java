@@ -21,27 +21,29 @@ package org.fabric3.fabric.deployer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.fabric.builder.Connector;
-import org.fabric3.spi.component.ComponentManager;
-import org.fabric3.spi.component.RegistrationException;
-import org.fabric3.spi.builder.BuilderException;
-import org.fabric3.spi.builder.resource.ResourceContainerBuilderRegistry;
-import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
-import org.fabric3.spi.component.Component;
-import org.fabric3.spi.marshaller.MarshallerRegistry;
-import org.fabric3.spi.model.physical.PhysicalChangeSet;
-import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireDefinition;
-import org.fabric3.spi.model.physical.PhysicalResourceContainerDefinition;
-import org.fabric3.spi.services.messaging.MessagingService;
-import org.fabric3.spi.services.messaging.RequestListener;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
+import org.osoa.sca.annotations.Constructor;
+
+import org.fabric3.fabric.builder.Connector;
+import org.fabric3.host.monitor.MonitorFactory;
+import org.fabric3.spi.builder.BuilderException;
+import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
+import org.fabric3.spi.builder.resource.ResourceContainerBuilderRegistry;
+import org.fabric3.spi.component.Component;
+import org.fabric3.spi.component.ComponentManager;
+import org.fabric3.spi.component.RegistrationException;
+import org.fabric3.spi.marshaller.MarshallerRegistry;
+import org.fabric3.spi.model.physical.PhysicalChangeSet;
+import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
+import org.fabric3.spi.model.physical.PhysicalResourceContainerDefinition;
+import org.fabric3.spi.model.physical.PhysicalWireDefinition;
+import org.fabric3.spi.services.messaging.MessagingService;
+import org.fabric3.spi.services.messaging.RequestListener;
 
 /**
  * Deploys components in response to asynchronous messages from the Assembly.
@@ -78,6 +80,21 @@ public class DeployerImpl implements RequestListener, Deployer {
     private Connector connector;
 
     /**
+     * Sink for monitor events
+     */
+    private DeployerMonitor monitor;
+
+
+    @Constructor
+    public DeployerImpl(@Reference MonitorFactory factory) {
+        monitor = factory.getMonitor(DeployerMonitor.class);
+    }
+
+    public DeployerImpl(DeployerMonitor monitor) {
+        this.monitor = monitor;
+    }
+
+    /**
      * Deploys the component.
      *
      * @param content SCDL content.
@@ -91,8 +108,7 @@ public class DeployerImpl implements RequestListener, Deployer {
             final PhysicalChangeSet changeSet = (PhysicalChangeSet) marshallerRegistry.unmarshall(content);
             applyChangeSet(changeSet);
         } catch (Throwable ex) {
-            // FIXME log this
-            ex.printStackTrace();
+            monitor.error("Demarshalling receiving changeset", ex);
             return null;
         }
 
@@ -100,10 +116,12 @@ public class DeployerImpl implements RequestListener, Deployer {
     }
 
     public void applyChangeSet(PhysicalChangeSet changeSet) throws BuilderException, RegistrationException {
+        monitor.receivedChangeSet("Applying changeset");
         Set<PhysicalComponentDefinition> componentDefinitions = changeSet.getComponentDefinitions();
         List<Component> components = new ArrayList<Component>(componentDefinitions.size());
         for (PhysicalResourceContainerDefinition definition : changeSet.getAllResourceDefinitions()) {
             resourceBuilderRegistry.build(definition);
+            monitor.provisionResource("Provisioned resource", definition.getUri().toString());
         }
         for (PhysicalComponentDefinition pcd : componentDefinitions) {
             final Component component = componentBuilderRegistry.build(pcd);
@@ -117,6 +135,7 @@ public class DeployerImpl implements RequestListener, Deployer {
         }
         for (Component component : components) {
             component.start();
+            monitor.startComponent("Started component", component.getUri().toString());
         }
     }
 

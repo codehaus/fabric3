@@ -28,5 +28,13 @@ import org.fabric3.spi.model.physical.PhysicalChangeSet;
  * @version $Rev$ $Date$
  */
 public interface Deployer {
+
+    /**
+     * Apply the changeset to the runtime
+     *
+     * @param changeSet the changeset to apply
+     * @throws BuilderException      if an exception occurs building runtime artifacts from the changeset
+     * @throws RegistrationException if an error occurs registering a component built from the changeset
+     */
     void applyChangeSet(PhysicalChangeSet changeSet) throws BuilderException, RegistrationException;
 }

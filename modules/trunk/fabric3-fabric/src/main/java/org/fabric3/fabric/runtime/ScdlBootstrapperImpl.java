@@ -425,7 +425,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     }
 
     protected DeployerImpl createFederatedDeployer() {
-        DeployerImpl deployer = new DeployerImpl();
+        DeployerImpl deployer = new DeployerImpl(monitorFactory);
         ComponentBuilderRegistry registry = new DefaultComponentBuilderRegistry();
 
         WireAttacherRegistry wireAttacherRegistry = new WireAttacherRegistryImpl();

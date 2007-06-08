@@ -31,10 +31,11 @@ import javax.xml.stream.XMLStreamWriter;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.deployer.Deployer;
+import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.spi.builder.BuilderException;
+import org.fabric3.spi.command.Command;
 import org.fabric3.spi.command.CommandExecutorRegistry;
 import org.fabric3.spi.command.CommandSet;
-import org.fabric3.spi.command.Command;
 import org.fabric3.spi.command.ExecutionException;
 import org.fabric3.spi.component.RegistrationException;
 import org.fabric3.spi.marshaller.MarshalException;
@@ -53,15 +54,18 @@ public class FederatedRoutingService implements RoutingService {
     private final MessagingService messagingService;
     private final Deployer deployer;
     private final CommandExecutorRegistry executorRegistry;
+    private RoutingMonitor monitor;
 
     public FederatedRoutingService(@Reference Deployer deployer,
                                    @Reference MarshallerRegistry marshallerRegistry,
                                    @Reference MessagingService messagingService,
-                                   @Reference CommandExecutorRegistry executorRegistry) {
+                                   @Reference CommandExecutorRegistry executorRegistry,
+                                   @Reference MonitorFactory factory) {
         this.deployer = deployer;
         this.marshallerRegistry = marshallerRegistry;
         this.messagingService = messagingService;
         this.executorRegistry = executorRegistry;
+        monitor = factory.getMonitor(RoutingMonitor.class);
     }
 
     public void route(URI runtimeId, PhysicalChangeSet pcs) throws RoutingException {
@@ -75,6 +79,7 @@ public class FederatedRoutingService implements RoutingService {
             }
 
         } else {
+            monitor.routeChangeSet("Routing change set", runtimeId.toString(), pcs);
             routeToDestination(runtimeId, pcs);
         }
     }
@@ -83,6 +88,7 @@ public class FederatedRoutingService implements RoutingService {
         if (runtimeId == null) {
             routeLocally(commandSet);
         } else {
+            monitor.routeCommandSet("Routing command set", runtimeId.toString(), commandSet);
             routeToDestination(runtimeId, commandSet);
         }
     }

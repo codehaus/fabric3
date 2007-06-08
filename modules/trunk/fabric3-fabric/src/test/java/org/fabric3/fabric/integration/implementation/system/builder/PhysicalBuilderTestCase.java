@@ -35,6 +35,7 @@ import org.fabric3.fabric.component.instancefactory.impl.DefaultIFProviderBuilde
 import org.fabric3.fabric.component.instancefactory.impl.ReflectiveIFProviderBuilder;
 import org.fabric3.fabric.component.scope.CompositeScopeContainer;
 import org.fabric3.fabric.deployer.DeployerImpl;
+import org.fabric3.fabric.deployer.DeployerMonitor;
 import org.fabric3.fabric.implementation.pojo.PojoWorkContextTunnel;
 import org.fabric3.fabric.implementation.system.SystemComponentBuilder;
 import org.fabric3.fabric.implementation.system.SystemComponentDefinition;
@@ -170,8 +171,9 @@ public class PhysicalBuilderTestCase extends TestCase {
         builder.init();
 
         connector = new ConnectorImpl(null, wireAttacherRegistry);
-
-        deployer = new DeployerImpl();
+        DeployerMonitor monitor = EasyMock.createNiceMock(DeployerMonitor.class);
+        EasyMock.replay(monitor);
+        deployer = new DeployerImpl(monitor);
         deployer.setBuilderRegistry(builderRegistry);
         deployer.setComponentManager(componentManager);
         deployer.setConnector(connector);
