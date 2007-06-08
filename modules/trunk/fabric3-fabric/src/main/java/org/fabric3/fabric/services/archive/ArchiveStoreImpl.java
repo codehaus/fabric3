@@ -53,6 +53,7 @@ public class ArchiveStoreImpl implements ArchiveStore {
     protected String storeId;
     protected String domain;
     protected String repository;
+    private String runtimeId;
 
     /**
      * Creates a new archive store service instance
@@ -65,6 +66,7 @@ public class ArchiveStoreImpl implements ArchiveStore {
             throws IOException {
         this.repository = repository;
         domain = FileHelper.getDomainPath(hostInfo.getDomain());
+        runtimeId = hostInfo.getRuntimeId();
         archiveUriToUrl = new ConcurrentHashMap<URI, URL>();
     }
 
@@ -87,10 +89,10 @@ public class ArchiveStoreImpl implements ArchiveStore {
         if (repository == null) {
             repository = AccessController.doPrivileged(new PrivilegedAction<String>() {
                 public String run() {
-                    // Default to <user.home>/.fabric3/domains/<domain>/
+                    // Default to <user.home>/.fabric3/domains/<domain>/<runtime id>
                     String userHome = System.getProperty("user.home");
                     return userHome + File.separator + ".fabric3" + File.separator + "domains"
-                            + File.separator + domain + File.separator;
+                            + File.separator + domain + File.separator + runtimeId + File.separator;
 
                 }
             });

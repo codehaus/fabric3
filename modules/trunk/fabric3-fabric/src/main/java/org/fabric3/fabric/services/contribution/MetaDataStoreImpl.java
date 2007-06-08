@@ -66,6 +66,7 @@ public class MetaDataStoreImpl implements MetaDataStore {
             new ConcurrentHashMap<QName, Map<Export, Contribution>>();
     private String storeId = DEFAULT_STORE;
     private String domain;
+    private String runtimeId;
 
     public MetaDataStoreImpl(@Property(name = "repository", required = false)String repository,
                              @Reference HostInfo hostInfo,
@@ -75,6 +76,7 @@ public class MetaDataStoreImpl implements MetaDataStore {
         this.registry = registry;
         this.xstream = xstreamFactory.createInstance();
         domain = FileHelper.getDomainPath(hostInfo.getDomain());
+        runtimeId = hostInfo.getRuntimeId();
     }
 
     @Constructor
@@ -99,9 +101,10 @@ public class MetaDataStoreImpl implements MetaDataStore {
         if (repository == null) {
             repository = AccessController.doPrivileged(new PrivilegedAction<String>() {
                 public String run() {
-                    // Default to <user.home>/.fabric3/domains/<domain>/
+                    // Default to <user.home>/.fabric3/domains/<domain>/<runtime id>
                     String userHome = System.getProperty("user.home");
-                    return userHome + separator + ".fabric3" + separator + "domains" + separator + domain + separator;
+                    return userHome + separator + ".fabric3" + separator + "domains" + separator + domain
+                            + separator + runtimeId + File.separator;
                 }
             });
         }

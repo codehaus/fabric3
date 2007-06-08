@@ -28,8 +28,8 @@ import java.net.URL;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
-import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.fabric.services.contribution.ContributionStoreImpl;
+import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.services.contribution.ContributionStoreRegistry;
 
@@ -62,6 +62,7 @@ public class ArchiveStoreImplTestCase extends TestCase {
         super.setUp();
         HostInfo info = EasyMock.createMock(HostInfo.class);
         EasyMock.expect(info.getDomain()).andReturn(URI.create("fabric3://./fabric3/")).anyTimes();
+        EasyMock.expect(info.getRuntimeId()).andReturn("runtime").anyTimes();
         EasyMock.replay(info);
         ContributionStoreRegistry registry = EasyMock.createNiceMock(ContributionStoreRegistry.class);
         EasyMock.replay(registry);
