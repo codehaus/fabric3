@@ -32,7 +32,7 @@ import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.jmx.JmxManagementService;
 import org.fabric3.jmx.agent.Agent;
 import org.fabric3.jmx.agent.RmiAgent;
-import org.fabric3.runtime.standalone.DirectoryHelper;
+import org.fabric3.runtime.standalone.BootstrapHelper;
 import org.fabric3.runtime.standalone.StandaloneHostInfo;
 
 /**
@@ -92,7 +92,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
      * @throws MalformedURLException
      */
     private Fabric3Server() throws MalformedURLException {
-        installDirectory = DirectoryHelper.getInstallDirectory(Fabric3Server.class);
+        installDirectory = BootstrapHelper.getInstallDirectory(Fabric3Server.class);
         agent = RmiAgent.getInstance();
     }
 
@@ -105,8 +105,8 @@ public class Fabric3Server implements Fabric3ServerMBean {
         final StandaloneHostInfo hostInfo;
         final Fabric3Runtime<?> runtime;
         try {
-            hostInfo = DirectoryHelper.createHostInfo(installDirectory, profileName);
-            runtime = DirectoryHelper.createRuntime(hostInfo);
+            hostInfo = BootstrapHelper.createHostInfo(installDirectory, profileName);
+            runtime = BootstrapHelper.createRuntime(hostInfo);
         } catch (Exception ex) {
             ex.printStackTrace();
             throw new Fabric3ServerException(ex);
@@ -115,7 +115,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
         try {
             final MBeanServer mBeanServer = agent.getMBeanServer();
             final ManagementService<?> managementService = new JmxManagementService(mBeanServer, profileName);
-            final Bootstrapper bootstrapper = DirectoryHelper.createBootstrapper(hostInfo);
+            final Bootstrapper bootstrapper = BootstrapHelper.createBootstrapper(hostInfo);
             runtime.setManagementService(managementService);
             bootstrapper.bootstrap(runtime, hostInfo.getBootClassLoader(), hostInfo.getHostClassLoader());
             // start the runtime receiving requests

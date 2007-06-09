@@ -35,18 +35,18 @@ import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 
 /**
- * Utility class for installation directory related operations.
+ * Utility class for boostrap related operations.
  *
  * @version $Revision$ $Date$
  */
-public final class DirectoryHelper {
+public final class BootstrapHelper {
 
     /**
      * Installation directory system property name.
      */
     private static final String INSTALL_DIRECTORY_PROPERTY = "fabric3.installDir";
 
-    private DirectoryHelper() {
+    private BootstrapHelper() {
     }
 
     /**

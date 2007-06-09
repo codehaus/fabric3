@@ -58,7 +58,7 @@ public class StandaloneHostInfoImpl extends AbstractHostInfo implements Standalo
                                      final Properties properties,
                                      final ClassLoader hostClassLoader,
                                      final ClassLoader bootClassLoader) {
-        super(domain, DirectoryHelper.toURL(installDirectory), online, profileName);
+        super(domain, BootstrapHelper.toURL(installDirectory), online, profileName);
         this.profileName = profileName;
         this.profileDirectory = profileDirectory;
         this.properties = properties;

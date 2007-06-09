@@ -26,7 +26,7 @@ import java.util.ResourceBundle;
 
 import org.fabric3.api.annotation.LogLevel;
 import org.fabric3.host.runtime.Bootstrapper;
-import org.fabric3.runtime.standalone.DirectoryHelper;
+import org.fabric3.runtime.standalone.BootstrapHelper;
 import org.fabric3.runtime.standalone.StandaloneHostInfo;
 import org.fabric3.runtime.standalone.StandaloneRuntime;
 
@@ -63,13 +63,13 @@ public class Main {
             System.arraycopy(args, 1, appArgs, 0, appArgs.length);
         }
 
-        File installDir = DirectoryHelper.getInstallDirectory(Main.class);
+        File installDir = BootstrapHelper.getInstallDirectory(Main.class);
 
         // get profile to use, defaulting to "launcher"
         String profile = System.getProperty("fabric3.profile", "launcher");
 
-        StandaloneHostInfo hostInfo = DirectoryHelper.createHostInfo(installDir, profile);
-        StandaloneRuntime runtime = DirectoryHelper.createRuntime(hostInfo);
+        StandaloneHostInfo hostInfo = BootstrapHelper.createHostInfo(installDir, profile);
+        StandaloneRuntime runtime = BootstrapHelper.createRuntime(hostInfo);
 
         URL applicationJar = applicationFile.toURL();
         ClassLoader applicationClassLoader =
@@ -82,7 +82,7 @@ public class Main {
         }
 
         // boot the runtime
-        Bootstrapper bootstrapper = DirectoryHelper.createBootstrapper(hostInfo);
+        Bootstrapper bootstrapper = BootstrapHelper.createBootstrapper(hostInfo);
         LauncherMonitor monitor = runtime.getMonitorFactory().getMonitor(LauncherMonitor.class);
         try {
             bootstrapper.bootstrap(runtime, hostInfo.getBootClassLoader(), applicationClassLoader);
