@@ -16,14 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.component.scope;
+package org.fabric3.pojo.reflection;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import static org.easymock.EasyMock.createMock;
 
-import org.fabric3.pojo.reflection.EventInvoker;
-import org.fabric3.pojo.reflection.ObjectCallbackException;
 import org.fabric3.spi.component.TargetDestructionException;
 import org.fabric3.spi.component.TargetInitializationException;
 
@@ -67,8 +65,11 @@ public class ReflectiveInstanceWrapperTestCase extends TestCase {
         EasyMock.replay(destroyInvoker);
         wrapper = new ReflectiveInstanceWrapper<Object>(instance, null, destroyInvoker);
         try {
+            wrapper.start();
             wrapper.stop();
         } catch (TargetDestructionException e) {
+            fail();
+        } catch (TargetInitializationException e) {
             fail();
         }
         EasyMock.verify(destroyInvoker);

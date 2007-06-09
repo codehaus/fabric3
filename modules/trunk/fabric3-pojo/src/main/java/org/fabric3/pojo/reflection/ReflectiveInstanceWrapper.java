@@ -16,22 +16,26 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.component.scope;
+package org.fabric3.pojo.reflection;
 
+import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.TargetDestructionException;
 import org.fabric3.spi.component.TargetInitializationException;
-import org.fabric3.spi.component.InstanceWrapper;
 
 /**
  * @version $Rev$ $Date$
  */
-public class InstanceWrapperBase<T> implements InstanceWrapper<T> {
-    protected final T instance;
+public class ReflectiveInstanceWrapper<T> implements InstanceWrapper<T> {
+    private final T instance;
+    private final EventInvoker<T> initInvoker;
+    private final EventInvoker<T> destroyInvoker;
     private boolean started;
 
-    public InstanceWrapperBase(T instance) {
-        assert instance != null;
+    public ReflectiveInstanceWrapper(T instance, EventInvoker<T> initInvoker, EventInvoker<T> destroyInvoker) {
         this.instance = instance;
+        this.initInvoker = initInvoker;
+        this.destroyInvoker = destroyInvoker;
+        this.started = false;
     }
 
     public T getInstance() {
@@ -44,10 +48,28 @@ public class InstanceWrapperBase<T> implements InstanceWrapper<T> {
     }
 
     public void start() throws TargetInitializationException {
+        assert !started;
+        if (initInvoker != null) {
+            try {
+                initInvoker.invokeEvent(instance);
+            } catch (ObjectCallbackException e) {
+                throw new TargetInitializationException(e.getMessage(), e);
+            }
+        }
         started = true;
     }
 
+
     public void stop() throws TargetDestructionException {
-        started = false;
+        assert started;
+        try {
+            if (destroyInvoker != null) {
+                destroyInvoker.invokeEvent(instance);
+            }
+        } catch (ObjectCallbackException e) {
+            throw new TargetDestructionException(e.getMessage(), e);
+        } finally {
+            started = false;
+        }
     }
 }
