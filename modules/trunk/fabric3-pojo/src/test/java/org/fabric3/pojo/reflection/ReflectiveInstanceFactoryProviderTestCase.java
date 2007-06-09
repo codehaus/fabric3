@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.component;
+package org.fabric3.pojo.reflection;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -30,15 +30,12 @@ import java.util.Map;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
-import org.fabric3.pojo.reflection.FieldInjector;
-import org.fabric3.pojo.reflection.Injector;
-import org.fabric3.pojo.reflection.MethodInjector;
-import org.fabric3.spi.model.instance.ValueSource;
-import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.ObjectCreationException;
+import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.component.InstanceFactory;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.TargetInitializationException;
-import org.fabric3.spi.component.InstanceFactory;
+import org.fabric3.spi.model.instance.ValueSource;
 
 /**
  * @version $Rev$ $Date$

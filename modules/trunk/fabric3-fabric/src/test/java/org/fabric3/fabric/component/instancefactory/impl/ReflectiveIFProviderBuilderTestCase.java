@@ -21,7 +21,7 @@ package org.fabric3.fabric.component.instancefactory.impl;
 import java.lang.annotation.ElementType;
 
 import junit.framework.TestCase;
-import org.fabric3.fabric.component.ReflectiveInstanceFactoryProvider;
+import org.fabric3.pojo.reflection.ReflectiveInstanceFactoryProvider;
 import org.fabric3.fabric.model.physical.instancefactory.InjectionSiteMapping;
 import org.fabric3.spi.model.instance.ValueSource;
 import org.fabric3.spi.model.instance.ValueSource.ValueSourceType;

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.component;
+package org.fabric3.pojo.reflection;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -26,11 +26,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.fabric3.pojo.reflection.EventInvoker;
-import org.fabric3.pojo.reflection.FieldInjector;
-import org.fabric3.pojo.reflection.Injector;
-import org.fabric3.pojo.reflection.MethodEventInvoker;
-import org.fabric3.pojo.reflection.MethodInjector;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.InstanceFactory;
 import org.fabric3.spi.component.InstanceFactoryProvider;

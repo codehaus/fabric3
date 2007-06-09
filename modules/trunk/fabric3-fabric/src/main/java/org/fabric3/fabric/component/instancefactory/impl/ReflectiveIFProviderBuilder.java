@@ -29,7 +29,7 @@ import java.util.Map;
 
 import org.osoa.sca.annotations.EagerInit;
 
-import org.fabric3.fabric.component.ReflectiveInstanceFactoryProvider;
+import org.fabric3.pojo.reflection.ReflectiveInstanceFactoryProvider;
 import org.fabric3.fabric.component.instancefactory.IFProviderBuilderException;
 import org.fabric3.fabric.model.physical.instancefactory.InjectionSiteMapping;
 import org.fabric3.spi.model.instance.ValueSource;

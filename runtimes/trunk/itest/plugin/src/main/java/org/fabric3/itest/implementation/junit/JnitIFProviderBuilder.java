@@ -12,7 +12,7 @@ import java.util.Set;
 
 import org.osoa.sca.annotations.EagerInit;
 
-import org.fabric3.fabric.component.ReflectiveInstanceFactoryProvider;
+import org.fabric3.pojo.reflection.ReflectiveInstanceFactoryProvider;
 import org.fabric3.fabric.component.instancefactory.IFProviderBuilderException;
 import org.fabric3.fabric.component.instancefactory.impl.AbstractIFProviderBuilder;
 import org.fabric3.fabric.component.instancefactory.impl.UnknownInjectionSiteException;

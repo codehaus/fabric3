@@ -24,7 +24,6 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
 import org.fabric3.spi.component.Component;
-import org.fabric3.fabric.component.DuplicateNameException;
 
 /**
  * @version $Rev$ $Date$
