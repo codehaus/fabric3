@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.component.instancefactory.impl;
+package org.fabric3.fabric.services.instancefactory;
 
 import java.lang.annotation.ElementType;
 
@@ -29,12 +29,13 @@ import org.fabric3.pojo.instancefactory.Signature;
 import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.model.instance.ValueSource;
 import org.fabric3.spi.model.instance.ValueSource.ValueSourceType;
+import org.fabric3.fabric.services.instancefactory.ReflectiveInstanceFactoryBuilder;
 
 /**
  * @version $Date$ $Revision$
  */
 public class ReflectiveIFProviderBuilderTestCase extends TestCase {
-    private ReflectiveInstanceFactoryBuilder builder = new ReflectiveInstanceFactoryBuilder();
+    private ReflectiveInstanceFactoryBuilder builder = new ReflectiveInstanceFactoryBuilder(null);
     private InstanceFactoryDefinition definition;
 
     /**
@@ -98,10 +99,32 @@ public class ReflectiveIFProviderBuilderTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         definition = new InstanceFactoryDefinition();
-        definition.setImplementationClass("org.fabric3.fabric.component.instancefactory.impl.Foo");
+        definition.setImplementationClass(Foo.class.getName());
         definition.addConstructorArgument("java.lang.String");
         definition.addConstructorArgument("java.lang.Long");
         definition.setInitMethod(new Signature("init"));
         definition.setDestroyMethod(new Signature("destroy"));
+    }
+
+    public static class Foo {
+
+        protected Bar xyz;
+
+        public Foo(String a, Long b) {
+        }
+
+        public void setAbc(Bar abc) {
+        }
+
+        public void init() {
+        }
+
+        public void destroy() {
+        }
+
+    }
+    
+    public static class Bar {
+
     }
 }

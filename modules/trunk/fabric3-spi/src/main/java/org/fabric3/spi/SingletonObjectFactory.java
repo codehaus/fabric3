@@ -16,13 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.component.instancefactory.impl;
+package org.fabric3.spi;
 
 /**
- * 
- * @version $Date$ $Revision$
+ * Implementation of ObjectFactory that returns a single instance, typically an immutable type.
  *
+ * @version $Rev$ $Date$
  */
-public class Bar {
+public class SingletonObjectFactory<T> implements ObjectFactory<T> {
+    private final T instance;
+
+    public SingletonObjectFactory(T instance) {
+        this.instance = instance;
+    }
+
+    public T getInstance() {
+        return instance;
+    }
 
 }

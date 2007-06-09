@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.implementation.pojo;
+package org.fabric3.pojo.implementation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,8 +27,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
-import org.fabric3.fabric.injection.SingletonObjectFactory;
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.SingletonObjectFactory;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilder;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;

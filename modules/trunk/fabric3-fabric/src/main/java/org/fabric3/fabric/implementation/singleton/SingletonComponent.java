@@ -25,8 +25,8 @@ import java.util.Map;
 
 import org.osoa.sca.ComponentContext;
 
-import org.fabric3.extension.AbstractLifecycle;
-import org.fabric3.fabric.injection.SingletonObjectFactory;
+import org.fabric3.spi.AbstractLifecycle;
+import org.fabric3.spi.SingletonObjectFactory;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.AtomicComponent;

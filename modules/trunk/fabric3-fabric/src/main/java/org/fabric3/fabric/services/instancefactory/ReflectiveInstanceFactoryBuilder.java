@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.component.instancefactory.impl;
+package org.fabric3.fabric.services.instancefactory;
 
 import java.beans.IntrospectionException;
 import java.lang.annotation.ElementType;
@@ -28,14 +28,18 @@ import java.util.List;
 import java.util.Map;
 
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.pojo.reflection.ReflectiveInstanceFactoryProvider;
 import org.fabric3.pojo.instancefactory.InjectionSiteMapping;
+import org.fabric3.pojo.instancefactory.InstanceFactoryBuilder;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderException;
-import org.fabric3.spi.model.instance.ValueSource;
+import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
+import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.pojo.instancefactory.MemberSite;
 import org.fabric3.pojo.instancefactory.Signature;
-import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
+import org.fabric3.pojo.reflection.ReflectiveInstanceFactoryProvider;
+import org.fabric3.spi.model.instance.ValueSource;
 
 /**
  * Builds a reflection-based instance factory provider.
@@ -43,12 +47,18 @@ import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
  * @version $Date$ $Revision$
  */
 @EagerInit
-public class ReflectiveInstanceFactoryBuilder<T> extends
-        AbstractInstanceFactoryBuilder<ReflectiveInstanceFactoryProvider<T>, InstanceFactoryDefinition> {
+public class ReflectiveInstanceFactoryBuilder<T>
+        implements InstanceFactoryBuilder<ReflectiveInstanceFactoryProvider<T>, InstanceFactoryDefinition> {
 
-    @Override
-    protected Class<?> getIfpdClass() {
-        return InstanceFactoryDefinition.class;
+    private final InstanceFactoryBuilderRegistry registry;
+
+    public ReflectiveInstanceFactoryBuilder(@Reference InstanceFactoryBuilderRegistry registry) {
+        this.registry = registry;
+    }
+
+    @Init
+    public void init() {
+        registry.register(InstanceFactoryDefinition.class, this);
     }
 
     @SuppressWarnings("unchecked")

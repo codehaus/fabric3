@@ -22,7 +22,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
-import org.fabric3.fabric.implementation.pojo.PojoComponentBuilder;
+import org.fabric3.pojo.implementation.PojoComponentBuilder;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.component.InstanceFactoryProvider;

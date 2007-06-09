@@ -30,8 +30,8 @@ import org.fabric3.fabric.command.StartCompositeContextExecutor;
 import org.fabric3.fabric.command.StartCompositeContextGenerator;
 import org.fabric3.fabric.component.GroupInitializationExceptionFormatter;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
-import org.fabric3.fabric.component.instancefactory.impl.DefaultInstanceFactoryBuilderRegistry;
-import org.fabric3.fabric.component.instancefactory.impl.ReflectiveInstanceFactoryBuilder;
+import org.fabric3.fabric.services.instancefactory.DefaultInstanceFactoryBuilderRegistry;
+import org.fabric3.fabric.services.instancefactory.ReflectiveInstanceFactoryBuilder;
 import org.fabric3.fabric.component.scope.CompositeScopeContainer;
 import org.fabric3.fabric.component.scope.ScopeRegistryImpl;
 import org.fabric3.fabric.deployer.Deployer;
@@ -42,7 +42,7 @@ import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
 import org.fabric3.fabric.implementation.IntrospectionRegistryImpl;
 import org.fabric3.fabric.implementation.composite.CompositeComponentTypeLoader;
 import org.fabric3.fabric.implementation.composite.CompositeLoader;
-import org.fabric3.fabric.implementation.pojo.HelperImpl;
+import org.fabric3.fabric.services.instancefactory.GenerationHelperImpl;
 import org.fabric3.fabric.implementation.processor.ConstructorProcessor;
 import org.fabric3.fabric.implementation.processor.DestroyProcessor;
 import org.fabric3.fabric.implementation.processor.EagerInitProcessor;
@@ -385,7 +385,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
     protected GeneratorRegistry createGeneratorRegistry() {
         GeneratorRegistry registry = new GeneratorRegistryImpl();
-        new SystemComponentGenerator(registry, new HelperImpl());
+        new SystemComponentGenerator(registry, new GenerationHelperImpl());
         new SingletonGenerator(registry);
         StartCompositeContextGenerator contextGenerator = new StartCompositeContextGenerator(registry);
         contextGenerator.init();
@@ -430,8 +430,8 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         ComponentBuilderRegistry registry = new DefaultComponentBuilderRegistry();
 
         InstanceFactoryBuilderRegistry providerRegistry = new DefaultInstanceFactoryBuilderRegistry();
-        ReflectiveInstanceFactoryBuilder provider = new ReflectiveInstanceFactoryBuilder();
-        provider.setBuilderRegistry(providerRegistry);
+        ReflectiveInstanceFactoryBuilder provider = new ReflectiveInstanceFactoryBuilder(providerRegistry);
+        provider.init();
 
         TransformerRegistry<PullTransformer<?, ?>> transformerRegistry =
                 new DefaultTransformerRegistry<PullTransformer<?, ?>>();

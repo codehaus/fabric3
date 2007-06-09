@@ -16,17 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.component.instancefactory.impl;
+package org.fabric3.fabric.services.instancefactory;
 
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderException;
 
 /**
- * Thrown when an injection site is not found
- *
  * @version $Rev$ $Date$
  */
-public class UnknownInjectionSiteException extends InstanceFactoryBuilderException {
-    public UnknownInjectionSiteException(String identifier) {
-        super("Unknown injection site", identifier);
+public class NoRegisteredIFBuilderException extends InstanceFactoryBuilderException {
+
+    public NoRegisteredIFBuilderException(String identifier) {
+        super("No registered builder for", identifier);
     }
 }

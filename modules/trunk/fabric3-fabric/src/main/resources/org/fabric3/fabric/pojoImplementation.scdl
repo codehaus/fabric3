@@ -25,15 +25,15 @@
            name="org.fabric3.fabric.PojoImplementation"
            autowire="true">
 
-    <component name="defaultIFProviderBuilderRegistry">
-        <system:implementation.system class="org.fabric3.fabric.component.instancefactory.impl.DefaultInstanceFactoryBuilderRegistry"/>
+    <component name="org.fabric3.fabric.services.instancefactory.DefaultInstanceFactoryBuilderRegistry">
+        <system:implementation.system class="org.fabric3.fabric.services.instancefactory.DefaultInstanceFactoryBuilderRegistry"/>
     </component>
 
-    <component name="reflectiveIFProviderBuilder">
-        <system:implementation.system class="org.fabric3.fabric.component.instancefactory.impl.ReflectiveInstanceFactoryBuilder"/>
+    <component name="org.fabric3.fabric.services.instancefactory.ReflectiveInstanceFactoryBuilder">
+        <system:implementation.system class="org.fabric3.fabric.services.instancefactory.ReflectiveInstanceFactoryBuilder"/>
     </component>
 
-    <component name="pojo.generatorHelper">
-        <system:implementation.system class="org.fabric3.fabric.implementation.pojo.HelperImpl"/>
+    <component name="org.fabric3.fabric.services.instancefactory.GenerationHelperImpl">
+        <system:implementation.system class="org.fabric3.fabric.services.instancefactory.GenerationHelperImpl"/>
     </component>
 </composite>

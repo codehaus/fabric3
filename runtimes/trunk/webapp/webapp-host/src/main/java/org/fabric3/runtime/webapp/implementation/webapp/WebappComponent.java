@@ -27,7 +27,7 @@ import org.osoa.sca.CallableReference;
 import org.osoa.sca.ComponentContext;
 import org.osoa.sca.ServiceReference;
 
-import org.fabric3.extension.AbstractLifecycle;
+import org.fabric3.spi.AbstractLifecycle;
 import org.fabric3.fabric.component.ComponentContextImpl;
 import org.fabric3.fabric.component.ComponentContextProvider;
 import org.fabric3.fabric.component.ServiceReferenceImpl;

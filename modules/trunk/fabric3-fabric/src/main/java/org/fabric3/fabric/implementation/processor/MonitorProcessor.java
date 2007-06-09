@@ -22,7 +22,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.extension.implementation.java.AbstractPropertyProcessor;
-import org.fabric3.fabric.injection.SingletonObjectFactory;
+import org.fabric3.spi.SingletonObjectFactory;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.spi.implementation.java.ImplementationProcessorService;
 import org.fabric3.spi.implementation.java.JavaMappedProperty;

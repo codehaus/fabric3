@@ -27,11 +27,11 @@ import org.fabric3.spi.implementation.java.ConstructorDefinition;
 import org.fabric3.spi.implementation.java.JavaMappedProperty;
 import org.fabric3.spi.implementation.java.PojoComponentType;
 import org.fabric3.spi.implementation.java.IllegalPropertyException;
+import org.fabric3.spi.SingletonObjectFactory;
 
 import junit.framework.TestCase;
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
-import org.fabric3.fabric.injection.SingletonObjectFactory;
 import org.fabric3.host.monitor.MonitorFactory;
 
 import org.easymock.EasyMock;

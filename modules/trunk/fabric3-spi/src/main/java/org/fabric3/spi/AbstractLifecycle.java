@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.extension;
-
-import org.fabric3.spi.Lifecycle;
+package org.fabric3.spi;
 
 /**
  * Base class providing a simple implementation of Lifecycle.

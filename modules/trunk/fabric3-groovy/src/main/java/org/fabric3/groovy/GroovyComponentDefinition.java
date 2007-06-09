@@ -16,7 +16,7 @@
  */
 package org.fabric3.groovy;
 
-import org.fabric3.fabric.implementation.pojo.PojoComponentDefinition;
+import org.fabric3.pojo.implementation.PojoComponentDefinition;
 
 /**
  * @version $Rev$ $Date$

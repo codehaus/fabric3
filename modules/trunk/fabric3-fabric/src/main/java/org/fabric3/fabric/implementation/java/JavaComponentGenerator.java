@@ -23,7 +23,7 @@ import java.net.URI;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.implementation.pojo.PojoGenerationHelper;
+import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
@@ -45,12 +45,12 @@ import org.fabric3.spi.model.type.ComponentDefinition;
  */
 @EagerInit
 public class JavaComponentGenerator implements ComponentGenerator<LogicalComponent<JavaImplementation>> {
-    private final PojoGenerationHelper helper;
+    private final InstanceFactoryGenerationHelper helper;
     private final ClassLoaderGenerator classLoaderGenerator;
 
     public JavaComponentGenerator(@Reference GeneratorRegistry registry,
                                   @Reference ClassLoaderGenerator classLoaderGenerator,
-                                  @Reference PojoGenerationHelper helper) {
+                                  @Reference InstanceFactoryGenerationHelper helper) {
         this.classLoaderGenerator = classLoaderGenerator;
         registry.register(JavaImplementation.class, this);
         this.helper = helper;

@@ -14,12 +14,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.implementation.pojo;
+package org.fabric3.pojo.instancefactory;
 
 import java.lang.reflect.Method;
 
-import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
-import org.fabric3.pojo.instancefactory.Signature;
+import org.fabric3.pojo.implementation.PojoComponentDefinition;
 import org.fabric3.spi.implementation.java.ConstructorDefinition;
 import org.fabric3.spi.implementation.java.PojoComponentType;
 import org.fabric3.spi.model.type.ComponentDefinition;
@@ -28,7 +27,7 @@ import org.fabric3.spi.model.type.Implementation;
 /**
  * @version $Rev$ $Date$
  */
-public interface PojoGenerationHelper {
+public interface InstanceFactoryGenerationHelper {
     Integer getInitLevel(ComponentDefinition<?> definition, PojoComponentType type);
 
     Signature getSignature(Method method);

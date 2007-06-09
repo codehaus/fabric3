@@ -16,15 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.component;
+package org.fabric3.pojo;
 
-import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.ObjectCreationException;
-import org.fabric3.spi.component.ScopeContainer;
+import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.AtomicComponent;
+import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.TargetResolutionException;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.pojo.PojoWorkContextTunnel;
 
 /**
  * @version $Rev$ $Date$

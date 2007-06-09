@@ -36,6 +36,7 @@ import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.wire.Wire;
+import org.fabric3.pojo.implementation.PojoComponent;
 
 /**
  * @version $Rev$ $Date$

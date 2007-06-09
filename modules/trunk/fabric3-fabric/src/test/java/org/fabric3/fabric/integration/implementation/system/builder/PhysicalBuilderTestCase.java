@@ -30,8 +30,8 @@ import org.fabric3.fabric.builder.ConnectorImpl;
 import org.fabric3.fabric.builder.component.DefaultComponentBuilderRegistry;
 import org.fabric3.fabric.builder.component.WireAttacherRegistryImpl;
 import org.fabric3.fabric.component.ComponentManagerImpl;
-import org.fabric3.fabric.component.instancefactory.impl.DefaultInstanceFactoryBuilderRegistry;
-import org.fabric3.fabric.component.instancefactory.impl.ReflectiveInstanceFactoryBuilder;
+import org.fabric3.fabric.services.instancefactory.DefaultInstanceFactoryBuilderRegistry;
+import org.fabric3.fabric.services.instancefactory.ReflectiveInstanceFactoryBuilder;
 import org.fabric3.fabric.component.scope.CompositeScopeContainer;
 import org.fabric3.fabric.deployer.DeployerImpl;
 import org.fabric3.fabric.deployer.DeployerMonitor;
@@ -157,7 +157,8 @@ public class PhysicalBuilderTestCase extends TestCase {
         EasyMock.replay(scopeRegistry);
 
         InstanceFactoryBuilderRegistry providerBuilders = new DefaultInstanceFactoryBuilderRegistry();
-        providerBuilders.register(InstanceFactoryDefinition.class, new ReflectiveInstanceFactoryBuilder());
+        ReflectiveInstanceFactoryBuilder instanceFactoryBuilder = new ReflectiveInstanceFactoryBuilder(providerBuilders);
+        instanceFactoryBuilder.init();
 
         DefaultComponentBuilderRegistry builderRegistry = new DefaultComponentBuilderRegistry();
         componentManager = new ComponentManagerImpl();

@@ -20,6 +20,8 @@ package org.fabric3.fabric.injection;
 
 import junit.framework.TestCase;
 
+import org.fabric3.spi.SingletonObjectFactory;
+
 /**
  * @version $Rev$ $Date$
  */

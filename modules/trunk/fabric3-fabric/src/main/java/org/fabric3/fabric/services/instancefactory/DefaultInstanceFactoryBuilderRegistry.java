@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.component.instancefactory.impl;
+package org.fabric3.fabric.services.instancefactory;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

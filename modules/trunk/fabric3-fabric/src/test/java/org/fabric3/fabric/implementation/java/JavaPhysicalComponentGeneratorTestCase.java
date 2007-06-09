@@ -8,8 +8,8 @@ import java.net.URI;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
-import org.fabric3.fabric.implementation.pojo.HelperImpl;
-import org.fabric3.fabric.implementation.pojo.PojoComponentDefinition;
+import org.fabric3.fabric.services.instancefactory.GenerationHelperImpl;
+import org.fabric3.pojo.implementation.PojoComponentDefinition;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.pojo.instancefactory.InjectionSiteMapping;
 import org.fabric3.pojo.instancefactory.MemberSite;
@@ -98,7 +98,7 @@ public class JavaPhysicalComponentGeneratorTestCase extends TestCase {
         EasyMock.replay(registry);
         ClassLoaderGenerator classLoaderGenerator = EasyMock.createNiceMock(ClassLoaderGenerator.class);
         EasyMock.replay(classLoaderGenerator);
-        generator = new JavaComponentGenerator(registry, classLoaderGenerator, new HelperImpl());
+        generator = new JavaComponentGenerator(registry, classLoaderGenerator, new GenerationHelperImpl());
         initMethod = Foo.class.getMethod("init");
         destroyMethod = Foo.class.getMethod("destroy");
         setterMethod = Foo.class.getMethod("setter", Object.class);

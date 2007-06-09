@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.implementation.pojo;
+package org.fabric3.fabric.services.instancefactory;
 
 import java.lang.annotation.ElementType;
 import java.lang.reflect.Field;
@@ -24,10 +24,12 @@ import java.util.Map;
 
 import org.w3c.dom.Document;
 
-import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
+import org.fabric3.pojo.implementation.PojoComponentDefinition;
 import org.fabric3.pojo.instancefactory.InjectionSiteMapping;
+import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.pojo.instancefactory.MemberSite;
 import org.fabric3.pojo.instancefactory.Signature;
+import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
 import org.fabric3.spi.implementation.java.ConstructorDefinition;
 import org.fabric3.spi.implementation.java.JavaMappedProperty;
 import org.fabric3.spi.implementation.java.JavaMappedReference;
@@ -45,7 +47,7 @@ import org.fabric3.spi.model.type.PropertyValue;
 /**
  * @version $Rev$ $Date$
  */
-public class HelperImpl implements PojoGenerationHelper {
+public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
 
     public Integer getInitLevel(ComponentDefinition<?> definition, PojoComponentType type) {
         Integer initLevel = definition.getInitLevel();

@@ -16,18 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.implementation.pojo;
+package org.fabric3.pojo.implementation;
 
 import java.net.URI;
 import java.util.Map;
 
 import org.osoa.sca.ComponentContext;
 
-import org.fabric3.fabric.component.ComponentObjectFactory;
+import org.fabric3.pojo.ComponentObjectFactory;
 import org.fabric3.spi.component.InstanceFactory;
 import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.model.instance.ValueSource;
-import org.fabric3.extension.AbstractLifecycle;
+import org.fabric3.spi.AbstractLifecycle;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.component.AtomicComponent;
