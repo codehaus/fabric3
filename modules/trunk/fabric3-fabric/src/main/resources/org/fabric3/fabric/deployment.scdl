@@ -68,6 +68,16 @@
                 class="org.fabric3.fabric.services.contribution.manifest.QNameImportLoader"/>
     </component>
 
+    <component name="JavaExportLoader">
+        <system:implementation.system
+                class="org.fabric3.fabric.services.contribution.JavaExportLoader"/>
+    </component>
+
+    <component name="JavaImportLoader">
+        <system:implementation.system
+                class="org.fabric3.fabric.services.contribution.JavaImportLoader"/>
+    </component>
+
     <component name="ArtifactResolverRegistry">
         <system:implementation.system
                 class="org.fabric3.fabric.services.contribution.ArtifactResolverRegistryImpl"/>
