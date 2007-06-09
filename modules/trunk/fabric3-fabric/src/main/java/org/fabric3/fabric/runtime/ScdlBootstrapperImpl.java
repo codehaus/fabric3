@@ -29,9 +29,9 @@ import org.fabric3.fabric.command.StartCompositeContextCommand;
 import org.fabric3.fabric.command.StartCompositeContextExecutor;
 import org.fabric3.fabric.command.StartCompositeContextGenerator;
 import org.fabric3.fabric.component.GroupInitializationExceptionFormatter;
-import org.fabric3.fabric.component.instancefactory.IFProviderBuilderRegistry;
-import org.fabric3.fabric.component.instancefactory.impl.DefaultIFProviderBuilderRegistry;
-import org.fabric3.fabric.component.instancefactory.impl.ReflectiveIFProviderBuilder;
+import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
+import org.fabric3.fabric.component.instancefactory.impl.DefaultInstanceFactoryBuilderRegistry;
+import org.fabric3.fabric.component.instancefactory.impl.ReflectiveInstanceFactoryBuilder;
 import org.fabric3.fabric.component.scope.CompositeScopeContainer;
 import org.fabric3.fabric.component.scope.ScopeRegistryImpl;
 import org.fabric3.fabric.deployer.Deployer;
@@ -429,8 +429,8 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         DeployerImpl deployer = new DeployerImpl(monitorFactory);
         ComponentBuilderRegistry registry = new DefaultComponentBuilderRegistry();
 
-        IFProviderBuilderRegistry providerRegistry = new DefaultIFProviderBuilderRegistry();
-        ReflectiveIFProviderBuilder provider = new ReflectiveIFProviderBuilder();
+        InstanceFactoryBuilderRegistry providerRegistry = new DefaultInstanceFactoryBuilderRegistry();
+        ReflectiveInstanceFactoryBuilder provider = new ReflectiveInstanceFactoryBuilder();
         provider.setBuilderRegistry(providerRegistry);
 
         TransformerRegistry<PullTransformer<?, ?>> transformerRegistry =

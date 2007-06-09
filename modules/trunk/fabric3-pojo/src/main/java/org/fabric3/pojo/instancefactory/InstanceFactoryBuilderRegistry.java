@@ -16,10 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.component.instancefactory;
+package org.fabric3.pojo.instancefactory;
 
 import org.fabric3.spi.component.InstanceFactoryProvider;
-import org.fabric3.spi.model.physical.InstanceFactoryProviderDefinition;
 
 /**
  * Registry for instance factory builders.
@@ -27,7 +26,7 @@ import org.fabric3.spi.model.physical.InstanceFactoryProviderDefinition;
  * @version $Revision$ $Date: 2007-03-12 22:26:18 +0000 (Mon, 12 Mar
  *          2007) $
  */
-public interface IFProviderBuilderRegistry {
+public interface InstanceFactoryBuilderRegistry {
 
     /**
      * Registers an instance factory provider builder.
@@ -35,8 +34,8 @@ public interface IFProviderBuilderRegistry {
      * @param ifpdClass Instance factory provider definition class.
      * @param builder Instance factory provider builder.
      */
-    <IFPD extends InstanceFactoryProviderDefinition> void register(Class<?> ifpdClass,
-                                                                   IFProviderBuilder<?, IFPD> builder);
+    <IFPD extends InstanceFactoryDefinition> void register(Class<?> ifpdClass,
+                                                                   InstanceFactoryBuilder<?, IFPD> builder);
 
     /**
      * Builds an instnace factory provider from a definition.
@@ -46,6 +45,6 @@ public interface IFProviderBuilderRegistry {
      * @return Instance factory provider.
      * @param <T> the type of instance the InstanceFactory creates
      */
-    <T> InstanceFactoryProvider<T> build(InstanceFactoryProviderDefinition providerDefinition, ClassLoader cl)
-        throws IFProviderBuilderException;
+    <T> InstanceFactoryProvider<T> build(InstanceFactoryDefinition providerDefinition, ClassLoader cl)
+        throws InstanceFactoryBuilderException;
 }

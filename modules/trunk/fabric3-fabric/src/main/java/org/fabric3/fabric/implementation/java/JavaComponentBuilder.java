@@ -25,7 +25,8 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.component.instancefactory.IFProviderBuilderRegistry;
+import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
+import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.fabric.implementation.pojo.PojoComponentBuilder;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.BuilderException;
@@ -34,7 +35,6 @@ import org.fabric3.spi.component.ComponentManager;
 import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.model.physical.InstanceFactoryProviderDefinition;
 import org.fabric3.spi.model.type.Scope;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.transform.PullTransformer;
@@ -56,7 +56,7 @@ public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaCompone
     public JavaComponentBuilder(@Reference ComponentBuilderRegistry builderRegistry,
                                 @Reference ComponentManager manager,
                                 @Reference ScopeRegistry scopeRegistry,
-                                @Reference IFProviderBuilderRegistry providerBuilders,
+                                @Reference InstanceFactoryBuilderRegistry providerBuilders,
                                 @Reference ClassLoaderRegistry classLoaderRegistry,
                                 @Reference TransformerRegistry<PullTransformer<?, ?>> transformerRegistry,
                                 @Reference ProxyService proxyService) {
@@ -84,7 +84,7 @@ public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaCompone
         ScopeContainer<?> scopeContainer = scopeRegistry.getScopeContainer(scope);
 
         // create the InstanceFactoryProvider based on the definition in the model
-        InstanceFactoryProviderDefinition providerDefinition = definition.getInstanceFactoryProviderDefinition();
+        InstanceFactoryDefinition providerDefinition = definition.getInstanceFactoryProviderDefinition();
         InstanceFactoryProvider<T> provider = providerBuilders.build(providerDefinition, classLoader);
 
         Map<String, ObjectFactory<?>> propertyFactories = createPropertyFactories(definition, provider);

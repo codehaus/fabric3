@@ -21,20 +21,21 @@ package org.fabric3.fabric.component.instancefactory.impl;
 import java.lang.annotation.ElementType;
 
 import junit.framework.TestCase;
-import org.fabric3.pojo.reflection.ReflectiveInstanceFactoryProvider;
-import org.fabric3.pojo.reflection.definition.InjectionSiteMapping;
-import org.fabric3.pojo.reflection.definition.Signature;
-import org.fabric3.pojo.reflection.definition.ReflectiveInstanceFactoryDefinition;
+
+import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
+import org.fabric3.pojo.instancefactory.InjectionSiteMapping;
+import org.fabric3.pojo.instancefactory.MemberSite;
+import org.fabric3.pojo.instancefactory.Signature;
+import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.model.instance.ValueSource;
 import org.fabric3.spi.model.instance.ValueSource.ValueSourceType;
-import org.fabric3.pojo.reflection.definition.MemberSite;
 
 /**
  * @version $Date$ $Revision$
  */
 public class ReflectiveIFProviderBuilderTestCase extends TestCase {
-    private ReflectiveIFProviderBuilder builder = new ReflectiveIFProviderBuilder();
-    private ReflectiveInstanceFactoryDefinition definition;
+    private ReflectiveInstanceFactoryBuilder builder = new ReflectiveInstanceFactoryBuilder();
+    private InstanceFactoryDefinition definition;
 
     /**
      * Verifies an ValueSource is set properly for constructor parameters
@@ -46,7 +47,7 @@ public class ReflectiveIFProviderBuilderTestCase extends TestCase {
         definition.addCdiSource(cdiSource);
 
         ClassLoader cl = getClass().getClassLoader();
-        ReflectiveInstanceFactoryProvider provider = builder.build(definition, cl);
+        InstanceFactoryProvider provider = builder.build(definition, cl);
         Class<?> clazz = provider.getMemberType(cdiSource);
         assertEquals(String.class, clazz);
     }
@@ -67,7 +68,7 @@ public class ReflectiveIFProviderBuilderTestCase extends TestCase {
         definition.addInjectionSite(mapping);
 
         ClassLoader cl = getClass().getClassLoader();
-        ReflectiveInstanceFactoryProvider provider = builder.build(definition, cl);
+        InstanceFactoryProvider provider = builder.build(definition, cl);
         Class<?> clazz = provider.getMemberType(valueSource);
         assertEquals(Bar.class, clazz);
     }
@@ -88,7 +89,7 @@ public class ReflectiveIFProviderBuilderTestCase extends TestCase {
         definition.addInjectionSite(mapping);
 
         ClassLoader cl = getClass().getClassLoader();
-        ReflectiveInstanceFactoryProvider provider = builder.build(definition, cl);
+        InstanceFactoryProvider provider = builder.build(definition, cl);
         Class<?> clazz = provider.getMemberType(valueSource);
         assertEquals(Bar.class, clazz);
     }
@@ -96,7 +97,7 @@ public class ReflectiveIFProviderBuilderTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        definition = new ReflectiveInstanceFactoryDefinition();
+        definition = new InstanceFactoryDefinition();
         definition.setImplementationClass("org.fabric3.fabric.component.instancefactory.impl.Foo");
         definition.addConstructorArgument("java.lang.String");
         definition.addConstructorArgument("java.lang.Long");

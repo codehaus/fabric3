@@ -26,7 +26,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import org.fabric3.fabric.component.instancefactory.IFProviderBuilderRegistry;
+import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.fabric.injection.SingletonObjectFactory;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.BuilderException;
@@ -52,7 +52,7 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
 
     protected final ComponentBuilderRegistry builderRegistry;
     protected final ScopeRegistry scopeRegistry;
-    protected final IFProviderBuilderRegistry providerBuilders;
+    protected final InstanceFactoryBuilderRegistry providerBuilders;
     protected final ClassLoaderRegistry classLoaderRegistry;
     protected final TransformerRegistry<PullTransformer<?,?>> transformerRegistry;
 
@@ -72,7 +72,7 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
     protected PojoComponentBuilder(
             ComponentBuilderRegistry builderRegistry,
             ScopeRegistry scopeRegistry,
-            IFProviderBuilderRegistry providerBuilders,
+            InstanceFactoryBuilderRegistry providerBuilders,
             ClassLoaderRegistry classLoaderRegistry,
             TransformerRegistry<PullTransformer<?, ?>> transformerRegistry) {
         this.builderRegistry = builderRegistry;

@@ -24,10 +24,10 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
 import org.fabric3.spi.component.InstanceFactoryProvider;
-import org.fabric3.fabric.component.instancefactory.IFProviderBuilderRegistry;
+import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
+import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.model.physical.InstanceFactoryProviderDefinition;
 import org.fabric3.spi.model.type.Scope;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 
@@ -37,8 +37,8 @@ import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 public class SystemPhysicalComponentBuilderTestCase<T> extends TestCase {
     private ComponentBuilderRegistry builderRegistry;
     private ScopeRegistry scopeRegistry;
-    private IFProviderBuilderRegistry providerBuilders;
-    private InstanceFactoryProviderDefinition providerDefinition;
+    private InstanceFactoryBuilderRegistry providerBuilders;
+    private InstanceFactoryDefinition providerDefinition;
     private InstanceFactoryProvider<T> instanceFactoryProvider;
     private SystemComponentBuilder<T> builder;
     private SystemComponentDefinition definition;
@@ -67,8 +67,8 @@ public class SystemPhysicalComponentBuilderTestCase<T> extends TestCase {
         EasyMock.expect(classLoaderRegistry.getClassLoader(groupId)).andStubReturn(classLoader);
         EasyMock.replay(classLoaderRegistry);
 
-        providerBuilders = EasyMock.createMock(IFProviderBuilderRegistry.class);
-        providerDefinition = new InstanceFactoryProviderDefinition();
+        providerBuilders = EasyMock.createMock(InstanceFactoryBuilderRegistry.class);
+        providerDefinition = new InstanceFactoryDefinition();
         instanceFactoryProvider = EasyMock.createMock(InstanceFactoryProvider.class);
         EasyMock.expect(providerBuilders.build(providerDefinition, classLoader)).andStubReturn(instanceFactoryProvider);
         EasyMock.replay(providerBuilders);

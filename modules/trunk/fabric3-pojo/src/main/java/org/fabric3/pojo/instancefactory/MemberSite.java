@@ -1,4 +1,4 @@
-package org.fabric3.pojo.reflection.definition;
+package org.fabric3.pojo.instancefactory;
 
 import java.lang.annotation.ElementType;
 

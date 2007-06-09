@@ -19,9 +19,10 @@
 package org.fabric3.fabric.component.instancefactory.impl;
 
 import org.fabric3.spi.component.InstanceFactoryProvider;
-import org.fabric3.fabric.component.instancefactory.IFProviderBuilder;
-import org.fabric3.fabric.component.instancefactory.IFProviderBuilderRegistry;
-import org.fabric3.spi.model.physical.InstanceFactoryProviderDefinition;
+import org.fabric3.pojo.instancefactory.InstanceFactoryBuilder;
+import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
+import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
+
 import org.osoa.sca.annotations.Reference;
 
 /**
@@ -29,13 +30,13 @@ import org.osoa.sca.annotations.Reference;
  *
  * @version $Revision$ $Date$
  */
-public abstract class AbstractIFProviderBuilder<IFP extends InstanceFactoryProvider,
-        IFPD extends InstanceFactoryProviderDefinition> implements IFProviderBuilder<IFP, IFPD> {
+public abstract class AbstractInstanceFactoryBuilder<IFP extends InstanceFactoryProvider,
+        IFPD extends InstanceFactoryDefinition> implements InstanceFactoryBuilder<IFP, IFPD> {
 
     /**
-     * Returns the InstanceFactoryProviderDefinition the implementation handles.
+     * Returns the InstanceFactoryDefinition the implementation handles.
      *
-     * @return the InstanceFactoryProviderDefinition the implementation handles.
+     * @return the InstanceFactoryDefinition the implementation handles.
      */
     protected abstract Class<?> getIfpdClass();
 
@@ -45,7 +46,7 @@ public abstract class AbstractIFProviderBuilder<IFP extends InstanceFactoryProvi
      * @param registry The builder registry.
      */
     @Reference
-    public void setBuilderRegistry(IFProviderBuilderRegistry registry) {
+    public void setBuilderRegistry(InstanceFactoryBuilderRegistry registry) {
         registry.register(getIfpdClass(), this);
     }
 

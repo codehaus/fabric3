@@ -18,12 +18,12 @@
  */
 package org.fabric3.fabric.component.instancefactory.impl;
 
-import org.fabric3.fabric.component.instancefactory.IFProviderBuilderException;
+import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderException;
 
 /**
  * @version $Rev$ $Date$
  */
-public class NoRegisteredIFBuilderException extends IFProviderBuilderException {
+public class NoRegisteredIFBuilderException extends InstanceFactoryBuilderException {
 
     public NoRegisteredIFBuilderException(String identifier) {
         super("No registered builder for", identifier);

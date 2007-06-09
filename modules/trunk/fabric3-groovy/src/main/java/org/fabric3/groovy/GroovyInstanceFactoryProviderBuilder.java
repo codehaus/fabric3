@@ -19,20 +19,20 @@ package org.fabric3.groovy;
 import groovy.lang.GroovyClassLoader;
 
 import org.fabric3.pojo.reflection.ReflectiveInstanceFactoryProvider;
-import org.fabric3.fabric.component.instancefactory.IFProviderBuilderException;
-import org.fabric3.fabric.component.instancefactory.impl.ReflectiveIFProviderBuilder;
+import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderException;
+import org.fabric3.fabric.component.instancefactory.impl.ReflectiveInstanceFactoryBuilder;
 
 /**
  * @version $Rev$ $Date$
  */
-public class GroovyInstanceFactoryProviderBuilder extends ReflectiveIFProviderBuilder<GroovyInstanceFactoryDefinition> {
+public class GroovyInstanceFactoryProviderBuilder extends ReflectiveInstanceFactoryBuilder<GroovyInstanceFactoryDefinition> {
 
     protected Class<?> getIfpdClass() {
         return GroovyInstanceFactoryDefinition.class;
     }
 
     public ReflectiveInstanceFactoryProvider<GroovyInstanceFactoryDefinition> build(GroovyInstanceFactoryDefinition ifpd, ClassLoader cl)
-            throws IFProviderBuilderException {
+            throws InstanceFactoryBuilderException {
         cl = new GroovyClassLoader(cl);
         return super.build(ifpd, cl);
     }

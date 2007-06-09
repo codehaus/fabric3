@@ -30,12 +30,12 @@ import java.util.Map;
 import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.pojo.reflection.ReflectiveInstanceFactoryProvider;
-import org.fabric3.pojo.reflection.definition.ReflectiveInstanceFactoryDefinition;
-import org.fabric3.pojo.reflection.definition.InjectionSiteMapping;
-import org.fabric3.fabric.component.instancefactory.IFProviderBuilderException;
+import org.fabric3.pojo.instancefactory.InjectionSiteMapping;
+import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderException;
 import org.fabric3.spi.model.instance.ValueSource;
-import org.fabric3.pojo.reflection.definition.MemberSite;
-import org.fabric3.pojo.reflection.definition.Signature;
+import org.fabric3.pojo.instancefactory.MemberSite;
+import org.fabric3.pojo.instancefactory.Signature;
+import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 
 /**
  * Builds a reflection-based instance factory provider.
@@ -43,17 +43,17 @@ import org.fabric3.pojo.reflection.definition.Signature;
  * @version $Date$ $Revision$
  */
 @EagerInit
-public class ReflectiveIFProviderBuilder<T> extends
-        AbstractIFProviderBuilder<ReflectiveInstanceFactoryProvider<T>, ReflectiveInstanceFactoryDefinition> {
+public class ReflectiveInstanceFactoryBuilder<T> extends
+        AbstractInstanceFactoryBuilder<ReflectiveInstanceFactoryProvider<T>, InstanceFactoryDefinition> {
 
     @Override
     protected Class<?> getIfpdClass() {
-        return ReflectiveInstanceFactoryDefinition.class;
+        return InstanceFactoryDefinition.class;
     }
 
     @SuppressWarnings("unchecked")
-    public ReflectiveInstanceFactoryProvider<T> build(ReflectiveInstanceFactoryDefinition ifpd, ClassLoader cl)
-            throws IFProviderBuilderException {
+    public ReflectiveInstanceFactoryProvider<T> build(InstanceFactoryDefinition ifpd, ClassLoader cl)
+            throws InstanceFactoryBuilderException {
 
         try {
 
@@ -75,21 +75,21 @@ public class ReflectiveIFProviderBuilder<T> extends
                                                             destroyMethod);
 
         } catch (ClassNotFoundException ex) {
-            throw new IFProviderBuilderException(ex);
+            throw new InstanceFactoryBuilderException(ex);
         } catch (NoSuchMethodException ex) {
-            throw new IFProviderBuilderException(ex);
+            throw new InstanceFactoryBuilderException(ex);
         } catch (NoSuchFieldException ex) {
-            throw new IFProviderBuilderException(ex);
+            throw new InstanceFactoryBuilderException(ex);
         } catch (IntrospectionException ex) {
-            throw new IFProviderBuilderException(ex);
+            throw new InstanceFactoryBuilderException(ex);
         }
     }
 
     /*
      * Get injection sites.
      */
-    private Map<ValueSource, Member> getInjectionSites(ReflectiveInstanceFactoryDefinition ifpd, Class implClass)
-            throws NoSuchFieldException, IntrospectionException, IFProviderBuilderException {
+    private Map<ValueSource, Member> getInjectionSites(InstanceFactoryDefinition ifpd, Class implClass)
+            throws NoSuchFieldException, IntrospectionException, InstanceFactoryBuilderException {
 
         Map<ValueSource, Member> injectionSites = new HashMap<ValueSource, Member>();
         for (InjectionSiteMapping injectionSite : ifpd.getInjectionSites()) {
@@ -128,7 +128,7 @@ public class ReflectiveIFProviderBuilder<T> extends
     /*
      * Gets the matching constructor.
      */
-    private Constructor getConstructor(ReflectiveInstanceFactoryDefinition ifpd, ClassLoader cl, Class implClass)
+    private Constructor getConstructor(InstanceFactoryDefinition ifpd, ClassLoader cl, Class implClass)
             throws ClassNotFoundException, NoSuchMethodException {
         List<String> argNames = ifpd.getConstructorArguments();
         Class[] ctrArgs = new Class[argNames.size()];

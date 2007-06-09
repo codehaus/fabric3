@@ -30,9 +30,8 @@ import org.fabric3.fabric.builder.ConnectorImpl;
 import org.fabric3.fabric.builder.component.DefaultComponentBuilderRegistry;
 import org.fabric3.fabric.builder.component.WireAttacherRegistryImpl;
 import org.fabric3.fabric.component.ComponentManagerImpl;
-import org.fabric3.fabric.component.instancefactory.IFProviderBuilderRegistry;
-import org.fabric3.fabric.component.instancefactory.impl.DefaultIFProviderBuilderRegistry;
-import org.fabric3.fabric.component.instancefactory.impl.ReflectiveIFProviderBuilder;
+import org.fabric3.fabric.component.instancefactory.impl.DefaultInstanceFactoryBuilderRegistry;
+import org.fabric3.fabric.component.instancefactory.impl.ReflectiveInstanceFactoryBuilder;
 import org.fabric3.fabric.component.scope.CompositeScopeContainer;
 import org.fabric3.fabric.deployer.DeployerImpl;
 import org.fabric3.fabric.deployer.DeployerMonitor;
@@ -41,11 +40,12 @@ import org.fabric3.fabric.implementation.system.SystemComponentDefinition;
 import org.fabric3.fabric.implementation.system.SystemWireAttacher;
 import org.fabric3.fabric.implementation.system.SystemWireSourceDefinition;
 import org.fabric3.fabric.implementation.system.SystemWireTargetDefinition;
-import org.fabric3.pojo.reflection.definition.InjectionSiteMapping;
-import org.fabric3.pojo.reflection.definition.MemberSite;
-import org.fabric3.pojo.reflection.definition.ReflectiveInstanceFactoryDefinition;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.pojo.PojoWorkContextTunnel;
+import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
+import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
+import org.fabric3.pojo.instancefactory.InjectionSiteMapping;
+import org.fabric3.pojo.instancefactory.MemberSite;
 import org.fabric3.spi.builder.component.WireAttacherRegistry;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.ComponentManager;
@@ -94,7 +94,7 @@ public class PhysicalBuilderTestCase extends TestCase {
     }
 
     private SystemComponentDefinition createSourceComponentDefinition() {
-        ReflectiveInstanceFactoryDefinition sourceProviderDefinition = new ReflectiveInstanceFactoryDefinition();
+        InstanceFactoryDefinition sourceProviderDefinition = new InstanceFactoryDefinition();
         sourceProviderDefinition.setImplementationClass(SourceImpl.class.getName());
         InjectionSiteMapping mapping = new InjectionSiteMapping();
         mapping.setSource(new ValueSource(ValueSource.ValueSourceType.REFERENCE, "target"));
@@ -111,7 +111,7 @@ public class PhysicalBuilderTestCase extends TestCase {
     }
 
     private SystemComponentDefinition createTargetComponentDefinition() {
-        ReflectiveInstanceFactoryDefinition targetProviderDefinition = new ReflectiveInstanceFactoryDefinition();
+        InstanceFactoryDefinition targetProviderDefinition = new InstanceFactoryDefinition();
         targetProviderDefinition.setImplementationClass(TargetImpl.class.getName());
 
         SystemComponentDefinition target = new SystemComponentDefinition();
@@ -156,8 +156,8 @@ public class PhysicalBuilderTestCase extends TestCase {
         EasyMock.expect(scopeRegistry.getScopeContainer(Scope.COMPOSITE)).andStubReturn(scopeContainer);
         EasyMock.replay(scopeRegistry);
 
-        IFProviderBuilderRegistry providerBuilders = new DefaultIFProviderBuilderRegistry();
-        providerBuilders.register(ReflectiveInstanceFactoryDefinition.class, new ReflectiveIFProviderBuilder());
+        InstanceFactoryBuilderRegistry providerBuilders = new DefaultInstanceFactoryBuilderRegistry();
+        providerBuilders.register(InstanceFactoryDefinition.class, new ReflectiveInstanceFactoryBuilder());
 
         DefaultComponentBuilderRegistry builderRegistry = new DefaultComponentBuilderRegistry();
         componentManager = new ComponentManagerImpl();

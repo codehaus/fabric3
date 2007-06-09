@@ -18,14 +18,14 @@
  */
 package org.fabric3.fabric.component.instancefactory.impl;
 
-import org.fabric3.fabric.component.instancefactory.IFProviderBuilderException;
+import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderException;
 
 /**
  * Thrown when an injection site is not found
  *
  * @version $Rev$ $Date$
  */
-public class UnknownInjectionSiteException extends IFProviderBuilderException {
+public class UnknownInjectionSiteException extends InstanceFactoryBuilderException {
     public UnknownInjectionSiteException(String identifier) {
         super("Unknown injection site", identifier);
     }

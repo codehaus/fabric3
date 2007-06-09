@@ -18,8 +18,8 @@ package org.fabric3.fabric.implementation.pojo;
 
 import java.lang.reflect.Method;
 
-import org.fabric3.pojo.reflection.definition.ReflectiveInstanceFactoryDefinition;
-import org.fabric3.pojo.reflection.definition.Signature;
+import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
+import org.fabric3.pojo.instancefactory.Signature;
 import org.fabric3.spi.implementation.java.ConstructorDefinition;
 import org.fabric3.spi.implementation.java.PojoComponentType;
 import org.fabric3.spi.model.type.ComponentDefinition;
@@ -39,8 +39,7 @@ public interface PojoGenerationHelper {
      * @param type               the component type corresponding to the implementation
      * @param providerDefinition the instance factory provider definition
      */
-    void processConstructorSites(PojoComponentType type,
-                                 ReflectiveInstanceFactoryDefinition providerDefinition);
+    void processConstructorSites(PojoComponentType type, InstanceFactoryDefinition providerDefinition);
 
     /**
      * Creates InjectionSiteMappings for references declared by the component implementation
@@ -48,8 +47,7 @@ public interface PojoGenerationHelper {
      * @param type               the component type corresponding to the implementation
      * @param providerDefinition the instance factory provider definition
      */
-    void processReferenceSites(PojoComponentType type,
-                               ReflectiveInstanceFactoryDefinition providerDefinition);
+    void processReferenceSites(PojoComponentType type, InstanceFactoryDefinition providerDefinition);
 
     /**
      * Creates InjectionSiteMappings for references declared by the component implementation
@@ -57,8 +55,7 @@ public interface PojoGenerationHelper {
      * @param type               the component type corresponding to the implementation
      * @param providerDefinition the instance factory provider definition
      */
-    void processCallbackSites(PojoComponentType type,
-                              ReflectiveInstanceFactoryDefinition providerDefinition);
+    void processCallbackSites(PojoComponentType type, InstanceFactoryDefinition providerDefinition);
 
     /**
      * Adds the constructor parameter types to the provider definition
@@ -66,8 +63,7 @@ public interface PojoGenerationHelper {
      * @param ctorDef            the constructor definition
      * @param providerDefinition the provider definition
      */
-    void processConstructorArguments(ConstructorDefinition<?> ctorDef,
-                                     ReflectiveInstanceFactoryDefinition providerDefinition);
+    void processConstructorArguments(ConstructorDefinition<?> ctorDef, InstanceFactoryDefinition providerDefinition);
 
     void processProperties(PojoComponentDefinition physical,
                            ComponentDefinition<? extends Implementation<PojoComponentType>> logical);

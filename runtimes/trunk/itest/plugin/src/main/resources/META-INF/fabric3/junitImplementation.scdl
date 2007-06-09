@@ -33,8 +33,4 @@
         <system:implementation.system class="org.fabric3.itest.implementation.junit.JUnitComponentGenerator"/>
     </component>
 
-    <component name="org.fabric3.itest.implementation.junit.JnitIFProviderBuilder">
-        <system:implementation.system class="org.fabric3.itest.implementation.junit.JnitIFProviderBuilder"/>
-    </component>
-
 </composite>

@@ -22,23 +22,23 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.fabric3.spi.component.InstanceFactoryProvider;
-import org.fabric3.fabric.component.instancefactory.IFProviderBuilder;
-import org.fabric3.fabric.component.instancefactory.IFProviderBuilderException;
-import org.fabric3.fabric.component.instancefactory.IFProviderBuilderRegistry;
-import org.fabric3.spi.model.physical.InstanceFactoryProviderDefinition;
+import org.fabric3.pojo.instancefactory.InstanceFactoryBuilder;
+import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderException;
+import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
+import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 
 /**
  * Default implementation of the registry.
  * 
  * @version $Revison$ $Date$
  */
-public class DefaultIFProviderBuilderRegistry implements IFProviderBuilderRegistry {
+public class DefaultInstanceFactoryBuilderRegistry implements InstanceFactoryBuilderRegistry {
 
     // Internal cache
-    private Map<Class<?>, IFProviderBuilder<? extends InstanceFactoryProvider,
-            ? extends InstanceFactoryProviderDefinition>> registry =
-        new ConcurrentHashMap<Class<?>, IFProviderBuilder<? extends InstanceFactoryProvider,
-                ? extends InstanceFactoryProviderDefinition>>();
+    private Map<Class<?>, InstanceFactoryBuilder<? extends InstanceFactoryProvider,
+            ? extends InstanceFactoryDefinition>> registry =
+        new ConcurrentHashMap<Class<?>, InstanceFactoryBuilder<? extends InstanceFactoryProvider,
+                        ? extends InstanceFactoryDefinition>>();
 
     /**
      * Builds an instnace factory provider from a definition.
@@ -48,11 +48,11 @@ public class DefaultIFProviderBuilderRegistry implements IFProviderBuilderRegist
      * @return Instance factory provider.
      */
     @SuppressWarnings("unchecked")
-    public InstanceFactoryProvider build(InstanceFactoryProviderDefinition providerDefinition, ClassLoader cl)
-        throws IFProviderBuilderException {
+    public InstanceFactoryProvider build(InstanceFactoryDefinition providerDefinition, ClassLoader cl)
+        throws InstanceFactoryBuilderException {
 
-        Class<? extends InstanceFactoryProviderDefinition> type = providerDefinition.getClass();
-        IFProviderBuilder builder = registry.get(type);
+        Class<? extends InstanceFactoryDefinition> type = providerDefinition.getClass();
+        InstanceFactoryBuilder builder = registry.get(type);
         if(builder == null) {
             throw new NoRegisteredIFBuilderException(type.toString());
         }
@@ -62,8 +62,8 @@ public class DefaultIFProviderBuilderRegistry implements IFProviderBuilderRegist
     /**
      * Registers the builder.
      */
-    public <IFPD extends InstanceFactoryProviderDefinition> void register(Class<?> ifpdClass,
-                                                                          IFProviderBuilder<?, IFPD> builder) {
+    public <IFPD extends InstanceFactoryDefinition> void register(Class<?> ifpdClass,
+                                                                          InstanceFactoryBuilder<?, IFPD> builder) {
         registry.put(ifpdClass, builder);
     }
 

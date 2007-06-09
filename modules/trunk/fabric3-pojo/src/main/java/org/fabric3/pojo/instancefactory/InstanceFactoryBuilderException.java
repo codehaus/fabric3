@@ -16,26 +16,43 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.component.instancefactory;
+package org.fabric3.pojo.instancefactory;
 
-import org.fabric3.spi.component.InstanceFactoryProvider;
-import org.fabric3.spi.model.physical.InstanceFactoryProviderDefinition;
+import org.fabric3.spi.builder.BuilderException;
 
 /**
- * Interface for building instance factories.
+ * The builder exception for IF provider.
  *
  * @version $Revision$ $Date$
  */
-public interface IFProviderBuilder<IFP extends InstanceFactoryProvider,
-        IFPD extends InstanceFactoryProviderDefinition> {
+@SuppressWarnings("serial")
+public class InstanceFactoryBuilderException extends BuilderException {
 
     /**
-     * Builds an instance factory provider from provider definition.
+     * Initializes the message.
      *
-     * @param ifpd Instance factory provider definition.
-     * @param cl   Classloader to use.
-     * @return Instance factory provider.
-     * @throws IFProviderBuilderException
+     * @param message Initializes the message.
      */
-    IFP build(IFPD ifpd, ClassLoader cl) throws IFProviderBuilderException;
+    public InstanceFactoryBuilderException(String message) {
+        super(message);
+    }
+
+    /**
+     * Initil
+     * @param message
+     * @param identifier
+     */
+    public InstanceFactoryBuilderException(String message, String identifier) {
+        super(message, identifier);
+    }
+
+    /**
+     * Initializes the causer.
+     *
+     * @param cause Initializes the cause.
+     */
+    public InstanceFactoryBuilderException(Throwable cause) {
+        super(cause);
+    }
+
 }

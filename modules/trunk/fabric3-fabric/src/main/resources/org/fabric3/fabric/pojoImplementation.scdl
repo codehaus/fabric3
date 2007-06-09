@@ -26,11 +26,11 @@
            autowire="true">
 
     <component name="defaultIFProviderBuilderRegistry">
-        <system:implementation.system class="org.fabric3.fabric.component.instancefactory.impl.DefaultIFProviderBuilderRegistry"/>
+        <system:implementation.system class="org.fabric3.fabric.component.instancefactory.impl.DefaultInstanceFactoryBuilderRegistry"/>
     </component>
 
     <component name="reflectiveIFProviderBuilder">
-        <system:implementation.system class="org.fabric3.fabric.component.instancefactory.impl.ReflectiveIFProviderBuilder"/>
+        <system:implementation.system class="org.fabric3.fabric.component.instancefactory.impl.ReflectiveInstanceFactoryBuilder"/>
     </component>
 
     <component name="pojo.generatorHelper">

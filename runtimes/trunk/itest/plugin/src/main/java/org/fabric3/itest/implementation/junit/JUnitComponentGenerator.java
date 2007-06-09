@@ -13,9 +13,11 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.fabric.implementation.java.JavaComponentDefinition;
 import org.fabric3.fabric.implementation.java.JavaWireSourceDefinition;
 import org.fabric3.fabric.implementation.java.JavaWireTargetDefinition;
-import org.fabric3.pojo.reflection.definition.InjectionSiteMapping;
+import org.fabric3.pojo.instancefactory.InjectionSiteMapping;
 import org.fabric3.spi.model.instance.ValueSource;
-import org.fabric3.pojo.reflection.definition.MemberSite;
+import org.fabric3.pojo.instancefactory.MemberSite;
+import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
+import org.fabric3.pojo.instancefactory.Signature;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
@@ -58,14 +60,14 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         pDefinition.setClassLoaderId(URI.create("sca://./applicationClassLoader"));
         pDefinition.setScope(type.getImplementationScope());
         // TODO get classloader id
-        JUnitIFProviderDefinition providerDefinition = new JUnitIFProviderDefinition();
+        InstanceFactoryDefinition providerDefinition = new InstanceFactoryDefinition();
         Method destroyMethod = type.getDestroyMethod();
         if (destroyMethod != null) {
-            providerDefinition.setDestroyMethod(destroyMethod.getName());
+            providerDefinition.setDestroyMethod(new Signature(destroyMethod));
         }
         Method initMethod = type.getInitMethod();
         if (initMethod != null) {
-            providerDefinition.setInitMethod(initMethod.getName());
+            providerDefinition.setInitMethod(new Signature(initMethod));
         }
 
         // JFM FIXME seems hacky and add to JavaPCDG
@@ -109,7 +111,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
      * @param providerDefinition the instance factory provider definition
      */
     private void processConstructorSites(PojoComponentType type,
-                                         JUnitIFProviderDefinition providerDefinition) {
+                                         InstanceFactoryDefinition providerDefinition) {
         Map<String, JavaMappedReference> references = type.getReferences();
         Map<String, JavaMappedProperty<?>> properties = type.getProperties();
         Map<String, JavaMappedService> services = type.getServices();
@@ -148,7 +150,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
      * @param providerDefinition the instance factory provider definition
      */
     private void processReferenceSites(PojoComponentType type,
-                                       JUnitIFProviderDefinition providerDefinition) {
+                                       InstanceFactoryDefinition providerDefinition) {
         Map<String, JavaMappedReference> references = type.getReferences();
         for (Map.Entry<String, JavaMappedReference> entry : references.entrySet()) {
             JavaMappedReference reference = entry.getValue();
@@ -181,7 +183,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
      * @param providerDefinition the provider definition
      */
     private void processConstructorArguments(ConstructorDefinition<?> ctorDef,
-                                             JUnitIFProviderDefinition providerDefinition) {
+                                             InstanceFactoryDefinition providerDefinition) {
         for (Class<?> type : ctorDef.getConstructor().getParameterTypes()) {
             providerDefinition.addConstructorArgument(type.getName());
         }

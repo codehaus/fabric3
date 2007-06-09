@@ -17,37 +17,26 @@
  * under the License.    
  */
 
-package org.fabric3.pojo.reflection.definition;
+package org.fabric3.pojo.instancefactory;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import org.fabric3.spi.model.instance.ValueSource;
-import org.fabric3.spi.model.physical.InstanceFactoryProviderDefinition;
+import org.fabric3.spi.model.type.ModelObject;
 
 /**
- * Reflection-based instance factory provider definition.
+ * Base class for instance factory definitions.
  *
- * @version $Revision$ $Date$
+ * @version $Revsion$ $Date$
  */
-public class ReflectiveInstanceFactoryDefinition extends InstanceFactoryProviderDefinition {
-
+public class InstanceFactoryDefinition extends ModelObject {
     // Implementation class
-    private String implementationClass;
-
-    // Constructor arguments
-    private List<String> constructorArguments = new LinkedList<String>();
-
-    // Init method
-    private Signature initMethod;
-
-    // Destroy method
-    private Signature destroyMethod;
-
-    // Constructor injection sites
-    private List<ValueSource> cdiSources = new LinkedList<ValueSource>();
-
-    // Injection sites
+    private String implementationClass;// Constructor arguments
+    private List<String> constructorArguments = new LinkedList<String>();// Init method
+    private Signature initMethod;// Destroy method
+    private Signature destroyMethod;// Constructor injection sites
+    private List<ValueSource> cdiSources = new LinkedList<ValueSource>();// Injection sites
     private List<InjectionSiteMapping> injectionSites = new LinkedList<InjectionSiteMapping>();
 
     /**

@@ -24,7 +24,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.implementation.pojo.PojoGenerationHelper;
-import org.fabric3.pojo.reflection.definition.ReflectiveInstanceFactoryDefinition;
+import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
@@ -56,7 +56,7 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
         @SuppressWarnings({"unchecked"})
         PojoComponentType type = implementation.getComponentType();
 
-        ReflectiveInstanceFactoryDefinition providerDefinition = new ReflectiveInstanceFactoryDefinition();
+        InstanceFactoryDefinition providerDefinition = new InstanceFactoryDefinition();
         providerDefinition.setInitMethod(helper.getSignature(type.getInitMethod()));
         providerDefinition.setDestroyMethod(helper.getSignature(type.getDestroyMethod()));
         providerDefinition.setImplementationClass(implementation.getImplementationClass().getName());

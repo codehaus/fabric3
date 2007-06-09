@@ -35,6 +35,7 @@ public class MethodEventInvoker<T> implements EventInvoker<T> {
     public MethodEventInvoker(Method method) {
         assert method != null;
         this.method = method;
+        this.method.setAccessible(true);
     }
 
     public void invokeEvent(T instance) throws ObjectCallbackException {

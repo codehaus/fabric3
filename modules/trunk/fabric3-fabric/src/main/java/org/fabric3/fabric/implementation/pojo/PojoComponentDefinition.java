@@ -24,7 +24,7 @@ import java.util.Map;
 
 import org.w3c.dom.Document;
 
-import org.fabric3.spi.model.physical.InstanceFactoryProviderDefinition;
+import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 
 /**
@@ -34,7 +34,7 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
  */
 public abstract class PojoComponentDefinition extends PhysicalComponentDefinition {
 
-    private InstanceFactoryProviderDefinition instanceFactoryProviderDefinition;
+    private InstanceFactoryDefinition instanceFactoryProviderDefinition;
     private URI classLoaderId;
     private final Map<String, Document> propertyValues = new HashMap<String, Document>();
 
@@ -43,7 +43,7 @@ public abstract class PojoComponentDefinition extends PhysicalComponentDefinitio
      *
      * @return Instance factory provider definition.
      */
-    public InstanceFactoryProviderDefinition getInstanceFactoryProviderDefinition() {
+    public InstanceFactoryDefinition getInstanceFactoryProviderDefinition() {
         return instanceFactoryProviderDefinition;
     }
 
@@ -54,7 +54,7 @@ public abstract class PojoComponentDefinition extends PhysicalComponentDefinitio
      *         Instance factory provider definition.
      */
     public void setInstanceFactoryProviderDefinition(
-            InstanceFactoryProviderDefinition instanceFactoryProviderDefinition) {
+            InstanceFactoryDefinition instanceFactoryProviderDefinition) {
         this.instanceFactoryProviderDefinition = instanceFactoryProviderDefinition;
     }
 
