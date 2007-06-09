@@ -17,20 +17,20 @@
  * under the License.    
  */
 
-package org.fabric3.fabric.model.physical.instancefactory;
+package org.fabric3.pojo.reflection.definition;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import org.fabric3.spi.model.physical.InstanceFactoryProviderDefinition;
 import org.fabric3.spi.model.instance.ValueSource;
+import org.fabric3.spi.model.physical.InstanceFactoryProviderDefinition;
 
 /**
  * Reflection-based instance factory provider definition.
  *
  * @version $Revision$ $Date$
  */
-public class ReflectiveIFProviderDefinition extends InstanceFactoryProviderDefinition {
+public class ReflectiveInstanceFactoryDefinition extends InstanceFactoryProviderDefinition {
 
     // Implementation class
     private String implementationClass;
@@ -53,8 +53,7 @@ public class ReflectiveIFProviderDefinition extends InstanceFactoryProviderDefin
     /**
      * returns the constructor argument.
      *
-     * @return the constructorArguments Fully qualified names of the constructor
-     *         atgument types.
+     * @return the constructorArguments Fully qualified names of the constructor atgument types.
      */
     public List<String> getConstructorArguments() {
         return constructorArguments;

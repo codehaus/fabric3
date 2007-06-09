@@ -18,8 +18,8 @@ package org.fabric3.fabric.implementation.pojo;
 
 import java.lang.reflect.Method;
 
-import org.fabric3.fabric.model.physical.instancefactory.ReflectiveIFProviderDefinition;
-import org.fabric3.fabric.model.physical.instancefactory.Signature;
+import org.fabric3.pojo.reflection.definition.ReflectiveInstanceFactoryDefinition;
+import org.fabric3.pojo.reflection.definition.Signature;
 import org.fabric3.spi.implementation.java.ConstructorDefinition;
 import org.fabric3.spi.implementation.java.PojoComponentType;
 import org.fabric3.spi.model.type.ComponentDefinition;
@@ -40,7 +40,7 @@ public interface PojoGenerationHelper {
      * @param providerDefinition the instance factory provider definition
      */
     void processConstructorSites(PojoComponentType type,
-                                 ReflectiveIFProviderDefinition providerDefinition);
+                                 ReflectiveInstanceFactoryDefinition providerDefinition);
 
     /**
      * Creates InjectionSiteMappings for references declared by the component implementation
@@ -49,7 +49,7 @@ public interface PojoGenerationHelper {
      * @param providerDefinition the instance factory provider definition
      */
     void processReferenceSites(PojoComponentType type,
-                               ReflectiveIFProviderDefinition providerDefinition);
+                               ReflectiveInstanceFactoryDefinition providerDefinition);
 
     /**
      * Creates InjectionSiteMappings for references declared by the component implementation
@@ -58,7 +58,7 @@ public interface PojoGenerationHelper {
      * @param providerDefinition the instance factory provider definition
      */
     void processCallbackSites(PojoComponentType type,
-                              ReflectiveIFProviderDefinition providerDefinition);
+                              ReflectiveInstanceFactoryDefinition providerDefinition);
 
     /**
      * Adds the constructor parameter types to the provider definition
@@ -67,7 +67,7 @@ public interface PojoGenerationHelper {
      * @param providerDefinition the provider definition
      */
     void processConstructorArguments(ConstructorDefinition<?> ctorDef,
-                                     ReflectiveIFProviderDefinition providerDefinition);
+                                     ReflectiveInstanceFactoryDefinition providerDefinition);
 
     void processProperties(PojoComponentDefinition physical,
                            ComponentDefinition<? extends Implementation<PojoComponentType>> logical);

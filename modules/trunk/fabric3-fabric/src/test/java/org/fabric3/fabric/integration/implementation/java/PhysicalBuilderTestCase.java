@@ -41,9 +41,9 @@ import org.fabric3.fabric.implementation.java.JavaComponentDefinition;
 import org.fabric3.fabric.implementation.java.JavaWireAttacher;
 import org.fabric3.fabric.implementation.java.JavaWireSourceDefinition;
 import org.fabric3.fabric.implementation.java.JavaWireTargetDefinition;
-import org.fabric3.fabric.model.physical.instancefactory.InjectionSiteMapping;
-import org.fabric3.fabric.model.physical.instancefactory.MemberSite;
-import org.fabric3.fabric.model.physical.instancefactory.ReflectiveIFProviderDefinition;
+import org.fabric3.pojo.reflection.definition.InjectionSiteMapping;
+import org.fabric3.pojo.reflection.definition.MemberSite;
+import org.fabric3.pojo.reflection.definition.ReflectiveInstanceFactoryDefinition;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.spi.builder.component.WireAttacherRegistry;
@@ -94,7 +94,7 @@ public class PhysicalBuilderTestCase extends TestCase {
     }
 
     private JavaComponentDefinition createSourceComponentDefinition() {
-        ReflectiveIFProviderDefinition sourceProviderDefinition = new ReflectiveIFProviderDefinition();
+        ReflectiveInstanceFactoryDefinition sourceProviderDefinition = new ReflectiveInstanceFactoryDefinition();
         sourceProviderDefinition.setImplementationClass(SourceImpl.class.getName());
         InjectionSiteMapping mapping = new InjectionSiteMapping();
         mapping.setSource(new ValueSource(ValueSource.ValueSourceType.REFERENCE, "target"));
@@ -111,7 +111,7 @@ public class PhysicalBuilderTestCase extends TestCase {
     }
 
     private JavaComponentDefinition createTargetComponentDefinition() {
-        ReflectiveIFProviderDefinition targetProviderDefinition = new ReflectiveIFProviderDefinition();
+        ReflectiveInstanceFactoryDefinition targetProviderDefinition = new ReflectiveInstanceFactoryDefinition();
         targetProviderDefinition.setImplementationClass(TargetImpl.class.getName());
 
         JavaComponentDefinition target = new JavaComponentDefinition();
@@ -158,7 +158,7 @@ public class PhysicalBuilderTestCase extends TestCase {
         EasyMock.replay(scopeRegistry);
 
         IFProviderBuilderRegistry providerBuilders = new DefaultIFProviderBuilderRegistry();
-        providerBuilders.register(ReflectiveIFProviderDefinition.class, new ReflectiveIFProviderBuilder());
+        providerBuilders.register(ReflectiveInstanceFactoryDefinition.class, new ReflectiveIFProviderBuilder());
 
         DefaultComponentBuilderRegistry builderRegistry = new DefaultComponentBuilderRegistry();
         componentManager = new ComponentManagerImpl();

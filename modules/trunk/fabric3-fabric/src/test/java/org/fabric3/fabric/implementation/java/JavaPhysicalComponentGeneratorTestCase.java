@@ -10,9 +10,9 @@ import org.easymock.EasyMock;
 
 import org.fabric3.fabric.implementation.pojo.HelperImpl;
 import org.fabric3.fabric.implementation.pojo.PojoComponentDefinition;
-import org.fabric3.fabric.model.physical.instancefactory.InjectionSiteMapping;
-import org.fabric3.fabric.model.physical.instancefactory.MemberSite;
-import org.fabric3.fabric.model.physical.instancefactory.ReflectiveIFProviderDefinition;
+import org.fabric3.pojo.reflection.definition.InjectionSiteMapping;
+import org.fabric3.pojo.reflection.definition.MemberSite;
+import org.fabric3.pojo.reflection.definition.ReflectiveInstanceFactoryDefinition;
 import org.fabric3.spi.command.CommandSet;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GeneratorContext;
@@ -55,9 +55,9 @@ public class JavaPhysicalComponentGeneratorTestCase extends TestCase {
         assertTrue(pDefinition instanceof PojoComponentDefinition);
         PojoComponentDefinition pojoDefinition = (PojoComponentDefinition) pDefinition;
         assertEquals(COMPONENT_ID, pojoDefinition.getComponentId());
-        assertTrue(pojoDefinition.getInstanceFactoryProviderDefinition() instanceof ReflectiveIFProviderDefinition);
-        ReflectiveIFProviderDefinition provider =
-                (ReflectiveIFProviderDefinition) pojoDefinition.getInstanceFactoryProviderDefinition();
+        assertTrue(pojoDefinition.getInstanceFactoryProviderDefinition() instanceof ReflectiveInstanceFactoryDefinition);
+        ReflectiveInstanceFactoryDefinition provider =
+                (ReflectiveInstanceFactoryDefinition) pojoDefinition.getInstanceFactoryProviderDefinition();
         assertEquals(Foo.class.getName(), provider.getImplementationClass());
 
         // verify lifecycle callbacks

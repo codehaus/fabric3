@@ -16,10 +16,10 @@
  */
 package org.fabric3.groovy;
 
-import org.fabric3.fabric.model.physical.instancefactory.ReflectiveIFProviderDefinition;
+import org.fabric3.pojo.reflection.definition.ReflectiveInstanceFactoryDefinition;
 
 /**
  * @version $Rev$ $Date$
  */
-public class GroovyInstanceFactoryDefinition extends ReflectiveIFProviderDefinition {
+public class GroovyInstanceFactoryDefinition extends ReflectiveInstanceFactoryDefinition {
 }

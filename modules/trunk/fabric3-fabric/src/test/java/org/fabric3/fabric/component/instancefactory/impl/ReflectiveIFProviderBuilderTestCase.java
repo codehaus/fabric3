@@ -22,19 +22,19 @@ import java.lang.annotation.ElementType;
 
 import junit.framework.TestCase;
 import org.fabric3.pojo.reflection.ReflectiveInstanceFactoryProvider;
-import org.fabric3.fabric.model.physical.instancefactory.InjectionSiteMapping;
+import org.fabric3.pojo.reflection.definition.InjectionSiteMapping;
+import org.fabric3.pojo.reflection.definition.Signature;
+import org.fabric3.pojo.reflection.definition.ReflectiveInstanceFactoryDefinition;
 import org.fabric3.spi.model.instance.ValueSource;
 import org.fabric3.spi.model.instance.ValueSource.ValueSourceType;
-import org.fabric3.fabric.model.physical.instancefactory.MemberSite;
-import org.fabric3.fabric.model.physical.instancefactory.ReflectiveIFProviderDefinition;
-import org.fabric3.fabric.model.physical.instancefactory.Signature;
+import org.fabric3.pojo.reflection.definition.MemberSite;
 
 /**
  * @version $Date$ $Revision$
  */
 public class ReflectiveIFProviderBuilderTestCase extends TestCase {
     private ReflectiveIFProviderBuilder builder = new ReflectiveIFProviderBuilder();
-    private ReflectiveIFProviderDefinition definition;
+    private ReflectiveInstanceFactoryDefinition definition;
 
     /**
      * Verifies an ValueSource is set properly for constructor parameters
@@ -96,7 +96,7 @@ public class ReflectiveIFProviderBuilderTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        definition = new ReflectiveIFProviderDefinition();
+        definition = new ReflectiveInstanceFactoryDefinition();
         definition.setImplementationClass("org.fabric3.fabric.component.instancefactory.impl.Foo");
         definition.addConstructorArgument("java.lang.String");
         definition.addConstructorArgument("java.lang.Long");

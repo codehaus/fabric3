@@ -24,10 +24,10 @@ import java.util.Map;
 
 import org.w3c.dom.Document;
 
-import org.fabric3.fabric.model.physical.instancefactory.InjectionSiteMapping;
-import org.fabric3.fabric.model.physical.instancefactory.MemberSite;
-import org.fabric3.fabric.model.physical.instancefactory.ReflectiveIFProviderDefinition;
-import org.fabric3.fabric.model.physical.instancefactory.Signature;
+import org.fabric3.pojo.reflection.definition.InjectionSiteMapping;
+import org.fabric3.pojo.reflection.definition.MemberSite;
+import org.fabric3.pojo.reflection.definition.ReflectiveInstanceFactoryDefinition;
+import org.fabric3.pojo.reflection.definition.Signature;
 import org.fabric3.spi.implementation.java.ConstructorDefinition;
 import org.fabric3.spi.implementation.java.JavaMappedProperty;
 import org.fabric3.spi.implementation.java.JavaMappedReference;
@@ -60,7 +60,7 @@ public class HelperImpl implements PojoGenerationHelper {
     }
 
     public void processConstructorSites(PojoComponentType type,
-                                        ReflectiveIFProviderDefinition providerDefinition) {
+                                        ReflectiveInstanceFactoryDefinition providerDefinition) {
         Map<String, JavaMappedReference> references = type.getReferences();
         Map<String, JavaMappedProperty<?>> properties = type.getProperties();
         Map<String, JavaMappedService> services = type.getServices();
@@ -93,7 +93,7 @@ public class HelperImpl implements PojoGenerationHelper {
     }
 
     public void processReferenceSites(PojoComponentType type,
-                                      ReflectiveIFProviderDefinition providerDefinition) {
+                                      ReflectiveInstanceFactoryDefinition providerDefinition) {
         Map<String, JavaMappedReference> references = type.getReferences();
         for (Map.Entry<String, JavaMappedReference> entry : references.entrySet()) {
             JavaMappedReference reference = entry.getValue();
@@ -121,7 +121,7 @@ public class HelperImpl implements PojoGenerationHelper {
     }
 
     public void processCallbackSites(PojoComponentType type,
-                                     ReflectiveIFProviderDefinition providerDefinition) {
+                                     ReflectiveInstanceFactoryDefinition providerDefinition) {
         Map<String, JavaMappedService> services = type.getServices();
         for (Map.Entry<String, JavaMappedService> entry : services.entrySet()) {
             JavaMappedService service = entry.getValue();
@@ -148,7 +148,7 @@ public class HelperImpl implements PojoGenerationHelper {
     }
 
     public void processConstructorArguments(ConstructorDefinition<?> ctorDef,
-                                            ReflectiveIFProviderDefinition providerDefinition) {
+                                            ReflectiveInstanceFactoryDefinition providerDefinition) {
         for (Class<?> type : ctorDef.getConstructor().getParameterTypes()) {
             providerDefinition.addConstructorArgument(type.getName());
         }
@@ -157,8 +157,8 @@ public class HelperImpl implements PojoGenerationHelper {
     public void processProperties(PojoComponentDefinition physical,
                                   ComponentDefinition<? extends Implementation<PojoComponentType>> logical) {
         PojoComponentType type = logical.getImplementation().getComponentType();
-        ReflectiveIFProviderDefinition providerDefinition =
-                (ReflectiveIFProviderDefinition) physical.getInstanceFactoryProviderDefinition();
+        ReflectiveInstanceFactoryDefinition providerDefinition =
+                (ReflectiveInstanceFactoryDefinition) physical.getInstanceFactoryProviderDefinition();
         Map<String, JavaMappedProperty<?>> properties = type.getProperties();
         Map<String, PropertyValue> propertyValues = logical.getPropertyValues();
         for (Map.Entry<String, JavaMappedProperty<?>> entry : properties.entrySet()) {

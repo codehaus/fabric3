@@ -31,11 +31,11 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.fabric.implementation.java.JavaComponentDefinition;
 import org.fabric3.fabric.implementation.java.JavaWireSourceDefinition;
 import org.fabric3.fabric.implementation.java.JavaWireTargetDefinition;
-import org.fabric3.fabric.model.physical.instancefactory.InjectionSiteMapping;
+import org.fabric3.pojo.reflection.definition.InjectionSiteMapping;
 import org.fabric3.spi.model.instance.ValueSource;
-import org.fabric3.fabric.model.physical.instancefactory.MemberSite;
-import org.fabric3.fabric.model.physical.instancefactory.ReflectiveIFProviderDefinition;
-import org.fabric3.fabric.model.physical.instancefactory.Signature;
+import org.fabric3.pojo.reflection.definition.MemberSite;
+import org.fabric3.pojo.reflection.definition.ReflectiveInstanceFactoryDefinition;
+import org.fabric3.pojo.reflection.definition.Signature;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
@@ -77,7 +77,7 @@ public class LaunchedComponentGenerator implements ComponentGenerator<LogicalCom
         pDefinition.setClassLoaderId(URI.create("sca://./applicationClassLoader"));
         pDefinition.setScope(type.getImplementationScope());
         // TODO get classloader id
-        ReflectiveIFProviderDefinition providerDefinition = new ReflectiveIFProviderDefinition();
+        ReflectiveInstanceFactoryDefinition providerDefinition = new ReflectiveInstanceFactoryDefinition();
         Method initMethod = type.getInitMethod();
         if (initMethod != null) {
             providerDefinition.setInitMethod(new Signature(initMethod));
@@ -127,7 +127,7 @@ public class LaunchedComponentGenerator implements ComponentGenerator<LogicalCom
      * @param providerDefinition the instance factory provider definition
      */
     private void processConstructorSites(PojoComponentType type,
-                                         ReflectiveIFProviderDefinition providerDefinition) {
+                                         ReflectiveInstanceFactoryDefinition providerDefinition) {
         Map<String, JavaMappedReference> references = type.getReferences();
         Map<String, JavaMappedProperty<?>> properties = type.getProperties();
         Map<String, JavaMappedService> services = type.getServices();
@@ -166,7 +166,7 @@ public class LaunchedComponentGenerator implements ComponentGenerator<LogicalCom
      * @param providerDefinition the instance factory provider definition
      */
     private void processReferenceSites(PojoComponentType type,
-                                       ReflectiveIFProviderDefinition providerDefinition) {
+                                       ReflectiveInstanceFactoryDefinition providerDefinition) {
         Map<String, JavaMappedReference> references = type.getReferences();
         for (Map.Entry<String, JavaMappedReference> entry : references.entrySet()) {
             JavaMappedReference reference = entry.getValue();
@@ -199,7 +199,7 @@ public class LaunchedComponentGenerator implements ComponentGenerator<LogicalCom
      * @param providerDefinition the provider definition
      */
     private void processConstructorArguments(ConstructorDefinition<?> ctorDef,
-                                             ReflectiveIFProviderDefinition providerDefinition) {
+                                             ReflectiveInstanceFactoryDefinition providerDefinition) {
         for (Class<?> type : ctorDef.getConstructor().getParameterTypes()) {
             providerDefinition.addConstructorArgument(type.getName());
         }

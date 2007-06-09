@@ -8,7 +8,7 @@ import java.util.Collections;
 
 import org.fabric3.spi.model.physical.InstanceFactoryProviderDefinition;
 import org.fabric3.spi.model.instance.ValueSource;
-import org.fabric3.fabric.model.physical.instancefactory.InjectionSiteMapping;
+import org.fabric3.pojo.reflection.definition.InjectionSiteMapping;
 
 /**
  * JUnit-based instance factory provider definition.

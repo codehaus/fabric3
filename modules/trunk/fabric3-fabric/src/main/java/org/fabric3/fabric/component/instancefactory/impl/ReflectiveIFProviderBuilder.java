@@ -30,12 +30,12 @@ import java.util.Map;
 import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.pojo.reflection.ReflectiveInstanceFactoryProvider;
+import org.fabric3.pojo.reflection.definition.ReflectiveInstanceFactoryDefinition;
+import org.fabric3.pojo.reflection.definition.InjectionSiteMapping;
 import org.fabric3.fabric.component.instancefactory.IFProviderBuilderException;
-import org.fabric3.fabric.model.physical.instancefactory.InjectionSiteMapping;
 import org.fabric3.spi.model.instance.ValueSource;
-import org.fabric3.fabric.model.physical.instancefactory.MemberSite;
-import org.fabric3.fabric.model.physical.instancefactory.ReflectiveIFProviderDefinition;
-import org.fabric3.fabric.model.physical.instancefactory.Signature;
+import org.fabric3.pojo.reflection.definition.MemberSite;
+import org.fabric3.pojo.reflection.definition.Signature;
 
 /**
  * Builds a reflection-based instance factory provider.
@@ -44,15 +44,15 @@ import org.fabric3.fabric.model.physical.instancefactory.Signature;
  */
 @EagerInit
 public class ReflectiveIFProviderBuilder<T> extends
-        AbstractIFProviderBuilder<ReflectiveInstanceFactoryProvider<T>, ReflectiveIFProviderDefinition> {
+        AbstractIFProviderBuilder<ReflectiveInstanceFactoryProvider<T>, ReflectiveInstanceFactoryDefinition> {
 
     @Override
     protected Class<?> getIfpdClass() {
-        return ReflectiveIFProviderDefinition.class;
+        return ReflectiveInstanceFactoryDefinition.class;
     }
 
     @SuppressWarnings("unchecked")
-    public ReflectiveInstanceFactoryProvider<T> build(ReflectiveIFProviderDefinition ifpd, ClassLoader cl)
+    public ReflectiveInstanceFactoryProvider<T> build(ReflectiveInstanceFactoryDefinition ifpd, ClassLoader cl)
             throws IFProviderBuilderException {
 
         try {
@@ -88,7 +88,7 @@ public class ReflectiveIFProviderBuilder<T> extends
     /*
      * Get injection sites.
      */
-    private Map<ValueSource, Member> getInjectionSites(ReflectiveIFProviderDefinition ifpd, Class implClass)
+    private Map<ValueSource, Member> getInjectionSites(ReflectiveInstanceFactoryDefinition ifpd, Class implClass)
             throws NoSuchFieldException, IntrospectionException, IFProviderBuilderException {
 
         Map<ValueSource, Member> injectionSites = new HashMap<ValueSource, Member>();
@@ -128,7 +128,7 @@ public class ReflectiveIFProviderBuilder<T> extends
     /*
      * Gets the matching constructor.
      */
-    private Constructor getConstructor(ReflectiveIFProviderDefinition ifpd, ClassLoader cl, Class implClass)
+    private Constructor getConstructor(ReflectiveInstanceFactoryDefinition ifpd, ClassLoader cl, Class implClass)
             throws ClassNotFoundException, NoSuchMethodException {
         List<String> argNames = ifpd.getConstructorArguments();
         Class[] ctrArgs = new Class[argNames.size()];

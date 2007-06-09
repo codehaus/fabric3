@@ -16,9 +16,9 @@ import org.fabric3.pojo.reflection.ReflectiveInstanceFactoryProvider;
 import org.fabric3.fabric.component.instancefactory.IFProviderBuilderException;
 import org.fabric3.fabric.component.instancefactory.impl.AbstractIFProviderBuilder;
 import org.fabric3.fabric.component.instancefactory.impl.UnknownInjectionSiteException;
-import org.fabric3.fabric.model.physical.instancefactory.InjectionSiteMapping;
+import org.fabric3.pojo.reflection.definition.InjectionSiteMapping;
 import org.fabric3.spi.model.instance.ValueSource;
-import org.fabric3.fabric.model.physical.instancefactory.MemberSite;
+import org.fabric3.pojo.reflection.definition.MemberSite;
 import org.fabric3.fabric.util.JavaIntrospectionHelper;
 
 /**

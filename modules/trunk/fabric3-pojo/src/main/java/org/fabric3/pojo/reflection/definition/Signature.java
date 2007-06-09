@@ -14,12 +14,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.model.physical.instancefactory;
+package org.fabric3.pojo.reflection.definition;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Description of a method signature.
@@ -38,7 +38,8 @@ public class Signature {
 
     /**
      * Constructor that initializes the signture from a name and list of parameter types.
-     * @param name the method name
+     *
+     * @param name  the method name
      * @param types the parameter types
      */
     public Signature(String name, String... types) {
@@ -48,7 +49,8 @@ public class Signature {
 
     /**
      * Constructor that initializes the signture from a name and list of parameter types.
-     * @param name the method name
+     *
+     * @param name  the method name
      * @param types the parameter types
      */
     public Signature(String name, List<String> types) {
