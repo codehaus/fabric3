@@ -70,12 +70,12 @@
 
     <component name="JavaExportLoader">
         <system:implementation.system
-                class="org.fabric3.fabric.services.contribution.JavaExportLoader"/>
+                class="org.fabric3.fabric.services.contribution.manifest.JavaExportLoader"/>
     </component>
 
     <component name="JavaImportLoader">
         <system:implementation.system
-                class="org.fabric3.fabric.services.contribution.JavaImportLoader"/>
+                class="org.fabric3.fabric.services.contribution.manifest.JavaImportLoader"/>
     </component>
 
     <component name="ArtifactResolverRegistry">

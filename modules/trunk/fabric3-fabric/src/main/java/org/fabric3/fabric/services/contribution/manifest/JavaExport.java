@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.services.contribution;
+package org.fabric3.fabric.services.contribution.manifest;
 
 import javax.xml.namespace.QName;
 

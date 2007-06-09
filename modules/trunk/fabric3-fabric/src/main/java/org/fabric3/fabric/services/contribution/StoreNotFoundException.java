@@ -16,28 +16,15 @@
  */
 package org.fabric3.fabric.services.contribution;
 
-import javax.xml.stream.XMLStreamReader;
-
-import junit.framework.TestCase;
-import org.easymock.EasyMock;
+import org.fabric3.host.contribution.ContributionException;
 
 /**
+ * Thrown when an ArchiveStore or MetaDataStore is not found for a contribution operation
+ *
  * @version $Rev$ $Date$
  */
-public class JavaExportLoaderTestCase extends TestCase {
-    private JavaExportLoader loader = new JavaExportLoader(null);
-    private XMLStreamReader reader;
-
-    public void testRead() throws Exception {
-        JavaExport export = loader.load(null, reader, null);
-        assertEquals("com.foo.bar", export.getPackageName());
-    }
-
-
-    protected void setUp() throws Exception {
-        super.setUp();
-        reader = EasyMock.createMock(XMLStreamReader.class);
-        EasyMock.expect(reader.getAttributeValue(null, "package")).andReturn("com.foo.bar");
-        EasyMock.replay(reader);
+public class StoreNotFoundException extends ContributionException {
+    public StoreNotFoundException(String message, String identifier) {
+        super(message, identifier);
     }
 }

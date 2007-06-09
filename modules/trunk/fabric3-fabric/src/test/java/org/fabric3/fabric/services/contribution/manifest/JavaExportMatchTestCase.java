@@ -14,17 +14,25 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.services.contribution;
+package org.fabric3.fabric.services.contribution.manifest;
 
-import org.fabric3.host.contribution.ContributionException;
+import junit.framework.TestCase;
 
 /**
- * Thrown when an ArchiveStore or MetaDataStore is not found for a contribution operation
- *
  * @version $Rev$ $Date$
  */
-public class StoreNotFundException extends ContributionException {
-    public StoreNotFundException(String message, String identifier) {
-        super(message, identifier);
+public class JavaExportMatchTestCase extends TestCase {
+
+    public void testPackageMultiLevelMatch() {
+        JavaExport jexport = new JavaExport("com.foo");
+        JavaImport jimport = new JavaImport("com.foo.bar.Baz");
+        assertEquals(JavaExport.EXACT_MATCH, jexport.match(jimport));
     }
+
+    public void testNoSubPackageMatch() {
+        JavaExport jexport = new JavaExport("com.foo.bar");
+        JavaImport jimport = new JavaImport("com.foo");
+        assertEquals(JavaExport.NO_MATCH, jexport.match(jimport));
+    }
+
 }

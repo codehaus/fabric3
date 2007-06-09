@@ -115,7 +115,7 @@ public class ContributionServiceImpl implements ContributionService, Contributio
             throws ContributionException, IOException {
         ArchiveStore archiveStore = archiveStores.get(id);
         if (archiveStore == null) {
-            throw new StoreNotFundException("Archive store not found", id);
+            throw new StoreNotFoundException("Archive store not found", id);
         }
         URL locationUrl = archiveStore.store(sourceUri, sourceStream);
         return processMetaData(id, locationUrl, contentType, checksum, timestamp);
@@ -142,7 +142,7 @@ public class ContributionServiceImpl implements ContributionService, Contributio
         String id = parseStoreId(uri);
         MetaDataStore metaDataStore = metaDataStores.get(id);
         if (metaDataStore == null) {
-            throw new StoreNotFundException("MetaData store not found", id);
+            throw new StoreNotFoundException("MetaData store not found", id);
         }
         Contribution contribution = metaDataStore.find(uri);
         if (contribution == null) {
@@ -173,7 +173,7 @@ public class ContributionServiceImpl implements ContributionService, Contributio
         String id = parseStoreId(contributionUri);
         MetaDataStore metaDataStore = metaDataStores.get(id);
         if (metaDataStore == null) {
-            throw new StoreNotFundException("MetaData store not found", id);
+            throw new StoreNotFoundException("MetaData store not found", id);
         }
         Contribution contribution = metaDataStore.find(contributionUri);
         if (contribution == null) {
@@ -211,7 +211,7 @@ public class ContributionServiceImpl implements ContributionService, Contributio
         addContributionDescription(contribution);
         MetaDataStore metaDataStore = metaDataStores.get(id);
         if (metaDataStore == null) {
-            throw new StoreNotFundException("MetaData store not found", id);
+            throw new StoreNotFoundException("MetaData store not found", id);
         }
 
         metaDataStore.store(contribution);
@@ -237,11 +237,11 @@ public class ContributionServiceImpl implements ContributionService, Contributio
      * Recursively adds a resource description pointing to the contribution artifact on contained components.
      *
      * @param contribution the contribution the resource description requires
-     * @throws StoreNotFundException if no store can be found for a contribution import
+     * @throws StoreNotFoundException if no store can be found for a contribution import
      * @throws ContributionNotFoundException if a required imported contribution is not found
      */
     private void addContributionDescription(Contribution contribution)
-            throws StoreNotFundException, ContributionNotFoundException {
+            throws StoreNotFoundException, ContributionNotFoundException {
         // encode the contribution URL so it can be dereferenced remotely
         URL identifier = encoder.encode(contribution.getLocation());
         ContributionResourceDescription description = new ContributionResourceDescription(identifier);
@@ -250,7 +250,7 @@ public class ContributionServiceImpl implements ContributionService, Contributio
             String key = parseStoreId(uri);
             MetaDataStore store = metaDataStores.get(key);
             if (store == null) {
-                throw new StoreNotFundException("No store for id", key);
+                throw new StoreNotFoundException("No store for id", key);
             }
             Contribution imported = store.find(uri);
             if (imported == null) {
