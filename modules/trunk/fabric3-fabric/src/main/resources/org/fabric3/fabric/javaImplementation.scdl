@@ -28,21 +28,25 @@
 			  autowire="true">
 
 
-    <component name="java.implementationLoader">
+    <component name="org.fabric3.fabric.implementation.java.JavaImplementationLoader">
         <system:implementation.system class="org.fabric3.fabric.implementation.java.JavaImplementationLoader"/>
-        <reference name="componentTypeLoader" target="java.componentTypeLoader"/>
+        <reference name="componentTypeLoader" target="org.fabric3.fabric.implementation.java.JavaComponentTypeLoader"/>
     </component>
 
-    <component name="java.componentTypeLoader">
+    <component name="org.fabric3.fabric.implementation.java.JavaComponentTypeLoader">
         <system:implementation.system class="org.fabric3.fabric.implementation.java.JavaComponentTypeLoader"/>
     </component>
 
-    <component name="javaGenerator">
+    <component name="org.fabric3.fabric.implementation.java.JavaComponentGenerator">
         <system:implementation.system class="org.fabric3.fabric.implementation.java.JavaComponentGenerator"/>
     </component>
 
-    <component name="javaPhysicalComponentBuilder">
+    <component name="org.fabric3.fabric.implementation.java.JavaComponentBuilder">
         <system:implementation.system class="org.fabric3.fabric.implementation.java.JavaComponentBuilder"/>
+    </component>
+
+    <component name="org.fabric3.fabric.implementation.java.JavaWireAttacher">
+        <system:implementation.system class="org.fabric3.fabric.implementation.java.JavaWireAttacher"/>
     </component>
 
 </composite>

@@ -23,55 +23,33 @@ import java.net.URI;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
-import org.osoa.sca.annotations.Service;
 
-import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.fabric.component.instancefactory.IFProviderBuilderRegistry;
 import org.fabric3.fabric.implementation.pojo.PojoComponentBuilder;
-import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.transform.PullTransformer;
-import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.spi.builder.BuilderException;
-import org.fabric3.spi.builder.WiringException;
-import org.fabric3.spi.builder.component.ComponentBuilder;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
-import org.fabric3.spi.builder.component.WireAttacher;
-import org.fabric3.spi.builder.component.WireAttacherRegistry;
-import org.fabric3.spi.component.AtomicComponent;
-import org.fabric3.spi.component.Component;
-import org.fabric3.spi.component.ComponentManager;
+import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.model.instance.ValueSource;
-import static org.fabric3.spi.model.instance.ValueSource.ValueSourceType.REFERENCE;
 import org.fabric3.spi.model.physical.InstanceFactoryProviderDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.model.type.Scope;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
-import org.fabric3.spi.util.UriHelper;
-import org.fabric3.spi.wire.Wire;
+import org.fabric3.spi.transform.PullTransformer;
+import org.fabric3.spi.transform.TransformerRegistry;
 
 /**
  * @version $Rev$ $Date$
  */
 @EagerInit
-@Service(interfaces = {ComponentBuilder.class, WireAttacher.class})
-public class SystemComponentBuilder<T>
-        extends PojoComponentBuilder<T, SystemComponentDefinition, SystemComponent<T>>
-        implements WireAttacher<SystemWireSourceDefinition, SystemWireTargetDefinition> {
+public class SystemComponentBuilder<T> extends PojoComponentBuilder<T, SystemComponentDefinition, SystemComponent<T>> {
 
     public SystemComponentBuilder(
             @Reference ComponentBuilderRegistry builderRegistry,
-            @Reference ComponentManager manager,
-            @Reference WireAttacherRegistry wireAttacherRegistry,
             @Reference ScopeRegistry scopeRegistry,
             @Reference IFProviderBuilderRegistry providerBuilders,
             @Reference ClassLoaderRegistry classLoaderRegistry,
-            @Reference TransformerRegistry<PullTransformer<?,?>> transformerRegistry) {
+            @Reference TransformerRegistry<PullTransformer<?, ?>> transformerRegistry) {
         super(builderRegistry,
-              manager,
-              wireAttacherRegistry,
               scopeRegistry,
               providerBuilders,
               classLoaderRegistry,
@@ -81,8 +59,6 @@ public class SystemComponentBuilder<T>
     @Init
     public void init() {
         builderRegistry.register(SystemComponentDefinition.class, this);
-        wireAttacherRegistry.register(SystemWireSourceDefinition.class, this);
-        wireAttacherRegistry.register(SystemWireTargetDefinition.class, this);
     }
 
     public SystemComponent<T> build(SystemComponentDefinition definition) throws BuilderException {
@@ -102,28 +78,5 @@ public class SystemComponentBuilder<T>
         createPropertyFactories(definition, provider);
 
         return new SystemComponent<T>(componentId, provider, scopeContainer, groupId, initLevel, -1, -1);
-    }
-
-    public void attachToSource(SystemWireSourceDefinition sourceDefinition,
-                               PhysicalWireTargetDefinition targetDefinition,
-                               Wire wire) throws WiringException {
-        URI sourceName = UriHelper.getDefragmentedName(sourceDefinition.getUri());
-        Component source = manager.getComponent(sourceName);
-        assert source instanceof SystemComponent;
-        SystemComponent<?> sourceComponent = (SystemComponent) source;
-        URI targetName = UriHelper.getDefragmentedName(targetDefinition.getUri());
-        Component target = manager.getComponent(targetName);
-        assert target instanceof AtomicComponent;
-        AtomicComponent<?> targetComponent = (AtomicComponent<?>) target;
-        URI sourceUri = sourceDefinition.getUri();
-        ValueSource referenceSource = new ValueSource(REFERENCE, sourceUri.getFragment());
-        ObjectFactory<?> factory = targetComponent.createObjectFactory();
-        sourceComponent.setObjectFactory(referenceSource, factory);
-    }
-
-    public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition,
-                               SystemWireTargetDefinition targetDefinition,
-                               Wire wire) throws WiringException {
-        // nothing to do here as the wire will always be optimized
     }
 }

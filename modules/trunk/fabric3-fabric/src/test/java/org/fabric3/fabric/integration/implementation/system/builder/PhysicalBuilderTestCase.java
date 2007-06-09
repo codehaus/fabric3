@@ -36,15 +36,16 @@ import org.fabric3.fabric.component.instancefactory.impl.ReflectiveIFProviderBui
 import org.fabric3.fabric.component.scope.CompositeScopeContainer;
 import org.fabric3.fabric.deployer.DeployerImpl;
 import org.fabric3.fabric.deployer.DeployerMonitor;
-import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.fabric.implementation.system.SystemComponentBuilder;
 import org.fabric3.fabric.implementation.system.SystemComponentDefinition;
+import org.fabric3.fabric.implementation.system.SystemWireAttacher;
 import org.fabric3.fabric.implementation.system.SystemWireSourceDefinition;
 import org.fabric3.fabric.implementation.system.SystemWireTargetDefinition;
 import org.fabric3.fabric.model.physical.instancefactory.InjectionSiteMapping;
 import org.fabric3.fabric.model.physical.instancefactory.MemberSite;
 import org.fabric3.fabric.model.physical.instancefactory.ReflectiveIFProviderDefinition;
 import org.fabric3.host.monitor.MonitorFactory;
+import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.spi.builder.component.WireAttacherRegistry;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.ComponentManager;
@@ -159,17 +160,17 @@ public class PhysicalBuilderTestCase extends TestCase {
         providerBuilders.register(ReflectiveIFProviderDefinition.class, new ReflectiveIFProviderBuilder());
 
         DefaultComponentBuilderRegistry builderRegistry = new DefaultComponentBuilderRegistry();
-        WireAttacherRegistry wireAttacherRegistry = new WireAttacherRegistryImpl();
         componentManager = new ComponentManagerImpl();
         builder = new SystemComponentBuilder(builderRegistry,
-                                             componentManager,
-                                             wireAttacherRegistry,
                                              scopeRegistry,
                                              providerBuilders,
                                              classLoaderRegistry,
                                              null);
         builder.init();
 
+        WireAttacherRegistry wireAttacherRegistry = new WireAttacherRegistryImpl();
+        SystemWireAttacher wireAttacher = new SystemWireAttacher(componentManager, wireAttacherRegistry);
+        wireAttacher.init();
         connector = new ConnectorImpl(null, wireAttacherRegistry);
         DeployerMonitor monitor = EasyMock.createNiceMock(DeployerMonitor.class);
         EasyMock.replay(monitor);

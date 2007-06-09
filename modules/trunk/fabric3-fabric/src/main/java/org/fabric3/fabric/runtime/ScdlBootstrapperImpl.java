@@ -64,6 +64,7 @@ import org.fabric3.fabric.implementation.system.SystemComponentBuilder;
 import org.fabric3.fabric.implementation.system.SystemComponentGenerator;
 import org.fabric3.fabric.implementation.system.SystemComponentTypeLoader;
 import org.fabric3.fabric.implementation.system.SystemImplementationLoader;
+import org.fabric3.fabric.implementation.system.SystemWireAttacher;
 import org.fabric3.fabric.loader.ComponentLoader;
 import org.fabric3.fabric.loader.ComponentTypeElementLoader;
 import org.fabric3.fabric.loader.IncludeLoader;
@@ -428,24 +429,28 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         DeployerImpl deployer = new DeployerImpl(monitorFactory);
         ComponentBuilderRegistry registry = new DefaultComponentBuilderRegistry();
 
-        WireAttacherRegistry wireAttacherRegistry = new WireAttacherRegistryImpl();
-        SingletonWireAttacher<?, ?> singletonWireAttacher = new SingletonWireAttacher();
-        wireAttacherRegistry.register(SingletonWireTargetDefinition.class, singletonWireAttacher);
         IFProviderBuilderRegistry providerRegistry = new DefaultIFProviderBuilderRegistry();
         ReflectiveIFProviderBuilder provider = new ReflectiveIFProviderBuilder();
         provider.setBuilderRegistry(providerRegistry);
+
         TransformerRegistry<PullTransformer<?, ?>> transformerRegistry =
                 new DefaultTransformerRegistry<PullTransformer<?, ?>>();
         transformerRegistry.register(new String2String());
         transformerRegistry.register(new String2Integer());
+
         SystemComponentBuilder<?> builder = new SystemComponentBuilder<Object>(registry,
-                                                                               componentManager,
-                                                                               wireAttacherRegistry,
                                                                                scopeRegistry,
                                                                                providerRegistry,
                                                                                classLoaderRegistry,
                                                                                transformerRegistry);
         builder.init();
+
+        WireAttacherRegistry wireAttacherRegistry = new WireAttacherRegistryImpl();
+        SingletonWireAttacher<?, ?> singletonWireAttacher = new SingletonWireAttacher();
+        wireAttacherRegistry.register(SingletonWireTargetDefinition.class, singletonWireAttacher);
+        SystemWireAttacher wireAttacher = new SystemWireAttacher(componentManager, wireAttacherRegistry);
+        wireAttacher.init();
+
         deployer.setBuilderRegistry(registry);
         deployer.setComponentManager(componentManager);
         Connector connector = new ConnectorImpl(null, wireAttacherRegistry);

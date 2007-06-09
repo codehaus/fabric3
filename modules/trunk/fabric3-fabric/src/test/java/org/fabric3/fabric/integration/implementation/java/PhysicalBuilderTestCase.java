@@ -38,13 +38,14 @@ import org.fabric3.fabric.deployer.DeployerImpl;
 import org.fabric3.fabric.deployer.DeployerMonitor;
 import org.fabric3.fabric.implementation.java.JavaComponentBuilder;
 import org.fabric3.fabric.implementation.java.JavaComponentDefinition;
+import org.fabric3.fabric.implementation.java.JavaWireAttacher;
 import org.fabric3.fabric.implementation.java.JavaWireSourceDefinition;
 import org.fabric3.fabric.implementation.java.JavaWireTargetDefinition;
-import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.fabric.model.physical.instancefactory.InjectionSiteMapping;
 import org.fabric3.fabric.model.physical.instancefactory.MemberSite;
 import org.fabric3.fabric.model.physical.instancefactory.ReflectiveIFProviderDefinition;
 import org.fabric3.host.monitor.MonitorFactory;
+import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.spi.builder.component.WireAttacherRegistry;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.ComponentManager;
@@ -160,17 +161,18 @@ public class PhysicalBuilderTestCase extends TestCase {
         providerBuilders.register(ReflectiveIFProviderDefinition.class, new ReflectiveIFProviderBuilder());
 
         DefaultComponentBuilderRegistry builderRegistry = new DefaultComponentBuilderRegistry();
-        WireAttacherRegistry wireAttacherRegistry = new WireAttacherRegistryImpl();
         componentManager = new ComponentManagerImpl();
         builder = new JavaComponentBuilder(builderRegistry,
                                            componentManager,
-                                           wireAttacherRegistry,
                                            scopeRegistry,
                                            providerBuilders,
                                            classLoaderRegistry,
-                                           null);
+                                           null, null);
         builder.init();
 
+        WireAttacherRegistry wireAttacherRegistry = new WireAttacherRegistryImpl();
+        JavaWireAttacher wireAttacher = new JavaWireAttacher(componentManager, wireAttacherRegistry, null);
+        wireAttacher.init();
         connector = new ConnectorImpl(null, wireAttacherRegistry);
 
         DeployerMonitor monitor = EasyMock.createNiceMock(DeployerMonitor.class);

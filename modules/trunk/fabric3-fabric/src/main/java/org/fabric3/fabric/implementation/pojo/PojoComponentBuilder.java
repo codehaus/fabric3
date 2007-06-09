@@ -18,24 +18,22 @@
  */
 package org.fabric3.fabric.implementation.pojo;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
-import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.fabric.component.instancefactory.IFProviderBuilderRegistry;
 import org.fabric3.fabric.injection.SingletonObjectFactory;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilder;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
-import org.fabric3.spi.builder.component.WireAttacherRegistry;
 import org.fabric3.spi.component.Component;
-import org.fabric3.spi.component.ComponentManager;
+import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.model.instance.ValueSource;
 import org.fabric3.spi.model.type.JavaClass;
@@ -53,11 +51,9 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
         implements ComponentBuilder<PCD, C> {
 
     protected final ComponentBuilderRegistry builderRegistry;
-    protected final WireAttacherRegistry wireAttacherRegistry;
     protected final ScopeRegistry scopeRegistry;
     protected final IFProviderBuilderRegistry providerBuilders;
     protected final ClassLoaderRegistry classLoaderRegistry;
-    protected final ComponentManager manager;
     protected final TransformerRegistry<PullTransformer<?,?>> transformerRegistry;
 
     private static final XSDSimpleType SOURCE_TYPE = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
@@ -75,15 +71,11 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
 
     protected PojoComponentBuilder(
             ComponentBuilderRegistry builderRegistry,
-            ComponentManager manager,
-            WireAttacherRegistry wireAttacherRegistry,
             ScopeRegistry scopeRegistry,
             IFProviderBuilderRegistry providerBuilders,
             ClassLoaderRegistry classLoaderRegistry,
-            TransformerRegistry<PullTransformer<?,?>> transformerRegistry) {
+            TransformerRegistry<PullTransformer<?, ?>> transformerRegistry) {
         this.builderRegistry = builderRegistry;
-        this.wireAttacherRegistry = wireAttacherRegistry;
-        this.manager = manager;
         this.scopeRegistry = scopeRegistry;
         this.providerBuilders = providerBuilders;
         this.classLoaderRegistry = classLoaderRegistry;
