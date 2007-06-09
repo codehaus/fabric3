@@ -23,6 +23,8 @@ import org.fabric3.spi.services.contribution.Export;
 import org.fabric3.spi.services.contribution.Import;
 
 /**
+ * Represents an <code>export.java</code> entry in a contribution manifest.
+ *
  * @version $Rev$ $Date$
  */
 public class JavaExport extends Export {

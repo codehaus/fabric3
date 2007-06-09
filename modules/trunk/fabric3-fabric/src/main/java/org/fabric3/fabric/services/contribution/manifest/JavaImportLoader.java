@@ -24,13 +24,13 @@ import org.osoa.sca.Constants;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.extension.loader.LoaderExtension;
+import org.fabric3.fabric.services.contribution.MissingPackageException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.fabric.services.contribution.MissingPackageException;
 
 /**
- * Processes a Java-based <code>import</code> element in a contribution manifest
+ * Processes a <code>import.java</code> element in a contribution manifest
  *
  * @version $Rev$ $Date$
  */

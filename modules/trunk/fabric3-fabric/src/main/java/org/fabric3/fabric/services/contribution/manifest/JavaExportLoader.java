@@ -24,12 +24,14 @@ import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.extension.loader.LoaderExtension;
+import org.fabric3.fabric.services.contribution.MissingPackageException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.fabric.services.contribution.MissingPackageException;
 
 /**
+ * Loads an <code>export.java</code> entry in a contribution manifest.
+ *
  * @version $Rev$ $Date$
  */
 public class JavaExportLoader extends LoaderExtension<Object, JavaExport> {
