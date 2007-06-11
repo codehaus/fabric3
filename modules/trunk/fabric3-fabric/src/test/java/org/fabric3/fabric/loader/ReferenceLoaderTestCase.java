@@ -54,6 +54,7 @@ public class ReferenceLoaderTestCase extends TestCase {
         EasyMock.expect(mockReader.getAttributeValue(null, "name")).andReturn(name);
         EasyMock.expect(mockReader.getAttributeValue(null, "promote")).andReturn(promoted);
         EasyMock.expect(mockReader.getAttributeValue(null, "multiplicity")).andReturn("0..1");
+        EasyMock.expect(mockReader.getAttributeValue(org.fabric3.spi.Constants.FABRIC3_NS, "key")).andReturn("test");
         EasyMock.expect(mockReader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
         EasyMock.expect(mockReader.getName()).andReturn(REFERENCE).anyTimes();
         EasyMock.replay(mockReader);
@@ -68,6 +69,7 @@ public class ReferenceLoaderTestCase extends TestCase {
         EasyMock.expect(mockReader.getAttributeValue(null, "name")).andReturn(name);
         EasyMock.expect(mockReader.getAttributeValue(null, "promote")).andReturn(promoted);
         EasyMock.expect(mockReader.getAttributeValue(null, "multiplicity")).andReturn("0..1");
+        EasyMock.expect(mockReader.getAttributeValue(org.fabric3.spi.Constants.FABRIC3_NS, "key")).andReturn("test");
         EasyMock.expect(mockReader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
         EasyMock.expect(mockReader.getName()).andReturn(REFERENCE).anyTimes();
         EasyMock.replay(mockReader);
@@ -81,6 +83,7 @@ public class ReferenceLoaderTestCase extends TestCase {
         EasyMock.expect(mockReader.getAttributeValue(null, "name")).andReturn(name);
         EasyMock.expect(mockReader.getAttributeValue(null, "promote")).andReturn(promoted);
         EasyMock.expect(mockReader.getAttributeValue(null, "multiplicity")).andReturn("0..1");
+        EasyMock.expect(mockReader.getAttributeValue(org.fabric3.spi.Constants.FABRIC3_NS, "key")).andReturn("test");
         EasyMock.expect(mockReader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
         EasyMock.expect(mockReader.getName()).andReturn(REFERENCE).anyTimes();
         EasyMock.replay(mockReader);
@@ -94,6 +97,7 @@ public class ReferenceLoaderTestCase extends TestCase {
         EasyMock.expect(mockReader.getAttributeValue(null, "name")).andReturn(name);
         EasyMock.expect(mockReader.getAttributeValue(null, "promote")).andReturn(promoted);
         EasyMock.expect(mockReader.getAttributeValue(null, "multiplicity")).andReturn("0..1");
+        EasyMock.expect(mockReader.getAttributeValue(org.fabric3.spi.Constants.FABRIC3_NS, "key")).andReturn("test");
         EasyMock.expect(mockReader.next()).andReturn(XMLStreamConstants.START_ELEMENT).times(2);
         EasyMock.expect(mockReader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
         EasyMock.expect(mockReader.getName()).andReturn(REFERENCE).anyTimes();
@@ -120,6 +124,7 @@ public class ReferenceLoaderTestCase extends TestCase {
         EasyMock.expect(mockReader.getAttributeValue(null, "name")).andReturn(name);
         EasyMock.expect(mockReader.getAttributeValue(null, "promote")).andReturn(promoted);
         EasyMock.expect(mockReader.getAttributeValue(null, "multiplicity")).andReturn("0..1");
+        EasyMock.expect(mockReader.getAttributeValue(org.fabric3.spi.Constants.FABRIC3_NS, "key")).andReturn("test");
         EasyMock.expect(mockReader.next()).andReturn(XMLStreamConstants.START_ELEMENT);
         EasyMock.expect(mockRegistry.load(null, mockReader, ctx)).andReturn(sc);
         EasyMock.expect(mockReader.next()).andReturn(XMLStreamConstants.END_ELEMENT);

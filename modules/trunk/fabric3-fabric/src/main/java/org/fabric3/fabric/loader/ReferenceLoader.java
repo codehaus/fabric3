@@ -34,6 +34,7 @@ import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.extension.loader.LoaderExtension;
+import org.fabric3.spi.Constants;
 import org.fabric3.spi.loader.InvalidReferenceException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
@@ -47,11 +48,13 @@ import org.fabric3.spi.model.type.ServiceContract;
 
 /**
  * Loads a reference from an XML-based assembly file
- *
+ * 
  * @version $Rev$ $Date$
  */
 public class ReferenceLoader extends LoaderExtension<Object, ReferenceDefinition> {
+
     public static final QName REFERENCE = new QName(SCA_NS, "reference");
+
     private static final Map<String, Multiplicity> MULTIPLICITY = new HashMap<String, Multiplicity>(4);
 
     static {
@@ -71,14 +74,91 @@ public class ReferenceLoader extends LoaderExtension<Object, ReferenceDefinition
     }
 
     public ReferenceDefinition load(Object modelType, XMLStreamReader reader, LoaderContext context)
-            throws XMLStreamException, LoaderException {
+        throws XMLStreamException, LoaderException {
+
         assert REFERENCE.equals(reader.getName());
+
+        ReferenceDefinition referenceDefinition = new ReferenceDefinition();
+
         String name = reader.getAttributeValue(null, "name");
+
+        setPromoted(reader, referenceDefinition, name);
+
+        setMultiplicity(reader, referenceDefinition);
+
+        setUri(reader, referenceDefinition, name);
+        
+        setKey(reader, referenceDefinition);
+
+        while (true) {
+            switch (reader.next()) {
+                case START_ELEMENT:
+                    ModelObject type = registry.load(null, reader, context);
+                    if (type instanceof ServiceContract) {
+                        referenceDefinition.setServiceContract((ServiceContract)type);
+                    } else if (type instanceof BindingDefinition) {
+                        referenceDefinition.addBinding((BindingDefinition)type);
+                    } else {
+                        throw new UnrecognizedElementException(reader.getName());
+                    }
+                    break;
+                case END_ELEMENT:
+                    return referenceDefinition;
+            }
+        }
+
+    }
+    
+    /*
+     * Processes the key attribute for map references.
+     */
+    private void setKey(XMLStreamReader reader, ReferenceDefinition referenceDefinition) {
+        
+        String key = reader.getAttributeValue(Constants.FABRIC3_NS, "key");
+        if(key != null) {
+            referenceDefinition.setKey(key);
+        }
+        
+    }
+
+    /*
+     * Sets the reference URI.
+     */
+    private void setUri(XMLStreamReader reader, ReferenceDefinition referenceDefinition, String name)
+        throws LoaderException {
+        
+        try {
+            referenceDefinition.setUri(new URI('#' + name));
+        } catch (URISyntaxException e) {
+            LoaderException le = new LoaderException(e);
+            le.setLine(reader.getLocation().getLineNumber());
+            le.setColumn(reader.getLocation().getColumnNumber());
+            throw le;
+        }
+        
+    }
+
+    /*
+     * Processes the multiplicty attribute.
+     */
+    private void setMultiplicity(XMLStreamReader reader, ReferenceDefinition referenceDefinition) {
+        
+        String multiplicityVal = reader.getAttributeValue(null, "multiplicity");
+        Multiplicity multiplicity = multiplicity(multiplicityVal, Multiplicity.ONE_ONE);
+        referenceDefinition.setMultiplicity(multiplicity);
+        
+    }
+
+    /*
+     * Processes the promotes attribute.
+     */
+    private void setPromoted(XMLStreamReader reader, ReferenceDefinition referenceDefinition, String name)
+        throws InvalidReferenceException {
+        
         String promoted = reader.getAttributeValue(null, "promote");
         if (promoted == null || promoted.trim().length() < 1) {
             throw new InvalidReferenceException("No promoted reference specified", name);
         }
-        ReferenceDefinition referenceDefinition = new ReferenceDefinition();
         StringTokenizer tokenizer = new StringTokenizer(promoted, " ");
         while (tokenizer.hasMoreTokens()) {
             try {
@@ -95,40 +175,14 @@ public class ReferenceLoader extends LoaderExtension<Object, ReferenceDefinition
                 throw new InvalidReferenceException("Invalid promoted uri", name, e);
             }
         }
-        String multiplicityVal = reader.getAttributeValue(null, "multiplicity");
-        Multiplicity multiplicity = multiplicity(multiplicityVal, Multiplicity.ONE_ONE);
-        referenceDefinition.setMultiplicity(multiplicity);
-        try {
-            referenceDefinition.setUri(new URI('#' + name));
-        } catch (URISyntaxException e) {
-            LoaderException le = new LoaderException(e);
-            le.setLine(reader.getLocation().getLineNumber());
-            le.setColumn(reader.getLocation().getColumnNumber());
-            throw le;
-        }
-        while (true) {
-            switch (reader.next()) {
-            case START_ELEMENT:
-                ModelObject type = registry.load(null, reader, context);
-                if (type instanceof ServiceContract) {
-                    referenceDefinition.setServiceContract((ServiceContract) type);
-                } else if (type instanceof BindingDefinition) {
-                    referenceDefinition.addBinding((BindingDefinition) type);
-                } else {
-                    throw new UnrecognizedElementException(reader.getName());
-                }
-                break;
-            case END_ELEMENT:
-                return referenceDefinition;
-            }
-        }
+        
     }
 
     /**
      * Convert a "multiplicity" attribute to the equivalent enum value.
-     *
+     * 
      * @param multiplicity the attribute to convert
-     * @param def          the default value
+     * @param def the default value
      * @return the enum equivalent
      */
     private static Multiplicity multiplicity(String multiplicity, Multiplicity def) {

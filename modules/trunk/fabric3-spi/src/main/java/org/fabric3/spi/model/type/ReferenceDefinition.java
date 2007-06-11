@@ -35,6 +35,7 @@ public class ReferenceDefinition extends ModelObject {
     private boolean required;
     private List<URI> promoted;
     private List<BindingDefinition> bindings;
+    private String key;
 
     public ReferenceDefinition() {
         multiplicity = Multiplicity.ONE_ONE;
@@ -104,5 +105,13 @@ public class ReferenceDefinition extends ModelObject {
 
     public void addBinding(BindingDefinition binding) {
         this.bindings.add(binding);
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }
