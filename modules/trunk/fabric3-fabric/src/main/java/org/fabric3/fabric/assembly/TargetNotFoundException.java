@@ -24,7 +24,7 @@ package org.fabric3.fabric.assembly;
  * @version $Rev$ $Date$
  */
 public class TargetNotFoundException extends ResolutionException {
-    protected TargetNotFoundException(String message, String identifier) {
+    public TargetNotFoundException(String message, String identifier) {
         super(message, identifier);
     }
 }
