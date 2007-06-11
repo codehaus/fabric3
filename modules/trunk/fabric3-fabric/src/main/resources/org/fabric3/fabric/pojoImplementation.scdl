@@ -36,4 +36,8 @@
     <component name="org.fabric3.fabric.services.instancefactory.GenerationHelperImpl">
         <system:implementation.system class="org.fabric3.fabric.services.instancefactory.GenerationHelperImpl"/>
     </component>
+
+    <component name="org.fabric3.fabric.services.instancefactory.BuildHelperImpl">
+        <system:implementation.system class="org.fabric3.fabric.services.instancefactory.BuildHelperImpl"/>
+    </component>
 </composite>

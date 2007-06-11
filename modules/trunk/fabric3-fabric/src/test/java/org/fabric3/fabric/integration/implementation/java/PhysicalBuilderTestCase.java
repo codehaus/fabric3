@@ -30,10 +30,6 @@ import org.fabric3.fabric.builder.ConnectorImpl;
 import org.fabric3.fabric.builder.component.DefaultComponentBuilderRegistry;
 import org.fabric3.fabric.builder.component.WireAttacherRegistryImpl;
 import org.fabric3.fabric.component.ComponentManagerImpl;
-import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
-import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
-import org.fabric3.fabric.services.instancefactory.DefaultInstanceFactoryBuilderRegistry;
-import org.fabric3.fabric.services.instancefactory.ReflectiveInstanceFactoryBuilder;
 import org.fabric3.fabric.component.scope.CompositeScopeContainer;
 import org.fabric3.fabric.deployer.DeployerImpl;
 import org.fabric3.fabric.deployer.DeployerMonitor;
@@ -42,10 +38,17 @@ import org.fabric3.fabric.implementation.java.JavaComponentDefinition;
 import org.fabric3.fabric.implementation.java.JavaWireAttacher;
 import org.fabric3.fabric.implementation.java.JavaWireSourceDefinition;
 import org.fabric3.fabric.implementation.java.JavaWireTargetDefinition;
-import org.fabric3.pojo.instancefactory.InjectionSiteMapping;
-import org.fabric3.pojo.instancefactory.MemberSite;
+import org.fabric3.fabric.services.classloading.ClassLoaderRegistryImpl;
+import org.fabric3.fabric.services.instancefactory.BuildHelperImpl;
+import org.fabric3.fabric.services.instancefactory.DefaultInstanceFactoryBuilderRegistry;
+import org.fabric3.fabric.services.instancefactory.ReflectiveInstanceFactoryBuilder;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.pojo.PojoWorkContextTunnel;
+import org.fabric3.pojo.instancefactory.InjectionSiteMapping;
+import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
+import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
+import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
+import org.fabric3.pojo.instancefactory.MemberSite;
 import org.fabric3.spi.builder.component.WireAttacherRegistry;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.ComponentManager;
@@ -140,10 +143,9 @@ public class PhysicalBuilderTestCase extends TestCase {
         groupId = URI.create("sca://./composite");
         sourceId = groupId.resolve("composite/source");
         targetId = groupId.resolve("composite/target");
-        classLoaderRegistry = EasyMock.createMock(ClassLoaderRegistry.class);
+        classLoaderRegistry = new ClassLoaderRegistryImpl();
         ClassLoader classLoader = getClass().getClassLoader();
-        EasyMock.expect(classLoaderRegistry.getClassLoader(groupId)).andStubReturn(classLoader);
-        EasyMock.replay(classLoaderRegistry);
+        classLoaderRegistry.register(groupId, classLoader);
 
         workContext = new SimpleWorkContext();
         workContext.setScopeIdentifier(Scope.COMPOSITE, groupId);
@@ -158,7 +160,8 @@ public class PhysicalBuilderTestCase extends TestCase {
         EasyMock.replay(scopeRegistry);
 
         InstanceFactoryBuilderRegistry providerBuilders = new DefaultInstanceFactoryBuilderRegistry();
-        ReflectiveInstanceFactoryBuilder instanceFactoryBuilder = new ReflectiveInstanceFactoryBuilder(providerBuilders);
+        InstanceFactoryBuildHelper buildHelper = new BuildHelperImpl(classLoaderRegistry);
+        ReflectiveInstanceFactoryBuilder instanceFactoryBuilder = new ReflectiveInstanceFactoryBuilder(providerBuilders, buildHelper);
         instanceFactoryBuilder.init();
 
         DefaultComponentBuilderRegistry builderRegistry = new DefaultComponentBuilderRegistry();

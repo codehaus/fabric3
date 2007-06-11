@@ -26,16 +26,19 @@ import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.pojo.instancefactory.InjectionSiteMapping;
 import org.fabric3.pojo.instancefactory.MemberSite;
 import org.fabric3.pojo.instancefactory.Signature;
+import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
 import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.model.instance.ValueSource;
 import org.fabric3.spi.model.instance.ValueSource.ValueSourceType;
 import org.fabric3.fabric.services.instancefactory.ReflectiveInstanceFactoryBuilder;
+import org.fabric3.fabric.services.classloading.ClassLoaderRegistryImpl;
 
 /**
  * @version $Date$ $Revision$
  */
 public class ReflectiveIFProviderBuilderTestCase extends TestCase {
-    private ReflectiveInstanceFactoryBuilder builder = new ReflectiveInstanceFactoryBuilder(null);
+    private InstanceFactoryBuildHelper helper = new BuildHelperImpl(new ClassLoaderRegistryImpl());
+    private ReflectiveInstanceFactoryBuilder builder = new ReflectiveInstanceFactoryBuilder(null, helper);
     private InstanceFactoryDefinition definition;
 
     /**

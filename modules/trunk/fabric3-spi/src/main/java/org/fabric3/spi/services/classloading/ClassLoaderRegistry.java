@@ -60,4 +60,14 @@ public interface ClassLoaderRegistry {
      * @throws ClassNotFoundException if the class could not be found by that classloader
      */
     Class<?> loadClass(URI classLoaderId, String className) throws ClassNotFoundException;
+
+    /**
+     * Load and define a class from a specific classloader.
+     *
+     * @param cl the ClassLoader to use
+     * @param className the name of the class
+     * @return the class
+     * @throws ClassNotFoundException if the class could not be found by that classloader
+     */
+    Class<?> loadClass(ClassLoader cl, String className) throws ClassNotFoundException;
 }

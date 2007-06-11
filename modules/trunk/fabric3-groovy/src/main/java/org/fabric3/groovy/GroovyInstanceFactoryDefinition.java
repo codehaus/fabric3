@@ -22,4 +22,23 @@ import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
  * @version $Rev$ $Date$
  */
 public class GroovyInstanceFactoryDefinition extends InstanceFactoryDefinition {
+    private String scriptName;
+
+    /**
+     * Returns the name of a file resource containing the implementation as Groovy script.
+     *
+     * @return the name of the script file
+     */
+    public String getScriptName() {
+        return scriptName;
+    }
+
+    /**
+     * Sets the name of a file resource containing the implementation as Groovy script.
+     *
+     * @param scriptName the name of the script file
+     */
+    public void setScriptName(String scriptName) {
+        this.scriptName = scriptName;
+    }
 }

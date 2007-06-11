@@ -64,9 +64,13 @@ public class ClassLoaderRegistryImpl implements ClassLoaderRegistry {
     }
 
     public Class<?> loadClass(URI classLoaderId, String className) throws ClassNotFoundException {
+        ClassLoader cl = getClassLoader(classLoaderId);
+        return loadClass(cl, className);
+    }
+
+    public Class<?> loadClass(ClassLoader cl, String className) throws ClassNotFoundException {
         Class<?> clazz = PRIMITIVES.get(className);
         if (clazz == null) {
-            ClassLoader cl = getClassLoader(classLoaderId);
             clazz = Class.forName(className, true, cl);
         }
         return clazz;
