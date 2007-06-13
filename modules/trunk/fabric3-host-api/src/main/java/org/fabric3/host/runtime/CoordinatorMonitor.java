@@ -16,23 +16,45 @@
  */
 package org.fabric3.host.runtime;
 
-import java.net.URL;
-
 /**
+ * Event monitor interface for the bootstrap sequence
+ *
  * @version $Rev$ $Date$
  */
-public interface ScdlBootstrapper extends Bootstrapper {
-    /**
-     * Returns the location of the SCDL used to boot this runtime.
-     *
-     * @return the location of the SCDL used to boot this runtime
-     */
-    URL getScdlLocation();
+public interface CoordinatorMonitor {
 
     /**
-     * Sets the location of the SCDL used to boot this runtime.
+     * Called when the runtime is initialized.
      *
-     * @param scdlLocation the location of the SCDL used to boot this runtime
+     * @param message a message
      */
-    void setScdlLocation(URL scdlLocation);
+    void initialized(String message);
+
+    /**
+     * Called when the runtime has joined a domain.
+     *
+     * @param message a message
+     */
+    void joinedDomain(String message);
+
+    /**
+     * Called when the runtime has performed recovery.
+     *
+     * @param message a message
+     */
+    void recovered(String message);
+
+    /**
+     * Called when the runtime has started.
+     *
+     * @param message a message
+     */
+    void started(String message);
+
+    /**
+     * Called when an exception was thrown during a boostrap operation
+     *
+     * @param e the exception
+     */
+    void error(Throwable e);
 }

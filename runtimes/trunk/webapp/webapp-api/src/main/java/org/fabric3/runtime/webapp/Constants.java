@@ -91,6 +91,17 @@ public final class Constants {
     static final String BOOTSTRAP_DEFAULT = "org.fabric3.fabric.runtime.ScdlBootstrapperImpl";
 
     /**
+     * Name of the parameter that defines the class to load to coordinate booting the runtime.
+     */
+    static final String COORDINATOR_PARAM = "fabric3.coordinatorImpl";
+
+    /**
+     * Name of the default webapp coordinator implementation.
+     */
+    static final String COORDINATOR_DEFAULT = "org.fabric3.runtime.webapp.WebappCoordinator";
+
+
+    /**
      * Servlet context-param name for user-specified system SCDL path.
      */
     static final String SYSTEM_SCDL_PATH_PARAM = "fabric3.systemScdlPath";
@@ -119,7 +130,7 @@ public final class Constants {
      * Default path for extensions if no "extensionScdlPath param is specified
      */
     static final String DEFAULT_EXTENSION_PATH_PARAM = "/WEB-INF/fabric3/extensions";
-    
+
     /**
      * Servlet context-param name for system monitoring level. Supported values are the names of statics defined in
      * java.util.logging.Level. If absent, no monitoring will take place.

@@ -5,9 +5,14 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
+import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.InitializationException;
+import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ScdlBootstrapper;
+import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.host.runtime.StartException;
 import org.fabric3.runtime.development.host.DevelopmentHostInfoImpl;
 import org.fabric3.runtime.development.host.DevelopmentRuntime;
@@ -17,7 +22,7 @@ import org.fabric3.runtime.development.host.DevelopmentRuntime;
  * <pre>
  * Domain domain = new Domain();
  * domain.activate(url);
- * MyService service = domain.locateService(MyService.class, compositeUri, "MyComponent");
+ * MyService service = domain.connectTo(MyService.class, compositeUri, "MyComponent");
  * //...
  * domain.stop();
  *  </pre>
@@ -47,17 +52,13 @@ public class Domain {
     public static final URI DOMAIN_URI = URI.create("fabric3://./domain");
 
     private DevelopmentRuntime runtime;
+    private RuntimeLifecycleCoordinator<DevelopmentRuntime, Bootstrapper> coordinator;
 
     public void activate(URL compositeFile) {
         if (runtime == null) {
             bootRuntime();
             runtime.activate(compositeFile);
         }
-    }
-
-    public void stop() {
-        runtime.stop();
-        runtime = null;
     }
 
     public <T> T connectTo(Class<T> interfaze, String componentUri) {
@@ -67,6 +68,21 @@ public class Domain {
         return runtime.connectTo(interfaze, componentUri);
     }
 
+    public void stop() {
+        try {
+            Future<Void> future = coordinator.shutdown();
+            future.get();
+        } catch (ShutdownException e) {
+            throw new RuntimeShutdownException(e);
+        } catch (ExecutionException e) {
+            throw new RuntimeShutdownException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeShutdownException(e);
+        }
+        runtime = null;
+    }
+
+    @SuppressWarnings({"unchecked"})
     private void bootRuntime() {
         String home = System.getProperty(FABRIC3_DEV_HOME);
         if (home == null) {
@@ -101,8 +117,18 @@ public class Domain {
             URL baseDirUrl = baseDir.toURI().toURL();
             runtime.setHostInfo(new DevelopmentHostInfoImpl(DOMAIN_URI, baseDirUrl, baseDir, cl, cl));
             runtime.setHostClassLoader(cl);
-            bootstrapper.bootstrap(runtime, cl, cl);
-            runtime.start();
+
+            Class<?> coordinatorClass =
+                    cl.loadClass("org.fabric3.runtime.development.host.DevelopmentBootstrapCoordinator");
+            coordinator = (RuntimeLifecycleCoordinator<DevelopmentRuntime, Bootstrapper>) coordinatorClass.newInstance();
+            coordinator.bootPrimordial(runtime, bootstrapper, cl, cl);
+            coordinator.initialize();
+            Future<Void> future = coordinator.joinDomain(-1);
+            future.get();
+            future = coordinator.recover();
+            future.get();
+            future = coordinator.start();
+            future.get();
         } catch (InstantiationException e) {
             throw new InvalidConfigurationException("Error instantiating runtime classes are missing", e);
         } catch (IllegalAccessException e) {
@@ -114,6 +140,10 @@ public class Domain {
         } catch (MalformedURLException e) {
             throw new InvalidConfigurationException("Error initializing runtime", e);
         } catch (StartException e) {
+            throw new InvalidConfigurationException("Error initializing runtime", e);
+        } catch (ExecutionException e) {
+            throw new InvalidConfigurationException("Error initializing runtime", e);
+        } catch (InterruptedException e) {
             throw new InvalidConfigurationException("Error initializing runtime", e);
         }
 

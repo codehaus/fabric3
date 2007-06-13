@@ -70,7 +70,7 @@
 
 
     <!-- JXTA Messaging Service -->
-    <component name="jxtaMessagingService">
+    <component name="MessagingService">
         <system:implementation.system class="org.fabric3.messaging.jxta.JxtaMessagingService"/>  
         <property name="tcpPort">2002</property>  
     </component>

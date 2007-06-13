@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.assembly;
+package org.fabric3.spi.model.topology;
 
 /**
  * Tracks information regarding a runtime service node, including available capabilities and resources

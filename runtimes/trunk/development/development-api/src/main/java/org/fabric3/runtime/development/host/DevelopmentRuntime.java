@@ -22,8 +22,4 @@ public interface DevelopmentRuntime extends Fabric3Runtime<DevelopmentHostInfo> 
 
     <T> T connectTo(Class<T> interfaze, String serviceUri);
 
-    /**
-     * Stops the runtime instance/
-     */
-    void stop();
 }

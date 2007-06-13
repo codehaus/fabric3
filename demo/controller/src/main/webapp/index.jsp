@@ -1,10 +1,11 @@
 <%@ page import="java.net.URI" %>
 <%@ page import="org.fabric3.fabric.assembly.Assembly" %>
 <%@ page import="org.fabric3.runtime.webapp.WebappRuntimeImpl" %>
-<%@ page import="org.fabric3.fabric.assembly.RuntimeInfo" %>
+<%@ page import="org.fabric3.spi.model.topology.RuntimeInfo" %>
 <%@ page import="java.util.Collection" %>
 <%@ page import="org.fabric3.spi.model.type.CompositeImplementation" %>
 <%@ page import="org.fabric3.spi.model.instance.LogicalComponent" %>
+<%@ page import="java.util.Map" %>
 <%--
  See the NOTICE file distributed with this work for information
  regarding copyright ownership.  This file is licensed
@@ -34,12 +35,12 @@
 <h1>fabric3 controller for <%= domain.getUri() %>
 </h1>
 <%
-    Collection<RuntimeInfo> runtimes = assembly.getRuntimes();
+    Map<String, RuntimeInfo> runtimes = assembly.getRuntimes();
 %>
 <h2>Participating Runtimes</h2>
 <table><tr><th>Runtime Id</th></tr>
 <%
-    for (RuntimeInfo runtimeInfo : runtimes) {
+    for (RuntimeInfo runtimeInfo : runtimes.values()) {
         out.print("<tr><td>" + runtimeInfo.getId() + "</td></tr>");
     }
 %>

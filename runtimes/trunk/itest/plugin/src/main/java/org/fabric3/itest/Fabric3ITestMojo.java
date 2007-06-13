@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
@@ -57,9 +59,12 @@ import org.fabric3.fabric.loader.LoaderContextImpl;
 import static org.fabric3.fabric.runtime.ComponentNames.COMPOSITE_LOADER_URI;
 import org.fabric3.fabric.runtime.ScdlBootstrapperImpl;
 import org.fabric3.host.Fabric3RuntimeException;
+import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.InitializationException;
+import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.host.runtime.StartException;
+import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.itest.implementation.junit.ImplementationJUnit;
 import org.fabric3.spi.deployer.CompositeClassLoader;
 import org.fabric3.spi.implementation.java.JavaMappedService;
@@ -195,6 +200,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
      */
     public ArtifactFactory artifactFactory;
 
+    @SuppressWarnings({"ThrowFromFinallyBlock"})
     public void execute() throws MojoExecutionException, MojoFailureException {
         Log log = getLog();
         if (!testScdl.exists()) {
@@ -213,15 +219,29 @@ public class Fabric3ITestMojo extends AbstractMojo {
         MojoMonitor monitor = runtime.getMonitorFactory().getMonitor(MojoMonitor.class);
         // FIXME this should probably be an isolated classloader
         ClassLoader testClassLoader = createTestClassLoader(getClass().getClassLoader());
+        RuntimeLifecycleCoordinator<MavenEmbeddedRuntime, Bootstrapper> coordinator;
         try {
             ScdlBootstrapper bootstrapper = new ScdlBootstrapperImpl();
             bootstrapper.setScdlLocation(systemScdl);
-            bootstrapper.bootstrap(runtime, cl, testClassLoader);
-            runtime.start();
+            coordinator = new MavenCoordinator();
+            coordinator.bootPrimordial(runtime, bootstrapper, cl, testClassLoader);
+            coordinator.initialize();
+            Future<Void> future = coordinator.joinDomain(-1);
+            future.get();
+            future = coordinator.recover();
+            future.get();
+            future = coordinator.start();
+            future.get();
         } catch (InitializationException e) {
             monitor.runError(e);
             throw new MojoExecutionException("Error initializing Fabric3 Runtime", e);
         } catch (StartException e) {
+            monitor.runError(e);
+            throw new MojoExecutionException("Error starting Fabric3 Runtime", e);
+        } catch (ExecutionException e) {
+            monitor.runError(e);
+            throw new MojoExecutionException("Error starting Fabric3 Runtime", e);
+        } catch (InterruptedException e) {
             monitor.runError(e);
             throw new MojoExecutionException("Error starting Fabric3 Runtime", e);
         }
@@ -265,14 +285,25 @@ public class Fabric3ITestMojo extends AbstractMojo {
         } finally {
             log.info("Stopping Fabric3 Runtime ...");
             try {
-                runtime.destroy();
+                Future<Void> future = coordinator.shutdown();
+                future.get();
             } catch (Fabric3RuntimeException e) {
+                monitor.runError(e);
+                throw new MojoExecutionException("Error shutting down Fabric3 Runtime", e);
+            } catch (ExecutionException e) {
+                monitor.runError(e);
+                throw new MojoExecutionException("Error shutting down Fabric3 Runtime", e);
+            } catch (InterruptedException e) {
+                monitor.runError(e);
+                throw new MojoExecutionException("Error shutting down Fabric3 Runtime", e);
+            } catch (ShutdownException e) {
                 monitor.runError(e);
                 throw new MojoExecutionException("Error shutting down Fabric3 Runtime", e);
             }
         }
     }
 
+    @SuppressWarnings({"unchecked"})
     protected ClassLoader createHostClassLoader(ClassLoader parent, Dependency[] extensions)
             throws MojoExecutionException {
         if (extensions == null || extensions.length == 0) {

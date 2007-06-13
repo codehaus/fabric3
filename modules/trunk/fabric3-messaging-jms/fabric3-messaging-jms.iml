@@ -8,6 +8,9 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="fabric3-extension" />
+    <orderEntry type="library" name="activemq-core-4.1.0-incubator" level="application" />
+    <orderEntry type="library" name="geronimo-jms_1.1_spec-1.0" level="application" />
     <orderEntryProperties />
   </component>
 </module>

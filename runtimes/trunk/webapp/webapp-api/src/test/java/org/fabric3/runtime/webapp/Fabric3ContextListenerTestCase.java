@@ -19,12 +19,14 @@
 package org.fabric3.runtime.webapp;
 
 import java.lang.reflect.Method;
-import java.net.URL;
 import java.net.URI;
+import java.net.URL;
+import java.util.concurrent.Future;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
 import junit.framework.TestCase;
+import org.easymock.EasyMock;
 import static org.easymock.classextension.EasyMock.createMock;
 import static org.easymock.classextension.EasyMock.eq;
 import static org.easymock.classextension.EasyMock.expect;
@@ -32,9 +34,11 @@ import static org.easymock.classextension.EasyMock.isA;
 import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
 
-import static org.fabric3.runtime.webapp.Constants.APPLICATION_SCDL_PATH_PARAM;
-import static org.fabric3.runtime.webapp.Constants.APPLICATION_SCDL_PATH_DEFAULT;
+import org.fabric3.host.runtime.Bootstrapper;
+import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ScdlBootstrapper;
+import static org.fabric3.runtime.webapp.Constants.APPLICATION_SCDL_PATH_DEFAULT;
+import static org.fabric3.runtime.webapp.Constants.APPLICATION_SCDL_PATH_PARAM;
 
 /**
  * @version $Rev$ $Date$
@@ -51,6 +55,7 @@ public class Fabric3ContextListenerTestCase extends TestCase {
     private String compositeId;
     private String domain;
 
+    @SuppressWarnings({"unchecked"})
     public void testInitializationUsingDefaults() throws Exception {
         ServletContextEvent event = createMock(ServletContextEvent.class);
         expect(event.getServletContext()).andReturn(context);
@@ -58,15 +63,30 @@ public class Fabric3ContextListenerTestCase extends TestCase {
 
         WebappRuntime runtime = createMock(WebappRuntime.class);
         ScdlBootstrapper bootstrapper = createMock(ScdlBootstrapper.class);
+        RuntimeLifecycleCoordinator<WebappRuntime, Bootstrapper> coordinator =
+                createMock(RuntimeLifecycleCoordinator.class);
+        Future<Void> future = EasyMock.createMock(Future.class);
+        EasyMock.expect(future.get()).andReturn(null).atLeastOnce();
+        EasyMock.replay(future);
+        coordinator.bootPrimordial(EasyMock.isA(WebappRuntime.class),
+                                   EasyMock.eq(bootstrapper),
+                                   EasyMock.isA(ClassLoader.class),
+                                   EasyMock.isA(ClassLoader.class));
+        coordinator.initialize();
+        EasyMock.expect(coordinator.joinDomain(EasyMock.anyLong())).andReturn(future);
+        EasyMock.expect(coordinator.recover()).andReturn(future);
+        EasyMock.expect(coordinator.start()).andReturn(future);
+        EasyMock.replay(coordinator);
         expect(utils.getBootClassLoader(cl)).andReturn(bootClassLoader);
         expect(utils.getInitParameter("fabric3.domain", domain)).andReturn(domain);
         expect(utils.getInitParameter("fabric3.composite", compositeId)).andReturn(compositeId);
         expect(utils.getInitParameter("fabric3.component", contextName)).andReturn(contextName);
         expect(utils.getInitParameter("fabric3.online", "true")).andReturn("true");
         expect(utils.getInitParameter(APPLICATION_SCDL_PATH_PARAM, APPLICATION_SCDL_PATH_DEFAULT))
-            .andReturn(APPLICATION_SCDL_PATH_DEFAULT);
+                .andReturn(APPLICATION_SCDL_PATH_DEFAULT);
         expect(utils.getRuntime(bootClassLoader)).andReturn(runtime);
         expect(utils.getBootstrapper(bootClassLoader)).andReturn(bootstrapper);
+        expect(utils.getCoordinator(bootClassLoader)).andReturn(coordinator);
         expect(utils.getSystemScdl(bootClassLoader)).andReturn(systemUrl);
         replay(utils);
 
@@ -81,8 +101,8 @@ public class Fabric3ContextListenerTestCase extends TestCase {
         runtime.setServletContext(context);
         runtime.setHostInfo(isA(WebappHostInfo.class));
         runtime.setHostClassLoader(cl);
-        bootstrapper.bootstrap(runtime, bootClassLoader, cl);
-        runtime.start();
+        bootstrapper.bootPrimordial(runtime, bootClassLoader, cl);
+        bootstrapper.bootSystem(runtime);
         runtime.deploy(URI.create(compositeId), scdl, URI.create(contextName));
         replay(runtime);
 
@@ -100,6 +120,7 @@ public class Fabric3ContextListenerTestCase extends TestCase {
         verify(cl);
         verify(bootClassLoader);
         verify(runtime);
+        verify(coordinator);
     }
 
     protected void setUp() throws Exception {

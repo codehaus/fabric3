@@ -14,25 +14,26 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.host.runtime;
+package org.fabric3.fabric.assembly.allocator;
 
-import java.net.URL;
+import org.fabric3.fabric.assembly.AssemblyException;
 
 /**
+ * Denotes an error allocating a component to a service node.
+ *
  * @version $Rev$ $Date$
  */
-public interface ScdlBootstrapper extends Bootstrapper {
-    /**
-     * Returns the location of the SCDL used to boot this runtime.
-     *
-     * @return the location of the SCDL used to boot this runtime
-     */
-    URL getScdlLocation();
+public class AllocationException extends AssemblyException {
 
-    /**
-     * Sets the location of the SCDL used to boot this runtime.
-     *
-     * @param scdlLocation the location of the SCDL used to boot this runtime
-     */
-    void setScdlLocation(URL scdlLocation);
+    public AllocationException(String message, String identifier) {
+        super(message, identifier);
+    }
+
+    public AllocationException(String message, String identifier, Throwable cause) {
+        super(message, identifier, cause);
+    }
+
+    public AllocationException(Throwable cause) {
+        super(cause);
+    }
 }

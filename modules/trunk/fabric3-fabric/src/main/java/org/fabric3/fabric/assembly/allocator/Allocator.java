@@ -14,25 +14,26 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.host.runtime;
+package org.fabric3.fabric.assembly.allocator;
 
-import java.net.URL;
+import java.util.Map;
+
+import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.topology.RuntimeInfo;
 
 /**
+ * Allocates a component to a service node.
+ *
  * @version $Rev$ $Date$
  */
-public interface ScdlBootstrapper extends Bootstrapper {
-    /**
-     * Returns the location of the SCDL used to boot this runtime.
-     *
-     * @return the location of the SCDL used to boot this runtime
-     */
-    URL getScdlLocation();
+public interface Allocator {
 
     /**
-     * Sets the location of the SCDL used to boot this runtime.
+     * Performs the allocation. Composites are recursed and their children are allocated.
      *
-     * @param scdlLocation the location of the SCDL used to boot this runtime
+     * @param infos     the set of service nodes available for allocation
+     * @param component the component to allocate
+     * @throws AllocationException if an error during allocation occurs
      */
-    void setScdlLocation(URL scdlLocation);
+    void allocate(Map<String, RuntimeInfo> infos, LogicalComponent<?> component) throws AllocationException;
 }

@@ -14,25 +14,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.host.runtime;
-
-import java.net.URL;
+package org.fabric3.spi.services.messaging;
 
 /**
+ * Indicates a timeout performing a messaging operation
+ *
  * @version $Rev$ $Date$
  */
-public interface ScdlBootstrapper extends Bootstrapper {
-    /**
-     * Returns the location of the SCDL used to boot this runtime.
-     *
-     * @return the location of the SCDL used to boot this runtime
-     */
-    URL getScdlLocation();
+public class MessagingTimeoutException extends MessagingException {
 
-    /**
-     * Sets the location of the SCDL used to boot this runtime.
-     *
-     * @param scdlLocation the location of the SCDL used to boot this runtime
-     */
-    void setScdlLocation(URL scdlLocation);
+    public MessagingTimeoutException(String message, String identifier) {
+        super(message, identifier);
+    }
 }

@@ -55,9 +55,7 @@ public class JxtaDiscoveryServiceTestCase extends TestCase {
 
         JxtaMessagingService discoveryService = getMessagingService("runtime-1", "domain");
 
-        discoveryService.start();
-        while (!discoveryService.isStarted()) {
-        }
+        discoveryService.joinDomain(-1);
 
         RequestListener requestListener = new RequestListener() {
             public XMLStreamReader onRequest(XMLStreamReader content) {

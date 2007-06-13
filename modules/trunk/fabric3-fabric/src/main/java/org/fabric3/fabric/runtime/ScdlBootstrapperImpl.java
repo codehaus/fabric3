@@ -1,3 +1,19 @@
+/*
+ * See the NOTICE file distributed with this work for information
+ * regarding copyright ownership.  This file is licensed
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.fabric3.fabric.runtime;
 
 import java.net.URI;
@@ -6,11 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.stream.XMLInputFactory;
 
-import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.fabric.assembly.ActivateException;
 import org.fabric3.fabric.assembly.AssemblyException;
-import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.assembly.InstantiationException;
 import org.fabric3.fabric.assembly.RuntimeAssembly;
 import org.fabric3.fabric.assembly.RuntimeAssemblyImpl;
@@ -29,10 +43,6 @@ import org.fabric3.fabric.command.StartCompositeContextCommand;
 import org.fabric3.fabric.command.StartCompositeContextExecutor;
 import org.fabric3.fabric.command.StartCompositeContextGenerator;
 import org.fabric3.fabric.component.GroupInitializationExceptionFormatter;
-import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
-import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
-import org.fabric3.fabric.services.instancefactory.DefaultInstanceFactoryBuilderRegistry;
-import org.fabric3.fabric.services.instancefactory.ReflectiveInstanceFactoryBuilder;
 import org.fabric3.fabric.component.scope.CompositeScopeContainer;
 import org.fabric3.fabric.component.scope.ScopeRegistryImpl;
 import org.fabric3.fabric.deployer.Deployer;
@@ -43,8 +53,6 @@ import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
 import org.fabric3.fabric.implementation.IntrospectionRegistryImpl;
 import org.fabric3.fabric.implementation.composite.CompositeComponentTypeLoader;
 import org.fabric3.fabric.implementation.composite.CompositeLoader;
-import org.fabric3.fabric.services.instancefactory.GenerationHelperImpl;
-import org.fabric3.fabric.services.instancefactory.BuildHelperImpl;
 import org.fabric3.fabric.implementation.processor.ConstructorProcessor;
 import org.fabric3.fabric.implementation.processor.DestroyProcessor;
 import org.fabric3.fabric.implementation.processor.EagerInitProcessor;
@@ -77,11 +85,14 @@ import org.fabric3.fabric.loader.ReferenceLoader;
 import org.fabric3.fabric.loader.ServiceLoader;
 import org.fabric3.fabric.marshaller.MarshallerLoader;
 import static org.fabric3.fabric.runtime.ComponentNames.CLASSLOADER_REGISTRY_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_NAME;
 import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
 import org.fabric3.fabric.services.classloading.ClassLoaderRegistryImpl;
+import org.fabric3.fabric.services.instancefactory.BuildHelperImpl;
+import org.fabric3.fabric.services.instancefactory.DefaultInstanceFactoryBuilderRegistry;
+import org.fabric3.fabric.services.instancefactory.GenerationHelperImpl;
+import org.fabric3.fabric.services.instancefactory.ReflectiveInstanceFactoryBuilder;
 import org.fabric3.fabric.services.routing.RuntimeRoutingService;
 import org.fabric3.fabric.util.JavaIntrospectionHelper;
 import org.fabric3.host.monitor.FormatterRegistry;
@@ -90,15 +101,14 @@ import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.ScdlBootstrapper;
+import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
+import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.builder.component.WireAttacherRegistry;
 import org.fabric3.spi.command.CommandExecutorRegistry;
 import org.fabric3.spi.component.ComponentManager;
-import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.RegistrationException;
-import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.idl.InvalidServiceContractException;
 import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
@@ -112,7 +122,6 @@ import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.CompositeImplementation;
-import org.fabric3.spi.model.type.Scope;
 import org.fabric3.spi.model.type.ServiceContract;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.transform.PullTransformer;
@@ -160,40 +169,35 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         this.scdlLocation = scdlLocation;
     }
 
-    public void bootstrap(Fabric3Runtime<?> runtime, ClassLoader bootClassLoader, ClassLoader applicationClassLoader)
+    public void bootPrimordial(Fabric3Runtime<?> runtime, ClassLoader bootClassLoader, ClassLoader appClassLoader)
             throws InitializationException {
-        initializeRuntime(runtime);
         createBootstrapComponents(runtime);
         registerBootstrapComponents((AbstractRuntime<?>) runtime);
         classLoaderRegistry.register(BOOT_CLASSLOADER_ID, bootClassLoader);
-        classLoaderRegistry.register(APPLICATION_CLASSLOADER_ID, applicationClassLoader);
+        classLoaderRegistry.register(APPLICATION_CLASSLOADER_ID, appClassLoader);
+    }
+
+    public void bootSystem(Fabric3Runtime<?> runtime) throws InitializationException {
+        CompositeImplementation impl;
+        // load the system composite
         try {
-            // FIXME come up with a better alternative: the domain context needs to be started so system services such 
-            // as the contribution service that operate on it may be initialized as system components
-            startDomainContext(runtime);
-            deploySystemScdl((AbstractRuntime<?>) runtime);
-            recoverDomain(runtime);
-        } catch (GroupInitializationException e) {
-            throw new InitializationException(e);
-        } catch (AssemblyException e) {
+            impl = new CompositeImplementation();
+            impl.setScdlLocation(scdlLocation);
+            impl.setClassLoader(classLoaderRegistry.getClassLoader(BOOT_CLASSLOADER_ID));
+            CompositeComponentTypeLoader compositeTypeLoader = new CompositeComponentTypeLoader(loader);
+            LoaderContext loaderContext = new LoaderContextImpl(null, null);
+            compositeTypeLoader.load(impl, loaderContext);
+        } catch (LoaderException e) {
             throw new InitializationException(e);
         }
-    }
-
-    protected void recoverDomain(Fabric3Runtime<?> runtime) throws AssemblyException {
-        DistributedAssembly assembly =
-                runtime.getSystemComponent(DistributedAssembly.class, DISTRIBUTED_ASSEMBLY_URI);
-        assembly.initialize();
-    }
-
-    protected void startDomainContext(Fabric3Runtime runtime) throws GroupInitializationException {
-        // start the domain context
-        ScopeContainer<URI> container = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
-        WorkContext workContext = new SimpleWorkContext();
-        URI domainUri = runtime.getHostInfo().getDomain();
-        URI groupId = URI.create(domainUri.toString() + "/");
-        workContext.setScopeIdentifier(Scope.COMPOSITE, groupId);
-        container.startContext(workContext, groupId);
+        // activate system components in the runtime domain
+        try {
+            ComponentDefinition<CompositeImplementation> definition =
+                    new ComponentDefinition<CompositeImplementation>("main", impl);
+            runtimeAssembly.activate(definition, false);
+        } catch (ActivateException e) {
+            throw new InitializationException(e);
+        }
     }
 
     protected void createBootstrapComponents(Fabric3Runtime runtime) throws InitializationException {
@@ -207,7 +211,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         componentManager = ((AbstractRuntime<?>) runtime).getComponentManager();
         resolver = new DefaultWireResolver();
         scopeRegistry = new ScopeRegistryImpl();
-        // create and register COMPOSITE ScopeContainer
+        // create the COMPOSITE ScopeContainer
         CompositeScopeContainer scopeContainer = new CompositeScopeContainer(monitorFactory);
         scopeContainer.setScopeRegistry(scopeRegistry);
         scopeContainer.start();
@@ -215,7 +219,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         Introspector introspector = createIntrospector(interfaceProcessorRegistry);
         loader = createLoader(introspector);
         GeneratorRegistry generatorRegistry = createGeneratorRegistry();
-        Deployer deployer = createFederatedDeployer();
+        Deployer deployer = createDeployer();
         CommandExecutorRegistry commandRegistry = createCommandExecutorRegistry(scopeRegistry);
         HostInfo info = runtime.getHostInfo();
         RuntimeRoutingService routingService = new RuntimeRoutingService(deployer, commandRegistry, info);
@@ -228,10 +232,6 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         } catch (AssemblyException e) {
             throw new InitializationException(e);
         }
-    }
-
-    protected void initializeRuntime(Fabric3Runtime runtime) throws InitializationException {
-        runtime.initialize();
     }
 
     protected <I extends HostInfo> void registerBootstrapComponents(AbstractRuntime<I> runtime)
@@ -265,10 +265,9 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
             componentManager.register(component);
             resolver.addHostUri(contract, uri);
             String serviceName = "#" + JavaIntrospectionHelper.getBaseName(type);
-            ComponentDefinition<?> definition = createDefinition(uri,
-                                                                 uri.resolve(serviceName),
-                                                                 ComponentManager.class,
-                                                                 componentManager.getClass());
+            URI resolved = uri.resolve(serviceName);
+            Class<? extends ComponentManager> clazz = componentManager.getClass();
+            ComponentDefinition<?> definition = createDefinition(uri, resolved, ComponentManager.class, clazz);
             runtimeAssembly.instantiateHostComponentDefinition(uri, definition);
         } catch (RegistrationException e) {
             throw new InitializationException(e);
@@ -287,8 +286,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
                 contracts.add(interfaceProcessorRegistry.introspect(type));
 
             }
-            SingletonComponent<I> component =
-                    new SingletonComponent<I>(uri, contracts, instance);
+            SingletonComponent<I> component = new SingletonComponent<I>(uri, contracts, instance);
             componentManager.register(component);
             for (ServiceContract<?> contract : component.getServiceContracts()) {
                 resolver.addHostUri(contract, uri);
@@ -298,41 +296,13 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
                 String serviceName = "#" + JavaIntrospectionHelper.getBaseName(type);
                 serviceNames.add(uri.resolve(serviceName));
             }
-            ComponentDefinition<?> definition = createDefinition(uri,
-                                                                 serviceNames,
-                                                                 types,
-                                                                 instance.getClass());
+            ComponentDefinition<?> definition = createDefinition(uri, serviceNames, types, instance.getClass());
             runtimeAssembly.instantiateHostComponentDefinition(uri, definition);
         } catch (RegistrationException e) {
             throw new InitializationException(e);
         } catch (InvalidServiceContractException e) {
             throw new InitializationException(e);
         } catch (InstantiationException e) {
-            throw new InitializationException(e);
-        }
-    }
-
-    protected void deploySystemScdl(AbstractRuntime<?> runtime) throws InitializationException {
-        CompositeImplementation impl;
-
-        // load system composite
-        try {
-            impl = new CompositeImplementation();
-            impl.setScdlLocation(scdlLocation);
-            impl.setClassLoader(classLoaderRegistry.getClassLoader(BOOT_CLASSLOADER_ID));
-            CompositeComponentTypeLoader compositeTypeLoader = new CompositeComponentTypeLoader(loader);
-            LoaderContext loaderContext = new LoaderContextImpl(null, null);
-            compositeTypeLoader.load(impl, loaderContext);
-        } catch (LoaderException e) {
-            throw new InitializationException(e);
-        }
-
-        // active system components
-        try {
-            ComponentDefinition<CompositeImplementation> definition =
-                    new ComponentDefinition<CompositeImplementation>("main", impl);
-            runtimeAssembly.activate(definition, false);
-        } catch (ActivateException e) {
             throw new InitializationException(e);
         }
     }
@@ -399,8 +369,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
                                                                             Class<?> serviceClass,
                                                                             Class<?> implClass)
             throws InvalidServiceContractException {
-        PojoComponentType type =
-                new PojoComponentType(implClass);
+        PojoComponentType type = new PojoComponentType(implClass);
         JavaServiceContract contract = interfaceProcessorRegistry.introspect(serviceClass);
         JavaMappedService service = new JavaMappedService(serviceName, contract, false);
         type.add(service);
@@ -413,8 +382,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
                                                                             List<Class<?>> serviceClasses,
                                                                             Class<?> implClass)
             throws InvalidServiceContractException {
-        PojoComponentType type =
-                new PojoComponentType(implClass);
+        PojoComponentType type = new PojoComponentType(implClass);
         int i = 0;
         for (URI serviceName : serviceNames) {
             Class<?> serviceClass = serviceClasses.get(i);
@@ -427,7 +395,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         return new ComponentDefinition<SingletonImplementation>(componentUri.toString(), implementation);
     }
 
-    protected DeployerImpl createFederatedDeployer() {
+    protected DeployerImpl createDeployer() {
         DeployerImpl deployer = new DeployerImpl(monitorFactory);
         ComponentBuilderRegistry registry = new DefaultComponentBuilderRegistry();
 

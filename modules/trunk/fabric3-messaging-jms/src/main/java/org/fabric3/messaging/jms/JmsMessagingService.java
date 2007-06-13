@@ -20,7 +20,6 @@ package org.fabric3.messaging.jms;
 
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.ExceptionListener;
@@ -37,16 +36,17 @@ import javax.xml.stream.XMLStreamReader;
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQTopic;
-import org.fabric3.extension.messaging.AbstractMessagingService;
-import org.fabric3.spi.services.messaging.MessagingException;
-import org.fabric3.spi.util.stax.StaxUtil;
 import org.osoa.sca.annotations.Property;
 
+import org.fabric3.extension.messaging.AbstractMessagingService;
+import org.fabric3.spi.services.messaging.DomainJoinException;
+import org.fabric3.spi.services.messaging.MessagingException;
+import org.fabric3.spi.util.stax.StaxUtil;
+
 /**
- * JMS based implementation of the messaging service. This class uses 
- * ActiveMQ specific API instead of JNDI based administered objects. This can 
- * be changed later if required.
- * 
+ * JMS based implementation of the messaging service. This class uses ActiveMQ specific API instead of JNDI based
+ * administered objects. This can be changed later if required.
+ *
  * @version $Revision$ $Date$
  */
 public class JmsMessagingService extends AbstractMessagingService {
@@ -65,12 +65,13 @@ public class JmsMessagingService extends AbstractMessagingService {
 
     // Topic to use
     private Topic topic;
-    
+
     // String broker url
     private String brokerUrl = ActiveMQConnection.DEFAULT_BROKER_URL;
 
     /**
      * Injects the topic used for communication.
+     *
      * @param topic Topic used for communication.
      */
     @Property
@@ -80,6 +81,7 @@ public class JmsMessagingService extends AbstractMessagingService {
 
     /**
      * Injects the broker URL.
+     *
      * @param brokerUrl Broker URL to use.
      */
     @Property
@@ -90,13 +92,12 @@ public class JmsMessagingService extends AbstractMessagingService {
     /**
      * Starts the service and sets up the message listener.
      */
-    @Override
-    protected synchronized void onStart() throws MessagingException {
+    public synchronized void joinDomain(final long timeOut) throws DomainJoinException {
 
         String runtimeId = getRuntimeInfo().getRuntimeId();
 
         try {
-            
+
             connectionFactory = new ActiveMQConnectionFactory(brokerUrl);
 
             connection = connectionFactory.createConnection();
@@ -109,11 +110,11 @@ public class JmsMessagingService extends AbstractMessagingService {
                         ex.printStackTrace();
                     }
                     try {
-                        onStart();
+                        joinDomain(timeOut);
                     } catch (MessagingException ex) {
                         ex.printStackTrace();
                     }
-                }                
+                }
             });
             receiverSession = connection.createSession(true, Session.AUTO_ACKNOWLEDGE);
 
@@ -123,13 +124,18 @@ public class JmsMessagingService extends AbstractMessagingService {
             connection.start();
 
         } catch (JMSException ex) {
-            throw new MessagingException(ex);
+            throw new DomainJoinException("Error joining domain", ex);
         }
 
     }
-    
+
+    public void leaveDomain() throws MessagingException {
+
+    }
+
     /**
      * Returns the available runtimes in the current domain.
+     *
      * @return List of available runtimes.
      */
     public Set<String> getRuntimeIds() {
@@ -138,8 +144,9 @@ public class JmsMessagingService extends AbstractMessagingService {
 
     /**
      * Closes the connection.
+     *
+     * @throws MessagingException
      */
-    @Override
     protected synchronized void onStop() throws MessagingException {
 
         try {
@@ -148,12 +155,12 @@ public class JmsMessagingService extends AbstractMessagingService {
             throw new MessagingException(ex);
         } finally {
             try {
-                connection.close();                
+                connection.close();
             } catch (JMSException ex) {
                 throw new MessagingException(ex);
             }
         }
-        
+
     }
 
     /**
@@ -168,7 +175,7 @@ public class JmsMessagingService extends AbstractMessagingService {
             MessageProducer messageProducer = senderSession.createProducer(topic);
 
             TextMessage textMessage = senderSession.createTextMessage(text);
-            
+
             textMessage.setStringProperty("runtimeId", runtimeId);
             messageProducer.send(textMessage);
             senderSession.commit();

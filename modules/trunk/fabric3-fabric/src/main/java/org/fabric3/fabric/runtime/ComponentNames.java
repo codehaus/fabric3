@@ -53,6 +53,10 @@ public final class ComponentNames {
 
     public static final URI EVENT_SERVICE_URI = URI.create(RUNTIME_NAME + "/main/eventService");
 
+    public static final URI WORK_SCHEDULER_URI = URI.create(RUNTIME_NAME + "/main/workScheduler");
+
+    public static final URI MESSAGING_SERVICE_URI = URI.create(RUNTIME_NAME + "/main/MessagingService");
+
     private ComponentNames() {
     }
 

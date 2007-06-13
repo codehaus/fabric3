@@ -22,18 +22,20 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Future;
 import javax.management.MBeanServer;
 
 import org.fabric3.api.annotation.LogLevel;
 import org.fabric3.host.management.ManagementService;
 import org.fabric3.host.runtime.Bootstrapper;
-import org.fabric3.host.runtime.Fabric3Runtime;
+import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.jmx.JmxManagementService;
 import org.fabric3.jmx.agent.Agent;
 import org.fabric3.jmx.agent.RmiAgent;
 import org.fabric3.runtime.standalone.BootstrapHelper;
 import org.fabric3.runtime.standalone.StandaloneHostInfo;
+import org.fabric3.runtime.standalone.StandaloneRuntime;
 
 /**
  * This class provides the commandline interface for starting the Fabric3 standalone server.
@@ -70,11 +72,15 @@ public class Fabric3Server implements Fabric3ServerMBean {
     /**
      * Started runtimes.
      */
-    private final Map<String, Fabric3Runtime> bootedRuntimes = new ConcurrentHashMap<String, Fabric3Runtime>();
+    private final Map<String, RuntimeLifecycleCoordinator<StandaloneRuntime, Bootstrapper>> bootedRuntimes =
+            new ConcurrentHashMap<String, RuntimeLifecycleCoordinator<StandaloneRuntime, Bootstrapper>>();
     private ServerMonitor monitor;
 
     /**
+     * Main method.
+     *
      * @param args Commandline arguments.
+     * @throws Exception if there is a problem starting the runtime
      */
     public static void main(String[] args) throws Exception {
         Fabric3Server server = new Fabric3Server();
@@ -89,7 +95,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
     /**
      * Constructor initializes all the required classloaders.
      *
-     * @throws MalformedURLException
+     * @throws MalformedURLException if the install directory is invalid
      */
     private Fabric3Server() throws MalformedURLException {
         installDirectory = BootstrapHelper.getInstallDirectory(Fabric3Server.class);
@@ -103,7 +109,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
      */
     public final void startRuntime(final String profileName) {
         final StandaloneHostInfo hostInfo;
-        final Fabric3Runtime<?> runtime;
+        final StandaloneRuntime runtime;
         try {
             hostInfo = BootstrapHelper.createHostInfo(installDirectory, profileName);
             runtime = BootstrapHelper.createRuntime(hostInfo);
@@ -116,11 +122,26 @@ public class Fabric3Server implements Fabric3ServerMBean {
             final MBeanServer mBeanServer = agent.getMBeanServer();
             final ManagementService<?> managementService = new JmxManagementService(mBeanServer, profileName);
             final Bootstrapper bootstrapper = BootstrapHelper.createBootstrapper(hostInfo);
+            final RuntimeLifecycleCoordinator<StandaloneRuntime, Bootstrapper> coordinator =
+                    BootstrapHelper.createCoordinator(hostInfo);
             runtime.setManagementService(managementService);
-            bootstrapper.bootstrap(runtime, hostInfo.getBootClassLoader(), hostInfo.getHostClassLoader());
+            // perform the boot sequence.
+            ClassLoader bootLoader = hostInfo.getBootClassLoader();
+            ClassLoader hostLoader = hostInfo.getHostClassLoader();
+            // load the primordial system components
+            coordinator.bootPrimordial(runtime, bootstrapper, bootLoader, hostLoader);
+            // load and initialize runtime extension components and the local runtime domain
+            coordinator.initialize();
+            // join a distributed domain
+            Future<Void> future = coordinator.joinDomain(10000);
+            future.get();
+            // perform recovery. If the runtime is a controller node, this may result in reprovisioning components
+            future = coordinator.recover();
+            future.get();
             // start the runtime receiving requests
-            runtime.start();
-            bootedRuntimes.put(profileName, runtime);
+            future = coordinator.start();
+            future.get();
+            bootedRuntimes.put(profileName, coordinator);
             System.err.println("Started " + profileName);
         } catch (Exception ex) {
             monitor.runError(ex);
@@ -134,9 +155,9 @@ public class Fabric3Server implements Fabric3ServerMBean {
     public final void shutdownRuntime(String bootPath) {
 
         try {
-            Fabric3Runtime runtime = bootedRuntimes.get(bootPath);
-            if (runtime != null) {
-                runtime.destroy();
+            RuntimeLifecycleCoordinator<StandaloneRuntime, Bootstrapper> coordinator = bootedRuntimes.get(bootPath);
+            if (coordinator != null) {
+                coordinator.shutdown();
                 bootedRuntimes.remove(bootPath);
             }
         } catch (ShutdownException ex) {
@@ -147,7 +168,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
     }
 
     /**
-     * Starts the server.
+     * Shuts the server down.
      */
     public final void shutdown() {
 

@@ -37,6 +37,10 @@
         <system:implementation.system class="org.fabric3.fabric.assembly.normalizer.PromotionNormalizerImpl"/>
     </component>
 
+    <component name="allocator">
+        <system:implementation.system class="org.fabric3.fabric.assembly.allocator.DefaultAllocator"/>
+    </component>
+    
     <component name="runtimeRoutingService">
         <system:implementation.system class="org.fabric3.fabric.services.routing.FederatedRoutingService"/>
     </component>
@@ -47,10 +51,6 @@
 
     <component name="modelMarshallerRegistry">
         <system:implementation.system class="org.fabric3.fabric.marshaller.DefaultMarshallerRegistry"/>
-    </component>
-
-    <component name="nullMessagingService">
-        <system:implementation.system class="org.fabric3.fabric.services.messaging.NullMessagingService"/>
     </component>
 
     <component name="proxyService">

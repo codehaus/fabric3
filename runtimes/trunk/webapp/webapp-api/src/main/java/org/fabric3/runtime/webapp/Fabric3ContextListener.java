@@ -18,21 +18,24 @@
  */
 package org.fabric3.runtime.webapp;
 
-import static org.fabric3.runtime.webapp.Constants.DOMAIN_PARAM;
-
 import java.net.URI;
 import java.net.URL;
+import java.util.concurrent.Future;
+import java.util.concurrent.ExecutionException;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import org.fabric3.host.Fabric3RuntimeException;
+import org.fabric3.host.runtime.Bootstrapper;
+import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.host.runtime.ShutdownException;
 import static org.fabric3.runtime.webapp.Constants.APPLICATION_SCDL_PATH_DEFAULT;
 import static org.fabric3.runtime.webapp.Constants.APPLICATION_SCDL_PATH_PARAM;
 import static org.fabric3.runtime.webapp.Constants.COMPONENT_PARAM;
 import static org.fabric3.runtime.webapp.Constants.COMPOSITE_PARAM;
+import static org.fabric3.runtime.webapp.Constants.DOMAIN_PARAM;
 import static org.fabric3.runtime.webapp.Constants.ONLINE_PARAM;
 import static org.fabric3.runtime.webapp.Constants.RUNTIME_ATTRIBUTE;
 
@@ -56,6 +59,7 @@ import static org.fabric3.runtime.webapp.Constants.RUNTIME_ATTRIBUTE;
  * @version $Rev$ $Date$
  */
 public class Fabric3ContextListener implements ServletContextListener {
+    private RuntimeLifecycleCoordinator<WebappRuntime, Bootstrapper> coordinator;
 
     public void contextInitialized(ServletContextEvent event) {
         ClassLoader webappClassLoader = Thread.currentThread().getContextClassLoader();
@@ -82,12 +86,20 @@ public class Fabric3ContextListener implements ServletContextListener {
             runtime.setServletContext(servletContext);
             runtime.setHostInfo(info);
             runtime.setHostClassLoader(webappClassLoader);
+            // initiate the runtime bootstrap sequence
             ScdlBootstrapper bootstrapper = utils.getBootstrapper(bootClassLoader);
             bootstrapper.setScdlLocation(systemScdl);
-            bootstrapper.bootstrap(runtime, bootClassLoader, webappClassLoader);
-            runtime.start();
+            coordinator = utils.getCoordinator(bootClassLoader);
+            coordinator.bootPrimordial(runtime, bootstrapper, bootClassLoader, webappClassLoader);
+            coordinator.initialize();
+            Future<Void> joinFuture = coordinator.joinDomain(-1);
+            joinFuture.get();
+            Future<Void> recoverFuture = coordinator.recover();
+            recoverFuture.get();
+            Future<Void> startFuture = coordinator.start();
+            startFuture.get();
             servletContext.setAttribute(RUNTIME_ATTRIBUTE, runtime);
-
+            // deploy the application composite
             runtime.deploy(compositeId, scdl, componentId);
         } catch (Fabric3RuntimeException e) {
             servletContext.log(e.getMessage(), e);
@@ -107,14 +119,18 @@ public class Fabric3ContextListener implements ServletContextListener {
     public void contextDestroyed(ServletContextEvent event) {
         ServletContext servletContext = event.getServletContext();
         WebappRuntime runtime = (WebappRuntime) servletContext.getAttribute(RUNTIME_ATTRIBUTE);
-        if (runtime == null) {
-            return;
+        if (runtime != null) {
+            servletContext.removeAttribute(RUNTIME_ATTRIBUTE);
         }
-        servletContext.removeAttribute(RUNTIME_ATTRIBUTE);
         try {
-            runtime.destroy();
+            Future<Void> future=  coordinator.shutdown();
+            future.get();
         } catch (ShutdownException e) {
-            servletContext.log("Error destroying runtume", e);
+            servletContext.log("Error shutting runtume down", e);
+        } catch (ExecutionException e) {
+            servletContext.log("Error shutting runtume down", e);
+        } catch (InterruptedException e) {
+            servletContext.log("Error shutting runtume down", e);
         }
     }
 

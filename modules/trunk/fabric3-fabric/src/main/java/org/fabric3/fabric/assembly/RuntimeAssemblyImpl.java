@@ -25,9 +25,10 @@ import java.util.Map;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.fabric.assembly.allocator.AllocationException;
 import org.fabric3.fabric.assembly.normalizer.PromotionNormalizer;
-import org.fabric3.fabric.assembly.store.AssemblyStore;
 import org.fabric3.fabric.assembly.resolver.WireResolver;
+import org.fabric3.fabric.assembly.store.AssemblyStore;
 import org.fabric3.fabric.runtime.ComponentNames;
 import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.spi.generator.GeneratorRegistry;
@@ -61,6 +62,12 @@ public class RuntimeAssemblyImpl extends AbstractAssembly implements RuntimeAsse
         this.hostComponents = new HashMap<URI, LogicalComponent<?>>();
     }
 
+    public void instantiateHostComponentDefinition(URI uri, ComponentDefinition<?> definition)
+            throws InstantiationException {
+        LogicalComponent<?> component = instantiate(domainUri, domain, definition);
+        hostComponents.put(uri, component);
+    }
+
     @Override
     protected Referenceable resolveTarget(URI uri, LogicalComponent<CompositeImplementation> component)
             throws ResolutionException {
@@ -81,9 +88,9 @@ public class RuntimeAssemblyImpl extends AbstractAssembly implements RuntimeAsse
         throw new TargetNotFoundException("Target not found", uri.toString());
     }
 
-    public void instantiateHostComponentDefinition(URI uri, ComponentDefinition<?> definition)
-            throws InstantiationException {
-        LogicalComponent<?> component = instantiate(domainUri, domain, definition);
-        hostComponents.put(uri, component);
+    protected void allocate(LogicalComponent<?> component, boolean synchronizeTopology) throws AllocationException {
+        // no recovery necessary since the domain is local
     }
+
+
 }

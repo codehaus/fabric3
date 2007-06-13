@@ -21,7 +21,7 @@ package org.fabric3.spi.services.messaging;
 import org.fabric3.host.Fabric3Exception;
 
 /**
- * Checked exception thrown during discovery operations.
+ * Checked exception thrown during messaging operations.
  *
  * @version $Revision$ $Date$
  */
@@ -57,4 +57,13 @@ public class MessagingException extends Fabric3Exception {
         super(cause);
     }
 
+    /**
+     * Initialises the exception message.
+     *
+     * @param message    Message for the exception.
+     * @param identifier Indentifier for the exception.
+     */
+    public MessagingException(String message, String identifier) {
+        super(message, identifier);
+    }
 }

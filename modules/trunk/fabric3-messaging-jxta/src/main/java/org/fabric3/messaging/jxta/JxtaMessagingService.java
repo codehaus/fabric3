@@ -49,7 +49,9 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.extension.messaging.AbstractMessagingService;
 import org.fabric3.messaging.jxta.pdp.PeerListener;
 import org.fabric3.messaging.jxta.prp.Fabric3QueryHandler;
+import org.fabric3.spi.services.messaging.DomainJoinException;
 import org.fabric3.spi.services.messaging.MessagingException;
+import org.fabric3.spi.services.messaging.MessagingTimeoutException;
 import org.fabric3.spi.services.work.NotificationListener;
 import org.fabric3.spi.services.work.NotificationListenerAdaptor;
 import org.fabric3.spi.services.work.WorkScheduler;
@@ -159,37 +161,15 @@ public class JxtaMessagingService extends AbstractMessagingService {
     }
 
     /**
-     * Starts the Messaging service.
+     * Joins the Domain and runs the Messaging service in a different thread.
      *
-     * @throws MessagingException any unexpected JXTA exception to bubble up the call stack.
+     * @throws DomainJoinException       any unexpected JXTA exception to bubble up the call stack.
+     * @throws MessagingTimeoutException if a timeout occurs joining the peer group
      */
-    @Override
-    public void onStart() throws MessagingException {
-
-        Runnable runnable = new Runnable() {
-            public void run() {
-                try {
-                    startService();
-                } catch (MessagingException ex) {
-                    throw new JxtaException(ex);
-                }
-            }
-        };
-
-        NotificationListener<Runnable> listener = new NotificationListenerAdaptor<Runnable>();
-        workScheduler.scheduleWork(runnable, listener);
-
-    }
-
-    /**
-     * Rusn the Messaging service in a different thread.
-     *
-     * @throws MessagingException any unexpected JXTA exception to bubble up the call stack.
-     */
-    private void startService() throws MessagingException {
+    public void joinDomain(long waitTime) throws DomainJoinException, MessagingTimeoutException {
 
         try {
-
+            // perform the join synchronously
             configure();
             createAndJoinDomainGroup();
 
@@ -198,13 +178,20 @@ public class JxtaMessagingService extends AbstractMessagingService {
 
             started.set(true);
             latch.countDown();
-            peerListener.start();
+            Runnable runnable = new Runnable() {
+                public void run() {
+                    // run the listener on a different thread
+                    peerListener.start();
+                }
+            };
+            NotificationListener<Runnable> listener = new NotificationListenerAdaptor<Runnable>();
+            workScheduler.scheduleWork(runnable, listener);
         } catch (PeerGroupException ex) {
-            throw new MessagingException(ex);
+            throw new DomainJoinException("Error joining the domain", ex);
         } catch (IOException ex) {
-            throw new MessagingException(ex);
+            throw new DomainJoinException("Error joining the domain", ex);
         } catch (Exception ex) {
-            throw new MessagingException(ex);
+            throw new DomainJoinException("Error joining the domain", ex);
         }
 
     }
@@ -277,11 +264,7 @@ public class JxtaMessagingService extends AbstractMessagingService {
         return started.get();
     }
 
-    /**
-     * Stops the Messaging service.
-     */
-    @Override
-    protected void onStop() {
+    public void leaveDomain() {
         peerListener.stop();
         started.set(false);
     }
@@ -300,7 +283,6 @@ public class JxtaMessagingService extends AbstractMessagingService {
             configurator.setName(runtimeId);
             configurator.setHome(new File(runtimeId));
             configurator.setTcpPort(tcpPort);
-
             // FIXME Once property support is available
             configurator.setPassword("test-password");
             configurator.setPrincipal("test-principal");

@@ -88,4 +88,8 @@
         <system:implementation.system class="org.fabric3.fabric.assembly.store.NonPersistentAssemblyStore"/>
     </component>
 
+    <component name="LocalMessagingService">
+        <system:implementation.system class="org.fabric3.fabric.services.messaging.NullMessagingService"/>
+    </component>
+    
 </composite>

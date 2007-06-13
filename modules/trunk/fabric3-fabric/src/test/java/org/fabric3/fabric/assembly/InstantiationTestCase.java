@@ -4,6 +4,7 @@ import java.net.URI;
 
 import junit.framework.TestCase;
 
+import org.fabric3.fabric.assembly.allocator.AllocationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
@@ -93,6 +94,10 @@ public class InstantiationTestCase extends TestCase {
         protected Referenceable resolveTarget(URI uri, LogicalComponent<CompositeImplementation> component)
                 throws ResolutionException {
             return null;
+        }
+
+        protected void allocate(LogicalComponent<?> component, boolean synchronizeTopology) throws AllocationException {
+
         }
 
         public void activate(ComponentDefinition<?> definition, boolean include) throws ActivateException {

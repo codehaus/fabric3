@@ -23,9 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
 
-import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.runtime.HostInfo;
@@ -88,22 +86,6 @@ public abstract class AbstractMessagingService implements MessagingService {
     }
 
     /**
-     * Starts the discovery service.
-     */
-    @Init
-    public final void start() throws MessagingException {
-        onStart();
-    }
-
-    /**
-     * Stops the discovery service.
-     */
-    @Destroy
-    public final void stop() throws MessagingException {
-        onStop();
-    }
-
-    /**
      * Gets the runtime info for the runtime using the discovery service.
      *
      * @return Runtime info for the runtime using the discovery service.
@@ -142,15 +124,5 @@ public abstract class AbstractMessagingService implements MessagingService {
     public int broadcastMessage(XMLStreamReader content) throws MessagingException {
         return sendMessage(null, content);
     }
-
-    /**
-     * Required to be overridden by sub-classes.
-     */
-    protected abstract void onStart() throws MessagingException;
-
-    /**
-     * Required to be overridden by sub-classes.
-     */
-    protected abstract void onStop() throws MessagingException;
 
 }

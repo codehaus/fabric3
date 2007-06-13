@@ -96,8 +96,9 @@ public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo>
         }
     }
 
-    public void stop() {
+    public void destroy() {
         if (started) {
+            super.destroy();
             WorkContext workContext = new SimpleWorkContext();
             workContext.setScopeIdentifier(Scope.COMPOSITE, DOMAIN_URI);
             scopeContainer.stopContext(workContext);

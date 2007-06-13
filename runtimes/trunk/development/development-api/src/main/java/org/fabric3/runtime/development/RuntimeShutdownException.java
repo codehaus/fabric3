@@ -14,25 +14,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.host.runtime;
+package org.fabric3.runtime.development;
 
-import java.net.URL;
+import org.fabric3.host.Fabric3RuntimeException;
 
 /**
+ * Denotes an error shutting down the development runtime
+ *
  * @version $Rev$ $Date$
  */
-public interface ScdlBootstrapper extends Bootstrapper {
-    /**
-     * Returns the location of the SCDL used to boot this runtime.
-     *
-     * @return the location of the SCDL used to boot this runtime
-     */
-    URL getScdlLocation();
+public class RuntimeShutdownException extends Fabric3RuntimeException {
 
-    /**
-     * Sets the location of the SCDL used to boot this runtime.
-     *
-     * @param scdlLocation the location of the SCDL used to boot this runtime
-     */
-    void setScdlLocation(URL scdlLocation);
+    public RuntimeShutdownException(Throwable cause) {
+        super(cause);
+    }
 }

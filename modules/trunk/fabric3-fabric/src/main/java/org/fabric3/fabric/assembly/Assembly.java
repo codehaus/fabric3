@@ -19,11 +19,12 @@
 package org.fabric3.fabric.assembly;
 
 import java.net.URI;
-import java.util.Collection;
+import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.topology.RuntimeInfo;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.CompositeImplementation;
 
@@ -53,7 +54,7 @@ public interface Assembly {
      *
      * @return the physical runtimes associated with this assembly's domain
      */
-    Collection<RuntimeInfo> getRuntimes();
+    Map<String, RuntimeInfo> getRuntimes();
 
     /**
      * Activates a component at the domain level by provisioning physical artifacts to service nodes.

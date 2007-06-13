@@ -24,6 +24,8 @@ import org.fabric3.host.management.ManagementService;
 import org.fabric3.host.monitor.MonitorFactory;
 
 /**
+ * Represents a node in the service network. Runtimes may host components and/or function as a Domain controller.
+ *
  * @version $Rev$ $Date$
  */
 public interface Fabric3Runtime<I extends HostInfo> {

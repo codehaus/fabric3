@@ -14,25 +14,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.host.runtime;
-
-import java.net.URL;
+package org.fabric3.spi.services.messaging;
 
 /**
+ * Indicates an error when a node joins the domain
+ *
  * @version $Rev$ $Date$
  */
-public interface ScdlBootstrapper extends Bootstrapper {
-    /**
-     * Returns the location of the SCDL used to boot this runtime.
-     *
-     * @return the location of the SCDL used to boot this runtime
-     */
-    URL getScdlLocation();
+public class DomainJoinException extends MessagingException {
 
-    /**
-     * Sets the location of the SCDL used to boot this runtime.
-     *
-     * @param scdlLocation the location of the SCDL used to boot this runtime
-     */
-    void setScdlLocation(URL scdlLocation);
+    public DomainJoinException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

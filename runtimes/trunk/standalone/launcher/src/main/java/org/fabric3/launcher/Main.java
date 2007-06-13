@@ -23,9 +23,11 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
+import java.util.concurrent.Future;
 
 import org.fabric3.api.annotation.LogLevel;
 import org.fabric3.host.runtime.Bootstrapper;
+import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.runtime.standalone.BootstrapHelper;
 import org.fabric3.runtime.standalone.StandaloneHostInfo;
 import org.fabric3.runtime.standalone.StandaloneRuntime;
@@ -85,9 +87,19 @@ public class Main {
         Bootstrapper bootstrapper = BootstrapHelper.createBootstrapper(hostInfo);
         LauncherMonitor monitor = runtime.getMonitorFactory().getMonitor(LauncherMonitor.class);
         try {
-            bootstrapper.bootstrap(runtime, hostInfo.getBootClassLoader(), applicationClassLoader);
-            runtime.start();
+            final RuntimeLifecycleCoordinator<StandaloneRuntime, Bootstrapper> coordinator =
+                    BootstrapHelper.createCoordinator(hostInfo);
+            coordinator.bootPrimordial(runtime, bootstrapper, hostInfo.getBootClassLoader(), applicationClassLoader);
+            coordinator.initialize();
+            Future<Void> future = coordinator.joinDomain(10000);
+            future.get();
+            future = coordinator.recover();
+            future.get();
+            future = coordinator.start();
+            future.get();
             int status = runtime.deployAndRun(applicationScdlURL, applicationClassLoader, appArgs);
+            future = coordinator.shutdown();
+            future.get();
             System.exit(status);
         } catch (Exception e) {
             monitor.runError(e);

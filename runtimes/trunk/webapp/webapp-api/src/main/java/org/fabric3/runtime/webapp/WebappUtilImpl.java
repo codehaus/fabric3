@@ -24,6 +24,8 @@ import java.net.URLClassLoader;
 import java.util.Set;
 import javax.servlet.ServletContext;
 
+import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
+import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import static org.fabric3.runtime.webapp.Constants.APPLICATION_SCDL_PATH_DEFAULT;
 import static org.fabric3.runtime.webapp.Constants.APPLICATION_SCDL_PATH_PARAM;
@@ -31,6 +33,8 @@ import static org.fabric3.runtime.webapp.Constants.BOOTDIR_DEFAULT;
 import static org.fabric3.runtime.webapp.Constants.BOOTDIR_PARAM;
 import static org.fabric3.runtime.webapp.Constants.BOOTSTRAP_DEFAULT;
 import static org.fabric3.runtime.webapp.Constants.BOOTSTRAP_PARAM;
+import static org.fabric3.runtime.webapp.Constants.COORDINATOR_DEFAULT;
+import static org.fabric3.runtime.webapp.Constants.COORDINATOR_PARAM;
 import static org.fabric3.runtime.webapp.Constants.RUNTIME_DEFAULT;
 import static org.fabric3.runtime.webapp.Constants.RUNTIME_PARAM;
 import static org.fabric3.runtime.webapp.Constants.SYSTEM_SCDL_PATH_DEFAULT;
@@ -72,7 +76,20 @@ public class WebappUtilImpl implements WebappUtil {
         }
     }
 
-
+    @SuppressWarnings({"unchecked"})
+    public RuntimeLifecycleCoordinator<WebappRuntime, Bootstrapper> getCoordinator(ClassLoader bootClassLoader)
+            throws Fabric3InitException {
+        try {
+            String className = getInitParameter(COORDINATOR_PARAM, COORDINATOR_DEFAULT);
+            return (RuntimeLifecycleCoordinator<WebappRuntime, Bootstrapper>) bootClassLoader.loadClass(className).newInstance();
+        } catch (InstantiationException e) {
+            throw new Fabric3InitException(e);
+        } catch (IllegalAccessException e) {
+            throw new Fabric3InitException(e);
+        } catch (ClassNotFoundException e) {
+            throw new Fabric3InitException("Bootstrapper Implementation not found", e);
+        }
+    }
 
     public ClassLoader getBootClassLoader(ClassLoader webappClassLoader) throws InvalidResourcePath {
         String bootDirName = getInitParameter(BOOTDIR_PARAM, BOOTDIR_DEFAULT);
@@ -87,7 +104,7 @@ public class WebappUtilImpl implements WebappUtil {
             try {
                 urls[i++] = servletContext.getResource((String) path);
             } catch (MalformedURLException e) {
-                throw new InvalidResourcePath(APPLICATION_SCDL_PATH_PARAM, path.toString(),  e);
+                throw new InvalidResourcePath(APPLICATION_SCDL_PATH_PARAM, path.toString(), e);
             }
         }
         return new URLClassLoader(urls, webappClassLoader);

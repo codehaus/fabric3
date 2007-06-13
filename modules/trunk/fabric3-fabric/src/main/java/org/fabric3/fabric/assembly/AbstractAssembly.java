@@ -21,7 +21,6 @@ package org.fabric3.fabric.assembly;
 import java.net.URI;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -30,6 +29,7 @@ import javax.xml.namespace.QName;
 
 import static org.osoa.sca.Constants.SCA_NS;
 
+import org.fabric3.fabric.assembly.allocator.AllocationException;
 import org.fabric3.fabric.assembly.normalizer.PromotionNormalizer;
 import org.fabric3.fabric.assembly.resolver.WireResolver;
 import org.fabric3.fabric.assembly.store.AssemblyStore;
@@ -47,6 +47,7 @@ import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.Referenceable;
 import org.fabric3.spi.model.physical.PhysicalChangeSet;
+import org.fabric3.spi.model.topology.RuntimeInfo;
 import org.fabric3.spi.model.type.BindingDefinition;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.ComponentType;
@@ -89,12 +90,12 @@ public abstract class AbstractAssembly implements Assembly {
         this.domainUri = domainUri;
         this.generatorRegistry = generatorRegistry;
         this.wireResolver = wireResolver;
+        this.promotionNormalizer = normalizer;
         this.routingService = routingService;
         this.assemblyStore = assemblyStore;
         this.metadataStore = metadataStore;
         domainMap = new ConcurrentHashMap<URI, LogicalComponent<?>>();
         runtimes = new ConcurrentHashMap<String, RuntimeInfo>();
-        this.promotionNormalizer = normalizer;
     }
 
     public void initialize() throws AssemblyException {
@@ -105,10 +106,9 @@ public abstract class AbstractAssembly implements Assembly {
             addToDomainMap(child);
         }
         // regenerate the domain components
-        // TODO handle re-provisioning. For now, just regenerate everything and reprovision
         if (!domain.getComponents().isEmpty()) {
             try {
-                generateAndProvision(null, domain, true);
+                generateAndProvision(null, domain, true, true);
             } catch (GenerationException e) {
                 throw new AssemblyException(e);
             } catch (RoutingException e) {
@@ -155,7 +155,7 @@ public abstract class AbstractAssembly implements Assembly {
             wireResolver.resolve(domain, component);
             normalize(component);
             // perform the inclusion, which will result in the generation of change sets provisioned to service nodes
-            generateAndProvision(domain, component, include);
+            generateAndProvision(domain, component, include, false);
             // TODO only add when the service nodes have acked
             if (include) {
                 for (LogicalComponent<?> child : component.getComponents()) {
@@ -171,6 +171,8 @@ public abstract class AbstractAssembly implements Assembly {
         } catch (RoutingException e) {
             throw new ActivateException(e);
         } catch (GenerationException e) {
+            throw new ActivateException(e);
+        } catch (AllocationException e) {
             throw new ActivateException(e);
         }
     }
@@ -216,11 +218,11 @@ public abstract class AbstractAssembly implements Assembly {
         runtimes.put(info.getId(), info);
     }
 
-    public Collection<RuntimeInfo> getRuntimes() {
+    public Map<String, RuntimeInfo> getRuntimes() {
         Set<String> runtimeNames = routingService.getRuntimeIds();
-        Set<RuntimeInfo> runtimeIds = new HashSet<RuntimeInfo>(runtimeNames.size());
+        Map<String, RuntimeInfo> runtimeIds = new HashMap<String, RuntimeInfo>(runtimeNames.size());
         for (String name : runtimeNames) {
-            runtimeIds.add(new RuntimeInfo(name));
+            runtimeIds.put(name, new RuntimeInfo(name));
         }
         return runtimeIds;
     }
@@ -307,18 +309,22 @@ public abstract class AbstractAssembly implements Assembly {
     /**
      * Generates and routes a physical change set to a set of service nodes based on the logical component.
      *
-     * @param parent          the parent composite
-     * @param component       the logical component generate physical artifacts frm
-     * @param includeInDomain true if SCA domain inclusion semantics should be in effect. That is, if true, children
-     *                        will be included at the domain level.
+     * @param parent              the parent composite
+     * @param component           the logical component generate physical artifacts frm
+     * @param includeInDomain     true if SCA domain inclusion semantics should be in effect. That is, if true, children
+     *                            will be included at the domain level.
+     * @param synchronizeTopology true if the topological view of the service network should be synchronized during
+     *                            allocation
      * @throws ResolutionException if an error ocurrs resolving a target
      * @throws GenerationException if an error is encountered generating a physical change set
      * @throws RoutingException    if an error is encountered routing the change set
+     * @throws AllocationException if an error occurs during allocation
      */
     protected void generateAndProvision(LogicalComponent<CompositeImplementation> parent,
                                         LogicalComponent<?> component,
-                                        boolean includeInDomain)
-            throws ResolutionException, GenerationException, RoutingException {
+                                        boolean includeInDomain,
+                                        boolean synchronizeTopology)
+            throws ResolutionException, GenerationException, RoutingException, AllocationException {
         Map<URI, GeneratorContext> contexts = new HashMap<URI, GeneratorContext>();
         // create physical component definitions for composite children
         if (includeInDomain) {
@@ -328,6 +334,8 @@ public abstract class AbstractAssembly implements Assembly {
             //noinspection unchecked
             LogicalComponent<CompositeImplementation> composite =
                     (LogicalComponent<CompositeImplementation>) component;
+            // allocate the components
+            allocate(composite, synchronizeTopology);
             for (LogicalComponent<?> child : component.getComponents()) {
                 generateChangeSets(composite, child, contexts);
             }
@@ -338,6 +346,7 @@ public abstract class AbstractAssembly implements Assembly {
             }
 
         } else {
+            allocate(component, synchronizeTopology);
             generateChangeSets(parent, component, contexts);
             GeneratorContext context = contexts.get(component.getRuntimeId());
             assert context != null;
@@ -497,5 +506,20 @@ public abstract class AbstractAssembly implements Assembly {
      */
     protected abstract Referenceable resolveTarget(URI uri, LogicalComponent<CompositeImplementation> component)
             throws ResolutionException;
+
+    /**
+     * Subclasses implement an allocation algorithm for components in the domain
+     *
+     * @param component           the component to allocate
+     * @param synchronizeTopology true if the assembly should attempt to synchronize its view of the domain topology
+     *                            with service nodes components have been pre-allocated to. Synchronization will attempt
+     *                            to poll a set number of times for runtimes components are pre-allocated to. If a
+     *                            runtime is not found, corresponding pre-allocated components will be marked for
+     *                            re-allocation.
+     * @throws AllocationException if an error occurs during the allocation process
+     */
+    protected abstract void allocate(LogicalComponent<?> component, boolean synchronizeTopology)
+            throws AllocationException;
+
 
 }

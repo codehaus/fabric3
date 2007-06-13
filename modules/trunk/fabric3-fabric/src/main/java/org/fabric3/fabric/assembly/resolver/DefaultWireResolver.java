@@ -27,7 +27,6 @@ import org.fabric3.fabric.assembly.ResolutionException;
 import org.fabric3.fabric.assembly.UnspecifiedTargetException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
-import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.type.Autowire;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.ComponentType;
