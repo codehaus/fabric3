@@ -18,11 +18,13 @@ package org.fabric3.groovy;
 
 import java.net.URI;
 
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.pojo.implementation.PojoComponentBuilder;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
-import org.fabric3.pojo.implementation.PojoComponentBuilder;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.component.InstanceFactoryProvider;
@@ -36,6 +38,7 @@ import org.fabric3.spi.transform.TransformerRegistry;
 /**
  * @version $Rev$ $Date$
  */
+@EagerInit
 public class GroovyComponentBuilder<T> extends PojoComponentBuilder<T, GroovyComponentDefinition, GroovyComponent<T>> {
     public GroovyComponentBuilder(@Reference ComponentBuilderRegistry builderRegistry,
                                   @Reference ScopeRegistry scopeRegistry,
@@ -47,6 +50,11 @@ public class GroovyComponentBuilder<T> extends PojoComponentBuilder<T, GroovyCom
               providerBuilders,
               classLoaderRegistry,
               transformerRegistry);
+    }
+
+    @Init
+    public void init() {
+        builderRegistry.register(GroovyComponentDefinition.class, this);
     }
 
     public GroovyComponent<T> build(GroovyComponentDefinition definition) throws BuilderException {

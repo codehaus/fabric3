@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.implementation.java;
+package org.fabric3.pojo.reflection;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -36,7 +36,7 @@ import org.fabric3.spi.wire.Message;
  * @param <T> the implementation class for the component being invoked
  * @param <CONTEXT> the type of context id used by the ScopeContainer
  */
-public class JavaInvokerInterceptor<T, CONTEXT> implements Interceptor {
+public class InvokerInterceptor<T, CONTEXT> implements Interceptor {
     private Method operation;
     private AtomicComponent<T> component;
     private ScopeContainer<CONTEXT> scopeContainer;
@@ -48,7 +48,7 @@ public class JavaInvokerInterceptor<T, CONTEXT> implements Interceptor {
      * @param component      the target component
      * @param scopeContainer the ScopeContainer that manages implementation instances for the target component
      */
-    public JavaInvokerInterceptor(Method operation,
+    public InvokerInterceptor(Method operation,
                                   AtomicComponent<T> component,
                                   ScopeContainer<CONTEXT> scopeContainer
     ) {

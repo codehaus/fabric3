@@ -28,7 +28,7 @@ import org.fabric3.api.annotation.LogLevel;
 import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.implementation.java.JavaComponent;
-import org.fabric3.fabric.implementation.java.JavaInvokerInterceptor;
+import org.fabric3.pojo.reflection.InvokerInterceptor;
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.fabric.loader.LoaderContextImpl;
 import org.fabric3.fabric.monitor.JavaLoggingMonitorFactory;
@@ -133,14 +133,14 @@ public class StandaloneRuntimeImpl extends AbstractRuntime<StandaloneHostInfo> i
             throws InvocationTargetException, NoSuchMethodException {
         WorkContext oldContext = PojoWorkContextTunnel.getThreadWorkContext();
         try {
-            // FIXME we should not be creating a JavaInvokerInterceptor here
+            // FIXME we should not be creating a InvokerInterceptor here
             // FIXME this should create a wire to the Launched component and invoke the head interceptor on the chain
             JavaComponent component = (JavaComponent) getComponentManager().getComponent(componentUri);
             PojoWorkContextTunnel.setThreadWorkContext(workContext);
             Object instance = component.createObjectFactory().getInstance();
             Method m = instance.getClass().getMethod("main", String[].class);
             ScopeContainer scopeContainer = component.getScopeContainer();
-            JavaInvokerInterceptor<?, ?> interceptor = new JavaInvokerInterceptor(m, component, scopeContainer);
+            InvokerInterceptor<?, ?> interceptor = new InvokerInterceptor(m, component, scopeContainer);
             Message msg = new MessageImpl();
             msg.setWorkContext(workContext);
             msg.setBody(new Object[]{args});

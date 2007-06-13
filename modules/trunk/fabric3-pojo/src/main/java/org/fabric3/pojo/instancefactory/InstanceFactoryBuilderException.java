@@ -55,4 +55,7 @@ public class InstanceFactoryBuilderException extends BuilderException {
         super(cause);
     }
 
+    public InstanceFactoryBuilderException(String message, String identifier, Throwable cause) {
+        super(message, identifier, cause);
+    }
 }

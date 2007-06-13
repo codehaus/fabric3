@@ -345,6 +345,7 @@
       <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/standalone/server.shutdown/standalone-shutdown.iml" filepath="$PROJECT_DIR$/runtimes/trunk/standalone/server.shutdown/standalone-shutdown.iml" group="standalone" />
       <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/standalone/smoketest/standalone-smoketest.iml" filepath="$PROJECT_DIR$/runtimes/trunk/standalone/smoketest/standalone-smoketest.iml" group="standalone" />
       <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/standalone/server.start/standalone-start.iml" filepath="$PROJECT_DIR$/runtimes/trunk/standalone/server.start/standalone-start.iml" group="standalone" />
+      <module fileurl="file://$PROJECT_DIR$/tests/groovy/test-groovy.iml" filepath="$PROJECT_DIR$/tests/groovy/test-groovy.iml" />
       <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/webapp/webapp-api/webapp-api.iml" filepath="$PROJECT_DIR$/runtimes/trunk/webapp/webapp-api/webapp-api.iml" group="webapp" />
       <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/webapp/webapp-host/webapp-host.iml" filepath="$PROJECT_DIR$/runtimes/trunk/webapp/webapp-host/webapp-host.iml" group="webapp" />
       <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/webapp/smoketest/webapp-smoketest.iml" filepath="$PROJECT_DIR$/runtimes/trunk/webapp/smoketest/webapp-smoketest.iml" group="webapp" />

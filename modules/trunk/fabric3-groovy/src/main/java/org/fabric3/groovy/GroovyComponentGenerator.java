@@ -1,8 +1,6 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
+ * See the NOTICE file distributed with this work for information
+ * regarding copyright ownership.  This file is licensed
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
@@ -16,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.implementation.java;
+package org.fabric3.groovy;
 
 import java.net.URI;
 
@@ -24,7 +22,6 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
-import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
@@ -39,34 +36,34 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.model.type.ComponentDefinition;
 
 /**
- * Generates a JavaComponentDefinition from a ComponentDefinition corresponding to a Java component implementation
- *
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class JavaComponentGenerator implements ComponentGenerator<LogicalComponent<JavaImplementation>> {
+public class GroovyComponentGenerator implements ComponentGenerator<LogicalComponent<GroovyImplementation>> {
     private final InstanceFactoryGenerationHelper helper;
     private final ClassLoaderGenerator classLoaderGenerator;
 
-    public JavaComponentGenerator(@Reference GeneratorRegistry registry,
-                                  @Reference ClassLoaderGenerator classLoaderGenerator,
-                                  @Reference InstanceFactoryGenerationHelper helper) {
+    public GroovyComponentGenerator(@Reference GeneratorRegistry registry,
+                                    @Reference ClassLoaderGenerator classLoaderGenerator,
+                                    @Reference InstanceFactoryGenerationHelper helper) {
         this.classLoaderGenerator = classLoaderGenerator;
-        registry.register(JavaImplementation.class, this);
+        registry.register(GroovyImplementation.class, this);
         this.helper = helper;
     }
 
-    public void generate(LogicalComponent<JavaImplementation> component, GeneratorContext context)
+    public void generate(LogicalComponent<GroovyImplementation> component, GeneratorContext context)
             throws GenerationException {
-        ComponentDefinition<JavaImplementation> definition = component.getDefinition();
-        JavaImplementation implementation = definition.getImplementation();
+
+        ComponentDefinition<GroovyImplementation> definition = component.getDefinition();
+        GroovyImplementation implementation = definition.getImplementation();
         PojoComponentType type = implementation.getComponentType();
 
         // create the instance factory definition
-        InstanceFactoryDefinition providerDefinition = new InstanceFactoryDefinition();
+        GroovyInstanceFactoryDefinition providerDefinition = new GroovyInstanceFactoryDefinition();
         providerDefinition.setInitMethod(helper.getSignature(type.getInitMethod()));
         providerDefinition.setDestroyMethod(helper.getSignature(type.getDestroyMethod()));
-        providerDefinition.setImplementationClass(implementation.getImplementationClass().getName());
+        providerDefinition.setImplementationClass(implementation.getClassName());
+        providerDefinition.setScriptName(implementation.getScriptName());
         helper.processConstructorArguments(type.getConstructorDefinition(), providerDefinition);
         helper.processConstructorSites(type, providerDefinition);
         helper.processReferenceSites(type, providerDefinition);
@@ -75,7 +72,7 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
 
         // create the physical component definition
         URI componentId = component.getUri();
-        JavaComponentDefinition physical = new JavaComponentDefinition();
+        GroovyComponentDefinition physical = new GroovyComponentDefinition();
         physical.setComponentId(componentId);
         physical.setGroupId(componentId.resolve("."));
         physical.setScope(type.getImplementationScope());
@@ -88,11 +85,12 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
         context.getPhysicalChangeSet().addComponentDefinition(physical);
     }
 
-    public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<JavaImplementation> source,
+    public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<GroovyImplementation> source,
                                                            LogicalReference reference,
                                                            boolean optimizable,
-                                                           GeneratorContext context) throws GenerationException {
-        JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
+                                                           GeneratorContext context)
+            throws GenerationException {
+        GroovyWireSourceDefinition wireDefinition = new GroovyWireSourceDefinition();
         wireDefinition.setUri(reference.getUri());
         wireDefinition.setOptimizable(optimizable);
         wireDefinition.setConversational(reference.getDefinition().getServiceContract().isConversational());
@@ -100,10 +98,10 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
     }
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
-                                                           LogicalComponent<JavaImplementation> target,
+                                                           LogicalComponent<GroovyImplementation> target,
                                                            GeneratorContext context)
             throws GenerationException {
-        JavaWireTargetDefinition wireDefinition = new JavaWireTargetDefinition();
+        GroovyWireTargetDefinition wireDefinition = new GroovyWireTargetDefinition();
         URI uri;
         if (service != null) {
             uri = service.getUri();
@@ -114,6 +112,4 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
         wireDefinition.setUri(uri);
         return wireDefinition;
     }
-
-
 }

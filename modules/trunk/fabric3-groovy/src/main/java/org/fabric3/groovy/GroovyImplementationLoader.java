@@ -37,6 +37,7 @@ import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.loader.MissingResourceException;
 import org.fabric3.spi.implementation.java.Introspector;
 import org.fabric3.spi.implementation.java.PojoComponentType;
+import org.fabric3.spi.model.type.Scope;
 
 /**
  * @version $Rev$ $Date$
@@ -94,6 +95,9 @@ public class GroovyImplementationLoader implements StAXElementLoader<GroovyImple
         }
         PojoComponentType componentType = new PojoComponentType(implClass);
         introspector.introspect(implClass, componentType, context);
+        if (componentType.getImplementationScope() == null) {
+            componentType.setImplementationScope(Scope.STATELESS);
+        }
         return new GroovyImplementation(scriptName, className, componentType);
     }
 }

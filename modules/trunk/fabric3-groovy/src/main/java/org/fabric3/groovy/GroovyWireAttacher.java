@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.implementation.java;
+package org.fabric3.groovy;
 
 import java.lang.reflect.Method;
 import java.net.URI;
@@ -27,6 +27,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.injection.CallbackWireObjectFactory;
 import org.fabric3.fabric.wire.WireObjectFactory;
+import org.fabric3.pojo.reflection.InvokerInterceptor;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.builder.component.WireAttacher;
@@ -43,7 +44,6 @@ import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.ProxyService;
 import org.fabric3.spi.wire.Wire;
-import org.fabric3.pojo.reflection.InvokerInterceptor;
 
 /**
  * The component builder for Java implementation types. Responsible for creating the Component runtime artifact from a
@@ -52,15 +52,15 @@ import org.fabric3.pojo.reflection.InvokerInterceptor;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class JavaWireAttacher implements WireAttacher<JavaWireSourceDefinition, JavaWireTargetDefinition> {
+public class GroovyWireAttacher implements WireAttacher<GroovyWireSourceDefinition, GroovyWireTargetDefinition> {
 
     private WireAttacherRegistry wireAttacherRegistry;
     private ComponentManager manager;
     private ProxyService proxyService;
 
-    public JavaWireAttacher(@Reference ComponentManager manager,
-                            @Reference WireAttacherRegistry wireAttacherRegistry,
-                            @Reference ProxyService proxyService) {
+    public GroovyWireAttacher(@Reference ComponentManager manager,
+                              @Reference WireAttacherRegistry wireAttacherRegistry,
+                              @Reference ProxyService proxyService) {
         this.wireAttacherRegistry = wireAttacherRegistry;
         this.manager = manager;
         this.proxyService = proxyService;
@@ -68,18 +68,18 @@ public class JavaWireAttacher implements WireAttacher<JavaWireSourceDefinition, 
 
     @Init
     public void init() {
-        wireAttacherRegistry.register(JavaWireSourceDefinition.class, this);
-        wireAttacherRegistry.register(JavaWireTargetDefinition.class, this);
+        wireAttacherRegistry.register(GroovyWireSourceDefinition.class, this);
+        wireAttacherRegistry.register(GroovyWireTargetDefinition.class, this);
     }
 
-    public void attachToSource(JavaWireSourceDefinition sourceDefinition,
+    public void attachToSource(GroovyWireSourceDefinition sourceDefinition,
                                PhysicalWireTargetDefinition targetDefinition,
                                Wire wire) {
         URI sourceUri = sourceDefinition.getUri();
         URI sourceName = UriHelper.getDefragmentedName(sourceDefinition.getUri());
         Component component = manager.getComponent(sourceName);
-        assert component instanceof JavaComponent;
-        JavaComponent<?> source = (JavaComponent) component;
+        assert component instanceof GroovyComponent;
+        GroovyComponent<?> source = (GroovyComponent) component;
         ValueSource referenceSource = new ValueSource(ValueSource.ValueSourceType.REFERENCE, sourceUri.getFragment());
 
         Class<?> type = source.getMemberType(referenceSource);
@@ -111,15 +111,15 @@ public class JavaWireAttacher implements WireAttacher<JavaWireSourceDefinition, 
     }
 
     public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition,
-                               JavaWireTargetDefinition targetDefinition,
+                               GroovyWireTargetDefinition targetDefinition,
                                Wire wire) throws WireAttachException {
         if (sourceDefinition.isOptimizable()) {
             return;
         }
         URI targetName = UriHelper.getDefragmentedName(targetDefinition.getUri());
         Component component = manager.getComponent(targetName);
-        assert component instanceof JavaComponent;
-        JavaComponent<?> target = (JavaComponent) component;
+        assert component instanceof GroovyComponent;
+        GroovyComponent<?> target = (GroovyComponent) component;
 
         ScopeContainer<?> scopeContainer = target.getScopeContainer();
         Class<?> implementationClass = target.getImplementationClass();
@@ -154,8 +154,8 @@ public class JavaWireAttacher implements WireAttacher<JavaWireSourceDefinition, 
     }
 
     private <T, CONTEXT> InvokerInterceptor<T, CONTEXT> createInterceptor(Method method,
-                                                                              JavaComponent<T> component,
-                                                                              ScopeContainer<CONTEXT> scopeContainer) {
+                                                                          GroovyComponent<T> component,
+                                                                          ScopeContainer<CONTEXT> scopeContainer) {
         return new InvokerInterceptor<T, CONTEXT>(method, component, scopeContainer);
     }
 }

@@ -16,7 +16,7 @@
  */
 package org.fabric3.groovy;
 
-import org.fabric3.spi.model.type.ComponentType;
+import org.fabric3.spi.implementation.java.PojoComponentType;
 import org.fabric3.spi.model.type.Implementation;
 
 /**
@@ -24,14 +24,14 @@ import org.fabric3.spi.model.type.Implementation;
  *
  * @version $Rev$ $Date$
  */
-public class GroovyImplementation extends Implementation<ComponentType> {
+public class GroovyImplementation extends Implementation<PojoComponentType> {
     private String scriptName;
     private String className;
 
     public GroovyImplementation() {
     }
 
-    public GroovyImplementation(String scriptName, String className, ComponentType componentType) {
+    public GroovyImplementation(String scriptName, String className, PojoComponentType componentType) {
         super(componentType);
         this.scriptName = scriptName;
         this.className = className;
