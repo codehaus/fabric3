@@ -61,23 +61,23 @@
         <hessian:binding.hessian uri="/calculator" />
     </service>
 
-    <component name="calculator" runtimeId="slave1">
+    <component name="calculator">
         <implementation.java class="calculator.CalculatorServiceImpl"/>
     </component>
 
-    <component name="adder" runtimeId="slave1">
+    <component name="adder">
         <implementation.java class="calculator.AddServiceImpl"/>
     </component>
 
-    <component name="subtractor" runtimeId="slave1">
+    <component name="subtractor">
         <implementation.java class="calculator.SubtractServiceImpl"/>
     </component>
 
-    <component name="multiplier" runtimeId="slave1">
+    <component name="multiplier">
         <implementation.java class="calculator.MultiplyServiceImpl"/>
     </component>
 
-    <component name="divider" runtimeId="slave1">
+    <component name="divider">
         <implementation.java class="calculator.DivideServiceImpl"/>
     </component>
 </composite>

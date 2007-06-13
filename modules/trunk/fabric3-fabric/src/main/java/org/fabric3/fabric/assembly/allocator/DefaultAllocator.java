@@ -19,6 +19,9 @@ package org.fabric3.fabric.assembly.allocator;
 import java.net.URI;
 import java.util.Map;
 
+import org.osoa.sca.annotations.Reference;
+
+import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.topology.RuntimeInfo;
 import org.fabric3.spi.model.type.CompositeImplementation;
@@ -29,6 +32,12 @@ import org.fabric3.spi.model.type.CompositeImplementation;
  * @version $Rev$ $Date$
  */
 public class DefaultAllocator implements Allocator {
+    private HostInfo hostInfo;
+
+    public DefaultAllocator(@Reference HostInfo hostInfo) {
+        this.hostInfo = hostInfo;
+    }
+
     public void allocate(Map<String, RuntimeInfo> runtimes, LogicalComponent<?> component) throws AllocationException {
         if (CompositeImplementation.class.isInstance(component.getDefinition().getImplementation())) {
             for (LogicalComponent<?> child : component.getComponents()) {
@@ -36,7 +45,7 @@ public class DefaultAllocator implements Allocator {
                     // the component is a composite, recurse and asign its children
                     allocate(runtimes, child);
                 } else {
-                    assign(runtimes, component);
+                    assign(runtimes, child);
                 }
             }
         } else {
@@ -59,7 +68,24 @@ public class DefaultAllocator implements Allocator {
             info = runtimes.get(id.toString());
         }
         if (info == null) {
-            // TODO assign runtime
+            // Assign runtime using a simple algorithm: if two or more exist, pick one other than the controller,
+            // otherwise deploy locally
+            if (runtimes.size() < 2) {
+                // single node setup, allocate locally
+                component.setRuntimeId(null);
+                return;
+            }
+            for (RuntimeInfo runtime : runtimes.values()) {
+                if (!hostInfo.getRuntimeId().equals(runtime.getId())) {
+                    info = runtime;
+                    break;
+                }
+            }
+            if (info != null) {
+                component.setRuntimeId(URI.create(info.getId()));
+            } else {
+                component.setRuntimeId(null);
+            }
         }
     }
 
