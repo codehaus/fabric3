@@ -110,7 +110,6 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
     }
 
     public Future<Void> joinDomain(final long timeout) {
-        final long start = System.currentTimeMillis();
         if (state != State.INITIALIZED) {
             throw new IllegalStateException("Not in INITIALIZED state");
         }
