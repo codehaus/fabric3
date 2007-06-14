@@ -28,5 +28,10 @@
     <component name="Echo">
         <groovy:groovy script="tests/groovy/EchoImpl.groovy"/>
         <property name="message">Hello</property>
+        <reference name="java" target="Java"/>
+    </component>
+
+    <component name="Java">
+        <implementation.java class="tests.groovy.EchoJava"/>
     </component>
 </composite>

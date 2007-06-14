@@ -17,12 +17,16 @@
 
 package tests.groovy
 import org.osoa.sca.annotations.Property
+import org.osoa.sca.annotations.Reference
+import org.osoa.sca.annotations.Service
 
+@Service(EchoService.class)
 class EchoImpl implements EchoService {
 
-    @Property String message
+    @Property public String message
+    @Reference public EchoService java
 
     public String hello(String name) {
-        return message + " " + name
+        return message + " " + java.hello(name)
     }
 }
