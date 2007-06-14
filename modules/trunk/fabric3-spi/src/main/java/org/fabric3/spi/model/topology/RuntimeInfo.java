@@ -24,7 +24,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.xml.namespace.QName;
 
+import org.fabric3.spi.Constants;
 import org.fabric3.spi.model.type.ResourceDescription;
 
 /**
@@ -33,6 +35,8 @@ import org.fabric3.spi.model.type.ResourceDescription;
  * @version $Rev$ $Date$
  */
 public class RuntimeInfo {
+    public static final QName QNAME = new QName(Constants.FABRIC3_NS, "runtimeInfo");
+
     private String id;
     private List<ResourceDescription<?>> resources;
     private Set<URI> components;
@@ -43,6 +47,7 @@ public class RuntimeInfo {
     }
 
     public RuntimeInfo(String id) {
+        this();
         this.id = id;
     }
 
