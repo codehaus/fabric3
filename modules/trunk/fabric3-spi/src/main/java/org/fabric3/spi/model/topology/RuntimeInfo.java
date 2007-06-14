@@ -70,7 +70,7 @@ public class RuntimeInfo {
     }
 
     /**
-     * Adds a resource description representing an available runtime resources
+     * Adds a resource description representing an available runtime resources.
      *
      * @param resource the resource description
      */
@@ -79,10 +79,20 @@ public class RuntimeInfo {
     }
 
 
+    /**
+     * Returns the list of active components hosted by the runtime.
+     *
+     * @return the list of active components hosted by the runtime
+     */
     public Set<URI> getComponents() {
         return Collections.unmodifiableSet(components);
     }
 
+    /**
+     * Adds a a component name to the list of active components hosted by the runtime
+     *
+     * @param uri the component name
+     */
     public void addComponent(URI uri) {
         components.add(uri);
     }
