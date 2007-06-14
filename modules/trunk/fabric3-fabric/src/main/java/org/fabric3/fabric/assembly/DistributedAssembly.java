@@ -18,10 +18,22 @@
  */
 package org.fabric3.fabric.assembly;
 
+import java.util.Map;
+
+import org.fabric3.spi.model.topology.RuntimeInfo;
+
 /**
  * Represents an assembly that is distributed over a series of federated nodes, also termed a service network
  *
  * @version $Rev$ $Date$
  */
 public interface DistributedAssembly extends Assembly {
+
+    /**
+     * Returns the runtimes associated with this assembly's domain.
+     *
+     * @return the runtimes associated with this assembly's domain
+     */
+    Map<String, RuntimeInfo> getRuntimes();
+
 }

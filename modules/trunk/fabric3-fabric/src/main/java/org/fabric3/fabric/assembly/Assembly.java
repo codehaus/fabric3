@@ -19,12 +19,10 @@
 package org.fabric3.fabric.assembly;
 
 import java.net.URI;
-import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.spi.model.topology.RuntimeInfo;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.CompositeImplementation;
 
@@ -48,13 +46,6 @@ public interface Assembly {
      * @return the domain
      */
     LogicalComponent<CompositeImplementation> getDomain();
-
-    /**
-     * Returns the physical runtimes associated with this assembly's domain.
-     *
-     * @return the physical runtimes associated with this assembly's domain
-     */
-    Map<String, RuntimeInfo> getRuntimes();
 
     /**
      * Activates a component at the domain level by provisioning physical artifacts to service nodes.
@@ -85,13 +76,5 @@ public interface Assembly {
      * @throws BindException if an error occurs binding the service
      */
     void bindService(URI serviceURI, LogicalBinding binding) throws BindException;
-
-    /**
-     * Registers a runtime service node with the Assembly
-     *
-     * @param info the RuntimeInfo representing the service node
-     * @throws RuntimeRegistrationException if an error is ocurrs during registration
-     */
-    void registerRuntime(RuntimeInfo info) throws RuntimeRegistrationException;
 
 }

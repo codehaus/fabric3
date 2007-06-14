@@ -77,7 +77,6 @@ public abstract class AbstractAssembly implements Assembly {
     protected PromotionNormalizer promotionNormalizer;
     protected LogicalComponent<CompositeImplementation> domain;
     protected Map<URI, LogicalComponent<?>> domainMap;
-    protected Map<String, RuntimeInfo> runtimes;
     protected AssemblyStore assemblyStore;
 
     public AbstractAssembly(URI domainUri,
@@ -95,7 +94,6 @@ public abstract class AbstractAssembly implements Assembly {
         this.assemblyStore = assemblyStore;
         this.metadataStore = metadataStore;
         domainMap = new ConcurrentHashMap<URI, LogicalComponent<?>>();
-        runtimes = new ConcurrentHashMap<String, RuntimeInfo>();
     }
 
     public void initialize() throws AssemblyException {
@@ -212,19 +210,6 @@ public abstract class AbstractAssembly implements Assembly {
         } catch (RoutingException e) {
             throw new BindException(e);
         }
-    }
-
-    public void registerRuntime(RuntimeInfo info) throws RuntimeRegistrationException {
-        runtimes.put(info.getId(), info);
-    }
-
-    public Map<String, RuntimeInfo> getRuntimes() {
-        Set<String> runtimeNames = routingService.getRuntimeIds();
-        Map<String, RuntimeInfo> runtimeIds = new HashMap<String, RuntimeInfo>(runtimeNames.size());
-        for (String name : runtimeNames) {
-            runtimeIds.put(name, new RuntimeInfo(name));
-        }
-        return runtimeIds;
     }
 
     public String resolveResourceContainer(ResourceDescription description, ModelObject type)

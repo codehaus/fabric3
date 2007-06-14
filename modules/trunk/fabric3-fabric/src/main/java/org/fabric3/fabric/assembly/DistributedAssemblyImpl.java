@@ -19,8 +19,11 @@
 package org.fabric3.fabric.assembly;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Property;
@@ -37,6 +40,7 @@ import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.Referenceable;
+import org.fabric3.spi.model.topology.RuntimeInfo;
 import org.fabric3.spi.model.type.CompositeImplementation;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.util.UriHelper;
@@ -52,6 +56,7 @@ public class DistributedAssemblyImpl extends AbstractAssembly implements Distrib
     private Allocator allocator;
     private long syncPause = 1000;
     private int syncTimes = 10;
+    private Map<String, RuntimeInfo> runtimes;
 
     public DistributedAssemblyImpl(@Reference GeneratorRegistry generatorRegistry,
                                    @Reference WireResolver wireResolver,
@@ -69,6 +74,7 @@ public class DistributedAssemblyImpl extends AbstractAssembly implements Distrib
               store,
               metaDataStore);
         this.allocator = allocator;
+        runtimes = new ConcurrentHashMap<String, RuntimeInfo>();
     }
 
     /**
@@ -90,6 +96,17 @@ public class DistributedAssemblyImpl extends AbstractAssembly implements Distrib
     public void setSyncTimes(int syncTimes) {
         this.syncTimes = syncTimes;
     }
+
+    public Map<String, RuntimeInfo> getRuntimes() {
+        // TODO this needs to be changed to have the assembly notified of new runtimes coming online
+        Set<String> runtimeNames = routingService.getRuntimeIds();
+        Map<String, RuntimeInfo> runtimeIds = new HashMap<String, RuntimeInfo>(runtimeNames.size());
+        for (String name : runtimeNames) {
+            runtimeIds.put(name, new RuntimeInfo(name));
+        }
+        return runtimeIds;
+    }
+
 
     @SuppressWarnings({"unchecked"})
     @Override
