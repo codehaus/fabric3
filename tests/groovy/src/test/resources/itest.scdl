@@ -27,5 +27,6 @@
 
     <component name="Echo">
         <groovy:groovy script="tests/groovy/EchoImpl.groovy"/>
+        <property name="message">Hello</property>
     </component>
 </composite>

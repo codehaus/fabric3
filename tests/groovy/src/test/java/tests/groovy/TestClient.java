@@ -14,6 +14,6 @@ public class TestClient extends TestCase {
     }
 
     public void testEcho() {
-        assertEquals("Hello World", service.hello(null));
+        assertEquals("Hello World", service.hello("World"));
     }
 }

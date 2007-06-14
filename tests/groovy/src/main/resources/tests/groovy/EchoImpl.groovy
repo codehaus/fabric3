@@ -15,8 +15,14 @@
  * under the License.
  */
 
-class EchoImpl implements tests.groovy.EchoService {
+package tests.groovy
+import org.osoa.sca.annotations.Property
+
+class EchoImpl implements EchoService {
+
+    @Property String message
+
     public String hello(String name) {
-        return "Hello World"
+        return message + " " + name
     }
 }
