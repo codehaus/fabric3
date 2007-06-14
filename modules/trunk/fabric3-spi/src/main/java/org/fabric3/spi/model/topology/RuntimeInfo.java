@@ -18,6 +18,15 @@
  */
 package org.fabric3.spi.model.topology;
 
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.fabric3.spi.model.type.ResourceDescription;
+
 /**
  * Tracks information regarding a runtime service node, including available capabilities and resources
  *
@@ -25,6 +34,13 @@ package org.fabric3.spi.model.topology;
  */
 public class RuntimeInfo {
     private String id;
+    private List<ResourceDescription<?>> resources;
+    private Set<URI> components;
+
+    public RuntimeInfo() {
+        resources = new ArrayList<ResourceDescription<?>>();
+        components = new HashSet<URI>();
+    }
 
     public RuntimeInfo(String id) {
         this.id = id;
@@ -37,5 +53,32 @@ public class RuntimeInfo {
      */
     public String getId() {
         return id;
+    }
+
+    /**
+     * Returns a list of resource descriptions for available runtime resources such as extensions.
+     *
+     * @return the list of resource descriptions
+     */
+    public List<ResourceDescription<?>> getResourceDescriptions() {
+        return Collections.unmodifiableList(resources);
+    }
+
+    /**
+     * Adds a resource description representing an available runtime resources
+     *
+     * @param resource the resource description
+     */
+    public void addResourceDescription(ResourceDescription<?> resource) {
+        resources.add(resource);
+    }
+
+
+    public Set<URI> getComponents() {
+        return Collections.unmodifiableSet(components);
+    }
+
+    public void addComponent(URI uri) {
+        components.add(uri);
     }
 }
