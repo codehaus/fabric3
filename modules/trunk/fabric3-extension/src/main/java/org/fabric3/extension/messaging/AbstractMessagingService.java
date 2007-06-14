@@ -76,21 +76,21 @@ public abstract class AbstractMessagingService implements MessagingService {
     }
 
     /**
-     * Sets the runtime info for the runtime using the discovery service.
+     * Sets the host info for the runtime using the discovery service.
      *
      * @param hostInfo Runtime info for the runtime using the discovery service.
      */
     @Reference
-    public final void setRuntimeInfo(HostInfo hostInfo) {
+    public final void setHostInfo(HostInfo hostInfo) {
         this.hostInfo = hostInfo;
     }
 
     /**
-     * Gets the runtime info for the runtime using the discovery service.
+     * Gets the host info for the runtime using the discovery service.
      *
      * @return Runtime info for the runtime using the discovery service.
      */
-    protected final HostInfo getRuntimeInfo() {
+    protected final HostInfo getHostInfo() {
         return hostInfo;
     }
 

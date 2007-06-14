@@ -111,7 +111,7 @@ public class JxtaDiscoveryServiceTestCase extends TestCase {
             }
 
         };
-        messagingService.setRuntimeInfo(runtimeInfo);
+        messagingService.setHostInfo(runtimeInfo);
 
         NetworkConfigurator configurator = new NetworkConfigurator();
         configurator.setPrincipal("test-user");

@@ -278,7 +278,7 @@ public class JxtaMessagingService extends AbstractMessagingService {
 
         try {
 
-            String runtimeId = getRuntimeInfo().getRuntimeId();
+            String runtimeId = getHostInfo().getRuntimeId();
 
             configurator.setName(runtimeId);
             configurator.setHome(new File(runtimeId));
@@ -310,7 +310,7 @@ public class JxtaMessagingService extends AbstractMessagingService {
      */
     private void createAndJoinDomainGroup() throws Exception {
 
-        String domain = getRuntimeInfo().getDomain().toString();
+        String domain = getHostInfo().getDomain().toString();
 
         PeerGroup netGroup = new NetPeerGroupFactory().getInterface();
         ModuleImplAdvertisement implAdv = netGroup.getAllPurposePeerGroupImplAdvertisement();
@@ -344,9 +344,9 @@ public class JxtaMessagingService extends AbstractMessagingService {
      */
     private void setupMessaging() {
 
-        final DiscoveryService MessagingService = domainGroup.getDiscoveryService();
-        MessagingService.remotePublish(domainGroup.getPeerAdvertisement());
-        peerListener = new PeerListener(MessagingService, interval, getRuntimeInfo().getRuntimeId());
+        final DiscoveryService discoveryService = domainGroup.getDiscoveryService();
+        discoveryService.remotePublish(domainGroup.getPeerAdvertisement());
+        peerListener = new PeerListener(discoveryService, interval, getHostInfo().getRuntimeId());
 
     }
 

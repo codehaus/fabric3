@@ -94,7 +94,7 @@ public class JmsMessagingService extends AbstractMessagingService {
      */
     public synchronized void joinDomain(final long timeOut) throws DomainJoinException {
 
-        String runtimeId = getRuntimeInfo().getRuntimeId();
+        String runtimeId = getHostInfo().getRuntimeId();
 
         try {
 

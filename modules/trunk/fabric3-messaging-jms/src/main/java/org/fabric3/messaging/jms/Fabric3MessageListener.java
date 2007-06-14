@@ -37,17 +37,17 @@ import org.fabric3.spi.util.stax.StaxUtil;
 public class Fabric3MessageListener implements MessageListener {
 
     // Discovery service
-    private JmsMessagingService discoveryService;
+    private JmsMessagingService messagingService;
     
     // Runtime id
     private String runtimeId;
     
     /**
      * Initializes the discovery service.
-     * @param discoveryService Discovery service.
+     * @param messagingService messaging service.
      */
-    public Fabric3MessageListener(JmsMessagingService discoveryService, String runtimeId) {
-        this.discoveryService = discoveryService;
+    public Fabric3MessageListener(JmsMessagingService messagingService, String runtimeId) {
+        this.messagingService = messagingService;
         this.runtimeId = runtimeId;
     }
     
@@ -69,7 +69,7 @@ public class Fabric3MessageListener implements MessageListener {
             final QName messageType = StaxUtil.getDocumentElementQName(text);
             System.err.println("Message received: " + messageType);
             
-            RequestListener messageListener = discoveryService.getRequestListener(messageType);
+            RequestListener messageListener = messagingService.getRequestListener(messageType);
             if (messageListener != null) {
                 XMLStreamReader requestReader = StaxUtil.createReader(text);
                 messageListener.onRequest(requestReader);

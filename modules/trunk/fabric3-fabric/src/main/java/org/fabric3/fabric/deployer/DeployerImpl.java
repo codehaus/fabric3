@@ -140,12 +140,12 @@ public class DeployerImpl implements RequestListener, Deployer {
     }
 
     /**
-     * Injects the discovery service.
+     * Injects the messaging service.
      *
-     * @param messagingService Discovery service to be injected.
+     * @param messagingService messaging service to be injected.
      */
     @Reference
-    public void setDiscoveryService(MessagingService messagingService) {
+    public void setMessagingService(MessagingService messagingService) {
         QName qName = new QName(PhysicalChangeSet.class.getName());
         messagingService.registerRequestListener(qName, this);
     }
