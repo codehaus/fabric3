@@ -16,12 +16,27 @@
  */
 package org.fabric3.runtime.development.host;
 
-import org.fabric3.spi.model.type.BindingDefinition;
-
 /**
- * Represents a wire bound to client code
+ * Implementations cache mock definitions registered with the domain.
  *
  * @version $Rev$ $Date$
  */
-public class ClientBindingDefinition extends BindingDefinition {
+public interface MockObjectCache {
+
+    /**
+     * Add the mock to the cache
+     *
+     * @param name       the name of the reference being mocked
+     * @param definition the data structure containing the mock and the interface it implements
+     */
+    void putMockDefinition(String name, MockDefinition<?> definition);
+
+    /**
+     * Returns a mock definition for the given reference name.
+     *
+     * @param name the name of the mock
+     * @return the mock definition
+     */
+    MockDefinition getMockDefinition(String name);
+
 }

@@ -16,12 +16,25 @@
  */
 package org.fabric3.runtime.development.host;
 
-import org.fabric3.spi.model.type.BindingDefinition;
-
 /**
- * Represents a wire bound to client code
+ * A holder for a mock object and the interface it implements
  *
  * @version $Rev$ $Date$
  */
-public class ClientBindingDefinition extends BindingDefinition {
+public class MockDefinition<T> {
+    private Class<T> interfaze;
+    private T mock;
+
+    public Class<T> getInterfaze() {
+        return interfaze;
+    }
+
+    public T getMock() {
+        return mock;
+    }
+
+    public MockDefinition(Class<T> interfaze, T mock) {
+        this.interfaze = interfaze;
+        this.mock = mock;
+    }
 }

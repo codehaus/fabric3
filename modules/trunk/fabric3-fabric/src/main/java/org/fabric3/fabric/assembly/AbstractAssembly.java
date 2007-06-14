@@ -392,42 +392,41 @@ public abstract class AbstractAssembly implements Assembly {
             contexts.put(runtimeId, context);
         }
         for (LogicalReference entry : component.getReferences()) {
-            for (URI uri : entry.getTargetUris()) {
-                Referenceable target = resolveTarget(uri, parent);
-                if (target == null) {
-                    String refUri = entry.getUri().toString();
-                    throw new TargetNotFoundException("Target not found for reference " + refUri,
-                                                      uri.toString());
-                }
-                if (target instanceof LogicalReference) {
-                    // TODO this should be extensible and moved out
-                    LogicalReference logicalReference = ((LogicalReference) target);
-                    LogicalBinding logicalBinding = logicalReference.getBindings().get(0);
-                    generatorRegistry.generateBoundReferenceWire(component, entry, logicalBinding, context);
-                } else if (target instanceof LogicalComponent) {
-                    LogicalComponent<?> targetComponent = (LogicalComponent) target;
-                    String serviceName = uri.getFragment();
-                    LogicalReference reference = component.getReference(entry.getUri().getFragment());
-                    LogicalService targetService = null;
-                    if (serviceName != null) {
-                        targetService = targetComponent.getService(serviceName);
-                    } else if (targetComponent.getServices().size() == 1) {
-                        // default service
-                        targetService = targetComponent.getServices().iterator().next();
+            if (entry.getBindings().isEmpty()) {
+                for (URI uri : entry.getTargetUris()) {
+                    Referenceable target = resolveTarget(uri, parent);
+                    if (target == null) {
+                        String refUri = entry.getUri().toString();
+                        throw new TargetNotFoundException("Target not found for reference " + refUri, uri.toString());
                     }
-                    assert targetService != null;
-                    generatorRegistry.generateUnboundWire(component,
-                                                          reference,
-                                                          targetService,
-                                                          targetComponent,
-                                                          context);
-                } else {
-                    throw new InvalidTargetTypeException("Invalid reference target type",
-                                                         target.getClass().getName(),
-                                                         entry.getUri(),
-                                                         uri);
-                }
+                    if (target instanceof LogicalComponent) {
+                        LogicalComponent<?> targetComponent = (LogicalComponent) target;
+                        String serviceName = uri.getFragment();
+                        LogicalReference reference = component.getReference(entry.getUri().getFragment());
+                        LogicalService targetService = null;
+                        if (serviceName != null) {
+                            targetService = targetComponent.getService(serviceName);
+                        } else if (targetComponent.getServices().size() == 1) {
+                            // default service
+                            targetService = targetComponent.getServices().iterator().next();
+                        }
+                        assert targetService != null;
+                        generatorRegistry.generateUnboundWire(component,
+                                                              reference,
+                                                              targetService,
+                                                              targetComponent,
+                                                              context);
+                    } else {
+                        String name = target.getClass().getName();
+                        URI refUri = entry.getUri();
+                        throw new InvalidTargetTypeException("Invalid reference target type", name, refUri, uri);
+                    }
 
+                }
+            } else {
+                // TODO this should be extensible and moved out
+                LogicalBinding logicalBinding = entry.getBindings().get(0);
+                generatorRegistry.generateBoundReferenceWire(component, entry, logicalBinding, context);
             }
 
         }

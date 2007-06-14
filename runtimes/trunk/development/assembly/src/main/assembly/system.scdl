@@ -75,12 +75,24 @@
         <system:implementation.system class="org.fabric3.runtime.development.host.ClientBindingGenerator"/>
 	</component>
 
+    <component name="MockBindingGenerator">
+        <system:implementation.system class="org.fabric3.runtime.development.host.MockBindingGenerator"/>
+	</component>
+    
     <component name="ClientWireCache">
         <system:implementation.system class="org.fabric3.runtime.development.host.ClientWireCacheImpl"/>
 	</component>
 
+    <component name="MockObjectCache">
+        <system:implementation.system class="org.fabric3.runtime.development.host.MockObjectCacheImpl"/>
+	</component>
+
     <component name="ClientWireAttacher">
         <system:implementation.system class="org.fabric3.runtime.development.host.ClientWireAttacher"/>
+	</component>
+
+    <component name="MockWireAttacher">
+        <system:implementation.system class="org.fabric3.runtime.development.host.MockWireAttacher"/>
 	</component>
 
     <!-- no recovery for the development runtime -->

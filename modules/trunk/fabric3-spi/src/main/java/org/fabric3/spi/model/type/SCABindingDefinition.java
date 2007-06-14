@@ -14,14 +14,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.runtime.development.host;
-
-import org.fabric3.spi.model.type.BindingDefinition;
+package org.fabric3.spi.model.type;
 
 /**
- * Represents a wire bound to client code
+ * Represents the SCA binding
  *
  * @version $Rev$ $Date$
  */
-public class ClientBindingDefinition extends BindingDefinition {
+public class SCABindingDefinition extends BindingDefinition {
 }

@@ -16,12 +16,22 @@
  */
 package org.fabric3.runtime.development.host;
 
-import org.fabric3.spi.model.type.BindingDefinition;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Represents a wire bound to client code
+ * Default implementation of the MockObjectCache
  *
  * @version $Rev$ $Date$
  */
-public class ClientBindingDefinition extends BindingDefinition {
+public class MockObjectCacheImpl implements MockObjectCache {
+    private Map<String, MockDefinition<?>> mocks = new HashMap<String, MockDefinition<?>>();
+
+    public void putMockDefinition(String name, MockDefinition<?> mock) {
+        mocks.put(name, mock);
+    }
+
+    public MockDefinition<?> getMockDefinition(String name) {
+        return mocks.get(name);
+    }
 }

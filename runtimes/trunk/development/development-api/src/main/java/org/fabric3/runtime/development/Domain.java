@@ -43,6 +43,17 @@ import org.fabric3.runtime.development.host.DevelopmentRuntime;
  * Note that instantiating a Domain and activating a composite will bootstrap a Fabric3 runtime in a child classloader
  * of the application classloader. This will ensure Fabric3 implementation classes are isolated from the application
  * classpath.
+ * <p/>
+ * The development domain also supports mocking composite references. For example, the following will mock a composite
+ * reference, "myReference", that implements the <code>SomeReference</code> interface:
+ * <pre>
+ * SomeReference mock = .... // create the mock object
+ * domain.registerMockReference("myReference", SomeReference.class, mock);
+ * domain.activate(url);
+ * // perform a test
+ * // verify the mock
+ * </pre>
+ * Note that frameworks such as EasyMock (http://www.easymock.org/) may be used to create and verify mock objects.
  *
  * @version $Rev$ $Date$
  */
@@ -57,8 +68,8 @@ public class Domain {
     public void activate(URL compositeFile) {
         if (runtime == null) {
             bootRuntime();
-            runtime.activate(compositeFile);
         }
+        runtime.activate(compositeFile);
     }
 
     public <T> T connectTo(Class<T> interfaze, String componentUri) {
@@ -66,6 +77,13 @@ public class Domain {
             throw new IllegalStateException("No composite is activated");
         }
         return runtime.connectTo(interfaze, componentUri);
+    }
+
+    public <T> void registerMockReference(String name, Class<T> interfaze, T mock) {
+        if (runtime == null) {
+            bootRuntime();
+        }
+        runtime.registerMockReference(name, interfaze, mock);
     }
 
     public void stop() {
@@ -120,7 +138,8 @@ public class Domain {
 
             Class<?> coordinatorClass =
                     cl.loadClass("org.fabric3.runtime.development.host.DevelopmentCoordinator");
-            coordinator = (RuntimeLifecycleCoordinator<DevelopmentRuntime, Bootstrapper>) coordinatorClass.newInstance();
+            coordinator =
+                    (RuntimeLifecycleCoordinator<DevelopmentRuntime, Bootstrapper>) coordinatorClass.newInstance();
             coordinator.bootPrimordial(runtime, bootstrapper, cl, cl);
             coordinator.initialize();
             Future<Void> future = coordinator.joinDomain(-1);

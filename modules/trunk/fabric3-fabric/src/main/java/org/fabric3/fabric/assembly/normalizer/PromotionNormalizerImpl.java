@@ -9,6 +9,7 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.type.CompositeImplementation;
+import org.fabric3.spi.model.type.SCABindingDefinition;
 import org.fabric3.spi.util.UriHelper;
 
 /**
@@ -92,6 +93,11 @@ public class PromotionNormalizerImpl implements PromotionNormalizer {
             }
             if (!bindings.isEmpty()) {
                 reference.overrideBindings(bindings);
+            } else if (reference.getBindings().size() == 0) {
+                // no bindings were configured so use the SCA Binding
+                SCABindingDefinition definition = new SCABindingDefinition();
+                LogicalBinding<SCABindingDefinition> binding = new LogicalBinding<SCABindingDefinition>(definition);
+                reference.addBinding(binding);
             }
             if (!targets.isEmpty()) {
                 reference.overrideTargets(targets);

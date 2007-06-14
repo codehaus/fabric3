@@ -16,12 +16,21 @@
  */
 package org.fabric3.runtime.development.host;
 
-import org.fabric3.spi.model.type.BindingDefinition;
+import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 
 /**
- * Represents a wire bound to client code
+ * WireTargetDefinition for the mock binding type
  *
  * @version $Rev$ $Date$
  */
-public class ClientBindingDefinition extends BindingDefinition {
+public class MockWireTargetDefinition extends PhysicalWireTargetDefinition {
+    private String mockName;
+
+    public MockWireTargetDefinition(String mockName) {
+        this.mockName = mockName;
+    }
+
+    public String getMockName() {
+        return mockName;
+    }
 }

@@ -22,4 +22,6 @@ public interface DevelopmentRuntime extends Fabric3Runtime<DevelopmentHostInfo> 
 
     <T> T connectTo(Class<T> interfaze, String serviceUri);
 
+    <T> void registerMockReference(String name, Class<T> interfaze, T mock);
+
 }

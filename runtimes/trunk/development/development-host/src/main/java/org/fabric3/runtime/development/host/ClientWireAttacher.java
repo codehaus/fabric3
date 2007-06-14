@@ -37,9 +37,8 @@ public class ClientWireAttacher implements WireAttacher<ClientWireSourceDefiniti
         wireCache.putWire(target.getUri(), wire);
     }
 
-    public void attachToTarget(PhysicalWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire)
-            throws WiringException {
+    public void attachToTarget(PhysicalWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) {
         throw new UnsupportedOperationException();
-
     }
+
 }

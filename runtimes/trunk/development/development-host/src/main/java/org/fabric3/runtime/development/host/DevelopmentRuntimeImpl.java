@@ -14,16 +14,17 @@ import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.loader.LoaderContextImpl;
 import org.fabric3.fabric.monitor.JavaLoggingMonitorFactory;
 import org.fabric3.fabric.runtime.AbstractRuntime;
-import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.COMPOSITE_LOADER_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_NAME;
 import org.fabric3.fabric.util.JavaIntrospectionHelper;
 import org.fabric3.fabric.wire.WireUtils;
+import org.fabric3.host.runtime.StartException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.ComponentTypeLoader;
+import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.CompositeImplementation;
@@ -49,6 +50,7 @@ public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo>
     public static final URI DOMAIN_URI = URI.create("fabric3://./domain/main/");
     private static final String DOMAIN_STRING = DOMAIN_URI.toString();
     private static final URI WIRE_CACHE_URI = URI.create(RUNTIME_NAME + "/main/ClientWireCache");
+    private static final URI MOCK_CACHE_URI = URI.create(RUNTIME_NAME + "/main/MockObjectCache");
     private static final URI PROXY_SERVICE_URI = URI.create(RUNTIME_NAME + "/main/proxyService");
     private DevelopmentMonitor monitor;
     private ScopeContainer<URI> scopeContainer;
@@ -56,12 +58,24 @@ public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo>
     private DistributedAssembly assembly;
     private ClientWireCache wireCache;
     private ProxyService proxyService;
+    private MockObjectCache mockCache;
 
     public DevelopmentRuntimeImpl() {
         super(DevelopmentHostInfo.class);
         JavaLoggingMonitorFactory monitorFactory = new JavaLoggingMonitorFactory();
         setMonitorFactory(monitorFactory);
         monitor = monitorFactory.getMonitor(DevelopmentMonitor.class);
+    }
+
+
+    public void start() throws StartException {
+        assembly = getSystemComponent(DistributedAssembly.class, DISTRIBUTED_ASSEMBLY_URI);
+        wireCache = getSystemComponent(ClientWireCache.class, WIRE_CACHE_URI);
+        mockCache = getSystemComponent(MockObjectCache.class, MOCK_CACHE_URI);
+        proxyService = getSystemComponent(ProxyService.class, PROXY_SERVICE_URI);
+        ScopeRegistry scopeRegistry = getScopeRegistry();
+        scopeContainer = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
+        super.start();
     }
 
     public void activate(URL compositeFile) {
@@ -74,19 +88,14 @@ public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo>
         impl.setClassLoader(getHostClassLoader());
 
         ComponentDefinition<CompositeImplementation> definition =
-                new ComponentDefinition<CompositeImplementation>("main", impl);
+            new ComponentDefinition<CompositeImplementation>("main", impl);
         try {
             @SuppressWarnings("unchecked")
             ComponentTypeLoader<CompositeImplementation> loader =
-                    getSystemComponent(ComponentTypeLoader.class, COMPOSITE_LOADER_URI);
-            assembly = getSystemComponent(DistributedAssembly.class, DISTRIBUTED_ASSEMBLY_URI);
-            wireCache = getSystemComponent(ClientWireCache.class, WIRE_CACHE_URI);
-            proxyService = getSystemComponent(ProxyService.class, PROXY_SERVICE_URI);
+                getSystemComponent(ComponentTypeLoader.class, COMPOSITE_LOADER_URI);
             LoaderContext loaderContext = new LoaderContextImpl(getHostClassLoader(), null);
             loader.load(impl, loaderContext);
             assembly.activate(definition, false);
-            ScopeRegistry scopeRegistry = getScopeRegistry();
-            scopeContainer = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
             WorkContext workContext = new SimpleWorkContext();
             workContext.setScopeIdentifier(Scope.COMPOSITE, DOMAIN_URI);
             scopeContainer.startContext(workContext, DOMAIN_URI);
@@ -129,6 +138,10 @@ public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo>
         } catch (BindException e) {
             throw new ServiceUnavailableException(e);
         }
+    }
+
+    public <T> void registerMockReference(String name, Class<T> interfaze, T mock) {
+        mockCache.putMockDefinition(name, new MockDefinition<T>(interfaze, mock));
     }
 
     public interface DevelopmentMonitor {

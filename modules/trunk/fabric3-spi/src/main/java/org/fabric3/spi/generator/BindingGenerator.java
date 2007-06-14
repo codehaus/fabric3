@@ -35,25 +35,27 @@ public interface BindingGenerator<PWSD extends PhysicalWireSourceDefinition,
         BD extends BindingDefinition> {
 
     /**
-     * Generates a phtysical wire source definition from a logical binding.
-     * 
-     * @param binding Logical binding.
-     * @param context Generator context.
+     * Generates a physical wire source definition from a logical binding.
+     *
+     * @param binding           Logical binding.
+     * @param context           Generator context.
      * @param serviceDefinition Service definition for the target.
      * @return Physical wire source definition.
      * @throws GenerationException
      */
-    PWSD generateWireSource(LogicalBinding<BD> binding, GeneratorContext context, ServiceDefinition serviceDefinition) throws GenerationException;
+    PWSD generateWireSource(LogicalBinding<BD> binding, GeneratorContext context, ServiceDefinition serviceDefinition)
+            throws GenerationException;
 
     /**
-     * Generates a phtysical wire target definition from a logical binding.
-     * 
-     * @param binding Logical binding.
-     * @param context Generator context.
+     * Generates a physical wire target definition from a logical binding.
+     *
+     * @param binding             Logical binding.
+     * @param context             Generator context.
      * @param referenceDefinition Reference definition for the target.
      * @return Physical wire target definition.
      * @throws GenerationException
      */
-    PWTD generateWireTarget(LogicalBinding<BD> binding, GeneratorContext context, ReferenceDefinition referenceDefinition) throws GenerationException;
+    PWTD generateWireTarget(LogicalBinding<BD> binding, GeneratorContext context, ReferenceDefinition referenceDefinition)
+            throws GenerationException;
 
 }
