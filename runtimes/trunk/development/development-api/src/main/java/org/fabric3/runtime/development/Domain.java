@@ -119,7 +119,7 @@ public class Domain {
             runtime.setHostClassLoader(cl);
 
             Class<?> coordinatorClass =
-                    cl.loadClass("org.fabric3.runtime.development.host.DevelopmentBootstrapCoordinator");
+                    cl.loadClass("org.fabric3.runtime.development.host.DevelopmentCoordinator");
             coordinator = (RuntimeLifecycleCoordinator<DevelopmentRuntime, Bootstrapper>) coordinatorClass.newInstance();
             coordinator.bootPrimordial(runtime, bootstrapper, cl, cl);
             coordinator.initialize();
