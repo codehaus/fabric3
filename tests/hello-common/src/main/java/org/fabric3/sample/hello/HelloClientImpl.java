@@ -20,11 +20,13 @@ package org.fabric3.sample.hello;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Scope;
 
 /**
  * @version $Revision$ $Date$
  */
 @EagerInit
+@Scope("COMPOSITE")
 public class HelloClientImpl implements HelloClient {
 
     public HelloService helloService;
