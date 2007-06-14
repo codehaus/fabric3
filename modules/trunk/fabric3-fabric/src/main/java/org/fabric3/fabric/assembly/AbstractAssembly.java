@@ -23,7 +23,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.xml.namespace.QName;
 
@@ -47,7 +46,6 @@ import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.Referenceable;
 import org.fabric3.spi.model.physical.PhysicalChangeSet;
-import org.fabric3.spi.model.topology.RuntimeInfo;
 import org.fabric3.spi.model.type.BindingDefinition;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.ComponentType;
