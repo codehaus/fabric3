@@ -26,29 +26,29 @@ under the License.
 	<artifactId>binding-jms-test</artifactId>
 	<version>0.1-SNAPSHOT</version>
 	<name>Fabric3 JMS Binding Test</name>
-	<description>Fabric3 Hessian Binding Test.</description>
-	
-	<dependencies>	
-			
+	<description>Fabric3 JMS Binding Test.</description>
+
+	<dependencies>
+
 		<dependency>
 			<groupId>org.codehaus.fabric3.spec</groupId>
 			<artifactId>sca-api-r1.0</artifactId>
 			<version>0.1</version>
-		</dependency>	
-			
+		</dependency>
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 		</dependency>
-    
+
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>sample-hello-common</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
-		
+
 	</dependencies>
-	
+
 	<build>
 		<defaultGoal>verify</defaultGoal>
 		<plugins>
@@ -110,5 +110,5 @@ under the License.
 			</plugin>
 		</plugins>
 	</build>
-	
+
 </project>
