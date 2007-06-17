@@ -145,4 +145,20 @@ public class RuntimeInfo {
     public void addComponent(URI uri) {
         components.add(uri);
     }
+
+    /**
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        return obj.getClass() == RuntimeInfo.class && ((RuntimeInfo) obj).equals(id);
+    }
+
+    /**
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }
