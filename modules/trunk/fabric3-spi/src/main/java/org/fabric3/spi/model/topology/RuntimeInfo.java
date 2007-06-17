@@ -35,11 +35,19 @@ import org.fabric3.spi.model.type.ResourceDescription;
  * @version $Rev$ $Date$
  */
 public class RuntimeInfo {
+
     public static final QName QNAME = new QName(Constants.FABRIC3_NS, "runtimeInfo");
+
+    public enum Status {
+        STARTED, STOPPED;
+    }
 
     private String id;
     private List<ResourceDescription<?>> resources;
     private Set<URI> components;
+    private Set<QName> features;
+    private long uptime;
+    private Status status;
 
     public RuntimeInfo() {
         resources = new ArrayList<ResourceDescription<?>>();
@@ -47,8 +55,49 @@ public class RuntimeInfo {
     }
 
     public RuntimeInfo(String id) {
-        this();
         this.id = id;
+    }
+
+    /**
+     * @return Runtime status.
+     */
+    public Status getStatus() {
+        return status;
+    }
+
+    /**
+     * @param status Runtime status.
+     */
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    /**
+     * @return Features available on the runtime.
+     */
+    public Set<QName> getFeatures() {
+        return features;
+    }
+
+    /**
+     * @param features Features available on the runtime.
+     */
+    public void setFeatures(Set<QName> features) {
+        this.features = features;
+    }
+
+    /**
+     * @return Uptime for the runtime.
+     */
+    public long getUptime() {
+        return uptime;
+    }
+
+    /**
+     * @param uptime Uptime for the runtime.
+     */
+    public void setUptime(long uptime) {
+        this.uptime = uptime;
     }
 
     /**
