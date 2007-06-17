@@ -151,7 +151,7 @@ public class RuntimeInfo {
      */
     @Override
     public boolean equals(Object obj) {
-        return obj.getClass() == RuntimeInfo.class && ((RuntimeInfo) obj).equals(id);
+        return obj != null && obj.getClass() == RuntimeInfo.class && ((RuntimeInfo) obj).equals(id);
     }
 
     /**
