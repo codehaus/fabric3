@@ -18,7 +18,7 @@
  */
 package org.fabric3.spi.services.discovery;
 
-import java.util.List;
+import java.util.Set;
 
 import org.fabric3.spi.model.topology.RuntimeInfo;
 
@@ -37,6 +37,6 @@ public interface DiscoveryService {
      *
      * @return List of runtimes participating in the domain.
      */
-    List<RuntimeInfo> getParticipatingRuntimes();
+    Set<RuntimeInfo> getParticipatingRuntimes();
 
 }
