@@ -58,6 +58,34 @@ import com.thoughtworks.xstream.XStream;
 /**
  * JXTA implementation of the discovery service.
  *
+ * <p>
+ * The implementation uses the JXTA PDP to broadcast advertisements on the current node
+ * and receive advertisements from the nodes participating in the same domain. Requests
+ * for advertisements from remote nodes and publishing advertisements for the current
+ * node are performed in a different thread using the work scheduler. This is done every
+ * 2 seconds by default, however, this can be configured through the <code>interval</code>
+ * property.
+ * </p>
+ *
+ * <p>
+ * A remote node from which no advertisment has been received for the 10 seconds by default
+ * is expelled from the current domain view. However, this can be overridden using the
+ * property <code>expirationThreshold</code>.
+ * </p>
+ *
+ * <p>
+ * The advertisements include serialized information on the <code>RuntimeInfo</code> of the
+ * node broadcasting the advertisement. Currently, serialization is performed using xstream
+ * and transported using the description attribute of the peer discovery advertisement. However,
+ * it is worth investigating using custom advertisements.
+ * </p>
+ *
+ * <p>
+ * The discovery service is injected with the <code>AdvertisementService</code>. Services within
+ * local nodes should use this service as a mediator for locally advertising their features.
+ * These features are then broadcasted to the wider domain by the discovery service.
+ * </p>
+ *
  * @version $Revsion$ $Date$
  */
 public class JxtaDiscoveryService implements DiscoveryService {
@@ -106,9 +134,11 @@ public class JxtaDiscoveryService implements DiscoveryService {
     }
 
     /**
-     * Sets the interval in which discovery messages and advertisements are sent.
+     * Sets the interval in which discovery messages and advertisements are
+     * sent.
      *
-     * @param interval Polling interval.
+     * @param interval
+     *            Polling interval.
      */
     @Property
     public void setInterval(long interval) {
@@ -118,7 +148,8 @@ public class JxtaDiscoveryService implements DiscoveryService {
     /**
      * Sets the expiration threshold after which the runtime expelled.
      *
-     * @param expirationThreshold Polling interval.
+     * @param expirationThreshold
+     *            Polling interval.
      */
     @Property
     public void setExpirationThreshold(long expirationThreshold) {
@@ -128,7 +159,8 @@ public class JxtaDiscoveryService implements DiscoveryService {
     /**
      * Injects the host info.
      *
-     * @param Host info to be injected in.
+     * @param Host
+     *            info to be injected in.
      */
     @Reference
     public void setHostInfo(HostInfo hostInfo) {
@@ -138,7 +170,8 @@ public class JxtaDiscoveryService implements DiscoveryService {
     /**
      * Injects the JXTA service.
      *
-     * @param jxtaService JXTA service to be injected in.
+     * @param jxtaService
+     *            JXTA service to be injected in.
      */
     @Reference
     public void setJxtaService(JxtaService jxtaService) {
@@ -146,9 +179,21 @@ public class JxtaDiscoveryService implements DiscoveryService {
     }
 
     /**
+     * Injects the advertisement service.
+     *
+     * @param advertisementService
+     *            Advertisement service to be injected in.
+     */
+    @Reference
+    public void setAdvertisementService(AdvertisementService advertisementService) {
+        this.advertisementService = advertisementService;
+    }
+
+    /**
      * Injects the work scheduler.
      *
-     * @param workScheduler Work scheduler to be injected in.
+     * @param workScheduler
+     *            Work scheduler to be injected in.
      */
     @Reference
     public void setWorkScheduler(WorkScheduler workScheduler) {
@@ -176,7 +221,7 @@ public class JxtaDiscoveryService implements DiscoveryService {
 
         try {
             parser = SAXParserFactory.newInstance().newSAXParser();
-        } catch(ParserConfigurationException ex) {
+        } catch (ParserConfigurationException ex) {
             throw new Fabric3JxtaException(ex);
         } catch (SAXException ex) {
             throw new Fabric3JxtaException(ex);
@@ -202,34 +247,38 @@ public class JxtaDiscoveryService implements DiscoveryService {
             DiscoveryResponseMsg res = discoveryEvent.getResponse();
             Enumeration en = res.getAdvertisements();
 
-            if (en != null ) {
+            if (en == null) {
+                return;
+            }
 
-                while (en.hasMoreElements()) {
+            while (en.hasMoreElements()) {
 
-                    PeerAdvertisement adv = (PeerAdvertisement) en.nextElement();
-                    try {
+                PeerAdvertisement adv = (PeerAdvertisement) en.nextElement();
+                try {
 
-                        String desc = adv.getDesc().toString();
-                        WhitespaceStripper stripper = new WhitespaceStripper();
-                        parser.parse(new ByteArrayInputStream(desc.getBytes()), stripper);
+                    String desc = adv.getDesc().toString();
+                    WhitespaceStripper stripper = new WhitespaceStripper();
+                    parser.parse(new ByteArrayInputStream(desc.getBytes()), stripper);
 
-                        RuntimeInfo runtimeInfo = (RuntimeInfo) xstream.fromXML(stripper.getXml());
-                        participatingRuntimes.put(runtimeInfo, System.currentTimeMillis());
-
-                        for(RuntimeInfo info : participatingRuntimes.keySet()) {
-                            long lastActive = participatingRuntimes.get(info);
-                            if(System.currentTimeMillis() - lastActive > expirationThreshold) {
-                                participatingRuntimes.remove(info);
-                            }
-                        }
-
-
-                    } catch(SAXException ex) {
-                        // TODO Notify the monitor
-                    } catch (IOException ex) {
-                        // TODO Notify the monitor
+                    RuntimeInfo runtimeInfo = (RuntimeInfo) xstream.fromXML(stripper.getXml());
+                    if(runtimeInfo.getId().equals(hostInfo.getRuntimeId())) {
+                        continue;
                     }
 
+                    participatingRuntimes.put(runtimeInfo, System.currentTimeMillis());
+                    System.err.println(hostInfo.getRuntimeId() + ":" + runtimeInfo.getId());
+
+                    for (RuntimeInfo info : participatingRuntimes.keySet()) {
+                        long lastActive = participatingRuntimes.get(info);
+                        if (System.currentTimeMillis() - lastActive > expirationThreshold) {
+                            participatingRuntimes.remove(info);
+                        }
+                    }
+
+                } catch (SAXException ex) {
+                    // TODO Notify the monitor
+                } catch (IOException ex) {
+                    // TODO Notify the monitor
                 }
 
             }
@@ -254,7 +303,7 @@ public class JxtaDiscoveryService implements DiscoveryService {
         public void run() {
 
             discoveryService.addDiscoveryListener(new Listener());
-            while(live.get()) {
+            while (live.get()) {
 
                 try {
 
@@ -262,7 +311,7 @@ public class JxtaDiscoveryService implements DiscoveryService {
 
                     discoveryService.getRemoteAdvertisements(null, PEER, null, null, 5);
 
-                    RuntimeInfo runtimeInfo = new RuntimeInfo("runtime1");
+                    RuntimeInfo runtimeInfo = new RuntimeInfo(hostInfo.getRuntimeId());
                     runtimeInfo.setFeatures(advertisementService.getFeatures());
 
                     String runtimeInfoXml = xstream.toXML(runtimeInfo);
@@ -271,7 +320,7 @@ public class JxtaDiscoveryService implements DiscoveryService {
                     discoveryService.publish(peerAdvertisement);
                     discoveryService.remotePublish(peerAdvertisement);
 
-                } catch(InterruptedException ex) {
+                } catch (InterruptedException ex) {
                     return;
                 } catch (IOException e) {
                     // TODO Notify the monitor
@@ -291,6 +340,7 @@ public class JxtaDiscoveryService implements DiscoveryService {
 
         /**
          * Returns the XML stripped of white spaces.
+         *
          * @return XStream xml.
          */
         public String getXml() {
@@ -306,12 +356,13 @@ public class JxtaDiscoveryService implements DiscoveryService {
         }
 
         /**
-         * @see org.xml.sax.helpers.DefaultHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
+         * @see org.xml.sax.helpers.DefaultHandler#endElement(java.lang.String,
+         *      java.lang.String, java.lang.String)
          */
         @Override
         public void endElement(String uri, String localName, String qName) throws SAXException {
 
-            if("Desc".equals(qName)) {
+            if ("Desc".equals(qName)) {
                 return;
             }
 
@@ -320,19 +371,20 @@ public class JxtaDiscoveryService implements DiscoveryService {
         }
 
         /**
-         * @see org.xml.sax.helpers.DefaultHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
+         * @see org.xml.sax.helpers.DefaultHandler#startElement(java.lang.String,
+         *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
          */
         @Override
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 
-            if("Desc".equals(qName)) {
+            if ("Desc".equals(qName)) {
                 return;
             }
 
             builder.append("<");
             builder.append(qName);
-            if(attributes.getLength() > 0) {
-                for(int i = 0;i < attributes.getLength();i++) {
+            if (attributes.getLength() > 0) {
+                for (int i = 0; i < attributes.getLength(); i++) {
                     builder.append(" ");
                     builder.append(attributes.getQName(i));
                     builder.append("=");
