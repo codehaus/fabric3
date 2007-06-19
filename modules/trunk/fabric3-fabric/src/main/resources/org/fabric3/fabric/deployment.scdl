@@ -50,7 +50,7 @@
 
     <component name="FolderContributionProcessor">
         <system:implementation.system
-                class="org.fabric3.fabric.services.contribution.processor.FolderContributionProcessor"/>
+                class="org.fabric3.fabric.services.contribution.processor.ExplodedJarContributionProcessor"/>
     </component>
 
     <component name="ContributionElementLoader">

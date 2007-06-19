@@ -52,14 +52,17 @@ import org.fabric3.spi.services.contribution.Import;
 import org.fabric3.spi.services.contribution.MatchingExportNotFoundException;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 
-public class FolderContributionProcessor extends ContributionProcessorExtension implements ContributionProcessor {
+/**
+ * Handles exploded jars on a filesystem.
+ */
+public class ExplodedJarContributionProcessor extends ContributionProcessorExtension implements ContributionProcessor {
     private static final URI HOST_CLASSLOADER = URI.create("sca://./hostClassLoader");
     private LoaderRegistry loaderRegistry;
     private ClassLoaderRegistry classLoaderRegistry;
     private XMLInputFactory xmlFactory;
     private MetaDataStore metaDataStore;
 
-    public FolderContributionProcessor(@Reference LoaderRegistry loaderRegistry,
+    public ExplodedJarContributionProcessor(@Reference LoaderRegistry loaderRegistry,
                                        @Reference ClassLoaderRegistry classLoaderRegistry,
                                        @Reference XMLInputFactory xmlFactory,
                                        @Reference MetaDataStore metaDataStore) {
@@ -207,7 +210,7 @@ public class FolderContributionProcessor extends ContributionProcessorExtension 
             });
             for (File file : files) {
                 artifacts.add(file.toURL());
-                      
+
             }
         } catch (URISyntaxException e) {
             throw new ContributionException("Illegal URL", e);
