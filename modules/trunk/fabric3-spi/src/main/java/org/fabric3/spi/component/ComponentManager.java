@@ -19,6 +19,7 @@
 package org.fabric3.spi.component;
 
 import java.net.URI;
+import java.util.List;
 
 /**
  * Responsible for tracking and managing the component tree for a runtime instance. The tree corresponds to components
@@ -53,4 +54,11 @@ public interface ComponentManager {
      */
     Component getComponent(URI uri);
 
+    /**
+     * Returns a list of component URIs in the given hierarchy, e.g a domain or composite within a domain.
+     *
+     * @param uri a URI representing the hierarchy
+     * @return the list of component URIs
+     */
+    List<URI> getComponentsInHierarchy(URI uri);
 }

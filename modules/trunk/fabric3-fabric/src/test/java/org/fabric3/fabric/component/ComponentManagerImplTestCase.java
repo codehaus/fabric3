@@ -19,6 +19,7 @@
 package org.fabric3.fabric.component;
 
 import java.net.URI;
+import java.util.List;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
@@ -80,6 +81,27 @@ public class ComponentManagerImplTestCase extends TestCase {
         assertEquals(root, manager.getComponent(ROOT1));
         EasyMock.verify(root);
         EasyMock.verify(duplicate);
+    }
+
+    public void testGetComponentsInHierarchy() throws Exception {
+        Component c1 = EasyMock.createMock(Component.class);
+        URI uri1 = URI.create("sca://fabric/component1");
+        EasyMock.expect(c1.getUri()).andReturn(uri1).atLeastOnce();
+        EasyMock.replay(c1);
+        Component c2 = EasyMock.createMock(Component.class);
+        URI uri2 = URI.create("sca://fabric/component2");
+        EasyMock.expect(c2.getUri()).andReturn(uri2).atLeastOnce();
+        EasyMock.replay(c2);
+        Component c3 = EasyMock.createMock(Component.class);
+        EasyMock.expect(c3.getUri()).andReturn(URI.create("sca://other/component3")).atLeastOnce();
+        EasyMock.replay(c3);
+        manager.register(c1);
+        manager.register(c2);
+        manager.register(c3);
+        List<URI> uris = manager.getComponentsInHierarchy(URI.create("sca://fabric"));
+        assertEquals(2, uris.size());
+        assertTrue(uris.contains(uri1));
+        assertTrue(uris.contains(uri2));
     }
 
     protected void setUp() throws Exception {

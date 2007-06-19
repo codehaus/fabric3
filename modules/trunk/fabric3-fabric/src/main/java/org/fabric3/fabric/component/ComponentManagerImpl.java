@@ -20,6 +20,8 @@ package org.fabric3.fabric.component;
 
 import java.net.URI;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.fabric3.spi.component.AtomicComponent;
@@ -71,4 +73,15 @@ public class ComponentManagerImpl implements ComponentManager {
         return components.get(name);
     }
 
+    public List<URI> getComponentsInHierarchy(URI uri) {
+        String strigified = uri.toString();
+        List<URI> uris = new ArrayList<URI>();
+        for (Component component : components.values()) {
+            URI componentUri = component.getUri();
+            if (componentUri.toString().startsWith(strigified)) {
+                uris.add(componentUri);
+            }
+        }
+        return uris;
+    }
 }
