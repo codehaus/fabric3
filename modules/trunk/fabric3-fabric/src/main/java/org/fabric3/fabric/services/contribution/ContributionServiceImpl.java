@@ -224,11 +224,15 @@ public class ContributionServiceImpl implements ContributionService, Contributio
         if (contentType == null || Constants.CONTENT_UNKONWN.equals(contentType)) {
             // FIXME this should be extensible
             if (url.toExternalForm().endsWith(".jar")) {
-                contentType = Constants.JAR_CONTENT_TYPE;
+                return Constants.JAR_CONTENT_TYPE;
             } else {
                 throw new AssertionError();
             }
 
+        } else {
+            if ("file".equals(url.getProtocol())) {
+                return Constants.FOLDER_CONTENT_TYPE;
+            }
         }
         return contentType;
     }
@@ -237,7 +241,7 @@ public class ContributionServiceImpl implements ContributionService, Contributio
      * Recursively adds a resource description pointing to the contribution artifact on contained components.
      *
      * @param contribution the contribution the resource description requires
-     * @throws StoreNotFoundException if no store can be found for a contribution import
+     * @throws StoreNotFoundException        if no store can be found for a contribution import
      * @throws ContributionNotFoundException if a required imported contribution is not found
      */
     private void addContributionDescription(Contribution contribution)

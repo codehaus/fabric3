@@ -48,6 +48,11 @@
                 class="org.fabric3.fabric.services.contribution.processor.JarContributionProcessor"/>
     </component>
 
+    <component name="FolderContributionProcessor">
+        <system:implementation.system
+                class="org.fabric3.fabric.services.contribution.processor.FolderContributionProcessor"/>
+    </component>
+
     <component name="ContributionElementLoader">
         <system:implementation.system
                 class="org.fabric3.fabric.services.contribution.manifest.ContributionElementLoader"/>

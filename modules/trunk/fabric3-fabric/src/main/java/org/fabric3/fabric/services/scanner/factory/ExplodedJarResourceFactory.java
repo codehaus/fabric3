@@ -28,16 +28,29 @@ public class ExplodedJarResourceFactory implements FileSystemResourceFactory {
             return null;
         }
         File manifest = new File(file, "/META-INF/sca-contribution.xml");
-        if (manifest.exists()) {
+        if (!manifest.exists()) {
             // not a contribution archive, ignore
             return null;
         }
         DirectoryResource directoryResource = new DirectoryResource(file);
         // monitor everything in META-INF
         File metaInf = new File(file, "/META-INF");
-        for (File entry : metaInf.listFiles()) {
-            directoryResource.addResource(new FileResource(entry));
-        }
+        monitorResource(directoryResource, metaInf);
         return directoryResource;
+    }
+
+    private void monitorResource(DirectoryResource directoryResource, File file) {
+        if (file.isDirectory()) {
+            for (File entry : file.listFiles()) {
+                if (entry.isFile()) {
+                    directoryResource.addResource(new FileResource(entry));
+                } else {
+                    monitorResource(directoryResource, entry);
+                }
+            }
+        } else {
+            directoryResource.addResource(new FileResource(file));
+        }
+
     }
 }
