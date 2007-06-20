@@ -317,6 +317,7 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-binding-hessian/fabric3-binding-hessian.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-binding-hessian/fabric3-binding-hessian.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-binding-ws/fabric3-binding-ws.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-binding-ws/fabric3-binding-ws.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-console/fabric3-console.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-console/fabric3-console.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-discovery-jxta/fabric3-discovery-jxta.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-discovery-jxta/fabric3-discovery-jxta.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-extension/fabric3-extension.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-extension/fabric3-extension.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-fabric/fabric3-fabric.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-fabric/fabric3-fabric.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-groovy/fabric3-groovy.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-groovy/fabric3-groovy.iml" />
@@ -324,6 +325,7 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-interface-wsdl/fabric3-interface-wsdl.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-interface-wsdl/fabric3-interface-wsdl.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-jetty/fabric3-jetty.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-jetty/fabric3-jetty.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-jmx/fabric3-jmx.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-jmx/fabric3-jmx.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-jxta/fabric3-jxta.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-jxta/fabric3-jxta.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-maven/fabric3-maven.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-maven/fabric3-maven.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-messaging-jms/fabric3-messaging-jms.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-messaging-jms/fabric3-messaging-jms.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-messaging-jxta/fabric3-messaging-jxta.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-messaging-jxta/fabric3-messaging-jxta.iml" />
