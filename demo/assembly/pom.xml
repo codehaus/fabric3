@@ -152,6 +152,9 @@
 
         <module>../../modules/trunk/fabric3-jetty</module>
         <module>../../modules/trunk/fabric3-binding-hessian</module>
+        <module>../../modules/trunk/fabric3-install-jxta</module>
+        <module>../../modules/trunk/fabric3-jxta</module>
+        <module>../../modules/trunk/fabric3-discovery-jxta</module>
         <module>../../modules/trunk/fabric3-messaging-jxta</module>
 
         <module>../../runtimes/trunk/standalone/standalone-api</module>

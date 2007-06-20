@@ -6,34 +6,50 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License.    
+ * under the License.
  */
-package org.fabric3.spi.services.messaging;
-
-import javax.xml.stream.XMLStreamReader;
+package org.fabric3.spi.util;
 
 /**
- * Message listener for propogating callbacks. Response listeners handle async meesages that are received in response to
- * a request message that was originally sent.
- *
- * @version $Revision$ $Date$
+ * @version $Revsion$ $Date$
  */
-public interface ResponseListener {
+public class TwosTuple<FIRST, SECOND> {
+
+    // First
+    private FIRST first;
+
+    // Second
+    private SECOND second;
 
     /**
-     * Callback for propogating async messages.
-     *
-     * @param content   Message content.
-     * @param messageId optional message id if this was in response to a message that was sent.
+     * @param first
+     * @param second
      */
-    void onResponse(XMLStreamReader content, int messageId);
+    public TwosTuple(FIRST first, SECOND second) {
+        this.first = first;
+        this.second = second;
+    }
+
+    /**
+     * @return the first
+     */
+    public FIRST getFirst() {
+        return first;
+    }
+
+    /**
+     * @return the second
+     */
+    public SECOND getSecond() {
+        return second;
+    }
 
 }

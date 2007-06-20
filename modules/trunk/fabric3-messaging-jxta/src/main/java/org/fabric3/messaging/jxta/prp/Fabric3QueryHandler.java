@@ -22,16 +22,14 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import net.jxta.impl.protocol.ResolverResponse;
 import net.jxta.protocol.ResolverQueryMsg;
 import net.jxta.protocol.ResolverResponseMsg;
 import net.jxta.resolver.QueryHandler;
 import net.jxta.resolver.ResolverService;
 
-import org.fabric3.messaging.jxta.JxtaMessagingService;
 import org.fabric3.messaging.jxta.JxtaException;
+import org.fabric3.messaging.jxta.JxtaMessagingService;
 import org.fabric3.spi.services.messaging.RequestListener;
-import org.fabric3.spi.services.messaging.ResponseListener;
 import org.fabric3.spi.util.stax.StaxUtil;
 
 /**
@@ -43,21 +41,17 @@ import org.fabric3.spi.util.stax.StaxUtil;
  */
 public class Fabric3QueryHandler implements QueryHandler {
 
-    /** Resolver service for sending responses. */
-    private final ResolverService resolverService;
-
     /** Discovery service. */
-    private final JxtaMessagingService discoveryService;
+    private final JxtaMessagingService messagingService;
 
     /**
      * Initializes the JXTA resolver service and Fabric3 discovery service.
      *
      * @param resolverService Resolver service.
-     * @param discoveryService Fabric3 discovery service.
+     * @param messagingService Fabric3 messaging service.
      */
-    public Fabric3QueryHandler(final ResolverService resolverService, final JxtaMessagingService discoveryService) {
-        this.resolverService = resolverService;
-        this.discoveryService = discoveryService;
+    public Fabric3QueryHandler(final JxtaMessagingService messagingService) {
+        this.messagingService = messagingService;
     }
 
     /**
@@ -68,24 +62,13 @@ public class Fabric3QueryHandler implements QueryHandler {
         try {
 
             final String message = queryMessage.getQuery();
-            final int queryId = queryMessage.getQueryId();
-            final String source = queryMessage.getSrc();
-            final String handler = queryMessage.getHandlerName();
 
             final QName messageType = StaxUtil.getDocumentElementQName(message);
-            RequestListener messageListener = discoveryService.getRequestListener(messageType);
+            RequestListener messageListener = messagingService.getRequestListener(messageType);
             if(messageListener != null) {
 
                 XMLStreamReader requestReader = StaxUtil.createReader(message);
-                XMLStreamReader responseReader = messageListener.onRequest(requestReader);
-                String response = StaxUtil.serialize(responseReader);
-
-                ResolverResponse responseMessage = new ResolverResponse();
-                responseMessage.setResponse(response);
-                responseMessage.setHandlerName(handler);
-                responseMessage.setQueryId(queryId);
-
-                resolverService.sendResponse(source, responseMessage);
+                messageListener.onRequest(requestReader);
 
             }
             return ResolverService.OK;
@@ -100,23 +83,6 @@ public class Fabric3QueryHandler implements QueryHandler {
      * Processes a response message.
      */
     public void processResponse(ResolverResponseMsg responseMessage) {
-
-        try {
-
-            final String message = responseMessage.getResponse();
-            final int queryId = responseMessage.getQueryId();
-
-            final QName messageType = StaxUtil.getDocumentElementQName(message);
-            ResponseListener messageListener = discoveryService.getResponseListener(messageType);
-            if(messageListener != null) {
-                XMLStreamReader responseReader = StaxUtil.createReader(message);
-                messageListener.onResponse(responseReader, queryId);
-            }
-
-        } catch(XMLStreamException ex) {
-            throw new JxtaException(ex);
-        }
-
     }
 
 }

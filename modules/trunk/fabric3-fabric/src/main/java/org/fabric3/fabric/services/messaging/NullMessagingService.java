@@ -18,15 +18,10 @@
  */
 package org.fabric3.fabric.services.messaging;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.extension.messaging.AbstractMessagingService;
-import org.fabric3.spi.services.messaging.DomainJoinException;
 import org.fabric3.spi.services.messaging.MessagingException;
-import org.fabric3.spi.services.messaging.MessagingTimeoutException;
 
 /**
  * A messaging service implementation fr a single node runtime
@@ -34,26 +29,12 @@ import org.fabric3.spi.services.messaging.MessagingTimeoutException;
  * @version $Rev$ $Date$
  */
 public class NullMessagingService extends AbstractMessagingService {
-    private Set<String> runtimes;
 
-    public NullMessagingService() {
-        runtimes = new HashSet<String>();
-        runtimes.add("master");
+    public void sendMessage(String runtimeId, XMLStreamReader content) throws MessagingException {
     }
 
-    public void joinDomain(long waitTime) throws DomainJoinException, MessagingTimeoutException {
-
+    public Object getMessageDestination() {
+        return null;
     }
 
-    public void leaveDomain() throws MessagingException {
-
-    }
-
-    public int sendMessage(String runtimeId, XMLStreamReader content) throws MessagingException {
-        return 0;
-    }
-
-    public Set<String> getRuntimeIds() {
-        return Collections.unmodifiableSet(runtimes);
-    }
 }

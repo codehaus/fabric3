@@ -21,6 +21,7 @@ package org.fabric3.fabric.services.routing;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.net.URI;
+import java.util.HashSet;
 import java.util.Set;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
@@ -94,7 +95,7 @@ public class FederatedRoutingService implements RoutingService {
     }
 
     public Set<String> getRuntimeIds() {
-        return messagingService.getRuntimeIds();
+        return new HashSet<String>();
     }
 
     private void routeLocally(CommandSet set) throws RoutingException {

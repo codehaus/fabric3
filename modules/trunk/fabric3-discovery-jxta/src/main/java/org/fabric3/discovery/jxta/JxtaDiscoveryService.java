@@ -22,6 +22,7 @@ import static net.jxta.discovery.DiscoveryService.ADV;
 
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -38,7 +39,9 @@ import org.fabric3.jxta.JxtaService;
 import org.fabric3.spi.model.topology.RuntimeInfo;
 import org.fabric3.spi.services.advertisement.AdvertisementService;
 import org.fabric3.spi.services.discovery.DiscoveryService;
+import org.fabric3.spi.services.messaging.MessagingService;
 import org.fabric3.spi.services.work.WorkScheduler;
+import org.fabric3.spi.util.TwosTuple;
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
@@ -104,21 +107,34 @@ public class JxtaDiscoveryService implements DiscoveryService {
     private Publisher publisher;
 
     // Participating runtimes
-    private Map<RuntimeInfo, Long> participatingRuntimes = new ConcurrentHashMap<RuntimeInfo, Long>();
+    private Map<String, TwosTuple<RuntimeInfo, Long>> participatingRuntimes = new ConcurrentHashMap<String, TwosTuple<RuntimeInfo, Long>>();
+
+    // Messaging service
+    private MessagingService messagingService;
 
     /**
      * @see org.fabric3.spi.services.discovery.DiscoveryService#getParticipatingRuntimes()
      */
     public Set<RuntimeInfo> getParticipatingRuntimes() {
-        return participatingRuntimes.keySet();
+        Set<RuntimeInfo> ret = new HashSet<RuntimeInfo>();
+        for(TwosTuple<RuntimeInfo, Long> tuple : participatingRuntimes.values()) {
+            ret.add(tuple.getFirst());
+        }
+        return ret;
+    }
+
+    /**
+     * @see org.fabric3.spi.services.discovery.DiscoveryService#getRuntimeInfo(java.lang.String)
+     */
+    public RuntimeInfo getRuntimeInfo(String runtimeId) {
+        return participatingRuntimes.get(runtimeId).getFirst();
     }
 
     /**
      * Sets the interval in which discovery messages and advertisements are
      * sent.
      *
-     * @param interval
-     *            Polling interval.
+     * @param interval Polling interval.
      */
     @Property
     public void setInterval(long interval) {
@@ -128,8 +144,7 @@ public class JxtaDiscoveryService implements DiscoveryService {
     /**
      * Sets the expiration threshold after which the runtime expelled.
      *
-     * @param expirationThreshold
-     *            Polling interval.
+     * @param expirationThreshold Polling interval.
      */
     @Property
     public void setExpirationThreshold(long expirationThreshold) {
@@ -139,8 +154,7 @@ public class JxtaDiscoveryService implements DiscoveryService {
     /**
      * Injects the host info.
      *
-     * @param Host
-     *            info to be injected in.
+     * @param Host info to be injected in.
      */
     @Reference
     public void setHostInfo(HostInfo hostInfo) {
@@ -150,8 +164,7 @@ public class JxtaDiscoveryService implements DiscoveryService {
     /**
      * Injects the JXTA service.
      *
-     * @param jxtaService
-     *            JXTA service to be injected in.
+     * @param jxtaService JXTA service to be injected in.
      */
     @Reference
     public void setJxtaService(JxtaService jxtaService) {
@@ -159,10 +172,19 @@ public class JxtaDiscoveryService implements DiscoveryService {
     }
 
     /**
+     * Injects the messaging service.
+     *
+     * @param messagingService Messaging service to be injected in.
+     */
+    @Reference
+    public void setMessagingService(MessagingService messagingService) {
+        this.messagingService = messagingService;
+    }
+
+    /**
      * Injects the advertisement service.
      *
-     * @param advertisementService
-     *            Advertisement service to be injected in.
+     * @param advertisementService Advertisement service to be injected in.
      */
     @Reference
     public void setAdvertisementService(AdvertisementService advertisementService) {
@@ -172,8 +194,7 @@ public class JxtaDiscoveryService implements DiscoveryService {
     /**
      * Injects the work scheduler.
      *
-     * @param workScheduler
-     *            Work scheduler to be injected in.
+     * @param workScheduler Work scheduler to be injected in.
      */
     @Reference
     public void setWorkScheduler(WorkScheduler workScheduler) {
@@ -230,16 +251,15 @@ public class JxtaDiscoveryService implements DiscoveryService {
                         continue;
                     }
 
-                    participatingRuntimes.put(runtimeInfo, System.currentTimeMillis());
+                    participatingRuntimes.put(runtimeInfo.getId(), new TwosTuple<RuntimeInfo, Long>(runtimeInfo, System.currentTimeMillis()));
                 }
 
             }
 
             // Expire inactive runtimes
-            for (RuntimeInfo info : participatingRuntimes.keySet()) {
-                long lastActive = participatingRuntimes.get(info);
-                if (System.currentTimeMillis() - lastActive > expirationThreshold) {
-                    participatingRuntimes.remove(info);
+            for (TwosTuple<RuntimeInfo, Long> tuple : participatingRuntimes.values()) {
+                if (System.currentTimeMillis() - tuple.getSecond() > expirationThreshold) {
+                    participatingRuntimes.remove(tuple.getFirst().getId());
                 }
             }
 
@@ -276,6 +296,7 @@ public class JxtaDiscoveryService implements DiscoveryService {
 
                     RuntimeInfo runtimeInfo = new RuntimeInfo(hostInfo.getRuntimeId());
                     runtimeInfo.setFeatures(advertisementService.getFeatures());
+                    runtimeInfo.setMessageDestination(messagingService.getMessageDestination());
 
                     presenceAdv.setRuntimeInfo(runtimeInfo);
 

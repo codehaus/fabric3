@@ -39,4 +39,12 @@ public interface DiscoveryService {
      */
     Set<RuntimeInfo> getParticipatingRuntimes();
 
+    /**
+     * Gets the runtime info for the given runtime id.
+     *
+     * @param runtimeId Runtime id.
+     * @return Runtime info.
+     */
+    RuntimeInfo getRuntimeInfo(String runtimeId);
+
 }

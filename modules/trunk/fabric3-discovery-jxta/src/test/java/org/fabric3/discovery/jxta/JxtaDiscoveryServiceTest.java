@@ -44,7 +44,7 @@ public class JxtaDiscoveryServiceTest extends TestCase {
 
         JxtaDiscoveryService discoveryService = new JxtaDiscoveryService();
 
-        HostInfo hostInfo = new MyHostInfo(new URI("domain"), "runtime1");
+        HostInfo hostInfo = new MyHostInfo(new URI("domain"), "runtime2");
 
         NetworkConfigurator configurator = new NetworkConfigurator();
         configurator.setPrincipal("test-user");
@@ -65,7 +65,7 @@ public class JxtaDiscoveryServiceTest extends TestCase {
         jxtaService.start();
         discoveryService.start();
 
-        Thread.sleep(5000);
+        Thread.sleep(50000);
 
         discoveryService.stop();
 

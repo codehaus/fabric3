@@ -16,6 +16,10 @@
  */
 package org.fabric3.runtime.standalone.host;
 
+import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.WORK_SCHEDULER_URI;
+
 import java.net.URI;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -24,10 +28,6 @@ import java.util.concurrent.FutureTask;
 import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.fabric.assembly.AssemblyException;
 import org.fabric3.fabric.assembly.DistributedAssembly;
-import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.MESSAGING_SERVICE_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.WORK_SCHEDULER_URI;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.CoordinatorMonitor;
 import org.fabric3.host.runtime.InitializationException;
@@ -41,7 +41,6 @@ import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.model.type.Scope;
 import org.fabric3.spi.services.messaging.MessagingException;
-import org.fabric3.spi.services.messaging.MessagingService;
 import org.fabric3.spi.services.work.WorkScheduler;
 
 /**
@@ -115,20 +114,6 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
         }
         Callable<Void> callable = new Callable<Void>() {
             public Void call() throws MessagingException, InitializationException {
-                try {
-                    MessagingService service =
-                            runtime.getSystemComponent(MessagingService.class, MESSAGING_SERVICE_URI);
-                    if (service == null) {
-                        throw new InitializationException("Messaging service not found",
-                                                          MESSAGING_SERVICE_URI.toString());
-                    }
-                    service.joinDomain(timeout);
-                    state = State.DOMAIN_JOINED;
-                } catch (MessagingException e) {
-                    state = State.ERROR;
-                    monitor.error(e);
-                    throw e;
-                }
                 return null;
             }
         };

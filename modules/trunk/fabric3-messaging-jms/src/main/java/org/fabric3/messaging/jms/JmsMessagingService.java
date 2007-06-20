@@ -20,6 +20,7 @@ package org.fabric3.messaging.jms;
 
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.ExceptionListener;
@@ -36,12 +37,11 @@ import javax.xml.stream.XMLStreamReader;
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQTopic;
-import org.osoa.sca.annotations.Property;
-
 import org.fabric3.extension.messaging.AbstractMessagingService;
-import org.fabric3.spi.services.messaging.DomainJoinException;
 import org.fabric3.spi.services.messaging.MessagingException;
 import org.fabric3.spi.util.stax.StaxUtil;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Property;
 
 /**
  * JMS based implementation of the messaging service. This class uses ActiveMQ specific API instead of JNDI based
@@ -66,6 +66,9 @@ public class JmsMessagingService extends AbstractMessagingService {
     // Topic to use
     private Topic topic;
 
+    // Topid name
+    private String topicName;
+
     // String broker url
     private String brokerUrl = ActiveMQConnection.DEFAULT_BROKER_URL;
 
@@ -75,8 +78,9 @@ public class JmsMessagingService extends AbstractMessagingService {
      * @param topic Topic used for communication.
      */
     @Property
-    public void setTopic(String topic) {
-        this.topic = new ActiveMQTopic(topic);
+    public void setTopic(String topicName) {
+        this.topic = new ActiveMQTopic(topicName);
+        this.topicName = topicName;
     }
 
     /**
@@ -92,7 +96,8 @@ public class JmsMessagingService extends AbstractMessagingService {
     /**
      * Starts the service and sets up the message listener.
      */
-    public synchronized void joinDomain(final long timeOut) throws DomainJoinException {
+    @Init
+    public synchronized void joinDomain(final long timeOut) throws MessagingException {
 
         String runtimeId = getHostInfo().getRuntimeId();
 
@@ -124,7 +129,7 @@ public class JmsMessagingService extends AbstractMessagingService {
             connection.start();
 
         } catch (JMSException ex) {
-            throw new DomainJoinException("Error joining domain", ex);
+            throw new MessagingException("Error joining domain", ex);
         }
 
     }
@@ -166,7 +171,7 @@ public class JmsMessagingService extends AbstractMessagingService {
     /**
      * Sends the message.
      */
-    public synchronized int sendMessage(String runtimeId, XMLStreamReader reader) throws MessagingException {
+    public synchronized void sendMessage(String runtimeId, XMLStreamReader reader) throws MessagingException {
 
         try {
 
@@ -181,13 +186,18 @@ public class JmsMessagingService extends AbstractMessagingService {
             senderSession.commit();
             senderSession.close();
 
-            return 1;
-
         } catch (XMLStreamException ex) {
             throw new MessagingException(ex);
         } catch (JMSException ex) {
             throw new MessagingException(ex);
         }
+    }
+
+    /**
+     * @see org.fabric3.spi.services.messaging.MessagingService#getMessageDestination()
+     */
+    public Object getMessageDestination() {
+        return topicName;
     }
 
 }

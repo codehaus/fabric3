@@ -48,6 +48,7 @@ public class RuntimeInfo {
     private Set<QName> features;
     private long uptime;
     private Status status;
+    private Object messageDestination;
 
     public RuntimeInfo() {
         resources = new ArrayList<ResourceDescription<?>>();
@@ -160,5 +161,19 @@ public class RuntimeInfo {
     @Override
     public int hashCode() {
         return id.hashCode();
+    }
+
+    /**
+     * @return Message destination used by this runtime.
+     */
+    public Object getMessageDestination() {
+        return messageDestination;
+    }
+
+    /**
+     * @param messageDestination Message destination used by this runtime.
+     */
+    public void setMessageDestination(Object messageDestination) {
+        this.messageDestination = messageDestination;
     }
 }
