@@ -30,60 +30,52 @@
     LogicalComponent<CompositeImplementation> domain = assembly.getDomain();
 %>
 <html>
-<head><title>fabric3 controller</title></head>
+<head><title>Fabric3 controller</title></head>
 <body>
-<h1>fabric3 controller for <%= domain.getUri() %>
-</h1>
+<h2>Current Domain: <%= domain.getUri() %>
+</h2>
+
+<h3>Participating Runtimes</h3>
 <%
     Map<String, RuntimeInfo> runtimes = assembly.getRuntimes();
 %>
-<h2>Participating Runtimes</h2>
+<%
+    if (runtimes.size() == 0) {
+        out.print("No remote runtimes");
+    } else {
+%>
 <table>
-    <tr>
-        <th>Runtime Id</th>
-    </tr>
+    <th width="120"/>
+    <th align="left" width="120">ID</th>
+    <th align="left">Status</th>
     <%
         for (RuntimeInfo runtimeInfo : runtimes.values()) {
-            out.print("<tr><td>" + runtimeInfo.getId() + "</td></tr>");
+            out.print("<tr><td><img src=\"runtimes.gif\"></img></td><td>" + runtimeInfo.getId() + "</td><td>Running</td></tr>");
         }
+
     %>
 </table>
-<h2>Components</h2>
+<%
+    }
+%>
+<h3>Components</h3>
 <table>
-    <th>ComponentId</th>
-    <th>Runtime</th>
+    <th></th>
+    <th width="300" align="left">ID</th>
+    <th align="left">Runtime</th>
     <%
         Collection<LogicalComponent<?>> components = domain.getComponents();
         for (LogicalComponent<?> component : components) {
-    %>
-    <tr>
-        <td><%= component.getUri()%>
-        </td>
-        <td><%= component.getRuntimeId()%>
-        </td>
-    </tr>
-    <%
+            out.print("<tr><td><img src=\"component.gif\"></td><td>" + component.getUri() + "</td>");
+            if (component.getRuntimeId() != null) {
+                out.print("<td>" + component.getRuntimeId() + "</td></tr>");
+            } else {
+                out.print("<td>Local</td></tr>");
+            }
         }
     %>
+
+
 </table>
-<h2>Create New Component</h2>
-
-<form action="upload.jsp" method="POST">
-    <table>
-        <tr>
-            <td>Component name</td>
-            <td><input name="name" type="text" size="40"/></td>
-        </tr>
-        <tr>
-            <td valign="top">Assembly XML</td>
-            <td><textarea name="scdl" rows="30" cols="40"></textarea></td>
-        </tr>
-        <tr>
-            <td/>
-            <td align="center"><input type="submit" value="Create"/></td>
-        </tr>
-
-    </table>
-</form>
 </body>
 </html>
