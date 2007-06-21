@@ -67,6 +67,11 @@ public class PresenceAdvertisement extends Advertisement {
      */
     private String peerId;
 
+    /**
+     * Message destination.
+     */
+    private String messageDestination;
+
     /*
      * Features.
      */
@@ -108,6 +113,11 @@ public class PresenceAdvertisement extends Advertisement {
                 adv.setPeerId(elem.getValue().toString());
             }
 
+            elem = (Element) element.getChildren("messageDestination").nextElement();
+            if (elem != null && elem.getValue() != null) {
+                adv.messageDestination = elem.getValue().toString();
+            }
+
             elem = (Element) element.getChildren("features").nextElement();
             adv.features = new HashSet<QName>();
             Enumeration children = elem.getChildren("feature");
@@ -128,8 +138,9 @@ public class PresenceAdvertisement extends Advertisement {
      * @param runtimeInfo Runtime info.
      */
     public void setRuntimeInfo(RuntimeInfo runtimeInfo) {
-        this.runtimeId = runtimeInfo.getId();
-        this.features = runtimeInfo.getFeatures();
+        runtimeId = runtimeInfo.getId();
+        features = runtimeInfo.getFeatures();
+        messageDestination = runtimeInfo.getMessageDestination();
     }
 
     /**
@@ -138,6 +149,7 @@ public class PresenceAdvertisement extends Advertisement {
     public RuntimeInfo getRuntimeInfo() {
         RuntimeInfo runtimeInfo = new RuntimeInfo(runtimeId);
         runtimeInfo.setFeatures(features);
+        runtimeInfo.setMessageDestination(messageDestination);
         return runtimeInfo;
     }
 
@@ -165,6 +177,9 @@ public class PresenceAdvertisement extends Advertisement {
         doc.appendChild(elem);
 
         elem = doc.createElement("runtimeId", runtimeId);
+        doc.appendChild(elem);
+
+        elem = doc.createElement("messageDestination", messageDestination);
         doc.appendChild(elem);
 
         elem = doc.createElement("features");

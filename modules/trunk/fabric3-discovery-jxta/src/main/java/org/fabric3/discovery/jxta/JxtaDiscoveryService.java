@@ -166,10 +166,11 @@ public class JxtaDiscoveryService implements DiscoveryService {
      *
      * @param messagingService Messaging service to be injected in.
      */
-    @Reference
-    public void setMessagingService(MessagingService messagingService) {
-        this.messagingService = messagingService;
-    }
+    // TODO Commented as we don't support bi-directional references yet
+    //@Reference
+    //public void setMessagingService(MessagingService messagingService) {
+    //    this.messagingService = messagingService;
+    //}
 
     /**
      * Injects the advertisement service.
@@ -290,7 +291,9 @@ public class JxtaDiscoveryService implements DiscoveryService {
 
                     RuntimeInfo runtimeInfo = new RuntimeInfo(hostInfo.getRuntimeId());
                     runtimeInfo.setFeatures(advertisementService.getFeatures());
-                    runtimeInfo.setMessageDestination(messagingService.getMessageDestination());
+                    // TODO Hack for the demo, this info should come from the messaging service
+                    runtimeInfo.setMessageDestination(jxtaService.getDomainGroup().getPeerID().toString());
+                    // runtimeInfo.setMessageDestination(messagingService.getMessageDestination());
 
                     presenceAdv.setRuntimeInfo(runtimeInfo);
 
