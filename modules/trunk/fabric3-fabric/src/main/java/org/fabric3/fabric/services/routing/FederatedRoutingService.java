@@ -116,10 +116,6 @@ public class FederatedRoutingService implements RoutingService {
 
     private void routeToDestination(URI runtimeId, Object commandSet) throws RoutingException {
         try {
-            String id = runtimeId.toString();
-            if (!getRuntimeIds().contains(id)) {
-                throw new RuntimeNotFoundException("Destination runtime not found", id);
-            }
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             XMLStreamWriter writer = XMLOutputFactory.newInstance().createXMLStreamWriter(out);
             marshallerRegistry.marshall(commandSet, writer);

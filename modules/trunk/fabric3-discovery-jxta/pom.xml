@@ -28,7 +28,7 @@
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-discovery-jxta</artifactId>
     <version>0.1-SNAPSHOT</version>
-    <name>Fabric3 JXTA Messaging</name>
+    <name>Fabric3 JXTA Discovery</name>
     <description>Fabric3 federation discovery based on JXTA.</description>
 
     <dependencies>
