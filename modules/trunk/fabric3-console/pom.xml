@@ -31,7 +31,7 @@
     <dependencies>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-spi</artifactId>
+            <artifactId>fabric3-fabric</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
 

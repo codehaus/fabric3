@@ -38,5 +38,10 @@
         <system:implementation.system class="org.fabric3.console.handler.scdl.ScdlContributionHandler"/>
         <property name="path">/scdlSubmit</property>
     </component>
-    
+
+    <component name="console.consoleServlet">
+        <system:implementation.system class="org.fabric3.console.handler.scdl.ConsoleServlet"/>
+        <property name="path">/console/*</property>
+    </component>
+
 </composite>

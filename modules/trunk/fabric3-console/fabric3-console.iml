@@ -10,8 +10,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="fabric3-spi" />
     <orderEntry type="library" name="servlet-api-2.4" level="application" />
+    <orderEntry type="module" module-name="fabric3-fabric" />
     <orderEntryProperties />
   </component>
 </module>
