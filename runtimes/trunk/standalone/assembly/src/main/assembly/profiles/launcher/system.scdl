@@ -93,4 +93,8 @@
         <property name="tcpPort">2000</property>
     </component>
 
+    <component name="DiscoveryService">
+        <system:implementation.system class="org.fabric3.fabric.services.discovery.NullDiscoveryService"/>
+    </component>
+    
 </composite>

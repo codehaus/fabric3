@@ -47,4 +47,6 @@ public interface DiscoveryService {
      */
     RuntimeInfo getRuntimeInfo(String runtimeId);
 
+    void joinDomain(long timeout) throws DiscoveryException;
+
 }

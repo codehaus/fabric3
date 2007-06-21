@@ -16,10 +16,6 @@
  */
 package org.fabric3.runtime.standalone.host;
 
-import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.WORK_SCHEDULER_URI;
-
 import java.net.URI;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -28,6 +24,10 @@ import java.util.concurrent.FutureTask;
 import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.fabric.assembly.AssemblyException;
 import org.fabric3.fabric.assembly.DistributedAssembly;
+import static org.fabric3.fabric.runtime.ComponentNames.DISCOVERY_SERVICE_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.WORK_SCHEDULER_URI;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.CoordinatorMonitor;
 import org.fabric3.host.runtime.InitializationException;
@@ -40,7 +40,8 @@ import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.model.type.Scope;
-import org.fabric3.spi.services.messaging.MessagingException;
+import org.fabric3.spi.services.discovery.DiscoveryException;
+import org.fabric3.spi.services.discovery.DiscoveryService;
 import org.fabric3.spi.services.work.WorkScheduler;
 
 /**
@@ -113,7 +114,22 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
             throw new IllegalStateException("Not in INITIALIZED state");
         }
         Callable<Void> callable = new Callable<Void>() {
-            public Void call() throws MessagingException, InitializationException {
+            public Void call() throws DiscoveryException, InitializationException {
+                try {
+                    DiscoveryService service =
+                            runtime.getSystemComponent(DiscoveryService.class, DISCOVERY_SERVICE_URI);
+                    if (service == null) {
+                        String identifier = DISCOVERY_SERVICE_URI.toString();
+                        throw new InitializationException("Discovery service not found", identifier);
+                    }
+                    service.joinDomain(timeout);
+                    state = State.DOMAIN_JOINED;
+                } catch (DiscoveryException e) {
+                    state = State.ERROR;
+                    monitor.error(e);
+                    throw e;
+                }
+
                 return null;
             }
         };

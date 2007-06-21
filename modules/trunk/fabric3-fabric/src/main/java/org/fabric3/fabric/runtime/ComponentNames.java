@@ -57,6 +57,8 @@ public final class ComponentNames {
 
     public static final URI MESSAGING_SERVICE_URI = URI.create(RUNTIME_NAME + "/main/MessagingService");
 
+    public static final URI DISCOVERY_SERVICE_URI = URI.create(RUNTIME_NAME + "/main/DiscoveryService");
+
     private ComponentNames() {
     }
 

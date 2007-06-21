@@ -75,8 +75,12 @@
         <system:implementation.system class="org.fabric3.fabric.assembly.store.NonPersistentAssemblyStore"/>
     </component>
 
-    <component name="LocalMessagingService">
+    <component name="MessagingService">
         <system:implementation.system class="org.fabric3.fabric.services.messaging.NullMessagingService"/>
+    </component>
+
+    <component name="DiscoveryService">
+        <system:implementation.system class="org.fabric3.fabric.services.discovery.NullDiscoveryService"/>
     </component>
 
 </composite>

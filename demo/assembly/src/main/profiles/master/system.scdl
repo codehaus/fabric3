@@ -68,6 +68,15 @@
         <system:implementation.system class="org.fabric3.messaging.jxta.JxtaMessagingService"/>
         <property name="tcpPort">2000</property>
     </component>
+
+    <component name="JxtaService">
+        <system:implementation.system class="org.fabric3.jxta.impl.JxtaServiceImpl"/>
+        <property name="tcpPort">2000</property>
+    </component>
+    
+    <component name="DiscoveryService">
+        <system:implementation.system class="org.fabric3.discovery.jxta.JxtaDiscoveryService"/>
+    </component>
     
     <!-- JXTA Network Configurator -->
     <component name="jxtaNetworkConfigurator">

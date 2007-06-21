@@ -63,7 +63,7 @@ public class JxtaDiscoveryServiceTest extends TestCase {
         discoveryService.setJxtaService(jxtaService);
 
         jxtaService.start();
-        discoveryService.start();
+        discoveryService.joinDomain(-1);
 
         Thread.sleep(50000);
 

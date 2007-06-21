@@ -90,6 +90,7 @@
                 <include>org.codehaus.fabric3:fabric3-jetty</include>
                 <include>org.codehaus.fabric3:fabric3-console</include>
                 <include>org.codehaus.fabric3:fabric3-messaging-jxta</include>
+                <include>org.codehaus.fabric3:fabric3-discovery-jxta</include>
                 <include>org.codehaus.fabric3:fabric3-binding-hessian</include>
                 <include>org.codehaus.fabric3:fabric3-maven</include>
                 <include>org.codehaus.fabric3.demo:fabric3-demo-calculator</include>
@@ -112,6 +113,7 @@
                 <include>org.codehaus.fabric3:fabric3-fabric</include>
                 <include>org.codehaus.fabric3.standalone:standalone-host</include>
                 <include>org.codehaus.fabric3:fabric3-jetty</include>
+                <include>org.codehaus.fabric3:fabric3-discovery-jxta</include>
                 <include>org.codehaus.fabric3:fabric3-messaging-jxta</include>
                 <include>org.codehaus.fabric3:fabric3-binding-hessian</include>
                 <include>org.codehaus.fabric3:fabric3-maven</include>
@@ -136,6 +138,7 @@
                 <include>org.codehaus.fabric3.standalone:standalone-host</include>
                 <include>org.codehaus.fabric3:fabric3-jetty</include>
                 <include>org.codehaus.fabric3:fabric3-messaging-jxta</include>
+                <include>org.codehaus.fabric3:fabric3-discovery-jxta</include>
                 <include>org.codehaus.fabric3:fabric3-binding-hessian</include>
                 <include>org.codehaus.fabric3:fabric3-maven</include>
                 <include>org.codehaus.fabric3.demo:fabric3-demo-calculator</include>

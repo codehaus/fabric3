@@ -59,7 +59,7 @@
 
     <!-- include deployment configuration -->
     <include name="org.fabric3.fabric.Deployment" scdlResource="org/fabric3/fabric/deployment.scdl"/>
-    
+
     <!-- include transform configuration -->
     <include name="org.fabric3.transform.Transform" scdlResource="org/fabric3/transform/transform.scdl"/>
 
@@ -73,35 +73,39 @@
 
     <component name="ClientBindingGenerator">
         <system:implementation.system class="org.fabric3.runtime.development.host.ClientBindingGenerator"/>
-	</component>
+    </component>
 
     <component name="MockBindingGenerator">
         <system:implementation.system class="org.fabric3.runtime.development.host.MockBindingGenerator"/>
-	</component>
-    
+    </component>
+
     <component name="ClientWireCache">
         <system:implementation.system class="org.fabric3.runtime.development.host.ClientWireCacheImpl"/>
-	</component>
+    </component>
 
     <component name="MockObjectCache">
         <system:implementation.system class="org.fabric3.runtime.development.host.MockObjectCacheImpl"/>
-	</component>
+    </component>
 
     <component name="ClientWireAttacher">
         <system:implementation.system class="org.fabric3.runtime.development.host.ClientWireAttacher"/>
-	</component>
+    </component>
 
     <component name="MockWireAttacher">
         <system:implementation.system class="org.fabric3.runtime.development.host.MockWireAttacher"/>
-	</component>
+    </component>
 
     <!-- no recovery for the development runtime -->
     <component name="assemblyRecoveryService">
         <system:implementation.system class="org.fabric3.fabric.assembly.store.NonPersistentAssemblyStore"/>
     </component>
 
-    <component name="LocalMessagingService">
+    <component name="MessagingService">
         <system:implementation.system class="org.fabric3.fabric.services.messaging.NullMessagingService"/>
     </component>
-    
+
+    <component name="DiscoveryService">
+        <system:implementation.system class="org.fabric3.fabric.services.discovery.NullDiscoveryService"/>
+    </component>
+
 </composite>

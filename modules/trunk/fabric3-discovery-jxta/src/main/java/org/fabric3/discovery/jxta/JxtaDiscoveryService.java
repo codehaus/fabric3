@@ -18,8 +18,6 @@
  */
 package org.fabric3.discovery.jxta;
 
-import static net.jxta.discovery.DiscoveryService.ADV;
-
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -30,9 +28,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import net.jxta.discovery.DiscoveryEvent;
 import net.jxta.discovery.DiscoveryListener;
+import static net.jxta.discovery.DiscoveryService.ADV;
 import net.jxta.document.AdvertisementFactory;
 import net.jxta.peergroup.PeerGroup;
 import net.jxta.protocol.DiscoveryResponseMsg;
+import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.Property;
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.jxta.JxtaService;
@@ -42,41 +44,29 @@ import org.fabric3.spi.services.discovery.DiscoveryService;
 import org.fabric3.spi.services.messaging.MessagingService;
 import org.fabric3.spi.services.work.WorkScheduler;
 import org.fabric3.spi.util.TwosTuple;
-import org.osoa.sca.annotations.Destroy;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Property;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * JXTA implementation of the discovery service.
- *
- * <p>
- * The implementation uses the JXTA PDP to broadcast advertisements on the current node
- * and receive advertisements from the nodes participating in the same domain. Requests
- * for advertisements from remote nodes and publishing advertisements for the current
- * node are performed in a different thread using the work scheduler. This is done every
- * 2 seconds by default, however, this can be configured through the <code>interval</code>
- * property.
- * </p>
- *
- * <p>
- * A remote node from which no advertisment has been received for the 10 seconds by default
- * is expelled from the current domain view. However, this can be overridden using the
- * property <code>expirationThreshold</code>.
- * </p>
- *
- * <p>
- * The advertisements include serialized information on the <code>RuntimeInfo</code> of the
- * node broadcasting the advertisement. Currently, serialization is performed using xstream
- * and transported using the description attribute of the peer discovery advertisement. However,
- * it is worth investigating using custom advertisements.
- * </p>
- *
- * <p>
- * The discovery service is injected with the <code>AdvertisementService</code>. Services within
- * local nodes should use this service as a mediator for locally advertising their features.
- * These features are then broadcasted to the wider domain by the discovery service.
- * </p>
+ * <p/>
+ * <p/>
+ * The implementation uses the JXTA PDP to broadcast advertisements on the current node and receive advertisements from
+ * the nodes participating in the same domain. Requests for advertisements from remote nodes and publishing
+ * advertisements for the current node are performed in a different thread using the work scheduler. This is done every
+ * 2 seconds by default, however, this can be configured through the <code>interval</code> property. </p>
+ * <p/>
+ * <p/>
+ * A remote node from which no advertisment has been received for the 10 seconds by default is expelled from the current
+ * domain view. However, this can be overridden using the property <code>expirationThreshold</code>. </p>
+ * <p/>
+ * <p/>
+ * The advertisements include serialized information on the <code>RuntimeInfo</code> of the node broadcasting the
+ * advertisement. Currently, serialization is performed using xstream and transported using the description attribute of
+ * the peer discovery advertisement. However, it is worth investigating using custom advertisements. </p>
+ * <p/>
+ * <p/>
+ * The discovery service is injected with the <code>AdvertisementService</code>. Services within local nodes should use
+ * this service as a mediator for locally advertising their features. These features are then broadcasted to the wider
+ * domain by the discovery service. </p>
  *
  * @version $Revsion$ $Date$
  */
@@ -107,7 +97,8 @@ public class JxtaDiscoveryService implements DiscoveryService {
     private Publisher publisher;
 
     // Participating runtimes
-    private Map<String, TwosTuple<RuntimeInfo, Long>> participatingRuntimes = new ConcurrentHashMap<String, TwosTuple<RuntimeInfo, Long>>();
+    private Map<String, TwosTuple<RuntimeInfo, Long>> participatingRuntimes =
+            new ConcurrentHashMap<String, TwosTuple<RuntimeInfo, Long>>();
 
     // Messaging service
     private MessagingService messagingService;
@@ -117,7 +108,7 @@ public class JxtaDiscoveryService implements DiscoveryService {
      */
     public Set<RuntimeInfo> getParticipatingRuntimes() {
         Set<RuntimeInfo> ret = new HashSet<RuntimeInfo>();
-        for(TwosTuple<RuntimeInfo, Long> tuple : participatingRuntimes.values()) {
+        for (TwosTuple<RuntimeInfo, Long> tuple : participatingRuntimes.values()) {
             ret.add(tuple.getFirst());
         }
         return ret;
@@ -131,8 +122,7 @@ public class JxtaDiscoveryService implements DiscoveryService {
     }
 
     /**
-     * Sets the interval in which discovery messages and advertisements are
-     * sent.
+     * Sets the interval in which discovery messages and advertisements are sent.
      *
      * @param interval Polling interval.
      */
@@ -154,7 +144,7 @@ public class JxtaDiscoveryService implements DiscoveryService {
     /**
      * Injects the host info.
      *
-     * @param Host info to be injected in.
+     * @param hostInfo info to be injected in.
      */
     @Reference
     public void setHostInfo(HostInfo hostInfo) {
@@ -204,9 +194,10 @@ public class JxtaDiscoveryService implements DiscoveryService {
     /**
      * Starts the service.
      *
+     * @param timeout the time to wait to join the domain
      */
-    @Init
-    public void start() {
+//    @Init
+    public void joinDomain(long timeout) {
 
         assert workScheduler != null;
         assert jxtaService != null;
@@ -242,16 +233,18 @@ public class JxtaDiscoveryService implements DiscoveryService {
             while (en != null && en.hasMoreElements()) {
 
                 Object object = en.nextElement();
-                if(object instanceof PresenceAdvertisement) {
+                if (object instanceof PresenceAdvertisement) {
 
                     PresenceAdvertisement presenceAdv = (PresenceAdvertisement) object;
                     RuntimeInfo runtimeInfo = presenceAdv.getRuntimeInfo();
 
-                    if(runtimeInfo.getId().equals(hostInfo.getRuntimeId())) {
+                    if (runtimeInfo.getId().equals(hostInfo.getRuntimeId())) {
                         continue;
                     }
 
-                    participatingRuntimes.put(runtimeInfo.getId(), new TwosTuple<RuntimeInfo, Long>(runtimeInfo, System.currentTimeMillis()));
+                    participatingRuntimes.put(runtimeInfo.getId(),
+                                              new TwosTuple<RuntimeInfo, Long>(runtimeInfo,
+                                                                               System.currentTimeMillis()));
                 }
 
             }
@@ -292,7 +285,8 @@ public class JxtaDiscoveryService implements DiscoveryService {
                     discoveryService.getRemoteAdvertisements(null, ADV, null, null, 5);
 
                     PresenceAdvertisement presenceAdv = null;
-                    presenceAdv = (PresenceAdvertisement) AdvertisementFactory.newAdvertisement(PresenceAdvertisement.getAdvertisementType());
+                    presenceAdv =
+                            (PresenceAdvertisement) AdvertisementFactory.newAdvertisement(PresenceAdvertisement.getAdvertisementType());
 
                     RuntimeInfo runtimeInfo = new RuntimeInfo(hostInfo.getRuntimeId());
                     runtimeInfo.setFeatures(advertisementService.getFeatures());

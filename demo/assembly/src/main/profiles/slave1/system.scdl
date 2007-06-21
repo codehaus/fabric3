@@ -64,11 +64,20 @@
     <include name="org.fabric3.transform.Transform" scdlResource="org/fabric3/transform/transform.scdl"/>
 
     <!-- JXTA Messaging Service -->
+    <component name="JxtaService">
+        <system:implementation.system class="org.fabric3.jxta.impl.JxtaServiceImpl"/>
+        <property name="tcpPort">2001</property>
+    </component>
+
     <component name="MessagingService">
         <system:implementation.system class="org.fabric3.messaging.jxta.JxtaMessagingService"/>  
         <property name="tcpPort">2001</property>
     </component>
-    
+
+    <component name="DiscoveryService">
+        <system:implementation.system class="org.fabric3.discovery.jxta.JxtaDiscoveryService"/>
+    </component>
+
     <!-- JXTA Network Configurator -->
     <component name="jxtaNetworkConfigurator">
         <system:implementation.system class="net.jxta.platform.NetworkConfigurator"/>

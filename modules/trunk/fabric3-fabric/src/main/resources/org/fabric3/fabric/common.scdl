@@ -53,6 +53,10 @@
         <system:implementation.system class="org.fabric3.fabric.marshaller.DefaultMarshallerRegistry"/>
     </component>
 
+    <component name="advertismentService">
+        <system:implementation.system class="org.fabric3.fabric.services.advertsiement.DefaultAdvertismentService"/>
+    </component>
+
     <component name="proxyService">
         <system:implementation.system class="org.fabric3.fabric.wire.jdk.JDKProxyService"/>
     </component>
