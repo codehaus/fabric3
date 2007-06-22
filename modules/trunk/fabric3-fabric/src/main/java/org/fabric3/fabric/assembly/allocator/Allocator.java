@@ -16,10 +16,7 @@
  */
 package org.fabric3.fabric.assembly.allocator;
 
-import java.util.Set;
-
 import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.spi.model.topology.RuntimeInfo;
 
 /**
  * Allocates a component to a service node.
@@ -31,9 +28,13 @@ public interface Allocator {
     /**
      * Performs the allocation. Composites are recursed and their children are allocated.
      *
-     * @param infos     the set of service nodes available for allocation
-     * @param component the component to allocate
+     * @param component           the component to allocate
+     * @param synchronizeTopology true if the allocator should attempt to synchronize its view of the domain topology
+     *                            with service nodes components have been pre-allocated to. Synchronization will attempt
+     *                            to poll a set number of times for runtimes components are pre-allocated to. If a
+     *                            runtime is not found, corresponding pre-allocated components will be marked for
+     *                            re-allocation.
      * @throws AllocationException if an error during allocation occurs
      */
-    void allocate(Set<RuntimeInfo> infos, LogicalComponent<?> component) throws AllocationException;
+    void allocate(LogicalComponent<?> component, boolean synchronizeTopology) throws AllocationException;
 }

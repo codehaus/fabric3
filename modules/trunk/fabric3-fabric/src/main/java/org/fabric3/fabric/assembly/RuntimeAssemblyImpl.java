@@ -25,7 +25,7 @@ import java.util.Map;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.assembly.allocator.AllocationException;
+import org.fabric3.fabric.assembly.allocator.Allocator;
 import org.fabric3.fabric.assembly.normalizer.PromotionNormalizer;
 import org.fabric3.fabric.assembly.resolver.WireResolver;
 import org.fabric3.fabric.assembly.store.AssemblyStore;
@@ -50,12 +50,14 @@ public class RuntimeAssemblyImpl extends AbstractAssembly implements RuntimeAsse
     public RuntimeAssemblyImpl(@Reference GeneratorRegistry generatorRegistry,
                                @Reference WireResolver wireResolver,
                                @Reference PromotionNormalizer normalizer,
+                               @Reference Allocator allocator,
                                @Reference RoutingService routingService,
                                @Reference AssemblyStore store) {
         super(ComponentNames.RUNTIME_URI,
               generatorRegistry,
               wireResolver,
               normalizer,
+              allocator,
               routingService,
               store,
               null);
@@ -86,10 +88,6 @@ public class RuntimeAssemblyImpl extends AbstractAssembly implements RuntimeAsse
             return target;
         }
         throw new TargetNotFoundException("Target not found", uri.toString());
-    }
-
-    protected void allocate(LogicalComponent<?> component, boolean synchronizeTopology) throws AllocationException {
-        // no recovery necessary since the domain is local
     }
 
 

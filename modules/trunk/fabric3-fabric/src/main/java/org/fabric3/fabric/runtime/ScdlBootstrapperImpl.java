@@ -28,6 +28,8 @@ import org.fabric3.fabric.assembly.AssemblyException;
 import org.fabric3.fabric.assembly.InstantiationException;
 import org.fabric3.fabric.assembly.RuntimeAssembly;
 import org.fabric3.fabric.assembly.RuntimeAssemblyImpl;
+import org.fabric3.fabric.assembly.allocator.Allocator;
+import org.fabric3.fabric.assembly.allocator.LocalAllocator;
 import org.fabric3.fabric.assembly.normalizer.PromotionNormalizer;
 import org.fabric3.fabric.assembly.normalizer.PromotionNormalizerImpl;
 import org.fabric3.fabric.assembly.resolver.DefaultWireResolver;
@@ -224,9 +226,10 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         HostInfo info = runtime.getHostInfo();
         RuntimeRoutingService routingService = new RuntimeRoutingService(deployer, commandRegistry, info);
         PromotionNormalizer normalizer = new PromotionNormalizerImpl();
+        Allocator allocator = new LocalAllocator();
         AssemblyStore store = new NonPersistentAssemblyStore(info);
         runtimeAssembly =
-                new RuntimeAssemblyImpl(generatorRegistry, resolver, normalizer, routingService, store);
+                new RuntimeAssemblyImpl(generatorRegistry, resolver, normalizer, allocator, routingService, store);
         try {
             runtimeAssembly.initialize();
         } catch (AssemblyException e) {

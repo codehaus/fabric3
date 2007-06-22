@@ -17,14 +17,19 @@
 package org.fabric3.fabric.assembly.allocator;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
+import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.topology.RuntimeInfo;
 import org.fabric3.spi.model.type.CompositeImplementation;
+import org.fabric3.spi.services.discovery.DiscoveryService;
 
 /**
  * Default Allocator implementation.
@@ -33,9 +38,42 @@ import org.fabric3.spi.model.type.CompositeImplementation;
  */
 public class DefaultAllocator implements Allocator {
     private HostInfo hostInfo;
+    private DiscoveryService discoveryService;
+    private long syncPause = 1000;
+    private int syncTimes = 10;
 
-    public DefaultAllocator(@Reference HostInfo hostInfo) {
+
+    public DefaultAllocator(@Reference HostInfo hostInfo, @Reference DiscoveryService discoveryService) {
         this.hostInfo = hostInfo;
+        this.discoveryService = discoveryService;
+    }
+
+    /**
+     * Sets the number of times a service node should be polled during a topology sync operation.
+     *
+     * @param syncTimes the number of times a service node should be polled during a topology sync operation
+     */
+    @Property(required = false)
+    public void setSyncTimes(int syncTimes) {
+        this.syncTimes = syncTimes;
+    }
+
+    /**
+     * Sets the pause time in milliseconds for service node polling during a topology sync operation
+     *
+     * @param syncPause the pause time in milliseconds
+     */
+    @Property(required = false)
+    public void setSyncPause(long syncPause) {
+        this.syncPause = syncPause;
+    }
+
+    public void allocate(LogicalComponent<?> component, boolean synchronizeTopology) throws AllocationException {
+        if (synchronizeTopology) {
+            synchronizeTopology(component);
+        }
+        Set<RuntimeInfo> runtimes = discoveryService.getParticipatingRuntimes();
+        allocate(runtimes, component);
     }
 
     public void allocate(Set<RuntimeInfo> runtimes, LogicalComponent<?> component) throws AllocationException {
@@ -66,7 +104,7 @@ public class DefaultAllocator implements Allocator {
         if (!runtimes.contains(info)) {
             // Assign runtime using a simple algorithm: if two or more exist, pick one other than the controller,
             // otherwise deploy locally
-            if (runtimes.size() < 2) {
+            if (runtimes.size() < 1) {
                 // single node setup, allocate locally
                 component.setRuntimeId(null);
                 return;
@@ -84,5 +122,89 @@ public class DefaultAllocator implements Allocator {
             }
         }
     }
+
+
+    /**
+     * Attempts to synchrnize the domain topological view with runtime nodes the component or its children have been
+     * pre-allocated to. The list of runtimes are periodically queried a set number of times. It is assumed the list of
+     * runtimes will be asynchronously updated as new nodes are discovered. If a pre-allocated runtime is not found for
+     * a component, the latter is marked for re-allocation.
+     *
+     * @param component to synchronize the domain topology with
+     */
+    private void synchronizeTopology(LogicalComponent<?> component) {
+        // calculate the set of runtimes the component or its children (if it is a composite) have been pre-allocated to
+        Set<String> preAllocated = calculatePreallocatedRuntimes(component);
+        // synchronize the set of runtimes with the domain topology, gathering the non-responding runtimes
+        Set<String> nonRespondingRuntimes = new HashSet<String>();
+        Map<String, RuntimeInfo> runtimes = new HashMap<String, RuntimeInfo>();
+        Set<RuntimeInfo> infos = discoveryService.getParticipatingRuntimes();
+        for (RuntimeInfo info : infos) {
+            runtimes.put(info.getId(), info);
+        }
+        for (String runtime : preAllocated) {
+            int i = 0;
+            while (!runtimes.containsKey(runtime) && i < syncTimes) {
+                try {
+                    Thread.sleep(syncPause);
+                    ++i;
+                } catch (InterruptedException e) {
+                    throw new AssertionError();
+                }
+            }
+            if (!runtimes.containsKey(runtime)) {
+                nonRespondingRuntimes.add(runtime);
+            }
+        }
+        // mark components pre-allocated to a non-responding runtime as needing to be re-allocated
+        markForReallocation(component, nonRespondingRuntimes);
+    }
+
+    /**
+     * Returns the set of pre-allocated runtimes for a component and its children.
+     *
+     * @param component the component being allocated
+     * @return the set of pre-allocated runtimes for a component and its children
+     */
+    private HashSet<String> calculatePreallocatedRuntimes(LogicalComponent<?> component) {
+        HashSet<String> runtimes = new HashSet<String>();
+        calculatePreallocatedRuntimes(component, runtimes);
+        return runtimes;
+    }
+
+    @SuppressWarnings({"unchecked"})
+    private void calculatePreallocatedRuntimes(LogicalComponent<?> component, Set<String> runtimes) {
+        for (LogicalComponent<?> child : component.getComponents()) {
+            if (CompositeImplementation.class.isInstance(child.getDefinition().getImplementation())) {
+                calculatePreallocatedRuntimes(child, runtimes);
+            } else {
+                URI uri = child.getRuntimeId();
+                if (uri != null) {
+                    String runtime = uri.toString();
+                    if (!runtimes.contains(runtime)) {
+                        runtimes.add(runtime);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Marks a component or its children for re-allocation if its pre-allocated runtime is in the set of non-responding
+     * runtimes.
+     *
+     * @param component             the component to evaluate
+     * @param nonRespondingRuntimes the list of non-responding runtimes
+     */
+    private void markForReallocation(LogicalComponent<?> component, Set<String> nonRespondingRuntimes) {
+        URI id = component.getRuntimeId();
+        if (id != null && nonRespondingRuntimes.contains(id.toString())) {
+            component.setRuntimeId(null);
+        }
+        for (LogicalComponent<?> child : component.getComponents()) {
+            markForReallocation(child, nonRespondingRuntimes);
+        }
+    }
+
 
 }

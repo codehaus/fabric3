@@ -29,6 +29,7 @@ import javax.xml.namespace.QName;
 import static org.osoa.sca.Constants.SCA_NS;
 
 import org.fabric3.fabric.assembly.allocator.AllocationException;
+import org.fabric3.fabric.assembly.allocator.Allocator;
 import org.fabric3.fabric.assembly.normalizer.PromotionNormalizer;
 import org.fabric3.fabric.assembly.resolver.WireResolver;
 import org.fabric3.fabric.assembly.store.AssemblyStore;
@@ -70,9 +71,10 @@ public abstract class AbstractAssembly implements Assembly {
     protected final URI domainUri;
     protected final GeneratorRegistry generatorRegistry;
     protected final WireResolver wireResolver;
+    protected final Allocator allocator;
     protected final RoutingService routingService;
     protected final MetaDataStore metadataStore;
-    protected PromotionNormalizer promotionNormalizer;
+    protected final PromotionNormalizer promotionNormalizer;
     protected LogicalComponent<CompositeImplementation> domain;
     protected Map<URI, LogicalComponent<?>> domainMap;
     protected AssemblyStore assemblyStore;
@@ -81,6 +83,7 @@ public abstract class AbstractAssembly implements Assembly {
                             GeneratorRegistry generatorRegistry,
                             WireResolver wireResolver,
                             PromotionNormalizer normalizer,
+                            Allocator allocator,
                             RoutingService routingService,
                             AssemblyStore assemblyStore,
                             MetaDataStore metadataStore) {
@@ -88,6 +91,7 @@ public abstract class AbstractAssembly implements Assembly {
         this.generatorRegistry = generatorRegistry;
         this.wireResolver = wireResolver;
         this.promotionNormalizer = normalizer;
+        this.allocator = allocator;
         this.routingService = routingService;
         this.assemblyStore = assemblyStore;
         this.metadataStore = metadataStore;
@@ -318,7 +322,7 @@ public abstract class AbstractAssembly implements Assembly {
             LogicalComponent<CompositeImplementation> composite =
                     (LogicalComponent<CompositeImplementation>) component;
             // allocate the components
-            allocate(composite, synchronizeTopology);
+            allocator.allocate(composite, synchronizeTopology);
             for (LogicalComponent<?> child : component.getComponents()) {
                 generateChangeSets(composite, child, contexts);
             }
@@ -329,7 +333,7 @@ public abstract class AbstractAssembly implements Assembly {
             }
 
         } else {
-            allocate(component, synchronizeTopology);
+            allocator.allocate(component, synchronizeTopology);
             generateChangeSets(parent, component, contexts);
             GeneratorContext context = contexts.get(component.getRuntimeId());
             assert context != null;
@@ -488,20 +492,5 @@ public abstract class AbstractAssembly implements Assembly {
      */
     protected abstract Referenceable resolveTarget(URI uri, LogicalComponent<CompositeImplementation> component)
             throws ResolutionException;
-
-    /**
-     * Subclasses implement an allocation algorithm for components in the domain
-     *
-     * @param component           the component to allocate
-     * @param synchronizeTopology true if the assembly should attempt to synchronize its view of the domain topology
-     *                            with service nodes components have been pre-allocated to. Synchronization will attempt
-     *                            to poll a set number of times for runtimes components are pre-allocated to. If a
-     *                            runtime is not found, corresponding pre-allocated components will be marked for
-     *                            re-allocation.
-     * @throws AllocationException if an error occurs during the allocation process
-     */
-    protected abstract void allocate(LogicalComponent<?> component, boolean synchronizeTopology)
-            throws AllocationException;
-
 
 }
