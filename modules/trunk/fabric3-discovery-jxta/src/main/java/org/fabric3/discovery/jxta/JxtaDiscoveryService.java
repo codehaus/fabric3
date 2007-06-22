@@ -254,7 +254,10 @@ public class JxtaDiscoveryService implements DiscoveryService {
             for (TwosTuple<RuntimeInfo, Long> tuple : participatingRuntimes.values()) {
                 if (System.currentTimeMillis() - tuple.getSecond() > expirationThreshold) {
                     participatingRuntimes.remove(tuple.getFirst().getId());
+                } else {
+                    System.err.println(hostInfo.getRuntimeId() + ":" + tuple.getFirst().getId());
                 }
+
             }
 
         }
