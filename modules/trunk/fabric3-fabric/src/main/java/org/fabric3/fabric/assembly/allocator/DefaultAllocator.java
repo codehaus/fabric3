@@ -17,7 +17,7 @@
 package org.fabric3.fabric.assembly.allocator;
 
 import java.net.URI;
-import java.util.Map;
+import java.util.Set;
 
 import org.osoa.sca.annotations.Reference;
 
@@ -38,7 +38,7 @@ public class DefaultAllocator implements Allocator {
         this.hostInfo = hostInfo;
     }
 
-    public void allocate(Map<String, RuntimeInfo> runtimes, LogicalComponent<?> component) throws AllocationException {
+    public void allocate(Set<RuntimeInfo> runtimes, LogicalComponent<?> component) throws AllocationException {
         if (CompositeImplementation.class.isInstance(component.getDefinition().getImplementation())) {
             for (LogicalComponent<?> child : component.getComponents()) {
                 if (CompositeImplementation.class.isInstance(child.getDefinition().getImplementation())) {
@@ -61,13 +61,9 @@ public class DefaultAllocator implements Allocator {
      * @param component the component to assign
      * @throws AllocationException if an error occurs assigning the component
      */
-    private void assign(Map<String, RuntimeInfo> runtimes, LogicalComponent<?> component) throws AllocationException {
+    private void assign(Set<RuntimeInfo> runtimes, LogicalComponent<?> component) throws AllocationException {
         RuntimeInfo info = null;
-        URI id = component.getRuntimeId();
-        if (id != null) {
-            info = runtimes.get(id.toString());
-        }
-        if (info == null) {
+        if (!runtimes.contains(info)) {
             // Assign runtime using a simple algorithm: if two or more exist, pick one other than the controller,
             // otherwise deploy locally
             if (runtimes.size() < 2) {
@@ -75,7 +71,7 @@ public class DefaultAllocator implements Allocator {
                 component.setRuntimeId(null);
                 return;
             }
-            for (RuntimeInfo runtime : runtimes.values()) {
+            for (RuntimeInfo runtime : runtimes) {
                 if (!hostInfo.getRuntimeId().equals(runtime.getId())) {
                     info = runtime;
                     break;

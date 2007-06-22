@@ -1,11 +1,12 @@
-<%@ page import="java.net.URI" %>
 <%@ page import="java.util.Collection" %>
-<%@ page import="java.util.Map" %>
+<%@ page import="java.util.Set" %>
 <%@ page import="org.fabric3.fabric.assembly.DistributedAssembly" %>
+<%@ page import="org.fabric3.fabric.runtime.ComponentNames" %>
 <%@ page import="org.fabric3.runtime.webapp.WebappRuntimeImpl" %>
 <%@ page import="org.fabric3.spi.model.instance.LogicalComponent" %>
 <%@ page import="org.fabric3.spi.model.topology.RuntimeInfo" %>
 <%@ page import="org.fabric3.spi.model.type.CompositeImplementation" %>
+<%@ page import="org.fabric3.spi.services.discovery.DiscoveryService" %>
 <%--
  See the NOTICE file distributed with this work for information
  regarding copyright ownership.  This file is licensed
@@ -26,8 +27,10 @@
 <%
     WebappRuntimeImpl runtime = (WebappRuntimeImpl) application.getAttribute("fabric3.runtime");
     DistributedAssembly assembly = runtime.getSystemComponent(DistributedAssembly.class,
-                                                              URI.create("fabric3://./runtime/main/distributedAssembly"));
+                                                              ComponentNames.DISTRIBUTED_ASSEMBLY_URI);
     LogicalComponent<CompositeImplementation> domain = assembly.getDomain();
+    DiscoveryService discoveryService = runtime.getSystemComponent(DiscoveryService.class,
+                                                                   ComponentNames.DISCOVERY_SERVICE_URI);
 %>
 <html>
 <head><title>Fabric3 controller</title></head>
@@ -37,7 +40,7 @@
 
 <h3>Participating Runtimes</h3>
 <%
-    Map<String, RuntimeInfo> runtimes = assembly.getRuntimes();
+    Set<RuntimeInfo> runtimes = discoveryService.getParticipatingRuntimes();
 %>
 <%
     if (runtimes.size() == 0) {
@@ -49,7 +52,7 @@
     <th align="left" width="120">ID</th>
     <th align="left">Status</th>
     <%
-        for (RuntimeInfo runtimeInfo : runtimes.values()) {
+        for (RuntimeInfo runtimeInfo : runtimes) {
             out.print("<tr><td><img src=\"runtimes.gif\"></img></td><td>" + runtimeInfo.getId() + "</td><td>Running</td></tr>");
         }
 

@@ -21,7 +21,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Collection;
-import java.util.Map;
+import java.util.Set;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,6 +34,7 @@ import org.fabric3.spi.host.ServletHost;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.topology.RuntimeInfo;
 import org.fabric3.spi.model.type.CompositeImplementation;
+import org.fabric3.spi.services.discovery.DiscoveryService;
 
 /**
  * A temporary console servlet for showing the status of the distributed domain.
@@ -42,19 +43,23 @@ import org.fabric3.spi.model.type.CompositeImplementation;
  */
 public class ConsoleServlet extends Fabric3Servlet {
     private DistributedAssembly assembly;
+    private DiscoveryService discoveryService;
 
     /**
      * Injects the servlet host and path mapping.
      *
-     * @param servletHost Servlet host to use.
-     * @param path        Path mapping for the servlet.
-     * @param assembly    the distrbituted assembly
+     * @param servletHost      Servlet host to use.
+     * @param path             Path mapping for the servlet.
+     * @param assembly         the distrbituted assembly
+     * @param discoveryService the discovery service
      */
-    public ConsoleServlet(@Reference(name = "servletHost")ServletHost servletHost,
-                          @Reference(name = "assembly")DistributedAssembly assembly,
+    public ConsoleServlet(@Reference ServletHost servletHost,
+                          @Reference DistributedAssembly assembly,
+                          @Reference DiscoveryService discoveryService,
                           @Property(name = "path")String path) {
         super(servletHost, path);
         this.assembly = assembly;
+        this.discoveryService = discoveryService;
     }
 
     protected void process(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
@@ -75,7 +80,7 @@ public class ConsoleServlet extends Fabric3Servlet {
             }
         }
         LogicalComponent<CompositeImplementation> domain = assembly.getDomain();
-        Map<String, RuntimeInfo> runtimes = assembly.getRuntimes();
+        Set<RuntimeInfo> runtimes = discoveryService.getParticipatingRuntimes();
         PrintWriter writer = res.getWriter();
         writer.write("<html><head><title>Fabric3 controller</title></head><body><h2>Current Domain: ");
         writer.write(domain.getUri().toString());
@@ -85,7 +90,7 @@ public class ConsoleServlet extends Fabric3Servlet {
         } else {
             writer.write(
                     "<table><th width=\"120\"/><th align=\"left\" width=\"120\">ID</th><th align=\"left\">Status</th>");
-            for (RuntimeInfo runtimeInfo : runtimes.values()) {
+            for (RuntimeInfo runtimeInfo : runtimes) {
                 writer.write("<tr><td><img src=\"\\console\\runtimes.gif\"></img></td><td>");
                 writer.write(runtimeInfo.getId());
                 writer.write("</td><td>Running</td></tr>");

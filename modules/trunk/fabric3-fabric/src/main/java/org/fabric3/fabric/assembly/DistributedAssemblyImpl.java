@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Property;
@@ -58,7 +57,6 @@ public class DistributedAssemblyImpl extends AbstractAssembly implements Distrib
     private DiscoveryService discoveryService;
     private long syncPause = 1000;
     private int syncTimes = 10;
-    private Map<String, RuntimeInfo> runtimes;
 
     public DistributedAssemblyImpl(@Reference GeneratorRegistry generatorRegistry,
                                    @Reference WireResolver wireResolver,
@@ -78,7 +76,6 @@ public class DistributedAssemblyImpl extends AbstractAssembly implements Distrib
               metaDataStore);
         this.allocator = allocator;
         this.discoveryService = discoveryService;
-        runtimes = new ConcurrentHashMap<String, RuntimeInfo>();
     }
 
     /**
@@ -101,16 +98,6 @@ public class DistributedAssemblyImpl extends AbstractAssembly implements Distrib
         this.syncTimes = syncTimes;
     }
 
-    public Map<String, RuntimeInfo> getRuntimes() {
-        Set<RuntimeInfo> runtimeNames = discoveryService.getParticipatingRuntimes();// routingService.getRuntimeIds();
-        Map<String, RuntimeInfo> runtimeIds = new HashMap<String, RuntimeInfo>(runtimeNames.size());
-        for (RuntimeInfo info : runtimeNames) {
-            runtimeIds.put(info.getId(), info);
-        }
-        return runtimeIds;
-    }
-
-
     @SuppressWarnings({"unchecked"})
     @Override
     protected void allocate(LogicalComponent<?> component, boolean synchronizeTopology) throws AllocationException {
@@ -118,7 +105,7 @@ public class DistributedAssemblyImpl extends AbstractAssembly implements Distrib
             synchronizeTopology(component);
             // TODO determine the list of components to recover
         }
-        allocator.allocate(getRuntimes(), component);
+        allocator.allocate(discoveryService.getParticipatingRuntimes(), component);
     }
 
     @Override
@@ -148,12 +135,17 @@ public class DistributedAssemblyImpl extends AbstractAssembly implements Distrib
      */
     private void synchronizeTopology(LogicalComponent<?> component) {
         // calculate the set of runtimes the component or its children (if it is a composite) have been pre-allocated to
-        HashSet<String> runtimes = calculatePreallocatedRuntimes(component);
+        Set<String> preAllocated = calculatePreallocatedRuntimes(component);
         // synchronize the set of runtimes with the domain topology, gathering the non-responding runtimes
-        HashSet<String> nonRespondingRuntimes = new HashSet<String>();
-        for (String runtime : runtimes) {
+        Set<String> nonRespondingRuntimes = new HashSet<String>();
+        Map<String, RuntimeInfo> runtimes = new HashMap<String, RuntimeInfo>();
+        Set<RuntimeInfo> infos = discoveryService.getParticipatingRuntimes();
+        for (RuntimeInfo info : infos) {
+            runtimes.put(info.getId(), info);
+        }
+        for (String runtime : preAllocated) {
             int i = 0;
-            while (!getRuntimes().containsKey(runtime) && i < syncTimes) {
+            while (!runtimes.containsKey(runtime) && i < syncTimes) {
                 try {
                     Thread.sleep(syncPause);
                     ++i;
@@ -161,7 +153,7 @@ public class DistributedAssemblyImpl extends AbstractAssembly implements Distrib
                     throw new AssertionError();
                 }
             }
-            if (!getRuntimes().containsKey(runtime)) {
+            if (!runtimes.containsKey(runtime)) {
                 nonRespondingRuntimes.add(runtime);
             }
         }
@@ -205,7 +197,7 @@ public class DistributedAssemblyImpl extends AbstractAssembly implements Distrib
      * @param component             the component to evaluate
      * @param nonRespondingRuntimes the list of non-responding runtimes
      */
-    private void markForReallocation(LogicalComponent<?> component, HashSet<String> nonRespondingRuntimes) {
+    private void markForReallocation(LogicalComponent<?> component, Set<String> nonRespondingRuntimes) {
         URI id = component.getRuntimeId();
         if (id != null && nonRespondingRuntimes.contains(id.toString())) {
             component.setRuntimeId(null);
@@ -214,5 +206,6 @@ public class DistributedAssemblyImpl extends AbstractAssembly implements Distrib
             markForReallocation(child, nonRespondingRuntimes);
         }
     }
+
 
 }

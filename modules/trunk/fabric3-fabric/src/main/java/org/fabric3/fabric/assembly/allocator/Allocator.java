@@ -16,7 +16,7 @@
  */
 package org.fabric3.fabric.assembly.allocator;
 
-import java.util.Map;
+import java.util.Set;
 
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.topology.RuntimeInfo;
@@ -35,5 +35,5 @@ public interface Allocator {
      * @param component the component to allocate
      * @throws AllocationException if an error during allocation occurs
      */
-    void allocate(Map<String, RuntimeInfo> infos, LogicalComponent<?> component) throws AllocationException;
+    void allocate(Set<RuntimeInfo> infos, LogicalComponent<?> component) throws AllocationException;
 }
