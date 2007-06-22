@@ -317,6 +317,7 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-binding-hessian/fabric3-binding-hessian.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-binding-hessian/fabric3-binding-hessian.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-binding-ws/fabric3-binding-ws.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-binding-ws/fabric3-binding-ws.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-console/fabric3-console.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-console/fabric3-console.iml" />
+      <module fileurl="file://$PROJECT_DIR$/demo/webclient/fabric3-demo-webclient.iml" filepath="$PROJECT_DIR$/demo/webclient/fabric3-demo-webclient.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-discovery-jxta/fabric3-discovery-jxta.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-discovery-jxta/fabric3-discovery-jxta.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-extension/fabric3-extension.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-extension/fabric3-extension.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-fabric/fabric3-fabric.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-fabric/fabric3-fabric.iml" />

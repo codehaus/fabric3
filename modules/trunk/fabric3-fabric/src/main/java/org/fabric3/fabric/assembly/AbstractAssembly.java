@@ -336,8 +336,10 @@ public abstract class AbstractAssembly implements Assembly {
             allocator.allocate(component, synchronizeTopology);
             generateChangeSets(parent, component, contexts);
             GeneratorContext context = contexts.get(component.getRuntimeId());
-            assert context != null;
-            generatorRegistry.generateCommandSet(component, context);
+            if (context != null) {
+                // if null, no component
+                generatorRegistry.generateCommandSet(component, context);
+            }
         }
         // route the change sets to service nodes
         for (Map.Entry<URI, GeneratorContext> entry : contexts.entrySet()) {
