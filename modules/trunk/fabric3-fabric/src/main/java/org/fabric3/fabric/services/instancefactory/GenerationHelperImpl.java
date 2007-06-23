@@ -106,14 +106,8 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
                 continue;
             }
             ValueSource source = new ValueSource(REFERENCE, entry.getKey());
-            MemberSite memberSite = new MemberSite();
-            memberSite.setName(member.getName());
-            if (member instanceof Method) {
-                memberSite.setElementType(ElementType.METHOD);
-            } else if (member instanceof Field) {
-                memberSite.setElementType(ElementType.FIELD);
-            }
-
+            MemberSite memberSite = new MemberSite(member);
+            
             InjectionSiteMapping mapping = new InjectionSiteMapping();
             mapping.setSource(source);
             mapping.setSite(memberSite);
@@ -134,14 +128,8 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
                 continue;
             }
             ValueSource source = new ValueSource(SERVICE, entry.getKey());
-            MemberSite memberSite = new MemberSite();
-            memberSite.setName(member.getName());
-            if (member instanceof Method) {
-                memberSite.setElementType(ElementType.METHOD);
-            } else if (member instanceof Field) {
-                memberSite.setElementType(ElementType.FIELD);
-            }
-
+            MemberSite memberSite = new MemberSite(member);
+            
             InjectionSiteMapping mapping = new InjectionSiteMapping();
             mapping.setSource(source);
             mapping.setSite(memberSite);
@@ -182,14 +170,8 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
             if (member != null) {
                 // set up the injection site
                 ValueSource source = new ValueSource(PROPERTY, name);
-                MemberSite memberSite = new MemberSite();
-                memberSite.setName(member.getName());
-                if (member instanceof Method) {
-                    memberSite.setElementType(ElementType.METHOD);
-                } else if (member instanceof Field) {
-                    memberSite.setElementType(ElementType.FIELD);
-                }
-
+                MemberSite memberSite = new MemberSite(member);
+                
                 InjectionSiteMapping mapping = new InjectionSiteMapping();
                 mapping.setSource(source);
                 mapping.setSite(memberSite);

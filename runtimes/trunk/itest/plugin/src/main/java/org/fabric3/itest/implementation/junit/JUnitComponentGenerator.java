@@ -161,14 +161,8 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
                 continue;
             }
             ValueSource source = new ValueSource(ValueSource.ValueSourceType.REFERENCE, entry.getKey());
-            MemberSite memberSite = new MemberSite();
-            memberSite.setName(member.getName());
-            if (member instanceof Method) {
-                memberSite.setElementType(ElementType.METHOD);
-            } else if (member instanceof Field) {
-                memberSite.setElementType(ElementType.FIELD);
-            }
-
+            MemberSite memberSite = new MemberSite(member);
+            
             InjectionSiteMapping mapping = new InjectionSiteMapping();
             mapping.setSource(source);
             mapping.setSite(memberSite);

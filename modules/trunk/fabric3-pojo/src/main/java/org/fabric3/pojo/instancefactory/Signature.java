@@ -17,6 +17,7 @@
 package org.fabric3.pojo.instancefactory;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,6 +30,7 @@ import java.util.List;
 public class Signature {
     private String name;
     private List<String> parameterTypes;
+    private boolean isConstructor = false;
 
     /**
      * Default constructor.
@@ -66,11 +68,13 @@ public class Signature {
      */
     public Signature(Method method) {
         name = method.getName();
-        Class<?>[] classes = method.getParameterTypes();
-        parameterTypes = new ArrayList<String>(classes.length);
-        for (Class<?> paramType : classes) {
-            parameterTypes.add(paramType.getName());
-        }
+        setParameterTypes(method.getParameterTypes());
+    }
+
+    public Signature(Constructor constructor) {
+        name = constructor.getName();
+        setParameterTypes(constructor.getParameterTypes());
+        isConstructor = true;
     }
 
     /**
@@ -82,11 +86,8 @@ public class Signature {
      * @throws NoSuchMethodException  if no matching method could be found
      */
     public Method getMethod(Class<?> clazz) throws ClassNotFoundException, NoSuchMethodException {
-        ClassLoader cl = clazz.getClassLoader();
-        Class<?>[] types = new Class<?>[parameterTypes.size()];
-        for (int i = 0; i < types.length; i++) {
-            types[i] = Class.forName(parameterTypes.get(i), true, cl);
-        }
+        if(isConstructor) throw new AssertionError("Illegal call to getMethod on a Constructor Signature");
+        Class<?>[] types = getParameterTypes(clazz.getClassLoader());
         while (clazz != null) {
             try {
                 // TODO do we need to reject package, private, static or synthetic methods?
@@ -96,6 +97,35 @@ public class Signature {
             }
         }
         throw new NoSuchMethodException(toString());
+    }
+
+    /**
+     * Return the constructor on the supplied class that matches this signature.
+     *
+     * @param clazz the class whose constructor should be returned
+     * @return the matching constructor
+     * @throws ClassNotFoundException if the class for one of the parameters could not be loaded
+     * @throws NoSuchMethodException  if no matching constructor could be found
+     */
+    public Constructor getConstructor(Class<?> clazz) throws ClassNotFoundException, NoSuchMethodException {
+        if(!isConstructor) throw new AssertionError("Illegal call to getConstructor on a Method Signature");
+        Class<?>[] types = getParameterTypes(clazz.getClassLoader());
+        return clazz.getConstructor(types);
+    }
+
+    private void setParameterTypes(Class<?>[] classes) {
+      parameterTypes = new ArrayList<String>(classes.length);
+        for (Class<?> paramType : classes) {
+            parameterTypes.add(paramType.getName());
+        }
+    }
+
+    private Class<?>[] getParameterTypes(ClassLoader cl) throws ClassNotFoundException {
+        Class<?>[] types = new Class<?>[parameterTypes.size()];
+        for (int i = 0; i < types.length; i++) {
+            types[i] = Class.forName(parameterTypes.get(i), true, cl);
+        }
+        return types;
     }
 
     /**
@@ -134,6 +164,13 @@ public class Signature {
         this.parameterTypes = parameterTypes;
     }
 
+    public boolean isConstructor() {
+        return isConstructor;
+    }
+
+    public void setConstructor(boolean constructor) {
+        isConstructor = constructor;
+    }
 
     public String toString() {
         StringBuilder builder = new StringBuilder();

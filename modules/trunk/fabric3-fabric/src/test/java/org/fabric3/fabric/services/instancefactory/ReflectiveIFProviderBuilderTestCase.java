@@ -19,6 +19,8 @@
 package org.fabric3.fabric.services.instancefactory;
 
 import java.lang.annotation.ElementType;
+import java.lang.reflect.Method;
+import java.lang.reflect.Field;
 
 import junit.framework.TestCase;
 
@@ -63,9 +65,8 @@ public class ReflectiveIFProviderBuilderTestCase extends TestCase {
      */
     public void testProtectedFieldInjectionSource() throws Exception {
         ValueSource valueSource = new ValueSource(ValueSourceType.REFERENCE, "xyz");
-        MemberSite memberSite = new MemberSite();
-        memberSite.setName("xyz");
-        memberSite.setElementType(ElementType.FIELD);
+        Field field = Foo.class.getDeclaredField("xyz");
+        MemberSite memberSite = new MemberSite(field);
         InjectionSiteMapping mapping = new InjectionSiteMapping();
         mapping.setSite(memberSite);
         mapping.setSource(valueSource);
@@ -84,9 +85,8 @@ public class ReflectiveIFProviderBuilderTestCase extends TestCase {
      */
     public void testMethodInjectionSource() throws Exception {
         ValueSource valueSource = new ValueSource(ValueSourceType.REFERENCE, "abc");
-        MemberSite memberSite = new MemberSite();
-        memberSite.setName("setAbc");
-        memberSite.setElementType(ElementType.METHOD);
+        Method method = Foo.class.getMethod("setAbc", Bar.class);
+        MemberSite memberSite = new MemberSite(method);
         InjectionSiteMapping mapping = new InjectionSiteMapping();
         mapping.setSite(memberSite);
         mapping.setSource(valueSource);

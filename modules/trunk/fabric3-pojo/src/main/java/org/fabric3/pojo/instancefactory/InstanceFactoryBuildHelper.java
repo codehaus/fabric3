@@ -34,8 +34,8 @@ public interface InstanceFactoryBuildHelper {
             throws ClassNotFoundException, NoSuchMethodException;
 
     Method getMethod(Class<?> implClass, Signature signature)
-                    throws NoSuchMethodException, ClassNotFoundException;
+            throws NoSuchMethodException, ClassNotFoundException;
 
     Map<ValueSource, Member> getInjectionSites(Class implClass, List<InjectionSiteMapping> mappings)
-                            throws NoSuchFieldException, InstanceFactoryBuilderException;
+            throws NoSuchFieldException, NoSuchMethodException, InstanceFactoryBuilderException;
 }

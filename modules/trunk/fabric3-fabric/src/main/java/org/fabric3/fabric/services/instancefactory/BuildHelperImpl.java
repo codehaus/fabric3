@@ -68,7 +68,7 @@ public class BuildHelperImpl implements InstanceFactoryBuildHelper {
     }
 
     public Map<ValueSource, Member> getInjectionSites(Class implClass, List<InjectionSiteMapping> mappings)
-            throws NoSuchFieldException, InstanceFactoryBuilderException {
+            throws NoSuchFieldException, NoSuchMethodException, InstanceFactoryBuilderException {
         Map<ValueSource, Member> injectionSites = new HashMap<ValueSource, Member>();
         for (InjectionSiteMapping injectionSite : mappings) {
 
@@ -81,14 +81,13 @@ public class BuildHelperImpl implements InstanceFactoryBuildHelper {
             if (elementType == ElementType.FIELD) {
                 member = implClass.getDeclaredField(name);
             } else if (elementType == ElementType.METHOD) {
-                // FIXME look up directly based on signature sent in RIFPD
-                Method[] methods = implClass.getMethods();
-                for (Method method : methods) {
-                    if (name.equals(method.getName())) {
-                        member = method;
-                        break;
-                    }
+                Signature signature = memberSite.getSignature();
+                try {
+                    member = signature.getMethod(implClass);
+                } catch(ClassNotFoundException cnfe) {
+                    throw new InstanceFactoryBuilderException(cnfe);
                 }
+                                
             }
             if (member == null) {
                 throw new UnknownInjectionSiteException(name);
