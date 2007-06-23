@@ -26,35 +26,36 @@
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>binding-burlap-test</artifactId>
     <version>0.1-SNAPSHOT</version>
-    <name>Fabric3 Burlap Binding</name>
+    <name>Fabric3 Burlap Binding Test</name>
+    <packaging>pom</packaging>
     <description>Fabric3 Burlap Binding Test.</description>
 
     <dependencies>
-    
+
         <dependency>
             <groupId>org.codehaus.fabric3.spec</groupId>
             <artifactId>sca-api-r1.0</artifactId>
             <version>0.1</version>
         </dependency>
-        
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
-    
+
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>sample-hello-common</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
-		
+
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>geronimo-j2ee-connector_1.5_spec</artifactId>
             <version>1.0.1</version>
             <scope>provided</scope>
         </dependency>
-        
+
     </dependencies>
 
     <build>
@@ -118,5 +119,11 @@
             </plugin>
         </plugins>
     </build>
-    
+
+    <modules>
+        <module>../../runtimes/trunk/itest</module>
+        <module>../../modules/trunk/fabric3-binding-burlap</module>
+        <module>../hello-common</module>
+    </modules>
+
 </project>

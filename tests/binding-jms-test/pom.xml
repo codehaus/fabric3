@@ -26,6 +26,7 @@ under the License.
 	<artifactId>binding-jms-test</artifactId>
 	<version>0.1-SNAPSHOT</version>
 	<name>Fabric3 JMS Binding Test</name>
+	<packaging>pom</packaging>
 	<description>Fabric3 JMS Binding Test.</description>
 
 	<dependencies>
@@ -110,5 +111,11 @@ under the License.
 			</plugin>
 		</plugins>
 	</build>
+
+    <modules>
+        <module>../../runtimes/trunk/itest</module>
+        <module>../../modules/trunk/fabric3-binding-jms</module>
+        <module>../hello-common</module>
+    </modules>
 
 </project>

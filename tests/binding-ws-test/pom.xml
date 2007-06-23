@@ -25,7 +25,8 @@
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>binding-ws-test</artifactId>
     <version>0.1-SNAPSHOT</version>
-    <name>Fabric3 WS Binding</name>
+    <name>Fabric3 WS Binding Test</name>
+    <packaging>pom</packaging>
     <description>Fabric3 WS Binding Test.</description>
 
     <repositories>
@@ -155,5 +156,11 @@
             </plugin>
         </plugins>
     </build>
+
+    <modules>
+        <module>../../runtimes/trunk/itest</module>
+        <module>../../modules/trunk/fabric3-binding-ws</module>
+        <module>../hello-common</module>
+    </modules>
 
 </project>

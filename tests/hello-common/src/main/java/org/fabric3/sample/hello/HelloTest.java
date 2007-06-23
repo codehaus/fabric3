@@ -30,7 +30,7 @@ public class HelloTest extends TestCase {
     private @Reference HelloClient helloClient;
 
     public void testBinding() {
-        assertEquals("Hello, World", helloClient.sayHello("World"));
+        assertEquals("Hello, World", helloClient.sayHello("Hello", "World"));
     }
 
     @Reference

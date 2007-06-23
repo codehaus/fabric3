@@ -38,8 +38,8 @@ public class HelloClientImpl implements HelloClient {
     /* (non-Javadoc)
      * @see org.fabric3.binding.hessian.HelloClient#sayHello(java.lang.String)
      */
-    public String sayHello(String name) {
-        return helloService.sayHello(name);
+    public String sayHello(String greeting, String name) {
+        return helloService.sayHello(greeting, name);
     }
 
 }

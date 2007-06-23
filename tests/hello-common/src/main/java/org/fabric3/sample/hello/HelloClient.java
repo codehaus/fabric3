@@ -23,6 +23,6 @@ package org.fabric3.sample.hello;
  */
 public interface HelloClient {
 
-    public abstract String sayHello(String name);
+    public abstract String sayHello(String greeting, String name);
 
 }

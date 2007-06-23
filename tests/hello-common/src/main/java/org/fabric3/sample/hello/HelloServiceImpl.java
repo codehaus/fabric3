@@ -31,8 +31,8 @@ public class HelloServiceImpl implements HelloService {
     /* (non-Javadoc)
      * @see org.fabric3.binding.hessian.HelloService#sayHello(java.lang.String)
      */
-    public String sayHello(String name) {
-        return "Hello, " + name;
+    public String sayHello(String greeting, String name) {
+        return greeting + ", " + name;
     }
 
 }
