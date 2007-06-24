@@ -32,7 +32,7 @@ public interface ScannerMonitor {
      *
      * @param name the name of the resource
      */
-    @LogLevel("DEBUG")
+    @LogLevel("FINE")
     void add(String name);
 
     /**
@@ -40,7 +40,7 @@ public interface ScannerMonitor {
      *
      * @param name the name of the resource
      */
-    @LogLevel("DEBUG")
+    @LogLevel("FINE")
     void remove(String name);
 
     /**
@@ -48,7 +48,7 @@ public interface ScannerMonitor {
      *
      * @param name the name of the resource
      */
-    @LogLevel("DEBUG")
+    @LogLevel("FINE")
     void update(String name);
 
     /**
@@ -56,11 +56,11 @@ public interface ScannerMonitor {
      *
      * @param name the name of the resource
      */
-    @LogLevel("DEBUG")
+    @LogLevel("FINE")
     void processed(String name);
 
     /**
-     * Called when an error is encountered processing an entry
+     * Called when a general error is encountered processing an entry
      *
      * @param e the error
      */
@@ -68,22 +68,20 @@ public interface ScannerMonitor {
     void error(Throwable e);
 
     /**
-     * Called when an error is encountered processing an entry
+     * Called when an error is encountered during recovery
      *
-     * @param message the error-specific message
-     * @param e       the error
+     * @param e the error
      */
     @LogLevel("SEVERE")
-    void error(String message, Throwable e);
+    void recoveryError(Throwable e);
 
     /**
-     * Called when an error is encountered processing an entry
+     * Called when an error is encountered removing an entry
      *
-     * @param message    the error-specific message
-     * @param identifier an identifier
-     * @param e          the error
+     * @param filename the file being removed
+     * @param e        the error
      */
     @LogLevel("SEVERE")
-    void error(String message, String identifier, Throwable e);
+    void removalError(String filename, Throwable e);
 
 }

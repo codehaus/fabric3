@@ -80,7 +80,7 @@ public class FederatedRoutingService implements RoutingService {
             }
 
         } else {
-            monitor.routeChangeSet("Routing change set", runtimeId.toString(), pcs);
+            monitor.routeChangeSet(runtimeId.toString(), pcs);
             routeToDestination(runtimeId, pcs);
         }
     }
@@ -89,7 +89,7 @@ public class FederatedRoutingService implements RoutingService {
         if (runtimeId == null) {
             routeLocally(commandSet);
         } else {
-            monitor.routeCommandSet("Routing command set", runtimeId.toString(), commandSet);
+            monitor.routeCommandSet(runtimeId.toString(), commandSet);
             routeToDestination(runtimeId, commandSet);
         }
     }

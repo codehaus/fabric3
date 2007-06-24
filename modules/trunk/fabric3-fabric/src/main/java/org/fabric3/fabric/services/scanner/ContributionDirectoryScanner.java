@@ -120,7 +120,7 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
             recover();
             executor.scheduleWithFixedDelay(this, 10, delay, TimeUnit.MILLISECONDS);
         } catch (FileNotFoundException e) {
-            monitor.error("Error during recovery", e);
+            monitor.recoveryError(e);
         }
     }
 
@@ -150,7 +150,7 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
             // persist changes
             save();
         } catch (FileNotFoundException e) {
-            monitor.error("Error persisting scanner state", e);
+            monitor.recoveryError(e);
         } catch (RuntimeException e) {
             monitor.error(e);
         }
@@ -294,7 +294,7 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
                     removed.add(filename);
                     monitor.remove(filename);
                 } catch (ContributionException e) {
-                    monitor.error("Error removing artifact", filename, e);
+                    monitor.removalError(filename, e);
                 }
             }
         }

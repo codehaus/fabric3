@@ -103,7 +103,6 @@ public class DeployerImpl implements RequestListener, Deployer {
      *         TODO Handle response messages.
      */
     public XMLStreamReader onRequest(XMLStreamReader content) {
-
         try {
             final PhysicalChangeSet changeSet = (PhysicalChangeSet) marshallerRegistry.unmarshall(content);
             applyChangeSet(changeSet);
@@ -116,12 +115,12 @@ public class DeployerImpl implements RequestListener, Deployer {
     }
 
     public void applyChangeSet(PhysicalChangeSet changeSet) throws BuilderException, RegistrationException {
-        monitor.receivedChangeSet("Applying changeset");
+        monitor.applyChangeset();
         Set<PhysicalComponentDefinition> componentDefinitions = changeSet.getComponentDefinitions();
         List<Component> components = new ArrayList<Component>(componentDefinitions.size());
         for (PhysicalResourceContainerDefinition definition : changeSet.getAllResourceDefinitions()) {
             resourceBuilderRegistry.build(definition);
-            monitor.provisionResource("Provisioned resource", definition.getUri().toString());
+            monitor.provisionResource(definition.getUri().toString());
         }
         for (PhysicalComponentDefinition pcd : componentDefinitions) {
             final Component component = componentBuilderRegistry.build(pcd);
@@ -135,7 +134,7 @@ public class DeployerImpl implements RequestListener, Deployer {
         }
         for (Component component : components) {
             component.start();
-            monitor.startComponent("Started component", component.getUri().toString());
+            monitor.startComponent(component.getUri().toString());
         }
     }
 

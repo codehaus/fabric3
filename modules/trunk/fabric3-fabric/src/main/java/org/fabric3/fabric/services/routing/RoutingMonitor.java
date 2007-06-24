@@ -27,8 +27,8 @@ import org.fabric3.spi.command.CommandSet;
 public interface RoutingMonitor {
 
     @LogLevel("FINE")
-    void routeChangeSet(String message, String runtimeId, PhysicalChangeSet set);
+    void routeChangeSet(String runtimeId, PhysicalChangeSet set);
 
     @LogLevel("FINE")
-    void routeCommandSet(String message, String runtimeId, CommandSet set);
+    void routeCommandSet(String runtimeId, CommandSet set);
 }

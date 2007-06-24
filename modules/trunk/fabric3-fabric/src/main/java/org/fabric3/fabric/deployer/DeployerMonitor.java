@@ -26,16 +26,13 @@ import org.fabric3.api.annotation.LogLevel;
 public interface DeployerMonitor {
 
     @LogLevel("FINE")
-    void receivedChangeSet(String message);
+    void applyChangeset();
 
     @LogLevel("FINEST")
-    void startComponent(String message, String id);
+    void startComponent(String id);
 
     @LogLevel("FINEST")
-    void provisionResource(String message, String id);
-
-    @LogLevel("FINEST")
-    void executeCommand(String message, String id);
+    void provisionResource(String id);
 
     @LogLevel("SEVERE")
     void error(String message, Throwable e);

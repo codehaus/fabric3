@@ -28,13 +28,13 @@ import org.fabric3.api.annotation.LogLevel;
 import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.implementation.java.JavaComponent;
-import org.fabric3.pojo.reflection.InvokerInterceptor;
-import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.fabric.loader.LoaderContextImpl;
 import org.fabric3.fabric.monitor.JavaLoggingMonitorFactory;
 import org.fabric3.fabric.runtime.AbstractRuntime;
 import static org.fabric3.fabric.runtime.ComponentNames.COMPOSITE_LOADER_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
+import org.fabric3.pojo.PojoWorkContextTunnel;
+import org.fabric3.pojo.reflection.InvokerInterceptor;
 import org.fabric3.runtime.standalone.StandaloneHostInfo;
 import org.fabric3.runtime.standalone.StandaloneRuntime;
 import org.fabric3.runtime.standalone.host.implementation.launched.Launched;
@@ -61,7 +61,7 @@ public class StandaloneRuntimeImpl extends AbstractRuntime<StandaloneHostInfo> i
 
     public StandaloneRuntimeImpl() {
         super(StandaloneHostInfo.class);
-        monitorFactory = new JavaLoggingMonitorFactory();
+        monitorFactory = new JavaLoggingMonitorFactory(null, null, "f3");  
         setMonitorFactory(monitorFactory);
         monitor = monitorFactory.getMonitor(StandaloneMonitor.class);
     }

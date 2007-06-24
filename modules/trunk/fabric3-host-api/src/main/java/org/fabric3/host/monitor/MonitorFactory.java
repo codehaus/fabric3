@@ -20,8 +20,6 @@ package org.fabric3.host.monitor;
 
 import java.util.Map;
 
-import org.fabric3.host.monitor.FormatterRegistry;
-
 /**
  * A MonitorFactory creates implementations of components' monitor interfaces that interface with a its monitoring
  * scheme. For example, a implementation may create versions that emit appropriate logging events or which send
