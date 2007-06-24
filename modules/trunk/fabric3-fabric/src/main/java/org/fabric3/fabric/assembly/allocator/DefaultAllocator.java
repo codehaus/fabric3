@@ -40,7 +40,7 @@ public class DefaultAllocator implements Allocator {
     private HostInfo hostInfo;
     private DiscoveryService discoveryService;
     private long syncPause = 1000;
-    private int syncTimes = 10;
+    private int syncTimes = 1000;
 
 
     public DefaultAllocator(@Reference HostInfo hostInfo, @Reference DiscoveryService discoveryService) {
@@ -137,14 +137,10 @@ public class DefaultAllocator implements Allocator {
         Set<String> preAllocated = calculatePreallocatedRuntimes(component);
         // synchronize the set of runtimes with the domain topology, gathering the non-responding runtimes
         Set<String> nonRespondingRuntimes = new HashSet<String>();
-        Map<String, RuntimeInfo> runtimes = new HashMap<String, RuntimeInfo>();
-        Set<RuntimeInfo> infos = discoveryService.getParticipatingRuntimes();
-        for (RuntimeInfo info : infos) {
-            runtimes.put(info.getId(), info);
-        }
+       // Map<String, RuntimeInfo> runtimes = getRuntimes();
         for (String runtime : preAllocated) {
             int i = 0;
-            while (!runtimes.containsKey(runtime) && i < syncTimes) {
+            while (!getRuntimes().containsKey(runtime) && i < syncTimes) {
                 try {
                     Thread.sleep(syncPause);
                     ++i;
@@ -152,12 +148,21 @@ public class DefaultAllocator implements Allocator {
                     throw new AssertionError();
                 }
             }
-            if (!runtimes.containsKey(runtime)) {
+            if (!getRuntimes().containsKey(runtime)) {
                 nonRespondingRuntimes.add(runtime);
             }
         }
         // mark components pre-allocated to a non-responding runtime as needing to be re-allocated
         markForReallocation(component, nonRespondingRuntimes);
+    }
+
+    private Map<String, RuntimeInfo> getRuntimes() {
+        Map<String, RuntimeInfo> runtimes = new HashMap<String, RuntimeInfo>();
+        Set<RuntimeInfo> infos = discoveryService.getParticipatingRuntimes();
+        for (RuntimeInfo info : infos) {
+            runtimes.put(info.getId(), info);
+        }
+        return runtimes;
     }
 
     /**
