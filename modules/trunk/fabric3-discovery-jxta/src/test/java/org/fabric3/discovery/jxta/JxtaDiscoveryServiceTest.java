@@ -38,9 +38,11 @@ public class JxtaDiscoveryServiceTest extends TestCase {
 
     public void testGetParticipatingRuntimes() throws Exception {
 
+        String runtimeId = "runtime2";
+
         JxtaDiscoveryService discoveryService = new JxtaDiscoveryService();
 
-        HostInfo hostInfo = new MyHostInfo(new URI("domain"), "runtime2");
+        HostInfo hostInfo = new MyHostInfo(new URI("domain"), runtimeId);
 
         NetworkConfigurator configurator = new NetworkConfigurator();
         configurator.setPrincipal("test-user");
@@ -51,7 +53,7 @@ public class JxtaDiscoveryServiceTest extends TestCase {
         jxtaService.setNetworkConfigurator(configurator);
 
         WorkScheduler workScheduler = new MyWorkScheduler();
-        RuntimeInfoService runtimeInfoService = new MyRuntimeInfoService("runtime2");
+        RuntimeInfoService runtimeInfoService = new MyRuntimeInfoService(runtimeId);
 
         discoveryService.setWorkScheduler(workScheduler);
         discoveryService.setHostInfo(hostInfo);

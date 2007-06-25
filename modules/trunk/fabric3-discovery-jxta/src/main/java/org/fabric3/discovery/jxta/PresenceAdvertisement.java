@@ -18,14 +18,13 @@
  */
 package org.fabric3.discovery.jxta;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Enumeration;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
-
-import org.fabric3.spi.model.topology.RuntimeInfo;
 
 import net.jxta.document.Advertisement;
 import net.jxta.document.AdvertisementFactory;
@@ -37,6 +36,9 @@ import net.jxta.document.StructuredDocumentFactory;
 import net.jxta.id.ID;
 import net.jxta.id.IDFactory;
 import net.jxta.peer.PeerID;
+
+import org.fabric3.jxta.impl.Fabric3JxtaException;
+import org.fabric3.spi.model.topology.RuntimeInfo;
 
 /**
  *
@@ -67,7 +69,7 @@ public class PresenceAdvertisement extends Advertisement {
      */
     private String peerId;
 
-    /**
+    /*
      * Message destination.
      */
     private String messageDestination;
@@ -76,6 +78,12 @@ public class PresenceAdvertisement extends Advertisement {
      * Features.
      */
     private Set<QName> features = new HashSet<QName>();
+
+    /*
+     * Component URIs.
+     *
+     */
+    private Set<URI> components = new HashSet<URI>();
 
     /*
      * Instantiator.
@@ -128,6 +136,20 @@ public class PresenceAdvertisement extends Advertisement {
                 }
             }
 
+            elem = (Element) element.getChildren("components").nextElement();
+            adv.components = new HashSet<URI>();
+            children = elem.getChildren("component");
+            while(children.hasMoreElements()) {
+                elem = (Element) children.nextElement();
+                if (elem != null && elem.getValue() != null) {
+                    try {
+                        adv.components.add(new URI(elem.getValue().toString()));
+                    } catch (URISyntaxException ex) {
+                        throw new Fabric3JxtaException(ex);
+                    }
+                }
+            }
+
             return adv;
 
         }
@@ -139,8 +161,13 @@ public class PresenceAdvertisement extends Advertisement {
      */
     public void setRuntimeInfo(RuntimeInfo runtimeInfo) {
         runtimeId = runtimeInfo.getId();
-        features = runtimeInfo.getFeatures();
+        if(runtimeInfo.getFeatures() != null) {
+            features = runtimeInfo.getFeatures();
+        }
         messageDestination = runtimeInfo.getMessageDestination();
+        if(runtimeInfo.getComponents() != null) {
+            components = runtimeInfo.getComponents();
+        }
     }
 
     /**
@@ -150,6 +177,9 @@ public class PresenceAdvertisement extends Advertisement {
         RuntimeInfo runtimeInfo = new RuntimeInfo(runtimeId);
         runtimeInfo.setFeatures(features);
         runtimeInfo.setMessageDestination(messageDestination);
+        for(URI component : components) {
+            runtimeInfo.addComponent(component);
+        }
         return runtimeInfo;
     }
 
@@ -171,6 +201,7 @@ public class PresenceAdvertisement extends Advertisement {
      * @see net.jxta.document.Advertisement#getDocument(net.jxta.document.MimeMediaType)
      */
     public Document getDocument(MimeMediaType mimeMediaType) {
+
         StructuredDocument doc = StructuredDocumentFactory.newStructuredDocument(mimeMediaType, getAdvertisementType());
 
         Element elem = doc.createElement("peerId", peerId);
@@ -184,9 +215,14 @@ public class PresenceAdvertisement extends Advertisement {
 
         elem = doc.createElement("features");
         doc.appendChild(elem);
-        Iterator<QName> it = features.iterator();
-        while(it.hasNext()) {
-            elem.appendChild(doc.createElement("feature", it.next().toString()));
+        for(QName feature : features) {
+            elem.appendChild(doc.createElement("feature", feature.toString()));
+        }
+
+        elem = doc.createElement("components");
+        doc.appendChild(elem);
+        for(URI component : components) {
+            elem.appendChild(doc.createElement("feature", component.toString()));
         }
 
         return doc;

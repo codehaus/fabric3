@@ -44,7 +44,7 @@ public class RuntimeInfo {
 
     private String id;
     private List<ResourceDescription<?>> resources;
-    private Set<URI> components;
+    private Set<URI> components = new HashSet<URI>();
     private Set<QName> features;
     private long uptime;
     private Status status;
