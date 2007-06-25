@@ -19,7 +19,6 @@
 package org.fabric3.binding.ws.wire;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
 
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.Message;
