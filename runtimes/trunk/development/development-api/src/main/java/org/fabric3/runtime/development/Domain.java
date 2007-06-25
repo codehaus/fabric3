@@ -103,10 +103,16 @@ public class Domain {
     @SuppressWarnings({"unchecked"})
     private void bootRuntime() {
         String home = System.getProperty(FABRIC3_DEV_HOME);
+        File baseDir;
         if (home == null) {
-            throw new InvalidFabric3HomeException("Fabric3 home system property not set", FABRIC3_DEV_HOME);
+            home = calculateHome();
+            baseDir = new File(home).getParentFile();
+            if (baseDir == null || !baseDir.exists()) {
+                throw new InvalidFabric3HomeException("Fabric3 home system property not set", FABRIC3_DEV_HOME);
+            }
+        } else {
+            baseDir = new File(home);
         }
-        File baseDir = new File(home);
         if (!baseDir.exists()) {
             throw new InvalidFabric3HomeException("Fabric3 home system directory does not exist", home);
         }
@@ -137,9 +143,9 @@ public class Domain {
             runtime.setHostClassLoader(cl);
 
             Class<?> coordinatorClass =
-                    cl.loadClass("org.fabric3.runtime.development.host.DevelopmentCoordinator");
+                cl.loadClass("org.fabric3.runtime.development.host.DevelopmentCoordinator");
             coordinator =
-                    (RuntimeLifecycleCoordinator<DevelopmentRuntime, Bootstrapper>) coordinatorClass.newInstance();
+                (RuntimeLifecycleCoordinator<DevelopmentRuntime, Bootstrapper>) coordinatorClass.newInstance();
             coordinator.bootPrimordial(runtime, bootstrapper, cl, cl);
             coordinator.initialize();
             Future<Void> future = coordinator.joinDomain(-1);
@@ -166,6 +172,21 @@ public class Domain {
             throw new InvalidConfigurationException("Error initializing runtime", e);
         }
 
+    }
+
+    /**
+     * Used if no {@link #FABRIC3_DEV_HOME} is specified, calculates the location of the runtime installation relative
+     * to the jar containing the Domain class.
+     *
+     * @return the directory containing the runtime installation
+     */
+    private String calculateHome() {
+        String home;
+        String path = Domain.class.getResource("Domain.class").toString();
+        path = path.substring(0, path.indexOf("!"));
+        path = path.substring(0, path.lastIndexOf("/"));
+        home = path.substring(path.lastIndexOf(":") + 1);
+        return home;
     }
 
 }
