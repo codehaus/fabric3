@@ -89,15 +89,11 @@ public class JxtaServiceImpl implements JxtaService {
     @Init
     public void start() {
 
-        System.err.println("Starting");
-
         assert hostInfo != null;
         assert networkConfigurator != null;
 
         configure();
         createAndJoinDomainGroup();
-
-        System.err.println("Started");
 
     }
 
