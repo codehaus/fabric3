@@ -65,7 +65,7 @@ public class JxtaDiscoveryServiceTest extends TestCase {
         jxtaService.start();
         discoveryService.joinDomain(-1);
 
-        //Thread.sleep(100000);
+        Thread.sleep(100000);
 
         discoveryService.stop();
         //System.exit(0);
