@@ -35,14 +35,13 @@ import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
-import org.fabric3.spi.model.type.ServiceContract;
 
 /**
  * Loads a Java interface definition from an XML-based assembly file
  *
  * @version $Rev$ $Date$
  */
-public class InterfaceJavaLoader extends LoaderExtension<ServiceContract, JavaServiceContract> {
+public class InterfaceJavaLoader extends LoaderExtension<JavaServiceContract> {
     public static final QName INTERFACE_JAVA = new QName(SCA_NS, "interface.java");
 
     private final JavaInterfaceProcessorRegistry interfaceRegistry;
@@ -58,7 +57,7 @@ public class InterfaceJavaLoader extends LoaderExtension<ServiceContract, JavaSe
         return INTERFACE_JAVA;
     }
 
-    public JavaServiceContract load(ServiceContract type, XMLStreamReader reader, LoaderContext loaderContext)
+    public JavaServiceContract load(XMLStreamReader reader, LoaderContext loaderContext)
             throws XMLStreamException, LoaderException {
 
         assert INTERFACE_JAVA.equals(reader.getName());

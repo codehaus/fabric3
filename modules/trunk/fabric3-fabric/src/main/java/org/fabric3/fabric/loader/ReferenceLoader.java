@@ -51,7 +51,7 @@ import org.fabric3.spi.model.type.ServiceContract;
  * 
  * @version $Rev$ $Date$
  */
-public class ReferenceLoader extends LoaderExtension<Object, ReferenceDefinition> {
+public class ReferenceLoader extends LoaderExtension<ReferenceDefinition> {
 
     public static final QName REFERENCE = new QName(SCA_NS, "reference");
 
@@ -73,7 +73,7 @@ public class ReferenceLoader extends LoaderExtension<Object, ReferenceDefinition
         return REFERENCE;
     }
 
-    public ReferenceDefinition load(Object modelType, XMLStreamReader reader, LoaderContext context)
+    public ReferenceDefinition load(XMLStreamReader reader, LoaderContext context)
         throws XMLStreamException, LoaderException {
 
         assert REFERENCE.equals(reader.getName());
@@ -93,7 +93,7 @@ public class ReferenceLoader extends LoaderExtension<Object, ReferenceDefinition
         while (true) {
             switch (reader.next()) {
                 case START_ELEMENT:
-                    ModelObject type = registry.load(null, reader, context);
+                    ModelObject type = registry.load(reader, context);
                     if (type instanceof ServiceContract) {
                         referenceDefinition.setServiceContract((ServiceContract)type);
                     } else if (type instanceof BindingDefinition) {

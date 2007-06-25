@@ -41,7 +41,7 @@ import org.fabric3.spi.services.contribution.Import;
  *
  * @version $Rev$ $Date$
  */
-public class ContributionElementLoader extends LoaderExtension<Object, ContributionManifest> {
+public class ContributionElementLoader extends LoaderExtension<ContributionManifest> {
     private static final QName CONTRIBUTION = new QName(SCA_NS, "contribution");
 
     private final LoaderRegistry registry;
@@ -55,7 +55,7 @@ public class ContributionElementLoader extends LoaderExtension<Object, Contribut
         return CONTRIBUTION;
     }
 
-    public ContributionManifest load(Object object, XMLStreamReader reader, LoaderContext context)
+    public ContributionManifest load(XMLStreamReader reader, LoaderContext context)
             throws XMLStreamException, LoaderException {
         ContributionManifest contribution = new ContributionManifest();
         while (true) {
@@ -66,7 +66,7 @@ public class ContributionElementLoader extends LoaderExtension<Object, Contribut
                 if (CONTRIBUTION.equals(element)) {
                     continue;
                 }
-                Object o = registry.load(null, reader, context);
+                Object o = registry.load(reader, context);
                 if (o instanceof Deployable) {
                     contribution.addDeployable((Deployable) o);
                 } else if (o instanceof Export) {

@@ -45,7 +45,7 @@ import org.fabric3.spi.model.type.ServiceDefinition;
  *
  * @version $Rev$ $Date$
  */
-public class ServiceLoader extends LoaderExtension<Object, ServiceDefinition> {
+public class ServiceLoader extends LoaderExtension<ServiceDefinition> {
     private static final QName SERVICE = new QName(SCA_NS, "service");
 
     @Constructor
@@ -57,7 +57,7 @@ public class ServiceLoader extends LoaderExtension<Object, ServiceDefinition> {
         return SERVICE;
     }
 
-    public ServiceDefinition load(Object modelType, XMLStreamReader reader, LoaderContext context)
+    public ServiceDefinition load(XMLStreamReader reader, LoaderContext context)
             throws XMLStreamException, LoaderException {
         assert SERVICE.equals(reader.getName());
         String name = reader.getAttributeValue(null, "name");
@@ -88,7 +88,7 @@ public class ServiceLoader extends LoaderExtension<Object, ServiceDefinition> {
             int i = reader.next();
             switch (i) {
             case START_ELEMENT:
-                ModelObject type = registry.load(null, reader, context);
+                ModelObject type = registry.load(reader, context);
                 if (type instanceof ServiceContract) {
                     def.setServiceContract((ServiceContract) type);
                 } else if (type instanceof BindingDefinition) {

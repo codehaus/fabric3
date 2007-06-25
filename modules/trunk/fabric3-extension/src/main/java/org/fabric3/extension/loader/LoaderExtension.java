@@ -34,7 +34,7 @@ import org.fabric3.spi.loader.StAXElementLoader;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public abstract class LoaderExtension<INPUT, OUTPUT> implements StAXElementLoader<INPUT, OUTPUT> {
+public abstract class LoaderExtension<OUTPUT> implements StAXElementLoader<OUTPUT> {
     /**
      * The LoaderRegistry that this loader should register with; usually set by injection. This registry may also be
      * used to load sub-elements.

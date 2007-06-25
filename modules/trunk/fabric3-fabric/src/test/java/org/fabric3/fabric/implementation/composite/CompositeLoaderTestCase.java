@@ -46,7 +46,7 @@ public class CompositeLoaderTestCase extends TestCase {
         EasyMock.expect(reader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
         EasyMock.expect(reader.getName()).andReturn(COMPOSITE);
         EasyMock.replay(reader);
-        CompositeComponentType type = loader.load(null, reader, null);
+        CompositeComponentType type = loader.load(reader, null);
         assertEquals(name, type.getName());
         assertEquals(Autowire.INHERITED, type.getAutowire());
         EasyMock.verify(reader);
@@ -60,7 +60,7 @@ public class CompositeLoaderTestCase extends TestCase {
         EasyMock.expect(reader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
         EasyMock.expect(reader.getName()).andReturn(COMPOSITE);
         EasyMock.replay(reader);
-        CompositeComponentType type = loader.load(null, reader, null);
+        CompositeComponentType type = loader.load(reader, null);
         assertEquals(Autowire.ON, type.getAutowire());
         EasyMock.verify(reader);
     }

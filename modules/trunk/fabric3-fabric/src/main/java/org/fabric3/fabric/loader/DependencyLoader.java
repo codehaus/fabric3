@@ -39,7 +39,7 @@ import org.fabric3.spi.Constants;
  *
  * @version $Rev$ $Date$
  */
-public class DependencyLoader extends LoaderExtension<Dependency, Dependency> {
+public class DependencyLoader extends LoaderExtension<Dependency> {
     private static final QName DEPENDENCY = new QName(Constants.FABRIC3_NS, "dependency");
     private static final QName GROUP = new QName(Constants.FABRIC3_NS, "group");
     private static final QName NAME = new QName(Constants.FABRIC3_NS, "name");
@@ -55,7 +55,7 @@ public class DependencyLoader extends LoaderExtension<Dependency, Dependency> {
         return DEPENDENCY;
     }
 
-    public Dependency load(Dependency modelType, XMLStreamReader reader, LoaderContext context)
+    public Dependency load(XMLStreamReader reader, LoaderContext context)
             throws XMLStreamException, LoaderException {
         Artifact artifact = new Artifact();
         while (reader.nextTag() == XMLStreamConstants.START_ELEMENT) {

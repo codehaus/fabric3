@@ -141,7 +141,7 @@ public class JarContributionProcessor extends ContributionProcessorExtension imp
             reader.nextTag();
             // FIXME SCDL location
             LoaderContext context = new LoaderContextImpl(getClass().getClassLoader(), null);
-            Object loaded = loaderRegistry.load(null, reader, context);
+            Object loaded = loaderRegistry.load(reader, context);
             assert loaded instanceof ContributionManifest;
             return (ContributionManifest) loaded;
         } catch (FileNotFoundException e) {
@@ -183,7 +183,7 @@ public class JarContributionProcessor extends ContributionProcessorExtension imp
             reader = xmlFactory.createXMLStreamReader(stream);
             reader.nextTag();
             LoaderContext context = new LoaderContextImpl(loader, null);
-            Object loaded = loaderRegistry.load(null, reader, context);
+            Object loaded = loaderRegistry.load(reader, context);
             assert loaded instanceof CompositeComponentType;
             return (CompositeComponentType) loaded;
 

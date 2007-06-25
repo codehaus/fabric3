@@ -36,7 +36,7 @@ import org.fabric3.spi.loader.LoaderUtil;
 /**
  * @version $Rev$ $Date$
  */
-public class ImplementationJUnitLoader extends LoaderExtension<ImplementationJUnit, ImplementationJUnit> {
+public class ImplementationJUnitLoader extends LoaderExtension<ImplementationJUnit> {
     private static final QName JUNIT = new QName(Constants.FABRIC3_NS, "junit");
 
     private final ComponentTypeLoader<ImplementationJUnit> componentTypeLoader;
@@ -52,7 +52,7 @@ public class ImplementationJUnitLoader extends LoaderExtension<ImplementationJUn
         return JUNIT;
     }
 
-    public ImplementationJUnit load(ImplementationJUnit modelType, XMLStreamReader reader, LoaderContext loaderContext)
+    public ImplementationJUnit load(XMLStreamReader reader, LoaderContext loaderContext)
             throws XMLStreamException, LoaderException {
         String className = reader.getAttributeValue(null, "class");
         LoaderUtil.skipToEndElement(reader);

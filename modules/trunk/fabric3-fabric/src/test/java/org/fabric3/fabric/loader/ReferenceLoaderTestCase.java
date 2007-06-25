@@ -31,7 +31,6 @@ import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.model.type.BindingDefinition;
-import org.fabric3.spi.model.type.ModelObject;
 import org.fabric3.spi.model.type.ReferenceDefinition;
 import org.fabric3.spi.model.type.ServiceContract;
 
@@ -58,7 +57,7 @@ public class ReferenceLoaderTestCase extends TestCase {
         EasyMock.expect(mockReader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
         EasyMock.expect(mockReader.getName()).andReturn(REFERENCE).anyTimes();
         EasyMock.replay(mockReader);
-        ReferenceDefinition referenceDefinition = loader.load(null, mockReader, ctx);
+        ReferenceDefinition referenceDefinition = loader.load(mockReader, ctx);
         assertNotNull(referenceDefinition);
         assertEquals("#" + name, referenceDefinition.getUri().toString());
     }
@@ -73,7 +72,7 @@ public class ReferenceLoaderTestCase extends TestCase {
         EasyMock.expect(mockReader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
         EasyMock.expect(mockReader.getName()).andReturn(REFERENCE).anyTimes();
         EasyMock.replay(mockReader);
-        ReferenceDefinition referenceDefinition = loader.load(null, mockReader, ctx);
+        ReferenceDefinition referenceDefinition = loader.load(mockReader, ctx);
         assertEquals("Component#Service", referenceDefinition.getPromoted().get(0).toString());
     }
 
@@ -87,7 +86,7 @@ public class ReferenceLoaderTestCase extends TestCase {
         EasyMock.expect(mockReader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
         EasyMock.expect(mockReader.getName()).andReturn(REFERENCE).anyTimes();
         EasyMock.replay(mockReader);
-        ReferenceDefinition referenceDefinition = loader.load(null, mockReader, ctx);
+        ReferenceDefinition referenceDefinition = loader.load(mockReader, ctx);
         assertTrue(ReferenceDefinition.class.equals(referenceDefinition.getClass()));
     }
 
@@ -106,13 +105,12 @@ public class ReferenceLoaderTestCase extends TestCase {
         BindingDefinition binding = new BindingDefinition() {
         };
         EasyMock.expect(mockRegistry.load(
-                (ModelObject) EasyMock.isNull(),
                 EasyMock.eq(mockReader),
                 EasyMock.isA(LoaderContext.class)))
                 .andReturn(binding).times(2);
         EasyMock.replay(mockRegistry);
 
-        ReferenceDefinition referenceDefinition = loader.load(null, mockReader, ctx);
+        ReferenceDefinition referenceDefinition = loader.load(mockReader, ctx);
         assertEquals(2, referenceDefinition.getBindings().size());
     }
 
@@ -126,13 +124,13 @@ public class ReferenceLoaderTestCase extends TestCase {
         EasyMock.expect(mockReader.getAttributeValue(null, "multiplicity")).andReturn("0..1");
         EasyMock.expect(mockReader.getAttributeValue(org.fabric3.spi.Constants.FABRIC3_NS, "key")).andReturn("test");
         EasyMock.expect(mockReader.next()).andReturn(XMLStreamConstants.START_ELEMENT);
-        EasyMock.expect(mockRegistry.load(null, mockReader, ctx)).andReturn(sc);
+        EasyMock.expect(mockRegistry.load(mockReader, ctx)).andReturn(sc);
         EasyMock.expect(mockReader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
 
         EasyMock.replay(mockReader);
         EasyMock.replay(mockRegistry);
 
-        ReferenceDefinition referenceDefinition = loader.load(null, mockReader, ctx);
+        ReferenceDefinition referenceDefinition = loader.load(mockReader, ctx);
         assertNotNull(referenceDefinition);
         assertEquals("#" + name, referenceDefinition.getUri().toString());
         assertSame(sc, referenceDefinition.getServiceContract());

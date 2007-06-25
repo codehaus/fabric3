@@ -42,7 +42,7 @@ import org.osoa.sca.annotations.Reference;
 /**
  * @version $Revision: 1 $ $Date: 2007-05-14 18:40:37 +0100 (Mon, 14 May 2007) $
  */
-public class FeatureLoader extends LoaderExtension<Object, SystemImplementation> {
+public class FeatureLoader extends LoaderExtension<SystemImplementation> {
 
     // Qualified name of the root element.
     private static final QName MARSHALLED = new QName(Constants.FABRIC3_SYSTEM_NS, "features");
@@ -86,7 +86,7 @@ public class FeatureLoader extends LoaderExtension<Object, SystemImplementation>
      * Registers the metadata with the marshaller registry.
      */
     @SuppressWarnings("unchecked")
-    public SystemImplementation load(Object modelType, XMLStreamReader reader, LoaderContext context)
+    public SystemImplementation load(XMLStreamReader reader, LoaderContext context)
             throws XMLStreamException, LoaderException {
 
         String feature = reader.getElementText();

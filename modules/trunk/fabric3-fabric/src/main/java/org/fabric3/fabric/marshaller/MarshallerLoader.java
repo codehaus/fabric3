@@ -41,7 +41,7 @@ import org.fabric3.spi.model.type.Scope;
 /**
  * @version $Revision$ $Date$
  */
-public class MarshallerLoader extends LoaderExtension<Object, SystemImplementation> {
+public class MarshallerLoader extends LoaderExtension<SystemImplementation> {
 
     private static final QName MARSHALLED = new QName(Constants.FABRIC3_SYSTEM_NS, "marshalled");
 
@@ -77,7 +77,7 @@ public class MarshallerLoader extends LoaderExtension<Object, SystemImplementati
      * Registers the metadata with the marshaller registry.
      */
     @SuppressWarnings("unchecked")
-    public SystemImplementation load(Object modelType, XMLStreamReader reader, LoaderContext context)
+    public SystemImplementation load(XMLStreamReader reader, LoaderContext context)
             throws XMLStreamException, LoaderException {
 
         String modelClassName = reader.getAttributeValue(null, "modelClass");

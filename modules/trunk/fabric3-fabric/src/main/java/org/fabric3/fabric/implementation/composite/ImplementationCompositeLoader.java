@@ -45,7 +45,7 @@ import org.fabric3.spi.services.artifact.ArtifactRepository;
  *
  * @version $Rev$ $Date$
  */
-public class ImplementationCompositeLoader extends LoaderExtension<Object, CompositeImplementation> {
+public class ImplementationCompositeLoader extends LoaderExtension<CompositeImplementation> {
     private static final QName IMPLEMENTATION_COMPOSITE =
             new QName(Constants.SCA_NS, "implementation.composite");
 
@@ -62,7 +62,7 @@ public class ImplementationCompositeLoader extends LoaderExtension<Object, Compo
     }
 
     public CompositeImplementation load(
-            Object object, XMLStreamReader reader,
+            XMLStreamReader reader,
             LoaderContext loaderContext)
             throws XMLStreamException, LoaderException {
 

@@ -35,7 +35,7 @@ public class QNameExportLoaderTestCase extends TestCase {
     private XMLStreamReader reader;
 
     public void testRead() throws Exception {
-        QNameExport export = loader.load(null, reader, null);
+        QNameExport export = loader.load(reader, null);
         assertEquals(QNAME, export.getNamespace());
     }
 

@@ -37,7 +37,7 @@ import org.osoa.sca.annotations.Reference;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class BurlapBindingLoader extends LoaderExtension<Object, BurlapBindingDefinition> {
+public class BurlapBindingLoader extends LoaderExtension<BurlapBindingDefinition> {
 
     /** Qualified name for the binding element. */
     private static final QName BINDING_QNAME = 
@@ -56,7 +56,7 @@ public class BurlapBindingLoader extends LoaderExtension<Object, BurlapBindingDe
         return BINDING_QNAME;
     }
 
-    public BurlapBindingDefinition load(Object configuration, XMLStreamReader reader, LoaderContext loaderContext)
+    public BurlapBindingDefinition load(XMLStreamReader reader, LoaderContext loaderContext)
         throws XMLStreamException, LoaderException {
         
         BurlapBindingDefinition bd = new BurlapBindingDefinition();

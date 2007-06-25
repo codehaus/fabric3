@@ -37,7 +37,7 @@ public class QNameImportLoaderTestCase extends TestCase {
     private XMLStreamReader reader;
 
     public void testRead() throws Exception {
-        QNameImport qimport = loader.load(null, reader, null);
+        QNameImport qimport = loader.load(reader, null);
         assertEquals(QNAME, qimport.getNamespace());
         assertEquals(LOCATION, qimport.getLocation());
     }

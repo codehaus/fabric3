@@ -36,7 +36,7 @@ import org.fabric3.spi.loader.LoaderUtil;
 /**
  * @version $Rev$ $Date$
  */
-public class LaunchedLoader extends LoaderExtension<Object, Launched> {
+public class LaunchedLoader extends LoaderExtension<Launched> {
     private static final QName LAUNCHED = new QName(Constants.FABRIC3_NS, "launched");
 
     private final ComponentTypeLoader<Launched> componentTypeLoader;
@@ -52,7 +52,7 @@ public class LaunchedLoader extends LoaderExtension<Object, Launched> {
         return LAUNCHED;
     }
 
-    public Launched load(Object modelType, XMLStreamReader reader, LoaderContext loaderContext)
+    public Launched load(XMLStreamReader reader, LoaderContext loaderContext)
             throws XMLStreamException, LoaderException {
         String className = reader.getAttributeValue(null, "class");
         String factoryName = reader.getAttributeValue(null, "factory");

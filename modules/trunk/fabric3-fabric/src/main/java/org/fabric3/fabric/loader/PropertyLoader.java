@@ -41,7 +41,7 @@ import org.fabric3.spi.model.type.Property;
  *
  * @version $Rev$ $Date$
  */
-public class PropertyLoader extends LoaderExtension<Object, Property<?>> {
+public class PropertyLoader extends LoaderExtension<Property<?>> {
     public static final String PROPERTY_NAME_ATTR = "name";
     public static final String PROPERTY_TYPE_ATTR = "type";
     public static final String PROPERTY_MANY_ATTR = "many";
@@ -65,7 +65,7 @@ public class PropertyLoader extends LoaderExtension<Object, Property<?>> {
         return PROPERTY;
     }
 
-    public Property<?> load(Object modelType, XMLStreamReader reader, LoaderContext ctx)
+    public Property<?> load(XMLStreamReader reader, LoaderContext ctx)
             throws XMLStreamException, LoaderException {
         assert PROPERTY.equals(reader.getName());
         String name = reader.getAttributeValue(null, PROPERTY_NAME_ATTR);

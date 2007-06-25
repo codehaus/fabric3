@@ -48,23 +48,20 @@ import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.MissingImplementationException;
 import org.fabric3.spi.model.type.Autowire;
 import org.fabric3.spi.model.type.ComponentDefinition;
-import org.fabric3.spi.model.type.ComponentType;
 import org.fabric3.spi.model.type.DataType;
 import org.fabric3.spi.model.type.Implementation;
 import org.fabric3.spi.model.type.ModelObject;
 import org.fabric3.spi.model.type.PropertyValue;
 import org.fabric3.spi.model.type.ReferenceTarget;
 import org.fabric3.spi.model.type.XSDSimpleType;
-import org.fabric3.transform.xml.Stream2Element;
 import org.fabric3.transform.xml.Stream2Element2;
-import org.fabric3.transform.xml.Stream2Stream;
 
 /**
  * Loads a component definition from an XML-based assembly file
  *
  * @version $Rev$ $Date$
  */
-public class ComponentLoader extends LoaderExtension<ComponentType<?, ?, ?>, ComponentDefinition<?>> {
+public class ComponentLoader extends LoaderExtension<ComponentDefinition<?>> {
     private static final QName COMPONENT = new QName(SCA_NS, "component");
     private static final QName PROPERTY = new QName(SCA_NS, "property");
     private static final QName REFERENCE = new QName(SCA_NS, "reference");
@@ -85,7 +82,7 @@ public class ComponentLoader extends LoaderExtension<ComponentType<?, ?, ?>, Com
         return COMPONENT;
     }
 
-    public ComponentDefinition<?> load(ComponentType<?, ?, ?> type, XMLStreamReader reader, LoaderContext context)
+    public ComponentDefinition<?> load(XMLStreamReader reader, LoaderContext context)
             throws XMLStreamException, LoaderException {
         assert COMPONENT.equals(reader.getName());
         String name = reader.getAttributeValue(null, "name");
@@ -163,7 +160,7 @@ public class ComponentLoader extends LoaderExtension<ComponentType<?, ?, ?>, Com
     protected Implementation<?> loadImplementation(XMLStreamReader reader, LoaderContext context)
             throws XMLStreamException, LoaderException {
         reader.nextTag();
-        ModelObject type = registry.load(null, reader, context);
+        ModelObject type = registry.load(reader, context);
         if (!(type instanceof Implementation)) {
             throw new MissingImplementationException();
         }

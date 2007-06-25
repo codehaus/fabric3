@@ -24,7 +24,6 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import junit.framework.TestCase;
-import static org.easymock.EasyMock.isNull;
 import org.easymock.classextension.EasyMock;
 
 import org.fabric3.spi.loader.LoaderContext;
@@ -42,7 +41,7 @@ public class StAXLoaderRegistryImplTestCase extends TestCase {
     private LoaderRegistryImpl registry;
     private QName name;
     private LoaderRegistryImpl.Monitor mockMonitor;
-    private StAXElementLoader<Object, Object> mockLoader;
+    private StAXElementLoader<Object> mockLoader;
     private XMLStreamReader mockReader;
     private LoaderContext loaderContext;
     private ModelObject modelType;
@@ -68,12 +67,11 @@ public class StAXLoaderRegistryImplTestCase extends TestCase {
         mockMonitor.elementLoad(EasyMock.eq(name));
         EasyMock.replay(mockMonitor);
         EasyMock.expect(mockLoader.load(
-                isNull(),
                 EasyMock.eq(mockReader),
                 EasyMock.eq(loaderContext))).andReturn(modelType);
         EasyMock.replay(mockLoader);
         registry.registerLoader(name, mockLoader);
-        assertSame(modelType, registry.load(null, mockReader, loaderContext));
+        assertSame(modelType, registry.load(mockReader, loaderContext));
         EasyMock.verify(mockLoader);
         EasyMock.verify(mockMonitor);
         EasyMock.verify(mockReader);
@@ -86,7 +84,7 @@ public class StAXLoaderRegistryImplTestCase extends TestCase {
         mockMonitor.elementLoad(EasyMock.eq(name));
         EasyMock.replay(mockMonitor);
         try {
-            registry.load(null, mockReader, loaderContext);
+            registry.load(mockReader, loaderContext);
             fail();
         } catch (UnrecognizedElementException e) {
             assertSame(name, e.getElement());
@@ -102,12 +100,11 @@ public class StAXLoaderRegistryImplTestCase extends TestCase {
         mockMonitor.elementLoad(EasyMock.eq(name));
         EasyMock.replay(mockMonitor);
         EasyMock.expect(mockLoader.load(
-                EasyMock.eq(modelType),
                 EasyMock.eq(mockReader),
                 EasyMock.eq(loaderContext))).andReturn(modelType);
         EasyMock.replay(mockLoader);
         registry.registerLoader(name, mockLoader);
-        assertSame(modelType, registry.load(modelType, mockReader, loaderContext));
+        assertSame(modelType, registry.load(mockReader, loaderContext));
         EasyMock.verify(mockLoader);
     }
 

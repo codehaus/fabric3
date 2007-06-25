@@ -354,7 +354,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         return loaderRegistry;
     }
 
-    protected void registerLoader(LoaderRegistry registry, LoaderExtension<?, ?> loader) {
+    protected void registerLoader(LoaderRegistry registry, LoaderExtension<?> loader) {
         registry.registerLoader(loader.getXMLType(), loader);
     }
 

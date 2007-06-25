@@ -45,7 +45,7 @@ import org.fabric3.spi.Constants;
 /**
  * @version $Rev$ $Date$
  */
-public class WebappLoader extends LoaderExtension<Object, WebappImplementation> {
+public class WebappLoader extends LoaderExtension<WebappImplementation> {
     private static final QName WEBAPP = new QName(Constants.FABRIC3_NS, "webapp");
 
     private final InterfaceJavaIntrospector introspector;
@@ -60,7 +60,7 @@ public class WebappLoader extends LoaderExtension<Object, WebappImplementation> 
         return WEBAPP;
     }
 
-    public WebappImplementation load(Object modelType, XMLStreamReader reader, LoaderContext loaderContext)
+    public WebappImplementation load(XMLStreamReader reader, LoaderContext loaderContext)
             throws XMLStreamException, LoaderException {
 
         WebappComponentType componentType = new WebappComponentType();

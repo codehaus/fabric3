@@ -42,7 +42,7 @@ import org.fabric3.spi.model.type.Include;
  *
  * @version $Rev$ $Date$
  */
-public class IncludeLoader extends LoaderExtension<Object, Include> {
+public class IncludeLoader extends LoaderExtension<Include> {
     private static final QName INCLUDE = new QName(SCA_NS, "include");
 
     @Constructor
@@ -54,7 +54,7 @@ public class IncludeLoader extends LoaderExtension<Object, Include> {
         return INCLUDE;
     }
 
-    public Include load(Object modelType, XMLStreamReader reader, LoaderContext loaderContext)
+    public Include load(XMLStreamReader reader, LoaderContext loaderContext)
             throws XMLStreamException, LoaderException {
 
         assert INCLUDE.equals(reader.getName());

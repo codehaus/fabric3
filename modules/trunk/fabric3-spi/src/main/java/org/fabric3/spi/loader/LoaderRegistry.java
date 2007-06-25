@@ -39,7 +39,7 @@ public interface LoaderRegistry extends Loader {
      * @param element the element that should be delegated to the contibuted loader
      * @param loader  a loader that is being contributed to the system
      */
-    void registerLoader(QName element, StAXElementLoader<?, ?> loader);
+    void registerLoader(QName element, StAXElementLoader<?> loader);
 
     /**
      * Unregister a loader. This will typically be called by a loader as it is being destroyed.
@@ -47,5 +47,5 @@ public interface LoaderRegistry extends Loader {
      * @param element the element that was being delegated to the contibuted loader
      * @param loader  a loader that should no longer be used
      */
-    void unregisterLoader(QName element, StAXElementLoader<?, ?> loader);
+    void unregisterLoader(QName element, StAXElementLoader<?> loader);
 }

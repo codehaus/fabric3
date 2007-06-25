@@ -47,10 +47,10 @@
 
     XMLStreamReader reader = xmlFactory.createXMLStreamReader(new StringReader(scdl));
     while (reader.next() != XMLStreamConstants.START_ELEMENT) ;
-    URI componentURI = URI.create(assembly.getDomain().getUri().toString() +"/"+ componentName);
+    URI componentURI = URI.create(assembly.getDomain().getUri().toString() + "/" + componentName);
     try {
         LoaderContext loaderContext = new LoaderContextImpl(Thread.currentThread().getContextClassLoader(), null);
-        CompositeComponentType componentType = loader.load(null, reader, loaderContext);
+        CompositeComponentType componentType = loader.load(reader, loaderContext);
         CompositeImplementation implementation = new CompositeImplementation();
         implementation.setComponentType(componentType);
         ComponentDefinition component = new ComponentDefinition(componentURI.toString(), implementation);

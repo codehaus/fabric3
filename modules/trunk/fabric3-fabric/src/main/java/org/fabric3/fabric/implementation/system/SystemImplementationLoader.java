@@ -38,7 +38,7 @@ import org.fabric3.spi.loader.LoaderUtil;
  *
  * @version $Rev$ $Date$
  */
-public class SystemImplementationLoader extends LoaderExtension<Object, SystemImplementation> {
+public class SystemImplementationLoader extends LoaderExtension<SystemImplementation> {
     public static final QName SYSTEM_IMPLEMENTATION = new QName(Constants.FABRIC3_SYSTEM_NS, "implementation.system");
 
     private final ComponentTypeLoader<SystemImplementation> componentTypeLoader;
@@ -50,7 +50,7 @@ public class SystemImplementationLoader extends LoaderExtension<Object, SystemIm
         this.componentTypeLoader = componentTypeLoader;
     }
 
-    public SystemImplementation load(Object type, XMLStreamReader reader, LoaderContext loaderContext)
+    public SystemImplementation load(XMLStreamReader reader, LoaderContext loaderContext)
             throws XMLStreamException, LoaderException {
         assert SYSTEM_IMPLEMENTATION.equals(reader.getName());
         String implClass = reader.getAttributeValue(null, "class");

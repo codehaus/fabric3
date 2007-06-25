@@ -49,7 +49,7 @@ public class LoaderExtensionTestCase extends TestCase {
     }
 
 
-    private static class Extension extends LoaderExtension<ModelObject, ModelObject> {
+    private static class Extension extends LoaderExtension<ModelObject> {
 
         public Extension(LoaderRegistry registry) {
             super(registry);
@@ -59,7 +59,7 @@ public class LoaderExtensionTestCase extends TestCase {
             return new QName("");
         }
 
-        public ModelObject load(ModelObject type, XMLStreamReader reader, LoaderContext loaderContext)
+        public ModelObject load(XMLStreamReader reader, LoaderContext loaderContext)
                 throws XMLStreamException, LoaderException {
             throw new AssertionError();
         }

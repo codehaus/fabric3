@@ -57,7 +57,7 @@ public class ServiceLoaderTestCase extends TestCase {
         expect(mockReader.next()).andReturn(END_ELEMENT);
         expect(mockReader.getName()).andReturn(SERVICE).anyTimes();
         replay(mockReader);
-        ServiceDefinition serviceDefinition = loader.load(null, mockReader, loaderContext);
+        ServiceDefinition serviceDefinition = loader.load(mockReader, loaderContext);
         assertNotNull(serviceDefinition);
         assertEquals("#" + name, serviceDefinition.getUri().toString());
     }
@@ -70,7 +70,7 @@ public class ServiceLoaderTestCase extends TestCase {
         expect(mockReader.next()).andReturn(END_ELEMENT);
         expect(mockReader.getName()).andReturn(SERVICE).anyTimes();
         replay(mockReader);
-        ServiceDefinition serviceDefinition = loader.load(null, mockReader, loaderContext);
+        ServiceDefinition serviceDefinition = loader.load(mockReader, loaderContext);
         assertTrue(ServiceDefinition.class.equals(serviceDefinition.getClass()));
     }
 
@@ -87,10 +87,10 @@ public class ServiceLoaderTestCase extends TestCase {
 
         BindingDefinition binding = new BindingDefinition() {
         };
-        expect(mockRegistry.load(null, mockReader, loaderContext)).andReturn(binding).times(2);
+        expect(mockRegistry.load(mockReader, loaderContext)).andReturn(binding).times(2);
         replay(mockRegistry);
 
-        ServiceDefinition serviceDefinition = loader.load(null, mockReader, loaderContext);
+        ServiceDefinition serviceDefinition = loader.load(mockReader, loaderContext);
         assertEquals(2, serviceDefinition.getBindings().size());
     }
 
@@ -103,14 +103,14 @@ public class ServiceLoaderTestCase extends TestCase {
         expect(mockReader.getAttributeValue(null, "name")).andReturn(name);
         expect(mockReader.getAttributeValue(null, "promote")).andReturn(target);
         expect(mockReader.next()).andReturn(START_ELEMENT);
-        expect(mockRegistry.load(null, mockReader, loaderContext)).andReturn(sc);
+        expect(mockRegistry.load(mockReader, loaderContext)).andReturn(sc);
         expect(mockReader.next()).andReturn(END_ELEMENT);
         expect(mockReader.getName()).andReturn(SERVICE);
 
         replay(mockReader);
         replay(mockRegistry);
 
-        ServiceDefinition serviceDefinition = loader.load(null, mockReader, loaderContext);
+        ServiceDefinition serviceDefinition = loader.load(mockReader, loaderContext);
         assertNotNull(serviceDefinition);
         assertEquals("#" + name, serviceDefinition.getUri().toString());
         assertSame(sc, serviceDefinition.getServiceContract());
@@ -124,14 +124,14 @@ public class ServiceLoaderTestCase extends TestCase {
         expect(mockReader.getAttributeValue(null, "name")).andReturn(name);
         expect(mockReader.getAttributeValue(null, "promote")).andReturn(null);
         expect(mockReader.next()).andReturn(START_ELEMENT);
-        expect(mockRegistry.load(null, mockReader, loaderContext)).andReturn(sc);
+        expect(mockRegistry.load(mockReader, loaderContext)).andReturn(sc);
         expect(mockReader.next()).andReturn(END_ELEMENT);
         expect(mockReader.getName()).andReturn(SERVICE);
 
         replay(mockReader);
         replay(mockRegistry);
 
-        ServiceDefinition serviceDefinition = loader.load(null, mockReader, loaderContext);
+        ServiceDefinition serviceDefinition = loader.load(mockReader, loaderContext);
         assertNotNull(serviceDefinition);
         assertEquals("#" + name, serviceDefinition.getUri().toString());
         assertSame(sc, serviceDefinition.getServiceContract());

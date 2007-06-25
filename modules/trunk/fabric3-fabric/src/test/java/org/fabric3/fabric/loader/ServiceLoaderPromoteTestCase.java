@@ -50,7 +50,7 @@ public class ServiceLoaderPromoteTestCase extends TestCase {
         EasyMock.expect(mockReader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
         EasyMock.expect(mockReader.getName()).andReturn(SERVICE);
         EasyMock.replay(mockReader);
-        ServiceDefinition serviceDefinition = loader.load(null, mockReader, ctx);
+        ServiceDefinition serviceDefinition = loader.load(mockReader, ctx);
         assertNotNull(serviceDefinition);
         assertEquals("target", serviceDefinition.getTarget().toString());
     }
@@ -63,7 +63,7 @@ public class ServiceLoaderPromoteTestCase extends TestCase {
         EasyMock.expect(mockReader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
         EasyMock.expect(mockReader.getName()).andReturn(SERVICE);
         EasyMock.replay(mockReader);
-        ServiceDefinition serviceDefinition = loader.load(null, mockReader, ctx);
+        ServiceDefinition serviceDefinition = loader.load(mockReader, ctx);
         assertNotNull(serviceDefinition);
         assertEquals("target#fragment", serviceDefinition.getTarget().toString());
     }

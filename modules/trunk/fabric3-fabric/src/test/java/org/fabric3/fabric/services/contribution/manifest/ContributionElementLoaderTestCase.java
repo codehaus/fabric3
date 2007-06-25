@@ -49,7 +49,7 @@ public class ContributionElementLoaderTestCase extends TestCase {
     private IMocksControl control;
 
     public void testDispatch() throws Exception {
-        ContributionManifest manifest = loader.load(null, reader, null);
+        ContributionManifest manifest = loader.load(reader, null);
         control.verify();
         assertEquals(1, manifest.getDeployables().size());
         assertEquals(1, manifest.getExports().size());
@@ -68,8 +68,8 @@ public class ContributionElementLoaderTestCase extends TestCase {
         EasyMock.expect(reader.next()).andReturn(XMLStreamConstants.START_ELEMENT);
         EasyMock.expect(reader.getName()).andReturn(DEPLOYABLE_ELEMENT);
         Deployable deployable = new Deployable(DEPLOYABLE);
-        EasyMock.expect(loaderRegistry.load(EasyMock.isNull(),
-                                            EasyMock.isA(XMLStreamReader.class),
+        EasyMock.expect(loaderRegistry.load(
+                EasyMock.isA(XMLStreamReader.class),
                                             (LoaderContext) EasyMock.isNull())).andReturn(deployable);
         EasyMock.expect(reader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
         EasyMock.expect(reader.getName()).andReturn(DEPLOYABLE_ELEMENT);
@@ -81,8 +81,8 @@ public class ContributionElementLoaderTestCase extends TestCase {
                 return null;
             }
         };
-        EasyMock.expect(loaderRegistry.load(EasyMock.isNull(),
-                                            EasyMock.isA(XMLStreamReader.class),
+        EasyMock.expect(loaderRegistry.load(
+                EasyMock.isA(XMLStreamReader.class),
                                             (LoaderContext) EasyMock.isNull())).andReturn(contribImport);
         EasyMock.expect(reader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
         EasyMock.expect(reader.getName()).andReturn(IMPORT_ELEMENT);
@@ -98,8 +98,8 @@ public class ContributionElementLoaderTestCase extends TestCase {
                 return null;
             }
         };
-        EasyMock.expect(loaderRegistry.load(EasyMock.isNull(),
-                                            EasyMock.isA(XMLStreamReader.class),
+        EasyMock.expect(loaderRegistry.load(
+                EasyMock.isA(XMLStreamReader.class),
                                             (LoaderContext) EasyMock.isNull())).andReturn(contribExport);
         EasyMock.expect(reader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
         EasyMock.expect(reader.getName()).andReturn(EXPORT_ELEMENT);

@@ -37,7 +37,7 @@ import org.fabric3.spi.util.stax.StaxUtil;
  *
  * @version $Rev$ $Date$
  */
-public class DeployableLoader extends LoaderExtension<Object, Deployable> {
+public class DeployableLoader extends LoaderExtension<Deployable> {
     private static final QName DEPLOYABLE = new QName(SCA_NS, "deployable");
 
     /**
@@ -53,7 +53,7 @@ public class DeployableLoader extends LoaderExtension<Object, Deployable> {
         return DEPLOYABLE;
     }
 
-    public Deployable load(Object contribution, XMLStreamReader reader, LoaderContext context)
+    public Deployable load(XMLStreamReader reader, LoaderContext context)
             throws LoaderException, XMLStreamException {
         String name = reader.getAttributeValue(null, "composite");
         if (name == null) {

@@ -26,12 +26,11 @@ import javax.xml.stream.XMLStreamReader;
  *
  * @version $Rev$ $Date$
  */
-public interface StAXElementLoader<INPUT, OUTPUT> {
+public interface StAXElementLoader<OUTPUT> {
     /**
      * Deserialize an element in an XML stream. When this method returns the stream will be positioned on the
      * corresponding END_ELEMENT.
      *
-     * @param configuration the configuration to load configuration data from. May be null.
      * @param reader        the XML stream reader positioned on the applicable START_ELEMENT
      * @param context       the context for the load operation
      * @return the deserialized object for that element
@@ -39,6 +38,6 @@ public interface StAXElementLoader<INPUT, OUTPUT> {
      * @throws javax.xml.stream.XMLStreamException
      *                         if an error reading the XML stream occurs
      */
-    OUTPUT load(INPUT configuration, XMLStreamReader reader, LoaderContext context)
+    OUTPUT load(XMLStreamReader reader, LoaderContext context)
             throws XMLStreamException, LoaderException;
 }

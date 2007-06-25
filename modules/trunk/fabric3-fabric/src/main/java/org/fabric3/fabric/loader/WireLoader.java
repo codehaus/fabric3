@@ -42,7 +42,7 @@ import org.fabric3.spi.model.type.WireDefinition;
  *
  * @version $Rev$ $Date$
  */
-public class WireLoader extends LoaderExtension<Object, WireDefinition> {
+public class WireLoader extends LoaderExtension<WireDefinition> {
     private static final QName WIRE = new QName(SCA_NS, "wire");
     private static final QName SOURCE_URI = new QName(SCA_NS, "source.uri");
     private static final QName TARGET_URI = new QName(SCA_NS, "target.uri");
@@ -56,7 +56,7 @@ public class WireLoader extends LoaderExtension<Object, WireDefinition> {
         return WIRE;
     }
 
-    public WireDefinition load(Object modelType, XMLStreamReader reader, LoaderContext loaderContext)
+    public WireDefinition load(XMLStreamReader reader, LoaderContext loaderContext)
             throws XMLStreamException, LoaderException {
         assert WIRE.equals(reader.getName());
         WireDefinition wireDefn;

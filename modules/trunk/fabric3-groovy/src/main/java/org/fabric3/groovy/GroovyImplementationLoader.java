@@ -43,7 +43,7 @@ import org.fabric3.spi.model.type.Scope;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class GroovyImplementationLoader implements StAXElementLoader<GroovyImplementation, GroovyImplementation> {
+public class GroovyImplementationLoader implements StAXElementLoader<GroovyImplementation> {
     private static final QName GROOVY = new QName("http://www.fabric3.org/xmlns/groovy/1.0", "groovy");
 
     private final LoaderRegistry registry;
@@ -65,7 +65,7 @@ public class GroovyImplementationLoader implements StAXElementLoader<GroovyImple
         registry.unregisterLoader(GROOVY, this);
     }
 
-    public GroovyImplementation load(GroovyImplementation configuration, XMLStreamReader reader, LoaderContext context)
+    public GroovyImplementation load(XMLStreamReader reader, LoaderContext context)
             throws XMLStreamException, LoaderException {
         String className = reader.getAttributeValue(null, "class");
         String scriptName = reader.getAttributeValue(null, "script");

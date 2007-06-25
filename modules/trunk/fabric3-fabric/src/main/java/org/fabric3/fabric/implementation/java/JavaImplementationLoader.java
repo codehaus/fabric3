@@ -33,7 +33,7 @@ import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
 
-public class JavaImplementationLoader extends LoaderExtension<Object, JavaImplementation> {
+public class JavaImplementationLoader extends LoaderExtension<JavaImplementation> {
     public static final QName IMPLEMENTATION_JAVA = new QName(SCA_NS, "implementation.java");
 
     private final ComponentTypeLoader<JavaImplementation> componentTypeLoader;
@@ -51,7 +51,7 @@ public class JavaImplementationLoader extends LoaderExtension<Object, JavaImplem
         return IMPLEMENTATION_JAVA;
     }
 
-    public JavaImplementation load(Object type, XMLStreamReader reader, LoaderContext loaderContext)
+    public JavaImplementation load(XMLStreamReader reader, LoaderContext loaderContext)
             throws XMLStreamException, LoaderException {
         assert IMPLEMENTATION_JAVA.equals(reader.getName());
         String implClass = reader.getAttributeValue(null, "class");

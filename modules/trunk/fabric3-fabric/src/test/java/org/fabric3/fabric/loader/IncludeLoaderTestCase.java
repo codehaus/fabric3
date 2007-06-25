@@ -66,7 +66,7 @@ public class IncludeLoaderTestCase extends TestCase {
         replay(registry, reader, context);
 
         try {
-            loader.load(null, reader, context);
+            loader.load(reader, context);
             fail();
         } catch (MissingIncludeException e) {
             // OK expected
@@ -93,7 +93,7 @@ public class IncludeLoaderTestCase extends TestCase {
                 .andReturn(null);
         replay(registry, reader, context);
 
-        Include include = loader.load(null, reader, context);
+        Include include = loader.load(reader, context);
         assertEquals(name, include.getName());
         assertEquals(includeURL, include.getScdlLocation());
         verify(registry, reader, context);
@@ -118,7 +118,7 @@ public class IncludeLoaderTestCase extends TestCase {
                 .andReturn(null);
         replay(registry, reader, context);
 
-        Include include = loader.load(null, reader, context);
+        Include include = loader.load(reader, context);
         assertEquals(name, include.getName());
         assertEquals(includeURL, include.getScdlLocation());
         verify(registry, reader, context);
@@ -146,7 +146,7 @@ public class IncludeLoaderTestCase extends TestCase {
                 .andReturn(null);
         replay(registry, reader, context);
 
-        Include include = loader.load(null, reader, context);
+        Include include = loader.load(reader, context);
         assertEquals(name, include.getName());
         assertEquals(includeURL, include.getScdlLocation());
         verify(registry, reader, context);

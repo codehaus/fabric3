@@ -29,7 +29,7 @@ public class JavaExportLoaderTestCase extends TestCase {
     private XMLStreamReader reader;
 
     public void testRead() throws Exception {
-        JavaExport export = loader.load(null, reader, null);
+        JavaExport export = loader.load(reader, null);
         assertEquals("com.foo.bar", export.getPackageName());
     }
 

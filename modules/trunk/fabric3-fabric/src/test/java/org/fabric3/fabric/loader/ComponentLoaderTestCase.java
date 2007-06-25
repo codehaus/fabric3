@@ -62,12 +62,12 @@ public class ComponentLoaderTestCase extends TestCase {
         EasyMock.expect(reader.getAttributeValue(null, "autowire")).andReturn(null);
         EasyMock.expect(reader.getAttributeValue(null, "runtimeId")).andReturn(null);
         EasyMock.expect(reader.nextTag()).andReturn(0);
-        EasyMock.expect(loaderRegistry.load(null, reader, ctx)).andReturn(impl);
+        EasyMock.expect(loaderRegistry.load(reader, ctx)).andReturn(impl);
         EasyMock.expect(reader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
         //EasyMock.expect(reader.getName()).andReturn(COMPONENT);
         control.replay();
 
-        ComponentDefinition component = loader.load(null, reader, ctx);
+        ComponentDefinition component = loader.load(reader, ctx);
         assertEquals(NAME, component.getName());
         assertEquals(Autowire.INHERITED, component.getAutowire());
         assertNull(component.getInitLevel());
@@ -81,12 +81,12 @@ public class ComponentLoaderTestCase extends TestCase {
         EasyMock.expect(reader.getAttributeValue(null, "autowire")).andReturn("true");
         EasyMock.expect(reader.getAttributeValue(null, "runtimeId")).andReturn(null);
         EasyMock.expect(reader.nextTag()).andReturn(0);
-        EasyMock.expect(loaderRegistry.load(null, reader, ctx)).andReturn(impl);
+        EasyMock.expect(loaderRegistry.load(reader, ctx)).andReturn(impl);
         EasyMock.expect(reader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
         //EasyMock.expect(reader.getName()).andReturn(COMPONENT);
         control.replay();
 
-        ComponentDefinition component = loader.load(null, reader, ctx);
+        ComponentDefinition component = loader.load(reader, ctx);
         assertEquals(NAME, component.getName());
         assertNull(component.getInitLevel());
         assertEquals(Autowire.ON, component.getAutowire());
@@ -100,12 +100,12 @@ public class ComponentLoaderTestCase extends TestCase {
         EasyMock.expect(reader.getAttributeValue(null, "autowire")).andReturn(null);
         EasyMock.expect(reader.getAttributeValue(null, "runtimeId")).andReturn(null);
         EasyMock.expect(reader.nextTag()).andReturn(0);
-        EasyMock.expect(loaderRegistry.load(null, reader, ctx)).andReturn(impl);
+        EasyMock.expect(loaderRegistry.load(reader, ctx)).andReturn(impl);
         EasyMock.expect(reader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
         //EasyMock.expect(reader.getName()).andReturn(COMPONENT);
         control.replay();
 
-        ComponentDefinition component = loader.load(null, reader, ctx);
+        ComponentDefinition component = loader.load(reader, ctx);
         assertEquals(NAME, component.getName());
         assertEquals(Integer.valueOf(20), component.getInitLevel());
         assertEquals(Autowire.INHERITED, component.getAutowire());
@@ -148,7 +148,7 @@ public class ComponentLoaderTestCase extends TestCase {
         EasyMock.expect(reader.getAttributeValue(null, "autowire")).andReturn(null);
         EasyMock.expect(reader.getAttributeValue(null, "runtimeId")).andReturn(null);
         EasyMock.expect(reader.nextTag()).andReturn(0);
-        EasyMock.expect(loaderRegistry.load(null, reader, ctx)).andReturn(impl);
+        EasyMock.expect(loaderRegistry.load(reader, ctx)).andReturn(impl);
         EasyMock.expect(reader.next()).andReturn(XMLStreamConstants.START_ELEMENT);
         EasyMock.expect(reader.getName()).andReturn(new QName("foo", "bar"));
         EasyMock.expect(reader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
@@ -156,7 +156,7 @@ public class ComponentLoaderTestCase extends TestCase {
         //EasyMock.expect(reader.getName()).andReturn(COMPONENT);
         control.replay();
 
-        ComponentDefinition component = loader.load(null, reader, ctx);
+        ComponentDefinition component = loader.load(reader, ctx);
         assertEquals(NAME, component.getName());
         assertEquals(Autowire.INHERITED, component.getAutowire());
         assertNull(component.getInitLevel());

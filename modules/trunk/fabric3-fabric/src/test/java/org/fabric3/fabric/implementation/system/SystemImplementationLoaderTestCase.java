@@ -52,7 +52,7 @@ public class SystemImplementationLoaderTestCase extends TestCase {
         EasyMock.expect(reader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
         EasyMock.replay(reader);
 
-        SystemImplementation impl = loader.load(null, reader, context);
+        SystemImplementation impl = loader.load(reader, context);
         assertEquals(getClass(), impl.getImplementationClass());
         EasyMock.verify(reader);
         EasyMock.verify(context);

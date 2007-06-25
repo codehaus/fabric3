@@ -36,7 +36,7 @@ import org.fabric3.spi.services.contribution.QNameExport;
  *
  * @version $Rev$ $Date$
  */
-public class QNameExportLoader extends LoaderExtension<Object, QNameExport> {
+public class QNameExportLoader extends LoaderExtension<QNameExport> {
     private static final QName EXPORT = new QName(SCA_NS, "export");
 
     /**
@@ -52,7 +52,7 @@ public class QNameExportLoader extends LoaderExtension<Object, QNameExport> {
         return EXPORT;
     }
 
-    public QNameExport load(Object object, XMLStreamReader reader, LoaderContext context)
+    public QNameExport load(XMLStreamReader reader, LoaderContext context)
             throws ManifestLoadException, XMLStreamException {
         String ns = reader.getAttributeValue(null, "namespace");
         if (ns == null) {

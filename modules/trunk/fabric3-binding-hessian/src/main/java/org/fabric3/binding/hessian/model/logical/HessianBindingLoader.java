@@ -37,7 +37,7 @@ import org.osoa.sca.annotations.Reference;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class HessianBindingLoader extends LoaderExtension<Object, HessianBindingDefinition> {
+public class HessianBindingLoader extends LoaderExtension<HessianBindingDefinition> {
 
     /** Qualified name for the binding element. */
     private static final QName BINDING_QNAME = 
@@ -60,9 +60,9 @@ public class HessianBindingLoader extends LoaderExtension<Object, HessianBinding
     }
 
     /** 
-     * @see org.fabric3.spi.loader.StAXElementLoader#load(java.lang.Object, javax.xml.stream.XMLStreamReader, org.fabric3.spi.loader.LoaderContext)
+     * @see org.fabric3.spi.loader.StAXElementLoader#load(javax.xml.stream.XMLStreamReader,org.fabric3.spi.loader.LoaderContext)
      */
-    public HessianBindingDefinition load(Object configuration, XMLStreamReader reader, LoaderContext loaderContext)
+    public HessianBindingDefinition load(XMLStreamReader reader, LoaderContext loaderContext)
         throws XMLStreamException, LoaderException {
         
         HessianBindingDefinition bd = new HessianBindingDefinition();

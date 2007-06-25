@@ -46,7 +46,7 @@ import org.fabric3.spi.model.type.WSPolicyAttachment;
  *
  * @version $Rev$ $Date$
  */
-public class PolicySetLoader extends LoaderExtension<Object, PolicySet> {
+public class PolicySetLoader extends LoaderExtension<PolicySet> {
 
     private static final String WSPOLICY_NAMESPACE = "http://schemas.xmlsoap.org/ws/2004/09/policy";
 
@@ -71,7 +71,7 @@ public class PolicySetLoader extends LoaderExtension<Object, PolicySet> {
         return POLICYSET;
     }
 
-    public PolicySet load(Object modelType, XMLStreamReader reader, LoaderContext loaderContext)
+    public PolicySet load(XMLStreamReader reader, LoaderContext loaderContext)
             throws XMLStreamException {
         assert POLICYSET.equals(reader.getName());
         String name = reader.getAttributeValue(null, "name");

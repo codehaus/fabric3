@@ -29,7 +29,7 @@ public class JavaImportLoaderTestCase extends TestCase {
     private XMLStreamReader reader;
 
     public void testRead() throws Exception {
-        JavaImport jimport = loader.load(null, reader, null);
+        JavaImport jimport = loader.load(reader, null);
         assertEquals("foo.bar.baz", jimport.getPackageName());
     }
 

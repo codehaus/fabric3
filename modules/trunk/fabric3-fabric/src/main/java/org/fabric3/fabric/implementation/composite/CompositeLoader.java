@@ -61,7 +61,7 @@ import org.fabric3.spi.util.stax.StaxUtil;
  *
  * @version $Rev$ $Date$
  */
-public class CompositeLoader extends LoaderExtension<CompositeComponentType, CompositeComponentType> {
+public class CompositeLoader extends LoaderExtension<CompositeComponentType> {
     public static final QName COMPOSITE = new QName(SCA_NS, "composite");
     public static final String URI_DELIMITER = "/";
 
@@ -76,7 +76,7 @@ public class CompositeLoader extends LoaderExtension<CompositeComponentType, Com
         return COMPOSITE;
     }
 
-    public CompositeComponentType load(CompositeComponentType modelType, XMLStreamReader reader, LoaderContext loaderContext)
+    public CompositeComponentType load(XMLStreamReader reader, LoaderContext loaderContext)
             throws XMLStreamException, LoaderException {
         String name = reader.getAttributeValue(null, "name");
         String autowire = reader.getAttributeValue(null, "autowire");
@@ -93,7 +93,7 @@ public class CompositeLoader extends LoaderExtension<CompositeComponentType, Com
         while (true) {
             switch (reader.next()) {
             case START_ELEMENT:
-                ModelObject loadedType = registry.load(type, reader, loaderContext);
+                ModelObject loadedType = registry.load(reader, loaderContext);
                 if (loadedType instanceof ServiceDefinition) {
                     type.add((ServiceDefinition) loadedType);
                 } else if (loadedType instanceof ReferenceDefinition) {

@@ -37,14 +37,13 @@ public interface Loader {
      * This method must be called with the XML cursor positioned on a START_ELEMENT event. When this method returns, the
      * stream will be positioned on the corresponding END_ELEMENT event.
      *
-     * @param configuration the object to load configuration data from. May be null.
      * @param reader        the XML stream to parse
      * @param loaderContext the current loader context
      * @return the model object obtained by parsing the current element on the stream
      * @throws LoaderException    if there was a problem loading the document
      * @throws XMLStreamException if there was a problem reading the stream
      */
-    <INPUT, OUTPUT> OUTPUT load(INPUT configuration, XMLStreamReader reader, LoaderContext loaderContext)
+    <OUTPUT> OUTPUT load(XMLStreamReader reader, LoaderContext loaderContext)
             throws XMLStreamException, LoaderException;
 
     /**

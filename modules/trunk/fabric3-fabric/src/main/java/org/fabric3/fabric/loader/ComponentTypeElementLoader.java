@@ -41,7 +41,7 @@ import org.fabric3.spi.model.type.ServiceDefinition;
 /**
  * @version $Rev$ $Date$
  */
-public class ComponentTypeElementLoader extends LoaderExtension<ComponentType<?, ?, ?>, ComponentType<?, ?, ?>> {
+public class ComponentTypeElementLoader extends LoaderExtension<ComponentType<?, ?, ?>> {
     public static final QName COMPONENT_TYPE = new QName(SCA_NS, "componentType");
 
     @Constructor
@@ -54,21 +54,15 @@ public class ComponentTypeElementLoader extends LoaderExtension<ComponentType<?,
     }
 
     @SuppressWarnings("unchecked")
-    public ComponentType load(ComponentType<?, ?, ?> modelType, XMLStreamReader reader, LoaderContext context)
+    public ComponentType load(XMLStreamReader reader, LoaderContext context)
             throws XMLStreamException, LoaderException {
         assert COMPONENT_TYPE.equals(reader.getName());
         ComponentType<ServiceDefinition, ReferenceDefinition, Property<?>> componentType;
-        if (modelType != null) {
-            // a specialized component type was passed in
-            componentType = (ComponentType<ServiceDefinition, ReferenceDefinition, Property<?>>) modelType;
-        } else {
-            componentType = new ComponentType<ServiceDefinition, ReferenceDefinition, Property<?>>();
-        }
-
+        componentType = new ComponentType<ServiceDefinition, ReferenceDefinition, Property<?>>();
         while (true) {
             switch (reader.next()) {
             case START_ELEMENT:
-                ModelObject o = registry.load(componentType, reader, context);
+                ModelObject o = registry.load(reader, context);
                 if (o instanceof ServiceDefinition) {
                     componentType.add((ServiceDefinition) o);
                 } else if (o instanceof ReferenceDefinition) {

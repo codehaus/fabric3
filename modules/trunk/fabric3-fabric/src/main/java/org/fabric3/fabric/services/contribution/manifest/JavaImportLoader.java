@@ -34,7 +34,7 @@ import org.fabric3.spi.loader.LoaderRegistry;
  *
  * @version $Rev$ $Date$
  */
-public class JavaImportLoader extends LoaderExtension<Object, JavaImport> {
+public class JavaImportLoader extends LoaderExtension<JavaImport> {
     private static final QName IMPORT = new QName(Constants.SCA_NS, "import.java");
 
     /**
@@ -50,7 +50,7 @@ public class JavaImportLoader extends LoaderExtension<Object, JavaImport> {
         return IMPORT;
     }
 
-    public JavaImport load(Object object, XMLStreamReader reader, LoaderContext context)
+    public JavaImport load(XMLStreamReader reader, LoaderContext context)
             throws LoaderException, XMLStreamException {
         String packageName = reader.getAttributeValue(null, "package");
         if (packageName == null) {

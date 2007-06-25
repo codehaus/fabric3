@@ -50,7 +50,7 @@ import org.fabric3.spi.loader.UnrecognizedElementException;
 public class LoaderRegistryImpl implements LoaderRegistry {
     private Monitor monitor;
     private final XMLInputFactory xmlFactory;
-    private final Map<QName, StAXElementLoader<?, ?>> loaders = new HashMap<QName, StAXElementLoader<?, ?>>();
+    private final Map<QName, StAXElementLoader<?>> loaders = new HashMap<QName, StAXElementLoader<?>>();
 
     @Constructor
     public LoaderRegistryImpl(@Reference MonitorFactory monitorFactory, @Reference XMLInputFactory factory) {
@@ -64,26 +64,26 @@ public class LoaderRegistryImpl implements LoaderRegistry {
         this.xmlFactory = factory;
     }
 
-    public void registerLoader(QName element, StAXElementLoader<?, ?> loader) {
+    public void registerLoader(QName element, StAXElementLoader<?> loader) {
         monitor.registeringLoader(element);
         loaders.put(element, loader);
     }
 
-    public void unregisterLoader(QName element, StAXElementLoader<?, ?> loader) {
+    public void unregisterLoader(QName element, StAXElementLoader<?> loader) {
         monitor.unregisteringLoader(element);
         loaders.remove(element);
     }
 
-    public <I, O> O load(I modelType, XMLStreamReader reader, LoaderContext loaderContext)
+    public <O> O load(XMLStreamReader reader, LoaderContext loaderContext)
             throws XMLStreamException, LoaderException {
         QName name = reader.getName();
         monitor.elementLoad(name);
         // FIXME unsafe cast!
-        StAXElementLoader<I, O> loader = (StAXElementLoader<I, O>) loaders.get(name);
+        StAXElementLoader<O> loader = (StAXElementLoader<O>) loaders.get(name);
         if (loader == null) {
             throw new UnrecognizedElementException(name);
         }
-        return loader.load(modelType, reader, loaderContext);
+        return loader.load(reader, loaderContext);
     }
 
     public <I, O> O load(I originalModelType, URL url, Class<O> type, LoaderContext ctx)
@@ -97,7 +97,7 @@ public class LoaderRegistryImpl implements LoaderRegistry {
                 try {
                     reader.nextTag();
                     QName name = reader.getName();
-                    Object modelType = load(originalModelType, reader, ctx);
+                    Object modelType = load(reader, ctx);
                     if (type.isInstance(modelType)) {
                         return type.cast(modelType);
                     } else {

@@ -39,7 +39,7 @@ import org.osoa.sca.Constants;
  * 
  * @version $Revision$ $Date$
  */
-public class InterfaceWsdlLoader extends LoaderExtension<Object, WsdlContract> implements Constants {
+public class InterfaceWsdlLoader extends LoaderExtension<WsdlContract> implements Constants {
     
     /**
      * Interface element QName.
@@ -69,9 +69,9 @@ public class InterfaceWsdlLoader extends LoaderExtension<Object, WsdlContract> i
     }
 
     /**
-     * @see org.fabric3.spi.loader.StAXElementLoader#load(java.lang.Object, javax.xml.stream.XMLStreamReader, org.fabric3.spi.loader.LoaderContext)
+     * @see org.fabric3.spi.loader.StAXElementLoader#load(javax.xml.stream.XMLStreamReader,org.fabric3.spi.loader.LoaderContext)
      */
-    public WsdlContract load(Object input, XMLStreamReader reader, LoaderContext context) throws XMLStreamException, LoaderException {
+    public WsdlContract load(XMLStreamReader reader, LoaderContext context) throws XMLStreamException, LoaderException {
         
         WsdlContract wsdlContract = new WsdlContract();
         
