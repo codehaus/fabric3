@@ -93,7 +93,7 @@ public class CompositeLoader extends LoaderExtension<CompositeComponentType> {
         while (true) {
             switch (reader.next()) {
             case START_ELEMENT:
-                ModelObject loadedType = registry.load(reader, loaderContext);
+                ModelObject loadedType = registry.load(reader, ModelObject.class, loaderContext);
                 if (loadedType instanceof ServiceDefinition) {
                     type.add((ServiceDefinition) loadedType);
                 } else if (loadedType instanceof ReferenceDefinition) {

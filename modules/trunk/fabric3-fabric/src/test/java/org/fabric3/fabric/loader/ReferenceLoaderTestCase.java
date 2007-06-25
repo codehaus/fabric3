@@ -33,6 +33,7 @@ import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.model.type.BindingDefinition;
 import org.fabric3.spi.model.type.ReferenceDefinition;
 import org.fabric3.spi.model.type.ServiceContract;
+import org.fabric3.spi.model.type.ModelObject;
 
 /**
  * Verifies loading of a reference definition from an XML-based assembly
@@ -106,7 +107,7 @@ public class ReferenceLoaderTestCase extends TestCase {
         };
         EasyMock.expect(mockRegistry.load(
                 EasyMock.eq(mockReader),
-                EasyMock.isA(LoaderContext.class)))
+                EasyMock.eq(ModelObject.class), EasyMock.isA(LoaderContext.class)))
                 .andReturn(binding).times(2);
         EasyMock.replay(mockRegistry);
 
@@ -124,7 +125,7 @@ public class ReferenceLoaderTestCase extends TestCase {
         EasyMock.expect(mockReader.getAttributeValue(null, "multiplicity")).andReturn("0..1");
         EasyMock.expect(mockReader.getAttributeValue(org.fabric3.spi.Constants.FABRIC3_NS, "key")).andReturn("test");
         EasyMock.expect(mockReader.next()).andReturn(XMLStreamConstants.START_ELEMENT);
-        EasyMock.expect(mockRegistry.load(mockReader, ctx)).andReturn(sc);
+        EasyMock.expect(mockRegistry.load(mockReader, ModelObject.class, ctx)).andReturn(sc);
         EasyMock.expect(mockReader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
 
         EasyMock.replay(mockReader);

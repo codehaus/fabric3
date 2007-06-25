@@ -74,16 +74,15 @@ public class LoaderRegistryImpl implements LoaderRegistry {
         loaders.remove(element);
     }
 
-    public <O> O load(XMLStreamReader reader, LoaderContext loaderContext)
+    public <O> O load(XMLStreamReader reader, Class<O> type, LoaderContext loaderContext)
             throws XMLStreamException, LoaderException {
         QName name = reader.getName();
         monitor.elementLoad(name);
-        // FIXME unsafe cast!
-        StAXElementLoader<O> loader = (StAXElementLoader<O>) loaders.get(name);
+        StAXElementLoader<?> loader = loaders.get(name);
         if (loader == null) {
             throw new UnrecognizedElementException(name);
         }
-        return loader.load(reader, loaderContext);
+        return type.cast(loader.load(reader, loaderContext));
     }
 
     public <O> O load(URL url, Class<O> type, LoaderContext ctx)
@@ -96,15 +95,7 @@ public class LoaderRegistryImpl implements LoaderRegistry {
                 reader = xmlFactory.createXMLStreamReader(is);
                 try {
                     reader.nextTag();
-                    QName name = reader.getName();
-                    Object modelType = load(reader, ctx);
-                    if (type.isInstance(modelType)) {
-                        return type.cast(modelType);
-                    } else {
-                        UnrecognizedElementException e = new UnrecognizedElementException(name);
-                        e.setResourceURI(url.toString());
-                        throw e;
-                    }
+                    return load(reader, type, ctx);
                 } catch (LoaderException e) {
                     Location location = reader.getLocation();
                     e.setLine(location.getLineNumber());

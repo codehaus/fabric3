@@ -66,7 +66,7 @@ public class ContributionElementLoader extends LoaderExtension<ContributionManif
                 if (CONTRIBUTION.equals(element)) {
                     continue;
                 }
-                Object o = registry.load(reader, context);
+                Object o = registry.load(reader, Object.class, context);
                 if (o instanceof Deployable) {
                     contribution.addDeployable((Deployable) o);
                 } else if (o instanceof Export) {

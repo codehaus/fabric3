@@ -45,12 +45,10 @@ import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
-import org.fabric3.spi.loader.MissingImplementationException;
 import org.fabric3.spi.model.type.Autowire;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.DataType;
 import org.fabric3.spi.model.type.Implementation;
-import org.fabric3.spi.model.type.ModelObject;
 import org.fabric3.spi.model.type.PropertyValue;
 import org.fabric3.spi.model.type.ReferenceTarget;
 import org.fabric3.spi.model.type.XSDSimpleType;
@@ -160,11 +158,7 @@ public class ComponentLoader extends LoaderExtension<ComponentDefinition<?>> {
     protected Implementation<?> loadImplementation(XMLStreamReader reader, LoaderContext context)
             throws XMLStreamException, LoaderException {
         reader.nextTag();
-        ModelObject type = registry.load(reader, context);
-        if (!(type instanceof Implementation)) {
-            throw new MissingImplementationException();
-        }
-        return (Implementation<?>) type;
+        return registry.load(reader, Implementation.class, context);
     }
 
     protected PropertyValue loadPropertyValue(XMLStreamReader reader, LoaderContext context)

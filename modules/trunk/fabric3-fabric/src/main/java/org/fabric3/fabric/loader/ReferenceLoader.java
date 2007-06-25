@@ -93,7 +93,7 @@ public class ReferenceLoader extends LoaderExtension<ReferenceDefinition> {
         while (true) {
             switch (reader.next()) {
                 case START_ELEMENT:
-                    ModelObject type = registry.load(reader, context);
+                    ModelObject type = registry.load(reader, ModelObject.class, context);
                     if (type instanceof ServiceContract) {
                         referenceDefinition.setServiceContract((ServiceContract)type);
                     } else if (type instanceof BindingDefinition) {

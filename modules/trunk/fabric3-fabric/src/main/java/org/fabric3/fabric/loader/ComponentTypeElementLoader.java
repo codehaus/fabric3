@@ -62,7 +62,7 @@ public class ComponentTypeElementLoader extends LoaderExtension<ComponentType<?,
         while (true) {
             switch (reader.next()) {
             case START_ELEMENT:
-                ModelObject o = registry.load(reader, context);
+                ModelObject o = registry.load(reader, ModelObject.class, context);
                 if (o instanceof ServiceDefinition) {
                     componentType.add((ServiceDefinition) o);
                 } else if (o instanceof ReferenceDefinition) {

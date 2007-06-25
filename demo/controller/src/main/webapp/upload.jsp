@@ -50,7 +50,7 @@
     URI componentURI = URI.create(assembly.getDomain().getUri().toString() + "/" + componentName);
     try {
         LoaderContext loaderContext = new LoaderContextImpl(Thread.currentThread().getContextClassLoader(), null);
-        CompositeComponentType componentType = loader.load(reader, loaderContext);
+        CompositeComponentType componentType = loader.load(reader, CompositeComponentType.class, loaderContext);
         CompositeImplementation implementation = new CompositeImplementation();
         implementation.setComponentType(componentType);
         ComponentDefinition component = new ComponentDefinition(componentURI.toString(), implementation);

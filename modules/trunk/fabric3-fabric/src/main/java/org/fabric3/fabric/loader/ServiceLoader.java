@@ -88,7 +88,7 @@ public class ServiceLoader extends LoaderExtension<ServiceDefinition> {
             int i = reader.next();
             switch (i) {
             case START_ELEMENT:
-                ModelObject type = registry.load(reader, context);
+                ModelObject type = registry.load(reader, ModelObject.class, context);
                 if (type instanceof ServiceContract) {
                     def.setServiceContract((ServiceContract) type);
                 } else if (type instanceof BindingDefinition) {

@@ -36,6 +36,7 @@ import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.model.type.BindingDefinition;
 import org.fabric3.spi.model.type.ServiceContract;
 import org.fabric3.spi.model.type.ServiceDefinition;
+import org.fabric3.spi.model.type.ModelObject;
 
 /**
  * Verifies loading of a service definition from an XML-based assembly
@@ -87,7 +88,7 @@ public class ServiceLoaderTestCase extends TestCase {
 
         BindingDefinition binding = new BindingDefinition() {
         };
-        expect(mockRegistry.load(mockReader, loaderContext)).andReturn(binding).times(2);
+        expect(mockRegistry.load(mockReader, ModelObject.class, loaderContext)).andReturn(binding).times(2);
         replay(mockRegistry);
 
         ServiceDefinition serviceDefinition = loader.load(mockReader, loaderContext);
@@ -103,7 +104,7 @@ public class ServiceLoaderTestCase extends TestCase {
         expect(mockReader.getAttributeValue(null, "name")).andReturn(name);
         expect(mockReader.getAttributeValue(null, "promote")).andReturn(target);
         expect(mockReader.next()).andReturn(START_ELEMENT);
-        expect(mockRegistry.load(mockReader, loaderContext)).andReturn(sc);
+        expect(mockRegistry.load(mockReader, ModelObject.class, loaderContext)).andReturn(sc);
         expect(mockReader.next()).andReturn(END_ELEMENT);
         expect(mockReader.getName()).andReturn(SERVICE);
 
@@ -124,7 +125,7 @@ public class ServiceLoaderTestCase extends TestCase {
         expect(mockReader.getAttributeValue(null, "name")).andReturn(name);
         expect(mockReader.getAttributeValue(null, "promote")).andReturn(null);
         expect(mockReader.next()).andReturn(START_ELEMENT);
-        expect(mockRegistry.load(mockReader, loaderContext)).andReturn(sc);
+        expect(mockRegistry.load(mockReader, ModelObject.class, loaderContext)).andReturn(sc);
         expect(mockReader.next()).andReturn(END_ELEMENT);
         expect(mockReader.getName()).andReturn(SERVICE);
 

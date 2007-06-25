@@ -70,7 +70,7 @@ public class ContributionElementLoaderTestCase extends TestCase {
         Deployable deployable = new Deployable(DEPLOYABLE);
         EasyMock.expect(loaderRegistry.load(
                 EasyMock.isA(XMLStreamReader.class),
-                                            (LoaderContext) EasyMock.isNull())).andReturn(deployable);
+                EasyMock.eq(Object.class), (LoaderContext) EasyMock.isNull())).andReturn(deployable);
         EasyMock.expect(reader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
         EasyMock.expect(reader.getName()).andReturn(DEPLOYABLE_ELEMENT);
 
@@ -83,7 +83,7 @@ public class ContributionElementLoaderTestCase extends TestCase {
         };
         EasyMock.expect(loaderRegistry.load(
                 EasyMock.isA(XMLStreamReader.class),
-                                            (LoaderContext) EasyMock.isNull())).andReturn(contribImport);
+                EasyMock.eq(Object.class), (LoaderContext) EasyMock.isNull())).andReturn(contribImport);
         EasyMock.expect(reader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
         EasyMock.expect(reader.getName()).andReturn(IMPORT_ELEMENT);
 
@@ -100,7 +100,7 @@ public class ContributionElementLoaderTestCase extends TestCase {
         };
         EasyMock.expect(loaderRegistry.load(
                 EasyMock.isA(XMLStreamReader.class),
-                                            (LoaderContext) EasyMock.isNull())).andReturn(contribExport);
+                EasyMock.eq(Object.class), (LoaderContext) EasyMock.isNull())).andReturn(contribExport);
         EasyMock.expect(reader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
         EasyMock.expect(reader.getName()).andReturn(EXPORT_ELEMENT);
 

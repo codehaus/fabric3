@@ -45,14 +45,14 @@ public class JarContributionProcessorTestCase extends TestCase {
         CompositeComponentType type2 = new CompositeComponentType(new QName("TestComposite1"));
         EasyMock.expect(loaderRegistry.load(
                 EasyMock.isA(XMLStreamReader.class),
-                                      EasyMock.isA(LoaderContext.class))).andReturn(manifest);
+                EasyMock.eq(ContributionManifest.class), EasyMock.isA(LoaderContext.class))).andReturn(manifest);
         EasyMock.expect(loaderRegistry.load(
                 EasyMock.isA(XMLStreamReader.class),
-                                              EasyMock.isA(LoaderContext.class))).andReturn(type1);
+                EasyMock.eq(CompositeComponentType.class), EasyMock.isA(LoaderContext.class))).andReturn(type1);
 
         EasyMock.expect(loaderRegistry.load(
                 EasyMock.isA(XMLStreamReader.class),
-                                              EasyMock.isA(LoaderContext.class))).andReturn(type2);
+                EasyMock.eq(CompositeComponentType.class), EasyMock.isA(LoaderContext.class))).andReturn(type2);
         EasyMock.replay(loaderRegistry);
         ClassLoader cl = getClass().getClassLoader();
         classLoaderRegistry = EasyMock.createMock(ClassLoaderRegistry.class);

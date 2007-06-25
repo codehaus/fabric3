@@ -35,23 +35,26 @@ public interface Loader {
      * This method must be called with the XML cursor positioned on a START_ELEMENT event. When this method returns, the
      * stream will be positioned on the corresponding END_ELEMENT event.
      *
-     * @param reader        the XML stream to parse
-     * @param loaderContext the current loader context
+     * @param reader  the XML stream to parse
+     * @param type    the type of Java object that should be returned
+     * @param context the current loader context
      * @return the model object obtained by parsing the current element on the stream
      * @throws LoaderException    if there was a problem loading the document
      * @throws XMLStreamException if there was a problem reading the stream
+     * @throws ClassCastException if the XML type cannot be cast to the expected output type
      */
-    <OUTPUT> OUTPUT load(XMLStreamReader reader, LoaderContext loaderContext)
+    <OUTPUT> OUTPUT load(XMLStreamReader reader, Class<OUTPUT> type, LoaderContext context)
             throws XMLStreamException, LoaderException;
 
     /**
      * Load a model object from a specified location.
      *
-     * @param url           the location of an XML document to be loaded
-     * @param type          the type of ModelObject that is expected to be in the document
-     * @param context       the current loader context
+     * @param url     the location of an XML document to be loaded
+     * @param type    the type of Java Object that should be returned
+     * @param context the current loader context
      * @return the model ojbect loaded from the document
-     * @throws LoaderException if there was a problem loading the document
+     * @throws LoaderException    if there was a problem loading the document
+     * @throws ClassCastException if the XML type cannot be cast to the expected output type
      */
     <OUTPUT> OUTPUT load(URL url, Class<OUTPUT> type, LoaderContext context)
             throws LoaderException;
