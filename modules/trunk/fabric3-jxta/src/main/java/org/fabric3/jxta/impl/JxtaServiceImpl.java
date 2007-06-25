@@ -19,7 +19,6 @@ import org.fabric3.jxta.JxtaService;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
-import org.osoa.sca.annotations.Property;
 
 /**
  * Default implementation of the JXTA service.
@@ -46,7 +45,6 @@ public class JxtaServiceImpl implements JxtaService {
 
     // Network configurator
     private NetworkConfigurator networkConfigurator;
-    private int tcpPort;
 
     /**
      * @see org.fabric3.jxta.JxtaService#getDomainGroup()
@@ -77,11 +75,6 @@ public class JxtaServiceImpl implements JxtaService {
         this.networkConfigurator = networkConfigurator;
     }
 
-    @Property
-    public void setTcpPort(String tcpPort) {
-        this.tcpPort = Integer.parseInt(tcpPort);
-    }
-
     /**
      * Joins the domain and creates the discovery and resolver services.
      *
@@ -108,10 +101,6 @@ public class JxtaServiceImpl implements JxtaService {
 
             networkConfigurator.setName(runtimeId);
             networkConfigurator.setHome(new File(runtimeId));
-            networkConfigurator.setTcpPort(tcpPort);
-            // FIXME Once property support is available
-            networkConfigurator.setPassword("test-password");
-            networkConfigurator.setPrincipal("test-principal");
 
             if (networkConfigurator.exists()) {
                 File pc = new File(networkConfigurator.getHome(), "PlatformConfig");

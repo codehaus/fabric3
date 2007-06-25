@@ -20,18 +20,14 @@ package org.fabric3.discovery.jxta;
 
 import java.net.URI;
 import java.net.URL;
-import java.util.Collections;
-import java.util.Set;
-
-import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 import net.jxta.platform.NetworkConfigurator;
 
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.jxta.impl.JxtaServiceImpl;
-import org.fabric3.spi.services.advertisement.AdvertisementListener;
-import org.fabric3.spi.services.advertisement.AdvertisementService;
+import org.fabric3.spi.model.topology.RuntimeInfo;
+import org.fabric3.spi.services.runtime.RuntimeInfoService;
 import org.fabric3.spi.services.work.NotificationListener;
 import org.fabric3.spi.services.work.WorkScheduler;
 
@@ -55,11 +51,11 @@ public class JxtaDiscoveryServiceTest extends TestCase {
         jxtaService.setNetworkConfigurator(configurator);
 
         WorkScheduler workScheduler = new MyWorkScheduler();
-        AdvertisementService advertisementService = new MyAdvertisementService();
+        RuntimeInfoService runtimeInfoService = new MyRuntimeInfoService("runtime2");
 
         discoveryService.setWorkScheduler(workScheduler);
         discoveryService.setHostInfo(hostInfo);
-        discoveryService.setAdvertisementService(advertisementService);
+        discoveryService.setRuntimeInfoService(runtimeInfoService);
         discoveryService.setJxtaService(jxtaService);
 
         jxtaService.start();
@@ -113,22 +109,16 @@ public class JxtaDiscoveryServiceTest extends TestCase {
 
     }
 
-    private class MyAdvertisementService implements AdvertisementService {
+    private class MyRuntimeInfoService implements RuntimeInfoService {
 
-        public void addFeature(QName qname) {
+        private String runtimeId;
+
+        public MyRuntimeInfoService(String runtimeId) {
+            this.runtimeId = runtimeId;
         }
 
-        public void addListener(AdvertisementListener listener) {
-        }
-
-        public Set<QName> getFeatures() {
-            return Collections.EMPTY_SET;
-        }
-
-        public void removeFeature(QName qname) {
-        }
-
-        public void removeListener(AdvertisementListener listener) {
+        public RuntimeInfo getRuntimeInfo() {
+            return new RuntimeInfo(runtimeId);
         }
 
     }

@@ -40,7 +40,7 @@
     <component name="allocator">
         <system:implementation.system class="org.fabric3.fabric.assembly.allocator.DefaultAllocator"/>
     </component>
-    
+
     <component name="runtimeRoutingService">
         <system:implementation.system class="org.fabric3.fabric.services.routing.FederatedRoutingService"/>
     </component>
@@ -55,6 +55,10 @@
 
     <component name="advertismentService">
         <system:implementation.system class="org.fabric3.fabric.services.advertsiement.DefaultAdvertismentService"/>
+    </component>
+
+    <component name="runtimeInfoService">
+        <system:implementation.system class="org.fabric3.fabric.services.runtime.DefaultRuntimeInfoService"/>
     </component>
 
     <component name="proxyService">

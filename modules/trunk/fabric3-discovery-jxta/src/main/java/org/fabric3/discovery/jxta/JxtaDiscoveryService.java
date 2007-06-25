@@ -18,6 +18,8 @@
  */
 package org.fabric3.discovery.jxta;
 
+import static net.jxta.discovery.DiscoveryService.ADV;
+
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -28,22 +30,20 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import net.jxta.discovery.DiscoveryEvent;
 import net.jxta.discovery.DiscoveryListener;
-import static net.jxta.discovery.DiscoveryService.ADV;
 import net.jxta.document.AdvertisementFactory;
 import net.jxta.peergroup.PeerGroup;
 import net.jxta.protocol.DiscoveryResponseMsg;
-import org.osoa.sca.annotations.Destroy;
-import org.osoa.sca.annotations.Property;
-import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.jxta.JxtaService;
 import org.fabric3.spi.model.topology.RuntimeInfo;
-import org.fabric3.spi.services.advertisement.AdvertisementService;
 import org.fabric3.spi.services.discovery.DiscoveryService;
-import org.fabric3.spi.services.messaging.MessagingService;
+import org.fabric3.spi.services.runtime.RuntimeInfoService;
 import org.fabric3.spi.services.work.WorkScheduler;
 import org.fabric3.spi.util.TwosTuple;
+import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.Property;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * JXTA implementation of the discovery service.
@@ -87,8 +87,8 @@ public class JxtaDiscoveryService implements DiscoveryService {
     // Host info
     private HostInfo hostInfo;
 
-    // Advertismenet service
-    private AdvertisementService advertisementService;
+    // Runtime info service
+    private RuntimeInfoService runtimeInfoService;
 
     // Jxta discovery service
     private net.jxta.discovery.DiscoveryService discoveryService;
@@ -99,9 +99,6 @@ public class JxtaDiscoveryService implements DiscoveryService {
     // Participating runtimes
     private Map<String, TwosTuple<RuntimeInfo, Long>> participatingRuntimes =
             new ConcurrentHashMap<String, TwosTuple<RuntimeInfo, Long>>();
-
-    // Messaging service
-    private MessagingService messagingService;
 
     /**
      * @see org.fabric3.spi.services.discovery.DiscoveryService#getParticipatingRuntimes()
@@ -162,24 +159,13 @@ public class JxtaDiscoveryService implements DiscoveryService {
     }
 
     /**
-     * Injects the messaging service.
+     * Injects the runtime info service.
      *
-     * @param messagingService Messaging service to be injected in.
-     */
-    // TODO Commented as we don't support bi-directional references yet
-    //@Reference
-    //public void setMessagingService(MessagingService messagingService) {
-    //    this.messagingService = messagingService;
-    //}
-
-    /**
-     * Injects the advertisement service.
-     *
-     * @param advertisementService Advertisement service to be injected in.
+     * @param runtimeInfoService Runtime info service to be injected in.
      */
     @Reference
-    public void setAdvertisementService(AdvertisementService advertisementService) {
-        this.advertisementService = advertisementService;
+    public void setRuntimeInfoService(RuntimeInfoService runtimeInfoService) {
+        this.runtimeInfoService = runtimeInfoService;
     }
 
     /**
@@ -197,7 +183,6 @@ public class JxtaDiscoveryService implements DiscoveryService {
      *
      * @param timeout the time to wait to join the domain
      */
-//    @Init
     public void joinDomain(long timeout) {
 
         assert workScheduler != null;
@@ -292,11 +277,9 @@ public class JxtaDiscoveryService implements DiscoveryService {
                     presenceAdv =
                             (PresenceAdvertisement) AdvertisementFactory.newAdvertisement(PresenceAdvertisement.getAdvertisementType());
 
-                    RuntimeInfo runtimeInfo = new RuntimeInfo(hostInfo.getRuntimeId());
-                    runtimeInfo.setFeatures(advertisementService.getFeatures());
+                    RuntimeInfo runtimeInfo = runtimeInfoService.getRuntimeInfo();
                     // TODO Hack for the demo, this info should come from the messaging service
                     runtimeInfo.setMessageDestination(jxtaService.getDomainGroup().getPeerID().toString());
-                    // runtimeInfo.setMessageDestination(messagingService.getMessageDestination());
 
                     presenceAdv.setRuntimeInfo(runtimeInfo);
 

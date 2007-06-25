@@ -7,15 +7,15 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License.    
+ * under the License.
 -->
 <!--
     Default system configuration for the launcher environment.
@@ -63,24 +63,27 @@
     <!-- include transform configuration -->
     <include name="org.fabric3.transform.Transform" scdlResource="org/fabric3/transform/transform.scdl"/>
 
-    <!-- JXTA Messaging Service -->
-    <component name="MessagingService">
-        <system:implementation.system class="org.fabric3.messaging.jxta.JxtaMessagingService"/>
-        <property name="tcpPort">2000</property>
+    <!-- JXTA Network Configurator -->
+    <component name="jxtaNetworkConfigurator">
+        <system:implementation.system class="net.jxta.platform.NetworkConfigurator"/>
+        <property name="password">test-password</property>
+        <property name="principal">test-principal</property>
     </component>
 
+    <!-- JXTA Service -->
     <component name="JxtaService">
         <system:implementation.system class="org.fabric3.jxta.impl.JxtaServiceImpl"/>
         <property name="tcpPort">2000</property>
     </component>
-    
+
+    <!-- JXTA Messaging Service -->
+    <component name="MessagingService">
+        <system:implementation.system class="org.fabric3.messaging.jxta.JxtaMessagingService"/>
+    </component>
+
+    <!-- JXTA Discovery Service -->
     <component name="DiscoveryService">
         <system:implementation.system class="org.fabric3.discovery.jxta.JxtaDiscoveryService"/>
-    </component>
-    
-    <!-- JXTA Network Configurator -->
-    <component name="jxtaNetworkConfigurator">
-        <system:implementation.system class="net.jxta.platform.NetworkConfigurator"/>
     </component>
 
 
@@ -112,7 +115,7 @@
     <component name="wiringExceptionFormatter">
         <system:implementation.system class="org.fabric3.fabric.builder.WiringExceptionFormatter"/>
     </component>
-    
+
     <!-- Marshhaler registry-->
     <component name="marshallerRegistry">
         <system:implementation.system
@@ -121,16 +124,16 @@
 
     <!-- Console -->
     <include name="org.apache.tuscany.sca.console" scdlResource="org/fabric3/console/console.scdl"/>
-    
+
     <!-- Jetty service -->
     <component name="JettyService">
             <system:implementation.system class="org.fabric3.jetty.JettyServiceImpl"/>
     </component>
-	 
+
 	 <component name="assemblyRecoveryService">
         <system:implementation.system class="org.fabric3.fabric.assembly.store.AssemblyStoreImpl"/>
     </component>
 
 	<include scdlResource="META-INF/hessian.scdl"/>
-    
+
 </composite>
