@@ -37,11 +37,13 @@ import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.model.type.Property;
 import org.fabric3.spi.model.type.Scope;
+import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Revision: 1 $ $Date: 2007-05-14 18:40:37 +0100 (Mon, 14 May 2007) $
  */
+@EagerInit
 public class FeatureLoader extends LoaderExtension<SystemImplementation> {
 
     // Qualified name of the root element.
