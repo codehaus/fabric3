@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.feature;
+package org.fabric3.fabric.services.advertsiement;
 
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
