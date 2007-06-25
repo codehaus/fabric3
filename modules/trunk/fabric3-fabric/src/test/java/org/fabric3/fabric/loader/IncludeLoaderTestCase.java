@@ -29,7 +29,6 @@ import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.isA;
-import static org.easymock.EasyMock.isNull;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import org.osoa.sca.Constants;
@@ -86,7 +85,6 @@ public class IncludeLoaderTestCase extends TestCase {
         expect(context.getClassLoader()).andReturn(cl);
 
         expect(registry.load(
-                (CompositeComponentType) isNull(),
                 eq(includeURL),
                 eq(CompositeComponentType.class),
                 isA(LoaderContext.class)))
@@ -111,7 +109,6 @@ public class IncludeLoaderTestCase extends TestCase {
         expect(context.getClassLoader()).andReturn(cl);
 
         expect(registry.load(
-                (CompositeComponentType) isNull(),
                 eq(includeURL),
                 eq(CompositeComponentType.class),
                 isA(LoaderContext.class)))
@@ -139,7 +136,6 @@ public class IncludeLoaderTestCase extends TestCase {
         expect(context.getClassLoader()).andReturn(cl);
 
         expect(registry.load(
-                (CompositeComponentType) isNull(),
                 eq(includeURL),
                 eq(CompositeComponentType.class),
                 isA(LoaderContext.class)))

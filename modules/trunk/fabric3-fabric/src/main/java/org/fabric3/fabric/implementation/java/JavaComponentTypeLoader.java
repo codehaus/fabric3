@@ -74,7 +74,11 @@ public class JavaComponentTypeLoader implements ComponentTypeLoader<JavaImplemen
     }
 
     protected PojoComponentType loadFromSidefile(URL url, LoaderContext loaderContext) throws LoaderException {
+        // FIXME we need to merge the loaded componentType information with the introspection result
+        throw new UnsupportedOperationException();
+/*
         PojoComponentType componentType = new PojoComponentType();
-        return loader.load(componentType, url, PojoComponentType.class, loaderContext);
+        return loader.load(url, PojoComponentType.class, loaderContext);
+*/
     }
 }

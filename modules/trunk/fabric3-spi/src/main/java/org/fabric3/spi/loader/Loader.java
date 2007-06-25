@@ -22,8 +22,6 @@ import java.net.URL;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.spi.model.type.Implementation;
-
 /**
  * System service for loading configuration artifacts from an XML source.
  *
@@ -49,13 +47,12 @@ public interface Loader {
     /**
      * Load a model object from a specified location.
      *
-     * @param configuration the object to load configuration data from. May be null.
      * @param url           the location of an XML document to be loaded
      * @param type          the type of ModelObject that is expected to be in the document
      * @param context       the current loader context
      * @return the model ojbect loaded from the document
      * @throws LoaderException if there was a problem loading the document
      */
-    <INPUT, OUTPUT> OUTPUT load(INPUT configuration, URL url, Class<OUTPUT> type, LoaderContext context)
+    <OUTPUT> OUTPUT load(URL url, Class<OUTPUT> type, LoaderContext context)
             throws LoaderException;
 }

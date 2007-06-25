@@ -59,6 +59,6 @@ public class CompositeComponentTypeLoader implements ComponentTypeLoader<Composi
     }
 
     protected CompositeComponentType loadFromSidefile(URL url, LoaderContext context) throws LoaderException {
-        return loader.load(null, url, CompositeComponentType.class, context);
+        return loader.load(url, CompositeComponentType.class, context);
     }
 }

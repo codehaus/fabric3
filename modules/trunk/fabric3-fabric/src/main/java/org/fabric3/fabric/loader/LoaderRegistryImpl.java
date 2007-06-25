@@ -86,7 +86,7 @@ public class LoaderRegistryImpl implements LoaderRegistry {
         return loader.load(reader, loaderContext);
     }
 
-    public <I, O> O load(I originalModelType, URL url, Class<O> type, LoaderContext ctx)
+    public <O> O load(URL url, Class<O> type, LoaderContext ctx)
             throws LoaderException {
         try {
             XMLStreamReader reader;

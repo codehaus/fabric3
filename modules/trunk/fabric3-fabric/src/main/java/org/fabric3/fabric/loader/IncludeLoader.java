@@ -93,6 +93,6 @@ public class IncludeLoader extends LoaderExtension<Include> {
     }
 
     protected CompositeComponentType loadFromSidefile(URL url, LoaderContext context) throws LoaderException {
-        return registry.load(null, url, CompositeComponentType.class, context);
+        return registry.load(url, CompositeComponentType.class, context);
     }
 }
