@@ -31,6 +31,9 @@ import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.ReferenceDefinition;
+import org.fabric3.spi.model.type.ComponentType;
+import org.fabric3.spi.model.type.ServiceDefinition;
+import org.fabric3.spi.model.type.Property;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
@@ -49,7 +52,8 @@ public class WebappComponentGenerator implements ComponentGenerator<LogicalCompo
     @SuppressWarnings({"unchecked"})
     public void generate(LogicalComponent<WebappImplementation> component, GeneratorContext context) {
         ComponentDefinition<WebappImplementation> definition = component.getDefinition();
-        WebappComponentType componentType = definition.getImplementation().getComponentType();
+        ComponentType<ServiceDefinition, ReferenceDefinition, Property<?>> componentType =
+                definition.getImplementation().getComponentType();
 
         WebappPhysicalComponentDefinition pDefinition = new WebappPhysicalComponentDefinition();
         URI componentId = component.getUri();

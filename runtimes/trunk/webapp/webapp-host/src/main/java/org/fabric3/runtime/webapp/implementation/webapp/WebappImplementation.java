@@ -18,10 +18,14 @@
  */
 package org.fabric3.runtime.webapp.implementation.webapp;
 
+import org.fabric3.spi.model.type.ComponentType;
 import org.fabric3.spi.model.type.Implementation;
+import org.fabric3.spi.model.type.Property;
+import org.fabric3.spi.model.type.ReferenceDefinition;
+import org.fabric3.spi.model.type.ServiceDefinition;
 
 /**
  * @version $Rev$ $Date$
  */
-public class WebappImplementation extends Implementation<WebappComponentType> {
+public class WebappImplementation extends Implementation<ComponentType<ServiceDefinition, ReferenceDefinition, Property<?>>> {
 }

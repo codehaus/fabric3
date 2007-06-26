@@ -40,6 +40,10 @@ import org.fabric3.spi.loader.MissingResourceException;
 import org.fabric3.spi.loader.UnrecognizedElementException;
 import org.fabric3.spi.model.type.ReferenceDefinition;
 import org.fabric3.spi.model.type.ServiceContract;
+import org.fabric3.spi.model.type.ComponentType;
+import org.fabric3.spi.model.type.Scope;
+import org.fabric3.spi.model.type.ServiceDefinition;
+import org.fabric3.spi.model.type.Property;
 import org.fabric3.spi.Constants;
 
 /**
@@ -63,7 +67,9 @@ public class WebappLoader extends LoaderExtension<WebappImplementation> {
     public WebappImplementation load(XMLStreamReader reader, LoaderContext loaderContext)
             throws XMLStreamException, LoaderException {
 
-        WebappComponentType componentType = new WebappComponentType();
+        ComponentType<ServiceDefinition, ReferenceDefinition, Property<?>> componentType =
+                new ComponentType<ServiceDefinition, ReferenceDefinition, Property<?>>();
+        componentType.setImplementationScope(Scope.COMPOSITE);
         WebappImplementation impl = new WebappImplementation();
         impl.setComponentType(componentType);
 
@@ -84,7 +90,7 @@ public class WebappLoader extends LoaderExtension<WebappImplementation> {
         }
     }
 
-    protected void defineReference(WebappComponentType componentType,
+    protected void defineReference(ComponentType<ServiceDefinition, ReferenceDefinition, Property<?>> componentType,
                                    XMLStreamReader reader,
                                    LoaderContext context) throws LoaderException {
         String name = reader.getAttributeValue(null, "name");
