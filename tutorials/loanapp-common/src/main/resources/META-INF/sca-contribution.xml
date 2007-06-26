@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="ASCII"?>
+<contribution xmlns="http://www.osoa.org/xmlns/sca/1.0">
+    <export.java package="loanapp.credit"/>
+    <export.java package="loanapp.loanservice"/>
+</contribution>
+
+
+
