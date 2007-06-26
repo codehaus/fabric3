@@ -222,7 +222,7 @@ public class PresenceAdvertisement extends Advertisement {
         elem = doc.createElement("components");
         doc.appendChild(elem);
         for(URI component : components) {
-            elem.appendChild(doc.createElement("feature", component.toString()));
+            elem.appendChild(doc.createElement("component", component.toString()));
         }
 
         return doc;
