@@ -1,7 +1,6 @@
 package org.fabric3.itest.implementation.junit;
 
 import java.lang.reflect.Member;
-import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.Map;
 
@@ -12,26 +11,25 @@ import org.fabric3.fabric.implementation.java.JavaComponentDefinition;
 import org.fabric3.fabric.implementation.java.JavaWireSourceDefinition;
 import org.fabric3.fabric.implementation.java.JavaWireTargetDefinition;
 import org.fabric3.pojo.instancefactory.InjectionSiteMapping;
-import org.fabric3.spi.model.instance.ValueSource;
-import org.fabric3.pojo.instancefactory.MemberSite;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
-import org.fabric3.pojo.instancefactory.Signature;
-import org.fabric3.pojo.processor.PojoComponentType;
-import org.fabric3.pojo.processor.JavaMappedReference;
+import org.fabric3.pojo.instancefactory.MemberSite;
+import org.fabric3.pojo.processor.ConstructorDefinition;
 import org.fabric3.pojo.processor.JavaMappedProperty;
+import org.fabric3.pojo.processor.JavaMappedReference;
+import org.fabric3.pojo.processor.JavaMappedService;
+import org.fabric3.pojo.processor.PojoComponentType;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
-import org.fabric3.pojo.processor.ConstructorDefinition;
-import org.fabric3.pojo.processor.JavaMappedService;
-import org.fabric3.spi.model.type.ComponentDefinition;
-import org.fabric3.spi.model.type.Property;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
+import org.fabric3.spi.model.instance.ValueSource;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.type.ComponentDefinition;
+import org.fabric3.spi.model.type.Property;
 
 /**
  * @version $Rev$ $Date$ TODO JFM this class shares commonalities
@@ -59,14 +57,8 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         pDefinition.setScope(type.getImplementationScope());
         // TODO get classloader id
         InstanceFactoryDefinition providerDefinition = new InstanceFactoryDefinition();
-        Method destroyMethod = type.getDestroyMethod();
-        if (destroyMethod != null) {
-            providerDefinition.setDestroyMethod(new Signature(destroyMethod));
-        }
-        Method initMethod = type.getInitMethod();
-        if (initMethod != null) {
-            providerDefinition.setInitMethod(new Signature(initMethod));
-        }
+        providerDefinition.setInitMethod(type.getInitMethod());
+        providerDefinition.setDestroyMethod(type.getDestroyMethod());
 
         // JFM FIXME seems hacky and add to JavaPCDG
         Integer level = definition.getInitLevel();

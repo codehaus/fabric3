@@ -34,6 +34,7 @@ import org.fabric3.pojo.processor.Introspector;
 import org.fabric3.pojo.processor.JavaMappedService;
 import org.fabric3.pojo.processor.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
+import org.fabric3.pojo.instancefactory.Signature;
 import org.fabric3.spi.loader.ComponentTypeLoader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
@@ -89,12 +90,11 @@ public class JUnitComponentTypeLoader implements ComponentTypeLoader<Implementat
         return componentType;
     }
 
-    protected Method getCallback(Class<?> implClass, String name) {
+    protected Signature getCallback(Class<?> implClass, String name) {
         while (Object.class != implClass) {
             try {
                 Method callback = implClass.getDeclaredMethod(name);
-                callback.setAccessible(true);
-                return callback;
+                return new Signature(callback);
             } catch (NoSuchMethodException e) {
                 implClass = implClass.getSuperclass();
                 continue;

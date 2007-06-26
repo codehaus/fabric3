@@ -19,14 +19,14 @@
 package org.fabric3.fabric.implementation.processor;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 
 import org.osoa.sca.annotations.Init;
 
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.pojo.instancefactory.Signature;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.processor.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
+import org.fabric3.spi.loader.LoaderContext;
 
 /**
  * Processes the {@link @Init} annotation on a component implementation and updates the component type with the
@@ -50,9 +50,6 @@ public class InitProcessor extends ImplementationProcessorExtension {
         if (type.getInitMethod() != null) {
             throw new DuplicateInitException("More than one initializer found on implementaton");
         }
-        if (Modifier.isProtected(method.getModifiers())) {
-            method.setAccessible(true);
-        }
-        type.setInitMethod(method);
+        type.setInitMethod(new Signature(method));
     }
 }

@@ -72,7 +72,7 @@ public class Signature {
     }
 
     public Signature(Constructor constructor) {
-        name = constructor.getName();
+        name = "<init>";
         setParameterTypes(constructor.getParameterTypes());
         isConstructor = true;
     }
@@ -184,5 +184,19 @@ public class Signature {
         }
         builder.append(')');
         return builder.toString();
+    }
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Signature signature = (Signature) o;
+
+        return name.equals(signature.name) && parameterTypes.equals(signature.parameterTypes);
+
+    }
+
+    public int hashCode() {
+        return name.hashCode() + 31 * parameterTypes.hashCode();
     }
 }

@@ -19,7 +19,6 @@
 package org.fabric3.runtime.standalone.host.implementation.launched;
 
 import java.lang.reflect.Member;
-import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.Map;
 
@@ -29,19 +28,18 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.fabric.implementation.java.JavaComponentDefinition;
 import org.fabric3.fabric.implementation.java.JavaWireSourceDefinition;
 import org.fabric3.fabric.implementation.java.JavaWireTargetDefinition;
-import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
-import org.fabric3.pojo.instancefactory.Signature;
-import org.fabric3.pojo.instancefactory.MemberSite;
 import org.fabric3.pojo.instancefactory.InjectionSiteMapping;
+import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
+import org.fabric3.pojo.instancefactory.MemberSite;
 import org.fabric3.pojo.processor.ConstructorDefinition;
+import org.fabric3.pojo.processor.JavaMappedProperty;
+import org.fabric3.pojo.processor.JavaMappedReference;
 import org.fabric3.pojo.processor.JavaMappedService;
 import org.fabric3.pojo.processor.PojoComponentType;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
-import org.fabric3.pojo.processor.JavaMappedReference;
-import org.fabric3.pojo.processor.JavaMappedProperty;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
@@ -76,14 +74,8 @@ public class LaunchedComponentGenerator implements ComponentGenerator<LogicalCom
         pDefinition.setScope(type.getImplementationScope());
         // TODO get classloader id
         InstanceFactoryDefinition providerDefinition = new InstanceFactoryDefinition();
-        Method initMethod = type.getInitMethod();
-        if (initMethod != null) {
-            providerDefinition.setInitMethod(new Signature(initMethod));
-        }
-        Method destroyMethod = type.getDestroyMethod();
-        if (destroyMethod != null) {
-            providerDefinition.setDestroyMethod(new Signature(destroyMethod));
-        }
+        providerDefinition.setInitMethod(type.getInitMethod());
+        providerDefinition.setDestroyMethod(type.getDestroyMethod());
 
         // JFM FIXME seems hacky and add to JavaPCDG
         Integer level = definition.getInitLevel();

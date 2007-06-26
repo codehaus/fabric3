@@ -19,10 +19,10 @@
 package org.fabric3.pojo.processor;
 
 import java.lang.reflect.Member;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.fabric3.pojo.instancefactory.Signature;
 import org.fabric3.spi.model.type.ComponentType;
 
 /**
@@ -33,8 +33,8 @@ import org.fabric3.spi.model.type.ComponentType;
 public class PojoComponentType extends ComponentType<JavaMappedService, JavaMappedReference, JavaMappedProperty<?>> {
     private final Class<?> implClass;
     private ConstructorDefinition<?> constructorDefinition;
-    private Method initMethod;
-    private Method destroyMethod;
+    private Signature initMethod;
+    private Signature destroyMethod;
     private final Map<String, Resource> resources = new HashMap<String, Resource>();
     private Member conversationIDMember;
 
@@ -87,7 +87,7 @@ public class PojoComponentType extends ComponentType<JavaMappedService, JavaMapp
      *
      * @return the component initializer method
      */
-    public Method getInitMethod() {
+    public Signature getInitMethod() {
         return initMethod;
     }
 
@@ -96,7 +96,7 @@ public class PojoComponentType extends ComponentType<JavaMappedService, JavaMapp
      *
      * @param initMethod the component initializer method
      */
-    public void setInitMethod(Method initMethod) {
+    public void setInitMethod(Signature initMethod) {
         this.initMethod = initMethod;
     }
 
@@ -105,7 +105,7 @@ public class PojoComponentType extends ComponentType<JavaMappedService, JavaMapp
      *
      * @return the component destructor method
      */
-    public Method getDestroyMethod() {
+    public Signature getDestroyMethod() {
         return destroyMethod;
     }
 
@@ -114,7 +114,7 @@ public class PojoComponentType extends ComponentType<JavaMappedService, JavaMapp
      *
      * @param destroyMethod the component destructor method
      */
-    public void setDestroyMethod(Method destroyMethod) {
+    public void setDestroyMethod(Signature destroyMethod) {
         this.destroyMethod = destroyMethod;
     }
 

@@ -27,6 +27,7 @@ import org.fabric3.api.annotation.Resource;
 
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.pojo.instancefactory.Signature;
 import static org.fabric3.spi.model.type.Scope.COMPOSITE;
 import org.fabric3.spi.component.ScopeRegistry;
 
@@ -54,11 +55,10 @@ public class IntrospectionRegistryIntegrationTestCase extends TestCase {
     private IntrospectionRegistryImpl registry;
 
     public void testSimpleComponentTypeParsing() throws Exception {
-        PojoComponentType type =
-            new PojoComponentType();
+        PojoComponentType type = new PojoComponentType();
         registry.introspect(Foo.class, type, null);
-        assertEquals(Foo.class.getMethod("init"), type.getInitMethod());
-        assertEquals(Foo.class.getMethod("destroy"), type.getDestroyMethod());
+        assertEquals(new Signature(Foo.class.getMethod("init")), type.getInitMethod());
+        assertEquals(new Signature(Foo.class.getMethod("destroy")), type.getDestroyMethod());
         assertEquals(COMPOSITE, type.getImplementationScope());
         assertEquals(Foo.class.getMethod("setBar", String.class), type.getProperties().get("bar").getMember());
         assertEquals(Foo.class.getMethod("setTarget", Foo.class), type.getReferences().get("target").getMember());

@@ -19,14 +19,14 @@
 package org.fabric3.fabric.implementation.processor;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 
 import org.osoa.sca.annotations.Destroy;
 
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.pojo.instancefactory.Signature;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.processor.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
+import org.fabric3.spi.loader.LoaderContext;
 
 /**
  * Processes the {@link @Destroy} annotation on a component implementation and updates the component type with the
@@ -50,9 +50,6 @@ public class DestroyProcessor extends ImplementationProcessorExtension {
         if (type.getDestroyMethod() != null) {
             throw new DuplicateDestructorException("More than one destructor found on implementation");
         }
-        if (Modifier.isProtected(method.getModifiers())) {
-            method.setAccessible(true);
-        }
-        type.setDestroyMethod(method);
+        type.setDestroyMethod(new Signature(method));
     }
 }

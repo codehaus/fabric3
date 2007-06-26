@@ -13,6 +13,7 @@ import org.fabric3.pojo.implementation.PojoComponentDefinition;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.pojo.instancefactory.InjectionSiteMapping;
 import org.fabric3.pojo.instancefactory.MemberSite;
+import org.fabric3.pojo.instancefactory.Signature;
 import org.fabric3.pojo.processor.JavaMappedReference;
 import org.fabric3.pojo.processor.ConstructorDefinition;
 import org.fabric3.pojo.processor.PojoComponentType;
@@ -122,8 +123,8 @@ public class JavaPhysicalComponentGeneratorTestCase extends TestCase {
         PojoComponentType type =
                 new PojoComponentType(Foo.class);
         type.setImplementationScope(Scope.COMPOSITE);
-        type.setInitMethod(initMethod);
-        type.setDestroyMethod(destroyMethod);
+        type.setInitMethod(new Signature(initMethod));
+        type.setDestroyMethod(new Signature(destroyMethod));
 
         Constructor<Foo> constructor = Foo.class.getConstructor(Object.class, Object.class);
         ConstructorDefinition<Foo> ctorDef = new ConstructorDefinition<Foo>(constructor);
