@@ -26,7 +26,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.implementation.java.ConstructorDefinition;
-import org.fabric3.spi.implementation.java.ImplementationProcessorExtension;
+import org.fabric3.extension.implementation.java.ImplementationProcessorExtension;
 import org.fabric3.spi.implementation.java.ImplementationProcessorService;
 import org.fabric3.spi.implementation.java.PojoComponentType;
 import org.fabric3.spi.implementation.java.ProcessingException;

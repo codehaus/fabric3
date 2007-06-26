@@ -28,7 +28,7 @@ import org.osoa.sca.annotations.Context;
 import org.fabric3.fabric.injection.RequestContextObjectFactory;
 import org.fabric3.fabric.util.JavaIntrospectionHelper;
 import org.fabric3.spi.loader.LoaderContext;
-import org.fabric3.spi.implementation.java.ImplementationProcessorExtension;
+import org.fabric3.extension.implementation.java.ImplementationProcessorExtension;
 import org.fabric3.spi.implementation.java.JavaMappedProperty;
 import org.fabric3.spi.implementation.java.PojoComponentType;
 import org.fabric3.spi.implementation.java.ProcessingException;

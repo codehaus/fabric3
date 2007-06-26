@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.implementation.java;
+package org.fabric3.extension.implementation.java;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -31,6 +31,10 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.spi.implementation.java.ImplementationProcessor;
+import org.fabric3.spi.implementation.java.IntrospectionRegistry;
+import org.fabric3.spi.implementation.java.PojoComponentType;
+import org.fabric3.spi.implementation.java.ProcessingException;
 
 /**
  * A convenience class for annotation processors which alleviates the need to implement unused callbacks

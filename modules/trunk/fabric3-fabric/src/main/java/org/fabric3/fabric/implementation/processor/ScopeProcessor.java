@@ -19,11 +19,12 @@
 package org.fabric3.fabric.implementation.processor;
 
 import org.fabric3.spi.loader.LoaderContext;
-import org.fabric3.spi.implementation.java.ImplementationProcessorExtension;
+import org.fabric3.extension.implementation.java.ImplementationProcessorExtension;
 import org.fabric3.spi.implementation.java.PojoComponentType;
 import org.fabric3.spi.implementation.java.ProcessingException;
 import org.fabric3.spi.model.type.Scope;
 import org.fabric3.spi.component.ScopeRegistry;
+
 import org.osoa.sca.annotations.Reference;
 
 /**

@@ -29,7 +29,7 @@ import org.osoa.sca.annotations.Remotable;
 import static org.fabric3.fabric.util.JavaIntrospectionHelper.getAllInterfaces;
 import static org.fabric3.fabric.util.JavaIntrospectionHelper.toPropertyName;
 import org.fabric3.spi.idl.InvalidServiceContractException;
-import org.fabric3.spi.implementation.java.ImplementationProcessorExtension;
+import org.fabric3.extension.implementation.java.ImplementationProcessorExtension;
 import org.fabric3.spi.implementation.java.ImplementationProcessorService;
 import org.fabric3.spi.implementation.java.JavaMappedService;
 import org.fabric3.spi.implementation.java.PojoComponentType;

@@ -29,7 +29,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.idl.InvalidServiceContractException;
 import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
-import org.fabric3.spi.implementation.java.ImplementationProcessorExtension;
+import org.fabric3.extension.implementation.java.ImplementationProcessorExtension;
 import org.fabric3.spi.implementation.java.JavaMappedReference;
 import org.fabric3.spi.implementation.java.PojoComponentType;
 import org.fabric3.spi.implementation.java.ProcessingException;

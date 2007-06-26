@@ -21,7 +21,7 @@ package org.fabric3.fabric.implementation.processor;
 import org.osoa.sca.annotations.AllowsPassByReference;
 
 import org.fabric3.spi.loader.LoaderContext;
-import org.fabric3.spi.implementation.java.ImplementationProcessorExtension;
+import org.fabric3.extension.implementation.java.ImplementationProcessorExtension;
 import org.fabric3.spi.implementation.java.PojoComponentType;
 import org.fabric3.spi.implementation.java.ProcessingException;
 

@@ -26,15 +26,14 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Map;
 
-import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.implementation.java.ConstructorDefinition;
 import org.fabric3.spi.implementation.java.DuplicatePropertyException;
 import org.fabric3.spi.implementation.java.IllegalPropertyException;
-import org.fabric3.spi.implementation.java.ImplementationProcessorExtension;
 import org.fabric3.spi.implementation.java.ImplementationProcessorService;
 import org.fabric3.spi.implementation.java.JavaMappedProperty;
 import org.fabric3.spi.implementation.java.PojoComponentType;
 import org.fabric3.spi.implementation.java.ProcessingException;
+import org.fabric3.spi.loader.LoaderContext;
 
 /**
  * Base class for ImplementationProcessors that handle annotations that add Properties.

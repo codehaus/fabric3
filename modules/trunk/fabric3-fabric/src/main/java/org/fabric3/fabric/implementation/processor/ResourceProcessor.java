@@ -24,7 +24,7 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 
 import org.fabric3.spi.loader.LoaderContext;
-import org.fabric3.spi.implementation.java.ImplementationProcessorExtension;
+import org.fabric3.extension.implementation.java.ImplementationProcessorExtension;
 import org.fabric3.spi.implementation.java.PojoComponentType;
 import org.fabric3.spi.implementation.java.ProcessingException;
 import org.fabric3.spi.implementation.java.Resource;

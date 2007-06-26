@@ -39,7 +39,7 @@ import org.osoa.sca.annotations.Service;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.idl.InvalidServiceContractException;
 import org.fabric3.spi.implementation.java.ConstructorDefinition;
-import org.fabric3.spi.implementation.java.ImplementationProcessorExtension;
+import org.fabric3.extension.implementation.java.ImplementationProcessorExtension;
 import org.fabric3.spi.implementation.java.ImplementationProcessorService;
 import org.fabric3.spi.implementation.java.JavaMappedProperty;
 import org.fabric3.spi.implementation.java.JavaMappedReference;

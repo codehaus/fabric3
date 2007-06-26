@@ -31,7 +31,7 @@ import org.fabric3.spi.model.type.ComponentType;
  * @version $$Rev$$ $$Date$$
  */
 public class PojoComponentType extends ComponentType<JavaMappedService, JavaMappedReference, JavaMappedProperty<?>> {
-    private Class<?> implClass;
+    private final Class<?> implClass;
     private ConstructorDefinition<?> constructorDefinition;
     private Method initMethod;
     private Method destroyMethod;
@@ -43,6 +43,7 @@ public class PojoComponentType extends ComponentType<JavaMappedService, JavaMapp
      */
     @Deprecated
     public PojoComponentType() {
+        implClass = null;
     }
 
     /**
@@ -61,15 +62,6 @@ public class PojoComponentType extends ComponentType<JavaMappedService, JavaMapp
      */
     public Class<?> getImplClass() {
         return implClass;
-    }
-
-    /**
-     * Sets the java class for the POJO this is describing.
-     *
-     * @param implClass the java class for the POJO this is describing
-     */
-    public void setImplClass(Class<?> implClass) {
-        this.implClass = implClass;
     }
 
     /**
