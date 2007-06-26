@@ -63,6 +63,11 @@
         <reference name="registry" target="pullTransformerRegistry"/>
     </component>
 
+    <component name="String2QName">
+        <system:implementation.system class="org.fabric3.transform.dom2java.String2QName"/>
+        <reference name="registry" target="pullTransformerRegistry"/>
+    </component>
+
     <component name="String2String">
         <system:implementation.system class="org.fabric3.transform.dom2java.String2String"/>
         <reference name="registry" target="pullTransformerRegistry"/>

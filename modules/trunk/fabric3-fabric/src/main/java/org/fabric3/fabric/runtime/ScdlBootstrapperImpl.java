@@ -90,6 +90,8 @@ import static org.fabric3.fabric.runtime.ComponentNames.CLASSLOADER_REGISTRY_URI
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_NAME;
 import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
+
+import org.fabric3.fabric.services.advertsiement.FeatureLoader;
 import org.fabric3.fabric.services.classloading.ClassLoaderRegistryImpl;
 import org.fabric3.fabric.services.instancefactory.BuildHelperImpl;
 import org.fabric3.fabric.services.instancefactory.DefaultInstanceFactoryBuilderRegistry;
@@ -351,6 +353,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         SystemComponentTypeLoader componentTypeLoader = new SystemComponentTypeLoader(introspector);
         registerLoader(loaderRegistry, new SystemImplementationLoader(loaderRegistry, componentTypeLoader));
         registerLoader(loaderRegistry, new MarshallerLoader(loaderRegistry, introspector));
+        registerLoader(loaderRegistry, new FeatureLoader(loaderRegistry, introspector));
         return loaderRegistry;
     }
 

@@ -35,19 +35,19 @@ import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
+import org.fabric3.spi.model.type.ComponentDefinition;
+import org.fabric3.spi.model.type.Implementation;
 import org.fabric3.spi.model.type.Property;
 import org.fabric3.spi.model.type.Scope;
-import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Revision: 1 $ $Date: 2007-05-14 18:40:37 +0100 (Mon, 14 May 2007) $
  */
-@EagerInit
-public class FeatureLoader extends LoaderExtension<SystemImplementation> {
+public class FeatureLoader extends LoaderExtension<ComponentDefinition> {
 
     // Qualified name of the root element.
-    private static final QName MARSHALLED = new QName(Constants.FABRIC3_SYSTEM_NS, "features");
+    private static final QName QNAME = new QName(Constants.FABRIC3_SYSTEM_NS, "feature");
 
     // Introspector
     private Introspector introspector;
@@ -81,23 +81,22 @@ public class FeatureLoader extends LoaderExtension<SystemImplementation> {
      */
     @Override
     public QName getXMLType() {
-        return MARSHALLED;
+        return QNAME;
     }
 
     /**
      * Registers the metadata with the marshaller registry.
      */
     @SuppressWarnings("unchecked")
-    public SystemImplementation load(XMLStreamReader reader, LoaderContext context)
+    public ComponentDefinition load(XMLStreamReader reader, LoaderContext context)
             throws XMLStreamException, LoaderException {
 
+        String name = reader.getAttributeValue(null, "name");
         String feature = reader.getElementText();
 
-        LoaderUtil.skipToEndElement(reader);
-
-        final SystemImplementation marshallerImplementation = new SystemImplementation();
+        final SystemImplementation featureImplementation = new SystemImplementation();
         final Class<FeatureComponent> implClass = FeatureComponent.class;
-        marshallerImplementation.setImplementationClass(implClass);
+        featureImplementation.setImplementationClass(implClass);
 
         PojoComponentType componentType = getComponentType(implClass, context);
 
@@ -107,9 +106,9 @@ public class FeatureLoader extends LoaderExtension<SystemImplementation> {
 
         componentType.setImplementationScope(Scope.COMPOSITE);
 
-        marshallerImplementation.setComponentType(componentType);
+        featureImplementation.setComponentType(componentType);
 
-        return marshallerImplementation;
+        return new ComponentDefinition<Implementation<?>>(name, featureImplementation);
 
     }
 

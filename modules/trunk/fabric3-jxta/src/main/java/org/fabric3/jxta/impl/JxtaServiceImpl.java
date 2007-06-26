@@ -101,6 +101,7 @@ public class JxtaServiceImpl implements JxtaService {
 
             networkConfigurator.setName(runtimeId);
             networkConfigurator.setHome(new File(runtimeId));
+            networkConfigurator.setMode(NetworkConfigurator.EDGE_NODE);
 
             if (networkConfigurator.exists()) {
                 File pc = new File(networkConfigurator.getHome(), "PlatformConfig");

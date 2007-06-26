@@ -33,7 +33,7 @@ import org.osoa.sca.annotations.Reference;
 public class FeatureComponent {
 
     // Feature // TODO support list of features
-    private QName feature;
+    private String feature;
 
     // Advertisement service
     private AdvertisementService advertisementService;
@@ -50,7 +50,7 @@ public class FeatureComponent {
      * @param feature Feature injected as a property.
      */
     @Property
-    public void setFeature(QName feature) {
+    public void setFeature(String feature) {
         this.feature = feature;
     }
 
@@ -59,7 +59,7 @@ public class FeatureComponent {
      */
     @Init
     public void start() {
-        advertisementService.addFeature(feature);
+        advertisementService.addFeature(QName.valueOf(feature));
     }
 
 }

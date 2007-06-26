@@ -57,6 +57,10 @@
         <system:implementation.system class="org.fabric3.fabric.services.advertsiement.DefaultAdvertismentService"/>
     </component>
 
+    <component name="featureLoader">
+        <system:implementation.system class="org.fabric3.fabric.services.advertsiement.FeatureLoader"/>
+    </component>
+
     <component name="runtimeInfoService">
         <system:implementation.system class="org.fabric3.fabric.services.runtime.DefaultRuntimeInfoService"/>
     </component>

@@ -25,6 +25,7 @@ import java.util.Set;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
@@ -94,6 +95,13 @@ public class ConsoleServlet extends Fabric3Servlet {
                 writer.write("<tr><td><img src=\"\\console\\runtimes.gif\"></img></td><td>");
                 writer.write(runtimeInfo.getId());
                 writer.write("</td><td>Running</td></tr>");
+                writer.write("<h3>Supported Features</h3>");
+                writer.write("<table>");
+                for(QName feature : runtimeInfo.getFeatures()) {
+                    writer.write("<tr><td>" + feature + "</td></tr>");
+
+                }
+                writer.write("</table>");
             }
             writer.write("</table>");
         }

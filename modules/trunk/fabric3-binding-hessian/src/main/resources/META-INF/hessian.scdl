@@ -34,5 +34,8 @@
     <component name="HessianWireAttacher">
         <system:implementation.system class="org.fabric3.binding.hessian.wire.HessianWireAttacher"/>
     </component>
-    
+
+    <!-- Feature -->
+    <system:feature name="HessianBindingFeature">{http://fabric3.org/xmlns/binding}hessian</system:feature>
+
 </composite>
