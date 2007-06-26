@@ -20,5 +20,13 @@ package org.fabric3.spi.transform;
  * @version $Rev$ $Date$
  */
 public interface PushTransformer<SOURCE, TARGET> extends Transformer {
-    void transform(SOURCE source, TARGET target) throws Exception;
+    /**
+     * Transforms the source by writing it to the target.
+     *
+     * @param source the source instance
+     * @param target the target to be written to
+     * @param context the context for this transformation
+     * @throws Exception if there was a problem during the transformation
+     */
+    void transform(SOURCE source, TARGET target, TransformContext context) throws Exception;
 }

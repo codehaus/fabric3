@@ -42,7 +42,7 @@ public class String2MapTestCase extends TestCase {
                 .parse(new ByteArrayInputStream(xml.getBytes()))
                 .getDocumentElement();
         
-        Map<String, String> map = string2Map.transform(node);
+        Map<String, String> map = string2Map.transform(node, null);
 
         assertEquals(3, map.size());
         assertEquals("yellow", map.get("apple"));

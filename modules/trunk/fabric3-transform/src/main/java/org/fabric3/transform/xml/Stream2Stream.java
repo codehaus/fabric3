@@ -32,6 +32,7 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
 import org.fabric3.spi.model.type.DataType;
+import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.transform.AbstractPushTransformer;
 
 /**
@@ -46,7 +47,7 @@ public class Stream2Stream extends AbstractPushTransformer<XMLStreamReader, XMLS
         return null;
     }
 
-    public void transform(XMLStreamReader reader, XMLStreamWriter writer) throws XMLStreamException {
+    public void transform(XMLStreamReader reader, XMLStreamWriter writer, TransformContext context) throws XMLStreamException {
         int level = 0;
         do {
             switch (reader.next()) {

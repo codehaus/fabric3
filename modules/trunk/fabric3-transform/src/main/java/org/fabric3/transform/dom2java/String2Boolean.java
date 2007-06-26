@@ -23,6 +23,7 @@ import org.fabric3.spi.model.type.XSDSimpleType;
 import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.model.type.DataType;
 import org.fabric3.spi.transform.TransformationException;
+import org.fabric3.spi.transform.TransformContext;
 
 /**
  * @version $Rev$ $Date$
@@ -39,7 +40,7 @@ public class String2Boolean extends AbstractPullTransformer<Node, Boolean> {
         return TARGET;
     }
 
-    public Boolean transform(Node node) throws TransformationException {
+    public Boolean transform(Node node, TransformContext context) throws TransformationException {
         return Boolean.valueOf(node.getTextContent());
     }
 }

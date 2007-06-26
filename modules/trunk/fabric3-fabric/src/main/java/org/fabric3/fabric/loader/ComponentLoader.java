@@ -219,7 +219,7 @@ public class ComponentLoader extends LoaderExtension<ComponentDefinition<?>> {
         Document value = docBuilder.newDocument();
         Element valueElement = value.createElement("value");
         value.appendChild(valueElement);
-        stream2Element.transform(reader, valueElement);
+        stream2Element.transform(reader, valueElement, null);
         return new PropertyValue(name, dataType, value);
     }
 

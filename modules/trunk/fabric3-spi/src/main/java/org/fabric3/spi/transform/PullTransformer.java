@@ -16,12 +16,17 @@
  */
 package org.fabric3.spi.transform;
 
-import org.fabric3.spi.model.type.DataType;
-
 /**
  * @version $Rev$ $Date$
  */
 public interface PullTransformer<SOURCE, TARGET> extends Transformer {
-
-    TARGET transform(SOURCE source) throws Exception;
+    /**
+     * Transforms the source instance into a new instance of the target type.
+     *
+     * @param source the source instance
+     * @param context the context for this transformation
+     * @return a new instance of the target type
+     * @throws Exception if there was a problem during the transformation
+     */
+    TARGET transform(SOURCE source, TransformContext context) throws Exception;
 }

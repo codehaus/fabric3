@@ -31,6 +31,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.spi.model.type.DataType;
+import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.transform.AbstractPushTransformer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -55,7 +56,7 @@ public class Stream2Element2 extends AbstractPushTransformer<XMLStreamReader, El
         return null;
     }
 
-    public void transform(XMLStreamReader reader, Element element) throws XMLStreamException {
+    public void transform(XMLStreamReader reader, Element element, TransformContext context) throws XMLStreamException {
         
         Document document = element.getOwnerDocument();
         String name = rootElement.getLocalPart();

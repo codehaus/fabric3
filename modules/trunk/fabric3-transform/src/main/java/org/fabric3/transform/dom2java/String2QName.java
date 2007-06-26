@@ -25,6 +25,7 @@ import org.fabric3.spi.model.type.XSDSimpleType;
 import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.model.type.DataType;
 import org.fabric3.spi.transform.TransformationException;
+import org.fabric3.spi.transform.TransformContext;
 
 /**
  * @version $Rev: 42 $ $Date: 2007-05-16 18:58:55 +0100 (Wed, 16 May 2007) $
@@ -41,7 +42,7 @@ public class String2QName extends AbstractPullTransformer<Node, QName> {
         return TARGET;
     }
 
-    public QName transform(Node node) throws TransformationException {
+    public QName transform(Node node, TransformContext context) throws TransformationException {
         return QName.valueOf(node.getTextContent());
     }
 }

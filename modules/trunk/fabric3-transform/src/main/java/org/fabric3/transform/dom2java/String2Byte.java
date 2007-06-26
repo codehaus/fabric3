@@ -23,6 +23,7 @@ import org.fabric3.spi.model.type.XSDSimpleType;
 import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.model.type.DataType;
 import org.fabric3.spi.transform.TransformationException;
+import org.fabric3.spi.transform.TransformContext;
 
 /**
  * @version $Rev$ $Date$
@@ -39,7 +40,7 @@ public class String2Byte extends AbstractPullTransformer<Node, Byte> {
         return TARGET;
     }
 
-    public Byte transform(Node node) throws TransformationException {
+    public Byte transform(Node node, TransformContext context) throws TransformationException {
         return Byte.valueOf(node.getTextContent());
     }
 }

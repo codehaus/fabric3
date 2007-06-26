@@ -41,6 +41,7 @@ import org.fabric3.spi.model.type.XSDSimpleType;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
+import org.fabric3.spi.transform.TransformContext;
 
 /**
  * Base class for ComponentBuilders that build components based on POJOs.
@@ -89,39 +90,30 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
         ConcurrentHashMap<String, ObjectFactory<?>> factories =
                 new ConcurrentHashMap<String, ObjectFactory<?>>(propertyValues.size());
 
+        ClassLoader cl = classLoaderRegistry.getClassLoader(definition.getClassLoaderId());
+        TransformContext context = new TransformContext(null, cl, null, null);
         for (Map.Entry<String, Document> entry : propertyValues.entrySet()) {
             String name = entry.getKey();
             Document value = entry.getValue();
             Element element = value.getDocumentElement();
             ValueSource source = new ValueSource(ValueSource.ValueSourceType.PROPERTY, name);
             Class<?> memberType = provider.getMemberType(source);
-            ObjectFactory<?> objectFactory;
-            if (Class.class.equals(memberType)) {
-                String className = element.getTextContent();
-                try {
-                    Class<?> clazz = classLoaderRegistry.loadClass(definition.getClassLoaderId(), className);
-                    objectFactory = new SingletonObjectFactory<Class<?>>(clazz);
-                } catch (ClassNotFoundException e) {
-                    throw new PropertyTransformException(e.getMessage(), className, e);
-                }
-            } else {
-                if (memberType.isPrimitive()) {
-                    memberType = OBJECT_TYPES.get(memberType);
-                }
-                objectFactory = createObjectFactory(name, memberType, element);
+            if (memberType.isPrimitive()) {
+                memberType = OBJECT_TYPES.get(memberType);
             }
+            ObjectFactory<?> objectFactory = createObjectFactory(name, memberType, element, context);
             provider.setObjectFactory(source, objectFactory);
             factories.put(name, objectFactory);
         }
         return factories;
     }
 
-    protected <T> ObjectFactory<T> createObjectFactory(String name, Class<T> type, Element value)
+    protected <T> ObjectFactory<T> createObjectFactory(String name, Class<T> type, Element value, TransformContext context)
             throws BuilderException {
         JavaClass<T> targetType = new JavaClass<T>(type);
         PullTransformer<Node, T> transformer = getTransformer(SOURCE_TYPE, targetType);
         try {
-            T instance = type.cast(transformer.transform(value));
+            T instance = type.cast(transformer.transform(value, context));
             return new SingletonObjectFactory<T>(instance);
         } catch (Exception e) {
             throw new PropertyTransformException("Unable to transform property value", name, e);

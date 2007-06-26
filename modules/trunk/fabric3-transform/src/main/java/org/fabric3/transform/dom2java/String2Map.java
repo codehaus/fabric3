@@ -28,6 +28,7 @@ import org.fabric3.spi.model.type.XSDSimpleType;
 import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.model.type.DataType;
 import org.fabric3.spi.transform.TransformationException;
+import org.fabric3.spi.transform.TransformContext;
 
 /**
  * Expects the property to be dfined in the format,
@@ -50,7 +51,7 @@ public class String2Map extends AbstractPullTransformer<Node, Map<String, String
         return TARGET;
     }
 
-    public Map<String, String> transform(Node node) throws TransformationException {
+    public Map<String, String> transform(Node node, TransformContext context) throws TransformationException {
         
         Map<String, String> map = new HashMap<String, String>();
         NodeList nodeList = node.getChildNodes();

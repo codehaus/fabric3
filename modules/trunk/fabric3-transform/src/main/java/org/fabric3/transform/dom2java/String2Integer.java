@@ -22,6 +22,7 @@ import org.fabric3.spi.model.type.DataType;
 import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.model.type.XSDSimpleType;
 import org.fabric3.spi.transform.TransformationException;
+import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.transform.AbstractPullTransformer;
 
 /**
@@ -39,7 +40,7 @@ public class String2Integer extends AbstractPullTransformer<Node, Integer> {
         return TARGET;
     }
 
-    public Integer transform(Node node) throws TransformationException {
+    public Integer transform(Node node, TransformContext context) throws TransformationException {
         return Integer.valueOf(node.getTextContent());
     }
 }
