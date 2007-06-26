@@ -24,6 +24,8 @@ import loanapp.loanservice.LoanApplicationService;
 import loanapp.loanservice.LoanResult;
 
 /**
+ * Implementation that handles a loan application
+ *
  * @version $Rev$ $Date$
  */
 public class LoanApplicationComponent implements LoanApplicationService {

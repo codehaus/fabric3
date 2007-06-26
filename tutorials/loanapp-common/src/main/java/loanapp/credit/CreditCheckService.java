@@ -19,11 +19,19 @@ package loanapp.credit;
 import org.osoa.sca.annotations.Remotable;
 
 /**
+ * Implementations perform a credit check for a customer.
+ *
  * @version $Rev$ $Date$
  */
 @Remotable
 public interface CreditCheckService {
 
+    /**
+     * Performs the credit check, returning the credit score for a customer.
+     *
+     * @param id the customer id
+     * @return the credit score
+     */
     int checkCredit(String id);
 
 }

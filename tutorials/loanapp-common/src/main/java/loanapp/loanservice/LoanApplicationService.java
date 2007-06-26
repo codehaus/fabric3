@@ -19,6 +19,8 @@ package loanapp.loanservice;
 import org.osoa.sca.annotations.Remotable;
 
 /**
+ * Implementations process a loan application.
+ *
  * @version $Rev$ $Date$
  */
 @Remotable

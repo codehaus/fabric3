@@ -17,14 +17,31 @@
 package loanapp.loanservice;
 
 /**
+ * A Loan application message
+ *
  * @version $Rev$ $Date$
  */
 public interface LoanApplication {
 
+    /**
+     * The customer id making the loan application
+     *
+     * @return
+     */
     String getCustomerID();
 
+    /**
+     * The loan amount.
+     *
+     * @return the loan amount
+     */
     double getAmount();
 
+    /**
+     * The loan downpayment amount.
+     *
+     * @return the loan downpayment amount
+     */
     double getDownPayment();
 
 }

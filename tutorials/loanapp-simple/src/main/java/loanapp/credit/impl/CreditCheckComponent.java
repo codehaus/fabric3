@@ -19,6 +19,8 @@ package loanapp.credit.impl;
 import loanapp.credit.CreditCheckService;
 
 /**
+ * Implementation that performs a simple credit check.
+ *
  * @version $Rev$ $Date$
  */
 public class CreditCheckComponent implements CreditCheckService {
