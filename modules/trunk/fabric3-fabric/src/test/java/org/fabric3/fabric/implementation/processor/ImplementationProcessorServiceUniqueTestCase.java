@@ -18,7 +18,7 @@
  */
 package org.fabric3.fabric.implementation.processor;
 
-import org.fabric3.spi.implementation.java.ImplementationProcessorService;
+import org.fabric3.pojo.processor.ImplementationProcessorService;
 
 import junit.framework.TestCase;
 import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;

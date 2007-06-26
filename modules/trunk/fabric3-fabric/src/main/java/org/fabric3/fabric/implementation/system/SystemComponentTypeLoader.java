@@ -18,9 +18,9 @@
  */
 package org.fabric3.fabric.implementation.system;
 
-import org.fabric3.spi.implementation.java.Introspector;
-import org.fabric3.spi.implementation.java.PojoComponentType;
-import org.fabric3.spi.implementation.java.ProcessingException;
+import org.fabric3.pojo.processor.Introspector;
+import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.spi.loader.ComponentTypeLoader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;

@@ -23,10 +23,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import org.fabric3.spi.implementation.java.ConstructorDefinition;
-import org.fabric3.spi.implementation.java.JavaMappedProperty;
-import org.fabric3.spi.implementation.java.PojoComponentType;
-import org.fabric3.spi.implementation.java.IllegalPropertyException;
+import org.fabric3.pojo.processor.ConstructorDefinition;
+import org.fabric3.pojo.processor.JavaMappedProperty;
+import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.pojo.processor.IllegalPropertyException;
 import org.fabric3.spi.SingletonObjectFactory;
 
 import junit.framework.TestCase;

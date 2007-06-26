@@ -25,8 +25,8 @@ import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Scope;
 import org.fabric3.api.annotation.Resource;
 
-import org.fabric3.spi.implementation.java.ImplementationProcessorService;
-import org.fabric3.spi.implementation.java.PojoComponentType;
+import org.fabric3.pojo.processor.ImplementationProcessorService;
+import org.fabric3.pojo.processor.PojoComponentType;
 import static org.fabric3.spi.model.type.Scope.COMPOSITE;
 import org.fabric3.spi.component.ScopeRegistry;
 
@@ -41,6 +41,7 @@ import org.fabric3.fabric.implementation.processor.ReferenceProcessor;
 import org.fabric3.fabric.implementation.processor.ResourceProcessor;
 import org.fabric3.fabric.implementation.processor.ScopeProcessor;
 import org.fabric3.fabric.monitor.NullMonitorFactory;
+
 import org.easymock.EasyMock;
 
 /**

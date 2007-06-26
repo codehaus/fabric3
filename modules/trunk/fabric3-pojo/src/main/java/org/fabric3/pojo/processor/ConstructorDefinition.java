@@ -16,21 +16,36 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.implementation.java;
+package org.fabric3.pojo.processor;
+
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Denotes an illegal property definition in a component type
+ * Hold injection information for the constructor used to instantiate a component implementation instance
  *
  * @version $Rev$ $Date$
  */
-public class IllegalPropertyException extends ProcessingException {
+public class ConstructorDefinition<T> {
 
-    public IllegalPropertyException(String message) {
-        super(message);
+    private Constructor<T> constructor;
+    private List<String> injectionNames;
+
+    public ConstructorDefinition(Constructor<T> constructor) {
+        this.constructor = constructor;
+        injectionNames = new ArrayList<String>();
     }
 
+    public Constructor<T> getConstructor() {
+        return constructor;
+    }
 
-    public IllegalPropertyException(String message, String identifier) {
-        super(message, identifier);
+    public List<String> getInjectionNames() {
+        return injectionNames;
+    }
+
+    public void setInjectionNames(List<String> injectionNames) {
+        this.injectionNames = injectionNames;
     }
 }

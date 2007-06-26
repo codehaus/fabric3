@@ -16,20 +16,28 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.implementation.java;
+package org.fabric3.pojo.processor;
+
+import org.fabric3.spi.loader.LoaderContext;
 
 /**
- * Thrown when an implementation has more than one property injection site with the same name
+ * Implementations are responsible for walking a component implementation class, adding additional component type
+ * information as appropriate
  *
  * @version $Rev$ $Date$
  */
-public class DuplicatePropertyException extends ProcessingException {
+public interface Introspector {
 
-    public DuplicatePropertyException(String message) {
-        super(message);
-    }
+    /**
+     * Walks the given component implementation class
+     *
+     * @param clazz the component implementation class
+     * @param type  the component type associated with the implementation class
+     * @return the updated component type
+     * @throws ProcessingException if an error is encountered evaluating the implementation class
+     */
+    PojoComponentType introspect(Class<?> clazz,
+                                 PojoComponentType type,
+                                 LoaderContext context) throws ProcessingException;
 
-    public DuplicatePropertyException(String message, String identifier) {
-        super(message, identifier);
-    }
 }

@@ -20,7 +20,7 @@ package org.fabric3.fabric.implementation.processor;
 
 import org.osoa.sca.annotations.AllowsPassByReference;
 
-import org.fabric3.spi.implementation.java.PojoComponentType;
+import org.fabric3.pojo.processor.PojoComponentType;
 
 import junit.framework.TestCase;
 

@@ -18,7 +18,7 @@
  */
 package org.fabric3.fabric.implementation.processor;
 
-import org.fabric3.spi.implementation.java.ProcessingException;
+import org.fabric3.pojo.processor.ProcessingException;
 
 /**
  * Denotes an illegal use of the {@link @org.osoa.sca.annotations.Service} annotation

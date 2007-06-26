@@ -16,28 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.implementation.java;
-
-import org.fabric3.spi.loader.LoaderContext;
+package org.fabric3.pojo.processor;
 
 /**
- * Implementations are responsible for walking a component implementation class, adding additional component type
- * information as appropriate
+ * Denotes an illegal property definition in a component type
  *
  * @version $Rev$ $Date$
  */
-public interface Introspector {
+public class IllegalPropertyException extends ProcessingException {
 
-    /**
-     * Walks the given component implementation class
-     *
-     * @param clazz the component implementation class
-     * @param type  the component type associated with the implementation class
-     * @return the updated component type
-     * @throws ProcessingException if an error is encountered evaluating the implementation class
-     */
-    PojoComponentType introspect(Class<?> clazz,
-                                 PojoComponentType type,
-                                 LoaderContext context) throws ProcessingException;
+    public IllegalPropertyException(String message) {
+        super(message);
+    }
 
+
+    public IllegalPropertyException(String message, String identifier) {
+        super(message, identifier);
+    }
 }

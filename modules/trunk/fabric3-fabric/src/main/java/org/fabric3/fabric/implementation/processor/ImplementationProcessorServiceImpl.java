@@ -36,13 +36,13 @@ import org.fabric3.fabric.idl.java.IllegalCallbackException;
 import static org.fabric3.fabric.util.JavaIntrospectionHelper.getBaseName;
 import org.fabric3.spi.idl.InvalidServiceContractException;
 import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
-import org.fabric3.spi.implementation.java.DuplicatePropertyException;
-import org.fabric3.spi.implementation.java.ImplementationProcessorService;
-import org.fabric3.spi.implementation.java.JavaMappedProperty;
-import org.fabric3.spi.implementation.java.JavaMappedReference;
-import org.fabric3.spi.implementation.java.JavaMappedService;
-import org.fabric3.spi.implementation.java.PojoComponentType;
-import org.fabric3.spi.implementation.java.ProcessingException;
+import org.fabric3.pojo.processor.DuplicatePropertyException;
+import org.fabric3.pojo.processor.ImplementationProcessorService;
+import org.fabric3.pojo.processor.JavaMappedProperty;
+import org.fabric3.pojo.processor.JavaMappedReference;
+import org.fabric3.pojo.processor.JavaMappedService;
+import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.spi.model.type.Multiplicity;
 import org.fabric3.spi.model.type.ServiceContract;
 
@@ -341,8 +341,8 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
         if (type.getResources().get(name) != null) {
             throw new DuplicateResourceException(name);
         }
-        org.fabric3.spi.implementation.java.Resource<T> resource =
-            new org.fabric3.spi.implementation.java.Resource<T>(name, param, null);
+        org.fabric3.pojo.processor.Resource<T> resource =
+            new org.fabric3.pojo.processor.Resource<T>(name, param, null);
         resource.setOptional(resourceAnnot.optional());
         String mappedName = resourceAnnot.mappedName();
         if (mappedName.length() > 0) {

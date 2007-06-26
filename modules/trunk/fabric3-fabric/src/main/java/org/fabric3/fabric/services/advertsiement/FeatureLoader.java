@@ -29,16 +29,16 @@ import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.fabric.implementation.system.SystemImplementation;
 import org.fabric3.fabric.loader.PropertyUtils;
 import org.fabric3.spi.Constants;
-import org.fabric3.spi.implementation.java.Introspector;
-import org.fabric3.spi.implementation.java.PojoComponentType;
+import org.fabric3.pojo.processor.Introspector;
+import org.fabric3.pojo.processor.PojoComponentType;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.Implementation;
 import org.fabric3.spi.model.type.Property;
 import org.fabric3.spi.model.type.Scope;
+
 import org.osoa.sca.annotations.Reference;
 
 /**

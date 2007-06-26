@@ -28,9 +28,9 @@ import org.osoa.sca.annotations.Conversational;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Remotable;
 
-import org.fabric3.spi.implementation.java.ImplementationProcessorService;
-import org.fabric3.spi.implementation.java.JavaMappedService;
-import org.fabric3.spi.implementation.java.PojoComponentType;
+import org.fabric3.pojo.processor.ImplementationProcessorService;
+import org.fabric3.pojo.processor.JavaMappedService;
+import org.fabric3.pojo.processor.PojoComponentType;
 import org.fabric3.spi.model.type.ServiceContract;
 
 import junit.framework.TestCase;

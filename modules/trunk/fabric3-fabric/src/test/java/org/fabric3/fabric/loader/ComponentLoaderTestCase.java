@@ -31,7 +31,7 @@ import org.easymock.IMocksControl;
 import org.w3c.dom.Document;
 
 import org.fabric3.fabric.implementation.java.JavaImplementation;
-import org.fabric3.spi.implementation.java.PojoComponentType;
+import org.fabric3.pojo.processor.PojoComponentType;
 import org.fabric3.spi.loader.InvalidValueException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;

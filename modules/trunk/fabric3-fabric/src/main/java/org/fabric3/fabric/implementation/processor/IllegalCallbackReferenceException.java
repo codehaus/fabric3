@@ -18,7 +18,7 @@
  */
 package org.fabric3.fabric.implementation.processor;
 
-import org.fabric3.spi.implementation.java.ProcessingException;
+import org.fabric3.pojo.processor.ProcessingException;
 
 /**
  * Denotes an illegcal use of {@link org.osoa.sca.annotations.Callback} on a reference

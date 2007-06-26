@@ -38,14 +38,14 @@ import org.osoa.sca.annotations.Service;
 
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.idl.InvalidServiceContractException;
-import org.fabric3.spi.implementation.java.ConstructorDefinition;
-import org.fabric3.extension.implementation.java.ImplementationProcessorExtension;
-import org.fabric3.spi.implementation.java.ImplementationProcessorService;
-import org.fabric3.spi.implementation.java.JavaMappedProperty;
-import org.fabric3.spi.implementation.java.JavaMappedReference;
-import org.fabric3.spi.implementation.java.JavaMappedService;
-import org.fabric3.spi.implementation.java.PojoComponentType;
-import org.fabric3.spi.implementation.java.ProcessingException;
+import org.fabric3.pojo.processor.ConstructorDefinition;
+import org.fabric3.pojo.processor.ImplementationProcessorExtension;
+import org.fabric3.pojo.processor.ImplementationProcessorService;
+import org.fabric3.pojo.processor.JavaMappedProperty;
+import org.fabric3.pojo.processor.JavaMappedReference;
+import org.fabric3.pojo.processor.ProcessingException;
+import org.fabric3.pojo.processor.JavaMappedService;
+import org.fabric3.pojo.processor.PojoComponentType;
 
 import static org.fabric3.fabric.util.JavaIntrospectionHelper.getAllInterfaces;
 import static org.fabric3.fabric.util.JavaIntrospectionHelper.getAllPublicAndProtectedFields;

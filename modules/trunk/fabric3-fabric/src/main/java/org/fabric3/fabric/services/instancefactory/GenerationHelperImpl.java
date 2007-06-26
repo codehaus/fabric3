@@ -16,8 +16,6 @@
  */
 package org.fabric3.fabric.services.instancefactory;
 
-import java.lang.annotation.ElementType;
-import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -30,11 +28,11 @@ import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.pojo.instancefactory.MemberSite;
 import org.fabric3.pojo.instancefactory.Signature;
 import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
-import org.fabric3.spi.implementation.java.ConstructorDefinition;
-import org.fabric3.spi.implementation.java.JavaMappedProperty;
-import org.fabric3.spi.implementation.java.JavaMappedReference;
-import org.fabric3.spi.implementation.java.JavaMappedService;
-import org.fabric3.spi.implementation.java.PojoComponentType;
+import org.fabric3.pojo.processor.JavaMappedService;
+import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.pojo.processor.ConstructorDefinition;
+import org.fabric3.pojo.processor.JavaMappedProperty;
+import org.fabric3.pojo.processor.JavaMappedReference;
 import org.fabric3.spi.model.instance.ValueSource;
 import static org.fabric3.spi.model.instance.ValueSource.ValueSourceType.PROPERTY;
 import static org.fabric3.spi.model.instance.ValueSource.ValueSourceType.REFERENCE;

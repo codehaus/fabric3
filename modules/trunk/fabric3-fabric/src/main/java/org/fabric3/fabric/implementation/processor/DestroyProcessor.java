@@ -24,9 +24,9 @@ import java.lang.reflect.Modifier;
 import org.osoa.sca.annotations.Destroy;
 
 import org.fabric3.spi.loader.LoaderContext;
-import org.fabric3.extension.implementation.java.ImplementationProcessorExtension;
-import org.fabric3.spi.implementation.java.PojoComponentType;
-import org.fabric3.spi.implementation.java.ProcessingException;
+import org.fabric3.pojo.processor.ImplementationProcessorExtension;
+import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.pojo.processor.ProcessingException;
 
 /**
  * Processes the {@link @Destroy} annotation on a component implementation and updates the component type with the

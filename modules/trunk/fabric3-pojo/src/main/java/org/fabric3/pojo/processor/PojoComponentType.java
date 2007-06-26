@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.implementation.java;
+package org.fabric3.pojo.processor;
 
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;

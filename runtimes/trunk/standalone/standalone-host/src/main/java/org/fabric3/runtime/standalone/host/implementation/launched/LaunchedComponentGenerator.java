@@ -18,8 +18,6 @@
  */
 package org.fabric3.runtime.standalone.host.implementation.launched;
 
-import java.lang.annotation.ElementType;
-import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.net.URI;
@@ -35,15 +33,15 @@ import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.pojo.instancefactory.Signature;
 import org.fabric3.pojo.instancefactory.MemberSite;
 import org.fabric3.pojo.instancefactory.InjectionSiteMapping;
+import org.fabric3.pojo.processor.ConstructorDefinition;
+import org.fabric3.pojo.processor.JavaMappedService;
+import org.fabric3.pojo.processor.PojoComponentType;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
-import org.fabric3.spi.implementation.java.ConstructorDefinition;
-import org.fabric3.spi.implementation.java.JavaMappedProperty;
-import org.fabric3.spi.implementation.java.JavaMappedReference;
-import org.fabric3.spi.implementation.java.JavaMappedService;
-import org.fabric3.spi.implementation.java.PojoComponentType;
+import org.fabric3.pojo.processor.JavaMappedReference;
+import org.fabric3.pojo.processor.JavaMappedProperty;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;

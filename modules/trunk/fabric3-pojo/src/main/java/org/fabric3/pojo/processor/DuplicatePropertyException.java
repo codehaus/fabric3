@@ -16,36 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.implementation.java;
-
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.List;
+package org.fabric3.pojo.processor;
 
 /**
- * Hold injection information for the constructor used to instantiate a component implementation instance
+ * Thrown when an implementation has more than one property injection site with the same name
  *
  * @version $Rev$ $Date$
  */
-public class ConstructorDefinition<T> {
+public class DuplicatePropertyException extends ProcessingException {
 
-    private Constructor<T> constructor;
-    private List<String> injectionNames;
-
-    public ConstructorDefinition(Constructor<T> constructor) {
-        this.constructor = constructor;
-        injectionNames = new ArrayList<String>();
+    public DuplicatePropertyException(String message) {
+        super(message);
     }
 
-    public Constructor<T> getConstructor() {
-        return constructor;
-    }
-
-    public List<String> getInjectionNames() {
-        return injectionNames;
-    }
-
-    public void setInjectionNames(List<String> injectionNames) {
-        this.injectionNames = injectionNames;
+    public DuplicatePropertyException(String message, String identifier) {
+        super(message, identifier);
     }
 }

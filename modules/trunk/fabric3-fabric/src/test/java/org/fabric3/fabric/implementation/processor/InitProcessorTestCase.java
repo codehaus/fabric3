@@ -22,7 +22,7 @@ import java.lang.reflect.Method;
 
 import org.osoa.sca.annotations.Init;
 
-import org.fabric3.spi.implementation.java.PojoComponentType;
+import org.fabric3.pojo.processor.PojoComponentType;
 
 import junit.framework.TestCase;
 

@@ -23,12 +23,13 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import org.fabric3.spi.loader.LoaderContext;
-import org.fabric3.spi.implementation.java.ImplementationProcessor;
-import org.fabric3.spi.implementation.java.PojoComponentType;
+import org.fabric3.pojo.processor.ImplementationProcessor;
+import org.fabric3.pojo.processor.PojoComponentType;
 
 import junit.framework.TestCase;
 import org.fabric3.fabric.implementation.IntrospectionRegistryImpl.Monitor;
 import org.fabric3.fabric.monitor.NullMonitorFactory;
+
 import org.easymock.EasyMock;
 
 /**

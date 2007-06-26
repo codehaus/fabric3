@@ -24,9 +24,9 @@ import java.lang.reflect.Method;
 import org.osoa.sca.annotations.Callback;
 import org.osoa.sca.annotations.Service;
 
-import org.fabric3.spi.implementation.java.JavaMappedService;
-import org.fabric3.spi.implementation.java.PojoComponentType;
-import org.fabric3.spi.implementation.java.ProcessingException;
+import org.fabric3.pojo.processor.JavaMappedService;
+import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.pojo.processor.ProcessingException;
 
 import junit.framework.TestCase;
 import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;

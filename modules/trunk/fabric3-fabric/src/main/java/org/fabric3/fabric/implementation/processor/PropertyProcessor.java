@@ -24,11 +24,11 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.spi.loader.LoaderContext;
-import org.fabric3.extension.implementation.java.AbstractPropertyProcessor;
-import org.fabric3.spi.implementation.java.ImplementationProcessorService;
-import org.fabric3.spi.implementation.java.JavaMappedProperty;
-import org.fabric3.spi.implementation.java.PojoComponentType;
-import org.fabric3.spi.implementation.java.ProcessingException;
+import org.fabric3.pojo.processor.AbstractPropertyProcessor;
+import org.fabric3.pojo.processor.JavaMappedProperty;
+import org.fabric3.pojo.processor.ImplementationProcessorService;
+import org.fabric3.pojo.processor.ProcessingException;
+import org.fabric3.pojo.processor.PojoComponentType;
 
 /**
  * Processes an {@link @Property} annotation, updating the component type with corresponding {@link JavaMappedProperty}

@@ -18,7 +18,7 @@
  */
 package org.fabric3.fabric.implementation.processor;
 
-import org.fabric3.spi.implementation.java.ProcessingException;
+import org.fabric3.pojo.processor.ProcessingException;
 
 /**
  * Thrown when an implementation has more than one reference injection site with the same name

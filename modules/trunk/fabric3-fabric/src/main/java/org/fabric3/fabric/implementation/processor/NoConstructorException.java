@@ -18,7 +18,7 @@
  */
 package org.fabric3.fabric.implementation.processor;
 
-import org.fabric3.spi.implementation.java.ProcessingException;
+import org.fabric3.pojo.processor.ProcessingException;
 
 /**
  * Thrown when a suitable constructor for a component implementation cannot be found

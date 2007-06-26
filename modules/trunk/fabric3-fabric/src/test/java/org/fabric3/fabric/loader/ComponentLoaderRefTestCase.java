@@ -27,8 +27,8 @@ import org.easymock.EasyMock;
 
 import org.fabric3.fabric.implementation.java.JavaImplementation;
 import org.fabric3.spi.component.Component;
-import org.fabric3.spi.implementation.java.JavaMappedReference;
-import org.fabric3.spi.implementation.java.PojoComponentType;
+import org.fabric3.pojo.processor.JavaMappedReference;
+import org.fabric3.pojo.processor.PojoComponentType;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;

@@ -16,49 +16,50 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.implementation.java;
+package org.fabric3.pojo.processor;
 
 import java.lang.reflect.Member;
-import javax.xml.namespace.QName;
 
-import org.fabric3.spi.model.type.Property;
+import org.fabric3.spi.loader.LoaderException;
 
 /**
- * A Property definition that is mapped to a specific location in the implementation class. This location will typically
- * be used to inject property values.
+ * Denotes a problem processing annotations on a POJO implementation
  *
  * @version $Rev$ $Date$
  */
-public class JavaMappedProperty<T> extends Property<T> {
+public class ProcessingException extends LoaderException {
     private Member member;
 
-    public JavaMappedProperty() {
+    public ProcessingException() {
     }
 
-    public JavaMappedProperty(String name, QName xmlType, Class<T> javaType) {
-        super(name, xmlType, javaType);
+    public ProcessingException(String message) {
+        super(message);
     }
 
-    public JavaMappedProperty(String name, QName xmlType, Class<T> javaType, Member member) {
-        super(name, xmlType, javaType);
-        this.member = member;
+    public ProcessingException(String message, String identifier) {
+        super(message, identifier);
     }
 
-    /**
-     * Returns the Member that this property is mapped to.
-     *
-     * @return the Member that this property is mapped to
-     */
-    public Member getMember() {
+    public ProcessingException(String message, String identifier, Throwable cause) {
+        super(message, identifier, cause);
+    }
+
+    public ProcessingException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public ProcessingException(Throwable cause) {
+        super(cause);
+    }
+
+
+    public Member getMemberName() {
         return member;
     }
 
-    /**
-     * Sets the Member that this property is mapped to
-     *
-     * @param member the Member that this property is mapped to
-     */
     public void setMember(Member member) {
         this.member = member;
     }
+
 }

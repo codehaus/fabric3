@@ -21,8 +21,8 @@ package org.fabric3.fabric.implementation.processor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import org.fabric3.spi.implementation.java.PojoComponentType;
-import org.fabric3.spi.implementation.java.Resource;
+import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.pojo.processor.Resource;
 
 import junit.framework.TestCase;
 

@@ -18,7 +18,7 @@
  */
 package org.fabric3.fabric.implementation.processor;
 
-import org.fabric3.spi.implementation.java.ProcessingException;
+import org.fabric3.pojo.processor.ProcessingException;
 
 /**
  * Thrown when a service interface cannot be determined based on a heuristic evaluation of an implementation

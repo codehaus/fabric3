@@ -35,8 +35,8 @@ import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.loader.MissingResourceException;
-import org.fabric3.spi.implementation.java.Introspector;
-import org.fabric3.spi.implementation.java.PojoComponentType;
+import org.fabric3.pojo.processor.Introspector;
+import org.fabric3.pojo.processor.PojoComponentType;
 import org.fabric3.spi.model.type.Scope;
 
 /**

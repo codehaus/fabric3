@@ -22,9 +22,9 @@ package org.fabric3.fabric.implementation.composite;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import org.fabric3.spi.implementation.java.PojoComponentType;
-import org.fabric3.spi.implementation.java.JavaMappedService;
-import org.fabric3.spi.implementation.java.JavaMappedReference;
+import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.pojo.processor.JavaMappedService;
+import org.fabric3.pojo.processor.JavaMappedReference;
 import org.fabric3.spi.loader.InvalidWireException;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.CompositeComponentType;

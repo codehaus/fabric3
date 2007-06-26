@@ -24,16 +24,16 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 
 import org.fabric3.spi.loader.LoaderContext;
-import org.fabric3.extension.implementation.java.ImplementationProcessorExtension;
-import org.fabric3.spi.implementation.java.PojoComponentType;
-import org.fabric3.spi.implementation.java.ProcessingException;
-import org.fabric3.spi.implementation.java.Resource;
+import org.fabric3.pojo.processor.ImplementationProcessorExtension;
+import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.pojo.processor.Resource;
+import org.fabric3.pojo.processor.ProcessingException;
 
 import static org.fabric3.fabric.util.JavaIntrospectionHelper.toPropertyName;
 
 /**
  * Processes an {@link @Resource} annotation, updating the component type with corresponding {@link
- * org.fabric3.spi.implementation.java.Resource}
+ * org.fabric3.pojo.processor.Resource}
  *
  * @version $Rev$ $Date$
  */

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.extension.implementation.java;
+package org.fabric3.pojo.processor;
 
 import java.lang.annotation.Retention;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -25,20 +25,12 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.loader.LoaderContext;
-import org.fabric3.spi.implementation.java.ImplementationProcessor;
-import org.fabric3.spi.implementation.java.PojoComponentType;
-import org.fabric3.spi.implementation.java.JavaMappedProperty;
-import org.fabric3.spi.implementation.java.IllegalPropertyException;
-import org.fabric3.spi.implementation.java.DuplicatePropertyException;
-import org.fabric3.spi.implementation.java.ConstructorDefinition;
-import org.fabric3.spi.implementation.java.ImplementationProcessorService;
-import org.fabric3.extension.implementation.java.AbstractPropertyProcessor;
-
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
+
+import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.loader.LoaderContext;
 
 /**
  * @version $Rev$ $Date$
