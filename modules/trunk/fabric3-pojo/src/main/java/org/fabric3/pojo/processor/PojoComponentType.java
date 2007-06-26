@@ -18,10 +18,10 @@
  */
 package org.fabric3.pojo.processor;
 
-import java.lang.reflect.Member;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.fabric3.pojo.instancefactory.MemberSite;
 import org.fabric3.pojo.instancefactory.Signature;
 import org.fabric3.spi.model.type.ComponentType;
 
@@ -36,7 +36,7 @@ public class PojoComponentType extends ComponentType<JavaMappedService, JavaMapp
     private Signature initMethod;
     private Signature destroyMethod;
     private final Map<String, Resource> resources = new HashMap<String, Resource>();
-    private Member conversationIDMember;
+    private MemberSite conversationIDMember;
 
     /**
      * Deprecated no-arg constructor, replaced with one that takes the POJO class.
@@ -126,11 +126,11 @@ public class PojoComponentType extends ComponentType<JavaMappedService, JavaMapp
         resources.put(resource.getName(), resource);
     }
 
-    public Member getConversationIDMember() {
+    public MemberSite getConversationIDMember() {
         return this.conversationIDMember;
     }
 
-    public void setConversationIDMember(Member conversationIDMember) {
+    public void setConversationIDMember(MemberSite conversationIDMember) {
         this.conversationIDMember = conversationIDMember;
     }
 }

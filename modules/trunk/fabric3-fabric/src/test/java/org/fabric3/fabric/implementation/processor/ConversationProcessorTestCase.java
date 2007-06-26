@@ -26,6 +26,7 @@ import org.osoa.sca.annotations.ConversationID;
 import org.osoa.sca.annotations.Scope;
 
 import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.pojo.instancefactory.Signature;
 
 import junit.framework.TestCase;
 
@@ -96,7 +97,7 @@ public class ConversationProcessorTestCase extends TestCase {
         Field field = FooWithConversationIDField.class.getDeclaredField("conversationID");
         processor.visitField(field, type, null);
         assertNotNull(type.getConversationIDMember());
-        assertEquals(field, type.getConversationIDMember());
+        assertEquals(field.getName(), type.getConversationIDMember().getName());
     }
 
     public void testSetConversationIDMethod() throws Exception {
@@ -105,7 +106,7 @@ public class ConversationProcessorTestCase extends TestCase {
         Method method = FooWithConversationIDMethod.class.getDeclaredMethods()[0];
         processor.visitMethod(method, type, null);
         assertNotNull(type.getConversationIDMember());
-        assertEquals(method, type.getConversationIDMember());
+        assertEquals(new Signature(method), type.getConversationIDMember().getSignature());
     }
 
     @Scope("CONVERSATION")
