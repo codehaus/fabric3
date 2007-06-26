@@ -78,15 +78,15 @@ public class ImplementationCompositeLoader extends LoaderExtension<CompositeImpl
         impl.setName(name);
         if (scdlLocation != null) {
             try {
-                impl.setScdlLocation(new URL(loaderContext.getScdlLocation(), scdlLocation));
+                impl.setScdlLocation(new URL(loaderContext.getSourceBase(), scdlLocation));
             } catch (MalformedURLException e) {
                 throw new InvalidValueException(scdlLocation, name, e);
             }
-            impl.setClassLoader(loaderContext.getClassLoader());
+            impl.setClassLoader(loaderContext.getTargetClassLoader());
         } else if (jarLocation != null) {
             URL jarUrl;
             try {
-                jarUrl = new URL(loaderContext.getScdlLocation(), jarLocation);
+                jarUrl = new URL(loaderContext.getSourceBase(), jarLocation);
             } catch (MalformedURLException e) {
                 throw new InvalidValueException(jarLocation, name, e);
             }
@@ -95,7 +95,7 @@ public class ImplementationCompositeLoader extends LoaderExtension<CompositeImpl
             } catch (MalformedURLException e) {
                 throw new AssertionError("Could not convert URL to a jar: url");
             }
-            impl.setClassLoader(new CompositeClassLoader(null, new URL[]{jarUrl}, loaderContext.getClassLoader()));
+            impl.setClassLoader(new CompositeClassLoader(null, new URL[]{jarUrl}, loaderContext.getTargetClassLoader()));
         } else if (artifactRepository != null && group != null && version != null) {
             Artifact artifact = new Artifact();
             artifact.setGroup(group);
@@ -117,7 +117,7 @@ public class ImplementationCompositeLoader extends LoaderExtension<CompositeImpl
             for (URL artifactURL : artifactURLs) {
                 urls[i++] = artifactURL;
             }
-            impl.setClassLoader(new CompositeClassLoader(null, urls, loaderContext.getClassLoader()));
+            impl.setClassLoader(new CompositeClassLoader(null, urls, loaderContext.getTargetClassLoader()));
         }
         return impl;
     }

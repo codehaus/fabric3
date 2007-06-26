@@ -72,7 +72,7 @@ public class GroovyImplementationLoader implements StAXElementLoader<GroovyImple
         LoaderUtil.skipToEndElement(reader);
 
         Class<?> implClass;
-        GroovyClassLoader gcl = new GroovyClassLoader(context.getClassLoader());
+        GroovyClassLoader gcl = new GroovyClassLoader(context.getTargetClassLoader());
         if (className != null) {
             try {
                 implClass = gcl.loadClass(className);

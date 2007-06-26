@@ -102,7 +102,7 @@ public class WebappLoader extends LoaderExtension<WebappImplementation> {
 
         Class<?> referenceType;
         try {
-            referenceType = context.getClassLoader().loadClass(className);
+            referenceType = context.getTargetClassLoader().loadClass(className);
         } catch (ClassNotFoundException e) {
             throw new MissingResourceException(className, e);
         }

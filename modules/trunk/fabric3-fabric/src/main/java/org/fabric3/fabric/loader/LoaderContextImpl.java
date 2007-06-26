@@ -21,6 +21,7 @@ package org.fabric3.fabric.loader;
 import java.net.URL;
 
 import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.spi.transform.TransformContext;
 
 /**
  * A holder that can be used during the load process to store information that is not part of the logical assembly
@@ -28,10 +29,7 @@ import org.fabric3.spi.loader.LoaderContext;
  *
  * @version $Rev$ $Date$
  */
-public class LoaderContextImpl implements LoaderContext {
-    private final ClassLoader classLoader;
-    private final URL scdlLocation;
-
+public class LoaderContextImpl extends TransformContext implements LoaderContext {
     /**
      * Constructor defining properties of this context.
      *
@@ -39,16 +37,6 @@ public class LoaderContextImpl implements LoaderContext {
      * @param scdlLocation the location of the SCDL defining this composite
      */
     public LoaderContextImpl(ClassLoader classLoader, URL scdlLocation) {
-        this.classLoader = classLoader;
-        this.scdlLocation = scdlLocation;
+        super(null, classLoader, scdlLocation, null);
     }
-
-    public ClassLoader getClassLoader() {
-        return classLoader;
-    }
-
-    public URL getScdlLocation() {
-        return scdlLocation;
-    }
-
 }

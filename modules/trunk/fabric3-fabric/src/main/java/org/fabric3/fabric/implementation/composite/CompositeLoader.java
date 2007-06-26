@@ -126,7 +126,7 @@ public class CompositeLoader extends LoaderExtension<CompositeComponentType> {
                         throw new MissingResourceException("Dependency not found", artifact.toString());
                     }
 
-                    ClassLoader classLoader = loaderContext.getClassLoader();
+                    ClassLoader classLoader = loaderContext.getTargetClassLoader();
                     if (classLoader instanceof CompositeClassLoader) {
                         CompositeClassLoader ccl = (CompositeClassLoader) classLoader;
                         for (URL dep : artifact.getUrls()) {

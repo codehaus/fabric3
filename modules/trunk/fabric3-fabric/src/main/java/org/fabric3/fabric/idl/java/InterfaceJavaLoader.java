@@ -71,10 +71,10 @@ public class InterfaceJavaLoader extends LoaderExtension<JavaServiceContract> {
         if (name == null) {
             throw new InvalidValueException("interface name not supplied");
         }
-        Class<?> interfaceClass = LoaderUtil.loadClass(name, loaderContext.getClassLoader());
+        Class<?> interfaceClass = LoaderUtil.loadClass(name, loaderContext.getTargetClassLoader());
 
         name = reader.getAttributeValue(null, "callbackInterface");
-        Class<?> callbackClass = (name != null) ? LoaderUtil.loadClass(name, loaderContext.getClassLoader()) : null;
+        Class<?> callbackClass = (name != null) ? LoaderUtil.loadClass(name, loaderContext.getTargetClassLoader()) : null;
 
         LoaderUtil.skipToEndElement(reader);
 

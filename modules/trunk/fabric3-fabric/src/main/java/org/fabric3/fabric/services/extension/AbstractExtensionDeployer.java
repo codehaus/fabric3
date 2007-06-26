@@ -57,7 +57,7 @@ public class AbstractExtensionDeployer {
         throw new UnsupportedOperationException("");
 //        // FIXME for now, assume this class's ClassLoader is the fabric3 system classloader
 //        // FIXME we should really use the one associated with the parent composite
-//        CompositeClassLoader extensionCL = new CompositeClassLoader(getClass().getClassLoader());
+//        CompositeClassLoader extensionCL = new CompositeClassLoader(getClass().getTargetClassLoader());
 //
 //        // see if the URL points to a composite JAR by looking for a default SCDL file inside it
 //        URL scdlLocation;

@@ -66,7 +66,7 @@ public class SystemImplementationLoaderTestCase extends TestCase {
         componentTypeLoader = EasyMock.createMock(ComponentTypeLoader.class);
 
         context = EasyMock.createMock(LoaderContext.class);
-        EasyMock.expect(context.getClassLoader()).andReturn(getClass().getClassLoader());
+        EasyMock.expect(context.getTargetClassLoader()).andReturn(getClass().getClassLoader());
         EasyMock.replay(context);
 
         reader = EasyMock.createMock(XMLStreamReader.class);

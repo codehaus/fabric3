@@ -63,11 +63,11 @@ public class IncludeLoader extends LoaderExtension<Include> {
         String scdlResource = reader.getAttributeValue(null, "scdlResource");
         LoaderUtil.skipToEndElement(reader);
 
-        ClassLoader cl = loaderContext.getClassLoader();
+        ClassLoader cl = loaderContext.getTargetClassLoader();
         URL url;
         if (scdlLocation != null) {
             try {
-                url = new URL(loaderContext.getScdlLocation(), scdlLocation);
+                url = new URL(loaderContext.getSourceBase(), scdlLocation);
             } catch (MalformedURLException e) {
                 throw new MissingResourceException(scdlLocation, name, e);
             }

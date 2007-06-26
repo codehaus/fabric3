@@ -179,7 +179,7 @@ public class ComponentLoader extends LoaderExtension<ComponentDefinition<?>> {
             try {
                 URI uri = new URI(file);
                 if (!uri.isAbsolute()) {
-                    uri = context.getScdlLocation().toURI().resolve(uri);
+                    uri = context.getSourceBase().toURI().resolve(uri);
                 }
                 propertyValue = new PropertyValue(name, uri);
             } catch (URISyntaxException e) {

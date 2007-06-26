@@ -81,7 +81,7 @@ public class MarshallerLoader extends LoaderExtension<SystemImplementation> {
             throws XMLStreamException, LoaderException {
 
         String modelClassName = reader.getAttributeValue(null, "modelClass");
-        Class<?> modelClass = LoaderUtil.loadClass(modelClassName, context.getClassLoader());
+        Class<?> modelClass = LoaderUtil.loadClass(modelClassName, context.getTargetClassLoader());
 
         String qname = reader.getAttributeValue(null, "xmlName");
         QName xmlName = QName.valueOf(qname);

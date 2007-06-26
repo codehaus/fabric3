@@ -88,7 +88,7 @@ public class ImplementationCompositeLoaderTestCase extends TestCase {
         expect(reader.next()).andReturn(END_ELEMENT);
         replay(reader);
 
-        expect(context.getClassLoader()).andReturn(cl);
+        expect(context.getTargetClassLoader()).andReturn(cl);
         replay(context);
         URL url = new URL("http://www.example.com/sca/base.jar");
         artifactRepository.resolve(artifactMatcher(url, "com.example", name, "1.0"));
@@ -115,8 +115,8 @@ public class ImplementationCompositeLoaderTestCase extends TestCase {
         expect(reader.next()).andReturn(END_ELEMENT);
         replay(reader);
 
-        expect(context.getScdlLocation()).andReturn(new URL("http://www.example.com/sca/base.scdl"));
-        expect(context.getClassLoader()).andReturn(cl);
+        expect(context.getSourceBase()).andReturn(new URL("http://www.example.com/sca/base.scdl"));
+        expect(context.getTargetClassLoader()).andReturn(cl);
         replay(context);
         replay(artifactRepository);
 
@@ -140,8 +140,8 @@ public class ImplementationCompositeLoaderTestCase extends TestCase {
         expect(reader.next()).andReturn(END_ELEMENT);
         replay(reader);
 
-        expect(context.getScdlLocation()).andReturn(new URL("http://www.example.com/sca/base.scdl"));
-        expect(context.getClassLoader()).andReturn(cl);
+        expect(context.getSourceBase()).andReturn(new URL("http://www.example.com/sca/base.scdl"));
+        expect(context.getTargetClassLoader()).andReturn(cl);
         replay(context);
         replay(artifactRepository);
 

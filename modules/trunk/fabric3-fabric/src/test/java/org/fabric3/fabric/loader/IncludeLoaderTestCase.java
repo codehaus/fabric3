@@ -61,7 +61,7 @@ public class IncludeLoaderTestCase extends TestCase {
         expect(reader.getAttributeValue(null, "scdlResource")).andReturn(null);
         expect(reader.next()).andReturn(END_ELEMENT);
 
-        expect(context.getClassLoader()).andReturn(cl);
+        expect(context.getTargetClassLoader()).andReturn(cl);
         replay(registry, reader, context);
 
         try {
@@ -81,8 +81,8 @@ public class IncludeLoaderTestCase extends TestCase {
         expect(reader.getAttributeValue(null, "scdlResource")).andReturn(null);
         expect(reader.next()).andReturn(END_ELEMENT);
 
-        expect(context.getScdlLocation()).andReturn(base);
-        expect(context.getClassLoader()).andReturn(cl);
+        expect(context.getSourceBase()).andReturn(base);
+        expect(context.getTargetClassLoader()).andReturn(cl);
 
         expect(registry.load(
                 eq(includeURL),
@@ -105,8 +105,8 @@ public class IncludeLoaderTestCase extends TestCase {
         expect(reader.getAttributeValue(null, "scdlResource")).andReturn(null);
         expect(reader.next()).andReturn(END_ELEMENT);
 
-        expect(context.getScdlLocation()).andReturn(base);
-        expect(context.getClassLoader()).andReturn(cl);
+        expect(context.getSourceBase()).andReturn(base);
+        expect(context.getTargetClassLoader()).andReturn(cl);
 
         expect(registry.load(
                 eq(includeURL),
@@ -133,7 +133,7 @@ public class IncludeLoaderTestCase extends TestCase {
         expect(reader.getAttributeValue(null, "scdlResource")).andReturn(resource);
         expect(reader.next()).andReturn(END_ELEMENT);
 
-        expect(context.getClassLoader()).andReturn(cl);
+        expect(context.getTargetClassLoader()).andReturn(cl);
 
         expect(registry.load(
                 eq(includeURL),

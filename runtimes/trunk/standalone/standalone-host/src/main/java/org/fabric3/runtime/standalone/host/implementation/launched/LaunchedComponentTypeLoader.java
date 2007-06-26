@@ -55,7 +55,7 @@ public class LaunchedComponentTypeLoader implements ComponentTypeLoader<Launched
         String className = implementation.getClassName();
         Class<?> implClass;
         try {
-            implClass = loaderContext.getClassLoader().loadClass(className);
+            implClass = loaderContext.getTargetClassLoader().loadClass(className);
         } catch (ClassNotFoundException e) {
             throw new MissingResourceException(className, e);
         }

@@ -33,13 +33,13 @@ public interface LoaderContext {
      *
      * @return a class loader that can be used to load application resources
      */
-    ClassLoader getClassLoader();
+    ClassLoader getTargetClassLoader();
 
     /**
      * Returns the location of the SCDL definition being deployed.
      *
      * @return the location of the SCDL definition being deployed
      */
-    URL getScdlLocation();
+    URL getSourceBase();
 
 }

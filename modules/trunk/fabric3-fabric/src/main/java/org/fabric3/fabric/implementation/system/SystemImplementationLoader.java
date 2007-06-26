@@ -56,7 +56,7 @@ public class SystemImplementationLoader extends LoaderExtension<SystemImplementa
         String implClass = reader.getAttributeValue(null, "class");
         LoaderUtil.skipToEndElement(reader);
 
-        Class<?> implementationClass = LoaderUtil.loadClass(implClass, loaderContext.getClassLoader());
+        Class<?> implementationClass = LoaderUtil.loadClass(implClass, loaderContext.getTargetClassLoader());
         SystemImplementation implementation = new SystemImplementation();
         implementation.setImplementationClass(implementationClass);
         componentTypeLoader.load(implementation, loaderContext);

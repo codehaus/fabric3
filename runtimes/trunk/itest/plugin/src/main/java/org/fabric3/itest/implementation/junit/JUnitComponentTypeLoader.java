@@ -60,7 +60,7 @@ public class JUnitComponentTypeLoader implements ComponentTypeLoader<Implementat
         String className = implementation.getClassName();
         Class<?> implClass;
         try {
-            implClass = context.getClassLoader().loadClass(className);
+            implClass = context.getTargetClassLoader().loadClass(className);
         } catch (ClassNotFoundException e) {
             throw new MissingResourceException(className, e);
         }
