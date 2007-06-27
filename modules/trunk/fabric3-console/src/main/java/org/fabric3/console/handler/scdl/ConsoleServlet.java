@@ -96,7 +96,7 @@ public class ConsoleServlet extends Fabric3Servlet {
                 writer.write(runtimeInfo.getId());
                 writer.write("</td><td>Running</td><td>");
                 for(QName feature : runtimeInfo.getFeatures()) {
-                    writer.write(feature.toString());
+                    writer.write(feature.getLocalPart());
                     writer.write("</br>");
 
                 }
