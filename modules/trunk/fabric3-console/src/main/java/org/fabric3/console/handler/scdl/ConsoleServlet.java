@@ -90,13 +90,13 @@ public class ConsoleServlet extends Fabric3Servlet {
             writer.write("No remote runtimes");
         } else {
             writer.write(
-                    "<table><th width=\"120\"/><th align=\"left\" width=\"120\">ID</th><th align=\"left\">Status</th><th align=\"left\">Features</th>");
+                    "<table><th width=\"120\"/><th align=\"left\" width=\"120\">ID</th><th align=\"left\" width=\"120\">Status</th><th align=\"left\" width=\"120\">Features</th>");
             for (RuntimeInfo runtimeInfo : runtimes) {
                 writer.write("<tr><td><img src=\"\\console\\runtimes.gif\"></img></td><td>");
                 writer.write(runtimeInfo.getId());
                 writer.write("</td><td>Running</td><td>");
                 for(QName feature : runtimeInfo.getFeatures()) {
-                    writer.write(feature.getLocalPart());
+                    writer.write(feature.getLocalPart() + " - " + feature.getNamespaceURI());
                     writer.write("</br>");
 
                 }
