@@ -137,7 +137,7 @@ public class DefaultAllocator implements Allocator {
         Set<String> preAllocated = calculatePreallocatedRuntimes(component);
         // synchronize the set of runtimes with the domain topology, gathering the non-responding runtimes
         Set<String> nonRespondingRuntimes = new HashSet<String>();
-       // Map<String, RuntimeInfo> runtimes = getRuntimes();
+        // Map<String, RuntimeInfo> runtimes = getRuntimes();
         for (String runtime : preAllocated) {
             int i = 0;
             while (!getRuntimes().containsKey(runtime) && i < syncTimes) {
@@ -202,10 +202,28 @@ public class DefaultAllocator implements Allocator {
      * @param nonRespondingRuntimes the list of non-responding runtimes
      */
     private void markForReallocation(LogicalComponent<?> component, Set<String> nonRespondingRuntimes) {
-        URI id = component.getRuntimeId();
-        if (id != null && nonRespondingRuntimes.contains(id.toString())) {
-            component.setRuntimeId(null);
+        if (!CompositeImplementation.class.isInstance(component.getDefinition().getImplementation())) {
+            URI id = component.getRuntimeId();
+            String stringId = null;
+            if (id != null) {
+                stringId = id.toString();
+            }
+            if (stringId != null && nonRespondingRuntimes.contains(stringId)) {
+                component.setRuntimeId(null);
+                component.setActive(false);
+            } else if (stringId != null) {
+                // check to see if the component is already running on the service node, and if so record that it is running
+                RuntimeInfo info = getRuntimes().get(stringId);
+                assert info != null;
+                if (info.getComponents().contains(component.getUri())) {
+                    component.setActive(true);
+                } else {
+                    component.setActive(false);
+                }
+
+            }
         }
+
         for (LogicalComponent<?> child : component.getComponents()) {
             markForReallocation(child, nonRespondingRuntimes);
         }

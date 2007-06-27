@@ -53,9 +53,7 @@ import org.fabric3.spi.model.type.ComponentType;
 import org.fabric3.spi.model.type.CompositeComponentType;
 import org.fabric3.spi.model.type.CompositeImplementation;
 import org.fabric3.spi.model.type.Implementation;
-import org.fabric3.spi.model.type.ModelObject;
 import org.fabric3.spi.model.type.ReferenceDefinition;
-import org.fabric3.spi.model.type.ResourceDescription;
 import org.fabric3.spi.model.type.ServiceDefinition;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.MetaDataStore;
@@ -214,11 +212,6 @@ public abstract class AbstractAssembly implements Assembly {
         }
     }
 
-    public String resolveResourceContainer(ResourceDescription description, ModelObject type)
-            throws ResourceResolutionException {
-        throw new UnsupportedOperationException();
-    }
-
     /**
      * Instantiates a logical component from a component definition
      *
@@ -360,6 +353,10 @@ public abstract class AbstractAssembly implements Assembly {
         Implementation<?> implementation = definition.getImplementation();
         if (CompositeImplementation.class.isInstance(implementation)) {
             for (LogicalComponent<?> child : component.getComponents()) {
+                // if the component is already running on a node (e.g. during recovery), skip provisioning
+                if (child.isActive()) {
+                    continue;
+                }
                 // generate changesets recursively for children
                 //noinspection unchecked
                 LogicalComponent<CompositeImplementation> composite =
@@ -369,6 +366,10 @@ public abstract class AbstractAssembly implements Assembly {
             }
         } else {
             // leaf component, generate a physical component and update the change sets
+            // if component is already running on a node (e.g. during recovery), skip provisioning
+            if (component.isActive()) {
+                return;
+            }
             generatePhysicalComponent(component, contexts);
             generatePhysicalWires(parent, component, contexts);
         }

@@ -42,6 +42,7 @@ public class LogicalComponent<I extends Implementation<?>> extends Referenceable
     private final Map<String, LogicalReference> references = new HashMap<String, LogicalReference>();
     private LogicalComponent<CompositeImplementation> parent;
     private URI runtimeId;
+    private boolean active;
 
     public LogicalComponent(URI uri, URI runtimeId, ComponentDefinition<I> definition) {
         super(uri);
@@ -65,6 +66,24 @@ public class LogicalComponent<I extends Implementation<?>> extends Referenceable
      */
     public void setRuntimeId(URI runtimeId) {
         this.runtimeId = runtimeId;
+    }
+
+    /**
+     * True if the component is curently active on a node.
+     *
+     * @return true if the component is curently active on a node
+     */
+    public boolean isActive() {
+        return active;
+    }
+
+    /**
+     * Sets if the component is currently active on a node.
+     *
+     * @param active true if the component is active
+     */
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     /**
