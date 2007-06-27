@@ -30,6 +30,9 @@
     <!-- include physical deployment configuration -->
     <include name="org.fabric3.fabric.Common" scdlResource="org/fabric3/fabric/common.scdl"/>
 
+<!-- include host services configuration -->
+    <include name="org.fabric3.fabric.HostServices" scdlResource="org/fabric3/fabric/hostServices.scdl"/>
+
     <!-- include exception formatters  -->
     <include name="org.fabric3.fabric.Formatters" scdlResource="org/fabric3/fabric/formatters.scdl"/>
 
