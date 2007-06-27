@@ -34,5 +34,8 @@
     <component name="BurlapWireAttacher">
         <system:implementation.system class="org.fabric3.binding.burlap.wire.BurlapWireAttacher"/>
     </component>
-    
+
+    <!-- Feature -->
+    <system:feature name="BurlapBindingFeature">{http://fabric3.org/xmlns/binding}burlap</system:feature>
+
 </composite>

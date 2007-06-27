@@ -35,5 +35,8 @@
         <system:implementation.system class="org.fabric3.binding.ws.wire.WsWireAttacher"/>
         <property name="contextPath">/services/*</property>
     </component>
-    
+
+    <!-- Feature -->
+    <system:feature name="WsBindingFeature">{http://fabric3.org/xmlns/binding}ws</system:feature>
+
 </composite>

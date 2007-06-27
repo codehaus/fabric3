@@ -35,5 +35,8 @@
         <system:implementation.system class="org.fabric3.binding.jms.wire.JmsWireAttacher"/>
         <property name="receiverThreads">10</property>
     </component>
-    
+
+    <!-- Feature -->
+    <system:feature name="JmsBindingFeature">{http://fabric3.org/xmlns/binding}jms</system:feature>
+
 </composite>
