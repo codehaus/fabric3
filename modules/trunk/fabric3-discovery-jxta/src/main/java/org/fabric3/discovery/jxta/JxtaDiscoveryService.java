@@ -283,8 +283,8 @@ public class JxtaDiscoveryService implements DiscoveryService {
 
                     presenceAdv.setRuntimeInfo(runtimeInfo);
 
-                    discoveryService.publish(presenceAdv);
-                    discoveryService.remotePublish(presenceAdv);
+                    discoveryService.publish(presenceAdv, 10000, 10000);
+                    // discoveryService.remotePublish(presenceAdv, 10000);
 
                 } catch (InterruptedException ex) {
                     return;
