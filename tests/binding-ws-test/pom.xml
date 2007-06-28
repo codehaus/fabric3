@@ -129,21 +129,6 @@
                             <artifactId>geronimo-j2ee-connector_1.5_spec</artifactId>
                             <version>1.0.1</version>
                         </dependency>
-			<dependency>
-			    <groupId>org.apache.cxf</groupId>
-			    <artifactId>cxf-rt-core</artifactId>
-			    <version>2.0-incubator-RC</version>
-			</dependency>
-			<dependency>
-			    <groupId>org.apache.cxf</groupId>
-			    <artifactId>cxf-rt-transports-http</artifactId>
-			    <version>2.0-incubator-RC</version>
-			</dependency>
-			<dependency>
-			    <groupId>org.apache.cxf</groupId>
-			    <artifactId>cxf-rt-frontend-simple</artifactId>
-			    <version>2.0-incubator-RC</version>
-                        </dependency>
                     </extensions>
                 </configuration>
                 <executions>
