@@ -27,10 +27,16 @@
             <reference name="calculatorReference" interface="calculator.CalculatorService"/>
         </fabric3:webapp>
     </component>
-
+<!--
     <reference name="calculatorReference" promote="calculator/calculatorReference">
         <interface.java interface="calculator.CalculatorService"/>
         <hessian:binding.hessian uri="http://localhost:8101/calculator"/>
     </reference>
+-->
+
+    <reference name="calculatorReference" promote="calculator/calculatorReference">
+        <interface.java interface="calculator.CalculatorService"/>
+        <binding.ws uri="http://localhost:8101/calculator"/>
+    </reference> 
 
 </composite>

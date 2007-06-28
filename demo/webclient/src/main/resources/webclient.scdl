@@ -63,6 +63,9 @@
     <!-- include transform configuration -->
     <include name="org.fabric3.transform.Transform" scdlResource="org/fabric3/transform/transform.scdl"/>
 
+    <!-- include host services configuration -->
+    <include name="org.fabric3.fabric.HostServices" scdlResource="org/fabric3/fabric/hostServices.scdl"/>
+    
     <!-- webapp component implementation -->
     <component name="webappLoader">
         <system:implementation.system class="org.fabric3.runtime.webapp.implementation.webapp.WebappLoader"/>
@@ -96,4 +99,6 @@
 
        <!-- Include hessian extension SCDL -->
     <include name="org.fabric3.binding.HessianExtension" scdlResource="META-INF/hessian.scdl"/>
+    <include name="org.fabric3.binding.CXFExtension" scdlResource="META-INF/ws.scdl"/> 
+
 </composite>
