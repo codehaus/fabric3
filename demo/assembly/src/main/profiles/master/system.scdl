@@ -141,4 +141,8 @@
 	
 	<include name="wsTransportBinding" scdlResource="META-INF/ws.scdl"/>
 
+	<include name="jmsTransportBinding" scdlResource="META-INF/jms.scdl"/>
+	
+	<include name="hessianTransportBinding" scdlResource="META-INF/hessian.scdl"/>
+
 </composite>

@@ -99,6 +99,9 @@
                 <include>org.codehaus.fabric3.demo:fabric3-demo-calculator</include>
                 <include>org.apache.geronimo.specs:geronimo-j2ee-connector_1.5_spec</include>
                 <include>org.apache.tuscany:commonj-api_r1.1</include>
+                <include>org.apache.activemq:activemq-core</include>
+                <include>geronimo-spec:geronimo-spec-jms</include>
+                <include>commons-logging:commons-logging</include>
             </includes>
             <excludes>
 				<exclude>org.codehaus.fabric3.standalone:standalone-api</exclude>
@@ -126,6 +129,9 @@
                 <include>org.codehaus.fabric3.demo:fabric3-demo-calculator</include>
                 <include>org.apache.geronimo.specs:geronimo-j2ee-connector_1.5_spec</include>
                 <include>org.apache.tuscany:commonj-api_r1.1</include>
+                <include>org.apache.activemq:activemq-core</include>
+                <include>geronimo-spec:geronimo-spec-jms</include>
+                <include>commons-logging:commons-logging</include>
             </includes>
             <excludes>
 				<exclude>org.codehaus.fabric3.standalone:standalone-api</exclude>
@@ -153,6 +159,9 @@
                 <include>org.codehaus.fabric3.demo:fabric3-demo-calculator</include>
                 <include>org.apache.geronimo.specs:geronimo-j2ee-connector_1.5_spec</include>
                 <include>org.apache.tuscany:commonj-api_r1.1</include>
+                <include>org.apache.activemq:activemq-core</include>
+                <include>geronimo-spec:geronimo-spec-jms</include>
+                <include>commons-logging:commons-logging</include>
             </includes>
             <excludes>
 				<exclude>org.codehaus.fabric3.standalone:standalone-api</exclude>

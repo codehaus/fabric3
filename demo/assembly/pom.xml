@@ -160,6 +160,18 @@
             <artifactId>fabric3-demo-calculator</artifactId>
             <version>${project.version}</version>
         </dependency>
+						
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-core</artifactId>
+            <version>4.1.1</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>geronimo-spec</groupId> 
+	        <artifactId>geronimo-spec-jms</artifactId> 
+            <version>1.1-rc4</version>
+        </dependency>
 
     </dependencies>
 
