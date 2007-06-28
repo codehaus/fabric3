@@ -120,9 +120,9 @@
         <system:implementation.system class="org.fabric3.fabric.assembly.store.AssemblyStoreImpl"/>
     </component>
 
-	<include scdlResource="META-INF/burlap.scdl"/>
+	<include name="burlapTransportBinding" scdlResource="META-INF/burlap.scdl"/>
 
-	<include scdlResource="META-INF/ws.scdl"/>
+	<include name="wsTransportBinding" scdlResource="META-INF/ws.scdl"/>
 
     <component name="JettyService">
         <system:implementation.system class="org.fabric3.jetty.JettyServiceImpl"/>
