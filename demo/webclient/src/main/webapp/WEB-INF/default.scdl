@@ -36,7 +36,7 @@
 
     <reference name="calculatorReference" promote="calculator/calculatorReference">
         <interface.java interface="calculator.CalculatorService"/>
-        <binding.ws uri="http://localhost:8101/calculator"/>
+        <binding.ws uri="http://localhost:8102/calculator"/>
     </reference> 
 
 </composite>

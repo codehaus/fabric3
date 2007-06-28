@@ -56,10 +56,16 @@
            name="CalculatorComposite"
            autowire="true">
 
-    <service name="calculatorRemote" promote="calculator">
+<!--    <service name="calculatorRemote" promote="calculator">
         <interface.java interface="calculator.CalculatorService"/>
         <hessian:binding.hessian uri="/calculator" />
+    </service>-->
+	 
+	 <service name="calculatorRemote" promote="calculator">
+        <interface.java interface="calculator.CalculatorService"/>
+        <binding.ws uri="/calculator" />
     </service>
+
 
     <component name="calculator">
         <implementation.java class="calculator.CalculatorServiceImpl"/>
