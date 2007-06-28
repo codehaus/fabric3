@@ -92,6 +92,9 @@
                 <include>org.codehaus.fabric3:fabric3-messaging-jxta</include>
                 <include>org.codehaus.fabric3:fabric3-discovery-jxta</include>
                 <include>org.codehaus.fabric3:fabric3-binding-hessian</include>
+                <include>org.codehaus.fabric3:fabric3-binding-burlap</include>
+                <include>org.codehaus.fabric3:fabric3-binding-jms</include>
+                <include>org.codehaus.fabric3:fabric3-binding-ws</include>
                 <include>org.codehaus.fabric3:fabric3-maven</include>
                 <include>org.codehaus.fabric3.demo:fabric3-demo-calculator</include>
                 <include>org.apache.geronimo.specs:geronimo-j2ee-connector_1.5_spec</include>
@@ -116,6 +119,9 @@
                 <include>org.codehaus.fabric3:fabric3-discovery-jxta</include>
                 <include>org.codehaus.fabric3:fabric3-messaging-jxta</include>
                 <include>org.codehaus.fabric3:fabric3-binding-hessian</include>
+                <include>org.codehaus.fabric3:fabric3-binding-burlap</include>
+                <include>org.codehaus.fabric3:fabric3-binding-jms</include>
+                <include>org.codehaus.fabric3:fabric3-binding-ws</include>
                 <include>org.codehaus.fabric3:fabric3-maven</include>
                 <include>org.codehaus.fabric3.demo:fabric3-demo-calculator</include>
                 <include>org.apache.geronimo.specs:geronimo-j2ee-connector_1.5_spec</include>
@@ -140,6 +146,9 @@
                 <include>org.codehaus.fabric3:fabric3-messaging-jxta</include>
                 <include>org.codehaus.fabric3:fabric3-discovery-jxta</include>
                 <include>org.codehaus.fabric3:fabric3-binding-hessian</include>
+                <include>org.codehaus.fabric3:fabric3-binding-burlap</include>
+                <include>org.codehaus.fabric3:fabric3-binding-jms</include>
+                <include>org.codehaus.fabric3:fabric3-binding-ws</include>
                 <include>org.codehaus.fabric3:fabric3-maven</include>
                 <include>org.codehaus.fabric3.demo:fabric3-demo-calculator</include>
                 <include>org.apache.geronimo.specs:geronimo-j2ee-connector_1.5_spec</include>

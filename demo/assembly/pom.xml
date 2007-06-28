@@ -94,8 +94,7 @@
             <artifactId>fabric3-messaging-jxta</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-		
+        		
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-discovery-jxta</artifactId>
@@ -105,6 +104,24 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-binding-hessian</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		  		
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-binding-burlap</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		  		
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-binding-jms</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		  		
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-binding-ws</artifactId>
             <version>${project.version}</version>
         </dependency>
 		
@@ -158,7 +175,12 @@
         <module>../../modules/trunk/fabric3-console</module>
 
         <module>../../modules/trunk/fabric3-jetty</module>
+        
         <module>../../modules/trunk/fabric3-binding-hessian</module>
+        <module>../../modules/trunk/fabric3-binding-burlap</module>
+        <module>../../modules/trunk/fabric3-binding-jms</module>
+        <module>../../modules/trunk/fabric3-binding-ws</module>
+        
         <module>../../modules/trunk/fabric3-install-jxta</module>
         <module>../../modules/trunk/fabric3-jxta</module>
         <module>../../modules/trunk/fabric3-discovery-jxta</module>
@@ -170,7 +192,6 @@
         <module>../../runtimes/trunk/standalone/server.start</module>
 		
         <module>../calculator</module>
-		
     </modules>
 
     <build>

@@ -124,8 +124,9 @@
                 class="org.fabric3.fabric.marshaller.xstream.XStreamMarshallerRegistry"/>
     </component>
 
+	<include name="hessianTransportBinding" scdlResource="META-INF/hessian.scdl"/>
 
-    <include scdlResource="META-INF/hessian.scdl"/>
+	<include name="jmsTransportBinding" scdlResource="META-INF/jms.scdl"/>
 
     <component name="JettyService">
         <system:implementation.system class="org.fabric3.jetty.JettyServiceImpl"/>

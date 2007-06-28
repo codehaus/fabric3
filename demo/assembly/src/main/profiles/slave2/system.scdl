@@ -120,4 +120,17 @@
         <system:implementation.system class="org.fabric3.fabric.assembly.store.AssemblyStoreImpl"/>
     </component>
 
+	<include scdlResource="META-INF/burlap.scdl"/>
+
+	<include scdlResource="META-INF/ws.scdl"/>
+
+    <component name="JettyService">
+        <system:implementation.system class="org.fabric3.jetty.JettyServiceImpl"/>
+        <property name="httpPort">8102</property>
+    </component>
+
+ 	 <component name="assemblyRecoveryService">
+        <system:implementation.system class="org.fabric3.fabric.assembly.store.AssemblyStoreImpl"/>
+    </component>
+
 </composite>

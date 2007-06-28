@@ -6,15 +6,15 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License.    
+ * under the License.
  */
 package org.fabric3.pojo.reflection;
 
@@ -48,18 +48,21 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
     private final EventInvoker<T> initInvoker;
     private final EventInvoker<T> destroyInvoker;
     private final Map<ValueSource, ObjectFactory<?>> factories = new HashMap<ValueSource, ObjectFactory<?>>();
+    private final ClassLoader cl;
 
     public ReflectiveInstanceFactoryProvider(Constructor<T> constructor,
                                              List<ValueSource> constructorNames,
                                              Map<ValueSource, Member> injectionSites,
                                              Method initMethod,
-                                             Method destroyMethod) {
+                                             Method destroyMethod,
+                                             ClassLoader cl) {
         this.implementationClass = constructor.getDeclaringClass();
         this.constructor = constructor;
         this.constructorNames = constructorNames;
         this.injectionSites = injectionSites;
         this.initInvoker = initMethod == null ? null : new MethodEventInvoker<T>(initMethod);
         this.destroyInvoker = destroyMethod == null ? null : new MethodEventInvoker<T>(destroyMethod);
+        this.cl = cl;
     }
 
     public void setObjectFactory(ValueSource name, ObjectFactory<?> objectFactory) {
@@ -90,7 +93,7 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
     public InstanceFactory<T> createFactory() {
         ObjectFactory<?>[] initArgs = getConstructorArgs();
         Injector<T>[] injectors = getInjectors();
-        return new ReflectiveInstanceFactory<T>(constructor, initArgs, injectors, initInvoker, destroyInvoker);
+        return new ReflectiveInstanceFactory<T>(constructor, initArgs, injectors, initInvoker, destroyInvoker, cl);
     }
 
     protected ObjectFactory<?>[] getConstructorArgs() {
@@ -105,7 +108,7 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
         }
         return initArgs;
     }
-                 
+
     protected Injector<T>[] getInjectors() {
         // work around JDK1.5 issue with allocating generic arrays
         @SuppressWarnings("unchecked")

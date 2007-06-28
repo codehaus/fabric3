@@ -137,6 +137,8 @@
         <system:implementation.system class="org.fabric3.fabric.assembly.store.AssemblyStoreImpl"/>
     </component>
 
-	<include scdlResource="META-INF/hessian.scdl"/>
+	<include name="burlapTransportBinding" scdlResource="META-INF/burlap.scdl"/>
+	
+	<include name="wsTransportBinding" scdlResource="META-INF/ws.scdl"/>
 
 </composite>
