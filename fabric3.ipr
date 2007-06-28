@@ -340,7 +340,6 @@
       <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/itest/smoketest/itest-smoketest.iml" filepath="$PROJECT_DIR$/runtimes/trunk/itest/smoketest/itest-smoketest.iml" group="itest" />
       <module fileurl="file://$PROJECT_DIR$/parent-pom/trunk/parent-pom.iml" filepath="$PROJECT_DIR$/parent-pom/trunk/parent-pom.iml" />
       <module fileurl="file://$PROJECT_DIR$/spec/trunk/sca-spec.iml" filepath="$PROJECT_DIR$/spec/trunk/sca-spec.iml" />
-      <module fileurl="file:///Users/jboynes/scdl4j/scdl4j.iml" filepath="/Users/jboynes/scdl4j/scdl4j.iml" />
       <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/standalone/standalone-api/standalone-api.iml" filepath="$PROJECT_DIR$/runtimes/trunk/standalone/standalone-api/standalone-api.iml" group="standalone" />
       <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/standalone/assembly/standalone-assembly.iml" filepath="$PROJECT_DIR$/runtimes/trunk/standalone/assembly/standalone-assembly.iml" group="standalone" />
       <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/standalone/standalone-host/standalone-host.iml" filepath="$PROJECT_DIR$/runtimes/trunk/standalone/standalone-host/standalone-host.iml" group="standalone" />
