@@ -61,7 +61,7 @@
             </excludes>
             <outputDirectory>bin</outputDirectory>
             <outputFileNameMapping>${artifactId}.${extension}</outputFileNameMapping>
-            <fileMode>755</fileMode>
+            <fileMode>0755</fileMode>
         </dependencySet>
         
         <!-- copy dependencies used by the executable commands to the lib directory -->
