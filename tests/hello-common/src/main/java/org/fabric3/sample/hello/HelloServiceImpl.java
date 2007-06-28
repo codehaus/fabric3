@@ -35,4 +35,8 @@ public class HelloServiceImpl implements HelloService {
         return greeting + ", " + name;
     }
 
+    public int add(int i, int j) {
+        return i + j;
+    }
+
 }

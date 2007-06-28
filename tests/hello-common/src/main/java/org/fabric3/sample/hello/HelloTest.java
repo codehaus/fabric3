@@ -31,6 +31,7 @@ public class HelloTest extends TestCase {
 
     public void testBinding() {
         assertEquals("Hello, World", helloClient.sayHello("Hello", "World"));
+        assertEquals(3, helloClient.add(1, 2));
     }
 
     @Reference

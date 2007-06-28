@@ -25,4 +25,6 @@ public interface HelloClient {
 
     public abstract String sayHello(String greeting, String name);
 
+    public abstract int add(int i, int j);
+
 }

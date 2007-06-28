@@ -42,4 +42,8 @@ public class HelloClientImpl implements HelloClient {
         return helloService.sayHello(greeting, name);
     }
 
+    public int add(int i, int j) {
+        return i + j;
+    }
+
 }

@@ -22,9 +22,11 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
 
+import org.fabric3.fabric.services.classloading.ClassLoaderRegistryImpl;
 import org.fabric3.spi.model.type.Operation;
 import org.fabric3.spi.model.type.DataType;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
+import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 
 /**
  * Contains methods for mapping between an operation in a {@link org.fabric3.spi.model.type.ServiceContract} and a method
@@ -33,6 +35,9 @@ import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
  * @version $Rev$ $Date$
  */
 public final class JavaIDLUtils {
+
+    // TODO This is a hack for the demo
+    private static final ClassLoaderRegistry registry = new ClassLoaderRegistryImpl();
 
     private JavaIDLUtils() {
     }
@@ -52,7 +57,7 @@ public final class JavaIDLUtils {
         List<String> params = operation.getParameters();
         Class<?>[] types = new Class<?>[params.size()];
         for (int i = 0; i < params.size(); i++) {
-            types[i] = clazz.getClassLoader().loadClass(params.get(i));
+            types[i] = registry.loadClass(clazz.getClassLoader(), params.get(i));
         }
         return clazz.getMethod(name, types);
     }

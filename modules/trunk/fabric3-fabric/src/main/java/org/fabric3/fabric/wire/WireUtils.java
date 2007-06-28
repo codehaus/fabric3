@@ -18,11 +18,12 @@
  */
 package org.fabric3.fabric.wire;
 
+import static org.fabric3.fabric.idl.java.JavaIDLUtils.findMethod;
+
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.fabric3.fabric.idl.java.JavaIDLUtils.findMethod;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.ProxyCreationException;

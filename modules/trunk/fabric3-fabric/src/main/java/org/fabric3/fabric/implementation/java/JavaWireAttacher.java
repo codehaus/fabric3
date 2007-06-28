@@ -39,6 +39,7 @@ import org.fabric3.spi.model.instance.ValueSource;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.ProxyService;
@@ -57,13 +58,16 @@ public class JavaWireAttacher implements WireAttacher<JavaWireSourceDefinition, 
     private WireAttacherRegistry wireAttacherRegistry;
     private ComponentManager manager;
     private ProxyService proxyService;
+    private ClassLoaderRegistry classLoaderRegistry;
 
     public JavaWireAttacher(@Reference ComponentManager manager,
                             @Reference WireAttacherRegistry wireAttacherRegistry,
-                            @Reference ProxyService proxyService) {
+                            @Reference ProxyService proxyService,
+                            @Reference ClassLoaderRegistry classLoaderRegistry) {
         this.wireAttacherRegistry = wireAttacherRegistry;
         this.manager = manager;
         this.proxyService = proxyService;
+        this.classLoaderRegistry = classLoaderRegistry;
     }
 
     @Init
@@ -134,7 +138,7 @@ public class JavaWireAttacher implements WireAttacher<JavaWireSourceDefinition, 
             for (int i = 0; i < params.size(); i++) {
                 String param = params.get(i);
                 try {
-                    paramTypes[i] = loader.loadClass(param);
+                    paramTypes[i] = classLoaderRegistry.loadClass(loader, param);
                 } catch (ClassNotFoundException e) {
                     URI sourceUri = wire.getSourceUri();
                     URI targetUri = wire.getTargetUri();
