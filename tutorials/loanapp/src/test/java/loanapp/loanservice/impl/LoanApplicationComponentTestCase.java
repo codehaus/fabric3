@@ -35,7 +35,7 @@ public class LoanApplicationComponentTestCase extends TestCase {
      */
     public void testLoanApplication() {
         LoanApplication app = new LoanApplicationImpl("123", 1000, 100);
-        assertEquals(LoanResult.APPROVED, component.applyForLoan(app));
+        assertEquals(LoanResult.APPROVED, component.applyForLoan(app).getCode());
     }
 
     /**

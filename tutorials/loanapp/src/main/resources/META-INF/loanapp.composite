@@ -20,11 +20,11 @@
            xmlns:fabric3="http://fabric3.org/xmlns/sca/0.1"
            xmlns:hessian="http://www.fabric3.org/binding/hessian/0.1-SNAPSHOT"
            name="LoanAppComposite">
- 
+    <!--
     <service name="LoanApplicationService" promote="LoanApplicationComponent">
         <interface.java interface="loanapp.loanservice.LoanApplicationService"/>
         <hessian:binding.hessian uri="/loanApplication"/>
-    </service>
+    </service>  -->
     
     <component name="LoanApplicationComponent">
         <implementation.java class="loanapp.loanservice.impl.LoanApplicationComponent"/>
