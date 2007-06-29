@@ -51,7 +51,7 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-webapp-plugin</artifactId>
-                <version>${project.version}</version>
+                <version>0.1</version>
                 <executions>
                     <execution>
                         <id>fabric3-war</id>
@@ -60,6 +60,9 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <runTimeVersion>${project.version}</runTimeVersion>
+                </configuration>
             </plugin>
 
             <plugin>
