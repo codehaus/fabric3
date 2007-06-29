@@ -68,6 +68,9 @@
             <includes>
                 <include>org.codehaus.fabric3.standalone:launcher</include>
             </includes>
+            <excludes>
+                <exclude>org.codehaus.fabric3:fabric3-api</exclude>
+            </excludes>
             <outputDirectory>bin</outputDirectory>
             <outputFileNameMapping>${artifactId}.${extension}</outputFileNameMapping>
             <fileMode>755</fileMode>
