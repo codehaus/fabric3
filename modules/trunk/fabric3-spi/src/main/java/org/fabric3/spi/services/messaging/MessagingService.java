@@ -47,9 +47,4 @@ public interface MessagingService {
      */
     void registerRequestListener(QName messageType, RequestListener listener);
 
-    /**
-     * @return Returns the message destination used by the local service.
-     */
-    Object getMessageDestination();
-
 }

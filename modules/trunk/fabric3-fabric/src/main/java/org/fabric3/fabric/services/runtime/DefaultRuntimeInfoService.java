@@ -24,6 +24,7 @@ import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.component.ComponentManager;
 import org.fabric3.spi.model.topology.RuntimeInfo;
 import org.fabric3.spi.services.advertisement.AdvertisementService;
+import org.fabric3.spi.services.messaging.MessageDestinationService;
 import org.fabric3.spi.services.runtime.RuntimeInfoService;
 import org.osoa.sca.annotations.Reference;
 
@@ -46,6 +47,9 @@ public class DefaultRuntimeInfoService implements RuntimeInfoService {
     // Host info
     private HostInfo hostInfo;
 
+    // Message destination service
+    private MessageDestinationService messageDestinationService;
+
     /**
      * @see org.fabric3.spi.services.runtime.RuntimeInfoService#getRuntimeInfo()
      */
@@ -60,7 +64,13 @@ public class DefaultRuntimeInfoService implements RuntimeInfoService {
         for(URI componentUri : componentManager.getComponentsInHierarchy(hostInfo.getDomain())) {
             runtimeInfo.addComponent(componentUri);
         }
+
+        // TODO Fix this in the runtime info
+        String messageDestintaion = (String) messageDestinationService.getMessageDestination();
+        runtimeInfo.setMessageDestination(messageDestintaion);
+
         return runtimeInfo;
+
     }
 
     /**
@@ -85,6 +95,14 @@ public class DefaultRuntimeInfoService implements RuntimeInfoService {
     @Reference
     public void setHostInfo(HostInfo hostInfo) {
         this.hostInfo = hostInfo;
+    }
+
+    /**
+     * @param messageDestinationService Message destination service to be injected.
+     */
+    @Reference
+    public void setMessageDestinationService(MessageDestinationService messageDestinationService) {
+        this.messageDestinationService = messageDestinationService;
     }
 
 }

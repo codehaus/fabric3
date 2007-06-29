@@ -28,11 +28,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import net.jxta.discovery.DiscoveryEvent;
-import net.jxta.discovery.DiscoveryListener;
 import net.jxta.document.AdvertisementFactory;
 import net.jxta.peergroup.PeerGroup;
-import net.jxta.protocol.DiscoveryResponseMsg;
 
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.jxta.JxtaService;
@@ -207,49 +204,6 @@ public class JxtaDiscoveryService implements DiscoveryService {
     }
 
     /*
-     * Listener for notifications from other nodes.
-     */
-    private class Listener implements DiscoveryListener {
-
-        public void discoveryEvent(DiscoveryEvent discoveryEvent) {
-
-            DiscoveryResponseMsg res = discoveryEvent.getResponse();
-            Enumeration en = res.getAdvertisements();
-
-            while (en != null && en.hasMoreElements()) {
-
-                Object object = en.nextElement();
-                if (object instanceof PresenceAdvertisement) {
-
-                    PresenceAdvertisement presenceAdv = (PresenceAdvertisement) object;
-                    RuntimeInfo runtimeInfo = presenceAdv.getRuntimeInfo();
-
-                    if (runtimeInfo.getId().equals(hostInfo.getRuntimeId())) {
-                        continue;
-                    }
-
-                    participatingRuntimes.put(runtimeInfo.getId(),
-                                              new TwosTuple<RuntimeInfo, Long>(runtimeInfo,
-                                                                               System.currentTimeMillis()));
-                }
-
-            }
-
-            // Expire inactive runtimes
-            for (TwosTuple<RuntimeInfo, Long> tuple : participatingRuntimes.values()) {
-                if (System.currentTimeMillis() - tuple.getSecond() > expirationThreshold) {
-                    participatingRuntimes.remove(tuple.getFirst().getId());
-                } else {
-                    System.err.println(hostInfo.getRuntimeId() + ":" + tuple.getFirst().getId());
-                }
-
-            }
-
-        }
-
-    }
-
-    /*
      * Notifier sending information about the current node.
      *
      */
@@ -264,33 +218,93 @@ public class JxtaDiscoveryService implements DiscoveryService {
          */
         public void run() {
 
-            discoveryService.addDiscoveryListener(new Listener());
             while (live.get()) {
 
                 try {
 
                     Thread.sleep(interval);
 
-                    discoveryService.getRemoteAdvertisements(null, ADV, null, null, 5);
+                    requestRemoteAdvertisements();
 
-                    PresenceAdvertisement presenceAdv = null;
-                    presenceAdv =
-                            (PresenceAdvertisement) AdvertisementFactory.newAdvertisement(PresenceAdvertisement.getAdvertisementType());
+                    publishAdvertisement();
 
-                    RuntimeInfo runtimeInfo = runtimeInfoService.getRuntimeInfo();
-                    // TODO Hack for the demo, this info should come from the messaging service
-                    runtimeInfo.setMessageDestination(jxtaService.getDomainGroup().getPeerID().toString());
+                    checkAdvertisementResponses();
 
-                    presenceAdv.setRuntimeInfo(runtimeInfo);
-
-                    discoveryService.publish(presenceAdv, 10000, 10000);
-                    discoveryService.remotePublish(presenceAdv);
+                    expireInacticeRuntimes();
 
                 } catch (InterruptedException ex) {
                     return;
                 } catch (IOException e) {
                     // TODO Notify the monitor
                 }
+            }
+
+        }
+
+
+
+    }
+
+    /*
+     * Request advertisements from remote nodes.
+     */
+    private void requestRemoteAdvertisements() {
+        discoveryService.getRemoteAdvertisements(null, ADV, null, null, 5);
+    }
+
+    /*
+     * Publishes advertisements about the current node.
+     */
+    private void publishAdvertisement() throws IOException {
+
+        String type = PresenceAdvertisement.getAdvertisementType();
+        PresenceAdvertisement presenceAdv = (PresenceAdvertisement) AdvertisementFactory.newAdvertisement(type);
+
+        RuntimeInfo runtimeInfo = runtimeInfoService.getRuntimeInfo();
+        presenceAdv.setRuntimeInfo(runtimeInfo);
+
+        discoveryService.publish(presenceAdv, 10000, 10000);
+
+    }
+
+    /*
+     * Checks responses to remote advertisement requests in local cache.
+     */
+    private void checkAdvertisementResponses() throws IOException {
+
+        Enumeration en = discoveryService.getLocalAdvertisements(ADV, null, null);
+
+        while (en != null && en.hasMoreElements()) {
+
+            Object object = en.nextElement();
+            if (object instanceof PresenceAdvertisement) {
+
+                PresenceAdvertisement presenceAdv1 = (PresenceAdvertisement) object;
+                RuntimeInfo runtimeInfo1 = presenceAdv1.getRuntimeInfo();
+
+                if (runtimeInfo1.getId().equals(hostInfo.getRuntimeId())) {
+                    continue;
+                }
+
+                participatingRuntimes.put(runtimeInfo1.getId(),
+                                          new TwosTuple<RuntimeInfo, Long>(runtimeInfo1,
+                                                                           System.currentTimeMillis()));
+            }
+
+        }
+
+    }
+
+    /*
+     * Expires inactive runtimes.
+     */
+    private void expireInacticeRuntimes() {
+
+        for (TwosTuple<RuntimeInfo, Long> tuple : participatingRuntimes.values()) {
+            if (System.currentTimeMillis() - tuple.getSecond() > expirationThreshold) {
+                participatingRuntimes.remove(tuple.getFirst().getId());
+            } else {
+                System.err.println(hostInfo.getRuntimeId() + ":" + tuple.getFirst().getId());
             }
 
         }

@@ -128,13 +128,6 @@ public class JxtaMessagingService extends AbstractMessagingService {
     }
 
     /**
-     * @see org.fabric3.spi.services.messaging.MessagingService#getMessageDestination()
-     */
-    public Object getMessageDestination() {
-        return domainGroup.getPeerID();
-    }
-
-    /**
      * Start method.
      *
      */

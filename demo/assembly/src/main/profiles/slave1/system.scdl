@@ -84,6 +84,11 @@
         <system:implementation.system class="org.fabric3.messaging.jxta.JxtaMessagingService"/>
     </component>
 
+    <!-- JXTA Messaging Service -->
+    <component name="MessageDestinationService">
+        <system:implementation.system class="org.fabric3.messaging.jxta.JxtaMessageDestinationService"/>
+    </component>
+
     <!-- JXTA Discovery Service -->
     <component name="DiscoveryService">
         <system:implementation.system class="org.fabric3.discovery.jxta.JxtaDiscoveryService"/>
