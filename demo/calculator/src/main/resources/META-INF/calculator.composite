@@ -56,15 +56,30 @@
            name="CalculatorComposite"
            autowire="true">
 
-<!--    <service name="calculatorRemote" promote="calculator">
+    <service name="calculatorOnHessian" promote="calculator">
         <interface.java interface="calculator.CalculatorService"/>
         <hessian:binding.hessian uri="/calculator" />
-    </service>-->
+    </service>
 	 
-	 <service name="calculatorRemote" promote="calculator">
+	 <service name="calculatorOnWS" promote="calculator">
         <interface.java interface="calculator.CalculatorService"/>
         <binding.ws uri="/calculator" />
     </service>
+
+   <!-- <service name="calculatorOnJMS" promote="calculator">
+       <interface.java interface="calculator.CalculatorService"/>
+        <binding.jms
+            correlationScheme="RequestMsgIDToCorrelID"
+            jndiURL="vm://localhost"
+            initialContextFactory="org.apache.activemq.jndi.ActiveMQInitialContextFactory">
+            <destination name="serviceQueue" type="queue" create="always"/>
+            <connectionFactory name="QueueConnectionFactory" create="never"/>
+            <response>
+                <destination name="clientQueue" type="queue" create="always"/>
+                <connectionFactory name="QueueConnectionFactory" create="never"/>
+            </response>
+        </binding.jms>
+   </service> -->
 
 
     <component name="calculator">

@@ -102,6 +102,7 @@
                 <include>org.apache.activemq:activemq-core</include>
                 <include>geronimo-spec:geronimo-spec-jms</include>
                 <include>commons-logging:commons-logging</include>
+                <include>org.apache.derby:derby</include>
             </includes>
             <excludes>
 				<exclude>org.codehaus.fabric3.standalone:standalone-api</exclude>
@@ -132,6 +133,7 @@
                 <include>org.apache.activemq:activemq-core</include>
                 <include>geronimo-spec:geronimo-spec-jms</include>
                 <include>commons-logging:commons-logging</include>
+                <include>org.apache.derby:derby</include>
             </includes>
             <excludes>
 				<exclude>org.codehaus.fabric3.standalone:standalone-api</exclude>
@@ -162,6 +164,7 @@
                 <include>org.apache.activemq:activemq-core</include>
                 <include>geronimo-spec:geronimo-spec-jms</include>
                 <include>commons-logging:commons-logging</include>
+                <include>org.apache.derby:derby</include>
             </includes>
             <excludes>
 				<exclude>org.codehaus.fabric3.standalone:standalone-api</exclude>

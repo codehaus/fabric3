@@ -27,16 +27,31 @@
             <reference name="calculatorReference" interface="calculator.CalculatorService"/>
         </fabric3:webapp>
     </component>
-<!--
+
     <reference name="calculatorReference" promote="calculator/calculatorReference">
         <interface.java interface="calculator.CalculatorService"/>
         <hessian:binding.hessian uri="http://localhost:8101/calculator"/>
     </reference>
--->
 
+
+    <!--<reference name="calculatorReference" promote="calculator/calculatorReference">-->
+        <!--<interface.java interface="calculator.CalculatorService"/>-->
+        <!--<binding.ws uri="http://localhost:8101/services/calculator"/>-->
+    <!--</reference>-->
+    <!--
     <reference name="calculatorReference" promote="calculator/calculatorReference">
         <interface.java interface="calculator.CalculatorService"/>
-        <binding.ws uri="http://localhost:8102/calculator"/>
-    </reference> 
-
+        <binding.jms
+            correlationScheme="RequestMsgIDToCorrelID"
+            jndiURL="vm://localhost"
+            initialContextFactory="org.apache.activemq.jndi.ActiveMQInitialContextFactory">
+            <destination name="serviceQueue" type="queue" create="always"/>
+            <connectionFactory name="QueueConnectionFactory" create="never"/>
+            <response>
+                <destination name="clientQueue" type="queue" create="always"/>
+                <connectionFactory name="QueueConnectionFactory" create="never"/>
+            </response>
+        </binding.jms>
+    </reference>   -->
+    
 </composite>

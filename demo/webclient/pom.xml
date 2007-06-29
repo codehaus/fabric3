@@ -49,13 +49,13 @@
             <artifactId>sca-api-r1.0</artifactId>
             <version>0.1</version>
         </dependency>
-		  
-<!--		  <dependency>
-            <groupId>org.codehaus.fabric3.webapp</groupId>
-            <artifactId>webapp-api</artifactId>
-				<version>0.1-SNAPSHOT</version>
-        </dependency>
--->
+
+        <!--		  <dependency>
+                    <groupId>org.codehaus.fabric3.webapp</groupId>
+                    <artifactId>webapp-api</artifactId>
+                        <version>0.1-SNAPSHOT</version>
+                </dependency>
+        -->
         <dependency>
             <groupId>org.codehaus.fabric3.webapp</groupId>
             <artifactId>webapp-host</artifactId>
@@ -89,6 +89,25 @@
             <artifactId>fabric3-binding-hessian</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-binding-jms</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-core</artifactId>
+            <version>4.1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derby</artifactId>
+            <version>10.2.2.0</version>
+        </dependency>
+
     </dependencies>
-  
+
 </project>

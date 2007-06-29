@@ -100,5 +100,6 @@
        <!-- Include hessian extension SCDL -->
     <include name="org.fabric3.binding.HessianExtension" scdlResource="META-INF/hessian.scdl"/>
     <include name="org.fabric3.binding.CXFExtension" scdlResource="META-INF/ws.scdl"/> 
+    <include name="org.fabric3.binding.JMSExtension" scdlResource="META-INF/jms.scdl"/> 
 
 </composite>

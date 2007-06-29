@@ -126,6 +126,8 @@
 
 	<include name="hessianTransportBinding" scdlResource="META-INF/hessian.scdl"/>
 
+    <include name="wsTransportBinding" scdlResource="META-INF/ws.scdl"/>
+
 	<include name="jmsTransportBinding" scdlResource="META-INF/jms.scdl"/>
 
     <component name="JettyService">
