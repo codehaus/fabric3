@@ -37,7 +37,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3.spec</groupId>
             <artifactId>sca-api-r1.0</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <version>0.1</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

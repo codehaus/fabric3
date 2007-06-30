@@ -1,0 +1,91 @@
+/*
+ * See the NOTICE file distributed with this work for information
+ * regarding copyright ownership.  This file is licensed
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.fabric3.fabric.command;
+
+import java.net.URI;
+import javax.xml.namespace.QName;
+
+import org.osoa.sca.annotations.Constructor;
+import org.osoa.sca.annotations.Reference;
+
+import org.fabric3.extension.command.AbstractCommandExecutor;
+import org.fabric3.extension.component.SimpleWorkContext;
+import org.fabric3.host.monitor.MonitorFactory;
+import org.fabric3.spi.command.CommandExecutorRegistry;
+import org.fabric3.spi.command.ExecutionException;
+import org.fabric3.spi.component.AtomicComponent;
+import org.fabric3.spi.component.Component;
+import org.fabric3.spi.component.ComponentManager;
+import org.fabric3.spi.component.ScopeContainer;
+import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.spi.component.TargetResolutionException;
+import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.marshaller.MarshallerRegistry;
+import org.fabric3.spi.model.type.Scope;
+import org.fabric3.spi.services.messaging.MessagingService;
+
+/**
+ * Eagerly initializes a component on a service node.
+ *
+ * @version $Rev$ $Date$
+ */
+public class InitializeComponentExecutor extends AbstractCommandExecutor<InitializeComponentCommand> {
+    private ComponentManager manager;
+    private ScopeContainer<?> scopeContainer;
+
+    @Constructor
+    public InitializeComponentExecutor(@Reference MessagingService messagingService,
+                                       @Reference MarshallerRegistry marshallerRegistry,
+                                       @Reference CommandExecutorRegistry commandExecutorRegistry,
+                                       @Reference ScopeRegistry scopeRegistry,
+                                       @Reference ComponentManager manager,
+                                       @Reference MonitorFactory factory) {
+
+        super(messagingService, marshallerRegistry, commandExecutorRegistry, factory);
+        this.manager = manager;
+        scopeContainer = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
+    }
+
+    public void execute(InitializeComponentCommand command) throws ExecutionException {
+        URI uri = command.getUri();
+        Component component = manager.getComponent(uri);
+        if (component == null) {
+            throw new InitializeException("Component not found", uri.toString());
+        }
+        // currently only support atomic initalization
+        if (!(component instanceof AtomicComponent)) {
+            throw new UnsupportedOperationException();
+        }
+        AtomicComponent<?> atomic = (AtomicComponent) component;
+        try {
+            WorkContext workContext = new SimpleWorkContext();
+            workContext.setScopeIdentifier(Scope.COMPOSITE, command.getGroupId());
+            // initialize the component
+            scopeContainer.getWrapper(atomic, workContext);
+        } catch (TargetResolutionException e) {
+            throw new ExecutionException("Error initializing component", uri.toString(), e);
+        }
+    }
+
+    protected QName getCommandQName() {
+        return InitializeComponentCommand.QNAME;
+    }
+
+    protected Class<InitializeComponentCommand> getCommandType() {
+        return InitializeComponentCommand.class;
+    }
+}

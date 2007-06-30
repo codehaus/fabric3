@@ -53,12 +53,7 @@
             <dependency>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-fabric</artifactId>
-                <version>0.1-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>org.codehaus.fabric3</groupId>
-                <artifactId>fabric3-maven</artifactId>
-                <version>0.1-SNAPSHOT</version>
+                <version>0.1</version>
             </dependency>
 
             <dependency>
@@ -102,12 +97,6 @@
     </dependencyManagement>
 
     <modules>
-        <module>../../../modules/trunk/fabric3-spi</module>
-        <module>../../../modules/trunk/fabric3-extension</module>
-        <module>../../../modules/trunk/fabric3-transform</module>
-        <module>../../../modules/trunk/fabric3-pojo</module>
-        <module>../../../modules/trunk/fabric3-fabric</module>
-
         <module>webapp-api</module>
         <module>webapp-host</module>
         <module>smoketest</module>

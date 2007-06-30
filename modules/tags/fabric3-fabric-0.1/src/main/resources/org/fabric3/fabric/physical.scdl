@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with this work for information
+ regarding copyright ownership.  This file is licensed
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
+<!--
+    Default system configuration of physical deployment components.
+
+    $Rev$ $Date$
+-->
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           name="org.fabric3.fabric.Physical"
+           autowire="true">
+
+    <!-- Component that provides the Deployer service -->
+    <component name="deployer">
+        <system:implementation.system class="org.fabric3.fabric.deployer.DeployerImpl"/>
+    </component>
+
+    <component name="connector">
+        <system:implementation.system class="org.fabric3.fabric.builder.ConnectorImpl"/>
+    </component>
+
+    <component name="physicalComponentBuilderRegistry">
+        <system:implementation.system class="org.fabric3.fabric.builder.component.DefaultComponentBuilderRegistry"/>
+    </component>
+
+    <component name="wireAttacherRegistryImpl">
+        <system:implementation.system class="org.fabric3.fabric.builder.component.WireAttacherRegistryImpl"/>
+    </component>
+
+    <component name="interceptorBuilderRegistry">
+        <system:implementation.system
+                class="org.fabric3.fabric.builder.interceptor.InterceptorBuilderRegistryImpl"/>
+    </component>
+
+</composite>

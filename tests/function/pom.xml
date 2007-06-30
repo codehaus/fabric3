@@ -41,12 +41,6 @@
         </dependency>
     </dependencies>
 
-<!--
-    <modules>
-        <module>../../runtimes/trunk/itest</module>
-    </modules>
--->
-
     <build>
         <defaultGoal>verify</defaultGoal>
         <plugins>

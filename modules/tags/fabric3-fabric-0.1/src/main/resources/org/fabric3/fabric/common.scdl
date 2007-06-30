@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with this work for information
+ regarding copyright ownership.  This file is licensed
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
+<!--
+    Default system configuration for common components.
+
+    $Rev$ $Date$
+-->
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           name="org.fabric3.fabric.Common"
+           autowire="true">
+
+    <component name="distributedAssembly">
+        <system:implementation.system class="org.fabric3.fabric.assembly.DistributedAssemblyImpl"/>
+    </component>
+
+    <component name="wireResolver">
+        <system:implementation.system class="org.fabric3.fabric.assembly.resolver.DefaultWireResolver"/>
+    </component>
+
+    <component name="promotionNormalizer">
+        <system:implementation.system class="org.fabric3.fabric.assembly.normalizer.PromotionNormalizerImpl"/>
+    </component>
+
+    <component name="allocator">
+        <system:implementation.system class="org.fabric3.fabric.assembly.allocator.DefaultAllocator"/>
+    </component>
+
+    <component name="runtimeRoutingService">
+        <system:implementation.system class="org.fabric3.fabric.services.routing.FederatedRoutingService"/>
+    </component>
+
+    <component name="generatorRegistry">
+        <system:implementation.system class="org.fabric3.fabric.generator.GeneratorRegistryImpl"/>
+    </component>
+
+    <component name="modelMarshallerRegistry">
+        <system:implementation.system class="org.fabric3.fabric.marshaller.DefaultMarshallerRegistry"/>
+    </component>
+
+    <component name="advertismentService">
+        <system:implementation.system class="org.fabric3.fabric.services.advertsiement.DefaultAdvertismentService"/>
+    </component>
+
+    <component name="featureLoader">
+        <system:implementation.system class="org.fabric3.fabric.services.advertsiement.FeatureLoader"/>
+    </component>
+
+    <component name="runtimeInfoService">
+        <system:implementation.system class="org.fabric3.fabric.services.runtime.DefaultRuntimeInfoService"/>
+    </component>
+
+    <component name="proxyService">
+        <system:implementation.system class="org.fabric3.fabric.wire.jdk.JDKProxyService"/>
+    </component>
+
+    <!-- Default scopes -->
+    <component name="scope.stateless">
+        <system:implementation.system class="org.fabric3.fabric.component.scope.StatelessScopeContainer"/>
+    </component>
+
+    <component name="scope.conversation">
+        <system:implementation.system class="org.fabric3.fabric.component.scope.ConversationalScopeContainer"/>
+        <reference name="store" target="memoryStore"/>
+    </component>
+
+    <component name="memoryStore">
+        <system:implementation.system class="org.fabric3.fabric.services.store.NonExpiringMemoryStore"/>
+    </component>
+
+    <!-- Resource host registry -->
+    <component name="resourceHostRegistry">
+        <system:implementation.system class="org.fabric3.fabric.services.host.DelegatingResourceHostRegistry"/>
+    </component>
+
+    <component name="xstreamFactory">
+        <system:implementation.system class="org.fabric3.fabric.services.xstream.XStreamFactoryImpl"/>
+    </component>
+
+    <!-- Default marshaller registry -->
+    <component name="org.fabric3.itest.defaultMarshallerRegistry">
+        <system:implementation.system class="org.fabric3.fabric.marshaller.xstream.XStreamMarshallerRegistry"/>
+    </component>
+
+    <component name="eventService">
+        <system:implementation.system class="org.fabric3.fabric.services.event.EventServiceImpl"/>
+    </component>
+
+    <component name="commandExecutorRegistry">
+        <system:implementation.system class="org.fabric3.fabric.command.CommandExecutorRegistryImpl"/>
+    </component>
+
+    <!-- default commands -->
+    <component name="startCommandExecutor">
+        <system:implementation.system class="org.fabric3.fabric.command.StartCompositeContextExecutor"/>
+    </component>
+
+    <component name="startCommandGenerator">
+        <system:implementation.system class="org.fabric3.fabric.command.StartCompositeContextGenerator"/>
+    </component>
+
+    <component name="initializeCommandExecutor">
+        <system:implementation.system class="org.fabric3.fabric.command.InitializeComponentExecutor"/>
+    </component>
+
+    <component name="initializeCommandGenerator">
+        <system:implementation.system class="org.fabric3.fabric.command.InitializeComponentGenerator"/>
+    </component>
+
+    <component name="classLoaderGenerator">
+        <system:implementation.system class="org.fabric3.fabric.classloader.ClassLoaderGeneratorImpl"/>
+    </component>
+
+    <component name="resourceBuilderRegistry">
+        <system:implementation.system class="org.fabric3.fabric.builder.resource.ResourceContainerBuilderRegistryImpl"/>
+    </component>
+
+    <component name="classLaoderBuilder">
+        <system:implementation.system class="org.fabric3.fabric.classloader.ClassLoaderBuilder"/>
+    </component>
+
+</composite>
