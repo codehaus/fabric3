@@ -97,7 +97,6 @@
 
         <module>standalone-api</module>
         <module>standalone-host</module>
-        <module>launcher</module>
         <module>server.start</module>
         <module>server.shutdown</module>
     </modules>
