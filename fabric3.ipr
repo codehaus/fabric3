@@ -340,11 +340,8 @@
       <module fileurl="file://$PROJECT_DIR$/parent-pom/trunk/parent-pom.iml" filepath="$PROJECT_DIR$/parent-pom/trunk/parent-pom.iml" />
       <module fileurl="file://$PROJECT_DIR$/spec/trunk/sca-spec.iml" filepath="$PROJECT_DIR$/spec/trunk/sca-spec.iml" />
       <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/standalone/standalone-api/standalone-api.iml" filepath="$PROJECT_DIR$/runtimes/trunk/standalone/standalone-api/standalone-api.iml" group="standalone" />
-      <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/standalone/assembly/standalone-assembly.iml" filepath="$PROJECT_DIR$/runtimes/trunk/standalone/assembly/standalone-assembly.iml" group="standalone" />
       <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/standalone/standalone-host/standalone-host.iml" filepath="$PROJECT_DIR$/runtimes/trunk/standalone/standalone-host/standalone-host.iml" group="standalone" />
-      <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/standalone/launcher/standalone-launcher.iml" filepath="$PROJECT_DIR$/runtimes/trunk/standalone/launcher/standalone-launcher.iml" group="standalone" />
       <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/standalone/server.shutdown/standalone-shutdown.iml" filepath="$PROJECT_DIR$/runtimes/trunk/standalone/server.shutdown/standalone-shutdown.iml" group="standalone" />
-      <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/standalone/smoketest/standalone-smoketest.iml" filepath="$PROJECT_DIR$/runtimes/trunk/standalone/smoketest/standalone-smoketest.iml" group="standalone" />
       <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/standalone/server.start/standalone-start.iml" filepath="$PROJECT_DIR$/runtimes/trunk/standalone/server.start/standalone-start.iml" group="standalone" />
       <module fileurl="file://$PROJECT_DIR$/tests/groovy/test-groovy.iml" filepath="$PROJECT_DIR$/tests/groovy/test-groovy.iml" />
       <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/webapp/webapp-api/webapp-api.iml" filepath="$PROJECT_DIR$/runtimes/trunk/webapp/webapp-api/webapp-api.iml" group="webapp" />
