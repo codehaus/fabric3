@@ -81,7 +81,5 @@
 
         <module>development-api</module>
         <module>development-host</module>
-        <module>assembly</module>
-        <module>smoketest</module>
     </modules>
 </project>
