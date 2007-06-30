@@ -40,14 +40,15 @@
         </file>
     </files>     
 
-    <!-- Include Hessian, Jetty and JCA. Exclude other F3 artifacts. -->
+    <!-- Include WS, Jetty and JCA. Exclude other F3 artifacts. -->
     <dependencySets>
 		
         <dependencySet>
             <includes>
-                <include>org.codehaus.fabric3:fabric3-binding-hessian</include>
+                <include>org.codehaus.fabric3:fabric3-binding-ws</include>
                 <include>org.codehaus.fabric3:fabric3-jetty</include>
                 <include>org.apache.geronimo.specs:geronimo-j2ee-connector_1.5_spec</include>
+                <include>commons-logging:commons-logging</include>
             </includes>
             <excludes>
                 <exclude>org.codehaus.fabric3:fabric3-extension</exclude>
