@@ -50,11 +50,6 @@
                 <artifactId>fabric3-fabric</artifactId>
                 <version>0.1</version>
             </dependency>
-            <dependency>
-                <groupId>org.codehaus.fabric3</groupId>
-                <artifactId>fabric3-maven</artifactId>
-                <version>0.1-SNAPSHOT</version>
-            </dependency>
 
             <dependency>
                 <groupId>org.codehaus.fabric3.development</groupId>
@@ -77,8 +72,6 @@
     </dependencyManagement>
 
     <modules>
-        <module>../../../modules/trunk/fabric3-maven</module>
-
         <module>development-api</module>
         <module>development-host</module>
     </modules>
