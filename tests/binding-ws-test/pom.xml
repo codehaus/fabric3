@@ -143,6 +143,7 @@
     </build>
 
     <modules>
+        <module>../../modules/trunk/fabric3-jetty</module>
         <module>../../runtimes/trunk/itest</module>
         <module>../../modules/trunk/fabric3-binding-ws</module>
         <module>../hello-common</module>
