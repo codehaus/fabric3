@@ -25,11 +25,11 @@
         <artifactId>fabric</artifactId>
         <version>2</version>
     </parent>
-    <artifactId>fabric3-burlap-extension-assembly</artifactId>
+    <artifactId>fabric3-hessian-extension-assembly</artifactId>
     <version>0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>Fabric3 Burlap Extension Distribution</name>
-    <description>Assembly distribution for Fabric3 Burlap Distribution.</description>
+    <name>Fabric3 Hessian Extension Distribution</name>
+    <description>Assembly distribution for Fabric3 Hessian Distribution.</description>
 
     <pluginRepositories>
         <pluginRepository>
@@ -55,7 +55,7 @@
 		  		
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-binding-burlap</artifactId>
+            <artifactId>fabric3-binding-hessian</artifactId>
             <version>${project.version}</version>
         </dependency>
 		
@@ -71,7 +71,7 @@
         <module>../../modules/trunk/fabric3-spi</module>
         <module>../../modules/trunk/fabric3-extension</module>
         <module>../../modules/trunk/fabric3-jetty</module>
-        <module>../../modules/trunk/fabric3-binding-burlap</module>    </modules>
+        <module>../../modules/trunk/fabric3-binding-hessian</module>    </modules>
 
     <build>
         <plugins>
