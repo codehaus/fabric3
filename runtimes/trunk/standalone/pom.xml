@@ -100,7 +100,5 @@
         <module>launcher</module>
         <module>server.start</module>
         <module>server.shutdown</module>
-        <module>assembly</module>
-        <module>smoketest</module>
     </modules>
 </project>
