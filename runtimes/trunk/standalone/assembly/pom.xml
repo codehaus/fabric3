@@ -53,11 +53,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-maven</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.apache.tuscany</groupId>
             <artifactId>commonj-api_r1.1</artifactId>
             <version>1.0-incubator-M2</version>

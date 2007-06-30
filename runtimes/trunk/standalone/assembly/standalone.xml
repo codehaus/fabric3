@@ -92,7 +92,6 @@
         <dependencySet>
             <includes>
                 <include>org.codehaus.fabric3.standalone:standalone-host</include>
-                <include>org.codehaus.fabric3:fabric3-maven</include>
                 <include>org.codehaus.woodstox:wstx-asl</include>
                 <include>org.apache.tuscany:commonj-api_r1.1</include>
             </includes>
