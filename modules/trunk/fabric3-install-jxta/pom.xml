@@ -27,6 +27,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-install-jxta</artifactId>
+    <packaging>pom</packaging>
     <version>0.1-SNAPSHOT</version>
     <name>Fabric3 JXTA Install</name>
     <description>Fabric3 Project to Install JXTA.</description>

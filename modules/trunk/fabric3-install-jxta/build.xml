@@ -38,7 +38,7 @@
 
     <target name="install-jxta" depends="check-installed" unless="already.installed">
         <mkdir dir="${basedir}/target/jxta-download/"/>
-        <get src="http://download.jxta.org/build/release/jse/2.4.1/jxta-lib-2.4.1.zip"
+        <get src="http://download.java.net/jxta/jxta-jxse/2.4.1/jxta-lib-2.4.1.zip"
             dest="${basedir}/target/jxta-download/jxta-lib-2.4.1.zip"
             verbose="true"
             usetimestamp="true"/>
