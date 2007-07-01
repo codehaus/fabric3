@@ -56,7 +56,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-binding-ws</artifactId>
-            <version>${project.version}</version>
+            <version>0.1</version>
         </dependency>
 
         <dependency>
@@ -68,15 +68,10 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-jetty</artifactId>
-            <version>${project.version}</version>
+            <version>0.1</version>
         </dependency>
 
     </dependencies>
-
-    <modules>
-        <module>../../modules/trunk/fabric3-jetty</module>
-        <module>../../modules/trunk/fabric3-binding-ws</module>    
-    </modules>
 
     <build>
         <plugins>
