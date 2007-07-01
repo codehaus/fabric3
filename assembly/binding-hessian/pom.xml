@@ -68,8 +68,6 @@
     </dependencies>
 
     <modules>
-        <module>../../modules/trunk/fabric3-spi</module>
-        <module>../../modules/trunk/fabric3-extension</module>
         <module>../../modules/trunk/fabric3-jetty</module>
         <module>../../modules/trunk/fabric3-binding-hessian</module>    </modules>
 
