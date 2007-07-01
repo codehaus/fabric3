@@ -68,10 +68,9 @@
     </dependencies>
 
     <modules>
-        <module>../../modules/trunk/fabric3-spi</module>
-        <module>../../modules/trunk/fabric3-extension</module>
         <module>../../modules/trunk/fabric3-jetty</module>
-        <module>../../modules/trunk/fabric3-binding-burlap</module>    </modules>
+        <module>../../modules/trunk/fabric3-binding-burlap</module>    
+    </modules>
 
     <build>
         <plugins>
