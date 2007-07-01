@@ -128,15 +128,15 @@
     </dependencies>
 
     <modules>
-        <module>../../modules/trunk/fabric3-console</module>
-        <module>../../modules/trunk/fabric3-jetty</module>
-        <module>../../modules/trunk/fabric3-install-jxta</module>
-        <module>../../modules/trunk/fabric3-jxta</module>
-        <module>../../modules/trunk/fabric3-discovery-jxta</module>
-        <module>../../modules/trunk/fabric3-messaging-jxta</module>
-        <module>../../runtimes/trunk/standalone/standalone-api</module>
-        <module>../../runtimes/trunk/standalone/standalone-host</module>
-        <module>../../runtimes/trunk/standalone/server.start</module>
+        <module>../../../modules/trunk/fabric3-console</module>
+        <module>../../../modules/trunk/fabric3-jetty</module>
+        <module>../../../modules/trunk/fabric3-install-jxta</module>
+        <module>../../../modules/trunk/fabric3-jxta</module>
+        <module>../../../modules/trunk/fabric3-discovery-jxta</module>
+        <module>../../../modules/trunk/fabric3-messaging-jxta</module>
+        <module>../../../runtimes/trunk/standalone/standalone-api</module>
+        <module>../../../runtimes/trunk/standalone/standalone-host</module>
+        <module>../../../runtimes/trunk/standalone/server.start</module>
     </modules>
 
     <build>

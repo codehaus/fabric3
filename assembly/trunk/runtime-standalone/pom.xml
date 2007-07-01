@@ -104,9 +104,9 @@
     </dependencies>
 
     <modules>
-        <module>../../runtimes/trunk/standalone/standalone-api</module>
-        <module>../../runtimes/trunk/standalone/standalone-host</module>
-        <module>../../runtimes/trunk/standalone/server.start</module>
+        <module>../../../runtimes/trunk/standalone/standalone-api</module>
+        <module>../../../runtimes/trunk/standalone/standalone-host</module>
+        <module>../../../runtimes/trunk/standalone/server.start</module>
     </modules>
 
     <build>

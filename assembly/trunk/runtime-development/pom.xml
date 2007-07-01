@@ -71,8 +71,8 @@
     </build>
 
     <modules>
-        <module>../../runtimes/trunk/development/development-api</module>
-        <module>../../runtimes/trunk/development/development-host</module>
+        <module>../../../runtimes/trunk/development/development-api</module>
+        <module>../../../runtimes/trunk/development/development-host</module>
     </modules>
 
 </project>
