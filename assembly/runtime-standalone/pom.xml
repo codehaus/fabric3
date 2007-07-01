@@ -47,11 +47,11 @@
 
     <dependencies>
 		
-	<dependency>
-		<groupId>org.codehaus.fabric3.spec</groupId>
-		<artifactId>sca-api-r1.0</artifactId>
-		<version>0.1</version>
-	</dependency>
+        <dependency>
+            <groupId>org.codehaus.fabric3.spec</groupId>
+            <artifactId>sca-api-r1.0</artifactId>
+            <version>0.1</version>
+        </dependency>
 		
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -104,12 +104,6 @@
     </dependencies>
 
     <modules>
-        <module>../../modules/trunk/fabric3-spi</module>
-        <module>../../modules/trunk/fabric3-extension</module>
-        <module>../../modules/trunk/fabric3-transform</module>
-        <module>../../modules/trunk/fabric3-pojo</module>
-        <module>../../modules/trunk/fabric3-fabric</module>
-        <module>../../modules/trunk/fabric3-jmx</module>
         <module>../../runtimes/trunk/standalone/standalone-api</module>
         <module>../../runtimes/trunk/standalone/standalone-host</module>
         <module>../../runtimes/trunk/standalone/server.start</module>

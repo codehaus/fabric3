@@ -71,11 +71,6 @@
     </build>
 
     <modules>
-        <module>../../modules/trunk/fabric3-spi</module>
-        <module>../../modules/trunk/fabric3-extension</module>
-        <module>../../modules/trunk/fabric3-transform</module>
-        <module>../../modules/trunk/fabric3-pojo</module>
-        <module>../../modules/trunk/fabric3-fabric</module>
         <module>../../runtimes/trunk/development/development-api</module>
         <module>../../runtimes/trunk/development/development-host</module>
     </modules>

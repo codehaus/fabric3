@@ -128,12 +128,6 @@
     </dependencies>
 
     <modules>
-        <module>../../modules/trunk/fabric3-spi</module>
-        <module>../../modules/trunk/fabric3-extension</module>
-        <module>../../modules/trunk/fabric3-transform</module>
-        <module>../../modules/trunk/fabric3-pojo</module>
-        <module>../../modules/trunk/fabric3-fabric</module>
-        <module>../../modules/trunk/fabric3-jmx</module>
         <module>../../modules/trunk/fabric3-console</module>
         <module>../../modules/trunk/fabric3-jetty</module>
         <module>../../modules/trunk/fabric3-install-jxta</module>
