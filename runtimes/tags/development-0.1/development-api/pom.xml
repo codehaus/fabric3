@@ -20,30 +20,22 @@
     <parent>
         <groupId>org.codehaus.fabric3.development</groupId>
         <artifactId>development-parent</artifactId>
-        <version>0.2-SNAPSHOT</version>
+        <version>0.1</version>
     </parent>
     <groupId>org.codehaus.fabric3.development</groupId>
-    <artifactId>development-host</artifactId>
-    <name>Fabric3 Development Runtime Host</name>
-    <description>Fabric3 Development Runtime Host.</description>
+    <artifactId>development-api</artifactId>
+    <name>Fabric3 Development Runtime API</name>
+    <description>Fabric3 Development Runtime API.</description>
 
     <dependencies>
-		 <dependency>
+		  <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.codehaus.fabric3.development</groupId>
-            <artifactId>development-api</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-fabric</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>stax</groupId>
-            <artifactId>stax-api</artifactId>
+            <artifactId>fabric3-host-api</artifactId>
         </dependency>
     </dependencies>
 </project>

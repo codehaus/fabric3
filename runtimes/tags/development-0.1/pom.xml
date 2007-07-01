@@ -24,13 +24,13 @@
     </parent>
     <groupId>org.codehaus.fabric3.development</groupId>
     <artifactId>development-parent</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.1</version>
     <packaging>pom</packaging>
     <name>Fabric3 Development Runtime</name>
     <description>Fabric3 Development Runtime.</description>
 
     <properties>
-        <developmentVersion>0.2-SNAPSHOT</developmentVersion>
+        <developmentVersion>0.1</developmentVersion>
     </properties>
 
     <dependencyManagement>
