@@ -20,12 +20,12 @@
     <parent>
         <groupId>org.codehaus.fabric3.webapp</groupId>
         <artifactId>webapp-parent</artifactId>
-        <version>0.2-SNAPSHOT</version>
+        <version>0.1</version>
     </parent>
     <groupId>org.codehaus.fabric3.webapp</groupId>
-    <artifactId>webapp-host</artifactId>
-    <name>Fabric3 Webapp Runtime Host</name>
-    <description>Fabric3 Webapp Runtime Host.</description>
+    <artifactId>webapp-api</artifactId>
+    <name>Fabric3 Webapp Runtime API</name>
+    <description>Fabric3 Webapp Runtime API.</description>
 
     <dependencies>
         <dependency>
@@ -34,24 +34,12 @@
         </dependency>
 
         <dependency>
-            <groupId>org.codehaus.fabric3.webapp</groupId>
-            <artifactId>webapp-api</artifactId>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-api</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-fabric</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.codehaus.woodstox</groupId>
-            <artifactId>wstx-asl</artifactId>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.tuscany</groupId>
-            <artifactId>commonj-api_r1.1</artifactId>
-            <scope>runtime</scope>
+            <artifactId>fabric3-host-api</artifactId>
         </dependency>
 
         <dependency>
