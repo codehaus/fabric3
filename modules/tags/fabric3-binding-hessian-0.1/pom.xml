@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-binding-hessian</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.1</version>
     <name>Fabric3 Hessian Binding</name>
     <description>Fabric3 Hessian Binding Implementation.</description>
 
@@ -47,7 +47,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-extension</artifactId>
-            <version>0.1</version>
+            <version>0.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
