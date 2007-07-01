@@ -6,15 +6,15 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License.    
+ * under the License.
  */
 
 package org.fabric3.binding.ws.wire;
@@ -43,7 +43,7 @@ import org.osoa.sca.annotations.Reference;
 
 /**
  * Wire attacher for web services.
- * 
+ *
  * @version $Revision$ $Date$
  */
 @EagerInit
@@ -53,10 +53,10 @@ public class WsWireAttacher implements WireAttacher<WsWireSourceDefinition, WsWi
      * CXF Servlet that serves the request.
      */
     private CXFServlet cxfServlet = new CXFServlet();
-    
+
     /**
      * Injects the wire attacher registry and servlet host.
-     * 
+     *
      * @param wireAttacherRegistry Wire attacher registry.
      * @param servletHost Servlet host for running CXF.
      * @param contextPath Context path from which the web services are provisioned.
@@ -64,11 +64,11 @@ public class WsWireAttacher implements WireAttacher<WsWireSourceDefinition, WsWi
     public WsWireAttacher(@Reference WireAttacherRegistry wireAttacherRegistry,
                           @Reference ServletHost servletHost,
                           @Property(name="contextPath") String contextPath) {
-        
+
         wireAttacherRegistry.register(WsWireSourceDefinition.class, this);
         wireAttacherRegistry.register(WsWireTargetDefinition.class, this);
         servletHost.registerMapping(contextPath, cxfServlet);
-        
+
     }
 
     /**
@@ -77,23 +77,33 @@ public class WsWireAttacher implements WireAttacher<WsWireSourceDefinition, WsWi
     public void attachToSource(WsWireSourceDefinition sourceDefinition,
                                PhysicalWireTargetDefinition targetDefinition,
                                Wire wire) throws WiringException {
-        
-        Map<String, InvocationChain> headInterceptors = new HashMap<String, InvocationChain>();
-    
-        for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
-            headInterceptors.put(entry.getKey().getName(), entry.getValue());
+
+        Thread currentThread = Thread.currentThread();
+        ClassLoader oldCl = currentThread.getContextClassLoader();
+        currentThread.setContextClassLoader(getClass().getClassLoader());
+
+        try {
+
+            Map<String, InvocationChain> headInterceptors = new HashMap<String, InvocationChain>();
+
+            for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
+                headInterceptors.put(entry.getKey().getName(), entry.getValue());
+            }
+
+            Class<?> service = sourceDefinition.getServiceInterface();
+            Object implementor = ServiceProxyHandler.newInstance(service, headInterceptors, wire);
+
+            ServerFactoryBean serverFactoryBean = new ServerFactoryBean();
+            serverFactoryBean.setAddress(sourceDefinition.getUri().toASCIIString());
+            serverFactoryBean.setServiceClass(service);
+            serverFactoryBean.setServiceBean(implementor);
+
+            serverFactoryBean.setBus(cxfServlet.getBus());
+            serverFactoryBean.create();
+
+        } finally {
+            currentThread.setContextClassLoader(oldCl);
         }
-            
-        Class<?> service = sourceDefinition.getServiceInterface();
-        Object implementor = ServiceProxyHandler.newInstance(service, headInterceptors, wire);
-            
-        ServerFactoryBean serverFactoryBean = new ServerFactoryBean();
-        serverFactoryBean.setAddress(sourceDefinition.getUri().toASCIIString());
-        serverFactoryBean.setServiceClass(service);
-        serverFactoryBean.setServiceBean(implementor);
-     
-        serverFactoryBean.setBus(cxfServlet.getBus());
-        serverFactoryBean.create();
 
     }
 
@@ -103,25 +113,35 @@ public class WsWireAttacher implements WireAttacher<WsWireSourceDefinition, WsWi
     public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition,
                                WsWireTargetDefinition targetDefinition,
                                Wire wire) throws WiringException {
-        
-        Class<?> referenceClass = targetDefinition.getReferenceInterface();
-        
-        ClientProxyFactoryBean factory = new ClientProxyFactoryBean();
-        factory.setServiceClass(referenceClass);
-        factory.setAddress(targetDefinition.getUri().toString());
-            
-        Object proxy = factory.create();
-            
-        for(Method method : referenceClass.getDeclaredMethods()) {
-            for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
-                PhysicalOperationDefinition op = entry.getKey();
-                InvocationChain chain = entry.getValue();
-                if(method.getName().equals(op.getName())) {
-                    chain.addInterceptor(new WsTargetInterceptor(method, proxy));
+
+        Thread currentThread = Thread.currentThread();
+        ClassLoader oldCl = currentThread.getContextClassLoader();
+        currentThread.setContextClassLoader(getClass().getClassLoader());
+
+        try {
+
+            Class<?> referenceClass = targetDefinition.getReferenceInterface();
+
+            ClientProxyFactoryBean factory = new ClientProxyFactoryBean();
+            factory.setServiceClass(referenceClass);
+            factory.setAddress(targetDefinition.getUri().toString());
+
+            Object proxy = factory.create();
+
+            for(Method method : referenceClass.getDeclaredMethods()) {
+                for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
+                    PhysicalOperationDefinition op = entry.getKey();
+                    InvocationChain chain = entry.getValue();
+                    if(method.getName().equals(op.getName())) {
+                        chain.addInterceptor(new WsTargetInterceptor(method, proxy));
+                    }
                 }
             }
+
+        } finally {
+            currentThread.setContextClassLoader(oldCl);
         }
-        
+
     }
 
 }
