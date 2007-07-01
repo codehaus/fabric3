@@ -41,24 +41,11 @@
         <format>tar.gz</format>
     </formats>
 
-    <files>
-        <!-- include legal and other files -->
-        <file>
-            <source>LICENSE.txt</source>
-            <outputDirectory>/</outputDirectory>
-        </file>
-        <file>
-            <source>NOTICE.txt</source>
-            <outputDirectory>/</outputDirectory>
-            <filtered>true</filtered>
-        </file>
-    </files>
-
     <fileSets>
         <!-- include assembly files -->
         <fileSet>
             <directory>src/main/assembly</directory>
-            <outputDirectory>/system</outputDirectory>
+            <outputDirectory>/</outputDirectory>
         </fileSet>
     </fileSets>
 
