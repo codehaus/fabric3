@@ -1,0 +1,110 @@
+		   Caucho Developer Source License
+		              Version 1.2
+			     
+Caucho Technology, Inc. ("Caucho") permits use of the accompanying software 
+and documentation ("the Software") provided that all of the conditions of 
+the Caucho Developer Source License ("the License Agreement") are met:
+
+1. You must not alter or remove any copyright or trademark notices in the Software.
+
+2. You may use the Software to develop, evaluate, and demonstrate applications.
+
+3. You shall not deploy the Software on an amount of CPU cores in excess of 
+that amount expressly authorized by this License Agreement. Furthermore, you 
+shall only deploy the license version identified in the License Agreement.
+
+4. Caucho reserves all rights to the Software not explicitly granted by the 
+License Agreement. Licensee expressly acknowledges that Caucho reserves all 
+rights, title and interest in the copyright to the Software and expressly 
+disclaims any and all interest therein. Licensee expressly acknowledges 
+that Caucho reserves all rights, title and interest to the trademarks Resin, 
+Quercus, Amber, Hessian and Powered by Resin, and expressly disclaims any 
+and all interest therein.  You must not use any of Caucho’s intellectual 
+properties to endorse products derived from the licensed software. 
+"Resin", “Quercus”, “Hessian”, “Amber” and "Caucho" may not appear 
+in the names of any products derived from this software.
+
+5. Each copy of the Software in source or binary form must include 
+an unmodified copy of the License Agreement in a plain ASCII text 
+file named LICENSE AGREEMENT.
+
+6. If you transmit any improvement or modification of the Software to 
+Caucho, you agree to assign the copyright of the improvement or 
+modification to Caucho forthwith.
+
+7. The License Agreement will terminate immediately without notice from 
+Caucho if you fail to comply with any provision or condition of the 
+License Agreement. Upon termination, you must destroy all copies and 
+derived works of the Software.  You may terminate the License Agreement 
+at any time by destroying all copies and derived works of the Software.
+
+8. You acknowledge that you are solely responsible for the use you make 
+of the Software. Accordingly, you agree to indemnify and hold Caucho harmless 
+from and against any and all demands, claims, or suits by third parties for 
+loss, damages or expenses (including attorneys' fees) arising out of, 
+or related to, use of the Software by you or any other individuals or entities. 
+
+9. The Software is provided "AS IS," without warranty of any kind.  
+ALL EXPRESS OR IMPLIED REPRESENTATIONS AND WARRANTIES, INCLUDING BUT 
+NOT LIMITED TO ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS FOR 
+A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY DISCLAIMED AND 
+EXCLUDED TO THE FULLEST EXTENT PERMISSABLE BY LAW. 
+
+10. CAUCHO AND ITS LICENSORS SHALL NOT BE LIABLE FOR ANY DAMAGES 
+SUFFERED BY YOU OR ANY THIRD PARTY AS A RESULT OF USING OR DISTRIBUTING 
+THE SOFTWARE. IN NO EVENT WILL CAUCHO TECHNOLOGY OR ITS LICENSORS BE 
+LIABLE FOR ANY LOST REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT, 
+SPECIAL, CONSEQUENTIAL, INCIDENTAL OR PUNITIVE DAMAGES, HOWEVER CAUSED 
+AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OF 
+OR INABILITY TO USE THE SOFTWARE, EVEN IF CAUCHO HAS BEEN ADVISED 
+OF THE POSSIBILITY OF SUCH DAMAGES.
+
+11. The word “You” as used herein shall apply and refer to each and 
+every licensee hereunder. Any action related to the License Agreement 
+shall be governed by California law and the State of California shall 
+exercise exclusive jurisdiction over any action arising from this License. 
+For all purposes associated with the Software and this License Agreement, 
+You consent to personal jurisdiction within California and agree to venue 
+within either Los Angeles or San Diego counties at the exclusive option 
+of Caucho.
+
+12. The only supported version of the Software is the latest release 
+of the Software. Bug fixes may be available in the next normally 
+scheduled version release of the Software.
+
+13. Severability.  If any provision(s) of this License Agreement is 
+held to be invalid, void or unenforceable  under any applicable statute 
+or rule of law, it shall be, to that extent, be deemed omitted, and all 
+of the remaining portions of this License Agreement shall remain fully enforceable.
+
+14.  Modifications and Term Waivers. This License Agreement may be 
+amended or modified only by a written agreement signed by the party 
+to be charged with the modification and/or amendment. No waiver of 
+any condition or term herein shall be effective unless it is embodied 
+in writing signed by the Party against whom the waiver is charged.  
+A waiver by either party of any term or condition of this License 
+Agreement in any instance shall not be deemed or construed to be 
+a waiver of such term or condition for the future or any subsequent breach thereof. 
+
+15. The prevailing party in any action arising out of an alleged breach 
+of this License Agreement shall be entitled to an award of reasonable 
+attorneys’ fees and costs incurred in connection with any such action 
+in addition to all other remedies otherwise available to the prevailing party.
+
+16.  Licensee acknowledges that Caucho may be irreparably damaged by 
+any unauthorized use of the Software or other material breach of this 
+License Agreement. Without prejudice to the rights and remedies otherwise 
+available to Caucho, Licensee expressly agrees that Caucho shall be entitled 
+to seek equitable relief, including an injunction or specific performance, 
+against Licensee in the event Licensee breaches any provisions, terms or 
+conditions of this License Agreement.  In the event Caucho exercises 
+its right to seek an injunction against Licensee pursuant to this paragraph, 
+Licensee agrees that Caucho shall have no obligation to post any bond 
+or other security in connection with said injunction.
+
+17. Entire Agreement. This License Agreement represents the entire agreement 
+between the parties, and supersedes all prior agreements, representations 
+and understandings (whether oral or in writing) with respect to the matters 
+covered by this Agreement.  The terms and conditions of this License Agreement 
+shall prevail in the event of any variance with any purchase order or 
+invoice produced by Licensee. 
