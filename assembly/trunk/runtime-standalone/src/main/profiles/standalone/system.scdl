@@ -99,9 +99,9 @@
     </component>
 
     <!-- Jetty service -->
-    <component name="JettyService">
+    <!--component name="JettyService">
             <system:implementation.system class="org.fabric3.jetty.JettyServiceImpl"/>
-    </component>
+    </component-->
 
 	 <component name="assemblyRecoveryService">
         <system:implementation.system class="org.fabric3.fabric.assembly.store.AssemblyStoreImpl"/>

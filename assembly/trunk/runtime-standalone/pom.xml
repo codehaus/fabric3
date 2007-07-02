@@ -92,22 +92,16 @@
         <dependency>
             <groupId>org.codehaus.fabric3.standalone</groupId>
             <artifactId>server</artifactId>
-            <version>${project.version}</version>
+            <version>0.1</version>
         </dependency>
 		
         <dependency>
             <groupId>org.codehaus.fabric3.standalone</groupId>
             <artifactId>standalone-host</artifactId>
-            <version>${project.version}</version>
+            <version>0.1</version>
         </dependency>
 		
     </dependencies>
-
-    <modules>
-        <module>../../../runtimes/trunk/standalone/standalone-api</module>
-        <module>../../../runtimes/trunk/standalone/standalone-host</module>
-        <module>../../../runtimes/trunk/standalone/server.start</module>
-    </modules>
 
     <build>
         <plugins>
