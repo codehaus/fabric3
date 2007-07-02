@@ -26,7 +26,7 @@
         <version>2</version>
     </parent>
     <artifactId>fabric3-federated-standalone-assembly</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.1</version>
     <packaging>pom</packaging>
     <name>Fabric3 Federated Standalone Distribution</name>
     <description>Assembly distribution for Fabric3 Federated Standalone Server.</description>
@@ -86,43 +86,43 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-fabric</artifactId>
-            <version>${project.version}</version>
+            <version>0.1</version>
         </dependency>
 		
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-messaging-jxta</artifactId>
-            <version>${project.version}</version>
+            <version>0.1</version>
         </dependency>
         		
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-discovery-jxta</artifactId>
-            <version>${project.version}</version>
+            <version>0.1</version>
         </dependency>
 		  		
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-jetty</artifactId>
-            <version>${project.version}</version>
+            <version>0.1</version>
         </dependency>
 		
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-console</artifactId>
-            <version>${project.version}</version>
+            <version>0.1-SNAPSHOT</version>
         </dependency>
 		
         <dependency>
             <groupId>org.codehaus.fabric3.standalone</groupId>
             <artifactId>server</artifactId>
-            <version>${project.version}</version>
+            <version>0.1</version>
         </dependency>
 		
         <dependency>
             <groupId>org.codehaus.fabric3.standalone</groupId>
             <artifactId>standalone-host</artifactId>
-            <version>${project.version}</version>
+            <version>0.1</version>
         </dependency>
 
     </dependencies>
