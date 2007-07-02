@@ -28,17 +28,12 @@
     </formats>
 
     <!-- include legal and other files -->
-    <files>
-        <file>
-            <source>LICENSE.txt</source>
+    <fileSets>
+        <fileSet>
+            <directory>src/main</directory>
             <outputDirectory>/</outputDirectory>
-        </file>
-        <file>
-            <source>NOTICE.txt</source>
-            <outputDirectory>/</outputDirectory>
-            <filtered>true</filtered>
-        </file>
-    </files>     
+        </fileSet>
+    </fileSets>
 
     <!-- Include WS, Jetty and JCA. Exclude other F3 artifacts. -->
     <dependencySets>
