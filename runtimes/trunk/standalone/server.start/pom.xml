@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.codehaus.fabric3.standalone</groupId>
         <artifactId>standalone-parent</artifactId>
-        <version>0.1-SNAPSHOT</version>
+        <version>0.2-SNAPSHOT</version>
     </parent>
     <groupId>org.codehaus.fabric3.standalone</groupId>
     <artifactId>server</artifactId>

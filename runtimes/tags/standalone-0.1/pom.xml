@@ -24,13 +24,13 @@
     </parent>
     <groupId>org.codehaus.fabric3.standalone</groupId>
     <artifactId>standalone-parent</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.1</version>
     <packaging>pom</packaging>
     <name>Fabric3 Standalone Runtime</name>
     <description>Fabric3 Standalone Runtime.</description>
 
     <properties>
-        <standaloneVersion>0.1-SNAPSHOT</standaloneVersion>
+        <standaloneVersion>0.1</standaloneVersion>
     </properties>
 
     <dependencyManagement>
@@ -69,6 +69,11 @@
             <dependency>
                 <groupId>org.codehaus.fabric3.standalone</groupId>
                 <artifactId>standalone-host</artifactId>
+                <version>${standaloneVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.fabric3.standalone</groupId>
+                <artifactId>launcher</artifactId>
                 <version>${standaloneVersion}</version>
             </dependency>
 
