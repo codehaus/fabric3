@@ -27,7 +27,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-discovery-jxta</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.2-SNAPSHOT</version>
     <name>Fabric3 JXTA Discovery</name>
     <description>Fabric3 federation discovery based on JXTA.</description>
 
@@ -48,7 +48,7 @@
        <dependency>
            <groupId>org.codehaus.fabric3</groupId>
            <artifactId>fabric3-jxta</artifactId>
-           <version>0.1-SNAPSHOT</version>
+           <version>0.1</version>
        </dependency>
 
         <dependency>
