@@ -29,8 +29,8 @@
 
     <!-- include physical deployment configuration -->
     <include name="org.fabric3.fabric.Common" scdlResource="org/fabric3/fabric/common.scdl"/>
-
-<!-- include host services configuration -->
+    
+    <!-- include host services configuration -->
     <include name="org.fabric3.fabric.HostServices" scdlResource="org/fabric3/fabric/hostServices.scdl"/>
 
     <!-- include exception formatters  -->
@@ -60,27 +60,11 @@
     <!-- Java implementation type -->
     <include name="org.fabric3.fabric.JavaImplementation" scdlResource="org/fabric3/fabric/javaImplementation.scdl"/>
 
-    <!-- Launched implementation type -->
-    <include name="org.fabric3.standalone.host.LaunchedImplementation" scdlResource="org/fabric3/standalone/host/launchedImplementation.scdl"/>
-
     <!-- include deployment configuration -->
     <include name="org.fabric3.fabric.Deployment" scdlResource="org/fabric3/fabric/deployment.scdl"/>
 
     <!-- include transform configuration -->
     <include name="org.fabric3.transform.Transform" scdlResource="org/fabric3/transform/transform.scdl"/>
-
-    <!-- component that scans the extension directory -->
-    <component name="directoryScanExtender" initLevel="90">
-        <system:implementation.system class="org.fabric3.runtime.standalone.host.DirectoryScanExtender"/>
-        <!-- JFM FIXME
-        <property name="path">extensions</property>
-        -->
-    </component>
-
-    <!-- no recovery for the launcher runtime -->
-    <component name="assemblyRecoveryService">
-        <system:implementation.system class="org.fabric3.fabric.assembly.store.AssemblyStoreImpl"/>
-    </component>
 
     <!-- Null Messaging Service -->
     <component name="MessagingService">
@@ -92,4 +76,43 @@
         <system:implementation.system class="org.fabric3.fabric.services.discovery.NullDiscoveryService"/>
     </component>
     
+    <!-- component that scans the extension directory -->
+    <component name="directoryScanExtender" initLevel="90">
+        <system:implementation.system class="org.fabric3.runtime.standalone.host.DirectoryScanExtender"/>
+        <property name="path">deploy</property>    </component>
+
+    <component name="launchedLoader">
+        <system:implementation.system class="org.fabric3.runtime.standalone.host.implementation.launched.LaunchedLoader"/>
+    </component>
+
+    <component name="launchedComponentLoader">
+        <system:implementation.system class="org.fabric3.runtime.standalone.host.implementation.launched.LaunchedComponentTypeLoader"/>
+    </component>
+
+    <component name="wiringExceptionFormatter">
+        <system:implementation.system class="org.fabric3.fabric.builder.WiringExceptionFormatter"/>
+    </component>
+
+    <!-- Marshhaler registry-->
+    <component name="marshallerRegistry">
+        <system:implementation.system class="org.fabric3.fabric.marshaller.xstream.XStreamMarshallerRegistry"/>
+    </component>
+
+    <!-- Jetty service -->
+    <component name="JettyService">
+            <system:implementation.system class="org.fabric3.jetty.JettyServiceImpl"/>
+    </component>
+
+	 <component name="assemblyRecoveryService">
+        <system:implementation.system class="org.fabric3.fabric.assembly.store.AssemblyStoreImpl"/>
+    </component>
+
+	<!--include name="burlapTransportBinding" scdlResource="META-INF/burlap.scdl"/>
+	
+	<include name="wsTransportBinding" scdlResource="META-INF/ws.scdl"/>
+
+	<include name="jmsTransportBinding" scdlResource="META-INF/jms.scdl"/>
+	
+	<include name="hessianTransportBinding" scdlResource="META-INF/hessian.scdl"/-->
+
 </composite>
