@@ -12,7 +12,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="sca-api-r1.0-0.1-SNAPSHOT" level="application" />
+    <orderEntry type="library" exported="" name="sca-api-r1.0-0.1" level="application" />
     <orderEntryProperties />
   </component>
 </module>
