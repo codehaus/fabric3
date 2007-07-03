@@ -25,6 +25,13 @@
         <interface.java interface="calculator.CalculatorService"/>
         <!-- Insert binding definition here -->
     </service>
+    <!--
+        Hessian binding:
+        <hessian:binding.hessian uri="/calculator" />
+
+        Web Services:
+        <binding.ws uri="/calculator" />
+    -->
     <component name="calculator">
         <implementation.java class="calculator.CalculatorServiceImpl"/>
     </component>

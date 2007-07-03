@@ -33,5 +33,12 @@
         <!-- Insert a binding definition -->
     </reference>
 
+    <!--
+        Hessian Binding:
+        <hessian:binding.hessian uri="http://localhost:8101/calculator"/>
+
+        Web Services Binding:
+        <binding.ws uri="http://localhost:8101/services/calculator"/>
+    -->
     
 </composite>
