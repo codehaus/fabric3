@@ -30,7 +30,7 @@
     <description>Fabric3 Standalone Runtime.</description>
 
     <properties>
-        <standaloneVersion>0.1-SNAPSHOT</standaloneVersion>
+        <standaloneVersion>0.2-SNAPSHOT</standaloneVersion>
     </properties>
 
     <dependencyManagement>
