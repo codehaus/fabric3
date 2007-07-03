@@ -15,18 +15,20 @@
  specific language governing permissions and limitations
  under the License.
 -->
-
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:fabric3="http://fabric3.org/xmlns/sca/0.1"
-           name="LoanAppClientComposite">
+           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           name="CalculatorTestSystemScdl"
+           autowire="true">
 
-    <component name="Main">
-        <fabric3:launched class="loanapp.ClientComponent"/>
+    <!-- Include system SCDL -->
+    <include name="org.fabric3.fabric.SystemImplementation" scdlResource="META-INF/fabric3/embeddedMaven.scdl"/>
+
+    <!-- Include hessian extension SCDL -->
+    <include name="org.fabric3.binding.HessianExtension" scdlResource="META-INF/hessian.scdl"/>
+
+    <component name="JettyService">
+        <system:implementation.system class="org.fabric3.jetty.JettyServiceImpl"/>
+        <property name="httpPort">8100</property>
     </component>
-
-    <reference name="client" promote="LoanAppClientComponent/loanService">
-        <interface.java interface="loanapp.loanservice.LoanApplicationService"/>
-    </reference>
-
-
 </composite>

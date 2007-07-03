@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+<!--
+    Default system configuration for the launcher environment.
+
+    $Rev: 255 $ $Date: 2007-06-21 03:32:24 -0700 (Thu, 21 Jun 2007) $
+-->
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           name="org.fabric3.runtime.webapp.System"
+           autowire="true">
+
+    <!-- include physical deployment configuration -->
+    <include name="org.fabric3.fabric.Common" scdlResource="org/fabric3/fabric/common.scdl"/>
+
+    <!-- include exception formatters  -->
+    <include name="org.fabric3.fabric.Formatters" scdlResource="org/fabric3/fabric/formatters.scdl"/>
+
+    <!-- include physical deployment configuration -->
+    <include name="org.fabric3.fabric.Physical" scdlResource="org/fabric3/fabric/physical.scdl"/>
+
+    <!-- include loader configuration -->
+    <include name="org.fabric3.launcher.Loader" scdlResource="org/fabric3/fabric/loader.scdl"/>
+
+    <!-- include implementation processor configuration -->
+    <include name="org.fabric3.launcher.Implementation" scdlResource="org/fabric3/fabric/implementation.scdl"/>
+
+    <!-- Java interface definition language -->
+    <include name="org.fabric3.launcher.InterfaceJava" scdlResource="org/fabric3/fabric/interfaceJava.scdl"/>
+
+    <!-- include omposite implementation type -->
+    <include name="org.fabric3.launcher.Composite" scdlResource="org/fabric3/fabric/composite.scdl"/>
+
+    <!-- Pojo implementation type -->
+    <include name="org.fabric3.fabric.PojoImplementation" scdlResource="org/fabric3/fabric/pojoImplementation.scdl"/>
+
+    <!-- System implementation type -->
+    <include name="org.fabric3.launcher.SystemImplementation" scdlResource="org/fabric3/fabric/systemImplementation.scdl"/>
+
+    <!-- Java implementation type -->
+    <include name="org.fabric3.launcher.JavaImplementation" scdlResource="org/fabric3/fabric/javaImplementation.scdl"/>
+
+    <!-- include deployment configuration -->
+    <include name="org.fabric3.fabric.Deployment" scdlResource="org/fabric3/fabric/deployment.scdl"/>
+
+    <!-- include transform configuration -->
+    <include name="org.fabric3.transform.Transform" scdlResource="org/fabric3/transform/transform.scdl"/>
+
+    <!-- include host services configuration -->
+    <include name="org.fabric3.fabric.HostServices" scdlResource="org/fabric3/fabric/hostServices.scdl"/>
+    
+    <!-- webapp component implementation -->
+    <component name="webappLoader">
+        <system:implementation.system class="org.fabric3.runtime.webapp.implementation.webapp.WebappLoader"/>
+    </component>
+
+    <component name="webappPhysicalComponentBuilder">
+        <system:implementation.system class="org.fabric3.runtime.webapp.implementation.webapp.WebAppComponentBuilder"/>
+    </component>
+
+    <component name="webappComponentGenerator">
+        <system:implementation.system class="org.fabric3.runtime.webapp.implementation.webapp.WebappComponentGenerator"/>
+    </component>
+
+    <!-- Web app ServletHost -->
+    <component name="servletHost">
+        <system:implementation.system class="org.fabric3.runtime.webapp.ServletHostImpl"/>
+    </component>
+
+    <!-- no recovery for the webapp runtime -->
+    <component name="assemblyRecoveryService">
+        <system:implementation.system class="org.fabric3.fabric.assembly.store.NonPersistentAssemblyStore"/>
+    </component>
+
+    <component name="MessagingService">
+        <system:implementation.system class="org.fabric3.fabric.services.messaging.NullMessagingService"/>
+    </component>
+
+    <component name="DiscoveryService">
+        <system:implementation.system class="org.fabric3.fabric.services.discovery.NullDiscoveryService"/>
+    </component>
+
+	 <!-- Include binding extensions here -->
+
+</composite>

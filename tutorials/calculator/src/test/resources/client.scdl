@@ -15,18 +15,18 @@
  specific language governing permissions and limitations
  under the License.
 -->
-
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:fabric3="http://fabric3.org/xmlns/sca/0.1"
-           name="LoanAppClientComposite">
+           xmlns:fabric3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:hessian="http://www.fabric3.org/binding/hessian/0.1-SNAPSHOT"
+           name="CalculatorTestComposite"
+           autowire="true">
 
-    <component name="Main">
-        <fabric3:launched class="loanapp.ClientComponent"/>
-    </component>
-
-    <reference name="client" promote="LoanAppClientComponent/loanService">
-        <interface.java interface="loanapp.loanservice.LoanApplicationService"/>
+    <reference name="client" promote="testComponent/calculator">
+        <interface.java interface="calculator.CalculatorService"/>
+        <hessian:binding.hessian uri="http://localhost:8101/calculator"/>
     </reference>
 
-
+    <component name="testComponent">
+        <fabric3:junit class="calculator.TestComponent"/>
+    </component>
 </composite>
