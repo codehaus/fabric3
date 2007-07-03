@@ -26,7 +26,7 @@
         <version>2</version>
     </parent>
     <artifactId>fabric3-federated-standalone-assembly</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.1</version>
     <packaging>pom</packaging>
     <name>Fabric3 Federated Standalone Distribution</name>
     <description>Assembly distribution for Fabric3 Federated Standalone Server.</description>
