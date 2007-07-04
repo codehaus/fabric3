@@ -18,9 +18,12 @@
  */
 package org.fabric3.spi.loader;
 
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLStreamException;
+import javax.xml.namespace.NamespaceContext;
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.XMLConstants;
 
 /**
  * Utility functions to support loader implementations.
@@ -74,5 +77,24 @@ public final class LoaderUtil {
         } finally {
             thread.setContextClassLoader(oldCL);
         }
+    }
+
+    /**
+     * Construct a QName from an XML value.
+     *
+     * @param text the text of an XML QName
+     * @param context the context for resolving namespace prefixes
+     * @return a QName with the appropriate namespace set
+     */
+    public static QName getQName(String text, NamespaceContext context) {
+        int index = text.indexOf(':');
+        if (index < 1 || index == text.length() -1) {
+            // unqualifed form or invalid - treat as a local part and use the null namespace
+            return new QName(text);
+        }
+        String prefix = text.substring(0, index);
+        String uri = context.getNamespaceURI(prefix);
+        String localPart = text.substring(index+1);
+        return new QName(uri, localPart, prefix);
     }
 }

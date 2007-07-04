@@ -153,7 +153,7 @@ public class ReferenceLoader extends LoaderExtension<ReferenceDefinition> {
      * Processes the promotes attribute.
      */
     private void setPromoted(XMLStreamReader reader, ReferenceDefinition referenceDefinition, String name)
-        throws InvalidReferenceException {
+        throws InvalidReferenceException, InvalidNameException {
         
         String promoted = reader.getAttributeValue(null, "promote");
         if (promoted == null || promoted.trim().length() < 1) {

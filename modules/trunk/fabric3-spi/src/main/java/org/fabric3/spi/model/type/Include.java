@@ -19,6 +19,7 @@
 package org.fabric3.spi.model.type;
 
 import java.net.URL;
+import javax.xml.namespace.QName;
 
 /**
  * Model object that represents the include of a composite by value.
@@ -26,7 +27,7 @@ import java.net.URL;
  * @version $Rev$ $Date$
  */
 public class Include extends ModelObject {
-    private String name;
+    private QName name;
     private URL scdlLocation;
     private CompositeComponentType included;
 
@@ -34,7 +35,7 @@ public class Include extends ModelObject {
      * Returns the name of the composite that is being included.
      * @return the name of the composite that is being included
      */
-    public String getName() {
+    public QName getName() {
         return name;
     }
 
@@ -42,7 +43,7 @@ public class Include extends ModelObject {
      * Sets the name of the composite that is being included.
      * @param name the name of the composite that is being included
      */
-    public void setName(String name) {
+    public void setName(QName name) {
         this.name = name;
     }
 

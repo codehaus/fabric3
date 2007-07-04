@@ -38,7 +38,7 @@ public class CompositeComponentType extends ComponentType<ServiceDefinition, Ref
     private Autowire autowire;
     private final Map<String, ComponentDefinition<? extends Implementation<?>>> components =
             new HashMap<String, ComponentDefinition<? extends Implementation<?>>>();
-    private final Map<String, Include> includes = new HashMap<String, Include>();
+    private final Map<QName, Include> includes = new HashMap<QName, Include>();
     private final List<WireDefinition> wires = new ArrayList<WireDefinition>();
 
     public CompositeComponentType() {
@@ -223,7 +223,7 @@ public class CompositeComponentType extends ComponentType<ServiceDefinition, Ref
         components.put(componentDefinition.getName(), componentDefinition);
     }
 
-    public Map<String, Include> getIncludes() {
+    public Map<QName, Include> getIncludes() {
         return includes;
     }
 

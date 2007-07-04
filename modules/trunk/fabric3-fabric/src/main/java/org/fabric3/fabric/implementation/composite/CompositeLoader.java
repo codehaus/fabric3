@@ -104,9 +104,9 @@ public class CompositeLoader extends LoaderExtension<CompositeComponentType> {
                     type.add((ComponentDefinition<?>) loadedType);
                 } else if (loadedType instanceof Include) {
                     Include include = (Include) loadedType;
-                    String includeName = include.getName();
+                    QName includeName = include.getName();
                     if (type.getIncludes().containsKey(includeName)) {
-                        throw new DuplicateIncludeException("Include already defined with name", includeName);
+                        throw new DuplicateIncludeException("Include already defined with name", includeName.toString());
                     }
                     type.add(include);
                 } else if (loadedType instanceof Dependency) {

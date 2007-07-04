@@ -18,14 +18,14 @@
  */
 package org.fabric3.fabric.loader;
 
-import org.fabric3.host.Fabric3RuntimeException;
+import org.fabric3.spi.loader.LoaderException;
 
 /**
  * Denotes an invalid name
  *
  * @version $Rev$ $Date$
  */
-public class InvalidNameException extends Fabric3RuntimeException {
+public class InvalidNameException extends LoaderException {
 
     public InvalidNameException() {
         super();

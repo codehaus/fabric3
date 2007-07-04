@@ -58,7 +58,11 @@ public class IncludeLoader extends LoaderExtension<Include> {
             throws XMLStreamException, LoaderException {
 
         assert INCLUDE.equals(reader.getName());
-        String name = reader.getAttributeValue(null, "name");
+        String nameAttr = reader.getAttributeValue(null, "name");
+        if (nameAttr == null || nameAttr.length() == 0) {
+            throw new InvalidNameException(nameAttr);
+        }
+        QName name = LoaderUtil.getQName(nameAttr, reader.getNamespaceContext());
         String scdlLocation = reader.getAttributeValue(null, "scdlLocation");
         String scdlResource = reader.getAttributeValue(null, "scdlResource");
         LoaderUtil.skipToEndElement(reader);
@@ -69,15 +73,15 @@ public class IncludeLoader extends LoaderExtension<Include> {
             try {
                 url = new URL(loaderContext.getSourceBase(), scdlLocation);
             } catch (MalformedURLException e) {
-                throw new MissingResourceException(scdlLocation, name, e);
+                throw new MissingResourceException(scdlLocation, name.toString(), e);
             }
         } else if (scdlResource != null) {
             url = cl.getResource(scdlResource);
             if (url == null) {
-                throw new MissingResourceException(scdlResource, name);
+                throw new MissingResourceException(scdlResource, name.toString());
             }
         } else {
-            throw new MissingIncludeException("No SCDL location or resource specified", name);
+            throw new MissingIncludeException("No SCDL location or resource specified", name.toString());
         }
 
         LoaderContext childContext =
