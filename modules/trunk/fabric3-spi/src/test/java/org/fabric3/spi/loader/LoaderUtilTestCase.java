@@ -17,14 +17,35 @@
 package org.fabric3.spi.loader;
 
 import javax.xml.namespace.QName;
+import javax.xml.namespace.NamespaceContext;
 
 import junit.framework.TestCase;
+import org.easymock.EasyMock;
 
 /**
  * @version $Rev$ $Date$
  */
 public class LoaderUtilTestCase extends TestCase {
+    private NamespaceContext context;
+
     public void testQNameWithNoPrefix() {
         assertEquals(new QName("foo"), LoaderUtil.getQName("foo", null));
+    }
+
+    public void testPrefixResolve() {
+        String uri = "http://example.com";
+        EasyMock.expect(context.getNamespaceURI("prefix")).andReturn(uri);
+        EasyMock.replay(context);
+        QName name = LoaderUtil.getQName("prefix:foo", context);
+        assertEquals(uri, name.getNamespaceURI());
+        assertEquals("prefix", name.getPrefix());
+        assertEquals("foo", name.getLocalPart());
+        EasyMock.verify(context);
+    }
+
+
+    protected void setUp() throws Exception {
+        super.setUp();
+        context = EasyMock.createMock(NamespaceContext.class);
     }
 }
