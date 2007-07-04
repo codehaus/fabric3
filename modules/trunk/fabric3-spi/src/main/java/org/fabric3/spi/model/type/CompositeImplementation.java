@@ -19,6 +19,7 @@
 package org.fabric3.spi.model.type;
 
 import java.net.URL;
+import javax.xml.namespace.QName;
 
 /**
  * A specialization of an implementation associated with composite components
@@ -26,15 +27,15 @@ import java.net.URL;
  * @version $Rev$ $Date$
  */
 public class CompositeImplementation extends Implementation<CompositeComponentType> {
-    private String name;
+    private QName name;
     private URL scdlLocation;
     private ClassLoader classLoader;
 
-    public String getName() {
+    public QName getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(QName name) {
         this.name = name;
     }
 

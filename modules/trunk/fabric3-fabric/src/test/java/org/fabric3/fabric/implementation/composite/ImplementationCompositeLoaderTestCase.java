@@ -21,6 +21,7 @@ package org.fabric3.fabric.implementation.composite;
 import java.net.MalformedURLException;
 import java.net.URL;
 import javax.xml.namespace.QName;
+import javax.xml.namespace.NamespaceContext;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -51,6 +52,7 @@ public class ImplementationCompositeLoaderTestCase extends TestCase {
     private ClassLoader cl;
     private ImplementationCompositeLoader loader;
     private XMLStreamReader reader;
+    private NamespaceContext namespaceContext;
     private LoaderContext context;
     private ArtifactRepository artifactRepository;
 
@@ -58,21 +60,17 @@ public class ImplementationCompositeLoaderTestCase extends TestCase {
         String name = "foo";
         expect(reader.getName()).andReturn(IMPLEMENTATION_COMPOSITE);
         expect(reader.getAttributeValue(null, "name")).andReturn(name);
+        expect(reader.getNamespaceContext()).andReturn(namespaceContext);
         expect(reader.getAttributeValue(null, "group")).andReturn(null);
         expect(reader.getAttributeValue(null, "version")).andReturn(null);
         expect(reader.getAttributeValue(null, "scdlLocation")).andReturn(null);
         expect(reader.getAttributeValue(null, "jarLocation")).andReturn(null);
         expect(reader.next()).andReturn(END_ELEMENT);
-        replay(reader);
-
-        replay(context);
-        replay(artifactRepository);
+        replay(reader, namespaceContext, context, artifactRepository);
 
         CompositeImplementation impl = loader.load(reader, context);
-        verify(reader);
-        verify(context);
-        verify(artifactRepository);
-        assertEquals(name, impl.getName());
+        verify(reader, namespaceContext, context, artifactRepository);
+        assertEquals(new QName(name), impl.getName());
         assertNull(impl.getScdlLocation());
         assertNull(impl.getClassLoader());
     }
@@ -81,24 +79,21 @@ public class ImplementationCompositeLoaderTestCase extends TestCase {
         String name = "foo";
         expect(reader.getName()).andReturn(IMPLEMENTATION_COMPOSITE);
         expect(reader.getAttributeValue(null, "name")).andReturn(name);
+        expect(reader.getNamespaceContext()).andReturn(namespaceContext);
         expect(reader.getAttributeValue(null, "group")).andReturn("com.example");
         expect(reader.getAttributeValue(null, "version")).andReturn("1.0");
         expect(reader.getAttributeValue(null, "scdlLocation")).andReturn(null);
         expect(reader.getAttributeValue(null, "jarLocation")).andReturn(null);
         expect(reader.next()).andReturn(END_ELEMENT);
-        replay(reader);
-
         expect(context.getTargetClassLoader()).andReturn(cl);
-        replay(context);
         URL url = new URL("http://www.example.com/sca/base.jar");
         artifactRepository.resolve(artifactMatcher(url, "com.example", name, "1.0"));
-        replay(artifactRepository);
+
+        replay(reader, namespaceContext, context, artifactRepository);
 
         CompositeImplementation impl = loader.load(reader, context);
-        verify(reader);
-        verify(context);
-        verify(artifactRepository);
-        assertEquals(name, impl.getName());
+        verify(reader, namespaceContext, context, artifactRepository);
+        assertEquals(new QName(name), impl.getName());
         assertEquals(new URL("jar:http://www.example.com/sca/base.jar!/META-INF/sca/default.scdl"),
             impl.getScdlLocation());
         assertTrue(impl.getClassLoader() instanceof CompositeClassLoader);
@@ -108,23 +103,20 @@ public class ImplementationCompositeLoaderTestCase extends TestCase {
         String name = "foo";
         expect(reader.getName()).andReturn(IMPLEMENTATION_COMPOSITE);
         expect(reader.getAttributeValue(null, "name")).andReturn(name);
+        expect(reader.getNamespaceContext()).andReturn(namespaceContext);
         expect(reader.getAttributeValue(null, "group")).andReturn(null);
         expect(reader.getAttributeValue(null, "version")).andReturn(null);
         expect(reader.getAttributeValue(null, "scdlLocation")).andReturn("bar.scdl");
         expect(reader.getAttributeValue(null, "jarLocation")).andReturn(null);
         expect(reader.next()).andReturn(END_ELEMENT);
-        replay(reader);
-
         expect(context.getSourceBase()).andReturn(new URL("http://www.example.com/sca/base.scdl"));
         expect(context.getTargetClassLoader()).andReturn(cl);
-        replay(context);
-        replay(artifactRepository);
+
+        replay(reader, namespaceContext, context, artifactRepository);
 
         CompositeImplementation impl = loader.load(reader, context);
-        verify(reader);
-        verify(context);
-        verify(artifactRepository);
-        assertEquals(name, impl.getName());
+        verify(reader, namespaceContext, context, artifactRepository);
+        assertEquals(new QName(name), impl.getName());
         assertEquals(new URL("http://www.example.com/sca/bar.scdl"), impl.getScdlLocation());
         assertSame(cl, impl.getClassLoader());
     }
@@ -133,23 +125,19 @@ public class ImplementationCompositeLoaderTestCase extends TestCase {
         String name = "foo";
         expect(reader.getName()).andReturn(IMPLEMENTATION_COMPOSITE);
         expect(reader.getAttributeValue(null, "name")).andReturn(name);
+        expect(reader.getNamespaceContext()).andReturn(namespaceContext);
         expect(reader.getAttributeValue(null, "group")).andReturn(null);
         expect(reader.getAttributeValue(null, "version")).andReturn(null);
         expect(reader.getAttributeValue(null, "scdlLocation")).andReturn(null);
         expect(reader.getAttributeValue(null, "jarLocation")).andReturn("bar.jar");
         expect(reader.next()).andReturn(END_ELEMENT);
-        replay(reader);
-
         expect(context.getSourceBase()).andReturn(new URL("http://www.example.com/sca/base.scdl"));
         expect(context.getTargetClassLoader()).andReturn(cl);
-        replay(context);
-        replay(artifactRepository);
+        replay(reader, namespaceContext, context, artifactRepository);
 
         CompositeImplementation impl = loader.load(reader, context);
-        verify(reader);
-        verify(context);
-        verify(artifactRepository);
-        assertEquals(name, impl.getName());
+        verify(reader, namespaceContext, context, artifactRepository);
+        assertEquals(new QName(name), impl.getName());
         assertEquals(new URL("jar:http://www.example.com/sca/bar.jar!/META-INF/sca/default.scdl"),
             impl.getScdlLocation());
     }
@@ -158,6 +146,7 @@ public class ImplementationCompositeLoaderTestCase extends TestCase {
         super.setUp();
         artifactRepository = createMock(ArtifactRepository.class);
         reader = createMock(XMLStreamReader.class);
+        namespaceContext = createMock(NamespaceContext.class);
         context = createMock(LoaderContext.class);
         cl = getClass().getClassLoader();
         loader = new ImplementationCompositeLoader(null, artifactRepository);
