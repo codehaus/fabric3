@@ -17,9 +17,8 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:fabric3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:hessian="http://www.fabric3.org/binding/hessian/0.1-SNAPSHOT"
-           name="CalculatorComposite"
-           >
+           xmlns:hessian="http://www.fabric3.org/binding/hessian/0.1"
+           name="CalculatorComposite">
 
     <component name="calculator">
         <implementation.java class="calculator.CalculatorServiceImpl"/>

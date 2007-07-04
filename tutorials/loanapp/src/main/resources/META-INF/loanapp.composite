@@ -18,7 +18,7 @@
 
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:fabric3="http://fabric3.org/xmlns/sca/0.1"
-           xmlns:hessian="http://www.fabric3.org/binding/hessian/0.1-SNAPSHOT"
+           xmlns:hessian="http://www.fabric3.org/binding/hessian/0.1"
            name="LoanAppComposite">
     <!--
     <service name="LoanApplicationService" promote="LoanApplicationComponent">

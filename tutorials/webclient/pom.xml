@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3.tutorials</groupId>
     <artifactId>fabric3-tutorial-webclient</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.1</version>
     <packaging>war</packaging>
     <name>Fabric3 Tutorial Web Client</name>
     <description>Fabric3 Web Client demonstrating distributed domains.</description>
@@ -77,7 +77,7 @@
 
         -->
         <!--
-        Dependencies for Hessian
+        Dependencies for Hessian/Burlap
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-binding-hessian</artifactId>
