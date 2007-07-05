@@ -11,6 +11,10 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="maven-plugin-api-2.0.4" level="application" />
+    <orderEntry type="library" name="maven-archiver-2.2" level="application" />
+    <orderEntry type="library" name="plexus-archiver-1.0-alpha-7" level="application" />
+    <orderEntry type="library" name="maven-project-2.0.4" level="application" />
+    <orderEntry type="library" name="maven-artifact-2.0.4" level="application" />
     <orderEntryProperties />
   </component>
 </module>
