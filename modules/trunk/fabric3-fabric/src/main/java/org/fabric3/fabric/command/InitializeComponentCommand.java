@@ -17,6 +17,9 @@
 package org.fabric3.fabric.command;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.fabric3.spi.Constants;
@@ -30,16 +33,20 @@ import org.fabric3.spi.command.Command;
  */
 public class InitializeComponentCommand implements Command {
     public static final QName QNAME = new QName(Constants.FABRIC3_NS, "initializeComponentCommand");
-    private final URI uri;
+    private final List<URI> uris;
     private final URI groupId;
 
-    public InitializeComponentCommand(URI uri, URI groupId) {
-        this.uri = uri;
+    public InitializeComponentCommand(URI groupId) {
         this.groupId = groupId;
+        uris = new ArrayList<URI>();
     }
 
-    public URI getUri() {
-        return uri;
+    public List<URI> getUris() {
+        return Collections.unmodifiableList(uris);
+    }
+
+    public void addUri(URI uri) {
+        uris.add(uri);
     }
 
     public URI getGroupId() {

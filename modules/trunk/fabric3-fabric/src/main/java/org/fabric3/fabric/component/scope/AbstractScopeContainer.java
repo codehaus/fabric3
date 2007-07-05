@@ -173,16 +173,7 @@ public abstract class AbstractScopeContainer<KEY> extends AbstractLifecycle impl
         destroyQueues.remove(contextId);
     }
 
-    /**
-     * Initialise an ordered list of components.
-     * The list is traversed in order and the getWrapper() method called for each to
-     * associate an instance with the supplied context.
-     *
-     * @param components  the components to be initialized
-     * @param workContext the work context in which to initialize the components
-     * @throws GroupInitializationException if one or more components threw an exception during initialization
-     */
-    protected void initializeComponents(List<AtomicComponent<?>> components, WorkContext workContext)
+    public void initializeComponents(List<AtomicComponent<?>> components, WorkContext workContext)
             throws GroupInitializationException {
         List<Exception> causes = null;
         for (AtomicComponent<?> component : components) {

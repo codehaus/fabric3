@@ -1,6 +1,7 @@
 package org.fabric3.runtime.development.host;
 
 import java.net.URL;
+import javax.xml.namespace.QName;
 
 import org.fabric3.host.runtime.Fabric3Runtime;
 
@@ -21,6 +22,11 @@ public interface DevelopmentRuntime extends Fabric3Runtime<DevelopmentHostInfo> 
     void activate(URL file);
 
     <T> T connectTo(Class<T> interfaze, String serviceUri);
+
+    public void includeExtension(URL compositeFile);
+
+    public void activateExtension(QName qName);
+
 
     <T> void registerMockReference(String name, Class<T> interfaze, T mock);
 

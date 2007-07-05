@@ -97,6 +97,10 @@
         <system:implementation.system class="org.fabric3.fabric.services.discovery.NullDiscoveryService"/>
     </component>
 
+    <component name="MessageDestinationService">
+        <system:implementation.system class="org.fabric3.fabric.services.messaging.NullMessageDestinationService"/>
+    </component>
+    
        <!-- Include hessian extension SCDL -->
     <include name="org.fabric3.binding.HessianExtension" scdlResource="META-INF/hessian.scdl"/>
     <include name="org.fabric3.binding.CXFExtension" scdlResource="META-INF/ws.scdl"/> 

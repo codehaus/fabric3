@@ -41,6 +41,8 @@ import org.fabric3.fabric.builder.ConnectorImpl;
 import org.fabric3.fabric.builder.component.DefaultComponentBuilderRegistry;
 import org.fabric3.fabric.builder.component.WireAttacherRegistryImpl;
 import org.fabric3.fabric.command.CommandExecutorRegistryImpl;
+import org.fabric3.fabric.command.InitializeComponentCommand;
+import org.fabric3.fabric.command.InitializeComponentExecutor;
 import org.fabric3.fabric.command.StartCompositeContextCommand;
 import org.fabric3.fabric.command.StartCompositeContextExecutor;
 import org.fabric3.fabric.command.StartCompositeContextGenerator;
@@ -90,7 +92,6 @@ import static org.fabric3.fabric.runtime.ComponentNames.CLASSLOADER_REGISTRY_URI
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_NAME;
 import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
-
 import org.fabric3.fabric.services.advertsiement.FeatureLoader;
 import org.fabric3.fabric.services.classloading.ClassLoaderRegistryImpl;
 import org.fabric3.fabric.services.instancefactory.BuildHelperImpl;
@@ -107,6 +108,9 @@ import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
+import org.fabric3.pojo.processor.ImplementationProcessorService;
+import org.fabric3.pojo.processor.IntrospectionRegistry;
+import org.fabric3.pojo.processor.JavaMappedService;
 import org.fabric3.pojo.processor.PojoComponentType;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.builder.component.WireAttacherRegistry;
@@ -118,15 +122,13 @@ import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.idl.InvalidServiceContractException;
 import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
 import org.fabric3.spi.idl.java.JavaServiceContract;
-import org.fabric3.pojo.processor.ImplementationProcessorService;
-import org.fabric3.pojo.processor.Introspector;
-import org.fabric3.pojo.processor.JavaMappedService;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.CompositeImplementation;
 import org.fabric3.spi.model.type.ServiceContract;
+import org.fabric3.spi.model.type.Autowire;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
@@ -198,7 +200,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         try {
             ComponentDefinition<CompositeImplementation> definition =
                     new ComponentDefinition<CompositeImplementation>("main", impl);
-            runtimeAssembly.activate(definition, false);
+            runtimeAssembly.activate(definition, true);
         } catch (ActivateException e) {
             throw new InitializationException(e);
         }
@@ -220,7 +222,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         scopeContainer.setScopeRegistry(scopeRegistry);
         scopeContainer.start();
 
-        Introspector introspector = createIntrospector(interfaceProcessorRegistry);
+        IntrospectionRegistry introspector = createIntrospector(interfaceProcessorRegistry);
         loader = createLoader(introspector);
         GeneratorRegistry generatorRegistry = createGeneratorRegistry();
         Deployer deployer = createDeployer();
@@ -229,7 +231,8 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         RuntimeRoutingService routingService = new RuntimeRoutingService(deployer, commandRegistry, info);
         PromotionNormalizer normalizer = new PromotionNormalizerImpl();
         Allocator allocator = new LocalAllocator();
-        AssemblyStore store = new NonPersistentAssemblyStore(info);
+        // enable autowire for the runtime domain
+        AssemblyStore store = new NonPersistentAssemblyStore(ComponentNames.RUNTIME_URI, Autowire.ON);
         runtimeAssembly =
                 new RuntimeAssemblyImpl(generatorRegistry, resolver, normalizer, allocator, routingService, store);
         try {
@@ -316,11 +319,19 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         CommandExecutorRegistryImpl commandRegistry = new CommandExecutorRegistryImpl();
         StartCompositeContextExecutor executor =
                 new StartCompositeContextExecutor(commandRegistry, scopeRegistry, monitorFactory);
+        InitializeComponentExecutor initExecutor =
+                new InitializeComponentExecutor(null,
+                                                null,
+                                                commandRegistry,
+                                                scopeRegistry,
+                                                componentManager,
+                                                monitorFactory);
         commandRegistry.register(StartCompositeContextCommand.class, executor);
+        commandRegistry.register(InitializeComponentCommand.class, initExecutor);
         return commandRegistry;
     }
 
-    protected Introspector createIntrospector(JavaInterfaceProcessorRegistry registry) {
+    protected IntrospectionRegistry createIntrospector(JavaInterfaceProcessorRegistry registry) {
         ImplementationProcessorService service = new ImplementationProcessorServiceImpl(registry);
         IntrospectionRegistryImpl.Monitor monitor = monitorFactory.getMonitor(IntrospectionRegistryImpl.Monitor.class);
         IntrospectionRegistryImpl introspectionRegistry = new IntrospectionRegistryImpl(monitor);
@@ -338,7 +349,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         return introspectionRegistry;
     }
 
-    protected LoaderRegistry createLoader(Introspector introspector) {
+    protected LoaderRegistry createLoader(IntrospectionRegistry introspector) {
         LoaderRegistryImpl loaderRegistry = new LoaderRegistryImpl(monitorFactory, xmlFactory);
 
         // register element loaders

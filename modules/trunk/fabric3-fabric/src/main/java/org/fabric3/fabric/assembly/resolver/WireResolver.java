@@ -21,8 +21,8 @@ package org.fabric3.fabric.assembly.resolver;
 import java.net.URI;
 
 import org.fabric3.fabric.assembly.ResolutionException;
-import org.fabric3.spi.model.type.ServiceContract;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.type.ServiceContract;
 
 /**
  * Implementations are responsible for resolving wire targets and URIs in an SCA Domain, including autowires.
@@ -32,13 +32,16 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 public interface WireResolver {
 
     /**
-     * Resolves wires for a component definition and its decendents
+     * Resolves wires for a component definition and its decendents. If component is a composite and the operation is an
+     * include, the child references will be resolved against the target composite and the component.
      *
-     * @param parent    the parent component
-     * @param component the logical component to resolve for
+     * @param targetComposite the target composite the component will be deployed into
+     * @param component       the logical component to resolve for
+     * @param include         true if the component is being included
      * @throws ResolutionException if an error occurs during resolution
      */
-    void resolve(LogicalComponent<?> parent, LogicalComponent<?> component) throws ResolutionException;
+    void resolve(LogicalComponent<?> targetComposite, LogicalComponent<?> component, boolean include)
+            throws ResolutionException;
 
     /**
      * Adds the uri of a host system service that can be an autowire target

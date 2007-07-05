@@ -94,8 +94,8 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
 
     public void start() {
         super.start();
-        scopeContainer.register(this);
         instanceFactory = provider.createFactory();
+        scopeContainer.register(this);
     }
 
     public void stop() {

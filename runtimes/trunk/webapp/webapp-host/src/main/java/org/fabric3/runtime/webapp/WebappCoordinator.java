@@ -28,6 +28,7 @@ import static org.fabric3.fabric.runtime.ComponentNames.DISCOVERY_SERVICE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.WORK_SCHEDULER_URI;
+import org.fabric3.fabric.runtime.ComponentNames;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.CoordinatorMonitor;
 import org.fabric3.host.runtime.InitializationException;
@@ -80,12 +81,19 @@ public class WebappCoordinator implements RuntimeLifecycleCoordinator<WebappRunt
         try {
             runtime.initialize();
             bootstrapper.bootPrimordial(runtime, bootClassLoader, appClassLoader);
-            // start the domain context
             ScopeRegistry scopeRegistry = runtime.getSystemComponent(ScopeRegistry.class, SCOPE_REGISTRY_URI);
             ScopeContainer<URI> container = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
+
+            // start the system context
+            URI systemGroupId = URI.create(ComponentNames.RUNTIME_NAME + "/");
             WorkContext workContext = new SimpleWorkContext();
+            workContext.setScopeIdentifier(Scope.COMPOSITE, systemGroupId);
+            container.startContext(workContext, systemGroupId);
+
+            // start the domain context
             URI domainUri = runtime.getHostInfo().getDomain();
             URI groupId = URI.create(domainUri.toString() + "/");
+            workContext = new SimpleWorkContext();
             workContext.setScopeIdentifier(Scope.COMPOSITE, groupId);
             container.startContext(workContext, groupId);
         } catch (GroupInitializationException e) {

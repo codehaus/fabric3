@@ -118,10 +118,6 @@
         <system:implementation.system class="org.fabric3.fabric.command.InitializeComponentExecutor"/>
     </component>
 
-    <component name="initializeCommandGenerator">
-        <system:implementation.system class="org.fabric3.fabric.command.InitializeComponentGenerator"/>
-    </component>
-
     <component name="classLoaderGenerator">
         <system:implementation.system class="org.fabric3.fabric.classloader.ClassLoaderGeneratorImpl"/>
     </component>

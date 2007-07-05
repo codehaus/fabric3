@@ -18,10 +18,12 @@ package org.fabric3.fabric.assembly.store;
 
 import java.net.URI;
 
+import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.type.Autowire;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.CompositeComponentType;
 import org.fabric3.spi.model.type.CompositeImplementation;
@@ -33,7 +35,14 @@ import org.fabric3.spi.model.type.CompositeImplementation;
  */
 public class NonPersistentAssemblyStore implements AssemblyStore {
     private URI domainUri;
+    private Autowire autowire = Autowire.OFF;
 
+    public NonPersistentAssemblyStore(URI domainUri, Autowire autowire) {
+        this.domainUri = domainUri;
+        this.autowire = autowire;
+    }
+
+    @Constructor
     public NonPersistentAssemblyStore(@Reference HostInfo info) {
         domainUri = info.getDomain();
     }
@@ -44,6 +53,7 @@ public class NonPersistentAssemblyStore implements AssemblyStore {
         impl.setComponentType(type);
         ComponentDefinition<CompositeImplementation> definition =
                 new ComponentDefinition<CompositeImplementation>(domainUri.toString(), impl);
+        type.setAutowire(autowire);
         return new LogicalComponent<CompositeImplementation>(domainUri, domainUri, definition);
     }
 

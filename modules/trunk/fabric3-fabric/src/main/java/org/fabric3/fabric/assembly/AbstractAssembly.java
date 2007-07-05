@@ -19,6 +19,7 @@
 package org.fabric3.fabric.assembly;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -34,9 +35,11 @@ import org.fabric3.fabric.assembly.normalizer.PromotionNormalizer;
 import org.fabric3.fabric.assembly.resolver.WireResolver;
 import org.fabric3.fabric.assembly.store.AssemblyStore;
 import org.fabric3.fabric.assembly.store.RecordException;
+import org.fabric3.fabric.command.InitializeComponentCommand;
 import org.fabric3.fabric.generator.DefaultGeneratorContext;
 import org.fabric3.fabric.services.routing.RoutingException;
 import org.fabric3.fabric.services.routing.RoutingService;
+import org.fabric3.spi.command.Command;
 import org.fabric3.spi.command.CommandSet;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
@@ -150,7 +153,7 @@ public abstract class AbstractAssembly implements Assembly {
                 component = instantiate(baseUri, domain, definition);
             }
             // resolve wires in the logical component
-            wireResolver.resolve(domain, component);
+            wireResolver.resolve(domain, component, include);
             normalize(component);
             // perform the inclusion, which will result in the generation of change sets provisioned to service nodes
             generateAndProvision(domain, component, include, false);
@@ -289,7 +292,7 @@ public abstract class AbstractAssembly implements Assembly {
     /**
      * Generates and routes a physical change set to a set of service nodes based on the logical component.
      *
-     * @param parent              the parent composite
+     * @param targetComposite     the target composite
      * @param component           the logical component generate physical artifacts frm
      * @param includeInDomain     true if SCA domain inclusion semantics should be in effect. That is, if true, children
      *                            will be included at the domain level.
@@ -300,7 +303,7 @@ public abstract class AbstractAssembly implements Assembly {
      * @throws RoutingException    if an error is encountered routing the change set
      * @throws AllocationException if an error occurs during allocation
      */
-    protected void generateAndProvision(LogicalComponent<CompositeImplementation> parent,
+    protected void generateAndProvision(LogicalComponent<CompositeImplementation> targetComposite,
                                         LogicalComponent<?> component,
                                         boolean includeInDomain,
                                         boolean synchronizeTopology)
@@ -317,22 +320,23 @@ public abstract class AbstractAssembly implements Assembly {
             // allocate the components
             allocator.allocate(composite, synchronizeTopology);
             for (LogicalComponent<?> child : component.getComponents()) {
-                generateChangeSets(composite, child, contexts);
+                List<LogicalComponent<CompositeImplementation>> composites =
+                        new ArrayList<LogicalComponent<CompositeImplementation>>();
+                composites.add(composite);
+                composites.add(targetComposite);
+                generateChangeSets(composites, child, contexts);
             }
             for (LogicalComponent<?> child : component.getComponents()) {
-                GeneratorContext context = contexts.get(child.getRuntimeId());
-                assert context != null;
-                generatorRegistry.generateCommandSet(child, context);
+                generateCommandSets(child, contexts);
             }
 
         } else {
             allocator.allocate(component, synchronizeTopology);
-            generateChangeSets(parent, component, contexts);
-            GeneratorContext context = contexts.get(component.getRuntimeId());
-            if (context != null) {
-                // if null, no component
-                generatorRegistry.generateCommandSet(component, context);
-            }
+            List<LogicalComponent<CompositeImplementation>> composites =
+                    new ArrayList<LogicalComponent<CompositeImplementation>>();
+            composites.add(targetComposite);
+            generateChangeSets(composites, component, contexts);
+            generateCommandSets(component, contexts);
         }
         // route the change sets to service nodes
         for (Map.Entry<URI, GeneratorContext> entry : contexts.entrySet()) {
@@ -345,7 +349,7 @@ public abstract class AbstractAssembly implements Assembly {
 
     }
 
-    protected void generateChangeSets(LogicalComponent<CompositeImplementation> parent,
+    protected void generateChangeSets(List<LogicalComponent<CompositeImplementation>> targetComposites,
                                       LogicalComponent<?> component,
                                       Map<URI, GeneratorContext> contexts)
             throws GenerationException, ResolutionException {
@@ -361,8 +365,11 @@ public abstract class AbstractAssembly implements Assembly {
                 //noinspection unchecked
                 LogicalComponent<CompositeImplementation> composite =
                         (LogicalComponent<CompositeImplementation>) component;
-                generateChangeSets(composite, child, contexts);
-                generatePhysicalWires(composite, child, contexts);
+                List<LogicalComponent<CompositeImplementation>> composites =
+                        new ArrayList<LogicalComponent<CompositeImplementation>>();
+                composites.add(composite);
+                generateChangeSets(composites, child, contexts);
+                generatePhysicalWires(composites, child, contexts);
             }
         } else {
             // leaf component, generate a physical component and update the change sets
@@ -371,7 +378,7 @@ public abstract class AbstractAssembly implements Assembly {
                 return;
             }
             generatePhysicalComponent(component, contexts);
-            generatePhysicalWires(parent, component, contexts);
+            generatePhysicalWires(targetComposites, component, contexts);
         }
     }
 
@@ -380,13 +387,13 @@ public abstract class AbstractAssembly implements Assembly {
      * resolved against the given parent.
      * <p/>
      *
-     * @param parent    the composite to resolve against
-     * @param component the component to generate wires for
-     * @param contexts  the GeneratorContexts to update with physical wire definitions
+     * @param targetComposites the composites to resolve against
+     * @param component        the component to generate wires for
+     * @param contexts         the GeneratorContexts to update with physical wire definitions
      * @throws GenerationException if an error occurs generating phyasical wire definitions
      * @throws ResolutionException if an error occurs resolving a wire target
      */
-    protected void generatePhysicalWires(LogicalComponent<CompositeImplementation> parent,
+    protected void generatePhysicalWires(List<LogicalComponent<CompositeImplementation>> targetComposites,
                                          LogicalComponent<?> component,
                                          Map<URI, GeneratorContext> contexts)
             throws GenerationException, ResolutionException {
@@ -401,7 +408,7 @@ public abstract class AbstractAssembly implements Assembly {
         for (LogicalReference entry : component.getReferences()) {
             if (entry.getBindings().isEmpty()) {
                 for (URI uri : entry.getTargetUris()) {
-                    Referenceable target = resolveTarget(uri, parent);
+                    Referenceable target = resolveTarget(uri, targetComposites);
                     if (target == null) {
                         String refUri = entry.getUri().toString();
                         throw new TargetNotFoundException("Target not found for reference " + refUri, uri.toString());
@@ -450,6 +457,41 @@ public abstract class AbstractAssembly implements Assembly {
         }
     }
 
+    protected void generateCommandSets(LogicalComponent<?> component,
+                                       Map<URI, GeneratorContext> contexts) throws GenerationException {
+
+        GeneratorContext context = contexts.get(component.getRuntimeId());
+        if (context != null) {
+            generatorRegistry.generateCommandSet(component, context);
+            if (isEagerInit(component)) {
+                // if the component is eager init, add it to the list of components to initialize on the node it
+                // will be provisioned to
+                CommandSet commandSet = context.getCommandSet();
+                List<Command> set = commandSet.getCommands(CommandSet.Phase.LAST);
+                boolean found = false;
+                for (Command command : set) {
+                    // check if the command exists, and if so update it
+                    if (command instanceof InitializeComponentCommand) {
+                        ((InitializeComponentCommand) command).addUri(component.getUri());
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    // a previous command was not found so create one
+                    // @FIXME a trailing slash is needed since group ids are set on ComponentDefinitions using URI#resolve(",")
+                    URI groupId = URI.create(component.getParent().getUri().toString() + "/");
+                    InitializeComponentCommand initCommand = new InitializeComponentCommand(groupId);
+                    initCommand.addUri(component.getUri());
+                    commandSet.add(CommandSet.Phase.LAST, initCommand);
+                }
+            }
+        }
+        for (LogicalComponent<?> child : component.getComponents()) {
+            generateCommandSets(child, contexts);
+        }
+    }
+
     /**
      * Generates a physical component from the given logical component, updating the appropriate GeneratorContext or
      * creating a new one if necessary. A GeneratorContext is created for each service node a physical compnent is
@@ -485,15 +527,24 @@ public abstract class AbstractAssembly implements Assembly {
         }
     }
 
+    protected boolean isEagerInit(LogicalComponent<?> component) {
+        ComponentDefinition<? extends Implementation<?>> definition = component.getDefinition();
+        Integer level = definition.getInitLevel();
+        if (level != null) {
+            return level > 0;
+        }
+        return definition.getImplementation().getComponentType().getInitLevel() > 0;
+    }
+
     /**
      * Subclasses are responsible for implementing an algorithm to resolve target URIs against a composite
      *
-     * @param uri       the target uri to resolve
-     * @param component the composite to resolve against
+     * @param uri        the target uri to resolve
+     * @param components the composites to resolve against, in order
      * @return the logical instance
      * @throws ResolutionException if an error occurs during resolution, such as the target not being found
      */
-    protected abstract Referenceable resolveTarget(URI uri, LogicalComponent<CompositeImplementation> component)
+    protected abstract Referenceable resolveTarget(URI uri, List<LogicalComponent<CompositeImplementation>> components)
             throws ResolutionException;
 
 }

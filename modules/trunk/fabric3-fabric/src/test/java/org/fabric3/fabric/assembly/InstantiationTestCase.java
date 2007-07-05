@@ -1,6 +1,7 @@
 package org.fabric3.fabric.assembly;
 
 import java.net.URI;
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -90,12 +91,12 @@ public class InstantiationTestCase extends TestCase {
 
         }
 
-        protected Referenceable resolveTarget(URI uri, LogicalComponent<CompositeImplementation> component)
-                throws ResolutionException {
-            return null;
+        public void activate(ComponentDefinition<?> definition, boolean include) throws ActivateException {
         }
 
-        public void activate(ComponentDefinition<?> definition, boolean include) throws ActivateException {
+        protected Referenceable resolveTarget(URI uri, List<LogicalComponent<CompositeImplementation>> components)
+                throws ResolutionException {
+            return null;
         }
     }
 

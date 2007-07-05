@@ -97,5 +97,9 @@
     <component name="DiscoveryService">
         <system:implementation.system class="org.fabric3.fabric.services.discovery.NullDiscoveryService"/>
     </component>
-    
+
+    <component name="MessageDestinationService">
+        <system:implementation.system class="org.fabric3.fabric.services.messaging.NullMessageDestinationService"/>
+    </component>
+
 </composite>

@@ -8,6 +8,8 @@ import java.net.URLClassLoader;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import javax.xml.namespace.QName;
+
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
@@ -99,6 +101,21 @@ public class Domain {
         }
         runtime = null;
     }
+
+    public void includeExtension(URL compositeFile) {
+        if (runtime == null) {
+            bootRuntime();
+        }
+        runtime.includeExtension(compositeFile);
+    }
+
+    public void activateExtension(QName qName) {
+        if (runtime == null) {
+            bootRuntime();
+        }
+        runtime.activateExtension(qName);
+    }
+
 
     @SuppressWarnings({"unchecked"})
     private void bootRuntime() {

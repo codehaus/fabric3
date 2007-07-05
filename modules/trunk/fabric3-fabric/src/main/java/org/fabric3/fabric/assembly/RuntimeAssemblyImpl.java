@@ -21,6 +21,7 @@ package org.fabric3.fabric.assembly;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
@@ -71,21 +72,23 @@ public class RuntimeAssemblyImpl extends AbstractAssembly implements RuntimeAsse
     }
 
     @Override
-    protected Referenceable resolveTarget(URI uri, LogicalComponent<CompositeImplementation> component)
+    protected Referenceable resolveTarget(URI uri, List<LogicalComponent<CompositeImplementation>> components)
             throws ResolutionException {
         // TODO only resolves one level deep
-        URI defragmentedUri = UriHelper.getDefragmentedName(uri);
-        Referenceable target = component.getComponent(defragmentedUri);
-        if (target != null) {
-            return target;
-        }
-        target = component.getReference(uri.getFragment());
-        if (target != null) {
-            return target;
-        }
-        target = hostComponents.get(defragmentedUri);
-        if (target != null) {
-            return target;
+        for (LogicalComponent<CompositeImplementation> component : components) {
+            URI defragmentedUri = UriHelper.getDefragmentedName(uri);
+            Referenceable target = component.getComponent(defragmentedUri);
+            if (target != null) {
+                return target;
+            }
+            target = component.getReference(uri.getFragment());
+            if (target != null) {
+                return target;
+            }
+            target = hostComponents.get(defragmentedUri);
+            if (target != null) {
+                return target;
+            }
         }
         throw new TargetNotFoundException("Target not found", uri.toString());
     }

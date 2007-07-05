@@ -19,6 +19,7 @@
 package org.fabric3.spi.component;
 
 import java.net.URI;
+import java.util.List;
 
 import org.fabric3.spi.Lifecycle;
 import org.fabric3.spi.model.type.Scope;
@@ -92,4 +93,16 @@ public interface ScopeContainer<KEY> extends Lifecycle {
      */
     <T> void returnWrapper(AtomicComponent<T> component, WorkContext workContext, InstanceWrapper<T> wrapper)
             throws TargetDestructionException;
+
+    /**
+     * Initialise an ordered list of components.
+     * The list is traversed in order and the getWrapper() method called for each to
+     * associate an instance with the supplied context.
+     *
+     * @param components  the components to be initialized
+     * @param workContext the work context in which to initialize the components
+     * @throws GroupInitializationException if one or more components threw an exception during initialization
+     */
+    void initializeComponents(List<AtomicComponent<?>> components, WorkContext workContext)
+            throws GroupInitializationException;
 }

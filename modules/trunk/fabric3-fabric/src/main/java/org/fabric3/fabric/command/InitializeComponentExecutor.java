@@ -17,6 +17,8 @@
 package org.fabric3.fabric.command;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.Constructor;
@@ -30,9 +32,9 @@ import org.fabric3.spi.command.ExecutionException;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.Component;
 import org.fabric3.spi.component.ComponentManager;
+import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.component.TargetResolutionException;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.marshaller.MarshallerRegistry;
 import org.fabric3.spi.model.type.Scope;
@@ -61,23 +63,21 @@ public class InitializeComponentExecutor extends AbstractCommandExecutor<Initial
     }
 
     public void execute(InitializeComponentCommand command) throws ExecutionException {
-        URI uri = command.getUri();
-        Component component = manager.getComponent(uri);
-        if (component == null) {
-            throw new InitializeException("Component not found", uri.toString());
+        List<URI> uris = command.getUris();
+        List<AtomicComponent<?>> components = new ArrayList<AtomicComponent<?>>();
+        for (URI uri : uris) {
+            Component component = manager.getComponent(uri);
+            if (!(component instanceof AtomicComponent)) {
+                throw new ComponentNotRegisteredException("Component not registered", uri.toString());
+            }
+            components.add((AtomicComponent) component);
         }
-        // currently only support atomic initalization
-        if (!(component instanceof AtomicComponent)) {
-            throw new UnsupportedOperationException();
-        }
-        AtomicComponent<?> atomic = (AtomicComponent) component;
+        WorkContext workContext = new SimpleWorkContext();
+        workContext.setScopeIdentifier(Scope.COMPOSITE, command.getGroupId());
         try {
-            WorkContext workContext = new SimpleWorkContext();
-            workContext.setScopeIdentifier(Scope.COMPOSITE, command.getGroupId());
-            // initialize the component
-            scopeContainer.getWrapper(atomic, workContext);
-        } catch (TargetResolutionException e) {
-            throw new ExecutionException("Error initializing component", uri.toString(), e);
+            scopeContainer.initializeComponents(components, workContext);
+        } catch (GroupInitializationException e) {
+            throw new ExecutionException("Error starting components", e);
         }
     }
 
