@@ -188,10 +188,9 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         // load the system composite
         try {
             impl = new CompositeImplementation();
-            impl.setScdlLocation(scdlLocation);
-            impl.setClassLoader(classLoaderRegistry.getClassLoader(BOOT_CLASSLOADER_ID));
             CompositeComponentTypeLoader compositeTypeLoader = new CompositeComponentTypeLoader(loader);
-            LoaderContext loaderContext = new LoaderContextImpl(null, null);
+            LoaderContext loaderContext = new LoaderContextImpl(classLoaderRegistry.getClassLoader(BOOT_CLASSLOADER_ID),
+                                                                scdlLocation);
             compositeTypeLoader.load(impl, loaderContext);
         } catch (LoaderException e) {
             throw new InitializationException(e);

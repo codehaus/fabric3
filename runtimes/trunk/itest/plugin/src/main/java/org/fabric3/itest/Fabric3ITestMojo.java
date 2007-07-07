@@ -255,9 +255,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
                 URI domain = URI.create(testDomain);
 
                 CompositeImplementation impl = new CompositeImplementation();
-                impl.setScdlLocation(testScdl.toURI().toURL());
-                impl.setClassLoader(testClassLoader);
-
+                
                 ComponentDefinition<CompositeImplementation> definition =
                         new ComponentDefinition<CompositeImplementation>(testComponentName, impl);
 
@@ -265,7 +263,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
                 ComponentTypeLoader<CompositeImplementation> loader =
                         runtime.getSystemComponent(ComponentTypeLoader.class, COMPOSITE_LOADER_URI);
 
-                LoaderContext loaderContext = new LoaderContextImpl(null, null);
+                LoaderContext loaderContext = new LoaderContextImpl(testClassLoader, testScdl.toURI().toURL());
                 loader.load(impl, loaderContext);
 
                 runtime.deploy(definition);

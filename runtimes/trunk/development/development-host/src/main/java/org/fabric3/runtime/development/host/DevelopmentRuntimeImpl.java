@@ -99,8 +99,6 @@ public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo>
 //        }
 
         CompositeImplementation impl = new CompositeImplementation();
-        impl.setScdlLocation(compositeFile);
-        impl.setClassLoader(getHostClassLoader());
 
         ComponentDefinition<CompositeImplementation> definition =
                 new ComponentDefinition<CompositeImplementation>("main", impl);
@@ -108,7 +106,7 @@ public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo>
             @SuppressWarnings("unchecked")
             ComponentTypeLoader<CompositeImplementation> loader =
                     getSystemComponent(ComponentTypeLoader.class, COMPOSITE_LOADER_URI);
-            LoaderContext loaderContext = new LoaderContextImpl(getHostClassLoader(), null);
+            LoaderContext loaderContext = new LoaderContextImpl(getHostClassLoader(), compositeFile);
             loader.load(impl, loaderContext);
             applicationAssembly.activate(definition, false);
             WorkContext workContext = new SimpleWorkContext();
@@ -130,15 +128,13 @@ public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo>
             //URL scdl;
             JarInputStream jar = new JarInputStream(compositeFile.openStream());
             List<URL> urls = getSCDLUrls(jar, toJarURL(compositeFile));
-            impl.setScdlLocation(urls.get(0));
-            impl.setClassLoader(getHostClassLoader());
 
             ComponentDefinition<CompositeImplementation> definition =
                     new ComponentDefinition<CompositeImplementation>("extension", impl);
             @SuppressWarnings("unchecked")
             ComponentTypeLoader<CompositeImplementation> loader =
                     getSystemComponent(ComponentTypeLoader.class, COMPOSITE_LOADER_URI);
-            LoaderContext loaderContext = new LoaderContextImpl(getHostClassLoader(), null);
+            LoaderContext loaderContext = new LoaderContextImpl(getHostClassLoader(), urls.get(0));
             loader.load(impl, loaderContext);
             definition.setAutowire(Autowire.ON);
             runtimeAssembly.activate(definition, true);

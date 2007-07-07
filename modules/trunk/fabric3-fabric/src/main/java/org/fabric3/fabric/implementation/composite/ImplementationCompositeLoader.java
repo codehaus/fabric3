@@ -73,57 +73,9 @@ public class ImplementationCompositeLoader extends LoaderExtension<CompositeImpl
             throw new InvalidNameException(nameAttr);
         }
         QName name = LoaderUtil.getQName(nameAttr, reader.getNamespaceContext());
-        String group = reader.getAttributeValue(null, "group");
-        String version = reader.getAttributeValue(null, "version");
-        String scdlLocation = reader.getAttributeValue(null, "scdlLocation");
-        String jarLocation = reader.getAttributeValue(null, "jarLocation");
         LoaderUtil.skipToEndElement(reader);
-
         CompositeImplementation impl = new CompositeImplementation();
         impl.setName(name);
-        if (scdlLocation != null) {
-            try {
-                impl.setScdlLocation(new URL(loaderContext.getSourceBase(), scdlLocation));
-            } catch (MalformedURLException e) {
-                throw new InvalidValueException(scdlLocation, name.toString(), e);
-            }
-            impl.setClassLoader(loaderContext.getTargetClassLoader());
-        } else if (jarLocation != null) {
-            URL jarUrl;
-            try {
-                jarUrl = new URL(loaderContext.getSourceBase(), jarLocation);
-            } catch (MalformedURLException e) {
-                throw new InvalidValueException(jarLocation, name.toString(), e);
-            }
-            try {
-                impl.setScdlLocation(new URL("jar:" + jarUrl.toExternalForm() + "!/META-INF/sca/default.scdl"));
-            } catch (MalformedURLException e) {
-                throw new AssertionError("Could not convert URL to a jar: url");
-            }
-            impl.setClassLoader(new CompositeClassLoader(null, new URL[]{jarUrl}, loaderContext.getTargetClassLoader()));
-        } else if (artifactRepository != null && group != null && version != null) {
-            Artifact artifact = new Artifact();
-            artifact.setGroup(group);
-            artifact.setName(name.toString());
-            artifact.setVersion(version);
-            artifact.setType("jar");
-            artifactRepository.resolve(artifact);
-            if (artifact.getUrl() == null) {
-                throw new MissingResourceException(artifact.toString(), name.toString());
-            }
-            try {
-                impl.setScdlLocation(new URL("jar:" + artifact.getUrl() + "!/META-INF/sca/default.scdl"));
-            } catch (MalformedURLException e) {
-                throw new AssertionError(e);
-            }
-            Set<URL> artifactURLs = artifact.getUrls();
-            URL[] urls = new URL[artifactURLs.size()];
-            int i = 0;
-            for (URL artifactURL : artifactURLs) {
-                urls[i++] = artifactURL;
-            }
-            impl.setClassLoader(new CompositeClassLoader(null, urls, loaderContext.getTargetClassLoader()));
-        }
         return impl;
     }
 }

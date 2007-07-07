@@ -79,9 +79,6 @@ public class StandaloneRuntimeImpl extends AbstractRuntime<StandaloneHostInfo> i
         URI compositeUri = new URI("fabric3://./domain/main/");
 
         CompositeImplementation impl = new CompositeImplementation();
-        impl.setScdlLocation(applicationScdl);
-        impl.setClassLoader(applicationClassLoader);
-
         ComponentDefinition<CompositeImplementation> definition =
                 new ComponentDefinition<CompositeImplementation>("main", impl);
         try {
@@ -90,7 +87,7 @@ public class StandaloneRuntimeImpl extends AbstractRuntime<StandaloneHostInfo> i
                     getSystemComponent(ComponentTypeLoader.class, COMPOSITE_LOADER_URI);
             DistributedAssembly assembly = getSystemComponent(DistributedAssembly.class, DISTRIBUTED_ASSEMBLY_URI);
             // deploy the components
-            LoaderContext loaderContext = new LoaderContextImpl(null, null);
+            LoaderContext loaderContext = new LoaderContextImpl(applicationClassLoader, applicationScdl);
             loader.load(impl, loaderContext);
             assembly.activate(definition, false);
             ScopeRegistry scopeRegistry = getScopeRegistry();

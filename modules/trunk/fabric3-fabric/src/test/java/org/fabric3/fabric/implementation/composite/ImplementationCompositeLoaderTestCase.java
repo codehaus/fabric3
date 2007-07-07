@@ -61,18 +61,12 @@ public class ImplementationCompositeLoaderTestCase extends TestCase {
         expect(reader.getName()).andReturn(IMPLEMENTATION_COMPOSITE);
         expect(reader.getAttributeValue(null, "name")).andReturn(name);
         expect(reader.getNamespaceContext()).andReturn(namespaceContext);
-        expect(reader.getAttributeValue(null, "group")).andReturn(null);
-        expect(reader.getAttributeValue(null, "version")).andReturn(null);
-        expect(reader.getAttributeValue(null, "scdlLocation")).andReturn(null);
-        expect(reader.getAttributeValue(null, "jarLocation")).andReturn(null);
         expect(reader.next()).andReturn(END_ELEMENT);
         replay(reader, namespaceContext, context, artifactRepository);
 
         CompositeImplementation impl = loader.load(reader, context);
         verify(reader, namespaceContext, context, artifactRepository);
         assertEquals(new QName(name), impl.getName());
-        assertNull(impl.getScdlLocation());
-        assertNull(impl.getClassLoader());
     }
 
     public void testWithArtifact() throws LoaderException, XMLStreamException, MalformedURLException {
@@ -80,23 +74,12 @@ public class ImplementationCompositeLoaderTestCase extends TestCase {
         expect(reader.getName()).andReturn(IMPLEMENTATION_COMPOSITE);
         expect(reader.getAttributeValue(null, "name")).andReturn(name);
         expect(reader.getNamespaceContext()).andReturn(namespaceContext);
-        expect(reader.getAttributeValue(null, "group")).andReturn("com.example");
-        expect(reader.getAttributeValue(null, "version")).andReturn("1.0");
-        expect(reader.getAttributeValue(null, "scdlLocation")).andReturn(null);
-        expect(reader.getAttributeValue(null, "jarLocation")).andReturn(null);
         expect(reader.next()).andReturn(END_ELEMENT);
-        expect(context.getTargetClassLoader()).andReturn(cl);
-        URL url = new URL("http://www.example.com/sca/base.jar");
-        artifactRepository.resolve(artifactMatcher(url, "com.example", name, "1.0"));
-
         replay(reader, namespaceContext, context, artifactRepository);
 
         CompositeImplementation impl = loader.load(reader, context);
         verify(reader, namespaceContext, context, artifactRepository);
         assertEquals(new QName(name), impl.getName());
-        assertEquals(new URL("jar:http://www.example.com/sca/base.jar!/META-INF/sca/default.scdl"),
-            impl.getScdlLocation());
-        assertTrue(impl.getClassLoader() instanceof CompositeClassLoader);
     }
 
     public void testWithScdlLocation() throws LoaderException, XMLStreamException, MalformedURLException {
@@ -104,21 +87,12 @@ public class ImplementationCompositeLoaderTestCase extends TestCase {
         expect(reader.getName()).andReturn(IMPLEMENTATION_COMPOSITE);
         expect(reader.getAttributeValue(null, "name")).andReturn(name);
         expect(reader.getNamespaceContext()).andReturn(namespaceContext);
-        expect(reader.getAttributeValue(null, "group")).andReturn(null);
-        expect(reader.getAttributeValue(null, "version")).andReturn(null);
-        expect(reader.getAttributeValue(null, "scdlLocation")).andReturn("bar.scdl");
-        expect(reader.getAttributeValue(null, "jarLocation")).andReturn(null);
         expect(reader.next()).andReturn(END_ELEMENT);
-        expect(context.getSourceBase()).andReturn(new URL("http://www.example.com/sca/base.scdl"));
-        expect(context.getTargetClassLoader()).andReturn(cl);
-
         replay(reader, namespaceContext, context, artifactRepository);
 
         CompositeImplementation impl = loader.load(reader, context);
         verify(reader, namespaceContext, context, artifactRepository);
         assertEquals(new QName(name), impl.getName());
-        assertEquals(new URL("http://www.example.com/sca/bar.scdl"), impl.getScdlLocation());
-        assertSame(cl, impl.getClassLoader());
     }
 
     public void testWithJarLocation() throws LoaderException, XMLStreamException, MalformedURLException {
@@ -126,20 +100,12 @@ public class ImplementationCompositeLoaderTestCase extends TestCase {
         expect(reader.getName()).andReturn(IMPLEMENTATION_COMPOSITE);
         expect(reader.getAttributeValue(null, "name")).andReturn(name);
         expect(reader.getNamespaceContext()).andReturn(namespaceContext);
-        expect(reader.getAttributeValue(null, "group")).andReturn(null);
-        expect(reader.getAttributeValue(null, "version")).andReturn(null);
-        expect(reader.getAttributeValue(null, "scdlLocation")).andReturn(null);
-        expect(reader.getAttributeValue(null, "jarLocation")).andReturn("bar.jar");
         expect(reader.next()).andReturn(END_ELEMENT);
-        expect(context.getSourceBase()).andReturn(new URL("http://www.example.com/sca/base.scdl"));
-        expect(context.getTargetClassLoader()).andReturn(cl);
         replay(reader, namespaceContext, context, artifactRepository);
 
         CompositeImplementation impl = loader.load(reader, context);
         verify(reader, namespaceContext, context, artifactRepository);
         assertEquals(new QName(name), impl.getName());
-        assertEquals(new URL("jar:http://www.example.com/sca/bar.jar!/META-INF/sca/default.scdl"),
-            impl.getScdlLocation());
     }
 
     protected void setUp() throws Exception {

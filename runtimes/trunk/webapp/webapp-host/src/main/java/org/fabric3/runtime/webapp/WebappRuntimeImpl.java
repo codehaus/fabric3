@@ -73,8 +73,6 @@ public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implement
     public void deploy(URI compositeId, URL applicationScdl, URI componentId) throws InitializationException {
         try {
             CompositeImplementation impl = new CompositeImplementation();
-            impl.setScdlLocation(applicationScdl);
-            impl.setClassLoader(getHostClassLoader());
 
             // FIXME JFM this is a horrible hack until the contribution service is in place
 //            ClassLoaderRegistry classLoaderRegistry =
@@ -84,7 +82,7 @@ public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implement
             @SuppressWarnings("unchecked")
             ComponentTypeLoader<CompositeImplementation> loader =
                     getSystemComponent(ComponentTypeLoader.class, COMPOSITE_LOADER_URI);
-            LoaderContext loaderContext = new LoaderContextImpl(null, null);
+            LoaderContext loaderContext = new LoaderContextImpl(getHostClassLoader(), applicationScdl);
             loader.load(impl, loaderContext);
 
             ComponentDefinition<CompositeImplementation> definition =
