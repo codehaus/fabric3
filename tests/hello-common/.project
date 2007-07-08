@@ -1,6 +1,6 @@
 <projectDescription>
-  <name>binding-hessian-test</name>
-  <comment>Fabric3 Hessian Binding Test.</comment>
+  <name>sample-hello-common</name>
+  <comment>Fabric3 Common Hello Sample.</comment>
   <projects/>
   <buildSpec>
     <buildCommand>

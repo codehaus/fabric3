@@ -27,7 +27,7 @@
     <artifactId>binding-burlap-test</artifactId>
     <version>0.1-SNAPSHOT</version>
     <name>Fabric3 Burlap Binding Test</name>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
     <description>Fabric3 Burlap Binding Test.</description>
 
     <dependencies>
@@ -89,18 +89,17 @@
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-itest-plugin</artifactId>
                 <configuration>
-                    <!--testScdl>target/test-classes/META-INF/testApp.scdl</testScdl-->
                     <systemScdl>file:target/classes/META-INF/testSystem.scdl</systemScdl>
                     <extensions>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-binding-burlap</artifactId>
-                            <version>0.1-SNAPSHOT</version>
+                            <version>0.1</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-jetty</artifactId>
-                            <version>0.1-SNAPSHOT</version>
+                            <version>0.1</version>
                         </dependency>
                         <dependency>
                             <groupId>org.apache.geronimo.specs</groupId>
@@ -119,11 +118,5 @@
             </plugin>
         </plugins>
     </build>
-
-    <modules>
-        <module>../../runtimes/trunk/itest</module>
-        <module>../../modules/trunk/fabric3-binding-burlap</module>
-        <module>../hello-common</module>
-    </modules>
 
 </project>

@@ -1,6 +1,6 @@
 <projectDescription>
-  <name>binding-hessian-test</name>
-  <comment>Fabric3 Hessian Binding Test.</comment>
+  <name>binding-ws-test</name>
+  <comment>Fabric3 WS Binding Test.</comment>
   <projects/>
   <buildSpec>
     <buildCommand>
