@@ -109,21 +109,12 @@ public class DefaultWireResolver implements WireResolver {
                 // case where a reference is specified but not configured, e.g. promoted or autowirable
                 // check for promotions first
                 String baseName = UriHelper.getBaseName(component.getUri());
-                boolean found = false;
-                for (LogicalReference candidate : targetComposite.getReferences()) {
-                    List<URI> uris = candidate.getDefinition().getPromoted();
-                    for (URI uri : uris) {
-                        if (baseName.equals(UriHelper.getDefragmentedNameAsString(uri))
-                                && referenceName.equals(uri.getFragment())) {
-                            logicalReference.addTargetUri(candidate.getUri());
-                            // FIXME only works one level
-                            found = true;
-                            break;
-                        }
-                    }
-                    if (found) {
-                        return;
-                    }
+                // If the composite is being included search siblings for promoted referencea, else search the
+                // target composite
+                if (include && resolvePromotions(baseName, logicalReference, component.getParent())) {
+                    return;
+                } else if (resolvePromotions(baseName, logicalReference, targetComposite)) {
+                    return;
                 }
                 ServiceContract requiredContract = reference.getServiceContract();
                 boolean required = reference.isRequired();
@@ -132,10 +123,10 @@ public class DefaultWireResolver implements WireResolver {
                     URI targetUri = null;
                     if (include) {
                         // for an include, search the siblings prior to the target composite
-                        targetUri = resolveReference(component.getParent(), component, referenceName, requiredContract);
+                        targetUri = resolveByType(component.getParent(), component, referenceName, requiredContract);
                     }
                     if (targetUri == null) {
-                        targetUri = resolveReference(targetComposite, component, referenceName, requiredContract);
+                        targetUri = resolveByType(targetComposite, component, referenceName, requiredContract);
                     }
                     if (targetUri == null && required) {
                         String fullRef = component.getUri().toString() + "#" + referenceName;
@@ -162,10 +153,10 @@ public class DefaultWireResolver implements WireResolver {
                     URI targetUri = null;
                     if (include) {
                         // for an include, search the siblings prior to the target composite
-                        targetUri = resolveReference(component.getParent(), component, referenceName, requiredContract);
+                        targetUri = resolveByType(component.getParent(), component, referenceName, requiredContract);
                     }
                     if (targetUri == null) {
-                        targetUri = resolveReference(targetComposite, component, fragment, requiredContract);
+                        targetUri = resolveByType(targetComposite, component, fragment, requiredContract);
                     }
                     if (targetUri == null && required) {
                         String fullRef = component.getUri().toString() + "#" + referenceName;
@@ -178,7 +169,33 @@ public class DefaultWireResolver implements WireResolver {
     }
 
     /**
-     * Resolves a reference against a composite
+     * Resolves reference targets by searching for composite references that promote it
+     *
+     * @param name             the name of the reference's component
+     * @param logicalReference the logical reference to resolve targets for
+     * @param composite        the composite to resolve against
+     * @return true if promoted targets were resolved
+     */
+    private boolean resolvePromotions(String name, LogicalReference logicalReference, LogicalComponent<?> composite) {
+        String referenceName = logicalReference.getUri().getFragment();
+        boolean found = false;
+        for (LogicalReference candidate : composite.getReferences()) {
+            List<URI> uris = candidate.getDefinition().getPromoted();
+            for (URI uri : uris) {
+                if (name.equals(UriHelper.getDefragmentedNameAsString(uri))
+                        && referenceName.equals(uri.getFragment())) {
+                    logicalReference.addTargetUri(candidate.getUri());
+                    // FIXME only works one level
+                    found = true;
+                    break;
+                }
+            }
+        }
+        return found;
+    }
+
+    /**
+     * Resolves a reference against a composite by its service contract
      *
      * @param composite        the composite component to resolve against
      * @param component        the component to resolve
@@ -188,10 +205,10 @@ public class DefaultWireResolver implements WireResolver {
      * @throws AutowireTargetNotFoundException
      *          if an errror resolving occurs
      */
-    private URI resolveReference(LogicalComponent<?> composite,
-                                 LogicalComponent component,
-                                 String referenceName,
-                                 ServiceContract requiredContract) throws AutowireTargetNotFoundException {
+    private URI resolveByType(LogicalComponent<?> composite,
+                              LogicalComponent component,
+                              String referenceName,
+                              ServiceContract requiredContract) throws AutowireTargetNotFoundException {
         // for now, attempt to match on interface, assume the class can be loaded
         Class<?> requiredInterface = requiredContract.getInterfaceClass();
         if (requiredInterface == null) {
