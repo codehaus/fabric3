@@ -1,0 +1,13 @@
+<projectDescription>
+  <name>fabric3-tutorial-loanapp-client</name>
+  <comment>Fabric3 Loan Application Sample Client.</comment>
+  <projects/>
+  <buildSpec>
+    <buildCommand>
+      <name>org.eclipse.jdt.core.javabuilder</name>
+    </buildCommand>
+  </buildSpec>
+  <natures>
+    <nature>org.eclipse.jdt.core.javanature</nature>
+  </natures>
+</projectDescription>
