@@ -35,7 +35,6 @@ import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilder;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderException;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
-import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.pojo.reflection.ReflectiveInstanceFactoryProvider;
 import org.fabric3.spi.model.instance.ValueSource;
 
@@ -81,7 +80,8 @@ public class GroovyInstanceFactoryBuilder<T>
                                                             ctrInjectSites,
                                                             injectionSites,
                                                             initMethod,
-                                                            destroyMethod);
+                                                            destroyMethod,
+                                                            gcl);
         } catch (ClassNotFoundException e) {
             throw new InstanceFactoryBuilderException(e);
         } catch (NoSuchMethodException ex) {
