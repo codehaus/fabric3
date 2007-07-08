@@ -1,0 +1,15 @@
+<projectDescription>
+  <name>standalone-host</name>
+  <comment>Fabric3 Standalone Runtime Host.</comment>
+  <projects>
+    <project>standalone-api</project>
+  </projects>
+  <buildSpec>
+    <buildCommand>
+      <name>org.eclipse.jdt.core.javabuilder</name>
+    </buildCommand>
+  </buildSpec>
+  <natures>
+    <nature>org.eclipse.jdt.core.javanature</nature>
+  </natures>
+</projectDescription>
