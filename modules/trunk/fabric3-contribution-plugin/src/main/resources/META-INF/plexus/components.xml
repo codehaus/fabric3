@@ -18,6 +18,16 @@
 <component-set>
     <components>
         <component>
+            <role>org.apache.maven.artifact.handler.ArtifactHandler</role>
+            <role-hint>sca-contribution</role-hint>
+            <implementation>org.apache.maven.artifact.handler.DefaultArtifactHandler</implementation>
+            <configuration>
+                <type>sca-contribution</type>
+                <extension>zip</extension>
+                <includesDependencies>true</includesDependencies>
+            </configuration>
+        </component>    
+        <component>
             <role>org.apache.maven.lifecycle.mapping.LifecycleMapping</role>
             <role-hint>sca-contribution</role-hint>
             <implementation>org.apache.maven.lifecycle.mapping.DefaultLifecycleMapping</implementation>
@@ -28,7 +38,7 @@
                     <process-test-resources>org.apache.maven.plugins:maven-resources-plugin:testResources</process-test-resources>
                     <test-compile>org.apache.maven.plugins:maven-compiler-plugin:testCompile</test-compile>
                     <test>org.apache.maven.plugins:maven-surefire-plugin:test</test>
-                    <package>org.codehaus.fabric3:fabrci3-contribution-plugin:package</package>
+                    <package>org.codehaus.fabric3:fabric3-contribution-plugin:package</package>
                     <integration-test>org.codehaus.fabric3:fabric3-itest-plugin:test</integration-test>
                     <install>org.apache.maven.plugins:maven-install-plugin:install</install>
                     <deploy>org.apache.maven.plugins:maven-deploy-plugin:deploy</deploy>

@@ -17,9 +17,18 @@
 package org.fabric3.contribution;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
+import java.util.Iterator;
+import java.util.Set;
 
 import org.apache.maven.archiver.MavenArchiveConfiguration;
 import org.apache.maven.archiver.MavenArchiver;
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.resolver.filter.ScopeArtifactFilter;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -122,9 +131,11 @@ public class Fabric3ContributionMojo extends AbstractMojo {
         try {
             File contentDirectory = classesDirectory;
             if (!contentDirectory.exists()) {
-                getLog().warn("JAR will be empty - no content was marked for inclusion!");
+                throw new FileNotFoundException(String.format("Unable to package contribution, %s does not exist.",contentDirectory));
             } else {
-                archiver.getArchiver().addDirectory(contentDirectory, DEFAULT_INCLUDES, DEFAULT_EXCLUDES);
+            	handleContributionFile(contentDirectory);
+            	includeDependencies(contentDirectory);
+            	archiver.getArchiver().addDirectory(contentDirectory, DEFAULT_INCLUDES, DEFAULT_EXCLUDES);
             }
 
             archiver.createArchive(project, archive);
@@ -137,12 +148,43 @@ public class Fabric3ContributionMojo extends AbstractMojo {
     }
 
     protected File getJarFile(File buildDir, String finalName, String classifier) {
+    	getLog().debug( "Calculating the archive file name");
         if (classifier != null) {
             classifier = classifier.trim();
             if (classifier.length() > 0) {
                 finalName = finalName + '-' + classifier;
             }
         }
-        return new File(buildDir, finalName + ".composite");
+        return new File(buildDir, finalName + ".zip");
+    }
+    
+    protected void handleContributionFile(File contentDirectory)throws FileNotFoundException{
+    	getLog().debug( "checking for sca-contribution.xml file");
+    	File contributionFile = new File(contentDirectory,"META-INF"+ File.separator + "sca-contribution.xml");
+    	if (!contributionFile.exists()){
+    		//generate sca-contribution-generated.xml?
+    		throw new FileNotFoundException(String.format("Missing sca-contribution.xml file %s",contributionFile));
+    	}
+    }
+    
+    protected void includeDependencies(File contentDirectory) throws FileNotFoundException, IOException{
+	 	getLog().debug( "including dependencies in archive");
+	 	//include all the dependencies that are required for runtime operation and are not sca-contributions(they
+	 	// will be deployed separately);
+	 	ScopeArtifactFilter filter = new ScopeArtifactFilter( Artifact.SCOPE_RUNTIME );
+        for (Artifact artifact : (Set<Artifact>)project.getArtifacts() ) {
+        	System.out.println("checking " + artifact.getArtifactId());
+        	boolean isSCAContribution = "sca-contribution".equals(artifact.getType());
+            if ( !isSCAContribution && !artifact.isOptional() && filter.include( artifact ) ) {
+            	getLog().debug( String.format("including dependency %s", artifact));
+            	File destinationFile = new File( contentDirectory, artifact.getFile().getName());
+            	getLog().debug(String.format("copying %s to %s", artifact.getFile(), destinationFile));
+            	FileChannel destChannel = new FileOutputStream(destinationFile).getChannel();
+            	FileChannel srcChannel = new FileInputStream(artifact.getFile()).getChannel();
+            	srcChannel.transferTo(0, srcChannel.size(), destChannel);
+            	destChannel.close();
+            	srcChannel.close();                
+            }
+        }
     }
 }
