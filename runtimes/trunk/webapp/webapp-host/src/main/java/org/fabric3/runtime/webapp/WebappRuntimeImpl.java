@@ -26,6 +26,7 @@ import javax.servlet.http.HttpSessionEvent;
 
 import org.fabric3.fabric.assembly.ActivateException;
 import org.fabric3.fabric.assembly.DistributedAssembly;
+import org.fabric3.fabric.implementation.composite.CompositeComponentTypeLoader;
 import org.fabric3.fabric.loader.LoaderContextImpl;
 import org.fabric3.fabric.runtime.AbstractRuntime;
 import static org.fabric3.fabric.runtime.ComponentNames.COMPOSITE_LOADER_URI;
@@ -33,7 +34,6 @@ import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.runtime.webapp.implementation.webapp.WebappComponent;
 import org.fabric3.spi.ObjectCreationException;
-import org.fabric3.spi.loader.ComponentTypeLoader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.model.type.ComponentDefinition;
@@ -79,9 +79,8 @@ public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implement
 //                    getSystemComponent(ClassLoaderRegistry.class, CLASSLOADER_REGISTRY_URI);
 //            classLoaderRegistry.register(URI.create("sca://./applicationClassLoader"), getHostClassLoader());
 
-            @SuppressWarnings("unchecked")
-            ComponentTypeLoader<CompositeImplementation> loader =
-                    getSystemComponent(ComponentTypeLoader.class, COMPOSITE_LOADER_URI);
+            CompositeComponentTypeLoader loader =
+                    getSystemComponent(CompositeComponentTypeLoader.class, COMPOSITE_LOADER_URI);
             LoaderContext loaderContext = new LoaderContextImpl(getHostClassLoader(), applicationScdl);
             loader.load(impl, loaderContext);
 

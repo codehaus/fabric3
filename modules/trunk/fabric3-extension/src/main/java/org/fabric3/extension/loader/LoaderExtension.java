@@ -66,7 +66,7 @@ public abstract class LoaderExtension<OUTPUT> implements StAXElementLoader<OUTPU
      */
     @Destroy
     public void stop() {
-        registry.unregisterLoader(getXMLType(), this);
+        registry.unregisterLoader(getXMLType());
     }
 
     /**

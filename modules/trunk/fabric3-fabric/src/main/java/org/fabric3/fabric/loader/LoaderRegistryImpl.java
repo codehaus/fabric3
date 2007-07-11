@@ -65,11 +65,14 @@ public class LoaderRegistryImpl implements LoaderRegistry {
     }
 
     public void registerLoader(QName element, StAXElementLoader<?> loader) {
+        if (loaders.containsKey(element)) {
+            throw new IllegalStateException("Loader already registered for " + element);
+        }
         monitor.registeringLoader(element);
         loaders.put(element, loader);
     }
 
-    public void unregisterLoader(QName element, StAXElementLoader<?> loader) {
+    public void unregisterLoader(QName element) {
         monitor.unregisteringLoader(element);
         loaders.remove(element);
     }

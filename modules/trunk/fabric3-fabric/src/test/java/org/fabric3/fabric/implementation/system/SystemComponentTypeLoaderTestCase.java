@@ -44,7 +44,7 @@ import org.fabric3.spi.model.type.ServiceDefinition;
  * @version $Rev$ $Date$
  */
 public class SystemComponentTypeLoaderTestCase extends TestCase {
-    private SystemComponentTypeLoader loader;
+    private SystemComponentTypeLoaderImpl loader;
 
     public void testIntrospectUnannotatedClass() throws ProcessingException {
         SystemImplementation impl = new SystemImplementation(BasicInterfaceImpl.class);
@@ -71,7 +71,7 @@ public class SystemComponentTypeLoaderTestCase extends TestCase {
         registry.registerProcessor(new ReferenceProcessor(interfaceProcessorRegistry));
         registry.registerProcessor(new ServiceProcessor(service));
         registry.registerProcessor(new HeuristicPojoProcessor(service));
-        loader = new SystemComponentTypeLoader(registry);
+        loader = new SystemComponentTypeLoaderImpl(registry);
     }
 
     public interface BasicInterface {

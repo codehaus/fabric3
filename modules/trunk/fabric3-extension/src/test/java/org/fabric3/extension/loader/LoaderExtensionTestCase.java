@@ -40,7 +40,7 @@ public class LoaderExtensionTestCase extends TestCase {
         LoaderRegistry registry = EasyMock.createMock(LoaderRegistry.class);
         registry.registerLoader(EasyMock.isA(QName.class), EasyMock.isA(Extension.class));
         EasyMock.expectLastCall();
-        registry.unregisterLoader(EasyMock.isA(QName.class), EasyMock.isA(Extension.class));
+        registry.unregisterLoader(EasyMock.isA(QName.class));
         EasyMock.expectLastCall();
         EasyMock.replay(registry);
         Extension loader = new Extension(registry);

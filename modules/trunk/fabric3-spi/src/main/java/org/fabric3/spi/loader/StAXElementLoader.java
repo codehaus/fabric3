@@ -31,13 +31,11 @@ public interface StAXElementLoader<OUTPUT> {
      * Deserialize an element in an XML stream. When this method returns the stream will be positioned on the
      * corresponding END_ELEMENT.
      *
-     * @param reader        the XML stream reader positioned on the applicable START_ELEMENT
-     * @param context       the context for the load operation
+     * @param reader  the XML stream reader positioned on the applicable START_ELEMENT
+     * @param context the context for the load operation
      * @return the deserialized object for that element
-     * @throws LoaderException if an error loading the type occurs
-     * @throws javax.xml.stream.XMLStreamException
-     *                         if an error reading the XML stream occurs
+     * @throws LoaderException    if an error loading the type occurs
+     * @throws XMLStreamException if an error reading the XML stream occurs
      */
-    OUTPUT load(XMLStreamReader reader, LoaderContext context)
-            throws XMLStreamException, LoaderException;
+    OUTPUT load(XMLStreamReader reader, LoaderContext context) throws XMLStreamException, LoaderException;
 }

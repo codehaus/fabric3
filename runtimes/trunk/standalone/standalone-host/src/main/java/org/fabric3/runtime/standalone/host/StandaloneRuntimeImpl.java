@@ -27,6 +27,7 @@ import java.util.Map;
 import org.fabric3.api.annotation.LogLevel;
 import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.fabric.assembly.DistributedAssembly;
+import org.fabric3.fabric.implementation.composite.CompositeComponentTypeLoader;
 import org.fabric3.fabric.implementation.java.JavaComponent;
 import org.fabric3.fabric.loader.LoaderContextImpl;
 import org.fabric3.fabric.monitor.JavaLoggingMonitorFactory;
@@ -42,7 +43,6 @@ import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.spi.loader.ComponentTypeLoader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.CompositeComponentType;
@@ -82,9 +82,8 @@ public class StandaloneRuntimeImpl extends AbstractRuntime<StandaloneHostInfo> i
         ComponentDefinition<CompositeImplementation> definition =
                 new ComponentDefinition<CompositeImplementation>("main", impl);
         try {
-            @SuppressWarnings("unchecked")
-            ComponentTypeLoader<CompositeImplementation> loader =
-                    getSystemComponent(ComponentTypeLoader.class, COMPOSITE_LOADER_URI);
+            CompositeComponentTypeLoader loader =
+                    getSystemComponent(CompositeComponentTypeLoader.class, COMPOSITE_LOADER_URI);
             DistributedAssembly assembly = getSystemComponent(DistributedAssembly.class, DISTRIBUTED_ASSEMBLY_URI);
             // deploy the components
             LoaderContext loaderContext = new LoaderContextImpl(applicationClassLoader, applicationScdl);

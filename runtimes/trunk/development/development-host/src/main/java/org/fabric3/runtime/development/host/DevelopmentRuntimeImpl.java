@@ -20,6 +20,7 @@ import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.fabric.assembly.BindException;
 import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.assembly.RuntimeAssembly;
+import org.fabric3.fabric.implementation.composite.CompositeComponentTypeLoader;
 import org.fabric3.fabric.loader.LoaderContextImpl;
 import org.fabric3.fabric.monitor.JavaLoggingMonitorFactory;
 import org.fabric3.fabric.runtime.AbstractRuntime;
@@ -33,13 +34,12 @@ import org.fabric3.host.runtime.StartException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.spi.loader.ComponentTypeLoader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.model.instance.LogicalBinding;
+import org.fabric3.spi.model.type.Autowire;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.CompositeImplementation;
 import org.fabric3.spi.model.type.Scope;
-import org.fabric3.spi.model.type.Autowire;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.ProxyService;
 import org.fabric3.spi.wire.Wire;
@@ -103,9 +103,8 @@ public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo>
         ComponentDefinition<CompositeImplementation> definition =
                 new ComponentDefinition<CompositeImplementation>("main", impl);
         try {
-            @SuppressWarnings("unchecked")
-            ComponentTypeLoader<CompositeImplementation> loader =
-                    getSystemComponent(ComponentTypeLoader.class, COMPOSITE_LOADER_URI);
+            CompositeComponentTypeLoader loader =
+                    getSystemComponent(CompositeComponentTypeLoader.class, COMPOSITE_LOADER_URI);
             LoaderContext loaderContext = new LoaderContextImpl(getHostClassLoader(), compositeFile);
             loader.load(impl, loaderContext);
             applicationAssembly.activate(definition, false);
@@ -131,9 +130,8 @@ public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo>
 
             ComponentDefinition<CompositeImplementation> definition =
                     new ComponentDefinition<CompositeImplementation>("extension", impl);
-            @SuppressWarnings("unchecked")
-            ComponentTypeLoader<CompositeImplementation> loader =
-                    getSystemComponent(ComponentTypeLoader.class, COMPOSITE_LOADER_URI);
+            CompositeComponentTypeLoader loader =
+                    getSystemComponent(CompositeComponentTypeLoader.class, COMPOSITE_LOADER_URI);
             LoaderContext loaderContext = new LoaderContextImpl(getHostClassLoader(), urls.get(0));
             loader.load(impl, loaderContext);
             definition.setAutowire(Autowire.ON);

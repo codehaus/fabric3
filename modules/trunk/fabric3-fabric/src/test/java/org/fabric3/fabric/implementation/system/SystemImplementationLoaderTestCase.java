@@ -26,7 +26,6 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
 import org.fabric3.spi.Constants;
-import org.fabric3.spi.loader.ComponentTypeLoader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderRegistry;
 
@@ -39,7 +38,7 @@ public class SystemImplementationLoaderTestCase extends TestCase {
     private LoaderRegistry registry;
     private LoaderContext context;
     private XMLStreamReader reader;
-    private ComponentTypeLoader<SystemImplementation> componentTypeLoader;
+    private SystemComponentTypeLoader componentTypeLoader;
     private SystemImplementationLoader loader;
 
     public void testLoad() throws Exception {
@@ -63,7 +62,7 @@ public class SystemImplementationLoaderTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         registry = EasyMock.createMock(LoaderRegistry.class);
-        componentTypeLoader = EasyMock.createMock(ComponentTypeLoader.class);
+        componentTypeLoader = EasyMock.createMock(SystemComponentTypeLoader.class);
 
         context = EasyMock.createMock(LoaderContext.class);
         EasyMock.expect(context.getTargetClassLoader()).andReturn(getClass().getClassLoader());

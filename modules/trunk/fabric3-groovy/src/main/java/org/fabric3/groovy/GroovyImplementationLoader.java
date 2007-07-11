@@ -62,7 +62,7 @@ public class GroovyImplementationLoader implements StAXElementLoader<GroovyImple
 
     @Destroy
     public void destroy() {
-        registry.unregisterLoader(GROOVY, this);
+        registry.unregisterLoader(GROOVY);
     }
 
     public GroovyImplementation load(XMLStreamReader reader, LoaderContext context)

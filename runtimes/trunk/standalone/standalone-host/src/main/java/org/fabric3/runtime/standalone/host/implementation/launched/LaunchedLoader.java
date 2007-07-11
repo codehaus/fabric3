@@ -23,11 +23,9 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.Reference;
-import org.osoa.sca.annotations.Constructor;
 
 import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.spi.Constants;
-import org.fabric3.spi.loader.ComponentTypeLoader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
@@ -39,11 +37,10 @@ import org.fabric3.spi.loader.LoaderUtil;
 public class LaunchedLoader extends LoaderExtension<Launched> {
     private static final QName LAUNCHED = new QName(Constants.FABRIC3_NS, "launched");
 
-    private final ComponentTypeLoader<Launched> componentTypeLoader;
+    private final LaunchedComponentTypeLoader componentTypeLoader;
 
-    @Constructor({"loaderRegistry", "componentTypeLoader"})
     public LaunchedLoader(@Reference LoaderRegistry registry,
-                          @Reference ComponentTypeLoader<Launched> componentTypeLoader) {
+                          @Reference LaunchedComponentTypeLoader componentTypeLoader) {
         super(registry);
         this.componentTypeLoader = componentTypeLoader;
     }

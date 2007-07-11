@@ -27,11 +27,10 @@
 
     <component name="org.fabric3.runtime.standalone.host.implementation.launched.LaunchedLoader">
         <system:implementation.system class="org.fabric3.runtime.standalone.host.implementation.launched.LaunchedLoader"/>
-        <reference name="componentTypeLoader" target="org.fabric3.runtime.standalone.host.implementation.launched.LaunchedComponentTypeLoader"/>
     </component>
 
-    <component name="org.fabric3.runtime.standalone.host.implementation.launched.LaunchedComponentTypeLoader">
-        <system:implementation.system class="org.fabric3.runtime.standalone.host.implementation.launched.LaunchedComponentTypeLoader"/>
+    <component name="org.fabric3.runtime.standalone.host.implementation.launched.LaunchedComponentTypeLoaderImpl">
+        <system:implementation.system class="org.fabric3.runtime.standalone.host.implementation.launched.LaunchedComponentTypeLoaderImpl"/>
     </component>
 
     <component name="launchedGenerator">

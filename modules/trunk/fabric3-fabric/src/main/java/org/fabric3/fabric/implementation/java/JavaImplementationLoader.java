@@ -23,11 +23,9 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import static org.osoa.sca.Constants.SCA_NS;
-import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.extension.loader.LoaderExtension;
-import org.fabric3.spi.loader.ComponentTypeLoader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
@@ -36,12 +34,11 @@ import org.fabric3.spi.loader.LoaderUtil;
 public class JavaImplementationLoader extends LoaderExtension<JavaImplementation> {
     public static final QName IMPLEMENTATION_JAVA = new QName(SCA_NS, "implementation.java");
 
-    private final ComponentTypeLoader<JavaImplementation> componentTypeLoader;
+    private final JavaComponentTypeLoader componentTypeLoader;
 
 
-    @Constructor({"loaderRegistry", "componentTypeLoader"})
     public JavaImplementationLoader(@Reference LoaderRegistry registry,
-                                    @Reference ComponentTypeLoader<JavaImplementation> componentTypeLoader) {
+                                    @Reference JavaComponentTypeLoader componentTypeLoader) {
         super(registry);
         this.componentTypeLoader = componentTypeLoader;
     }

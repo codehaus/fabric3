@@ -36,7 +36,7 @@
     </component>
     <component name="composite.componentTypeLoader">
         <system:implementation.system
-                class="org.fabric3.fabric.implementation.composite.CompositeComponentTypeLoader"/>
+                class="org.fabric3.fabric.implementation.composite.CompositeComponentTypeLoaderImpl"/>
     </component>
 
     <component name="composite.implementationLoader">

@@ -44,7 +44,7 @@ public class JavaComponentTypeLoaderTestCase extends TestCase {
             }
         });
         EasyMock.replay(registry);
-        JavaComponentTypeLoader loader = new JavaComponentTypeLoader(null, registry);
+        JavaComponentTypeLoaderImpl loader = new JavaComponentTypeLoaderImpl(registry);
         loader.loadByIntrospection(new JavaImplementation(), null);
         EasyMock.verify(registry);
     }

@@ -56,7 +56,7 @@ public class StAXLoaderRegistryImplTestCase extends TestCase {
     public void testLoaderUnregistration() {
         mockMonitor.unregisteringLoader(EasyMock.eq(name));
         EasyMock.replay(mockMonitor);
-        registry.unregisterLoader(name, mockLoader);
+        registry.unregisterLoader(name);
         EasyMock.verify(mockMonitor);
     }
 

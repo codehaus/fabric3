@@ -22,11 +22,10 @@
 
     <component name="org.fabric3.itest.implementation.junit.ImplementationJUnitLoader">
         <system:implementation.system class="org.fabric3.itest.implementation.junit.ImplementationJUnitLoader"/>
-        <reference name="componentTypeLoader" target="org.fabric3.itest.implementation.junit.JUnitComponentTypeLoader"/>
     </component>
 
-    <component name="org.fabric3.itest.implementation.junit.JUnitComponentTypeLoader">
-        <system:implementation.system class="org.fabric3.itest.implementation.junit.JUnitComponentTypeLoader"/>
+    <component name="org.fabric3.itest.implementation.junit.JUnitComponentTypeLoaderImpl">
+        <system:implementation.system class="org.fabric3.itest.implementation.junit.JUnitComponentTypeLoaderImpl"/>
     </component>
 
     <component name="org.fabric3.itest.implementation.junit.JUnitComponentGenerator">

@@ -56,6 +56,7 @@ import org.fabric3.fabric.idl.java.InterfaceJavaLoader;
 import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
 import org.fabric3.fabric.implementation.IntrospectionRegistryImpl;
 import org.fabric3.fabric.implementation.composite.CompositeComponentTypeLoader;
+import org.fabric3.fabric.implementation.composite.CompositeComponentTypeLoaderImpl;
 import org.fabric3.fabric.implementation.composite.CompositeLoader;
 import org.fabric3.fabric.implementation.processor.ConstructorProcessor;
 import org.fabric3.fabric.implementation.processor.DestroyProcessor;
@@ -76,7 +77,7 @@ import org.fabric3.fabric.implementation.singleton.SingletonWireAttacher;
 import org.fabric3.fabric.implementation.singleton.SingletonWireTargetDefinition;
 import org.fabric3.fabric.implementation.system.SystemComponentBuilder;
 import org.fabric3.fabric.implementation.system.SystemComponentGenerator;
-import org.fabric3.fabric.implementation.system.SystemComponentTypeLoader;
+import org.fabric3.fabric.implementation.system.SystemComponentTypeLoaderImpl;
 import org.fabric3.fabric.implementation.system.SystemImplementationLoader;
 import org.fabric3.fabric.implementation.system.SystemWireAttacher;
 import org.fabric3.fabric.loader.ComponentLoader;
@@ -125,10 +126,10 @@ import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
+import org.fabric3.spi.model.type.Autowire;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.CompositeImplementation;
 import org.fabric3.spi.model.type.ServiceContract;
-import org.fabric3.spi.model.type.Autowire;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
@@ -188,7 +189,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         // load the system composite
         try {
             impl = new CompositeImplementation();
-            CompositeComponentTypeLoader compositeTypeLoader = new CompositeComponentTypeLoader(loader);
+            CompositeComponentTypeLoader compositeTypeLoader = new CompositeComponentTypeLoaderImpl(loader);
             LoaderContext loaderContext = new LoaderContextImpl(classLoaderRegistry.getClassLoader(BOOT_CLASSLOADER_ID),
                                                                 scdlLocation);
             compositeTypeLoader.load(impl, loaderContext);
@@ -360,7 +361,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         registerLoader(loaderRegistry, new PropertyLoader(loaderRegistry));
         registerLoader(loaderRegistry, new ReferenceLoader(loaderRegistry));
         registerLoader(loaderRegistry, new ServiceLoader(loaderRegistry));
-        SystemComponentTypeLoader componentTypeLoader = new SystemComponentTypeLoader(introspector);
+        SystemComponentTypeLoaderImpl componentTypeLoader = new SystemComponentTypeLoaderImpl(introspector);
         registerLoader(loaderRegistry, new SystemImplementationLoader(loaderRegistry, componentTypeLoader));
         registerLoader(loaderRegistry, new MarshallerLoader(loaderRegistry, introspector));
         registerLoader(loaderRegistry, new FeatureLoader(loaderRegistry, introspector));

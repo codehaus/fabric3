@@ -55,6 +55,7 @@ import org.apache.maven.surefire.suite.SurefireTestSuite;
 import org.apache.maven.surefire.testset.TestSetFailedException;
 
 import org.fabric3.api.annotation.LogLevel;
+import org.fabric3.fabric.implementation.composite.CompositeComponentTypeLoader;
 import org.fabric3.fabric.loader.LoaderContextImpl;
 import static org.fabric3.fabric.runtime.ComponentNames.COMPOSITE_LOADER_URI;
 import org.fabric3.fabric.runtime.ScdlBootstrapperImpl;
@@ -63,13 +64,12 @@ import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ScdlBootstrapper;
-import org.fabric3.host.runtime.StartException;
 import org.fabric3.host.runtime.ShutdownException;
+import org.fabric3.host.runtime.StartException;
 import org.fabric3.itest.implementation.junit.ImplementationJUnit;
-import org.fabric3.spi.deployer.CompositeClassLoader;
 import org.fabric3.pojo.processor.JavaMappedService;
 import org.fabric3.pojo.processor.PojoComponentType;
-import org.fabric3.spi.loader.ComponentTypeLoader;
+import org.fabric3.spi.deployer.CompositeClassLoader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.CompositeComponentType;
@@ -259,9 +259,8 @@ public class Fabric3ITestMojo extends AbstractMojo {
                 ComponentDefinition<CompositeImplementation> definition =
                         new ComponentDefinition<CompositeImplementation>(testComponentName, impl);
 
-                @SuppressWarnings("unchecked")
-                ComponentTypeLoader<CompositeImplementation> loader =
-                        runtime.getSystemComponent(ComponentTypeLoader.class, COMPOSITE_LOADER_URI);
+                CompositeComponentTypeLoader loader =
+                        runtime.getSystemComponent(CompositeComponentTypeLoader.class, COMPOSITE_LOADER_URI);
 
                 LoaderContext loaderContext = new LoaderContextImpl(testClassLoader, testScdl.toURI().toURL());
                 loader.load(impl, loaderContext);

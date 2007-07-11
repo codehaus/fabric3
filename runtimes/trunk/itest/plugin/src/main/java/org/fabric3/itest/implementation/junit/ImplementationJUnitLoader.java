@@ -23,11 +23,9 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.Reference;
-import org.osoa.sca.annotations.Constructor;
 
 import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.spi.Constants;
-import org.fabric3.spi.loader.ComponentTypeLoader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
@@ -39,11 +37,10 @@ import org.fabric3.spi.loader.LoaderUtil;
 public class ImplementationJUnitLoader extends LoaderExtension<ImplementationJUnit> {
     private static final QName JUNIT = new QName(Constants.FABRIC3_NS, "junit");
 
-    private final ComponentTypeLoader<ImplementationJUnit> componentTypeLoader;
+    private final JUnitComponentTypeLoader componentTypeLoader;
 
-    @Constructor({"loaderRegistry", "componentTypeLoader"})
     public ImplementationJUnitLoader(@Reference LoaderRegistry registry,
-                                     @Reference ComponentTypeLoader<ImplementationJUnit> componentTypeLoader) {
+                                     @Reference JUnitComponentTypeLoader componentTypeLoader) {
         super(registry);
         this.componentTypeLoader = componentTypeLoader;
     }

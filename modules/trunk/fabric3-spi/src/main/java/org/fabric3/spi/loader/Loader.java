@@ -56,6 +56,5 @@ public interface Loader {
      * @throws LoaderException    if there was a problem loading the document
      * @throws ClassCastException if the XML type cannot be cast to the expected output type
      */
-    <OUTPUT> OUTPUT load(URL url, Class<OUTPUT> type, LoaderContext context)
-            throws LoaderException;
+    <OUTPUT> OUTPUT load(URL url, Class<OUTPUT> type, LoaderContext context) throws LoaderException;
 }
