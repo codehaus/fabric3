@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.JarURLConnection;
 import java.net.URL;
+import java.net.URLClassLoader;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
@@ -32,7 +33,8 @@ public class JarResourceFactory implements FileSystemResourceFactory {
         }
         JarURLConnection conn;
         try {
-            URL url = new URL("jar:file://" + file.getCanonicalPath() + "!/META-INF/sca-contribution.xml");
+            ClassLoader cl = new URLClassLoader(new URL[] {file.toURL()});
+            URL url = cl.getResource("/META-INF/sca-contribution.xml");
             conn = (JarURLConnection) url.openConnection();
             if (conn.getJarEntry() == null) {
                 // not a contribution archive, ignore

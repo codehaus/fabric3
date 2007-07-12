@@ -1,7 +1,9 @@
 <projectDescription>
   <name>fabric3-fabric</name>
   <comment>Fabric3 Core Fabric.</comment>
-  <projects/>
+  <projects>
+    <project>fabric3-spi</project>
+  </projects>
   <buildSpec>
     <buildCommand>
       <name>org.eclipse.jdt.core.javabuilder</name>
