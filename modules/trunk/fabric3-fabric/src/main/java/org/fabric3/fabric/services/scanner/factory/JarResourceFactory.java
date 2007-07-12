@@ -42,7 +42,7 @@ public class JarResourceFactory implements FileSystemResourceFactory {
             // no sca-contribution, ignore
             return null;
         } catch (IOException e) {
-            throw new AssertionError();
+            throw new AssertionError(e);
         }
         return new FileResource(file);
     }
