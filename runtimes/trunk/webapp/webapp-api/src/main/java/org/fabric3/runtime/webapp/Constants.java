@@ -48,7 +48,7 @@ public final class Constants {
     /**
      * Default application SCDL path.
      */
-    public static final String APPLICATION_SCDL_PATH_DEFAULT = "/WEB-INF/default.scdl";
+    public static final String APPLICATION_SCDL_PATH_DEFAULT = "/WEB-INF/web.composite";
 
     /**
      * Servlet context-param name for setting if the runtime is online.
@@ -109,7 +109,7 @@ public final class Constants {
     /**
      * Default webapp system SCDL path.
      */
-    static final String SYSTEM_SCDL_PATH_DEFAULT = "META-INF/fabric3/webapp.scdl";
+    static final String SYSTEM_SCDL_PATH_DEFAULT = "META-INF/fabric3/webapp.composite";
 
     /**
      * Context attribute to which the Fabric3 runtime for this servlet context is stored.

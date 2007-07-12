@@ -129,7 +129,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
      * the test/resources directory and be copied by the resource plugin; this allows property substitution if
      * required.
      *
-     * @parameter expression="${project.build.testOutputDirectory}/itest.scdl"
+     * @parameter expression="${project.build.testOutputDirectory}/itest.composite"
      */
     public File testScdl;
 
@@ -211,7 +211,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
         ClassLoader cl = createHostClassLoader(getClass().getClassLoader(), extensions);
         Thread.currentThread().setContextClassLoader(cl);
         if (systemScdl == null) {
-            systemScdl = cl.getResource("META-INF/fabric3/embeddedMaven.scdl");
+            systemScdl = cl.getResource("META-INF/fabric3/embeddedMaven.composite");
         }
 
         log.info("Starting Embedded Fabric3 Runtime ...");

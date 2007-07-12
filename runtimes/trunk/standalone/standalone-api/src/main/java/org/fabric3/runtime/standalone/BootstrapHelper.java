@@ -312,7 +312,7 @@ public final class BootstrapHelper {
         // locate the system SCDL
         File profileDir = hostInfo.getProfileDirectory();
         URL profileURL = toURL(profileDir);
-        URL systemSCDL = new URL(profileURL, hostInfo.getProperty("fabric3.systemSCDL", "system.scdl"));
+        URL systemSCDL = new URL(profileURL, hostInfo.getProperty("fabric3.systemSCDL", "system.composite"));
 
         // locate the implementation
         String className = hostInfo.getProperty("fabric3.bootstrapperClass",

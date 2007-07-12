@@ -22,12 +22,10 @@
            autowire="true">
            
     <!-- Include system SCDL -->
-    <include name="org.fabric3.fabric.SystemImplementation"
-             scdlResource="META-INF/fabric3/embeddedMaven.scdl"/>
+    <include name="org.fabric3.fabric.SystemImplementation" scdlResource="META-INF/fabric3/embeddedMaven.composite"/>
 
     <!-- Include Burlap extension SCDL -->
-    <include name="org.fabric3.binding.BurlapExtension"
-             scdlResource="META-INF/burlap.scdl"/>
+    <include name="org.fabric3.binding.BurlapExtension" scdlResource="META-INF/burlap.composite"/>
 
     <!-- Jetty service -->
     <component name="JettyService">

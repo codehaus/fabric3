@@ -304,6 +304,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/tests/binding-burlap-test/binding-burlap-test.iml" filepath="$PROJECT_DIR$/tests/binding-burlap-test/binding-burlap-test.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/binding-hessian-test/binding-hessian-test.iml" filepath="$PROJECT_DIR$/tests/binding-hessian-test/binding-hessian-test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tests/binding-jms-test/binding-jms-test.iml" filepath="$PROJECT_DIR$/tests/binding-jms-test/binding-jms-test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tests/binding-ws-test/binding-ws-test.iml" filepath="$PROJECT_DIR$/tests/binding-ws-test/binding-ws-test.iml" />
       <module fileurl="file://$PROJECT_DIR$/demo/assembly/demo-assembly.iml" filepath="$PROJECT_DIR$/demo/assembly/demo-assembly.iml" />
       <module fileurl="file://$PROJECT_DIR$/demo/calculator/demo-calculator.iml" filepath="$PROJECT_DIR$/demo/calculator/demo-calculator.iml" />
       <module fileurl="file://$PROJECT_DIR$/demo/controller/demo-controller.iml" filepath="$PROJECT_DIR$/demo/controller/demo-controller.iml" />

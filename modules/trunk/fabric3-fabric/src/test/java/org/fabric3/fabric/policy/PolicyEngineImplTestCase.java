@@ -65,7 +65,7 @@ public class PolicyEngineImplTestCase extends TestCase {
     protected void setUp() throws Exception {
         PolicySetLoader loader = new PolicySetLoader(null);
         XMLInputFactory factory = XMLInputFactory.newInstance();
-        InputStream resourceAsStream = this.getClass().getResourceAsStream("PolicySet.scdl");
+        InputStream resourceAsStream = this.getClass().getResourceAsStream("PolicySet.composite");
         XMLStreamReader reader = factory.createXMLStreamReader(resourceAsStream);
         PolicySetContainerImpl psc = new PolicySetContainerImpl();
         while (true) {

@@ -128,7 +128,7 @@ public class IncludeLoaderTestCase extends TestCase {
 
     public void testWithScdlResource() throws LoaderException, XMLStreamException {
         String name = "foo";
-        String resource = "org/fabric3/fabric/loader/test-include.scdl";
+        String resource = "org/fabric3/fabric/loader/test-include.composite";
         includeURL = cl.getResource(resource);
         assertNotNull(includeURL);
 

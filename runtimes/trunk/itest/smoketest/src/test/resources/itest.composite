@@ -21,7 +21,7 @@
            xmlns:fabric3="http://fabric3.org/xmlns/sca/2.0-alpha"
            name="TestHarnessComposite">
 
-    <include name="ITestSmoketestComposite" scdlResource="META-INF/sca/default.scdl"/>
+    <include name="ITestSmoketestComposite" scdlResource="META-INF/sca/default.composite"/>
 
     <component name="testComponent">
         <fabric3:junit class="org.fabric3.itest.smoketest.BasicTestComponent"/>

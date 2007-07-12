@@ -18,17 +18,27 @@
  * under the License.    
 -->
 <!--
-    Test for stax.
+    Default system configuration for the launcher environment.
     
     $Rev$ $Date$
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
-           name="test.scdl">
+           name="org.fabric3.fabric.Composite"
+           autowire="true">
 
-    <component name="test.component">
-        <system:implementation.system class="test.class"/>
-        <property name="testProperty">123</property>
+    <!-- Composite implementation type -->
+    <component name="composite.loader">
+        <system:implementation.system class="org.fabric3.fabric.implementation.composite.CompositeLoader"/>
+    </component>
+    <component name="composite.dependencyLoader">
+        <system:implementation.system class="org.fabric3.fabric.loader.DependencyLoader"/>
+    </component>
+    <component name="composite.componentTypeLoader">
+        <system:implementation.system class="org.fabric3.fabric.implementation.composite.CompositeComponentTypeLoaderImpl"/>
+    </component>
+    <component name="composite.implementationLoader">
+        <system:implementation.system class="org.fabric3.fabric.implementation.composite.ImplementationCompositeLoader"/>
     </component>
 
 </composite>

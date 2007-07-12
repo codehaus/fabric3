@@ -22,11 +22,9 @@
            autowire="true">
            
     <!-- Include system SCDL -->
-    <include name="org.fabric3.fabric.SystemImplementation"
-             scdlResource="META-INF/fabric3/embeddedMaven.scdl"/>
+    <include name="org.fabric3.fabric.SystemImplementation" scdlResource="META-INF/fabric3/embeddedMaven.composite"/>
 
     <!-- Include jms extension SCDL -->
-    <include name="org.fabric3.binding.JmsExtension"
-             scdlResource="META-INF/jms.scdl"/>
+    <include name="org.fabric3.binding.JmsExtension" scdlResource="META-INF/jms.composite"/>
              
 </composite>

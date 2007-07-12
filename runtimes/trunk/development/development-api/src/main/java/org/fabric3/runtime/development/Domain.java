@@ -61,7 +61,7 @@ import org.fabric3.runtime.development.host.DevelopmentRuntime;
  */
 public class Domain {
     public static final String FABRIC3_DEV_HOME = "fabric3.dev.home";
-    public static final String SYSTEM_SCDL = "/system/system.scdl";
+    public static final String SYSTEM_SCDL = "/system/system.composite";
     public static final URI DOMAIN_URI = URI.create("fabric3://./domain");
 
     private DevelopmentRuntime runtime;

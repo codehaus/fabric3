@@ -22,12 +22,10 @@
            autowire="true">
            
     <!-- Include system SCDL -->
-    <include name="org.fabric3.fabric.SystemImplementation"
-             scdlResource="META-INF/fabric3/embeddedMaven.scdl"/>
+    <include name="org.fabric3.fabric.SystemImplementation" scdlResource="META-INF/fabric3/embeddedMaven.composite"/>
 
     <!-- Include hessian extension SCDL -->
-    <include name="org.fabric3.binding.HessianExtension"
-             scdlResource="META-INF/hessian.scdl"/>
+    <include name="org.fabric3.binding.HessianExtension" scdlResource="META-INF/hessian.composite"/>
              
     <!-- Jetty service -->
     <component name="JettyService">

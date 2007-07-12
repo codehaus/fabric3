@@ -82,8 +82,8 @@ public class WebappRuntimeImplTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        systemScdl = getClass().getResource("/META-INF/fabric3/webapp.scdl");
-        applicationScdl = getClass().getResource("/testapp.scdl");
+        systemScdl = getClass().getResource("/META-INF/fabric3/webapp.composite");
+        applicationScdl = getClass().getResource("/testapp.composite");
         context = createMock(ServletContext.class);
 
         runtime = new WebappRuntimeImpl();

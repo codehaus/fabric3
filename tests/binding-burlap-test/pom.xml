@@ -89,12 +89,12 @@
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-itest-plugin</artifactId>
                 <configuration>
-                    <systemScdl>file:target/classes/META-INF/testSystem.scdl</systemScdl>
+                    <systemScdl>file:target/classes/META-INF/testSystem.composite</systemScdl>
                     <extensions>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-binding-burlap</artifactId>
-                            <version>0.1</version>
+                            <version>0.2-SNAPSHOT</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>

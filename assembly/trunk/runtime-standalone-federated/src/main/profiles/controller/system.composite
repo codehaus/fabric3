@@ -28,43 +28,43 @@
            autowire="true">
 
     <!-- include physical deployment configuration -->
-    <include name="org.fabric3.fabric.Common" scdlResource="org/fabric3/fabric/common.scdl"/>
-
-<!-- include host services configuration -->
-    <include name="org.fabric3.fabric.HostServices" scdlResource="org/fabric3/fabric/hostServices.scdl"/>
+    <include name="org.fabric3.fabric.Common" scdlResource="org/fabric3/fabric/common.composite"/>
+    
+    <!-- include host services configuration -->
+    <include name="org.fabric3.fabric.HostServices" scdlResource="org/fabric3/fabric/hostServices.composite"/>
 
     <!-- include exception formatters  -->
-    <include name="org.fabric3.fabric.Formatters" scdlResource="org/fabric3/fabric/formatters.scdl"/>
+    <include name="org.fabric3.fabric.Formatters" scdlResource="org/fabric3/fabric/formatters.composite"/>
 
     <!-- include physical deployment configuration -->
-    <include name="org.fabric3.fabric.Physical" scdlResource="org/fabric3/fabric/physical.scdl"/>
+    <include name="org.fabric3.fabric.Physical" scdlResource="org/fabric3/fabric/physical.composite"/>
 
     <!-- include loader configuration -->
-    <include name="org.fabric3.fabric.Loader" scdlResource="org/fabric3/fabric/loader.scdl"/>
+    <include name="org.fabric3.fabric.Loader" scdlResource="org/fabric3/fabric/loader.composite"/>
 
     <!-- include implementation processor configuration -->
-    <include name="org.fabric3.fabric.Implementation" scdlResource="org/fabric3/fabric/implementation.scdl"/>
+    <include name="org.fabric3.fabric.Implementation" scdlResource="org/fabric3/fabric/implementation.composite"/>
 
     <!-- Java interface definition language -->
-    <include name="org.fabric3.fabric.InterfaceJava" scdlResource="org/fabric3/fabric/interfaceJava.scdl"/>
+    <include name="org.fabric3.fabric.InterfaceJava" scdlResource="org/fabric3/fabric/interfaceJava.composite"/>
 
     <!-- include omposite implementation type -->
-    <include name="org.fabric3.fabric.Composite" scdlResource="org/fabric3/fabric/composite.scdl"/>
+    <include name="org.fabric3.fabric.Composite" scdlResource="org/fabric3/fabric/composite.composite"/>
 
     <!-- Pojo implementation type -->
-    <include name="org.fabric3.fabric.PojoImplementation" scdlResource="org/fabric3/fabric/pojoImplementation.scdl"/>
+    <include name="org.fabric3.fabric.PojoImplementation" scdlResource="org/fabric3/fabric/pojoImplementation.composite"/>
 
     <!-- System implementation type -->
-    <include name="org.fabric3.fabric.SystemImplementation" scdlResource="org/fabric3/fabric/systemImplementation.scdl"/>
+    <include name="org.fabric3.fabric.SystemImplementation" scdlResource="org/fabric3/fabric/systemImplementation.composite"/>
 
     <!-- Java implementation type -->
-    <include name="org.fabric3.fabric.JavaImplementation" scdlResource="org/fabric3/fabric/javaImplementation.scdl"/>
+    <include name="org.fabric3.fabric.JavaImplementation" scdlResource="org/fabric3/fabric/javaImplementation.composite"/>
 
     <!-- include deployment configuration -->
-    <include name="org.fabric3.fabric.Deployment" scdlResource="org/fabric3/fabric/deployment.scdl"/>
+    <include name="org.fabric3.fabric.Deployment" scdlResource="org/fabric3/fabric/deployment.composite"/>
 
     <!-- include transform configuration -->
-    <include name="org.fabric3.transform.Transform" scdlResource="org/fabric3/transform/transform.scdl"/>
+    <include name="org.fabric3.transform.Transform" scdlResource="org/fabric3/transform/transform.composite"/>
 
     <!-- JXTA Network Configurator -->
     <component name="jxtaNetworkConfigurator">
@@ -94,6 +94,15 @@
         <system:implementation.system class="org.fabric3.discovery.jxta.JxtaDiscoveryService"/>
     </component>
 
+
+    <!-- component that scans the extension directory -->
+    <component name="directoryScanExtender" initLevel="90">
+        <system:implementation.system class="org.fabric3.runtime.standalone.host.DirectoryScanExtender"/>
+        <!-- JFM FIXME
+        <property name="path">extensions</property>
+        -->
+    </component>
+
     <component name="launchedLoader">
         <system:implementation.system class="org.fabric3.runtime.standalone.host.implementation.launched.LaunchedLoader"/>
     </component>
@@ -106,28 +115,22 @@
         <system:implementation.system class="org.fabric3.fabric.builder.WiringExceptionFormatter"/>
     </component>
 
-    <component name="loaderExceptionFormatter">
-        <system:implementation.system class="org.fabric3.fabric.loader.LoaderExceptionFormatter"/>
-    </component>
-
-    <component name="incompatibleServiceContractExceptionFormatter">
-        <system:implementation.system class="org.fabric3.fabric.wire.IncompatibleServiceContractExceptionFormatter"/>
-    </component>
-
     <!-- Marshhaler registry-->
     <component name="marshallerRegistry">
         <system:implementation.system
                 class="org.fabric3.fabric.marshaller.xstream.XStreamMarshallerRegistry"/>
     </component>
 
+    <!-- Console -->
+    <include name="org.apache.tuscany.sca.console" scdlResource="org/fabric3/console/console.composite"/>
+
+    <!-- Jetty service -->
     <component name="JettyService">
-        <system:implementation.system class="org.fabric3.jetty.JettyServiceImpl"/>
-        <property name="httpPort">8101</property>
+            <system:implementation.system class="org.fabric3.jetty.JettyServiceImpl"/>
     </component>
 
- 	 <component name="assemblyRecoveryService">
+    <component name="assemblyRecoveryService">
         <system:implementation.system class="org.fabric3.fabric.assembly.store.AssemblyStoreImpl"/>
     </component>
-
 
 </composite>

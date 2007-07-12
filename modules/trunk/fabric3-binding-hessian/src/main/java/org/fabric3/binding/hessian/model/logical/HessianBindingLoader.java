@@ -41,7 +41,7 @@ public class HessianBindingLoader extends LoaderExtension<HessianBindingDefiniti
 
     /** Qualified name for the binding element. */
     private static final QName BINDING_QNAME = 
-        new QName("http://www.fabric3.org/binding/hessian/0.1-SNAPSHOT", "binding.hessian");
+        new QName("http://www.fabric3.org/binding/hessian/0.1", "binding.hessian");
     
     /**
      * Injects the registry.

@@ -17,9 +17,20 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           name="FunctionTestHarnessComposite">
+           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           name="WsTestSystemScdl"
+           autowire="true">
+           
+    <!-- Include system SCDL -->
+    <include name="org.fabric3.fabric.SystemImplementation" scdlResource="META-INF/fabric3/embeddedMaven.composite"/>
 
-    <include name="SmokeTestComposite" scdlLocation="smoketest.scdl"/>
-    <include name="ConversationComposite" scdlLocation="conversation.scdl"/>
-    <include name="PropertiesComposite" scdlLocation="properties.scdl"/>
+    <!-- Include hessian extension SCDL -->
+    <include name="org.fabric3.binding.WsExtension" scdlResource="META-INF/ws.composite"/>
+             
+    <!-- Jetty service -->
+    <component name="JettyService">
+            <system:implementation.system class="org.fabric3.jetty.JettyServiceImpl"/>
+    </component>
+    
+             
 </composite>

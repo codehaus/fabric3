@@ -41,14 +41,14 @@ public class StaxUtilTestCase extends TestCase {
 
     public void testSerialize() throws XMLStreamException {
 
-        InputStream in = getClass().getClassLoader().getResourceAsStream("test.scdl");
+        InputStream in = getClass().getClassLoader().getResourceAsStream("test.composite");
         XMLStreamReader reader = StaxUtil.createReader(in);
         StaxUtil.serialize(reader);
         // TODO Do assertions
     }
 
     public void testGetDocumentElementQName() throws XMLStreamException {
-        InputStream in = getClass().getClassLoader().getResourceAsStream("test.scdl");
+        InputStream in = getClass().getClassLoader().getResourceAsStream("test.composite");
         XMLStreamReader reader = StaxUtil.createReader(in);
         String xml = StaxUtil.serialize(reader);
         QName qname = StaxUtil.getDocumentElementQName(xml);
