@@ -11,11 +11,13 @@ if [ $? != 0 ]
 then 
     exit $? 
 fi
+
 mvn clean install -f fabric3-spi/pom.xml
 if [ $? != 0 ] 
 then 
     exit $? 
 fi
+
 mvn clean install -f fabric3-policy-spi/pom.xml
 if [ $? != 0 ] 
 then 
@@ -27,21 +29,25 @@ if [ $? != 0 ]
 then 
     exit $? 
 fi
+
 mvn clean install -f fabric3-jmx/pom.xml
 if [ $? != 0 ] 
 then 
     exit $? 
 fi
+
 mvn clean install -f fabric3-transform/pom.xml
 if [ $? != 0 ] 
 then 
     exit $? 
 fi
+
 mvn clean install -f fabric3-fabric/pom.xml
 if [ $? != 0 ] 
 then 
     exit $? 
 fi
+
 mvn clean install -f fabric3-pojo/pom.xml
 if [ $? != 0 ] 
 then 
@@ -59,16 +65,19 @@ if [ $? != 0 ]
 then 
     exit $? 
 fi
+
 mvn clean install -f fabric3-jxta/pom.xml
 if [ $? != 0 ] 
 then 
     exit $? 
 fi
+
 mvn clean install -f fabric3-discovery-jxta/pom.xml
 if [ $? != 0 ] 
 then 
     exit $? 
 fi
+
 mvn clean install -f fabric3-messaging-jxta/pom.xml
 if [ $? != 0 ] 
 then 
@@ -86,16 +95,19 @@ if [ $? != 0 ]
 then 
     exit $? 
 fi
+
 mvn clean install -f fabric3-binding-hessian/pom.xml
 if [ $? != 0 ] 
 then 
     exit $? 
 fi
+
 mvn clean install -f fabric3-binding-jms/pom.xml
 if [ $? != 0 ] 
 then 
     exit $? 
 fi
+
 mvn clean install -f fabric3-binding-ws/pom.xml
 if [ $? != 0 ] 
 then 
@@ -125,17 +137,13 @@ if [ $? != 0 ]
 then 
     exit $? 
 fi
-mvn clean install -f fabric3-scdl4j/pom.xml
-if [ $? != 0 ] 
-then 
-    exit $? 
-fi
 
 mvn clean install -f fabric3-contribution-plugin/pom.xml
 if [ $? != 0 ] 
 then 
     exit $? 
 fi
+
 mvn clean install -f fabric3-webapp-plugin/pom.xml
 if [ $? != 0 ] 
 then 
