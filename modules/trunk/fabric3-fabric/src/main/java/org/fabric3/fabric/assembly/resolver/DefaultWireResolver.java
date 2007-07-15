@@ -136,6 +136,7 @@ public class DefaultWireResolver implements WireResolver {
                     throw new UnspecifiedTargetException("Reference target not specified", refUri.toString());
                 }
             } else {
+                // reference element is specified
                 List<URI> uris = target.getTargets();
                 if (!uris.isEmpty()) {
                     URI parentUri = targetComposite.getUri();
@@ -147,6 +148,7 @@ public class DefaultWireResolver implements WireResolver {
                 }
 
                 if (target.isAutowire()) {
+                    // a reference element is specified with autowire and no target
                     ServiceContract requiredContract = reference.getServiceContract();
                     String fragment = target.getReferenceName().getFragment();
                     boolean required = reference.isRequired();
@@ -156,6 +158,7 @@ public class DefaultWireResolver implements WireResolver {
                         targetUri = resolveByType(component.getParent(), component, referenceName, requiredContract);
                     }
                     if (targetUri == null) {
+                        // search the target compoisite
                         targetUri = resolveByType(targetComposite, component, fragment, requiredContract);
                     }
                     if (targetUri == null && required) {
@@ -214,7 +217,6 @@ public class DefaultWireResolver implements WireResolver {
         if (requiredInterface == null) {
             throw new UnsupportedOperationException("Only interfaces support for autowire");
         }
-        // autowire to a target in the parent
         URI targetUri = null;
         URI candidateUri = null;
         // find a suitable target, starting with components first

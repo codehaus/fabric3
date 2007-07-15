@@ -39,6 +39,8 @@ public interface ContributionStoreRegistry {
      */
     void unregister(ArchiveStore store);
 
+    ArchiveStore getArchiveStore(String storeId);
+
     /**
      * Register an MetaDataStore.
      *
@@ -52,5 +54,7 @@ public interface ContributionStoreRegistry {
      * @param store the MetaDataStore
      */
     void unregister(MetaDataStore store);
+
+    MetaDataStore getMetadataStore(String storeId);
 
 }

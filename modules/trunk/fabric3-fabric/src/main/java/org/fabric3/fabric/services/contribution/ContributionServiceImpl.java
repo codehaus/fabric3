@@ -24,9 +24,7 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import javax.xml.namespace.QName;
 
@@ -57,46 +55,29 @@ import org.fabric3.spi.services.contribution.MetaDataStore;
  *
  * @version $Rev$ $Date$
  */
-@Service(interfaces = {ContributionService.class, ContributionStoreRegistry.class})
+@Service(ContributionService.class)
 @EagerInit
-public class ContributionServiceImpl implements ContributionService, ContributionStoreRegistry {
+public class ContributionServiceImpl implements ContributionService {
     /**
      * The contribution prefix. Default is to map directly to the file system, which assumes nodes have access to it
      */
     private String uriPrefix = "file://contribution/";
     private ContributionProcessorRegistry processorRegistry;
     private ArtifactLocationEncoder encoder;
-    private Map<String, ArchiveStore> archiveStores;
-    private Map<String, MetaDataStore> metaDataStores;
+    private ContributionStoreRegistry contributionStoreRegistry;
 
     public ContributionServiceImpl(@Reference ContributionProcessorRegistry processorRegistry,
-                                   @Reference ArtifactLocationEncoder encoder)
+                                   @Reference ArtifactLocationEncoder encoder,
+                                   @Reference ContributionStoreRegistry contributionStoreRegistry)
             throws IOException, ClassNotFoundException {
         this.processorRegistry = processorRegistry;
         this.encoder = encoder;
-        archiveStores = new HashMap<String, ArchiveStore>();
-        metaDataStores = new HashMap<String, MetaDataStore>();
+        this.contributionStoreRegistry = contributionStoreRegistry;
     }
 
     @Property(required = false)
     public void setUriPrefix(String uriPrefix) {
         this.uriPrefix = uriPrefix;
-    }
-
-    public void register(ArchiveStore store) {
-        archiveStores.put(store.getId(), store);
-    }
-
-    public void unregister(ArchiveStore store) {
-        metaDataStores.remove(store.getId());
-    }
-
-    public void register(MetaDataStore store) {
-        metaDataStores.put(store.getId(), store);
-    }
-
-    public void unregister(MetaDataStore store) {
-        metaDataStores.remove(store.getId());
     }
 
     public URI contribute(String id, URL url, byte[] checksum, long timestamp)
@@ -113,7 +94,7 @@ public class ContributionServiceImpl implements ContributionService, Contributio
 
     public URI contribute(String id, URI sourceUri, String contentType, byte[] checksum, long timestamp, InputStream sourceStream)
             throws ContributionException, IOException {
-        ArchiveStore archiveStore = archiveStores.get(id);
+        ArchiveStore archiveStore = contributionStoreRegistry.getArchiveStore(id);
         if (archiveStore == null) {
             throw new StoreNotFoundException("Archive store not found", id);
         }
@@ -122,7 +103,7 @@ public class ContributionServiceImpl implements ContributionService, Contributio
     }
 
     public boolean exists(String id, URI uri) {
-        MetaDataStore metaDataStore = metaDataStores.get(id);
+        MetaDataStore metaDataStore = contributionStoreRegistry.getMetadataStore(id);
         return metaDataStore != null && metaDataStore.find(uri) != null;
     }
 
@@ -140,7 +121,7 @@ public class ContributionServiceImpl implements ContributionService, Contributio
     public void update(URI uri, String contentType, byte[] checksum, long timestamp, InputStream stream)
             throws ContributionException, IOException {
         String id = parseStoreId(uri);
-        MetaDataStore metaDataStore = metaDataStores.get(id);
+        MetaDataStore metaDataStore = contributionStoreRegistry.getMetadataStore(id);
         if (metaDataStore == null) {
             throw new StoreNotFoundException("MetaData store not found", id);
         }
@@ -158,7 +139,7 @@ public class ContributionServiceImpl implements ContributionService, Contributio
     }
 
     public long getContributionTimestamp(String id, URI uri) {
-        MetaDataStore metaDataStore = metaDataStores.get(id);
+        MetaDataStore metaDataStore = contributionStoreRegistry.getMetadataStore(id);
         if (metaDataStore == null) {
             return -1;
         }
@@ -171,7 +152,7 @@ public class ContributionServiceImpl implements ContributionService, Contributio
 
     public List<QName> getDeployables(URI contributionUri) throws ContributionException {
         String id = parseStoreId(contributionUri);
-        MetaDataStore metaDataStore = metaDataStores.get(id);
+        MetaDataStore metaDataStore = contributionStoreRegistry.getMetadataStore(id);
         if (metaDataStore == null) {
             throw new StoreNotFoundException("MetaData store not found", id);
         }
@@ -209,7 +190,7 @@ public class ContributionServiceImpl implements ContributionService, Contributio
         // TODO rollback storage if an error processing contribution
         // index the contribution
         addContributionDescription(contribution);
-        MetaDataStore metaDataStore = metaDataStores.get(id);
+        MetaDataStore metaDataStore = contributionStoreRegistry.getMetadataStore(id);
         if (metaDataStore == null) {
             throw new StoreNotFoundException("MetaData store not found", id);
         }
@@ -252,7 +233,7 @@ public class ContributionServiceImpl implements ContributionService, Contributio
         // Obtain local URLs for imported contributions and encode them for remote dereferencing
         for (URI uri : contribution.getResolvedImportUris()) {
             String key = parseStoreId(uri);
-            MetaDataStore store = metaDataStores.get(key);
+            MetaDataStore store = contributionStoreRegistry.getMetadataStore(key);
             if (store == null) {
                 throw new StoreNotFoundException("No store for id", key);
             }

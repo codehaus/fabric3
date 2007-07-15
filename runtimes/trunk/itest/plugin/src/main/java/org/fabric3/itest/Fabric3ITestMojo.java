@@ -19,6 +19,7 @@
 package org.fabric3.itest;
 
 import java.io.File;
+import static java.io.File.separator;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -142,6 +143,14 @@ public class Fabric3ITestMojo extends AbstractMojo {
     public URL systemScdl;
 
     /**
+     * The location of the extensions directory. This allows the default runtime configuration supplied in this plugin
+     * to be overridden.
+     *
+     * @parameter
+     */
+    public File extensionsDirectory;
+
+    /**
      * Set of extension artifacts that should be deployed to the runtime.
      *
      * @parameter
@@ -213,6 +222,13 @@ public class Fabric3ITestMojo extends AbstractMojo {
         if (systemScdl == null) {
             systemScdl = cl.getResource("META-INF/fabric3/embeddedMaven.composite");
         }
+        if (extensionsDirectory == null) {
+            String userHome = System.getProperty("user.home");
+            File extensions = new File(userHome + separator + ".fabric3" + separator + "extensions" + separator);
+            if (extensions.exists()) {
+                extensionsDirectory = extensions;
+            }
+        }
 
         log.info("Starting Embedded Fabric3 Runtime ...");
         MavenEmbeddedRuntime runtime = createRuntime(cl);
@@ -223,7 +239,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
         try {
             ScdlBootstrapper bootstrapper = new ScdlBootstrapperImpl();
             bootstrapper.setScdlLocation(systemScdl);
-            coordinator = new MavenCoordinator();
+            coordinator = new MavenCoordinator(extensionsDirectory);
             coordinator.bootPrimordial(runtime, bootstrapper, cl, testClassLoader);
             coordinator.initialize();
             Future<Void> future = coordinator.joinDomain(-1);
@@ -255,7 +271,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
                 URI domain = URI.create(testDomain);
 
                 CompositeImplementation impl = new CompositeImplementation();
-                
+
                 ComponentDefinition<CompositeImplementation> definition =
                         new ComponentDefinition<CompositeImplementation>(testComponentName, impl);
 

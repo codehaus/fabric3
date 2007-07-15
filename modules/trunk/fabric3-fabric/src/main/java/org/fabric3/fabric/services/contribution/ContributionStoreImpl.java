@@ -19,8 +19,6 @@
 
 package org.fabric3.fabric.services.contribution;
 
-import static org.fabric3.spi.services.contribution.ContributionConstants.DEFAULT_STORE;
-
 import java.io.IOException;
 
 import org.osoa.sca.annotations.Constructor;
@@ -31,8 +29,8 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.services.archive.ArchiveStoreImpl;
 import org.fabric3.host.runtime.HostInfo;
+import static org.fabric3.spi.services.contribution.ContributionConstants.DEFAULT_STORE;
 import org.fabric3.spi.services.contribution.ContributionStoreRegistry;
-import org.fabric3.spi.services.contribution.ContributionConstants;
 
 /**
  * The default implementation of ContributionStore
@@ -60,8 +58,7 @@ public class ContributionStoreImpl extends ArchiveStoreImpl {
     }
 
     @Constructor
-    @Deprecated
-    // JFM FIXME remove when properties work
+    // JFM FIXME move to other CTOR when properties work
     public ContributionStoreImpl(@Reference HostInfo hostInfo, @Reference ContributionStoreRegistry registry)
             throws IOException {
         this(null, hostInfo, registry);

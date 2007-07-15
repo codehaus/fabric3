@@ -16,18 +16,31 @@
  */
 package org.fabric3.itest;
 
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import javax.xml.namespace.QName;
 
 import org.fabric3.extension.component.SimpleWorkContext;
+import org.fabric3.fabric.assembly.ActivateException;
 import org.fabric3.fabric.assembly.AssemblyException;
 import org.fabric3.fabric.assembly.DistributedAssembly;
-import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
+import org.fabric3.fabric.assembly.RuntimeAssembly;
 import org.fabric3.fabric.runtime.ComponentNames;
+import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_ASSEMBLY_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
+import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
@@ -45,6 +58,7 @@ import org.fabric3.spi.model.type.Scope;
  * @version $Rev$ $Date$
  */
 public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbeddedRuntime, Bootstrapper> {
+    private static final String EXTENSIONS = "extensions";
 
     private enum State {
         UNINITIALIZED,
@@ -58,9 +72,17 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
         ERROR
     }
 
+    private File extensionsDirectory;
     private State state = State.UNINITIALIZED;
     private MavenEmbeddedRuntime runtime;
     private Bootstrapper bootstrapper;
+
+    public MavenCoordinator() {
+    }
+
+    public MavenCoordinator(File extensionsDirectory) {
+        this.extensionsDirectory = extensionsDirectory;
+    }
 
     public void bootPrimordial(MavenEmbeddedRuntime runtime,
                                Bootstrapper bootstrapper,
@@ -99,7 +121,39 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
         if (state != State.PRIMORDIAL) {
             throw new IllegalStateException("Not in PRIMORDIAL state");
         }
+        // initialize core system components
         bootstrapper.bootSystem(runtime);
+        if (extensionsDirectory != null) {
+            // contribute and activate extensions if they exist in the runtime domain
+            ContributionService contributionService = runtime.getSystemComponent(ContributionService.class,
+                                                                                 CONTRIBUTION_SERVICE_URI);
+            RuntimeAssembly assembly = runtime.getSystemComponent(RuntimeAssembly.class, RUNTIME_ASSEMBLY_URI);
+            File[] extensions = extensionsDirectory.listFiles(new FilenameFilter() {
+                public boolean accept(File dir, String name) {
+                    return name.endsWith(".jar");
+                }
+            });
+            try {
+                for (File extension : extensions) {
+                    URL url = extension.toURI().toURL();
+                    URI addedUri = contributionService.contribute(EXTENSIONS, url, new byte[0], -1);
+                    List<QName> deployables = contributionService.getDeployables(addedUri);
+                    for (QName deployable : deployables) {
+                        // include deployables in the runtime domain
+                        assembly.activate(deployable, true);
+                    }
+                }
+            } catch (MalformedURLException e) {
+                throw new InitializationException(e);
+            } catch (IOException e) {
+                throw new InitializationException(e);
+            } catch (ContributionException e) {
+                throw new InitializationException(e);
+            } catch (ActivateException e) {
+                throw new InitializationException(e);
+            }
+
+        }
         state = State.INITIALIZED;
 
     }

@@ -59,6 +59,8 @@ public final class ComponentNames {
 
     public static final URI DISCOVERY_SERVICE_URI = URI.create(RUNTIME_NAME + "/DiscoveryService");
 
+    public static final URI CONTRIBUTION_SERVICE_URI = URI.create(RUNTIME_NAME + "/ContributionService");
+
     private ComponentNames() {
     }
 

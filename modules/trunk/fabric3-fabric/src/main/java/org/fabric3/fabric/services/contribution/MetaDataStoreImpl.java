@@ -65,6 +65,7 @@ public class MetaDataStoreImpl implements MetaDataStore {
     private Map<QName, Map<Export, Contribution>> exportsToContributionCache =
             new ConcurrentHashMap<QName, Map<Export, Contribution>>();
     private String storeId = DEFAULT_STORE;
+    private boolean persistent = true;
     private String domain;
     private String runtimeId;
 
@@ -80,11 +81,10 @@ public class MetaDataStoreImpl implements MetaDataStore {
     }
 
     @Constructor
-    @Deprecated
-    // JFM FIXME remove when properties work
+    // JFM FIXME move @Constructor to other CTOR when properties work
     public MetaDataStoreImpl(@Reference HostInfo hostInfo,
                              @Reference ContributionStoreRegistry registry,
-                             @Reference XStreamFactory xstreamFactory) throws IOException {
+                             @Reference XStreamFactory xstreamFactory) {
 
         this.registry = registry;
         this.xstream = xstreamFactory.createInstance();
@@ -93,28 +93,36 @@ public class MetaDataStoreImpl implements MetaDataStore {
     }
 
     @Property(required = false)
-    public void setId(String storeId) {
+    public void setStoreId(String storeId) {
         this.storeId = storeId;
+    }
+
+    @Property(required = false)
+    // TODO fixme when boolean properties supported
+    public void setPersistent(String persistent) {
+        this.persistent = Boolean.valueOf(persistent);
     }
 
     @Init
     public void init() throws IOException {
-        if (repository == null) {
-            repository = AccessController.doPrivileged(new PrivilegedAction<String>() {
-                public String run() {
-                    // Default to <user.home>/.fabric3/domains/<domain>/<runtime id>
-                    String userHome = System.getProperty("user.home");
-                    return userHome + separator + ".fabric3" + separator + "domains" + separator + domain
-                            + separator + runtimeId + File.separator;
-                }
-            });
+        if (persistent) {
+            if (repository == null) {
+                repository = AccessController.doPrivileged(new PrivilegedAction<String>() {
+                    public String run() {
+                        // Default to <user.home>/.fabric3/domains/<domain>/<runtime id>
+                        String userHome = System.getProperty("user.home");
+                        return userHome + separator + ".fabric3" + separator + "domains" + separator + domain
+                                + separator + runtimeId + File.separator;
+                    }
+                });
+            }
+            root = new File(repository + separator + "index" + separator);
+            FileHelper.forceMkdir(root);
+            if (!root.exists() || !this.root.isDirectory() || !root.canRead()) {
+                throw new IOException("The repository location is not a directory: " + repository);
+            }
+            recover();
         }
-        root = new File(repository + separator + "index" + separator);
-        FileHelper.forceMkdir(root);
-        if (!root.exists() || !this.root.isDirectory() || !root.canRead()) {
-            throw new IOException("The repository location is not a directory: " + repository);
-        }
-        recover();
         registry.register(this);
     }
 
@@ -123,20 +131,22 @@ public class MetaDataStoreImpl implements MetaDataStore {
     }
 
     public void store(Contribution contribution) throws IOException {
-        FileOutputStream fos = null;
-        try {
-            File directory = new File(root, contribution.getUri().getPath());
-            FileHelper.forceMkdir(directory);
-            File index = new File(directory, "contribution.ser");
-            fos = new FileOutputStream(index);
-            xstream.toXML(contribution, fos);
-            cache.put(contribution.getUri(), contribution);
-            addToExports(contribution);
-        } finally {
-            if (fos != null) {
-                fos.close();
+        if (persistent) {
+            FileOutputStream fos = null;
+            try {
+                File directory = new File(root, contribution.getUri().getPath());
+                FileHelper.forceMkdir(directory);
+                File index = new File(directory, "contribution.ser");
+                fos = new FileOutputStream(index);
+                xstream.toXML(contribution, fos);
+            } finally {
+                if (fos != null) {
+                    fos.close();
+                }
             }
         }
+        cache.put(contribution.getUri(), contribution);
+        addToExports(contribution);
     }
 
 

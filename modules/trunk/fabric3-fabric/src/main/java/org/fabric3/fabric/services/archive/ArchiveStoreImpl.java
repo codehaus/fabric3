@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
@@ -51,6 +52,7 @@ public class ArchiveStoreImpl implements ArchiveStore {
     protected File root;
     protected Map<URI, URL> archiveUriToUrl;
     protected String storeId;
+    private boolean persistent = true;
     protected String domain;
     protected String repository;
     private String runtimeId;
@@ -76,10 +78,16 @@ public class ArchiveStoreImpl implements ArchiveStore {
     }
 
     @Property(required = false)
-    public void setId(String storeId) {
+    public void setStoreId(String storeId) {
         this.storeId = storeId;
     }
 
+    @Property(required = false)
+    // TODO fixme when boolean properties supported
+    public void setPersistent(String persistent) {
+        this.persistent = Boolean.valueOf(persistent);
+    }
+    
     public String getId() {
         return storeId;
     }
@@ -98,9 +106,21 @@ public class ArchiveStoreImpl implements ArchiveStore {
             });
         }
         root = new File(repository);
+        if (!persistent && root.exists()) {
+            // remove any old contents of the directory
+            FileHelper.forceDelete(root);
+        }
+
         FileHelper.forceMkdir(root);
         if (!root.exists() || !this.root.isDirectory() || !root.canRead()) {
             throw new IOException("The repository location is not a directory: " + repository);
+        }
+    }
+
+    @Destroy
+    public void destroy() throws IOException {
+        if (!persistent && root.exists()) {
+            FileHelper.forceDelete(root);
         }
     }
 

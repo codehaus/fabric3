@@ -23,9 +23,10 @@ import java.net.URI;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
+import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
 import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
@@ -43,14 +44,18 @@ import org.fabric3.spi.model.type.ComponentDefinition;
 @EagerInit
 public class SystemComponentGenerator implements ComponentGenerator<LogicalComponent<SystemImplementation>> {
     private final InstanceFactoryGenerationHelper helper;
+    private ClassLoaderGenerator classLoaderGenerator;
 
     public SystemComponentGenerator(@Reference GeneratorRegistry registry,
+                                    @Reference ClassLoaderGenerator classLoaderGenerator,
                                     @Reference InstanceFactoryGenerationHelper helper) {
+        this.classLoaderGenerator = classLoaderGenerator;
         registry.register(SystemImplementation.class, this);
         this.helper = helper;
     }
 
-    public void generate(LogicalComponent<SystemImplementation> component, GeneratorContext context) {
+    public void generate(LogicalComponent<SystemImplementation> component, GeneratorContext context)
+            throws GenerationException {
         ComponentDefinition<SystemImplementation> definition = component.getDefinition();
         SystemImplementation implementation = definition.getImplementation();
         @SuppressWarnings({"unchecked"})
@@ -69,12 +74,14 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
         SystemComponentDefinition physical = new SystemComponentDefinition();
         physical.setComponentId(componentId);
         physical.setGroupId(componentId.resolve("."));
-        // TODO set the classloader id temporarily until multiparent classloading is in palce
-        physical.setClassLoaderId(URI.create("sca://./bootClassLoader"));
         physical.setScope(type.getImplementationScope());
         physical.setInitLevel(helper.getInitLevel(definition, type));
         physical.setInstanceFactoryProviderDefinition(providerDefinition);
         helper.processProperties(physical, definition);
+
+        // generate the classloader resource definition
+        URI classLoaderId = classLoaderGenerator.generate(component, context);
+        physical.setClassLoaderId(classLoaderId);
 
         context.getPhysicalChangeSet().addComponentDefinition(physical);
     }

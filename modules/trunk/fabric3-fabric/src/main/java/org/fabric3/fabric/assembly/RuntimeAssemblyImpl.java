@@ -20,8 +20,8 @@ package org.fabric3.fabric.assembly;
 
 import java.net.URI;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
@@ -37,6 +37,7 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.Referenceable;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.CompositeImplementation;
+import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.util.UriHelper;
 
 /**
@@ -53,7 +54,8 @@ public class RuntimeAssemblyImpl extends AbstractAssembly implements RuntimeAsse
                                @Reference PromotionNormalizer normalizer,
                                @Reference Allocator allocator,
                                @Reference RoutingService routingService,
-                               @Reference AssemblyStore store) {
+                               @Reference AssemblyStore store,
+                               @Reference MetaDataStore metaDataStore) {
         super(ComponentNames.RUNTIME_URI,
               generatorRegistry,
               wireResolver,
@@ -61,7 +63,7 @@ public class RuntimeAssemblyImpl extends AbstractAssembly implements RuntimeAsse
               allocator,
               routingService,
               store,
-              null);
+              metaDataStore);
         this.hostComponents = new HashMap<URI, LogicalComponent<?>>();
     }
 
