@@ -108,7 +108,7 @@
     </component>
 
     <component name="launchedComponentLoader">
-        <system:implementation.system class="org.fabric3.runtime.standalone.host.implementation.launched.LaunchedComponentTypeLoader"/>
+        <system:implementation.system class="org.fabric3.runtime.standalone.host.implementation.launched.LaunchedComponentTypeLoaderImpl"/>
     </component>
 
     <component name="wiringExceptionFormatter">
