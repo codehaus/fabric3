@@ -3,9 +3,8 @@ package org.fabric3.fabric.services.scanner.factory;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.JarURLConnection;
-import java.net.URL;
-import java.net.URLClassLoader;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
@@ -31,13 +30,10 @@ public class JarResourceFactory implements FileSystemResourceFactory {
         if (!file.getName().endsWith(".jar")) {
             return null;
         }
-        JarURLConnection conn;
         try {
-            ClassLoader cl = new URLClassLoader(new URL[] {file.toURL()});
-            URL url = cl.getResource("/META-INF/sca-contribution.xml");
-            conn = (JarURLConnection) url.openConnection();
-            if (conn.getJarEntry() == null) {
-                // not a contribution archive, ignore
+            JarFile jarFile = new JarFile(file.getCanonicalPath());
+            JarEntry entry = jarFile.getJarEntry("META-INF/sca-contribution.xml");
+            if (entry == null) {
                 return null;
             }
         } catch (FileNotFoundException e) {
