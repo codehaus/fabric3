@@ -32,7 +32,7 @@ echo ${#modules[*]}
 
 for module in ${modules[@]} 
 do 
-   mvn clean install -f $module 
+   mvn clean source:jar install -f $module 
    if [ $? != 0 ] 
    then
        exit $?
