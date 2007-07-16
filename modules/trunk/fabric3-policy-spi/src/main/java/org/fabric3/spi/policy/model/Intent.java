@@ -18,6 +18,11 @@
  */
 package org.fabric3.spi.policy.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.xml.namespace.QName;
+
 import org.fabric3.spi.model.type.ModelObject;
 
 /**
@@ -27,5 +32,65 @@ import org.fabric3.spi.model.type.ModelObject;
  *
  */
 public class Intent extends ModelObject {
+    
+    /** Qualified name of the intent. */
+    private QName name;
+    
+    /** Description of the intent. */
+    private String description;
+    
+    /** SCA artifacts constrained by this intent. */
+    private Set<QName> constrainedArtifacts = new HashSet<QName>();
+
+    /**
+     * @return Qualified name of the intent.
+     */
+    public QName getName() {
+        return name;
+    }
+
+    /**
+     * @param name Qualified name of the intent.
+     */
+    public void setQname(QName name) {
+        this.name = name;
+    }
+
+    /**
+     * @return Intent description.
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * @param description Intent description.
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    /**
+     * @return SCA artifacts constrained by this intent.
+     */
+    public Set<QName> getConstrainedArtifacts() {
+        return constrainedArtifacts;
+    }
+
+    /**
+     * @param constrainedArtifacts SCA artifacts constrained by this intent.
+     */
+    public void setConstrainedArtifacts(Set<QName> constrainedArtifacts) {
+        this.constrainedArtifacts = constrainedArtifacts;
+    }
+    
+    /**
+     * Checks whether the specified artifact can be constrained by this intent.
+     * @param scaArtifact SCA artifact that needs to be checked.
+     * @return True if this intent can constrain the specified SCA artifact.
+     */
+    public boolean doesConstrain(QName scaArtifact) {
+        return constrainedArtifacts.contains(scaArtifact);
+    }
 
 }
