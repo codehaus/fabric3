@@ -30,8 +30,9 @@ public class JarResourceFactory implements FileSystemResourceFactory {
         if (!file.getName().endsWith(".jar")) {
             return null;
         }
+        JarFile jarFile = null;
         try {
-            JarFile jarFile = new JarFile(file.getCanonicalPath());
+            jarFile = new JarFile(file.getCanonicalPath());
             JarEntry entry = jarFile.getJarEntry("META-INF/sca-contribution.xml");
             if (entry == null) {
                 return null;
@@ -41,6 +42,14 @@ public class JarResourceFactory implements FileSystemResourceFactory {
             return null;
         } catch (IOException e) {
             throw new AssertionError(e);
+        } finally {
+            try {
+                if (jarFile != null) {
+                    jarFile.close();
+                }
+            } catch (IOException e) {
+                // ignore
+            }
         }
         return new FileResource(file);
     }
