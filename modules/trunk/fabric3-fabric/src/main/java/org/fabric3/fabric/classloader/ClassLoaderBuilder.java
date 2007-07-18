@@ -129,6 +129,7 @@ public class ClassLoaderBuilder implements ResourceContainerBuilder<PhysicalClas
     private void updateClassLoader(ClassLoader cl, PhysicalClassLoaderDefinition definition)
             throws ClassLoaderBuilderException {
         assert cl instanceof CompositeClassLoader;
+        List<URL> classpath = new ArrayList<URL>();
         CompositeClassLoader loader = (CompositeClassLoader) cl;
         Set<URL> urls = definition.getResourceUrls();
         URL[] loaderUrls = loader.getURLs();
@@ -144,11 +145,18 @@ public class ClassLoaderBuilder implements ResourceContainerBuilder<PhysicalClas
                 try {
                     // resolve the remote artifact URL and add it to the classloader
                     URL resolvedUrl = artifactResolverRegistry.resolve(url);
-                    loader.addURL(resolvedUrl);
+                    // introspect and expand if necessary
+                    File file = new File(resolvedUrl.getFile());
+                    classpath.addAll(classpathProcessorRegistry.process(file));
                 } catch (ResolutionException e) {
                     throw new ClassLoaderBuilderException("Error resolving artifact", e);
+                } catch (IOException e) {
+                    throw new ClassLoaderBuilderException("Error processing", url.toString(), e);
                 }
             }
+        }
+        for (URL url : classpath) {
+            loader.addURL(url);
         }
     }
 
@@ -172,17 +180,24 @@ public class ClassLoaderBuilder implements ResourceContainerBuilder<PhysicalClas
             // resolve the remote artifact URL and add it to the classloader
             try {
                 URL resolvedUrl = artifactResolverRegistry.resolve(url);
-                for (URL loaderUrl : loaderUrls) {
-                    if (loaderUrl.equals(resolvedUrl)) {
-                        found = true;
-                        break;
+                // introspect and expand if necessary
+                File file = new File(resolvedUrl.getFile());
+                List<URL> classpath = classpathProcessorRegistry.process(file);
+                for (URL entry : classpath) {
+                    for (URL loaderUrl : loaderUrls) {
+                        if (loaderUrl.equals(entry)) {
+                            found = true;
+                            break;
+                        }
+                        if (!found) {
+                            resolvedUrls.add(entry);
+                        }
                     }
-                }
-                if (!found) {
-                    resolvedUrls.add(resolvedUrl);
                 }
             } catch (ResolutionException e) {
                 throw new ClassLoaderBuilderException("Error resolving artifact", e);
+            } catch (IOException e) {
+                throw new ClassLoaderBuilderException("Error processing", url.toString(), e);
             }
         }
         URL[] classpath = resolvedUrls.toArray(new URL[resolvedUrls.size()]);
@@ -201,9 +216,9 @@ public class ClassLoaderBuilder implements ResourceContainerBuilder<PhysicalClas
         for (URL url : urls) {
             try {
                 // resolve the remote artifact URLs and cache them locally
-                URL resolved = artifactResolverRegistry.resolve(url);
+                URL resolvedUrl = artifactResolverRegistry.resolve(url);
                 // introspect and expand if necessary
-                File file = new File(resolved.getFile());
+                File file = new File(resolvedUrl.getFile());
                 classpath.addAll(classpathProcessorRegistry.process(file));
             } catch (ResolutionException e) {
                 throw new ClassLoaderBuilderException("Error resolving artifact", e);
