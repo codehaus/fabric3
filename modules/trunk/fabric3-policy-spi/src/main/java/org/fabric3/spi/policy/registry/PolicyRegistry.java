@@ -18,6 +18,14 @@
  */
 package org.fabric3.spi.policy.registry;
 
+import java.util.Set;
+
+import javax.xml.namespace.QName;
+
+import org.fabric3.spi.model.instance.LogicalScaArtifact;
+import org.fabric3.spi.policy.model.Intent;
+import org.fabric3.spi.policy.model.PolicySet;
+
 /**
  * Abstraction for the service that keeps track of the domain-wide
  * policies and intents that are registered.
@@ -25,5 +33,24 @@ package org.fabric3.spi.policy.registry;
  * @version $Revision$ $Date$
  */
 public interface PolicyRegistry {
+    
+    /**
+     * @param policySet Policy set that needs to be registered.
+     */
+    void registerPolicySet(PolicySet policySet);
+    
+    /**
+     * @param intent Intent that needs to be registered.
+     */
+    void registerIntent(Intent intent);
+    
+    /**
+     * Finds the interceptor qnames for the SCA artifact based on the rules 
+     * specified by the SCA policy specification.
+     * 
+     * @param scaArtifact SCA artifact.
+     * @return List of interceptors.
+     */
+    Set<QName> getInterceptors(LogicalScaArtifact<?> scaArtifact);
 
 }

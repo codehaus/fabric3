@@ -7,7 +7,7 @@
   <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
   <classpathentry kind="var" path="M2_REPO/org/codehaus/fabric3/fabric3-host-api/0.1/fabric3-host-api-0.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/junit/junit/3.8.2/junit-3.8.2.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/codehaus/fabric3/fabric3-spi/0.2-SNAPSHOT/fabric3-spi-0.2-SNAPSHOT.jar" sourcepath="M2_REPO/org/codehaus/fabric3/fabric3-spi/0.2-SNAPSHOT/fabric3-spi-0.2-SNAPSHOT-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/codehaus/fabric3/fabric3-spi/0.2-SNAPSHOT/fabric3-spi-0.2-SNAPSHOT.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/codehaus/fabric3/spec/sca-api-r1.0/0.1/sca-api-r1.0-0.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/codehaus/fabric3/fabric3-api/0.1/fabric3-api-0.1.jar"/>
 </classpath>

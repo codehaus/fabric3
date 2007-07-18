@@ -40,6 +40,9 @@ public class PolicySet extends ModelObject {
     
     /** Intents provided by this policy set. */
     private Set<QName> provides = new HashSet<QName>();
+    
+    /** Interceptors that implement this policy set. */
+    private Set<QName> interceptors = new HashSet<QName>();
 
     /**
      * @return Qualified name of the intent.
@@ -51,7 +54,7 @@ public class PolicySet extends ModelObject {
     /**
      * @param name Qualified name of the intent.
      */
-    public void setQname(QName name) {
+    public void setQName(QName name) {
         this.name = name;
     }
 
@@ -99,6 +102,20 @@ public class PolicySet extends ModelObject {
      */
     public boolean doesProvide(QName intent) {
         return provides.contains(intent);
+    }
+
+    /**
+     * @return Interceptors that implement this policy set.
+     */
+    public Set<QName> getInterceptors() {
+        return interceptors;
+    }
+
+    /**
+     * @param interceptors Interceptors that implement this policy set.
+     */
+    public void setInterceptors(Set<QName> interceptors) {
+        this.interceptors = interceptors;
     }
 
 }
