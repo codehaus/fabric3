@@ -28,11 +28,11 @@ modules[22]=fabric3-maven/pom.xml
 modules[23]=fabric3-contribution-plugin/pom.xml
 modules[24]=fabric3-webapp-plugin/pom.xml
 
-echo ${#modules[*]}
+rm -r ~/.m2/repository/org/codehaus/fabric3
 
 for module in ${modules[@]} 
 do 
-   mvn clean source:jar install -f $module 
+   mvn clean package -f $module 
    if [ $? != 0 ] 
    then
        exit $?
