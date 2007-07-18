@@ -17,6 +17,7 @@
 package org.fabric3.fabric.services.archive;
 
 import java.io.File;
+import static java.io.File.separator;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
@@ -87,7 +88,7 @@ public class ArchiveStoreImpl implements ArchiveStore {
     public void setPersistent(String persistent) {
         this.persistent = Boolean.valueOf(persistent);
     }
-    
+
     public String getId() {
         return storeId;
     }
@@ -105,7 +106,7 @@ public class ArchiveStoreImpl implements ArchiveStore {
                 }
             });
         }
-        root = new File(repository);
+        root = root = new File(repository + separator + "stores" + separator + storeId + separator);
         if (!persistent && root.exists()) {
             // remove any old contents of the directory
             FileHelper.forceDelete(root);

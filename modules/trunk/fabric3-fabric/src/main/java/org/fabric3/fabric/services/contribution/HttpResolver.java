@@ -63,7 +63,7 @@ public class HttpResolver implements ArtifactResolver {
             if (localURL == null) {
                 // resolve remotely
                 stream = url.openStream();
-                store.store(url.toURI(), stream);
+                localURL = store.store(url.toURI(), stream);
             }
             return localURL;
         } catch (URISyntaxException e) {

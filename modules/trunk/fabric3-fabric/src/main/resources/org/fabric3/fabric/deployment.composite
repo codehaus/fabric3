@@ -39,11 +39,16 @@
         <property name="repository">target/repository</property>
     </component>
 
-    <component name="ContributionProcessorRegistry" initLevel="35">
+    <component name="JarService">
+        <system:implementation.system
+                class="org.fabric3.fabric.services.archive.JarServiceImpl"/>
+    </component>
+
+    <component name="ContributionProcessorRegistry">
         <system:implementation.system
                 class="org.fabric3.fabric.services.contribution.ContributionProcessorRegistryImpl"/>
     </component>
-    <component name="JarContributionProcessor" initLevel="30">
+    <component name="JarContributionProcessor">
         <system:implementation.system
                 class="org.fabric3.fabric.services.contribution.processor.JarContributionProcessor"/>
     </component>
@@ -51,6 +56,15 @@
     <component name="FolderContributionProcessor">
         <system:implementation.system
                 class="org.fabric3.fabric.services.contribution.processor.ExplodedJarContributionProcessor"/>
+    </component>
+
+    <component name="ClasspathProcessorRegistry">
+        <system:implementation.system
+                class="org.fabric3.fabric.services.contribution.ClasspathProcessorRegistryImpl"/>
+    </component>
+
+    <component name="JarClasspathProcessor">
+        <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.JarClasspathProcessor"/>
     </component>
 
     <component name="ContributionElementLoader">

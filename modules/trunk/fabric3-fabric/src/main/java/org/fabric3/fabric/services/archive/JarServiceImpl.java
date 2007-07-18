@@ -34,11 +34,12 @@ import org.fabric3.fabric.util.IOHelper;
  */
 public class JarServiceImpl implements JarService {
 
-    public void expand(File jar, File directory, boolean deleteOnExit) throws IOException {
+    public void expand(File jar, File expandDirectory, boolean deleteOnExit) throws IOException {
         JarInputStream stream = new JarInputStream(new FileInputStream(jar));
         JarEntry entry;
         while ((entry = stream.getNextJarEntry()) != null) {
-            File file = new File(directory, entry.getName());
+            String path = entry.getName();
+            File file = new File(expandDirectory, path);
             if (entry.isDirectory()) {
                 // entry is a directory, create it
                 if (!file.exists()) {
@@ -58,10 +59,22 @@ public class JarServiceImpl implements JarService {
                     file.setLastModified(entry.getTime());
                 }
             }
-            if (deleteOnExit) {
-                file.deleteOnExit();
+        }
+        if (expandDirectory.exists() && deleteOnExit) {
+            delete(expandDirectory);
+        }
+    }
+
+    private void delete(File file) {
+        // delete first before recursing as deleteOnExit deletes in reverse order
+        file.deleteOnExit();
+        if (file.isDirectory()) {
+            File[] children = file.listFiles();
+            for (File child : children) {
+                delete(child);
             }
         }
     }
+
 
 }

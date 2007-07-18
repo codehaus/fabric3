@@ -16,10 +16,14 @@
  */
 package org.fabric3.fabric.classloader;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.osoa.sca.annotations.EagerInit;
@@ -33,6 +37,7 @@ import org.fabric3.spi.builder.resource.ResourceContainerBuilderRegistry;
 import org.fabric3.spi.deployer.CompositeClassLoader;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ArtifactResolverRegistry;
+import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.spi.services.contribution.ResolutionException;
 
 /**
@@ -50,15 +55,18 @@ public class ClassLoaderBuilder implements ResourceContainerBuilder<PhysicalClas
     private ResourceContainerBuilderRegistry builderRegistry;
     private ClassLoaderRegistry classLoaderRegistry;
     private ArtifactResolverRegistry artifactResolverRegistry;
+    private ClasspathProcessorRegistry classpathProcessorRegistry;
     private URI domainUri;
 
     public ClassLoaderBuilder(@Reference ResourceContainerBuilderRegistry builderRegistry,
                               @Reference ClassLoaderRegistry classLoaderRegistry,
                               @Reference ArtifactResolverRegistry artifactResolverRegistry,
-                              @Reference HostInfo info) {
+                              @Reference HostInfo info,
+                              @Reference ClasspathProcessorRegistry classpathProcessorRegistry) {
         this.builderRegistry = builderRegistry;
         this.classLoaderRegistry = classLoaderRegistry;
         this.artifactResolverRegistry = artifactResolverRegistry;
+        this.classpathProcessorRegistry = classpathProcessorRegistry;
         domainUri = info.getDomain();
     }
 
@@ -189,17 +197,20 @@ public class ClassLoaderBuilder implements ResourceContainerBuilder<PhysicalClas
      * @throws ClassLoaderBuilderException if an error occurs resolving a url
      */
     private URL[] resolveClasspath(Set<URL> urls) throws ClassLoaderBuilderException {
-        URL[] classpath = new URL[urls.size()];
-        int i = 0;
+        List<URL> classpath = new ArrayList<URL>();
         for (URL url : urls) {
             try {
                 // resolve the remote artifact URLs and cache them locally
-                classpath[i] = artifactResolverRegistry.resolve(url);
+                URL resolved = artifactResolverRegistry.resolve(url);
+                // introspect and expand if necessary
+                File file = new File(resolved.getFile());
+                classpath.addAll(classpathProcessorRegistry.process(file));
             } catch (ResolutionException e) {
                 throw new ClassLoaderBuilderException("Error resolving artifact", e);
+            } catch (IOException e) {
+                throw new ClassLoaderBuilderException("Error processing", url.toString(), e);
             }
-            i++;
         }
-        return classpath;
+        return classpath.toArray(new URL[classpath.size()]);
     }
 }

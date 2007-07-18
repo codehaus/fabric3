@@ -29,4 +29,8 @@ public class ClassLoaderBuilderException extends BuilderException {
     public ClassLoaderBuilderException(String message, Throwable cause) {
         super(message, cause);
     }
+
+    public ClassLoaderBuilderException(String message, String identifier, Throwable cause) {
+        super(message, identifier, cause);
+    }
 }

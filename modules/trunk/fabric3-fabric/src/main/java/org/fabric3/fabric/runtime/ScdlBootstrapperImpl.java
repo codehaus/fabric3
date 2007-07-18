@@ -98,12 +98,16 @@ import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_NAME;
 import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
 import org.fabric3.fabric.services.advertsiement.FeatureLoader;
+import org.fabric3.fabric.services.archive.JarService;
+import org.fabric3.fabric.services.archive.JarServiceImpl;
 import org.fabric3.fabric.services.classloading.ClassLoaderRegistryImpl;
 import org.fabric3.fabric.services.contribution.ArtifactResolverRegistryImpl;
+import org.fabric3.fabric.services.contribution.ClasspathProcessorRegistryImpl;
+import org.fabric3.fabric.services.contribution.ContributionStoreImpl;
 import org.fabric3.fabric.services.contribution.ContributionStoreRegistryImpl;
 import org.fabric3.fabric.services.contribution.FileSystemResolver;
 import org.fabric3.fabric.services.contribution.MetaDataStoreImpl;
-import org.fabric3.fabric.services.contribution.ContributionStoreImpl;
+import org.fabric3.fabric.services.contribution.processor.JarClasspathProcessor;
 import org.fabric3.fabric.services.instancefactory.BuildHelperImpl;
 import org.fabric3.fabric.services.instancefactory.DefaultInstanceFactoryBuilderRegistry;
 import org.fabric3.fabric.services.instancefactory.GenerationHelperImpl;
@@ -143,6 +147,7 @@ import org.fabric3.spi.model.type.CompositeImplementation;
 import org.fabric3.spi.model.type.ServiceContract;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ArtifactResolverRegistry;
+import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.spi.services.contribution.ContributionStoreRegistry;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
@@ -493,8 +498,14 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         ArtifactResolverRegistry artifactResolverRegistry = new ArtifactResolverRegistryImpl();
         FileSystemResolver resolver = new FileSystemResolver(artifactResolverRegistry);
         resolver.init();
-        ClassLoaderBuilder clBuilder =
-                new ClassLoaderBuilder(resourceRegistry, classLoaderRegistry, artifactResolverRegistry, info);
+        ClasspathProcessorRegistry classpathProcessorRegistry = new ClasspathProcessorRegistryImpl();
+        JarService jarService = new JarServiceImpl();
+        new JarClasspathProcessor(classpathProcessorRegistry, jarService);
+        ClassLoaderBuilder clBuilder = new ClassLoaderBuilder(resourceRegistry,
+                                                              classLoaderRegistry,
+                                                              artifactResolverRegistry,
+                                                              info,
+                                                              classpathProcessorRegistry);
         clBuilder.init();
         return resourceRegistry;
     }

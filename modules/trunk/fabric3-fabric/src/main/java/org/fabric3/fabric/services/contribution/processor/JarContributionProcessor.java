@@ -19,6 +19,7 @@
 
 package org.fabric3.fabric.services.contribution.processor;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,6 +29,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
@@ -47,6 +49,7 @@ import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.model.type.CompositeComponentType;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.ContributionProcessor;
@@ -61,18 +64,21 @@ public class JarContributionProcessor extends ContributionProcessorExtension imp
     public static final QName COMPOSITE = new QName(SCA_NS, "composite");
     private static final URI HOST_CLASSLOADER = URI.create("sca://./hostClassLoader");
     private final LoaderRegistry loaderRegistry;
+    private final ClassLoaderRegistry classLoaderRegistry;
     private final XMLInputFactory xmlFactory;
     private final MetaDataStore metaDataStore;
-    private final ClassLoaderRegistry classLoaderRegistry;
+    private final ClasspathProcessorRegistry classpathProcessorRegistry;
 
     public JarContributionProcessor(@Reference LoaderRegistry loaderRegistry,
                                     @Reference ClassLoaderRegistry classLoaderRegistry,
                                     @Reference XMLInputFactory xmlFactory,
-                                    @Reference MetaDataStore metaDataStore) {
+                                    @Reference MetaDataStore metaDataStore,
+                                    @Reference ClasspathProcessorRegistry classpathProcessorRegistry) {
         this.loaderRegistry = loaderRegistry;
         this.classLoaderRegistry = classLoaderRegistry;
         this.xmlFactory = xmlFactory;
         this.metaDataStore = metaDataStore;
+        this.classpathProcessorRegistry = classpathProcessorRegistry;
     }
 
     public String getContentType() {
@@ -83,28 +89,31 @@ public class JarContributionProcessor extends ContributionProcessorExtension imp
             throws ContributionException, IOException {
         URL sourceUrl = contribution.getLocation();
         // process the contribution manifest
-        ContributionManifest manifest = processManifest(sourceUrl);
+        File jarFile = new File(sourceUrl.getFile());
+        ContributionManifest manifest = processManifest(jarFile);
         contribution.setManifest(manifest);
         // process .composite files
         List<URL> artifactUrls = getCompositeUrls(inputStream, toJarURL(sourceUrl));
         // Build a classloader to perform the contribution introspection. The classpath will contain the contribution
         // jar and resolved imports
-        // FIXME for now, add the jar to the system classloader
         ClassLoader cl = classLoaderRegistry.getClassLoader(HOST_CLASSLOADER);
         CompositeClassLoader loader = new CompositeClassLoader(contribution.getUri(), cl);
-        loader.addURL(sourceUrl);
-        for (Import imprt : manifest.getImports()) {
-            Contribution imported = metaDataStore.resolve(imprt);
-            if (imported == null) {
-                throw new MatchingExportNotFoundException(imprt.toString());
-            }
-            // add the resolved URI to the contribution
-            contribution.addResolvedImportUri(imported.getUri());
-            // add the jar to the classpath
-            loader.addURL(imported.getLocation());
-        }
         ClassLoader oldClassloader = Thread.currentThread().getContextClassLoader();
         try {
+            List<URL> classpath = classpathProcessorRegistry.process(jarFile);
+            for (URL library : classpath) {
+                loader.addURL(library);
+            }
+            for (Import imprt : manifest.getImports()) {
+                Contribution imported = metaDataStore.resolve(imprt);
+                if (imported == null) {
+                    throw new MatchingExportNotFoundException(imprt.toString());
+                }
+                // add the resolved URI to the contribution
+                contribution.addResolvedImportUri(imported.getUri());
+                // add the jar to the classpath
+                loader.addURL(imported.getLocation());
+            }
             // set the classloader on the current context so artifacts in the contribution can be introspected
             Thread.currentThread().setContextClassLoader(loader);
             for (URL artifactUrl : artifactUrls) {
@@ -125,30 +134,35 @@ public class JarContributionProcessor extends ContributionProcessorExtension imp
      * <p/>
      * TODO support generated manifests
      *
-     * @param sourceUrl the base url to load the manifest from
+     * @param file pointer to the jar file
      * @return the loaded manifest
      * @throws IOException           if an error occurs reading the manifest
      * @throws ContributionException if an error occurs processing the manifest
      */
-    private ContributionManifest processManifest(URL sourceUrl)
-            throws IOException, ContributionException {
-        URL manifest = new URL("jar:" + sourceUrl.toExternalForm() + "!/META-INF/sca-contribution.xml");
+    private ContributionManifest processManifest(File file) throws IOException, ContributionException {
+        JarFile jar = null;
         InputStream stream = null;
         XMLStreamReader reader = null;
         try {
-            stream = manifest.openStream();
+            jar = new JarFile(file);
+            JarEntry entry = jar.getJarEntry("META-INF/sca-contribution.xml");
+            assert entry != null;
+            stream = jar.getInputStream(entry);
             reader = xmlFactory.createXMLStreamReader(stream);
             reader.nextTag();
             // FIXME SCDL location
             LoaderContext context = new LoaderContextImpl(getClass().getClassLoader(), null);
             return loaderRegistry.load(reader, ContributionManifest.class, context);
         } catch (FileNotFoundException e) {
-            throw new ContributionManifestNotFoundException(sourceUrl.toString());
+            throw new ContributionManifestNotFoundException(file.toString());
         } catch (XMLStreamException e) {
             throw new ContributionException(e);
         } catch (LoaderException e) {
             throw new ContributionException(e);
         } finally {
+            if (jar != null) {
+                jar.close();
+            }
             if (reader != null) {
                 try {
                     reader.close();
