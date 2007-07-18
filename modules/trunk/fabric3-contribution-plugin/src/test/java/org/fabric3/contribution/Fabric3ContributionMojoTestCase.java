@@ -136,8 +136,8 @@ public class Fabric3ContributionMojoTestCase extends AbstractMojoTestCase {
         }
         assertTrue( "sca-contribution.xml file not found", jarContent.contains( "META-INF/sca-contribution.xml" ) );
         assertTrue( "content not found", jarContent.contains( "test.properties" ) );
-        assertTrue( "dependency not added", jarContent.contains( "dep-1.jar" ) );
-        assertFalse( "dependency of type sca-contribution should not have been added", jarContent.contains( "dep-2.jar" ) );
+        assertTrue( "dependency not added", jarContent.contains( "META-INF/lib/dep-1.jar" ) );
+        assertFalse( "dependency of type sca-contribution should not have been added", jarContent.contains( "META-INF/lib/dep-2.jar" ) );
 	}
 	
 

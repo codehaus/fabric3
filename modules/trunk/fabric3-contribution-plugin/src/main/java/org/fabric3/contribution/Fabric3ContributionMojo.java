@@ -171,13 +171,17 @@ public class Fabric3ContributionMojo extends AbstractMojo {
 	 	getLog().debug( "including dependencies in archive");
 	 	//include all the dependencies that are required for runtime operation and are not sca-contributions(they
 	 	// will be deployed separately);
+                File libDir = new File( contentDirectory,"META-INF" + File.separator + "lib" );
 	 	ScopeArtifactFilter filter = new ScopeArtifactFilter( Artifact.SCOPE_RUNTIME );
         for (Artifact artifact : (Set<Artifact>)project.getArtifacts() ) {
         	System.out.println("checking " + artifact.getArtifactId());
         	boolean isSCAContribution = "sca-contribution".equals(artifact.getType());
             if ( !isSCAContribution && !artifact.isOptional() && filter.include( artifact ) ) {
             	getLog().debug( String.format("including dependency %s", artifact));
-            	File destinationFile = new File( contentDirectory, artifact.getFile().getName());
+            	File destinationFile = new File( libDir, artifact.getFile().getName());
+                if (!libDir.exists()){
+                    libDir.mkdirs();
+                }
             	getLog().debug(String.format("copying %s to %s", artifact.getFile(), destinationFile));
             	FileChannel destChannel = new FileOutputStream(destinationFile).getChannel();
             	FileChannel srcChannel = new FileInputStream(artifact.getFile()).getChannel();
