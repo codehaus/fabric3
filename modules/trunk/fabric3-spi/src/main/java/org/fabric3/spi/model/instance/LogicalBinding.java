@@ -25,11 +25,16 @@ import org.fabric3.spi.model.type.BindingDefinition;
  *
  * @version $Rev$ $Date$
  */
-public class LogicalBinding<BD extends BindingDefinition> {
+public class LogicalBinding<BD extends BindingDefinition> extends LogicalScaArtifact<Bindable> {
     
     private final BD binding;
 
-    public LogicalBinding(BD binding) {
+    /**
+     * @param binding
+     * @param parent
+     */
+    public LogicalBinding(BD binding, Bindable parent) {
+        super(null, parent);
         this.binding = binding;
     }
 
@@ -41,4 +46,5 @@ public class LogicalBinding<BD extends BindingDefinition> {
     public BD getBinding() {
         return binding;
     }
+    
 }

@@ -47,35 +47,35 @@ public class LogicalScaArtifact<P extends LogicalScaArtifact<?>> extends Referen
     /**
      * @return Parent of this SCA artifact.
      */
-    public P getParent() {
+    public final P getParent() {
         return parent;
     }
 
     /**
      * @return Intents declared on the SCA artifact.
      */
-    public Set<QName> getIntents() {
+    public final Set<QName> getIntents() {
         return intents;
     }
 
     /**
      * @param intents Intents declared on the SCA artifact.
      */
-    public void setIntents(Set<QName> intents) {
+    public final void setIntents(Set<QName> intents) {
         this.intents = intents;
     }
 
     /**
      * @return Policy sets declared on the SCA artifact.
      */
-    public Set<QName> getPolicySets() {
+    public final Set<QName> getPolicySets() {
         return policySets;
     }
 
     /**
      * @param policySets Policy sets declared on the SCA artifact.
      */
-    public void setPolicySets(Set<QName> policySets) {
+    public final void setPolicySets(Set<QName> policySets) {
         this.policySets = policySets;
     }
     

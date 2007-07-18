@@ -30,6 +30,7 @@ import static org.fabric3.spi.model.instance.ValueSource.ValueSourceType.SERVICE
 import org.fabric3.spi.model.physical.PhysicalChangeSet;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.type.ComponentDefinition;
+import org.fabric3.spi.model.type.CompositeImplementation;
 import org.fabric3.spi.model.type.Scope;
 
 /**
@@ -50,7 +51,7 @@ public class JavaPhysicalComponentGeneratorTestCase extends TestCase {
      */
     @SuppressWarnings({"unchecked"})
     public void testGeneration() throws Exception {
-        generator.generate(createLogicalComponent(), context);
+        generator.generate(createLogicalComponent(null), context);
         PhysicalChangeSet changeSet = context.getPhysicalChangeSet();
         PhysicalComponentDefinition pDefinition = changeSet.getComponentDefinitions().iterator().next();
         assertTrue(pDefinition instanceof PojoComponentDefinition);
@@ -106,7 +107,7 @@ public class JavaPhysicalComponentGeneratorTestCase extends TestCase {
 
     }
 
-    private LogicalComponent<JavaImplementation> createLogicalComponent() throws NoSuchMethodException {
+    private LogicalComponent<JavaImplementation> createLogicalComponent(LogicalComponent<CompositeImplementation> parent) throws NoSuchMethodException {
         PojoComponentType type = createType();
         JavaImplementation impl = new JavaImplementation();
         impl.setComponentType(type);
@@ -114,7 +115,7 @@ public class JavaPhysicalComponentGeneratorTestCase extends TestCase {
         ComponentDefinition<JavaImplementation> definition =
                 new ComponentDefinition<JavaImplementation>(COMPONENT_ID.toString(), impl);
         definition.setInitLevel(1);
-        return new LogicalComponent<JavaImplementation>(COMPONENT_ID, RUNTIME_ID, definition);
+        return new LogicalComponent<JavaImplementation>(COMPONENT_ID, RUNTIME_ID, definition, parent);
     }
 
 

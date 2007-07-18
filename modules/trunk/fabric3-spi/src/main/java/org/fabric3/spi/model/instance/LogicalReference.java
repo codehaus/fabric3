@@ -30,55 +30,65 @@ import org.fabric3.spi.model.type.ReferenceDefinition;
  *
  * @version $Rev$ $Date$
  */
-public class LogicalReference extends Referenceable {
-    private final List<LogicalBinding> bindings;
+public class LogicalReference extends Bindable {
+    
     private final ReferenceDefinition definition;
     private List<URI> targets;
     private List<URI> promoted;
 
-    public LogicalReference(URI uri, ReferenceDefinition definition) {
-        super(uri);
+    /**
+     * @param uri
+     * @param definition
+     * @param parent
+     */
+    public LogicalReference(URI uri, ReferenceDefinition definition, LogicalComponent<?> parent) {
+        super(uri, parent);
         this.definition = definition;
-        bindings = new ArrayList<LogicalBinding>();
         targets = new ArrayList<URI>();
         promoted = new ArrayList<URI>();
     }
 
+    /**
+     * @return
+     */
     public ReferenceDefinition getDefinition() {
         return definition;
     }
 
-    public List<LogicalBinding> getBindings() {
-        return Collections.unmodifiableList(bindings);
-    }
-
-    public void addBinding(LogicalBinding binding) {
-        bindings.add(binding);
-    }
-
-    public void overrideBindings(List<LogicalBinding> bindings) {
-        this.bindings.clear();
-        this.bindings.addAll(bindings);
-    }
-
+    /**
+     * @return
+     */
     public List<URI> getTargetUris() {
         return Collections.unmodifiableList(targets);
     }
 
+    /**
+     * @param uri
+     */
     public void addTargetUri(URI uri) {
         targets.add(uri);
     }
 
+    /**
+     * @param targets
+     */
     public void overrideTargets(List<URI> targets) {
         this.targets.clear();
         this.targets.addAll(targets);
     }
 
+    /**
+     * @return
+     */
     public List<URI> getPromotedUris() {
         return Collections.unmodifiableList(promoted);
     }
 
+    /**
+     * @param uri
+     */
     public void addPromotedUri(URI uri) {
         promoted.add(uri);
     }
+    
 }

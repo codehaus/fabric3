@@ -68,6 +68,7 @@ import org.fabric3.spi.util.UriHelper;
  * @version $Rev$ $Date$
  */
 public abstract class AbstractAssembly implements Assembly {
+    
     public static final QName COMPOSITE = new QName(SCA_NS, "composite");
     protected final URI domainUri;
     protected final GeneratorRegistry generatorRegistry;
@@ -233,8 +234,7 @@ public abstract class AbstractAssembly implements Assembly {
         ComponentType<?, ?, ?> type = impl.getComponentType();
         //URI uri = URI.create(baseUri.toString() + "/" + definition.getName());
         URI runtimeId = definition.getRuntimeId();
-        LogicalComponent<I> component = new LogicalComponent<I>(baseUri, runtimeId, definition);
-        component.setParent(parent);
+        LogicalComponent<I> component = new LogicalComponent<I>(baseUri, runtimeId, definition, parent);
         if (CompositeComponentType.class.isInstance(type)) {
             CompositeComponentType compositeType = CompositeComponentType.class.cast(type);
             LogicalComponent<CompositeImplementation> composite =
@@ -242,26 +242,25 @@ public abstract class AbstractAssembly implements Assembly {
             for (ComponentDefinition<? extends Implementation<?>> child : compositeType.getComponents().values()) {
                 URI childUri = URI.create(baseUri.toString() + "/" + child.getName());
                 LogicalComponent<? extends Implementation<?>> logicalChild = instantiate(childUri, composite, child);
-                logicalChild.setParent(composite);
                 component.addComponent(logicalChild);
             }
         }
         for (ServiceDefinition service : type.getServices().values()) {
             URI serviceUri = baseUri.resolve(service.getUri());
-            LogicalService logicalService = new LogicalService(serviceUri, service);
+            LogicalService logicalService = new LogicalService(serviceUri, service, component);
             if (service.getTarget() != null) {
                 logicalService.setTargetUri(URI.create(baseUri.toString() + "/" + service.getTarget()));
             }
             for (BindingDefinition binding : service.getBindings()) {
-                logicalService.addBinding(new LogicalBinding(binding));
+                logicalService.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalService));
             }
             component.addService(logicalService);
         }
         for (ReferenceDefinition reference : type.getReferences().values()) {
             URI referenceUri = baseUri.resolve(reference.getUri());
-            LogicalReference logicalReference = new LogicalReference(referenceUri, reference);
+            LogicalReference logicalReference = new LogicalReference(referenceUri, reference, component);
             for (BindingDefinition binding : reference.getBindings()) {
-                logicalReference.addBinding(new LogicalBinding(binding));
+                logicalReference.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalReference));
             }
             for (URI promotedUri : reference.getPromoted()) {
                 URI resolvedUri = URI.create(baseUri.toString() + "/" + promotedUri.toString());
@@ -414,7 +413,7 @@ public abstract class AbstractAssembly implements Assembly {
                         throw new TargetNotFoundException("Target not found for reference " + refUri, uri.toString());
                     }
                     if (target instanceof LogicalComponent) {
-                        LogicalComponent<?> targetComponent = (LogicalComponent) target;
+                        LogicalComponent<?> targetComponent = (LogicalComponent<?>) target;
                         String serviceName = uri.getFragment();
                         LogicalReference reference = component.getReference(entry.getUri().getFragment());
                         LogicalService targetService = null;
@@ -439,19 +438,19 @@ public abstract class AbstractAssembly implements Assembly {
                 }
             } else {
                 // TODO this should be extensible and moved out
-                LogicalBinding logicalBinding = entry.getBindings().get(0);
+                LogicalBinding<?> logicalBinding = entry.getBindings().get(0);
                 generatorRegistry.generateBoundReferenceWire(component, entry, logicalBinding, context);
             }
 
         }
         // generate changesets for bound service wires
         for (LogicalService service : component.getServices()) {
-            List<LogicalBinding> bindings = service.getBindings();
+            List<LogicalBinding<?>> bindings = service.getBindings();
             if (bindings.isEmpty()) {
                 // service is not bound, skip
                 continue;
             }
-            for (LogicalBinding binding : service.getBindings()) {
+            for (LogicalBinding<?> binding : service.getBindings()) {
                 generatorRegistry.generateBoundServiceWire(service, binding, component, context);
             }
         }

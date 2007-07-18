@@ -34,18 +34,24 @@ import org.fabric3.spi.model.type.PropertyValue;
  *
  * @version $Rev$ $Date$
  */
-public class LogicalComponent<I extends Implementation<?>> extends Referenceable {
+public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArtifact<LogicalComponent<CompositeImplementation>> {
+    
     private final ComponentDefinition<I> definition;
     private final Map<String, PropertyValue> propertyValues = new HashMap<String, PropertyValue>();
     private final Map<URI, LogicalComponent<?>> components = new HashMap<URI, LogicalComponent<?>>();
     private final Map<String, LogicalService> services = new HashMap<String, LogicalService>();
     private final Map<String, LogicalReference> references = new HashMap<String, LogicalReference>();
-    private LogicalComponent<CompositeImplementation> parent;
     private URI runtimeId;
     private boolean active;
 
-    public LogicalComponent(URI uri, URI runtimeId, ComponentDefinition<I> definition) {
-        super(uri);
+    /**
+     * @param uri URI of the component.
+     * @param runtimeId URI of the runtime to which the component has to be provisioned.
+     * @param definition Definition of the component.
+     * @param parent Parent of the component.
+     */
+    public LogicalComponent(URI uri, URI runtimeId, ComponentDefinition<I> definition, LogicalComponent<CompositeImplementation> parent) {
+        super(uri, parent);
         this.runtimeId = runtimeId;
         this.definition = definition;
     }
@@ -84,24 +90,6 @@ public class LogicalComponent<I extends Implementation<?>> extends Referenceable
      */
     public void setActive(boolean active) {
         this.active = active;
-    }
-
-    /**
-     * Returns the component's parent composite.
-     *
-     * @return the component's parent composite
-     */
-    public LogicalComponent<CompositeImplementation> getParent() {
-        return parent;
-    }
-
-    /**
-     * Sets the component's parent composite.
-     *
-     * @param parent the component's parent composite
-     */
-    public void setParent(LogicalComponent<CompositeImplementation> parent) {
-        this.parent = parent;
     }
 
     /**

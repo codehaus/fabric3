@@ -28,25 +28,46 @@ import java.util.List;
  *
  * @version $Rev: 59 $ $Date: 2007-05-19 08:21:09 +0100 (Sat, 19 May 2007) $
  */
-public class Bindable<P extends LogicalScaArtifact<?>> extends LogicalScaArtifact<P> {
+public class Bindable extends LogicalScaArtifact<LogicalComponent<?>> {
     
     private final List<LogicalBinding<?>> bindings;
 
-    public Bindable(URI uri, P parent) {
+    /**
+     * Initializes the URI and parent for the service or the reference.
+     * 
+     * @param uri URI of the service or the reference.
+     * @param parent Parent of the service or the reference.
+     */
+    public Bindable(URI uri, LogicalComponent<?> parent) {
         super(uri, parent);
         bindings = new ArrayList<LogicalBinding<?>>();
     }
 
-    public void overrideBindings(List<LogicalBinding<?>> bindings) {
+    /**
+     * Overrides all the current bindings for the service or reference.
+     * 
+     * @param bindings New set of bindings.
+     */
+    public final void overrideBindings(List<LogicalBinding<?>> bindings) {
         this.bindings.clear();
         this.bindings.addAll(bindings);
     }
 
-    public List<LogicalBinding<?>> getBindings() {
+    /**
+     * Returns all the bindings on the service or the reference.
+     * 
+     * @return The bindings available on the service or the reference.
+     */
+    public final List<LogicalBinding<?>> getBindings() {
         return Collections.unmodifiableList(bindings);
     }
 
-    public void addBinding(LogicalBinding<?> binding) {
+    /**
+     * Adds a binding to the service or the reference.
+     * 
+     * @param binding Binding to be added to the service or the reference.
+     */
+    public final void addBinding(LogicalBinding<?> binding) {
         bindings.add(binding);
     }
 

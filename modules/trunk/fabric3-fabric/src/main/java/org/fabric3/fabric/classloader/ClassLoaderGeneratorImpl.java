@@ -101,7 +101,7 @@ public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {
         }
     }
 
-    private void processBindings(List<LogicalBinding> bindings) {
+    private void processBindings(List<LogicalBinding<?>> bindings) {
         for (LogicalBinding binding : bindings) {
             for (ResourceDescription description : binding.getBinding().getResourceDescriptions()) {
                 if (description instanceof ExtensionResourceDescription) {

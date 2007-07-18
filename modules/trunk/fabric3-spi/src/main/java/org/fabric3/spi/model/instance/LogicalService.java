@@ -19,50 +19,48 @@
 package org.fabric3.spi.model.instance;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import org.fabric3.spi.model.type.ServiceDefinition;
 
 /**
- * Represents a reslved service
+ * Represents a resolved service
  *
  * @version $Rev$ $Date$
  */
-public class LogicalService extends Referenceable {
-    private final List<LogicalBinding> bindings;
+public class LogicalService extends Bindable {
+    
     private final ServiceDefinition definition;
     private URI targetUri;
 
-    public LogicalService(URI uri, ServiceDefinition definition) {
-        super(uri);
+    /**
+     * @param uri
+     * @param definition
+     * @param parent
+     */
+    public LogicalService(URI uri, ServiceDefinition definition, LogicalComponent<?> parent) {
+        super(uri, parent);
         this.definition = definition;
-        bindings = new ArrayList<LogicalBinding>();
     }
 
+    /**
+     * @return
+     */
     public ServiceDefinition getDefinition() {
         return definition;
     }
 
-    public void overrideBindings(List<LogicalBinding> bindings) {
-        this.bindings.clear();
-        this.bindings.addAll(bindings);
-    }
-
-    public List<LogicalBinding> getBindings() {
-        return Collections.unmodifiableList(bindings);
-    }
-
-    public void addBinding(LogicalBinding binding) {
-        bindings.add(binding);
-    }
-
+    /**
+     * @return
+     */
     public URI getTargetUri() {
         return targetUri;
     }
 
+    /**
+     * @param targetUri
+     */
     public void setTargetUri(URI targetUri) {
         this.targetUri = targetUri;
     }
+    
 }

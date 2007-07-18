@@ -28,9 +28,9 @@ public class BindingNormalizerImplTestcase extends TestCase {
     public void testServiceNormalize() throws Exception {
         LogicalComponent<?> component = createServiceAssembly();
         normalizer.normalize(component);
-        List<LogicalBinding> bindings = component.getServices().iterator().next().getBindings();
+        List<LogicalBinding<?>> bindings = component.getServices().iterator().next().getBindings();
         assertEquals(3, bindings.size());
-        for (LogicalBinding binding : bindings) {
+        for (LogicalBinding<?> binding : bindings) {
             BindingDefinition definition = binding.getBinding();
             assertTrue(definition instanceof MockBinding2
                     || definition instanceof MockBinding3
@@ -41,9 +41,9 @@ public class BindingNormalizerImplTestcase extends TestCase {
     public void testReferenceNormalize() throws Exception {
         LogicalComponent<?> component = createReferenceAssembly();
         normalizer.normalize(component);
-        List<LogicalBinding> bindings = component.getReferences().iterator().next().getBindings();
+        List<LogicalBinding<?>> bindings = component.getReferences().iterator().next().getBindings();
         assertEquals(3, bindings.size());
-        for (LogicalBinding binding : bindings) {
+        for (LogicalBinding<?> binding : bindings) {
             BindingDefinition definition = binding.getBinding();
             assertTrue(definition instanceof MockBinding2
                     || definition instanceof MockBinding3
@@ -69,40 +69,38 @@ public class BindingNormalizerImplTestcase extends TestCase {
      * @return
      */
     private LogicalComponent<?> createServiceAssembly() {
-        LogicalComponent<?> component = createComponent(URI.create("grandParent/parent/component"));
         // setup parent
         LogicalComponent<CompositeImplementation> parent = createComposite(URI.create("grandParent/parent"));
+        LogicalComponent<?> component = createComponent(URI.create("grandParent/parent/component"), parent);
         parent.addComponent(component);
-        component.setParent(parent);
         //setup grandparent
         LogicalComponent<CompositeImplementation> grandParent = createComposite(URI.create("grandParent"));
         grandParent.addComponent(parent);
-        parent.setParent(grandParent);
 
-        LogicalBinding<?> binding1 = new LogicalBinding<BindingDefinition>(new MockBinding());
         ServiceDefinition serviceDefinition1 = new ServiceDefinition();
-        LogicalService service1 = new LogicalService(URI.create("grandParent/parent#service1"), serviceDefinition1);
+        LogicalService service1 = new LogicalService(URI.create("grandParent/parent#service1"), serviceDefinition1, component);
+        LogicalBinding<?> binding1 = new LogicalBinding<BindingDefinition>(new MockBinding(), service1);
         service1.setTargetUri(URI.create("grandParent/parent/component#service"));
         service1.addBinding(binding1);
         parent.addService(service1);
 
-        LogicalBinding<?> binding2 = new LogicalBinding<BindingDefinition>(new MockBinding2());
         ServiceDefinition serviceDefinition2 = new ServiceDefinition();
-        LogicalService service2 = new LogicalService(URI.create("grandParent/parent#service2"), serviceDefinition2);
+        LogicalService service2 = new LogicalService(URI.create("grandParent/parent#service2"), serviceDefinition2, component);
+        LogicalBinding<?> binding2 = new LogicalBinding<BindingDefinition>(new MockBinding2(), service2);
         service2.setTargetUri(URI.create("grandParent/parent/component#service"));
         service2.addBinding(binding2);
         parent.addService(service2);
 
-        LogicalBinding<?> binding3 = new LogicalBinding<BindingDefinition>(new MockBinding3());
         ServiceDefinition serviceDefinition3 = new ServiceDefinition();
-        LogicalService service3 = new LogicalService(URI.create("grandParent#service3"), serviceDefinition3);
+        LogicalService service3 = new LogicalService(URI.create("grandParent#service3"), serviceDefinition3, component);
+        LogicalBinding<?> binding3 = new LogicalBinding<BindingDefinition>(new MockBinding3(), service3);
         service3.setTargetUri(URI.create("grandParent/parent#service1"));
         service3.addBinding(binding3);
         grandParent.addService(service3);
 
-        LogicalBinding<?> binding4 = new LogicalBinding<BindingDefinition>(new MockBinding4());
         ServiceDefinition serviceDefinition4 = new ServiceDefinition();
-        LogicalService service4 = new LogicalService(URI.create("grandParent#service4"), serviceDefinition4);
+        LogicalService service4 = new LogicalService(URI.create("grandParent#service4"), serviceDefinition4, component);
+        LogicalBinding<?> binding4 = new LogicalBinding<BindingDefinition>(new MockBinding4(), service4);
         service4.setTargetUri(URI.create("grandParent/parent#service1"));
         service4.addBinding(binding4);
         grandParent.addService(service4);
@@ -127,40 +125,38 @@ public class BindingNormalizerImplTestcase extends TestCase {
      * @return
      */
     private LogicalComponent<?> createReferenceAssembly() {
-        LogicalComponent<?> component = createComponent(URI.create("grandParent/parent/component"));
         // setup parent
         LogicalComponent<CompositeImplementation> parent = createComposite(URI.create("grandParent/parent"));
+        LogicalComponent<?> component = createComponent(URI.create("grandParent/parent/component"), parent);
         parent.addComponent(component);
-        component.setParent(parent);
         //setup grandparent
         LogicalComponent<CompositeImplementation> grandParent = createComposite(URI.create("grandParent"));
         grandParent.addComponent(parent);
-        parent.setParent(grandParent);
 
-        LogicalBinding<?> binding1 = new LogicalBinding<BindingDefinition>(new MockBinding());
         ReferenceDefinition refDefinition1 = new ReferenceDefinition();
-        LogicalReference reference1 = new LogicalReference(URI.create("grandParent/parent#reference1"), refDefinition1);
+        LogicalReference reference1 = new LogicalReference(URI.create("grandParent/parent#reference1"), refDefinition1, component);
+        LogicalBinding<?> binding1 = new LogicalBinding<BindingDefinition>(new MockBinding(), reference1);
         reference1.addPromotedUri(URI.create("grandParent/parent/component#reference"));
         reference1.addBinding(binding1);
         parent.addReference(reference1);
 
-        LogicalBinding<?> binding2 = new LogicalBinding<BindingDefinition>(new MockBinding2());
         ReferenceDefinition refDeinition2 = new ReferenceDefinition();
-        LogicalReference reference2 = new LogicalReference(URI.create("grandParent/parent#reference2"), refDeinition2);
+        LogicalReference reference2 = new LogicalReference(URI.create("grandParent/parent#reference2"), refDeinition2, component);
+        LogicalBinding<?> binding2 = new LogicalBinding<BindingDefinition>(new MockBinding2(), reference2);
         reference2.addPromotedUri(URI.create("grandParent/parent/component#reference"));
         reference2.addBinding(binding2);
         parent.addReference(reference2);
 
-        LogicalBinding<?> binding3 = new LogicalBinding<BindingDefinition>(new MockBinding3());
         ReferenceDefinition refDefinition3 = new ReferenceDefinition();
-        LogicalReference reference3 = new LogicalReference(URI.create("grandParent#reference3"), refDefinition3);
+        LogicalReference reference3 = new LogicalReference(URI.create("grandParent#reference3"), refDefinition3, component);
+        LogicalBinding<?> binding3 = new LogicalBinding<BindingDefinition>(new MockBinding3(), reference3);
         reference3.addPromotedUri(URI.create("grandParent/parent#reference1"));
         reference3.addBinding(binding3);
         grandParent.addReference(reference3);
 
-        LogicalBinding<?> binding4 = new LogicalBinding<BindingDefinition>(new MockBinding4());
         ReferenceDefinition refDefinition4 = new ReferenceDefinition();
-        LogicalReference reference4 = new LogicalReference(URI.create("grandParent#reference4"), refDefinition4);
+        LogicalReference reference4 = new LogicalReference(URI.create("grandParent#reference4"), refDefinition4, component);
+        LogicalBinding<?> binding4 = new LogicalBinding<BindingDefinition>(new MockBinding4(), reference4);
         reference4.addPromotedUri(URI.create("grandParent/parent#reference1"));
         reference4.addBinding(binding4);
         grandParent.addReference(reference4);
@@ -176,26 +172,26 @@ public class BindingNormalizerImplTestcase extends TestCase {
         impl.setComponentType(type);
         ComponentDefinition<CompositeImplementation> definition =
                 new ComponentDefinition<CompositeImplementation>(uri.toString(), impl);
-        return new LogicalComponent<CompositeImplementation>(uri, runtimeID, definition);
+        return new LogicalComponent<CompositeImplementation>(uri, runtimeID, definition, null);
 
     }
 
-    private LogicalComponent<?> createComponent(URI uri) {
+    private LogicalComponent<?> createComponent(URI uri, LogicalComponent<CompositeImplementation> parent) {
         URI runtimeID = URI.create("id");
         ComponentType<?, ?, ?> type = new ComponentType<ServiceDefinition, ReferenceDefinition, Property<?>>();
         MockImplementation impl = new MockImplementation();
         impl.setComponentType(type);
         ComponentDefinition<MockImplementation> definition =
                 new ComponentDefinition<MockImplementation>(uri.toString(), impl);
+        LogicalComponent<MockImplementation> component = new LogicalComponent<MockImplementation>(uri, runtimeID, definition, parent);
         ServiceDefinition serviceDefinition = new ServiceDefinition();
         LogicalService service =
-                new LogicalService(URI.create("grandParent/parent/component#service"), serviceDefinition);
-        LogicalComponent component = new LogicalComponent<MockImplementation>(uri, runtimeID, definition);
+                new LogicalService(URI.create("grandParent/parent/component#service"), serviceDefinition, component);
         component.addService(service);
 
         ReferenceDefinition referenceDefinition = new ReferenceDefinition();
         LogicalReference reference =
-                new LogicalReference(URI.create("grandParent/parent/component#reference"), referenceDefinition);
+                new LogicalReference(URI.create("grandParent/parent/component#reference"), referenceDefinition, component);
         component.addReference(reference);
         return component;
     }
