@@ -146,7 +146,9 @@ public class JarContributionProcessor extends ContributionProcessorExtension imp
         try {
             jar = new JarFile(file);
             JarEntry entry = jar.getJarEntry("META-INF/sca-contribution.xml");
-            assert entry != null;
+            if (entry == null) {
+                throw new ContributionManifestNotFoundException(file.getCanonicalPath());
+            }
             stream = jar.getInputStream(entry);
             reader = xmlFactory.createXMLStreamReader(stream);
             reader.nextTag();
