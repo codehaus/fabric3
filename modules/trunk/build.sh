@@ -1,8 +1,10 @@
 #!/bin/bash
 
-for module in */pom.xml
+rm -r ~/.m2/repository/org/codehaus/fabric3
+
+for module in */pom.xml 
 do 
-   mvn -P eclipse eclipse:eclipse -f $module 
+   mvn $* -f $module 
    if [ $? != 0 ] 
    then
        exit $?
