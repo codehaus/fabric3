@@ -39,12 +39,13 @@ import org.fabric3.spi.model.type.Property;
  * @version $Rev$ $Date$
  */
 public class PropertyLoader implements StAXElementLoader<Property<?>> {
-    public static final String PROPERTY_NAME_ATTR = "name";
-    public static final String PROPERTY_TYPE_ATTR = "type";
-    public static final String PROPERTY_MANY_ATTR = "many";
-    public static final String REQUIRED_ATTR = "override";
-
     private static final QName PROPERTY = new QName(SCA_NS, "Property");
+    private static final String NAME = "name";
+    private static final String TYPE = "type";
+    private static final String ELEMENT = "element";
+    private static final String MANY = "many";
+    private static final String MUST_SUPPLY = "mustSupply";
+
     private final DocumentBuilder documentBuilder;
 
     public PropertyLoader() {
@@ -63,8 +64,8 @@ public class PropertyLoader implements StAXElementLoader<Property<?>> {
     public Property<?> load(XMLStreamReader reader, LoaderContext ctx)
             throws XMLStreamException, LoaderException {
         assert PROPERTY.equals(reader.getName());
-        String name = reader.getAttributeValue(null, PROPERTY_NAME_ATTR);
-        String typeName = reader.getAttributeValue(null, PROPERTY_TYPE_ATTR);
+        String name = reader.getAttributeValue(null, NAME);
+        String typeName = reader.getAttributeValue(null, TYPE);
         QName xmlType = null;
         if (typeName != null) {
             int index = typeName.indexOf(':');
@@ -75,12 +76,12 @@ public class PropertyLoader implements StAXElementLoader<Property<?>> {
                 xmlType = new QName(ns, localName, prefix);
             }
         }
-        boolean many = Boolean.parseBoolean(reader.getAttributeValue(null, PROPERTY_MANY_ATTR));
-        String required = reader.getAttributeValue(null, REQUIRED_ATTR);
+        boolean many = Boolean.parseBoolean(reader.getAttributeValue(null, MANY));
+        boolean mustSupply = Boolean.parseBoolean(reader.getAttributeValue(null, MUST_SUPPLY));
         Document value = PropertyUtils.createPropertyValue(reader, xmlType, documentBuilder);
 
         Property<?> property = new Property();
-        property.setRequired(Boolean.parseBoolean(required));
+        property.setRequired(mustSupply);
         property.setName(name);
         property.setXmlType(xmlType);
         property.setMany(many);
