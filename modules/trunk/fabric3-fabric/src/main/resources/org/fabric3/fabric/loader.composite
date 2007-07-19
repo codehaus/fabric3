@@ -32,15 +32,26 @@
         <system:implementation.system class="org.fabric3.fabric.loader.LoaderRegistryImpl"/>
     </component>
 
-    <!-- Foundation element loader implementations -->
+    <!-- Common SCDL loader implementations -->
+    <component name="loader.Property">
+        <system:implementation.system class="org.fabric3.loader.common.PropertyLoader"/>
+    </component>
+
+    <!-- Composite SCDL loader implementations -->
+    <component name="loader.Include">
+        <system:implementation.system class="org.fabric3.loader.composite.IncludeLoader"/>
+    </component>
+    <component name="loader.Composite">
+        <system:implementation.system class="org.fabric3.loader.composite.CompositeLoader"/>
+        <reference name="include" target="loader.Include"/>
+        <reference name="property" target="loader.Property"/>
+    </component>
+
     <component name="elementLoader.component">
         <system:implementation.system class="org.fabric3.fabric.loader.ComponentLoader"/>
     </component>
     <component name="elementLoader.componentType">
         <system:implementation.system class="org.fabric3.fabric.loader.ComponentTypeElementLoader"/>
-    </component>
-    <component name="elementLoader.property">
-        <system:implementation.system class="org.fabric3.fabric.loader.PropertyLoader"/>
     </component>
     <component name="elementLoader.reference">
         <system:implementation.system class="org.fabric3.fabric.loader.ReferenceLoader"/>

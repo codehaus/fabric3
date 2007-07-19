@@ -27,7 +27,7 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.fabric.implementation.system.SystemImplementation;
-import org.fabric3.fabric.loader.PropertyUtils;
+import org.fabric3.loader.common.PropertyUtils;
 import org.fabric3.spi.Constants;
 import org.fabric3.pojo.processor.Introspector;
 import org.fabric3.pojo.processor.PojoComponentType;

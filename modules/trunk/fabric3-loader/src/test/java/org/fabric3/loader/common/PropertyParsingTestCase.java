@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.loader;
+package org.fabric3.loader.common;
 
 import java.io.StringReader;
 import javax.xml.parsers.DocumentBuilder;
@@ -30,6 +30,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import junit.framework.TestCase;
+
+import org.fabric3.loader.common.PropertyUtils;
 
 /**
  * @version $Rev$ $Date$

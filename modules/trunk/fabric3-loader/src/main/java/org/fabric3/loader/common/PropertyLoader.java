@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.loader;
+package org.fabric3.loader.common;
 
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
@@ -26,33 +26,28 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import static org.osoa.sca.Constants.SCA_NS;
-import org.osoa.sca.annotations.Constructor;
-import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 
-import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
+import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.model.type.Property;
 
 /**
- * Loads a property from an XML-based assembly file
+ * Loads a property declaration from an XML-based assembly file
  *
  * @version $Rev$ $Date$
  */
-public class PropertyLoader extends LoaderExtension<Property<?>> {
+public class PropertyLoader implements StAXElementLoader<Property<?>> {
     public static final String PROPERTY_NAME_ATTR = "name";
     public static final String PROPERTY_TYPE_ATTR = "type";
     public static final String PROPERTY_MANY_ATTR = "many";
     public static final String REQUIRED_ATTR = "override";
 
-    public static final QName PROPERTY = new QName(SCA_NS, "property");
+    private static final QName PROPERTY = new QName(SCA_NS, "Property");
     private final DocumentBuilder documentBuilder;
 
-    @Constructor
-    public PropertyLoader(@Reference LoaderRegistry registry) {
-        super(registry);
+    public PropertyLoader() {
         try {
             documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         } catch (ParserConfigurationException e) {

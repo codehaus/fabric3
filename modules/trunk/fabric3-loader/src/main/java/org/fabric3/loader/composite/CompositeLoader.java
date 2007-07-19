@@ -56,14 +56,19 @@ import org.fabric3.spi.util.stax.StaxUtil;
 public class CompositeLoader implements StAXElementLoader<CompositeComponentType> {
     private static final QName COMPOSITE = new QName(SCA_NS, "composite");
     private static final QName INCLUDE = new QName(SCA_NS, "include");
+    private static final QName PROPERTY = new QName(SCA_NS, "property");
 
     private final LoaderRegistry registry;
     private final StAXElementLoader<Include> includeLoader;
+    private final StAXElementLoader<Property<?>> propertyLoader;
 
     public CompositeLoader(@Reference LoaderRegistry registry,
-                           @Reference(name="include") StAXElementLoader<Include> includeLoader) {
+                           @Reference(name="include") StAXElementLoader<Include> includeLoader,
+                           @Reference(name="property") StAXElementLoader<Property<?>> propertyLoader
+                           ) {
         this.registry = registry;
         this.includeLoader = includeLoader;
+        this.propertyLoader = propertyLoader;
     }
 
     public QName getXMLType() {
@@ -105,14 +110,15 @@ public class CompositeLoader implements StAXElementLoader<CompositeComponentType
                         throw new DuplicateIncludeException("Include already defined with name", includeName.toString());
                     }
                     type.add(include);
+                } else if (PROPERTY.equals(qname)) {
+                    Property<?> property = propertyLoader.load(reader, loaderContext);
+                    type.add(property);
                 } else {
                     ModelObject loadedType = registry.load(reader, ModelObject.class, loaderContext);
                     if (loadedType instanceof ServiceDefinition) {
                         type.add((ServiceDefinition) loadedType);
                     } else if (loadedType instanceof ReferenceDefinition) {
                         type.add((ReferenceDefinition) loadedType);
-                    } else if (loadedType instanceof Property<?>) {
-                        type.add((Property<?>) loadedType);
                     } else if (loadedType instanceof ComponentDefinition<?>) {
                         type.add((ComponentDefinition<?>) loadedType);
                     } else if (loadedType instanceof WireDefinition) {
