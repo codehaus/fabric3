@@ -16,9 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.loader;
+package org.fabric3.loader.common;
 
-import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamConstants;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
@@ -28,15 +28,14 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
-import static org.osoa.sca.Constants.SCA_NS;
 
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.model.type.BindingDefinition;
+import org.fabric3.spi.model.type.ModelObject;
 import org.fabric3.spi.model.type.ServiceContract;
 import org.fabric3.spi.model.type.ServiceDefinition;
-import org.fabric3.spi.model.type.ModelObject;
 
 /**
  * Verifies loading of a service definition from an XML-based assembly
@@ -44,7 +43,6 @@ import org.fabric3.spi.model.type.ModelObject;
  * @version $Rev$ $Date$
  */
 public class ServiceLoaderTestCase extends TestCase {
-    private static final QName SERVICE = new QName(SCA_NS, "service");
     private ServiceLoader loader;
     private LoaderContext loaderContext;
     private XMLStreamReader mockReader;
@@ -52,11 +50,9 @@ public class ServiceLoaderTestCase extends TestCase {
 
     public void testWithNoInterface() throws LoaderException, XMLStreamException {
         String name = "serviceDefinition";
-        expect(mockReader.getName()).andReturn(SERVICE).anyTimes();
         expect(mockReader.getAttributeValue(null, "name")).andReturn(name);
         expect(mockReader.getAttributeValue(null, "promote")).andReturn(null);
         expect(mockReader.next()).andReturn(END_ELEMENT);
-        expect(mockReader.getName()).andReturn(SERVICE).anyTimes();
         replay(mockReader);
         ServiceDefinition serviceDefinition = loader.load(mockReader, loaderContext);
         assertNotNull(serviceDefinition);
@@ -65,11 +61,9 @@ public class ServiceLoaderTestCase extends TestCase {
 
     public void testComponentTypeService() throws LoaderException, XMLStreamException {
         String name = "service";
-        expect(mockReader.getName()).andReturn(SERVICE).anyTimes();
         expect(mockReader.getAttributeValue(null, "name")).andReturn(name);
         expect(mockReader.getAttributeValue(null, "promote")).andReturn(null);
         expect(mockReader.next()).andReturn(END_ELEMENT);
-        expect(mockReader.getName()).andReturn(SERVICE).anyTimes();
         replay(mockReader);
         ServiceDefinition serviceDefinition = loader.load(mockReader, loaderContext);
         assertTrue(ServiceDefinition.class.equals(serviceDefinition.getClass()));
@@ -77,13 +71,11 @@ public class ServiceLoaderTestCase extends TestCase {
 
     public void testMultipleBindings() throws LoaderException, XMLStreamException {
         String name = "serviceDefinition";
-        expect(mockReader.getName()).andReturn(SERVICE).anyTimes();
         expect(mockReader.getAttributeValue(null, "name")).andReturn(name);
         expect(mockReader.getAttributeValue(null, "promote")).andReturn("component/target");
         expect(mockReader.next()).andReturn(START_ELEMENT);
         expect(mockReader.next()).andReturn(START_ELEMENT);
         expect(mockReader.next()).andReturn(END_ELEMENT);
-        expect(mockReader.getName()).andReturn(SERVICE).anyTimes();
         replay(mockReader);
 
         BindingDefinition binding = new BindingDefinition() {
@@ -100,13 +92,11 @@ public class ServiceLoaderTestCase extends TestCase {
         String target = "target";
         ServiceContract sc = new ServiceContract() {
         };
-        expect(mockReader.getName()).andReturn(SERVICE).anyTimes();
         expect(mockReader.getAttributeValue(null, "name")).andReturn(name);
         expect(mockReader.getAttributeValue(null, "promote")).andReturn(target);
         expect(mockReader.next()).andReturn(START_ELEMENT);
         expect(mockRegistry.load(mockReader, ModelObject.class, loaderContext)).andReturn(sc);
         expect(mockReader.next()).andReturn(END_ELEMENT);
-        expect(mockReader.getName()).andReturn(SERVICE);
 
         replay(mockReader);
         replay(mockRegistry);
@@ -121,13 +111,11 @@ public class ServiceLoaderTestCase extends TestCase {
         String name = "serviceDefinition";
         ServiceContract sc = new ServiceContract() {
         };
-        expect(mockReader.getName()).andReturn(SERVICE).anyTimes();
         expect(mockReader.getAttributeValue(null, "name")).andReturn(name);
         expect(mockReader.getAttributeValue(null, "promote")).andReturn(null);
         expect(mockReader.next()).andReturn(START_ELEMENT);
         expect(mockRegistry.load(mockReader, ModelObject.class, loaderContext)).andReturn(sc);
         expect(mockReader.next()).andReturn(END_ELEMENT);
-        expect(mockReader.getName()).andReturn(SERVICE);
 
         replay(mockReader);
         replay(mockRegistry);
@@ -136,6 +124,28 @@ public class ServiceLoaderTestCase extends TestCase {
         assertNotNull(serviceDefinition);
         assertEquals("#" + name, serviceDefinition.getUri().toString());
         assertSame(sc, serviceDefinition.getServiceContract());
+    }
+
+    public void testReferenceNoFragment() throws LoaderException, XMLStreamException {
+        String name = "serviceDefinition";
+        EasyMock.expect(mockReader.getAttributeValue(null, "name")).andReturn(name);
+        EasyMock.expect(mockReader.getAttributeValue(null, "promote")).andReturn("target");
+        EasyMock.expect(mockReader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
+        EasyMock.replay(mockReader);
+        ServiceDefinition serviceDefinition = loader.load(mockReader, loaderContext);
+        assertNotNull(serviceDefinition);
+        assertEquals("target", serviceDefinition.getTarget().toString());
+    }
+
+    public void testReferenceWithFragment() throws LoaderException, XMLStreamException {
+        String name = "serviceDefinition";
+        EasyMock.expect(mockReader.getAttributeValue(null, "name")).andReturn(name);
+        EasyMock.expect(mockReader.getAttributeValue(null, "promote")).andReturn("target/fragment");
+        EasyMock.expect(mockReader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
+        EasyMock.replay(mockReader);
+        ServiceDefinition serviceDefinition = loader.load(mockReader, loaderContext);
+        assertNotNull(serviceDefinition);
+        assertEquals("target#fragment", serviceDefinition.getTarget().toString());
     }
 
     protected void setUp() throws Exception {

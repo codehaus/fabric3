@@ -46,6 +46,7 @@ import org.fabric3.spi.model.type.Multiplicity;
 import org.fabric3.spi.model.type.ReferenceDefinition;
 import org.fabric3.spi.model.type.ServiceContract;
 import org.fabric3.loader.common.InvalidNameException;
+import org.fabric3.loader.common.QualifiedName;
 
 /**
  * Loads a reference from an XML-based assembly file

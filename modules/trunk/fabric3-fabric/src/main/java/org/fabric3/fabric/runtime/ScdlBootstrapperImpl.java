@@ -84,12 +84,8 @@ import org.fabric3.fabric.implementation.system.SystemImplementationLoader;
 import org.fabric3.fabric.implementation.system.SystemWireAttacher;
 import org.fabric3.fabric.loader.ComponentLoader;
 import org.fabric3.fabric.loader.ComponentTypeElementLoader;
-import org.fabric3.loader.composite.IncludeLoader;
-import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.fabric.loader.LoaderRegistryImpl;
-import org.fabric3.loader.common.PropertyLoader;
 import org.fabric3.fabric.loader.ReferenceLoader;
-import org.fabric3.fabric.loader.ServiceLoader;
 import org.fabric3.fabric.marshaller.MarshallerLoader;
 import static org.fabric3.fabric.runtime.ComponentNames.CLASSLOADER_REGISTRY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_ASSEMBLY_URI;
@@ -119,7 +115,9 @@ import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.ScdlBootstrapper;
+import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.loader.composite.CompositeLoader;
+import org.fabric3.loader.composite.IncludeLoader;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
@@ -399,16 +397,15 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
         // register element loaders
         IncludeLoader includeLoader = new IncludeLoader(loaderRegistry);
-        PropertyLoader propertyLoader = new PropertyLoader();
         registerLoader(loaderRegistry, new CompositeLoader(loaderRegistry,
                                                            includeLoader,
-                                                           propertyLoader));
+                                                           null,
+                                                           null));
 
         registerLoader(loaderRegistry, new ComponentLoader(loaderRegistry));
         registerLoader(loaderRegistry, new ComponentTypeElementLoader(loaderRegistry));
         registerLoader(loaderRegistry, new InterfaceJavaLoader(loaderRegistry, interfaceProcessorRegistry));
         registerLoader(loaderRegistry, new ReferenceLoader(loaderRegistry));
-        registerLoader(loaderRegistry, new ServiceLoader(loaderRegistry));
         SystemComponentTypeLoaderImpl componentTypeLoader = new SystemComponentTypeLoaderImpl(introspector);
         registerLoader(loaderRegistry, new SystemImplementationLoader(loaderRegistry, componentTypeLoader));
         registerLoader(loaderRegistry, new MarshallerLoader(loaderRegistry, introspector));

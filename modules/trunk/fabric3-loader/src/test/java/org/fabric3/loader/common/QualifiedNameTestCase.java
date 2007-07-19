@@ -16,11 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.loader;
+package org.fabric3.loader.common;
 
 import junit.framework.TestCase;
 
 import org.fabric3.loader.common.InvalidNameException;
+import org.fabric3.loader.common.QualifiedName;
 
 /**
  * Tests parsing of naming patters

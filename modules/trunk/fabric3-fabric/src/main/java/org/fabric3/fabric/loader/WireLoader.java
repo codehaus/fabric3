@@ -36,6 +36,7 @@ import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.model.type.WireDefinition;
+import org.fabric3.loader.common.QualifiedName;
 
 /**
  * Loads a wire from an XML-based assembly file

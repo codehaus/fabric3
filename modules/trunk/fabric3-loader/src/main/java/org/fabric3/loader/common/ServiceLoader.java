@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.loader;
+package org.fabric3.loader.common;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -27,13 +27,12 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import static org.osoa.sca.Constants.SCA_NS;
-import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
+import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.loader.UnrecognizedElementException;
 import org.fabric3.spi.model.type.BindingDefinition;
 import org.fabric3.spi.model.type.ModelObject;
@@ -45,12 +44,13 @@ import org.fabric3.spi.model.type.ServiceDefinition;
  *
  * @version $Rev$ $Date$
  */
-public class ServiceLoader extends LoaderExtension<ServiceDefinition> {
-    private static final QName SERVICE = new QName(SCA_NS, "service");
+public class ServiceLoader implements StAXElementLoader<ServiceDefinition> {
+    private static final QName SERVICE = new QName(SCA_NS, "Service");
 
-    @Constructor
+    private final LoaderRegistry registry;
+
     public ServiceLoader(@Reference LoaderRegistry registry) {
-        super(registry);
+        this.registry = registry;
     }
 
     public QName getXMLType() {
@@ -59,7 +59,6 @@ public class ServiceLoader extends LoaderExtension<ServiceDefinition> {
 
     public ServiceDefinition load(XMLStreamReader reader, LoaderContext context)
             throws XMLStreamException, LoaderException {
-        assert SERVICE.equals(reader.getName());
         String name = reader.getAttributeValue(null, "name");
         ServiceDefinition def = new ServiceDefinition();
         try {
@@ -98,13 +97,10 @@ public class ServiceLoader extends LoaderExtension<ServiceDefinition> {
                 }
                 break;
             case END_ELEMENT:
-                if (SERVICE.equals(reader.getName())) {
-                    if (targetUri != null) {
-                        def.setTarget(targetUri);
-                    }
-                    return def;
+                if (targetUri != null) {
+                    def.setTarget(targetUri);
                 }
-                break;
+                return def;
             }
         }
     }

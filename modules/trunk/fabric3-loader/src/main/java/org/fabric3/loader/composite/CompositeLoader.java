@@ -57,18 +57,22 @@ public class CompositeLoader implements StAXElementLoader<CompositeComponentType
     private static final QName COMPOSITE = new QName(SCA_NS, "composite");
     private static final QName INCLUDE = new QName(SCA_NS, "include");
     private static final QName PROPERTY = new QName(SCA_NS, "property");
+    private static final QName SERVICE = new QName(SCA_NS, "service");
 
     private final LoaderRegistry registry;
     private final StAXElementLoader<Include> includeLoader;
     private final StAXElementLoader<Property<?>> propertyLoader;
+    private final StAXElementLoader<ServiceDefinition> serviceLoader;
 
     public CompositeLoader(@Reference LoaderRegistry registry,
                            @Reference(name="include") StAXElementLoader<Include> includeLoader,
-                           @Reference(name="property") StAXElementLoader<Property<?>> propertyLoader
+                           @Reference(name="property") StAXElementLoader<Property<?>> propertyLoader,
+                           @Reference(name="service") StAXElementLoader<ServiceDefinition> serviceLoader
                            ) {
         this.registry = registry;
         this.includeLoader = includeLoader;
         this.propertyLoader = propertyLoader;
+        this.serviceLoader = serviceLoader;
     }
 
     public QName getXMLType() {
@@ -113,11 +117,12 @@ public class CompositeLoader implements StAXElementLoader<CompositeComponentType
                 } else if (PROPERTY.equals(qname)) {
                     Property<?> property = propertyLoader.load(reader, loaderContext);
                     type.add(property);
+                } else if (SERVICE.equals(qname)) {
+                    ServiceDefinition service = serviceLoader.load(reader, loaderContext);
+                    type.add(service);
                 } else {
                     ModelObject loadedType = registry.load(reader, ModelObject.class, loaderContext);
-                    if (loadedType instanceof ServiceDefinition) {
-                        type.add((ServiceDefinition) loadedType);
-                    } else if (loadedType instanceof ReferenceDefinition) {
+                    if (loadedType instanceof ReferenceDefinition) {
                         type.add((ReferenceDefinition) loadedType);
                     } else if (loadedType instanceof ComponentDefinition<?>) {
                         type.add((ComponentDefinition<?>) loadedType);
