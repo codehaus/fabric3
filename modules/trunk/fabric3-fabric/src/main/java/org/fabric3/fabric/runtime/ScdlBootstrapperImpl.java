@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.stream.XMLInputFactory;
 
-import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.fabric.assembly.ActivateException;
 import org.fabric3.fabric.assembly.AssemblyException;
 import org.fabric3.fabric.assembly.InstantiationException;
@@ -61,7 +60,6 @@ import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
 import org.fabric3.fabric.implementation.IntrospectionRegistryImpl;
 import org.fabric3.fabric.implementation.composite.CompositeComponentTypeLoader;
 import org.fabric3.fabric.implementation.composite.CompositeComponentTypeLoaderImpl;
-import org.fabric3.fabric.implementation.composite.CompositeLoader;
 import org.fabric3.fabric.implementation.processor.ConstructorProcessor;
 import org.fabric3.fabric.implementation.processor.DestroyProcessor;
 import org.fabric3.fabric.implementation.processor.EagerInitProcessor;
@@ -121,6 +119,7 @@ import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.ScdlBootstrapper;
+import org.fabric3.loader.composite.CompositeLoader;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
@@ -141,6 +140,7 @@ import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
+import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.model.type.Autowire;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.CompositeImplementation;
@@ -413,7 +413,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         return loaderRegistry;
     }
 
-    protected void registerLoader(LoaderRegistry registry, LoaderExtension<?> loader) {
+    protected void registerLoader(LoaderRegistry registry, StAXElementLoader<?> loader) {
         registry.registerLoader(loader.getXMLType(), loader);
     }
 

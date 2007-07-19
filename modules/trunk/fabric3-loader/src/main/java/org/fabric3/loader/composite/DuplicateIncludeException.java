@@ -1,4 +1,4 @@
-package org.fabric3.fabric.implementation.composite;
+package org.fabric3.loader.composite;
 
 import org.fabric3.spi.loader.LoaderException;
 

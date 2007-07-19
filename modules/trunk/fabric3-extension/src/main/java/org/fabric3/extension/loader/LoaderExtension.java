@@ -18,8 +18,6 @@
  */
 package org.fabric3.extension.loader;
 
-import javax.xml.namespace.QName;
-
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
@@ -68,11 +66,4 @@ public abstract class LoaderExtension<OUTPUT> implements StAXElementLoader<OUTPU
     public void stop() {
         registry.unregisterLoader(getXMLType());
     }
-
-    /**
-     * Returns the QName of the element that this implementation handles.
-     *
-     * @return the QName of the element that this implementation handles
-     */
-    public abstract QName getXMLType();
 }

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.implementation.composite;
+package org.fabric3.loader.composite;
 
 import javax.xml.namespace.QName;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
@@ -25,14 +25,17 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import static org.osoa.sca.Constants.SCA_NS;
+import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.spi.loader.InvalidConfigurationException;
 import org.fabric3.spi.loader.InvalidServiceException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
+import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.model.type.Autowire;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.CompositeComponentType;
@@ -49,16 +52,28 @@ import org.fabric3.spi.util.stax.StaxUtil;
  *
  * @version $Rev$ $Date$
  */
-public class CompositeLoader extends LoaderExtension<CompositeComponentType> {
-    public static final QName COMPOSITE = new QName(SCA_NS, "composite");
-    public static final String URI_DELIMITER = "/";
+@EagerInit
+public class CompositeLoader implements StAXElementLoader<CompositeComponentType> {
+    private static final QName COMPOSITE = new QName(SCA_NS, "composite");
+
+    private final LoaderRegistry registry;
 
     public CompositeLoader(@Reference LoaderRegistry registry) {
-        super(registry);
+        this.registry = registry;
     }
 
     public QName getXMLType() {
         return COMPOSITE;
+    }
+
+    @Init
+    public void init() {
+        registry.registerLoader(COMPOSITE, this);
+    }
+
+    @Destroy
+    public void destroy() {
+        registry.unregisterLoader(COMPOSITE);
     }
 
     public CompositeComponentType load(XMLStreamReader reader, LoaderContext loaderContext)

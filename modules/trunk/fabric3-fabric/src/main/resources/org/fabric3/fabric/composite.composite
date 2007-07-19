@@ -29,7 +29,7 @@
 
     <!-- Composite implementation type -->
     <component name="composite.loader">
-        <system:implementation.system class="org.fabric3.fabric.implementation.composite.CompositeLoader"/>
+        <system:implementation.system class="org.fabric3.loader.composite.CompositeLoader"/>
     </component>
     <component name="composite.componentTypeLoader">
         <system:implementation.system class="org.fabric3.fabric.implementation.composite.CompositeComponentTypeLoaderImpl"/>

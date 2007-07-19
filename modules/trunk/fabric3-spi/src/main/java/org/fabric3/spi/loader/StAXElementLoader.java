@@ -20,6 +20,7 @@ package org.fabric3.spi.loader;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import javax.xml.namespace.QName;
 
 /**
  * Deserializes an element from a StAX input stream.
@@ -38,4 +39,11 @@ public interface StAXElementLoader<OUTPUT> {
      * @throws XMLStreamException if an error reading the XML stream occurs
      */
     OUTPUT load(XMLStreamReader reader, LoaderContext context) throws XMLStreamException, LoaderException;
+
+    /**
+     * Returns the XML type this loader handles.
+     *
+     * @return the XML type this loader handles
+     */
+    QName getXMLType();
 }

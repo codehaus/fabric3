@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.implementation.composite;
+package org.fabric3.loader.composite;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
