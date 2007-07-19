@@ -18,10 +18,7 @@
  */
 package org.fabric3.fabric.implementation.composite;
 
-import java.net.URI;
 import java.net.URL;
-import java.util.List;
-import java.util.Map;
 import javax.xml.namespace.QName;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
@@ -35,21 +32,17 @@ import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.spi.deployer.CompositeClassLoader;
 import org.fabric3.spi.loader.InvalidConfigurationException;
 import org.fabric3.spi.loader.InvalidServiceException;
-import org.fabric3.spi.loader.InvalidWireException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.MissingResourceException;
 import org.fabric3.spi.model.type.Autowire;
 import org.fabric3.spi.model.type.ComponentDefinition;
-import org.fabric3.spi.model.type.ComponentType;
 import org.fabric3.spi.model.type.CompositeComponentType;
-import org.fabric3.spi.model.type.Implementation;
 import org.fabric3.spi.model.type.Include;
 import org.fabric3.spi.model.type.ModelObject;
 import org.fabric3.spi.model.type.Property;
 import org.fabric3.spi.model.type.ReferenceDefinition;
-import org.fabric3.spi.model.type.ReferenceTarget;
 import org.fabric3.spi.model.type.ServiceDefinition;
 import org.fabric3.spi.model.type.WireDefinition;
 import org.fabric3.spi.services.artifact.Artifact;
@@ -142,64 +135,10 @@ public class CompositeLoader extends LoaderExtension<CompositeComponentType> {
                 break;
             case END_ELEMENT:
                 assert COMPOSITE.equals(reader.getName());
-                // if there are wire defintions then link them up to the relevant components
-                resolveWires(type);
-                verifyCompositeCompleteness(type);
+               verifyCompositeCompleteness(type);
                 return type;
             }
         }
-    }
-
-    protected void resolveWires(CompositeComponentType composite) throws InvalidWireException {
-        ComponentDefinition componentDefinition;
-        ServiceDefinition serviceDefinition;
-        List<WireDefinition> wireDefns = composite.getDeclaredWires();
-        for (WireDefinition wire : wireDefns) {
-            URI targetUri = wire.getTarget();
-            // validate the target before finding the source
-            validateTarget(targetUri, composite);
-
-            String sourceName = wire.getSource().getPath(); //new QualifiedName(wire.getSource().getPath());
-            serviceDefinition = composite.getDeclaredServices().get(sourceName);
-            if (serviceDefinition != null) {
-                serviceDefinition.setTarget(wire.getTarget());
-            } else {
-                componentDefinition = composite.getDeclaredComponents().get(sourceName);
-                if (componentDefinition != null) {
-                    if (wire.getSource().getFragment() == null) {
-                        throw new InvalidWireException("Source reference not specified", sourceName);
-                    }
-                    URI referenceName = URI.create(wire.getSource().getFragment());
-                    ReferenceTarget referenceTarget = createReferenceTarget(referenceName,
-                                                                            targetUri,
-                                                                            componentDefinition);
-                    componentDefinition.add(referenceTarget);
-                } else {
-                    throw new InvalidWireException("Source not found", sourceName);
-                }
-            }
-        }
-    }
-
-    private ReferenceTarget createReferenceTarget(URI componentReferenceName,
-                                                  URI target,
-                                                  ComponentDefinition componentDefn) throws InvalidWireException {
-        ComponentType componentType = componentDefn.getImplementation().getComponentType();
-        if (componentReferenceName == null) {
-            // if there is ambiguity in determining the source of the wire or there is no reference to be wired
-            if (componentType.getReferences().size() > 1 || componentType.getReferences().isEmpty()) {
-                throw new InvalidWireException("Unable to determine unique source reference");
-            } else {
-                Map references = componentType.getReferences();
-                ReferenceDefinition definition = (ReferenceDefinition) references.values().iterator().next();
-                componentReferenceName = definition.getUri();
-            }
-        }
-
-        ReferenceTarget referenceTarget = new ReferenceTarget();
-        referenceTarget.setReferenceName(componentReferenceName);
-        referenceTarget.addTarget(target);
-        return referenceTarget;
     }
 
     protected void verifyCompositeCompleteness(CompositeComponentType composite) throws InvalidServiceException {
@@ -212,28 +151,4 @@ public class CompositeLoader extends LoaderExtension<CompositeComponentType> {
         }
     }
 
-    private void validateTarget(URI target, CompositeComponentType composite) throws InvalidWireException {
-        // if target is not a reference of the composite
-        String targetName = target.getPath();
-        if (composite.getReferences().get(targetName) == null) {
-            ComponentDefinition<?> targetDefinition = composite.getDeclaredComponents().get(targetName);
-            // if a target component exists in this composite
-            if (targetDefinition != null) {
-                Implementation<?> implementation = targetDefinition.getImplementation();
-                ComponentType<?, ?, ?> componentType = implementation.getComponentType();
-                Map<String, ? extends ServiceDefinition> services = componentType.getServices();
-                if (target.getFragment() == null) {
-                    if (services.size() > 1 || services.isEmpty()) {
-                        throw new InvalidWireException("Ambiguous target", target.toString());
-                    }
-                } else {
-                    if (services.get(target.getFragment()) == null) {
-                        throw new InvalidWireException("Invalid target service", target.toString());
-                    }
-                }
-            } else {
-                throw new InvalidWireException("Target not found", target.toString());
-            }
-        }
-    }
 }
