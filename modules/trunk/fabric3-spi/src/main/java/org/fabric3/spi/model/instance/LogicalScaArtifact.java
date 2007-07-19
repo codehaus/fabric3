@@ -33,7 +33,7 @@ public class LogicalScaArtifact<P extends LogicalScaArtifact<?>> extends Referen
     
     private Set<QName> intents = new HashSet<QName>();
     private Set<QName> policySets = new HashSet<QName>();
-    private P parent;
+    private final P parent;
 
     /**
      * @param uri URI of the SCA artifact.
