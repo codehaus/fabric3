@@ -62,6 +62,13 @@ public final class PolicySet extends ModelObject {
     }
     
     /**
+     * @return Name of the policy set.
+     */
+    public QName getName() {
+        return name;
+    }
+    
+    /**
      * Checks whether this policy set applies to the specified artifact.
      * @param scaArtifact SCA artifact that needs to be checked.
      * @return True if this policy set applies to the specified SCA artifact.

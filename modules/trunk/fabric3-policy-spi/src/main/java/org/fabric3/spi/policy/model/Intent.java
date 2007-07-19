@@ -56,6 +56,13 @@ public final class Intent extends ModelObject {
     }
     
     /**
+     * @return Name of the intent.
+     */
+    public QName getName() {
+        return name;
+    }
+    
+    /**
      * Checks whether the specified artifact can be constrained by this intent.
      * @param scaArtifact SCA artifact that needs to be checked.
      * @return True if this intent can constrain the specified SCA artifact.
