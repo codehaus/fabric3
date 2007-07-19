@@ -32,7 +32,6 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.isA;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
-import org.osoa.sca.Constants;
 
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
@@ -44,7 +43,6 @@ import org.fabric3.spi.model.type.Include;
  * @version $Rev$ $Date$
  */
 public class IncludeLoaderTestCase extends TestCase {
-    private static final QName INCLUDE = new QName(Constants.SCA_NS, "include");
 
     private LoaderRegistry registry;
     private IncludeLoader loader;
