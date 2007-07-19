@@ -51,6 +51,6 @@ public interface PolicyRegistry {
      * @param scaArtifact SCA artifact.
      * @return List of interceptors.
      */
-    Set<QName> getInterceptors(LogicalScaArtifact<?> scaArtifact);
+    Set<QName> getInterceptorBuilders(LogicalScaArtifact<?> scaArtifact);
 
 }
