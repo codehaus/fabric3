@@ -58,21 +58,25 @@ public class CompositeLoader implements StAXElementLoader<CompositeComponentType
     private static final QName INCLUDE = new QName(SCA_NS, "include");
     private static final QName PROPERTY = new QName(SCA_NS, "property");
     private static final QName SERVICE = new QName(SCA_NS, "service");
+    private static final QName REFERENCE = new QName(SCA_NS, "reference");
 
     private final LoaderRegistry registry;
     private final StAXElementLoader<Include> includeLoader;
     private final StAXElementLoader<Property<?>> propertyLoader;
     private final StAXElementLoader<ServiceDefinition> serviceLoader;
+    private final StAXElementLoader<ReferenceDefinition> referenceLoader;
 
     public CompositeLoader(@Reference LoaderRegistry registry,
                            @Reference(name="include") StAXElementLoader<Include> includeLoader,
                            @Reference(name="property") StAXElementLoader<Property<?>> propertyLoader,
-                           @Reference(name="service") StAXElementLoader<ServiceDefinition> serviceLoader
+                           @Reference(name="service") StAXElementLoader<ServiceDefinition> serviceLoader,
+                           @Reference(name="reference") StAXElementLoader<ReferenceDefinition> referenceLoader
                            ) {
         this.registry = registry;
         this.includeLoader = includeLoader;
         this.propertyLoader = propertyLoader;
         this.serviceLoader = serviceLoader;
+        this.referenceLoader = referenceLoader;
     }
 
     public QName getXMLType() {
@@ -120,6 +124,9 @@ public class CompositeLoader implements StAXElementLoader<CompositeComponentType
                 } else if (SERVICE.equals(qname)) {
                     ServiceDefinition service = serviceLoader.load(reader, loaderContext);
                     type.add(service);
+                } else if (REFERENCE.equals(qname)) {
+                    ReferenceDefinition reference = referenceLoader.load(reader, loaderContext);
+                    type.add(reference);
                 } else {
                     ModelObject loadedType = registry.load(reader, ModelObject.class, loaderContext);
                     if (loadedType instanceof ReferenceDefinition) {

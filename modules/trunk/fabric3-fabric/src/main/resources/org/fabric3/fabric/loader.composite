@@ -39,6 +39,9 @@
     <component name="loader.Service">
         <system:implementation.system class="org.fabric3.loader.common.ServiceLoader"/>
     </component>
+    <component name="loader.Reference">
+        <system:implementation.system class="org.fabric3.loader.common.ReferenceLoader"/>
+    </component>
 
     <!-- Composite SCDL loader implementations -->
     <component name="loader.Include">
@@ -49,6 +52,7 @@
         <reference name="include" target="loader.Include"/>
         <reference name="property" target="loader.Property"/>
         <reference name="service" target="loader.Service"/>
+        <reference name="reference" target="loader.Reference"/>
     </component>
 
     <component name="elementLoader.component">
@@ -56,9 +60,6 @@
     </component>
     <component name="elementLoader.componentType">
         <system:implementation.system class="org.fabric3.fabric.loader.ComponentTypeElementLoader"/>
-    </component>
-    <component name="elementLoader.reference">
-        <system:implementation.system class="org.fabric3.fabric.loader.ReferenceLoader"/>
     </component>
     <component name="elementLoader.wire">
         <system:implementation.system class="org.fabric3.fabric.loader.WireLoader"/>

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.loader;
+package org.fabric3.loader.common;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -30,34 +30,31 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import static org.osoa.sca.Constants.SCA_NS;
-import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.spi.Constants;
 import org.fabric3.spi.loader.InvalidReferenceException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
+import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.loader.UnrecognizedElementException;
 import org.fabric3.spi.model.type.BindingDefinition;
 import org.fabric3.spi.model.type.ModelObject;
 import org.fabric3.spi.model.type.Multiplicity;
 import org.fabric3.spi.model.type.ReferenceDefinition;
 import org.fabric3.spi.model.type.ServiceContract;
-import org.fabric3.loader.common.InvalidNameException;
-import org.fabric3.loader.common.QualifiedName;
 
 /**
  * Loads a reference from an XML-based assembly file
  * 
  * @version $Rev$ $Date$
  */
-public class ReferenceLoader extends LoaderExtension<ReferenceDefinition> {
-
-    public static final QName REFERENCE = new QName(SCA_NS, "reference");
-
+public class ReferenceLoader implements StAXElementLoader<ReferenceDefinition> {
+    private static final QName REFERENCE = new QName(SCA_NS, "Reference");
     private static final Map<String, Multiplicity> MULTIPLICITY = new HashMap<String, Multiplicity>(4);
+
+    private final LoaderRegistry registry;
 
     static {
         MULTIPLICITY.put("0..1", Multiplicity.ZERO_ONE);
@@ -66,9 +63,8 @@ public class ReferenceLoader extends LoaderExtension<ReferenceDefinition> {
         MULTIPLICITY.put("1..n", Multiplicity.ONE_N);
     }
 
-    @Constructor
     public ReferenceLoader(@Reference LoaderRegistry registry) {
-        super(registry);
+        this.registry = registry;
     }
 
     public QName getXMLType() {
@@ -77,8 +73,6 @@ public class ReferenceLoader extends LoaderExtension<ReferenceDefinition> {
 
     public ReferenceDefinition load(XMLStreamReader reader, LoaderContext context)
         throws XMLStreamException, LoaderException {
-
-        assert REFERENCE.equals(reader.getName());
 
         ReferenceDefinition referenceDefinition = new ReferenceDefinition();
 

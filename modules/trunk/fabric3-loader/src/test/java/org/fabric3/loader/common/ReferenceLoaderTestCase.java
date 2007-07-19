@@ -16,24 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.loader;
+package org.fabric3.loader.common;
 
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
-import org.osoa.sca.Constants;
 
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.model.type.BindingDefinition;
+import org.fabric3.spi.model.type.ModelObject;
 import org.fabric3.spi.model.type.ReferenceDefinition;
 import org.fabric3.spi.model.type.ServiceContract;
-import org.fabric3.spi.model.type.ModelObject;
 
 /**
  * Verifies loading of a reference definition from an XML-based assembly
@@ -41,7 +39,6 @@ import org.fabric3.spi.model.type.ModelObject;
  * @version $Rev$ $Date$
  */
 public class ReferenceLoaderTestCase extends TestCase {
-    private static final QName REFERENCE = new QName(Constants.SCA_NS, "reference");
     private String promoted;
     private ReferenceLoader loader;
     private XMLStreamReader mockReader;
@@ -50,13 +47,11 @@ public class ReferenceLoaderTestCase extends TestCase {
 
     public void testWithNoInterface() throws LoaderException, XMLStreamException {
         String name = "referenceDefinition";
-        EasyMock.expect(mockReader.getName()).andReturn(REFERENCE).anyTimes();
         EasyMock.expect(mockReader.getAttributeValue(null, "name")).andReturn(name);
         EasyMock.expect(mockReader.getAttributeValue(null, "promote")).andReturn(promoted);
         EasyMock.expect(mockReader.getAttributeValue(null, "multiplicity")).andReturn("0..1");
         EasyMock.expect(mockReader.getAttributeValue(org.fabric3.spi.Constants.FABRIC3_NS, "key")).andReturn("test");
         EasyMock.expect(mockReader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
-        EasyMock.expect(mockReader.getName()).andReturn(REFERENCE).anyTimes();
         EasyMock.replay(mockReader);
         ReferenceDefinition referenceDefinition = loader.load(mockReader, ctx);
         assertNotNull(referenceDefinition);
@@ -65,13 +60,11 @@ public class ReferenceLoaderTestCase extends TestCase {
 
     public void testPromote() throws LoaderException, XMLStreamException {
         String name = "referenceDefinition";
-        EasyMock.expect(mockReader.getName()).andReturn(REFERENCE).anyTimes();
         EasyMock.expect(mockReader.getAttributeValue(null, "name")).andReturn(name);
         EasyMock.expect(mockReader.getAttributeValue(null, "promote")).andReturn(promoted);
         EasyMock.expect(mockReader.getAttributeValue(null, "multiplicity")).andReturn("0..1");
         EasyMock.expect(mockReader.getAttributeValue(org.fabric3.spi.Constants.FABRIC3_NS, "key")).andReturn("test");
         EasyMock.expect(mockReader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
-        EasyMock.expect(mockReader.getName()).andReturn(REFERENCE).anyTimes();
         EasyMock.replay(mockReader);
         ReferenceDefinition referenceDefinition = loader.load(mockReader, ctx);
         assertEquals("Component#Service", referenceDefinition.getPromoted().get(0).toString());
@@ -79,13 +72,11 @@ public class ReferenceLoaderTestCase extends TestCase {
 
     public void testComponentTypeService() throws LoaderException, XMLStreamException {
         String name = "reference";
-        EasyMock.expect(mockReader.getName()).andReturn(REFERENCE).anyTimes();
         EasyMock.expect(mockReader.getAttributeValue(null, "name")).andReturn(name);
         EasyMock.expect(mockReader.getAttributeValue(null, "promote")).andReturn(promoted);
         EasyMock.expect(mockReader.getAttributeValue(null, "multiplicity")).andReturn("0..1");
         EasyMock.expect(mockReader.getAttributeValue(org.fabric3.spi.Constants.FABRIC3_NS, "key")).andReturn("test");
         EasyMock.expect(mockReader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
-        EasyMock.expect(mockReader.getName()).andReturn(REFERENCE).anyTimes();
         EasyMock.replay(mockReader);
         ReferenceDefinition referenceDefinition = loader.load(mockReader, ctx);
         assertTrue(ReferenceDefinition.class.equals(referenceDefinition.getClass()));
@@ -93,14 +84,12 @@ public class ReferenceLoaderTestCase extends TestCase {
 
     public void testMultipleBindings() throws LoaderException, XMLStreamException {
         String name = "referenceDefinition";
-        EasyMock.expect(mockReader.getName()).andReturn(REFERENCE).anyTimes();
         EasyMock.expect(mockReader.getAttributeValue(null, "name")).andReturn(name);
         EasyMock.expect(mockReader.getAttributeValue(null, "promote")).andReturn(promoted);
         EasyMock.expect(mockReader.getAttributeValue(null, "multiplicity")).andReturn("0..1");
         EasyMock.expect(mockReader.getAttributeValue(org.fabric3.spi.Constants.FABRIC3_NS, "key")).andReturn("test");
         EasyMock.expect(mockReader.next()).andReturn(XMLStreamConstants.START_ELEMENT).times(2);
         EasyMock.expect(mockReader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
-        EasyMock.expect(mockReader.getName()).andReturn(REFERENCE).anyTimes();
         EasyMock.replay(mockReader);
 
         BindingDefinition binding = new BindingDefinition() {
@@ -119,7 +108,6 @@ public class ReferenceLoaderTestCase extends TestCase {
         String name = "referenceDefinition";
         ServiceContract sc = new ServiceContract() {
         };
-        EasyMock.expect(mockReader.getName()).andReturn(REFERENCE).anyTimes();
         EasyMock.expect(mockReader.getAttributeValue(null, "name")).andReturn(name);
         EasyMock.expect(mockReader.getAttributeValue(null, "promote")).andReturn(promoted);
         EasyMock.expect(mockReader.getAttributeValue(null, "multiplicity")).andReturn("0..1");
