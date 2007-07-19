@@ -18,7 +18,6 @@
  */
 package org.fabric3.fabric.implementation.composite;
 
-import java.net.URL;
 import javax.xml.namespace.QName;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
@@ -29,13 +28,11 @@ import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.extension.loader.LoaderExtension;
-import org.fabric3.spi.deployer.CompositeClassLoader;
 import org.fabric3.spi.loader.InvalidConfigurationException;
 import org.fabric3.spi.loader.InvalidServiceException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.loader.MissingResourceException;
 import org.fabric3.spi.model.type.Autowire;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.CompositeComponentType;
@@ -45,8 +42,6 @@ import org.fabric3.spi.model.type.Property;
 import org.fabric3.spi.model.type.ReferenceDefinition;
 import org.fabric3.spi.model.type.ServiceDefinition;
 import org.fabric3.spi.model.type.WireDefinition;
-import org.fabric3.spi.services.artifact.Artifact;
-import org.fabric3.spi.services.artifact.ArtifactRepository;
 import org.fabric3.spi.util.stax.StaxUtil;
 
 /**
@@ -58,11 +53,8 @@ public class CompositeLoader extends LoaderExtension<CompositeComponentType> {
     public static final QName COMPOSITE = new QName(SCA_NS, "composite");
     public static final String URI_DELIMITER = "/";
 
-    private final ArtifactRepository artifactRepository;
-
-    public CompositeLoader(@Reference LoaderRegistry registry, @Reference ArtifactRepository artifactRepository) {
+    public CompositeLoader(@Reference LoaderRegistry registry) {
         super(registry);
-        this.artifactRepository = artifactRepository;
     }
 
     public QName getXMLType() {
@@ -102,30 +94,6 @@ public class CompositeLoader extends LoaderExtension<CompositeComponentType> {
                         throw new DuplicateIncludeException("Include already defined with name", includeName.toString());
                     }
                     type.add(include);
-                } else if (loadedType instanceof Dependency) {
-                    Artifact artifact = ((Dependency) loadedType).getArtifact();
-                    if (artifactRepository == null) {
-                        throw new MissingResourceException("No ArtifactRepository configured for this system",
-                                                           artifact.toString()
-                        );
-                    }
-
-                    // default to jar type if not specified
-                    if (artifact.getType() == null) {
-                        artifact.setType("jar");
-                    }
-                    artifactRepository.resolve(artifact);
-                    if (artifact.getUrl() == null) {
-                        throw new MissingResourceException("Dependency not found", artifact.toString());
-                    }
-
-                    ClassLoader classLoader = loaderContext.getTargetClassLoader();
-                    if (classLoader instanceof CompositeClassLoader) {
-                        CompositeClassLoader ccl = (CompositeClassLoader) classLoader;
-                        for (URL dep : artifact.getUrls()) {
-                            ccl.addURL(dep);
-                        }
-                    }
                 } else if (loadedType instanceof WireDefinition) {
                     type.add((WireDefinition) loadedType);
                 } else if (loadedType != null) {

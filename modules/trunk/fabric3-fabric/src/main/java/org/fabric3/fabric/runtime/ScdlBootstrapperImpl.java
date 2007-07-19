@@ -400,7 +400,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         // register element loaders
         registerLoader(loaderRegistry, new ComponentLoader(loaderRegistry));
         registerLoader(loaderRegistry, new ComponentTypeElementLoader(loaderRegistry));
-        registerLoader(loaderRegistry, new CompositeLoader(loaderRegistry, null));
+        registerLoader(loaderRegistry, new CompositeLoader(loaderRegistry));
         registerLoader(loaderRegistry, new IncludeLoader(loaderRegistry));
         registerLoader(loaderRegistry, new InterfaceJavaLoader(loaderRegistry, interfaceProcessorRegistry));
         registerLoader(loaderRegistry, new PropertyLoader(loaderRegistry));

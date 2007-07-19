@@ -31,9 +31,6 @@
     <component name="composite.loader">
         <system:implementation.system class="org.fabric3.fabric.implementation.composite.CompositeLoader"/>
     </component>
-    <component name="composite.dependencyLoader">
-        <system:implementation.system class="org.fabric3.fabric.loader.DependencyLoader"/>
-    </component>
     <component name="composite.componentTypeLoader">
         <system:implementation.system class="org.fabric3.fabric.implementation.composite.CompositeComponentTypeLoaderImpl"/>
     </component>
