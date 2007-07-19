@@ -16,27 +16,32 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.loader;
+package org.fabric3.loader.common;
 
-import java.net.URL;
-
-import org.fabric3.spi.loader.LoaderContext;
-import org.fabric3.spi.transform.TransformContext;
+import org.fabric3.spi.loader.LoaderException;
 
 /**
- * A holder that can be used during the load process to store information that is not part of the logical assembly
- * model. This should be regarded as transient and references to this context should not be stored inside the model.
+ * Denotes an invalid name
  *
  * @version $Rev$ $Date$
  */
-public class LoaderContextImpl extends TransformContext implements LoaderContext {
-    /**
-     * Constructor defining properties of this context.
-     *
-     * @param classLoader  the classloader for loading application resources
-     * @param scdlLocation the location of the SCDL defining this composite
-     */
-    public LoaderContextImpl(ClassLoader classLoader, URL scdlLocation) {
-        super(null, classLoader, scdlLocation, null);
+public class InvalidNameException extends LoaderException {
+
+    public InvalidNameException() {
+        super();
     }
+
+    public InvalidNameException(String message) {
+        super(message);
+    }
+
+    public InvalidNameException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public InvalidNameException(Throwable cause) {
+        super(cause);
+    }
+
 }
+

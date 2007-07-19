@@ -40,7 +40,7 @@ import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.extension.contribution.ContributionProcessorExtension;
-import org.fabric3.fabric.loader.LoaderContextImpl;
+import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.spi.deployer.CompositeClassLoader;

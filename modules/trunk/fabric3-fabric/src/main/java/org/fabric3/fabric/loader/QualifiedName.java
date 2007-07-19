@@ -18,6 +18,8 @@
  */
 package org.fabric3.fabric.loader;
 
+import org.fabric3.loader.common.InvalidNameException;
+
 /**
  * An evaluated name consisting of a part/port pair. In the runtime, a part generally 'contains' or 'provides' ports
  * such as a component/service point or a component/reference pair.

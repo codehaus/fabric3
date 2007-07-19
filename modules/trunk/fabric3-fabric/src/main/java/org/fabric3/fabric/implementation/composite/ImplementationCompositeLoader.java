@@ -18,9 +18,6 @@
  */
 package org.fabric3.fabric.implementation.composite;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Set;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -29,17 +26,13 @@ import org.osoa.sca.Constants;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.extension.loader.LoaderExtension;
-import org.fabric3.spi.deployer.CompositeClassLoader;
-import org.fabric3.spi.loader.InvalidValueException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
-import org.fabric3.spi.loader.MissingResourceException;
 import org.fabric3.spi.model.type.CompositeImplementation;
-import org.fabric3.spi.services.artifact.Artifact;
 import org.fabric3.spi.services.artifact.ArtifactRepository;
-import org.fabric3.fabric.loader.InvalidNameException;
+import org.fabric3.loader.common.InvalidNameException;
 
 /**
  * Loader that handles an &lt;implementation.composite&gt; element.

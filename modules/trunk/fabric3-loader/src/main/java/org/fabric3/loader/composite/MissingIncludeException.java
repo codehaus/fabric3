@@ -16,32 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.loader;
+package org.fabric3.loader.composite;
 
 import org.fabric3.spi.loader.LoaderException;
 
 /**
- * Denotes an invalid name
+ * Exception that indicates that an include was not provided.
  *
  * @version $Rev$ $Date$
  */
-public class InvalidNameException extends LoaderException {
+public class MissingIncludeException extends LoaderException {
+    private static final long serialVersionUID = -2917278473974880124L;
 
-    public InvalidNameException() {
-        super();
+    public MissingIncludeException(String message, String identifier) {
+        super(message, identifier);
     }
-
-    public InvalidNameException(String message) {
-        super(message);
-    }
-
-    public InvalidNameException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public InvalidNameException(Throwable cause) {
-        super(cause);
-    }
-
 }
-

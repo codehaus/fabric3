@@ -57,7 +57,7 @@ import org.apache.maven.surefire.testset.TestSetFailedException;
 
 import org.fabric3.api.annotation.LogLevel;
 import org.fabric3.fabric.implementation.composite.CompositeComponentTypeLoader;
-import org.fabric3.fabric.loader.LoaderContextImpl;
+import org.fabric3.loader.common.LoaderContextImpl;
 import static org.fabric3.fabric.runtime.ComponentNames.COMPOSITE_LOADER_URI;
 import org.fabric3.fabric.runtime.ScdlBootstrapperImpl;
 import org.fabric3.host.Fabric3RuntimeException;

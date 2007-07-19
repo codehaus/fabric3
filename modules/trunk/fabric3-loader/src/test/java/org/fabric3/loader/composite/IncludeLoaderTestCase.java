@@ -16,11 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.loader;
+package org.fabric3.loader.composite;
 
 import java.net.URL;
-import javax.xml.namespace.QName;
 import javax.xml.namespace.NamespaceContext;
+import javax.xml.namespace.QName;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -128,7 +128,7 @@ public class IncludeLoaderTestCase extends TestCase {
 
     public void testWithScdlResource() throws LoaderException, XMLStreamException {
         String name = "foo";
-        String resource = "org/fabric3/fabric/loader/test-include.composite";
+        String resource = "org/fabric3/loader/composite/test-include.composite";
         includeURL = cl.getResource(resource);
         assertNotNull(includeURL);
 

@@ -20,6 +20,8 @@ package org.fabric3.fabric.loader;
 
 import junit.framework.TestCase;
 
+import org.fabric3.loader.common.InvalidNameException;
+
 /**
  * Tests parsing of naming patters
  *

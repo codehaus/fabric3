@@ -84,8 +84,8 @@ import org.fabric3.fabric.implementation.system.SystemImplementationLoader;
 import org.fabric3.fabric.implementation.system.SystemWireAttacher;
 import org.fabric3.fabric.loader.ComponentLoader;
 import org.fabric3.fabric.loader.ComponentTypeElementLoader;
-import org.fabric3.fabric.loader.IncludeLoader;
-import org.fabric3.fabric.loader.LoaderContextImpl;
+import org.fabric3.loader.composite.IncludeLoader;
+import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.fabric.loader.LoaderRegistryImpl;
 import org.fabric3.fabric.loader.PropertyLoader;
 import org.fabric3.fabric.loader.ReferenceLoader;
@@ -398,10 +398,12 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         LoaderRegistryImpl loaderRegistry = new LoaderRegistryImpl(monitorFactory, xmlFactory);
 
         // register element loaders
+        IncludeLoader includeLoader = new IncludeLoader(loaderRegistry);
+        registerLoader(loaderRegistry, new CompositeLoader(loaderRegistry,
+                                                           includeLoader));
+
         registerLoader(loaderRegistry, new ComponentLoader(loaderRegistry));
         registerLoader(loaderRegistry, new ComponentTypeElementLoader(loaderRegistry));
-        registerLoader(loaderRegistry, new CompositeLoader(loaderRegistry));
-        registerLoader(loaderRegistry, new IncludeLoader(loaderRegistry));
         registerLoader(loaderRegistry, new InterfaceJavaLoader(loaderRegistry, interfaceProcessorRegistry));
         registerLoader(loaderRegistry, new PropertyLoader(loaderRegistry));
         registerLoader(loaderRegistry, new ReferenceLoader(loaderRegistry));

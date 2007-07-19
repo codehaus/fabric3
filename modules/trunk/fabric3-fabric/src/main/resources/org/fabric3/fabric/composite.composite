@@ -28,9 +28,14 @@
            autowire="true">
 
     <!-- Composite implementation type -->
+    <component name="composite.include">
+        <system:implementation.system class="org.fabric3.loader.composite.IncludeLoader"/>
+    </component>
     <component name="composite.loader">
         <system:implementation.system class="org.fabric3.loader.composite.CompositeLoader"/>
+        <reference name="include" target="composite.include"/>
     </component>
+
     <component name="composite.componentTypeLoader">
         <system:implementation.system class="org.fabric3.fabric.implementation.composite.CompositeComponentTypeLoaderImpl"/>
     </component>

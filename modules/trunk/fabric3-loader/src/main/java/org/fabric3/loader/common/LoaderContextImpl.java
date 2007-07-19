@@ -16,19 +16,27 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.loader;
+package org.fabric3.loader.common;
 
-import org.fabric3.spi.loader.LoaderException;
+import java.net.URL;
+
+import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.spi.transform.TransformContext;
 
 /**
- * Exception that indicates that an include was not provided.
+ * A holder that can be used during the load process to store information that is not part of the logical assembly
+ * model. This should be regarded as transient and references to this context should not be stored inside the model.
  *
  * @version $Rev$ $Date$
  */
-public class MissingIncludeException extends LoaderException {
-    private static final long serialVersionUID = -2917278473974880124L;
-
-    public MissingIncludeException(String message, String identifier) {
-        super(message, identifier);
+public class LoaderContextImpl extends TransformContext implements LoaderContext {
+    /**
+     * Constructor defining properties of this context.
+     *
+     * @param classLoader  the classloader for loading application resources
+     * @param scdlLocation the location of the SCDL defining this composite
+     */
+    public LoaderContextImpl(ClassLoader classLoader, URL scdlLocation) {
+        super(null, classLoader, scdlLocation, null);
     }
 }

@@ -5,7 +5,7 @@
 <%@ page import="org.fabric3.extension.component.SimpleWorkContext" %>
 <%@ page import="org.fabric3.fabric.assembly.DistributedAssembly" %>
 <%@ page import="static org.fabric3.fabric.runtime.ComponentNames.LOADER_URI" %>
-<%@ page import="org.fabric3.fabric.loader.LoaderContextImpl" %>
+<%@ page import="org.fabric3.loader.common.LoaderContextImpl" %>
 <%@ page import="org.fabric3.fabric.runtime.ComponentNames" %>
 <%@ page import="org.fabric3.runtime.webapp.WebappRuntimeImpl" %>
 <%@ page import="org.fabric3.spi.component.ScopeContainer" %>

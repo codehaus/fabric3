@@ -27,7 +27,7 @@ import javax.servlet.http.HttpSessionEvent;
 import org.fabric3.fabric.assembly.ActivateException;
 import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.implementation.composite.CompositeComponentTypeLoader;
-import org.fabric3.fabric.loader.LoaderContextImpl;
+import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.fabric.runtime.AbstractRuntime;
 import static org.fabric3.fabric.runtime.ComponentNames.COMPOSITE_LOADER_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;

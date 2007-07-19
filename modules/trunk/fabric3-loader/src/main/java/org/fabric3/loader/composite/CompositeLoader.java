@@ -55,11 +55,15 @@ import org.fabric3.spi.util.stax.StaxUtil;
 @EagerInit
 public class CompositeLoader implements StAXElementLoader<CompositeComponentType> {
     private static final QName COMPOSITE = new QName(SCA_NS, "composite");
+    private static final QName INCLUDE = new QName(SCA_NS, "include");
 
     private final LoaderRegistry registry;
+    private final StAXElementLoader<Include> includeLoader;
 
-    public CompositeLoader(@Reference LoaderRegistry registry) {
+    public CompositeLoader(@Reference LoaderRegistry registry,
+                           @Reference(name="include") StAXElementLoader<Include> includeLoader) {
         this.registry = registry;
+        this.includeLoader = includeLoader;
     }
 
     public QName getXMLType() {
@@ -93,28 +97,31 @@ public class CompositeLoader implements StAXElementLoader<CompositeComponentType
         while (true) {
             switch (reader.next()) {
             case START_ELEMENT:
-                ModelObject loadedType = registry.load(reader, ModelObject.class, loaderContext);
-                if (loadedType instanceof ServiceDefinition) {
-                    type.add((ServiceDefinition) loadedType);
-                } else if (loadedType instanceof ReferenceDefinition) {
-                    type.add((ReferenceDefinition) loadedType);
-                } else if (loadedType instanceof Property<?>) {
-                    type.add((Property<?>) loadedType);
-                } else if (loadedType instanceof ComponentDefinition<?>) {
-                    type.add((ComponentDefinition<?>) loadedType);
-                } else if (loadedType instanceof Include) {
-                    Include include = (Include) loadedType;
+                QName qname = reader.getName();
+                if (INCLUDE.equals(qname)) {
+                    Include include = includeLoader.load(reader, loaderContext);
                     QName includeName = include.getName();
                     if (type.getIncludes().containsKey(includeName)) {
                         throw new DuplicateIncludeException("Include already defined with name", includeName.toString());
                     }
                     type.add(include);
-                } else if (loadedType instanceof WireDefinition) {
-                    type.add((WireDefinition) loadedType);
-                } else if (loadedType != null) {
-                    throw new InvalidConfigurationException("Invalid element type", loadedType.getClass().getName());
+                } else {
+                    ModelObject loadedType = registry.load(reader, ModelObject.class, loaderContext);
+                    if (loadedType instanceof ServiceDefinition) {
+                        type.add((ServiceDefinition) loadedType);
+                    } else if (loadedType instanceof ReferenceDefinition) {
+                        type.add((ReferenceDefinition) loadedType);
+                    } else if (loadedType instanceof Property<?>) {
+                        type.add((Property<?>) loadedType);
+                    } else if (loadedType instanceof ComponentDefinition<?>) {
+                        type.add((ComponentDefinition<?>) loadedType);
+                    } else if (loadedType instanceof WireDefinition) {
+                        type.add((WireDefinition) loadedType);
+                    } else if (loadedType != null) {
+                        throw new InvalidConfigurationException("Invalid element type", loadedType.getClass().getName());
+                    }
+                    reader.next();
                 }
-                reader.next();
                 break;
             case END_ELEMENT:
                 assert COMPOSITE.equals(reader.getName());

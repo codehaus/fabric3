@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.loader;
+package org.fabric3.loader.composite;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -25,15 +25,16 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import static org.osoa.sca.Constants.SCA_NS;
-import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.extension.loader.LoaderExtension;
+import org.fabric3.loader.common.InvalidNameException;
+import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.MissingResourceException;
+import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.model.type.CompositeComponentType;
 import org.fabric3.spi.model.type.Include;
 
@@ -42,12 +43,13 @@ import org.fabric3.spi.model.type.Include;
  *
  * @version $Rev$ $Date$
  */
-public class IncludeLoader extends LoaderExtension<Include> {
+public class IncludeLoader implements StAXElementLoader<Include> {
     private static final QName INCLUDE = new QName(SCA_NS, "include");
 
-    @Constructor
+    private final LoaderRegistry registry;
+
     public IncludeLoader(@Reference LoaderRegistry registry) {
-        super(registry);
+        this.registry = registry;
     }
 
     public QName getXMLType() {

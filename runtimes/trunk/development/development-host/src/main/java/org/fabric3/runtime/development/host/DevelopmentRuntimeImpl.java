@@ -21,7 +21,7 @@ import org.fabric3.fabric.assembly.BindException;
 import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.assembly.RuntimeAssembly;
 import org.fabric3.fabric.implementation.composite.CompositeComponentTypeLoader;
-import org.fabric3.fabric.loader.LoaderContextImpl;
+import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.fabric.monitor.JavaLoggingMonitorFactory;
 import org.fabric3.fabric.runtime.AbstractRuntime;
 import static org.fabric3.fabric.runtime.ComponentNames.COMPOSITE_LOADER_URI;

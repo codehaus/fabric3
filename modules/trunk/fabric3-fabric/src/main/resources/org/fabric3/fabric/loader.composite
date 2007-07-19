@@ -39,9 +39,6 @@
     <component name="elementLoader.componentType">
         <system:implementation.system class="org.fabric3.fabric.loader.ComponentTypeElementLoader"/>
     </component>
-    <component name="elementLoader.include">
-        <system:implementation.system class="org.fabric3.fabric.loader.IncludeLoader"/>
-    </component>
     <component name="elementLoader.property">
         <system:implementation.system class="org.fabric3.fabric.loader.PropertyLoader"/>
     </component>

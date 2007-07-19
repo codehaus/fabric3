@@ -53,6 +53,7 @@ import org.fabric3.spi.model.type.PropertyValue;
 import org.fabric3.spi.model.type.ReferenceTarget;
 import org.fabric3.spi.model.type.XSDSimpleType;
 import org.fabric3.transform.xml.Stream2Element2;
+import org.fabric3.loader.common.InvalidNameException;
 
 /**
  * Loads a component definition from an XML-based assembly file

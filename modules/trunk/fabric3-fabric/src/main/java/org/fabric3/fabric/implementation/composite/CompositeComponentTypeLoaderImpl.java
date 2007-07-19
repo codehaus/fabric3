@@ -23,7 +23,7 @@ import java.net.URL;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.loader.LoaderContextImpl;
+import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.spi.deployer.CompositeClassLoader;
 import org.fabric3.spi.loader.Loader;
 import org.fabric3.spi.loader.LoaderContext;
