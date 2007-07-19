@@ -57,7 +57,6 @@ public class IncludeLoaderTestCase extends TestCase {
 
     public void testNoLocation() throws LoaderException, XMLStreamException {
         String name = "foo";
-        expect(reader.getName()).andReturn(INCLUDE);
         expect(reader.getAttributeValue(null, "name")).andReturn(name);
         expect(reader.getNamespaceContext()).andReturn(namespaceContext);
         expect(reader.getAttributeValue(null, "scdlLocation")).andReturn(null);
@@ -78,7 +77,6 @@ public class IncludeLoaderTestCase extends TestCase {
 
     public void testWithAbsoluteScdlLocation() throws LoaderException, XMLStreamException {
         String name = "foo";
-        expect(reader.getName()).andReturn(INCLUDE);
         expect(reader.getAttributeValue(null, "name")).andReturn(name);
         expect(reader.getNamespaceContext()).andReturn(namespaceContext);
         expect(reader.getAttributeValue(null, "scdlLocation")).andReturn("http://example.com/include.scdl");
@@ -103,7 +101,6 @@ public class IncludeLoaderTestCase extends TestCase {
 
     public void testWithRelativeScdlLocation() throws LoaderException, XMLStreamException {
         String name = "foo";
-        expect(reader.getName()).andReturn(INCLUDE);
         expect(reader.getAttributeValue(null, "name")).andReturn(name);
         expect(reader.getNamespaceContext()).andReturn(namespaceContext);
         expect(reader.getAttributeValue(null, "scdlLocation")).andReturn("include.scdl");
@@ -132,7 +129,6 @@ public class IncludeLoaderTestCase extends TestCase {
         includeURL = cl.getResource(resource);
         assertNotNull(includeURL);
 
-        expect(reader.getName()).andReturn(INCLUDE);
         expect(reader.getAttributeValue(null, "name")).andReturn(name);
         expect(reader.getNamespaceContext()).andReturn(namespaceContext);
         expect(reader.getAttributeValue(null, "scdlLocation")).andReturn(null);

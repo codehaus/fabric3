@@ -44,7 +44,7 @@ import org.fabric3.spi.model.type.Include;
  * @version $Rev$ $Date$
  */
 public class IncludeLoader implements StAXElementLoader<Include> {
-    private static final QName INCLUDE = new QName(SCA_NS, "include");
+    private static final QName INCLUDE = new QName(SCA_NS, "Include");
 
     private final LoaderRegistry registry;
 
@@ -59,7 +59,6 @@ public class IncludeLoader implements StAXElementLoader<Include> {
     public Include load(XMLStreamReader reader, LoaderContext loaderContext)
             throws XMLStreamException, LoaderException {
 
-        assert INCLUDE.equals(reader.getName());
         String nameAttr = reader.getAttributeValue(null, "name");
         if (nameAttr == null || nameAttr.length() == 0) {
             throw new InvalidNameException(nameAttr);
