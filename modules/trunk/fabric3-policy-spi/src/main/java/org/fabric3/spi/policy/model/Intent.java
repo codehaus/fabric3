@@ -31,8 +31,8 @@ import org.fabric3.spi.model.type.ModelObject;
  * @version $Revision$ $Date$
  *
  */
-public class Intent extends ModelObject {
-    
+public final class Intent extends ModelObject {
+
     /** Qualified name of the intent. */
     private QName name;
     
@@ -43,45 +43,16 @@ public class Intent extends ModelObject {
     private Set<QName> constrainedArtifacts = new HashSet<QName>();
 
     /**
-     * @return Qualified name of the intent.
+     * Initializes the name, description and the constrained artifacts.
+     * 
+     * @param name Name of the intent.
+     * @param description Description of the intent.
+     * @param constrainedArtifacts SCA artifacts this intent constrains.
      */
-    public QName getName() {
-        return name;
-    }
-
-    /**
-     * @param name Qualified name of the intent.
-     */
-    public void setQname(QName name) {
+    public Intent(QName name, String description, Set<QName> constrainedArtifacts) {
         this.name = name;
-    }
-
-    /**
-     * @return Intent description.
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * @param description Intent description.
-     */
-    public void setDescription(String description) {
         this.description = description;
-    }
-
-    /**
-     * @return SCA artifacts constrained by this intent.
-     */
-    public Set<QName> getConstrainedArtifacts() {
-        return constrainedArtifacts;
-    }
-
-    /**
-     * @param constrainedArtifacts SCA artifacts constrained by this intent.
-     */
-    public void setConstrainedArtifacts(Set<QName> constrainedArtifacts) {
-        this.constrainedArtifacts = constrainedArtifacts;
+        this.constrainedArtifacts.addAll(constrainedArtifacts);
     }
     
     /**
@@ -91,6 +62,30 @@ public class Intent extends ModelObject {
      */
     public boolean doesConstrain(QName scaArtifact) {
         return constrainedArtifacts.contains(scaArtifact);
+    }
+    
+    /**
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object other) {
+        return other instanceof Intent && ((Intent) other).name.equals(name);
+    }
+
+    /**
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
+
+    /**
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return name + "-" + description;
     }
 
 }

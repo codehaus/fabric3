@@ -18,6 +18,7 @@
  */
 package org.fabric3.spi.policy.model;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,7 +31,7 @@ import org.fabric3.spi.model.type.ModelObject;
  *
  * @version $Revision$ $Date$
  */
-public class PolicySet extends ModelObject {
+public final class PolicySet extends ModelObject {
     
     /** Qualified name of the policy set. */
     private QName name;
@@ -41,49 +42,23 @@ public class PolicySet extends ModelObject {
     /** Intents provided by this policy set. */
     private Set<QName> provides = new HashSet<QName>();
     
-    /** Interceptors that implement this policy set. */
-    private Set<QName> interceptors = new HashSet<QName>();
+    /** Builders for the interceptors that implement this policy set. */
+    private Set<QName> interceptorBuilders = new HashSet<QName>();
 
     /**
-     * @return Qualified name of the intent.
-     */
-    public QName getName() {
-        return name;
-    }
-
-    /**
-     * @param name Qualified name of the intent.
-     */
-    public void setQName(QName name) {
-        this.name = name;
-    }
-
-    /**
-     * @return SCA artifacts to which this policy set applies.
-     */
-    public Set<QName> getAppliesTo() {
-        return appliesTo;
-    }
-
-    /**
-     * @param appliesTo SCA artifacts to which this policy set applies.
-     */
-    public void setAppliesTo(Set<QName> appliesTo) {
-        this.appliesTo = appliesTo;
-    }
-
-    /**
-     * @return Intents provided by this policy set.
-     */
-    public Set<QName> getProvides() {
-        return provides;
-    }
-
-    /**
+     * Initializes the state for the policy set.
+     * 
+     * @param name Name of the policy set.
+     * @param appliesTo SCA artifacts this policy set applies to. 
+     * TODO Above is an XPath expression according to the specification.
      * @param provides Intents provided by this policy set.
+     * @param interceptorBuilders Builders for the interceptors that implement this policy set.
      */
-    public void setProvides(Set<QName> provides) {
-        this.provides = provides;
+    public PolicySet(QName name, Set<QName> appliesTo, Set<QName> provides, Set<QName> interceptorBuilders) {
+        this.name = name;
+        this.appliesTo.addAll(appliesTo);
+        this.provides.addAll(provides);
+        this.interceptorBuilders.addAll(interceptorBuilders);
     }
     
     /**
@@ -105,17 +80,34 @@ public class PolicySet extends ModelObject {
     }
 
     /**
-     * @return Interceptors that implement this policy set.
+     * @return Builder names for the interceptors that implement this policy set.
      */
-    public Set<QName> getInterceptors() {
-        return interceptors;
+    public Set<QName> getInterceptorBuilders() {
+        return Collections.unmodifiableSet(interceptorBuilders);
+    }
+    
+    /**
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object other) {
+        return other instanceof PolicySet && ((PolicySet) other).name.equals(name);
     }
 
     /**
-     * @param interceptors Interceptors that implement this policy set.
+     * @see java.lang.Object#hashCode()
      */
-    public void setInterceptors(Set<QName> interceptors) {
-        this.interceptors = interceptors;
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
+
+    /**
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return name.toString();
     }
 
 }
