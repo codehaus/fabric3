@@ -33,14 +33,14 @@
     </component>
 
     <!-- Common SCDL loader implementations -->
+    <component name="loader.ComponentReference">
+        <system:implementation.system class="org.fabric3.loader.common.ComponentReferenceLoader"/>
+    </component>
+    <component name="loader.ComponentService">
+        <system:implementation.system class="org.fabric3.loader.common.ComponentServiceLoader"/>
+    </component>
     <component name="loader.Property">
         <system:implementation.system class="org.fabric3.loader.common.PropertyLoader"/>
-    </component>
-    <component name="loader.Service">
-        <system:implementation.system class="org.fabric3.loader.common.ServiceLoader"/>
-    </component>
-    <component name="loader.Reference">
-        <system:implementation.system class="org.fabric3.loader.common.ReferenceLoader"/>
     </component>
 
     <!-- Composite SCDL loader implementations -->
@@ -54,7 +54,13 @@
     <component name="loader.Include">
         <system:implementation.system class="org.fabric3.loader.composite.IncludeLoader"/>
     </component>
-    
+    <component name="loader.Reference">
+        <system:implementation.system class="org.fabric3.loader.composite.ReferenceLoader"/>
+    </component>
+    <component name="loader.Service">
+        <system:implementation.system class="org.fabric3.loader.composite.ServiceLoader"/>
+    </component>
+
     <component name="loader.Composite">
         <system:implementation.system class="org.fabric3.loader.composite.CompositeLoader"/>
         <reference name="include" target="loader.Include"/>
@@ -67,8 +73,8 @@
     <component name="elementLoader.componentType">
         <system:implementation.system class="org.fabric3.loader.componentType.ComponentTypeLoader"/>
         <reference name="property" target="loader.Property"/>
-        <reference name="service" target="loader.Service"/>
-        <reference name="reference" target="loader.Reference"/>
+        <reference name="service" target="loader.ComponentService"/>
+        <reference name="reference" target="loader.ComponentReference"/>
     </component>
 
 </composite>

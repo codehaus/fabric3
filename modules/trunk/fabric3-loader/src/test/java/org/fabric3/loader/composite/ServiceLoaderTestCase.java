@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.loader.common;
+package org.fabric3.loader.composite;
 
 import javax.xml.stream.XMLStreamConstants;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
