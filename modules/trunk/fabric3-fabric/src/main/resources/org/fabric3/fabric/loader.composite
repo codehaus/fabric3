@@ -61,8 +61,5 @@
     <component name="elementLoader.componentType">
         <system:implementation.system class="org.fabric3.fabric.loader.ComponentTypeElementLoader"/>
     </component>
-    <component name="elementLoader.wire">
-        <system:implementation.system class="org.fabric3.fabric.loader.WireLoader"/>
-    </component>
 
 </composite>
