@@ -50,6 +50,7 @@
     <component name="loader.Component">
         <system:implementation.system class="org.fabric3.loader.composite.ComponentLoader"/>
         <reference name="propertyValue" target="loader.PropertyValue"/>
+        <reference name="reference" target="loader.ComponentReference"/>
     </component>
     <component name="loader.Include">
         <system:implementation.system class="org.fabric3.loader.composite.IncludeLoader"/>

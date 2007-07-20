@@ -113,6 +113,7 @@ import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.loader.common.LoaderContextImpl;
+import org.fabric3.loader.common.ComponentReferenceLoader;
 import org.fabric3.loader.composite.ComponentLoader;
 import org.fabric3.loader.composite.CompositeLoader;
 import org.fabric3.loader.composite.IncludeLoader;
@@ -395,7 +396,10 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
         // register element loaders
         PropertyValueLoader propertyValueLoader = new PropertyValueLoader();
-        ComponentLoader componentLoader = new ComponentLoader(loaderRegistry, propertyValueLoader);
+        ComponentReferenceLoader componentReferenceLoader = new ComponentReferenceLoader();
+        ComponentLoader componentLoader = new ComponentLoader(loaderRegistry,
+                                                              propertyValueLoader,
+                                                              componentReferenceLoader);
         
         IncludeLoader includeLoader = new IncludeLoader(loaderRegistry);
         CompositeLoader compositeLoader = new CompositeLoader(loaderRegistry,

@@ -58,11 +58,14 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
 
     private final LoaderRegistry registry;
     private final StAXElementLoader<PropertyValue> propertyValueLoader;
+    private final StAXElementLoader<ComponentReference> referenceLoader;
 
     public ComponentLoader(@Reference LoaderRegistry registry,
-                           @Reference (name = "propertyValue") StAXElementLoader<PropertyValue> propertyValueLoader) {
+                           @Reference (name = "propertyValue") StAXElementLoader<PropertyValue> propertyValueLoader,
+                           @Reference (name = "reference") StAXElementLoader<ComponentReference> referenceLoader) {
         this.registry = registry;
         this.propertyValueLoader = propertyValueLoader;
+        this.referenceLoader = referenceLoader;
     }
 
     public QName getXMLType() {
@@ -91,11 +94,11 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
                 if (PROPERTY.equals(qname)) {
                     PropertyValue value = propertyValueLoader.load(reader, context);
                     componentDefinition.add(value);
-                    // reader.next();
                 } else if (REFERENCE.equals(qname)) {
-                    loadReference(reader, componentDefinition, context);
-                    reader.next();
+                    ComponentReference reference = referenceLoader.load(reader, context);
+                    componentDefinition.add(reference);
                 } else {
+                    // Unknown extension element - ignore
                     LoaderUtil.skipToEndElement(reader);
                 }
                 break;
@@ -147,34 +150,6 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
             throws XMLStreamException, LoaderException {
         reader.nextTag();
         return registry.load(reader, Implementation.class, context);
-    }
-
-    protected void loadReference(XMLStreamReader reader,
-                                 ComponentDefinition<?> componentDefinition,
-                                 LoaderContext context) throws XMLStreamException, LoaderException {
-        String name = reader.getAttributeValue(null, "name");
-        if (name == null) {
-            throw new InvalidReferenceException("No name specified");
-        }
-        String target = reader.getAttributeValue(null, "target");
-        boolean autowire = Boolean.parseBoolean(reader.getAttributeValue(null, "autowire"));
-        URI componentId = URI.create(componentDefinition.getName()); //FIXME we should not need to create a URI here
-        List<URI> uris = new ArrayList<URI>();
-        if (target != null) {
-            StringTokenizer tokenizer = new StringTokenizer(target);
-            while (tokenizer.hasMoreTokens()) {
-                String token = tokenizer.nextToken();
-                QualifiedName qName = new QualifiedName(token);
-                uris.add(componentId.resolve(qName.getFragment()));
-            }
-        }
-
-        ComponentReference referenceTarget = new ComponentReference(name);
-        referenceTarget.setAutowire(autowire);
-        componentDefinition.add(referenceTarget);
-        for (URI uri : uris) {
-            referenceTarget.addTarget(uri);
-        }
     }
 
 }
