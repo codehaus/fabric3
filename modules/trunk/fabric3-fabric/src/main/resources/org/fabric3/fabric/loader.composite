@@ -60,7 +60,10 @@
     </component>
 
     <component name="elementLoader.componentType">
-        <system:implementation.system class="org.fabric3.fabric.loader.ComponentTypeElementLoader"/>
+        <system:implementation.system class="org.fabric3.loader.componentType.ComponentTypeLoader"/>
+        <reference name="property" target="loader.Property"/>
+        <reference name="service" target="loader.Service"/>
+        <reference name="reference" target="loader.Reference"/>
     </component>
 
 </composite>

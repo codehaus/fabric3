@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.loader.composite;
+package org.fabric3.loader.componentType;
 
 import javax.xml.namespace.QName;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
@@ -30,98 +30,66 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.loader.InvalidServiceException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.StAXElementLoader;
-import org.fabric3.spi.model.type.Autowire;
-import org.fabric3.spi.model.type.ComponentDefinition;
-import org.fabric3.spi.model.type.CompositeComponentType;
-import org.fabric3.spi.model.type.Include;
+import org.fabric3.spi.model.type.ComponentType;
 import org.fabric3.spi.model.type.ModelObject;
 import org.fabric3.spi.model.type.Property;
 import org.fabric3.spi.model.type.ReferenceDefinition;
 import org.fabric3.spi.model.type.ServiceDefinition;
-import org.fabric3.spi.util.stax.StaxUtil;
 
 /**
- * Loads a composite component definition from an XML-based assembly file
- *
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class CompositeLoader implements StAXElementLoader<CompositeComponentType> {
-    private static final QName COMPOSITE = new QName(SCA_NS, "composite");
-    private static final QName INCLUDE = new QName(SCA_NS, "include");
+public class ComponentTypeLoader implements StAXElementLoader<ComponentType<ServiceDefinition, ReferenceDefinition, Property<?>>> {
+    private static final QName COMPONENT_TYPE = new QName(SCA_NS, "componentType");
     private static final QName PROPERTY = new QName(SCA_NS, "property");
     private static final QName SERVICE = new QName(SCA_NS, "service");
     private static final QName REFERENCE = new QName(SCA_NS, "reference");
-    private static final QName COMPONENT = new QName(SCA_NS, "component");
 
     private final LoaderRegistry registry;
-    private final StAXElementLoader<Include> includeLoader;
     private final StAXElementLoader<Property<?>> propertyLoader;
     private final StAXElementLoader<ServiceDefinition> serviceLoader;
     private final StAXElementLoader<ReferenceDefinition> referenceLoader;
-    private final StAXElementLoader<ComponentDefinition<?>> componentLoader;
 
-    public CompositeLoader(@Reference LoaderRegistry registry,
-                           @Reference(name = "include")StAXElementLoader<Include> includeLoader,
-                           @Reference(name = "property")StAXElementLoader<Property<?>> propertyLoader,
-                           @Reference(name = "service")StAXElementLoader<ServiceDefinition> serviceLoader,
-                           @Reference(name = "reference")StAXElementLoader<ReferenceDefinition> referenceLoader,
-                           @Reference(name = "component")StAXElementLoader<ComponentDefinition<?>> componentLoader
+    public ComponentTypeLoader(@Reference LoaderRegistry registry,
+                               @Reference(name = "property")StAXElementLoader<Property<?>> propertyLoader,
+                               @Reference(name = "service")StAXElementLoader<ServiceDefinition> serviceLoader,
+                               @Reference(name = "reference")StAXElementLoader<ReferenceDefinition> referenceLoader
     ) {
         this.registry = registry;
-        this.includeLoader = includeLoader;
         this.propertyLoader = propertyLoader;
         this.serviceLoader = serviceLoader;
         this.referenceLoader = referenceLoader;
-        this.componentLoader = componentLoader;
-    }
-
-    public QName getXMLType() {
-        return COMPOSITE;
     }
 
     @Init
     public void init() {
-        registry.registerLoader(COMPOSITE, this);
+        registry.registerLoader(COMPONENT_TYPE, this);
     }
 
     @Destroy
     public void destroy() {
-        registry.unregisterLoader(COMPOSITE);
+        registry.unregisterLoader(COMPONENT_TYPE);
     }
 
-    public CompositeComponentType load(XMLStreamReader reader, LoaderContext loaderContext)
-            throws XMLStreamException, LoaderException {
-        String name = reader.getAttributeValue(null, "name");
-        String autowire = reader.getAttributeValue(null, "autowire");
-        QName compositeName = StaxUtil.createQName(name, reader);
-        CompositeComponentType type = new CompositeComponentType(compositeName);
+    public QName getXMLType() {
+        return COMPONENT_TYPE;
+    }
 
-        if ("true".equalsIgnoreCase(autowire)) {
-            type.setAutowire(Autowire.ON);
-        } else if (autowire == null) {
-            type.setAutowire(Autowire.INHERITED);
-        } else {
-            type.setAutowire(Autowire.OFF);
-        }
+    public ComponentType<ServiceDefinition, ReferenceDefinition, Property<?>> load(XMLStreamReader reader,
+                                                                                   LoaderContext loaderContext)
+            throws XMLStreamException, LoaderException {
+        ComponentType<ServiceDefinition, ReferenceDefinition, Property<?>> type =
+                new ComponentType<ServiceDefinition, ReferenceDefinition, Property<?>>();
         while (true) {
             switch (reader.next()) {
             case START_ELEMENT:
                 QName qname = reader.getName();
-                if (INCLUDE.equals(qname)) {
-                    Include include = includeLoader.load(reader, loaderContext);
-                    QName includeName = include.getName();
-                    if (type.getIncludes().containsKey(includeName)) {
-                        throw new DuplicateIncludeException("Include already defined with name",
-                                                            includeName.toString());
-                    }
-                    type.add(include);
-                } else if (PROPERTY.equals(qname)) {
+                if (PROPERTY.equals(qname)) {
                     Property<?> property = propertyLoader.load(reader, loaderContext);
                     type.add(property);
                 } else if (SERVICE.equals(qname)) {
@@ -130,9 +98,6 @@ public class CompositeLoader implements StAXElementLoader<CompositeComponentType
                 } else if (REFERENCE.equals(qname)) {
                     ReferenceDefinition reference = referenceLoader.load(reader, loaderContext);
                     type.add(reference);
-                } else if (COMPONENT.equals(qname)) {
-                    ComponentDefinition<?> componentDefinition = componentLoader.load(reader, loaderContext);
-                    type.add(componentDefinition);
                 } else {
                     // Extension element - for now try to load and see if we can handle it
                     ModelObject modelObject = registry.load(reader, ModelObject.class, loaderContext);
@@ -142,29 +107,14 @@ public class CompositeLoader implements StAXElementLoader<CompositeComponentType
                         type.add((ServiceDefinition) modelObject);
                     } else if (modelObject instanceof ReferenceDefinition) {
                         type.add((ReferenceDefinition) modelObject);
-                    } else if (modelObject instanceof ComponentDefinition) {
-                        type.add((ComponentDefinition<?>) modelObject);
                     } else {
                         // Unknown extension element, ignore
                     }
                 }
                 break;
             case END_ELEMENT:
-                assert COMPOSITE.equals(reader.getName());
-                verifyCompositeCompleteness(type);
                 return type;
             }
         }
     }
-
-    protected void verifyCompositeCompleteness(CompositeComponentType composite) throws InvalidServiceException {
-        // check if all of the composite services have been wired
-        for (ServiceDefinition svcDefn : composite.getDeclaredServices().values()) {
-            if (svcDefn.getTarget() == null) {
-                String identifier = svcDefn.getUri().toString();
-                throw new InvalidServiceException("Composite service not wired to a target", identifier);
-            }
-        }
-    }
-
 }
