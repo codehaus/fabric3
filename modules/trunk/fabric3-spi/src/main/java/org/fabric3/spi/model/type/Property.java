@@ -25,18 +25,20 @@ import org.w3c.dom.Document;
 import org.fabric3.spi.ObjectFactory;
 
 /**
- * A component property
+ * A component property as declared in the component type.
  *
  * @version $Rev$ $Date$
+ * @param <T> the Java type of the property, if known
  */
 public class Property<T> extends ModelObject {
     private String name;
+    private boolean many;
     private boolean required;
-    private ObjectFactory<T> defaultValueFactory;
     private QName xmlType;
     private Class<T> javaType;
-    private boolean many;
+
     private Document defaultValue;
+    private ObjectFactory<T> defaultValueFactory;
 
     public Property() {
     }
@@ -47,18 +49,56 @@ public class Property<T> extends ModelObject {
         this.javaType = javaType;
     }
 
+    /**
+     * Returns the name of the property.
+     *
+     * @return the name of the property
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets the name of the property.
+     *
+     * @param name the name of the property
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * Returns whether the property is many-valued or single-valued.
+     *
+     * @return true if the property is many-valued
+     */
+    public boolean isMany() {
+        return many;
+    }
+
+    /**
+     * Sets whether the property is many-valued or single-valued.
+     *
+     * @param many true if the property is many-valued
+     */
+    public void setMany(boolean many) {
+        this.many = many;
+    }
+
+    /**
+     * Returns whether the component definition must supply a value for this property.
+     *
+     * @return true if the component definition must supply a value
+     */
     public boolean isRequired() {
         return required;
     }
 
+    /**
+     * Sets whether the component definition must supply a value for this property.
+     *
+     * @param required true if the component definition must supply a value
+     */
     public void setRequired(boolean required) {
         this.required = required;
     }
@@ -85,14 +125,6 @@ public class Property<T> extends ModelObject {
 
     public void setJavaType(Class<T> javaType) {
         this.javaType = javaType;
-    }
-
-    public boolean isMany() {
-        return many;
-    }
-
-    public void setMany(boolean many) {
-        this.many = many;
     }
 
     public Document getDefaultValue() {
