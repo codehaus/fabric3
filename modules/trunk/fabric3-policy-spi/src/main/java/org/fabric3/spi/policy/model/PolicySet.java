@@ -36,9 +36,6 @@ public final class PolicySet extends ModelObject {
     /** Qualified name of the policy set. */
     private QName name;
     
-    /** SCA artifacts to which this policy set applies. */
-    private Set<QName> appliesTo = new HashSet<QName>();
-    
     /** Intents provided by this policy set. */
     private Set<QName> provides = new HashSet<QName>();
     
@@ -49,14 +46,11 @@ public final class PolicySet extends ModelObject {
      * Initializes the state for the policy set.
      * 
      * @param name Name of the policy set.
-     * @param appliesTo SCA artifacts this policy set applies to. 
-     * TODO Above is an XPath expression according to the specification.
      * @param provides Intents provided by this policy set.
      * @param interceptorBuilders Builders for the interceptors that implement this policy set.
      */
-    public PolicySet(QName name, Set<QName> appliesTo, Set<QName> provides, Set<QName> interceptorBuilders) {
+    public PolicySet(QName name, Set<QName> provides, Set<QName> interceptorBuilders) {
         this.name = name;
-        this.appliesTo.addAll(appliesTo);
         this.provides.addAll(provides);
         this.interceptorBuilders.addAll(interceptorBuilders);
     }
@@ -66,15 +60,6 @@ public final class PolicySet extends ModelObject {
      */
     public QName getName() {
         return name;
-    }
-    
-    /**
-     * Checks whether this policy set applies to the specified artifact.
-     * @param scaArtifact SCA artifact that needs to be checked.
-     * @return True if this policy set applies to the specified SCA artifact.
-     */
-    public boolean doesApplyTo(QName scaArtifact) {
-        return appliesTo.contains(scaArtifact);
     }
     
     /**
