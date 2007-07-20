@@ -56,13 +56,6 @@ public final class PolicySet extends ModelObject {
     }
     
     /**
-     * @return Name of the policy set.
-     */
-    public QName getName() {
-        return name;
-    }
-    
-    /**
      * Checks whether the specified intent is provided by this policy set.
      * @param intent Intent that needs to be checked.
      * @return True if this policy set provides to the specified intent.
