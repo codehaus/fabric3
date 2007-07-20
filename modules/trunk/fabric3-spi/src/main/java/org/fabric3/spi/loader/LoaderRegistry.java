@@ -34,21 +34,19 @@ import javax.xml.namespace.QName;
  */
 public interface LoaderRegistry extends Loader {
     /**
-     * Register a loader.
-     * This operation will typically be called by a loader during its initialization.
+     * Register a loader. This operation will typically be called by a loader during its initialization.
      *
-     * @param type an XML type that this loader can handle
+     * @param element the name of the XML global element that this loader can handle
      * @param loader  a loader that is being contributed to the system
-     * @throws IllegalStateException if there is already a loader registered for the supplied type
+     * @throws IllegalStateException if there is already a loader registered for the supplied element
      */
-    void registerLoader(QName type, StAXElementLoader<?> loader) throws IllegalStateException;
+    void registerLoader(QName element, StAXElementLoader<?> loader) throws IllegalStateException;
 
     /**
-     * Unregister the loader for the supplied type.
-     * This will typically be called by a loader as it is being destroyed.
-     * This method simply returns if no loader is registered for that type.
+     * Unregister the loader for the supplied element. This will typically be called by a loader as it is being
+     * destroyed. This method simply returns if no loader is registered for that element.
      *
-     * @param type the type whose loader should be unregistered
+     * @param element the element whose loader should be unregistered
      */
-    void unregisterLoader(QName type);
+    void unregisterLoader(QName element);
 }

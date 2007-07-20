@@ -79,11 +79,11 @@ import org.fabric3.fabric.implementation.singleton.SingletonWireAttacher;
 import org.fabric3.fabric.implementation.singleton.SingletonWireTargetDefinition;
 import org.fabric3.fabric.implementation.system.SystemComponentBuilder;
 import org.fabric3.fabric.implementation.system.SystemComponentGenerator;
+import org.fabric3.fabric.implementation.system.SystemComponentTypeLoader;
 import org.fabric3.fabric.implementation.system.SystemComponentTypeLoaderImpl;
 import org.fabric3.fabric.implementation.system.SystemImplementationLoader;
 import org.fabric3.fabric.implementation.system.SystemWireAttacher;
 import org.fabric3.fabric.loader.LoaderRegistryImpl;
-import org.fabric3.fabric.marshaller.MarshallerLoader;
 import static org.fabric3.fabric.runtime.ComponentNames.CLASSLOADER_REGISTRY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_NAME;
@@ -136,7 +136,6 @@ import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.model.type.Autowire;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.CompositeImplementation;
@@ -391,7 +390,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     }
 
     protected LoaderRegistry createLoader(IntrospectionRegistry introspector) {
-        LoaderRegistryImpl loaderRegistry = new LoaderRegistryImpl(monitorFactory, xmlFactory);
+        LoaderRegistry loaderRegistry = new LoaderRegistryImpl(monitorFactory, xmlFactory);
 
         // register element loaders
         IncludeLoader includeLoader = new IncludeLoader(loaderRegistry);
@@ -402,18 +401,20 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
                                                               null,
                                                               null,
                                                               componentLoader);
-        registerLoader(loaderRegistry, compositeLoader);
+        compositeLoader.init();
 
-        registerLoader(loaderRegistry, new InterfaceJavaLoader(loaderRegistry, interfaceProcessorRegistry));
-        SystemComponentTypeLoaderImpl componentTypeLoader = new SystemComponentTypeLoaderImpl(introspector);
-        registerLoader(loaderRegistry, new SystemImplementationLoader(loaderRegistry, componentTypeLoader));
-        registerLoader(loaderRegistry, new MarshallerLoader(loaderRegistry, introspector));
-        registerLoader(loaderRegistry, new FeatureLoader(loaderRegistry, introspector));
+        InterfaceJavaLoader interfaceJavaLoader = new InterfaceJavaLoader(loaderRegistry, interfaceProcessorRegistry);
+        interfaceJavaLoader.start();
+
+        SystemComponentTypeLoader typeLoader = new SystemComponentTypeLoaderImpl(introspector);
+        SystemImplementationLoader systemImplementationLoader =
+                new SystemImplementationLoader(loaderRegistry, typeLoader);
+        systemImplementationLoader.start();
+
+        FeatureLoader featureLoader = new FeatureLoader(loaderRegistry, introspector);
+        featureLoader.start();
+
         return loaderRegistry;
-    }
-
-    protected void registerLoader(LoaderRegistry registry, StAXElementLoader<?> loader) {
-        registry.registerLoader(loader.getXMLType(), loader);
     }
 
     protected GeneratorRegistry createGeneratorRegistry() {
