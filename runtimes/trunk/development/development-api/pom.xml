@@ -36,6 +36,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-host-api</artifactId>
+				<version>0.2-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

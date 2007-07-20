@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -37,6 +36,7 @@ import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionNotFoundException;
 import org.fabric3.host.contribution.ContributionService;
+import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.CompositeComponentType;
 import org.fabric3.spi.model.type.CompositeImplementation;
@@ -80,65 +80,46 @@ public class ContributionServiceImpl implements ContributionService {
         this.uriPrefix = uriPrefix;
     }
 
-    public URI contribute(String id, URL url, byte[] checksum, long timestamp)
+    public URI contribute(String id, ContributionSource source)
             throws ContributionException, IOException {
-        URLConnection urlConnection = url.openConnection();
-        String contentType = getContentType(urlConnection, url);
-        InputStream is = urlConnection.getInputStream();
-        try {
-            return processMetaData(id, url, contentType, checksum, timestamp);
-        } finally {
-            is.close();
+        URL locationUrl;
+        URI contributionUri = URI.create(uriPrefix + id + "/" + UUID.randomUUID());
+        if (source.isLocal()) {
+            locationUrl = source.getLocation();
+        } else {
+            ArchiveStore archiveStore = contributionStoreRegistry.getArchiveStore(id);
+            if (archiveStore == null) {
+                throw new StoreNotFoundException("Archive store not found", id);
+            }
+            locationUrl = archiveStore.store(contributionUri, source.getSource());
         }
+        String type = getContentType(locationUrl, source.getContentType());
+        byte[] checksum = source.getChecksum();
+        long timestamp = source.getTimestamp();
+        processMetaData(id, contributionUri, locationUrl, type, checksum, timestamp);
+        return contributionUri;
     }
 
-    public URI contribute(String id, URI sourceUri, String contentType, byte[] checksum, long timestamp, InputStream sourceStream)
-            throws ContributionException, IOException {
-        ArchiveStore archiveStore = contributionStoreRegistry.getArchiveStore(id);
-        if (archiveStore == null) {
-            throw new StoreNotFoundException("Archive store not found", id);
-        }
-        URL locationUrl = archiveStore.store(sourceUri, sourceStream);
-        return processMetaData(id, locationUrl, contentType, checksum, timestamp);
-    }
-
-    public boolean exists(String id, URI uri) {
+    public boolean exists(URI uri) {
+        String id = parseStoreId(uri);
         MetaDataStore metaDataStore = contributionStoreRegistry.getMetadataStore(id);
         return metaDataStore != null && metaDataStore.find(uri) != null;
     }
 
-    public void update(URI uri, byte[] checksum, long timestamp, URL url) throws ContributionException, IOException {
-        URLConnection urlConnection = url.openConnection();
-        String contentType = getContentType(urlConnection, url);
-        InputStream is = urlConnection.getInputStream();
+    public void update(ContributionSource source) throws ContributionException, IOException {
+        URI uri = source.getUri();
+        byte[] checksum = source.getChecksum();
+        long timestamp = source.getTimestamp();
+        InputStream is = source.getSource();
         try {
-            update(uri, contentType, checksum, timestamp, is);
+            update(uri, checksum, timestamp, is);
         } finally {
             is.close();
         }
     }
 
-    public void update(URI uri, String contentType, byte[] checksum, long timestamp, InputStream stream)
-            throws ContributionException, IOException {
+    public long getContributionTimestamp(URI uri) {
         String id = parseStoreId(uri);
-        MetaDataStore metaDataStore = contributionStoreRegistry.getMetadataStore(id);
-        if (metaDataStore == null) {
-            throw new StoreNotFoundException("MetaData store not found", id);
-        }
-        Contribution contribution = metaDataStore.find(uri);
-        if (contribution == null) {
-            throw new ContributionNotFoundException("Contribution not found for ", uri.toString());
-        }
-        long archivedTimestamp = contribution.getTimestamp();
-        if (timestamp > archivedTimestamp) {
-            // TODO update
-        } else if (timestamp == archivedTimestamp && checksum.equals(contribution.getChecksum())) {
-            // TODO update
-        }
-
-    }
-
-    public long getContributionTimestamp(String id, URI uri) {
         MetaDataStore metaDataStore = contributionStoreRegistry.getMetadataStore(id);
         if (metaDataStore == null) {
             return -1;
@@ -179,10 +160,28 @@ public class ContributionServiceImpl implements ContributionService {
         throw new UnsupportedOperationException();
     }
 
-    private URI processMetaData(String id, URL locationUrl, String contentType, byte[] checksum, long timestamp)
+    private void update(URI uri, byte[] checksum, long timestamp, InputStream stream)
+            throws ContributionException, IOException {
+        String id = parseStoreId(uri);
+        MetaDataStore metaDataStore = contributionStoreRegistry.getMetadataStore(id);
+        if (metaDataStore == null) {
+            throw new StoreNotFoundException("MetaData store not found", id);
+        }
+        Contribution contribution = metaDataStore.find(uri);
+        if (contribution == null) {
+            throw new ContributionNotFoundException("Contribution not found for ", uri.toString());
+        }
+        long archivedTimestamp = contribution.getTimestamp();
+        if (timestamp > archivedTimestamp) {
+            // TODO update
+        } else if (timestamp == archivedTimestamp && checksum.equals(contribution.getChecksum())) {
+            // TODO update
+        }
+    }
+
+    private void processMetaData(String id, URI contributionUri, URL locationUrl, String contentType, byte[] checksum, long timestamp)
             throws ContributionException, IOException {
         // store the contribution
-        URI contributionUri = URI.create(uriPrefix + id + "/" + UUID.randomUUID());
         Contribution contribution = new Contribution(contributionUri, locationUrl, checksum, timestamp);
         //process the contribution
         InputStream stream = locationUrl.openStream();
@@ -195,13 +194,11 @@ public class ContributionServiceImpl implements ContributionService {
             throw new StoreNotFoundException("MetaData store not found", id);
         }
 
-        metaDataStore.store(contribution);
         //store the contribution in the memory cache
-        return contributionUri;
+        metaDataStore.store(contribution);
     }
 
-    private String getContentType(URLConnection urlConnection, URL url) {
-        String contentType = urlConnection.getContentType();
+    private String getContentType(URL url, String contentType) {
         if (contentType == null || Constants.CONTENT_UNKONWN.equals(contentType)) {
             // FIXME this should be extensible
             if (url.toExternalForm().endsWith(".jar")) {

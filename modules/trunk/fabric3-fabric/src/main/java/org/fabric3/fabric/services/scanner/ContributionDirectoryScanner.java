@@ -34,6 +34,8 @@ import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.services.xstream.XStreamFactory;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
+import org.fabric3.host.contribution.ContributionSource;
+import org.fabric3.host.contribution.FileContributionSource;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.spi.services.VoidService;
 import static org.fabric3.spi.services.contribution.ContributionConstants.DEFAULT_STORE;
@@ -241,10 +243,11 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
         long timestamp = file.lastModified();
         if (artifactUri != null) {
             // updated
-            long previousTimestamp = contributionService.getContributionTimestamp(storeId, artifactUri);
+            long previousTimestamp = contributionService.getContributionTimestamp(artifactUri);
             if (timestamp > previousTimestamp) {
                 try {
-                    contributionService.update(artifactUri, checksum, timestamp, location);
+                    ContributionSource source = new FileContributionSource(artifactUri, location, timestamp, checksum);
+                    contributionService.update(source);
                 } catch (ContributionException e) {
                     errorCache.put(name, cached);
                     monitor.error(e);
@@ -255,7 +258,8 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
         } else {
             // added
             try {
-                URI addedUri = contributionService.contribute(storeId, location, checksum, timestamp);
+                ContributionSource source = new FileContributionSource(location, timestamp, checksum);
+                URI addedUri = contributionService.contribute(storeId, source);
                 List<QName> deployables = contributionService.getDeployables(addedUri);
                 for (QName deployable : deployables) {
                     // include deployables at the domain level
@@ -287,7 +291,7 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
                 // artifact was removed
                 try {
                     // check that the resurce was not deleted by another process
-                    if (contributionService.exists(storeId, uri)) {
+                    if (contributionService.exists(uri)) {
                         // TODO get Deployables and remove from assembly
                         contributionService.remove(uri);
                     }

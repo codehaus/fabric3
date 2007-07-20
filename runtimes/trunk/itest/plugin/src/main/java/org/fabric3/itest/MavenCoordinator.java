@@ -41,6 +41,7 @@ import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
+import org.fabric3.host.contribution.FileContributionSource;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
@@ -136,7 +137,8 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
             try {
                 for (File extension : extensions) {
                     URL url = extension.toURI().toURL();
-                    URI addedUri = contributionService.contribute(EXTENSIONS, url, new byte[0], -1);
+                    FileContributionSource source = new FileContributionSource(url, -1, new byte[0]);
+                    URI addedUri = contributionService.contribute(EXTENSIONS, source);
                     List<QName> deployables = contributionService.getDeployables(addedUri);
                     for (QName deployable : deployables) {
                         // include deployables in the runtime domain
