@@ -35,6 +35,7 @@ import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.UnrecognizedElementException;
+import org.fabric3.spi.loader.LoaderUtil;
 
 /**
  * Loads a service definition from an XML-based assembly file
@@ -70,15 +71,7 @@ public class ComponentServiceLoader implements StAXElementLoader<ServiceDefiniti
         URI targetUri = null;
         String promote = reader.getAttributeValue(null, "promote");
         if (promote != null) {
-            QualifiedName qName = new QualifiedName(promote);
-            try {
-                targetUri = new URI(qName.getFragment());
-            } catch (URISyntaxException e) {
-                LoaderException le = new LoaderException(e);
-                le.setLine(reader.getLocation().getLineNumber());
-                le.setColumn(reader.getLocation().getColumnNumber());
-                throw le;
-            }
+            targetUri = LoaderUtil.getURI(promote);
         }
         while (true) {
             int i = reader.next();

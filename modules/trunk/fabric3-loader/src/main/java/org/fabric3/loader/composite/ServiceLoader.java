@@ -32,13 +32,13 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
+import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.loader.UnrecognizedElementException;
 import org.fabric3.spi.model.type.BindingDefinition;
 import org.fabric3.spi.model.type.ModelObject;
 import org.fabric3.spi.model.type.ServiceContract;
 import org.fabric3.spi.model.type.ServiceDefinition;
-import org.fabric3.loader.common.QualifiedName;
 
 /**
  * Loads a service definition from an XML-based assembly file
@@ -74,15 +74,7 @@ public class ServiceLoader implements StAXElementLoader<ServiceDefinition> {
         URI targetUri = null;
         String promote = reader.getAttributeValue(null, "promote");
         if (promote != null) {
-            QualifiedName qName = new QualifiedName(promote);
-            try {
-                targetUri = new URI(qName.getFragment());
-            } catch (URISyntaxException e) {
-                LoaderException le = new LoaderException(e);
-                le.setLine(reader.getLocation().getLineNumber());
-                le.setColumn(reader.getLocation().getColumnNumber());
-                throw le;
-            }
+            targetUri = LoaderUtil.getURI(promote);
         }
         while (true) {
             int i = reader.next();

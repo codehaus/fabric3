@@ -18,12 +18,12 @@
  */
 package org.fabric3.spi.loader;
 
+import java.net.URI;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.XMLConstants;
 
 /**
  * Utility functions to support loader implementations.
@@ -96,5 +96,23 @@ public final class LoaderUtil {
         String uri = context.getNamespaceURI(prefix);
         String localPart = text.substring(index+1);
         return new QName(uri, localPart, prefix);
+    }
+
+    /**
+     * Convert a component URI in the form ${componentName}/${serviceName}
+     * to a URI of the form ${componentName}#${serviceName}
+     *
+     * @param target the target URI to convert
+     * @return a URI where the fragment represents the service name 
+     */
+    public static URI getURI(String target) {
+        int index = target.lastIndexOf('/');
+        if (index == -1) {
+            return URI.create(target);
+        } else {
+            String uri = target.substring(0, index);
+            String fragment = target.substring(index+1);
+            return URI.create(uri + '#'+ fragment);
+        }
     }
 }

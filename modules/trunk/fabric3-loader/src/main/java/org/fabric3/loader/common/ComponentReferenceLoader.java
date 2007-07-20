@@ -53,16 +53,13 @@ public class ComponentReferenceLoader implements StAXElementLoader<ComponentRefe
             StringTokenizer tokenizer = new StringTokenizer(target);
             while (tokenizer.hasMoreTokens()) {
                 String token = tokenizer.nextToken();
-                QualifiedName qName = new QualifiedName(token);
-                uris.add(URI.create(qName.getFragment()));
+                uris.add(LoaderUtil.getURI(token));
             }
         }
 
         ComponentReference reference = new ComponentReference(name);
         reference.setAutowire(autowire);
-        for (URI uri : uris) {
-            reference.addTarget(uri);
-        }
+        reference.getTargets().addAll(uris);
         return reference;
     }
 }

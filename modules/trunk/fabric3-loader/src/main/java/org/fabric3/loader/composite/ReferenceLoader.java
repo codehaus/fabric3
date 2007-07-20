@@ -32,11 +32,13 @@ import javax.xml.stream.XMLStreamReader;
 import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.loader.common.InvalidNameException;
 import org.fabric3.spi.Constants;
 import org.fabric3.spi.loader.InvalidReferenceException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
+import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.loader.UnrecognizedElementException;
 import org.fabric3.spi.model.type.BindingDefinition;
@@ -44,8 +46,6 @@ import org.fabric3.spi.model.type.ModelObject;
 import org.fabric3.spi.model.type.Multiplicity;
 import org.fabric3.spi.model.type.ReferenceDefinition;
 import org.fabric3.spi.model.type.ServiceContract;
-import org.fabric3.loader.common.InvalidNameException;
-import org.fabric3.loader.common.QualifiedName;
 
 /**
  * Loads a reference from an XML-based assembly file
@@ -159,19 +159,8 @@ public class ReferenceLoader implements StAXElementLoader<ReferenceDefinition> {
         }
         StringTokenizer tokenizer = new StringTokenizer(promoted, " ");
         while (tokenizer.hasMoreTokens()) {
-            try {
-                QualifiedName qName = new QualifiedName(tokenizer.nextToken());
-                URI uri;
-                if (qName.getPartName() != null) {
-                    uri = new URI(qName.getPartName() + "#" + qName.getPortName());
-                } else {
-                    uri = new URI(qName.getPartName() + "#" + qName.getPortName());
-
-                }
-                referenceDefinition.addPromoted(uri);
-            } catch (URISyntaxException e) {
-                throw new InvalidReferenceException("Invalid promoted uri", name, e);
-            }
+            URI uri = LoaderUtil.getURI(tokenizer.nextToken());
+            referenceDefinition.addPromoted(uri);
         }
         
     }

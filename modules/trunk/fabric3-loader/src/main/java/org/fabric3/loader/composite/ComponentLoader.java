@@ -20,9 +20,6 @@ package org.fabric3.loader.composite;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
 import javax.xml.namespace.QName;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
@@ -32,8 +29,6 @@ import javax.xml.stream.XMLStreamReader;
 import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.loader.common.QualifiedName;
-import org.fabric3.spi.loader.InvalidReferenceException;
 import org.fabric3.spi.loader.InvalidValueException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
@@ -42,9 +37,9 @@ import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.model.type.Autowire;
 import org.fabric3.spi.model.type.ComponentDefinition;
+import org.fabric3.spi.model.type.ComponentReference;
 import org.fabric3.spi.model.type.Implementation;
 import org.fabric3.spi.model.type.PropertyValue;
-import org.fabric3.spi.model.type.ComponentReference;
 
 /**
  * Loads a component definition from an XML-based assembly file
