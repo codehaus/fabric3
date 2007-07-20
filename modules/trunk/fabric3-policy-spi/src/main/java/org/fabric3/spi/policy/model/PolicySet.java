@@ -70,6 +70,15 @@ public final class PolicySet extends ModelObject {
     public boolean doesProvide(QName intent) {
         return provides.contains(intent);
     }
+    
+    /**
+     * Checks whether the specified intents is provided by this policy set.
+     * @param intents Intents that need to be checked.
+     * @return True if this policy set provides to the specified intent.
+     */
+    public boolean doesProvide(Set<QName> intents) {
+        return provides.containsAll(intents);
+    }
 
     /**
      * @return Builder names for the interceptors that implement this policy set.
