@@ -43,6 +43,7 @@ import org.fabric3.spi.model.type.Include;
 import org.fabric3.spi.model.type.Property;
 import org.fabric3.spi.model.type.ReferenceDefinition;
 import org.fabric3.spi.model.type.ServiceDefinition;
+import org.fabric3.spi.model.type.ModelObject;
 import org.fabric3.spi.util.stax.StaxUtil;
 
 /**
@@ -133,8 +134,19 @@ public class CompositeLoader implements StAXElementLoader<CompositeComponentType
                     ComponentDefinition<?> componentDefinition = componentLoader.load(reader, loaderContext);
                     type.add(componentDefinition);
                 } else {
-                    // unsupported extension element - ignore
-                    LoaderUtil.skipToEndElement(reader);
+                    // Extension element - for now try to load and see if we can handle it
+                    ModelObject modelObject = registry.load(reader, ModelObject.class, loaderContext);
+                    if (modelObject instanceof Property) {
+                        type.add((Property<?>) modelObject);
+                    } else if (modelObject instanceof ServiceDefinition) {
+                        type.add((ServiceDefinition) modelObject);
+                    } else if (modelObject instanceof ReferenceDefinition) {
+                        type.add((ReferenceDefinition) modelObject);
+                    } else if (modelObject instanceof ComponentDefinition) {
+                        type.add((ComponentDefinition<?>) modelObject);
+                    } else {
+                        // Unknown extension element, ignore
+                    }
                 }
                 break;
             case END_ELEMENT:

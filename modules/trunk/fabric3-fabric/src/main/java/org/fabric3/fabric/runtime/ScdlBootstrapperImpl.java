@@ -82,8 +82,6 @@ import org.fabric3.fabric.implementation.system.SystemComponentGenerator;
 import org.fabric3.fabric.implementation.system.SystemComponentTypeLoaderImpl;
 import org.fabric3.fabric.implementation.system.SystemImplementationLoader;
 import org.fabric3.fabric.implementation.system.SystemWireAttacher;
-import org.fabric3.loader.composite.ComponentLoader;
-import org.fabric3.fabric.loader.ComponentTypeElementLoader;
 import org.fabric3.fabric.loader.LoaderRegistryImpl;
 import org.fabric3.fabric.marshaller.MarshallerLoader;
 import static org.fabric3.fabric.runtime.ComponentNames.CLASSLOADER_REGISTRY_URI;
@@ -115,6 +113,7 @@ import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.loader.common.LoaderContextImpl;
+import org.fabric3.loader.composite.ComponentLoader;
 import org.fabric3.loader.composite.CompositeLoader;
 import org.fabric3.loader.composite.IncludeLoader;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
@@ -397,14 +396,14 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         // register element loaders
         IncludeLoader includeLoader = new IncludeLoader(loaderRegistry);
         ComponentLoader componentLoader = new ComponentLoader(loaderRegistry);
-        registerLoader(loaderRegistry, new CompositeLoader(loaderRegistry,
-                                                           includeLoader,
-                                                           null,
-                                                           null,
-                                                           null,
-                                                           componentLoader));
+        CompositeLoader compositeLoader = new CompositeLoader(loaderRegistry,
+                                                              includeLoader,
+                                                              null,
+                                                              null,
+                                                              null,
+                                                              componentLoader);
+        registerLoader(loaderRegistry, compositeLoader);
 
-        registerLoader(loaderRegistry, new ComponentTypeElementLoader(loaderRegistry));
         registerLoader(loaderRegistry, new InterfaceJavaLoader(loaderRegistry, interfaceProcessorRegistry));
         SystemComponentTypeLoaderImpl componentTypeLoader = new SystemComponentTypeLoaderImpl(introspector);
         registerLoader(loaderRegistry, new SystemImplementationLoader(loaderRegistry, componentTypeLoader));
