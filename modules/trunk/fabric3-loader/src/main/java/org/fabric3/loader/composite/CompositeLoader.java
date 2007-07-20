@@ -30,21 +30,19 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.loader.InvalidConfigurationException;
 import org.fabric3.spi.loader.InvalidServiceException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
+import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.model.type.Autowire;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.CompositeComponentType;
 import org.fabric3.spi.model.type.Include;
-import org.fabric3.spi.model.type.ModelObject;
 import org.fabric3.spi.model.type.Property;
 import org.fabric3.spi.model.type.ReferenceDefinition;
 import org.fabric3.spi.model.type.ServiceDefinition;
-import org.fabric3.spi.model.type.WireDefinition;
 import org.fabric3.spi.util.stax.StaxUtil;
 
 /**
@@ -59,24 +57,28 @@ public class CompositeLoader implements StAXElementLoader<CompositeComponentType
     private static final QName PROPERTY = new QName(SCA_NS, "property");
     private static final QName SERVICE = new QName(SCA_NS, "service");
     private static final QName REFERENCE = new QName(SCA_NS, "reference");
+    private static final QName COMPONENT = new QName(SCA_NS, "component");
 
     private final LoaderRegistry registry;
     private final StAXElementLoader<Include> includeLoader;
     private final StAXElementLoader<Property<?>> propertyLoader;
     private final StAXElementLoader<ServiceDefinition> serviceLoader;
     private final StAXElementLoader<ReferenceDefinition> referenceLoader;
+    private final StAXElementLoader<ComponentDefinition<?>> componentLoader;
 
     public CompositeLoader(@Reference LoaderRegistry registry,
                            @Reference(name="include") StAXElementLoader<Include> includeLoader,
                            @Reference(name="property") StAXElementLoader<Property<?>> propertyLoader,
                            @Reference(name="service") StAXElementLoader<ServiceDefinition> serviceLoader,
-                           @Reference(name="reference") StAXElementLoader<ReferenceDefinition> referenceLoader
+                           @Reference(name="reference") StAXElementLoader<ReferenceDefinition> referenceLoader,
+                           @Reference(name="component") StAXElementLoader<ComponentDefinition<?>> componentLoader
                            ) {
         this.registry = registry;
         this.includeLoader = includeLoader;
         this.propertyLoader = propertyLoader;
         this.serviceLoader = serviceLoader;
         this.referenceLoader = referenceLoader;
+        this.componentLoader = componentLoader;
     }
 
     public QName getXMLType() {
@@ -127,23 +129,17 @@ public class CompositeLoader implements StAXElementLoader<CompositeComponentType
                 } else if (REFERENCE.equals(qname)) {
                     ReferenceDefinition reference = referenceLoader.load(reader, loaderContext);
                     type.add(reference);
+                } else if (COMPONENT.equals(qname)) {
+                    ComponentDefinition<?> componentDefinition = componentLoader.load(reader, loaderContext);
+                    type.add(componentDefinition);
                 } else {
-                    ModelObject loadedType = registry.load(reader, ModelObject.class, loaderContext);
-                    if (loadedType instanceof ReferenceDefinition) {
-                        type.add((ReferenceDefinition) loadedType);
-                    } else if (loadedType instanceof ComponentDefinition<?>) {
-                        type.add((ComponentDefinition<?>) loadedType);
-                    } else if (loadedType instanceof WireDefinition) {
-                        type.add((WireDefinition) loadedType);
-                    } else if (loadedType != null) {
-                        throw new InvalidConfigurationException("Invalid element type", loadedType.getClass().getName());
-                    }
-                    reader.next();
+                    // unsupported extension element - ignore
+                    LoaderUtil.skipToEndElement(reader);
                 }
                 break;
             case END_ELEMENT:
                 assert COMPOSITE.equals(reader.getName());
-               verifyCompositeCompleteness(type);
+                verifyCompositeCompleteness(type);
                 return type;
             }
         }

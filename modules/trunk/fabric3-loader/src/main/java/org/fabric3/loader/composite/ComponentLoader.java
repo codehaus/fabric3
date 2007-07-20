@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.loader;
+package org.fabric3.loader.composite;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -33,18 +33,19 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import static org.osoa.sca.Constants.SCA_NS;
-import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import org.fabric3.extension.loader.LoaderExtension;
+import org.fabric3.loader.common.InvalidNameException;
+import org.fabric3.loader.common.QualifiedName;
 import org.fabric3.spi.loader.InvalidReferenceException;
 import org.fabric3.spi.loader.InvalidValueException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
+import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.model.type.Autowire;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.DataType;
@@ -53,25 +54,23 @@ import org.fabric3.spi.model.type.PropertyValue;
 import org.fabric3.spi.model.type.ReferenceTarget;
 import org.fabric3.spi.model.type.XSDSimpleType;
 import org.fabric3.transform.xml.Stream2Element2;
-import org.fabric3.loader.common.InvalidNameException;
-import org.fabric3.loader.common.QualifiedName;
 
 /**
  * Loads a component definition from an XML-based assembly file
  *
  * @version $Rev$ $Date$
  */
-public class ComponentLoader extends LoaderExtension<ComponentDefinition<?>> {
+public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>> {
     private static final QName COMPONENT = new QName(SCA_NS, "component");
     private static final QName PROPERTY = new QName(SCA_NS, "property");
     private static final QName REFERENCE = new QName(SCA_NS, "reference");
 
+    private final LoaderRegistry registry;
     private final Stream2Element2 stream2Element;
     private final DocumentBuilderFactory documentBuilderFactory;
 
-    @Constructor
     public ComponentLoader(@Reference LoaderRegistry registry) {
-        super(registry);
+        this.registry = registry;
         // TODO get the transformers by injection
         stream2Element = new Stream2Element2(PROPERTY);
         documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -84,7 +83,6 @@ public class ComponentLoader extends LoaderExtension<ComponentDefinition<?>> {
 
     public ComponentDefinition<?> load(XMLStreamReader reader, LoaderContext context)
             throws XMLStreamException, LoaderException {
-        assert COMPONENT.equals(reader.getName());
         String name = reader.getAttributeValue(null, "name");
         Autowire autowire = loadAutowire(reader);
         URI runtimeId = loadRuntimeId(reader);

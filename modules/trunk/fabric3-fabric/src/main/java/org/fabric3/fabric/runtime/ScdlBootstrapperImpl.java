@@ -82,7 +82,7 @@ import org.fabric3.fabric.implementation.system.SystemComponentGenerator;
 import org.fabric3.fabric.implementation.system.SystemComponentTypeLoaderImpl;
 import org.fabric3.fabric.implementation.system.SystemImplementationLoader;
 import org.fabric3.fabric.implementation.system.SystemWireAttacher;
-import org.fabric3.fabric.loader.ComponentLoader;
+import org.fabric3.loader.composite.ComponentLoader;
 import org.fabric3.fabric.loader.ComponentTypeElementLoader;
 import org.fabric3.fabric.loader.LoaderRegistryImpl;
 import org.fabric3.fabric.marshaller.MarshallerLoader;
@@ -396,13 +396,14 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
         // register element loaders
         IncludeLoader includeLoader = new IncludeLoader(loaderRegistry);
+        ComponentLoader componentLoader = new ComponentLoader(loaderRegistry);
         registerLoader(loaderRegistry, new CompositeLoader(loaderRegistry,
                                                            includeLoader,
                                                            null,
                                                            null,
-                                                           null));
+                                                           null,
+                                                           componentLoader));
 
-        registerLoader(loaderRegistry, new ComponentLoader(loaderRegistry));
         registerLoader(loaderRegistry, new ComponentTypeElementLoader(loaderRegistry));
         registerLoader(loaderRegistry, new InterfaceJavaLoader(loaderRegistry, interfaceProcessorRegistry));
         SystemComponentTypeLoaderImpl componentTypeLoader = new SystemComponentTypeLoaderImpl(introspector);

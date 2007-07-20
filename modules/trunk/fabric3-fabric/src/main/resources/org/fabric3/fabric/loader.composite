@@ -47,17 +47,18 @@
     <component name="loader.Include">
         <system:implementation.system class="org.fabric3.loader.composite.IncludeLoader"/>
     </component>
+    <component name="loader.Component">
+        <system:implementation.system class="org.fabric3.loader.composite.ComponentLoader"/>
+    </component>
     <component name="loader.Composite">
         <system:implementation.system class="org.fabric3.loader.composite.CompositeLoader"/>
         <reference name="include" target="loader.Include"/>
         <reference name="property" target="loader.Property"/>
         <reference name="service" target="loader.Service"/>
         <reference name="reference" target="loader.Reference"/>
+        <reference name="component" target="loader.Component"/>
     </component>
 
-    <component name="elementLoader.component">
-        <system:implementation.system class="org.fabric3.fabric.loader.ComponentLoader"/>
-    </component>
     <component name="elementLoader.componentType">
         <system:implementation.system class="org.fabric3.fabric.loader.ComponentTypeElementLoader"/>
     </component>
