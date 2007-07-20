@@ -24,9 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
@@ -34,10 +31,7 @@ import javax.xml.stream.XMLStreamReader;
 
 import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.Reference;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
-import org.fabric3.loader.common.InvalidNameException;
 import org.fabric3.loader.common.QualifiedName;
 import org.fabric3.spi.loader.InvalidReferenceException;
 import org.fabric3.spi.loader.InvalidValueException;
@@ -48,12 +42,9 @@ import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.model.type.Autowire;
 import org.fabric3.spi.model.type.ComponentDefinition;
-import org.fabric3.spi.model.type.DataType;
 import org.fabric3.spi.model.type.Implementation;
 import org.fabric3.spi.model.type.PropertyValue;
 import org.fabric3.spi.model.type.ReferenceTarget;
-import org.fabric3.spi.model.type.XSDSimpleType;
-import org.fabric3.transform.xml.Stream2Element2;
 
 /**
  * Loads a component definition from an XML-based assembly file
@@ -66,15 +57,12 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
     private static final QName REFERENCE = new QName(SCA_NS, "reference");
 
     private final LoaderRegistry registry;
-    private final Stream2Element2 stream2Element;
-    private final DocumentBuilderFactory documentBuilderFactory;
+    private final StAXElementLoader<PropertyValue> propertyValueLoader;
 
-    public ComponentLoader(@Reference LoaderRegistry registry) {
+    public ComponentLoader(@Reference LoaderRegistry registry,
+                           @Reference (name = "propertyValue") StAXElementLoader<PropertyValue> propertyValueLoader) {
         this.registry = registry;
-        // TODO get the transformers by injection
-        stream2Element = new Stream2Element2(PROPERTY);
-        documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        documentBuilderFactory.setNamespaceAware(true);
+        this.propertyValueLoader = propertyValueLoader;
     }
 
     public QName getXMLType() {
@@ -101,7 +89,7 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
             case START_ELEMENT:
                 QName qname = reader.getName();
                 if (PROPERTY.equals(qname)) {
-                    PropertyValue value = loadPropertyValue(reader, context);
+                    PropertyValue value = propertyValueLoader.load(reader, context);
                     componentDefinition.add(value);
                     // reader.next();
                 } else if (REFERENCE.equals(qname)) {
@@ -159,68 +147,6 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
             throws XMLStreamException, LoaderException {
         reader.nextTag();
         return registry.load(reader, Implementation.class, context);
-    }
-
-    protected PropertyValue loadPropertyValue(XMLStreamReader reader, LoaderContext context)
-            throws XMLStreamException, LoaderException {
-
-        String name = reader.getAttributeValue(null, "name");
-        if (name == null || name.length() == 0) {
-            throw new InvalidNameException(name);
-        }
-
-        PropertyValue propertyValue;
-
-        String source = reader.getAttributeValue(null, "source");
-        String file = reader.getAttributeValue(null, "file");
-        if (source != null) {
-            propertyValue = new PropertyValue(name, source);
-        } else if (file != null) {
-            try {
-                URI uri = new URI(file);
-                if (!uri.isAbsolute()) {
-                    uri = context.getSourceBase().toURI().resolve(uri);
-                }
-                propertyValue = new PropertyValue(name, uri);
-            } catch (URISyntaxException e) {
-                throw new InvalidValueException(file, name, e);
-            }
-        } else {
-            propertyValue = loadInlinePropertyValue(name, reader);
-        }
-        // LoaderUtil.skipToEndElement(reader);
-        return propertyValue;
-    }
-
-    protected PropertyValue loadInlinePropertyValue(String name, XMLStreamReader reader)
-            throws InvalidValueException, XMLStreamException {
-        DataType<QName> dataType;
-        String type = reader.getAttributeValue(null, "type");
-        String element = reader.getAttributeValue(null, "element");
-        if (type != null) {
-            if (element != null) {
-                throw new InvalidValueException("Cannot supply both type and element for property ", name);
-            }
-            // TODO support type attribute
-            throw new UnsupportedOperationException();
-        } else if (element != null) {
-            // TODO support element attribute
-            throw new UnsupportedOperationException();
-        } else {
-            dataType = new XSDSimpleType(Element.class, XSDSimpleType.STRING);
-        }
-
-        DocumentBuilder docBuilder;
-        try {
-            docBuilder = documentBuilderFactory.newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
-            throw new AssertionError();
-        }
-        Document value = docBuilder.newDocument();
-        Element valueElement = value.createElement("value");
-        value.appendChild(valueElement);
-        stream2Element.transform(reader, valueElement, null);
-        return new PropertyValue(name, dataType, value);
     }
 
     protected void loadReference(XMLStreamReader reader,

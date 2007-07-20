@@ -44,12 +44,17 @@
     </component>
 
     <!-- Composite SCDL loader implementations -->
-    <component name="loader.Include">
-        <system:implementation.system class="org.fabric3.loader.composite.IncludeLoader"/>
+    <component name="loader.PropertyValue">
+        <system:implementation.system class="org.fabric3.loader.composite.PropertyValueLoader"/>
     </component>
     <component name="loader.Component">
         <system:implementation.system class="org.fabric3.loader.composite.ComponentLoader"/>
+        <reference name="propertyValue" target="loader.PropertyValue"/>
     </component>
+    <component name="loader.Include">
+        <system:implementation.system class="org.fabric3.loader.composite.IncludeLoader"/>
+    </component>
+    
     <component name="loader.Composite">
         <system:implementation.system class="org.fabric3.loader.composite.CompositeLoader"/>
         <reference name="include" target="loader.Include"/>

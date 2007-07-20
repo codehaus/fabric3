@@ -116,6 +116,7 @@ import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.loader.composite.ComponentLoader;
 import org.fabric3.loader.composite.CompositeLoader;
 import org.fabric3.loader.composite.IncludeLoader;
+import org.fabric3.loader.composite.PropertyValueLoader;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
@@ -393,8 +394,10 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         LoaderRegistry loaderRegistry = new LoaderRegistryImpl(monitorFactory, xmlFactory);
 
         // register element loaders
+        PropertyValueLoader propertyValueLoader = new PropertyValueLoader();
+        ComponentLoader componentLoader = new ComponentLoader(loaderRegistry, propertyValueLoader);
+        
         IncludeLoader includeLoader = new IncludeLoader(loaderRegistry);
-        ComponentLoader componentLoader = new ComponentLoader(loaderRegistry);
         CompositeLoader compositeLoader = new CompositeLoader(loaderRegistry,
                                                               includeLoader,
                                                               null,
