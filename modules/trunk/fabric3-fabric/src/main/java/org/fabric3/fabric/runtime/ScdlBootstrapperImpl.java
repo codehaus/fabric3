@@ -407,7 +407,8 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
                                                               null,
                                                               null,
                                                               null,
-                                                              componentLoader);
+                                                              componentLoader,
+                                                              null);
         compositeLoader.init();
 
         InterfaceJavaLoader interfaceJavaLoader = new InterfaceJavaLoader(loaderRegistry, interfaceProcessorRegistry);

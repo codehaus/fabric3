@@ -26,22 +26,19 @@ import java.net.URI;
  * @version $Rev$ $Date$
  */
 public class WireDefinition extends ModelObject {
-    private URI source;
-    private URI target;
+    private final URI source;
+    private final URI target;
+
+    public WireDefinition(URI source, URI target) {
+        this.source = source;
+        this.target = target;
+    }
 
     public URI getSource() {
         return source;
     }
 
-    public void setSource(URI source) {
-        this.source = source;
-    }
-
     public URI getTarget() {
         return target;
-    }
-
-    public void setTarget(URI target) {
-        this.target = target;
     }
 }

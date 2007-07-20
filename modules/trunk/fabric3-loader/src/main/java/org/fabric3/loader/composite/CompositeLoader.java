@@ -43,6 +43,7 @@ import org.fabric3.spi.model.type.ModelObject;
 import org.fabric3.spi.model.type.Property;
 import org.fabric3.spi.model.type.ReferenceDefinition;
 import org.fabric3.spi.model.type.ServiceDefinition;
+import org.fabric3.spi.model.type.WireDefinition;
 import org.fabric3.spi.util.stax.StaxUtil;
 
 /**
@@ -58,6 +59,7 @@ public class CompositeLoader implements StAXElementLoader<CompositeComponentType
     private static final QName SERVICE = new QName(SCA_NS, "service");
     private static final QName REFERENCE = new QName(SCA_NS, "reference");
     private static final QName COMPONENT = new QName(SCA_NS, "component");
+    private static final QName WIRE = new QName(SCA_NS, "wire");
 
     private final LoaderRegistry registry;
     private final StAXElementLoader<Include> includeLoader;
@@ -65,13 +67,15 @@ public class CompositeLoader implements StAXElementLoader<CompositeComponentType
     private final StAXElementLoader<ServiceDefinition> serviceLoader;
     private final StAXElementLoader<ReferenceDefinition> referenceLoader;
     private final StAXElementLoader<ComponentDefinition<?>> componentLoader;
+    private final StAXElementLoader<WireDefinition> wireLoader;
 
     public CompositeLoader(@Reference LoaderRegistry registry,
                            @Reference(name = "include")StAXElementLoader<Include> includeLoader,
                            @Reference(name = "property")StAXElementLoader<Property<?>> propertyLoader,
                            @Reference(name = "service")StAXElementLoader<ServiceDefinition> serviceLoader,
                            @Reference(name = "reference")StAXElementLoader<ReferenceDefinition> referenceLoader,
-                           @Reference(name = "component")StAXElementLoader<ComponentDefinition<?>> componentLoader
+                           @Reference(name = "component")StAXElementLoader<ComponentDefinition<?>> componentLoader,
+                           @Reference(name = "wire")StAXElementLoader<WireDefinition> wireLoader
     ) {
         this.registry = registry;
         this.includeLoader = includeLoader;
@@ -79,6 +83,7 @@ public class CompositeLoader implements StAXElementLoader<CompositeComponentType
         this.serviceLoader = serviceLoader;
         this.referenceLoader = referenceLoader;
         this.componentLoader = componentLoader;
+        this.wireLoader = wireLoader;
     }
 
     public QName getXMLType() {
@@ -133,6 +138,9 @@ public class CompositeLoader implements StAXElementLoader<CompositeComponentType
                 } else if (COMPONENT.equals(qname)) {
                     ComponentDefinition<?> componentDefinition = componentLoader.load(reader, loaderContext);
                     type.add(componentDefinition);
+                } else if (WIRE.equals(qname)) {
+                    WireDefinition wire = wireLoader.load(reader, loaderContext);
+                    type.add(wire);
                 } else {
                     // Extension element - for now try to load and see if we can handle it
                     ModelObject modelObject = registry.load(reader, ModelObject.class, loaderContext);

@@ -61,6 +61,9 @@
     <component name="loader.Service">
         <system:implementation.system class="org.fabric3.loader.composite.ServiceLoader"/>
     </component>
+    <component name="loader.Wire">
+        <system:implementation.system class="org.fabric3.loader.composite.WireLoader"/>
+    </component>
 
     <component name="loader.Composite">
         <system:implementation.system class="org.fabric3.loader.composite.CompositeLoader"/>
@@ -69,6 +72,7 @@
         <reference name="service" target="loader.Service"/>
         <reference name="reference" target="loader.Reference"/>
         <reference name="component" target="loader.Component"/>
+        <reference name="wire" target="loader.Wire"/>
     </component>
 
     <component name="elementLoader.componentType">
