@@ -24,10 +24,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.namespace.QName;
+
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.CompositeImplementation;
 import org.fabric3.spi.model.type.Implementation;
 import org.fabric3.spi.model.type.PropertyValue;
+import org.osoa.sca.Constants;
 
 /**
  * Represents an instantiated component in the service network.
@@ -35,6 +38,8 @@ import org.fabric3.spi.model.type.PropertyValue;
  * @version $Rev$ $Date$
  */
 public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArtifact<LogicalComponent<CompositeImplementation>> {
+    
+    private static final QName TYPE = new QName(Constants.SCA_NS, "component");
     
     private final ComponentDefinition<I> definition;
     private final Map<String, PropertyValue> propertyValues = new HashMap<String, PropertyValue>();
@@ -51,7 +56,7 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
      * @param parent Parent of the component.
      */
     public LogicalComponent(URI uri, URI runtimeId, ComponentDefinition<I> definition, LogicalComponent<CompositeImplementation> parent) {
-        super(uri, parent);
+        super(uri, parent, TYPE);
         this.runtimeId = runtimeId;
         this.definition = definition;
     }

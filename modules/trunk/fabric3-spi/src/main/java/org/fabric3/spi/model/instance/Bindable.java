@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
 /**
  * Super class for logical services and references.
  *
@@ -37,9 +39,10 @@ public class Bindable extends LogicalScaArtifact<LogicalComponent<?>> {
      * 
      * @param uri URI of the service or the reference.
      * @param parent Parent of the service or the reference.
+     * @param type Type of this artifact (service or reference).
      */
-    public Bindable(URI uri, LogicalComponent<?> parent) {
-        super(uri, parent);
+    protected Bindable(URI uri, LogicalComponent<?> parent, QName type) {
+        super(uri, parent, type);
         bindings = new ArrayList<LogicalBinding<?>>();
     }
 

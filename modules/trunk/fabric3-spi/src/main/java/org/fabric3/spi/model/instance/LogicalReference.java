@@ -23,7 +23,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
 import org.fabric3.spi.model.type.ReferenceDefinition;
+import org.osoa.sca.Constants;
 
 /**
  * Represents a resolved reference
@@ -31,6 +34,8 @@ import org.fabric3.spi.model.type.ReferenceDefinition;
  * @version $Rev$ $Date$
  */
 public class LogicalReference extends Bindable {
+    
+    private static final QName TYPE = new QName(Constants.SCA_NS, "reference");
     
     private final ReferenceDefinition definition;
     private List<URI> targets;
@@ -42,7 +47,7 @@ public class LogicalReference extends Bindable {
      * @param parent
      */
     public LogicalReference(URI uri, ReferenceDefinition definition, LogicalComponent<?> parent) {
-        super(uri, parent);
+        super(uri, parent, TYPE);
         this.definition = definition;
         targets = new ArrayList<URI>();
         promoted = new ArrayList<URI>();

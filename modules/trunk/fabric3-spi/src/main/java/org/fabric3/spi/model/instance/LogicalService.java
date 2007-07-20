@@ -20,7 +20,10 @@ package org.fabric3.spi.model.instance;
 
 import java.net.URI;
 
+import javax.xml.namespace.QName;
+
 import org.fabric3.spi.model.type.ServiceDefinition;
+import org.osoa.sca.Constants;
 
 /**
  * Represents a resolved service
@@ -28,6 +31,8 @@ import org.fabric3.spi.model.type.ServiceDefinition;
  * @version $Rev$ $Date$
  */
 public class LogicalService extends Bindable {
+    
+    private static final QName TYPE = new QName(Constants.SCA_NS, "service");
     
     private final ServiceDefinition definition;
     private URI targetUri;
@@ -38,7 +43,7 @@ public class LogicalService extends Bindable {
      * @param parent
      */
     public LogicalService(URI uri, ServiceDefinition definition, LogicalComponent<?> parent) {
-        super(uri, parent);
+        super(uri, parent, TYPE);
         this.definition = definition;
     }
 

@@ -18,7 +18,10 @@
  */
 package org.fabric3.spi.model.instance;
 
+import javax.xml.namespace.QName;
+
 import org.fabric3.spi.model.type.BindingDefinition;
+import org.osoa.sca.Constants;
 
 /**
  * Represents a resolved binding
@@ -27,6 +30,8 @@ import org.fabric3.spi.model.type.BindingDefinition;
  */
 public class LogicalBinding<BD extends BindingDefinition> extends LogicalScaArtifact<Bindable> {
     
+    private static final QName TYPE = new QName(Constants.SCA_NS, "binding");
+    
     private final BD binding;
 
     /**
@@ -34,7 +39,7 @@ public class LogicalBinding<BD extends BindingDefinition> extends LogicalScaArti
      * @param parent
      */
     public LogicalBinding(BD binding, Bindable parent) {
-        super(null, parent);
+        super(null, parent, TYPE);
         this.binding = binding;
     }
 
