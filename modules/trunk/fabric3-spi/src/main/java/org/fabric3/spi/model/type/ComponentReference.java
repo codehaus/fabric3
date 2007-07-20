@@ -23,21 +23,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents the set of targets configured on a reference
+ * Represents the configuration of a component reference.
  *
  * @version $Rev$ $Date$
  */
-public class ReferenceTarget extends ModelObject {
-    private URI referenceName;
+public class ComponentReference extends ModelObject {
+    private final String name;
     private boolean autowire;
     private List<URI> targets = new ArrayList<URI>();
 
-    public URI getReferenceName() {
-        return referenceName;
+    /**
+     * Construct a ComponentReference specifying the name of the reference being configured.
+     *
+     * @param name the name of the reference being configured
+     */
+    public ComponentReference(String name) {
+        this.name = name;
     }
 
-    public void setReferenceName(URI referenceName) {
-        this.referenceName = referenceName;
+    public String getName() {
+        return name;
     }
 
     /**

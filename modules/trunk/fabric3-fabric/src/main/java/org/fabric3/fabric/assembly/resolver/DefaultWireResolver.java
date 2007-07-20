@@ -33,7 +33,7 @@ import org.fabric3.spi.model.type.ComponentType;
 import org.fabric3.spi.model.type.CompositeComponentType;
 import org.fabric3.spi.model.type.Implementation;
 import org.fabric3.spi.model.type.ReferenceDefinition;
-import org.fabric3.spi.model.type.ReferenceTarget;
+import org.fabric3.spi.model.type.ComponentReference;
 import org.fabric3.spi.model.type.ServiceContract;
 import org.fabric3.spi.model.type.ServiceDefinition;
 import org.fabric3.spi.util.UriHelper;
@@ -98,13 +98,13 @@ public class DefaultWireResolver implements WireResolver {
             throws ResolutionException {
         ComponentDefinition<? extends Implementation<?>> definition = component.getDefinition();
         ComponentType<?, ?, ?> componentType = definition.getImplementation().getComponentType();
-        Map<String, ReferenceTarget> targets = definition.getReferenceTargets();
+        Map<String, ComponentReference> targets = definition.getReferences();
         for (ReferenceDefinition reference : componentType.getReferences().values()) {
             URI refUri = reference.getUri();
             String referenceName = refUri.getFragment();
             LogicalReference logicalReference = component.getReference(referenceName);
             assert logicalReference != null;
-            ReferenceTarget target = targets.get(referenceName);
+            ComponentReference target = targets.get(referenceName);
             if (target == null) {
                 // case where a reference is specified but not configured, e.g. promoted or autowirable
                 // check for promotions first
@@ -150,7 +150,7 @@ public class DefaultWireResolver implements WireResolver {
                 if (target.isAutowire()) {
                     // a reference element is specified with autowire and no target
                     ServiceContract requiredContract = reference.getServiceContract();
-                    String fragment = target.getReferenceName().getFragment();
+                    String fragment = target.getName();
                     boolean required = reference.isRequired();
                     URI targetUri = null;
                     if (include) {

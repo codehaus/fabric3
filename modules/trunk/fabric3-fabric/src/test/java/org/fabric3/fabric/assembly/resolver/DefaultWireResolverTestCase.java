@@ -31,7 +31,7 @@ import org.fabric3.spi.model.type.CompositeImplementation;
 import org.fabric3.spi.model.type.Implementation;
 import org.fabric3.spi.model.type.Property;
 import org.fabric3.spi.model.type.ReferenceDefinition;
-import org.fabric3.spi.model.type.ReferenceTarget;
+import org.fabric3.spi.model.type.ComponentReference;
 import org.fabric3.spi.model.type.ServiceContract;
 import org.fabric3.spi.model.type.ServiceDefinition;
 
@@ -157,8 +157,7 @@ public class DefaultWireResolverTestCase extends TestCase {
         impl.setComponentType(type);
         ComponentDefinition<MockAtomicImpl> definition =
                 new ComponentDefinition<MockAtomicImpl>(SOURCE_URI.toString(), impl);
-        ReferenceTarget target = new ReferenceTarget();
-        target.setReferenceName(REFERENCE_URI);
+        ComponentReference target = new ComponentReference(REFERENCE_URI.getFragment());
         target.setAutowire(true);
         definition.add(target);
         URI id = URI.create("runtime");

@@ -44,7 +44,7 @@ import org.fabric3.spi.model.type.Autowire;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.Implementation;
 import org.fabric3.spi.model.type.PropertyValue;
-import org.fabric3.spi.model.type.ReferenceTarget;
+import org.fabric3.spi.model.type.ComponentReference;
 
 /**
  * Loads a component definition from an XML-based assembly file
@@ -169,8 +169,7 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
             }
         }
 
-        ReferenceTarget referenceTarget = new ReferenceTarget();
-        referenceTarget.setReferenceName(componentId.resolve('#' + name));
+        ComponentReference referenceTarget = new ComponentReference(name);
         referenceTarget.setAutowire(autowire);
         componentDefinition.add(referenceTarget);
         for (URI uri : uris) {
