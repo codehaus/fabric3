@@ -26,8 +26,8 @@ import java.util.Set;
 import javax.xml.namespace.QName;
 
 import org.fabric3.spi.model.instance.LogicalScaArtifact;
-import org.fabric3.spi.policy.model.Intent;
-import org.fabric3.spi.policy.model.PolicySet;
+import org.fabric3.spi.model.definition.Intent;
+import org.fabric3.spi.model.definition.PolicySet;
 import org.fabric3.spi.policy.registry.PolicyRegistry;
 
 /**

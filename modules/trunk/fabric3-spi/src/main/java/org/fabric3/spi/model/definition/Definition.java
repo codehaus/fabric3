@@ -16,41 +16,49 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.policy.registry;
+package org.fabric3.spi.model.definition;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
-import javax.xml.namespace.QName;
-
-import org.fabric3.spi.model.instance.LogicalScaArtifact;
-import org.fabric3.spi.model.definition.Intent;
-import org.fabric3.spi.model.definition.PolicySet;
+import org.fabric3.spi.model.type.ModelObject;
 
 /**
- * Abstraction for the service that keeps track of the domain-wide
- * policies and intents that are registered.
- * 
  * @version $Revision$ $Date$
+ *
  */
-public interface PolicyRegistry {
+public class Definition extends ModelObject {
+    
+    private Set<PolicySet> policySets = new HashSet<PolicySet>();
+    private Set<Intent> intents = new HashSet<Intent>();
     
     /**
-     * @param policySet Policy set that needs to be registered.
+     * @return Policy sets in this definition.
      */
-    void registerPolicySet(PolicySet policySet);
+    public Set<PolicySet> getPolicySets() {
+        return Collections.unmodifiableSet(policySets);
+    }
     
     /**
-     * @param intent Intent that needs to be registered.
+     * @return Intents in this definition.
      */
-    void registerIntent(Intent intent);
+    public Set<Intent> getIntents() {
+        return Collections.unmodifiableSet(intents);
+    }
     
     /**
-     * Finds the interceptor qnames for the SCA artifact based on the rules 
-     * specified by the SCA policy specification.
-     * 
-     * @param scaArtifact SCA artifact.
-     * @return List of interceptors.
+     * @param policySet Policy set to be added.
      */
-    Set<QName> getInterceptorBuilders(LogicalScaArtifact<?> scaArtifact);
+    public void addPolicySet(PolicySet policySet) {
+        policySets.add(policySet);
+    }
+    
+    /**
+     * @param intent Intent set to be added.
+     */
+    public void addIntent(Intent intent) {
+        intents.add(intent);
+    }
 
 }
