@@ -55,7 +55,6 @@ import org.fabric3.fabric.component.scope.ScopeRegistryImpl;
 import org.fabric3.fabric.deployer.Deployer;
 import org.fabric3.fabric.deployer.DeployerImpl;
 import org.fabric3.fabric.generator.GeneratorRegistryImpl;
-import org.fabric3.fabric.idl.java.InterfaceJavaLoader;
 import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
 import org.fabric3.fabric.implementation.IntrospectionRegistryImpl;
 import org.fabric3.fabric.implementation.composite.CompositeComponentTypeLoader;
@@ -112,8 +111,8 @@ import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.ScdlBootstrapper;
-import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.loader.common.ComponentReferenceLoader;
+import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.loader.composite.ComponentLoader;
 import org.fabric3.loader.composite.CompositeLoader;
 import org.fabric3.loader.composite.IncludeLoader;
@@ -410,9 +409,6 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
                                                               componentLoader,
                                                               null);
         compositeLoader.init();
-
-        InterfaceJavaLoader interfaceJavaLoader = new InterfaceJavaLoader(loaderRegistry, interfaceProcessorRegistry);
-        interfaceJavaLoader.start();
 
         SystemComponentTypeLoader typeLoader = new SystemComponentTypeLoaderImpl(introspector);
         SystemImplementationLoader systemImplementationLoader =
