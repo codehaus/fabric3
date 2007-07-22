@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.fabric3.fabric.model.NonBlockingIntentDefinition;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
@@ -36,12 +35,10 @@ import org.fabric3.spi.generator.ComponentResourceGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
-import org.fabric3.spi.generator.InterceptorGenerator;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
-import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
@@ -50,7 +47,6 @@ import org.fabric3.spi.model.type.BindingDefinition;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.DataType;
 import org.fabric3.spi.model.type.Implementation;
-import org.fabric3.spi.model.type.IntentDefinition;
 import org.fabric3.spi.model.type.Operation;
 import org.fabric3.spi.model.type.ReferenceDefinition;
 import org.fabric3.spi.model.type.ResourceDescription;
@@ -64,7 +60,6 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
     private Map<Class<?>,
             ComponentGenerator<? extends LogicalComponent<? extends Implementation>>> componentGenerators;
     private Map<Class<?>, BindingGenerator> bindingGenerators;
-    private Map<Class<?>, InterceptorGenerator<? extends IntentDefinition>> interceptorGenerators;
     private Map<Class<?>, ComponentResourceGenerator> resourceGenerators;
     private List<CommandGenerator> commandGenerators = new ArrayList<CommandGenerator>();
 
@@ -74,15 +69,10 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
                         ComponentGenerator<? extends LogicalComponent<? extends Implementation>>>();
         bindingGenerators = new ConcurrentHashMap<Class<?>, BindingGenerator>();
         resourceGenerators = new ConcurrentHashMap<Class<?>, ComponentResourceGenerator>();
-        interceptorGenerators = new ConcurrentHashMap<Class<?>, InterceptorGenerator<? extends IntentDefinition>>();
     }
 
     public <T extends BindingDefinition> void register(Class<T> clazz, BindingGenerator generator) {
         bindingGenerators.put(clazz, generator);
-    }
-
-    public <T extends IntentDefinition> void register(Class<T> clazz, InterceptorGenerator<T> generator) {
-        interceptorGenerators.put(clazz, generator);
     }
 
     public void register(Class<?> clazz, ComponentResourceGenerator generator) {
@@ -288,35 +278,11 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         for (Operation o : contract.getOperations()) {
             PhysicalOperationDefinition physicalOperation = mapOperation(o);
             wireDefinition.addOperation(physicalOperation);
-            if (o.isNonBlocking()) {
-                // this is egregious
-                // hardcode intent until we get the intent infrastructure in place
-                IntentDefinition intent = new NonBlockingIntentDefinition();
-                Class<? extends IntentDefinition> type = NonBlockingIntentDefinition.class;
-                InterceptorGenerator generator = interceptorGenerators.get(type);
-                if (generator == null) {
-                    throw new GeneratorNotFoundException(type);
-                }
-                PhysicalInterceptorDefinition interceptorDefinition = generator.generate(intent, context);
-                physicalOperation.addInterceptor(interceptorDefinition);
-            }
         }
         for (Operation o : contract.getCallbackOperations()) {
             PhysicalOperationDefinition physicalOperation = mapOperation(o);
             physicalOperation.setCallback(true);
             wireDefinition.addOperation(physicalOperation);
-            if (o.isNonBlocking()) {
-                // this is egregious
-                // hardcode intent until we get the intent infrastructure in place
-                IntentDefinition intent = new NonBlockingIntentDefinition();
-                Class<? extends IntentDefinition> type = NonBlockingIntentDefinition.class;
-                InterceptorGenerator generator = interceptorGenerators.get(type);
-                if (generator == null) {
-                    throw new GeneratorNotFoundException(type);
-                }
-                PhysicalInterceptorDefinition interceptorDefinition = generator.generate(intent, context);
-                physicalOperation.addInterceptor(interceptorDefinition);
-            }
         }
         return wireDefinition;
     }

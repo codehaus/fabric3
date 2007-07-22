@@ -26,7 +26,6 @@ import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.type.BindingDefinition;
 import org.fabric3.spi.model.type.Implementation;
-import org.fabric3.spi.model.type.IntentDefinition;
 import org.fabric3.spi.model.type.ResourceDescription;
 
 /**
@@ -54,14 +53,6 @@ public interface GeneratorRegistry {
      * @param generator the generator to register
      */
     <T extends BindingDefinition> void register(Class<T> clazz, BindingGenerator generator);
-
-    /**
-     * Registers an interceptor generator
-     *
-     * @param phase     the binding type type the generator handles
-     * @param generator the generator to register
-     */
-    <T extends IntentDefinition> void register(Class<T> phase, InterceptorGenerator<T> generator);
 
     /**
      * Registers a resource generator
