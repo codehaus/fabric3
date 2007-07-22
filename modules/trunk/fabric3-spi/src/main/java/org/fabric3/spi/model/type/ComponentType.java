@@ -20,6 +20,7 @@ package org.fabric3.spi.model.type;
 
 import java.util.HashMap;
 import java.util.Map;
+import javax.xml.namespace.QName;
 
 /**
  * <p>The definition of the configurable aspects of an implementation in terms of the services it exposes, the services
@@ -41,9 +42,27 @@ public class ComponentType<S extends ServiceDefinition, R extends ReferenceDefin
     private int initLevel;
     private long maxAge = -1;
     private long maxIdleTime = -1;
+    private QName constrainingType;
     private final Map<String, S> services = new HashMap<String, S>();
     private final Map<String, R> references = new HashMap<String, R>();
     private final Map<String, P> properties = new HashMap<String, P>();
+
+    /**
+     * Returns the name of the constraining type for this component type.
+     *
+     * @return the name of the constraining type for this component type
+     */
+    public QName getConstrainingType() {
+        return constrainingType;
+    }
+
+    /**
+     * Sets the name of the constraining type for this component type.
+     * @param constrainingType the name of the constraining type for this component type
+     */
+    public void setConstrainingType(QName constrainingType) {
+        this.constrainingType = constrainingType;
+    }
 
     /**
      * Returns the component implementation scope.

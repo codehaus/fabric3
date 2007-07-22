@@ -34,6 +34,7 @@ import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.model.type.ComponentType;
 import org.fabric3.spi.model.type.ModelObject;
 import org.fabric3.spi.model.type.Property;
@@ -83,8 +84,12 @@ public class ComponentTypeLoader implements StAXElementLoader<ComponentType<Serv
     public ComponentType<ServiceDefinition, ReferenceDefinition, Property<?>> load(XMLStreamReader reader,
                                                                                    LoaderContext loaderContext)
             throws XMLStreamException, LoaderException {
+        QName constrainingType =
+                LoaderUtil.getQName(reader.getAttributeValue(null, "constrainingType"), reader.getNamespaceContext());
+
         ComponentType<ServiceDefinition, ReferenceDefinition, Property<?>> type =
                 new ComponentType<ServiceDefinition, ReferenceDefinition, Property<?>>();
+        type.setConstrainingType(constrainingType);
         while (true) {
             switch (reader.next()) {
             case START_ELEMENT:
