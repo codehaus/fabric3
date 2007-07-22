@@ -24,9 +24,13 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+
+import javax.xml.namespace.QName;
 
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.CommandGenerator;
@@ -39,6 +43,7 @@ import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
+import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
@@ -51,6 +56,7 @@ import org.fabric3.spi.model.type.Operation;
 import org.fabric3.spi.model.type.ReferenceDefinition;
 import org.fabric3.spi.model.type.ResourceDescription;
 import org.fabric3.spi.model.type.ServiceContract;
+import org.fabric3.spi.policy.registry.PolicyRegistry;
 
 /**
  * @version $Rev$ $Date$
@@ -62,7 +68,11 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
     private Map<Class<?>, BindingGenerator> bindingGenerators;
     private Map<Class<?>, ComponentResourceGenerator> resourceGenerators;
     private List<CommandGenerator> commandGenerators = new ArrayList<CommandGenerator>();
+    private PolicyRegistry policyRegistry;
 
+    /**
+     * 
+     */
     public GeneratorRegistryImpl() {
         componentGenerators =
                 new ConcurrentHashMap<Class<?>,
@@ -71,23 +81,41 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         resourceGenerators = new ConcurrentHashMap<Class<?>, ComponentResourceGenerator>();
     }
 
+    /**
+     * @see org.fabric3.spi.generator.GeneratorRegistry#register(java.lang.Class, org.fabric3.spi.generator.BindingGenerator)
+     */
     public <T extends BindingDefinition> void register(Class<T> clazz, BindingGenerator generator) {
         bindingGenerators.put(clazz, generator);
     }
 
+    /**
+     * @see org.fabric3.spi.generator.GeneratorRegistry#register(java.lang.Class, org.fabric3.spi.generator.ComponentResourceGenerator)
+     */
     public void register(Class<?> clazz, ComponentResourceGenerator generator) {
         resourceGenerators.put(clazz, generator);
     }
 
+    /**
+     * @see org.fabric3.spi.generator.GeneratorRegistry#register(org.fabric3.spi.generator.CommandGenerator)
+     */
     public void register(CommandGenerator generator) {
         commandGenerators.add(generator);
     }
 
-    public <T extends Implementation<?>> void register(Class<T> clazz,
-                                                       ComponentGenerator<LogicalComponent<T>> generator) {
+    /**
+     * @see org.fabric3.spi.generator.GeneratorRegistry#register(java.lang.Class, org.fabric3.spi.generator.ComponentGenerator)
+     */
+    public <T extends Implementation<?>> void register(Class<T> clazz, ComponentGenerator<LogicalComponent<T>> generator) {
         componentGenerators.put(clazz, generator);
     }
+    
+    public void setPolicyRegistry(PolicyRegistry policyRegistry) {
+        this.policyRegistry = policyRegistry;
+    }
 
+    /**
+     * @see org.fabric3.spi.generator.GeneratorRegistry#generatePhysicalComponent(org.fabric3.spi.model.instance.LogicalComponent, org.fabric3.spi.generator.GeneratorContext)
+     */
     @SuppressWarnings({"unchecked"})
     public <C extends LogicalComponent<?>> void generatePhysicalComponent(C component, GeneratorContext context)
             throws GenerationException {
@@ -100,6 +128,9 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         generator.generate(component, context);
     }
 
+    /**
+     * @see org.fabric3.spi.generator.GeneratorRegistry#generateBoundServiceWire(org.fabric3.spi.model.instance.LogicalService, org.fabric3.spi.model.instance.LogicalBinding, org.fabric3.spi.model.instance.LogicalComponent, org.fabric3.spi.generator.GeneratorContext)
+     */
     @SuppressWarnings({"unchecked"})
     public <C extends LogicalComponent<?>> void generateBoundServiceWire(LogicalService service,
                                                                          LogicalBinding binding,
@@ -108,7 +139,14 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
             throws GenerationException {
 
         ServiceContract<?> contract = service.getDefinition().getServiceContract();
-        PhysicalWireDefinition wireDefinition = createWireDefinition(contract, context);
+        
+        Set<QName> interceptorBuilders = new HashSet<QName>();
+        if(policyRegistry != null) {
+            interceptorBuilders = policyRegistry.getInterceptorBuilders(binding);
+        }
+        
+        PhysicalWireDefinition wireDefinition = createWireDefinition(contract, context, interceptorBuilders);
+        
         Class<?> type = component.getDefinition().getImplementation().getClass();
         ComponentGenerator<C> targetGenerator = (ComponentGenerator<C>) componentGenerators.get(type);
         if (targetGenerator == null) {
@@ -138,22 +176,30 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
 
     }
 
+    /**
+     * @see org.fabric3.spi.generator.GeneratorRegistry#generateBoundReferenceWire(org.fabric3.spi.model.instance.LogicalComponent, org.fabric3.spi.model.instance.LogicalReference, org.fabric3.spi.model.instance.LogicalBinding, org.fabric3.spi.generator.GeneratorContext)
+     */
     @SuppressWarnings({"unchecked"})
-    public <C extends LogicalComponent<?>>
-    void generateBoundReferenceWire(C source,
-                                    LogicalReference reference,
-                                    LogicalBinding bindingDefinition,
-                                    GeneratorContext context) throws GenerationException {
+    public <C extends LogicalComponent<?>> void generateBoundReferenceWire(C source,
+                                                                           LogicalReference reference,
+                                                                           LogicalBinding binding,
+                                                                           GeneratorContext context) throws GenerationException {
 
         ServiceContract<?> contract = reference.getDefinition().getServiceContract();
-        PhysicalWireDefinition wireDefinition = createWireDefinition(contract, context);
-        Class<?> type = bindingDefinition.getBinding().getClass();
+        
+        Set<QName> interceptorBuilders = new HashSet<QName>();
+        if(policyRegistry != null) {
+            interceptorBuilders = policyRegistry.getInterceptorBuilders(binding);
+        }
+        
+        PhysicalWireDefinition wireDefinition = createWireDefinition(contract, context, interceptorBuilders);
+        Class<?> type = binding.getBinding().getClass();
         BindingGenerator targetGenerator = bindingGenerators.get(type);
         if (targetGenerator == null) {
             throw new GeneratorNotFoundException(type);
         }
         PhysicalWireTargetDefinition targetDefinition =
-                targetGenerator.generateWireTarget(bindingDefinition, context, reference.getDefinition());
+                targetGenerator.generateWireTarget(binding, context, reference.getDefinition());
         wireDefinition.setTarget(targetDefinition);
 
         type = source.getDefinition().getImplementation().getClass();
@@ -166,18 +212,29 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         wireDefinition.setSource(sourceDefinition);
 
         context.getPhysicalChangeSet().addWireDefinition(wireDefinition);
+        
     }
 
+    /**
+     * @see org.fabric3.spi.generator.GeneratorRegistry#generateUnboundWire(org.fabric3.spi.model.instance.LogicalComponent, org.fabric3.spi.model.instance.LogicalReference, org.fabric3.spi.model.instance.LogicalService, org.fabric3.spi.model.instance.LogicalComponent, org.fabric3.spi.generator.GeneratorContext)
+     */
     @SuppressWarnings({"unchecked"})
-    public <S extends LogicalComponent<?>, T extends LogicalComponent<?>>
-    void generateUnboundWire(S source,
-                             LogicalReference reference,
-                             LogicalService service,
-                             T target,
-                             GeneratorContext context) throws GenerationException {
+    public <S extends LogicalComponent<?>, T extends LogicalComponent<?>> void generateUnboundWire(S source,
+                                                                                                   LogicalReference reference,
+                                                                                                   LogicalService service,
+                                                                                                   T target,
+                                                                                                   GeneratorContext context) throws GenerationException {
+        
         ReferenceDefinition referenceDefinition = reference.getDefinition();
         ServiceContract<?> contract = referenceDefinition.getServiceContract();
-        PhysicalWireDefinition wireDefinition = createWireDefinition(contract, context);
+        
+        Set<QName> interceptorBuilders = new HashSet<QName>();
+        if(policyRegistry != null) {
+            interceptorBuilders = policyRegistry.getInterceptorBuilders(service);
+            interceptorBuilders.addAll(policyRegistry.getInterceptorBuilders(reference));
+        }
+        
+        PhysicalWireDefinition wireDefinition = createWireDefinition(contract, context, interceptorBuilders);
         Class<?> type = target.getDefinition().getImplementation().getClass();
         ComponentGenerator<T> targetGenerator = (ComponentGenerator<T>) componentGenerators.get(type);
         if (targetGenerator == null) {
@@ -206,19 +263,20 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
                 sourceGenerator.generateWireSource(source, reference, optimizable, context);
         wireDefinition.setSource(sourceDefinition);
         context.getPhysicalChangeSet().addWireDefinition(wireDefinition);
+        
     }
 
+    /**
+     * @see org.fabric3.spi.generator.GeneratorRegistry#generateResource(org.fabric3.spi.model.type.ResourceDescription, org.fabric3.spi.model.instance.LogicalComponent, org.fabric3.spi.generator.GeneratorContext)
+     */
     public URI generateResource(ResourceDescription description, LogicalComponent<?> component, GeneratorContext context)
             throws GenerationException {
         throw new UnsupportedOperationException();
-//        Class<?> type = definition.getClass();
-//        ComponentResourceGenerator generator = resourceGenerators.get(type);
-//        if (generator == null) {
-//            throw new GeneratorNotFoundException(type);
-//        }
-//        return generator.generate(definition, context);
     }
 
+    /**
+     * @see org.fabric3.spi.generator.GeneratorRegistry#generateCommandSet(org.fabric3.spi.model.instance.LogicalComponent, org.fabric3.spi.generator.GeneratorContext)
+     */
     public void generateCommandSet(LogicalComponent<?> component, GeneratorContext context)
             throws GenerationException {
         for (CommandGenerator generator : commandGenerators) {
@@ -229,6 +287,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
 
     @SuppressWarnings({"unchecked"})
     private PhysicalOperationDefinition mapOperation(Operation o) {
+        
         PhysicalOperationDefinition operation = new PhysicalOperationDefinition();
         operation.setName(o.getName());
         operation.setConversationSequence(o.getConversationSequence());
@@ -245,6 +304,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
     }
 
     private String getClassName(Type paramType) {
+        
         // TODO this needs to be fixed
         if (paramType instanceof Class) {
             return ((Class) paramType).getName();
@@ -269,22 +329,30 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
             return "[L" + var.getGenericComponentType();
         }
         throw new AssertionError();
+        
     }
 
     @SuppressWarnings({"unchecked"})
-    private PhysicalWireDefinition createWireDefinition(ServiceContract<?> contract, GeneratorContext context)
+    private PhysicalWireDefinition createWireDefinition(ServiceContract<?> contract, GeneratorContext context, Set<QName> interceptorBuilders)
             throws GenerationException {
+        
         PhysicalWireDefinition wireDefinition = new PhysicalWireDefinition();
         for (Operation o : contract.getOperations()) {
             PhysicalOperationDefinition physicalOperation = mapOperation(o);
             wireDefinition.addOperation(physicalOperation);
+            for(QName interceptorBuilder : interceptorBuilders) {
+                physicalOperation.addInterceptor(new PhysicalInterceptorDefinition(interceptorBuilder));
+            }
         }
+        
         for (Operation o : contract.getCallbackOperations()) {
             PhysicalOperationDefinition physicalOperation = mapOperation(o);
             physicalOperation.setCallback(true);
             wireDefinition.addOperation(physicalOperation);
         }
+        
         return wireDefinition;
+        
     }
 
 }
