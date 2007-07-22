@@ -113,9 +113,9 @@ public class StAXLoaderRegistryImplTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         name = new QName("http://mock", "test");
-        loaderContext = new LoaderContextImpl(null, null);
-        mockMonitor = EasyMock.createMock(LoaderRegistryImpl.Monitor.class);
         ClassLoader cl = getClass().getClassLoader();
+        loaderContext = new LoaderContextImpl(cl, null);
+        mockMonitor = EasyMock.createMock(LoaderRegistryImpl.Monitor.class);
         XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance("javax.xml.stream.XMLInputFactory", cl);
         registry = new LoaderRegistryImpl(mockMonitor, xmlInputFactory);
 
