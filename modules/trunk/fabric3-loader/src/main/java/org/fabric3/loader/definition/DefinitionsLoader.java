@@ -18,17 +18,22 @@
  */
 package org.fabric3.loader.definition;
 
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import static org.osoa.sca.Constants.SCA_NS;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.model.definition.Definitions;
+import org.fabric3.spi.model.definition.Intent;
+import org.fabric3.spi.model.definition.PolicySet;
 import org.osoa.sca.annotations.Reference;
 
 /**
@@ -38,21 +43,46 @@ import org.osoa.sca.annotations.Reference;
  */
 public class DefinitionsLoader implements StAXElementLoader<Definitions> {
     
+    static final QName INTENT = new QName(SCA_NS, "intent");
+    static final QName DESCRIPTION = new QName(SCA_NS, "description");
+    static final QName POLICY_SET = new QName(SCA_NS, "policySet");
+    
     private static final QName DEFINITIONS = new QName(SCA_NS, "definitions");
     
     private LoaderRegistry loaderRegistry;
 
     public DefinitionsLoader(@Reference LoaderRegistry registry) {
-        this.loaderRegistry = loaderRegistry;
+        this.loaderRegistry = registry;
         loaderRegistry.registerLoader(DEFINITIONS, this);
     }
 
     /**
      * @see org.fabric3.spi.loader.StAXElementLoader#load(javax.xml.stream.XMLStreamReader, org.fabric3.spi.loader.LoaderContext)
      */
-    public Definitions load(XMLStreamReader reader, LoaderContext context) throws XMLStreamException, LoaderException {
-        // TODO Auto-generated method stub
-        return null;
+    public Definitions load(XMLStreamReader reader, LoaderContext parentContext) throws XMLStreamException, LoaderException {
+        
+        Definitions definitions = new Definitions();
+        String targetNamespace = reader.getAttributeValue(SCA_NS, "targetNamespace");
+        LoaderContext context = new LoaderContextImpl(parentContext, targetNamespace);
+        
+        while (true) {
+            switch (reader.next()) {
+            case START_ELEMENT:
+                QName qname = reader.getName();
+                if (INTENT.equals(qname)) {
+                    Intent intent = loaderRegistry.load(reader, Intent.class, context);
+                    definitions.addIntent(intent);
+                } else if (POLICY_SET.equals(qname)) {
+                    PolicySet policySet = loaderRegistry.load(reader, PolicySet.class, context);
+                    definitions.addPolicySet(policySet);
+                }
+                break;
+            case END_ELEMENT:
+                assert DEFINITIONS.equals(reader.getName());
+                return definitions;
+            }
+        }
+        
     }
 
 }

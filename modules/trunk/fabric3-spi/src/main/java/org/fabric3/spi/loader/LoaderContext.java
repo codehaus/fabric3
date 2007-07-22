@@ -41,5 +41,12 @@ public interface LoaderContext {
      * @return the location of the SCDL definition being deployed
      */
     URL getSourceBase();
+    
+    /**
+     * Target namespace for this loader context.
+     * 
+     * @return Target namespace.
+     */
+    String getTargetNamespace();
 
 }

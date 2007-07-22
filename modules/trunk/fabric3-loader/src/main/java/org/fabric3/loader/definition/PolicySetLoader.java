@@ -18,7 +18,9 @@
  */
 package org.fabric3.loader.definition;
 
-import static org.osoa.sca.Constants.SCA_NS;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
@@ -29,6 +31,8 @@ import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.model.definition.PolicySet;
+import org.fabric3.spi.util.stax.StaxUtil;
+import org.osoa.sca.Constants;
 import org.osoa.sca.annotations.Reference;
 
 /**
@@ -37,23 +41,36 @@ import org.osoa.sca.annotations.Reference;
  * @version $Revision$ $Date$
  */
 public class PolicySetLoader implements StAXElementLoader<PolicySet> {
-    
-    private static final QName POLICY_SET = new QName(SCA_NS, "policySet");
 
     /**
      * Registers the loader with the registry.
      * @param registry Injected registry
      */
     public PolicySetLoader(@Reference LoaderRegistry registry) {
-        registry.registerLoader(POLICY_SET, this);
+        registry.registerLoader(DefinitionsLoader.POLICY_SET, this);
     }
 
     /**
      * @see org.fabric3.spi.loader.StAXElementLoader#load(javax.xml.stream.XMLStreamReader, org.fabric3.spi.loader.LoaderContext)
      */
     public PolicySet load(XMLStreamReader reader, LoaderContext context) throws XMLStreamException, LoaderException {
-        // TODO Auto-generated method stub
-        return null;
+        
+        QName name = StaxUtil.createQName(reader.getAttributeValue(Constants.SCA_NS, "name"), reader);
+        
+        Set<QName> provides = new HashSet<QName>();
+        StringTokenizer tok = new StringTokenizer(reader.getAttributeValue(Constants.SCA_NS, "constrains"));
+        while(tok.hasMoreElements()) {
+            provides.add(StaxUtil.createQName(tok.nextToken(), reader));
+        }
+        
+        Set<QName> builders = new HashSet<QName>();
+        tok = new StringTokenizer(reader.getAttributeValue(org.fabric3.spi.Constants.FABRIC3_NS, "builders"));
+        while(tok.hasMoreElements()) {
+            builders.add(StaxUtil.createQName(tok.nextToken(), reader));
+        }
+        
+        return new PolicySet(name, provides, builders);
+        
     }
 
 }

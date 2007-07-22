@@ -18,7 +18,12 @@
  */
 package org.fabric3.loader.definition;
 
-import static org.osoa.sca.Constants.SCA_NS;
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
@@ -29,6 +34,8 @@ import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.model.definition.Intent;
+import org.fabric3.spi.util.stax.StaxUtil;
+import org.osoa.sca.Constants;
 import org.osoa.sca.annotations.Reference;
 
 /**
@@ -37,23 +44,44 @@ import org.osoa.sca.annotations.Reference;
  * @version $Revision$ $Date$
  */
 public class IntentLoader implements StAXElementLoader<Intent> {
-    
-    private static final QName INTENT = new QName(SCA_NS, "intent");
 
     /**
      * Registers the loader with the registry.
      * @param registry Injected registry
      */
     public IntentLoader(@Reference LoaderRegistry registry) {
-        registry.registerLoader(INTENT, this);
+        registry.registerLoader(DefinitionsLoader.INTENT, this);
     }
 
     /**
      * @see org.fabric3.spi.loader.StAXElementLoader#load(javax.xml.stream.XMLStreamReader, org.fabric3.spi.loader.LoaderContext)
      */
     public Intent load(XMLStreamReader reader, LoaderContext context) throws XMLStreamException, LoaderException {
-        // TODO Auto-generated method stub
-        return null;
+        
+        QName name = StaxUtil.createQName(reader.getAttributeValue(Constants.SCA_NS, "name"), reader);
+        
+        Set<QName> constrains = new HashSet<QName>();
+        StringTokenizer tok = new StringTokenizer(reader.getAttributeValue(Constants.SCA_NS, "constrains"));
+        while(tok.hasMoreElements()) {
+            constrains.add(StaxUtil.createQName(tok.nextToken(), reader));
+        }
+        
+        String description = null;
+        
+        while (true) {
+            switch (reader.next()) {
+            case START_ELEMENT:
+                if (DefinitionsLoader.DESCRIPTION.equals(reader.getName())) {
+                    description = reader.getElementText();
+                }
+                break;
+            case END_ELEMENT:
+                if (DefinitionsLoader.INTENT.equals(reader.getName())) {
+                    return new Intent(name, description, constrains);
+                }
+            }
+        }
+        
     }
 
 }

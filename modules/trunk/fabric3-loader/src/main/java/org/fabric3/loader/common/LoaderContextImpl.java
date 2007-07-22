@@ -24,19 +24,43 @@ import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.transform.TransformContext;
 
 /**
- * A holder that can be used during the load process to store information that is not part of the logical assembly
- * model. This should be regarded as transient and references to this context should not be stored inside the model.
- *
+ * A holder that can be used during the load process to store information that
+ * is not part of the logical assembly model. This should be regarded as
+ * transient and references to this context should not be stored inside the
+ * model.
+ * 
  * @version $Rev$ $Date$
  */
-public class LoaderContextImpl extends TransformContext implements LoaderContext {
+public class LoaderContextImpl extends TransformContext implements
+        LoaderContext {
+
+    private String targetNamespace;
+
     /**
      * Constructor defining properties of this context.
-     *
-     * @param classLoader  the classloader for loading application resources
+     * 
+     * @param classLoader the classloader for loading application resources
      * @param scdlLocation the location of the SCDL defining this composite
      */
     public LoaderContextImpl(ClassLoader classLoader, URL scdlLocation) {
         super(null, classLoader, scdlLocation, null);
+    }
+
+    /**
+     * Initializes from a parent context.
+     * 
+     * @param parentContext Parent context.
+     * @param targetNamespace Target namespace.
+     */
+    public LoaderContextImpl(LoaderContext parentContext, String targetNamespace) {
+        super(null, parentContext.getTargetClassLoader(), parentContext.getSourceBase(), null);
+        this.targetNamespace = targetNamespace;
+    }
+
+    /**
+     * @see org.fabric3.spi.loader.LoaderContext#getTargetNamespace()
+     */
+    public String getTargetNamespace() {
+        return targetNamespace;
     }
 }
