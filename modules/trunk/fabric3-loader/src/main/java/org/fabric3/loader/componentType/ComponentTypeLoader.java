@@ -33,8 +33,8 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.loader.LoaderUtil;
+import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.model.type.ComponentType;
 import org.fabric3.spi.model.type.ModelObject;
 import org.fabric3.spi.model.type.Property;
@@ -84,8 +84,10 @@ public class ComponentTypeLoader implements StAXElementLoader<ComponentType<Serv
     public ComponentType<ServiceDefinition, ReferenceDefinition, Property<?>> load(XMLStreamReader reader,
                                                                                    LoaderContext loaderContext)
             throws XMLStreamException, LoaderException {
-        QName constrainingType =
-                LoaderUtil.getQName(reader.getAttributeValue(null, "constrainingType"), reader.getNamespaceContext());
+        String constrainingAttr = reader.getAttributeValue(null, "constrainingType");
+        QName constrainingType = LoaderUtil.getQName(constrainingAttr,
+                                                     loaderContext.getTargetNamespace(),
+                                                     reader.getNamespaceContext());
 
         ComponentType<ServiceDefinition, ReferenceDefinition, Property<?>> type =
                 new ComponentType<ServiceDefinition, ReferenceDefinition, Property<?>>();

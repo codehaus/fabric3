@@ -19,29 +19,22 @@
 package org.fabric3.fabric.implementation.composite;
 
 import java.net.MalformedURLException;
-import java.net.URL;
-import javax.xml.namespace.QName;
 import javax.xml.namespace.NamespaceContext;
+import javax.xml.namespace.QName;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-
-import static org.osoa.sca.Constants.SCA_NS;
-
-import org.fabric3.spi.deployer.CompositeClassLoader;
-import org.fabric3.spi.loader.LoaderContext;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.model.type.CompositeImplementation;
-import org.fabric3.spi.services.artifact.Artifact;
-import org.fabric3.spi.services.artifact.ArtifactRepository;
 
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.reportMatcher;
 import static org.easymock.EasyMock.verify;
-import org.easymock.IArgumentMatcher;
+import static org.osoa.sca.Constants.SCA_NS;
+
+import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.spi.loader.LoaderException;
+import org.fabric3.spi.model.type.CompositeImplementation;
 
 /**
  * @version $Rev$ $Date$
@@ -49,101 +42,70 @@ import org.easymock.IArgumentMatcher;
 public class ImplementationCompositeLoaderTestCase extends TestCase {
     private static final QName IMPLEMENTATION_COMPOSITE = new QName(SCA_NS, "implementation.composite");
 
-    private ClassLoader cl;
     private ImplementationCompositeLoader loader;
     private XMLStreamReader reader;
+    private QName name;
     private NamespaceContext namespaceContext;
     private LoaderContext context;
-    private ArtifactRepository artifactRepository;
 
     public void testName() throws LoaderException, XMLStreamException, MalformedURLException {
-        String name = "foo";
         expect(reader.getName()).andReturn(IMPLEMENTATION_COMPOSITE);
-        expect(reader.getAttributeValue(null, "name")).andReturn(name);
+        expect(reader.getAttributeValue(null, "name")).andReturn(name.getLocalPart());
         expect(reader.getNamespaceContext()).andReturn(namespaceContext);
         expect(reader.next()).andReturn(END_ELEMENT);
-        replay(reader, namespaceContext, context, artifactRepository);
+        expect(context.getTargetNamespace()).andReturn(name.getNamespaceURI());
+        replay(reader, namespaceContext, context);
 
         CompositeImplementation impl = loader.load(reader, context);
-        verify(reader, namespaceContext, context, artifactRepository);
-        assertEquals(new QName(name), impl.getName());
+        verify(reader, namespaceContext, context);
+        assertEquals(name, impl.getName());
     }
 
     public void testWithArtifact() throws LoaderException, XMLStreamException, MalformedURLException {
-        String name = "foo";
         expect(reader.getName()).andReturn(IMPLEMENTATION_COMPOSITE);
-        expect(reader.getAttributeValue(null, "name")).andReturn(name);
+        expect(reader.getAttributeValue(null, "name")).andReturn(name.getLocalPart());
         expect(reader.getNamespaceContext()).andReturn(namespaceContext);
         expect(reader.next()).andReturn(END_ELEMENT);
-        replay(reader, namespaceContext, context, artifactRepository);
+        expect(context.getTargetNamespace()).andReturn(name.getNamespaceURI());
+        replay(reader, namespaceContext, context);
 
         CompositeImplementation impl = loader.load(reader, context);
-        verify(reader, namespaceContext, context, artifactRepository);
-        assertEquals(new QName(name), impl.getName());
+        verify(reader, namespaceContext, context);
+        assertEquals(name, impl.getName());
     }
 
     public void testWithScdlLocation() throws LoaderException, XMLStreamException, MalformedURLException {
-        String name = "foo";
         expect(reader.getName()).andReturn(IMPLEMENTATION_COMPOSITE);
-        expect(reader.getAttributeValue(null, "name")).andReturn(name);
+        expect(reader.getAttributeValue(null, "name")).andReturn(name.getLocalPart());
         expect(reader.getNamespaceContext()).andReturn(namespaceContext);
         expect(reader.next()).andReturn(END_ELEMENT);
-        replay(reader, namespaceContext, context, artifactRepository);
+        expect(context.getTargetNamespace()).andReturn(name.getNamespaceURI());
+        replay(reader, namespaceContext, context);
 
         CompositeImplementation impl = loader.load(reader, context);
-        verify(reader, namespaceContext, context, artifactRepository);
-        assertEquals(new QName(name), impl.getName());
+        verify(reader, namespaceContext, context);
+        assertEquals(name, impl.getName());
     }
 
     public void testWithJarLocation() throws LoaderException, XMLStreamException, MalformedURLException {
-        String name = "foo";
         expect(reader.getName()).andReturn(IMPLEMENTATION_COMPOSITE);
-        expect(reader.getAttributeValue(null, "name")).andReturn(name);
+        expect(reader.getAttributeValue(null, "name")).andReturn(name.getLocalPart());
         expect(reader.getNamespaceContext()).andReturn(namespaceContext);
         expect(reader.next()).andReturn(END_ELEMENT);
-        replay(reader, namespaceContext, context, artifactRepository);
+        expect(context.getTargetNamespace()).andReturn(name.getNamespaceURI());
+        replay(reader, namespaceContext, context);
 
         CompositeImplementation impl = loader.load(reader, context);
-        verify(reader, namespaceContext, context, artifactRepository);
-        assertEquals(new QName(name), impl.getName());
+        verify(reader, namespaceContext, context);
+        assertEquals(name, impl.getName());
     }
 
     protected void setUp() throws Exception {
         super.setUp();
-        artifactRepository = createMock(ArtifactRepository.class);
         reader = createMock(XMLStreamReader.class);
         namespaceContext = createMock(NamespaceContext.class);
         context = createMock(LoaderContext.class);
-        cl = getClass().getClassLoader();
-        loader = new ImplementationCompositeLoader(null, artifactRepository);
-    }
-
-    protected static Artifact artifactMatcher(final URL url,
-                                              final String group,
-                                              final String name,
-                                              final String version) {
-        reportMatcher(new IArgumentMatcher() {
-
-            public boolean matches(Object object) {
-                if (!(object instanceof Artifact)) {
-                    return false;
-                }
-
-                Artifact artifact = (Artifact) object;
-                boolean match = group.equals(artifact.getGroup())
-                    && name.equals(artifact.getName())
-                    && version.equals(artifact.getVersion())
-                    && "jar".equals(artifact.getType());
-                if (match) {
-                    artifact.setUrl(url);
-                }
-                return match;
-            }
-
-            public void appendTo(StringBuffer stringBuffer) {
-                stringBuffer.append(group).append(':').append(name).append(':').append(version);
-            }
-        });
-        return null;
+        loader = new ImplementationCompositeLoader(null);
+        name = new QName("http://example.com/xmlns", "foo");
     }
 }

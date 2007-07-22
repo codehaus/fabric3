@@ -26,13 +26,12 @@ import org.osoa.sca.Constants;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.extension.loader.LoaderExtension;
+import org.fabric3.loader.common.InvalidNameException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.model.type.CompositeImplementation;
-import org.fabric3.spi.services.artifact.ArtifactRepository;
-import org.fabric3.loader.common.InvalidNameException;
 
 /**
  * Loader that handles an &lt;implementation.composite&gt; element.
@@ -43,21 +42,15 @@ public class ImplementationCompositeLoader extends LoaderExtension<CompositeImpl
     private static final QName IMPLEMENTATION_COMPOSITE =
             new QName(Constants.SCA_NS, "implementation.composite");
 
-    private final ArtifactRepository artifactRepository;
-
-    public ImplementationCompositeLoader(@Reference LoaderRegistry registry,
-                                         @Reference ArtifactRepository artifactRepository) {
+    public ImplementationCompositeLoader(@Reference LoaderRegistry registry) {
         super(registry);
-        this.artifactRepository = artifactRepository;
     }
 
     public QName getXMLType() {
         return IMPLEMENTATION_COMPOSITE;
     }
 
-    public CompositeImplementation load(
-            XMLStreamReader reader,
-            LoaderContext loaderContext)
+    public CompositeImplementation load(XMLStreamReader reader, LoaderContext loaderContext)
             throws XMLStreamException, LoaderException {
 
         assert IMPLEMENTATION_COMPOSITE.equals(reader.getName());
@@ -65,7 +58,7 @@ public class ImplementationCompositeLoader extends LoaderExtension<CompositeImpl
         if (nameAttr == null || nameAttr.length() == 0) {
             throw new InvalidNameException(nameAttr);
         }
-        QName name = LoaderUtil.getQName(nameAttr, reader.getNamespaceContext());
+        QName name = LoaderUtil.getQName(nameAttr, loaderContext.getTargetNamespace(), reader.getNamespaceContext());
         LoaderUtil.skipToEndElement(reader);
         CompositeImplementation impl = new CompositeImplementation();
         impl.setName(name);

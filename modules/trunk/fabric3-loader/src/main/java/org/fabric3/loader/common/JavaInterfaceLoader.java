@@ -45,7 +45,7 @@ import org.fabric3.spi.loader.StAXElementLoader;
  */
 @EagerInit
 public class JavaInterfaceLoader implements StAXElementLoader<JavaServiceContract<?>> {
-    public static final QName INTERFACE_JAVA = new QName(SCA_NS, "interface.java");
+    private static final QName INTERFACE_JAVA = new QName(SCA_NS, "interface.java");
 
     private final LoaderRegistry registry;
     private final InterfaceJavaIntrospector introspector;
@@ -64,10 +64,6 @@ public class JavaInterfaceLoader implements StAXElementLoader<JavaServiceContrac
     @Destroy
     public void destroy() {
         registry.unregisterLoader(INTERFACE_JAVA);
-    }
-
-    public QName getXMLType() {
-        return INTERFACE_JAVA;
     }
 
     public JavaServiceContract<?> load(XMLStreamReader reader, LoaderContext loaderContext)

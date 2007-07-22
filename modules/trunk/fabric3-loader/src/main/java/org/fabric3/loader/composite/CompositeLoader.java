@@ -45,6 +45,7 @@ import org.fabric3.spi.model.type.ReferenceDefinition;
 import org.fabric3.spi.model.type.ServiceDefinition;
 import org.fabric3.spi.model.type.WireDefinition;
 import org.fabric3.spi.util.stax.StaxUtil;
+import org.fabric3.loader.common.LoaderContextImpl;
 
 /**
  * Loads a composite component definition from an XML-based assembly file
@@ -103,10 +104,12 @@ public class CompositeLoader implements StAXElementLoader<CompositeComponentType
     public CompositeComponentType load(XMLStreamReader reader, LoaderContext loaderContext)
             throws XMLStreamException, LoaderException {
         String name = reader.getAttributeValue(null, "name");
-        String autowire = reader.getAttributeValue(null, "autowire");
-        QName compositeName = StaxUtil.createQName(name, reader);
+        String targetNamespace = reader.getAttributeValue(null, "targetNamespace");
+        loaderContext = new LoaderContextImpl(loaderContext, targetNamespace);
+        QName compositeName = new QName(targetNamespace, name);
         CompositeComponentType type = new CompositeComponentType(compositeName);
 
+        String autowire = reader.getAttributeValue(null, "autowire");
         if ("true".equalsIgnoreCase(autowire)) {
             type.setAutowire(Autowire.ON);
         } else if (autowire == null) {
@@ -114,6 +117,7 @@ public class CompositeLoader implements StAXElementLoader<CompositeComponentType
         } else {
             type.setAutowire(Autowire.OFF);
         }
+
         while (true) {
             switch (reader.next()) {
             case START_ELEMENT:

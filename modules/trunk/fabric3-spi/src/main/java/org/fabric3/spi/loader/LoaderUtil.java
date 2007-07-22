@@ -56,10 +56,8 @@ public final class LoaderUtil {
     }
 
     /**
-     * Load the class using the supplied ClassLoader.
-     * The class will be defined so any initializers present will be fired.
-     * As the class is being loaded, the Thread context ClassLoader will be
-     * set to the supplied classloader.
+     * Load the class using the supplied ClassLoader. The class will be defined so any initializers present will be
+     * fired. As the class is being loaded, the Thread context ClassLoader will be set to the supplied classloader.
      *
      * @param name the name of the class to load
      * @param cl   the classloader to use to load it
@@ -82,28 +80,34 @@ public final class LoaderUtil {
     /**
      * Construct a QName from an XML value.
      *
-     * @param text the text of an XML QName
-     * @param context the context for resolving namespace prefixes
+     * @param text             the text of an XML QName; if null or "" then null will be returned
+     * @param defaultNamespace the default namespace to use if none is defined
+     * @param context          the context for resolving namespace prefixes
      * @return a QName with the appropriate namespace set
      */
-    public static QName getQName(String text, NamespaceContext context) {
-        int index = text.indexOf(':');
-        if (index < 1 || index == text.length() -1) {
-            // unqualifed form or invalid - treat as a local part and use the null namespace
-            return new QName(text);
+    public static QName getQName(String text, String defaultNamespace, NamespaceContext context) {
+        if (text == null || text.length() == 0) {
+            return null;
         }
-        String prefix = text.substring(0, index);
-        String uri = context.getNamespaceURI(prefix);
-        String localPart = text.substring(index+1);
-        return new QName(uri, localPart, prefix);
+
+        int index = text.indexOf(':');
+        if (index < 1 || index == text.length() - 1) {
+            // unqualifed form - use the default supplied
+            return new QName(defaultNamespace, text);
+        } else {
+            String prefix = text.substring(0, index);
+            String uri = context.getNamespaceURI(prefix);
+            String localPart = text.substring(index + 1);
+            return new QName(uri, localPart, prefix);
+        }
     }
 
     /**
-     * Convert a component URI in the form ${componentName}/${serviceName}
-     * to a URI of the form ${componentName}#${serviceName}
+     * Convert a component URI in the form ${componentName}/${serviceName} to a URI of the form
+     * ${componentName}#${serviceName}
      *
      * @param target the target URI to convert
-     * @return a URI where the fragment represents the service name 
+     * @return a URI where the fragment represents the service name
      */
     public static URI getURI(String target) {
         int index = target.lastIndexOf('/');
@@ -111,8 +115,8 @@ public final class LoaderUtil {
             return URI.create(target);
         } else {
             String uri = target.substring(0, index);
-            String fragment = target.substring(index+1);
-            return URI.create(uri + '#'+ fragment);
+            String fragment = target.substring(index + 1);
+            return URI.create(uri + '#' + fragment);
         }
     }
 }

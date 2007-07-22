@@ -27,16 +27,16 @@ import org.easymock.EasyMock;
  */
 public class LoaderUtilTestCase extends TestCase {
     private NamespaceContext context;
+    private String uri;
 
     public void testQNameWithNoPrefix() {
-        assertEquals(new QName("foo"), LoaderUtil.getQName("foo", null));
+        assertEquals(new QName(uri, "foo"), LoaderUtil.getQName("foo", uri, null));
     }
 
     public void testPrefixResolve() {
-        String uri = "http://example.com";
         EasyMock.expect(context.getNamespaceURI("prefix")).andReturn(uri);
         EasyMock.replay(context);
-        QName name = LoaderUtil.getQName("prefix:foo", context);
+        QName name = LoaderUtil.getQName("prefix:foo", null, context);
         assertEquals(uri, name.getNamespaceURI());
         assertEquals("prefix", name.getPrefix());
         assertEquals("foo", name.getLocalPart());
@@ -46,6 +46,7 @@ public class LoaderUtilTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
+        uri = "http://example.com";
         context = EasyMock.createMock(NamespaceContext.class);
     }
 }

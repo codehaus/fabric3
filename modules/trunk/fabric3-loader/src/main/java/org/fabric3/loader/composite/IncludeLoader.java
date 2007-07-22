@@ -63,7 +63,7 @@ public class IncludeLoader implements StAXElementLoader<Include> {
         if (nameAttr == null || nameAttr.length() == 0) {
             throw new InvalidNameException(nameAttr);
         }
-        QName name = LoaderUtil.getQName(nameAttr, reader.getNamespaceContext());
+        QName name = LoaderUtil.getQName(nameAttr, loaderContext.getTargetNamespace(), reader.getNamespaceContext());
         String scdlLocation = reader.getAttributeValue(null, "scdlLocation");
         String scdlResource = reader.getAttributeValue(null, "scdlResource");
         LoaderUtil.skipToEndElement(reader);
