@@ -55,10 +55,11 @@ public class PolicySetLoader implements StAXElementLoader<PolicySet> {
      */
     public PolicySet load(XMLStreamReader reader, LoaderContext context) throws XMLStreamException, LoaderException {
         
-        QName name = StaxUtil.createQName(reader.getAttributeValue(Constants.SCA_NS, "name"), reader);
+        String name = reader.getAttributeValue(null, "name");
+        QName qName = new QName(context.getTargetNamespace(), name);
         
         Set<QName> provides = new HashSet<QName>();
-        StringTokenizer tok = new StringTokenizer(reader.getAttributeValue(Constants.SCA_NS, "constrains"));
+        StringTokenizer tok = new StringTokenizer(reader.getAttributeValue(null, "provides"));
         while(tok.hasMoreElements()) {
             provides.add(StaxUtil.createQName(tok.nextToken(), reader));
         }
@@ -69,7 +70,7 @@ public class PolicySetLoader implements StAXElementLoader<PolicySet> {
             builders.add(StaxUtil.createQName(tok.nextToken(), reader));
         }
         
-        return new PolicySet(name, provides, builders);
+        return new PolicySet(qName, provides, builders);
         
     }
 

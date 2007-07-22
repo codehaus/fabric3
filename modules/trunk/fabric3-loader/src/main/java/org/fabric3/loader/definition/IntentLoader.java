@@ -58,10 +58,11 @@ public class IntentLoader implements StAXElementLoader<Intent> {
      */
     public Intent load(XMLStreamReader reader, LoaderContext context) throws XMLStreamException, LoaderException {
         
-        QName name = StaxUtil.createQName(reader.getAttributeValue(Constants.SCA_NS, "name"), reader);
+        String name = reader.getAttributeValue(null, "name");
+        QName qName = new QName(context.getTargetNamespace(), name);
         
         Set<QName> constrains = new HashSet<QName>();
-        StringTokenizer tok = new StringTokenizer(reader.getAttributeValue(Constants.SCA_NS, "constrains"));
+        StringTokenizer tok = new StringTokenizer(reader.getAttributeValue(null, "constrains"));
         while(tok.hasMoreElements()) {
             constrains.add(StaxUtil.createQName(tok.nextToken(), reader));
         }
@@ -77,7 +78,7 @@ public class IntentLoader implements StAXElementLoader<Intent> {
                 break;
             case END_ELEMENT:
                 if (DefinitionsLoader.INTENT.equals(reader.getName())) {
-                    return new Intent(name, description, constrains);
+                    return new Intent(qName, description, constrains);
                 }
             }
         }

@@ -62,7 +62,7 @@ public class DefinitionsLoader implements StAXElementLoader<Definitions> {
     public Definitions load(XMLStreamReader reader, LoaderContext parentContext) throws XMLStreamException, LoaderException {
         
         Definitions definitions = new Definitions();
-        String targetNamespace = reader.getAttributeValue(SCA_NS, "targetNamespace");
+        String targetNamespace = reader.getAttributeValue(null, "targetNamespace");
         LoaderContext context = new LoaderContextImpl(parentContext, targetNamespace);
         
         while (true) {

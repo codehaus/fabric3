@@ -4,7 +4,7 @@
     targetNamespace="http://fabric3.org/xmlns/sca/2.0-alpha" 
     xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha">
     
-    <intent name="transactional" constrains="reference service">
+    <intent name="transactional" constrains="service">
         <description>Transactional intent</description>
     </intent>
     
