@@ -29,6 +29,7 @@ import javax.xml.stream.XMLStreamReader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
+import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.model.definition.PolicySet;
 import org.fabric3.spi.util.stax.StaxUtil;
@@ -69,6 +70,8 @@ public class PolicySetLoader implements StAXElementLoader<PolicySet> {
         while(tok.hasMoreElements()) {
             builders.add(StaxUtil.createQName(tok.nextToken(), reader));
         }
+        
+        LoaderUtil.skipToEndElement(reader);
         
         return new PolicySet(qName, provides, builders);
         

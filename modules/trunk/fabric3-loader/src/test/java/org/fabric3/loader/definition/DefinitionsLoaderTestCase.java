@@ -44,7 +44,7 @@ import org.osoa.sca.Constants;
 /**
  * @version $Revision$ $Date$
  */
-public class DefinitionsLoaderTest extends TestCase {
+public class DefinitionsLoaderTestCase extends TestCase {
 
     public void testLoad() throws Exception {
         
