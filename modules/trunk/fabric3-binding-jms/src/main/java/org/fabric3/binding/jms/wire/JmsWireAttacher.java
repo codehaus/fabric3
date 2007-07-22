@@ -33,6 +33,7 @@ import org.fabric3.binding.jms.model.DestinationDefinition;
 import org.fabric3.binding.jms.model.JmsBindingMetadata;
 import org.fabric3.binding.jms.model.physical.JmsWireSourceDefinition;
 import org.fabric3.binding.jms.model.physical.JmsWireTargetDefinition;
+import org.fabric3.binding.jms.transport.impl.StandaloneJmsHost;
 import org.fabric3.binding.jms.wire.lookup.connectionfactory.AlwaysConnectionFactoryStrategy;
 import org.fabric3.binding.jms.wire.lookup.connectionfactory.ConnectionFactoryStrategy;
 import org.fabric3.binding.jms.wire.lookup.connectionfactory.IfNotExistConnectionFactoryStrategy;
@@ -140,7 +141,7 @@ public class JmsWireAttacher implements WireAttacher<JmsWireSourceDefinition, Jm
         Destination resDestination = destinationStrategies.get(create).getDestination(destinationDefinition, resCf, env);
         
         MessageListener messageListener = new Fabric3MessageListener(resDestination, resCf, ops, correlationScheme, wire);
-        JmsServiceHandler serviceHandler = new JmsServiceHandler(reqCf, reqDestination, receiverThreads, messageListener);
+        StandaloneJmsHost serviceHandler = new StandaloneJmsHost(reqCf, reqDestination, receiverThreads, messageListener);
         
         serviceHandler.start();
 

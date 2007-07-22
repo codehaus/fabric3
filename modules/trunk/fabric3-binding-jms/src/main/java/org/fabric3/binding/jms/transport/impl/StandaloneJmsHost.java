@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.binding.jms.wire;
+package org.fabric3.binding.jms.transport.impl;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -30,14 +30,15 @@ import javax.jms.MessageListener;
 import javax.jms.Session;
 
 import org.fabric3.binding.jms.Fabric3JmsException;
+import org.fabric3.binding.jms.transport.JmsHost;
 import org.fabric3.binding.jms.wire.helper.JmsHelper;
 
 /**
  * Service handler for JMS.
  * 
- * @version $Revsion$ $Date$
+ * @version $Revsion$ $Date: 2007-05-22 00:19:04 +0100 (Tue, 22 May 2007) $
  */
-public class JmsServiceHandler {
+public class StandaloneJmsHost implements JmsHost {
 
     /**
      * Connection factory for receiving requests.
@@ -75,7 +76,7 @@ public class JmsServiceHandler {
      * @param receiverThreads Number of receivers for service requests.
      * @param messageListener Message listener for processing messages.
      */
-    public JmsServiceHandler(ConnectionFactory connectionFactory,
+    public StandaloneJmsHost(ConnectionFactory connectionFactory,
                              Destination destination,
                              int receiverThreads,
                              MessageListener messageListener) {
@@ -116,6 +117,13 @@ public class JmsServiceHandler {
         }
         JmsHelper.closeQuietly(connection);
 
+    }
+
+    public void registerListener(Destination destination,
+            ConnectionFactory factory, MessageListener listener,
+            boolean transactional) {
+        // TODO Auto-generated method stub
+        
     }
 
 }
