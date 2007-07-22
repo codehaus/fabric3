@@ -20,14 +20,15 @@ package org.fabric3.fabric.wire;
 
 import java.lang.reflect.Method;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
+
+import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 
 /**
  * @version $Rev$ $Date$
  */
 public class WireUtilsTestCase extends TestCase {
-    private Method m;
-
     public void testCreateInterfaceToWireMapping() throws Exception {
 //        Wire wire = new WireImpl();
 //        Operation<Type> op = new Operation<Type>("hello", null, null, null);
@@ -51,12 +52,35 @@ public class WireUtilsTestCase extends TestCase {
 //        }
     }
 
+    private Method method;
+    private Method methodString;
+    private PhysicalOperationDefinition physicalOperationDefinition;
+    private PhysicalOperationDefinition physicalOperationDefinitionString;
+
+    public void testFindMethod() throws Exception {
+        Assert.assertEquals(method, WireUtils.findMethod(Foo.class, physicalOperationDefinition));
+        assertEquals(methodString, WireUtils.findMethod(Foo.class, physicalOperationDefinitionString));
+    }
+
     protected void setUp() throws Exception {
         super.setUp();
-        m = Foo.class.getMethod("hello");
+        method = Foo.class.getMethod("operation");
+        methodString = Foo.class.getMethod("operation", String.class);
+        physicalOperationDefinition = new PhysicalOperationDefinition();
+        physicalOperationDefinition.setName("operation");
+        physicalOperationDefinitionString = new PhysicalOperationDefinition();
+        physicalOperationDefinitionString.setName("operation");
+        physicalOperationDefinitionString.addParameter(String.class.getName());
     }
 
     private interface Foo {
-        void hello();
+        void operation();
+
+        void operation(String param);
+
+        void operationOverload(String param1, String param2);
+
+        void operationOverload(String param1, int param2);
+
     }
 }

@@ -18,23 +18,26 @@
  */
 package org.fabric3.fabric.wire;
 
-import static org.fabric3.fabric.idl.java.JavaIDLUtils.findMethod;
+import org.fabric3.fabric.services.classloading.ClassLoaderRegistryImpl;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.ProxyCreationException;
 import org.fabric3.spi.wire.Wire;
+import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 
 /**
  * Utilities for operating on wires
  *
  * @version $Rev$ $Date$
  */
-public final class WireUtils {
+public final class WireUtils {// TODO This is a hack for the demo
+private static final ClassLoaderRegistry registry = new ClassLoaderRegistryImpl();
 
     private WireUtils() {
     }
@@ -58,4 +61,23 @@ public final class WireUtils {
         return chains;
     }
 
+    /**
+     * Returns the matching method from the class for a given operation.
+     *
+     * @param clazz     the class to introspect
+     * @param operation the operation to match
+     * @return a matching method
+     * @throws NoSuchMethodException  if a matching method is not found
+     * @throws ClassNotFoundException if a parameter type specified in the operation is not found
+     */
+    public static Method findMethod(Class<?> clazz, PhysicalOperationDefinition operation)
+            throws NoSuchMethodException, ClassNotFoundException {
+        String name = operation.getName();
+        List<String> params = operation.getParameters();
+        Class<?>[] types = new Class<?>[params.size()];
+        for (int i = 0; i < params.size(); i++) {
+            types[i] = registry.loadClass(clazz.getClassLoader(), params.get(i));
+        }
+        return clazz.getMethod(name, types);
+    }
 }
