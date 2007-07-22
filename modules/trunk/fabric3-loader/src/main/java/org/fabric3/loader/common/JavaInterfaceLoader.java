@@ -16,48 +16,61 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.idl.java;
+package org.fabric3.loader.common;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import static org.osoa.sca.Constants.SCA_NS;
-import org.osoa.sca.annotations.Constructor;
+import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.spi.idl.InvalidServiceContractException;
-import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
+import org.fabric3.spi.idl.java.InterfaceJavaIntrospector;
 import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.spi.loader.InvalidValueException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
+import org.fabric3.spi.loader.StAXElementLoader;
 
 /**
  * Loads a Java interface definition from an XML-based assembly file
  *
  * @version $Rev$ $Date$
  */
-public class InterfaceJavaLoader extends LoaderExtension<JavaServiceContract> {
+@EagerInit
+public class JavaInterfaceLoader implements StAXElementLoader<JavaServiceContract<?>> {
     public static final QName INTERFACE_JAVA = new QName(SCA_NS, "interface.java");
 
-    private final JavaInterfaceProcessorRegistry interfaceRegistry;
+    private final LoaderRegistry registry;
+    private final InterfaceJavaIntrospector introspector;
 
-    @Constructor({"registry", "interfaceRegistry"})
-    public InterfaceJavaLoader(@Reference LoaderRegistry registry,
-                               @Reference JavaInterfaceProcessorRegistry interfaceRegistry) {
-        super(registry);
-        this.interfaceRegistry = interfaceRegistry;
+    public JavaInterfaceLoader(@Reference LoaderRegistry registry,
+                               @Reference InterfaceJavaIntrospector introspector) {
+        this.introspector = introspector;
+        this.registry = registry;
+    }
+
+    @Init
+    public void init() {
+        registry.registerLoader(INTERFACE_JAVA, this);
+    }
+
+    @Destroy
+    public void destroy() {
+        registry.unregisterLoader(INTERFACE_JAVA);
     }
 
     public QName getXMLType() {
         return INTERFACE_JAVA;
     }
 
-    public JavaServiceContract load(XMLStreamReader reader, LoaderContext loaderContext)
+    public JavaServiceContract<?> load(XMLStreamReader reader, LoaderContext loaderContext)
             throws XMLStreamException, LoaderException {
 
         assert INTERFACE_JAVA.equals(reader.getName());
@@ -74,18 +87,17 @@ public class InterfaceJavaLoader extends LoaderExtension<JavaServiceContract> {
         Class<?> interfaceClass = LoaderUtil.loadClass(name, loaderContext.getTargetClassLoader());
 
         name = reader.getAttributeValue(null, "callbackInterface");
-        Class<?> callbackClass = (name != null) ? LoaderUtil.loadClass(name, loaderContext.getTargetClassLoader()) : null;
+        Class<?> callbackClass =
+                (name != null) ? LoaderUtil.loadClass(name, loaderContext.getTargetClassLoader()) : null;
 
         LoaderUtil.skipToEndElement(reader);
 
-        JavaServiceContract serviceContract;
         try {
-            serviceContract = interfaceRegistry.introspect(interfaceClass, callbackClass);
+            JavaServiceContract<?> serviceContract = introspector.introspect(interfaceClass, callbackClass);
+            serviceContract.setConversational(conversational);
+            return serviceContract;
         } catch (InvalidServiceContractException e) {
             throw new LoaderException(interfaceClass.getName(), e);
         }
-
-        serviceContract.setConversational(conversational);
-        return serviceContract;
     }
 }

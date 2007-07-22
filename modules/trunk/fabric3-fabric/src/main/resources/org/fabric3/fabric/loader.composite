@@ -42,6 +42,9 @@
     <component name="loader.Property">
         <system:implementation.system class="org.fabric3.loader.common.PropertyLoader"/>
     </component>
+    <component name="loader.JavaInterface">
+        <system:implementation.system class="org.fabric3.loader.common.JavaInterfaceLoader"/>
+    </component>
 
     <!-- Composite SCDL loader implementations -->
     <component name="loader.PropertyValue">

@@ -30,7 +30,4 @@
     <component name="interfaceJava.interfaceProcessorRegistry">
         <system:implementation.system class="org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl"/>
     </component>
-    <component name="interfaceJava.loader">
-        <system:implementation.system class="org.fabric3.fabric.idl.java.InterfaceJavaLoader"/>
-    </component>
 </composite>
