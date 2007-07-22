@@ -28,7 +28,7 @@ import org.fabric3.spi.model.type.ModelObject;
  * @version $Revision$ $Date$
  *
  */
-public class Definition extends ModelObject {
+public class Definitions extends ModelObject {
     
     private Set<PolicySet> policySets = new HashSet<PolicySet>();
     private Set<Intent> intents = new HashSet<Intent>();
