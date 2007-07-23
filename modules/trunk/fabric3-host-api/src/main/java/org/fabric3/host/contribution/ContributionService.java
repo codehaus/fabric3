@@ -70,13 +70,13 @@ public interface ContributionService {
     long getContributionTimestamp(URI uri);
 
     /**
-     * Returns a list of deployable URIs in a contribution
+     * Returns a list of deployables in a contribution
      *
      * @param uri the URI of the contribution to search
-     * @return a list of deployable URIs in a contribution. If no deployables are found, an empty list is returned.
+     * @return a list of deployables in a contribution. If no deployables are found, an empty list is returned.
      * @throws ContributionNotFoundException if a contribution corresponding to the URI is not found
      */
-    public List<QName> getDeployables(URI uri) throws ContributionException;
+    public List<Deployable> getDeployables(URI uri) throws ContributionException;
 
     /**
      * Remove a contribution from the SCA domain

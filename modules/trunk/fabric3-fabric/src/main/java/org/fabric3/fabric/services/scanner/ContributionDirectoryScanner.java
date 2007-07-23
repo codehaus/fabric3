@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import javax.xml.namespace.QName;
 
 import com.thoughtworks.xstream.XStream;
 import org.osoa.sca.annotations.Constructor;
@@ -32,9 +31,11 @@ import org.osoa.sca.annotations.Service;
 import org.fabric3.fabric.assembly.ActivateException;
 import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.services.xstream.XStreamFactory;
+import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
+import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.contribution.FileContributionSource;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.spi.services.VoidService;
@@ -260,10 +261,12 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
             try {
                 ContributionSource source = new FileContributionSource(location, timestamp, checksum);
                 URI addedUri = contributionService.contribute(storeId, source);
-                List<QName> deployables = contributionService.getDeployables(addedUri);
-                for (QName deployable : deployables) {
-                    // include deployables at the domain level
-                    assembly.activate(deployable, true);
+                List<Deployable> deployables = contributionService.getDeployables(addedUri);
+                for (Deployable deployable : deployables) {
+                    if (Constants.COMPOSITE_TYPE.equals(deployable.getType())) {
+                        // include deployables at the domain level
+                        assembly.activate(deployable.getName(), true);
+                    }
                 }
                 processed.put(name, addedUri);
                 monitor.add(location.toString());

@@ -15,8 +15,10 @@ import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.services.scanner.resource.FileResource;
 import org.fabric3.fabric.services.xstream.XStreamFactoryImpl;
 import org.fabric3.fabric.util.FileHelper;
+import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
+import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.spi.services.scanner.FileSystemResource;
 import org.fabric3.spi.services.scanner.FileSystemResourceFactory;
@@ -245,8 +247,8 @@ public class ContributionDirectoryScannerTestCase extends TestCase {
         EasyMock.expect(monitorFactory.getMonitor(ScannerMonitor.class)).andReturn(monitor).anyTimes();
         EasyMock.replay(monitorFactory);
         contributionService = EasyMock.createMock(ContributionService.class);
-        List<QName> deployables = new ArrayList<QName>();
-        deployables.add(DEPLOYABLE);
+        List<Deployable> deployables = new ArrayList<Deployable>();
+        deployables.add(new Deployable(DEPLOYABLE, Constants.COMPOSITE_TYPE));
         EasyMock.expect(contributionService.getDeployables(ARTIFACT_URI)).andReturn(deployables);
 
         assembly = EasyMock.createMock(DistributedAssembly.class);

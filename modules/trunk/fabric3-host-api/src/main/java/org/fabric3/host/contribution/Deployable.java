@@ -1,9 +1,7 @@
-package org.fabric3.spi.services.contribution;
+package org.fabric3.host.contribution;
 
 import java.io.Serializable;
 import javax.xml.namespace.QName;
-
-import org.fabric3.spi.model.type.ModelObject;
 
 /**
  * Represents a deployable artifact in a contribution
@@ -14,11 +12,11 @@ import org.fabric3.spi.model.type.ModelObject;
 public class Deployable implements Serializable {
     private static final long serialVersionUID = -710863113841788110L;
     private final QName name;
-    private final ModelObject modelObject;
+    private final QName type;
 
-    public Deployable(QName name, ModelObject modelObject) {
+    public Deployable(QName name, QName type) {
         this.name = name;
-        this.modelObject = modelObject;
+        this.type = type;
     }
 
     /**
@@ -31,12 +29,12 @@ public class Deployable implements Serializable {
     }
 
     /**
-     * Returns the deployable model object.
+     * Returns the deployable type.
      *
-     * @return the deployable model object
+     * @return the deployable type
      */
-    public ModelObject getModelObject() {
-        return modelObject;
+    public QName getType() {
+        return type;
     }
 
 

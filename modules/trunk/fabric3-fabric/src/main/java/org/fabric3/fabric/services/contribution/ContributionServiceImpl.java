@@ -37,6 +37,7 @@ import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionNotFoundException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
+import org.fabric3.host.contribution.Deployable;
 import org.fabric3.spi.model.type.ComponentDefinition;
 import org.fabric3.spi.model.type.CompositeComponentType;
 import org.fabric3.spi.model.type.CompositeImplementation;
@@ -131,7 +132,7 @@ public class ContributionServiceImpl implements ContributionService {
         return contribution.getTimestamp();
     }
 
-    public List<QName> getDeployables(URI contributionUri) throws ContributionException {
+    public List<Deployable> getDeployables(URI contributionUri) throws ContributionException {
         String id = parseStoreId(contributionUri);
         MetaDataStore metaDataStore = contributionStoreRegistry.getMetadataStore(id);
         if (metaDataStore == null) {
@@ -141,8 +142,8 @@ public class ContributionServiceImpl implements ContributionService {
         if (contribution == null) {
             throw new ContributionNotFoundException("No contribution found for URI", contributionUri.toString());
         }
-        List<QName> list = new ArrayList<QName>();
-        for (QName deployable : contribution.getManifest().getDeployables()) {
+        List<Deployable> list = new ArrayList<Deployable>();
+        for (Deployable deployable : contribution.getManifest().getDeployables()) {
             list.add(deployable);
         }
         return list;

@@ -28,6 +28,8 @@ import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.extension.loader.LoaderExtension;
+import org.fabric3.host.contribution.Constants;
+import org.fabric3.host.contribution.Deployable;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
@@ -71,7 +73,8 @@ public class ContributionElementLoader extends LoaderExtension<ContributionManif
                     if (name == null) {
                         throw new MissingAttributeException("composite");
                     }
-                    QName deployable = StaxUtil.createQName(name, reader);
+                    QName qName = StaxUtil.createQName(name, reader);
+                    Deployable deployable = new Deployable(qName, Constants.COMPOSITE_TYPE);
                     contribution.addDeployable(deployable);
                 } else {
                     Object o = registry.load(reader, Object.class, context);

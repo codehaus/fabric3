@@ -18,6 +18,8 @@
  */
 package org.fabric3.host.contribution;
 
+import javax.xml.namespace.QName;
+
 /**
  * Definitions of constants.
  *
@@ -35,6 +37,8 @@ public final class Constants {
     public final static String CONTENT_UNKONWN = "content/unknown";
 
     public static final String URI_PREFIX = "sca://contribution/";
+
+    public final static QName COMPOSITE_TYPE = new QName("http://www.osoa.org/xmlns/sca/1.0", "composite");
 
     private Constants() {
     }
