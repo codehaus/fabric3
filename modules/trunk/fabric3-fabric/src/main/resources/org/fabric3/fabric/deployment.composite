@@ -72,11 +72,6 @@
                 class="org.fabric3.fabric.services.contribution.manifest.ContributionElementLoader"/>
     </component>
 
-    <component name="DeployableLoader">
-        <system:implementation.system
-                class="org.fabric3.fabric.services.contribution.manifest.DeployableLoader"/>
-    </component>
-
     <component name="QNameExportLoader">
         <system:implementation.system
                 class="org.fabric3.fabric.services.contribution.manifest.QNameExportLoader"/>

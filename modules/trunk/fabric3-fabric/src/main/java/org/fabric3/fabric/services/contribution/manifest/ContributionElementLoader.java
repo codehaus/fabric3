@@ -32,9 +32,9 @@ import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.services.contribution.ContributionManifest;
-import org.fabric3.spi.services.contribution.Deployable;
 import org.fabric3.spi.services.contribution.Export;
 import org.fabric3.spi.services.contribution.Import;
+import org.fabric3.spi.util.stax.StaxUtil;
 
 /**
  * Loads a contribution manifest from a contribution element
@@ -43,6 +43,7 @@ import org.fabric3.spi.services.contribution.Import;
  */
 public class ContributionElementLoader extends LoaderExtension<ContributionManifest> {
     private static final QName CONTRIBUTION = new QName(SCA_NS, "contribution");
+    private static final QName DEPLOYABLE = new QName(SCA_NS, "deployable");
 
     private final LoaderRegistry registry;
 
@@ -65,16 +66,22 @@ public class ContributionElementLoader extends LoaderExtension<ContributionManif
                 QName element = reader.getName();
                 if (CONTRIBUTION.equals(element)) {
                     continue;
-                }
-                Object o = registry.load(reader, Object.class, context);
-                if (o instanceof Deployable) {
-                    contribution.addDeployable((Deployable) o);
-                } else if (o instanceof Export) {
-                    contribution.addExport((Export) o);
-                } else if (o instanceof Import) {
-                    contribution.addImport((Import) o);
-                } else if (o != null) {
-                    throw new InvalidManifestTypeException("Unrecognized type", o.getClass().getName());
+                } else if (DEPLOYABLE.equals(element)) {
+                    String name = reader.getAttributeValue(null, "composite");
+                    if (name == null) {
+                        throw new MissingAttributeException("composite");
+                    }
+                    QName deployable = StaxUtil.createQName(name, reader);
+                    contribution.addDeployable(deployable);
+                } else {
+                    Object o = registry.load(reader, Object.class, context);
+                    if (o instanceof Export) {
+                        contribution.addExport((Export) o);
+                    } else if (o instanceof Import) {
+                        contribution.addImport((Import) o);
+                    } else if (o != null) {
+                        throw new InvalidManifestTypeException("Unrecognized type", o.getClass().getName());
+                    }
                 }
                 break;
             case XMLStreamConstants.END_ELEMENT:

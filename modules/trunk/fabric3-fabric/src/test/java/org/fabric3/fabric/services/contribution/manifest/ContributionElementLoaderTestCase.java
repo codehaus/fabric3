@@ -30,7 +30,6 @@ import static org.osoa.sca.Constants.SCA_NS;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.services.contribution.ContributionManifest;
-import org.fabric3.spi.services.contribution.Deployable;
 import org.fabric3.spi.services.contribution.Export;
 import org.fabric3.spi.services.contribution.Import;
 
@@ -52,6 +51,7 @@ public class ContributionElementLoaderTestCase extends TestCase {
         ContributionManifest manifest = loader.load(reader, null);
         control.verify();
         assertEquals(1, manifest.getDeployables().size());
+        assertEquals(DEPLOYABLE, manifest.getDeployables().get(0));
         assertEquals(1, manifest.getExports().size());
         assertEquals(1, manifest.getImports().size());
     }
@@ -67,10 +67,9 @@ public class ContributionElementLoaderTestCase extends TestCase {
         EasyMock.expect(reader.getName()).andReturn(CONTRIBUTION);
         EasyMock.expect(reader.next()).andReturn(XMLStreamConstants.START_ELEMENT);
         EasyMock.expect(reader.getName()).andReturn(DEPLOYABLE_ELEMENT);
-        Deployable deployable = new Deployable(DEPLOYABLE);
-        EasyMock.expect(loaderRegistry.load(
-                EasyMock.isA(XMLStreamReader.class),
-                EasyMock.eq(Object.class), (LoaderContext) EasyMock.isNull())).andReturn(deployable);
+        EasyMock.expect(reader.getAttributeValue((String) EasyMock.isNull(),
+                                                 EasyMock.eq("composite"))).andReturn("test");
+        EasyMock.expect(reader.getNamespaceURI()).andReturn(null);
         EasyMock.expect(reader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
         EasyMock.expect(reader.getName()).andReturn(DEPLOYABLE_ELEMENT);
 

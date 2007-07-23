@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.io.Serializable;
+import javax.xml.namespace.QName;
 
 /**
  * Represents a contribution manifest
@@ -15,7 +16,7 @@ public class ContributionManifest implements Serializable {
     private static final long serialVersionUID = -4968254313720890686L;
     private List<Export> exports = new ArrayList<Export>();
     private List<Import> imports = new ArrayList<Import>();
-    private List<Deployable> deployables = new ArrayList<Deployable>();
+    private List<QName> deployables = new ArrayList<QName>();
 
     public List<Export> getExports() {
         return Collections.unmodifiableList(exports);
@@ -33,11 +34,11 @@ public class ContributionManifest implements Serializable {
         imports.add(artifactImport);
     }
 
-    public List<Deployable> getDeployables() {
+    public List<QName> getDeployables() {
         return Collections.unmodifiableList(deployables);
     }
 
-    public void addDeployable(Deployable deployale) {
+    public void addDeployable(QName deployale) {
         deployables.add(deployale);
     }
 

@@ -47,7 +47,6 @@ import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionProcessorRegistry;
 import org.fabric3.spi.services.contribution.ContributionStoreRegistry;
-import org.fabric3.spi.services.contribution.Deployable;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 
 /**
@@ -142,8 +141,8 @@ public class ContributionServiceImpl implements ContributionService {
             throw new ContributionNotFoundException("No contribution found for URI", contributionUri.toString());
         }
         List<QName> list = new ArrayList<QName>();
-        for (Deployable deployable : contribution.getManifest().getDeployables()) {
-            list.add(deployable.getName());
+        for (QName deployable : contribution.getManifest().getDeployables()) {
+            list.add(deployable);
         }
         return list;
     }
