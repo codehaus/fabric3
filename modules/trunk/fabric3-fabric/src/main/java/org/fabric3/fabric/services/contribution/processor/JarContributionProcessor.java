@@ -118,7 +118,7 @@ public class JarContributionProcessor extends ContributionProcessorExtension imp
             Thread.currentThread().setContextClassLoader(loader);
             for (URL artifactUrl : artifactUrls) {
                 CompositeComponentType componentType = processComponentType(artifactUrl, loader);
-                contribution.addComponentType(componentType);
+                contribution.addType(componentType);
             }
         } catch (LoaderException e) {
             throw new ContributionException(e);

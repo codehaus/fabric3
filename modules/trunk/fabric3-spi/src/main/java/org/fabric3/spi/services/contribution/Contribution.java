@@ -125,7 +125,7 @@ public class Contribution implements Serializable {
      *
      * @param type the component type
      */
-    public void addComponentType(CompositeComponentType type) {
+    public void addType(CompositeComponentType type) {
         types.put(type.getName(), type);
     }
 
@@ -134,7 +134,7 @@ public class Contribution implements Serializable {
      *
      * @return the introspected component types
      */
-    public Map<QName, CompositeComponentType> getComponentTypes() {
+    public Map<QName, CompositeComponentType> getTypes() {
         return Collections.unmodifiableMap(types);
     }
 
@@ -144,7 +144,7 @@ public class Contribution implements Serializable {
      * @param key the component type QName
      * @return the component type or null
      */
-    public CompositeComponentType getComponentType(QName key) {
+    public CompositeComponentType getType(QName key) {
         return types.get(key);
     }
 

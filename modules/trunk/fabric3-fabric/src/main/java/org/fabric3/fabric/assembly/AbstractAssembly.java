@@ -128,7 +128,7 @@ public abstract class AbstractAssembly implements Assembly {
         if (contribution == null) {
             throw new ArtifactNotFoundException("Deployable composite not found for", deployable.toString());
         }
-        CompositeComponentType type = contribution.getComponentType(deployable);
+        CompositeComponentType type = contribution.getType(deployable);
         assert type != null;
         CompositeImplementation impl = new CompositeImplementation();
         impl.setComponentType(type);

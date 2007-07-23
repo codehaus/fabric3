@@ -240,7 +240,7 @@ public class ContributionServiceImpl implements ContributionService {
             URL importedUrl = encoder.encode(imported.getLocation());
             description.addArtifactUrl(importedUrl);
         }
-        for (CompositeComponentType type : contribution.getComponentTypes().values()) {
+        for (CompositeComponentType type : contribution.getTypes().values()) {
             addContributionDescription(description, type);
         }
     }
