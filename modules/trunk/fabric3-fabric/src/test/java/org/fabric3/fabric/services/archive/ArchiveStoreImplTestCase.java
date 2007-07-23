@@ -61,12 +61,12 @@ public class ArchiveStoreImplTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         HostInfo info = EasyMock.createMock(HostInfo.class);
-        EasyMock.expect(info.getDomain()).andReturn(URI.create("fabric3://./fabric3/")).anyTimes();
-        EasyMock.expect(info.getRuntimeId()).andReturn("runtime").anyTimes();
+        EasyMock.expect(info.getBaseURL()).andReturn(null).atLeastOnce();
         EasyMock.replay(info);
         ContributionStoreRegistry registry = EasyMock.createNiceMock(ContributionStoreRegistry.class);
         EasyMock.replay(registry);
-        this.repository = new ContributionStoreImpl("target/repository/", info, registry);
+        this.repository = new ContributionStoreImpl(info, registry);
+        repository.setRepository("target/repository/");
         repository.init();
     }
 

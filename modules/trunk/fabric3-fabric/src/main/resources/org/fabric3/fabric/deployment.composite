@@ -30,13 +30,13 @@
     <component name="ContributionService" initLevel="90">
         <system:implementation.system class="org.fabric3.fabric.services.contribution.ContributionServiceImpl"/>
     </component>
+
     <component name="ContributionStore" initLevel="40">
         <system:implementation.system class="org.fabric3.fabric.services.contribution.ContributionStoreImpl"/>
-        <property name="repository">target/repository</property>
     </component>
+
     <component name="MetadataStore" initLevel="40">
         <system:implementation.system class="org.fabric3.fabric.services.contribution.MetaDataStoreImpl"/>
-        <property name="repository">target/repository</property>
     </component>
 
     <component name="JarService">

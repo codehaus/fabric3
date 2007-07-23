@@ -18,8 +18,8 @@
  */
 package org.fabric3.itest;
 
-import java.net.URL;
 import java.net.URI;
+import java.net.URL;
 
 import org.fabric3.spi.services.artifact.ArtifactRepository;
 
@@ -41,7 +41,7 @@ public class MavenHostInfoImpl implements MavenHostInfo {
     }
 
     public URL getBaseURL() {
-        throw new UnsupportedOperationException();
+        return null;
     }
 
     public boolean isOnline() {

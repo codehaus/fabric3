@@ -21,10 +21,8 @@ package org.fabric3.fabric.services.contribution;
 
 import java.io.IOException;
 
-import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.services.archive.ArchiveStoreImpl;
@@ -44,24 +42,15 @@ public class ContributionStoreImpl extends ArchiveStoreImpl {
     /**
      * Creates a new repository service instance
      *
-     * @param repository the repository location
-     * @param hostInfo   the host info for the runtime
-     * @param registry   the contribution store registry this store will register with
+     * @param hostInfo the host info for the runtime
+     * @param registry the contribution store registry this store will register with
      * @throws java.io.IOException if an error occurs initializing the repository
      */
-    public ContributionStoreImpl(@Property(name = "repository")String repository,
-                                 @Reference HostInfo hostInfo,
-                                 @Reference ContributionStoreRegistry registry) throws IOException {
-        super(repository, hostInfo);
-        this.registry = registry;
-        storeId = DEFAULT_STORE;
-    }
-
-    @Constructor
-    // JFM FIXME move to other CTOR when properties work
     public ContributionStoreImpl(@Reference HostInfo hostInfo, @Reference ContributionStoreRegistry registry)
             throws IOException {
-        this(null, hostInfo, registry);
+        super(hostInfo);
+        this.registry = registry;
+        storeId = DEFAULT_STORE;
     }
 
 

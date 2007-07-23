@@ -26,9 +26,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.net.URI;
 import java.util.regex.Pattern;
-import java.util.StringTokenizer;
 
 public class FileHelper {
     /**
@@ -227,22 +225,6 @@ public class FileHelper {
     }
 
     /**
-     * Calculates a filesystem path based on the domain URI
-     *
-     * @param uri the domain URI
-     * @return the filesystem path
-     */
-    public static String getDomainPath(URI uri) {
-        assert uri.getScheme() != null;
-        StringBuilder buf = new StringBuilder(uri.getScheme());
-        StringTokenizer path = new StringTokenizer(uri.getPath(), "/");
-        while (path.hasMoreTokens()) {
-            buf.append("/").append(path.nextToken());
-        }
-        return buf.toString();
-    }
-
-    /**
      * A regular-expression based resource filter
      */
     public static class RegExpFilter implements FileFilter {
@@ -324,7 +306,7 @@ public class FileHelper {
      * Clean a directory without deleting it.
      *
      * @param directory directory to clean, must not be <code>null</code>
-     * @throws IOException          in case cleaning is unsuccessful
+     * @throws IOException in case cleaning is unsuccessful
      */
     private static void cleanDirectoryOnExit(File directory) throws IOException {
         if (!directory.exists()) {
@@ -367,7 +349,7 @@ public class FileHelper {
      *
      * @param srcDir  an existing directory to copy, must not be <code>null</code>
      * @param destDir the new directory, must not be <code>null</code>
-     * @throws IOException          if an IO error occurs during copying
+     * @throws IOException if an IO error occurs during copying
      * @since Commons IO 1.1
      */
     public static void copyDirectory(File srcDir, File destDir) throws IOException {
@@ -385,7 +367,7 @@ public class FileHelper {
      * @param srcDir           an existing directory to copy, must not be <code>null</code>
      * @param destDir          the new directory, must not be <code>null</code>
      * @param preserveFileDate true if the file date of the copy should be the same as the original
-     * @throws IOException          if source or destination is invalid
+     * @throws IOException if source or destination is invalid
      */
     public static void copyDirectory(File srcDir, File destDir, boolean preserveFileDate) throws IOException {
         if (srcDir == null) {
@@ -417,7 +399,7 @@ public class FileHelper {
      *
      * @param srcDir  an existing directory to copy, must not be <code>null</code>
      * @param destDir the directory to place the copy in, must not be <code>null</code>
-     * @throws IOException          if an IO error occurs during copying
+     * @throws IOException if an IO error occurs during copying
      */
     public static void copyDirectoryToDirectory(File srcDir, File destDir) throws IOException {
         if (srcDir == null) {
@@ -461,7 +443,7 @@ public class FileHelper {
      * @param srcFile          an existing file to copy, must not be <code>null</code>
      * @param destFile         the new file, must not be <code>null</code>
      * @param preserveFileDate true if the file date of the copy should be the same as the original
-     * @throws IOException          if an IO error occurs during copying
+     * @throws IOException if an IO error occurs during copying
      * @see #copyFileToDirectory(File,File,boolean)
      */
     public static void copyFile(File srcFile, File destFile, boolean preserveFileDate) throws IOException {
@@ -500,7 +482,7 @@ public class FileHelper {
      *
      * @param srcFile an existing file to copy, must not be <code>null</code>
      * @param destDir the directory to place the copy in, must not be <code>null</code>
-     * @throws IOException          if an IO error occurs during copying
+     * @throws IOException if an IO error occurs during copying
      * @see #copyFile(File,File,boolean)
      */
     public static void copyFileToDirectory(File srcFile, File destDir) throws IOException {
@@ -517,7 +499,7 @@ public class FileHelper {
      * @param srcFile          an existing file to copy, must not be <code>null</code>
      * @param destDir          the directory to place the copy in, must not be <code>null</code>
      * @param preserveFileDate true if the file date of the copy should be the same as the original
-     * @throws IOException          if an IO error occurs during copying
+     * @throws IOException if an IO error occurs during copying
      * @see #copyFile(File,File,boolean)
      * @since Commons IO 1.3
      */

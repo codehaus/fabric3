@@ -60,6 +60,7 @@ public class MetaDataStoreImplTestCase extends TestCase {
         info = EasyMock.createMock(HostInfo.class);
         EasyMock.expect(info.getDomain()).andReturn(URI.create("fabric3://./domain/")).anyTimes();
         EasyMock.expect(info.getRuntimeId()).andReturn("runtime").anyTimes();
+        EasyMock.expect(info.getBaseURL()).andReturn(null).atLeastOnce();
         EasyMock.replay(info);
         registry = EasyMock.createNiceMock(ContributionStoreRegistry.class);
         EasyMock.replay(registry);

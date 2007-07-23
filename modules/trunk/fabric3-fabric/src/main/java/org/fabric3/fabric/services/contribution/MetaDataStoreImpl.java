@@ -25,12 +25,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import static javax.xml.XMLConstants.NULL_NS_URI;
 import javax.xml.namespace.QName;
 
 import com.thoughtworks.xstream.XStream;
@@ -65,8 +65,7 @@ public class MetaDataStoreImpl implements MetaDataStore {
             new ConcurrentHashMap<QName, Map<Export, Contribution>>();
     private String storeId = DEFAULT_STORE;
     private boolean persistent = true;
-    private String domain;
-    private String runtimeId;
+    private File baseDir;
 
     public MetaDataStoreImpl(@Reference HostInfo hostInfo,
                              @Reference ContributionStoreRegistry registry,
@@ -74,8 +73,11 @@ public class MetaDataStoreImpl implements MetaDataStore {
 
         this.registry = registry;
         this.xstream = xstreamFactory.createInstance();
-        domain = FileHelper.getDomainPath(hostInfo.getDomain());
-        runtimeId = hostInfo.getRuntimeId();
+        URL url = hostInfo.getBaseURL();
+        if (url != null) {
+            String pathname = url.getFile();
+            baseDir = new File(pathname);
+        }
     }
 
     @Property(required = false)
@@ -97,17 +99,11 @@ public class MetaDataStoreImpl implements MetaDataStore {
     @Init
     public void init() throws IOException {
         if (persistent) {
-            if (repository == null) {
-                repository = AccessController.doPrivileged(new PrivilegedAction<String>() {
-                    public String run() {
-                        // Default to <user.home>/.fabric3/domains/<domain>/<runtime id>
-                        String userHome = System.getProperty("user.home");
-                        return userHome + separator + ".fabric3" + separator + "domains" + separator + domain
-                                + separator + runtimeId + File.separator;
-                    }
-                });
+            if (repository != null) {
+                root = new File(repository + separator + "index" + separator);
+            } else {
+                root = new File(baseDir, "stores" + separator + storeId + separator + "index");
             }
-            root = new File(repository + separator + "index" + separator);
             FileHelper.forceMkdir(root);
             if (!root.exists() || !this.root.isDirectory() || !root.canRead()) {
                 throw new IOException("The repository location is not a directory: " + repository);

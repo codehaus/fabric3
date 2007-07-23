@@ -23,8 +23,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
+import java.net.URL;
 
 import com.thoughtworks.xstream.XStream;
 import org.osoa.sca.annotations.EagerInit;
@@ -56,20 +55,17 @@ public class AssemblyStoreImpl implements AssemblyStore {
                              @Reference XStreamFactory factory) throws IOException {
         domainUri = hostInfo.getDomain();
         xstream = factory.createInstance();
-        // TODO refactor utility method
-        final String domain = FileHelper.getDomainPath(hostInfo.getDomain());
-        final String id = hostInfo.getRuntimeId();
-        String repository = AccessController.doPrivileged(new PrivilegedAction<String>() {
-            public String run() {
-                String userHome = System.getProperty("user.home");
-                return userHome + separator + ".fabric3" + separator + "domains" + separator
-                        + domain + separator + id + separator;
-            }
-        });
-        File root = new File(repository);
+        URL url = hostInfo.getBaseURL();
+        if (url == null) {
+            throw new FileNotFoundException("No base directory found");
+        }
+        String pathname = url.getFile();
+        File baseDir = new File(pathname);
+
+        File root = new File(baseDir, "stores" + separator + "assembly");
         FileHelper.forceMkdir(root);
         if (!root.exists() || !root.isDirectory() || !root.canRead()) {
-            throw new IOException("The location is not a directory: " + repository);
+            throw new IOException("The location is not a directory: " + root.getCanonicalPath());
         }
         serializedFile = new File(root, "assembly.ser");
     }

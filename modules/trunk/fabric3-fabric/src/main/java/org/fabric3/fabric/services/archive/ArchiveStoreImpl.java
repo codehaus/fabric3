@@ -26,8 +26,6 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -56,26 +54,21 @@ public class ArchiveStoreImpl implements ArchiveStore {
     private boolean persistent = true;
     protected String domain;
     protected String repository;
-    private String runtimeId;
+    private File baseDir;
 
     /**
      * Creates a new archive store service instance
      *
-     * @param repository the repository location
-     * @param hostInfo   the host info for the runtime
+     * @param hostInfo the host info for the runtime
      * @throws java.io.IOException if an error occurs initializing the repository
      */
-    public ArchiveStoreImpl(@Property(name = "repository")String repository, @Reference HostInfo hostInfo)
-            throws IOException {
-        this.repository = repository;
-        domain = FileHelper.getDomainPath(hostInfo.getDomain());
-        runtimeId = hostInfo.getRuntimeId();
+    public ArchiveStoreImpl(@Reference HostInfo hostInfo) throws IOException {
         archiveUriToUrl = new ConcurrentHashMap<URI, URL>();
-    }
-
-    public ArchiveStoreImpl(HostInfo hostInfo)
-            throws IOException {
-        this(null, hostInfo);
+        URL url = hostInfo.getBaseURL();
+        if (url != null) {
+            String pathname = url.getFile();
+            baseDir = new File(pathname);
+        }
     }
 
     @Property(required = false)
@@ -89,24 +82,28 @@ public class ArchiveStoreImpl implements ArchiveStore {
         this.persistent = Boolean.valueOf(persistent);
     }
 
+    @Property(required = false)
+    public void setRepository(String repository) {
+        this.repository = repository;
+    }
+
     public String getId() {
         return storeId;
     }
 
     @Init
     public void init() throws IOException {
-        if (repository == null) {
-            repository = AccessController.doPrivileged(new PrivilegedAction<String>() {
-                public String run() {
-                    // Default to <user.home>/.fabric3/domains/<domain>/<runtime id>
-                    String userHome = System.getProperty("user.home");
-                    return userHome + File.separator + ".fabric3" + File.separator + "domains"
-                            + File.separator + domain + File.separator + runtimeId + File.separator;
-
-                }
-            });
+        if (repository != null) {
+            root = new File(repository + separator + "index" + separator);
+        } else {
+            root = new File(baseDir, "stores" + separator + storeId + separator + "store");
         }
-        root = root = new File(repository + separator + "stores" + separator + storeId + separator);
+        FileHelper.forceMkdir(root);
+        if (!root.exists() || !this.root.isDirectory() || !root.canRead()) {
+            throw new IOException("The repository location is not a directory: " + repository);
+        }
+
+
         if (!persistent && root.exists()) {
             // remove any old contents of the directory
             FileHelper.forceDelete(root);
