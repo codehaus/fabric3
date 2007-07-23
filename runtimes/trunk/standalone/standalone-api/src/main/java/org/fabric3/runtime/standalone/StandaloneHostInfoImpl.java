@@ -36,28 +36,25 @@ public class StandaloneHostInfoImpl extends AbstractHostInfo implements Standalo
     private final ClassLoader bootClassLoader;
 
     /**
-     * Initializes the base URL, install directory, application root directory and
-     * online mode.
+     * Initializes the base URL, install directory, application root directory and online mode.
      *
      * @param domain                   the SCA domain this runtime belongs to
      * @param profileName              the runtime's profile name
      * @param installDirectory         directory containing the standalone installation
      * @param profileDirectory         directory containing this runtime's profile
-     * @param applicationRootDirectory Application root directory.
      * @param online                   true if this runtime should consider itself online
      * @param properties               properties for this runtime
      * @param hostClassLoader          the runtime host's classloader
      * @param bootClassLoader          the runtime bootstrap classloader
      */
     public StandaloneHostInfoImpl(final URI domain,
-                                     final String profileName,
-                                     final File installDirectory,
-                                     final File profileDirectory,
-                                     final File applicationRootDirectory,
-                                     final boolean online,
-                                     final Properties properties,
-                                     final ClassLoader hostClassLoader,
-                                     final ClassLoader bootClassLoader) {
+                                  final String profileName,
+                                  final File installDirectory,
+                                  final File profileDirectory,
+                                  final boolean online,
+                                  final Properties properties,
+                                  final ClassLoader hostClassLoader,
+                                  final ClassLoader bootClassLoader) {
         super(domain, BootstrapHelper.toURL(installDirectory), online, profileName);
         this.profileName = profileName;
         this.profileDirectory = profileDirectory;

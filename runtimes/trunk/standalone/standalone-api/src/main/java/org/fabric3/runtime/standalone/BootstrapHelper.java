@@ -31,8 +31,8 @@ import java.net.URLClassLoader;
 import java.util.Properties;
 import java.util.jar.JarFile;
 
-import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.Bootstrapper;
+import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 
 /**
@@ -283,7 +283,6 @@ public final class BootstrapHelper {
                                               profile,
                                               installDir,
                                               profileDir,
-                                              null,
                                               online,
                                               props,
                                               hostClassLoader,
