@@ -27,7 +27,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import javax.xml.namespace.QName;
 
 import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.fabric.assembly.ActivateException;
@@ -39,8 +38,10 @@ import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
+import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
+import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.contribution.FileContributionSource;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.InitializationException;
@@ -139,10 +140,12 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
                     URL url = extension.toURI().toURL();
                     FileContributionSource source = new FileContributionSource(url, -1, new byte[0]);
                     URI addedUri = contributionService.contribute(EXTENSIONS, source);
-                    List<QName> deployables = contributionService.getDeployables(addedUri);
-                    for (QName deployable : deployables) {
-                        // include deployables in the runtime domain
-                        assembly.activate(deployable, true);
+                    List<Deployable> deployables = contributionService.getDeployables(addedUri);
+                    for (Deployable deployable : deployables) {
+                        if (Constants.COMPOSITE_TYPE.equals(deployable.getType())) {
+                            // include deployables in the runtime domain
+                            assembly.activate(deployable.getName(), true);
+                        }
                     }
                 }
             } catch (MalformedURLException e) {
