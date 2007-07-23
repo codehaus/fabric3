@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 import javax.xml.namespace.QName;
 
-import org.fabric3.spi.model.type.CompositeComponentType;
+import org.fabric3.spi.model.type.ModelObject;
 
 /**
  * The base representation of a deployed contribution
@@ -44,7 +44,7 @@ public class Contribution implements Serializable {
     private byte[] checksum;
     private long timestamp;
     private ContributionManifest manifest;
-    private Map<QName, CompositeComponentType> types = new HashMap<QName, CompositeComponentType>();
+    private Map<QName, ModelObject> types = new HashMap<QName, ModelObject>();
     private List<URI> resolvedImports = new ArrayList<URI>();
 
     public Contribution(URI uri) {
@@ -121,30 +121,31 @@ public class Contribution implements Serializable {
     }
 
     /**
-     * Adds metadata from a composite component type introspected in the contribution
+     * Adds metadata from a referenceable type introspected in the contribution
      *
+     * @param name the type's qualified name
      * @param type the component type
      */
-    public void addType(CompositeComponentType type) {
-        types.put(type.getName(), type);
+    public void addType(QName name, ModelObject type) {
+        types.put(name, type);
     }
 
     /**
-     * Returns the introspected component types by QName for the contribution
+     * Returns the referenceable introspected types by QName for the contribution
      *
      * @return the introspected component types
      */
-    public Map<QName, CompositeComponentType> getTypes() {
+    public Map<QName, ModelObject> getTypes() {
         return Collections.unmodifiableMap(types);
     }
 
     /**
-     * Returns the introspected component type for corresponding to the QName key
+     * Returns the referenceable introspected type for corresponding to the QName key
      *
      * @param key the component type QName
-     * @return the component type or null
+     * @return the type or null
      */
-    public CompositeComponentType getType(QName key) {
+    public ModelObject getType(QName key) {
         return types.get(key);
     }
 

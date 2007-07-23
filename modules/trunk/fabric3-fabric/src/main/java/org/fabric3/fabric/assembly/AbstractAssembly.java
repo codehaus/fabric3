@@ -56,6 +56,7 @@ import org.fabric3.spi.model.type.ComponentType;
 import org.fabric3.spi.model.type.CompositeComponentType;
 import org.fabric3.spi.model.type.CompositeImplementation;
 import org.fabric3.spi.model.type.Implementation;
+import org.fabric3.spi.model.type.ModelObject;
 import org.fabric3.spi.model.type.ReferenceDefinition;
 import org.fabric3.spi.model.type.ServiceDefinition;
 import org.fabric3.spi.services.contribution.Contribution;
@@ -68,7 +69,7 @@ import org.fabric3.spi.util.UriHelper;
  * @version $Rev$ $Date$
  */
 public abstract class AbstractAssembly implements Assembly {
-    
+
     public static final QName COMPOSITE = new QName(SCA_NS, "composite");
     protected final URI domainUri;
     protected final GeneratorRegistry generatorRegistry;
@@ -128,8 +129,11 @@ public abstract class AbstractAssembly implements Assembly {
         if (contribution == null) {
             throw new ArtifactNotFoundException("Deployable composite not found for", deployable.toString());
         }
-        CompositeComponentType type = contribution.getType(deployable);
-        assert type != null;
+        ModelObject object = contribution.getType(deployable);
+        if (!(object instanceof CompositeComponentType)) {
+            throw new IllegalContributionTypeException("Deployable must be a composite", deployable.toString());
+        }
+        CompositeComponentType type = (CompositeComponentType) object;
         CompositeImplementation impl = new CompositeImplementation();
         impl.setComponentType(type);
         ComponentDefinition<CompositeImplementation> definition =

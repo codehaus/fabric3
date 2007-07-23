@@ -42,6 +42,7 @@ import org.fabric3.spi.model.type.CompositeComponentType;
 import org.fabric3.spi.model.type.CompositeImplementation;
 import org.fabric3.spi.model.type.ContributionResourceDescription;
 import org.fabric3.spi.model.type.Implementation;
+import org.fabric3.spi.model.type.ModelObject;
 import org.fabric3.spi.services.archive.ArchiveStore;
 import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
 import org.fabric3.spi.services.contribution.Contribution;
@@ -240,8 +241,10 @@ public class ContributionServiceImpl implements ContributionService {
             URL importedUrl = encoder.encode(imported.getLocation());
             description.addArtifactUrl(importedUrl);
         }
-        for (CompositeComponentType type : contribution.getTypes().values()) {
-            addContributionDescription(description, type);
+        for (ModelObject type : contribution.getTypes().values()) {
+            if (type instanceof CompositeComponentType) {
+                addContributionDescription(description, (CompositeComponentType) type);
+            }
         }
     }
 

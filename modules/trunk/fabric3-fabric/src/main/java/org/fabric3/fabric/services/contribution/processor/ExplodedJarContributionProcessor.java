@@ -106,7 +106,7 @@ public class ExplodedJarContributionProcessor extends ContributionProcessorExten
             Thread.currentThread().setContextClassLoader(loader);
             for (URL artifactUrl : artifactUrls) {
                 CompositeComponentType componentType = processComponentType(artifactUrl, loader);
-                contribution.addType(componentType);
+                contribution.addType(componentType.getName(), componentType);
             }
         } catch (LoaderException e) {
             throw new ContributionException(e);

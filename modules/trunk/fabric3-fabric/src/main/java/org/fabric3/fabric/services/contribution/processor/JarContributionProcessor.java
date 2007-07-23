@@ -40,9 +40,9 @@ import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.extension.contribution.ContributionProcessorExtension;
-import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.spi.deployer.CompositeClassLoader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
@@ -118,7 +118,7 @@ public class JarContributionProcessor extends ContributionProcessorExtension imp
             Thread.currentThread().setContextClassLoader(loader);
             for (URL artifactUrl : artifactUrls) {
                 CompositeComponentType componentType = processComponentType(artifactUrl, loader);
-                contribution.addType(componentType);
+                contribution.addType(componentType.getName(), componentType);
             }
         } catch (LoaderException e) {
             throw new ContributionException(e);

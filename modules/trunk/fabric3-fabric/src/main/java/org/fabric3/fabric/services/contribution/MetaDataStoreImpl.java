@@ -43,7 +43,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.fabric.services.xstream.XStreamFactory;
 import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.host.runtime.HostInfo;
-import org.fabric3.spi.model.type.CompositeComponentType;
+import org.fabric3.spi.model.type.ModelObject;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionStoreRegistry;
 import org.fabric3.spi.services.contribution.Export;
@@ -156,7 +156,7 @@ public class MetaDataStoreImpl implements MetaDataStore {
 
     public Contribution resolve(QName deployable) {
         for (Contribution contribution : cache.values()) {
-            Map<QName, CompositeComponentType> map = contribution.getTypes();
+            Map<QName, ModelObject> map = contribution.getTypes();
             if (map == null) {
                 continue;
             }
