@@ -31,7 +31,8 @@ public class MetaDataStoreImplTestCase extends TestCase {
     private ContributionStoreRegistry registry;
 
     public void testRecoverAndResolve() throws Exception {
-        MetaDataStoreImpl store2 = new MetaDataStoreImpl(REPOSITORY, info, registry, new XStreamFactoryImpl());
+        MetaDataStoreImpl store2 = new MetaDataStoreImpl(info, registry, new XStreamFactoryImpl());
+        store2.setRepository(REPOSITORY);
         store2.init();
         QNameImport imprt = new QNameImport(IMPORT_EXPORT_QNAME);
         Contribution contribution = store2.resolve(imprt);
@@ -63,7 +64,8 @@ public class MetaDataStoreImplTestCase extends TestCase {
         registry = EasyMock.createNiceMock(ContributionStoreRegistry.class);
         EasyMock.replay(registry);
 
-        store = new MetaDataStoreImpl(REPOSITORY, info, registry, new XStreamFactoryImpl());
+        store = new MetaDataStoreImpl(info, registry, new XStreamFactoryImpl());
+        store.setRepository(REPOSITORY);
         store.init();
         Contribution contribution = new Contribution(RESOURCE_URI);
         ContributionManifest manifest = new ContributionManifest();

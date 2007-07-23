@@ -35,7 +35,6 @@ import javax.xml.namespace.QName;
 
 import com.thoughtworks.xstream.XStream;
 import org.osoa.sca.Constants;
-import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
@@ -69,19 +68,6 @@ public class MetaDataStoreImpl implements MetaDataStore {
     private String domain;
     private String runtimeId;
 
-    public MetaDataStoreImpl(@Property(name = "repository", required = false)String repository,
-                             @Reference HostInfo hostInfo,
-                             @Reference ContributionStoreRegistry registry,
-                             @Reference XStreamFactory xstreamFactory) throws IOException {
-        this.repository = repository;
-        this.registry = registry;
-        this.xstream = xstreamFactory.createInstance();
-        domain = FileHelper.getDomainPath(hostInfo.getDomain());
-        runtimeId = hostInfo.getRuntimeId();
-    }
-
-    @Constructor
-    // JFM FIXME move @Constructor to other CTOR when properties work
     public MetaDataStoreImpl(@Reference HostInfo hostInfo,
                              @Reference ContributionStoreRegistry registry,
                              @Reference XStreamFactory xstreamFactory) {
@@ -101,6 +87,11 @@ public class MetaDataStoreImpl implements MetaDataStore {
     // TODO fixme when boolean properties supported
     public void setPersistent(String persistent) {
         this.persistent = Boolean.valueOf(persistent);
+    }
+
+    @Property(required = false)
+    public void setRepository(String repository) {
+        this.repository = repository;
     }
 
     @Init
