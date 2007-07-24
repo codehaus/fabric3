@@ -29,48 +29,40 @@ import java.util.List;
  * @version $Rev$ $Date$
  */
 public class ServiceDefinition extends ModelObject {
-    private URI uri;
+    private String name;
     private ServiceContract serviceContract;
     private boolean remotable;
     private String callbackRefName;
-    private List<BindingDefinition> bindings;
+    private final List<BindingDefinition> bindings;
     private URI target;
 
+    public ServiceDefinition(String name, ServiceContract<?> serviceContract, boolean remotable) {
+        this.name = name;
+        this.serviceContract = serviceContract;
+        this.remotable = remotable;
+        bindings = new ArrayList<BindingDefinition>();
+    }
+
+    public ServiceDefinition(String name, ServiceContract<?> serviceContract, boolean remotable, String callbackRefName) {
+        this.name = name;
+        this.serviceContract = serviceContract;
+        this.remotable = remotable;
+        this.callbackRefName = callbackRefName;
+        bindings = new ArrayList<BindingDefinition>();
+    }
+
+    @Deprecated
     public ServiceDefinition() {
         bindings = new ArrayList<BindingDefinition>();
     }
 
-    public ServiceDefinition(URI uri, ServiceContract serviceContract, boolean remotable) {
-        bindings = new ArrayList<BindingDefinition>();
-        this.uri = uri;
-        this.serviceContract = serviceContract;
-        this.remotable = remotable;
-    }
-
-    public ServiceDefinition(URI uri, ServiceContract serviceContract, boolean remotable, String callbackRefName) {
-        bindings = new ArrayList<BindingDefinition>();
-        this.uri = uri;
-        this.serviceContract = serviceContract;
-        this.remotable = remotable;
-        this.callbackRefName = callbackRefName;
-    }
-
     /**
-     * Returns the service name
+     * Return the name of this service definition.
      *
-     * @return the service name
+     * @return the name of this service definition
      */
-    public URI getUri() {
-        return uri;
-    }
-
-    /**
-     * Sets the service name
-     *
-     * @param uri the service name
-     */
-    public void setUri(URI uri) {
-        this.uri = uri;
+    public String getName() {
+        return name;
     }
 
     /**

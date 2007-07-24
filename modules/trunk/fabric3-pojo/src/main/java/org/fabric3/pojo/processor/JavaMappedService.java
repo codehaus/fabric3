@@ -19,7 +19,6 @@
 package org.fabric3.pojo.processor;
 
 import java.lang.reflect.Member;
-import java.net.URI;
 
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
@@ -39,15 +38,11 @@ public class JavaMappedService extends ServiceDefinition {
     public JavaMappedService() {
     }
 
-    public JavaMappedService(Class<?> serviceInterface) {
-        this.serviceInterface = serviceInterface;
-    }
-
-    public JavaMappedService(URI name, ServiceContract contract, boolean remotable) {
+    public JavaMappedService(String name, ServiceContract contract, boolean remotable) {
         super(name, contract, remotable);
     }
 
-    public JavaMappedService(URI name,
+    public JavaMappedService(String name,
                              ServiceContract contract,
                              boolean remotable,
                              String callbackRefName,

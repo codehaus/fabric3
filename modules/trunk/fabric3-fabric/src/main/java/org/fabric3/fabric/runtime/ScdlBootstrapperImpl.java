@@ -314,10 +314,9 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
                     new SingletonComponent<I>(uri, contracts, instance);
             componentManager.register(component);
             resolver.addHostUri(contract, uri);
-            String serviceName = "#" + JavaIntrospectionHelper.getBaseName(type);
-            URI resolved = uri.resolve(serviceName);
+            String serviceName = JavaIntrospectionHelper.getBaseName(type);
             Class<? extends ComponentManager> clazz = componentManager.getClass();
-            ComponentDefinition<?> definition = createDefinition(uri, resolved, ComponentManager.class, clazz);
+            ComponentDefinition<?> definition = createDefinition(uri, serviceName, ComponentManager.class, clazz);
             runtimeAssembly.instantiateHostComponentDefinition(uri, definition);
         } catch (RegistrationException e) {
             throw new InitializationException(e);
@@ -341,10 +340,10 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
             for (ServiceContract<?> contract : component.getServiceContracts()) {
                 resolver.addHostUri(contract, uri);
             }
-            List<URI> serviceNames = new ArrayList<URI>();
+            List<String> serviceNames = new ArrayList<String>(types.size());
             for (Class<?> type : types) {
-                String serviceName = "#" + JavaIntrospectionHelper.getBaseName(type);
-                serviceNames.add(uri.resolve(serviceName));
+                String serviceName = JavaIntrospectionHelper.getBaseName(type);
+                serviceNames.add(serviceName);
             }
             ComponentDefinition<?> definition = createDefinition(uri, serviceNames, types, instance.getClass());
             runtimeAssembly.instantiateHostComponentDefinition(uri, definition);
@@ -432,7 +431,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     }
 
     protected ComponentDefinition<SingletonImplementation> createDefinition(URI componentUri,
-                                                                            URI serviceName,
+                                                                            String serviceName,
                                                                             Class<?> serviceClass,
                                                                             Class<?> implClass)
             throws InvalidServiceContractException {
@@ -445,13 +444,13 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     }
 
     protected ComponentDefinition<SingletonImplementation> createDefinition(URI componentUri,
-                                                                            List<URI> serviceNames,
+                                                                            List<String> serviceNames,
                                                                             List<Class<?>> serviceClasses,
                                                                             Class<?> implClass)
             throws InvalidServiceContractException {
         PojoComponentType type = new PojoComponentType(implClass);
         int i = 0;
-        for (URI serviceName : serviceNames) {
+        for (String serviceName : serviceNames) {
             Class<?> serviceClass = serviceClasses.get(i);
             JavaServiceContract contract = interfaceProcessorRegistry.introspect(serviceClass);
             JavaMappedService service = new JavaMappedService(serviceName, contract, false);

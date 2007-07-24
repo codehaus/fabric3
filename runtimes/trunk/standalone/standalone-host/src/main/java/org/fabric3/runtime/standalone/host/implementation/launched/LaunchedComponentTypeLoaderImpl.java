@@ -19,7 +19,6 @@
 package org.fabric3.runtime.standalone.host.implementation.launched;
 
 import java.lang.reflect.Type;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,19 +30,19 @@ import org.fabric3.pojo.processor.Introspector;
 import org.fabric3.pojo.processor.JavaMappedService;
 import org.fabric3.pojo.processor.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
+import org.fabric3.scdl.DataType;
+import org.fabric3.scdl.Operation;
+import org.fabric3.scdl.Scope;
+import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.MissingResourceException;
-import org.fabric3.scdl.DataType;
-import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.Operation;
-import org.fabric3.scdl.Scope;
 
 /**
  * @version $Revision$ $Date$
  */
 public class LaunchedComponentTypeLoaderImpl implements LaunchedComponentTypeLoader {
-    private static final URI SERVICE_NAME = URI.create("#main");
+    private static final String SERVICE_NAME = "main";
     private final Introspector introspector;
 
     public LaunchedComponentTypeLoaderImpl(@Reference IntrospectionRegistry introspector) {

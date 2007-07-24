@@ -19,7 +19,6 @@
 package org.fabric3.loader.composite;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import javax.xml.namespace.QName;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
@@ -29,16 +28,16 @@ import javax.xml.stream.XMLStreamReader;
 import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.scdl.BindingDefinition;
+import org.fabric3.scdl.ModelObject;
+import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.loader.UnrecognizedElementException;
-import org.fabric3.scdl.BindingDefinition;
-import org.fabric3.scdl.ModelObject;
-import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.ServiceDefinition;
 
 /**
  * Loads a service definition from an XML-based assembly file
@@ -61,15 +60,7 @@ public class ServiceLoader implements StAXElementLoader<ServiceDefinition> {
     public ServiceDefinition load(XMLStreamReader reader, LoaderContext context)
             throws XMLStreamException, LoaderException {
         String name = reader.getAttributeValue(null, "name");
-        ServiceDefinition def = new ServiceDefinition();
-        try {
-            def.setUri(new URI('#' + name));
-        } catch (URISyntaxException e) {
-            LoaderException le = new LoaderException(e);
-            le.setLine(reader.getLocation().getLineNumber());
-            le.setColumn(reader.getLocation().getColumnNumber());
-            throw le;
-        }
+        ServiceDefinition def = new ServiceDefinition(name, null, true);
 
         URI targetUri = null;
         String promote = reader.getAttributeValue(null, "promote");

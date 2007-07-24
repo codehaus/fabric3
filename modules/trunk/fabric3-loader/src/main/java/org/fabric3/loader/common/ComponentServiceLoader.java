@@ -17,25 +17,24 @@
 package org.fabric3.loader.common;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
-import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.Constants;
+import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.ModelObject;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.BindingDefinition;
-import org.fabric3.spi.loader.StAXElementLoader;
-import org.fabric3.spi.loader.LoaderRegistry;
+import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.UnrecognizedElementException;
+import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
+import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.spi.loader.UnrecognizedElementException;
 
 /**
  * Loads a service definition from an XML-based assembly file
@@ -58,15 +57,7 @@ public class ComponentServiceLoader implements StAXElementLoader<ServiceDefiniti
     public ServiceDefinition load(XMLStreamReader reader, LoaderContext context)
             throws XMLStreamException, LoaderException {
         String name = reader.getAttributeValue(null, "name");
-        ServiceDefinition def = new ServiceDefinition();
-        try {
-            def.setUri(new URI('#' + name));
-        } catch (URISyntaxException e) {
-            LoaderException le = new LoaderException(e);
-            le.setLine(reader.getLocation().getLineNumber());
-            le.setColumn(reader.getLocation().getColumnNumber());
-            throw le;
-        }
+        ServiceDefinition def = new ServiceDefinition(name, null, false);
 
         URI targetUri = null;
         String promote = reader.getAttributeValue(null, "promote");

@@ -21,7 +21,6 @@ package org.fabric3.itest.implementation.junit;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -35,19 +34,19 @@ import org.fabric3.pojo.processor.Introspector;
 import org.fabric3.pojo.processor.JavaMappedService;
 import org.fabric3.pojo.processor.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
+import org.fabric3.scdl.DataType;
+import org.fabric3.scdl.Operation;
+import org.fabric3.scdl.Scope;
+import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.MissingResourceException;
-import org.fabric3.scdl.DataType;
-import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.Operation;
-import org.fabric3.scdl.Scope;
 
 /**
  * @version $Rev$ $Date$
  */
 public class JUnitComponentTypeLoaderImpl implements JUnitComponentTypeLoader {
-    private static final URI TEST_SERVICE_NAME = URI.create("#testService");
+    private static final String TEST_SERVICE_NAME = "testService";
     private final Introspector introspector;
 
     @Constructor

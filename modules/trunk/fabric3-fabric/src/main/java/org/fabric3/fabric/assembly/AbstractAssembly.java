@@ -250,7 +250,7 @@ public abstract class AbstractAssembly implements Assembly {
             }
         }
         for (ServiceDefinition service : type.getServices().values()) {
-            URI serviceUri = baseUri.resolve(service.getUri());
+            URI serviceUri = baseUri.resolve('#' + service.getName());
             LogicalService logicalService = new LogicalService(serviceUri, service, component);
             if (service.getTarget() != null) {
                 logicalService.setTargetUri(URI.create(baseUri.toString() + "/" + service.getTarget()));

@@ -172,8 +172,7 @@ public class CompositeLoader implements StAXElementLoader<CompositeComponentType
         // check if all of the composite services have been wired
         for (ServiceDefinition svcDefn : composite.getDeclaredServices().values()) {
             if (svcDefn.getTarget() == null) {
-                String identifier = svcDefn.getUri().toString();
-                throw new InvalidServiceException("Composite service not wired to a target", identifier);
+                throw new InvalidServiceException("Composite service not wired to a target", svcDefn.getName());
             }
         }
     }

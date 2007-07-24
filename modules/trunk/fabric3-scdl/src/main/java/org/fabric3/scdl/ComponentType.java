@@ -159,7 +159,7 @@ public class ComponentType<S extends ServiceDefinition, R extends ReferenceDefin
      * @param service a service provided by the implementation
      */
     public void add(S service) {
-        services.put(service.getUri().getFragment(), service);
+        services.put(service.getName(), service);
     }
 
     /**

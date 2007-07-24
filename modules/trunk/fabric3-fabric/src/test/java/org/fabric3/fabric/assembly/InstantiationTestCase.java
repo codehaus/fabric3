@@ -71,8 +71,7 @@ public class InstantiationTestCase extends TestCase {
     }
 
     private ComponentDefinition<?> createParentWithServiceAndReference() {
-        ServiceDefinition service = new ServiceDefinition();
-        service.setUri(URI.create("#service"));
+        ServiceDefinition service = new ServiceDefinition("service", null, false);
         ReferenceDefinition reference = new ReferenceDefinition();
         reference.setUri(URI.create("#reference"));
         CompositeComponentType type = new CompositeComponentType();

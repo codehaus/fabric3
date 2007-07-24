@@ -230,10 +230,10 @@ public class DefaultWireResolver implements WireResolver {
                     continue;
                 }
                 if (requiredInterface.equals(serviceInterface)) {
-                    targetUri = URI.create(candidate.getName() + service.getUri());
+                    targetUri = URI.create(candidate.getName() + '#' + service.getName());
                     break;
                 } else if (candidateUri == null && requiredInterface.isAssignableFrom(serviceInterface)) {
-                    candidateUri = URI.create(candidate.getName() + service.getUri());
+                    candidateUri = URI.create(candidate.getName() + '#' + service.getName());
                 }
             }
             if (targetUri != null) {

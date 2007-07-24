@@ -56,7 +56,7 @@ public class ServiceLoaderTestCase extends TestCase {
         replay(mockReader);
         ServiceDefinition serviceDefinition = loader.load(mockReader, loaderContext);
         assertNotNull(serviceDefinition);
-        assertEquals("#" + name, serviceDefinition.getUri().toString());
+        assertEquals(name, serviceDefinition.getName());
     }
 
     public void testComponentTypeService() throws LoaderException, XMLStreamException {
@@ -103,7 +103,7 @@ public class ServiceLoaderTestCase extends TestCase {
 
         ServiceDefinition serviceDefinition = loader.load(mockReader, loaderContext);
         assertNotNull(serviceDefinition);
-        assertEquals("#" + name, serviceDefinition.getUri().toString());
+        assertEquals(name, serviceDefinition.getName());
         assertSame(sc, serviceDefinition.getServiceContract());
     }
 
@@ -122,7 +122,7 @@ public class ServiceLoaderTestCase extends TestCase {
 
         ServiceDefinition serviceDefinition = loader.load(mockReader, loaderContext);
         assertNotNull(serviceDefinition);
-        assertEquals("#" + name, serviceDefinition.getUri().toString());
+        assertEquals(name, serviceDefinition.getName());
         assertSame(sc, serviceDefinition.getServiceContract());
     }
 

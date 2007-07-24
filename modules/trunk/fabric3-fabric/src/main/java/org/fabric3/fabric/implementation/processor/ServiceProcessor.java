@@ -76,7 +76,7 @@ public class ServiceProcessor extends ImplementationProcessorExtension {
                         } catch (InvalidServiceContractException e) {
                             throw new ProcessingException(e);
                         }
-                        type.getServices().put(service.getUri().getFragment(), service);
+                        type.getServices().put(service.getName(), service);
                     }
                 }
                 return;
@@ -102,7 +102,7 @@ public class ServiceProcessor extends ImplementationProcessorExtension {
             } catch (InvalidServiceContractException e) {
                 throw new ProcessingException(e);
             }
-            type.getServices().put(service.getUri().getFragment(), service);
+            type.getServices().put(service.getName(), service);
         }
     }
 

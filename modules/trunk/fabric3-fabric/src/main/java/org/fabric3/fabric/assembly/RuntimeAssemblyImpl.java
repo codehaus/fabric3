@@ -69,7 +69,7 @@ public class RuntimeAssemblyImpl extends AbstractAssembly implements RuntimeAsse
 
     public void instantiateHostComponentDefinition(URI uri, ComponentDefinition<?> definition)
             throws InstantiationException {
-        LogicalComponent<?> component = instantiate(domainUri, domain, definition);
+        LogicalComponent<?> component = instantiate(uri, domain, definition);
         hostComponents.put(uri, component);
     }
 

@@ -169,12 +169,10 @@ public class DefaultWireResolverTestCase extends TestCase {
 
     private LogicalComponent<?> createTargetAtomic(Class<?> serviceInterface, LogicalComponent<CompositeImplementation> parent) {
         URI uri = URI.create("target");
-        ServiceDefinition service = new ServiceDefinition();
-        service.setUri(URI.create("#service"));
         ServiceContract contract = new ServiceContract() {
         };
         contract.setInterfaceClass(serviceInterface);
-        service.setServiceContract(contract);
+        ServiceDefinition service = new ServiceDefinition("service", contract, false);
         MockComponentType type = new MockComponentType();
         type.add(service);
         MockAtomicImpl impl = new MockAtomicImpl();

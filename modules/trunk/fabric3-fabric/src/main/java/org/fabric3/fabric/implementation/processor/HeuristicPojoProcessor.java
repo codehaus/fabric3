@@ -88,7 +88,7 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
                 } catch (InvalidServiceContractException e) {
                     throw new ProcessingException(e);
                 }
-                type.getServices().put(service.getUri().getFragment(), service);
+                type.getServices().put(service.getName(), service);
             } else if (interfaces.size() == 1) {
                 JavaMappedService service;
                 try {
@@ -96,7 +96,7 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
                 } catch (InvalidServiceContractException e) {
                     throw new ProcessingException(e);
                 }
-                type.getServices().put(service.getUri().getFragment(), service);
+                type.getServices().put(service.getName(), service);
             }
         }
         Set<Method> methods = getAllUniquePublicProtectedMethods(clazz);
@@ -477,7 +477,7 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
                 } catch (InvalidServiceContractException e) {
                     throw new ProcessingException(e);
                 }
-                type.getServices().put(service.getUri().getFragment(), service);
+                type.getServices().put(service.getName(), service);
             }
         }
     }

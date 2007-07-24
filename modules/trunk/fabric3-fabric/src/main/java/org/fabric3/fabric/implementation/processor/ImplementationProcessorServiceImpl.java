@@ -34,8 +34,6 @@ import org.osoa.sca.annotations.Remotable;
 import org.fabric3.api.annotation.Resource;
 import org.fabric3.fabric.idl.java.IllegalCallbackException;
 import static org.fabric3.fabric.util.JavaIntrospectionHelper.getBaseName;
-import org.fabric3.spi.idl.InvalidServiceContractException;
-import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
 import org.fabric3.pojo.processor.DuplicatePropertyException;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.processor.JavaMappedProperty;
@@ -45,6 +43,8 @@ import org.fabric3.pojo.processor.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.scdl.Multiplicity;
 import org.fabric3.scdl.ServiceContract;
+import org.fabric3.spi.idl.InvalidServiceContractException;
+import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
 
 /**
  * The default implementation of an <code>ImplementationProcessorService</code>
@@ -59,13 +59,9 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
     }
 
     public JavaMappedService createService(Class<?> interfaze) throws InvalidServiceContractException {
-        JavaMappedService service = new JavaMappedService();
-        // create a relative URI
-        service.setUri(URI.create("#" + interfaze.getSimpleName()));
-        service.setRemotable(interfaze.getAnnotation(Remotable.class) != null);
         ServiceContract<?> contract = registry.introspect(interfaze);
-        service.setServiceContract(contract);
-        return service;
+        boolean remotable = interfaze.getAnnotation(Remotable.class) != null;
+        return new JavaMappedService(interfaze.getSimpleName(), contract, remotable);
     }
 
     public void processCallback(Class<?> interfaze, ServiceContract<?> contract) throws IllegalCallbackException {

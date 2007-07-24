@@ -146,9 +146,8 @@ public class JavaPhysicalComponentGeneratorTestCase extends TestCase {
         ctorProperty.setName("ctorProp");
         type.add(ctorProperty);
 
-        JavaMappedService service = new JavaMappedService();
+        JavaMappedService service = new JavaMappedService("setCallback", null, false);
         service.setCallbackMember(Foo.class.getMethod("setCallback", Object.class));
-        service.setUri(URI.create("#setCallback"));
         type.add(service);
         return type;
     }
