@@ -61,6 +61,10 @@ public final class ComponentNames {
 
     public static final URI CONTRIBUTION_SERVICE_URI = URI.create(RUNTIME_NAME + "/ContributionService");
 
+    public static final URI BOOT_CLASSLOADER_ID = URI.create("sca://./bootClassLoader");
+
+    public static final URI APPLICATION_CLASSLOADER_ID = URI.create("sca://./applicationClassLoader");
+
     private ComponentNames() {
     }
 

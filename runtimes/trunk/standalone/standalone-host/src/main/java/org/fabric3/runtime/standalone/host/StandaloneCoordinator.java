@@ -16,19 +16,32 @@
  */
 package org.fabric3.runtime.standalone.host;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
 import org.fabric3.extension.component.SimpleWorkContext;
+import org.fabric3.fabric.assembly.ActivateException;
 import org.fabric3.fabric.assembly.AssemblyException;
 import org.fabric3.fabric.assembly.DistributedAssembly;
+import org.fabric3.fabric.assembly.RuntimeAssembly;
+import org.fabric3.fabric.runtime.ComponentNames;
+import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DISCOVERY_SERVICE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.WORK_SCHEDULER_URI;
-import org.fabric3.fabric.runtime.ComponentNames;
+import org.fabric3.fabric.services.contribution.processor.ExtensionContributionSource;
+import org.fabric3.host.contribution.Constants;
+import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.ContributionService;
+import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.CoordinatorMonitor;
 import org.fabric3.host.runtime.InitializationException;
@@ -64,6 +77,7 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
     }
 
     private State state = State.UNINITIALIZED;
+    private File extensionsDirectory;
     private StandaloneRuntime runtime;
     private Bootstrapper bootstrapper;
     private WorkScheduler scheduler;
@@ -97,7 +111,10 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
             workContext = new SimpleWorkContext();
             workContext.setScopeIdentifier(Scope.COMPOSITE, groupId);
             container.startContext(workContext, groupId);
+            // XCV make configurable
+            extensionsDirectory = new File(runtime.getHostInfo().getInstallDirectory(), "extensions");
         } catch (GroupInitializationException e) {
+            state = State.ERROR;
             throw new InitializationException(e);
         }
         state = State.PRIMORDIAL;
@@ -105,21 +122,28 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
 
     public void initialize() throws InitializationException {
         if (state != State.PRIMORDIAL) {
+            state = State.ERROR;
             throw new IllegalStateException("Not in PRIMORDIAL state");
         }
-        bootstrapper.bootSystem(runtime);
-        monitor = runtime.getMonitorFactory().getMonitor(CoordinatorMonitor.class);
-        scheduler = runtime.getSystemComponent(WorkScheduler.class, WORK_SCHEDULER_URI);
-        if (scheduler == null) {
+        try {
+            bootstrapper.bootSystem(runtime);
+            monitor = runtime.getMonitorFactory().getMonitor(CoordinatorMonitor.class);
+            scheduler = runtime.getSystemComponent(WorkScheduler.class, WORK_SCHEDULER_URI);
+            if (scheduler == null) {
+                state = State.ERROR;
+                throw new InitializationException("WorkScheduler not found", WORK_SCHEDULER_URI.toString());
+            }
+            includeExtensions();
+            state = State.INITIALIZED;
+        } catch (InitializationException e) {
             state = State.ERROR;
-            throw new InitializationException("WorkScheduler not found", WORK_SCHEDULER_URI.toString());
+            throw e;
         }
-        state = State.INITIALIZED;
-
     }
 
     public Future<Void> joinDomain(final long timeout) {
         if (state != State.INITIALIZED) {
+            state = State.ERROR;
             throw new IllegalStateException("Not in INITIALIZED state");
         }
         Callable<Void> callable = new Callable<Void>() {
@@ -149,6 +173,7 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
 
     public Future<Void> recover() {
         if (state != State.DOMAIN_JOINED) {
+            state = State.ERROR;
             throw new IllegalStateException("Not in DOMAIN_JOINED state");
         }
         Callable<Void> callable = new Callable<Void>() {
@@ -180,6 +205,7 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
 
     public Future<Void> start() {
         if (state != State.RECOVERED) {
+            state = State.ERROR;
             throw new IllegalStateException("Not in RECOVERED state");
         }
         Callable<Void> callable = new Callable<Void>() {
@@ -202,6 +228,7 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
 
     public Future<Void> shutdown() throws ShutdownException {
         if (state != State.STARTED) {
+            state = State.ERROR;
             throw new IllegalStateException("Not in STARTED state");
         }
         Callable<Void> callable = new Callable<Void>() {
@@ -221,5 +248,43 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
         scheduler.scheduleWork(task);
         return task;
     }
+
+    /**
+     * Processes extensions and includes them in the runtime domain
+     *
+     * @throws InitializationException if an error occurs included the extensions
+     */
+    private void includeExtensions() throws InitializationException {
+        if (extensionsDirectory != null) {
+            // contribute and activate extensions if they exist in the runtime domain
+            ContributionService contributionService = runtime.getSystemComponent(ContributionService.class,
+                                                                                 CONTRIBUTION_SERVICE_URI);
+            RuntimeAssembly assembly = runtime.getSystemComponent(RuntimeAssembly.class, RUNTIME_ASSEMBLY_URI);
+            try {
+                ExtensionContributionSource source =
+                        new ExtensionContributionSource(extensionsDirectory.toURI().toURL(), -1, new byte[0]);
+                // XCV configurable: "extensions"
+                URI addedUri = contributionService.contribute("extensions", source);
+
+                List<Deployable> deployables = contributionService.getDeployables(addedUri);
+                for (Deployable deployable : deployables) {
+                    if (Constants.COMPOSITE_TYPE.equals(deployable.getType())) {
+                        // include deployables in the runtime domain
+                        assembly.activate(deployable.getName(), true);
+                    }
+                }
+            } catch (MalformedURLException e) {
+                throw new InitializationException(e);
+            } catch (IOException e) {
+                throw new InitializationException(e);
+            } catch (ContributionException e) {
+                throw new InitializationException(e);
+            } catch (ActivateException e) {
+                throw new InitializationException(e);
+            }
+
+        }
+    }
+
 
 }

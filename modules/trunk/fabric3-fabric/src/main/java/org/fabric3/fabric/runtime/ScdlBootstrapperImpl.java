@@ -16,6 +16,9 @@
  */
 package org.fabric3.fabric.runtime;
 
+import static org.fabric3.fabric.runtime.ComponentNames.APPLICATION_CLASSLOADER_ID;
+import static org.fabric3.fabric.runtime.ComponentNames.BOOT_CLASSLOADER_ID;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
@@ -164,8 +167,6 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     private static final URI RUNTIME_INFO_URI = URI.create(RUNTIME_NAME + "/HostInfo");
     private static final URI STORE_REGISTRY_URI = URI.create(RUNTIME_NAME + "/StoreRegistrt");
     private static final URI HOST_CLASSLOADER_ID = URI.create("sca://./hostClassLoader");
-    private static final URI BOOT_CLASSLOADER_ID = URI.create("sca://./bootClassLoader");
-    private static final URI APPLICATION_CLASSLOADER_ID = URI.create("sca://./applicationClassLoader");
 
     private JavaInterfaceProcessorRegistry interfaceProcessorRegistry;
 

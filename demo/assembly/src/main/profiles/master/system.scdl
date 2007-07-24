@@ -104,14 +104,6 @@
     </component>
 
 
-    <!-- component that scans the extension directory -->
-    <component name="directoryScanExtender" initLevel="90">
-        <system:implementation.system class="org.fabric3.runtime.standalone.host.DirectoryScanExtender"/>
-        <!-- JFM FIXME
-        <property name="path">extensions</property>
-        -->
-    </component>
-
     <component name="launchedLoader">
         <system:implementation.system class="org.fabric3.runtime.standalone.host.implementation.launched.LaunchedLoader"/>
     </component>

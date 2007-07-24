@@ -39,7 +39,7 @@ public class JarClasspathProcessorTestCase extends TestCase {
      */
     public void testExpansionNoLibraries() throws Exception {
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        URL location = cl.getResource("./repository/test.jar");
+        URL location = cl.getResource("./repository/1/test.jar");
         List<URL> urls = processor.process(new File(location.getFile()));
         assertEquals(1, urls.size());
         assertEquals(location, urls.get(0));
@@ -52,7 +52,7 @@ public class JarClasspathProcessorTestCase extends TestCase {
      */
     public void testExpansionWithLibraries() throws Exception {
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        URL location = cl.getResource("./repository/testWithLibraries.jar");
+        URL location = cl.getResource("./repository/2/testWithLibraries.jar");
         List<URL> urls = processor.process(new File(location.getFile()));
         assertEquals(2, urls.size());
         assertEquals(location, urls.get(0));

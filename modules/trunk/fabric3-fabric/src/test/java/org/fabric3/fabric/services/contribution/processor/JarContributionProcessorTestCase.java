@@ -3,8 +3,8 @@ package org.fabric3.fabric.services.contribution.processor;
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
@@ -35,7 +35,7 @@ public class JarContributionProcessorTestCase extends TestCase {
         long timestamp = System.currentTimeMillis();
         Contribution contribution = new Contribution(uri, location, checksum, timestamp);
         ClassLoader ccl = Thread.currentThread().getContextClassLoader();
-        processor.processContent(contribution, uri, ccl.getResourceAsStream("./repository/test.jar"));
+        processor.processContent(contribution, uri, ccl.getResourceAsStream("./repository/1/test.jar"));
         EasyMock.verify(loaderRegistry);
         assertNotNull(contribution.getManifest());
     }
@@ -44,7 +44,7 @@ public class JarContributionProcessorTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         ClassLoader ccl = Thread.currentThread().getContextClassLoader();
-        location = ccl.getResource("./repository/test.jar");
+        location = ccl.getResource("./repository/1/test.jar");
         ContributionManifest manifest = new ContributionManifest();
         loaderRegistry = EasyMock.createMock(LoaderRegistry.class);
         CompositeComponentType type1 = new CompositeComponentType(new QName("TestComposite1"));

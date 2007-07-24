@@ -6,15 +6,15 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License.    
+ * under the License.
  */
 
 package org.fabric3.fabric.services.contribution.processor;
@@ -96,9 +96,10 @@ public class JarContributionProcessor extends ContributionProcessorExtension imp
         List<URL> artifactUrls = getCompositeUrls(inputStream, toJarURL(sourceUrl));
         // Build a classloader to perform the contribution introspection. The classpath will contain the contribution
         // jar and resolved imports
+        ClassLoader oldClassloader = Thread.currentThread().getContextClassLoader();
         ClassLoader cl = classLoaderRegistry.getClassLoader(HOST_CLASSLOADER);
         CompositeClassLoader loader = new CompositeClassLoader(contribution.getUri(), cl);
-        ClassLoader oldClassloader = Thread.currentThread().getContextClassLoader();
+        loader.addParent(oldClassloader);
         try {
             List<URL> classpath = classpathProcessorRegistry.process(jarFile);
             for (URL library : classpath) {
@@ -125,7 +126,11 @@ public class JarContributionProcessor extends ContributionProcessorExtension imp
         } catch (XMLStreamException e) {
             throw new ContributionException(e);
         } finally {
-            Thread.currentThread().setContextClassLoader(oldClassloader);
+            try {
+                inputStream.close();
+            } finally {
+                Thread.currentThread().setContextClassLoader(oldClassloader);
+            }
         }
     }
 

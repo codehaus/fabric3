@@ -92,7 +92,13 @@ public class ContributionServiceImpl implements ContributionService {
             if (archiveStore == null) {
                 throw new StoreNotFoundException("Archive store not found", id);
             }
-            locationUrl = archiveStore.store(contributionUri, source.getSource());
+            InputStream stream = source.getSource();
+            try {
+                locationUrl = archiveStore.store(contributionUri, stream);
+            } finally {
+                stream.close();
+            }
+
         }
         String type = getContentType(locationUrl, source.getContentType());
         byte[] checksum = source.getChecksum();
@@ -208,6 +214,8 @@ public class ContributionServiceImpl implements ContributionService {
                 throw new AssertionError();
             }
 
+        } else if (Constants.EXTENSION_TYPE.equals(contentType)) {
+            return contentType;
         } else {
             if ("file".equals(url.getProtocol())) {
                 return Constants.FOLDER_CONTENT_TYPE;

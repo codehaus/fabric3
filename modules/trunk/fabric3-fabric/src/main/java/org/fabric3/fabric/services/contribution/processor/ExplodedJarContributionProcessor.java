@@ -113,7 +113,11 @@ public class ExplodedJarContributionProcessor extends ContributionProcessorExten
         } catch (XMLStreamException e) {
             throw new ContributionException(e);
         } finally {
-            Thread.currentThread().setContextClassLoader(oldClassloader);
+            try {
+                inputStream.close();
+            } finally {
+                Thread.currentThread().setContextClassLoader(oldClassloader);
+            }
         }
     }
 
