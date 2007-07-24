@@ -39,6 +39,15 @@ import org.fabric3.fabric.command.InitializeComponentCommand;
 import org.fabric3.fabric.generator.DefaultGeneratorContext;
 import org.fabric3.fabric.services.routing.RoutingException;
 import org.fabric3.fabric.services.routing.RoutingService;
+import org.fabric3.scdl.BindingDefinition;
+import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.ComponentType;
+import org.fabric3.scdl.CompositeComponentType;
+import org.fabric3.scdl.CompositeImplementation;
+import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.ModelObject;
+import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.command.CommandSet;
 import org.fabric3.spi.generator.GenerationException;
@@ -50,15 +59,6 @@ import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.Referenceable;
 import org.fabric3.spi.model.physical.PhysicalChangeSet;
-import org.fabric3.scdl.BindingDefinition;
-import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.ComponentType;
-import org.fabric3.scdl.CompositeComponentType;
-import org.fabric3.scdl.CompositeImplementation;
-import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.ModelObject;
-import org.fabric3.scdl.ReferenceDefinition;
-import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.util.UriHelper;
@@ -183,7 +183,7 @@ public abstract class AbstractAssembly implements Assembly {
         }
     }
 
-    public void bindService(URI serviceUri, LogicalBinding binding) throws BindException {
+    public void bindService(URI serviceUri, BindingDefinition bindingDefinition) throws BindException {
         URI defragmentedUri = UriHelper.getDefragmentedName(serviceUri);
         LogicalComponent<?> targetComponent = domainMap.get(defragmentedUri);
         if (targetComponent == null) {
@@ -204,7 +204,7 @@ public abstract class AbstractAssembly implements Assembly {
                 throw new BindException("Service not found", defragmentedUri.toString());
             }
         }
-
+        LogicalBinding<?> binding = new LogicalBinding<BindingDefinition>(bindingDefinition, service);
         PhysicalChangeSet changeSet = new PhysicalChangeSet();
         CommandSet commandSet = new CommandSet();
         GeneratorContext context = new DefaultGeneratorContext(changeSet, commandSet);

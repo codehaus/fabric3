@@ -21,10 +21,10 @@ package org.fabric3.fabric.assembly;
 import java.net.URI;
 import javax.xml.namespace.QName;
 
-import org.fabric3.spi.model.instance.LogicalBinding;
-import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.CompositeImplementation;
+import org.fabric3.spi.model.instance.LogicalComponent;
 
 /**
  * Manages a service network
@@ -72,9 +72,9 @@ public interface Assembly {
      * Binds a service.
      *
      * @param serviceURI the absolute URI of the service
-     * @param binding    the binding information
+     * @param binding    the binding definition
      * @throws BindException if an error occurs binding the service
      */
-    void bindService(URI serviceURI, LogicalBinding binding) throws BindException;
+    void bindService(URI serviceURI, BindingDefinition binding) throws BindException;
 
 }

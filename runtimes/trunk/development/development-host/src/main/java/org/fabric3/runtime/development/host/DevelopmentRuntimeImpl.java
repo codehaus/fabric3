@@ -21,7 +21,6 @@ import org.fabric3.fabric.assembly.BindException;
 import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.assembly.RuntimeAssembly;
 import org.fabric3.fabric.implementation.composite.CompositeComponentTypeLoader;
-import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.fabric.monitor.JavaLoggingMonitorFactory;
 import org.fabric3.fabric.runtime.AbstractRuntime;
 import static org.fabric3.fabric.runtime.ComponentNames.COMPOSITE_LOADER_URI;
@@ -31,15 +30,15 @@ import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_NAME;
 import org.fabric3.fabric.util.JavaIntrospectionHelper;
 import org.fabric3.fabric.wire.WireUtils;
 import org.fabric3.host.runtime.StartException;
-import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.component.WorkContext;
-import org.fabric3.spi.loader.LoaderContext;
-import org.fabric3.spi.model.instance.LogicalBinding;
+import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Scope;
+import org.fabric3.spi.component.ScopeContainer;
+import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.ProxyService;
 import org.fabric3.spi.wire.Wire;
@@ -186,8 +185,7 @@ public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo>
             Wire wire = wireCache.getWire(uri);
             if (wire == null) {
                 ClientBindingDefinition definition = new ClientBindingDefinition();
-                LogicalBinding<?> binding = new LogicalBinding<ClientBindingDefinition>(definition);
-                applicationAssembly.bindService(uri, binding);
+                applicationAssembly.bindService(uri, definition);
             }
             wire = wireCache.getWire(uri);
             Map<Method, InvocationChain> mappings = WireUtils.createInterfaceToWireMapping(interfaze, wire);
