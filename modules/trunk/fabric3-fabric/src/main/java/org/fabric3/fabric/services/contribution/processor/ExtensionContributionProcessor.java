@@ -37,10 +37,10 @@ import org.fabric3.fabric.services.contribution.StoreNotFoundException;
 import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.Deployable;
-import static org.fabric3.spi.Constants.FABRIC3_SYSTEM_NS;
 import org.fabric3.scdl.CompositeComponentType;
 import org.fabric3.scdl.Include;
 import org.fabric3.scdl.ModelObject;
+import static org.fabric3.spi.Constants.FABRIC3_SYSTEM_NS;
 import org.fabric3.spi.services.archive.ArchiveStore;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.Contribution;
@@ -93,51 +93,63 @@ public class ExtensionContributionProcessor extends ContributionProcessorExtensi
         if (jars.length == 0) {
             return;
         }
-        List<Contribution> contributions = new ArrayList<Contribution>();
         ClassLoader oldClassloader = Thread.currentThread().getContextClassLoader();
         ClassLoader bootCl = classLoaderRegistry.getClassLoader(BOOT_CLASSLOADER_ID);
+        List<Contribution> contributions = null;
         try {
             // Set the boot classloader so SPI classes are available to extensions
             // This will need to change in the future
             Thread.currentThread().setContextClassLoader(bootCl);
-            for (File jar : jars) {
-                ArchiveStore archiveStore = contributionStoreRegistry.getArchiveStore(extensionsStoreId);
-                if (archiveStore == null) {
-                    throw new StoreNotFoundException("Extensions archive store not found", extensionsStoreId);
-                }
-                MetaDataStore metaDataStore = contributionStoreRegistry.getMetadataStore(extensionsStoreId);
-                if (archiveStore == null) {
-                    throw new StoreNotFoundException("Extensions metadata store not found", extensionsStoreId);
-                }
-                InputStream stream = null;
-                InputStream archiveStream = null;
-                try {
-                    URI contributionUri = URI.create(contribution.getUri() + "/" + UUID.randomUUID());
-                    URL url = jar.toURI().toURL();
-                    archiveStream = url.openStream();
-                    archiveStore.store(contributionUri, archiveStream);
-                    stream = url.openStream();
-                    Contribution child = new Contribution(contributionUri, url, new byte[0], -1);
-                    contributions.add(child);
-                    registry.processContent(child, Constants.JAR_CONTENT_TYPE, jar.toURI(), stream);
-                    metaDataStore.store(child);
-                } finally {
-                    try {
-                        if (archiveStream != null) {
-                            archiveStream.close();
-                        }
-                    } finally {
-                        if (stream != null) {
-                            stream.close();
-                        }
-                    }
-                }
-            }
+            contributions = processArchives(contribution, jars);
         } finally {
             Thread.currentThread().setContextClassLoader(oldClassloader);
         }
-        QName extensionQName = new QName(FABRIC3_SYSTEM_NS, "extensions");
-        CompositeComponentType type = new CompositeComponentType(extensionQName);
+        QName name = new QName(FABRIC3_SYSTEM_NS, "extensions");
+        createComponentType(contribution, name, contributions);
+        manifest.addDeployable(new Deployable(name, Constants.COMPOSITE_TYPE));
+    }
+
+    private List<Contribution> processArchives(Contribution contribution, File[] jars)
+            throws IOException, ContributionException {
+        List<Contribution> contributions = new ArrayList<Contribution>();
+        for (File jar : jars) {
+            ArchiveStore archiveStore = contributionStoreRegistry.getArchiveStore(extensionsStoreId);
+            if (archiveStore == null) {
+                throw new StoreNotFoundException("Extensions archive store not found", extensionsStoreId);
+            }
+            MetaDataStore metaDataStore = contributionStoreRegistry.getMetadataStore(extensionsStoreId);
+            if (archiveStore == null) {
+                throw new StoreNotFoundException("Extensions metadata store not found", extensionsStoreId);
+            }
+            InputStream stream = null;
+            InputStream archiveStream = null;
+            try {
+                URI contributionUri = URI.create(contribution.getUri() + "/" + UUID.randomUUID());
+                URL url = jar.toURI().toURL();
+                archiveStream = url.openStream();
+                archiveStore.store(contributionUri, archiveStream);
+                stream = url.openStream();
+                Contribution child = new Contribution(contributionUri, url, new byte[0], -1);
+                contributions.add(child);
+                registry.processContent(child, Constants.JAR_CONTENT_TYPE, jar.toURI(), stream);
+                metaDataStore.store(child);
+            } finally {
+                try {
+                    if (archiveStream != null) {
+                        archiveStream.close();
+                    }
+                } finally {
+                    if (stream != null) {
+                        stream.close();
+                    }
+                }
+            }
+        }
+        return contributions;
+    }
+
+    private void createComponentType(Contribution contribution, QName qName, List<Contribution> contributions) {
+        CompositeComponentType type = new CompositeComponentType(qName);
         for (Contribution child : contributions) {
             for (Map.Entry<QName, ModelObject> entry : child.getTypes().entrySet()) {
                 if (!(entry.getValue() instanceof CompositeComponentType)) {
@@ -161,9 +173,7 @@ public class ExtensionContributionProcessor extends ContributionProcessorExtensi
             }
             contribution.addResolvedImportUri(child.getUri());
         }
-        contribution.addType(extensionQName, type);
-        manifest.addDeployable(new Deployable(extensionQName, Constants.COMPOSITE_TYPE));
+        contribution.addType(qName, type);
     }
-
 
 }
