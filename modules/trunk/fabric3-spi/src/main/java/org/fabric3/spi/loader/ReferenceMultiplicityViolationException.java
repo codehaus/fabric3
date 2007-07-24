@@ -19,7 +19,7 @@
 
 package org.fabric3.spi.loader;
 
-import org.fabric3.spi.model.type.Multiplicity;
+import org.fabric3.scdl.Multiplicity;
 
 /**
  * Denote the violation of multiplicity declaration for a reference

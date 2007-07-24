@@ -1,7 +1,7 @@
 package org.fabric3.fabric.wire;
 
-import org.fabric3.spi.model.type.Operation;
-import org.fabric3.spi.model.type.ServiceContract;
+import org.fabric3.scdl.Operation;
+import org.fabric3.scdl.ServiceContract;
 
 /**
  * @version $Rev$ $Date$

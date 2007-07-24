@@ -30,11 +30,11 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalChangeSet;
-import org.fabric3.spi.model.type.CompositeImplementation;
+import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.model.type.ContributionResourceDescription;
 import org.fabric3.spi.model.type.ExtensionResourceDescription;
-import org.fabric3.spi.model.type.Implementation;
-import org.fabric3.spi.model.type.ResourceDescription;
+import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.ResourceDescription;
 
 @EagerInit
 public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {

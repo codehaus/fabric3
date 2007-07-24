@@ -18,11 +18,11 @@
  */
 package org.fabric3.runtime.webapp.implementation.webapp;
 
-import org.fabric3.spi.model.type.ComponentType;
-import org.fabric3.spi.model.type.Implementation;
-import org.fabric3.spi.model.type.Property;
-import org.fabric3.spi.model.type.ReferenceDefinition;
-import org.fabric3.spi.model.type.ServiceDefinition;
+import org.fabric3.scdl.ComponentType;
+import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.Property;
+import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.scdl.ReferenceDefinition;
 
 /**
  * @version $Rev$ $Date$

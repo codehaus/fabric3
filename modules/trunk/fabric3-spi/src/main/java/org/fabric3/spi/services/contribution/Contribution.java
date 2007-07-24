@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 import javax.xml.namespace.QName;
 
-import org.fabric3.spi.model.type.ModelObject;
+import org.fabric3.scdl.ModelObject;
 
 /**
  * The base representation of a deployed contribution

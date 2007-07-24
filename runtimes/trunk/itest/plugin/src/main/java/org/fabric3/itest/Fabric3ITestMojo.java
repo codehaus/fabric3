@@ -72,11 +72,11 @@ import org.fabric3.pojo.processor.JavaMappedService;
 import org.fabric3.pojo.processor.PojoComponentType;
 import org.fabric3.spi.deployer.CompositeClassLoader;
 import org.fabric3.spi.loader.LoaderContext;
-import org.fabric3.spi.model.type.ComponentDefinition;
-import org.fabric3.spi.model.type.CompositeComponentType;
-import org.fabric3.spi.model.type.CompositeImplementation;
-import org.fabric3.spi.model.type.Implementation;
-import org.fabric3.spi.model.type.Operation;
+import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.CompositeComponentType;
+import org.fabric3.scdl.CompositeImplementation;
+import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.Operation;
 
 /**
  * Integration-tests an SCA composite by running it in local copy of Fabric3 and calling JUnit-based test components to

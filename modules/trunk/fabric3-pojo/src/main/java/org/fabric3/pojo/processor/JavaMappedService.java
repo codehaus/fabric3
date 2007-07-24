@@ -21,8 +21,8 @@ package org.fabric3.pojo.processor;
 import java.lang.reflect.Member;
 import java.net.URI;
 
-import org.fabric3.spi.model.type.ServiceContract;
-import org.fabric3.spi.model.type.ServiceDefinition;
+import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.ServiceDefinition;
 
 /**
  * A ServiceDefinition definition that is mapped to a Java interface. The mapped interface is not required to be the

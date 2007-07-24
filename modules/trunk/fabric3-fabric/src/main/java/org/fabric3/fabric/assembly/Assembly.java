@@ -23,8 +23,8 @@ import javax.xml.namespace.QName;
 
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.spi.model.type.ComponentDefinition;
-import org.fabric3.spi.model.type.CompositeImplementation;
+import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.CompositeImplementation;
 
 /**
  * Manages a service network

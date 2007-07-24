@@ -33,8 +33,8 @@ import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.processor.JavaMappedReference;
 import org.fabric3.pojo.processor.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
-import org.fabric3.spi.model.type.Multiplicity;
-import org.fabric3.spi.model.type.ServiceContract;
+import org.fabric3.scdl.Multiplicity;
+import org.fabric3.scdl.ServiceContract;
 
 import static org.fabric3.fabric.util.JavaIntrospectionHelper.toPropertyName;
 

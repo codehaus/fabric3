@@ -38,12 +38,12 @@ import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.MissingResourceException;
 import org.fabric3.spi.loader.UnrecognizedElementException;
-import org.fabric3.spi.model.type.ReferenceDefinition;
-import org.fabric3.spi.model.type.ServiceContract;
-import org.fabric3.spi.model.type.ComponentType;
-import org.fabric3.spi.model.type.Scope;
-import org.fabric3.spi.model.type.ServiceDefinition;
-import org.fabric3.spi.model.type.Property;
+import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.ComponentType;
+import org.fabric3.scdl.Scope;
+import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.scdl.Property;
 import org.fabric3.spi.Constants;
 
 /**

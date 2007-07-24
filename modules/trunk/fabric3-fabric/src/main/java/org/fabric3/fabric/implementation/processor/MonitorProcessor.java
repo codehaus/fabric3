@@ -50,7 +50,6 @@ public class MonitorProcessor extends AbstractPropertyProcessor<Monitor> {
                                     Monitor annotation,
                                     LoaderContext context) {
         Class<T> javaType = property.getJavaType();
-        property.setDefaultValueFactory(new SingletonObjectFactory<T>(monitorFactory.getMonitor(javaType)));
     }
 
 }

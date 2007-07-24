@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.model.type;
+package org.fabric3.scdl;
 
 import java.util.Collections;
 import java.util.HashMap;

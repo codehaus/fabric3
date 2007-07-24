@@ -46,8 +46,8 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.ValueSource;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
-import org.fabric3.spi.model.type.ComponentDefinition;
-import org.fabric3.spi.model.type.Property;
+import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.Property;
 
 /**
  * @version $Rev$ $Date$

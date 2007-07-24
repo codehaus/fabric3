@@ -34,7 +34,7 @@ import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.spi.model.type.PropertyValue;
+import org.fabric3.scdl.PropertyValue;
 
 /**
  * Base class for Component implementations based on Java objects.

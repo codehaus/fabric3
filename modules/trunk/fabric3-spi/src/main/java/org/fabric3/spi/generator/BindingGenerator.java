@@ -21,9 +21,9 @@ package org.fabric3.spi.generator;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
-import org.fabric3.spi.model.type.BindingDefinition;
-import org.fabric3.spi.model.type.ReferenceDefinition;
-import org.fabric3.spi.model.type.ServiceDefinition;
+import org.fabric3.scdl.BindingDefinition;
+import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.ServiceDefinition;
 
 /**
  * Generates {@link PhysicalWireSourceDefinition}s and {@link PhysicalWireTargetDefinition}s for a resolved binding

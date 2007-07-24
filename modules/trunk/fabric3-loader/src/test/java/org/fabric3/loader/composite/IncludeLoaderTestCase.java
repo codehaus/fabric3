@@ -36,8 +36,8 @@ import static org.easymock.EasyMock.verify;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.model.type.CompositeComponentType;
-import org.fabric3.spi.model.type.Include;
+import org.fabric3.scdl.CompositeComponentType;
+import org.fabric3.scdl.Include;
 
 /**
  * @version $Rev$ $Date$

@@ -24,9 +24,9 @@ import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
-import org.fabric3.spi.model.type.BindingDefinition;
-import org.fabric3.spi.model.type.Implementation;
-import org.fabric3.spi.model.type.ResourceDescription;
+import org.fabric3.scdl.BindingDefinition;
+import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.ResourceDescription;
 
 /**
  * A registry for {@link ComponentGenerator}s, {@link BindingGenerator}s, {@link InterceptorGenerator}s and {@link

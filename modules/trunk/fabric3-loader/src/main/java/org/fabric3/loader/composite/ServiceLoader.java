@@ -35,10 +35,10 @@ import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.loader.UnrecognizedElementException;
-import org.fabric3.spi.model.type.BindingDefinition;
-import org.fabric3.spi.model.type.ModelObject;
-import org.fabric3.spi.model.type.ServiceContract;
-import org.fabric3.spi.model.type.ServiceDefinition;
+import org.fabric3.scdl.BindingDefinition;
+import org.fabric3.scdl.ModelObject;
+import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.ServiceDefinition;
 
 /**
  * Loads a service definition from an XML-based assembly file

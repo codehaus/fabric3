@@ -25,7 +25,8 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.spi.model.type.ReferenceDefinition;
+import org.fabric3.scdl.ReferenceDefinition;
+
 import org.osoa.sca.Constants;
 
 /**

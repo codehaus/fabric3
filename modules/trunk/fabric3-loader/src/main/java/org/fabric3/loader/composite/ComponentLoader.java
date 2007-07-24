@@ -35,11 +35,11 @@ import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.StAXElementLoader;
-import org.fabric3.spi.model.type.Autowire;
-import org.fabric3.spi.model.type.ComponentDefinition;
-import org.fabric3.spi.model.type.ComponentReference;
-import org.fabric3.spi.model.type.Implementation;
-import org.fabric3.spi.model.type.PropertyValue;
+import org.fabric3.scdl.Autowire;
+import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.ComponentReference;
+import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.PropertyValue;
 
 /**
  * Loads a component definition from an XML-based assembly file

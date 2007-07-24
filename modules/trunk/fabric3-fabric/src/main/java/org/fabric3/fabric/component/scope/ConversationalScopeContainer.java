@@ -23,7 +23,7 @@ import org.osoa.sca.Conversation;
 
 import org.fabric3.spi.component.InstanceWrapperStore;
 import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.spi.model.type.Scope;
+import org.fabric3.scdl.Scope;
 import org.fabric3.host.monitor.MonitorFactory;
 
 /**

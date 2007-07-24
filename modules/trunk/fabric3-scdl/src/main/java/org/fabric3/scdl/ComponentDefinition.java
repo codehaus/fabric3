@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.model.type;
+package org.fabric3.scdl;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -28,13 +28,14 @@ import java.util.Map;
  * componentType).</p> <p>Every component has a name which uniquely identifies it within the scope of the composite that
  * contains it; the name must be different from the names of all other components, services and references immediately
  * contained in the composite (directly or through an &lt;include&gt; element).</p> <p>A component may define a {@link
- * PropertyValue} that overrides the default value of a {@link Property} defined in the componentType.</p> <p>It may
- * also define a {@link ComponentReference} for a {@link ReferenceDefinition} defined in the componentType. The
- * ComponentReference must resolve to another component or a reference in the enclosing composite.</p> <p>Components may
- * specify an initialization level that will determine the order in which it will be eagerly initialized relative to
- * other components from the enclosing composite that are in the same scope. This can be used to define a startup
- * sequence for components that are otherwise independent. Any initialization required to resolve references between
- * components will override this initialization order.</p>
+ * PropertyValue} that overrides the default value of a {@link org.fabric3.scdl.Property} defined in the
+ * componentType.</p> <p>It may also define a {@link ComponentReference} for a {@link
+ * org.fabric3.scdl.ReferenceDefinition} defined in the componentType. The ComponentReference must resolve to another
+ * component or a reference in the enclosing composite.</p> <p>Components may specify an initialization level that will
+ * determine the order in which it will be eagerly initialized relative to other components from the enclosing composite
+ * that are in the same scope. This can be used to define a startup sequence for components that are otherwise
+ * independent. Any initialization required to resolve references between components will override this initialization
+ * order.</p>
  *
  * @version $Rev$ $Date$
  */

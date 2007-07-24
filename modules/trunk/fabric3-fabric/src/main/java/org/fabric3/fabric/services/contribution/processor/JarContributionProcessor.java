@@ -47,7 +47,7 @@ import org.fabric3.spi.deployer.CompositeClassLoader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.model.type.CompositeComponentType;
+import org.fabric3.scdl.CompositeComponentType;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.spi.services.contribution.Contribution;

@@ -35,8 +35,8 @@ import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
-import org.fabric3.spi.model.type.Property;
-import org.fabric3.spi.model.type.Scope;
+import org.fabric3.scdl.Property;
+import org.fabric3.scdl.Scope;
 
 /**
  * @version $Revision$ $Date$

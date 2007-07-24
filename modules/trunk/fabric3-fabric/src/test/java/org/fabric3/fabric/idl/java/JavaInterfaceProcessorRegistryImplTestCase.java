@@ -34,8 +34,8 @@ import org.fabric3.fabric.util.JavaIntrospectionHelper;
 import org.fabric3.spi.idl.InvalidServiceContractException;
 import org.fabric3.spi.idl.java.JavaInterfaceProcessor;
 import org.fabric3.spi.idl.java.JavaServiceContract;
-import org.fabric3.spi.model.type.DataType;
-import org.fabric3.spi.model.type.Operation;
+import org.fabric3.scdl.DataType;
+import org.fabric3.scdl.Operation;
 
 /**
  * @version $Rev$ $Date$

@@ -10,8 +10,8 @@ import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
-import org.fabric3.spi.model.type.ReferenceDefinition;
-import org.fabric3.spi.model.type.ServiceDefinition;
+import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.ServiceDefinition;
 
 /**
  * Implementation of the client binding generator.

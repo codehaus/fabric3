@@ -34,7 +34,7 @@ import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.spi.host.ServletHost;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.topology.RuntimeInfo;
-import org.fabric3.spi.model.type.CompositeImplementation;
+import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.services.discovery.DiscoveryService;
 
 /**

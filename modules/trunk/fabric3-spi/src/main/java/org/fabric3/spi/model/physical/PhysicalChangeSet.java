@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.fabric3.spi.model.type.ModelObject;
+import org.fabric3.scdl.ModelObject;
 
 /**
  * Models a physical change set, sent from the master to the slave.

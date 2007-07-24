@@ -24,7 +24,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import org.fabric3.spi.idl.InvalidServiceContractException;
-import org.fabric3.spi.model.type.ServiceContract;
+import org.fabric3.scdl.ServiceContract;
 
 /**
  * Provides utility methods for Java implementation processing

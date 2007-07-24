@@ -21,8 +21,8 @@ package org.fabric3.itest.implementation.junit;
 import java.util.List;
 import java.lang.reflect.Type;
 
-import org.fabric3.spi.model.type.ServiceContract;
-import org.fabric3.spi.model.type.Operation;
+import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.Operation;
 
 /**
  * @version $Rev$ $Date$

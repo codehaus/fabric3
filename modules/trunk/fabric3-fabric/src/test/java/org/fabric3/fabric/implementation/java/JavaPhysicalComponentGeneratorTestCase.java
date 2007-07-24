@@ -29,9 +29,9 @@ import static org.fabric3.spi.model.instance.ValueSource.ValueSourceType.REFEREN
 import static org.fabric3.spi.model.instance.ValueSource.ValueSourceType.SERVICE;
 import org.fabric3.spi.model.physical.PhysicalChangeSet;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
-import org.fabric3.spi.model.type.ComponentDefinition;
-import org.fabric3.spi.model.type.CompositeImplementation;
-import org.fabric3.spi.model.type.Scope;
+import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.CompositeImplementation;
+import org.fabric3.scdl.Scope;
 
 /**
  * @version $Rev$ $Date$

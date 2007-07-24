@@ -26,7 +26,7 @@ import org.osoa.sca.annotations.EndsConversation;
 
 import org.fabric3.spi.idl.InvalidConversationalOperationException;
 import org.fabric3.spi.idl.java.JavaServiceContract;
-import org.fabric3.spi.model.type.Operation;
+import org.fabric3.scdl.Operation;
 
 /**
  * @version $Rev$ $Date$

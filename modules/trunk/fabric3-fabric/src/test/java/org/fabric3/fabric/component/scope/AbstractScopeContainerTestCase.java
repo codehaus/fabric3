@@ -1,7 +1,7 @@
 package org.fabric3.fabric.component.scope;
 
 import junit.framework.TestCase;
-import org.fabric3.spi.model.type.Scope;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.AtomicComponent;
@@ -9,6 +9,7 @@ import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.component.TargetResolutionException;
 import org.fabric3.spi.component.TargetDestructionException;
 import org.fabric3.spi.Lifecycle;
+
 import org.easymock.EasyMock;
 
 /**

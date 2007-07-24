@@ -27,7 +27,7 @@ public interface CommandGenerator {
 
     /**
      * Generates an {@link org.fabric3.spi.command.CommandSet} based on a {@link
-     * org.fabric3.spi.model.type.ComponentDefinition}. The resulting CommandSet is added to the PhysicalChangeSet
+     * org.fabric3.scdl.ComponentDefinition}. The resulting CommandSet is added to the PhysicalChangeSet
      * associated with the current GeneratorContext.
      *
      * @param component the logical component to evaluate

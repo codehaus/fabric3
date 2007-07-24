@@ -21,7 +21,7 @@ package org.fabric3.fabric.wire;
 import org.fabric3.spi.wire.ProxyCreationException;
 
 /**
- * Thrown when an {@link org.fabric3.spi.model.type.Operation} cannot be mapped to a method on an interface
+ * Thrown when an {@link org.fabric3.scdl.Operation} cannot be mapped to a method on an interface
  * @version $Rev$ $Date$
  */
 public class NoMethodForOperationException extends ProxyCreationException {

@@ -67,7 +67,7 @@ public class ConversationProcessorTestCase extends TestCase {
         PojoComponentType type =
             new PojoComponentType();
         processor.visitClass(ImplicitFooScope.class, type, null);
-        assertEquals(org.fabric3.spi.model.type.Scope.CONVERSATION, type.getImplementationScope());
+        assertEquals(org.fabric3.scdl.Scope.CONVERSATION, type.getImplementationScope());
     }
 
     public void testBadFooScope() throws Exception {
@@ -86,7 +86,7 @@ public class ConversationProcessorTestCase extends TestCase {
         PojoComponentType type =
             new PojoComponentType();
         processor.visitClass(FooJustConversation.class, type, null);
-        assertEquals(org.fabric3.spi.model.type.Scope.CONVERSATION, type.getImplementationScope());
+        assertEquals(org.fabric3.scdl.Scope.CONVERSATION, type.getImplementationScope());
         assertEquals(-1, type.getMaxAge());
         assertEquals(-1, type.getMaxIdleTime());
     }

@@ -17,7 +17,7 @@
 package org.fabric3.fabric.assembly.store;
 
 import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.spi.model.type.CompositeImplementation;
+import org.fabric3.scdl.CompositeImplementation;
 
 /**
  * Implementations persist the logical SCA domain model

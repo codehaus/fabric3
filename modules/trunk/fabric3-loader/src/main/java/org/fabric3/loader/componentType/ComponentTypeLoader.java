@@ -35,11 +35,11 @@ import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.StAXElementLoader;
-import org.fabric3.spi.model.type.ComponentType;
-import org.fabric3.spi.model.type.ModelObject;
-import org.fabric3.spi.model.type.Property;
-import org.fabric3.spi.model.type.ReferenceDefinition;
-import org.fabric3.spi.model.type.ServiceDefinition;
+import org.fabric3.scdl.ComponentType;
+import org.fabric3.scdl.ModelObject;
+import org.fabric3.scdl.Property;
+import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.ServiceDefinition;
 
 /**
  * @version $Rev$ $Date$

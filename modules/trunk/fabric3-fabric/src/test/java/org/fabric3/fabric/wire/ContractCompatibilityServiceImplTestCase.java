@@ -24,10 +24,10 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.fabric3.spi.model.type.DataType;
-import org.fabric3.spi.model.type.Operation;
-import static org.fabric3.spi.model.type.Operation.NO_CONVERSATION;
-import org.fabric3.spi.model.type.ServiceContract;
+import org.fabric3.scdl.DataType;
+import org.fabric3.scdl.Operation;
+import org.fabric3.scdl.ServiceContract;
+import static org.fabric3.scdl.Operation.NO_CONVERSATION;
 
 /**
  * TODO some tests commented out due to DataType.equals() needing to be strict

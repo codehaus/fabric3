@@ -23,7 +23,7 @@ import javax.xml.transform.dom.DOMSource;
 
 import org.w3c.dom.Element;
 
-import org.fabric3.spi.model.type.DataType;
+import org.fabric3.scdl.DataType;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.transform.AbstractPullTransformer;

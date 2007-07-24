@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.fabric3.scdl.ResourceDescription;
+
 /**
  * Denotes a requirement on a contribution artifact.
  *

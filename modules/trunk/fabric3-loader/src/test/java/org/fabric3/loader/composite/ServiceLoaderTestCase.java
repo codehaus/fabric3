@@ -32,10 +32,10 @@ import static org.easymock.EasyMock.replay;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.model.type.BindingDefinition;
-import org.fabric3.spi.model.type.ModelObject;
-import org.fabric3.spi.model.type.ServiceContract;
-import org.fabric3.spi.model.type.ServiceDefinition;
+import org.fabric3.scdl.BindingDefinition;
+import org.fabric3.scdl.ModelObject;
+import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.ServiceDefinition;
 
 /**
  * Verifies loading of a service definition from an XML-based assembly

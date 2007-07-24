@@ -21,8 +21,8 @@ package org.fabric3.runtime.standalone.host.implementation.launched;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import org.fabric3.spi.model.type.Operation;
-import org.fabric3.spi.model.type.ServiceContract;
+import org.fabric3.scdl.Operation;
+import org.fabric3.scdl.ServiceContract;
 
 /**
  * @version $Revison$ $Date$

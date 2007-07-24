@@ -19,7 +19,7 @@
 package org.fabric3.fabric.implementation.java;
 
 import org.fabric3.pojo.processor.PojoComponentType;
-import org.fabric3.spi.model.type.Implementation;
+import org.fabric3.scdl.Implementation;
 
 /**
  * @version $$Rev$$ $$Date$$

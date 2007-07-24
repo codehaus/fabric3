@@ -22,7 +22,7 @@ import java.net.URI;
 
 import org.fabric3.fabric.assembly.ResolutionException;
 import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.spi.model.type.ServiceContract;
+import org.fabric3.scdl.ServiceContract;
 
 /**
  * Implementations are responsible for resolving wire targets and URIs in an SCA Domain, including autowires.

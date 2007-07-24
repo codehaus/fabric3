@@ -9,13 +9,13 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.Referenceable;
-import org.fabric3.spi.model.type.ComponentDefinition;
-import org.fabric3.spi.model.type.ComponentType;
-import org.fabric3.spi.model.type.CompositeComponentType;
-import org.fabric3.spi.model.type.CompositeImplementation;
-import org.fabric3.spi.model.type.Implementation;
-import org.fabric3.spi.model.type.ReferenceDefinition;
-import org.fabric3.spi.model.type.ServiceDefinition;
+import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.ComponentType;
+import org.fabric3.scdl.CompositeComponentType;
+import org.fabric3.scdl.CompositeImplementation;
+import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.ServiceDefinition;
 
 /**
  * @version $Rev$ $Date$

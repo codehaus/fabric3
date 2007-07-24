@@ -28,10 +28,10 @@ import org.easymock.EasyMock;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.model.type.BindingDefinition;
-import org.fabric3.spi.model.type.ModelObject;
-import org.fabric3.spi.model.type.ReferenceDefinition;
-import org.fabric3.spi.model.type.ServiceContract;
+import org.fabric3.scdl.BindingDefinition;
+import org.fabric3.scdl.ModelObject;
+import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.ReferenceDefinition;
 
 /**
  * Verifies loading of a reference definition from an XML-based assembly

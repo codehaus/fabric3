@@ -53,7 +53,7 @@ import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.spi.model.type.Scope;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.services.discovery.DiscoveryException;
 import org.fabric3.spi.services.discovery.DiscoveryService;
 import org.fabric3.spi.services.work.WorkScheduler;

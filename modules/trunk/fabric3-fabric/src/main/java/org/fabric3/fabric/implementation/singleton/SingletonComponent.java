@@ -33,7 +33,7 @@ import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.idl.java.JavaServiceContract;
-import org.fabric3.spi.model.type.PropertyValue;
+import org.fabric3.scdl.PropertyValue;
 
 /**
  * An {@link org.fabric3.spi.component.AtomicComponent} used when registering objects directly into a composite

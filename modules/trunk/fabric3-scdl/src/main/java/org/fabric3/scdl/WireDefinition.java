@@ -16,32 +16,29 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.model.type;
+package org.fabric3.scdl;
+
+import java.net.URI;
 
 /**
- * Enumeration for multiplicity.
+ * Represents a wire specified in an assembly
+ *
+ * @version $Rev$ $Date$
  */
-public enum Multiplicity {
-    /**
-     * Indicates a relationship that is optionally connected to the requestor and which, if supplied, must be connected
-     * to exactly one provider.
-     */
-    ZERO_ONE,
+public class WireDefinition extends ModelObject {
+    private final URI source;
+    private final URI target;
 
-    /**
-     * Indicates a relationship that must be connected between exactly one requestor and exactly one provider.
-     */
-    ONE_ONE,
+    public WireDefinition(URI source, URI target) {
+        this.source = source;
+        this.target = target;
+    }
 
-    /**
-     * Indicates a relationship that is optionally connects the requestor to zero to unbounded providers.
-     */
-    ZERO_N,
+    public URI getSource() {
+        return source;
+    }
 
-    /**
-     * Indicates a relationship that must be connected at the requestor and which connects it to zero to unbounded
-     * providers.
-     */
-    ONE_N
-
+    public URI getTarget() {
+        return target;
+    }
 }

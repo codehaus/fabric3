@@ -30,7 +30,7 @@ import org.fabric3.pojo.processor.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.model.type.Scope;
+import org.fabric3.scdl.Scope;
 
 /**
  * @version $Rev$ $Date$

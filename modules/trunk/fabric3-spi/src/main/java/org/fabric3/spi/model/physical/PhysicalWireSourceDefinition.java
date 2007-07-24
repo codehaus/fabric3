@@ -21,7 +21,7 @@ package org.fabric3.spi.model.physical;
 
 import java.net.URI;
 
-import org.fabric3.spi.model.type.ModelObject;
+import org.fabric3.scdl.ModelObject;
 
 /**
  * Represents a physical wire source definition.

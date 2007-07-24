@@ -34,7 +34,7 @@ import org.fabric3.spi.component.TargetDestructionException;
 import org.fabric3.spi.component.TargetInitializationException;
 import org.fabric3.spi.component.TargetResolutionException;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.spi.model.type.Scope;
+import org.fabric3.scdl.Scope;
 
 /**
  * A scope context which manages atomic component instances keyed by composite

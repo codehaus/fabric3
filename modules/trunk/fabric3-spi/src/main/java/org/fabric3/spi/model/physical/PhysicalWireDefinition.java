@@ -22,7 +22,7 @@ import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.fabric3.spi.model.type.ModelObject;
+import org.fabric3.scdl.ModelObject;
 
 /**
  * Model class representing the portable definition of a wire. This class is used to describe the inbound and outbound

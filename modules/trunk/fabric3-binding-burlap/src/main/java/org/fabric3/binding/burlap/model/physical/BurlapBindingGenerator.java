@@ -24,8 +24,9 @@ import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalBinding;
-import org.fabric3.spi.model.type.ReferenceDefinition;
-import org.fabric3.spi.model.type.ServiceDefinition;
+import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.ServiceDefinition;
+
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
@@ -51,7 +52,7 @@ public class BurlapBindingGenerator implements
     /**
      * @see org.fabric3.spi.generator.BindingGenerator#generateWireSource(org.fabric3.spi.model.instance.LogicalBinding,
      *      org.fabric3.spi.generator.GeneratorContext,
-     *      org.fabric3.spi.model.type.ServiceDefinition)
+     *org.fabric3.scdl.ServiceDefinition)
      */
     public BurlapWireSourceDefinition generateWireSource(LogicalBinding<BurlapBindingDefinition> logicalBinding,
                                                          GeneratorContext generatorContext,
@@ -70,7 +71,7 @@ public class BurlapBindingGenerator implements
     /**
      * @see org.fabric3.spi.generator.BindingGenerator#generateWireTarget(org.fabric3.spi.model.instance.LogicalBinding,
      *      org.fabric3.spi.generator.GeneratorContext,
-     *      org.fabric3.spi.model.type.ReferenceDefinition)
+     *org.fabric3.scdl.ReferenceDefinition)
      */
     public BurlapWireTargetDefinition generateWireTarget(LogicalBinding<BurlapBindingDefinition> logicalBinding,
                                                          GeneratorContext generatorContext,

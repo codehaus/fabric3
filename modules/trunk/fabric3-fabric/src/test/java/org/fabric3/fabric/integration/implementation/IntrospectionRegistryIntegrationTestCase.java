@@ -28,7 +28,7 @@ import org.fabric3.api.annotation.Resource;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.processor.PojoComponentType;
 import org.fabric3.pojo.instancefactory.Signature;
-import static org.fabric3.spi.model.type.Scope.COMPOSITE;
+import static org.fabric3.scdl.Scope.COMPOSITE;
 import org.fabric3.spi.component.ScopeRegistry;
 
 import junit.framework.TestCase;
@@ -68,7 +68,7 @@ public class IntrospectionRegistryIntegrationTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         ScopeRegistry scopeRegistry = EasyMock.createMock(ScopeRegistry.class);
-        EasyMock.expect(scopeRegistry.getScope("COMPOSITE")).andStubReturn(org.fabric3.spi.model.type.Scope.COMPOSITE);
+        EasyMock.expect(scopeRegistry.getScope("COMPOSITE")).andStubReturn(org.fabric3.scdl.Scope.COMPOSITE);
         EasyMock.replay(scopeRegistry);
 
         registry = new IntrospectionRegistryImpl();

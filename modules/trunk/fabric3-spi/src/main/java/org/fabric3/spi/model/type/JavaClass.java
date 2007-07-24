@@ -16,12 +16,14 @@
  */
 package org.fabric3.spi.model.type;
 
+import org.fabric3.scdl.DataType;
+
 /**
  * Specialization of DataType for Java Classes.
  *
  * @version $Rev$ $Date$
  */
-public class JavaClass<P> extends DataType<Class<P>>{
+public class JavaClass<P> extends DataType<Class<P>> {
     public JavaClass(Class<P> clazz) {
         super(clazz, clazz);
     }

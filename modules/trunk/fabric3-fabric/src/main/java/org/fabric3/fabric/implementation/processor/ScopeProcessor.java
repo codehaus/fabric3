@@ -22,13 +22,13 @@ import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.processor.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
-import org.fabric3.spi.model.type.Scope;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.component.ScopeRegistry;
 
 import org.osoa.sca.annotations.Reference;
 
 /**
- * Processes the {@link org.fabric3.spi.model.type.Scope} annotation and updates the component type with the corresponding implmentation scope
+ * Processes the {@link org.fabric3.scdl.Scope} annotation and updates the component type with the corresponding implmentation scope
  *
  * @version $Rev$ $Date$
  */

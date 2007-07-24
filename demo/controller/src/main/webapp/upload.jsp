@@ -14,10 +14,10 @@
 <%@ page import="static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI" %>
 <%@ page import="org.fabric3.spi.loader.LoaderContext" %>
 <%@ page import="org.fabric3.spi.loader.LoaderRegistry" %>
-<%@ page import="org.fabric3.spi.model.type.ComponentDefinition" %>
-<%@ page import="org.fabric3.spi.model.type.CompositeComponentType" %>
-<%@ page import="org.fabric3.spi.model.type.CompositeImplementation" %>
-<%@ page import="org.fabric3.spi.model.type.Scope" %>
+<%@ page import="org.fabric3.scdl.ComponentDefinition" %>
+<%@ page import="org.fabric3.scdl.CompositeComponentType" %>
+<%@ page import="org.fabric3.scdl.CompositeImplementation" %>
+<%@ page import="org.fabric3.scdl.Scope" %>
 <%@ page import="javax.xml.stream.XMLStreamConstants" %>
 <%--
  See the NOTICE file distributed with this work for information

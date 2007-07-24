@@ -16,7 +16,7 @@
  */
 package org.fabric3.fabric.implementation.composite;
 
-import org.fabric3.spi.model.type.CompositeImplementation;
+import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 

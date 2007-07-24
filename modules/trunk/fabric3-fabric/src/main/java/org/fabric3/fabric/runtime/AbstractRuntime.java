@@ -38,7 +38,7 @@ import org.fabric3.spi.component.Component;
 import org.fabric3.spi.component.ComponentManager;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.spi.model.type.Scope;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.services.event.RuntimeStart;
 import org.fabric3.spi.services.management.Fabric3ManagementService;

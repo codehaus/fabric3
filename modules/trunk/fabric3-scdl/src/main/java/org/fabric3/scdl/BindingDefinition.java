@@ -16,29 +16,30 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.model.type;
+package org.fabric3.scdl;
 
 import java.net.URI;
 
 /**
- * Represents a wire specified in an assembly
+ * The base representation of a binding specified in an assembly
  *
  * @version $Rev$ $Date$
  */
-public class WireDefinition extends ModelObject {
-    private final URI source;
-    private final URI target;
+public abstract class BindingDefinition extends ModelObject {
+    private URI targetUri;
 
-    public WireDefinition(URI source, URI target) {
-        this.source = source;
-        this.target = target;
+    protected BindingDefinition() {
     }
 
-    public URI getSource() {
-        return source;
+    public BindingDefinition(URI targetUri) {
+        this.targetUri = targetUri;
     }
 
-    public URI getTarget() {
-        return target;
+    public URI getTargetUri() {
+        return targetUri;
+    }
+
+    public void setTargetUri(URI targetUri) {
+        this.targetUri = targetUri;
     }
 }

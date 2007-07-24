@@ -23,7 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.fabric3.spi.model.instance.ValueSource;
-import org.fabric3.spi.model.type.ModelObject;
+import org.fabric3.scdl.ModelObject;
 
 /**
  * Base class for instance factory definitions.

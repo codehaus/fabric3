@@ -23,7 +23,7 @@ import java.util.Collections;
 import junit.framework.TestCase;
 
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.model.type.Scope;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 

@@ -29,8 +29,8 @@ import org.fabric3.spi.loader.Loader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.model.type.CompositeComponentType;
-import org.fabric3.spi.model.type.CompositeImplementation;
+import org.fabric3.scdl.CompositeComponentType;
+import org.fabric3.scdl.CompositeImplementation;
 
 /**
  * Loads a composite component type

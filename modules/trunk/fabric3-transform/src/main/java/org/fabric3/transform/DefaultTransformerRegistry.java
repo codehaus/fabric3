@@ -19,7 +19,7 @@ package org.fabric3.transform;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.fabric3.spi.model.type.DataType;
+import org.fabric3.scdl.DataType;
 import org.fabric3.spi.transform.Transformer;
 import org.fabric3.spi.transform.TransformerRegistry;
 

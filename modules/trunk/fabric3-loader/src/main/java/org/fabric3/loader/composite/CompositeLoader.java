@@ -35,16 +35,15 @@ import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.StAXElementLoader;
-import org.fabric3.spi.model.type.Autowire;
-import org.fabric3.spi.model.type.ComponentDefinition;
-import org.fabric3.spi.model.type.CompositeComponentType;
-import org.fabric3.spi.model.type.Include;
-import org.fabric3.spi.model.type.ModelObject;
-import org.fabric3.spi.model.type.Property;
-import org.fabric3.spi.model.type.ReferenceDefinition;
-import org.fabric3.spi.model.type.ServiceDefinition;
-import org.fabric3.spi.model.type.WireDefinition;
-import org.fabric3.spi.util.stax.StaxUtil;
+import org.fabric3.scdl.Autowire;
+import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.CompositeComponentType;
+import org.fabric3.scdl.Include;
+import org.fabric3.scdl.ModelObject;
+import org.fabric3.scdl.WireDefinition;
+import org.fabric3.scdl.Property;
+import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.loader.common.LoaderContextImpl;
 
 /**

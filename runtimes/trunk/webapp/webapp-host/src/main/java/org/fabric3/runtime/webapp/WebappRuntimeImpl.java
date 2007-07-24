@@ -36,8 +36,8 @@ import org.fabric3.runtime.webapp.implementation.webapp.WebappComponent;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.model.type.ComponentDefinition;
-import org.fabric3.spi.model.type.CompositeImplementation;
+import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.CompositeImplementation;
 
 /**
  * Bootstrapper for the Fabric3 runtime in a web application host. This listener manages one runtime per servlet

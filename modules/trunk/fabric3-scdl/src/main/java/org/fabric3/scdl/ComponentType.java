@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.model.type;
+package org.fabric3.scdl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +37,7 @@ import javax.xml.namespace.QName;
  * @version $Rev$ $Date$
  */
 public class ComponentType<S extends ServiceDefinition, R extends ReferenceDefinition, P extends Property<?>>
-    extends ModelObject {
+        extends ModelObject {
     private Scope<?> implementationScope;
     private int initLevel;
     private long maxAge = -1;
@@ -58,6 +58,7 @@ public class ComponentType<S extends ServiceDefinition, R extends ReferenceDefin
 
     /**
      * Sets the name of the constraining type for this component type.
+     *
      * @param constrainingType the name of the constraining type for this component type
      */
     public void setConstrainingType(QName constrainingType) {
@@ -66,6 +67,7 @@ public class ComponentType<S extends ServiceDefinition, R extends ReferenceDefin
 
     /**
      * Returns the component implementation scope.
+     *
      * @return the component implementation scope
      */
     public Scope<?> getImplementationScope() {
@@ -74,6 +76,7 @@ public class ComponentType<S extends ServiceDefinition, R extends ReferenceDefin
 
     /**
      * Sets the component implementation scope.
+     *
      * @param implementationScope the component implementation scope
      */
     public void setImplementationScope(Scope<?> implementationScope) {

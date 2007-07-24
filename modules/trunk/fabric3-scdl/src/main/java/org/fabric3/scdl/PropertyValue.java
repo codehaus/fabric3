@@ -16,21 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.model.type;
+package org.fabric3.scdl;
 
 import java.net.URI;
-
 import javax.xml.namespace.QName;
 
 import org.w3c.dom.Document;
 
 /**
- * Represents the value of a configured component property. The value can be specified:
- * <ul>
- * <li>as an XML value in the component definition</li>
- * <li>as a reference to an external resource<li>
- * <li>as the result of an XPath expression</li>
- * <ul>
+ * Represents the value of a configured component property. The value can be specified: <ul> <li>as an XML value in the
+ * component definition</li> <li>as a reference to an external resource<li> <li>as the result of an XPath
+ * expression</li> <ul>
  *
  * @version $Rev$ $Date$
  */
@@ -47,7 +43,7 @@ public class PropertyValue extends ModelObject {
     /**
      * Constructor specifying the name of a property and the XPath source expression.
      *
-     * @param name the name of the property which this value is for
+     * @param name   the name of the property which this value is for
      * @param source an XPath expression whose result will be the actual value
      */
     public PropertyValue(String name, String source) {
@@ -67,9 +63,9 @@ public class PropertyValue extends ModelObject {
     }
 
     /**
-     * @param name the name of the property
+     * @param name      the name of the property
      * @param valueType the XML type of the value
-     * @param value the property value
+     * @param value     the property value
      */
     public PropertyValue(String name, DataType<QName> valueType, Document value) {
         this.name = name;
@@ -79,6 +75,7 @@ public class PropertyValue extends ModelObject {
 
     /**
      * Returns the name of the property that this value is for.
+     *
      * @return the name of the property that this value is for
      */
     public String getName() {
@@ -87,6 +84,7 @@ public class PropertyValue extends ModelObject {
 
     /**
      * Sets the name of the property that this value is for.
+     *
      * @param name the name of the property that this value is for
      */
     public void setName(String name) {
@@ -104,6 +102,7 @@ public class PropertyValue extends ModelObject {
 
     /**
      * Sets an XPath expression that should be evaluated to get the actual property value.
+     *
      * @param source an XPath expression that should be evaluated to get the actual property value
      */
     public void setSource(String source) {
@@ -112,6 +111,7 @@ public class PropertyValue extends ModelObject {
 
     /**
      * Returns the location of the resource containing the property value.
+     *
      * @return the location of the resource containing the property value
      */
     public URI getFile() {
@@ -120,6 +120,7 @@ public class PropertyValue extends ModelObject {
 
     /**
      * Sets the location of the resource containing the property value
+     *
      * @param file the location of the resource containing the property value
      */
     public void setFile(URI file) {
@@ -128,6 +129,7 @@ public class PropertyValue extends ModelObject {
 
     /**
      * Returns the XML value of the property.
+     *
      * @return the XML value of the property
      */
     public Document getValue() {
@@ -136,6 +138,7 @@ public class PropertyValue extends ModelObject {
 
     /**
      * Sets the XML value of the property.
+     *
      * @param value the XML value of the property
      */
     public void setValue(Document value) {
@@ -144,6 +147,7 @@ public class PropertyValue extends ModelObject {
 
     /**
      * Returns the value's XML Schema type.
+     *
      * @return the value's XML Schema type
      */
     public DataType<QName> getValueType() {
@@ -152,6 +156,7 @@ public class PropertyValue extends ModelObject {
 
     /**
      * Sets the value's XML Schema type.
+     *
      * @param valueType the value's XML Schema type
      */
     public void setValueType(DataType<QName> valueType) {

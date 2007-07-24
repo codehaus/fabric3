@@ -26,10 +26,11 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.spi.model.type.ComponentDefinition;
-import org.fabric3.spi.model.type.CompositeImplementation;
-import org.fabric3.spi.model.type.Implementation;
-import org.fabric3.spi.model.type.PropertyValue;
+import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.CompositeImplementation;
+import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.PropertyValue;
+
 import org.osoa.sca.Constants;
 
 /**

@@ -24,7 +24,7 @@ import java.util.Map;
 import org.osoa.sca.ComponentContext;
 
 import org.fabric3.spi.Lifecycle;
-import org.fabric3.spi.model.type.PropertyValue;
+import org.fabric3.scdl.PropertyValue;
 
 /**
  * The runtime instantiation of an SCA component

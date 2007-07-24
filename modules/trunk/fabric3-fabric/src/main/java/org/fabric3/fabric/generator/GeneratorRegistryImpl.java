@@ -48,14 +48,14 @@ import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
-import org.fabric3.spi.model.type.BindingDefinition;
-import org.fabric3.spi.model.type.ComponentDefinition;
-import org.fabric3.spi.model.type.DataType;
-import org.fabric3.spi.model.type.Implementation;
-import org.fabric3.spi.model.type.Operation;
-import org.fabric3.spi.model.type.ReferenceDefinition;
-import org.fabric3.spi.model.type.ResourceDescription;
-import org.fabric3.spi.model.type.ServiceContract;
+import org.fabric3.scdl.BindingDefinition;
+import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.DataType;
+import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.Operation;
+import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.ResourceDescription;
+import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.policy.registry.PolicyRegistry;
 
 /**
@@ -267,7 +267,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
     }
 
     /**
-     * @see org.fabric3.spi.generator.GeneratorRegistry#generateResource(org.fabric3.spi.model.type.ResourceDescription, org.fabric3.spi.model.instance.LogicalComponent, org.fabric3.spi.generator.GeneratorContext)
+     * @see org.fabric3.spi.generator.GeneratorRegistry#generateResource(org.fabric3.scdl.ResourceDescription, org.fabric3.spi.model.instance.LogicalComponent, org.fabric3.spi.generator.GeneratorContext)
      */
     public URI generateResource(ResourceDescription description, LogicalComponent<?> component, GeneratorContext context)
             throws GenerationException {

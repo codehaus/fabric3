@@ -23,10 +23,10 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.spi.model.type.Autowire;
-import org.fabric3.spi.model.type.ComponentDefinition;
-import org.fabric3.spi.model.type.CompositeComponentType;
-import org.fabric3.spi.model.type.CompositeImplementation;
+import org.fabric3.scdl.Autowire;
+import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.CompositeComponentType;
+import org.fabric3.scdl.CompositeImplementation;
 
 /**
  * A non-persistent AssemblyStore

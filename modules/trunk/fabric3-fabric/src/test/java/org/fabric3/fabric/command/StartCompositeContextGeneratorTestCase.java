@@ -30,9 +30,9 @@ import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.spi.model.type.ComponentDefinition;
-import org.fabric3.spi.model.type.CompositeComponentType;
-import org.fabric3.spi.model.type.CompositeImplementation;
+import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.CompositeComponentType;
+import org.fabric3.scdl.CompositeImplementation;
 
 /**
  * @version $Rev$ $Date$

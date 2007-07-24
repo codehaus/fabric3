@@ -31,7 +31,7 @@ import org.w3c.dom.Document;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.StAXElementLoader;
-import org.fabric3.spi.model.type.Property;
+import org.fabric3.scdl.Property;
 
 /**
  * Loads a property declaration from an XML-based assembly file

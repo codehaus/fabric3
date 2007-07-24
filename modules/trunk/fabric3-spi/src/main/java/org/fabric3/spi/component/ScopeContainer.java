@@ -22,7 +22,7 @@ import java.net.URI;
 import java.util.List;
 
 import org.fabric3.spi.Lifecycle;
-import org.fabric3.spi.model.type.Scope;
+import org.fabric3.scdl.Scope;
 
 
 /**

@@ -19,7 +19,7 @@ package org.fabric3.transform.dom2java;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Node;
 
-import org.fabric3.spi.model.type.DataType;
+import org.fabric3.scdl.DataType;
 import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.model.type.XSDSimpleType;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;

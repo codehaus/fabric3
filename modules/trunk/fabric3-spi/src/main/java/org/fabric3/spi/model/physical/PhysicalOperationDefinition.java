@@ -23,7 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.fabric3.spi.model.type.ModelObject;
+import org.fabric3.scdl.ModelObject;
 
 /**
  * Represents an operation.

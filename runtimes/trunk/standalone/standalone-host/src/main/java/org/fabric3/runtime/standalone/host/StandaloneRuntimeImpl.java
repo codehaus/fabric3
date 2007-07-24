@@ -44,11 +44,11 @@ import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.loader.LoaderContext;
-import org.fabric3.spi.model.type.ComponentDefinition;
-import org.fabric3.spi.model.type.CompositeComponentType;
-import org.fabric3.spi.model.type.CompositeImplementation;
-import org.fabric3.spi.model.type.Implementation;
-import org.fabric3.spi.model.type.Scope;
+import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.CompositeComponentType;
+import org.fabric3.scdl.CompositeImplementation;
+import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.spi.wire.MessageImpl;
 

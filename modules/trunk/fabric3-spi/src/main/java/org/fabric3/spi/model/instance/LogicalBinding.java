@@ -20,7 +20,7 @@ package org.fabric3.spi.model.instance;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.spi.model.type.BindingDefinition;
+import org.fabric3.scdl.BindingDefinition;
 import org.osoa.sca.Constants;
 
 /**

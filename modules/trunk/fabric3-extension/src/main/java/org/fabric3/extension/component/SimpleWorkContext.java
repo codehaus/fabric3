@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.spi.model.type.Scope;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.wire.Wire;
 
 /**

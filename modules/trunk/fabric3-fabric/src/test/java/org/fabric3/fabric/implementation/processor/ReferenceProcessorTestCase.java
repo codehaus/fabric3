@@ -25,8 +25,8 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.pojo.processor.JavaMappedReference;
 import org.fabric3.pojo.processor.PojoComponentType;
-import org.fabric3.spi.model.type.Multiplicity;
-import org.fabric3.spi.model.type.ServiceContract;
+import org.fabric3.scdl.Multiplicity;
+import org.fabric3.scdl.ServiceContract;
 
 import junit.framework.TestCase;
 import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;

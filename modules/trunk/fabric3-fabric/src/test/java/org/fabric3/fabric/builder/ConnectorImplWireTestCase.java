@@ -33,7 +33,7 @@ import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
-import org.fabric3.spi.model.type.ServiceContract;
+import org.fabric3.scdl.ServiceContract;
 
 /**
  * @version $Rev$ $Date$

@@ -24,7 +24,7 @@ import org.osoa.sca.annotations.Service;
 
 import org.fabric3.pojo.processor.JavaMappedService;
 import org.fabric3.pojo.processor.PojoComponentType;
-import org.fabric3.spi.model.type.ServiceContract;
+import org.fabric3.scdl.ServiceContract;
 
 import junit.framework.TestCase;
 import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;

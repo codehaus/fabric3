@@ -45,8 +45,11 @@
     </dependencyManagement>
 
     <modules>
+        <module>../../../modules/trunk/fabric3-scdl</module>
         <module>../../../modules/trunk/fabric3-spi</module>
         <module>../../../modules/trunk/fabric3-extension</module>
+        <module>../../../modules/trunk/fabric3-transform</module>
+        <module>../../../modules/trunk/fabric3-pojo</module>
         <module>../../../modules/trunk/fabric3-loader</module>
         <module>../../../modules/trunk/fabric3-fabric</module>
 

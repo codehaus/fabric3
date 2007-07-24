@@ -52,7 +52,7 @@ import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.spi.model.type.Scope;
+import org.fabric3.scdl.Scope;
 
 /**
  * Implementation of a coordinator for the iTest runtime.

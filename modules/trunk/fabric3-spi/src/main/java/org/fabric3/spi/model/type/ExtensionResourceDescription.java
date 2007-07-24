@@ -18,6 +18,8 @@ package org.fabric3.spi.model.type;
 
 import javax.xml.namespace.QName;
 
+import org.fabric3.scdl.ResourceDescription;
+
 /**
  * Denotes a requirement on or availability of an extension capability.
  *

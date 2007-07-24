@@ -28,7 +28,7 @@ import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.InstanceWrapperStore;
 import org.fabric3.spi.component.TargetResolutionException;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.spi.model.type.Scope;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.ObjectCreationException;
 
 /**

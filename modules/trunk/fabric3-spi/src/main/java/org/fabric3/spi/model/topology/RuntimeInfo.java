@@ -27,7 +27,7 @@ import java.util.Set;
 import javax.xml.namespace.QName;
 
 import org.fabric3.spi.Constants;
-import org.fabric3.spi.model.type.ResourceDescription;
+import org.fabric3.scdl.ResourceDescription;
 
 /**
  * Tracks information regarding a runtime service node, including available capabilities and resources

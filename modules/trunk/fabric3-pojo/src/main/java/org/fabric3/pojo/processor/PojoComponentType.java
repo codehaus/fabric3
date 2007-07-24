@@ -23,7 +23,7 @@ import java.util.Map;
 
 import org.fabric3.pojo.instancefactory.MemberSite;
 import org.fabric3.pojo.instancefactory.Signature;
-import org.fabric3.spi.model.type.ComponentType;
+import org.fabric3.scdl.ComponentType;
 
 /**
  * A component type specialization for POJO implementations

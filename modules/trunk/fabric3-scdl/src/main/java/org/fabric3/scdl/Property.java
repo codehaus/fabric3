@@ -16,13 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.model.type;
+package org.fabric3.scdl;
 
 import javax.xml.namespace.QName;
 
 import org.w3c.dom.Document;
-
-import org.fabric3.spi.ObjectFactory;
 
 /**
  * A component property as declared in the component type.
@@ -38,7 +36,6 @@ public class Property<T> extends ModelObject {
     private Class<T> javaType;
 
     private Document defaultValue;
-    private ObjectFactory<T> defaultValueFactory;
 
     public Property() {
     }
@@ -101,14 +98,6 @@ public class Property<T> extends ModelObject {
      */
     public void setRequired(boolean required) {
         this.required = required;
-    }
-
-    public ObjectFactory<T> getDefaultValueFactory() {
-        return defaultValueFactory;
-    }
-
-    public void setDefaultValueFactory(ObjectFactory<T> factory) {
-        this.defaultValueFactory = factory;
     }
 
     public QName getXmlType() {

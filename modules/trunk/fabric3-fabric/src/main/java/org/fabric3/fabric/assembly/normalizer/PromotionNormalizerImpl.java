@@ -8,7 +8,7 @@ import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
-import org.fabric3.spi.model.type.CompositeImplementation;
+import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.model.type.SCABindingDefinition;
 import org.fabric3.spi.util.UriHelper;
 

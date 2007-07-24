@@ -20,8 +20,8 @@ package org.fabric3.spi.model.physical;
 
 import java.net.URI;
 
-import org.fabric3.spi.model.type.ModelObject;
-import org.fabric3.spi.model.type.Scope;
+import org.fabric3.scdl.ModelObject;
+import org.fabric3.scdl.Scope;
 
 /**
  * Represents a physical component model.

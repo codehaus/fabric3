@@ -16,14 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.model.type;
+package org.fabric3.scdl;
 
 import java.net.URL;
 import javax.xml.namespace.QName;
 
 /**
  * Model object that represents the include of a composite by value.
- * 
+ *
  * @version $Rev$ $Date$
  */
 public class Include extends ModelObject {
@@ -33,6 +33,7 @@ public class Include extends ModelObject {
 
     /**
      * Returns the name of the composite that is being included.
+     *
      * @return the name of the composite that is being included
      */
     public QName getName() {
@@ -41,6 +42,7 @@ public class Include extends ModelObject {
 
     /**
      * Sets the name of the composite that is being included.
+     *
      * @param name the name of the composite that is being included
      */
     public void setName(QName name) {
@@ -49,6 +51,7 @@ public class Include extends ModelObject {
 
     /**
      * Returns the location of the SCDL for composite being included.
+     *
      * @return the location of the SCDL for composite being included
      */
     public URL getScdlLocation() {
@@ -57,6 +60,7 @@ public class Include extends ModelObject {
 
     /**
      * Sets the location of the SCDL for composite being included.
+     *
      * @param scdlLocation the location of the SCDL for composite being included
      */
     public void setScdlLocation(URL scdlLocation) {
@@ -65,6 +69,7 @@ public class Include extends ModelObject {
 
     /**
      * Returns the composite that was included.
+     *
      * @return the composite that was included
      */
     public CompositeComponentType getIncluded() {
@@ -73,6 +78,7 @@ public class Include extends ModelObject {
 
     /**
      * Sets the composite that was included.
+     *
      * @param included the composite that was included
      */
     public void setIncluded(CompositeComponentType included) {

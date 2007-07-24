@@ -10,7 +10,7 @@ import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.spi.model.type.Implementation;
+import org.fabric3.scdl.Implementation;
 
 /**
  * @version $Rev$ $Date$

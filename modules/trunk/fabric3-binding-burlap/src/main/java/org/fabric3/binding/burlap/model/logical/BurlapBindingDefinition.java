@@ -18,7 +18,7 @@
  */
 package org.fabric3.binding.burlap.model.logical;
 
-import org.fabric3.spi.model.type.BindingDefinition;
+import org.fabric3.scdl.BindingDefinition;
 
 /**
  * @version $Revision$ $Date$

@@ -26,7 +26,7 @@ import org.w3c.dom.NodeList;
 import org.fabric3.transform.AbstractPullTransformer;
 import org.fabric3.spi.model.type.XSDSimpleType;
 import org.fabric3.spi.model.type.JavaClass;
-import org.fabric3.spi.model.type.DataType;
+import org.fabric3.scdl.DataType;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.TransformContext;
 

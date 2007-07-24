@@ -27,15 +27,15 @@ import org.fabric3.fabric.assembly.ResolutionException;
 import org.fabric3.fabric.assembly.UnspecifiedTargetException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
-import org.fabric3.spi.model.type.Autowire;
-import org.fabric3.spi.model.type.ComponentDefinition;
-import org.fabric3.spi.model.type.ComponentType;
-import org.fabric3.spi.model.type.CompositeComponentType;
-import org.fabric3.spi.model.type.Implementation;
-import org.fabric3.spi.model.type.ReferenceDefinition;
-import org.fabric3.spi.model.type.ComponentReference;
-import org.fabric3.spi.model.type.ServiceContract;
-import org.fabric3.spi.model.type.ServiceDefinition;
+import org.fabric3.scdl.Autowire;
+import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.ComponentType;
+import org.fabric3.scdl.CompositeComponentType;
+import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.ComponentReference;
+import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.util.UriHelper;
 
 /**

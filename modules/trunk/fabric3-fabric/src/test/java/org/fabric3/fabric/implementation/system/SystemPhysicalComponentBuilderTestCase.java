@@ -28,7 +28,7 @@ import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.model.type.Scope;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 
 /**

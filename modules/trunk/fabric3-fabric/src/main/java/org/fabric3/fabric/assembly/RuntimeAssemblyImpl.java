@@ -35,8 +35,8 @@ import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.Referenceable;
-import org.fabric3.spi.model.type.ComponentDefinition;
-import org.fabric3.spi.model.type.CompositeImplementation;
+import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.util.UriHelper;
 

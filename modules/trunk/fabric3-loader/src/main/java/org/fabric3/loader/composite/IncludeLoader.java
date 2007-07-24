@@ -35,8 +35,8 @@ import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.MissingResourceException;
 import org.fabric3.spi.loader.StAXElementLoader;
-import org.fabric3.spi.model.type.CompositeComponentType;
-import org.fabric3.spi.model.type.Include;
+import org.fabric3.scdl.CompositeComponentType;
+import org.fabric3.scdl.Include;
 
 /**
  * Loader that handles &lt;include&gt; elements.

@@ -21,8 +21,8 @@ package org.fabric3.pojo.processor;
 import java.lang.reflect.Member;
 import java.net.URI;
 
-import org.fabric3.spi.model.type.ReferenceDefinition;
-import org.fabric3.spi.model.type.ServiceContract;
+import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.ServiceContract;
 
 /**
  * A ReferenceDefinition definition that is mapped to a specific location in the implementation class. This location

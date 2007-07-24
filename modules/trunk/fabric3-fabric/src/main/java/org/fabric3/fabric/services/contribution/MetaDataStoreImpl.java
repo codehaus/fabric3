@@ -41,7 +41,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.fabric.services.xstream.XStreamFactory;
 import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.host.runtime.HostInfo;
-import org.fabric3.spi.model.type.ModelObject;
+import org.fabric3.scdl.ModelObject;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionStoreRegistry;
 import org.fabric3.spi.services.contribution.Export;

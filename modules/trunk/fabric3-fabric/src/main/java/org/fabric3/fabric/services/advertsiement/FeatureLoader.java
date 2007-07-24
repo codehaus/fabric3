@@ -34,10 +34,10 @@ import org.fabric3.pojo.processor.PojoComponentType;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.model.type.ComponentDefinition;
-import org.fabric3.spi.model.type.Implementation;
-import org.fabric3.spi.model.type.Property;
-import org.fabric3.spi.model.type.Scope;
+import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.Property;
+import org.fabric3.scdl.Scope;
 
 import org.osoa.sca.annotations.Reference;
 

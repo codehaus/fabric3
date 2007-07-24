@@ -31,7 +31,7 @@ import org.osoa.sca.annotations.Remotable;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.processor.JavaMappedService;
 import org.fabric3.pojo.processor.PojoComponentType;
-import org.fabric3.spi.model.type.ServiceContract;
+import org.fabric3.scdl.ServiceContract;
 
 import junit.framework.TestCase;
 import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
@@ -75,7 +75,7 @@ public class ImplementationProcessorServiceTestCase extends TestCase {
             0,
             type,
             injectionNames);
-        org.fabric3.spi.model.type.Property<?> property = type.getProperties().get("foo");
+        org.fabric3.scdl.Property<?> property = type.getProperties().get("foo");
         assertEquals(int.class, property.getJavaType());
     }
 

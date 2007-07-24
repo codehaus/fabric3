@@ -30,7 +30,7 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.spi.model.type.DataType;
+import org.fabric3.scdl.DataType;
 import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.transform.AbstractPushTransformer;
 import org.w3c.dom.Document;

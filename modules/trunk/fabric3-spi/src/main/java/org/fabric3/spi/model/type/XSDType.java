@@ -20,12 +20,14 @@ import java.lang.reflect.Type;
 import javax.xml.namespace.QName;
 import javax.xml.XMLConstants;
 
+import org.fabric3.scdl.DataType;
+
 /**
  * Specialization of DataType representing types from the XML Schema type system.
  *
  * @version $Rev$ $Date$
  */
-public abstract class XSDType extends DataType<QName>{
+public abstract class XSDType extends DataType<QName> {
     public static final String XSD_NS = XMLConstants.W3C_XML_SCHEMA_NS_URI;
 
     protected XSDType(Type physical, QName logical) {

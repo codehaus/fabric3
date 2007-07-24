@@ -22,7 +22,8 @@ import java.net.URI;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.spi.model.type.ServiceDefinition;
+import org.fabric3.scdl.ServiceDefinition;
+
 import org.osoa.sca.Constants;
 
 /**

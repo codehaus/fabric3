@@ -21,7 +21,7 @@ package org.fabric3.pojo.processor;
 import java.lang.reflect.Member;
 import javax.xml.namespace.QName;
 
-import org.fabric3.spi.model.type.Property;
+import org.fabric3.scdl.Property;
 
 /**
  * A Property definition that is mapped to a specific location in the implementation class. This location will typically

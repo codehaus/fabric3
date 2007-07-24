@@ -41,11 +41,11 @@ import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.loader.UnrecognizedElementException;
-import org.fabric3.spi.model.type.BindingDefinition;
-import org.fabric3.spi.model.type.ModelObject;
-import org.fabric3.spi.model.type.Multiplicity;
-import org.fabric3.spi.model.type.ReferenceDefinition;
-import org.fabric3.spi.model.type.ServiceContract;
+import org.fabric3.scdl.BindingDefinition;
+import org.fabric3.scdl.ModelObject;
+import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.Multiplicity;
+import org.fabric3.scdl.ReferenceDefinition;
 
 /**
  * Loads a reference from an XML-based assembly file

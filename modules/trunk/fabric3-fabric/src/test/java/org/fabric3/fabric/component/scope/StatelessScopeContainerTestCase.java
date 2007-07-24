@@ -25,7 +25,7 @@ import org.easymock.IMocksControl;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.spi.model.type.Scope;
+import org.fabric3.scdl.Scope;
 import org.fabric3.host.monitor.MonitorFactory;
 
 /**

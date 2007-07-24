@@ -28,7 +28,7 @@ import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.pojo.processor.JavaMappedProperty;
 import org.fabric3.pojo.processor.JavaMappedReference;
 import org.fabric3.pojo.processor.PojoComponentType;
-import org.fabric3.spi.model.type.ServiceContract;
+import org.fabric3.scdl.ServiceContract;
 
 import junit.framework.TestCase;
 import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;

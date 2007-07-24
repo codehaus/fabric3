@@ -36,10 +36,10 @@ import org.fabric3.spi.idl.OverloadedOperationException;
 import org.fabric3.spi.idl.java.JavaInterfaceProcessor;
 import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
 import org.fabric3.spi.idl.java.JavaServiceContract;
-import org.fabric3.spi.model.type.DataType;
-import org.fabric3.spi.model.type.Operation;
-import static org.fabric3.spi.model.type.Operation.CONVERSATION_END;
-import static org.fabric3.spi.model.type.Operation.NO_CONVERSATION;
+import org.fabric3.scdl.DataType;
+import org.fabric3.scdl.Operation;
+import static org.fabric3.scdl.Operation.CONVERSATION_END;
+import static org.fabric3.scdl.Operation.NO_CONVERSATION;
 
 /**
  * Default implementation of an InterfaceJavaIntrospector.

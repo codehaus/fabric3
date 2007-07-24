@@ -34,8 +34,8 @@ import org.fabric3.spi.loader.InvalidValueException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.StAXElementLoader;
-import org.fabric3.spi.model.type.DataType;
-import org.fabric3.spi.model.type.PropertyValue;
+import org.fabric3.scdl.DataType;
+import org.fabric3.scdl.PropertyValue;
 import org.fabric3.spi.model.type.XSDSimpleType;
 import org.fabric3.transform.xml.Stream2Element2;
 

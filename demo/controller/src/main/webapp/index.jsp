@@ -5,7 +5,7 @@
 <%@ page import="org.fabric3.runtime.webapp.WebappRuntimeImpl" %>
 <%@ page import="org.fabric3.spi.model.instance.LogicalComponent" %>
 <%@ page import="org.fabric3.spi.model.topology.RuntimeInfo" %>
-<%@ page import="org.fabric3.spi.model.type.CompositeImplementation" %>
+<%@ page import="org.fabric3.scdl.CompositeImplementation" %>
 <%@ page import="org.fabric3.spi.services.discovery.DiscoveryService" %>
 <%--
  See the NOTICE file distributed with this work for information

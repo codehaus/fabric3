@@ -203,7 +203,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
         Constructor<PropertyIntTypeOnConstructor> ctor = PropertyIntTypeOnConstructor.class.getConstructor(int.class);
         type.setConstructorDefinition(new ConstructorDefinition<PropertyIntTypeOnConstructor>(ctor));
         processor.visitEnd(ProtectedRemotableRefMethodImpl.class, type, null);
-        org.fabric3.spi.model.type.Property<?> foo = type.getProperties().get("foo");
+        org.fabric3.scdl.Property<?> foo = type.getProperties().get("foo");
         assertEquals(int.class, foo.getJavaType());
     }
 

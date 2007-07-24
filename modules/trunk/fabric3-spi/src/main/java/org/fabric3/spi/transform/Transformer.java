@@ -16,7 +16,7 @@
  */
 package org.fabric3.spi.transform;
 
-import org.fabric3.spi.model.type.DataType;
+import org.fabric3.scdl.DataType;
 
 /**
  * @version $Rev$ $Date$

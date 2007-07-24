@@ -40,15 +40,6 @@ public class AbstractPropertyProcessorTestCase extends TestCase {
     private ImplementationProcessor processor;
 
 
-    public void testVisitMethod() throws Exception {
-        Method method = Foo.class.getMethod("setBar", String.class);
-        PojoComponentType type =
-            new PojoComponentType();
-        processor.visitMethod(method, type, null);
-        JavaMappedProperty<?> prop = type.getProperties().get("test");
-        assertNotNull(prop.getDefaultValueFactory());
-    }
-
     public void testVisitNoParamsMethod() throws Exception {
         Method method = Foo.class.getMethod("setNoParamsBar");
         PojoComponentType type =
@@ -84,15 +75,6 @@ public class AbstractPropertyProcessorTestCase extends TestCase {
         } catch (DuplicatePropertyException e) {
             //expected
         }
-    }
-
-    public void testVisitField() throws Exception {
-        Field field = Foo.class.getDeclaredField("d");
-        PojoComponentType type =
-            new PojoComponentType();
-        processor.visitField(field, type, null);
-        JavaMappedProperty<?> prop = type.getProperties().get("test");
-        assertNotNull(prop.getDefaultValueFactory());
     }
 
     public void testVisitConstructor() throws Exception {
@@ -135,7 +117,6 @@ public class AbstractPropertyProcessorTestCase extends TestCase {
         protected <T> void initProperty(JavaMappedProperty<T> property,
                                         Bar annotation,
                                         LoaderContext context) {
-            property.setDefaultValueFactory(EasyMock.createMock(ObjectFactory.class));
             property.setName("test");
         }
 

@@ -43,8 +43,8 @@ import org.fabric3.pojo.processor.JavaMappedReference;
 import org.fabric3.pojo.processor.JavaMappedService;
 import org.fabric3.pojo.processor.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
-import org.fabric3.spi.model.type.Multiplicity;
-import org.fabric3.spi.model.type.ServiceContract;
+import org.fabric3.scdl.Multiplicity;
+import org.fabric3.scdl.ServiceContract;
 
 /**
  * The default implementation of an <code>ImplementationProcessorService</code>

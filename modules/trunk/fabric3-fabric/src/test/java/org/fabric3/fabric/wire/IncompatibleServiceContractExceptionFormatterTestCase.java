@@ -21,12 +21,13 @@ package org.fabric3.fabric.wire;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import org.fabric3.spi.model.type.Operation;
-import org.fabric3.spi.model.type.ServiceContract;
+import org.fabric3.scdl.Operation;
+import org.fabric3.scdl.ServiceContract;
 import org.fabric3.fabric.wire.IncompatibleServiceContractException;
 
 import junit.framework.TestCase;
 import org.fabric3.host.monitor.FormatterRegistry;
+
 import org.easymock.EasyMock;
 
 /**

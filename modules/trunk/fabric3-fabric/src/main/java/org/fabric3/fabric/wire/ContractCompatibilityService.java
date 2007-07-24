@@ -18,7 +18,7 @@
  */
 package org.fabric3.fabric.wire;
 
-import org.fabric3.spi.model.type.ServiceContract;
+import org.fabric3.scdl.ServiceContract;
 import org.fabric3.fabric.wire.IncompatibleServiceContractException;
 
 /**

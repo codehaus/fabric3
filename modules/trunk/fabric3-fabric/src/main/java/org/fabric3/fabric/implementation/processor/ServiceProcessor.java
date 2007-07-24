@@ -35,7 +35,7 @@ import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.processor.PojoComponentType;
 import org.fabric3.pojo.processor.JavaMappedService;
 import org.fabric3.spi.loader.LoaderContext;
-import org.fabric3.spi.model.type.ServiceContract;
+import org.fabric3.scdl.ServiceContract;
 
 /**
  * Processes an {@link org.osoa.sca.annotations.Service} annotation and updates the component type with corresponding

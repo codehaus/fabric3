@@ -26,8 +26,8 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.monitor.ExceptionFormatter;
 import org.fabric3.host.monitor.FormatterRegistry;
-import org.fabric3.spi.model.type.Operation;
-import org.fabric3.spi.model.type.ServiceContract;
+import org.fabric3.scdl.Operation;
+import org.fabric3.scdl.ServiceContract;
 import org.fabric3.extension.monitor.FormatterHelper;
 
 /**

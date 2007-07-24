@@ -34,10 +34,10 @@ import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.MissingResourceException;
-import org.fabric3.spi.model.type.DataType;
-import org.fabric3.spi.model.type.Operation;
-import org.fabric3.spi.model.type.Scope;
-import org.fabric3.spi.model.type.ServiceContract;
+import org.fabric3.scdl.DataType;
+import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.Operation;
+import org.fabric3.scdl.Scope;
 
 /**
  * @version $Revision$ $Date$

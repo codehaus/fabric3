@@ -28,7 +28,7 @@ import org.apache.maven.surefire.report.ReportEntry;
 import org.apache.maven.surefire.report.StackTraceWriter;
 import org.apache.maven.surefire.report.PojoStackTraceWriter;
 
-import org.fabric3.spi.model.type.Operation;
+import org.fabric3.scdl.Operation;
 
 /**
  * @version $Rev$ $Date$

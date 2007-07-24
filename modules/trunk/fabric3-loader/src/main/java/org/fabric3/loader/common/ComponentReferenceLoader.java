@@ -28,7 +28,7 @@ import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.loader.LoaderUtil;
-import org.fabric3.spi.model.type.ComponentReference;
+import org.fabric3.scdl.ComponentReference;
 
 /**
  * Loads a reference from an XML-based assembly file

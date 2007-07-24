@@ -28,7 +28,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.topology.RuntimeInfo;
-import org.fabric3.spi.model.type.CompositeImplementation;
+import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.services.discovery.DiscoveryService;
 
 /**

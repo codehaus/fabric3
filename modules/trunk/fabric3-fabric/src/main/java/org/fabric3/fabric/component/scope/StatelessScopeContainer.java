@@ -29,7 +29,7 @@ import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.TargetDestructionException;
 import org.fabric3.spi.component.TargetResolutionException;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.spi.model.type.Scope;
+import org.fabric3.scdl.Scope;
 
 /**
  * A scope context which manages stateless atomic component instances in a non-pooled fashion.

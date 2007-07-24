@@ -37,10 +37,10 @@ import org.fabric3.spi.model.instance.ValueSource;
 import static org.fabric3.spi.model.instance.ValueSource.ValueSourceType.PROPERTY;
 import static org.fabric3.spi.model.instance.ValueSource.ValueSourceType.REFERENCE;
 import static org.fabric3.spi.model.instance.ValueSource.ValueSourceType.SERVICE;
-import org.fabric3.spi.model.type.ComponentDefinition;
-import org.fabric3.spi.model.type.Implementation;
-import org.fabric3.spi.model.type.Property;
-import org.fabric3.spi.model.type.PropertyValue;
+import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.Property;
+import org.fabric3.scdl.PropertyValue;
 
 /**
  * @version $Rev$ $Date$

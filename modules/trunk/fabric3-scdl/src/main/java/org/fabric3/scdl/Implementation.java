@@ -16,25 +16,28 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.model.type;
-
-import java.net.URL;
-import javax.xml.namespace.QName;
+package org.fabric3.scdl;
 
 /**
- * A specialization of an implementation associated with composite components
+ * Represents a component implementation
  *
  * @version $Rev$ $Date$
  */
-public class CompositeImplementation extends Implementation<CompositeComponentType> {
-    private QName name;
+public abstract class Implementation<T extends ComponentType> extends ModelObject {
+    private T componentType;
 
-    public QName getName() {
-        return name;
+    protected Implementation() {
     }
 
-    public void setName(QName name) {
-        this.name = name;
+    protected Implementation(T componentType) {
+        this.componentType = componentType;
     }
 
+    public T getComponentType() {
+        return componentType;
+    }
+
+    public void setComponentType(T componentType) {
+        this.componentType = componentType;
+    }
 }

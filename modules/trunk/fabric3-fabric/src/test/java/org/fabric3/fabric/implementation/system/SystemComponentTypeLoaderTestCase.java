@@ -36,9 +36,9 @@ import org.fabric3.fabric.monitor.NullMonitorFactory;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.processor.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
-import org.fabric3.spi.model.type.Property;
-import org.fabric3.spi.model.type.ReferenceDefinition;
-import org.fabric3.spi.model.type.ServiceDefinition;
+import org.fabric3.scdl.Property;
+import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.ServiceDefinition;
 
 /**
  * @version $Rev$ $Date$

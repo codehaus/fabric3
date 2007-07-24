@@ -28,9 +28,9 @@ import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.spi.model.type.ComponentType;
-import org.fabric3.spi.model.type.CompositeComponentType;
-import org.fabric3.spi.model.type.Implementation;
+import org.fabric3.scdl.ComponentType;
+import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.CompositeComponentType;
 
 /**
  * Generates a command to start the composite context on a service node. Child composite contexts will also be started

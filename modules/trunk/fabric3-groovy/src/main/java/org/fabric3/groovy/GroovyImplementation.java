@@ -17,7 +17,7 @@
 package org.fabric3.groovy;
 
 import org.fabric3.pojo.processor.PojoComponentType;
-import org.fabric3.spi.model.type.Implementation;
+import org.fabric3.scdl.Implementation;
 
 /**
  * A component implemented in Groovy. The implementation can be a script in source or compiled form.

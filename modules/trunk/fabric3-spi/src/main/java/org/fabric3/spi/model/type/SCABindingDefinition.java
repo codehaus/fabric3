@@ -16,6 +16,8 @@
  */
 package org.fabric3.spi.model.type;
 
+import org.fabric3.scdl.BindingDefinition;
+
 /**
  * Represents the SCA binding
  *

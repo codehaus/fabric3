@@ -24,7 +24,7 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.spi.model.type.ModelObject;
+import org.fabric3.scdl.ModelObject;
 
 /**
  * Model object that represents a policy set.

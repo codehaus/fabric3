@@ -37,7 +37,7 @@ import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.loader.MissingResourceException;
 import org.fabric3.pojo.processor.Introspector;
 import org.fabric3.pojo.processor.PojoComponentType;
-import org.fabric3.spi.model.type.Scope;
+import org.fabric3.scdl.Scope;
 
 /**
  * @version $Rev$ $Date$

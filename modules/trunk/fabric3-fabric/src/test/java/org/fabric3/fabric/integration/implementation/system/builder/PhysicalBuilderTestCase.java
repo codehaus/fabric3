@@ -59,7 +59,7 @@ import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.model.instance.ValueSource;
 import org.fabric3.spi.model.physical.PhysicalChangeSet;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
-import org.fabric3.spi.model.type.Scope;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 
 /**

@@ -16,30 +16,32 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.model.type;
-
-import java.net.URI;
+package org.fabric3.scdl;
 
 /**
- * The base representation of a binding specified in an assembly
- *
- * @version $Rev$ $Date$
+ * Enumeration for multiplicity.
  */
-public abstract class BindingDefinition extends ModelObject {
-    private URI targetUri;
+public enum Multiplicity {
+    /**
+     * Indicates a relationship that is optionally connected to the requestor and which, if supplied, must be connected
+     * to exactly one provider.
+     */
+    ZERO_ONE,
 
-    protected BindingDefinition() {
-    }
+    /**
+     * Indicates a relationship that must be connected between exactly one requestor and exactly one provider.
+     */
+    ONE_ONE,
 
-    public BindingDefinition(URI targetUri) {
-        this.targetUri = targetUri;
-    }
+    /**
+     * Indicates a relationship that is optionally connects the requestor to zero to unbounded providers.
+     */
+    ZERO_N,
 
-    public URI getTargetUri() {
-        return targetUri;
-    }
+    /**
+     * Indicates a relationship that must be connected at the requestor and which connects it to zero to unbounded
+     * providers.
+     */
+    ONE_N
 
-    public void setTargetUri(URI targetUri) {
-        this.targetUri = targetUri;
-    }
 }

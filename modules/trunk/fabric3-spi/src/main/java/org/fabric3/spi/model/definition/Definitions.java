@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.fabric3.spi.model.type.ModelObject;
+import org.fabric3.scdl.ModelObject;
 
 /**
  * @version $Revision$ $Date$

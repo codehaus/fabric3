@@ -36,7 +36,7 @@ import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
-import org.fabric3.spi.model.type.ComponentDefinition;
+import org.fabric3.scdl.ComponentDefinition;
 
 /**
  * Generates a JavaComponentDefinition from a ComponentDefinition corresponding to a Java component implementation

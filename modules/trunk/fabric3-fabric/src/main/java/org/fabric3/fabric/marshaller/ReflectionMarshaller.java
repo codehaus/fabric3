@@ -38,7 +38,7 @@ import javax.xml.stream.XMLStreamWriter;
 import org.fabric3.spi.marshaller.MarshalException;
 import org.fabric3.spi.marshaller.Marshaller;
 import org.fabric3.spi.marshaller.MarshallerRegistry;
-import org.fabric3.spi.model.type.ModelObject;
+import org.fabric3.scdl.ModelObject;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;

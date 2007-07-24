@@ -34,9 +34,9 @@ import org.fabric3.fabric.services.xstream.XStreamFactory;
 import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.spi.model.type.ComponentDefinition;
-import org.fabric3.spi.model.type.CompositeComponentType;
-import org.fabric3.spi.model.type.CompositeImplementation;
+import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.CompositeComponentType;
+import org.fabric3.scdl.CompositeImplementation;
 
 /**
  * Default implementation of the AssemblyStore that persists the logical domain model to disk. The implementation

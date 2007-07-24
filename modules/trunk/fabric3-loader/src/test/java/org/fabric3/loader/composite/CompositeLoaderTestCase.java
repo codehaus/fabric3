@@ -27,8 +27,8 @@ import org.easymock.EasyMock;
 import static org.osoa.sca.Constants.SCA_NS;
 
 import org.fabric3.spi.loader.LoaderContext;
-import org.fabric3.spi.model.type.Autowire;
-import org.fabric3.spi.model.type.CompositeComponentType;
+import org.fabric3.scdl.Autowire;
+import org.fabric3.scdl.CompositeComponentType;
 
 /**
  * @version $Rev$ $Date$

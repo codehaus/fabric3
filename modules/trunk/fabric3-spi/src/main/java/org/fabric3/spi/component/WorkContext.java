@@ -20,7 +20,7 @@ package org.fabric3.spi.component;
 
 import java.util.LinkedList;
 
-import org.fabric3.spi.model.type.Scope;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.wire.Wire;
 
 /**

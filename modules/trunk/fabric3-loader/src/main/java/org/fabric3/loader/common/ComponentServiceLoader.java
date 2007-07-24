@@ -26,10 +26,10 @@ import javax.xml.stream.XMLStreamConstants;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.Constants;
 
-import org.fabric3.spi.model.type.ServiceDefinition;
-import org.fabric3.spi.model.type.ModelObject;
-import org.fabric3.spi.model.type.ServiceContract;
-import org.fabric3.spi.model.type.BindingDefinition;
+import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.scdl.ModelObject;
+import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderContext;
