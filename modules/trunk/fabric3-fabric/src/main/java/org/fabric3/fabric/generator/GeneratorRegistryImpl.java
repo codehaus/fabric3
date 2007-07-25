@@ -153,12 +153,8 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
 
         ServiceContract<?> contract = service.getDefinition().getServiceContract();
         
-        Set<QName> interceptorBuilders = new HashSet<QName>();
-        if(policyRegistry != null) {
-            interceptorBuilders = policyRegistry.getInterceptorBuilders(binding);
-        }
-        
-        PhysicalWireDefinition wireDefinition = createWireDefinition(contract, context, interceptorBuilders);
+        // TODO Get the policy set extensions from the policy registry
+        PhysicalWireDefinition wireDefinition = createWireDefinition(contract, context, null);
         
         Class<?> type = component.getDefinition().getImplementation().getClass();
         ComponentGenerator<C> targetGenerator = (ComponentGenerator<C>) componentGenerators.get(type);
@@ -200,12 +196,9 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
 
         ServiceContract<?> contract = reference.getDefinition().getServiceContract();
         
-        Set<QName> interceptorBuilders = new HashSet<QName>();
-        if(policyRegistry != null) {
-            interceptorBuilders = policyRegistry.getInterceptorBuilders(binding);
-        }
+        // TODO Get the policy set extensions from the policy registry
+        PhysicalWireDefinition wireDefinition = createWireDefinition(contract, context, null);
         
-        PhysicalWireDefinition wireDefinition = createWireDefinition(contract, context, interceptorBuilders);
         Class<?> type = binding.getBinding().getClass();
         BindingGenerator targetGenerator = bindingGenerators.get(type);
         if (targetGenerator == null) {
@@ -241,13 +234,9 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         ReferenceDefinition referenceDefinition = reference.getDefinition();
         ServiceContract<?> contract = referenceDefinition.getServiceContract();
         
-        Set<QName> interceptorBuilders = new HashSet<QName>();
-        if(policyRegistry != null) {
-            interceptorBuilders = policyRegistry.getInterceptorBuilders(service);
-            interceptorBuilders.addAll(policyRegistry.getInterceptorBuilders(reference));
-        }
-        
-        PhysicalWireDefinition wireDefinition = createWireDefinition(contract, context, interceptorBuilders);
+        // TODO Get the policy set extensions from the policy registry
+        PhysicalWireDefinition wireDefinition = createWireDefinition(contract, context, null);
+
         Class<?> type = target.getDefinition().getImplementation().getClass();
         ComponentGenerator<T> targetGenerator = (ComponentGenerator<T>) componentGenerators.get(type);
         if (targetGenerator == null) {
@@ -363,15 +352,15 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
     }
 
     @SuppressWarnings({"unchecked"})
-    private PhysicalWireDefinition createWireDefinition(ServiceContract<?> contract, GeneratorContext context, Set<QName> interceptorBuilders)
+    private PhysicalWireDefinition createWireDefinition(ServiceContract<?> contract, GeneratorContext context, Set<PhysicalInterceptorDefinition> interceptorDefinitions)
             throws GenerationException {
         
         PhysicalWireDefinition wireDefinition = new PhysicalWireDefinition();
         for (Operation o : contract.getOperations()) {
             PhysicalOperationDefinition physicalOperation = mapOperation(o);
             wireDefinition.addOperation(physicalOperation);
-            for(QName interceptorBuilder : interceptorBuilders) {
-                physicalOperation.addInterceptor(new PhysicalInterceptorDefinition(interceptorBuilder));
+            for(PhysicalInterceptorDefinition interceptorDefinition : interceptorDefinitions) {
+                //TODO Call the interceptor generator
             }
         }
         

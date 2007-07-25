@@ -20,9 +20,6 @@ package org.fabric3.fabric.wire;
 
 import junit.framework.TestCase;
 
-import static org.fabric3.fabric.wire.NonBlockingInterceptorBuilder.QNAME;
-import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
-
 /**
  * @version $Rev$ $Date$
  */
@@ -30,8 +27,7 @@ public class NonBlockingInterceptorBuilderTestCase extends TestCase {
 
     public void testBuild() throws Exception {
         NonBlockingInterceptorBuilder builder = new NonBlockingInterceptorBuilder(null);
-        PhysicalInterceptorDefinition definition = new PhysicalInterceptorDefinition(QNAME);
-        definition.setBuilder(QNAME);
+        NonBlockingInterceptorDefinition definition = new NonBlockingInterceptorDefinition();
         assertTrue(builder.build(definition) instanceof NonBlockingInterceptor);
     }
 }

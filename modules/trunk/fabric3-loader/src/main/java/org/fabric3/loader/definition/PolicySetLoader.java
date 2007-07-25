@@ -18,6 +18,9 @@
  */
 package org.fabric3.loader.definition;
 
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -26,12 +29,12 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import org.fabric3.scdl.definitions.PolicySet;
+import org.fabric3.scdl.definitions.PolicySetExtension;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.StAXElementLoader;
-import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.util.stax.StaxUtil;
 import org.osoa.sca.annotations.Reference;
 
@@ -41,6 +44,9 @@ import org.osoa.sca.annotations.Reference;
  * @version $Revision$ $Date$
  */
 public class PolicySetLoader implements StAXElementLoader<PolicySet> {
+    
+    // Loader registry
+    private LoaderRegistry registry;
 
     /**
      * Registers the loader with the registry.
@@ -48,6 +54,7 @@ public class PolicySetLoader implements StAXElementLoader<PolicySet> {
      */
     public PolicySetLoader(@Reference LoaderRegistry registry) {
         registry.registerLoader(DefinitionsLoader.POLICY_SET, this);
+        this.registry = registry;
     }
 
     /**
@@ -70,9 +77,20 @@ public class PolicySetLoader implements StAXElementLoader<PolicySet> {
             builders.add(StaxUtil.createQName(tok.nextToken(), reader));
         }
         
-        LoaderUtil.skipToEndElement(reader);
-        
-        return new PolicySet(qName, provides, builders);
+        PolicySet policySet = new PolicySet(qName, provides, builders);
+
+        while (true) {
+            switch (reader.next()) {
+            case START_ELEMENT:
+                // Only support we have is for extension elements
+                PolicySetExtension extension = registry.load(reader, PolicySetExtension.class, context);
+                policySet.setExtension(extension);
+                break;
+            case END_ELEMENT:
+                assert DefinitionsLoader.POLICY_SET.equals(reader.getName());
+                return policySet;
+            }
+        }
         
     }
 

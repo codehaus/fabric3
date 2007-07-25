@@ -20,7 +20,6 @@ package org.fabric3.fabric.builder.interceptor;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import javax.xml.namespace.QName;
 
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
@@ -34,22 +33,36 @@ import org.fabric3.spi.wire.Interceptor;
  * @version $Rev$ $Date$
  */
 public class InterceptorBuilderRegistryImpl implements InterceptorBuilderRegistry {
-    private Map<QName, InterceptorBuilder> builders = new ConcurrentHashMap<QName, InterceptorBuilder>();
+    
+    private Map<Class<? extends PhysicalInterceptorDefinition>, InterceptorBuilder<?, ?>> builders = 
+        new ConcurrentHashMap<Class<? extends PhysicalInterceptorDefinition>, InterceptorBuilder<?, ?>>();
 
-    public void register(QName name, InterceptorBuilder builder) {
-        builders.put(name, builder);
+    /**
+     * @see org.fabric3.spi.builder.interceptor.InterceptorBuilderRegistry#register(java.lang.Class, org.fabric3.spi.builder.interceptor.InterceptorBuilder)
+     */
+    public <PID extends PhysicalInterceptorDefinition> void register(Class<PID> clazz, InterceptorBuilder<PID, ?> builder) {
+        builders.put(clazz, builder);
     }
 
-    public void unregister(QName name) {
-        builders.remove(name);
+    /**
+     * @see org.fabric3.spi.builder.interceptor.InterceptorBuilderRegistry#unregister(java.lang.Class)
+     */
+    public <PID extends PhysicalInterceptorDefinition> void unregister(Class<PID> clazz) {
+        builders.remove(clazz);
     }
 
-    public Interceptor build(PhysicalInterceptorDefinition definition) throws BuilderException {
-        QName name = definition.getBuilder();
-        InterceptorBuilder builder = builders.get(name);
-        if (builder == null) {
-            throw new InterceptorBuilderNotFoundException(name);
+    /**
+     * @see org.fabric3.spi.builder.interceptor.InterceptorBuilderRegistry#build(org.fabric3.spi.model.physical.PhysicalInterceptorDefinition)
+     */
+    public <PID extends PhysicalInterceptorDefinition> Interceptor build(PID definition) throws BuilderException {
+        
+        @SuppressWarnings("unchecked")
+        InterceptorBuilder<PID, ?> builder = (InterceptorBuilder<PID, ?>) builders.get(definition.getClass());
+        if(builder == null) {
+            throw new InterceptorBuilderNotFoundException(definition.getClass());
         }
         return builder.build(definition);
+        
     }
+    
 }

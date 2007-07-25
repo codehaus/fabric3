@@ -18,8 +18,6 @@
  */
 package org.fabric3.spi.model.physical;
 
-import javax.xml.namespace.QName;
-
 import org.fabric3.scdl.ModelObject;
 
 /**
@@ -29,31 +27,4 @@ import org.fabric3.scdl.ModelObject;
  * @version $Rev$ $Date$
  */
 public class PhysicalInterceptorDefinition extends ModelObject {
-
-    // The qualified name of the interceptor builder
-    private QName builder;
-
-    public PhysicalInterceptorDefinition(QName builder) {
-        this.builder = builder;
-    }
-
-    /**
-     * Gets the qualified name of the builder.
-     *
-     * @return Qualified name of the builder.
-     */
-    public QName getBuilder() {
-        return builder;
-    }
-
-    /**
-     * Sets the qualified name of the builder.
-     *
-     * @param builder Qualified name of the builder.
-     */
-    public void setBuilder(QName builder) {
-        this.builder = builder;
-    }
-
-
 }

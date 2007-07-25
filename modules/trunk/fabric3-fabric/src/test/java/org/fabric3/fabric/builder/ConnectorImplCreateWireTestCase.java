@@ -67,7 +67,7 @@ public class ConnectorImplCreateWireTestCase extends TestCase {
         EasyMock.expect(builder.build(EasyMock.isA(PhysicalInterceptorDefinition.class))).andReturn(null).times(2);
         EasyMock.replay(builder);
         InterceptorBuilderRegistryImpl regisry = new InterceptorBuilderRegistryImpl();
-        regisry.register(qName, builder);
+        regisry.register(PhysicalInterceptorDefinition.class, builder);
         TestConnector connector = new TestConnector(regisry);
         PhysicalWireDefinition definition = new PhysicalWireDefinition();
         PhysicalWireSourceDefinition sourceDefinition = new PhysicalWireSourceDefinition();
@@ -76,8 +76,7 @@ public class ConnectorImplCreateWireTestCase extends TestCase {
         targetDefinition.setUri(URI.create("target"));
         definition.setSource(sourceDefinition);
         definition.setTarget(targetDefinition);
-        PhysicalInterceptorDefinition interceptorDefinition = new PhysicalInterceptorDefinition(QNAME);
-        interceptorDefinition.setBuilder(qName);
+        PhysicalInterceptorDefinition interceptorDefinition = new PhysicalInterceptorDefinition();
 
         PhysicalOperationDefinition operation = new PhysicalOperationDefinition();
         operation.setName("operation");

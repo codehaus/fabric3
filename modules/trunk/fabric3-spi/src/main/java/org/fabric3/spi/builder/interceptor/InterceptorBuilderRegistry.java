@@ -18,33 +18,31 @@
  */
 package org.fabric3.spi.builder.interceptor;
 
-import javax.xml.namespace.QName;
-
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 import org.fabric3.spi.wire.Interceptor;
 
 /**
- * A registry of interceptor builders that performs a dispatch to a builder based on an interceptor definition QName
+ * A registry of interceptor builders that performs a dispatch to a builder based on an interceptor definition class.
  *
  * @version $Rev$ $Date$
  */
 public interface InterceptorBuilderRegistry {
 
     /**
-     * Register a interceptor builder for the given QName
+     * Register a interceptor builder for the given interceptor definition class.
      *
-     * @param name    the QName associated with the builder
+     * @param clazz   the intyerceptor definition class associated with the builder
      * @param builder the builder to register
      */
-    void register(QName name, InterceptorBuilder builder);
+    <PID extends PhysicalInterceptorDefinition> void register(Class<PID> clazz, InterceptorBuilder<PID, ?> builder);
 
     /**
      * Unregister a interceptor builder for the given QName
      *
-     * @param name the QName associated with the builder to unregister
+     * @param clazz   the intyerceptor definition class associated with the builder
      */
-    void unregister(QName name);
+    <PID extends PhysicalInterceptorDefinition> void unregister(Class<PID> clazz);
 
     /**
      * Dispatches to an interceptor builder matching the definition QName
@@ -53,6 +51,6 @@ public interface InterceptorBuilderRegistry {
      * @return an interceptor matching the given definition
      * @throws BuilderException if an error ocurrs during the dispatch or build
      */
-    Interceptor build(PhysicalInterceptorDefinition definition) throws BuilderException;
+    <PID extends PhysicalInterceptorDefinition> Interceptor build(PID definition) throws BuilderException;
 
 }

@@ -18,35 +18,41 @@
  */
 package org.fabric3.fabric.wire;
 
-import javax.xml.namespace.QName;
-
-import org.osoa.sca.annotations.Reference;
-
 import org.fabric3.extension.interceptor.InterceptorBuilderExtension;
-import org.fabric3.spi.Constants;
 import org.fabric3.spi.builder.BuilderException;
-import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 import org.fabric3.spi.services.work.WorkScheduler;
-import org.fabric3.spi.wire.Interceptor;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Creates a non-blocking interceptor
  *
  * @version $Rev$ $Date$
  */
-public class NonBlockingInterceptorBuilder extends InterceptorBuilderExtension {
-    public static final QName QNAME = new QName(Constants.FABRIC3_SYSTEM_NS, "nonblocking");
+public class NonBlockingInterceptorBuilder extends InterceptorBuilderExtension<NonBlockingInterceptorDefinition, NonBlockingInterceptor> {
+    
     private WorkScheduler scheduler;
 
+    /**
+     * Injects the work scheduler.
+     * 
+     * @param scheduler Work scheduler.
+     */
     public NonBlockingInterceptorBuilder(@Reference(required = true)WorkScheduler scheduler) {
         this.scheduler = scheduler;
     }
 
-    public Interceptor build(PhysicalInterceptorDefinition definition) throws BuilderException {
+    /**
+     * @see org.fabric3.spi.builder.interceptor.InterceptorBuilder#build(org.fabric3.spi.model.physical.PhysicalInterceptorDefinition)
+     */
+    public NonBlockingInterceptor build(NonBlockingInterceptorDefinition definition) throws BuilderException {
         return new NonBlockingInterceptor(scheduler);
     }
 
-    protected QName getName() {
-        return QNAME;
+    /**
+     * @see org.fabric3.extension.interceptor.InterceptorBuilderExtension#getInterceptorDefinitionClass()
+     */
+    @Override
+    protected Class<NonBlockingInterceptorDefinition> getInterceptorDefinitionClass() {
+        return NonBlockingInterceptorDefinition.class;
     }
 }

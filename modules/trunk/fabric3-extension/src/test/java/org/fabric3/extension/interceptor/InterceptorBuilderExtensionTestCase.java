@@ -18,31 +18,28 @@
  */
 package org.fabric3.extension.interceptor;
 
-import javax.xml.namespace.QName;
+import junit.framework.TestCase;
 
+import org.easymock.EasyMock;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
 import org.fabric3.spi.builder.interceptor.InterceptorBuilderRegistry;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 import org.fabric3.spi.wire.Interceptor;
-import org.fabric3.extension.interceptor.InterceptorBuilderExtension;
-
-import junit.framework.TestCase;
-import org.easymock.EasyMock;
 
 /**
  * @version $Rev$ $Date$
  */
 public class InterceptorBuilderExtensionTestCase extends TestCase {
-    private static final QName QNAME = new QName("builder");
 
     public void testRegistration() {
         InterceptorBuilderRegistry registry = EasyMock.createMock(InterceptorBuilderRegistry.class);
-        registry.register(EasyMock.eq(QNAME), EasyMock.isA(InterceptorBuilder.class));
+        
+        registry.register(EasyMock.eq(PhysicalInterceptorDefinition.class), EasyMock.isA(InterceptorBuilder.class));
         EasyMock.replay(registry);
         InterceptorBuilderExtension builder = new InterceptorBuilderExtension() {
-            protected QName getName() {
-                return QNAME;
+            protected Class<PhysicalInterceptorDefinition> getInterceptorDefinitionClass() {
+                return PhysicalInterceptorDefinition.class;
             }
 
             public Interceptor build(PhysicalInterceptorDefinition definition) throws BuilderException {

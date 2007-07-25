@@ -18,14 +18,13 @@
  */
 package org.fabric3.extension.interceptor;
 
-import javax.xml.namespace.QName;
-
+import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
+import org.fabric3.spi.builder.interceptor.InterceptorBuilderRegistry;
+import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
+import org.fabric3.spi.wire.Interceptor;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
-
-import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
-import org.fabric3.spi.builder.interceptor.InterceptorBuilderRegistry;
 
 /**
  * Abstract class interceptor builders may extend to handle registration with the interceptor builder registry
@@ -33,7 +32,7 @@ import org.fabric3.spi.builder.interceptor.InterceptorBuilderRegistry;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public abstract class InterceptorBuilderExtension implements InterceptorBuilder {
+public abstract class InterceptorBuilderExtension<PID extends PhysicalInterceptorDefinition, I extends Interceptor> implements InterceptorBuilder<PID, I> {
     protected InterceptorBuilderRegistry registry;
 
     @Reference(required = true)
@@ -43,8 +42,8 @@ public abstract class InterceptorBuilderExtension implements InterceptorBuilder 
 
     @Init
     public void init() {
-        registry.register(getName(), this);
+        registry.register(getInterceptorDefinitionClass(), this);
     }
 
-    protected abstract QName getName();
+    protected abstract Class<PID> getInterceptorDefinitionClass();
 }
