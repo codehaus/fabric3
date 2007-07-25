@@ -20,7 +20,6 @@ package org.fabric3.spi.generator;
 
 import java.net.URI;
 
-import org.fabric3.spi.model.definition.PolicySetExtension;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
@@ -29,6 +28,7 @@ import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.ResourceDescription;
+import org.fabric3.scdl.definitions.PolicySetExtension;
 
 /**
  * A registry for {@link ComponentGenerator}s, {@link BindingGenerator}s, {@link InterceptorGenerator}s and {@link

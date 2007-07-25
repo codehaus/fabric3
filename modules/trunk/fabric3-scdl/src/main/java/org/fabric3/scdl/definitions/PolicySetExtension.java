@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.model.definition;
+package org.fabric3.scdl.definitions;
 
 import org.fabric3.scdl.ModelObject;
 

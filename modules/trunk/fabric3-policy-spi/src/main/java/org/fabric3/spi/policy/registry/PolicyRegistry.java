@@ -23,8 +23,8 @@ import java.util.Set;
 import javax.xml.namespace.QName;
 
 import org.fabric3.spi.model.instance.LogicalScaArtifact;
-import org.fabric3.spi.model.definition.Intent;
-import org.fabric3.spi.model.definition.PolicySet;
+import org.fabric3.scdl.definitions.Intent;
+import org.fabric3.scdl.definitions.PolicySet;
 
 /**
  * Abstraction for the service that keeps track of the domain-wide

@@ -18,7 +18,7 @@
  */
 package org.fabric3.spi.generator;
 
-import org.fabric3.spi.model.definition.PolicySetExtension;
+import org.fabric3.scdl.definitions.PolicySetExtension;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 
 /**
