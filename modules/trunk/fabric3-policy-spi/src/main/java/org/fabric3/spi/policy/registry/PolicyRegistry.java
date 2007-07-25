@@ -18,13 +18,10 @@
  */
 package org.fabric3.spi.policy.registry;
 
-import java.util.Set;
-
-import javax.xml.namespace.QName;
-
-import org.fabric3.spi.model.instance.LogicalScaArtifact;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
+import org.fabric3.scdl.definitions.PolicySetExtension;
+import org.fabric3.spi.model.instance.LogicalScaArtifact;
 
 /**
  * Abstraction for the service that keeps track of the domain-wide
@@ -51,6 +48,6 @@ public interface PolicyRegistry {
      * @param scaArtifact SCA artifact.
      * @return List of interceptors.
      */
-    Set<QName> getInterceptorBuilders(LogicalScaArtifact<?> scaArtifact);
+    PolicySetExtension getPolicy(LogicalScaArtifact<?> scaArtifact);
 
 }

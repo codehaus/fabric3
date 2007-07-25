@@ -28,6 +28,7 @@ import javax.xml.namespace.QName;
 import org.fabric3.spi.model.instance.LogicalScaArtifact;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
+import org.fabric3.scdl.definitions.PolicySetExtension;
 import org.fabric3.spi.policy.registry.PolicyRegistry;
 
 /**
@@ -42,7 +43,7 @@ public class DefaultPolicyRegistry implements PolicyRegistry {
     /**
      * @see org.fabric3.spi.policy.registry.PolicyRegistry#getInterceptors(org.fabric3.spi.model.instance.LogicalScaArtifact)
      */
-    public Set<QName> getInterceptorBuilders(final LogicalScaArtifact<?> scaArtifact) {
+    public PolicySetExtension getPolicy(final LogicalScaArtifact<?> scaArtifact) {
         
         LogicalScaArtifact<?> temp = scaArtifact;
         
@@ -61,7 +62,7 @@ public class DefaultPolicyRegistry implements PolicyRegistry {
         
         for(PolicySet policySet : policySets) {
             if(policySet.doesProvide(intentNames)) {
-                return policySet.getInterceptorBuilders();
+                return policySet.getExtension();
             }
         }
 
