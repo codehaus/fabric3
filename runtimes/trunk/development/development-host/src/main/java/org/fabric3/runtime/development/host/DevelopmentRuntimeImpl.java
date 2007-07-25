@@ -93,12 +93,7 @@ public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo>
     }
 
     public void activate(URL compositeFile) {
-//        if (started) {
-//            throw new IllegalStateException("Composite already activated");
-//        }
-
         CompositeImplementation impl = new CompositeImplementation();
-
         ComponentDefinition<CompositeImplementation> definition =
                 new ComponentDefinition<CompositeImplementation>("main", impl);
         try {
@@ -122,8 +117,6 @@ public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo>
         }
         CompositeImplementation impl = new CompositeImplementation();
         try {
-//            URL scdl = new URL("jar:" + compositeFile.toExternalForm() + "!/META-INF/sca-contribution.xml");
-            //URL scdl;
             JarInputStream jar = new JarInputStream(compositeFile.openStream());
             List<URL> urls = getSCDLUrls(jar, toJarURL(compositeFile));
 
@@ -211,7 +204,7 @@ public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo>
                 if (entry.isDirectory()) {
                     continue;
                 }
-                if (entry.getName().endsWith(".scdl")) {
+                if (entry.getName().endsWith(".composite")) {
                     artifacts.add(new URL(sourceUrl, entry.getName()));
                 }
             }

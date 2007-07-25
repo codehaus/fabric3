@@ -10,31 +10,15 @@ import org.fabric3.host.runtime.AbstractHostInfo;
  * @version $Rev$ $Date$
  */
 public class DevelopmentHostInfoImpl extends AbstractHostInfo implements DevelopmentHostInfo {
-    private final File installDirectory;
-    private final ClassLoader hostClassLoader;
-    private final ClassLoader bootClassLoader;
+    private File extensionsDir;
 
-
-    public DevelopmentHostInfoImpl(final URI domain,
-                                   final URL baseUrl,
-                                   File installDirectory,
-                                   ClassLoader hostClassLoader,
-                                   ClassLoader bootClassLoader) {
+    public DevelopmentHostInfoImpl(final URI domain, final URL baseUrl, File extensionsDir) {
         super(domain, baseUrl, true, "DevelopmentRuntime");
-        this.installDirectory = installDirectory;
-        this.hostClassLoader = hostClassLoader;
-        this.bootClassLoader = bootClassLoader;
+        this.extensionsDir = extensionsDir;
     }
 
-    public File getInstallDirectory() {
-        return installDirectory;
+    public File getExtensionsDirectory() {
+        return extensionsDir;
     }
 
-    public ClassLoader getHostClassLoader() {
-        return hostClassLoader;
-    }
-
-    public ClassLoader getBootClassLoader() {
-        return bootClassLoader;
-    }
 }

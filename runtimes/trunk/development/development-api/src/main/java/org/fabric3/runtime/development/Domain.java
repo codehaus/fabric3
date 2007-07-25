@@ -7,7 +7,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-
 import javax.xml.namespace.QName;
 
 import org.fabric3.host.runtime.Bootstrapper;
@@ -66,6 +65,11 @@ public class Domain {
 
     private DevelopmentRuntime runtime;
     private RuntimeLifecycleCoordinator<DevelopmentRuntime, Bootstrapper> coordinator;
+    private String extensionsDirectory;
+
+    public void setExtensionsDirectory(String extensionsDirectory) {
+        this.extensionsDirectory = extensionsDirectory;
+    }
 
     public void activate(URL compositeFile) {
         if (runtime == null) {
@@ -156,13 +160,18 @@ public class Domain {
             Class<?> runtimeClass = cl.loadClass("org.fabric3.runtime.development.host.DevelopmentRuntimeImpl");
             runtime = (DevelopmentRuntime) runtimeClass.newInstance();
             URL baseDirUrl = baseDir.toURI().toURL();
-            runtime.setHostInfo(new DevelopmentHostInfoImpl(DOMAIN_URI, baseDirUrl, baseDir, cl, cl));
+            File dir;
+            if (extensionsDirectory == null) {
+                dir = new File(baseDir, "extensions");
+            } else {
+                dir = new File(extensionsDirectory);
+            }
+            runtime.setHostInfo(new DevelopmentHostInfoImpl(DOMAIN_URI, baseDirUrl, dir));
             runtime.setHostClassLoader(cl);
-
             Class<?> coordinatorClass =
-                cl.loadClass("org.fabric3.runtime.development.host.DevelopmentCoordinator");
+                    cl.loadClass("org.fabric3.runtime.development.host.DevelopmentCoordinator");
             coordinator =
-                (RuntimeLifecycleCoordinator<DevelopmentRuntime, Bootstrapper>) coordinatorClass.newInstance();
+                    (RuntimeLifecycleCoordinator<DevelopmentRuntime, Bootstrapper>) coordinatorClass.newInstance();
             coordinator.bootPrimordial(runtime, bootstrapper, cl, cl);
             coordinator.initialize();
             Future<Void> future = coordinator.joinDomain(-1);

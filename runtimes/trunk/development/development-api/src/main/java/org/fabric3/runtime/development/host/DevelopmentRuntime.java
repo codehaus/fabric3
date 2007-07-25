@@ -27,7 +27,6 @@ public interface DevelopmentRuntime extends Fabric3Runtime<DevelopmentHostInfo> 
 
     public void activateExtension(QName qName);
 
-
     <T> void registerMockReference(String name, Class<T> interfaze, T mock);
 
 }

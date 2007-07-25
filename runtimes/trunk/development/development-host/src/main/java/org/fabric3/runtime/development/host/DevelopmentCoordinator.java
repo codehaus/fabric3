@@ -16,28 +16,41 @@
  */
 package org.fabric3.runtime.development.host;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import org.fabric3.extension.component.SimpleWorkContext;
+import org.fabric3.fabric.assembly.ActivateException;
 import org.fabric3.fabric.assembly.AssemblyException;
 import org.fabric3.fabric.assembly.DistributedAssembly;
-import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
+import org.fabric3.fabric.assembly.RuntimeAssembly;
 import org.fabric3.fabric.runtime.ComponentNames;
+import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_ASSEMBLY_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
+import org.fabric3.fabric.services.contribution.processor.ExtensionContributionSource;
+import org.fabric3.host.contribution.Constants;
+import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.ContributionService;
+import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.host.runtime.StartException;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.scdl.Scope;
 
 /**
  * Implementation of a coordinator for the development runtime.
@@ -45,6 +58,7 @@ import org.fabric3.scdl.Scope;
  * @version $Rev$ $Date$
  */
 public class DevelopmentCoordinator implements RuntimeLifecycleCoordinator<DevelopmentRuntime, Bootstrapper> {
+    private static final String EXTENSIONS = "extensions";
 
     private enum State {
         UNINITIALIZED,
@@ -100,6 +114,7 @@ public class DevelopmentCoordinator implements RuntimeLifecycleCoordinator<Devel
             throw new IllegalStateException("Not in PRIMORDIAL state");
         }
         bootstrapper.bootSystem(runtime);
+        includeExtensions();
         state = State.INITIALIZED;
     }
 
@@ -155,6 +170,44 @@ public class DevelopmentCoordinator implements RuntimeLifecycleCoordinator<Devel
         state = State.SHUTDOWN;
         return new SyncFuture();
     }
+
+    /**
+     * Processes extensions and includes them in the runtime domain
+     *
+     * @throws InitializationException if an error occurs included the extensions
+     */
+    private void includeExtensions() throws InitializationException {
+        File extensionsDirectory = runtime.getHostInfo().getExtensionsDirectory();
+        if (extensionsDirectory != null && extensionsDirectory.exists()) {
+            // contribute and activate extensions if they exist in the runtime domain
+            ContributionService contributionService = runtime.getSystemComponent(ContributionService.class,
+                                                                                 CONTRIBUTION_SERVICE_URI);
+            RuntimeAssembly assembly = runtime.getSystemComponent(RuntimeAssembly.class, RUNTIME_ASSEMBLY_URI);
+            try {
+                ExtensionContributionSource source =
+                        new ExtensionContributionSource(extensionsDirectory.toURI().toURL(), -1, new byte[0]);
+                URI addedUri = contributionService.contribute(EXTENSIONS, source);
+
+                List<Deployable> deployables = contributionService.getDeployables(addedUri);
+                for (Deployable deployable : deployables) {
+                    if (Constants.COMPOSITE_TYPE.equals(deployable.getType())) {
+                        // include deployables in the runtime domain
+                        assembly.activate(deployable.getName(), true);
+                    }
+                }
+            } catch (MalformedURLException e) {
+                throw new InitializationException(e);
+            } catch (IOException e) {
+                throw new InitializationException(e);
+            } catch (ContributionException e) {
+                throw new InitializationException(e);
+            } catch (ActivateException e) {
+                throw new InitializationException(e);
+            }
+
+        }
+    }
+
 
     private static class SyncFuture implements Future<Void> {
         private ExecutionException ex;
