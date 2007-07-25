@@ -19,15 +19,13 @@
 package org.fabric3.binding.ws.model.physical;
 
 import org.fabric3.binding.ws.model.logical.WsBindingDefinition;
-import org.fabric3.spi.generator.BindingGenerator;
-import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorContext;
-import org.fabric3.spi.generator.GeneratorRegistry;
-import org.fabric3.spi.model.instance.LogicalBinding;
+import org.fabric3.extension.generator.BindingGeneratorExtension;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.spi.generator.GenerationException;
+import org.fabric3.spi.generator.GeneratorContext;
+import org.fabric3.spi.model.instance.LogicalBinding;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Implementation of the hessian binding generator.
@@ -35,18 +33,7 @@ import org.osoa.sca.annotations.Reference;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class WsBindingGenerator implements
-    BindingGenerator<WsWireSourceDefinition, WsWireTargetDefinition, WsBindingDefinition> {
-
-    /**
-     * Injects the generator registry.
-     * 
-     * @param generatorRegistry Generator registry.
-     */
-    public WsBindingGenerator(@Reference
-    GeneratorRegistry generatorRegistry) {
-        generatorRegistry.register(WsBindingDefinition.class, this);
-    }
+public class WsBindingGenerator extends BindingGeneratorExtension<WsWireSourceDefinition, WsWireTargetDefinition, WsBindingDefinition> {
 
     /**
      * @see org.fabric3.spi.generator.BindingGenerator#generateWireSource(org.fabric3.spi.model.instance.LogicalBinding,
@@ -82,6 +69,14 @@ public class WsBindingGenerator implements
 
         return hwtd;
 
+    }
+
+    /**
+     * @see org.fabric3.extension.generator.BindingGeneratorExtension#getBindingDefinitionClass()
+     */
+    @Override
+    protected Class<WsBindingDefinition> getBindingDefinitionClass() {
+        return WsBindingDefinition.class;
     }
 
 }

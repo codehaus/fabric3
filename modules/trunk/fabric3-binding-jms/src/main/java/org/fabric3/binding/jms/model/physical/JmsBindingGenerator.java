@@ -19,31 +19,19 @@
 package org.fabric3.binding.jms.model.physical;
 
 import org.fabric3.binding.jms.model.logical.JmsBindingDefinition;
-import org.fabric3.spi.generator.BindingGenerator;
-import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorContext;
-import org.fabric3.spi.generator.GeneratorRegistry;
-import org.fabric3.spi.model.instance.LogicalBinding;
+import org.fabric3.extension.generator.BindingGeneratorExtension;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.spi.generator.GenerationException;
+import org.fabric3.spi.generator.GeneratorContext;
+import org.fabric3.spi.model.instance.LogicalBinding;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class JmsBindingGenerator implements
-    BindingGenerator<JmsWireSourceDefinition, JmsWireTargetDefinition, JmsBindingDefinition> {
-
-    /**
-     * Injects the generator registry.
-     * 
-     * @param generatorRegistry Generator registry.
-     */
-    public JmsBindingGenerator(@Reference GeneratorRegistry generatorRegistry) {
-        generatorRegistry.register(JmsBindingDefinition.class, this);
-    }
+public class JmsBindingGenerator extends BindingGeneratorExtension<JmsWireSourceDefinition, JmsWireTargetDefinition, JmsBindingDefinition> {
 
     /**
      * @see org.fabric3.spi.generator.BindingGenerator#generateWireSource(org.fabric3.spi.model.instance.LogicalBinding,
@@ -66,6 +54,14 @@ public class JmsBindingGenerator implements
                                                       ReferenceDefinition referenceDefinition)
         throws GenerationException {
         return new JmsWireTargetDefinition(logicalBinding.getBinding().getMetadata());
+    }
+
+    /**
+     * @see org.fabric3.extension.generator.BindingGeneratorExtension#getBindingDefinitionClass()
+     */
+    @Override
+    protected Class<JmsBindingDefinition> getBindingDefinitionClass() {
+        return JmsBindingDefinition.class;
     }
 
 }

@@ -19,15 +19,13 @@
 package org.fabric3.binding.hessian.model.physical;
 
 import org.fabric3.binding.hessian.model.logical.HessianBindingDefinition;
-import org.fabric3.spi.generator.BindingGenerator;
-import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorContext;
-import org.fabric3.spi.generator.GeneratorRegistry;
-import org.fabric3.spi.model.instance.LogicalBinding;
+import org.fabric3.extension.generator.BindingGeneratorExtension;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.spi.generator.GenerationException;
+import org.fabric3.spi.generator.GeneratorContext;
+import org.fabric3.spi.model.instance.LogicalBinding;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Implementation of the hessian binding generator.
@@ -35,18 +33,7 @@ import org.osoa.sca.annotations.Reference;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class HessianBindingGenerator implements
-    BindingGenerator<HessianWireSourceDefinition, HessianWireTargetDefinition, HessianBindingDefinition> {
-
-    /**
-     * Injects the generator registry.
-     * 
-     * @param generatorRegistry Generator registry.
-     */
-    public HessianBindingGenerator(@Reference
-    GeneratorRegistry generatorRegistry) {
-        generatorRegistry.register(HessianBindingDefinition.class, this);
-    }
+public class HessianBindingGenerator extends BindingGeneratorExtension<HessianWireSourceDefinition, HessianWireTargetDefinition, HessianBindingDefinition> {
 
     /**
      * @see org.fabric3.spi.generator.BindingGenerator#generateWireSource(org.fabric3.spi.model.instance.LogicalBinding,
@@ -80,6 +67,14 @@ public class HessianBindingGenerator implements
 
         return hwtd;
 
+    }
+
+    /**
+     * @see org.fabric3.extension.generator.BindingGeneratorExtension#getBindingDefinitionClass()
+     */
+    @Override
+    protected Class<HessianBindingDefinition> getBindingDefinitionClass() {
+        return HessianBindingDefinition.class;
     }
 
 }
