@@ -19,7 +19,7 @@
 package org.fabric3.binding.jms.model.logical;
 
 import org.fabric3.binding.jms.model.JmsBindingMetadata;
-import org.fabric3.spi.model.type.BindingDefinition;
+import org.fabric3.scdl.BindingDefinition;
 
 /**
  * Logical model object for JMS binding definition. TODO Support for overriding

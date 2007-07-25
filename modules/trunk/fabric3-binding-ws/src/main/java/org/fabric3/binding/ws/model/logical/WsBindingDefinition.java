@@ -19,7 +19,7 @@
 
 package org.fabric3.binding.ws.model.logical;
 
-import org.fabric3.spi.model.type.BindingDefinition;
+import org.fabric3.scdl.BindingDefinition;
 
 /**
  * Logical binding definition for web services.

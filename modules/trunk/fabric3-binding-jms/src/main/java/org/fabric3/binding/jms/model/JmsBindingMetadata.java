@@ -22,7 +22,7 @@ import java.util.Hashtable;
 
 import javax.naming.Context;
 
-import org.fabric3.spi.model.type.BindingDefinition;
+import org.fabric3.scdl.BindingDefinition;
 
 /**
  * Logical model object for JMS binding definition. TODO Support for overriding

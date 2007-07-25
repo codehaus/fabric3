@@ -18,7 +18,7 @@
  */
 package org.fabric3.binding.jms.model;
 
-import org.fabric3.spi.model.type.ModelObject;
+import org.fabric3.scdl.ModelObject;
 
 /**
  * JMS resource adaptor definition.
