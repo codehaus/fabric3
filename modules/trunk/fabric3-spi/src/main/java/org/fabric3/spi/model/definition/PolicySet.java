@@ -41,6 +41,9 @@ public final class PolicySet extends ModelObject {
     
     /** Builders for the interceptors that implement this policy set. */
     private Set<QName> interceptorBuilders = new HashSet<QName>();
+    
+    /** Policy set extension */
+    private PolicySetExtension extension;
 
     /**
      * Initializes the state for the policy set.
@@ -102,6 +105,20 @@ public final class PolicySet extends ModelObject {
     @Override
     public String toString() {
         return name.toString();
+    }
+
+    /**
+     * @return Extension for the policy set.
+     */
+    public PolicySetExtension getExtension() {
+        return extension;
+    }
+
+    /**
+     * @param extension Extension for the policy set.
+     */
+    public void setExtension(PolicySetExtension extension) {
+        this.extension = extension;
     }
 
 }
