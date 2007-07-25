@@ -294,7 +294,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
     }
 
     /**
-     * @see org.fabric3.spi.generator.GeneratorRegistry#generateInterceptorDefinition(org.fabric3.spi.model.definition.PolicySetExtension)
+     * @see org.fabric3.spi.generator.GeneratorRegistry#generateInterceptorDefinition(org.fabric3.scdl.definitions.PolicySetExtension)
      */
     public <PE extends PolicySetExtension> PhysicalInterceptorDefinition generateInterceptorDefinition(PE policySetExtension) {
         @SuppressWarnings({"unchecked"})
