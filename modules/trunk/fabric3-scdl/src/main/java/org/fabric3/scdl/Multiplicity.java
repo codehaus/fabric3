@@ -26,22 +26,56 @@ public enum Multiplicity {
      * Indicates a relationship that is optionally connected to the requestor and which, if supplied, must be connected
      * to exactly one provider.
      */
-    ZERO_ONE,
+    ZERO_ONE("0..1"),
 
     /**
      * Indicates a relationship that must be connected between exactly one requestor and exactly one provider.
      */
-    ONE_ONE,
+    ONE_ONE("1..1"),
 
     /**
      * Indicates a relationship that is optionally connects the requestor to zero to unbounded providers.
      */
-    ZERO_N,
+    ZERO_N("0..n"),
 
     /**
      * Indicates a relationship that must be connected at the requestor and which connects it to zero to unbounded
      * providers.
      */
-    ONE_N
+    ONE_N("1..n");
 
+    private final String text;
+
+    Multiplicity(String value) {
+        this.text = value;
+    }
+
+    /**
+     * Returns the textual form of Multiplicity as defined by the Assembly spec.
+     *
+     * @return the textual form of Multiplicity as defined by the Assembly spec
+     */
+    public String toString() {
+        return text;
+    }
+
+    /**
+     * Parse the text form as defined by the Assembly spec.
+     *
+     * @param text multiplicity value as text as described by the Assembly spec; may be null
+     * @return the value corresponding to the text, or null if text is null
+     * @throws IllegalArgumentException if the text is not a valid value
+     */
+    public static Multiplicity fromString(String text) throws IllegalArgumentException {
+        if (text == null) {
+            return null;
+        }
+
+        for (Multiplicity multiplicity : Multiplicity.values()) {
+            if (multiplicity.text.equals(text)) {
+                return multiplicity;
+            }
+        }
+        throw new IllegalArgumentException(text);
+    }
 }

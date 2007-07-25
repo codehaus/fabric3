@@ -19,8 +19,6 @@
 package org.fabric3.loader.composite;
 
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.StringTokenizer;
 import javax.xml.namespace.QName;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
@@ -45,6 +43,7 @@ import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.loader.UnrecognizedElementException;
+import org.fabric3.spi.loader.InvalidValueException;
 
 /**
  * Loads a reference from an XML-based assembly file
@@ -53,16 +52,8 @@ import org.fabric3.spi.loader.UnrecognizedElementException;
  */
 public class ReferenceLoader implements StAXElementLoader<ReferenceDefinition> {
     private static final QName REFERENCE = new QName(SCA_NS, "Reference");
-    private static final Map<String, Multiplicity> MULTIPLICITY = new HashMap<String, Multiplicity>(4);
 
     private final LoaderRegistry registry;
-
-    static {
-        MULTIPLICITY.put("0..1", Multiplicity.ZERO_ONE);
-        MULTIPLICITY.put("1..1", Multiplicity.ONE_ONE);
-        MULTIPLICITY.put("0..n", Multiplicity.ZERO_N);
-        MULTIPLICITY.put("1..n", Multiplicity.ONE_N);
-    }
 
     public ReferenceLoader(@Reference LoaderRegistry registry) {
         this.registry = registry;
@@ -81,7 +72,12 @@ public class ReferenceLoader implements StAXElementLoader<ReferenceDefinition> {
 
         setPromoted(reader, referenceDefinition, name);
 
-        setMultiplicity(reader, referenceDefinition);
+        try {
+            Multiplicity multiplicity = Multiplicity.fromString(reader.getAttributeValue(null, "multiplicity"));
+            referenceDefinition.setMultiplicity(multiplicity);
+        } catch (IllegalArgumentException e) {
+            throw new InvalidValueException(reader.getAttributeValue(null, "multiplicity"), "multiplicity");
+        }
 
         setKey(reader, referenceDefinition);
 
@@ -117,17 +113,6 @@ public class ReferenceLoader implements StAXElementLoader<ReferenceDefinition> {
     }
 
     /*
-     * Processes the multiplicty attribute.
-     */
-    private void setMultiplicity(XMLStreamReader reader, ReferenceDefinition referenceDefinition) {
-        
-        String multiplicityVal = reader.getAttributeValue(null, "multiplicity");
-        Multiplicity multiplicity = multiplicity(multiplicityVal, Multiplicity.ONE_ONE);
-        referenceDefinition.setMultiplicity(multiplicity);
-        
-    }
-
-    /*
      * Processes the promotes attribute.
      */
     private void setPromoted(XMLStreamReader reader, ReferenceDefinition referenceDefinition, String name)
@@ -144,16 +129,4 @@ public class ReferenceLoader implements StAXElementLoader<ReferenceDefinition> {
         }
         
     }
-
-    /**
-     * Convert a "multiplicity" attribute to the equivalent enum value.
-     * 
-     * @param multiplicity the attribute to convert
-     * @param def the default value
-     * @return the enum equivalent
-     */
-    private static Multiplicity multiplicity(String multiplicity, Multiplicity def) {
-        return multiplicity == null ? def : MULTIPLICITY.get(multiplicity);
-    }
-
 }
