@@ -29,7 +29,7 @@ import java.util.List;
  * @version $Rev$ $Date$
  */
 public class ReferenceDefinition extends ModelObject {
-    private URI uri;
+    private String name;
     private ServiceContract serviceContract;
     private Multiplicity multiplicity;
     private boolean required;
@@ -43,28 +43,24 @@ public class ReferenceDefinition extends ModelObject {
         promoted = new ArrayList<URI>();
     }
 
-    public ReferenceDefinition(URI uri, ServiceContract serviceContract) {
-        this.uri = uri;
+    public ReferenceDefinition(String name, ServiceContract serviceContract) {
+        this.name = name;
         this.serviceContract = serviceContract;
         bindings = new ArrayList<BindingDefinition>();
         multiplicity = Multiplicity.ONE_ONE;
         promoted = new ArrayList<URI>();
     }
 
-    public ReferenceDefinition(URI uri, ServiceContract serviceContract, Multiplicity multiplicity) {
-        this.uri = uri;
+    public ReferenceDefinition(String name, ServiceContract serviceContract, Multiplicity multiplicity) {
+        this.name = name;
         this.serviceContract = serviceContract;
         this.multiplicity = multiplicity;
         bindings = new ArrayList<BindingDefinition>();
         promoted = new ArrayList<URI>();
     }
 
-    public URI getUri() {
-        return uri;
-    }
-
-    public void setUri(URI uri) {
-        this.uri = uri;
+    public String getName() {
+        return name;
     }
 
     public ServiceContract<?> getServiceContract() {

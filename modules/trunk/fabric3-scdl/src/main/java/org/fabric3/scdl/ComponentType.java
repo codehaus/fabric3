@@ -178,7 +178,7 @@ public class ComponentType<S extends ServiceDefinition, R extends ReferenceDefin
      * @param reference a reference to a service consumed by the implementation
      */
     public void add(R reference) {
-        references.put(reference.getUri().getFragment(), reference);
+        references.put(reference.getName(), reference);
     }
 
     /**

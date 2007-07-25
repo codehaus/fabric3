@@ -36,18 +36,16 @@ public class ConstructorReferenceTestCase extends TestCase {
     private ConstructorProcessor processor;
 
     public void testReference() throws Exception {
-        PojoComponentType type =
-            new PojoComponentType();
+        PojoComponentType type = new PojoComponentType();
         Constructor<Foo> ctor = Foo.class.getConstructor(String.class);
         processor.visitConstructor(ctor, type, null);
         JavaMappedReference reference = type.getReferences().get("myRef");
         assertTrue(reference.isRequired());
-        assertEquals("#myRef", reference.getUri().toString());
+        assertEquals("myRef", reference.getName());
     }
 
     public void testTwoReferencesSameType() throws Exception {
-        PojoComponentType type =
-            new PojoComponentType();
+        PojoComponentType type = new PojoComponentType();
         Constructor<Foo> ctor = Foo.class.getConstructor(String.class, String.class);
         processor.visitConstructor(ctor, type, null);
         assertNotNull(type.getReferences().get("myRef1"));

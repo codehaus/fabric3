@@ -62,7 +62,7 @@ public class WebappComponentGenerator implements ComponentGenerator<LogicalCompo
 
         Map<String, Class<?>> referenceTypes = new HashMap<String, Class<?>>();
         for (ReferenceDefinition referenceDefinition : componentType.getReferences().values()) {
-            String name = referenceDefinition.getUri().getFragment();
+            String name = referenceDefinition.getName();
             Class<?> type = referenceDefinition.getServiceContract().getInterfaceClass();
             referenceTypes.put(name, type);
         }

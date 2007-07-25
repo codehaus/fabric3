@@ -21,22 +21,20 @@ package org.fabric3.fabric.implementation.processor;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.net.URI;
 import java.util.Collection;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.loader.LoaderContext;
-import org.fabric3.spi.idl.InvalidServiceContractException;
-import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
+import static org.fabric3.fabric.util.JavaIntrospectionHelper.toPropertyName;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.processor.JavaMappedReference;
 import org.fabric3.pojo.processor.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.scdl.Multiplicity;
 import org.fabric3.scdl.ServiceContract;
-
-import static org.fabric3.fabric.util.JavaIntrospectionHelper.toPropertyName;
+import org.fabric3.spi.idl.InvalidServiceContractException;
+import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
+import org.fabric3.spi.loader.LoaderContext;
 
 /**
  * Processes an {@link @Reference} annotation, updating the component type with corresponding {@link
@@ -75,32 +73,29 @@ public class ReferenceProcessor extends ImplementationProcessorExtension {
             throw new DuplicateReferenceException(name);
         }
 
-        JavaMappedReference reference = new JavaMappedReference();
-        reference.setMember(method);
-        reference.setRequired(required);
-        reference.setUri(URI.create("#" + name));
+        Class<?> rawType = method.getParameterTypes()[0];
         ServiceContract contract;
         try {
-            Class<?> rawType = method.getParameterTypes()[0];
-            if (rawType.isArray() || Collection.class.isAssignableFrom(rawType)) {
-                if (required) {
-                    reference.setMultiplicity(Multiplicity.ONE_N);
-                } else {
-                    reference.setMultiplicity(Multiplicity.ZERO_N);
-                }
-            } else {
-                if (required) {
-                    reference.setMultiplicity(Multiplicity.ONE_ONE);
-                } else {
-                    reference.setMultiplicity(Multiplicity.ZERO_ONE);
-                }
-            }
             Class<?> baseType = getBaseType(rawType, method.getGenericParameterTypes()[0]);
             contract = regsitry.introspect(baseType);
         } catch (InvalidServiceContractException e) {
             throw new ProcessingException(e);
         }
-        reference.setServiceContract(contract);
+        JavaMappedReference reference = new JavaMappedReference(name, contract, method);
+        reference.setRequired(required);
+        if (rawType.isArray() || Collection.class.isAssignableFrom(rawType)) {
+            if (required) {
+                reference.setMultiplicity(Multiplicity.ONE_N);
+            } else {
+                reference.setMultiplicity(Multiplicity.ZERO_N);
+            }
+        } else {
+            if (required) {
+                reference.setMultiplicity(Multiplicity.ONE_ONE);
+            } else {
+                reference.setMultiplicity(Multiplicity.ZERO_ONE);
+            }
+        }
         type.getReferences().put(name, reference);
     }
 
@@ -123,32 +118,29 @@ public class ReferenceProcessor extends ImplementationProcessorExtension {
         if (type.getReferences().get(name) != null) {
             throw new DuplicateReferenceException(name);
         }
-        JavaMappedReference reference = new JavaMappedReference();
-        reference.setMember(field);
-        reference.setRequired(required);
-        reference.setUri(URI.create("#" + name));
+        Class<?> rawType = field.getType();
         ServiceContract contract;
         try {
-            Class<?> rawType = field.getType();
-            if (rawType.isArray() || Collection.class.isAssignableFrom(rawType)) {
-                if (required) {
-                    reference.setMultiplicity(Multiplicity.ONE_N);
-                } else {
-                    reference.setMultiplicity(Multiplicity.ZERO_N);
-                }
-            } else {
-                if (required) {
-                    reference.setMultiplicity(Multiplicity.ONE_ONE);
-                } else {
-                    reference.setMultiplicity(Multiplicity.ZERO_ONE);
-                }
-            }
             Class<?> baseType = getBaseType(rawType, field.getGenericType());
             contract = regsitry.introspect(baseType);
         } catch (InvalidServiceContractException e) {
             throw new ProcessingException(e);
         }
-        reference.setServiceContract(contract);
+        JavaMappedReference reference = new JavaMappedReference(name, contract, field);
+        reference.setRequired(required);
+        if (rawType.isArray() || Collection.class.isAssignableFrom(rawType)) {
+            if (required) {
+                reference.setMultiplicity(Multiplicity.ONE_N);
+            } else {
+                reference.setMultiplicity(Multiplicity.ZERO_N);
+            }
+        } else {
+            if (required) {
+                reference.setMultiplicity(Multiplicity.ONE_ONE);
+            } else {
+                reference.setMultiplicity(Multiplicity.ZERO_ONE);
+            }
+        }
         type.getReferences().put(name, reference);
     }
 

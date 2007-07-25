@@ -149,7 +149,7 @@ public class DefaultWireResolverTestCase extends TestCase {
         ServiceContract contract = new ServiceContract() {
         };
         contract.setInterfaceClass(requiredInterface);
-        ReferenceDefinition referenceDefinition = new ReferenceDefinition(URI.create("#ref"), contract);
+        ReferenceDefinition referenceDefinition = new ReferenceDefinition("ref", contract);
         referenceDefinition.setRequired(true);
         MockComponentType type = new MockComponentType();
         type.add(referenceDefinition);

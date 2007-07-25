@@ -19,7 +19,6 @@
 package org.fabric3.pojo.processor;
 
 import java.lang.reflect.Member;
-import java.net.URI;
 
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceContract;
@@ -36,7 +35,7 @@ public class JavaMappedReference extends ReferenceDefinition {
     public JavaMappedReference() {
     }
 
-    public JavaMappedReference(URI name, ServiceContract serviceContract, Member member) {
+    public JavaMappedReference(String name, ServiceContract serviceContract, Member member) {
         super(name, serviceContract);
         this.member = member;
     }

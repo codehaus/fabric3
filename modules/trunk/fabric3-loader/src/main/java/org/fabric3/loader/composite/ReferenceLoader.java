@@ -19,7 +19,6 @@
 package org.fabric3.loader.composite;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -33,6 +32,11 @@ import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.loader.common.InvalidNameException;
+import org.fabric3.scdl.BindingDefinition;
+import org.fabric3.scdl.ModelObject;
+import org.fabric3.scdl.Multiplicity;
+import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.Constants;
 import org.fabric3.spi.loader.InvalidReferenceException;
 import org.fabric3.spi.loader.LoaderContext;
@@ -41,11 +45,6 @@ import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.loader.UnrecognizedElementException;
-import org.fabric3.scdl.BindingDefinition;
-import org.fabric3.scdl.ModelObject;
-import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.Multiplicity;
-import org.fabric3.scdl.ReferenceDefinition;
 
 /**
  * Loads a reference from an XML-based assembly file
@@ -76,16 +75,14 @@ public class ReferenceLoader implements StAXElementLoader<ReferenceDefinition> {
     public ReferenceDefinition load(XMLStreamReader reader, LoaderContext context)
         throws XMLStreamException, LoaderException {
 
-        ReferenceDefinition referenceDefinition = new ReferenceDefinition();
-
         String name = reader.getAttributeValue(null, "name");
+
+        ReferenceDefinition referenceDefinition = new ReferenceDefinition(name, null, null);
 
         setPromoted(reader, referenceDefinition, name);
 
         setMultiplicity(reader, referenceDefinition);
 
-        setUri(reader, referenceDefinition, name);
-        
         setKey(reader, referenceDefinition);
 
         while (true) {
@@ -115,23 +112,6 @@ public class ReferenceLoader implements StAXElementLoader<ReferenceDefinition> {
         String key = reader.getAttributeValue(Constants.FABRIC3_NS, "key");
         if(key != null) {
             referenceDefinition.setKey(key);
-        }
-        
-    }
-
-    /*
-     * Sets the reference URI.
-     */
-    private void setUri(XMLStreamReader reader, ReferenceDefinition referenceDefinition, String name)
-        throws LoaderException {
-        
-        try {
-            referenceDefinition.setUri(new URI('#' + name));
-        } catch (URISyntaxException e) {
-            LoaderException le = new LoaderException(e);
-            le.setLine(reader.getLocation().getLineNumber());
-            le.setColumn(reader.getLocation().getColumnNumber());
-            throw le;
         }
         
     }

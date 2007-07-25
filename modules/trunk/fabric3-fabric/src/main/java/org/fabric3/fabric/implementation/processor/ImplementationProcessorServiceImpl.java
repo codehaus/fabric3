@@ -22,7 +22,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Member;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.net.URI;
 import java.util.Collection;
 import java.util.List;
 
@@ -136,10 +135,6 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
 
     public JavaMappedReference createReference(String name, Member member, Class<?> paramType)
         throws ProcessingException {
-        JavaMappedReference reference = new JavaMappedReference();
-        reference.setUri(URI.create("#" + name));
-        reference.setMember(member);
-        reference.setRequired(false);
         ServiceContract contract;
         try {
             contract = registry.introspect(paramType);
@@ -151,7 +146,8 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
         } catch (IllegalCallbackException e) {
             throw new ProcessingException(e);
         }
-        reference.setServiceContract(contract);
+        JavaMappedReference reference = new JavaMappedReference(name, contract, member);
+        reference.setRequired(false);
         return reference;
     }
 
@@ -252,7 +248,6 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
         // TODO multiplicity
         // the param is marked as a reference
         Reference refAnnotation = (Reference) annot;
-        JavaMappedReference reference = new JavaMappedReference();
         String name = refAnnotation.name();
         if (name == null || name.length() == 0) {
             if (constructorNames.length == 0 || constructorNames[0].length() == 0) {
@@ -272,29 +267,29 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
         if (type.getReferences().get(name) != null) {
             throw new DuplicateReferenceException(name);
         }
-        reference.setUri(URI.create("#" + name));
         boolean required = refAnnotation.required();
-        reference.setRequired(required);
+
+        Class<?> baseType = getBaseType(param, genericParam);
+        ServiceContract<?> contract;
         try {
-            Class<?> rawType = param;
-            if (rawType.isArray() || Collection.class.isAssignableFrom(rawType)) {
-                if (required) {
-                    reference.setMultiplicity(Multiplicity.ONE_N);
-                } else {
-                    reference.setMultiplicity(Multiplicity.ZERO_N);
-                }
-            } else {
-                if (required) {
-                    reference.setMultiplicity(Multiplicity.ONE_ONE);
-                } else {
-                    reference.setMultiplicity(Multiplicity.ZERO_ONE);
-                }
-            }
-            Class<?> baseType = getBaseType(rawType, genericParam);
-            ServiceContract<?> contract = registry.introspect(baseType);
-            reference.setServiceContract(contract);
+            contract = registry.introspect(baseType);
         } catch (InvalidServiceContractException e) {
             throw new ProcessingException(e);
+        }
+        JavaMappedReference reference = new JavaMappedReference(name, contract, null);
+        reference.setRequired(required);
+        if (param.isArray() || Collection.class.isAssignableFrom(param)) {
+            if (required) {
+                reference.setMultiplicity(Multiplicity.ONE_N);
+            } else {
+                reference.setMultiplicity(Multiplicity.ZERO_N);
+            }
+        } else {
+            if (required) {
+                reference.setMultiplicity(Multiplicity.ONE_ONE);
+            } else {
+                reference.setMultiplicity(Multiplicity.ZERO_ONE);
+            }
         }
         type.getReferences().put(name, reference);
         addName(explicitNames, pos, name);

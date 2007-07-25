@@ -348,7 +348,7 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
                     throw new AmbiguousConstructorException("Ambiguous property or reference for constructor type",
                         type.getName());
                 }
-                name = reference.getUri().getFragment();
+                name = reference.getName();
                 // do not break since ambiguities must be checked, i.e. more than one prop or ref of the same type
             }
         }

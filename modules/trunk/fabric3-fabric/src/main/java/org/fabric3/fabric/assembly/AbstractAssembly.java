@@ -261,7 +261,7 @@ public abstract class AbstractAssembly implements Assembly {
             component.addService(logicalService);
         }
         for (ReferenceDefinition reference : type.getReferences().values()) {
-            URI referenceUri = baseUri.resolve(reference.getUri());
+            URI referenceUri = baseUri.resolve('#' + reference.getName());
             LogicalReference logicalReference = new LogicalReference(referenceUri, reference, component);
             for (BindingDefinition binding : reference.getBindings()) {
                 logicalReference.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalReference));

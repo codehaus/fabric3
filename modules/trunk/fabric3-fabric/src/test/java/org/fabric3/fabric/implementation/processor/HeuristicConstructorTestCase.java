@@ -60,12 +60,9 @@ public class HeuristicConstructorTestCase extends TestCase {
      * Verifies a single constructor is chosen with a reference as the type
      */
     public void testSingleConstructorWithRef() throws Exception {
-        PojoComponentType type =
-            new PojoComponentType();
-        JavaMappedReference ref = new JavaMappedReference();
-        ref.setUri(URI.create("#foo"));
+        PojoComponentType type = new PojoComponentType();
         ServiceContract contract = new JavaServiceContract(String.class);
-        ref.setServiceContract(contract);
+        JavaMappedReference ref = new JavaMappedReference("foo", contract, null);
         type.getReferences().put("foo", ref);
         processor.visitEnd(Foo1.class, type, null);
         assertNotNull(type.getConstructorDefinition().getConstructor());
@@ -76,18 +73,16 @@ public class HeuristicConstructorTestCase extends TestCase {
      * Verifies a single constructor is chosen with a property and a reference as the type
      */
     public void testSingleConstructorWithPropRef() throws Exception {
-        PojoComponentType type =
-            new PojoComponentType();
+        PojoComponentType type = new PojoComponentType();
 
         JavaMappedProperty<String> prop = new JavaMappedProperty<String>();
         prop.setName("foo");
         prop.setJavaType(String.class);
         type.getProperties().put("foo", prop);
 
-        JavaMappedReference ref = new JavaMappedReference();
-        ref.setUri(URI.create("#ref"));
         ServiceContract contract = new JavaServiceContract(Foo1.class);
-        ref.setServiceContract(contract);
+        JavaMappedReference ref = new JavaMappedReference("ref", contract, null);
+
         type.getReferences().put("ref", ref);
         processor.visitEnd(Foo2.class, type, null);
         assertNotNull(type.getConstructorDefinition().getConstructor());
@@ -113,14 +108,10 @@ public class HeuristicConstructorTestCase extends TestCase {
     public void testSingleConstructorAmbiguousRef() throws Exception {
         PojoComponentType type =
             new PojoComponentType();
-        JavaMappedReference ref = new JavaMappedReference();
-        ref.setUri(URI.create("#ref"));
         ServiceContract contract = new JavaServiceContract(Foo1.class);
-        ref.setServiceContract(contract);
+        JavaMappedReference ref = new JavaMappedReference("ref", contract, null);
         type.getReferences().put("ref", ref);
-        JavaMappedReference ref2 = new JavaMappedReference();
-        ref2.setUri(URI.create("#ref2"));
-        ref2.setServiceContract(contract);
+        JavaMappedReference ref2 = new JavaMappedReference("ref2", contract, null);
         type.getReferences().put("ref2", ref2);
         try {
             processor.visitEnd(Foo4.class, type, null);

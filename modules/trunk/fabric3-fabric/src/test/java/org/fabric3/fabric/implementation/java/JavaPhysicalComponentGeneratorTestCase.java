@@ -133,13 +133,10 @@ public class JavaPhysicalComponentGeneratorTestCase extends TestCase {
         ctorDef.getInjectionNames().add("ctorProp");
         type.setConstructorDefinition(ctorDef);
 
-        JavaMappedReference setterReference = new JavaMappedReference();
-        setterReference.setUri(URI.create("#setter"));
-        setterReference.setMember(setterMethod);
+        JavaMappedReference setterReference = new JavaMappedReference("setter", null, setterMethod);
         type.add(setterReference);
 
-        JavaMappedReference ctorReference = new JavaMappedReference();
-        ctorReference.setUri(URI.create("#ctorRef"));
+        JavaMappedReference ctorReference = new JavaMappedReference("ctorRef", null, null);
         type.add(ctorReference);
 
         JavaMappedProperty<Object> ctorProperty = new JavaMappedProperty<Object>();

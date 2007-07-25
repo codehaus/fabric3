@@ -55,7 +55,7 @@ public class ReferenceLoaderTestCase extends TestCase {
         EasyMock.replay(mockReader);
         ReferenceDefinition referenceDefinition = loader.load(mockReader, ctx);
         assertNotNull(referenceDefinition);
-        assertEquals("#" + name, referenceDefinition.getUri().toString());
+        assertEquals(name, referenceDefinition.getName());
     }
 
     public void testPromote() throws LoaderException, XMLStreamException {
@@ -121,7 +121,7 @@ public class ReferenceLoaderTestCase extends TestCase {
 
         ReferenceDefinition referenceDefinition = loader.load(mockReader, ctx);
         assertNotNull(referenceDefinition);
-        assertEquals("#" + name, referenceDefinition.getUri().toString());
+        assertEquals(name, referenceDefinition.getName());
         assertSame(sc, referenceDefinition.getServiceContract());
     }
 

@@ -100,8 +100,7 @@ public class DefaultWireResolver implements WireResolver {
         ComponentType<?, ?, ?> componentType = definition.getImplementation().getComponentType();
         Map<String, ComponentReference> targets = definition.getReferences();
         for (ReferenceDefinition reference : componentType.getReferences().values()) {
-            URI refUri = reference.getUri();
-            String referenceName = refUri.getFragment();
+            String referenceName = reference.getName();
             LogicalReference logicalReference = component.getReference(referenceName);
             assert logicalReference != null;
             ComponentReference target = targets.get(referenceName);
@@ -133,7 +132,7 @@ public class DefaultWireResolver implements WireResolver {
                         throw new AutowireTargetNotFoundException("No suitable target found for", fullRef);
                     }
                 } else {
-                    throw new UnspecifiedTargetException("Reference target not specified", refUri.toString());
+                    throw new UnspecifiedTargetException("Reference target not specified", referenceName);
                 }
             } else {
                 // reference element is specified

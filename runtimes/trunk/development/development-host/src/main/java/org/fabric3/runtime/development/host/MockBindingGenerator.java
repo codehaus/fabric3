@@ -59,7 +59,7 @@ public class MockBindingGenerator implements
                                                          GeneratorContext generatorContext,
                                                          ReferenceDefinition referenceDefinition)
             throws GenerationException {
-        String name = referenceDefinition.getUri().getFragment();
+        String name = referenceDefinition.getName();
         return new MockWireTargetDefinition(name);
     }
 

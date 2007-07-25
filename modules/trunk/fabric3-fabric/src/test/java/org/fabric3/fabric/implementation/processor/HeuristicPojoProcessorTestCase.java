@@ -163,11 +163,9 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
     public void testExcludedPropertyAndReference() throws Exception {
         PojoComponentType type =
             new PojoComponentType();
-        JavaMappedReference ref = new JavaMappedReference();
-        ref.setUri(URI.create("#reference"));
+        JavaMappedReference ref = new JavaMappedReference("reference", null, null);
         type.add(ref);
-        JavaMappedReference ref2 = new JavaMappedReference();
-        ref2.setUri(URI.create("#reference2"));
+        JavaMappedReference ref2 = new JavaMappedReference("reference2", null, null);
         type.add(ref2);
         JavaMappedProperty<?> prop1 = new JavaMappedProperty();
         prop1.setName("string1");

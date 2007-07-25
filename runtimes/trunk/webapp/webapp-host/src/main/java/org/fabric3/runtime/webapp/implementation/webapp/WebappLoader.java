@@ -18,8 +18,6 @@
  */
 package org.fabric3.runtime.webapp.implementation.webapp;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import javax.xml.namespace.QName;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
@@ -29,22 +27,21 @@ import javax.xml.stream.XMLStreamReader;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.extension.loader.LoaderExtension;
+import org.fabric3.pojo.processor.ProcessingException;
+import org.fabric3.scdl.ComponentType;
+import org.fabric3.scdl.Property;
+import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.Scope;
+import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.spi.Constants;
 import org.fabric3.spi.idl.InvalidServiceContractException;
 import org.fabric3.spi.idl.java.InterfaceJavaIntrospector;
-import org.fabric3.pojo.processor.ProcessingException;
-import org.fabric3.spi.loader.IllegalSCDLNameException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.MissingResourceException;
 import org.fabric3.spi.loader.UnrecognizedElementException;
-import org.fabric3.scdl.ReferenceDefinition;
-import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.ComponentType;
-import org.fabric3.scdl.Scope;
-import org.fabric3.scdl.ServiceDefinition;
-import org.fabric3.scdl.Property;
-import org.fabric3.spi.Constants;
 
 /**
  * @version $Rev$ $Date$
@@ -94,12 +91,6 @@ public class WebappLoader extends LoaderExtension<WebappImplementation> {
                                    XMLStreamReader reader,
                                    LoaderContext context) throws LoaderException {
         String name = reader.getAttributeValue(null, "name");
-        URI referenceURI;
-        try {
-            referenceURI = new URI('#' + name);
-        } catch (URISyntaxException e) {
-            throw new IllegalSCDLNameException(e);
-        }
 
         String className = reader.getAttributeValue(null, "interface");
         if (className == null) {
@@ -120,7 +111,7 @@ public class WebappLoader extends LoaderExtension<WebappImplementation> {
             throw new ProcessingException("Invalid service contract", name, e);
         }
 
-        ReferenceDefinition definition = new ReferenceDefinition(referenceURI, serviceContract);
+        ReferenceDefinition definition = new ReferenceDefinition(name, serviceContract);
         componentType.add(definition);
     }
 }
