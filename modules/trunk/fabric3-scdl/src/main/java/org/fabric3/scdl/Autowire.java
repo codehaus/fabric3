@@ -19,12 +19,28 @@
 package org.fabric3.scdl;
 
 /**
- * Denotes if autowire is set, off or inherited for a Component or Reference
+ * Denotes if autowire is on, off or inherited.
  *
  * @version $Rev$ $Date$
  */
 public enum Autowire {
     ON,
     OFF,
-    INHERITED
+    INHERITED;
+
+    /**
+     * Parse an autowire value.
+     *
+     * @param text the text to parse
+     * @return INHERITED if the text is null or empty, ON if text is "true", otherwise OFF
+     */
+    public static Autowire fromString(String text) {
+        if (text == null || text.length() == 0) {
+            return INHERITED;
+        } else if ("true".equalsIgnoreCase(text)) {
+            return ON;
+        } else {
+            return OFF;
+        }
+    }
 }

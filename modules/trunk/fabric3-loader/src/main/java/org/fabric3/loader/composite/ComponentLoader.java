@@ -70,7 +70,7 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
     public ComponentDefinition<?> load(XMLStreamReader reader, LoaderContext context)
             throws XMLStreamException, LoaderException {
         String name = reader.getAttributeValue(null, "name");
-        Autowire autowire = loadAutowire(reader);
+        Autowire autowire = Autowire.fromString(reader.getAttributeValue(null, "autowire"));
         URI runtimeId = loadRuntimeId(reader);
         Integer initLevel = loadInitLevel(reader);
 
@@ -114,17 +114,6 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
             } catch (NumberFormatException e) {
                 throw new InvalidValueException(initLevel, "initValue", e);
             }
-        }
-    }
-
-    protected Autowire loadAutowire(XMLStreamReader reader) {
-        String autowire = reader.getAttributeValue(null, "autowire");
-        if (autowire == null) {
-            return Autowire.INHERITED;
-        } else if (Boolean.parseBoolean(autowire)) {
-            return Autowire.ON;
-        } else {
-            return Autowire.OFF;
         }
     }
 

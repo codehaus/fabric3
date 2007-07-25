@@ -108,14 +108,7 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
         QName compositeName = new QName(targetNamespace, name);
         Composite type = new Composite(compositeName);
 
-        String autowire = reader.getAttributeValue(null, "autowire");
-        if ("true".equalsIgnoreCase(autowire)) {
-            type.setAutowire(Autowire.ON);
-        } else if (autowire == null) {
-            type.setAutowire(Autowire.INHERITED);
-        } else {
-            type.setAutowire(Autowire.OFF);
-        }
+        type.setAutowire(Autowire.fromString(reader.getAttributeValue(null, "autowire")));
 
         while (true) {
             switch (reader.next()) {
