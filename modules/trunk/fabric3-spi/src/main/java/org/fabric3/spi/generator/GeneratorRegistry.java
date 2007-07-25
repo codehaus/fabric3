@@ -20,10 +20,12 @@ package org.fabric3.spi.generator;
 
 import java.net.URI;
 
+import org.fabric3.spi.model.definition.PolicySetExtension;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
+import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.ResourceDescription;
@@ -43,8 +45,7 @@ public interface GeneratorRegistry {
      * @param clazz     the implementation type the generator handles
      * @param generator the generator to register
      */
-    <T extends Implementation<?>> void register(Class<T> clazz,
-                                                ComponentGenerator<LogicalComponent<T>> generator);
+    <T extends Implementation<?>> void register(Class<T> clazz, ComponentGenerator<LogicalComponent<T>> generator);
 
     /**
      * Registers a component generator
@@ -52,7 +53,16 @@ public interface GeneratorRegistry {
      * @param clazz     the binding type type the generator handles
      * @param generator the generator to register
      */
-    <T extends BindingDefinition> void register(Class<T> clazz, BindingGenerator generator);
+    <T extends BindingDefinition> void register(Class<T> clazz, BindingGenerator<?, ?, T> generator);
+    
+    /**
+     * Registers an interceptor generator by type.
+     * 
+     * @param <T> Policy extension type.
+     * @param policyExtension Policy extension class.
+     * @param generator Interceptor generator.
+     */
+    <T extends PolicySetExtension> void register(Class<T> clazz, InterceptorDefinitionGenerator<T, ?> generator);
 
     /**
      * Registers a resource generator
@@ -92,7 +102,7 @@ public interface GeneratorRegistry {
      * @throws GenerationException if an error ocurrs during generation
      */
     <C extends LogicalComponent<?>> void generateBoundServiceWire(LogicalService service,
-                                                                  LogicalBinding binding,
+                                                                  LogicalBinding<?> binding,
                                                                   C target,
                                                                   GeneratorContext context) throws GenerationException;
 
@@ -109,7 +119,7 @@ public interface GeneratorRegistry {
      */
     <C extends LogicalComponent<?>> void generateBoundReferenceWire(C source,
                                                                     LogicalReference reference,
-                                                                    LogicalBinding binding,
+                                                                    LogicalBinding<?> binding,
                                                                     GeneratorContext context)
             throws GenerationException;
 
@@ -140,7 +150,7 @@ public interface GeneratorRegistry {
      * @return a URI representing the unique identifier for the physical  resource
      * @throws GenerationException if an error ocurrs during generation
      */
-    URI generateResource(ResourceDescription description, LogicalComponent<?> component, GeneratorContext context)
+    URI generateResource(ResourceDescription<?> description, LogicalComponent<?> component, GeneratorContext context)
             throws GenerationException;
 
     /**
@@ -151,5 +161,12 @@ public interface GeneratorRegistry {
      * @throws GenerationException if an error ocurrs during generation
      */
     void generateCommandSet(LogicalComponent<?> component, GeneratorContext context) throws GenerationException;
+    
+    /**
+     * Generates the physical interceptor definition corresponding to the policy extension.
+     * @param policySetExtension Policy extension.
+     * @return Physical interceptor definition.
+     */
+    <PE extends PolicySetExtension> PhysicalInterceptorDefinition generateInterceptorDefinition(PE policySetExtension);
 
 }
