@@ -10,12 +10,13 @@ import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.Referenceable;
 import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.ComponentType;
-import org.fabric3.scdl.CompositeComponentType;
+import org.fabric3.scdl.AbstractComponentType;
+import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.scdl.ComponentType;
 
 /**
  * @version $Rev$ $Date$
@@ -62,7 +63,7 @@ public class InstantiationTestCase extends TestCase {
         ComponentDefinition<MockImplementation> child =
                 new ComponentDefinition<MockImplementation>("child", childImp);
 
-        CompositeComponentType type = new CompositeComponentType();
+        Composite type = new Composite(null);
         type.add(child);
         CompositeImplementation implementation = new CompositeImplementation();
         implementation.setComponentType(type);
@@ -73,7 +74,7 @@ public class InstantiationTestCase extends TestCase {
     private ComponentDefinition<?> createParentWithServiceAndReference() {
         ServiceDefinition service = new ServiceDefinition("service", null, false);
         ReferenceDefinition reference = new ReferenceDefinition("reference", null, null);
-        CompositeComponentType type = new CompositeComponentType();
+        Composite type = new Composite(null);
         type.add(service);
         type.add(reference);
         CompositeImplementation implementation = new CompositeImplementation();
@@ -98,7 +99,7 @@ public class InstantiationTestCase extends TestCase {
         }
     }
 
-    private class MockImplementation extends Implementation<ComponentType> {
+    private class MockImplementation extends Implementation<AbstractComponentType> {
 
     }
 }

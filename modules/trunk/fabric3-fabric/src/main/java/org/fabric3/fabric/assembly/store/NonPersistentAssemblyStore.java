@@ -25,7 +25,7 @@ import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.CompositeComponentType;
+import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
 
 /**
@@ -48,7 +48,7 @@ public class NonPersistentAssemblyStore implements AssemblyStore {
     }
 
     public LogicalComponent<CompositeImplementation> read() throws RecoveryException {
-        CompositeComponentType type = new CompositeComponentType();
+        Composite type = new Composite(null);
         CompositeImplementation impl = new CompositeImplementation();
         impl.setComponentType(type);
         ComponentDefinition<CompositeImplementation> definition =

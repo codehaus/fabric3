@@ -45,7 +45,7 @@ import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.CompositeComponentType;
+import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Scope;
@@ -111,7 +111,7 @@ public class StandaloneRuntimeImpl extends AbstractRuntime<StandaloneHostInfo> i
 
     private int run(CompositeImplementation impl, String[] args, URI compositeUri, WorkContext workContext)
             throws Exception {
-        CompositeComponentType componentType = impl.getComponentType();
+        Composite componentType = impl.getComponentType();
         Map<String, ComponentDefinition<? extends Implementation<?>>> components = componentType.getComponents();
         for (Map.Entry<String, ComponentDefinition<? extends Implementation<?>>> entry : components.entrySet()) {
             String name = entry.getKey();

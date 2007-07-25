@@ -39,7 +39,7 @@ import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.CompositeComponentType;
+import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.model.type.ContributionResourceDescription;
 import org.fabric3.scdl.Implementation;
@@ -251,8 +251,8 @@ public class ContributionServiceImpl implements ContributionService {
             description.addArtifactUrl(importedUrl);
         }
         for (ModelObject type : contribution.getTypes().values()) {
-            if (type instanceof CompositeComponentType) {
-                addContributionDescription(description, (CompositeComponentType) type);
+            if (type instanceof Composite) {
+                addContributionDescription(description, (Composite) type);
             }
         }
     }
@@ -263,12 +263,12 @@ public class ContributionServiceImpl implements ContributionService {
      * @param description the resource description
      * @param type        the component type to introspect
      */
-    private void addContributionDescription(ContributionResourceDescription description, CompositeComponentType type) {
+    private void addContributionDescription(ContributionResourceDescription description, Composite type) {
         for (ComponentDefinition<?> definition : type.getComponents().values()) {
             Implementation<?> implementation = definition.getImplementation();
             if (CompositeImplementation.class.isInstance(implementation)) {
                 CompositeImplementation compositeImplementation = CompositeImplementation.class.cast(implementation);
-                CompositeComponentType componentType = compositeImplementation.getComponentType();
+                Composite componentType = compositeImplementation.getComponentType();
                 addContributionDescription(description, componentType);
             } else {
                 implementation.addResourceDescription(description);

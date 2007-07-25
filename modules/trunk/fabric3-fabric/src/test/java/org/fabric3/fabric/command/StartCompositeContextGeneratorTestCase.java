@@ -31,7 +31,7 @@ import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.CompositeComponentType;
+import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
 
 /**
@@ -75,7 +75,7 @@ public class StartCompositeContextGeneratorTestCase extends TestCase {
     }
 
     private ComponentDefinition<CompositeImplementation> createComposite(String name) {
-        CompositeComponentType type = new CompositeComponentType(new QName(name));
+        Composite type = new Composite(new QName(name));
         CompositeImplementation impl = new CompositeImplementation();
         impl.setComponentType(type);
         return new ComponentDefinition<CompositeImplementation>(name, impl);

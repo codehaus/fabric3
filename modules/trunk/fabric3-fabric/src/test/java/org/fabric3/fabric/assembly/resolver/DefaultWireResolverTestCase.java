@@ -25,8 +25,8 @@ import junit.framework.TestCase;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.ComponentType;
-import org.fabric3.scdl.CompositeComponentType;
+import org.fabric3.scdl.AbstractComponentType;
+import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Property;
@@ -125,7 +125,7 @@ public class DefaultWireResolverTestCase extends TestCase {
         LogicalComponent<CompositeImplementation> composite = createComposite("composite", null);
         LogicalComponent<?> source = createSourceAtomic(sourceClass, composite);
         composite.addComponent(source);
-        CompositeComponentType type = composite.getDefinition().getImplementation().getComponentType();
+        Composite type = composite.getDefinition().getImplementation().getComponentType();
         type.add(source.getDefinition());
         LogicalComponent<?> target = createTargetAtomic(targetClass, composite);
         composite.addComponent(target);
@@ -135,7 +135,7 @@ public class DefaultWireResolverTestCase extends TestCase {
 
     private LogicalComponent<CompositeImplementation> createComposite(String uri, LogicalComponent<CompositeImplementation> parent) {
         URI parentUri = URI.create(uri);
-        CompositeComponentType type = new CompositeComponentType();
+        Composite type = new Composite(null);
         CompositeImplementation impl = new CompositeImplementation();
         impl.setComponentType(type);
         ComponentDefinition<CompositeImplementation> definition =
@@ -186,7 +186,7 @@ public class DefaultWireResolverTestCase extends TestCase {
 
     }
 
-    private class MockComponentType extends ComponentType<ServiceDefinition, ReferenceDefinition, Property<?>> {
+    private class MockComponentType extends AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property<?>> {
 
     }
 

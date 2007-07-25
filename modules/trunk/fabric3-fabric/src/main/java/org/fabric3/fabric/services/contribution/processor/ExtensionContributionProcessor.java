@@ -37,7 +37,7 @@ import org.fabric3.fabric.services.contribution.StoreNotFoundException;
 import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.Deployable;
-import org.fabric3.scdl.CompositeComponentType;
+import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Include;
 import org.fabric3.scdl.ModelObject;
 import static org.fabric3.spi.Constants.FABRIC3_SYSTEM_NS;
@@ -149,14 +149,14 @@ public class ExtensionContributionProcessor extends ContributionProcessorExtensi
     }
 
     private void createComponentType(Contribution contribution, QName qName, List<Contribution> contributions) {
-        CompositeComponentType type = new CompositeComponentType(qName);
+        Composite type = new Composite(qName);
         for (Contribution child : contributions) {
             for (Map.Entry<QName, ModelObject> entry : child.getTypes().entrySet()) {
-                if (!(entry.getValue() instanceof CompositeComponentType)) {
+                if (!(entry.getValue() instanceof Composite)) {
                     continue;
                 }
                 QName name = entry.getKey();
-                CompositeComponentType childType = (CompositeComponentType) entry.getValue();
+                Composite childType = (Composite) entry.getValue();
                 for (Deployable deployable : child.getManifest().getDeployables()) {
                     if (deployable.getName().equals(name)) {
                         Include include = new Include();

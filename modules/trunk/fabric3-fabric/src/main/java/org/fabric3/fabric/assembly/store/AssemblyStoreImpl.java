@@ -35,7 +35,7 @@ import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.CompositeComponentType;
+import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
 
 /**
@@ -93,7 +93,7 @@ public class AssemblyStoreImpl implements AssemblyStore {
     public LogicalComponent<CompositeImplementation> read() throws RecoveryException {
         if (!serializedFile.exists()) {
             // no serialized file, create a new domain
-            CompositeComponentType type = new CompositeComponentType();
+            Composite type = new Composite(null);
             CompositeImplementation impl = new CompositeImplementation();
             impl.setComponentType(type);
             ComponentDefinition<CompositeImplementation> definition =

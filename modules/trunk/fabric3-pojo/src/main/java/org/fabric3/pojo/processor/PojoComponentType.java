@@ -23,14 +23,14 @@ import java.util.Map;
 
 import org.fabric3.pojo.instancefactory.MemberSite;
 import org.fabric3.pojo.instancefactory.Signature;
-import org.fabric3.scdl.ComponentType;
+import org.fabric3.scdl.AbstractComponentType;
 
 /**
  * A component type specialization for POJO implementations
  *
  * @version $$Rev$$ $$Date$$
  */
-public class PojoComponentType extends ComponentType<JavaMappedService, JavaMappedReference, JavaMappedProperty<?>> {
+public class PojoComponentType extends AbstractComponentType<JavaMappedService, JavaMappedReference, JavaMappedProperty<?>> {
     private final Class<?> implClass;
     private ConstructorDefinition<?> constructorDefinition;
     private Signature initMethod;

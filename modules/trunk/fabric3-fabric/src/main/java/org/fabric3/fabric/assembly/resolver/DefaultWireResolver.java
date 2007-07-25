@@ -29,8 +29,8 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.ComponentType;
-import org.fabric3.scdl.CompositeComponentType;
+import org.fabric3.scdl.AbstractComponentType;
+import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ComponentReference;
@@ -97,7 +97,7 @@ public class DefaultWireResolver implements WireResolver {
     private void resolveReferences(LogicalComponent<?> targetComposite, LogicalComponent<?> component, boolean include)
             throws ResolutionException {
         ComponentDefinition<? extends Implementation<?>> definition = component.getDefinition();
-        ComponentType<?, ?, ?> componentType = definition.getImplementation().getComponentType();
+        AbstractComponentType<?, ?, ?> componentType = definition.getImplementation().getComponentType();
         Map<String, ComponentReference> targets = definition.getReferences();
         for (ReferenceDefinition reference : componentType.getReferences().values()) {
             String referenceName = reference.getName();
@@ -222,7 +222,7 @@ public class DefaultWireResolver implements WireResolver {
         for (LogicalComponent<?> child : composite.getComponents()) {
             ComponentDefinition<? extends Implementation<?>> candidate = child.getDefinition();
             Implementation<?> candidateImpl = candidate.getImplementation();
-            ComponentType<?, ?, ?> candidateType = candidateImpl.getComponentType();
+            AbstractComponentType<?, ?, ?> candidateType = candidateImpl.getComponentType();
             for (ServiceDefinition service : candidateType.getServices().values()) {
                 Class<?> serviceInterface = service.getServiceContract().getInterfaceClass();
                 if (serviceInterface == null) {
@@ -284,17 +284,17 @@ public class DefaultWireResolver implements WireResolver {
             // first check in the original parent composite definition
             if (component.getParent() != null) {
                 ComponentDefinition<? extends Implementation<?>> def = component.getParent().getDefinition();
-                ComponentType<?, ?, ?> type = def.getImplementation().getComponentType();
-                autowire = (CompositeComponentType.class.cast(type)).getAutowire();
+                AbstractComponentType<?, ?, ?> type = def.getImplementation().getComponentType();
+                autowire = (Composite.class.cast(type)).getAutowire();
                 if (autowire == Autowire.OFF || autowire == Autowire.ON) {
                     return autowire;
                 }
             }
             // undefined in the original parent or the component is top-level, check in the target
             ComponentDefinition<? extends Implementation<?>> parentDefinition = targetComposite.getDefinition();
-            ComponentType<?, ?, ?> parentType = parentDefinition.getImplementation().getComponentType();
-            while (CompositeComponentType.class.isInstance(parentType)) {
-                autowire = (CompositeComponentType.class.cast(parentType)).getAutowire();
+            AbstractComponentType<?, ?, ?> parentType = parentDefinition.getImplementation().getComponentType();
+            while (Composite.class.isInstance(parentType)) {
+                autowire = (Composite.class.cast(parentType)).getAutowire();
                 if (autowire == Autowire.OFF || autowire == Autowire.ON) {
                     break;
                 }

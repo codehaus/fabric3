@@ -43,7 +43,7 @@ import org.fabric3.spi.deployer.CompositeClassLoader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.scdl.CompositeComponentType;
+import org.fabric3.scdl.Composite;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
@@ -105,7 +105,7 @@ public class ExplodedJarContributionProcessor extends ContributionProcessorExten
             // set the classloader on the current context so artifacts in the contribution can be introspected
             Thread.currentThread().setContextClassLoader(loader);
             for (URL artifactUrl : artifactUrls) {
-                CompositeComponentType componentType = processComponentType(artifactUrl, loader);
+                Composite componentType = processComponentType(artifactUrl, loader);
                 contribution.addType(componentType.getName(), componentType);
             }
         } catch (LoaderException e) {
@@ -173,7 +173,7 @@ public class ExplodedJarContributionProcessor extends ContributionProcessorExten
      * @throws XMLStreamException if an error occurs parsing the XML
      * @throws LoaderException    if an error occurs processing the component type
      */
-    private CompositeComponentType processComponentType(URL artifactUrl, ClassLoader loader)
+    private Composite processComponentType(URL artifactUrl, ClassLoader loader)
             throws IOException, XMLStreamException, LoaderException {
         XMLStreamReader reader = null;
         InputStream stream = null;
@@ -182,7 +182,7 @@ public class ExplodedJarContributionProcessor extends ContributionProcessorExten
             reader = xmlFactory.createXMLStreamReader(stream);
             reader.nextTag();
             LoaderContext context = new LoaderContextImpl(loader, null);
-            return loaderRegistry.load(reader, CompositeComponentType.class, context);
+            return loaderRegistry.load(reader, Composite.class, context);
 
         } finally {
             try {

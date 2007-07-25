@@ -37,7 +37,7 @@ import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.CompositeComponentType;
+import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Include;
 import org.fabric3.scdl.ModelObject;
 import org.fabric3.scdl.WireDefinition;
@@ -52,7 +52,7 @@ import org.fabric3.loader.common.LoaderContextImpl;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class CompositeLoader implements StAXElementLoader<CompositeComponentType> {
+public class CompositeLoader implements StAXElementLoader<Composite> {
     private static final QName COMPOSITE = new QName(SCA_NS, "composite");
     private static final QName INCLUDE = new QName(SCA_NS, "include");
     private static final QName PROPERTY = new QName(SCA_NS, "property");
@@ -100,13 +100,13 @@ public class CompositeLoader implements StAXElementLoader<CompositeComponentType
         registry.unregisterLoader(COMPOSITE);
     }
 
-    public CompositeComponentType load(XMLStreamReader reader, LoaderContext loaderContext)
+    public Composite load(XMLStreamReader reader, LoaderContext loaderContext)
             throws XMLStreamException, LoaderException {
         String name = reader.getAttributeValue(null, "name");
         String targetNamespace = reader.getAttributeValue(null, "targetNamespace");
         loaderContext = new LoaderContextImpl(loaderContext, targetNamespace);
         QName compositeName = new QName(targetNamespace, name);
-        CompositeComponentType type = new CompositeComponentType(compositeName);
+        Composite type = new Composite(compositeName);
 
         String autowire = reader.getAttributeValue(null, "autowire");
         if ("true".equalsIgnoreCase(autowire)) {
@@ -168,7 +168,7 @@ public class CompositeLoader implements StAXElementLoader<CompositeComponentType
         }
     }
 
-    protected void verifyCompositeCompleteness(CompositeComponentType composite) throws InvalidServiceException {
+    protected void verifyCompositeCompleteness(Composite composite) throws InvalidServiceException {
         // check if all of the composite services have been wired
         for (ServiceDefinition svcDefn : composite.getDeclaredServices().values()) {
             if (svcDefn.getTarget() == null) {

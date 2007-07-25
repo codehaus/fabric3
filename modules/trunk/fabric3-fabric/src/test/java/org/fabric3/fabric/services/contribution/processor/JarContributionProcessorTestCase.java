@@ -14,7 +14,7 @@ import org.easymock.EasyMock;
 
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.scdl.CompositeComponentType;
+import org.fabric3.scdl.Composite;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.spi.services.contribution.Contribution;
@@ -47,18 +47,18 @@ public class JarContributionProcessorTestCase extends TestCase {
         location = ccl.getResource("./repository/1/test.jar");
         ContributionManifest manifest = new ContributionManifest();
         loaderRegistry = EasyMock.createMock(LoaderRegistry.class);
-        CompositeComponentType type1 = new CompositeComponentType(new QName("TestComposite1"));
-        CompositeComponentType type2 = new CompositeComponentType(new QName("TestComposite1"));
+        Composite type1 = new Composite(new QName("TestComposite1"));
+        Composite type2 = new Composite(new QName("TestComposite1"));
         EasyMock.expect(loaderRegistry.load(
                 EasyMock.isA(XMLStreamReader.class),
                 EasyMock.eq(ContributionManifest.class), EasyMock.isA(LoaderContext.class))).andReturn(manifest);
         EasyMock.expect(loaderRegistry.load(
                 EasyMock.isA(XMLStreamReader.class),
-                EasyMock.eq(CompositeComponentType.class), EasyMock.isA(LoaderContext.class))).andReturn(type1);
+                EasyMock.eq(Composite.class), EasyMock.isA(LoaderContext.class))).andReturn(type1);
 
         EasyMock.expect(loaderRegistry.load(
                 EasyMock.isA(XMLStreamReader.class),
-                EasyMock.eq(CompositeComponentType.class), EasyMock.isA(LoaderContext.class))).andReturn(type2);
+                EasyMock.eq(Composite.class), EasyMock.isA(LoaderContext.class))).andReturn(type2);
         EasyMock.replay(loaderRegistry);
         ClassLoader cl = getClass().getClassLoader();
         classLoaderRegistry = EasyMock.createMock(ClassLoaderRegistry.class);

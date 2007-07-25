@@ -41,8 +41,8 @@ import org.fabric3.fabric.services.routing.RoutingException;
 import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.ComponentType;
-import org.fabric3.scdl.CompositeComponentType;
+import org.fabric3.scdl.AbstractComponentType;
+import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.ModelObject;
@@ -130,10 +130,10 @@ public abstract class AbstractAssembly implements Assembly {
             throw new ArtifactNotFoundException("Deployable composite not found for", deployable.toString());
         }
         ModelObject object = contribution.getType(deployable);
-        if (!(object instanceof CompositeComponentType)) {
+        if (!(object instanceof Composite)) {
             throw new IllegalContributionTypeException("Deployable must be a composite", deployable.toString());
         }
-        CompositeComponentType type = (CompositeComponentType) object;
+        Composite type = (Composite) object;
         CompositeImplementation impl = new CompositeImplementation();
         impl.setComponentType(type);
         ComponentDefinition<CompositeImplementation> definition =
@@ -235,14 +235,13 @@ public abstract class AbstractAssembly implements Assembly {
                                                                             ComponentDefinition<I> definition)
             throws InstantiationException {
         Implementation<?> impl = definition.getImplementation();
-        ComponentType<?, ?, ?> type = impl.getComponentType();
+        AbstractComponentType<?, ?, ?> type = impl.getComponentType();
         //URI uri = URI.create(baseUri.toString() + "/" + definition.getName());
         URI runtimeId = definition.getRuntimeId();
         LogicalComponent<I> component = new LogicalComponent<I>(baseUri, runtimeId, definition, parent);
-        if (CompositeComponentType.class.isInstance(type)) {
-            CompositeComponentType compositeType = CompositeComponentType.class.cast(type);
-            LogicalComponent<CompositeImplementation> composite =
-                    (LogicalComponent<CompositeImplementation>) component;
+        if (Composite.class.isInstance(type)) {
+            Composite compositeType = Composite.class.cast(type);
+            LogicalComponent<CompositeImplementation> composite = (LogicalComponent<CompositeImplementation>) component;
             for (ComponentDefinition<? extends Implementation<?>> child : compositeType.getComponents().values()) {
                 URI childUri = URI.create(baseUri.toString() + "/" + child.getName());
                 LogicalComponent<? extends Implementation<?>> logicalChild = instantiate(childUri, composite, child);
@@ -282,8 +281,8 @@ public abstract class AbstractAssembly implements Assembly {
      */
     protected void normalize(LogicalComponent<?> component) {
         Implementation<?> implementation = component.getDefinition().getImplementation();
-        ComponentType<?, ?, ?> type = implementation.getComponentType();
-        if (CompositeComponentType.class.isInstance(type)) {
+        AbstractComponentType<?, ?, ?> type = implementation.getComponentType();
+        if (Composite.class.isInstance(type)) {
             for (LogicalComponent<?> child : component.getComponents()) {
                 normalize(child);
             }

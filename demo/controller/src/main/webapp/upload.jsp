@@ -15,7 +15,7 @@
 <%@ page import="org.fabric3.spi.loader.LoaderContext" %>
 <%@ page import="org.fabric3.spi.loader.LoaderRegistry" %>
 <%@ page import="org.fabric3.scdl.ComponentDefinition" %>
-<%@ page import="org.fabric3.scdl.CompositeComponentType" %>
+<%@ page import="org.fabric3.scdl.Composite" %>
 <%@ page import="org.fabric3.scdl.CompositeImplementation" %>
 <%@ page import="org.fabric3.scdl.Scope" %>
 <%@ page import="javax.xml.stream.XMLStreamConstants" %>
@@ -50,7 +50,7 @@
     URI componentURI = URI.create(assembly.getDomain().getUri().toString() + "/" + componentName);
     try {
         LoaderContext loaderContext = new LoaderContextImpl(Thread.currentThread().getContextClassLoader(), null);
-        CompositeComponentType componentType = loader.load(reader, CompositeComponentType.class, loaderContext);
+        Composite componentType = loader.load(reader, Composite.class, loaderContext);
         CompositeImplementation implementation = new CompositeImplementation();
         implementation.setComponentType(componentType);
         ComponentDefinition component = new ComponentDefinition(componentURI.toString(), implementation);

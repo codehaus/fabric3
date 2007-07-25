@@ -29,7 +29,7 @@ import javax.xml.namespace.QName;
 public class Include extends ModelObject {
     private QName name;
     private URL scdlLocation;
-    private CompositeComponentType included;
+    private Composite included;
 
     /**
      * Returns the name of the composite that is being included.
@@ -72,7 +72,7 @@ public class Include extends ModelObject {
      *
      * @return the composite that was included
      */
-    public CompositeComponentType getIncluded() {
+    public Composite getIncluded() {
         return included;
     }
 
@@ -81,7 +81,7 @@ public class Include extends ModelObject {
      *
      * @param included the composite that was included
      */
-    public void setIncluded(CompositeComponentType included) {
+    public void setIncluded(Composite included) {
         this.included = included;
     }
 }

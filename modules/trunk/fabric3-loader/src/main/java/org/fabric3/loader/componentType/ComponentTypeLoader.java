@@ -30,22 +30,22 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.loader.LoaderContext;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.loader.LoaderUtil;
-import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.scdl.ComponentType;
 import org.fabric3.scdl.ModelObject;
 import org.fabric3.scdl.Property;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.spi.loader.LoaderException;
+import org.fabric3.spi.loader.LoaderRegistry;
+import org.fabric3.spi.loader.LoaderUtil;
+import org.fabric3.spi.loader.StAXElementLoader;
 
 /**
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class ComponentTypeLoader implements StAXElementLoader<ComponentType<ServiceDefinition, ReferenceDefinition, Property<?>>> {
+public class ComponentTypeLoader implements StAXElementLoader<ComponentType> {
     private static final QName COMPONENT_TYPE = new QName(SCA_NS, "componentType");
     private static final QName PROPERTY = new QName(SCA_NS, "property");
     private static final QName SERVICE = new QName(SCA_NS, "service");
@@ -81,16 +81,13 @@ public class ComponentTypeLoader implements StAXElementLoader<ComponentType<Serv
         return COMPONENT_TYPE;
     }
 
-    public ComponentType<ServiceDefinition, ReferenceDefinition, Property<?>> load(XMLStreamReader reader,
-                                                                                   LoaderContext loaderContext)
-            throws XMLStreamException, LoaderException {
+    public ComponentType load(XMLStreamReader reader, LoaderContext loaderContext) throws XMLStreamException, LoaderException {
         String constrainingAttr = reader.getAttributeValue(null, "constrainingType");
         QName constrainingType = LoaderUtil.getQName(constrainingAttr,
                                                      loaderContext.getTargetNamespace(),
                                                      reader.getNamespaceContext());
 
-        ComponentType<ServiceDefinition, ReferenceDefinition, Property<?>> type =
-                new ComponentType<ServiceDefinition, ReferenceDefinition, Property<?>>();
+        ComponentType type = new ComponentType();
         type.setConstrainingType(constrainingType);
         while (true) {
             switch (reader.next()) {

@@ -31,9 +31,9 @@ import javax.xml.namespace.QName;
  *
  * @version $Rev$ $Date$
  */
-public class CompositeComponentType extends ComponentType<ServiceDefinition, ReferenceDefinition, Property<?>> {
+public class Composite extends AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property<?>> {
 
-    private QName name;
+    private final QName name;
     private URI contributionUri;
     private Autowire autowire;
     private final Map<String, ComponentDefinition<? extends Implementation<?>>> components =
@@ -41,18 +41,14 @@ public class CompositeComponentType extends ComponentType<ServiceDefinition, Ref
     private final Map<QName, Include> includes = new HashMap<QName, Include>();
     private final List<WireDefinition> wires = new ArrayList<WireDefinition>();
 
-    public CompositeComponentType() {
-        setImplementationScope(Scope.COMPOSITE);
-    }
-
     /**
      * Constructor defining the composite name.
      *
      * @param name the qualified name of this composite
      */
-    public CompositeComponentType(QName name) {
-        this();
+    public Composite(QName name) {
         this.name = name;
+        setImplementationScope(Scope.COMPOSITE);
     }
 
     /**
@@ -63,15 +59,6 @@ public class CompositeComponentType extends ComponentType<ServiceDefinition, Ref
      */
     public QName getName() {
         return name;
-    }
-
-    /**
-     * Set the qualified name of this composite.
-     *
-     * @param name the qualified name of this composite
-     */
-    public void setName(QName name) {
-        this.name = name;
     }
 
     /**
@@ -245,7 +232,7 @@ public class CompositeComponentType extends ComponentType<ServiceDefinition, Ref
             return false;
         }
 
-        CompositeComponentType that = (CompositeComponentType) o;
+        Composite that = (Composite) o;
         return name.equals(that.name);
     }
 }

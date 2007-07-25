@@ -25,7 +25,7 @@ import javax.xml.namespace.QName;
  *
  * @version $Rev$ $Date$
  */
-public class CompositeImplementation extends Implementation<CompositeComponentType> {
+public class CompositeImplementation extends Implementation<Composite> {
     private QName name;
 
     public QName getName() {

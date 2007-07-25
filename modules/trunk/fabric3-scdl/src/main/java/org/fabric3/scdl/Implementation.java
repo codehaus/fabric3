@@ -23,7 +23,7 @@ package org.fabric3.scdl;
  *
  * @version $Rev$ $Date$
  */
-public abstract class Implementation<T extends ComponentType> extends ModelObject {
+public abstract class Implementation<T extends AbstractComponentType> extends ModelObject {
     private T componentType;
 
     protected Implementation() {

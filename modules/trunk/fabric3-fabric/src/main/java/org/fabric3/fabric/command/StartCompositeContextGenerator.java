@@ -28,9 +28,9 @@ import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.scdl.ComponentType;
+import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.CompositeComponentType;
+import org.fabric3.scdl.Composite;
 
 /**
  * Generates a command to start the composite context on a service node. Child composite contexts will also be started
@@ -75,7 +75,7 @@ public class StartCompositeContextGenerator implements CommandGenerator {
 
     private boolean isComposite(LogicalComponent<?> component) {
         Implementation<?> implementation = component.getDefinition().getImplementation();
-        ComponentType<?, ?, ?> type = implementation.getComponentType();
-        return CompositeComponentType.class.isInstance(type);
+        AbstractComponentType<?, ?, ?> type = implementation.getComponentType();
+        return Composite.class.isInstance(type);
     }
 }

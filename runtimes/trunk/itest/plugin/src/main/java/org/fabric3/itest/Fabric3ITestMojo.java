@@ -73,7 +73,7 @@ import org.fabric3.pojo.processor.PojoComponentType;
 import org.fabric3.spi.deployer.CompositeClassLoader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.CompositeComponentType;
+import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Operation;
@@ -445,7 +445,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
         SCATestSuite suite = new SCATestSuite();
 
         CompositeImplementation impl = definition.getImplementation();
-        CompositeComponentType componentType = impl.getComponentType();
+        Composite componentType = impl.getComponentType();
         Map<String, ComponentDefinition<? extends Implementation<?>>> components = componentType.getComponents();
         for (Map.Entry<String, ComponentDefinition<? extends Implementation<?>>> entry : components.entrySet()) {
             String name = entry.getKey();

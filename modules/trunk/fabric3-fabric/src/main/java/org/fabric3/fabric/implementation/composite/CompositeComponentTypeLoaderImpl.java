@@ -29,7 +29,7 @@ import org.fabric3.spi.loader.Loader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.scdl.CompositeComponentType;
+import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
 
 /**
@@ -53,11 +53,11 @@ public class CompositeComponentTypeLoaderImpl implements CompositeComponentTypeL
         ClassLoader cl = new CompositeClassLoader(URI.create("test"), context.getTargetClassLoader());
         LoaderContext childContext =
                 new LoaderContextImpl(cl, scdlLocation);
-        CompositeComponentType componentType = loadFromSidefile(scdlLocation, childContext);
+        Composite componentType = loadFromSidefile(scdlLocation, childContext);
         implementation.setComponentType(componentType);
     }
 
-    protected CompositeComponentType loadFromSidefile(URL url, LoaderContext context) throws LoaderException {
-        return loader.load(url, CompositeComponentType.class, context);
+    protected Composite loadFromSidefile(URL url, LoaderContext context) throws LoaderException {
+        return loader.load(url, Composite.class, context);
     }
 }

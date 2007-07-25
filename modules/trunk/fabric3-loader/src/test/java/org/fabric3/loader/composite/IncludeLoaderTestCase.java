@@ -36,7 +36,7 @@ import static org.easymock.EasyMock.verify;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.scdl.CompositeComponentType;
+import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Include;
 
 /**
@@ -88,7 +88,7 @@ public class IncludeLoaderTestCase extends TestCase {
 
         expect(registry.load(
                 eq(includeURL),
-                eq(CompositeComponentType.class),
+                eq(Composite.class),
                 isA(LoaderContext.class)))
                 .andReturn(null);
         replay(registry, reader, namespaceContext, context);
@@ -112,7 +112,7 @@ public class IncludeLoaderTestCase extends TestCase {
 
         expect(registry.load(
                 eq(includeURL),
-                eq(CompositeComponentType.class),
+                eq(Composite.class),
                 isA(LoaderContext.class)))
                 .andReturn(null);
         replay(registry, reader, namespaceContext, context);
@@ -139,7 +139,7 @@ public class IncludeLoaderTestCase extends TestCase {
 
         expect(registry.load(
                 eq(includeURL),
-                eq(CompositeComponentType.class),
+                eq(Composite.class),
                 isA(LoaderContext.class)))
                 .andReturn(null);
         replay(registry, reader, namespaceContext, context);

@@ -28,12 +28,13 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.pojo.processor.ProcessingException;
-import org.fabric3.scdl.ComponentType;
+import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.Property;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.Scope;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.scdl.ComponentType;
 import org.fabric3.spi.Constants;
 import org.fabric3.spi.idl.InvalidServiceContractException;
 import org.fabric3.spi.idl.java.InterfaceJavaIntrospector;
@@ -64,8 +65,7 @@ public class WebappLoader extends LoaderExtension<WebappImplementation> {
     public WebappImplementation load(XMLStreamReader reader, LoaderContext loaderContext)
             throws XMLStreamException, LoaderException {
 
-        ComponentType<ServiceDefinition, ReferenceDefinition, Property<?>> componentType =
-                new ComponentType<ServiceDefinition, ReferenceDefinition, Property<?>>();
+        ComponentType componentType = new ComponentType();
         componentType.setImplementationScope(Scope.COMPOSITE);
         WebappImplementation impl = new WebappImplementation();
         impl.setComponentType(componentType);
@@ -87,7 +87,7 @@ public class WebappLoader extends LoaderExtension<WebappImplementation> {
         }
     }
 
-    protected void defineReference(ComponentType<ServiceDefinition, ReferenceDefinition, Property<?>> componentType,
+    protected void defineReference(AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property<?>> componentType,
                                    XMLStreamReader reader,
                                    LoaderContext context) throws LoaderException {
         String name = reader.getAttributeValue(null, "name");

@@ -35,7 +35,7 @@ import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.MissingResourceException;
 import org.fabric3.spi.loader.StAXElementLoader;
-import org.fabric3.scdl.CompositeComponentType;
+import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Include;
 
 /**
@@ -87,7 +87,7 @@ public class IncludeLoader implements StAXElementLoader<Include> {
 
         LoaderContext childContext =
                 new LoaderContextImpl(cl, url);
-        CompositeComponentType composite;
+        Composite composite;
         composite = loadFromSidefile(url, childContext);
 
         Include include = new Include();
@@ -97,7 +97,7 @@ public class IncludeLoader implements StAXElementLoader<Include> {
         return include;
     }
 
-    protected CompositeComponentType loadFromSidefile(URL url, LoaderContext context) throws LoaderException {
-        return registry.load(url, CompositeComponentType.class, context);
+    protected Composite loadFromSidefile(URL url, LoaderContext context) throws LoaderException {
+        return registry.load(url, Composite.class, context);
     }
 }

@@ -28,7 +28,7 @@ import static org.osoa.sca.Constants.SCA_NS;
 
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.scdl.Autowire;
-import org.fabric3.scdl.CompositeComponentType;
+import org.fabric3.scdl.Composite;
 
 /**
  * @version $Rev$ $Date$
@@ -47,7 +47,7 @@ public class CompositeLoaderTestCase extends TestCase {
         EasyMock.expect(reader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
         EasyMock.expect(reader.getName()).andReturn(COMPOSITE);
         EasyMock.replay(reader, loaderContext);
-        CompositeComponentType type = loader.load(reader, loaderContext);
+        Composite type = loader.load(reader, loaderContext);
         assertEquals(name, type.getName());
         assertEquals(Autowire.INHERITED, type.getAutowire());
         EasyMock.verify(reader, loaderContext);
@@ -61,7 +61,7 @@ public class CompositeLoaderTestCase extends TestCase {
         EasyMock.expect(reader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
         EasyMock.expect(reader.getName()).andReturn(COMPOSITE);
         EasyMock.replay(reader, loaderContext);
-        CompositeComponentType type = loader.load(reader, loaderContext);
+        Composite type = loader.load(reader, loaderContext);
         assertEquals(Autowire.ON, type.getAutowire());
         EasyMock.verify(reader, loaderContext);
     }
