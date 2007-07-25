@@ -437,7 +437,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
             throws InvalidServiceContractException {
         PojoComponentType type = new PojoComponentType(implClass);
         JavaServiceContract contract = interfaceProcessorRegistry.introspect(serviceClass);
-        JavaMappedService service = new JavaMappedService(serviceName, contract, false);
+        JavaMappedService service = new JavaMappedService(serviceName, contract);
         type.add(service);
         SingletonImplementation implementation = new SingletonImplementation(type, implClass);
         return new ComponentDefinition<SingletonImplementation>(componentUri.toString(), implementation);
@@ -453,7 +453,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         for (String serviceName : serviceNames) {
             Class<?> serviceClass = serviceClasses.get(i);
             JavaServiceContract contract = interfaceProcessorRegistry.introspect(serviceClass);
-            JavaMappedService service = new JavaMappedService(serviceName, contract, false);
+            JavaMappedService service = new JavaMappedService(serviceName, contract);
             type.add(service);
             i++;
         }

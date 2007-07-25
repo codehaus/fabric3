@@ -83,7 +83,7 @@ public class JUnitComponentTypeLoaderImpl implements JUnitComponentTypeLoader {
             componentType.setDestroyMethod(getCallback(implClass, "tearDown"));
         }
         ServiceContract testContract = generateTestContract(implClass);
-        JavaMappedService testService = new JavaMappedService(TEST_SERVICE_NAME, testContract, false);
+        JavaMappedService testService = new JavaMappedService(TEST_SERVICE_NAME, testContract);
         componentType.add(testService);
         return componentType;
     }

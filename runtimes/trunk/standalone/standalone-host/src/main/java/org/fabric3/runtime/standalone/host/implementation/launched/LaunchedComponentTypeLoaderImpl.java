@@ -71,7 +71,7 @@ public class LaunchedComponentTypeLoaderImpl implements LaunchedComponentTypeLoa
         introspector.introspect(implClass, componentType, loaderContext);
 
         ServiceContract launchedContract = generateContract(implClass);
-        JavaMappedService testService = new JavaMappedService(SERVICE_NAME, launchedContract, false);
+        JavaMappedService testService = new JavaMappedService(SERVICE_NAME, launchedContract);
         componentType.add(testService);
         return componentType;
     }

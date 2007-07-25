@@ -60,7 +60,7 @@ public class ServiceLoader implements StAXElementLoader<ServiceDefinition> {
     public ServiceDefinition load(XMLStreamReader reader, LoaderContext context)
             throws XMLStreamException, LoaderException {
         String name = reader.getAttributeValue(null, "name");
-        ServiceDefinition def = new ServiceDefinition(name, null, true);
+        ServiceDefinition def = new ServiceDefinition(name, null);
 
         URI targetUri = null;
         String promote = reader.getAttributeValue(null, "promote");

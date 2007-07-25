@@ -38,16 +38,15 @@ public class JavaMappedService extends ServiceDefinition {
     public JavaMappedService() {
     }
 
-    public JavaMappedService(String name, ServiceContract contract, boolean remotable) {
-        super(name, contract, remotable);
+    public JavaMappedService(String name, ServiceContract contract) {
+        super(name, contract);
     }
 
     public JavaMappedService(String name,
                              ServiceContract contract,
-                             boolean remotable,
                              String callbackRefName,
                              Member callbackMember) {
-        super(name, contract, remotable, callbackRefName);
+        super(name, contract, callbackRefName);
         this.callbackMember = callbackMember;
     }
 

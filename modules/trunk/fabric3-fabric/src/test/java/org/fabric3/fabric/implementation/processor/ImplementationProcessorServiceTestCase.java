@@ -47,7 +47,6 @@ public class ImplementationProcessorServiceTestCase extends TestCase {
     public void testCreateConversationalService() throws Exception {
         JavaMappedService service = implService.createService(Foo.class);
         assertTrue(Foo.class.equals(service.getServiceContract().getInterfaceClass()));
-        assertTrue(service.isRemotable());
         assertTrue(service.getServiceContract().isConversational());
         ServiceContract serviceContract = service.getServiceContract();
         assertTrue(Bar.class.equals(serviceContract.getCallbackClass()));
@@ -57,7 +56,6 @@ public class ImplementationProcessorServiceTestCase extends TestCase {
     public void testCreateDefaultService() throws Exception {
         JavaMappedService service = implService.createService(Baz.class);
         assertTrue(Baz.class.equals(service.getServiceContract().getInterfaceClass()));
-        assertTrue(!service.isRemotable());
         assertFalse(service.getServiceContract().isConversational());
     }
 

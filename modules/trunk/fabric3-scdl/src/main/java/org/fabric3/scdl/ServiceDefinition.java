@@ -31,22 +31,19 @@ import java.util.List;
 public class ServiceDefinition extends ModelObject {
     private String name;
     private ServiceContract serviceContract;
-    private boolean remotable;
     private String callbackRefName;
     private final List<BindingDefinition> bindings;
     private URI target;
 
-    public ServiceDefinition(String name, ServiceContract<?> serviceContract, boolean remotable) {
+    public ServiceDefinition(String name, ServiceContract<?> serviceContract) {
         this.name = name;
         this.serviceContract = serviceContract;
-        this.remotable = remotable;
         bindings = new ArrayList<BindingDefinition>();
     }
 
-    public ServiceDefinition(String name, ServiceContract<?> serviceContract, boolean remotable, String callbackRefName) {
+    public ServiceDefinition(String name, ServiceContract<?> serviceContract, String callbackRefName) {
         this.name = name;
         this.serviceContract = serviceContract;
-        this.remotable = remotable;
         this.callbackRefName = callbackRefName;
         bindings = new ArrayList<BindingDefinition>();
     }
@@ -81,24 +78,6 @@ public class ServiceDefinition extends ModelObject {
      */
     public void setServiceContract(ServiceContract contract) {
         this.serviceContract = contract;
-    }
-
-    /**
-     * Returns true if the service is remotable
-     *
-     * @return true if the service is remotable
-     */
-    public boolean isRemotable() {
-        return remotable;
-    }
-
-    /**
-     * Sets if the service is remotable
-     *
-     * @param remotable if the service is remotable
-     */
-    public void setRemotable(boolean remotable) {
-        this.remotable = remotable;
     }
 
     /**

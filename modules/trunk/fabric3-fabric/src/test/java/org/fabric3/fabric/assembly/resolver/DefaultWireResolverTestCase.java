@@ -172,7 +172,7 @@ public class DefaultWireResolverTestCase extends TestCase {
         ServiceContract contract = new ServiceContract() {
         };
         contract.setInterfaceClass(serviceInterface);
-        ServiceDefinition service = new ServiceDefinition("service", contract, false);
+        ServiceDefinition service = new ServiceDefinition("service", contract);
         MockComponentType type = new MockComponentType();
         type.add(service);
         MockAtomicImpl impl = new MockAtomicImpl();
