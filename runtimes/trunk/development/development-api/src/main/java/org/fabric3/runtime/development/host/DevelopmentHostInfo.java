@@ -1,7 +1,6 @@
 package org.fabric3.runtime.development.host;
 
 import java.io.File;
-import java.net.URL;
 
 import org.fabric3.host.runtime.HostInfo;
 
@@ -13,5 +12,5 @@ import org.fabric3.host.runtime.HostInfo;
 public interface DevelopmentHostInfo extends HostInfo {
 
     File getExtensionsDirectory();
-    
+
 }
