@@ -29,7 +29,7 @@ import java.util.List;
  * @version $Rev$ $Date$
  */
 public class ReferenceDefinition extends ModelObject {
-    private String name;
+    private final String name;
     private ServiceContract serviceContract;
     private Multiplicity multiplicity;
     private boolean required;
@@ -37,17 +37,9 @@ public class ReferenceDefinition extends ModelObject {
     private List<BindingDefinition> bindings;
     private String key;
 
-    public ReferenceDefinition() {
-        multiplicity = Multiplicity.ONE_ONE;
-        bindings = new ArrayList<BindingDefinition>();
-        promoted = new ArrayList<URI>();
-    }
-
     public ReferenceDefinition(String name, ServiceContract serviceContract) {
-        this.name = name;
-        this.serviceContract = serviceContract;
+        this(name, serviceContract, Multiplicity.ONE_ONE);
         bindings = new ArrayList<BindingDefinition>();
-        multiplicity = Multiplicity.ONE_ONE;
         promoted = new ArrayList<URI>();
     }
 

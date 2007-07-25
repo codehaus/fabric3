@@ -138,28 +138,28 @@ public class BindingNormalizerImplTestcase extends TestCase {
         LogicalComponent<CompositeImplementation> grandParent = createComposite(URI.create("grandParent"));
         grandParent.addComponent(parent);
 
-        ReferenceDefinition refDefinition1 = new ReferenceDefinition();
+        ReferenceDefinition refDefinition1 = new ReferenceDefinition(null, null);
         LogicalReference reference1 = new LogicalReference(URI.create("grandParent/parent#reference1"), refDefinition1, component);
         LogicalBinding<?> binding1 = new LogicalBinding<BindingDefinition>(new MockBinding(), reference1);
         reference1.addPromotedUri(URI.create("grandParent/parent/component#reference"));
         reference1.addBinding(binding1);
         parent.addReference(reference1);
 
-        ReferenceDefinition refDeinition2 = new ReferenceDefinition();
+        ReferenceDefinition refDeinition2 = new ReferenceDefinition(null, null);
         LogicalReference reference2 = new LogicalReference(URI.create("grandParent/parent#reference2"), refDeinition2, component);
         LogicalBinding<?> binding2 = new LogicalBinding<BindingDefinition>(new MockBinding2(), reference2);
         reference2.addPromotedUri(URI.create("grandParent/parent/component#reference"));
         reference2.addBinding(binding2);
         parent.addReference(reference2);
 
-        ReferenceDefinition refDefinition3 = new ReferenceDefinition();
+        ReferenceDefinition refDefinition3 = new ReferenceDefinition(null, null);
         LogicalReference reference3 = new LogicalReference(URI.create("grandParent#reference3"), refDefinition3, component);
         LogicalBinding<?> binding3 = new LogicalBinding<BindingDefinition>(new MockBinding3(), reference3);
         reference3.addPromotedUri(URI.create("grandParent/parent#reference1"));
         reference3.addBinding(binding3);
         grandParent.addReference(reference3);
 
-        ReferenceDefinition refDefinition4 = new ReferenceDefinition();
+        ReferenceDefinition refDefinition4 = new ReferenceDefinition(null, null);
         LogicalReference reference4 = new LogicalReference(URI.create("grandParent#reference4"), refDefinition4, component);
         LogicalBinding<?> binding4 = new LogicalBinding<BindingDefinition>(new MockBinding4(), reference4);
         reference4.addPromotedUri(URI.create("grandParent/parent#reference1"));
@@ -194,7 +194,7 @@ public class BindingNormalizerImplTestcase extends TestCase {
                 new LogicalService(URI.create("grandParent/parent/component#service"), serviceDefinition, component);
         component.addService(service);
 
-        ReferenceDefinition referenceDefinition = new ReferenceDefinition();
+        ReferenceDefinition referenceDefinition = new ReferenceDefinition(null, null);
         LogicalReference reference =
                 new LogicalReference(URI.create("grandParent/parent/component#reference"), referenceDefinition, component);
         component.addReference(reference);

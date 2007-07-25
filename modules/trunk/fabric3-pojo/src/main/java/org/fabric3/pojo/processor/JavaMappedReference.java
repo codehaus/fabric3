@@ -32,9 +32,6 @@ import org.fabric3.scdl.ServiceContract;
 public class JavaMappedReference extends ReferenceDefinition {
     private Member member;
 
-    public JavaMappedReference() {
-    }
-
     public JavaMappedReference(String name, ServiceContract serviceContract, Member member) {
         super(name, serviceContract);
         this.member = member;

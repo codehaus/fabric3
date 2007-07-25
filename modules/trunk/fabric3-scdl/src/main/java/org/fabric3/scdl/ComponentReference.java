@@ -27,8 +27,7 @@ import java.util.List;
  *
  * @version $Rev$ $Date$
  */
-public class ComponentReference extends ModelObject {
-    private final String name;
+public class ComponentReference extends ReferenceDefinition {
     private boolean autowire;
     private List<URI> targets = new ArrayList<URI>();
 
@@ -38,11 +37,7 @@ public class ComponentReference extends ModelObject {
      * @param name the name of the reference being configured
      */
     public ComponentReference(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
+        super(name, null);
     }
 
     /**
