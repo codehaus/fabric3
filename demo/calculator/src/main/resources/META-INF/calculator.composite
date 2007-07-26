@@ -15,58 +15,29 @@
  specific language governing permissions and limitations
  under the License.
 -->
-<!--
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:fabric3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:hessian="http://www.fabric3.org/binding/hessian/0.1-SNAPSHOT"
-           name="CalculatorComposite">
-
-    <component name="calculator" runtimeId="slave1">
-        <implementation.java class="calculator.CalculatorServiceImpl"/>
-        <reference name="addService" autowire="true"/>
-        <reference name="subtractService" autowire="true"/>
-        <reference name="multiplyService" autowire="true"/>
-        <reference name="divideService" autowire="true"/>
-    </component>
-    
-    <component name="eagerCalculator" runtimeId="slave1">
-        <implementation.java class="calculator.EagerCalculator"/>
-    </component>
-
-    <component name="adder" runtimeId="slave1">
-        <implementation.java class="calculator.AddServiceImpl"/>
-    </component>
-
-    <component name="subtractor" runtimeId="slave1">
-        <implementation.java class="calculator.SubtractServiceImpl"/>
-    </component>
-
-    <component name="multiplier" runtimeId="slave1">
-        <implementation.java class="calculator.MultiplyServiceImpl"/>
-    </component>
-
-    <component name="divider" runtimeId="slave1">
-        <implementation.java class="calculator.DivideServiceImpl"/>
-    </component>
-</composite>           -->
-
-<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:fabric3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:hessian="http://www.fabric3.org/binding/hessian/0.1-SNAPSHOT"
+           xmlns:hessian="http://www.fabric3.org/binding/hessian/0.1"
+           xmlns:burlap="http://www.fabric3.org/binding/burlap/0.1"
            name="CalculatorComposite"
            autowire="true">
 
     <service name="calculatorOnHessian" promote="calculator">
         <interface.java interface="calculator.CalculatorService"/>
-        <hessian:binding.hessian uri="/calculator" />
-    </service>
-	 
-	 <service name="calculatorOnWS" promote="calculator">
-        <interface.java interface="calculator.CalculatorService"/>
-        <binding.ws uri="/calculator" />
+        <hessian:binding.hessian uri="/calculatorHessian" />
     </service>
 
-   <!-- <service name="calculatorOnJMS" promote="calculator">
+    <service name="calculatorOnBurlap" promote="calculator">
+        <interface.java interface="calculator.CalculatorService"/>
+        <burlap:binding.burlap uri="/calculatorBurlap" />
+    </service>
+	 
+    <service name="calculatorOnWS" promote="calculator">
+        <interface.java interface="calculator.CalculatorService"/>
+        <binding.ws uri="/calculatorWs" />
+    </service>
+
+   <service name="calculatorOnJMS" promote="calculator">
        <interface.java interface="calculator.CalculatorService"/>
         <binding.jms
             correlationScheme="RequestMsgIDToCorrelID"
@@ -79,9 +50,8 @@
                 <connectionFactory name="QueueConnectionFactory" create="never"/>
             </response>
         </binding.jms>
-   </service> -->
-
-
+   </service>
+   
     <component name="calculator">
         <implementation.java class="calculator.CalculatorServiceImpl"/>
     </component>

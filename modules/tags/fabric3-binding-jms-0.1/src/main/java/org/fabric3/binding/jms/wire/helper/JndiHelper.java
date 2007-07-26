@@ -50,7 +50,9 @@ public class JndiHelper {
                 
         try {
             
+            
             Thread.currentThread().setContextClassLoader(JndiHelper.class.getClassLoader());
+            Thread.currentThread().getContextClassLoader().loadClass("org.apache.activemq.jndi.ActiveMQInitialContextFactory");
             
             ctx = new InitialContext(env);
             

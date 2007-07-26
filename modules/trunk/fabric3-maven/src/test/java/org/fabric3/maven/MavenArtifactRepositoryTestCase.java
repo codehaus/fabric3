@@ -63,7 +63,7 @@ public class MavenArtifactRepositoryTestCase extends TestCase {
             }
 
             public boolean isOnline() {
-                return false;
+                return true;
             }
 
             public URI getDomain() {
