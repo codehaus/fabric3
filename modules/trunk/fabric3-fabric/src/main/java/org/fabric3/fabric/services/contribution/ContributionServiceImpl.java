@@ -41,15 +41,17 @@ import org.fabric3.host.contribution.Deployable;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
-import org.fabric3.spi.model.type.ContributionResourceDescription;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.ModelObject;
+import org.fabric3.spi.model.type.ContributionResourceDescription;
 import org.fabric3.spi.services.archive.ArchiveStore;
+import org.fabric3.spi.services.archive.ArchiveStoreException;
 import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionProcessorRegistry;
 import org.fabric3.spi.services.contribution.ContributionStoreRegistry;
 import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.services.contribution.MetaDataStoreException;
 
 /**
  * Default ContributionService implementation
@@ -81,8 +83,7 @@ public class ContributionServiceImpl implements ContributionService {
         this.uriPrefix = uriPrefix;
     }
 
-    public URI contribute(String id, ContributionSource source)
-            throws ContributionException, IOException {
+    public URI contribute(String id, ContributionSource source) throws ContributionException {
         URL locationUrl;
         URI contributionUri = URI.create(uriPrefix + id + "/" + UUID.randomUUID());
         if (source.isLocal()) {
@@ -92,19 +93,37 @@ public class ContributionServiceImpl implements ContributionService {
             if (archiveStore == null) {
                 throw new StoreNotFoundException("Archive store not found", id);
             }
-            InputStream stream = source.getSource();
+            InputStream stream = null;
             try {
+                stream = source.getSource();
                 locationUrl = archiveStore.store(contributionUri, stream);
+            } catch (IOException e) {
+                throw new ContributionException("Contribution error", e);
+            } catch (ArchiveStoreException e) {
+                throw new ContributionException("Contribution error", e);
             } finally {
-                stream.close();
+                try {
+                    if (stream != null) {
+                        stream.close();
+                    }
+                } catch (IOException e) {
+                    //noinspection ThrowFromFinallyBlock
+                    throw new ContributionException("Contribution error", e);
+                }
             }
 
         }
-        String type = getContentType(locationUrl, source.getContentType());
-        byte[] checksum = source.getChecksum();
-        long timestamp = source.getTimestamp();
-        processMetaData(id, contributionUri, locationUrl, type, checksum, timestamp);
-        return contributionUri;
+        try {
+            String type = getContentType(locationUrl, source.getContentType());
+            byte[] checksum = source.getChecksum();
+            long timestamp = source.getTimestamp();
+            processMetaData(id, contributionUri, locationUrl, type, checksum, timestamp);
+            return contributionUri;
+        } catch (IOException e) {
+            throw new ContributionException("Contribution error", e);
+        } catch (MetaDataStoreException e) {
+            throw new ContributionException("Contribution error", e);
+        }
     }
 
     public boolean exists(URI uri) {
@@ -113,15 +132,25 @@ public class ContributionServiceImpl implements ContributionService {
         return metaDataStore != null && metaDataStore.find(uri) != null;
     }
 
-    public void update(ContributionSource source) throws ContributionException, IOException {
+    public void update(ContributionSource source) throws ContributionException {
         URI uri = source.getUri();
         byte[] checksum = source.getChecksum();
         long timestamp = source.getTimestamp();
-        InputStream is = source.getSource();
+        InputStream is = null;
         try {
+            is = source.getSource();
             update(uri, checksum, timestamp, is);
+        } catch (IOException e) {
+            throw new ContributionException("Contribution error", e);
         } finally {
-            is.close();
+            try {
+                if (is != null) {
+                    is.close();
+                }
+            } catch (IOException e) {
+                //noinspection ThrowFromFinallyBlock
+                throw new ContributionException("Contribution error", e);
+            }
         }
     }
 
@@ -187,7 +216,7 @@ public class ContributionServiceImpl implements ContributionService {
     }
 
     private void processMetaData(String id, URI contributionUri, URL locationUrl, String contentType, byte[] checksum, long timestamp)
-            throws ContributionException, IOException {
+            throws ContributionException, IOException, MetaDataStoreException {
         // store the contribution
         Contribution contribution = new Contribution(contributionUri, locationUrl, checksum, timestamp);
         //process the contribution

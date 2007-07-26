@@ -36,14 +36,14 @@ import javax.xml.stream.XMLStreamReader;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.extension.contribution.ContributionProcessorExtension;
-import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.loader.common.LoaderContextImpl;
+import org.fabric3.scdl.Composite;
 import org.fabric3.spi.deployer.CompositeClassLoader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.scdl.Composite;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
@@ -63,9 +63,9 @@ public class ExplodedJarContributionProcessor extends ContributionProcessorExten
     private MetaDataStore metaDataStore;
 
     public ExplodedJarContributionProcessor(@Reference LoaderRegistry loaderRegistry,
-                                       @Reference ClassLoaderRegistry classLoaderRegistry,
-                                       @Reference XMLInputFactory xmlFactory,
-                                       @Reference MetaDataStore metaDataStore) {
+                                            @Reference ClassLoaderRegistry classLoaderRegistry,
+                                            @Reference XMLInputFactory xmlFactory,
+                                            @Reference MetaDataStore metaDataStore) {
         this.loaderRegistry = loaderRegistry;
         this.classLoaderRegistry = classLoaderRegistry;
         this.xmlFactory = xmlFactory;
@@ -77,13 +77,20 @@ public class ExplodedJarContributionProcessor extends ContributionProcessorExten
     }
 
     public void processContent(Contribution contribution, URI source, InputStream inputStream)
-            throws ContributionException, IOException {
+            throws ContributionException {
         URL sourceUrl = contribution.getLocation();
         // process the contribution manifest
-        ContributionManifest manifest = processManifest(sourceUrl);
-        contribution.setManifest(manifest);
-        // process .composite files
-        List<URL> artifactUrls = getCompositeUrls(sourceUrl);
+        ContributionManifest manifest;
+        List<URL> artifactUrls;
+        try {
+            manifest = processManifest(sourceUrl);
+            contribution.setManifest(manifest);
+            // process .composite files
+            artifactUrls = getCompositeUrls(sourceUrl);
+        } catch (IOException e) {
+            throw new ContributionException(e);
+
+        }
         // Build a classloader to perform the contribution introspection. The classpath will contain the contribution
         // jar and resolved imports
         // FIXME for now, add the jar to the system classloader
@@ -112,9 +119,16 @@ public class ExplodedJarContributionProcessor extends ContributionProcessorExten
             throw new ContributionException(e);
         } catch (XMLStreamException e) {
             throw new ContributionException(e);
+        } catch (IOException e) {
+            throw new ContributionException(e);
         } finally {
             try {
-                inputStream.close();
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    //noinspection ThrowFromFinallyBlock
+                    throw new ContributionException(e);
+                }
             } finally {
                 Thread.currentThread().setContextClassLoader(oldClassloader);
             }

@@ -43,11 +43,11 @@ import org.fabric3.extension.contribution.ContributionProcessorExtension;
 import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.loader.common.LoaderContextImpl;
+import org.fabric3.scdl.Composite;
 import org.fabric3.spi.deployer.CompositeClassLoader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.scdl.Composite;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.spi.services.contribution.Contribution;
@@ -86,14 +86,20 @@ public class JarContributionProcessor extends ContributionProcessorExtension imp
     }
 
     public void processContent(Contribution contribution, URI source, InputStream inputStream)
-            throws ContributionException, IOException {
+            throws ContributionException {
         URL sourceUrl = contribution.getLocation();
         // process the contribution manifest
         File jarFile = new File(sourceUrl.getFile());
-        ContributionManifest manifest = processManifest(jarFile);
-        contribution.setManifest(manifest);
-        // process .composite files
-        List<URL> artifactUrls = getCompositeUrls(inputStream, toJarURL(sourceUrl));
+        ContributionManifest manifest;
+        List<URL> artifactUrls;
+        try {
+            manifest = processManifest(jarFile);
+            contribution.setManifest(manifest);
+            // process .composite files
+            artifactUrls = getCompositeUrls(inputStream, toJarURL(sourceUrl));
+        } catch (IOException e) {
+            throw new ContributionException(e);
+        }
         // Build a classloader to perform the contribution introspection. The classpath will contain the contribution
         // jar and resolved imports
         ClassLoader oldClassloader = Thread.currentThread().getContextClassLoader();
@@ -125,9 +131,16 @@ public class JarContributionProcessor extends ContributionProcessorExtension imp
             throw new ContributionException(e);
         } catch (XMLStreamException e) {
             throw new ContributionException(e);
+        } catch (IOException e) {
+            throw new ContributionException(e);
         } finally {
             try {
-                inputStream.close();
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    //noinspection ThrowFromFinallyBlock
+                    throw new ContributionException(e);
+                }
             } finally {
                 Thread.currentThread().setContextClassLoader(oldClassloader);
             }

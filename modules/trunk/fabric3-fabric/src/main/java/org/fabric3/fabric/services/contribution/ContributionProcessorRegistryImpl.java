@@ -19,7 +19,6 @@
 
 package org.fabric3.fabric.services.contribution;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.HashMap;
@@ -56,7 +55,7 @@ public class ContributionProcessorRegistryImpl implements ContributionProcessorR
     }
 
     public void processContent(Contribution contribution, String contentType, URI source, InputStream inputStream)
-            throws ContributionException, IOException {
+            throws ContributionException {
         ContributionProcessor processor = this.registry.get(contentType);
         if (processor == null) {
             throw new UnsupportedContentTypeException(contentType, source.toString());

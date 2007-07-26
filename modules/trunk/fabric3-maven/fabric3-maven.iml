@@ -14,11 +14,24 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="fabric3-spi" />
     <orderEntry type="library" name="junit-3.8.1" level="application" />
-    <orderEntry type="library" name="maven-artifact-2.0.4" level="application" />
     <orderEntry type="library" name="maven-settings-2.0.4" level="application" />
     <orderEntry type="library" name="plexus-container-default-1.0-alpha-9" level="application" />
     <orderEntry type="library" name="plexus-utils-1.1" level="application" />
     <orderEntry type="library" name="classworlds-1.1" level="application" />
+    <orderEntry type="module" module-name="sca-spec" />
+    <orderEntry type="library" name="plexus-interactivity-api-1.0-alpha-4" level="application" />
+    <orderEntry type="library" name="maven-artifact-manager-2.0.7" level="application" />
+    <orderEntry type="library" name="maven-core-2.0.4" level="application" />
+    <orderEntry type="library" name="maven-model-2.0.7" level="application" />
+    <orderEntry type="library" name="maven-monitor-2.0.4" level="application" />
+    <orderEntry type="library" name="maven-plugin-api-2.0.4" level="application" />
+    <orderEntry type="library" name="maven-plugin-descriptor-2.0.4" level="application" />
+    <orderEntry type="library" name="maven-profile-2.0.7" level="application" />
+    <orderEntry type="library" name="maven-project-2.0.7" level="application" />
+    <orderEntry type="library" name="maven-repository-metadata-2.0.7" level="application" />
+    <orderEntry type="library" name="maven-settings-2.0.4" level="application" />
+    <orderEntry type="library" name="wagon-provider-api-1.0-beta-2" level="application" />
+    <orderEntry type="library" name="maven-artifact-2.0.7" level="application" />
     <orderEntryProperties />
   </component>
 </module>

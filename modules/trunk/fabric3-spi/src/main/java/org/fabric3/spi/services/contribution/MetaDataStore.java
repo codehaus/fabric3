@@ -18,7 +18,6 @@
  */
 package org.fabric3.spi.services.contribution;
 
-import java.io.IOException;
 import java.net.URI;
 import javax.xml.namespace.QName;
 
@@ -41,9 +40,9 @@ public interface MetaDataStore {
      * Stores the contribution metadata
      *
      * @param contribution the contribution metadata
-     * @throws java.io.IOException if an error storing the metadata occurs
+     * @throws MetaDataStoreException if an error storing the metadata occurs
      */
-    void store(Contribution contribution) throws IOException;
+    void store(Contribution contribution) throws MetaDataStoreException;
 
     /**
      * Returns the contribution for the given URI

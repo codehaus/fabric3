@@ -47,6 +47,7 @@ import org.fabric3.spi.services.contribution.ContributionStoreRegistry;
 import org.fabric3.spi.services.contribution.Export;
 import org.fabric3.spi.services.contribution.Import;
 import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.services.contribution.MetaDataStoreException;
 
 /**
  * Default IndexStore implementation
@@ -116,7 +117,7 @@ public class MetaDataStoreImpl implements MetaDataStore {
         return storeId;
     }
 
-    public void store(Contribution contribution) throws IOException {
+    public void store(Contribution contribution) throws MetaDataStoreException {
         if (persistent) {
             FileOutputStream fos = null;
             try {
@@ -125,9 +126,18 @@ public class MetaDataStoreImpl implements MetaDataStore {
                 File index = new File(directory, "contribution.ser");
                 fos = new FileOutputStream(index);
                 xstream.toXML(contribution, fos);
+            } catch (IOException e) {
+                String identifier = contribution.getUri().toString();
+                throw new MetaDataStoreException("Error storing contribution", identifier, e);
             } finally {
                 if (fos != null) {
-                    fos.close();
+                    try {
+                        fos.close();
+                    } catch (IOException e) {
+                        String identifier = contribution.getUri().toString();
+                        //noinspection ThrowFromFinallyBlock
+                        throw new MetaDataStoreException("Error storing contribution", identifier, e);
+                    }
                 }
             }
         }

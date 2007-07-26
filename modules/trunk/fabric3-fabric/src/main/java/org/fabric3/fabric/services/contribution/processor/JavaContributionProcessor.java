@@ -19,13 +19,12 @@
 
 package org.fabric3.fabric.services.contribution.processor;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 
 import org.fabric3.extension.contribution.ContributionProcessorExtension;
-import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.Constants;
+import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionProcessor;
 
@@ -36,7 +35,7 @@ public class JavaContributionProcessor extends ContributionProcessorExtension im
     }
 
     public void processContent(Contribution contribution, URI artifactURI, InputStream inputStream)
-            throws ContributionException, IOException {
+            throws ContributionException {
     }
 
 }

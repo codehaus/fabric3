@@ -42,6 +42,7 @@ import org.fabric3.scdl.Include;
 import org.fabric3.scdl.ModelObject;
 import static org.fabric3.spi.Constants.FABRIC3_SYSTEM_NS;
 import org.fabric3.spi.services.archive.ArchiveStore;
+import org.fabric3.spi.services.archive.ArchiveStoreException;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
@@ -49,6 +50,7 @@ import org.fabric3.spi.services.contribution.ContributionProcessor;
 import org.fabric3.spi.services.contribution.ContributionProcessorRegistry;
 import org.fabric3.spi.services.contribution.ContributionStoreRegistry;
 import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.services.contribution.MetaDataStoreException;
 
 /**
  * Processes extension jars in a directory. A Contribution is created with one deployable composite for all extensions,
@@ -80,7 +82,7 @@ public class ExtensionContributionProcessor extends ContributionProcessorExtensi
     }
 
     public void processContent(Contribution contribution, URI source, InputStream inputStream)
-            throws ContributionException, IOException {
+            throws ContributionException {
         URL sourceUrl = contribution.getLocation();
         File sourceDir = new File(sourceUrl.getFile());
         File[] jars = sourceDir.listFiles(new FileFilter() {
@@ -101,6 +103,12 @@ public class ExtensionContributionProcessor extends ContributionProcessorExtensi
             // This will need to change in the future
             Thread.currentThread().setContextClassLoader(bootCl);
             contributions = processArchives(contribution, jars);
+        } catch (ArchiveStoreException e) {
+            throw new ContributionException(e);
+        } catch (IOException e) {
+            throw new ContributionException(e);
+        } catch (MetaDataStoreException e) {
+            throw new ContributionException(e);
         } finally {
             Thread.currentThread().setContextClassLoader(oldClassloader);
         }
@@ -110,7 +118,7 @@ public class ExtensionContributionProcessor extends ContributionProcessorExtensi
     }
 
     private List<Contribution> processArchives(Contribution contribution, File[] jars)
-            throws IOException, ContributionException {
+            throws IOException, ContributionException, ArchiveStoreException, MetaDataStoreException {
         List<Contribution> contributions = new ArrayList<Contribution>();
         for (File jar : jars) {
             ArchiveStore archiveStore = contributionStoreRegistry.getArchiveStore(extensionsStoreId);

@@ -27,6 +27,7 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.spi.services.archive.ArchiveStore;
+import org.fabric3.spi.services.archive.ArchiveStoreException;
 import org.fabric3.spi.services.contribution.ArtifactResolver;
 import org.fabric3.spi.services.contribution.ArtifactResolverRegistry;
 import org.fabric3.spi.services.contribution.ResolutionException;
@@ -69,6 +70,8 @@ public class HttpResolver implements ArtifactResolver {
         } catch (URISyntaxException e) {
             throw new ResolutionException("URL cannot be converted to URI", url.toString(), e);
         } catch (IOException e) {
+            throw new ResolutionException("Error resolving artifact", url.toString(), e);
+        } catch (ArchiveStoreException e) {
             throw new ResolutionException("Error resolving artifact", url.toString(), e);
         } finally {
             try {

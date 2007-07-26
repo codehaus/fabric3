@@ -18,7 +18,6 @@
  */
 package org.fabric3.host.contribution;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.util.List;
@@ -39,9 +38,8 @@ public interface ContributionService {
      * @param source  the contribution source
      * @return a URI that uniquely identifies this contribution within the SCA Domain
      * @throws ContributionException if there was a problem with the contribution
-     * @throws IOException           if there was a problem reading the stream
      */
-    URI contribute(String storeId, ContributionSource source) throws ContributionException, IOException;
+    URI contribute(String storeId, ContributionSource source) throws ContributionException;
 
     /**
      * Updates a previously contributed artifact if its timestamp and checksum have changed
@@ -49,9 +47,8 @@ public interface ContributionService {
      * @param source the contribution source
      * @throws ContributionException if an error occurs during the update procecedure, for example, a previuous
      *                               contribution is not found
-     * @throws IOException           if an error occurs reading
      */
-    void update(ContributionSource source) throws ContributionException, IOException;
+    void update(ContributionSource source) throws ContributionException;
 
     /**
      * Returns true if a contribution for the given URI exists.

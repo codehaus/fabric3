@@ -40,6 +40,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.services.archive.ArchiveStore;
+import org.fabric3.spi.services.archive.ArchiveStoreException;
 
 /**
  * The default implementation of ArchiveStore
@@ -122,35 +123,43 @@ public class ArchiveStoreImpl implements ArchiveStore {
         }
     }
 
-    public URL store(URI uri, InputStream stream) throws IOException {
-        File location = mapToFile(uri);
-        // create the parent directory if necessary
-        FileHelper.forceMkdir(location.getParentFile());
-        write(stream, location);
-        URL locationUrl = location.toURL();
-        archiveUriToUrl.put(uri, locationUrl);
-        return locationUrl;
-    }
-
-    public URL store(URI uri, URL sourceURL) throws IOException {
-        // where the file should be stored in the repository
-        File location = mapToFile(uri);
-        File source = FileHelper.toFile(sourceURL);
-        if (source == null || source.isFile()) {
-            InputStream stream = sourceURL.openStream();
-            try {
-                return store(uri, stream);
-            } finally {
-                if (stream != null) {
-                    stream.close();
-                }
-            }
-        } else {
-            FileHelper.forceMkdir(location);
-            FileHelper.copyDirectory(source, location);
+    public URL store(URI uri, InputStream stream) throws ArchiveStoreException {
+        try {
+            File location = mapToFile(uri);
+            // create the parent directory if necessary
+            FileHelper.forceMkdir(location.getParentFile());
+            write(stream, location);
             URL locationUrl = location.toURL();
             archiveUriToUrl.put(uri, locationUrl);
-            return location.toURL();
+            return locationUrl;
+        } catch (IOException e) {
+            throw new ArchiveStoreException("Error storing archive", uri.toString(), e);
+        }
+    }
+
+    public URL store(URI uri, URL sourceURL) throws ArchiveStoreException {
+        try {
+            // where the file should be stored in the repository
+            File location = mapToFile(uri);
+            File source = FileHelper.toFile(sourceURL);
+            if (source == null || source.isFile()) {
+                InputStream stream = sourceURL.openStream();
+                try {
+                    return store(uri, stream);
+                } finally {
+                    if (stream != null) {
+                        stream.close();
+                    }
+                }
+            } else {
+                FileHelper.forceMkdir(location);
+                FileHelper.copyDirectory(source, location);
+                URL locationUrl = location.toURL();
+                archiveUriToUrl.put(uri, locationUrl);
+                return location.toURL();
+            }
+        } catch (IOException e) {
+            throw new ArchiveStoreException("Error storing archive", sourceURL.toString(), e);
         }
     }
 
