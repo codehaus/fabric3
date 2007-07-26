@@ -18,6 +18,8 @@
  */
 package org.fabric3.maven;
 
+import static org.apache.maven.artifact.Artifact.SCOPE_RUNTIME;
+
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -41,7 +43,6 @@ import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
 import org.apache.maven.artifact.resolver.ArtifactResolver;
 import org.apache.maven.settings.MavenSettingsBuilder;
 import org.apache.maven.settings.Settings;
-import org.fabric3.spi.services.artifact.Artifact;
 import org.codehaus.classworlds.ClassWorld;
 import org.codehaus.classworlds.DefaultClassRealm;
 import org.codehaus.classworlds.DuplicateRealmException;
@@ -49,9 +50,11 @@ import org.codehaus.plexus.PlexusContainerException;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.embed.Embedder;
 
+import org.fabric3.spi.services.artifact.Artifact;
+
 /**
  * Utility class for embedding Maven.
- * 
+ *
  * @version $Rev$ $Date$
  */
 public class MavenHelper {
@@ -59,32 +62,46 @@ public class MavenHelper {
     /** Local repository */
 //    private static final File LOCAL_REPO = new File(System.getProperty("user.home") + File.separator + ".m2" + File.separator + "repository");
 
-    /** Remote repository URLs */
+    /**
+     * Remote repository URLs
+     */
     private final String[] remoteRepositoryUrls;
 
-    /** Maven metadata source */
+    /**
+     * Maven metadata source
+     */
     private ArtifactMetadataSource metadataSource;
 
-    /** Artifact factory */
+    /**
+     * Artifact factory
+     */
     private ArtifactFactory artifactFactory;
 
-    /** Local artifact repository */
+    /**
+     * Local artifact repository
+     */
     private ArtifactRepository localRepository;
 
-    /** Remote artifact repositories */
+    /**
+     * Remote artifact repositories
+     */
     private List<ArtifactRepository> remoteRepositories = new LinkedList<ArtifactRepository>();
 
-    /** Artifact resolver */
+    /**
+     * Artifact resolver
+     */
     private ArtifactResolver artifactResolver;
 
-    /** Online */
+    /**
+     * Online
+     */
     private boolean online;
 
     /**
      * Initialize the remote repository URLs.
-     * 
+     *
      * @param remoteRepositoryUrl Remote repository URLS.
-     * @param online whether the runtime is online or not
+     * @param online              whether the runtime is online or not
      */
     public MavenHelper(String remoteRepositoryUrl, boolean online) {
         this.remoteRepositoryUrls = remoteRepositoryUrl.split(",");
@@ -93,9 +110,8 @@ public class MavenHelper {
 
     /**
      * Starts the embedder.
-     * 
-     * @throws Fabric3DependencyException
-     *             If unable to start the embedder.
+     *
+     * @throws Fabric3DependencyException If unable to start the embedder.
      */
     public void start() throws Fabric3DependencyException {
 
@@ -113,7 +129,7 @@ public class MavenHelper {
             DefaultClassRealm realm = (DefaultClassRealm) realms.get("plexus.fabric");
 
             Class clazz = Class.forName("org.codehaus.classworlds.RealmClassLoader");
-            Constructor ctr = clazz.getDeclaredConstructor(new Class[] { DefaultClassRealm.class, ClassLoader.class });
+            Constructor ctr = clazz.getDeclaredConstructor(DefaultClassRealm.class, ClassLoader.class);
             ctr.setAccessible(true);
             Object realmClassLoader = ctr.newInstance(realm, getClass().getClassLoader());
 
@@ -156,17 +172,17 @@ public class MavenHelper {
 
     /**
      * Stops the embedder.
-     * 
-     * @throws Fabric3DependencyException
-     *             If unable to stop the embedder.
+     *
+     * @throws Fabric3DependencyException If unable to stop the embedder.
      */
     public void stop() throws Fabric3DependencyException {
     }
 
     /**
      * Resolves the dependencies transitively.
-     * 
+     *
      * @param rootArtifact Artifact whose dependencies need to be resolved.
+     * @return true if the artifact was succesfully resolved
      * @throws Fabric3DependencyException If unable to resolve the dependencies.
      */
     public boolean resolveTransitively(Artifact rootArtifact) throws Fabric3DependencyException {
@@ -175,18 +191,13 @@ public class MavenHelper {
         mavenRootArtifact = artifactFactory.createArtifact(rootArtifact.getGroup(),
                                                            rootArtifact.getName(),
                                                            rootArtifact.getVersion(),
-                                                           org.apache.maven.artifact.Artifact.SCOPE_RUNTIME,
+                                                           SCOPE_RUNTIME,
                                                            rootArtifact.getType());
-
         try {
 
             if (resolve(mavenRootArtifact)) {
                 rootArtifact.setUrl(mavenRootArtifact.getFile().toURL());
-                if (resolveDependencies(rootArtifact, mavenRootArtifact)) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return resolveDependencies(rootArtifact, mavenRootArtifact);
             } else {
                 return false;
             }
@@ -211,28 +222,36 @@ public class MavenHelper {
         }
 
     }
-    
+
     /*
-     * Sets up local and remote repositories.
-     */
+    * Sets up local and remote repositories.
+    */
     private void setUpRepositories(Embedder embedder) {
 
         try {
 
-            ArtifactRepositoryFactory artifactRepositoryFactory = (ArtifactRepositoryFactory) embedder.lookup(ArtifactRepositoryFactory.ROLE);
+            ArtifactRepositoryFactory artifactRepositoryFactory =
+                    (ArtifactRepositoryFactory) embedder.lookup(ArtifactRepositoryFactory.ROLE);
 
-            ArtifactRepositoryLayout layout = (ArtifactRepositoryLayout) embedder.lookup(ArtifactRepositoryLayout.ROLE, "default");
+            ArtifactRepositoryLayout layout =
+                    (ArtifactRepositoryLayout) embedder.lookup(ArtifactRepositoryLayout.ROLE, "default");
 
-            String updatePolicy = online ? ArtifactRepositoryPolicy.UPDATE_POLICY_ALWAYS : ArtifactRepositoryPolicy.UPDATE_POLICY_NEVER;
-            ArtifactRepositoryPolicy snapshotsPolicy = new ArtifactRepositoryPolicy(true, updatePolicy, ArtifactRepositoryPolicy.CHECKSUM_POLICY_WARN);
-            ArtifactRepositoryPolicy releasesPolicy = new ArtifactRepositoryPolicy(true, updatePolicy, ArtifactRepositoryPolicy.CHECKSUM_POLICY_WARN);
+            String updatePolicy =
+                    online ? ArtifactRepositoryPolicy.UPDATE_POLICY_ALWAYS : ArtifactRepositoryPolicy.UPDATE_POLICY_NEVER;
+            ArtifactRepositoryPolicy snapshotsPolicy =
+                    new ArtifactRepositoryPolicy(true, updatePolicy, ArtifactRepositoryPolicy.CHECKSUM_POLICY_WARN);
+            ArtifactRepositoryPolicy releasesPolicy =
+                    new ArtifactRepositoryPolicy(true, updatePolicy, ArtifactRepositoryPolicy.CHECKSUM_POLICY_WARN);
 
-            MavenSettingsBuilder settingsBuilder = (MavenSettingsBuilder)embedder.lookup(MavenSettingsBuilder.ROLE);
+            MavenSettingsBuilder settingsBuilder = (MavenSettingsBuilder) embedder.lookup(MavenSettingsBuilder.ROLE);
             Settings settings = settingsBuilder.buildSettings();
             String localRepo = settings.getLocalRepository();
-            
-            localRepository = artifactRepositoryFactory.createArtifactRepository("local", new File(localRepo).toURL().toString(), layout,
-                    snapshotsPolicy, releasesPolicy);
+
+            localRepository = artifactRepositoryFactory.createArtifactRepository("local",
+                                                                                 new File(localRepo).toURL().toString(),
+                                                                                 layout,
+                                                                                 snapshotsPolicy,
+                                                                                 releasesPolicy);
 
             if (!online) {
                 return;
@@ -242,8 +261,11 @@ public class MavenHelper {
                 String repoid = remoteRepositoryUrl.replace(':', '_');
                 repoid = repoid.replace('/', '_');
                 repoid = repoid.replace('\\', '_');
-                remoteRepositories.add(artifactRepositoryFactory.createArtifactRepository(repoid, remoteRepositoryUrl, layout, snapshotsPolicy,
-                        releasesPolicy));
+                remoteRepositories.add(artifactRepositoryFactory.createArtifactRepository(repoid,
+                                                                                          remoteRepositoryUrl,
+                                                                                          layout,
+                                                                                          snapshotsPolicy,
+                                                                                          releasesPolicy));
             }
 
         } catch (Exception ex) {
@@ -263,8 +285,11 @@ public class MavenHelper {
             ArtifactResolutionResult result = null;
 
             resolutionGroup = metadataSource.retrieve(mavenRootArtifact, localRepository, remoteRepositories);
-            result = artifactResolver.resolveTransitively(resolutionGroup.getArtifacts(), mavenRootArtifact, remoteRepositories, localRepository,
-                    metadataSource);
+            result = artifactResolver.resolveTransitively(resolutionGroup.getArtifacts(),
+                                                          mavenRootArtifact,
+                                                          remoteRepositories,
+                                                          localRepository,
+                                                          metadataSource);
 
             // Add the artifacts to the deployment unit
             for (Object obj : result.getArtifacts()) {

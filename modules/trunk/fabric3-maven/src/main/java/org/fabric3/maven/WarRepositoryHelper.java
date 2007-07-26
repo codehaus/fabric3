@@ -27,90 +27,94 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.fabric3.spi.services.artifact.Artifact;
 import org.codehaus.plexus.util.IOUtil;
+
+import org.fabric3.spi.services.artifact.Artifact;
 
 /**
  * Helper class for resolving dependencies from WAR files.
- * 
- * @author Administrator
  *
+ * @author Administrator
  */
 public class WarRepositoryHelper {
-    
-    /** WAR Repository URL */
+
+    /**
+     * WAR Repository URL
+     */
     private URL repositoryUrl;
-    
-    /** Dependency metadata */
+
+    /**
+     * Dependency metadata
+     */
     private Map<String, Set<String>> transDependencyMap = new HashMap<String, Set<String>>();
-    
+
     /**
      * Initializes the repository URL.
+     *
      * @param baseUrl Base URL.
      */
     @SuppressWarnings("unchecked")
     public WarRepositoryHelper(URL baseUrl) {
-        
-        
+
+
         InputStream transDepMapInputStream = null;
         try {
-            
+
             repositoryUrl = new URL(baseUrl, "repository/");
             URL transDependencyMapUrl = new URL(repositoryUrl, "dependency.metadata");
             transDepMapInputStream = transDependencyMapUrl.openStream();
-            
+
             XMLDecoder decoder = new XMLDecoder(transDepMapInputStream);
-            transDependencyMap = (Map<String, Set<String>>)decoder.readObject();
+            transDependencyMap = (Map<String, Set<String>>) decoder.readObject();
             decoder.close();
-            
+
         } catch (MalformedURLException ex) {
             // throw new Fabric3DependencyException(ex);
-        } catch (IOException  ex) {
+        } catch (IOException ex) {
             // throw new Fabric3DependencyException(ex);
         } finally {
             IOUtil.close(transDepMapInputStream);
         }
-        
+
     }
 
     /**
      * Resolves the dependencies transitively.
-     * 
-     * @param artifact
-     *            Artifact whose dependencies need to be resolved.
-     * @throws Fabric3DependencyException
-     *             If unable to resolve the dependencies.
+     *
+     * @param rootArtifact Artifact whose dependencies need to be resolved.
+     * @return true if the artifact was successfully resolved
+     * @throws Fabric3DependencyException If unable to resolve the dependencies.
      */
     public boolean resolveTransitively(Artifact rootArtifact) throws Fabric3DependencyException {
-        
+
         String artKey = rootArtifact.getGroup() + "/" + rootArtifact.getName() + "/" + rootArtifact.getVersion() + "/";
-        if(!transDependencyMap.containsKey(artKey)) {
+        if (!transDependencyMap.containsKey(artKey)) {
             return false;
         }
-        
-        
-        for(String dep : transDependencyMap.get(artKey)) {
-            
+
+
+        for (String dep : transDependencyMap.get(artKey)) {
+
             String[] tokens = dep.split("/");
             String artName = tokens[1];
 
             try {
-                if(artName.equals(rootArtifact.getName())) {
+                if (artName.equals(rootArtifact.getName())) {
                     rootArtifact.setUrl(new URL(repositoryUrl, dep));
-                } else {      
+                } else {
                     Artifact depArtifact = new Artifact();
                     depArtifact.setGroup(tokens[0]);
                     depArtifact.setName(tokens[1]);
                     depArtifact.setVersion(tokens[2]);
                     depArtifact.setUrl(new URL(repositoryUrl, dep));
                     rootArtifact.addDependency(depArtifact);
-                    
+
                 }
             } catch (MalformedURLException ex) {
                 throw new Fabric3DependencyException(ex);
-            }      
+            }
         }
-        return rootArtifact.getUrl()!=null;
+        return rootArtifact.getUrl() != null;
     }
 
 }
