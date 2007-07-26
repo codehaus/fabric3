@@ -14,17 +14,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.services.contribution;
+package org.fabric3.maven;
 
 import org.fabric3.host.contribution.ContributionException;
 
 /**
- * Thrown when an ArchiveStore or MetaDataStore is not found for a contribution operation
- *
  * @version $Rev$ $Date$
  */
-public class StoreNotFoundException extends ContributionException {
-    public StoreNotFoundException(String message, String identifier) {
+public class MavenArtifactNotFoundException extends ContributionException {
+    public MavenArtifactNotFoundException(String message, String identifier) {
         super(message, identifier);
     }
 }

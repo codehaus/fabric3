@@ -33,7 +33,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.extension.contribution.ContributionProcessorExtension;
 import static org.fabric3.fabric.runtime.ComponentNames.BOOT_CLASSLOADER_ID;
-import org.fabric3.fabric.services.contribution.StoreNotFoundException;
+import org.fabric3.spi.services.contribution.StoreNotFoundException;
 import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.Deployable;
@@ -119,16 +119,16 @@ public class ExtensionContributionProcessor extends ContributionProcessorExtensi
 
     private List<Contribution> processArchives(Contribution contribution, File[] jars)
             throws IOException, ContributionException, ArchiveStoreException, MetaDataStoreException {
+        ArchiveStore archiveStore = contributionStoreRegistry.getArchiveStore(extensionsStoreId);
+        if (archiveStore == null) {
+            throw new StoreNotFoundException("Extensions archive store not found", extensionsStoreId);
+        }
+        MetaDataStore metaDataStore = contributionStoreRegistry.getMetadataStore(extensionsStoreId);
+        if (metaDataStore == null) {
+            throw new StoreNotFoundException("Extensions metadata store not found", extensionsStoreId);
+        }
         List<Contribution> contributions = new ArrayList<Contribution>();
         for (File jar : jars) {
-            ArchiveStore archiveStore = contributionStoreRegistry.getArchiveStore(extensionsStoreId);
-            if (archiveStore == null) {
-                throw new StoreNotFoundException("Extensions archive store not found", extensionsStoreId);
-            }
-            MetaDataStore metaDataStore = contributionStoreRegistry.getMetadataStore(extensionsStoreId);
-            if (archiveStore == null) {
-                throw new StoreNotFoundException("Extensions metadata store not found", extensionsStoreId);
-            }
             InputStream stream = null;
             InputStream archiveStream = null;
             try {

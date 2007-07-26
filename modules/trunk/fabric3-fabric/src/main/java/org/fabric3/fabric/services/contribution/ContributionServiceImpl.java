@@ -52,6 +52,7 @@ import org.fabric3.spi.services.contribution.ContributionProcessorRegistry;
 import org.fabric3.spi.services.contribution.ContributionStoreRegistry;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.MetaDataStoreException;
+import org.fabric3.spi.services.contribution.StoreNotFoundException;
 
 /**
  * Default ContributionService implementation
@@ -86,8 +87,14 @@ public class ContributionServiceImpl implements ContributionService {
     public URI contribute(String id, ContributionSource source) throws ContributionException {
         URL locationUrl;
         URI contributionUri = URI.create(uriPrefix + id + "/" + UUID.randomUUID());
+        InputStream sourceStream;
         if (source.isLocal()) {
-            locationUrl = source.getLocation();
+            try {
+                locationUrl = source.getLocation();
+                sourceStream = source.getSource();
+            } catch (IOException e) {
+                throw new ContributionException(e);
+            }
         } else {
             ArchiveStore archiveStore = contributionStoreRegistry.getArchiveStore(id);
             if (archiveStore == null) {
@@ -97,10 +104,11 @@ public class ContributionServiceImpl implements ContributionService {
             try {
                 stream = source.getSource();
                 locationUrl = archiveStore.store(contributionUri, stream);
+                sourceStream = locationUrl.openStream();
             } catch (IOException e) {
-                throw new ContributionException("Contribution error", e);
+                throw new ContributionException(e);
             } catch (ArchiveStoreException e) {
-                throw new ContributionException("Contribution error", e);
+                throw new ContributionException(e);
             } finally {
                 try {
                     if (stream != null) {
@@ -108,7 +116,7 @@ public class ContributionServiceImpl implements ContributionService {
                     }
                 } catch (IOException e) {
                     //noinspection ThrowFromFinallyBlock
-                    throw new ContributionException("Contribution error", e);
+                    throw new ContributionException(e);
                 }
             }
 
@@ -117,7 +125,10 @@ public class ContributionServiceImpl implements ContributionService {
             String type = getContentType(locationUrl, source.getContentType());
             byte[] checksum = source.getChecksum();
             long timestamp = source.getTimestamp();
-            processMetaData(id, contributionUri, locationUrl, type, checksum, timestamp);
+
+            Contribution contribution = new Contribution(contributionUri, locationUrl, checksum, timestamp);
+            //process the contribution
+            processMetaData(id, contribution, type, sourceStream);
             return contributionUri;
         } catch (IOException e) {
             throw new ContributionException("Contribution error", e);
@@ -215,13 +226,13 @@ public class ContributionServiceImpl implements ContributionService {
         }
     }
 
-    private void processMetaData(String id, URI contributionUri, URL locationUrl, String contentType, byte[] checksum, long timestamp)
+    private void processMetaData(String id, Contribution contribution, String contentType, InputStream stream)
             throws ContributionException, IOException, MetaDataStoreException {
         // store the contribution
-        Contribution contribution = new Contribution(contributionUri, locationUrl, checksum, timestamp);
+        //Contribution contribution = new Contribution(contributionUri, locationUrl, checksum, timestamp);
         //process the contribution
-        InputStream stream = locationUrl.openStream();
-        processorRegistry.processContent(contribution, contentType, contributionUri, stream);
+        //InputStream stream = locationUrl.openStream();
+        processorRegistry.processContent(contribution, contentType, contribution.getUri(), stream);
         // TODO rollback storage if an error processing contribution
         // index the contribution
         addContributionDescription(contribution);
