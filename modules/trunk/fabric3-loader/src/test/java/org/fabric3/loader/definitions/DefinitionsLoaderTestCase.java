@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.loader.definition;
+package org.fabric3.loader.definitions;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -32,6 +32,9 @@ import javax.xml.stream.XMLStreamReader;
 import junit.framework.TestCase;
 
 import org.fabric3.loader.common.LoaderContextImpl;
+import org.fabric3.loader.definitions.DefinitionsLoader;
+import org.fabric3.loader.definitions.IntentLoader;
+import org.fabric3.loader.definitions.PolicySetLoader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;

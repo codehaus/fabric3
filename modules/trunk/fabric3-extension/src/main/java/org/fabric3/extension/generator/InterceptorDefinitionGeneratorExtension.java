@@ -22,12 +22,16 @@ import org.fabric3.scdl.definitions.PolicySetExtension;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Abstract super class for all the interceptor definition generators.
  * 
  * @version $Revision$ $Date$
  */
+@EagerInit
 public abstract class InterceptorDefinitionGeneratorExtension<PSE extends PolicySetExtension, PID extends PhysicalInterceptorDefinition>
         implements InterceptorDefinitionGenerator<PSE, PID> {
     
@@ -39,6 +43,7 @@ public abstract class InterceptorDefinitionGeneratorExtension<PSE extends Policy
      * 
      * @param generatorRegistry Injected generator registry.
      */
+    @Reference
     public void setGeneratorRegistry(GeneratorRegistry generatorRegistry) {
         this.generatorRegistry = generatorRegistry;
     }
@@ -46,6 +51,7 @@ public abstract class InterceptorDefinitionGeneratorExtension<PSE extends Policy
     /**
      * Registers with the registry.
      */
+    @Init
     public void start() {
         generatorRegistry.register(getPolicyExtensionClass(), this);
     }

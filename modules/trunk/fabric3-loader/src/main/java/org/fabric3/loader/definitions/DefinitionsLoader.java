@@ -16,25 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.loader.definition;
+package org.fabric3.loader.definitions;
 
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
-
-import java.util.HashSet;
-import java.util.Set;
-import java.util.StringTokenizer;
+import static org.osoa.sca.Constants.SCA_NS;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.scdl.definitions.Definitions;
 import org.fabric3.scdl.definitions.Intent;
-import org.fabric3.spi.util.stax.StaxUtil;
+import org.fabric3.scdl.definitions.PolicySet;
 import org.osoa.sca.annotations.Reference;
 
 /**
@@ -42,43 +41,45 @@ import org.osoa.sca.annotations.Reference;
  * 
  * @version $Revision$ $Date$
  */
-public class IntentLoader implements StAXElementLoader<Intent> {
+public class DefinitionsLoader implements StAXElementLoader<Definitions> {
+    
+    static final QName INTENT = new QName(SCA_NS, "intent");
+    static final QName DESCRIPTION = new QName(SCA_NS, "description");
+    static final QName POLICY_SET = new QName(SCA_NS, "policySet");
+    
+    private static final QName DEFINITIONS = new QName(SCA_NS, "definitions");
+    
+    private LoaderRegistry loaderRegistry;
 
-    /**
-     * Registers the loader with the registry.
-     * @param registry Injected registry
-     */
-    public IntentLoader(@Reference LoaderRegistry registry) {
-        registry.registerLoader(DefinitionsLoader.INTENT, this);
+    public DefinitionsLoader(@Reference LoaderRegistry registry) {
+        this.loaderRegistry = registry;
+        loaderRegistry.registerLoader(DEFINITIONS, this);
     }
 
     /**
      * @see org.fabric3.spi.loader.StAXElementLoader#load(javax.xml.stream.XMLStreamReader, org.fabric3.spi.loader.LoaderContext)
      */
-    public Intent load(XMLStreamReader reader, LoaderContext context) throws XMLStreamException, LoaderException {
+    public Definitions load(XMLStreamReader reader, LoaderContext parentContext) throws XMLStreamException, LoaderException {
         
-        String name = reader.getAttributeValue(null, "name");
-        QName qName = new QName(context.getTargetNamespace(), name);
-        
-        Set<QName> constrains = new HashSet<QName>();
-        StringTokenizer tok = new StringTokenizer(reader.getAttributeValue(null, "constrains"));
-        while(tok.hasMoreElements()) {
-            constrains.add(StaxUtil.createQName(tok.nextToken(), reader));
-        }
-        
-        String description = null;
+        Definitions definitions = new Definitions();
+        String targetNamespace = reader.getAttributeValue(null, "targetNamespace");
+        LoaderContext context = new LoaderContextImpl(parentContext, targetNamespace);
         
         while (true) {
             switch (reader.next()) {
             case START_ELEMENT:
-                if (DefinitionsLoader.DESCRIPTION.equals(reader.getName())) {
-                    description = reader.getElementText();
+                QName qname = reader.getName();
+                if (INTENT.equals(qname)) {
+                    Intent intent = loaderRegistry.load(reader, Intent.class, context);
+                    definitions.addIntent(intent);
+                } else if (POLICY_SET.equals(qname)) {
+                    PolicySet policySet = loaderRegistry.load(reader, PolicySet.class, context);
+                    definitions.addPolicySet(policySet);
                 }
                 break;
             case END_ELEMENT:
-                if (DefinitionsLoader.INTENT.equals(reader.getName())) {
-                    return new Intent(qName, description, constrains);
-                }
+                assert DEFINITIONS.equals(reader.getName());
+                return definitions;
             }
         }
         

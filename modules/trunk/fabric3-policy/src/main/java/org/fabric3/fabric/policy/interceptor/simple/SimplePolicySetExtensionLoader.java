@@ -28,12 +28,15 @@ import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.StAXElementLoader;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * XML loader for the simple interceptor language.
  * 
  * @version $Revision$ $Date$
  */
+@EagerInit
 public class SimplePolicySetExtensionLoader implements StAXElementLoader<SimplePolicySetExtension> {
     
     // Qualified name of the handled element
@@ -44,7 +47,7 @@ public class SimplePolicySetExtensionLoader implements StAXElementLoader<SimpleP
      * 
      * @param registry Loader registry.
      */
-    public SimplePolicySetExtensionLoader(LoaderRegistry registry) {
+    public SimplePolicySetExtensionLoader(@Reference LoaderRegistry registry) {
         registry.registerLoader(QNAME, this);
     }
 

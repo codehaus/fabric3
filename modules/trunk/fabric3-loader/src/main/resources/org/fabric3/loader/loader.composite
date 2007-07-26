@@ -84,5 +84,16 @@
         <reference name="service" target="loader.ComponentService"/>
         <reference name="reference" target="loader.ComponentReference"/>
     </component>
+    
+    <!-- Definitions SCDL loader implementation -->
+    <component name="loader.definitions">
+        <system:implementation.system class="org.fabric3.loader.definitions.DefinitionsLoader"/>
+    </component>
+    <component name="loader.intent">
+        <system:implementation.system class="org.fabric3.loader.definitions.IntentLoader"/>
+    </component>
+    <component name="loader.policySet">
+        <system:implementation.system class="org.fabric3.loader.definitions.PolicySetLoader"/>
+    </component>
 
 </composite>
