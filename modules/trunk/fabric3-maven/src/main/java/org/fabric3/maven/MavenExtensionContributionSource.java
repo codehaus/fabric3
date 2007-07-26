@@ -22,8 +22,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
-import java.util.List;
-import javax.xml.namespace.QName;
 
 import org.fabric3.host.contribution.ContributionSource;
 
@@ -37,14 +35,12 @@ public class MavenExtensionContributionSource implements ContributionSource {
     private static final byte[] EMPTY_CHECKSUM = new byte[0];
     private byte[] contribution;
 
-    public MavenExtensionContributionSource(List<QName> extensions) throws IOException {
+    public MavenExtensionContributionSource(String[] extensions) throws IOException {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         int i = 0;
-        int last = extensions.size() - 1;
-        for (QName contribution : extensions) {
-            stream.write(contribution.getNamespaceURI().getBytes());
-            stream.write(":".getBytes());
-            stream.write(contribution.getLocalPart().getBytes());
+        int last = extensions.length - 1;
+        for (String contribution : extensions) {
+            stream.write(contribution.getBytes());
             if (i != last) {
                 stream.write(";".getBytes());
             }

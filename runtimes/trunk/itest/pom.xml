@@ -54,6 +54,7 @@
         <module>../../../modules/trunk/fabric3-loader</module>
         <module>../../../modules/trunk/fabric3-policy</module>
         <module>../../../modules/trunk/fabric3-fabric</module>
+        <module>../../../modules/trunk/fabric3-maven</module>
 
         <module>plugin</module>
         <module>smoketest</module>

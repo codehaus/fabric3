@@ -16,12 +16,8 @@
  */
 package org.fabric3.itest;
 
-import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URL;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -41,18 +37,19 @@ import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
 import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
+import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.Deployable;
-import org.fabric3.host.contribution.FileContributionSource;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.host.runtime.StartException;
+import org.fabric3.maven.MavenExtensionContributionSource;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.scdl.Scope;
 
 /**
  * Implementation of a coordinator for the iTest runtime.
@@ -74,7 +71,7 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
         ERROR
     }
 
-    private File extensionsDirectory;
+    private String[] contributions;
     private State state = State.UNINITIALIZED;
     private MavenEmbeddedRuntime runtime;
     private Bootstrapper bootstrapper;
@@ -82,8 +79,8 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
     public MavenCoordinator() {
     }
 
-    public MavenCoordinator(File extensionsDirectory) {
-        this.extensionsDirectory = extensionsDirectory;
+    public MavenCoordinator(String[] contributions) {
+        this.contributions = contributions;
     }
 
     public void bootPrimordial(MavenEmbeddedRuntime runtime,
@@ -125,39 +122,28 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
         }
         // initialize core system components
         bootstrapper.bootSystem(runtime);
-        if (extensionsDirectory != null) {
-            // contribute and activate extensions if they exist in the runtime domain
-            ContributionService contributionService = runtime.getSystemComponent(ContributionService.class,
-                                                                                 CONTRIBUTION_SERVICE_URI);
-            RuntimeAssembly assembly = runtime.getSystemComponent(RuntimeAssembly.class, RUNTIME_ASSEMBLY_URI);
-            File[] extensions = extensionsDirectory.listFiles(new FilenameFilter() {
-                public boolean accept(File dir, String name) {
-                    return name.endsWith(".jar");
-                }
-            });
+        if (contributions != null) {
             try {
-                for (File extension : extensions) {
-                    URL url = extension.toURI().toURL();
-                    FileContributionSource source = new FileContributionSource(url, -1, new byte[0]);
-                    URI addedUri = contributionService.contribute(EXTENSIONS, source);
-                    List<Deployable> deployables = contributionService.getDeployables(addedUri);
-                    for (Deployable deployable : deployables) {
-                        if (Constants.COMPOSITE_TYPE.equals(deployable.getType())) {
-                            // include deployables in the runtime domain
-                            assembly.activate(deployable.getName(), true);
-                        }
+                // contribute and activate extensions if they exist in the runtime domain
+                ContributionService contributionService = runtime.getSystemComponent(ContributionService.class,
+                                                                                     CONTRIBUTION_SERVICE_URI);
+                RuntimeAssembly assembly = runtime.getSystemComponent(RuntimeAssembly.class, RUNTIME_ASSEMBLY_URI);
+                ContributionSource source = new MavenExtensionContributionSource(contributions);
+                URI addedUri = contributionService.contribute(EXTENSIONS, source);
+                List<Deployable> deployables = contributionService.getDeployables(addedUri);
+                for (Deployable deployable : deployables) {
+                    if (Constants.COMPOSITE_TYPE.equals(deployable.getType())) {
+                        // include deployables in the runtime domain
+                        assembly.activate(deployable.getName(), true);
                     }
                 }
-            } catch (MalformedURLException e) {
-                throw new InitializationException(e);
-            } catch (IOException e) {
+            } catch (ActivateException e) {
                 throw new InitializationException(e);
             } catch (ContributionException e) {
                 throw new InitializationException(e);
-            } catch (ActivateException e) {
+            } catch (IOException e) {
                 throw new InitializationException(e);
             }
-
         }
         state = State.INITIALIZED;
 

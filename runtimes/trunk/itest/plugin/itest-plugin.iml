@@ -14,6 +14,7 @@
     <orderEntry type="library" name="maven-plugin-api-2.0.4" level="application" />
     <orderEntry type="library" name="maven-artifact-2.0.4" level="application" />
     <orderEntry type="library" name="surefire-api-2.0" level="application" />
+    <orderEntry type="module" module-name="fabric3-maven" />
     <orderEntryProperties />
   </component>
 </module>

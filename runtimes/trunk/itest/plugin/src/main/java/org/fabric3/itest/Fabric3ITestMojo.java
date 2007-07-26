@@ -19,7 +19,6 @@
 package org.fabric3.itest;
 
 import java.io.File;
-import static java.io.File.separator;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -57,7 +56,6 @@ import org.apache.maven.surefire.testset.TestSetFailedException;
 
 import org.fabric3.api.annotation.LogLevel;
 import org.fabric3.fabric.implementation.composite.CompositeComponentTypeLoader;
-import org.fabric3.loader.common.LoaderContextImpl;
 import static org.fabric3.fabric.runtime.ComponentNames.COMPOSITE_LOADER_URI;
 import org.fabric3.fabric.runtime.ScdlBootstrapperImpl;
 import org.fabric3.host.Fabric3RuntimeException;
@@ -68,15 +66,16 @@ import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.host.runtime.StartException;
 import org.fabric3.itest.implementation.junit.ImplementationJUnit;
+import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.pojo.processor.JavaMappedService;
 import org.fabric3.pojo.processor.PojoComponentType;
-import org.fabric3.spi.deployer.CompositeClassLoader;
-import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Operation;
+import org.fabric3.spi.deployer.CompositeClassLoader;
+import org.fabric3.spi.loader.LoaderContext;
 
 /**
  * Integration-tests an SCA composite by running it in local copy of Fabric3 and calling JUnit-based test components to
@@ -143,12 +142,11 @@ public class Fabric3ITestMojo extends AbstractMojo {
     public URL systemScdl;
 
     /**
-     * The location of the extensions directory. This allows the default runtime configuration supplied in this plugin
-     * to be overridden.
+     * Set of extension artifacts that should be deployed to the runtime.
      *
      * @parameter
      */
-    public File extensionsDirectory;
+    public String[] contributions;
 
     /**
      * Set of extension artifacts that should be deployed to the runtime.
@@ -222,13 +220,6 @@ public class Fabric3ITestMojo extends AbstractMojo {
         if (systemScdl == null) {
             systemScdl = cl.getResource("META-INF/fabric3/embeddedMaven.composite");
         }
-        if (extensionsDirectory == null) {
-            String userHome = System.getProperty("user.home");
-            File extensions = new File(userHome + separator + ".fabric3" + separator + "extensions" + separator);
-            if (extensions.exists()) {
-                extensionsDirectory = extensions;
-            }
-        }
 
         log.info("Starting Embedded Fabric3 Runtime ...");
         MavenEmbeddedRuntime runtime = createRuntime(cl);
@@ -239,7 +230,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
         try {
             ScdlBootstrapper bootstrapper = new ScdlBootstrapperImpl();
             bootstrapper.setScdlLocation(systemScdl);
-            coordinator = new MavenCoordinator(extensionsDirectory);
+            coordinator = new MavenCoordinator(contributions);
             coordinator.bootPrimordial(runtime, bootstrapper, cl, testClassLoader);
             coordinator.initialize();
             Future<Void> future = coordinator.joinDomain(-1);
