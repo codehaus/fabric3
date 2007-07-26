@@ -18,22 +18,33 @@
  */
 package org.fabric3.spi.services.contenttype;
 
-import java.net.URL;
+import org.fabric3.host.Fabric3Exception;
 
 /**
- * Resolver for content type based on file extensions.
- * 
  * @version $Revision$ $Date$
  */
-public interface ContentTypeResolver {
-    
+public class ContentTypeResolutionException extends Fabric3Exception {
+
     /**
-     * Gets the content type for the contribution source.
-     * 
-     * @param contentUrl URL for the content.
-     * @return Content type for the contribution source.
-     * @throws If unable to resolve content type.
+     * Serial version UID.
      */
-    String getContentType(URL contentUrl) throws ContentTypeResolutionException;
+    private static final long serialVersionUID = 7983355008884153907L;
+
+    /**
+     * @param message
+     * @param identifier
+     */
+    public ContentTypeResolutionException(String message, String identifier) {
+        super(message, identifier);
+    }
+
+    /**
+     * @param message
+     * @param identifier
+     * @param cause
+     */
+    public ContentTypeResolutionException(String message, String identifier, Throwable cause) {
+        super(message, identifier, cause);
+    }
 
 }

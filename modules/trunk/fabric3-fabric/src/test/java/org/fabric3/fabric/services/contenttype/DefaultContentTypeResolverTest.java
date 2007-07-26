@@ -16,24 +16,29 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.services.contenttype;
+package org.fabric3.fabric.services.contenttype;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+
+import junit.framework.TestCase;
 
 /**
- * Resolver for content type based on file extensions.
- * 
  * @version $Revision$ $Date$
  */
-public interface ContentTypeResolver {
-    
-    /**
-     * Gets the content type for the contribution source.
-     * 
-     * @param contentUrl URL for the content.
-     * @return Content type for the contribution source.
-     * @throws If unable to resolve content type.
-     */
-    String getContentType(URL contentUrl) throws ContentTypeResolutionException;
+public class DefaultContentTypeResolverTest extends TestCase {
+
+    public void testGetContentType() throws Exception {
+        
+        DefaultContentTypeResolver resolver = new DefaultContentTypeResolver();
+        URL url = getClass().getResource("test.composite");
+        
+        Map<String, String> extensionMap = new HashMap<String, String>();
+        extensionMap.put("composite", "text/vnd.fabric3.composite+xml");
+        resolver.setExtensionMap(extensionMap);
+        
+        assertEquals("text/vnd.fabric3.composite+xml", resolver.getContentType(url));
+    }
 
 }
