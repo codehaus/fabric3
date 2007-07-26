@@ -30,21 +30,21 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.loader.common.LoaderContextImpl;
+import org.fabric3.scdl.Autowire;
+import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.Composite;
+import org.fabric3.scdl.CompositeReference;
+import org.fabric3.scdl.CompositeService;
+import org.fabric3.scdl.Include;
+import org.fabric3.scdl.ModelObject;
+import org.fabric3.scdl.Property;
+import org.fabric3.scdl.WireDefinition;
 import org.fabric3.spi.loader.InvalidServiceException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.StAXElementLoader;
-import org.fabric3.scdl.Autowire;
-import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.Composite;
-import org.fabric3.scdl.Include;
-import org.fabric3.scdl.ModelObject;
-import org.fabric3.scdl.WireDefinition;
-import org.fabric3.scdl.Property;
-import org.fabric3.scdl.ReferenceDefinition;
-import org.fabric3.scdl.CompositeService;
-import org.fabric3.loader.common.LoaderContextImpl;
 
 /**
  * Loads a composite component definition from an XML-based assembly file
@@ -65,7 +65,7 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
     private final StAXElementLoader<Include> includeLoader;
     private final StAXElementLoader<Property<?>> propertyLoader;
     private final StAXElementLoader<CompositeService> serviceLoader;
-    private final StAXElementLoader<ReferenceDefinition> referenceLoader;
+    private final StAXElementLoader<CompositeReference> referenceLoader;
     private final StAXElementLoader<ComponentDefinition<?>> componentLoader;
     private final StAXElementLoader<WireDefinition> wireLoader;
 
@@ -73,7 +73,7 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
                            @Reference(name = "include")StAXElementLoader<Include> includeLoader,
                            @Reference(name = "property")StAXElementLoader<Property<?>> propertyLoader,
                            @Reference(name = "service")StAXElementLoader<CompositeService> serviceLoader,
-                           @Reference(name = "reference")StAXElementLoader<ReferenceDefinition> referenceLoader,
+                           @Reference(name = "reference")StAXElementLoader<CompositeReference> referenceLoader,
                            @Reference(name = "component")StAXElementLoader<ComponentDefinition<?>> componentLoader,
                            @Reference(name = "wire")StAXElementLoader<WireDefinition> wireLoader
     ) {
@@ -129,7 +129,7 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
                     CompositeService service = serviceLoader.load(reader, loaderContext);
                     type.add(service);
                 } else if (REFERENCE.equals(qname)) {
-                    ReferenceDefinition reference = referenceLoader.load(reader, loaderContext);
+                    CompositeReference reference = referenceLoader.load(reader, loaderContext);
                     type.add(reference);
                 } else if (COMPONENT.equals(qname)) {
                     ComponentDefinition<?> componentDefinition = componentLoader.load(reader, loaderContext);
@@ -144,8 +144,8 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
                         type.add((Property<?>) modelObject);
                     } else if (modelObject instanceof CompositeService) {
                         type.add((CompositeService) modelObject);
-                    } else if (modelObject instanceof ReferenceDefinition) {
-                        type.add((ReferenceDefinition) modelObject);
+                    } else if (modelObject instanceof CompositeReference) {
+                        type.add((CompositeReference) modelObject);
                     } else if (modelObject instanceof ComponentDefinition) {
                         type.add((ComponentDefinition<?>) modelObject);
                     } else {

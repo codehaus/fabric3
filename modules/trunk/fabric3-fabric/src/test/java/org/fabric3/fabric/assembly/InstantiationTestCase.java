@@ -10,9 +10,9 @@ import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.ComponentType;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
+import org.fabric3.scdl.CompositeReference;
 import org.fabric3.scdl.CompositeService;
 import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
@@ -73,7 +73,7 @@ public class InstantiationTestCase extends TestCase {
 
     private ComponentDefinition<?> createParentWithServiceAndReference() {
         CompositeService service = new CompositeService("service", null);
-        ReferenceDefinition reference = new ReferenceDefinition("reference", null, null);
+        CompositeReference reference = new CompositeReference("reference", null);
         Composite type = new Composite(null);
         type.add(service);
         type.add(reference);

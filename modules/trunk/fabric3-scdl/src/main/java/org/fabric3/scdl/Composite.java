@@ -31,7 +31,7 @@ import javax.xml.namespace.QName;
  *
  * @version $Rev$ $Date$
  */
-public class Composite extends AbstractComponentType<CompositeService, ReferenceDefinition, Property<?>> {
+public class Composite extends AbstractComponentType<CompositeService, CompositeReference, Property<?>> {
 
     private final QName name;
     private URI contributionUri;
@@ -117,8 +117,8 @@ public class Composite extends AbstractComponentType<CompositeService, Reference
      * Get all references including the ones are from included composites
      * @return
      */
-    public Map<String, ReferenceDefinition> getReferences() {
-        Map<String, ReferenceDefinition> view = new HashMap<String, ReferenceDefinition>(super.getReferences());
+    public Map<String, CompositeReference> getReferences() {
+        Map<String, CompositeReference> view = new HashMap<String, CompositeReference>(super.getReferences());
         for (Include i : includes.values()) {
             view.putAll(i.getIncluded().getReferences());
         }
@@ -176,7 +176,7 @@ public class Composite extends AbstractComponentType<CompositeService, Reference
     /**
      * Get declared references in this composite type, included doesn't count
      */
-    public Map<String, ReferenceDefinition> getDeclaredReferences() {
+    public Map<String, CompositeReference> getDeclaredReferences() {
         return super.getReferences();
     }
 
