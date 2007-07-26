@@ -61,8 +61,8 @@
     <component name="loader.Reference">
         <system:implementation.system class="org.fabric3.loader.composite.ReferenceLoader"/>
     </component>
-    <component name="loader.Service">
-        <system:implementation.system class="org.fabric3.loader.composite.ServiceLoader"/>
+    <component name="loader.CompositeService">
+        <system:implementation.system class="org.fabric3.loader.composite.CompositeServiceLoader"/>
     </component>
     <component name="loader.Wire">
         <system:implementation.system class="org.fabric3.loader.composite.WireLoader"/>
@@ -72,7 +72,7 @@
         <system:implementation.system class="org.fabric3.loader.composite.CompositeLoader"/>
         <reference name="include" target="loader.Include"/>
         <reference name="property" target="loader.Property"/>
-        <reference name="service" target="loader.Service"/>
+        <reference name="service" target="loader.CompositeService"/>
         <reference name="reference" target="loader.Reference"/>
         <reference name="component" target="loader.Component"/>
         <reference name="wire" target="loader.Wire"/>

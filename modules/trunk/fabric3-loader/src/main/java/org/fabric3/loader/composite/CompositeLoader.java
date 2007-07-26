@@ -43,7 +43,7 @@ import org.fabric3.scdl.ModelObject;
 import org.fabric3.scdl.WireDefinition;
 import org.fabric3.scdl.Property;
 import org.fabric3.scdl.ReferenceDefinition;
-import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.scdl.CompositeService;
 import org.fabric3.loader.common.LoaderContextImpl;
 
 /**
@@ -64,7 +64,7 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
     private final LoaderRegistry registry;
     private final StAXElementLoader<Include> includeLoader;
     private final StAXElementLoader<Property<?>> propertyLoader;
-    private final StAXElementLoader<ServiceDefinition> serviceLoader;
+    private final StAXElementLoader<CompositeService> serviceLoader;
     private final StAXElementLoader<ReferenceDefinition> referenceLoader;
     private final StAXElementLoader<ComponentDefinition<?>> componentLoader;
     private final StAXElementLoader<WireDefinition> wireLoader;
@@ -72,7 +72,7 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
     public CompositeLoader(@Reference LoaderRegistry registry,
                            @Reference(name = "include")StAXElementLoader<Include> includeLoader,
                            @Reference(name = "property")StAXElementLoader<Property<?>> propertyLoader,
-                           @Reference(name = "service")StAXElementLoader<ServiceDefinition> serviceLoader,
+                           @Reference(name = "service")StAXElementLoader<CompositeService> serviceLoader,
                            @Reference(name = "reference")StAXElementLoader<ReferenceDefinition> referenceLoader,
                            @Reference(name = "component")StAXElementLoader<ComponentDefinition<?>> componentLoader,
                            @Reference(name = "wire")StAXElementLoader<WireDefinition> wireLoader
@@ -126,7 +126,7 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
                     Property<?> property = propertyLoader.load(reader, loaderContext);
                     type.add(property);
                 } else if (SERVICE.equals(qname)) {
-                    ServiceDefinition service = serviceLoader.load(reader, loaderContext);
+                    CompositeService service = serviceLoader.load(reader, loaderContext);
                     type.add(service);
                 } else if (REFERENCE.equals(qname)) {
                     ReferenceDefinition reference = referenceLoader.load(reader, loaderContext);
@@ -142,8 +142,8 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
                     ModelObject modelObject = registry.load(reader, ModelObject.class, loaderContext);
                     if (modelObject instanceof Property) {
                         type.add((Property<?>) modelObject);
-                    } else if (modelObject instanceof ServiceDefinition) {
-                        type.add((ServiceDefinition) modelObject);
+                    } else if (modelObject instanceof CompositeService) {
+                        type.add((CompositeService) modelObject);
                     } else if (modelObject instanceof ReferenceDefinition) {
                         type.add((ReferenceDefinition) modelObject);
                     } else if (modelObject instanceof ComponentDefinition) {
@@ -163,7 +163,7 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
 
     protected void verifyCompositeCompleteness(Composite composite) throws InvalidServiceException {
         // check if all of the composite services have been wired
-        for (ServiceDefinition svcDefn : composite.getDeclaredServices().values()) {
+        for (CompositeService svcDefn : composite.getDeclaredServices().values()) {
             if (svcDefn.getTarget() == null) {
                 throw new InvalidServiceException("Composite service not wired to a target", svcDefn.getName());
             }

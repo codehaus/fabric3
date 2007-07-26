@@ -18,60 +18,52 @@
  */
 package org.fabric3.loader.composite;
 
-import java.net.URI;
-import javax.xml.namespace.QName;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.scdl.BindingDefinition;
+import org.fabric3.scdl.CompositeService;
 import org.fabric3.scdl.ModelObject;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.spi.loader.InvalidValueException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.loader.UnrecognizedElementException;
+import org.fabric3.spi.loader.Loader;
 
 /**
  * Loads a service definition from an XML-based assembly file
  *
  * @version $Rev$ $Date$
  */
-public class ServiceLoader implements StAXElementLoader<ServiceDefinition> {
-    private static final QName SERVICE = new QName(SCA_NS, "Service");
+public class CompositeServiceLoader implements StAXElementLoader<CompositeService> {
+    private final Loader loader;
 
-    private final LoaderRegistry registry;
-
-    public ServiceLoader(@Reference LoaderRegistry registry) {
-        this.registry = registry;
+    public CompositeServiceLoader(@Reference Loader loader) {
+        this.loader = loader;
     }
 
-    public QName getXMLType() {
-        return SERVICE;
-    }
-
-    public ServiceDefinition load(XMLStreamReader reader, LoaderContext context)
+    public CompositeService load(XMLStreamReader reader, LoaderContext context)
             throws XMLStreamException, LoaderException {
         String name = reader.getAttributeValue(null, "name");
-        ServiceDefinition def = new ServiceDefinition(name, null);
-
-        URI targetUri = null;
         String promote = reader.getAttributeValue(null, "promote");
-        if (promote != null) {
-            targetUri = LoaderUtil.getURI(promote);
+        if (promote == null) {
+            throw new InvalidValueException("promote not specified", name);
         }
+
+        CompositeService def = new CompositeService(name, null);
+        def.setTarget(LoaderUtil.getURI(promote));
         while (true) {
             int i = reader.next();
             switch (i) {
             case START_ELEMENT:
-                ModelObject type = registry.load(reader, ModelObject.class, context);
+                ModelObject type = loader.load(reader, ModelObject.class, context);
                 if (type instanceof ServiceContract) {
                     def.setServiceContract((ServiceContract) type);
                 } else if (type instanceof BindingDefinition) {
@@ -81,9 +73,6 @@ public class ServiceLoader implements StAXElementLoader<ServiceDefinition> {
                 }
                 break;
             case END_ELEMENT:
-                if (targetUri != null) {
-                    def.setTarget(targetUri);
-                }
                 return def;
             }
         }

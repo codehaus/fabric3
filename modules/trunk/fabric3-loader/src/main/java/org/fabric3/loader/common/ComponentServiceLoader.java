@@ -59,11 +59,6 @@ public class ComponentServiceLoader implements StAXElementLoader<ServiceDefiniti
         String name = reader.getAttributeValue(null, "name");
         ServiceDefinition def = new ServiceDefinition(name, null);
 
-        URI targetUri = null;
-        String promote = reader.getAttributeValue(null, "promote");
-        if (promote != null) {
-            targetUri = LoaderUtil.getURI(promote);
-        }
         while (true) {
             int i = reader.next();
             switch (i) {
@@ -78,9 +73,6 @@ public class ComponentServiceLoader implements StAXElementLoader<ServiceDefiniti
                 }
                 break;
             case XMLStreamConstants.END_ELEMENT:
-                if (targetUri != null) {
-                    def.setTarget(targetUri);
-                }
                 return def;
             }
         }

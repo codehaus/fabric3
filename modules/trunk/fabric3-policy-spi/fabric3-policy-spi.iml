@@ -10,7 +10,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="fabric3-spi" />
+    <orderEntry type="module" module-name="fabric3-spi" exported="" />
     <orderEntry type="module" module-name="fabric3-scdl" />
     <orderEntryProperties />
   </component>

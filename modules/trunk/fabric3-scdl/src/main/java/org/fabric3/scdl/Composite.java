@@ -31,7 +31,7 @@ import javax.xml.namespace.QName;
  *
  * @version $Rev$ $Date$
  */
-public class Composite extends AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property<?>> {
+public class Composite extends AbstractComponentType<CompositeService, ReferenceDefinition, Property<?>> {
 
     private final QName name;
     private URI contributionUri;
@@ -131,8 +131,8 @@ public class Composite extends AbstractComponentType<ServiceDefinition, Referenc
      * Get all services including the ones are from included composites
      * @return
      */
-    public Map<String, ServiceDefinition> getServices() {
-        Map<String, ServiceDefinition> view = new HashMap<String, ServiceDefinition>(super.getServices());
+    public Map<String, CompositeService> getServices() {
+        Map<String, CompositeService> view = new HashMap<String, CompositeService>(super.getServices());
         for (Include i : includes.values()) {
             view.putAll(i.getIncluded().getServices());
         }
@@ -183,7 +183,7 @@ public class Composite extends AbstractComponentType<ServiceDefinition, Referenc
     /**
      * Get declared services in this composite type, included doesn't count
      */
-    public Map<String, ServiceDefinition> getDeclaredServices() {
+    public Map<String, CompositeService> getDeclaredServices() {
         return super.getServices();
     }
 

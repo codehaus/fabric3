@@ -5,18 +5,18 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.fabric3.scdl.AbstractComponentType;
+import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.ComponentType;
+import org.fabric3.scdl.Composite;
+import org.fabric3.scdl.CompositeImplementation;
+import org.fabric3.scdl.CompositeService;
+import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.Referenceable;
-import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.AbstractComponentType;
-import org.fabric3.scdl.Composite;
-import org.fabric3.scdl.CompositeImplementation;
-import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.ReferenceDefinition;
-import org.fabric3.scdl.ServiceDefinition;
-import org.fabric3.scdl.ComponentType;
 
 /**
  * @version $Rev$ $Date$
@@ -72,7 +72,7 @@ public class InstantiationTestCase extends TestCase {
     }
 
     private ComponentDefinition<?> createParentWithServiceAndReference() {
-        ServiceDefinition service = new ServiceDefinition("service", null);
+        CompositeService service = new CompositeService("service", null);
         ReferenceDefinition reference = new ReferenceDefinition("reference", null, null);
         Composite type = new Composite(null);
         type.add(service);

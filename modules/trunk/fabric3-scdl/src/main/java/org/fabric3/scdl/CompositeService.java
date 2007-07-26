@@ -20,4 +20,7 @@ package org.fabric3.scdl;
  * @version $Rev$ $Date$
  */
 public class CompositeService extends ServiceDefinition {
+    public CompositeService(String name, ServiceContract<?> serviceContract) {
+        super(name, serviceContract);
+    }
 }

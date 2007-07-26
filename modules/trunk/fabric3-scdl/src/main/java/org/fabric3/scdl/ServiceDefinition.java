@@ -35,6 +35,10 @@ public class ServiceDefinition extends ModelObject {
     private final List<BindingDefinition> bindings;
     private URI target;
 
+    public ServiceDefinition(String name) {
+        this(name, null);
+    }
+
     public ServiceDefinition(String name, ServiceContract<?> serviceContract) {
         this.name = name;
         this.serviceContract = serviceContract;
