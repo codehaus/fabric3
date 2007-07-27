@@ -24,8 +24,11 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.fabric3.scdl.BindingDefinition;
@@ -153,11 +156,11 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
 
         ServiceContract<?> contract = service.getDefinition().getServiceContract();
         
-        PolicySetExtension policySetExtension = null;
+        Set<PolicySetExtension> policies = null;
         if(policyRegistry != null) {
-            policySetExtension = policyRegistry.getPolicy(service);
+            policies = policyRegistry.getPolicy(service);
         }
-        PhysicalWireDefinition wireDefinition = createWireDefinition(contract, context, policySetExtension);
+        PhysicalWireDefinition wireDefinition = createWireDefinition(contract, context, policies);
         
         Class<?> type = component.getDefinition().getImplementation().getClass();
         ComponentGenerator<C> targetGenerator = (ComponentGenerator<C>) componentGenerators.get(type);
@@ -199,11 +202,11 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
 
         ServiceContract<?> contract = reference.getDefinition().getServiceContract();
         
-        PolicySetExtension policySetExtension = null;
+        Set<PolicySetExtension> policies = null;
         if(policyRegistry != null) {
-            policySetExtension = policyRegistry.getPolicy(reference);
+            policies = policyRegistry.getPolicy(reference);
         }
-        PhysicalWireDefinition wireDefinition = createWireDefinition(contract, context, policySetExtension);
+        PhysicalWireDefinition wireDefinition = createWireDefinition(contract, context, policies);
         
         Class<?> type = binding.getBinding().getClass();
         BindingGenerator targetGenerator = bindingGenerators.get(type);
@@ -294,13 +297,22 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
     }
 
     /**
-     * @see org.fabric3.spi.generator.GeneratorRegistry#generateInterceptorDefinition(org.fabric3.scdl.definitions.PolicySetExtension)
+     * @see org.fabric3.spi.generator.GeneratorRegistry#generateInterceptorDefinitions(java.util.Set)
      */
-    public <PE extends PolicySetExtension> PhysicalInterceptorDefinition generateInterceptorDefinition(PE policySetExtension) {
-        @SuppressWarnings({"unchecked"})
-        InterceptorDefinitionGenerator<PE, ?> interceptorDefinitionGenerator = 
-            (InterceptorDefinitionGenerator<PE, ?>) interceptorDefinitionGenerators.get(policySetExtension.getClass());
-        return interceptorDefinitionGenerator.generate(policySetExtension, null);
+    @SuppressWarnings("unchecked")
+    public Set<PhysicalInterceptorDefinition> generateInterceptorDefinitions(Set<PolicySetExtension> policies) {
+        
+        if(policies == null) {
+            return Collections.EMPTY_SET;
+        }
+        
+        Set<PhysicalInterceptorDefinition> interceptors = new HashSet<PhysicalInterceptorDefinition>();
+        for(PolicySetExtension policy : policies) {
+            InterceptorDefinitionGenerator interceptorDefinitionGenerator = interceptorDefinitionGenerators.get(policy.getClass());
+            interceptors.add(interceptorDefinitionGenerator.generate(policy, null));
+        }
+        return interceptors;
+        
     }
 
     /**
@@ -358,15 +370,14 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
     }
 
     @SuppressWarnings({"unchecked"})
-    private PhysicalWireDefinition createWireDefinition(ServiceContract<?> contract, GeneratorContext context, PolicySetExtension policySetExtension)
+    private PhysicalWireDefinition createWireDefinition(ServiceContract<?> contract, GeneratorContext context, Set<PolicySetExtension> policies)
             throws GenerationException {
         
         PhysicalWireDefinition wireDefinition = new PhysicalWireDefinition();
         for (Operation o : contract.getOperations()) {
             PhysicalOperationDefinition physicalOperation = mapOperation(o);
             wireDefinition.addOperation(physicalOperation);
-            if(policySetExtension != null) {
-                PhysicalInterceptorDefinition interceptorDefinition = generateInterceptorDefinition(policySetExtension);
+            for(PhysicalInterceptorDefinition interceptorDefinition : generateInterceptorDefinitions(policies)) {
                 physicalOperation.addInterceptor(interceptorDefinition);
             }
         }

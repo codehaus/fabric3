@@ -18,6 +18,8 @@
  */
 package org.fabric3.spi.policy.registry;
 
+import java.util.Set;
+
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.scdl.definitions.PolicySetExtension;
@@ -48,6 +50,6 @@ public interface PolicyRegistry {
      * @param scaArtifact SCA artifact.
      * @return List of interceptors.
      */
-    PolicySetExtension getPolicy(LogicalScaArtifact<?> scaArtifact);
+    Set<PolicySetExtension> getPolicy(LogicalScaArtifact<?> scaArtifact);
 
 }

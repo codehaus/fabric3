@@ -19,6 +19,7 @@
 package org.fabric3.spi.generator;
 
 import java.net.URI;
+import java.util.Set;
 
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -163,10 +164,10 @@ public interface GeneratorRegistry {
     void generateCommandSet(LogicalComponent<?> component, GeneratorContext context) throws GenerationException;
     
     /**
-     * Generates the physical interceptor definition corresponding to the policy extension.
-     * @param policySetExtension Policy extension.
-     * @return Physical interceptor definition.
+     * Generates the physical interceptor definitions corresponding to the policies.
+     * @param policies Policies for which interceptors need to be resolved.
+     * @return Resolved physical interceptor definitions.
      */
-    <PE extends PolicySetExtension> PhysicalInterceptorDefinition generateInterceptorDefinition(PE policySetExtension);
+    Set<PhysicalInterceptorDefinition> generateInterceptorDefinitions(Set<PolicySetExtension> policies);
 
 }

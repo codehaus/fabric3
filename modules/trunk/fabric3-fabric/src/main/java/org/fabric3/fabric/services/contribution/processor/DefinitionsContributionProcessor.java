@@ -31,6 +31,8 @@ import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.loader.definitions.DefinitionsLoader;
 import org.fabric3.scdl.definitions.Definitions;
+import org.fabric3.scdl.definitions.Intent;
+import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.services.contribution.Contribution;
@@ -83,7 +85,13 @@ public class DefinitionsContributionProcessor extends ContributionProcessorExten
             LoaderContext context = new LoaderContextImpl((ClassLoader) null, null);
             Definitions definitions = definitionsLoader.load(reader, context);
             
-            contribution.addType(definitions.getName(), definitions);
+            for(PolicySet policySet : definitions.getPolicySets()) {
+                contribution.addType(policySet.getName(), policySet);
+            }
+            
+            for(Intent intent : definitions.getIntents()) {
+                contribution.addType(intent.getName(), intent);
+            }
 
         } catch (LoaderException e) {
             throw new ContributionException(e);

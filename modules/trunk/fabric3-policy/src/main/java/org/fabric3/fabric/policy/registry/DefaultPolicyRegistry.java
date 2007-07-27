@@ -43,7 +43,9 @@ public class DefaultPolicyRegistry implements PolicyRegistry {
     /**
      * @see org.fabric3.spi.policy.registry.PolicyRegistry#getInterceptors(org.fabric3.spi.model.instance.LogicalScaArtifact)
      */
-    public PolicySetExtension getPolicy(final LogicalScaArtifact<?> scaArtifact) {
+    public Set<PolicySetExtension> getPolicy(final LogicalScaArtifact<?> scaArtifact) {
+        
+        Set<PolicySetExtension> policies = new HashSet<PolicySetExtension>();
         
         LogicalScaArtifact<?> temp = scaArtifact;
         
@@ -62,12 +64,12 @@ public class DefaultPolicyRegistry implements PolicyRegistry {
         
         for(PolicySet policySet : policySets) {
             if(policySet.doesProvide(intentNames)) {
-                return policySet.getExtension();
+                policies.add(policySet.getExtension());
             }
         }
 
         
-        return null;
+        return policies;
         
     }
 

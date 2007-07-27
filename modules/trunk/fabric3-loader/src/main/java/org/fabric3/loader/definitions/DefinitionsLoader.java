@@ -62,8 +62,7 @@ public class DefinitionsLoader implements StAXElementLoader<Definitions> {
     public Definitions load(XMLStreamReader reader, LoaderContext parentContext) throws XMLStreamException, LoaderException {
 
         String targetNamespace = reader.getAttributeValue(null, "targetNamespace");
-        QName name = new QName(targetNamespace, reader.getAttributeValue(null, "name"));
-        Definitions definitions = new Definitions(name, targetNamespace);
+        Definitions definitions = new Definitions(targetNamespace);
         
         LoaderContext context = new LoaderContextImpl(parentContext, targetNamespace);
         

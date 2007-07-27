@@ -22,8 +22,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.xml.namespace.QName;
-
 import org.fabric3.scdl.ModelObject;
 
 /**
@@ -34,23 +32,14 @@ public class Definitions extends ModelObject {
     
     private Set<PolicySet> policySets = new HashSet<PolicySet>();
     private Set<Intent> intents = new HashSet<Intent>();
-    private QName name;
     private String targetNamespace;
     
     /**
      * @param name Qualified name of this definitions (TODO This is not covered by the spec).
      * @param targetNamespace Target namespace.
      */
-    public Definitions(QName name, String targetNamespace) {
-        this.name = name;
+    public Definitions(String targetNamespace) {
         this.targetNamespace = targetNamespace;
-    }
-    
-    /**
-     * @return Name of the definitions.
-     */
-    public QName getName() {
-        return name;
     }
     
     /**
