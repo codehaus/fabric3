@@ -20,6 +20,8 @@ package org.fabric3.spi.policy.registry;
 
 import java.util.Set;
 
+import javax.xml.namespace.QName;
+
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.scdl.definitions.PolicySetExtension;
@@ -51,5 +53,12 @@ public interface PolicyRegistry {
      * @return List of interceptors.
      */
     Set<PolicySetExtension> getPolicy(LogicalScaArtifact<?> scaArtifact);
+    
+    /**
+     * Deploys the definition artifact.
+     * 
+     * @param definitionArtifact Definition artifact (Policy or Intent)
+     */
+    void deploy(QName definitionArtifact);
 
 }

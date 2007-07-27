@@ -18,6 +18,8 @@
  */
 package org.fabric3.fabric.assembly;
 
+import static org.osoa.sca.Constants.SCA_NS;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,9 +27,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import javax.xml.namespace.QName;
 
-import static org.osoa.sca.Constants.SCA_NS;
+import javax.xml.namespace.QName;
 
 import org.fabric3.fabric.assembly.allocator.AllocationException;
 import org.fabric3.fabric.assembly.allocator.Allocator;
@@ -39,9 +40,9 @@ import org.fabric3.fabric.command.InitializeComponentCommand;
 import org.fabric3.fabric.generator.DefaultGeneratorContext;
 import org.fabric3.fabric.services.routing.RoutingException;
 import org.fabric3.fabric.services.routing.RoutingService;
+import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
@@ -59,7 +60,6 @@ import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.Referenceable;
 import org.fabric3.spi.model.physical.PhysicalChangeSet;
-import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.util.UriHelper;
 
@@ -125,11 +125,7 @@ public abstract class AbstractAssembly implements Assembly {
     }
 
     public void activate(QName deployable, boolean include) throws ActivateException {
-        Contribution contribution = metadataStore.resolve(deployable);
-        if (contribution == null) {
-            throw new ArtifactNotFoundException("Deployable composite not found for", deployable.toString());
-        }
-        ModelObject object = contribution.getType(deployable);
+        ModelObject object = metadataStore.resolve(deployable);
         if (!(object instanceof Composite)) {
             throw new IllegalContributionTypeException("Deployable must be a composite", deployable.toString());
         }

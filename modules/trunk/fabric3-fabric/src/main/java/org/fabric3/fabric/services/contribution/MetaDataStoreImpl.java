@@ -150,14 +150,14 @@ public class MetaDataStoreImpl implements MetaDataStore {
         return cache.get(contributionUri);
     }
 
-    public Contribution resolve(QName deployable) {
+    public ModelObject resolve(QName deployable) {
         for (Contribution contribution : cache.values()) {
             Map<QName, ModelObject> map = contribution.getTypes();
             if (map == null) {
                 continue;
             }
             if (map.containsKey(deployable)) {
-                return contribution;
+                return map.get(deployable);
             }
         }
         return null;

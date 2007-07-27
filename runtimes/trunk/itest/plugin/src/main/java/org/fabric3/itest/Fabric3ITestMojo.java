@@ -161,6 +161,11 @@ public class Fabric3ITestMojo extends AbstractMojo {
      * @readonly
      */
     public List<String> testClassPath;
+    
+    /**
+     * @parameter
+     */
+    public String definitionsFile;
 
     /**
      * Used to look up Artifacts in the remote repository.
@@ -230,7 +235,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
         try {
             ScdlBootstrapper bootstrapper = new ScdlBootstrapperImpl();
             bootstrapper.setScdlLocation(systemScdl);
-            coordinator = new MavenCoordinator(contributions);
+            coordinator = new MavenCoordinator(contributions, definitionsFile);
             coordinator.bootPrimordial(runtime, bootstrapper, cl, testClassLoader);
             coordinator.initialize();
             Future<Void> future = coordinator.joinDomain(-1);

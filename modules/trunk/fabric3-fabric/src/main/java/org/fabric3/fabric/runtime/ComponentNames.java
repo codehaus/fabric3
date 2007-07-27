@@ -64,6 +64,8 @@ public final class ComponentNames {
     public static final URI BOOT_CLASSLOADER_ID = URI.create("sca://./bootClassLoader");
 
     public static final URI APPLICATION_CLASSLOADER_ID = URI.create("sca://./applicationClassLoader");
+    
+    public static final URI POLICY_REGISTRY_URI = URI.create(RUNTIME_NAME + "/policyRegistry");
 
     private ComponentNames() {
     }

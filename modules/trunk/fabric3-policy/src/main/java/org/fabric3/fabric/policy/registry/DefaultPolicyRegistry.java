@@ -26,10 +26,13 @@ import java.util.Set;
 import javax.xml.namespace.QName;
 
 import org.fabric3.spi.model.instance.LogicalScaArtifact;
+import org.fabric3.scdl.ModelObject;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.scdl.definitions.PolicySetExtension;
 import org.fabric3.spi.policy.registry.PolicyRegistry;
+import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.osoa.sca.annotations.Reference;
 
 /**
  *
@@ -39,6 +42,17 @@ public class DefaultPolicyRegistry implements PolicyRegistry {
 
     private Set<PolicySet> policySets = new HashSet<PolicySet>();
     private Map<QName, Intent> intents = new HashMap<QName, Intent>();
+    private MetaDataStore metaDataStore;
+    
+    /**
+     * Injects the metadata store.
+     * 
+     * @param metaDataStore Metadata strore.
+     */
+    @Reference
+    public void setMetaDataStore(MetaDataStore metaDataStore) {
+        this.metaDataStore = metaDataStore;
+    }
     
     /**
      * @see org.fabric3.spi.policy.registry.PolicyRegistry#getInterceptors(org.fabric3.spi.model.instance.LogicalScaArtifact)
@@ -85,6 +99,20 @@ public class DefaultPolicyRegistry implements PolicyRegistry {
      */
     public void registerPolicySet(PolicySet policySet) {
         policySets.add(policySet);
+    }
+
+    /**
+     * @see org.fabric3.spi.policy.registry.PolicyRegistry#deploy(javax.xml.namespace.QName)
+     */
+    public void deploy(QName definitionArtifact) {
+        
+        ModelObject modelObject = metaDataStore.resolve(definitionArtifact);
+        if(modelObject instanceof Intent) {
+            registerIntent((Intent) modelObject);
+        } else if(modelObject instanceof PolicySet) {
+            registerPolicySet((PolicySet) modelObject);
+        }
+        
     }
 
 }

@@ -21,6 +21,8 @@ package org.fabric3.spi.services.contribution;
 import java.net.URI;
 import javax.xml.namespace.QName;
 
+import org.fabric3.scdl.ModelObject;
+
 /**
  * Implementations store contribution metadata
  *
@@ -52,7 +54,13 @@ public interface MetaDataStore {
      */
     Contribution find(URI contributionUri);
 
-    Contribution resolve(QName deployable);
+    /**
+     * Looks up a model object qname.
+     * 
+     * @param deployable Qualified name of the model object.
+     * @return Model object.
+     */
+    ModelObject resolve(QName deployable);
 
     Contribution resolve(Import imprt);
 

@@ -30,6 +30,7 @@ import org.fabric3.fabric.assembly.AssemblyException;
 import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.assembly.RuntimeAssembly;
 import org.fabric3.fabric.runtime.ComponentNames;
+import static org.fabric3.fabric.runtime.ComponentNames.POLICY_REGISTRY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_ASSEMBLY_URI;
@@ -50,6 +51,7 @@ import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.policy.registry.PolicyRegistry;
 
 /**
  * Implementation of a coordinator for the iTest runtime.
@@ -58,6 +60,7 @@ import org.fabric3.spi.component.WorkContext;
  */
 public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbeddedRuntime, Bootstrapper> {
     private static final String EXTENSIONS = "extensions";
+    private static final String DEFINITIONS = "definitions";
 
     private enum State {
         UNINITIALIZED,
@@ -75,12 +78,18 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
     private State state = State.UNINITIALIZED;
     private MavenEmbeddedRuntime runtime;
     private Bootstrapper bootstrapper;
+    private String definitionsFile;
 
     public MavenCoordinator() {
     }
 
-    public MavenCoordinator(String[] contributions) {
+    /**
+     * @param contributions Contributions to run in the test.
+     * @param definitionsFile Definitions file.
+     */
+    public MavenCoordinator(String[] contributions, String definitionsFile) {
         this.contributions = contributions;
+        this.definitionsFile = definitionsFile;
     }
 
     public void bootPrimordial(MavenEmbeddedRuntime runtime,
@@ -117,16 +126,18 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
     }
 
     public void initialize() throws InitializationException {
+        
         if (state != State.PRIMORDIAL) {
             throw new IllegalStateException("Not in PRIMORDIAL state");
         }
         // initialize core system components
         bootstrapper.bootSystem(runtime);
+        
+        ContributionService contributionService = runtime.getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
+        
         if (contributions != null) {
             try {
                 // contribute and activate extensions if they exist in the runtime domain
-                ContributionService contributionService = runtime.getSystemComponent(ContributionService.class,
-                                                                                     CONTRIBUTION_SERVICE_URI);
                 RuntimeAssembly assembly = runtime.getSystemComponent(RuntimeAssembly.class, RUNTIME_ASSEMBLY_URI);
                 ContributionSource source = new MavenExtensionContributionSource(contributions);
                 URI addedUri = contributionService.contribute(EXTENSIONS, source);
@@ -145,6 +156,21 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
                 throw new InitializationException(e);
             }
         }
+        
+        if(definitionsFile != null) {
+            try {
+                ContributionSource source = new ClasspathContributionSource(definitionsFile);
+                URI addedUri = contributionService.contribute(DEFINITIONS, source);
+                List<Deployable> deployables = contributionService.getDeployables(addedUri);
+                PolicyRegistry policyRegistry = runtime.getSystemComponent(PolicyRegistry.class, POLICY_REGISTRY_URI);
+                for (Deployable deployable : deployables) {
+                    policyRegistry.deploy(deployable.getName());
+                }
+            } catch (ContributionException e) {
+                throw new InitializationException(e);
+            }
+        }
+        
         state = State.INITIALIZED;
 
     }
