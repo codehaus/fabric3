@@ -60,9 +60,11 @@ public class DefinitionsLoader implements StAXElementLoader<Definitions> {
      * @see org.fabric3.spi.loader.StAXElementLoader#load(javax.xml.stream.XMLStreamReader, org.fabric3.spi.loader.LoaderContext)
      */
     public Definitions load(XMLStreamReader reader, LoaderContext parentContext) throws XMLStreamException, LoaderException {
-        
-        Definitions definitions = new Definitions();
+
         String targetNamespace = reader.getAttributeValue(null, "targetNamespace");
+        QName name = new QName(targetNamespace, reader.getAttributeValue(null, "name"));
+        Definitions definitions = new Definitions(name, targetNamespace);
+        
         LoaderContext context = new LoaderContextImpl(parentContext, targetNamespace);
         
         while (true) {
