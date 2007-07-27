@@ -53,11 +53,6 @@
                 class="org.fabric3.fabric.services.contribution.processor.JarContributionProcessor"/>
     </component>
 
-    <component name="ExtensionContributionProcessor">
-        <system:implementation.system
-                class="org.fabric3.fabric.services.contribution.processor.ExtensionContributionProcessor"/>
-    </component>
-
     <component name="FolderContributionProcessor">
         <system:implementation.system
                 class="org.fabric3.fabric.services.contribution.processor.ExplodedJarContributionProcessor"/>

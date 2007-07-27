@@ -16,9 +16,6 @@
  */
 package org.fabric3.fabric.runtime;
 
-import static org.fabric3.fabric.runtime.ComponentNames.APPLICATION_CLASSLOADER_ID;
-import static org.fabric3.fabric.runtime.ComponentNames.BOOT_CLASSLOADER_ID;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
@@ -86,6 +83,8 @@ import org.fabric3.fabric.implementation.system.SystemComponentTypeLoaderImpl;
 import org.fabric3.fabric.implementation.system.SystemImplementationLoader;
 import org.fabric3.fabric.implementation.system.SystemWireAttacher;
 import org.fabric3.fabric.loader.LoaderRegistryImpl;
+import static org.fabric3.fabric.runtime.ComponentNames.APPLICATION_CLASSLOADER_ID;
+import static org.fabric3.fabric.runtime.ComponentNames.BOOT_CLASSLOADER_ID;
 import static org.fabric3.fabric.runtime.ComponentNames.CLASSLOADER_REGISTRY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_NAME;
@@ -96,7 +95,6 @@ import org.fabric3.fabric.services.archive.JarServiceImpl;
 import org.fabric3.fabric.services.classloading.ClassLoaderRegistryImpl;
 import org.fabric3.fabric.services.contribution.ArtifactResolverRegistryImpl;
 import org.fabric3.fabric.services.contribution.ClasspathProcessorRegistryImpl;
-import org.fabric3.fabric.services.contribution.ContributionStoreImpl;
 import org.fabric3.fabric.services.contribution.ContributionStoreRegistryImpl;
 import org.fabric3.fabric.services.contribution.FileSystemResolver;
 import org.fabric3.fabric.services.contribution.MetaDataStoreImpl;
@@ -126,6 +124,10 @@ import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.processor.IntrospectionRegistry;
 import org.fabric3.pojo.processor.JavaMappedService;
 import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.scdl.Autowire;
+import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.CompositeImplementation;
+import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.builder.component.WireAttacherRegistry;
 import org.fabric3.spi.builder.resource.ResourceContainerBuilderRegistry;
@@ -140,10 +142,6 @@ import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.scdl.Autowire;
-import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.CompositeImplementation;
-import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ArtifactResolverRegistry;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
@@ -245,15 +243,6 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         CommandExecutorRegistry commandRegistry = createCommandExecutorRegistry(scopeRegistry);
 
         contributionStoreRegistry = new ContributionStoreRegistryImpl();
-        try {
-            ContributionStoreImpl contributionStore = new ContributionStoreImpl(info, contributionStoreRegistry);
-            contributionStore.setStoreId("extensions");
-            contributionStore.setPersistent("false");
-            contributionStore.init();
-        } catch (IOException e) {
-            throw new InitializationException(e);
-        }
-
         MetaDataStoreImpl metaDataStore =
                 new MetaDataStoreImpl(info, contributionStoreRegistry, new XStreamFactoryImpl());
         metaDataStore.setStoreId("extensions");
@@ -399,7 +388,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         ComponentLoader componentLoader = new ComponentLoader(loaderRegistry,
                                                               propertyValueLoader,
                                                               componentReferenceLoader);
-        
+
         IncludeLoader includeLoader = new IncludeLoader(loaderRegistry);
         CompositeLoader compositeLoader = new CompositeLoader(loaderRegistry,
                                                               includeLoader,

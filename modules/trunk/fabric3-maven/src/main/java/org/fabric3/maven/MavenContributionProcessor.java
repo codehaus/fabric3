@@ -47,14 +47,14 @@ import org.fabric3.spi.services.contribution.StoreNotFoundException;
 public class MavenContributionProcessor extends ContributionProcessorExtension {
 
     private ContributionStoreRegistry contributionStoreRegistry;
-    private String extensionsStoreId = "maven";
+    private String extensionsStoreId = "extensions";
 
     public MavenContributionProcessor(@Reference ContributionStoreRegistry contributionStoreRegistry) {
         this.contributionStoreRegistry = contributionStoreRegistry;
     }
 
     public String getContentType() {
-        return null;
+        return MavenExtensionContributionSource.MAVEN_CONTENT_TYPE;
     }
 
     @Property(required = false)
@@ -87,20 +87,18 @@ public class MavenContributionProcessor extends ContributionProcessorExtension {
         if (archiveStore == null) {
             throw new StoreNotFoundException("Extensions archive store not found", extensionsStoreId);
         }
-        MetaDataStore metaDataStore = contributionStoreRegistry.getMetadataStore(extensionsStoreId);
+        // xcv FIXME me
+        MetaDataStore metaDataStore = contributionStoreRegistry.getMetadataStore("extensions");
         if (metaDataStore == null) {
             throw new StoreNotFoundException("Extensions metadata store not found", extensionsStoreId);
         }
         InputStream stream = null;
-        InputStream archiveStream = null;
         try {
             URI contributionUri = URI.create(contribution.getUri() + "/" + UUID.randomUUID());
-
             URL url = archiveStore.find(URI.create(extensionUri));
             if (url == null) {
                 throw new MavenArtifactNotFoundException("Unable to resolve artifact", extensionUri);
             }
-            archiveStream = url.openStream();
             stream = url.openStream();
             Contribution child = new Contribution(contributionUri, url, new byte[0], -1);
             contributions.add(child);
@@ -115,21 +113,11 @@ public class MavenContributionProcessor extends ContributionProcessorExtension {
         } catch (URISyntaxException e) {
             throw new ContributionException(e);
         } finally {
-            try {
-                if (archiveStream != null) {
-                    try {
-                        archiveStream.close();
-                    } catch (IOException e) {
-                        throw new ContributionException(e);
-                    }
-                }
-            } finally {
-                if (stream != null) {
-                    try {
-                        stream.close();
-                    } catch (IOException e) {
-                        throw new ContributionException(e);
-                    }
+            if (stream != null) {
+                try {
+                    stream.close();
+                } catch (IOException e) {
+                    throw new ContributionException(e);
                 }
             }
         }

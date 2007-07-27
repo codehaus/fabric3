@@ -9,10 +9,12 @@ import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.spi.services.archive.ArchiveStore;
 import org.fabric3.spi.services.archive.ArchiveStoreException;
 import org.fabric3.spi.services.artifact.Artifact;
+import org.fabric3.spi.services.contribution.ContributionStoreRegistry;
 
 /**
  * An archive store that delegates to a set of local and remote Maven repositories.
@@ -22,9 +24,13 @@ import org.fabric3.spi.services.artifact.Artifact;
 @EagerInit
 public class MavenArchiveStore implements ArchiveStore {
     private static final String DEFAULT_REPO = "http://repo1.maven.org/maven2/";
-    private String id = "maven";
+    private String id = "extensions";
     private String remoteRepositories = DEFAULT_REPO;
     private MavenHelper helper;
+
+    public MavenArchiveStore(@Reference ContributionStoreRegistry registry) {
+        registry.register(this);
+    }
 
     public String getId() {
         return id;

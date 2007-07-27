@@ -246,8 +246,8 @@ public class ContributionServiceImpl implements ContributionService {
     }
 
     private String getContentType(URL url, String contentType) {
+        // FIXME Replace everything in this method with the activation-based content type registry
         if (contentType == null || Constants.CONTENT_UNKONWN.equals(contentType)) {
-            // FIXME this should be extensible
             if (url.toExternalForm().endsWith(".jar")) {
                 return Constants.JAR_CONTENT_TYPE;
             } else {
@@ -256,7 +256,7 @@ public class ContributionServiceImpl implements ContributionService {
 
         } else if (Constants.EXTENSION_TYPE.equals(contentType)) {
             return contentType;
-        } else {
+        } else if (url != null) {
             if ("file".equals(url.getProtocol())) {
                 return Constants.FOLDER_CONTENT_TYPE;
             }

@@ -40,7 +40,7 @@
     <include name="org.fabric3.fabric.Physical" scdlResource="org/fabric3/fabric/physical.composite"/>
 
     <!-- include loader configuration -->
-    <include name="org.fabric3.fabric.Loader" scdlResource="org/fabric3/fabric/loader.composite"/>
+    <include name="org.fabric3.fabric.Loader" scdlResource="org/fabric3/loader/loader.composite"/>
 
     <!-- include implementation processor configuration -->
     <include name="org.fabric3.fabric.Implementation" scdlResource="org/fabric3/fabric/implementation.composite"/>
@@ -62,6 +62,7 @@
 
     <!-- include deployment configuration -->
     <include name="org.fabric3.fabric.Deployment" scdlResource="org/fabric3/fabric/deployment.composite"/>
+	 <include name="org.fabric3.fabric.ExtensionsDeployment" scdlResource="org/fabric3/fabric/extensionsDeployment.composite"/>
 
     <!-- include transform configuration -->
     <include name="org.fabric3.transform.Transform" scdlResource="org/fabric3/transform/transform.composite"/>

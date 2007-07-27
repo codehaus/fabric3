@@ -72,6 +72,7 @@
         <dependencySet>
             <includes>
                 <exclude>org.codehaus.fabric3:fabric3-extension</exclude>  
+                <include>org.codehaus.fabric3:fabric3-loader</include>  
                 <include>org.codehaus.fabric3:fabric3-fabric</include>
                 <include>org.codehaus.fabric3.standalone:standalone-host</include>
                 <include>org.codehaus.fabric3:fabric3-jetty</include>
@@ -94,6 +95,7 @@
         <dependencySet>
             <includes>
                 <exclude>org.codehaus.fabric3:fabric3-extension</exclude>
+                <include>org.codehaus.fabric3:fabric3-loader</include>  
                 <include>org.codehaus.fabric3:fabric3-fabric</include>
                 <include>org.codehaus.fabric3.standalone:standalone-host</include>
                 <include>org.codehaus.fabric3:fabric3-jetty</include>
