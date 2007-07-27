@@ -27,7 +27,6 @@ import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Remotable;
 
 import static org.fabric3.fabric.util.JavaIntrospectionHelper.getAllInterfaces;
-import static org.fabric3.fabric.util.JavaIntrospectionHelper.toPropertyName;
 import org.fabric3.spi.idl.InvalidServiceContractException;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.processor.ProcessingException;
@@ -35,7 +34,6 @@ import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.processor.PojoComponentType;
 import org.fabric3.pojo.processor.JavaMappedService;
 import org.fabric3.spi.loader.LoaderContext;
-import org.fabric3.scdl.ServiceContract;
 
 /**
  * Processes an {@link org.osoa.sca.annotations.Service} annotation and updates the component type with corresponding
@@ -112,6 +110,7 @@ public class ServiceProcessor extends ImplementationProcessorExtension {
             PojoComponentType type,
             LoaderContext context) throws ProcessingException {
 
+/*
         Callback annotation = method.getAnnotation(Callback.class);
         if (annotation == null) {
             return;
@@ -133,12 +132,14 @@ public class ServiceProcessor extends ImplementationProcessorExtension {
         }
         callbackService.setCallbackReferenceName(name);
         callbackService.setCallbackMember(method);
+*/
     }
 
     public void visitField(Field field,
                            PojoComponentType type,
                            LoaderContext context) throws ProcessingException {
 
+/*
         Callback annotation = field.getAnnotation(Callback.class);
         if (annotation == null) {
             return;
@@ -157,6 +158,7 @@ public class ServiceProcessor extends ImplementationProcessorExtension {
         }
         callbacksService.setCallbackReferenceName(name);
         callbacksService.setCallbackMember(field);
+*/
     }
 
 

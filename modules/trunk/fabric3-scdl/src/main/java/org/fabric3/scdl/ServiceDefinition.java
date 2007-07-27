@@ -31,7 +31,6 @@ import java.util.List;
 public class ServiceDefinition extends ModelObject {
     private String name;
     private ServiceContract serviceContract;
-    private String callbackRefName;
     private final List<BindingDefinition> bindings;
     private URI target;
 
@@ -42,13 +41,6 @@ public class ServiceDefinition extends ModelObject {
     public ServiceDefinition(String name, ServiceContract<?> serviceContract) {
         this.name = name;
         this.serviceContract = serviceContract;
-        bindings = new ArrayList<BindingDefinition>();
-    }
-
-    public ServiceDefinition(String name, ServiceContract<?> serviceContract, String callbackRefName) {
-        this.name = name;
-        this.serviceContract = serviceContract;
-        this.callbackRefName = callbackRefName;
         bindings = new ArrayList<BindingDefinition>();
     }
 
@@ -82,20 +74,6 @@ public class ServiceDefinition extends ModelObject {
      */
     public void setServiceContract(ServiceContract contract) {
         this.serviceContract = contract;
-    }
-
-    /**
-     * Returns the callback name.
-     */
-    public String getCallbackReferenceName() {
-        return callbackRefName;
-    }
-
-    /**
-     * Sets the callback name
-     */
-    public void setCallbackReferenceName(String name) {
-        this.callbackRefName = name;
     }
 
     /**

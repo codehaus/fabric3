@@ -18,8 +18,6 @@
  */
 package org.fabric3.pojo.processor;
 
-import java.lang.reflect.Member;
-
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
 
@@ -33,21 +31,12 @@ import org.fabric3.scdl.ServiceDefinition;
  */
 public class JavaMappedService extends ServiceDefinition {
     private Class<?> serviceInterface;
-    private Member callbackMember;
 
     public JavaMappedService() {
     }
 
     public JavaMappedService(String name, ServiceContract contract) {
         super(name, contract);
-    }
-
-    public JavaMappedService(String name,
-                             ServiceContract contract,
-                             String callbackRefName,
-                             Member callbackMember) {
-        super(name, contract, callbackRefName);
-        this.callbackMember = callbackMember;
     }
 
     /**
@@ -68,14 +57,6 @@ public class JavaMappedService extends ServiceDefinition {
      */
     public void setServiceInterface(Class<?> serviceInterface) {
         this.serviceInterface = serviceInterface;
-    }
-
-    public Member getCallbackMember() {
-        return callbackMember;
-    }
-
-    public void setCallbackMember(Member callbackMember) {
-        this.callbackMember = callbackMember;
     }
 
 }

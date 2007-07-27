@@ -114,27 +114,6 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
 
     }
 
-    public void processCallbackSites(PojoComponentType type,
-                                     InstanceFactoryDefinition providerDefinition) {
-        Map<String, JavaMappedService> services = type.getServices();
-        for (Map.Entry<String, JavaMappedService> entry : services.entrySet()) {
-            JavaMappedService service = entry.getValue();
-            Member member = service.getCallbackMember();
-            if (member == null) {
-                // JFM this is dubious, the reference is mapped to a constructor so skip processing
-                // ImplementationProcessorService does not set the member type to a ctor when creating the ref
-                continue;
-            }
-            ValueSource source = new ValueSource(SERVICE, entry.getKey());
-            MemberSite memberSite = new MemberSite(member);
-            
-            InjectionSiteMapping mapping = new InjectionSiteMapping();
-            mapping.setSource(source);
-            mapping.setSite(memberSite);
-            providerDefinition.addInjectionSite(mapping);
-        }
-    }
-
     public void processConstructorArguments(ConstructorDefinition<?> ctorDef,
                                             InstanceFactoryDefinition providerDefinition) {
         for (Class<?> type : ctorDef.getConstructor().getParameterTypes()) {

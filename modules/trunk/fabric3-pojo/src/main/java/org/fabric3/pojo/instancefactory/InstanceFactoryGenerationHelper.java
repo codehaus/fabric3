@@ -49,14 +49,6 @@ public interface InstanceFactoryGenerationHelper {
     void processReferenceSites(PojoComponentType type, InstanceFactoryDefinition providerDefinition);
 
     /**
-     * Creates InjectionSiteMappings for references declared by the component implementation
-     *
-     * @param type               the component type corresponding to the implementation
-     * @param providerDefinition the instance factory provider definition
-     */
-    void processCallbackSites(PojoComponentType type, InstanceFactoryDefinition providerDefinition);
-
-    /**
      * Adds the constructor parameter types to the provider definition
      *
      * @param ctorDef            the constructor definition

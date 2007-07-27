@@ -81,6 +81,7 @@ public class JavaPhysicalComponentGeneratorTestCase extends TestCase {
         ValueSource ctorPropSource = provider.getCdiSources().get(1);
         assertEquals("ctorProp", ctorPropSource.getName());
 
+/*
         // verify callback
         InjectionSiteMapping callbackMapping = provider.getInjectionSites().get(1);
         MemberSite callbackSite = callbackMapping.getSite();
@@ -89,6 +90,7 @@ public class JavaPhysicalComponentGeneratorTestCase extends TestCase {
         ValueSource callbackSource = callbackMapping.getSource();
         assertEquals(SERVICE, callbackSource.getValueType());
         assertEquals("setCallback", callbackSource.getName());
+*/
 
     }
 
@@ -143,9 +145,6 @@ public class JavaPhysicalComponentGeneratorTestCase extends TestCase {
         ctorProperty.setName("ctorProp");
         type.add(ctorProperty);
 
-        JavaMappedService service = new JavaMappedService("setCallback", null);
-        service.setCallbackMember(Foo.class.getMethod("setCallback", Object.class));
-        type.add(service);
         return type;
     }
 
