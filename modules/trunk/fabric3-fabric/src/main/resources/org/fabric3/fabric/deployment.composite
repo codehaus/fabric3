@@ -25,6 +25,11 @@
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
            name="org.fabric3.fabric.Deployment"
            autowire="true">
+    
+    <!-- Content type resolver -->       
+    <component name="contentTypeResolver">
+        <system:implementation.system class="org.fabric3.fabric.services.contenttype.ExtensionMapContentTypeResolver"/>
+    </component>
 
     <!-- Contribution Service -->
     <component name="ContributionService" initLevel="90">
@@ -40,22 +45,23 @@
     </component>
 
     <component name="JarService">
-        <system:implementation.system
-                class="org.fabric3.fabric.services.archive.JarServiceImpl"/>
+        <system:implementation.system class="org.fabric3.fabric.services.archive.JarServiceImpl"/>
     </component>
 
     <component name="ContributionProcessorRegistry">
-        <system:implementation.system
-                class="org.fabric3.fabric.services.contribution.ContributionProcessorRegistryImpl"/>
+        <system:implementation.system class="org.fabric3.fabric.services.contribution.ContributionProcessorRegistryImpl"/>
     </component>
+    
     <component name="JarContributionProcessor">
-        <system:implementation.system
-                class="org.fabric3.fabric.services.contribution.processor.JarContributionProcessor"/>
+        <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.JarContributionProcessor"/>
+    </component>
+    
+    <component name="DefinitionsContributionProcessor">
+        <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.DefinitionsContributionProcessor"/>
     </component>
 
     <component name="FolderContributionProcessor">
-        <system:implementation.system
-                class="org.fabric3.fabric.services.contribution.processor.ExplodedJarContributionProcessor"/>
+        <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.ExplodedJarContributionProcessor"/>
     </component>
 
     <component name="ClasspathProcessorRegistry">
