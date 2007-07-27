@@ -535,14 +535,28 @@ public abstract class AbstractAssembly implements Assembly {
     }
 
     /**
-     * Subclasses are responsible for implementing an algorithm to resolve target URIs against a composite
+     * Algorithm to resolve target URIs against a composite
      *
      * @param uri        the target uri to resolve
      * @param components the composites to resolve against, in order
      * @return the logical instance
      * @throws ResolutionException if an error occurs during resolution, such as the target not being found
      */
-    protected abstract Referenceable resolveTarget(URI uri, List<LogicalComponent<CompositeImplementation>> components)
-            throws ResolutionException;
+    protected Referenceable resolveTarget(URI uri, List<LogicalComponent<CompositeImplementation>> components)
+            throws ResolutionException {
+        // TODO only resolves one level deep
+        URI defragmentedUri = UriHelper.getDefragmentedName(uri);
+        for (LogicalComponent<CompositeImplementation> component : components) {
+            Referenceable target = component.getComponent(defragmentedUri);
+            if (target != null) {
+                return target;
+            }
+            target = component.getReference(uri.getFragment());
+            if (target != null) {
+                return target;
+            }
+        }
+        throw new TargetNotFoundException("Target not found", uri.toString());
+    }
 
 }

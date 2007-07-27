@@ -19,9 +19,6 @@
 package org.fabric3.fabric.assembly;
 
 import java.net.URI;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
@@ -32,13 +29,10 @@ import org.fabric3.fabric.assembly.resolver.WireResolver;
 import org.fabric3.fabric.assembly.store.AssemblyStore;
 import org.fabric3.fabric.runtime.ComponentNames;
 import org.fabric3.fabric.services.routing.RoutingService;
+import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.spi.model.instance.Referenceable;
-import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.services.contribution.MetaDataStore;
-import org.fabric3.spi.util.UriHelper;
 
 /**
  * The default RuntimeAssembly implementation
@@ -47,8 +41,6 @@ import org.fabric3.spi.util.UriHelper;
  */
 @EagerInit
 public class RuntimeAssemblyImpl extends AbstractAssembly implements RuntimeAssembly {
-    private Map<URI, LogicalComponent<?>> hostComponents;
-
     public RuntimeAssemblyImpl(@Reference GeneratorRegistry generatorRegistry,
                                @Reference WireResolver wireResolver,
                                @Reference PromotionNormalizer normalizer,
@@ -64,36 +56,12 @@ public class RuntimeAssemblyImpl extends AbstractAssembly implements RuntimeAsse
               routingService,
               store,
               metaDataStore);
-        this.hostComponents = new HashMap<URI, LogicalComponent<?>>();
     }
 
     public void instantiateHostComponentDefinition(URI uri, ComponentDefinition<?> definition)
             throws InstantiationException {
         LogicalComponent<?> component = instantiate(uri, domain, definition);
-        hostComponents.put(uri, component);
+        domain.addComponent(component);
+        addToDomainMap(component);
     }
-
-    @Override
-    protected Referenceable resolveTarget(URI uri, List<LogicalComponent<CompositeImplementation>> components)
-            throws ResolutionException {
-        // TODO only resolves one level deep
-        for (LogicalComponent<CompositeImplementation> component : components) {
-            URI defragmentedUri = UriHelper.getDefragmentedName(uri);
-            Referenceable target = component.getComponent(defragmentedUri);
-            if (target != null) {
-                return target;
-            }
-            target = component.getReference(uri.getFragment());
-            if (target != null) {
-                return target;
-            }
-            target = hostComponents.get(defragmentedUri);
-            if (target != null) {
-                return target;
-            }
-        }
-        throw new TargetNotFoundException("Target not found", uri.toString());
-    }
-
-
 }
