@@ -46,6 +46,8 @@ import org.fabric3.scdl.ModelObject;
 import org.fabric3.spi.model.type.ContributionResourceDescription;
 import org.fabric3.spi.services.archive.ArchiveStore;
 import org.fabric3.spi.services.archive.ArchiveStoreException;
+import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
+import org.fabric3.spi.services.contenttype.ContentTypeResolver;
 import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionProcessorRegistry;
@@ -69,14 +71,17 @@ public class ContributionServiceImpl implements ContributionService {
     private ContributionProcessorRegistry processorRegistry;
     private ArtifactLocationEncoder encoder;
     private ContributionStoreRegistry contributionStoreRegistry;
+    private ContentTypeResolver contentTypeResolver;
 
     public ContributionServiceImpl(@Reference ContributionProcessorRegistry processorRegistry,
                                    @Reference ArtifactLocationEncoder encoder,
-                                   @Reference ContributionStoreRegistry contributionStoreRegistry)
+                                   @Reference ContributionStoreRegistry contributionStoreRegistry,
+                                   @Reference ContentTypeResolver contentTypeResolver)
             throws IOException, ClassNotFoundException {
         this.processorRegistry = processorRegistry;
         this.encoder = encoder;
         this.contributionStoreRegistry = contributionStoreRegistry;
+        this.contentTypeResolver = contentTypeResolver;
     }
 
     @Property(required = false)
@@ -122,7 +127,8 @@ public class ContributionServiceImpl implements ContributionService {
 
         }
         try {
-            String type = getContentType(locationUrl, source.getContentType());
+            // String type = getContentType(locationUrl, source.getContentType());
+            String type = contentTypeResolver.getContentType(source.getLocation());
             byte[] checksum = source.getChecksum();
             long timestamp = source.getTimestamp();
 
@@ -133,6 +139,8 @@ public class ContributionServiceImpl implements ContributionService {
         } catch (IOException e) {
             throw new ContributionException("Contribution error", e);
         } catch (MetaDataStoreException e) {
+            throw new ContributionException("Contribution error", e);
+        } catch (ContentTypeResolutionException e) {
             throw new ContributionException("Contribution error", e);
         }
     }

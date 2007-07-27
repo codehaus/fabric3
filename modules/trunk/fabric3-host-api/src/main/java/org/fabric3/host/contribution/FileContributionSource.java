@@ -43,10 +43,6 @@ public class FileContributionSource implements ContributionSource {
         return location;
     }
 
-    public String getContentType() throws IOException {
-        return location.openConnection().getContentType();
-    }
-
     public long getTimestamp() {
         return timestamp;
     }

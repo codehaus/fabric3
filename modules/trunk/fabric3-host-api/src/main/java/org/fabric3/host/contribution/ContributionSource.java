@@ -59,14 +59,6 @@ public interface ContributionSource {
     URL getLocation();
 
     /**
-     * Returns content type the content type to process.
-     *
-     * @return content ype the content type to process.
-     * @throws IOException if an error occurs returning the content type
-     */
-    String getContentType() throws IOException;
-
-    /**
      * Returns the source timestamp.
      *
      * @return the source timestamp
