@@ -55,8 +55,7 @@ import org.apache.maven.surefire.suite.SurefireTestSuite;
 import org.apache.maven.surefire.testset.TestSetFailedException;
 
 import org.fabric3.api.annotation.LogLevel;
-import org.fabric3.fabric.implementation.composite.CompositeComponentTypeLoader;
-import static org.fabric3.fabric.runtime.ComponentNames.COMPOSITE_LOADER_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.LOADER_URI;
 import org.fabric3.fabric.runtime.ScdlBootstrapperImpl;
 import org.fabric3.host.Fabric3RuntimeException;
 import org.fabric3.host.runtime.Bootstrapper;
@@ -71,10 +70,10 @@ import org.fabric3.pojo.processor.JavaMappedService;
 import org.fabric3.pojo.processor.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
-import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Operation;
 import org.fabric3.spi.deployer.CompositeClassLoader;
+import org.fabric3.spi.loader.Loader;
 import org.fabric3.spi.loader.LoaderContext;
 
 /**
@@ -266,19 +265,14 @@ public class Fabric3ITestMojo extends AbstractMojo {
                 // it becomes available
                 URI domain = URI.create(testDomain);
 
-                CompositeImplementation impl = new CompositeImplementation();
+                Loader loader = runtime.getSystemComponent(Loader.class, LOADER_URI);
 
-                ComponentDefinition<CompositeImplementation> definition =
-                        new ComponentDefinition<CompositeImplementation>(testComponentName, impl);
+                URL scdlLocation = testScdl.toURI().toURL();
+                LoaderContext loaderContext = new LoaderContextImpl(testClassLoader, scdlLocation);
+                Composite composite = loader.load(scdlLocation, Composite.class, loaderContext);
 
-                CompositeComponentTypeLoader loader =
-                        runtime.getSystemComponent(CompositeComponentTypeLoader.class, COMPOSITE_LOADER_URI);
-
-                LoaderContext loaderContext = new LoaderContextImpl(testClassLoader, testScdl.toURI().toURL());
-                loader.load(impl, loaderContext);
-
-                runtime.deploy(definition);
-                testSuite = createTestSuite(runtime, definition, domain);
+                runtime.deploy(composite);
+                testSuite = createTestSuite(runtime, composite, domain);
                 runtime.startContext(domain);
             } catch (Exception e) {
                 monitor.runError(e);
@@ -436,13 +430,11 @@ public class Fabric3ITestMojo extends AbstractMojo {
     }
 
     protected SurefireTestSuite createTestSuite(MavenEmbeddedRuntime runtime,
-                                                ComponentDefinition<CompositeImplementation> definition,
+                                                Composite composite,
                                                 URI uriBase) throws MojoExecutionException {
         SCATestSuite suite = new SCATestSuite();
 
-        CompositeImplementation impl = definition.getImplementation();
-        Composite componentType = impl.getComponentType();
-        Map<String, ComponentDefinition<? extends Implementation<?>>> components = componentType.getComponents();
+        Map<String, ComponentDefinition<? extends Implementation<?>>> components = composite.getComponents();
         for (Map.Entry<String, ComponentDefinition<? extends Implementation<?>>> entry : components.entrySet()) {
             String name = entry.getKey();
             ComponentDefinition<? extends Implementation<?>> junitDefinition = entry.getValue();

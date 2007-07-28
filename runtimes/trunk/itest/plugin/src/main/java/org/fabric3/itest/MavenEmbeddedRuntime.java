@@ -26,18 +26,17 @@ import org.apache.maven.surefire.testset.TestSetFailedException;
 import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.implementation.java.JavaComponent;
-import org.fabric3.pojo.reflection.InvokerInterceptor;
-import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.fabric.runtime.AbstractRuntime;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
+import org.fabric3.pojo.PojoWorkContextTunnel;
+import org.fabric3.pojo.reflection.InvokerInterceptor;
+import org.fabric3.scdl.Operation;
+import org.fabric3.scdl.Scope;
+import org.fabric3.scdl.Composite;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.CompositeImplementation;
-import org.fabric3.scdl.Operation;
-import org.fabric3.scdl.Scope;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.spi.wire.MessageImpl;
 
@@ -49,10 +48,9 @@ public class MavenEmbeddedRuntime extends AbstractRuntime<MavenHostInfo> {
         super(MavenHostInfo.class);
     }
 
-    public void deploy(ComponentDefinition<CompositeImplementation> definition) throws Exception {
+    public void deploy(Composite composite) throws Exception {
         DistributedAssembly assembly = getSystemComponent(DistributedAssembly.class, DISTRIBUTED_ASSEMBLY_URI);
-        // deploy the components
-        assembly.includeInDomain(definition);
+        assembly.includeInDomain(composite);
     }
 
     public void startContext(URI compositeId) throws GroupInitializationException {
