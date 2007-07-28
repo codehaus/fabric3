@@ -18,6 +18,10 @@
  */
 package org.fabric3.extension.generator;
 
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GeneratorRegistry;
@@ -29,6 +33,7 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
  * 
  * @version $Revision$ $Date$
  */
+@EagerInit
 public abstract class BindingGeneratorExtension<PWSD extends PhysicalWireSourceDefinition, PWTD extends PhysicalWireTargetDefinition, BD extends BindingDefinition>
         implements BindingGenerator<PWSD, PWTD, BD> {
     
@@ -40,6 +45,7 @@ public abstract class BindingGeneratorExtension<PWSD extends PhysicalWireSourceD
      * 
      * @param generatorRegistry Injected generator registry.
      */
+    @Reference
     public void setGeneratorRegistry(GeneratorRegistry generatorRegistry) {
         this.generatorRegistry = generatorRegistry;
     }
@@ -47,6 +53,7 @@ public abstract class BindingGeneratorExtension<PWSD extends PhysicalWireSourceD
     /**
      * Registers with the registry.
      */
+    @Init
     public void start() {
         generatorRegistry.register(getBindingDefinitionClass(), this);
     }
