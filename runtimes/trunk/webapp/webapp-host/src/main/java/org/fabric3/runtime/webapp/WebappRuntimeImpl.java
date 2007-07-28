@@ -25,19 +25,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSessionEvent;
 
 import org.fabric3.fabric.assembly.ActivateException;
-import org.fabric3.fabric.assembly.DistributedAssembly;
+import org.fabric3.fabric.assembly.Assembly;
 import org.fabric3.fabric.implementation.composite.CompositeComponentTypeLoader;
-import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.fabric.runtime.AbstractRuntime;
 import static org.fabric3.fabric.runtime.ComponentNames.COMPOSITE_LOADER_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
 import org.fabric3.host.runtime.InitializationException;
+import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.runtime.webapp.implementation.webapp.WebappComponent;
+import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.CompositeImplementation;
 
 /**
  * Bootstrapper for the Fabric3 runtime in a web application host. This listener manages one runtime per servlet
@@ -87,10 +87,10 @@ public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implement
             ComponentDefinition<CompositeImplementation> definition =
                     new ComponentDefinition<CompositeImplementation>(compositeId.toString(), impl);
 
-            DistributedAssembly assembly = getSystemComponent(DistributedAssembly.class, DISTRIBUTED_ASSEMBLY_URI);
+            Assembly assembly = getSystemComponent(Assembly.class, DISTRIBUTED_ASSEMBLY_URI);
             // deploy the components
-            assembly.activate(definition, false);
-            URI reslvedUri = URI.create(getHostInfo().getDomain().toString() + "/" + compositeId + "/" + componentId);
+            assembly.includeInDomain(definition);
+            URI reslvedUri = URI.create(getHostInfo().getDomain().toString() + "/" + componentId);
             WebappComponent webapp = (WebappComponent) getComponentManager().getComponent(reslvedUri);
             if (webapp == null) {
                 throw new Fabric3InitException("No component found with id " + componentId, componentId.toString());

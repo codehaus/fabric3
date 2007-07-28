@@ -23,6 +23,7 @@ import javax.xml.namespace.QName;
 
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.model.instance.LogicalComponent;
 
@@ -55,18 +56,32 @@ public interface Assembly {
      *                   directly included in the domain and the containing composite will be discarded.
      * @throws ActivateException if an error is encountered during activation
      */
+    @Deprecated
     void activate(ComponentDefinition<?> definition, boolean include) throws ActivateException;
 
     /**
-     * Activates a component at the domain level corresponding to the deployable QName by provisioning physical
-     * artifacts to service nodes.
+     * Include a deployable Composite in the domain.
      *
-     * @param deployable the deployable QName to activate
-     * @param include    if true, a domain-level inclusion is performed. That is, for composites, childrent will be
-     *                   directly included in the domain and the containing composite will be discarded.
+     * @param deployable the name of the deployable composite to include
      * @throws ActivateException if an error is encountered during activation
      */
-    void activate(QName deployable, boolean include) throws ActivateException;
+    void includeInDomain(QName deployable) throws ActivateException;
+
+    /**
+     * Include a Composite in the domain.
+     *
+     * @param composite the composite to include
+     * @throws ActivateException if an error is encountered during activation
+     */
+    void includeInDomain(Composite composite) throws ActivateException;
+
+    /**
+     * Include a Component in the domain.
+     *
+     * @param definition the definition of the Component
+     * @throws ActivateException if an error is encountered during activation
+     */
+    void includeInDomain(ComponentDefinition<?> definition) throws ActivateException;
 
     /**
      * Binds a service.

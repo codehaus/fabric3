@@ -192,7 +192,7 @@ public class DevelopmentCoordinator implements RuntimeLifecycleCoordinator<Devel
                 for (Deployable deployable : deployables) {
                     if (Constants.COMPOSITE_TYPE.equals(deployable.getType())) {
                         // include deployables in the runtime domain
-                        assembly.activate(deployable.getName(), true);
+                        assembly.includeInDomain(deployable.getName());
                     }
                 }
             } catch (MalformedURLException e) {

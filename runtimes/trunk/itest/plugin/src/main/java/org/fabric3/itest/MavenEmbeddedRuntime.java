@@ -52,7 +52,7 @@ public class MavenEmbeddedRuntime extends AbstractRuntime<MavenHostInfo> {
     public void deploy(ComponentDefinition<CompositeImplementation> definition) throws Exception {
         DistributedAssembly assembly = getSystemComponent(DistributedAssembly.class, DISTRIBUTED_ASSEMBLY_URI);
         // deploy the components
-        assembly.activate(definition, true);
+        assembly.includeInDomain(definition);
     }
 
     public void startContext(URI compositeId) throws GroupInitializationException {

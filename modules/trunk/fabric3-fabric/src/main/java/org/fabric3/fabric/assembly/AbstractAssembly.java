@@ -124,23 +124,31 @@ public abstract class AbstractAssembly implements Assembly {
         return domain;
     }
 
-    public void activate(QName deployable, boolean include) throws ActivateException {
+    public void includeInDomain(QName deployable) throws ActivateException {
         ModelObject object = metadataStore.resolve(deployable);
         if (!(object instanceof Composite)) {
             throw new IllegalContributionTypeException("Deployable must be a composite", deployable.toString());
         }
-        Composite type = (Composite) object;
+        Composite composite = (Composite) object;
+        includeInDomain(composite);
+    }
+
+    public void includeInDomain(Composite composite) throws ActivateException {
         CompositeImplementation impl = new CompositeImplementation();
-        impl.setComponentType(type);
+        impl.setComponentType(composite);
         ComponentDefinition<CompositeImplementation> definition =
                 new ComponentDefinition<CompositeImplementation>("type", impl);
-        activate(definition, include);
+        includeInDomain(definition);
         try {
             // record the operation
             assemblyStore.store(domain);
         } catch (RecordException e) {
-            throw new ActivateException("Error activating deployable", deployable.toString(), e);
+            throw new ActivateException("Error activating deployable", composite.getName().toString(), e);
         }
+    }
+
+    public void includeInDomain(ComponentDefinition<?> definition) throws ActivateException {
+        activate(definition, true);
     }
 
     public void activate(ComponentDefinition<?> definition, boolean include) throws ActivateException {

@@ -47,7 +47,7 @@ public class ContributionDirectoryScannerTestCase extends TestCase {
                                                        EasyMock.isA(ContributionSource.class))).andReturn(ARTIFACT_URI);
         EasyMock.replay(contributionService);
 
-        assembly.activate(DEPLOYABLE, true);
+        assembly.includeInDomain(DEPLOYABLE);
         EasyMock.replay(assembly);
         // deploy a file
         artifact.createNewFile();
@@ -67,7 +67,7 @@ public class ContributionDirectoryScannerTestCase extends TestCase {
         EasyMock.expect(contributionService.contribute(EasyMock.eq("DefaultStore"),
                                                        EasyMock.isA(ContributionSource.class))).andReturn(ARTIFACT_URI);
         EasyMock.replay(contributionService);
-        assembly.activate(DEPLOYABLE, true);
+        assembly.includeInDomain(DEPLOYABLE);
         EasyMock.replay(assembly);
         // deploy a file
         artifact.createNewFile();
@@ -88,7 +88,7 @@ public class ContributionDirectoryScannerTestCase extends TestCase {
         EasyMock.expect(contributionService.getContributionTimestamp(ARTIFACT_URI)).andReturn(0L);
         contributionService.update(EasyMock.isA(ContributionSource.class));
         EasyMock.replay(contributionService);
-        assembly.activate(DEPLOYABLE, true);
+        assembly.includeInDomain(DEPLOYABLE);
         EasyMock.replay(assembly);
         // deploy a file
         artifact.createNewFile();
@@ -118,7 +118,7 @@ public class ContributionDirectoryScannerTestCase extends TestCase {
                 true);
         contributionService.remove(EasyMock.eq(ARTIFACT_URI));
         EasyMock.replay(contributionService);
-        assembly.activate(DEPLOYABLE, true);
+        assembly.includeInDomain(DEPLOYABLE);
         EasyMock.replay(assembly);
         // deploy a file
         artifact.createNewFile();
@@ -148,7 +148,7 @@ public class ContributionDirectoryScannerTestCase extends TestCase {
         EasyMock.expect(contributionService.exists(ARTIFACT_URI)).andReturn(true);
         contributionService.remove(EasyMock.eq(ARTIFACT_URI));
         EasyMock.replay(contributionService);
-        assembly.activate(DEPLOYABLE, true);
+        assembly.includeInDomain(DEPLOYABLE);
         EasyMock.replay(assembly);
         // deploy the artifact
         artifact.createNewFile();
@@ -181,7 +181,7 @@ public class ContributionDirectoryScannerTestCase extends TestCase {
         EasyMock.expect(contributionService.getContributionTimestamp(ARTIFACT_URI)).andReturn(0L);
         contributionService.update(EasyMock.isA(ContributionSource.class));
         EasyMock.replay(contributionService);
-        assembly.activate(DEPLOYABLE, true);
+        assembly.includeInDomain(DEPLOYABLE);
         EasyMock.replay(assembly);
         // deploy the artifact
         artifact.createNewFile();
@@ -216,7 +216,7 @@ public class ContributionDirectoryScannerTestCase extends TestCase {
         EasyMock.expect(contributionService.contribute(EasyMock.eq("DefaultStore"),
                                                        EasyMock.isA(ContributionSource.class))).andReturn(ARTIFACT_URI);
         EasyMock.replay(contributionService);
-        assembly.activate(DEPLOYABLE, true);
+        assembly.includeInDomain(DEPLOYABLE);
         EasyMock.replay(assembly);
         // simulate two runs since the first run will just cache entries
         scanner.run();

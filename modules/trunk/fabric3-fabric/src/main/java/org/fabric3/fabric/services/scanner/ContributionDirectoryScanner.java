@@ -265,7 +265,7 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
                 for (Deployable deployable : deployables) {
                     if (Constants.COMPOSITE_TYPE.equals(deployable.getType())) {
                         // include composite deployables at the domain level
-                        assembly.activate(deployable.getName(), true);
+                        assembly.includeInDomain(deployable.getName());
                     }
                 }
                 processed.put(name, addedUri);

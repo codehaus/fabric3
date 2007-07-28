@@ -127,7 +127,7 @@ public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo>
             LoaderContext loaderContext = new LoaderContextImpl(getHostClassLoader(), urls.get(0));
             loader.load(impl, loaderContext);
             definition.setAutowire(Autowire.ON);
-            runtimeAssembly.activate(definition, true);
+            runtimeAssembly.includeInDomain(definition);
             WorkContext workContext = new SimpleWorkContext();
             workContext.setScopeIdentifier(Scope.COMPOSITE, DOMAIN_URI);
             scopeContainer.startContext(workContext, DOMAIN_URI);

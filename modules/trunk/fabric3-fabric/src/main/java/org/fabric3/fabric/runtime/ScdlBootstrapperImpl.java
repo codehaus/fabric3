@@ -209,7 +209,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
             // activate system components in the runtime domain
             ComponentDefinition<CompositeImplementation> definition =
                     new ComponentDefinition<CompositeImplementation>("main", impl);
-            runtimeAssembly.activate(definition, true);
+            runtimeAssembly.includeInDomain(definition);
         } catch (LoaderException e) {
             throw new InitializationException(e);
         } catch (ActivateException e) {

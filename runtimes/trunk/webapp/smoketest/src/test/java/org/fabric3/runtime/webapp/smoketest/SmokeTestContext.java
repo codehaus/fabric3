@@ -35,7 +35,7 @@ public class SmokeTestContext extends TestCase {
     public void testContext() throws IOException {
         URL url = new URL(base, "smoketest?test=context");
         String result = getContent(url);
-        assertEquals("component URI is fabric3://./domain/webapp/smoketest", result);
+        assertEquals("component URI is fabric3://./domain/smoketest", result);
     }
 
     private String getContent(URL url) throws IOException {
