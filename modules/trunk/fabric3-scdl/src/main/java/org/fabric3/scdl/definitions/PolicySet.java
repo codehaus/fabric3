@@ -18,7 +18,6 @@
  */
 package org.fabric3.scdl.definitions;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -39,9 +38,6 @@ public final class PolicySet extends ModelObject {
     /** Intents provided by this policy set. */
     private Set<QName> provides = new HashSet<QName>();
     
-    /** Builders for the interceptors that implement this policy set. */
-    private Set<QName> interceptorBuilders = new HashSet<QName>();
-    
     /** Policy set extension */
     private PolicySetExtension extension;
 
@@ -52,10 +48,9 @@ public final class PolicySet extends ModelObject {
      * @param provides Intents provided by this policy set.
      * @param interceptorBuilders Builders for the interceptors that implement this policy set.
      */
-    public PolicySet(QName name, Set<QName> provides, Set<QName> interceptorBuilders) {
+    public PolicySet(QName name, Set<QName> provides) {
         this.name = name;
         this.provides.addAll(provides);
-        this.interceptorBuilders.addAll(interceptorBuilders);
     }
     
     /**
@@ -81,13 +76,6 @@ public final class PolicySet extends ModelObject {
      */
     public boolean doesProvide(Set<QName> intents) {
         return provides.containsAll(intents);
-    }
-
-    /**
-     * @return Builder names for the interceptors that implement this policy set.
-     */
-    public Set<QName> getInterceptorBuilders() {
-        return Collections.unmodifiableSet(interceptorBuilders);
     }
     
     /**

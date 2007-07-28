@@ -34,6 +34,7 @@ import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.scdl.definitions.Definitions;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
+import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 /**
@@ -41,6 +42,7 @@ import org.osoa.sca.annotations.Reference;
  * 
  * @version $Revision$ $Date$
  */
+@EagerInit
 public class DefinitionsLoader implements StAXElementLoader<Definitions> {
     
     static final QName INTENT = new QName(SCA_NS, "intent");

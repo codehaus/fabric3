@@ -35,6 +35,7 @@ import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.spi.util.stax.StaxUtil;
+import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 /**
@@ -42,6 +43,7 @@ import org.osoa.sca.annotations.Reference;
  * 
  * @version $Revision$ $Date$
  */
+@EagerInit
 public class IntentLoader implements StAXElementLoader<Intent> {
 
     /**

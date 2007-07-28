@@ -197,8 +197,10 @@ public class ContributionServiceImpl implements ContributionService {
             throw new ContributionNotFoundException("No contribution found for URI", contributionUri.toString());
         }
         List<Deployable> list = new ArrayList<Deployable>();
-        for (Deployable deployable : contribution.getManifest().getDeployables()) {
-            list.add(deployable);
+        if(contribution.getManifest() != null) {
+            for (Deployable deployable : contribution.getManifest().getDeployables()) {
+                list.add(deployable);
+            }
         }
         return list;
     }

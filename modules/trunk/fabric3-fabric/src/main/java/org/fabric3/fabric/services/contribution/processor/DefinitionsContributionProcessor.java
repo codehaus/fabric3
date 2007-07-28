@@ -35,6 +35,7 @@ import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
+import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.osoa.sca.annotations.Reference;
 
@@ -47,7 +48,7 @@ import org.osoa.sca.annotations.Reference;
 public class DefinitionsContributionProcessor extends ContributionProcessorExtension {
 
     // Definitions loader
-    private DefinitionsLoader definitionsLoader;
+    private LoaderRegistry loaderRegistry;
     
     // Xml Input Factory
     private XMLInputFactory xmlInputFactory;
@@ -58,9 +59,9 @@ public class DefinitionsContributionProcessor extends ContributionProcessorExten
      * @param definitionsLoader Injected definitions loader.
      * @param xmlInputFactory Injected XML input factory.
      */
-    public DefinitionsContributionProcessor(@Reference DefinitionsLoader definitionsLoader, 
-                                            @Reference XMLInputFactory xmlInputFactory) {
-        this.definitionsLoader = definitionsLoader;
+    public DefinitionsContributionProcessor(@Reference(required=true) LoaderRegistry loaderRegistry, 
+                                            @Reference(required=true) XMLInputFactory xmlInputFactory) {
+        this.loaderRegistry = loaderRegistry;
         this.xmlInputFactory = xmlInputFactory;
     }
 
@@ -83,7 +84,7 @@ public class DefinitionsContributionProcessor extends ContributionProcessorExten
             reader.nextTag();
             
             LoaderContext context = new LoaderContextImpl((ClassLoader) null, null);
-            Definitions definitions = definitionsLoader.load(reader, context);
+            Definitions definitions = loaderRegistry.load(reader, Definitions.class, context);
             
             for(PolicySet policySet : definitions.getPolicySets()) {
                 contribution.addType(policySet.getName(), policySet);

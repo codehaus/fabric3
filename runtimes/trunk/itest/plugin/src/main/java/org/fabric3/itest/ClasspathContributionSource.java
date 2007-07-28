@@ -32,25 +32,27 @@ public class ClasspathContributionSource implements ContributionSource {
     
     // Resource name
     private String resource;
+    private ClassLoader cl;
     
-    public ClasspathContributionSource(String resource) {
+    public ClasspathContributionSource(String resource, ClassLoader cl) {
         this.resource = resource;
+        this.cl = cl;
     }
 
     public byte[] getChecksum() {
-        throw new UnsupportedOperationException();
+        return new byte[0];
     }
 
     public URL getLocation() {
-        return getClass().getClassLoader().getResource(resource);
+        return cl.getResource(resource);
     }
 
     public InputStream getSource() throws IOException {
-        return getClass().getClassLoader().getResourceAsStream(resource);
+        return cl.getResourceAsStream(resource);
     }
 
     public long getTimestamp() {
-        throw new UnsupportedOperationException();
+        return System.currentTimeMillis();
     }
 
     public URI getUri() {

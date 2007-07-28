@@ -259,6 +259,11 @@ public class MetaDataStoreImpl implements MetaDataStore {
      * @param contribution the contribution containing the exports to add
      */
     private void addToExports(Contribution contribution) {
+        
+        if(contribution.getManifest() == null) {
+            return;
+        }
+        
         List<Export> exports = contribution.getManifest().getExports();
         if (exports.size() > 0) {
             for (Export export : exports) {

@@ -36,6 +36,7 @@ import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.util.stax.StaxUtil;
+import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 /**
@@ -43,6 +44,7 @@ import org.osoa.sca.annotations.Reference;
  * 
  * @version $Revision$ $Date$
  */
+@EagerInit
 public class PolicySetLoader implements StAXElementLoader<PolicySet> {
     
     // Loader registry
@@ -71,13 +73,7 @@ public class PolicySetLoader implements StAXElementLoader<PolicySet> {
             provides.add(StaxUtil.createQName(tok.nextToken(), reader));
         }
         
-        Set<QName> builders = new HashSet<QName>();
-        tok = new StringTokenizer(reader.getAttributeValue(org.fabric3.spi.Constants.FABRIC3_NS, "builders"));
-        while(tok.hasMoreElements()) {
-            builders.add(StaxUtil.createQName(tok.nextToken(), reader));
-        }
-        
-        PolicySet policySet = new PolicySet(qName, provides, builders);
+        PolicySet policySet = new PolicySet(qName, provides);
 
         while (true) {
             switch (reader.next()) {

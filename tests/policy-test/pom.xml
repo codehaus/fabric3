@@ -41,9 +41,27 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.codehaus.fabric3</groupId>
+			<artifactId>fabric3-spi</artifactId>
+			<version>0.2-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.codehaus.fabric3.spec</groupId>
+			<artifactId>sca-api-r1.0</artifactId>
+			<version>0.1</version>
+		</dependency>
+
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 		</dependency>
+
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>sample-hello-common</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
 
 	</dependencies>
 
@@ -86,23 +104,11 @@
 					<systemScdl>
 						file:target/classes/META-INF/testSystem.composite
 					</systemScdl>
-					<extensions>
-						<dependency>
-							<groupId>org.codehaus.fabric3</groupId>
-							<artifactId>fabric3-binding-jms</artifactId>
-							<version>0.2-SNAPSHOT</version>
-						</dependency>
-						<dependency>
-							<groupId>geronimo-spec</groupId>
-							<artifactId>geronimo-spec-jms</artifactId>
-							<version>1.1-rc4</version>
-						</dependency>
-						<dependency>
-							<groupId>org.apache.activemq</groupId>
-							<artifactId>activemq-core</artifactId>
-							<version>4.1.1</version>
-						</dependency>
-					</extensions>
+					<definitionsFile>
+					    test.definitions
+					</definitionsFile>
+					<!--extensions>
+					</extensions-->
 				</configuration>
 				<executions>
 					<execution>

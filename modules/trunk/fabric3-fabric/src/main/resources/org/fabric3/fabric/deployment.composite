@@ -127,8 +127,15 @@
     <component name="JarResourceFactory">
         <system:implementation.system class="org.fabric3.fabric.services.scanner.factory.JarResourceFactory"/>
     </component>
+    
     <component name="ExplodedJarResourceFactory">
         <system:implementation.system class="org.fabric3.fabric.services.scanner.factory.ExplodedJarResourceFactory"/>
+    </component>
+
+    <component name="DefinitionsContributionStore">
+        <system:implementation.system class="org.fabric3.fabric.services.contribution.ContributionStoreImpl"/>
+        <property name="storeId">definitions</property>
+        <property name="persistent">false</property>
     </component>
 
 </composite>

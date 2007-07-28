@@ -79,6 +79,7 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
     private MavenEmbeddedRuntime runtime;
     private Bootstrapper bootstrapper;
     private String definitionsFile;
+    private ClassLoader cl;
 
     public MavenCoordinator() {
     }
@@ -87,9 +88,10 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
      * @param contributions Contributions to run in the test.
      * @param definitionsFile Definitions file.
      */
-    public MavenCoordinator(String[] contributions, String definitionsFile) {
+    public MavenCoordinator(String[] contributions, String definitionsFile, ClassLoader cl) {
         this.contributions = contributions;
         this.definitionsFile = definitionsFile;
+        this.cl = cl;
     }
 
     public void bootPrimordial(MavenEmbeddedRuntime runtime,
@@ -159,8 +161,8 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
         
         if(definitionsFile != null) {
             try {
-                ContributionSource source = new ClasspathContributionSource(definitionsFile);
-                URI addedUri = contributionService.contribute(DEFINITIONS, source);
+                ContributionSource source = new ClasspathContributionSource(definitionsFile, cl);
+                URI addedUri = contributionService.contribute("DefaultStore", source);
                 List<Deployable> deployables = contributionService.getDeployables(addedUri);
                 PolicyRegistry policyRegistry = runtime.getSystemComponent(PolicyRegistry.class, POLICY_REGISTRY_URI);
                 for (Deployable deployable : deployables) {
