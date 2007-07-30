@@ -20,29 +20,22 @@
            xmlns:burlap="http://www.fabric3.org/binding/burlap/0.1"
            name="BurlapTestComposite">
 
-    <service name="HelloBurlapService" promote="HelloService">
-        <interface.java interface="org.fabric3.sample.hello.HelloService"/>
-        <burlap:binding.burlap uri="/helloService" />
-    </service>
-
-    <reference name="HelloBurlapReference" promote="HelloClient/helloService">
-        <interface.java interface="org.fabric3.sample.hello.HelloService"/>
-        <burlap:binding.burlap uri="http://localhost:8080/helloService"/>
-    </reference>
-    
-    <component name="HelloTest">
-        <f3:junit class="org.fabric3.sample.hello.HelloTest"/>
-        <reference name="helloClient" target="HelloClient"/>
+    <component name="GreetingTest">
+        <f3:junit class="org.fabric3.test.map.GreetingClientTest"/>
+        <reference name="greetingClient" target="GreetingClient"/>
     </component>
 
-    <!-- Hello Client -->
-    <component name="HelloClient">
-        <implementation.java class="org.fabric3.sample.hello.HelloClientImpl"/>
+    <component name="GreetingClient">
+        <implementation.java class="org.fabric3.test.map.GreetingClientImpl"/>
+        <reference name="greetingServices" target="HelloService?key=HE BonjourService?key=BN"/>
     </component>
 
-    <!-- Hello Service -->
     <component name="HelloService">
-        <implementation.java class="org.fabric3.sample.hello.HelloServiceImpl"/>
+        <implementation.java class="org.fabric3.test.map.HelloServiceImpl"/>
+    </component>
+
+    <component name="BonjourService">
+        <implementation.java class="org.fabric3.test.map.BonjourServiceImpl"/>
     </component>
     
 </composite>

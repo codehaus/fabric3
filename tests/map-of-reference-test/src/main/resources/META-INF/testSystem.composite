@@ -23,13 +23,5 @@
            
     <!-- Include system SCDL -->
     <include name="org.fabric3.fabric.SystemImplementation" scdlResource="META-INF/fabric3/embeddedMaven.composite"/>
-
-    <!-- Include Burlap extension SCDL -->
-    <include name="org.fabric3.binding.BurlapExtension" scdlResource="META-INF/burlap.composite"/>
-
-    <!-- Jetty service -->
-    <component name="JettyService">
-            <system:implementation.system class="org.fabric3.jetty.JettyServiceImpl"/>
-    </component>
     
 </composite>
