@@ -16,14 +16,10 @@
  */
 package org.fabric3.loader.common;
 
-import java.net.URI;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-
-import org.osoa.sca.Constants;
-import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.ModelObject;
@@ -32,9 +28,10 @@ import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.loader.UnrecognizedElementException;
+import org.osoa.sca.Constants;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Loads a service definition from an XML-based assembly file
@@ -65,7 +62,7 @@ public class ComponentServiceLoader implements StAXElementLoader<ServiceDefiniti
             case XMLStreamConstants.START_ELEMENT:
                 ModelObject type = registry.load(reader, ModelObject.class, context);
                 if (type instanceof ServiceContract) {
-                    def.setServiceContract((ServiceContract) type);
+                    def.setServiceContract((ServiceContract<?>) type);
                 } else if (type instanceof BindingDefinition) {
                     def.addBinding((BindingDefinition) type);
                 } else {

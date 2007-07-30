@@ -27,6 +27,11 @@ import org.fabric3.spi.loader.LoaderException;
  */
 public class InvalidNameException extends LoaderException {
 
+    /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = 1L;
+
     public InvalidNameException() {
         super();
     }
