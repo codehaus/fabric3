@@ -65,7 +65,7 @@ public class CompositeServiceLoader implements StAXElementLoader<CompositeServic
             case START_ELEMENT:
                 ModelObject type = loader.load(reader, ModelObject.class, context);
                 if (type instanceof ServiceContract) {
-                    def.setServiceContract((ServiceContract) type);
+                    def.setServiceContract((ServiceContract<?>) type);
                 } else if (type instanceof BindingDefinition) {
                     def.addBinding((BindingDefinition) type);
                 } else {
