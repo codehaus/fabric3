@@ -23,6 +23,7 @@ import java.util.StringTokenizer;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import org.fabric3.spi.Constants;
 import org.fabric3.spi.loader.InvalidReferenceException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
@@ -46,7 +47,6 @@ public class ComponentReferenceLoader implements StAXElementLoader<ComponentRefe
         }
         boolean autowire = Boolean.parseBoolean(reader.getAttributeValue(null, "autowire"));
         String target = reader.getAttributeValue(null, "target");
-        LoaderUtil.skipToEndElement(reader);
 
         List<URI> uris = new ArrayList<URI>();
         if (target != null) {
@@ -60,6 +60,15 @@ public class ComponentReferenceLoader implements StAXElementLoader<ComponentRefe
         ComponentReference reference = new ComponentReference(name);
         reference.setAutowire(autowire);
         reference.getTargets().addAll(uris);
+        
+        String key = reader.getAttributeValue(Constants.FABRIC3_NS, "key");
+        if(key != null) {
+            reference.setKey(key);
+        }
+        
+        LoaderUtil.skipToEndElement(reader);
+        
         return reference;
+        
     }
 }

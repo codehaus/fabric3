@@ -16,30 +16,29 @@
  */
 package org.fabric3.loader.composite;
 
-import java.util.StringTokenizer;
 import java.net.URI;
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLStreamException;
+import java.util.StringTokenizer;
+
 import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
-import org.osoa.sca.annotations.Reference;
-
-import org.fabric3.scdl.ReferenceDefinition;
-import org.fabric3.scdl.Multiplicity;
-import org.fabric3.scdl.ModelObject;
-import org.fabric3.scdl.ServiceContract;
+import org.fabric3.loader.common.InvalidNameException;
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.CompositeReference;
-import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.scdl.ModelObject;
+import org.fabric3.scdl.Multiplicity;
+import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.ServiceContract;
+import org.fabric3.spi.loader.InvalidReferenceException;
+import org.fabric3.spi.loader.InvalidValueException;
+import org.fabric3.spi.loader.Loader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.InvalidValueException;
-import org.fabric3.spi.loader.UnrecognizedElementException;
-import org.fabric3.spi.loader.InvalidReferenceException;
 import org.fabric3.spi.loader.LoaderUtil;
-import org.fabric3.spi.loader.Loader;
-import org.fabric3.spi.Constants;
-import org.fabric3.loader.common.InvalidNameException;
+import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.spi.loader.UnrecognizedElementException;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Loads a reference from an XML-based assembly file
@@ -69,14 +68,12 @@ public class CompositeReferenceLoader implements StAXElementLoader<CompositeRefe
             throw new InvalidValueException(reader.getAttributeValue(null, "multiplicity"), "multiplicity");
         }
 
-        setKey(reader, referenceDefinition);
-
         while (true) {
             switch (reader.next()) {
                 case XMLStreamConstants.START_ELEMENT:
                     ModelObject type = loader.load(reader, ModelObject.class, context);
                     if (type instanceof ServiceContract) {
-                        referenceDefinition.setServiceContract((ServiceContract)type);
+                        referenceDefinition.setServiceContract((ServiceContract<?>)type);
                     } else if (type instanceof BindingDefinition) {
                         referenceDefinition.addBinding((BindingDefinition)type);
                     } else {
@@ -86,18 +83,6 @@ public class CompositeReferenceLoader implements StAXElementLoader<CompositeRefe
                 case XMLStreamConstants.END_ELEMENT:
                     return referenceDefinition;
             }
-        }
-
-    }
-
-    /*
-     * Processes the key attribute for map references.
-     */
-    private void setKey(XMLStreamReader reader, ReferenceDefinition referenceDefinition) {
-
-        String key = reader.getAttributeValue(Constants.FABRIC3_NS, "key");
-        if(key != null) {
-            referenceDefinition.setKey(key);
         }
 
     }
