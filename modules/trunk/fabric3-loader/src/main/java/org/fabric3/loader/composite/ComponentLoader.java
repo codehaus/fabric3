@@ -29,6 +29,7 @@ import javax.xml.stream.XMLStreamReader;
 import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.spi.Constants;
 import org.fabric3.spi.loader.InvalidValueException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
@@ -69,18 +70,20 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
 
     public ComponentDefinition<?> load(XMLStreamReader reader, LoaderContext context)
             throws XMLStreamException, LoaderException {
+        
         String name = reader.getAttributeValue(null, "name");
         Autowire autowire = Autowire.fromString(reader.getAttributeValue(null, "autowire"));
         URI runtimeId = loadRuntimeId(reader);
         Integer initLevel = loadInitLevel(reader);
+        String key = loadKey(reader);
 
         Implementation<?> impl = loadImplementation(reader, context);
 
-        ComponentDefinition<Implementation<?>> componentDefinition =
-                new ComponentDefinition<Implementation<?>>(name, impl);
+        ComponentDefinition<Implementation<?>> componentDefinition = new ComponentDefinition<Implementation<?>>(name, impl);
         componentDefinition.setAutowire(autowire);
         componentDefinition.setRuntimeId(runtimeId);
         componentDefinition.setInitLevel(initLevel);
+        componentDefinition.setKey(key);
 
         while (true) {
             switch (reader.next()) {
@@ -103,8 +106,12 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
             }
         }
     }
+    
+    private String loadKey(XMLStreamReader reader) {
+        return reader.getAttributeValue(Constants.FABRIC3_NS, "key");
+    }
 
-    protected Integer loadInitLevel(XMLStreamReader reader) throws InvalidValueException {
+    private Integer loadInitLevel(XMLStreamReader reader) throws InvalidValueException {
         String initLevel = reader.getAttributeValue(null, "initLevel");
         if (initLevel == null || initLevel.length() == 0) {
             return null;
@@ -117,7 +124,7 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
         }
     }
 
-    protected URI loadRuntimeId(XMLStreamReader reader) throws InvalidValueException {
+    private URI loadRuntimeId(XMLStreamReader reader) throws InvalidValueException {
         String runtimeAttr = reader.getAttributeValue(null, "runtimeId");
         if (runtimeAttr == null) {
             return null;
@@ -130,7 +137,7 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
         }
     }
 
-    protected Implementation<?> loadImplementation(XMLStreamReader reader, LoaderContext context)
+    private Implementation<?> loadImplementation(XMLStreamReader reader, LoaderContext context)
             throws XMLStreamException, LoaderException {
         reader.nextTag();
         return registry.load(reader, Implementation.class, context);

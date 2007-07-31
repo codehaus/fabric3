@@ -47,6 +47,7 @@ public class ComponentDefinition<I extends Implementation<?>> extends ModelObjec
     private final I implementation;
     private final Map<String, ComponentReference> references = new HashMap<String, ComponentReference>();
     private final Map<String, PropertyValue> propertyValues = new HashMap<String, PropertyValue>();
+    private String key;
 
     /**
      * Constructor specifying the component's name and implementation.
@@ -168,5 +169,21 @@ public class ComponentDefinition<I extends Implementation<?>> extends ModelObjec
      */
     public void add(PropertyValue value) {
         propertyValues.put(value.getName(), value);
+    }
+
+    /**
+     * Returns the key to be used if this component is wired to a map of references.
+     * @return The value of the key.
+     */
+    public String getKey() {
+        return key;
+    }
+
+    /**
+     * Returns the key to be used if this component is wired to a map of references.
+     * @param key The value of the key.
+     */
+    public void setKey(String key) {
+        this.key = key;
     }
 }
