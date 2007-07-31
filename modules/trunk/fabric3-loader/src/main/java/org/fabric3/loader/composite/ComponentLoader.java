@@ -48,6 +48,7 @@ import org.fabric3.scdl.PropertyValue;
  * @version $Rev$ $Date$
  */
 public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>> {
+    
     private static final QName COMPONENT = new QName(SCA_NS, "component");
     private static final QName PROPERTY = new QName(SCA_NS, "property");
     private static final QName REFERENCE = new QName(SCA_NS, "reference");
@@ -56,6 +57,11 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
     private final StAXElementLoader<PropertyValue> propertyValueLoader;
     private final StAXElementLoader<ComponentReference> referenceLoader;
 
+    /**
+     * @param registry
+     * @param propertyValueLoader
+     * @param referenceLoader
+     */
     public ComponentLoader(@Reference LoaderRegistry registry,
                            @Reference (name = "propertyValue") StAXElementLoader<PropertyValue> propertyValueLoader,
                            @Reference (name = "reference") StAXElementLoader<ComponentReference> referenceLoader) {
@@ -64,12 +70,17 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
         this.referenceLoader = referenceLoader;
     }
 
+    /**
+     * @return
+     */
     public QName getXMLType() {
         return COMPONENT;
     }
 
-    public ComponentDefinition<?> load(XMLStreamReader reader, LoaderContext context)
-            throws XMLStreamException, LoaderException {
+    /**
+     * @see org.fabric3.spi.loader.StAXElementLoader#load(javax.xml.stream.XMLStreamReader, org.fabric3.spi.loader.LoaderContext)
+     */
+    public ComponentDefinition<?> load(XMLStreamReader reader, LoaderContext context) throws XMLStreamException, LoaderException {
         
         String name = reader.getAttributeValue(null, "name");
         Autowire autowire = Autowire.fromString(reader.getAttributeValue(null, "autowire"));
@@ -107,10 +118,16 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
         }
     }
     
+    /*
+     * Loads the key when the component is wired to a map based reference.
+     */
     private String loadKey(XMLStreamReader reader) {
         return reader.getAttributeValue(Constants.FABRIC3_NS, "key");
     }
 
+    /*
+     * Loads the init level.
+     */
     private Integer loadInitLevel(XMLStreamReader reader) throws InvalidValueException {
         String initLevel = reader.getAttributeValue(null, "initLevel");
         if (initLevel == null || initLevel.length() == 0) {
@@ -124,6 +141,9 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
         }
     }
 
+    /*
+     * Loads the runtime id.
+     */
     private URI loadRuntimeId(XMLStreamReader reader) throws InvalidValueException {
         String runtimeAttr = reader.getAttributeValue(null, "runtimeId");
         if (runtimeAttr == null) {
@@ -137,6 +157,9 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
         }
     }
 
+    /*
+     * Loads the component implementation.
+     */
     private Implementation<?> loadImplementation(XMLStreamReader reader, LoaderContext context)
             throws XMLStreamException, LoaderException {
         reader.nextTag();
