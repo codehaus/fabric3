@@ -84,9 +84,9 @@ public class MavenEmbeddedRuntime extends AbstractRuntime<MavenHostInfo> {
                 throw new TestSetFailedException(operation.getName(), (Throwable) response.getBody());
             }
         } catch (NoSuchMethodException e) {
-            throw new AssertionError();
+            throw new AssertionError(e);
         } catch (ObjectCreationException e) {
-            throw new AssertionError();
+            throw new AssertionError(e);
         } finally {
             PojoWorkContextTunnel.setThreadWorkContext(oldContext);
         }
