@@ -25,7 +25,9 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.scdl.ComponentReference;
+import org.fabric3.scdl.Multiplicity;
 import org.fabric3.spi.loader.InvalidReferenceException;
+import org.fabric3.spi.loader.InvalidValueException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderUtil;
@@ -45,9 +47,19 @@ public class ComponentReferenceLoader implements StAXElementLoader<ComponentRefe
         if (name == null) {
             throw new InvalidReferenceException("No name specified");
         }
+        ComponentReference reference = new ComponentReference(name);
+        
         boolean autowire = Boolean.parseBoolean(reader.getAttributeValue(null, "autowire"));
-        String target = reader.getAttributeValue(null, "target");
+        reference.setAutowire(autowire);
+        
+        try {
+            Multiplicity multiplicity = Multiplicity.fromString(reader.getAttributeValue(null, "multiplicity"));
+            reference.setMultiplicity(multiplicity);
+        } catch (IllegalArgumentException e) {
+            throw new InvalidValueException(reader.getAttributeValue(null, "multiplicity"), "multiplicity");
+        }
 
+        String target = reader.getAttributeValue(null, "target");
         List<URI> uris = new ArrayList<URI>();
         if (target != null) {
             StringTokenizer tokenizer = new StringTokenizer(target);
@@ -56,9 +68,6 @@ public class ComponentReferenceLoader implements StAXElementLoader<ComponentRefe
                 uris.add(LoaderUtil.getURI(token));
             }
         }
-
-        ComponentReference reference = new ComponentReference(name);
-        reference.setAutowire(autowire);
         reference.getTargets().addAll(uris);
         
         LoaderUtil.skipToEndElement(reader);
