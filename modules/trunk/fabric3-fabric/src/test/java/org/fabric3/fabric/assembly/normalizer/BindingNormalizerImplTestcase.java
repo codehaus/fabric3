@@ -177,7 +177,7 @@ public class BindingNormalizerImplTestcase extends TestCase {
         impl.setComponentType(type);
         ComponentDefinition<CompositeImplementation> definition =
                 new ComponentDefinition<CompositeImplementation>(uri.toString(), impl);
-        return new LogicalComponent<CompositeImplementation>(uri, runtimeID, definition, null);
+        return new LogicalComponent<CompositeImplementation>(uri, runtimeID, definition, null, definition.getKey());
 
     }
 
@@ -188,7 +188,7 @@ public class BindingNormalizerImplTestcase extends TestCase {
         impl.setComponentType(type);
         ComponentDefinition<MockImplementation> definition =
                 new ComponentDefinition<MockImplementation>(uri.toString(), impl);
-        LogicalComponent<MockImplementation> component = new LogicalComponent<MockImplementation>(uri, runtimeID, definition, parent);
+        LogicalComponent<MockImplementation> component = new LogicalComponent<MockImplementation>(uri, runtimeID, definition, parent, definition.getKey());
         ServiceDefinition serviceDefinition = new ServiceDefinition();
         LogicalService service =
                 new LogicalService(URI.create("grandParent/parent/component#service"), serviceDefinition, component);

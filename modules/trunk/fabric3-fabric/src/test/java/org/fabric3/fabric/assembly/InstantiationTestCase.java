@@ -53,7 +53,7 @@ public class InstantiationTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         assembly = new MockAssembly();
-        parent = new LogicalComponent<CompositeImplementation>(PARENT_URI, null, null, null);
+        parent = new LogicalComponent<CompositeImplementation>(PARENT_URI, null, null, null, null);
     }
 
     private ComponentDefinition<?> createParentWithChild() {

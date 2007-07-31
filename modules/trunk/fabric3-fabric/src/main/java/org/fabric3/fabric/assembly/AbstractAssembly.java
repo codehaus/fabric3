@@ -242,7 +242,9 @@ public abstract class AbstractAssembly implements Assembly {
         AbstractComponentType<?, ?, ?> type = impl.getComponentType();
         //URI uri = URI.create(baseUri.toString() + "/" + definition.getName());
         URI runtimeId = definition.getRuntimeId();
-        LogicalComponent<I> component = new LogicalComponent<I>(baseUri, runtimeId, definition, parent);
+        String key = definition.getKey();
+        
+        LogicalComponent<I> component = new LogicalComponent<I>(baseUri, runtimeId, definition, parent, key);
         if (Composite.class.isInstance(type)) {
             Composite compositeType = Composite.class.cast(type);
             LogicalComponent<CompositeImplementation> composite = (LogicalComponent<CompositeImplementation>) component;

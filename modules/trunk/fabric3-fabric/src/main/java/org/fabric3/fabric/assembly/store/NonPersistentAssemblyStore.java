@@ -54,7 +54,7 @@ public class NonPersistentAssemblyStore implements AssemblyStore {
         ComponentDefinition<CompositeImplementation> definition =
                 new ComponentDefinition<CompositeImplementation>(domainUri.toString(), impl);
         type.setAutowire(autowire);
-        return new LogicalComponent<CompositeImplementation>(domainUri, domainUri, definition, null);
+        return new LogicalComponent<CompositeImplementation>(domainUri, domainUri, definition, null, definition.getKey());
     }
 
     public void store(LogicalComponent<CompositeImplementation> domain) {
