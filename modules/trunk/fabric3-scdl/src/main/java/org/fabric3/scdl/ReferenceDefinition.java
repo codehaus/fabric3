@@ -29,21 +29,30 @@ import java.util.List;
  * @version $Rev$ $Date$
  */
 public class ReferenceDefinition extends ModelObject {
+    
     private final String name;
-    private ServiceContract serviceContract;
+    private ServiceContract<?> serviceContract;
     private Multiplicity multiplicity;
     private boolean required;
     private List<URI> promoted;
     private List<BindingDefinition> bindings;
-    private String key;
 
-    public ReferenceDefinition(String name, ServiceContract serviceContract) {
+    /**
+     * @param name
+     * @param serviceContract
+     */
+    public ReferenceDefinition(String name, ServiceContract<?> serviceContract) {
         this(name, serviceContract, Multiplicity.ONE_ONE);
         bindings = new ArrayList<BindingDefinition>();
         promoted = new ArrayList<URI>();
     }
 
-    public ReferenceDefinition(String name, ServiceContract serviceContract, Multiplicity multiplicity) {
+    /**
+     * @param name
+     * @param serviceContract
+     * @param multiplicity
+     */
+    public ReferenceDefinition(String name, ServiceContract<?> serviceContract, Multiplicity multiplicity) {
         this.name = name;
         this.serviceContract = serviceContract;
         this.multiplicity = multiplicity;
@@ -51,55 +60,81 @@ public class ReferenceDefinition extends ModelObject {
         promoted = new ArrayList<URI>();
     }
 
+    /**
+     * @return
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * @return
+     */
     public ServiceContract<?> getServiceContract() {
         return serviceContract;
     }
 
-    public void setServiceContract(ServiceContract serviceContract) {
+    /**
+     * @param serviceContract
+     */
+    public void setServiceContract(ServiceContract<?> serviceContract) {
         this.serviceContract = serviceContract;
     }
 
+    /**
+     * @return
+     */
     public Multiplicity getMultiplicity() {
         return multiplicity;
     }
 
+    /**
+     * @param multiplicity
+     */
     public void setMultiplicity(Multiplicity multiplicity) {
         this.multiplicity = multiplicity;
     }
 
+    /**
+     * @return
+     */
     public boolean isRequired() {
         return required;
     }
 
+    /**
+     * @param required
+     */
     public void setRequired(boolean required) {
         this.required = required;
     }
 
+    /**
+     * @return
+     */
     public List<URI> getPromoted() {
         return Collections.unmodifiableList(promoted);
     }
 
+    /**
+     * @param uri
+     */
     public void addPromoted(URI uri) {
         promoted.add(uri);
     }
 
+    /**
+     * @return
+     */
     public List<BindingDefinition> getBindings() {
         return Collections.unmodifiableList(bindings);
     }
 
+    /**
+     * @param binding
+     */
     public void addBinding(BindingDefinition binding) {
         this.bindings.add(binding);
     }
 
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
 }

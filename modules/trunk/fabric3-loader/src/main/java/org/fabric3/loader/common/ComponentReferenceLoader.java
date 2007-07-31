@@ -20,16 +20,16 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
+
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.spi.Constants;
+import org.fabric3.scdl.ComponentReference;
 import org.fabric3.spi.loader.InvalidReferenceException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.loader.LoaderUtil;
-import org.fabric3.scdl.ComponentReference;
+import org.fabric3.spi.loader.StAXElementLoader;
 
 /**
  * Loads a reference from an XML-based assembly file
@@ -60,11 +60,6 @@ public class ComponentReferenceLoader implements StAXElementLoader<ComponentRefe
         ComponentReference reference = new ComponentReference(name);
         reference.setAutowire(autowire);
         reference.getTargets().addAll(uris);
-        
-        String key = reader.getAttributeValue(Constants.FABRIC3_NS, "key");
-        if(key != null) {
-            reference.setKey(key);
-        }
         
         LoaderUtil.skipToEndElement(reader);
         
