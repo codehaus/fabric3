@@ -27,14 +27,14 @@
 
     <component name="GreetingClient">
         <implementation.java class="org.fabric3.test.map.GreetingClientImpl"/>
-        <reference name="greetingServices" target="HelloService?key=HE BonjourService?key=BN"/>
+        <reference name="greetingServices" target="HelloService BonjourService"/>
     </component>
 
-    <component name="HelloService">
+    <component f3:key="HE" name="HelloService">
         <implementation.java class="org.fabric3.test.map.HelloServiceImpl"/>
     </component>
 
-    <component name="BonjourService">
+    <component f3:key="BN" name="BonjourService">
         <implementation.java class="org.fabric3.test.map.BonjourServiceImpl"/>
     </component>
     
