@@ -90,18 +90,9 @@
         <system:implementation.system class="org.fabric3.fabric.services.messaging.NullMessageDestinationService"/>
     </component>
 
-    <component name="MavenContributionProcessor">
-        <system:implementation.system class="org.fabric3.maven.MavenContributionProcessor"/>
-    </component>
-
-    <component name="ExtensionContributionProcessor">
-        <system:implementation.system
-                class="org.fabric3.fabric.services.contribution.processor.ExtensionContributionProcessor"/>
-    </component>
-
     <component name="ExtensionContributionStore">
         <system:implementation.system class="org.fabric3.maven.MavenArchiveStore"/>
     </component>
-    
+
 
 </composite>

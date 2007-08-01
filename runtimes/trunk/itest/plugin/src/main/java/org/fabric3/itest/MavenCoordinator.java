@@ -16,8 +16,10 @@
  */
 package org.fabric3.itest;
 
-import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -25,33 +27,33 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import org.fabric3.extension.component.SimpleWorkContext;
-import org.fabric3.fabric.assembly.ActivateException;
 import org.fabric3.fabric.assembly.AssemblyException;
 import org.fabric3.fabric.assembly.DistributedAssembly;
-import org.fabric3.fabric.assembly.RuntimeAssembly;
 import org.fabric3.fabric.runtime.ComponentNames;
-import static org.fabric3.fabric.runtime.ComponentNames.POLICY_REGISTRY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_ASSEMBLY_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.EXTENSION_CONTRIBUTION_STORE;
+import static org.fabric3.fabric.runtime.ComponentNames.POLICY_REGISTRY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
-import org.fabric3.host.contribution.Constants;
+import org.fabric3.fabric.runtime.ExtensionInitializationException;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.Deployable;
+import org.fabric3.host.contribution.FileContributionSource;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.host.runtime.StartException;
-import org.fabric3.maven.MavenExtensionContributionSource;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.policy.registry.PolicyRegistry;
+import org.fabric3.spi.services.archive.ArchiveStore;
+import org.fabric3.spi.services.archive.ArchiveStoreException;
 
 /**
  * Implementation of a coordinator for the iTest runtime.
@@ -85,7 +87,7 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
     }
 
     /**
-     * @param contributions Contributions to run in the test.
+     * @param contributions   Contributions to run in the test.
      * @param definitionsFile Definitions file.
      */
     public MavenCoordinator(String[] contributions, String definitionsFile, ClassLoader cl) {
@@ -128,38 +130,19 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
     }
 
     public void initialize() throws InitializationException {
-        
+
         if (state != State.PRIMORDIAL) {
             throw new IllegalStateException("Not in PRIMORDIAL state");
         }
         // initialize core system components
         bootstrapper.bootSystem(runtime);
-        
-        ContributionService contributionService = runtime.getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
-        
-        if (contributions != null) {
-            try {
-                // contribute and activate extensions if they exist in the runtime domain
-                RuntimeAssembly assembly = runtime.getSystemComponent(RuntimeAssembly.class, RUNTIME_ASSEMBLY_URI);
-                ContributionSource source = new MavenExtensionContributionSource(contributions);
-                URI addedUri = contributionService.contribute(EXTENSIONS, source);
-                List<Deployable> deployables = contributionService.getDeployables(addedUri);
-                for (Deployable deployable : deployables) {
-                    if (Constants.COMPOSITE_TYPE.equals(deployable.getType())) {
-                        // include deployables in the runtime domain
-                        assembly.includeInDomain(deployable.getName());
-                    }
-                }
-            } catch (ActivateException e) {
-                throw new InitializationException(e);
-            } catch (ContributionException e) {
-                throw new InitializationException(e);
-            } catch (IOException e) {
-                throw new InitializationException(e);
-            }
-        }
-        
-        if(definitionsFile != null) {
+
+        ContributionService contributionService =
+                runtime.getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
+
+        includeExtensions(contributionService);
+
+        if (definitionsFile != null) {
             try {
                 ContributionSource source = new ClasspathContributionSource(definitionsFile, cl);
                 URI addedUri = contributionService.contribute("DefaultStore", source);
@@ -172,7 +155,7 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
                 throw new InitializationException(e);
             }
         }
-        
+
         state = State.INITIALIZED;
 
     }
@@ -228,6 +211,32 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
         state = State.SHUTDOWN;
         // TODO implement
         return new SyncFuture();
+    }
+
+    private void includeExtensions(ContributionService contributionService) throws InitializationException {
+        if (contributions != null) {
+            ArchiveStore archiveStore = runtime.getSystemComponent(ArchiveStore.class, EXTENSION_CONTRIBUTION_STORE);
+            if (archiveStore == null) {
+                String id = EXTENSION_CONTRIBUTION_STORE.toString();
+                throw new InitializationException("Extensions archive store not configured", id);
+            }
+            // contribute and activate extensions if they exist in the runtime domain
+            List<URI> contributionUris = new ArrayList<URI>();
+            for (String contribution : contributions) {
+                try {
+                    URL url = archiveStore.find(new URI(contribution));
+                    ContributionSource source = new FileContributionSource(url, -1, new byte[0]);
+                    contributionUris.add(contributionService.contribute(EXTENSIONS, source));
+                } catch (ArchiveStoreException e) {
+                    throw new ExtensionInitializationException("Error contributing extension", contribution, e);
+                } catch (URISyntaxException e) {
+                    throw new ExtensionInitializationException("Error contributing extension", contribution, e);
+                } catch (ContributionException e) {
+                    throw new ExtensionInitializationException("Error contributing extension", contribution, e);
+                }
+            }
+            runtime.includeExtensionContributions(contributionUris);
+        }
     }
 
     private static class SyncFuture implements Future<Void> {
