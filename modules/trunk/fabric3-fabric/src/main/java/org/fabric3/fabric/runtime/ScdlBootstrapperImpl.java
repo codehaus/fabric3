@@ -310,7 +310,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
             Class<?> implClass = instance.getClass();
             List<JavaServiceContract<?>> contracts = createServiceContacts(types);
             ComponentDefinition<SingletonImplementation> definition = createDefinition(name, contracts, implClass);
-            SingletonComponent<I> component = new SingletonComponent<I>(uri, contracts, instance);
+            SingletonComponent<I> component = new SingletonComponent<I>(uri, contracts, instance, null);
 
             componentManager.register(component);
             for (JavaServiceContract<?> contract : contracts) {

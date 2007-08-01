@@ -25,9 +25,13 @@ import org.osoa.sca.CallableReference;
 import org.osoa.sca.ServiceReference;
 
 import org.fabric3.fabric.component.ComponentContextProvider;
+import org.fabric3.fabric.injection.MultiplicityObjectFactory;
+import org.fabric3.spi.component.AtomicComponent;
+import org.fabric3.spi.component.Component;
 import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.pojo.implementation.PojoComponent;
 import org.fabric3.spi.component.ScopeContainer;
+import org.fabric3.spi.model.instance.ValueSource;
 import org.fabric3.spi.wire.ProxyService;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.ObjectCreationException;
@@ -41,6 +45,7 @@ import org.fabric3.spi.ObjectCreationException;
 public class JavaComponent<T> extends PojoComponent<T> implements ComponentContextProvider {
     private final ProxyService proxyService;
     private final Map<String, ObjectFactory<?>> propertyFactories;
+    private final Map<String, MultiplicityObjectFactory<?>> referenceFactories;
 
     /**
      * Constructor for a Java Component.
@@ -63,10 +68,13 @@ public class JavaComponent<T> extends PojoComponent<T> implements ComponentConte
                          long maxIdleTime,
                          long maxAge,
                          ProxyService proxyService,
-                         Map<String, ObjectFactory<?>> propertyFactories) {
-        super(componentId, instanceFactoryProvider, scopeContainer, groupId, initLevel, maxIdleTime, maxAge);
+                         Map<String, ObjectFactory<?>> propertyFactories,
+                         Map<String, MultiplicityObjectFactory<?>> referenceFactories,
+                         String key) {
+        super(componentId, instanceFactoryProvider, scopeContainer, groupId, initLevel, maxIdleTime, maxAge, key);
         this.proxyService = proxyService;
         this.propertyFactories = propertyFactories;
+        this.referenceFactories = referenceFactories;
     }
 
     public <B> B getService(Class<B> businessInterface, String referenceName) {
@@ -90,5 +98,23 @@ public class JavaComponent<T> extends PojoComponent<T> implements ComponentConte
     @SuppressWarnings("unchecked")
     public <B, R extends CallableReference<B>> R cast(B target) {
         return (R) proxyService.cast(target);
+    }
+    
+    /**
+     * Attaches a reference source to the target.
+     * 
+     * @param referenceSource Reference source.
+     * @param objectFactory Object factory.
+     * @param target Target component.
+     */
+    public void attachReferenceToTarget(ValueSource referenceSource, ObjectFactory<?> objectFactory, AtomicComponent<?> target) {
+        
+        MultiplicityObjectFactory<?> factory = referenceFactories.get(referenceSource.getName());
+        if(factory != null) {
+            factory.addObjectFactory(objectFactory, target);
+            setObjectFactory(referenceSource, factory);
+        } else {
+            setObjectFactory(referenceSource, objectFactory);
+        }
     }
 }

@@ -19,12 +19,18 @@
 package org.fabric3.fabric.implementation.java;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.fabric.injection.ListMultiplicityObjectFactory;
+import org.fabric3.fabric.injection.MapMultiplicityObjectFactory;
+import org.fabric3.fabric.injection.MultiplicityObjectFactory;
+import org.fabric3.fabric.injection.SetMultiplicityObjectFactory;
+import org.fabric3.pojo.instancefactory.InjectionSiteMapping;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.pojo.implementation.PojoComponentBuilder;
@@ -35,7 +41,9 @@ import org.fabric3.spi.component.ComponentManager;
 import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.scdl.Multiplicity;
 import org.fabric3.scdl.Scope;
+import org.fabric3.spi.model.instance.ValueSource;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
@@ -85,11 +93,39 @@ public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaCompone
 
         // create the InstanceFactoryProvider based on the definition in the model
         InstanceFactoryDefinition providerDefinition = definition.getInstanceFactoryProviderDefinition();
+        
+        
         InstanceFactoryProvider<T> provider = providerBuilders.build(providerDefinition, classLoader);
 
         Map<String, ObjectFactory<?>> propertyFactories = createPropertyFactories(definition, provider);
+        Map<String, MultiplicityObjectFactory<?>> referenceFactories = createMultiplicityReferenceFactories(providerDefinition);
 
         return new JavaComponent<T>(componentId, provider, scopeContainer, groupId, initLevel, -1, -1, proxyService,
-                                    propertyFactories);
+                                    propertyFactories, referenceFactories, definition.getKey());
+        
+    }
+    
+    /*
+     * Create wrapper object factories for multi-valued references.
+     */
+    private Map<String, MultiplicityObjectFactory<?>> createMultiplicityReferenceFactories(InstanceFactoryDefinition providerDefinition) {
+        
+        Map<String, MultiplicityObjectFactory<?>> referenceFactories = new HashMap<String, MultiplicityObjectFactory<?>>();
+        for(InjectionSiteMapping injectionSiteMapping : providerDefinition.getInjectionSites()) {
+            if(injectionSiteMapping.getSource().getValueType() != ValueSource.ValueSourceType.REFERENCE) {
+                continue;
+            }
+            String referenceType = injectionSiteMapping.getSite().getSignature().getParameterTypes().get(0);
+            if("java.util.Map".equals(referenceType)) {
+                referenceFactories.put(injectionSiteMapping.getSource().getName(), new MapMultiplicityObjectFactory());
+            } else if("java.util.Set".equals(referenceType)) {
+                referenceFactories.put(injectionSiteMapping.getSource().getName(), new SetMultiplicityObjectFactory());
+            } else if("java.util.List".equals(referenceType)) {
+                referenceFactories.put(injectionSiteMapping.getSource().getName(), new ListMultiplicityObjectFactory());
+            } else if("java.util.Collection".equals(referenceType)) {
+                referenceFactories.put(injectionSiteMapping.getSource().getName(), new ListMultiplicityObjectFactory());
+            }
+        }
+        return referenceFactories;
     }
 }

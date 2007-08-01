@@ -45,11 +45,17 @@ public class SingletonComponent<T> extends AbstractLifecycle implements AtomicCo
     private T instance;
     private List<JavaServiceContract<?>> serviceContracts = new ArrayList<JavaServiceContract<?>>();
     private Map<String, PropertyValue> defaultPropertyValues;
+    private String key;
 
-    public SingletonComponent(URI componentId, List<JavaServiceContract<?>> services, T instance) {
+    public SingletonComponent(URI componentId, List<JavaServiceContract<?>> services, T instance, String key) {
         this.uri = componentId;
         this.instance = instance;
         this.serviceContracts.addAll(services);
+        this.key = key;
+    }
+    
+    public String getKey() {
+        return key;
     }
 
     public URI getUri() {

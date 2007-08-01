@@ -35,8 +35,9 @@ public class SystemComponent<T> extends PojoComponent<T> {
                            URI groupId,
                            int initLevel,
                            int maxIdleTime,
-                           int maxAge) {
-        super(componentId, provider, scopeContainer, groupId, initLevel, maxIdleTime, maxAge);
+                           int maxAge,
+                           String key) {
+        super(componentId, provider, scopeContainer, groupId, initLevel, maxIdleTime, maxAge, key);
     }
 
 }

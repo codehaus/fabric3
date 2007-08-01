@@ -51,6 +51,7 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
     private final long maxIdleTime;
     private final long maxAge;
     private InstanceFactory<T> instanceFactory;
+    private String key;
 
     public PojoComponent(URI componentId,
                          InstanceFactoryProvider<T> provider,
@@ -58,7 +59,8 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
                          URI groupId,
                          int initLevel,
                          long maxIdleTime,
-                         long maxAge) {
+                         long maxAge,
+                         String key) {
         this.uri = componentId;
         this.provider = provider;
         this.scopeContainer = scopeContainer;
@@ -66,6 +68,11 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
         this.initLevel = initLevel;
         this.maxIdleTime = maxIdleTime;
         this.maxAge = maxAge;
+        this.key = key;
+    }
+    
+    public String getKey() {
+        return key;
     }
 
     public URI getUri() {

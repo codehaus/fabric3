@@ -53,7 +53,7 @@ public class PojoComponentTestCase<T> extends TestCase {
     private WorkContext workContext;
 
     public void testConversationAttributes() {
-        TestComponent<T> component = new TestComponent<T>(componentId, null, null, 0, 12, 34);
+        TestComponent<T> component = new TestComponent<T>(componentId, null, null, 0, 12, 34, null);
         assertEquals(0, component.getInitLevel());
         assertEquals(false, component.isEagerInit());
         assertEquals(12, component.getMaxIdleTime());
@@ -61,7 +61,7 @@ public class PojoComponentTestCase<T> extends TestCase {
     }
 
     public void testEagerInit() {
-        TestComponent<T> component = new TestComponent<T>(componentId, null, null, 50, 12, 34);
+        TestComponent<T> component = new TestComponent<T>(componentId, null, null, 50, 12, 34, null);
         assertEquals(50, component.getInitLevel());
         assertEquals(true, component.isEagerInit());
         assertEquals(12, component.getMaxIdleTime());
@@ -126,7 +126,7 @@ public class PojoComponentTestCase<T> extends TestCase {
         workContext = createNiceMock(WorkContext.class);
         wire = createNiceMock(Wire.class);
         wires = Collections.singletonList(wire);
-        component = new TestComponent<T>(componentId, provider, scopeContainer, 0, -1, -1);
+        component = new TestComponent<T>(componentId, provider, scopeContainer, 0, -1, -1, null);
     }
 
     public static class TestComponent<T> extends PojoComponent<T> {
@@ -136,8 +136,9 @@ public class PojoComponentTestCase<T> extends TestCase {
                              ScopeContainer scopeContainer,
                              int initLevel,
                              long maxIdleTime,
-                             long maxAge) {
-            super(componentId, instanceFactoryProvider, scopeContainer, null, initLevel, maxIdleTime, maxAge);
+                             long maxAge,
+                             String key) {
+            super(componentId, instanceFactoryProvider, scopeContainer, null, initLevel, maxIdleTime, maxAge, key);
         }
     }
 }

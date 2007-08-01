@@ -16,28 +16,26 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.test.map;
+package org.fabric3.fabric.injection;
 
-import java.util.Map;
-
-import org.osoa.sca.annotations.Reference;
+import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.component.AtomicComponent;
 
 /**
+ * Common  interface for all multiplicity object factories.
+ * 
  * @version $Revision$ $Date$
+ *
+ * @param <T>
  */
-public class GreetingClientImpl implements GreetingClient {
+public interface MultiplicityObjectFactory<T> extends ObjectFactory<T> {
     
-    private Map<String, GreetingService> greetingServices;
-    
-    @Reference(required=true)
-    public void setGreetingServices(Map<String, GreetingService> greetingServices) {
-        this.greetingServices = greetingServices;
-    }
-    
-
-    public String greet(String name, String greetingKey) {
-        System.err.println(greetingServices);
-        return greetingServices.get(greetingKey).greet(name);
-    }
+    /**
+     * Adds a constituent object factory.
+     * 
+     * @param objectFactory Constituent object factory.
+     * @param targetComponent Target component.
+     */
+    void addObjectFactory(ObjectFactory<?> objectFactory, AtomicComponent<?> targetComponent);
 
 }

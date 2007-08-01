@@ -109,6 +109,8 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
             InjectionSiteMapping mapping = new InjectionSiteMapping();
             mapping.setSource(source);
             mapping.setSite(memberSite);
+            mapping.setMultiplicity(reference.getMultiplicity());
+            
             providerDefinition.addInjectionSite(mapping);
         }
 

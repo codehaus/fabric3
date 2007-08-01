@@ -77,6 +77,6 @@ public class SystemComponentBuilder<T> extends PojoComponentBuilder<T, SystemCom
 
         createPropertyFactories(definition, provider);
 
-        return new SystemComponent<T>(componentId, provider, scopeContainer, groupId, initLevel, -1, -1);
+        return new SystemComponent<T>(componentId, provider, scopeContainer, groupId, initLevel, -1, -1, null);
     }
 }

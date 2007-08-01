@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.component.AtomicComponent;
 
 /**
  * Resolves targets configured in a multiplicity by delegating to object factories and returning an <code>List</code>
@@ -30,28 +31,27 @@ import org.fabric3.spi.ObjectFactory;
  *
  * @version $Rev$ $Date$
  */
-public class ListMultiplicityObjectFactory<T> implements ObjectFactory<List<T>> {
+public class ListMultiplicityObjectFactory implements MultiplicityObjectFactory<List<?>> {
 
     // Object factories
-    private List<ObjectFactory<T>> factories = new LinkedList<ObjectFactory<T>>();
-    
-    /**
-     * Adds an object factory.
-     * @param objectFactory Object factory to be used.
-     */
-    public void addObjectFactory(ObjectFactory<T> objectFactory) {
-        factories.add(objectFactory);
-    }
+    private List<ObjectFactory<?>> factories = new LinkedList<ObjectFactory<?>>();
 
     /**
      * @see org.fabric3.spi.ObjectFactory#getInstance()
      */
-    public List<T> getInstance() throws ObjectCreationException {
-        List<T> list = new LinkedList<T>();
-        for (ObjectFactory<T> factory : factories) {
+    public List<Object> getInstance() throws ObjectCreationException {
+        List<Object> list = new LinkedList<Object>();
+        for (ObjectFactory<?> factory : factories) {
             list.add(factory.getInstance());
         }
         return list;
+    }
+
+    /**
+     * @see org.fabric3.fabric.injection.MultiplicityObjectFactory#addObjectFactory(org.fabric3.spi.ObjectFactory, org.fabric3.spi.component.AtomicComponent)
+     */
+    public void addObjectFactory(ObjectFactory<?> objectFactory, AtomicComponent<?> targetComponent) {
+        factories.add(objectFactory);
     }
 
 }

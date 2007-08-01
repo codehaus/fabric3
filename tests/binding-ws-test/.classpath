@@ -5,7 +5,7 @@
   <classpathentry kind="src" path="src/test/resources" output="target/test-classes" excluding="**/*.java"/>
   <classpathentry kind="output" path="target/classes"/>
   <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-  <classpathentry kind="var" path="M2_REPO/org/codehaus/fabric3/sample-hello-common/0.1-SNAPSHOT/sample-hello-common-0.1-SNAPSHOT.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/codehaus/fabric3/spec/sca-api-r1.0/0.1/sca-api-r1.0-0.1.jar"/>
+  <classpathentry kind="src" path="/sample-hello-common"/>
   <classpathentry kind="var" path="M2_REPO/junit/junit/3.8.2/junit-3.8.2.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/codehaus/fabric3/spec/sca-api-r1.0/0.1/sca-api-r1.0-0.1.jar"/>
 </classpath>

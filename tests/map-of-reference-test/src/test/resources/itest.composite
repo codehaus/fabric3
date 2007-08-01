@@ -27,15 +27,15 @@
 
     <component name="GreetingClient">
         <implementation.java class="org.fabric3.test.map.GreetingClientImpl"/>
-        <reference name="greetingServices" target="HelloService BonjourService"/>
+        <reference name="greetingServices" target="HelloService BonjourService" multiplicity="0..n" />
     </component>
 
     <component f3:key="HE" name="HelloService">
-        <implementation.java class="org.fabric3.test.map.HelloServiceImpl"/>
+        <implementation.java class="org.fabric3.test.map.HelloGreetingService"/>
     </component>
 
     <component f3:key="BN" name="BonjourService">
-        <implementation.java class="org.fabric3.test.map.BonjourServiceImpl"/>
+        <implementation.java class="org.fabric3.test.map.BonjourGreetingService"/>
     </component>
     
 </composite>

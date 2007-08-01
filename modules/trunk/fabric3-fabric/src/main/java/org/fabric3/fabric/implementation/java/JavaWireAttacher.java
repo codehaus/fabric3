@@ -76,9 +76,13 @@ public class JavaWireAttacher implements WireAttacher<JavaWireSourceDefinition, 
         wireAttacherRegistry.register(JavaWireTargetDefinition.class, this);
     }
 
+    /**
+     * @see org.fabric3.spi.builder.component.WireAttacher#attachToSource(org.fabric3.spi.model.physical.PhysicalWireSourceDefinition, org.fabric3.spi.model.physical.PhysicalWireTargetDefinition, org.fabric3.spi.wire.Wire)
+     */
     public void attachToSource(JavaWireSourceDefinition sourceDefinition,
                                PhysicalWireTargetDefinition targetDefinition,
                                Wire wire) {
+        
         URI sourceUri = sourceDefinition.getUri();
         URI sourceName = UriHelper.getDefragmentedName(sourceDefinition.getUri());
         Component component = manager.getComponent(sourceName);
@@ -87,15 +91,17 @@ public class JavaWireAttacher implements WireAttacher<JavaWireSourceDefinition, 
         ValueSource referenceSource = new ValueSource(ValueSource.ValueSourceType.REFERENCE, sourceUri.getFragment());
 
         Class<?> type = source.getMemberType(referenceSource);
+        URI targetName = UriHelper.getDefragmentedName(targetDefinition.getUri());
+        Component target = manager.getComponent(targetName);
+        
         if (sourceDefinition.isOptimizable()) {
-            URI targetName = UriHelper.getDefragmentedName(targetDefinition.getUri());
-            Component target = manager.getComponent(targetName);
             assert target instanceof AtomicComponent;
             ObjectFactory<?> factory = ((AtomicComponent<?>) target).createObjectFactory();
             source.setObjectFactory(referenceSource, factory);
+            source.attachReferenceToTarget(referenceSource, factory, (AtomicComponent<?>) target);
         } else {
             ObjectFactory<?> factory = createWireObjectFactory(type, sourceDefinition.isConversational(), wire);
-            source.setObjectFactory(referenceSource, factory);
+            source.attachReferenceToTarget(referenceSource, factory, (AtomicComponent<?>) target);
             if (!wire.getCallbackInvocationChains().isEmpty()) {
                 URI callbackUri = sourceDefinition.getCallbackUri();
                 ValueSource callbackSource =
@@ -106,14 +112,9 @@ public class JavaWireAttacher implements WireAttacher<JavaWireSourceDefinition, 
         }
     }
 
-    private <T> ObjectFactory<T> createWireObjectFactory(Class<T> type, boolean isConversational, Wire wire) {
-        return new WireObjectFactory<T>(type, isConversational, wire, proxyService);
-    }
-
-    private <T> ObjectFactory<T> createCallbackWireObjectFactory(Class<T> type) {
-        return new CallbackWireObjectFactory<T>(type, proxyService);
-    }
-
+    /**
+     * @see org.fabric3.spi.builder.component.WireAttacher#attachToTarget(org.fabric3.spi.model.physical.PhysicalWireSourceDefinition, org.fabric3.spi.model.physical.PhysicalWireTargetDefinition, org.fabric3.spi.wire.Wire)
+     */
     public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition,
                                JavaWireTargetDefinition targetDefinition,
                                Wire wire) throws WireAttachException {
@@ -161,5 +162,13 @@ public class JavaWireAttacher implements WireAttacher<JavaWireSourceDefinition, 
                                                                               JavaComponent<T> component,
                                                                               ScopeContainer<CONTEXT> scopeContainer) {
         return new InvokerInterceptor<T, CONTEXT>(method, component, scopeContainer);
+    }
+
+    private <T> ObjectFactory<T> createWireObjectFactory(Class<T> type, boolean isConversational, Wire wire) {
+        return new WireObjectFactory<T>(type, isConversational, wire, proxyService);
+    }
+
+    private <T> ObjectFactory<T> createCallbackWireObjectFactory(Class<T> type) {
+        return new CallbackWireObjectFactory<T>(type, proxyService);
     }
 }
