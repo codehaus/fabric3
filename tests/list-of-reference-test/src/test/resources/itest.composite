@@ -18,19 +18,19 @@
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:burlap="http://www.fabric3.org/binding/burlap/0.1"
-           name="MapOfReferenceTest">
+           name="ListOfReferenceTest">
 
-    <component name="GreetingTest">
-        <f3:junit class="org.fabric3.test.map.GreetingClientTest"/>
-        <reference name="greetingServices" target="HelloService BonjourService" multiplicity="0..n" />
+    <component name="IncrementerTest">
+        <f3:junit class="org.fabric3.test.list.IncrementerTest"/>
+        <reference name="incrementers" target="incrementer1 incrementer2" multiplicity="0..n"/>
     </component>
 
-    <component f3:key="HE" name="HelloService">
-        <implementation.java class="org.fabric3.test.map.HelloGreetingService"/>
+    <component name="incrementer1">
+        <implementation.java class="org.fabric3.test.list.IncrementerImpl"/>
     </component>
 
-    <component f3:key="BN" name="BonjourService">
-        <implementation.java class="org.fabric3.test.map.BonjourGreetingService"/>
+    <component name="incrementer2">
+        <implementation.java class="org.fabric3.test.list.IncrementerImpl"/>
     </component>
     
 </composite>

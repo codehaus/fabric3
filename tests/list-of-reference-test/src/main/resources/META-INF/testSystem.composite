@@ -17,20 +17,11 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:burlap="http://www.fabric3.org/binding/burlap/0.1"
-           name="MapOfReferenceTest">
-
-    <component name="GreetingTest">
-        <f3:junit class="org.fabric3.test.map.GreetingClientTest"/>
-        <reference name="greetingServices" target="HelloService BonjourService" multiplicity="0..n" />
-    </component>
-
-    <component f3:key="HE" name="HelloService">
-        <implementation.java class="org.fabric3.test.map.HelloGreetingService"/>
-    </component>
-
-    <component f3:key="BN" name="BonjourService">
-        <implementation.java class="org.fabric3.test.map.BonjourGreetingService"/>
-    </component>
+           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           name="BurlapTestSystemScdl"
+           autowire="true">
+           
+    <!-- Include system SCDL -->
+    <include name="org.fabric3.fabric.SystemImplementation" scdlResource="META-INF/fabric3/embeddedMaven.composite"/>
     
 </composite>

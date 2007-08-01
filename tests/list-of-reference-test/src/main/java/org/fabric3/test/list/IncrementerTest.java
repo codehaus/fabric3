@@ -16,13 +16,36 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.test.map;
+package org.fabric3.test.list;
+
+import java.util.List;
+
+import org.osoa.sca.annotations.Reference;
+
+import junit.framework.TestCase;
 
 /**
  * @version $Revision$ $Date$
  */
-public interface GreetingClient {
+public class IncrementerTest extends TestCase {
     
-    String greet(String name, String greetingKey);
+    private List<Incrementer> incrementers;
+    
+    @Reference(required=true)
+    public void setIncrementers(List<Incrementer> incrementers) {
+        this.incrementers = incrementers;
+    }
+
+    public void testIncrement() {
+        
+        int val = 0;
+        int count = 0;
+        for(Incrementer incrementer : incrementers) {
+            count++;
+            val = incrementer.increment(val);
+        }
+        assertEquals(count, val);
+        
+    }
 
 }

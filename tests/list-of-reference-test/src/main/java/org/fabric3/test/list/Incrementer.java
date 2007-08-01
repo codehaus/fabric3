@@ -16,29 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.test.map;
-
-import java.util.Map;
-
-import org.osoa.sca.annotations.Reference;
-
-import junit.framework.TestCase;
+package org.fabric3.test.list;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Revsion$ $Date$
+ *
  */
-public class GreetingClientTest extends TestCase {
+public interface Incrementer {
     
-    private Map<String, GreetingService> greetingServices;
-    
-    @Reference(required=true)
-    public void setGreetingServices(Map<String, GreetingService> greetingServices) {
-        this.greetingServices = greetingServices;
-    }
-
-    public void testGreet() {
-        assertEquals("Hello, Fred", greetingServices.get("HE").greet("Fred"));
-        assertEquals("Bonjour, Fred", greetingServices.get("BN").greet("Fred"));
-    }
+    int increment(int val);
 
 }

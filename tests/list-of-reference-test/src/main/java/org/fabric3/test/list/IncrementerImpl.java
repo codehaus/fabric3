@@ -16,27 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.test.map;
-
-import java.util.Map;
-
-import org.osoa.sca.annotations.Reference;
+package org.fabric3.test.list;
 
 /**
  * @version $Revision$ $Date$
  */
-public class GreetingClientImpl implements GreetingClient {
-    
-    private Map<String, GreetingService> greetingServices;
-    
-    @Reference(required=true)
-    public void setGreetingServices(Map<String, GreetingService> greetingServices) {
-        this.greetingServices = greetingServices;
-    }
-    
+public class IncrementerImpl implements Incrementer {
 
-    public String greet(String name, String greetingKey) {
-        return greetingServices.get(greetingKey).greet(name);
+    public int increment(int val) {
+        return ++val;
     }
 
 }
