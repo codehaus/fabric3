@@ -60,6 +60,7 @@
                 <include>org.codehaus.fabric3:fabric3-host-api</include>
                 <include>org.codehaus.fabric3:fabric3-jmx</include>
                 <include>org.codehaus.fabric3:fabric3-spi</include>
+                <include>org.codehaus.fabric3:fabric3-extension</include>
                 <include>javax.servlet:servlet-api</include>
                 <include>org.codehaus.woodstox:wstx-asl</include>
                 <include>stax:stax-api</include>
@@ -71,7 +72,6 @@
         <!-- copy boot dependencies to controller profile -->
         <dependencySet>
             <includes>
-                <exclude>org.codehaus.fabric3:fabric3-extension</exclude>  
                 <include>org.codehaus.fabric3:fabric3-loader</include>  
                 <include>org.codehaus.fabric3:fabric3-fabric</include>
                 <include>org.codehaus.fabric3.standalone:standalone-host</include>
@@ -88,6 +88,7 @@
                 <exclude>org.codehaus.fabric3:fabric3-api</exclude>
                 <exclude>org.codehaus.fabric3:fabric3-host-api</exclude>
                 <exclude>org.codehaus.fabric3:fabric3-spi</exclude>
+                <exclude>org.codehaus.fabric3:fabric3-extension</exclude>
             </excludes>
             <outputDirectory>profiles/controller/boot</outputDirectory>
         </dependencySet>
@@ -95,7 +96,6 @@
         <!-- copy boot dependencies to participant profile -->
         <dependencySet>
             <includes>
-                <exclude>org.codehaus.fabric3:fabric3-extension</exclude>
                 <include>org.codehaus.fabric3:fabric3-loader</include>  
                 <include>org.codehaus.fabric3:fabric3-fabric</include>
                 <include>org.codehaus.fabric3.standalone:standalone-host</include>
@@ -110,7 +110,8 @@
 		<exclude>org.codehaus.fabric3.standalone:standalone-api</exclude>
                 <exclude>org.codehaus.fabric3:fabric3-api</exclude>
                 <exclude>org.codehaus.fabric3:fabric3-host-api</exclude>
-                <exclude>org.codehaus.fabric3:fabric3-spi</exclude>
+					 <exclude>org.codehaus.fabric3:fabric3-extension</exclude>
+               <exclude>org.codehaus.fabric3:fabric3-spi</exclude>
             </excludes>
             <outputDirectory>profiles/participant/boot</outputDirectory>
         </dependencySet>
