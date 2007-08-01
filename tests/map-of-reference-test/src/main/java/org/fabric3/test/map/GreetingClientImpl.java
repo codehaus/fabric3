@@ -36,7 +36,6 @@ public class GreetingClientImpl implements GreetingClient {
     
 
     public String greet(String name, String greetingKey) {
-        System.err.println(greetingServices);
         return greetingServices.get(greetingKey).greet(name);
     }
 
