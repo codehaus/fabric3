@@ -32,23 +32,15 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
-import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionNotFoundException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.Deployable;
-import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.Composite;
-import org.fabric3.scdl.CompositeImplementation;
-import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.ModelObject;
-import org.fabric3.spi.model.type.ContributionResourceDescription;
 import org.fabric3.spi.services.archive.ArchiveStore;
 import org.fabric3.spi.services.archive.ArchiveStoreException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolver;
-import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionProcessorRegistry;
 import org.fabric3.spi.services.contribution.ContributionStoreRegistry;
@@ -64,22 +56,16 @@ import org.fabric3.spi.services.contribution.StoreNotFoundException;
 @Service(ContributionService.class)
 @EagerInit
 public class ContributionServiceImpl implements ContributionService {
-    /**
-     * The contribution prefix. Default is to map directly to the file system, which assumes nodes have access to it
-     */
-    private String uriPrefix = "file://contribution/";
     private ContributionProcessorRegistry processorRegistry;
-    private ArtifactLocationEncoder encoder;
     private ContributionStoreRegistry contributionStoreRegistry;
     private ContentTypeResolver contentTypeResolver;
+    private String uriPrefix = "file://contribution/";
 
     public ContributionServiceImpl(@Reference ContributionProcessorRegistry processorRegistry,
-                                   @Reference ArtifactLocationEncoder encoder,
                                    @Reference ContributionStoreRegistry contributionStoreRegistry,
                                    @Reference ContentTypeResolver contentTypeResolver)
             throws IOException, ClassNotFoundException {
         this.processorRegistry = processorRegistry;
-        this.encoder = encoder;
         this.contributionStoreRegistry = contributionStoreRegistry;
         this.contentTypeResolver = contentTypeResolver;
     }
@@ -127,7 +113,6 @@ public class ContributionServiceImpl implements ContributionService {
 
         }
         try {
-            // String type = getContentType(locationUrl, source.getContentType());
             String type = contentTypeResolver.getContentType(source.getLocation());
             byte[] checksum = source.getChecksum();
             long timestamp = source.getTimestamp();
@@ -197,7 +182,7 @@ public class ContributionServiceImpl implements ContributionService {
             throw new ContributionNotFoundException("No contribution found for URI", contributionUri.toString());
         }
         List<Deployable> list = new ArrayList<Deployable>();
-        if(contribution.getManifest() != null) {
+        if (contribution.getManifest() != null) {
             for (Deployable deployable : contribution.getManifest().getDeployables()) {
                 list.add(deployable);
             }
@@ -239,13 +224,9 @@ public class ContributionServiceImpl implements ContributionService {
     private void processMetaData(String id, Contribution contribution, String contentType, InputStream stream)
             throws ContributionException, IOException, MetaDataStoreException {
         // store the contribution
-        //Contribution contribution = new Contribution(contributionUri, locationUrl, checksum, timestamp);
-        //process the contribution
-        //InputStream stream = locationUrl.openStream();
         processorRegistry.processContent(contribution, contentType, contribution.getUri(), stream);
         // TODO rollback storage if an error processing contribution
-        // index the contribution
-        addContributionDescription(contribution);
+        // store the contribution index 
         MetaDataStore metaDataStore = contributionStoreRegistry.getMetadataStore(id);
         if (metaDataStore == null) {
             throw new StoreNotFoundException("MetaData store not found", id);
@@ -253,77 +234,6 @@ public class ContributionServiceImpl implements ContributionService {
 
         //store the contribution in the memory cache
         metaDataStore.store(contribution);
-    }
-
-    private String getContentType(URL url, String contentType) {
-        // FIXME Replace everything in this method with the activation-based content type registry
-        if (contentType == null || Constants.CONTENT_UNKONWN.equals(contentType)) {
-            if (url.toExternalForm().endsWith(".jar")) {
-                return Constants.JAR_CONTENT_TYPE;
-            } else {
-                throw new AssertionError();
-            }
-
-        } else if (Constants.EXTENSION_TYPE.equals(contentType)) {
-            return contentType;
-        } else if (url != null) {
-            if ("file".equals(url.getProtocol())) {
-                return Constants.FOLDER_CONTENT_TYPE;
-            }
-        }
-        return contentType;
-    }
-
-    /**
-     * Recursively adds a resource description pointing to the contribution artifact on contained components.
-     *
-     * @param contribution the contribution the resource description requires
-     * @throws StoreNotFoundException        if no store can be found for a contribution import
-     * @throws ContributionNotFoundException if a required imported contribution is not found
-     */
-    private void addContributionDescription(Contribution contribution)
-            throws StoreNotFoundException, ContributionNotFoundException {
-        // encode the contribution URL so it can be dereferenced remotely
-        URL identifier = encoder.encode(contribution.getLocation());
-        ContributionResourceDescription description = new ContributionResourceDescription(identifier);
-        // Obtain local URLs for imported contributions and encode them for remote dereferencing
-        for (URI uri : contribution.getResolvedImportUris()) {
-            String key = parseStoreId(uri);
-            MetaDataStore store = contributionStoreRegistry.getMetadataStore(key);
-            if (store == null) {
-                throw new StoreNotFoundException("No store for id", key);
-            }
-            Contribution imported = store.find(uri);
-            if (imported == null) {
-                throw new ContributionNotFoundException("Imported contribution not found", uri.toString());
-            }
-            URL importedUrl = encoder.encode(imported.getLocation());
-            description.addArtifactUrl(importedUrl);
-        }
-        for (ModelObject type : contribution.getTypes().values()) {
-            if (type instanceof Composite) {
-                addContributionDescription(description, (Composite) type);
-            }
-        }
-    }
-
-    /**
-     * Adds the given resource description pointing to the contribution artifact on contained components.
-     *
-     * @param description the resource description
-     * @param type        the component type to introspect
-     */
-    private void addContributionDescription(ContributionResourceDescription description, Composite type) {
-        for (ComponentDefinition<?> definition : type.getComponents().values()) {
-            Implementation<?> implementation = definition.getImplementation();
-            if (CompositeImplementation.class.isInstance(implementation)) {
-                CompositeImplementation compositeImplementation = CompositeImplementation.class.cast(implementation);
-                Composite componentType = compositeImplementation.getComponentType();
-                addContributionDescription(description, componentType);
-            } else {
-                implementation.addResourceDescription(description);
-            }
-        }
     }
 
     /**
@@ -344,5 +254,4 @@ public class ContributionServiceImpl implements ContributionService {
         }
 
     }
-
 }

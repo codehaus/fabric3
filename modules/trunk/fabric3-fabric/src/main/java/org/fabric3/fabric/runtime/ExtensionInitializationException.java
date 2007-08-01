@@ -14,25 +14,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.services.contribution.processor;
+package org.fabric3.fabric.runtime;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URL;
-
-import org.fabric3.host.contribution.Constants;
-import org.fabric3.host.contribution.FileContributionSource;
+import org.fabric3.host.runtime.InitializationException;
 
 /**
  * @version $Rev$ $Date$
  */
-public class ExtensionContributionSource extends FileContributionSource {
-
-    public ExtensionContributionSource(URL location, long timestamp, byte[] checksum) {
-        super(location, timestamp, checksum);
+public class ExtensionInitializationException extends InitializationException {
+    public ExtensionInitializationException(String message, String identifier, Throwable cause) {
+        super(message, identifier, cause);
     }
 
-    public String getContentType() throws IOException {
-        return Constants.EXTENSION_TYPE;
+    public ExtensionInitializationException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

@@ -16,6 +16,7 @@
  */
 package org.fabric3.spi.model.type;
 
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,22 +29,22 @@ import org.fabric3.scdl.ResourceDescription;
  *
  * @version $Rev$ $Date$
  */
-public class ContributionResourceDescription extends ResourceDescription<URL> {
-    private List<URL> importedArtifacts = new ArrayList<URL>();
+public class ContributionResourceDescription extends ResourceDescription<URI> {
+    private List<URL> artifactUrls = new ArrayList<URL>();
 
-    public ContributionResourceDescription(URL identifier) {
+    public ContributionResourceDescription(URI identifier) {
         super(identifier);
     }
 
-    public ContributionResourceDescription(URL identifier, String version) {
+    public ContributionResourceDescription(URI identifier, String version) {
         super(identifier, version);
     }
 
     public void addArtifactUrl(URL url) {
-        importedArtifacts.add(url);
+        artifactUrls.add(url);
     }
 
-    public List<URL> getImportedArtifactUrls() {
-        return Collections.unmodifiableList(importedArtifacts);
+    public List<URL> getArtifactUrls() {
+        return Collections.unmodifiableList(artifactUrls);
     }
 }

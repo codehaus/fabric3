@@ -16,6 +16,8 @@
  */
 package org.fabric3.fabric.runtime;
 
+import static org.fabric3.fabric.runtime.ComponentNames.EXTENSION_METADATA_STORE_URI;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
@@ -145,6 +147,7 @@ import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ArtifactResolverRegistry;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.spi.services.contribution.ContributionStoreRegistry;
+import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.transform.DefaultTransformerRegistry;
@@ -178,6 +181,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     private LoaderRegistry loader;
     private ClassLoaderRegistry classLoaderRegistry;
     private ContributionStoreRegistry contributionStoreRegistry;
+    private MetaDataStoreImpl metaDataStore;
 
     public ScdlBootstrapperImpl() {
     }
@@ -242,8 +246,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         CommandExecutorRegistry commandRegistry = createCommandExecutorRegistry(scopeRegistry);
 
         contributionStoreRegistry = new ContributionStoreRegistryImpl();
-        MetaDataStoreImpl metaDataStore =
-                new MetaDataStoreImpl(info, contributionStoreRegistry, new XStreamFactoryImpl());
+        metaDataStore = new MetaDataStoreImpl(info, contributionStoreRegistry, new XStreamFactoryImpl());
         metaDataStore.setStoreId("extensions");
         metaDataStore.setPersistent("false");
         try {
@@ -280,6 +283,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         registerSystemComponent(RUNTIME_ASSEMBLY_URI, RuntimeAssembly.class, runtimeAssembly);
         registerSystemComponent(XML_INPUT_FACTORY_URI, XMLInputFactory.class, xmlFactory);
         registerSystemComponent(STORE_REGISTRY_URI, ContributionStoreRegistry.class, contributionStoreRegistry);
+        registerSystemComponent(EXTENSION_METADATA_STORE_URI, MetaDataStore.class, metaDataStore);
 
         // register the MonitorFactory provided by the host
         List<Class<?>> monitorServices = new ArrayList<Class<?>>();
@@ -333,8 +337,8 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     }
 
     protected <I> ComponentDefinition<SingletonImplementation> createDefinition(String name,
-                                                                            List<JavaServiceContract<?>> contracts,
-                                                                            Class<I> implClass)
+                                                                                List<JavaServiceContract<?>> contracts,
+                                                                                Class<I> implClass)
             throws InvalidServiceContractException {
 
         PojoComponentType componentType = new PojoComponentType(implClass);

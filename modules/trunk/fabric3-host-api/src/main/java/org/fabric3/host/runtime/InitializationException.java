@@ -38,4 +38,12 @@ public class InitializationException extends Fabric3Exception {
     public InitializationException(Throwable cause) {
         super(cause);
     }
+
+    public InitializationException(String message, Throwable cause) {
+        super(message, null, cause);
+    }
+
+    public InitializationException(String message, String identifier, Throwable cause) {
+        super(message, identifier, cause);
+    }
 }

@@ -61,10 +61,8 @@ public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {
         for (ResourceDescription description : impl.getResourceDescriptions()) {
             if (description instanceof ContributionResourceDescription) {
                 ContributionResourceDescription contribDescription = (ContributionResourceDescription) description;
-                // add the contribution to the classpath
-                definition.addResourceUrl(contribDescription.getIdentifier());
-                for (URL url : contribDescription.getImportedArtifactUrls()) {
-                    // add imported artifacts to the classpath
+                // add the contribution and imported urls to the classpath
+                for (URL url : contribDescription.getArtifactUrls()) {
                     definition.addResourceUrl(url);
                 }
             } else if (description instanceof ExtensionResourceDescription) {

@@ -27,11 +27,6 @@
            autowire="true">
 
 
-    <component name="ExtensionContributionProcessor">
-        <system:implementation.system
-                class="org.fabric3.fabric.services.contribution.processor.ExtensionContributionProcessor"/>
-    </component>
-
     <component name="ExtensionContributionStore">
         <system:implementation.system
                 class="org.fabric3.fabric.services.contribution.ContributionStoreImpl"/>

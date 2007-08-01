@@ -34,6 +34,7 @@
     <orderEntry type="module" module-name="fabric3-extension" />
     <orderEntry type="library" name="easymock-2.2" level="application" />
     <orderEntry type="module" module-name="fabric3-spi" />
+    <orderEntry type="module" module-name="fabric3-scdl" />
     <orderEntryProperties />
   </component>
 </module>

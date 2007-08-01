@@ -35,7 +35,7 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.extension.contribution.ContributionProcessorExtension;
+import org.fabric3.extension.contribution.ArchiveContributionProcessor;
 import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.loader.common.LoaderContextImpl;
@@ -45,6 +45,7 @@ import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.ContributionProcessor;
@@ -55,7 +56,7 @@ import org.fabric3.spi.services.contribution.MetaDataStore;
 /**
  * Handles exploded jars on a filesystem.
  */
-public class ExplodedJarContributionProcessor extends ContributionProcessorExtension implements ContributionProcessor {
+public class ExplodedJarContributionProcessor extends ArchiveContributionProcessor implements ContributionProcessor {
     private static final URI HOST_CLASSLOADER = URI.create("sca://./hostClassLoader");
     private LoaderRegistry loaderRegistry;
     private ClassLoaderRegistry classLoaderRegistry;
@@ -65,7 +66,9 @@ public class ExplodedJarContributionProcessor extends ContributionProcessorExten
     public ExplodedJarContributionProcessor(@Reference LoaderRegistry loaderRegistry,
                                             @Reference ClassLoaderRegistry classLoaderRegistry,
                                             @Reference XMLInputFactory xmlFactory,
-                                            @Reference MetaDataStore metaDataStore) {
+                                            @Reference MetaDataStore metaDataStore,
+                                            @Reference ArtifactLocationEncoder encoder) {
+        super(metaDataStore, encoder);
         this.loaderRegistry = loaderRegistry;
         this.classLoaderRegistry = classLoaderRegistry;
         this.xmlFactory = xmlFactory;
@@ -115,6 +118,7 @@ public class ExplodedJarContributionProcessor extends ContributionProcessorExten
                 Composite componentType = processComponentType(artifactUrl, loader);
                 contribution.addType(componentType.getName(), componentType);
             }
+            addContributionDescription(contribution);
         } catch (LoaderException e) {
             throw new ContributionException(e);
         } catch (XMLStreamException e) {

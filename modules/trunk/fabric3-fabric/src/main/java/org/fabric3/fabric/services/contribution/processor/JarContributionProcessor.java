@@ -39,7 +39,7 @@ import javax.xml.stream.XMLStreamReader;
 import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.extension.contribution.ContributionProcessorExtension;
+import org.fabric3.extension.contribution.ArchiveContributionProcessor;
 import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.loader.common.LoaderContextImpl;
@@ -49,6 +49,7 @@ import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
@@ -60,7 +61,7 @@ import org.fabric3.spi.services.contribution.MetaDataStore;
 /**
  * Processes a JAR contribution
  */
-public class JarContributionProcessor extends ContributionProcessorExtension implements ContributionProcessor {
+public class JarContributionProcessor extends ArchiveContributionProcessor implements ContributionProcessor {
     public static final QName COMPOSITE = new QName(SCA_NS, "composite");
     private static final URI HOST_CLASSLOADER = URI.create("sca://./hostClassLoader");
     private final LoaderRegistry loaderRegistry;
@@ -73,7 +74,9 @@ public class JarContributionProcessor extends ContributionProcessorExtension imp
                                     @Reference ClassLoaderRegistry classLoaderRegistry,
                                     @Reference XMLInputFactory xmlFactory,
                                     @Reference MetaDataStore metaDataStore,
-                                    @Reference ClasspathProcessorRegistry classpathProcessorRegistry) {
+                                    @Reference ClasspathProcessorRegistry classpathProcessorRegistry,
+                                    @Reference ArtifactLocationEncoder encoder) {
+        super(metaDataStore, encoder);
         this.loaderRegistry = loaderRegistry;
         this.classLoaderRegistry = classLoaderRegistry;
         this.xmlFactory = xmlFactory;
@@ -127,6 +130,7 @@ public class JarContributionProcessor extends ContributionProcessorExtension imp
                 Composite componentType = processComponentType(artifactUrl, loader);
                 contribution.addType(componentType.getName(), componentType);
             }
+            addContributionDescription(contribution);
         } catch (LoaderException e) {
             throw new ContributionException(e);
         } catch (XMLStreamException e) {

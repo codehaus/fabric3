@@ -11,11 +11,13 @@ import javax.xml.stream.XMLStreamReader;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
+import org.easymock.IAnswer;
 
+import org.fabric3.scdl.Composite;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.scdl.Composite;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
@@ -70,6 +72,16 @@ public class JarContributionProcessorTestCase extends TestCase {
         ClasspathProcessorRegistry registry = EasyMock.createMock(ClasspathProcessorRegistry.class);
         EasyMock.expect(registry.process(EasyMock.isA(File.class))).andReturn(urls);
         EasyMock.replay(registry);
-        processor = new JarContributionProcessor(loaderRegistry, classLoaderRegistry, xmlFactory, null, registry);
+
+        ArtifactLocationEncoder encoder = EasyMock.createMock(ArtifactLocationEncoder.class);
+        EasyMock.expect(encoder.encode(EasyMock.isA(URL.class))).andStubAnswer(new IAnswer<URL>() {
+            public URL answer() throws Throwable {
+                return (URL) EasyMock.getCurrentArguments()[0];
+            }
+        });
+        EasyMock.replay(encoder);
+
+        processor =
+                new JarContributionProcessor(loaderRegistry, classLoaderRegistry, xmlFactory, null, registry, encoder);
     }
 }
