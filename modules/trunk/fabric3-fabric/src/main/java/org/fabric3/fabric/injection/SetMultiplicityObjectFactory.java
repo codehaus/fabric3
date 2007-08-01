@@ -18,22 +18,21 @@
  */
 package org.fabric3.fabric.injection;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 
 /**
- * Resolves targets configured in a multiplicity by delegating to object factories and returning an <code>List</code>
- * containing object instances
+ * A set based object factory.
  *
- * @version $Rev$ $Date$
+ * @version $Rev: 1 $ $Date: 2007-05-14 18:40:37 +0100 (Mon, 14 May 2007) $
  */
-public class ListMultiplicityObjectFactory<T> implements ObjectFactory<List<T>> {
+public class SetMultiplicityObjectFactory<T> implements ObjectFactory<Set<T>> {
 
     // Object factories
-    private List<ObjectFactory<T>> factories = new LinkedList<ObjectFactory<T>>();
+    private Set<ObjectFactory<T>> factories = new HashSet<ObjectFactory<T>>();
     
     /**
      * Adds an object factory.
@@ -46,12 +45,12 @@ public class ListMultiplicityObjectFactory<T> implements ObjectFactory<List<T>> 
     /**
      * @see org.fabric3.spi.ObjectFactory#getInstance()
      */
-    public List<T> getInstance() throws ObjectCreationException {
-        List<T> list = new LinkedList<T>();
+    public Set<T> getInstance() throws ObjectCreationException {
+        Set<T> set = new HashSet<T>();
         for (ObjectFactory<T> factory : factories) {
-            list.add(factory.getInstance());
+            set.add(factory.getInstance());
         }
-        return list;
+        return set;
     }
 
 }

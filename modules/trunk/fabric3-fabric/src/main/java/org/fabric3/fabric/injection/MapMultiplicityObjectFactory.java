@@ -18,40 +18,39 @@
  */
 package org.fabric3.fabric.injection;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 
 /**
- * Resolves targets configured in a multiplicity by delegating to object factories and returning an <code>List</code>
- * containing object instances
+ * A map based object factory.
  *
- * @version $Rev$ $Date$
+ * @version $Rev: 1 $ $Date: 2007-05-14 18:40:37 +0100 (Mon, 14 May 2007) $
  */
-public class ListMultiplicityObjectFactory<T> implements ObjectFactory<List<T>> {
+public class MapMultiplicityObjectFactory<K, V> implements ObjectFactory<Map<K, V>> {
 
     // Object factories
-    private List<ObjectFactory<T>> factories = new LinkedList<ObjectFactory<T>>();
+    private Map<K, ObjectFactory<V>> factories = new HashMap<K, ObjectFactory<V>>();
     
     /**
      * Adds an object factory.
      * @param objectFactory Object factory to be used.
      */
-    public void addObjectFactory(ObjectFactory<T> objectFactory) {
-        factories.add(objectFactory);
+    public void addObjectFactory(K key, ObjectFactory<V> objectFactory) {
+        factories.put(key, objectFactory);
     }
 
     /**
      * @see org.fabric3.spi.ObjectFactory#getInstance()
      */
-    public List<T> getInstance() throws ObjectCreationException {
-        List<T> list = new LinkedList<T>();
-        for (ObjectFactory<T> factory : factories) {
-            list.add(factory.getInstance());
+    public Map<K, V> getInstance() throws ObjectCreationException {
+        Map<K, V> map = new HashMap<K, V>();
+        for (Map.Entry<K, ObjectFactory<V>> entry : factories.entrySet()) {
+            map.put(entry.getKey(), entry.getValue().getInstance());
         }
-        return list;
+        return map;
     }
 
 }
