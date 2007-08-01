@@ -44,6 +44,12 @@
             <artifactId>fabric3-spi</artifactId>
 				<version>0.2-SNAPSHOT</version>
         </dependency>	
+
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-extension</artifactId>
+				<version>0.2-SNAPSHOT</version>
+        </dependency>	
 		  
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
