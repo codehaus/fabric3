@@ -24,6 +24,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.Map;
 
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
@@ -39,59 +40,80 @@ import org.fabric3.spi.loader.LoaderContext;
  */
 @EagerInit
 public abstract class ImplementationProcessorExtension implements ImplementationProcessor {
+    
+    // Introspector registry
     private IntrospectionRegistry registry;
 
+    /**
+     * Injects the introspection registry.
+     * @param registry Introspection registry.
+     */
     @Reference
     public void setRegistry(IntrospectionRegistry registry) {
         this.registry = registry;
     }
 
+    /**
+     * Registers with the registry.
+     */
     @Init
     public void init() {
         registry.registerProcessor(this);
     }
 
+    /**
+     * Unregisters with the registry.
+     */
     @Destroy
     public void destroy() {
         registry.unregisterProcessor(this);
     }
 
-    public <T> void visitClass(Class<T> clazz,
-                               PojoComponentType type,
-                               LoaderContext context)
-        throws ProcessingException {
+    /**
+     * @see org.fabric3.pojo.processor.ImplementationProcessor#visitClass(java.lang.Class, org.fabric3.pojo.processor.PojoComponentType, org.fabric3.spi.loader.LoaderContext)
+     */
+    public <T> void visitClass(Class<T> clazz, PojoComponentType type, LoaderContext context) throws ProcessingException {
     }
 
-    public <T> void visitSuperClass(Class<T> clazz,
-                                    PojoComponentType type,
-                                    LoaderContext context)
-        throws ProcessingException {
+    /**
+     * @see org.fabric3.pojo.processor.ImplementationProcessor#visitSuperClass(java.lang.Class, org.fabric3.pojo.processor.PojoComponentType, org.fabric3.spi.loader.LoaderContext)
+     */
+    public <T> void visitSuperClass(Class<T> clazz, PojoComponentType type, LoaderContext context) throws ProcessingException {
     }
 
-    public void visitMethod(Method method,
-                            PojoComponentType type,
-                            LoaderContext context)
-        throws ProcessingException {
+    /**
+     * @see org.fabric3.pojo.processor.ImplementationProcessor#visitMethod(java.lang.reflect.Method, org.fabric3.pojo.processor.PojoComponentType, org.fabric3.spi.loader.LoaderContext)
+     */
+    public void visitMethod(Method method, PojoComponentType type, LoaderContext context) throws ProcessingException {
     }
 
-    public <T> void visitConstructor(Constructor<T> constructor,
-                                     PojoComponentType type,
-                                     LoaderContext context)
-        throws ProcessingException {
+    /**
+     * @see org.fabric3.pojo.processor.ImplementationProcessor#visitConstructor(java.lang.reflect.Constructor, org.fabric3.pojo.processor.PojoComponentType, org.fabric3.spi.loader.LoaderContext)
+     */
+    public <T> void visitConstructor(Constructor<T> constructor, PojoComponentType type, LoaderContext context) throws ProcessingException {
     }
 
-    public void visitField(Field field,
-                           PojoComponentType type,
-                           LoaderContext context) throws ProcessingException {
+    /**
+     * @see org.fabric3.pojo.processor.ImplementationProcessor#visitField(java.lang.reflect.Field, org.fabric3.pojo.processor.PojoComponentType, org.fabric3.spi.loader.LoaderContext)
+     */
+    public void visitField(Field field, PojoComponentType type, LoaderContext context) throws ProcessingException {
     }
 
-    public <T> void visitEnd(Class<T> clazz,
-                             PojoComponentType type,
-                             LoaderContext context) throws ProcessingException {
-
+    /**
+     * @see org.fabric3.pojo.processor.ImplementationProcessor#visitEnd(java.lang.Class, org.fabric3.pojo.processor.PojoComponentType, org.fabric3.spi.loader.LoaderContext)
+     */
+    public <T> void visitEnd(Class<T> clazz, PojoComponentType type, LoaderContext context) throws ProcessingException {
     }
 
+    /**
+     * Computes the base type from a parameterized or non-paramaterized type.
+     * 
+     * @param cls Raw type.
+     * @param genericType Parameterized type.
+     * @return Base type.
+     */
     protected static Class<?> getBaseType(Class<?> cls, Type genericType) {
+
         if (cls.isArray()) {
             return cls.getComponentType();
         } else if (Collection.class.isAssignableFrom(cls)) {
@@ -108,8 +130,17 @@ public abstract class ImplementationProcessorExtension implements Implementation
                     return null;
                 }
             }
+        } else if (Map.class.isAssignableFrom(cls)) {
+            if (genericType == cls) {
+                return Object.class;
+            } else {
+                ParameterizedType parameterizedType = (ParameterizedType) genericType;
+                return (Class<?>) parameterizedType.getActualTypeArguments()[1];
+            }
         } else {
             return cls;
         }
+
     }
+
 }
