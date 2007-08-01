@@ -1,17 +1,9 @@
 package org.fabric3.runtime.development.host;
 
-import java.io.IOException;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.jar.JarEntry;
-import java.util.jar.JarInputStream;
-import javax.xml.namespace.QName;
 
 import org.osoa.sca.ServiceUnavailableException;
 
@@ -19,19 +11,16 @@ import org.fabric3.api.annotation.LogLevel;
 import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.fabric.assembly.BindException;
 import org.fabric3.fabric.assembly.DistributedAssembly;
-import org.fabric3.fabric.assembly.RuntimeAssembly;
 import org.fabric3.fabric.implementation.composite.CompositeComponentTypeLoader;
 import org.fabric3.fabric.monitor.JavaLoggingMonitorFactory;
 import org.fabric3.fabric.runtime.AbstractRuntime;
 import static org.fabric3.fabric.runtime.ComponentNames.COMPOSITE_LOADER_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_NAME;
 import org.fabric3.fabric.util.JavaIntrospectionHelper;
 import org.fabric3.fabric.wire.WireUtils;
 import org.fabric3.host.runtime.StartException;
 import org.fabric3.loader.common.LoaderContextImpl;
-import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Scope;
@@ -66,24 +55,20 @@ public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo>
     private ScopeContainer<URI> scopeContainer;
     private boolean started;
     private DistributedAssembly applicationAssembly;
-    private RuntimeAssembly runtimeAssembly;
     private ClientWireCache wireCache;
     private ProxyService proxyService;
     private MockObjectCache mockCache;
-    private Map<QName, ComponentDefinition<CompositeImplementation>> extensions;
 
     public DevelopmentRuntimeImpl() {
         super(DevelopmentHostInfo.class);
         JavaLoggingMonitorFactory monitorFactory = new JavaLoggingMonitorFactory();
         setMonitorFactory(monitorFactory);
         monitor = monitorFactory.getMonitor(DevelopmentMonitor.class);
-        extensions = new HashMap<QName, ComponentDefinition<CompositeImplementation>>();
     }
 
 
     public void start() throws StartException {
         applicationAssembly = getSystemComponent(DistributedAssembly.class, DISTRIBUTED_ASSEMBLY_URI);
-        runtimeAssembly = getSystemComponent(RuntimeAssembly.class, RUNTIME_ASSEMBLY_URI);
         wireCache = getSystemComponent(ClientWireCache.class, WIRE_CACHE_URI);
         mockCache = getSystemComponent(MockObjectCache.class, MOCK_CACHE_URI);
         proxyService = getSystemComponent(ProxyService.class, PROXY_SERVICE_URI);
@@ -111,48 +96,6 @@ public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo>
         }
     }
 
-    public void includeExtension(URL compositeFile) {
-        if (started) {
-            throw new IllegalStateException("Composite already activated");
-        }
-        CompositeImplementation impl = new CompositeImplementation();
-        try {
-            JarInputStream jar = new JarInputStream(compositeFile.openStream());
-            List<URL> urls = getSCDLUrls(jar, toJarURL(compositeFile));
-
-            ComponentDefinition<CompositeImplementation> definition =
-                    new ComponentDefinition<CompositeImplementation>("extension", impl);
-            CompositeComponentTypeLoader loader =
-                    getSystemComponent(CompositeComponentTypeLoader.class, COMPOSITE_LOADER_URI);
-            LoaderContext loaderContext = new LoaderContextImpl(getHostClassLoader(), urls.get(0));
-            loader.load(impl, loaderContext);
-            definition.setAutowire(Autowire.ON);
-            runtimeAssembly.includeInDomain(definition);
-            WorkContext workContext = new SimpleWorkContext();
-            workContext.setScopeIdentifier(Scope.COMPOSITE, DOMAIN_URI);
-            scopeContainer.startContext(workContext, DOMAIN_URI);
-            started = true;
-        } catch (Exception e) {
-            monitor.runError(e);
-        }
-    }
-
-    public void activateExtension(QName qName) {
-        try {
-            ComponentDefinition<CompositeImplementation> definition = extensions.get(qName);
-            if (definition == null) {
-                throw new AssertionError();
-            }
-            applicationAssembly.activate(definition, false);
-            WorkContext workContext = new SimpleWorkContext();
-            workContext.setScopeIdentifier(Scope.COMPOSITE, DOMAIN_URI);
-            scopeContainer.startContext(workContext, DOMAIN_URI);
-            started = true;
-        } catch (Exception e) {
-            monitor.runError(e);
-        }
-    }
-
     public void destroy() {
         if (started) {
             super.destroy();
@@ -164,7 +107,6 @@ public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo>
             applicationAssembly = null;
             proxyService = null;
             started = false;
-            extensions.clear();
         }
     }
 
@@ -190,37 +132,6 @@ public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo>
 
     public <T> void registerMockReference(String name, Class<T> interfaze, T mock) {
         mockCache.putMockDefinition(name, new MockDefinition<T>(interfaze, mock));
-    }
-
-    private List<URL> getSCDLUrls(JarInputStream jar, URL sourceUrl) throws IOException {
-        List<URL> artifacts = new ArrayList<URL>();
-        try {
-            while (true) {
-                JarEntry entry = jar.getNextJarEntry();
-                if (entry == null) {
-                    // EOF
-                    break;
-                }
-                if (entry.isDirectory()) {
-                    continue;
-                }
-                if (entry.getName().endsWith(".composite")) {
-                    artifacts.add(new URL(sourceUrl, entry.getName()));
-                }
-            }
-        } finally {
-            jar.close();
-        }
-        return artifacts;
-    }
-
-    private URL toJarURL(URL sourceUrl) throws MalformedURLException {
-        if (sourceUrl.toString().startsWith("jar:")) {
-            return sourceUrl;
-        } else {
-            return new URL("jar:" + sourceUrl.toExternalForm() + "!/");
-        }
-
     }
 
     public interface DevelopmentMonitor {

@@ -23,10 +23,6 @@ public interface DevelopmentRuntime extends Fabric3Runtime<DevelopmentHostInfo> 
 
     <T> T connectTo(Class<T> interfaze, String serviceUri);
 
-    public void includeExtension(URL compositeFile);
-
-    public void activateExtension(QName qName);
-
     <T> void registerMockReference(String name, Class<T> interfaze, T mock);
 
 }
