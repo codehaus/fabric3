@@ -33,6 +33,7 @@ import org.fabric3.fabric.injection.SetMultiplicityObjectFactory;
 import org.fabric3.pojo.instancefactory.InjectionSiteMapping;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
+import org.fabric3.pojo.instancefactory.MemberSite;
 import org.fabric3.pojo.implementation.PojoComponentBuilder;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.BuilderException;
@@ -115,7 +116,12 @@ public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaCompone
             if(injectionSiteMapping.getSource().getValueType() != ValueSource.ValueSourceType.REFERENCE) {
                 continue;
             }
-            String referenceType = injectionSiteMapping.getSite().getSignature().getParameterTypes().get(0);
+            MemberSite memberSite = injectionSiteMapping.getSite();
+            if(memberSite == null || memberSite.getSignature() == null) {
+                // TODO Handle CDI
+                continue;
+            }
+            String referenceType = memberSite.getSignature().getParameterTypes().get(0);
             if("java.util.Map".equals(referenceType)) {
                 referenceFactories.put(injectionSiteMapping.getSource().getName(), new MapMultiplicityObjectFactory());
             } else if("java.util.Set".equals(referenceType)) {
