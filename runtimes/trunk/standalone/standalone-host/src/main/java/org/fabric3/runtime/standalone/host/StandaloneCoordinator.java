@@ -17,31 +17,30 @@
 package org.fabric3.runtime.standalone.host;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
 import org.fabric3.extension.component.SimpleWorkContext;
-import org.fabric3.fabric.assembly.ActivateException;
 import org.fabric3.fabric.assembly.AssemblyException;
 import org.fabric3.fabric.assembly.DistributedAssembly;
-import org.fabric3.fabric.assembly.RuntimeAssembly;
 import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DISCOVERY_SERVICE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.WORK_SCHEDULER_URI;
-import org.fabric3.fabric.services.contribution.processor.ExtensionContributionSource;
-import org.fabric3.host.contribution.Constants;
+import org.fabric3.fabric.runtime.ExtensionInitializationException;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
-import org.fabric3.host.contribution.Deployable;
+import org.fabric3.host.contribution.ContributionSource;
+import org.fabric3.host.contribution.FileContributionSource;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.CoordinatorMonitor;
 import org.fabric3.host.runtime.InitializationException;
@@ -49,11 +48,11 @@ import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.host.runtime.StartException;
 import org.fabric3.runtime.standalone.StandaloneRuntime;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.scdl.Scope;
 import org.fabric3.spi.services.discovery.DiscoveryException;
 import org.fabric3.spi.services.discovery.DiscoveryService;
 import org.fabric3.spi.services.work.WorkScheduler;
@@ -64,6 +63,8 @@ import org.fabric3.spi.services.work.WorkScheduler;
  * @version $Rev$ $Date$
  */
 public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<StandaloneRuntime, Bootstrapper> {
+    private static final String EXTENSIONS = "extensions";
+
     private enum State {
         UNINITIALIZED,
         PRIMORDIAL,
@@ -111,7 +112,6 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
             workContext = new SimpleWorkContext();
             workContext.setScopeIdentifier(Scope.COMPOSITE, groupId);
             container.startContext(workContext, groupId);
-            // XCV make configurable
             extensionsDirectory = new File(runtime.getHostInfo().getInstallDirectory(), "extensions");
         } catch (GroupInitializationException e) {
             state = State.ERROR;
@@ -255,36 +255,31 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
      * @throws InitializationException if an error occurs included the extensions
      */
     private void includeExtensions() throws InitializationException {
-        if (extensionsDirectory != null) {
+        if (extensionsDirectory != null && extensionsDirectory.exists()) {
             // contribute and activate extensions if they exist in the runtime domain
             ContributionService contributionService = runtime.getSystemComponent(ContributionService.class,
                                                                                  CONTRIBUTION_SERVICE_URI);
-            RuntimeAssembly assembly = runtime.getSystemComponent(RuntimeAssembly.class, RUNTIME_ASSEMBLY_URI);
-            try {
-                ExtensionContributionSource source =
-                        new ExtensionContributionSource(extensionsDirectory.toURI().toURL(), -1, new byte[0]);
-                // XCV configurable: "extensions"
-                URI addedUri = contributionService.contribute("extensions", source);
-
-                List<Deployable> deployables = contributionService.getDeployables(addedUri);
-                for (Deployable deployable : deployables) {
-                    if (Constants.COMPOSITE_TYPE.equals(deployable.getType())) {
-                        // include deployables in the runtime domain
-                        assembly.includeInDomain(deployable.getName());
-                    }
+            List<URI> contributionUris = new ArrayList<URI>();
+            File[] files = extensionsDirectory.listFiles(new FileFilter() {
+                public boolean accept(File pathname) {
+                    return pathname.getName().endsWith(".jar");
                 }
-            } catch (MalformedURLException e) {
-                throw new InitializationException(e);
-            } catch (IOException e) {
-                throw new InitializationException(e);
-            } catch (ContributionException e) {
-                throw new InitializationException(e);
-            } catch (ActivateException e) {
-                throw new InitializationException(e);
-            }
+            });
+            for (File file : files) {
+                try {
+                    ContributionSource source = new FileContributionSource(file.toURI().toURL(), -1, new byte[0]);
+                    contributionUris.add(contributionService.contribute(EXTENSIONS, source));
+                } catch (MalformedURLException e) {
+                    throw new ExtensionInitializationException("Error loading extension", file.getName(), e);
+                } catch (IOException e) {
+                    throw new ExtensionInitializationException("Error loading extension", file.getName(), e);
+                } catch (ContributionException e) {
+                    throw new ExtensionInitializationException("Error loading extension", file.getName(), e);
+                }
 
+            }
+            runtime.includeExtensionContributions(contributionUris);
         }
     }
-
 
 }

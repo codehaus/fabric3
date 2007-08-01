@@ -23,13 +23,13 @@ import javax.xml.namespace.QName;
 import junit.framework.TestCase;
 
 import org.fabric3.fabric.generator.DefaultGeneratorContext;
+import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.Composite;
+import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.command.CommandSet;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.Composite;
-import org.fabric3.scdl.CompositeImplementation;
 
 /**
  * @version $Rev$ $Date$
@@ -60,19 +60,22 @@ public class RunCommandGeneratorTestCase extends TestCase {
         generator = new RunCommandGenerator(null);
 
         ComponentDefinition<CompositeImplementation> parentDefinition = createComposite("parent");
-        composite = new LogicalComponent<CompositeImplementation>(PARENT, PARENT, parentDefinition, null);
+        String key = parentDefinition.getKey();
+        composite = new LogicalComponent<CompositeImplementation>(PARENT, PARENT, parentDefinition, null, key);
         LogicalComponent<CompositeImplementation> childComposite =
-                new LogicalComponent<CompositeImplementation>(CHILD, CHILD, parentDefinition, composite);
+                new LogicalComponent<CompositeImplementation>(CHILD, CHILD, parentDefinition, composite, key);
 
         ComponentDefinition<Launched> launched2Def = createLaunched("launched2");
+        String key2 = launched2Def.getKey();
         LogicalComponent<Launched> launched2 =
-                new LogicalComponent<Launched>(LAUNCHED2, LAUNCHED1, launched2Def, childComposite);
+                new LogicalComponent<Launched>(LAUNCHED2, LAUNCHED1, launched2Def, childComposite, key2);
         childComposite.addComponent(launched2);
 
 
         ComponentDefinition<Launched> launched1Def = createLaunched("launched1");
+        String key1 = launched1Def.getKey();
         LogicalComponent<Launched> launched1 =
-                new LogicalComponent<Launched>(LAUNCHED1, LAUNCHED1, launched1Def, childComposite);
+                new LogicalComponent<Launched>(LAUNCHED1, LAUNCHED1, launched1Def, childComposite, key1);
         composite.addComponent(launched1);
         composite.addComponent(childComposite);
     }
