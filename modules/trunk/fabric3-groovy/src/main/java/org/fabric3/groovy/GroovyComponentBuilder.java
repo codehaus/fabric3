@@ -73,6 +73,6 @@ public class GroovyComponentBuilder<T> extends PojoComponentBuilder<T, GroovyCom
 
         createPropertyFactories(definition, provider);
 
-        return new GroovyComponent<T>(componentId, provider, scopeContainer, groupId, initLevel, -1, -1);
+        return new GroovyComponent<T>(componentId, provider, scopeContainer, groupId, initLevel, -1, -1, definition.getKey());
     }
 }
