@@ -243,8 +243,12 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         ReferenceDefinition referenceDefinition = reference.getDefinition();
         ServiceContract<?> contract = referenceDefinition.getServiceContract();
         
-        // TODO Get the policy set extensions from the policy registry
-        PhysicalWireDefinition wireDefinition = createWireDefinition(contract, context, null);
+        Set<PolicySetExtension> policies = new HashSet<PolicySetExtension>();
+        if(policyRegistry != null) {
+            policies.addAll(policyRegistry.getPolicy(reference));
+            policies.addAll(policyRegistry.getPolicy(service));
+        }
+        PhysicalWireDefinition wireDefinition = createWireDefinition(contract, context, policies);
 
         Class<?> type = target.getDefinition().getImplementation().getClass();
         ComponentGenerator<T> targetGenerator = (ComponentGenerator<T>) componentGenerators.get(type);
