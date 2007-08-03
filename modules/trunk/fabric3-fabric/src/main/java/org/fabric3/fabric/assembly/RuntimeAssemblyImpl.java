@@ -20,7 +20,6 @@ package org.fabric3.fabric.assembly;
 
 import java.net.URI;
 
-import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.assembly.allocator.Allocator;
@@ -39,7 +38,6 @@ import org.fabric3.spi.services.contribution.MetaDataStore;
  *
  * @version $Rev$ $Date$
  */
-@EagerInit
 public class RuntimeAssemblyImpl extends AbstractAssembly implements RuntimeAssembly {
     public RuntimeAssemblyImpl(@Reference GeneratorRegistry generatorRegistry,
                                @Reference WireResolver wireResolver,

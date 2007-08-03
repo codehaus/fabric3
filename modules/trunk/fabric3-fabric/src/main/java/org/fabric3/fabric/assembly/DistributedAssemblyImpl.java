@@ -18,7 +18,6 @@
  */
 package org.fabric3.fabric.assembly;
 
-import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
@@ -37,7 +36,6 @@ import org.fabric3.spi.services.contribution.MetaDataStore;
  * @version $Rev$ $Date$
  */
 @Service(DistributedAssembly.class)
-@EagerInit
 public class DistributedAssemblyImpl extends AbstractAssembly implements DistributedAssembly {
 
     public DistributedAssemblyImpl(@Reference GeneratorRegistry generatorRegistry,
