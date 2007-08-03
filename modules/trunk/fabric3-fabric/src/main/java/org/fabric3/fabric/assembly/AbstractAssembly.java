@@ -138,7 +138,7 @@ public abstract class AbstractAssembly implements Assembly {
         impl.setComponentType(composite);
         ComponentDefinition<CompositeImplementation> definition =
                 new ComponentDefinition<CompositeImplementation>("type", impl);
-        includeInDomain(definition);
+        activate(definition, true);
         try {
             // record the operation
             assemblyStore.store(domain);

@@ -51,10 +51,7 @@
     try {
         LoaderContext loaderContext = new LoaderContextImpl(Thread.currentThread().getContextClassLoader(), null);
         Composite componentType = loader.load(reader, Composite.class, loaderContext);
-        CompositeImplementation implementation = new CompositeImplementation();
-        implementation.setComponentType(componentType);
-        ComponentDefinition component = new ComponentDefinition(componentURI.toString(), implementation);
-        assembly.includeInDomain(component);
+        assembly.includeInDomain(componentType);
 
         ScopeContainer<URI> container = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
         WorkContext workContext = new SimpleWorkContext();

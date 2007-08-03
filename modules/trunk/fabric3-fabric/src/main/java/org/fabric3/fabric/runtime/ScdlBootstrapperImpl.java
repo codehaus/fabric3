@@ -16,8 +16,6 @@
  */
 package org.fabric3.fabric.runtime;
 
-import static org.fabric3.fabric.runtime.ComponentNames.EXTENSION_METADATA_STORE_URI;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
@@ -59,8 +57,6 @@ import org.fabric3.fabric.deployer.DeployerImpl;
 import org.fabric3.fabric.generator.GeneratorRegistryImpl;
 import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
 import org.fabric3.fabric.implementation.IntrospectionRegistryImpl;
-import org.fabric3.fabric.implementation.composite.CompositeComponentTypeLoader;
-import org.fabric3.fabric.implementation.composite.CompositeComponentTypeLoaderImpl;
 import org.fabric3.fabric.implementation.processor.ConstructorProcessor;
 import org.fabric3.fabric.implementation.processor.DestroyProcessor;
 import org.fabric3.fabric.implementation.processor.EagerInitProcessor;
@@ -88,6 +84,7 @@ import org.fabric3.fabric.loader.LoaderRegistryImpl;
 import static org.fabric3.fabric.runtime.ComponentNames.APPLICATION_CLASSLOADER_ID;
 import static org.fabric3.fabric.runtime.ComponentNames.BOOT_CLASSLOADER_ID;
 import static org.fabric3.fabric.runtime.ComponentNames.CLASSLOADER_REGISTRY_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.EXTENSION_METADATA_STORE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_NAME;
 import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
@@ -128,7 +125,7 @@ import org.fabric3.pojo.processor.JavaMappedService;
 import org.fabric3.pojo.processor.PojoComponentType;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.CompositeImplementation;
+import org.fabric3.scdl.Composite;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.builder.component.WireAttacherRegistry;
 import org.fabric3.spi.builder.resource.ResourceContainerBuilderRegistry;
@@ -205,15 +202,12 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     public void bootSystem(Fabric3Runtime<?> runtime) throws InitializationException {
         try {
             // load the system composite
-            CompositeImplementation impl = new CompositeImplementation();
-            CompositeComponentTypeLoader compositeTypeLoader = new CompositeComponentTypeLoaderImpl(loader);
             ClassLoader bootCl = classLoaderRegistry.getClassLoader(BOOT_CLASSLOADER_ID);
             LoaderContext loaderContext = new LoaderContextImpl(bootCl, scdlLocation);
-            compositeTypeLoader.load(impl, loaderContext);
-            // activate system components in the runtime domain
-            ComponentDefinition<CompositeImplementation> definition =
-                    new ComponentDefinition<CompositeImplementation>("main", impl);
-            runtimeAssembly.includeInDomain(definition);
+            Composite composite = loader.load(scdlLocation, Composite.class, loaderContext);
+
+            // include in the runtime domain assembly
+            runtimeAssembly.includeInDomain(composite);
         } catch (LoaderException e) {
             throw new InitializationException(e);
         } catch (ActivateException e) {
