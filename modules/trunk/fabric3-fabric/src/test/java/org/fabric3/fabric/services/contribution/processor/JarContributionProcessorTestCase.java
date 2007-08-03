@@ -31,7 +31,7 @@ import org.fabric3.spi.services.contribution.ProcessorRegistry;
 public class JarContributionProcessorTestCase extends TestCase {
     private LoaderRegistry loaderRegistry;
     private ClassLoaderRegistry classLoaderRegistry;
-    private JarContributionProcessor processor;
+    private SCAJarContributionProcessor processor;
     private URL location;
 
     public void testProcess() throws Exception {
@@ -80,7 +80,7 @@ public class JarContributionProcessorTestCase extends TestCase {
         EasyMock.expect(processorRegistry.processResource(EasyMock.isA(String.class),
                                                           EasyMock.isA(InputStream.class))).andReturn(null).atLeastOnce();
         EasyMock.replay(processorRegistry);
-        processor = new JarContributionProcessor(processorRegistry,
+        processor = new SCAJarContributionProcessor(processorRegistry,
                                                  loaderRegistry,
                                                  classLoaderRegistry,
                                                  xmlFactory,

@@ -53,7 +53,7 @@
     </component>
     
     <component name="JarContributionProcessor">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.JarContributionProcessor"/>
+        <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.SCAJarContributionProcessor"/>
     </component>
 
     <component name="CompositeResourceProcessor">

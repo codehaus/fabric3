@@ -60,9 +60,9 @@ import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.Resource;
 
 /**
- * Processes a JAR contribution
+ * Processes a JAR contribution with a META-INF/sca-contribution.xml in it
  */
-public class JarContributionProcessor extends ArchiveContributionProcessor implements ContributionProcessor {
+public class SCAJarContributionProcessor extends ArchiveContributionProcessor implements ContributionProcessor {
     public static final QName COMPOSITE = new QName(SCA_NS, "composite");
     private static final URI HOST_CLASSLOADER = URI.create("sca://./hostClassLoader");
     private final LoaderRegistry loaderRegistry;
@@ -72,14 +72,14 @@ public class JarContributionProcessor extends ArchiveContributionProcessor imple
     private final ClasspathProcessorRegistry classpathProcessorRegistry;
     private final ContentTypeResolver contentTypeResolver;
 
-    public JarContributionProcessor(@Reference ProcessorRegistry processorRegistry,
-                                    @Reference LoaderRegistry loaderRegistry,
-                                    @Reference ClassLoaderRegistry classLoaderRegistry,
-                                    @Reference XMLInputFactory xmlFactory,
-                                    @Reference MetaDataStore metaDataStore,
-                                    @Reference ClasspathProcessorRegistry classpathProcessorRegistry,
-                                    @Reference ArtifactLocationEncoder encoder,
-                                    @Reference ContentTypeResolver contentTypeResolver) {
+    public SCAJarContributionProcessor(@Reference ProcessorRegistry processorRegistry,
+                                       @Reference LoaderRegistry loaderRegistry,
+                                       @Reference ClassLoaderRegistry classLoaderRegistry,
+                                       @Reference XMLInputFactory xmlFactory,
+                                       @Reference MetaDataStore metaDataStore,
+                                       @Reference ClasspathProcessorRegistry classpathProcessorRegistry,
+                                       @Reference ArtifactLocationEncoder encoder,
+                                       @Reference ContentTypeResolver contentTypeResolver) {
 
         super(metaDataStore, encoder);
         this.registry = processorRegistry;
