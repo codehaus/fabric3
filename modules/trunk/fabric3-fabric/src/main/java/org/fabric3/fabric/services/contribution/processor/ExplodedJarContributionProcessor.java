@@ -79,13 +79,14 @@ public class ExplodedJarContributionProcessor extends ArchiveContributionProcess
         return Constants.FOLDER_CONTENT_TYPE;
     }
 
-    public void processContent(Contribution contribution, URI source, InputStream inputStream)
-            throws ContributionException {
+    public void processContent(Contribution contribution, URI source) throws ContributionException {
         URL sourceUrl = contribution.getLocation();
+        InputStream inputStream;
         // process the contribution manifest
         ContributionManifest manifest;
         List<URL> artifactUrls;
         try {
+            inputStream = sourceUrl.openStream();
             manifest = processManifest(sourceUrl);
             contribution.setManifest(manifest);
             // process .composite files
@@ -116,7 +117,7 @@ public class ExplodedJarContributionProcessor extends ArchiveContributionProcess
             Thread.currentThread().setContextClassLoader(loader);
             for (URL artifactUrl : artifactUrls) {
                 Composite componentType = processComponentType(artifactUrl, loader);
-                contribution.addType(componentType.getName(), componentType);
+               // XCV Refactor contribution.addType(componentType.getName(), componentType);
             }
             addContributionDescription(contribution);
         } catch (LoaderException e) {

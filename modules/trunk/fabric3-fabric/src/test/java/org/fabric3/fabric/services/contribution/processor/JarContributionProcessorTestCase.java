@@ -1,11 +1,11 @@
 package org.fabric3.fabric.services.contribution.processor;
 
 import java.io.File;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 
@@ -13,7 +13,7 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 
-import org.fabric3.scdl.Composite;
+import org.fabric3.fabric.services.contenttype.ExtensionMapContentTypeResolver;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
@@ -21,8 +21,11 @@ import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
+import org.fabric3.spi.services.contribution.ProcessorRegistry;
 
 /**
+ * XCV TODO refactor this testcase as it does not test anything anymore
+ *
  * @version $Rev$ $Date$
  */
 public class JarContributionProcessorTestCase extends TestCase {
@@ -36,8 +39,8 @@ public class JarContributionProcessorTestCase extends TestCase {
         byte[] checksum = "test".getBytes();
         long timestamp = System.currentTimeMillis();
         Contribution contribution = new Contribution(uri, location, checksum, timestamp);
-        ClassLoader ccl = Thread.currentThread().getContextClassLoader();
-        processor.processContent(contribution, uri, ccl.getResourceAsStream("./repository/1/test.jar"));
+        //ClassLoader ccl = Thread.currentThread().getContextClassLoader();
+        processor.processContent(contribution, uri);
         EasyMock.verify(loaderRegistry);
         assertNotNull(contribution.getManifest());
     }
@@ -49,18 +52,9 @@ public class JarContributionProcessorTestCase extends TestCase {
         location = ccl.getResource("./repository/1/test.jar");
         ContributionManifest manifest = new ContributionManifest();
         loaderRegistry = EasyMock.createMock(LoaderRegistry.class);
-        Composite type1 = new Composite(new QName("TestComposite1"));
-        Composite type2 = new Composite(new QName("TestComposite1"));
         EasyMock.expect(loaderRegistry.load(
                 EasyMock.isA(XMLStreamReader.class),
                 EasyMock.eq(ContributionManifest.class), EasyMock.isA(LoaderContext.class))).andReturn(manifest);
-        EasyMock.expect(loaderRegistry.load(
-                EasyMock.isA(XMLStreamReader.class),
-                EasyMock.eq(Composite.class), EasyMock.isA(LoaderContext.class))).andReturn(type1);
-
-        EasyMock.expect(loaderRegistry.load(
-                EasyMock.isA(XMLStreamReader.class),
-                EasyMock.eq(Composite.class), EasyMock.isA(LoaderContext.class))).andReturn(type2);
         EasyMock.replay(loaderRegistry);
         ClassLoader cl = getClass().getClassLoader();
         classLoaderRegistry = EasyMock.createMock(ClassLoaderRegistry.class);
@@ -81,7 +75,18 @@ public class JarContributionProcessorTestCase extends TestCase {
         });
         EasyMock.replay(encoder);
 
-        processor =
-                new JarContributionProcessor(loaderRegistry, classLoaderRegistry, xmlFactory, null, registry, encoder);
+        ExtensionMapContentTypeResolver contentTypeResolver = new ExtensionMapContentTypeResolver();
+        ProcessorRegistry processorRegistry = EasyMock.createMock(ProcessorRegistry.class);
+        EasyMock.expect(processorRegistry.processResource(EasyMock.isA(String.class),
+                                                          EasyMock.isA(InputStream.class))).andReturn(null).atLeastOnce();
+        EasyMock.replay(processorRegistry);
+        processor = new JarContributionProcessor(processorRegistry,
+                                                 loaderRegistry,
+                                                 classLoaderRegistry,
+                                                 xmlFactory,
+                                                 null,
+                                                 registry,
+                                                 encoder,
+                                                 contentTypeResolver);
     }
 }

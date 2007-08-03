@@ -28,7 +28,7 @@ import org.fabric3.host.contribution.ContributionException;
  *
  * @version $Rev$ $Date$
  */
-public interface ContributionProcessorRegistry {
+public interface ProcessorRegistry {
     /**
      * Register a ContributionProcessor using the content type as the key
      *
@@ -41,20 +41,42 @@ public interface ContributionProcessorRegistry {
      *
      * @param contentType the content
      */
-    void unregister(String contentType);
+    void unregisterContributionProcessor(String contentType);
 
     /**
-     * Process a contribution or an artifact in the contribution from the input stream.
+     * Register a ResourceProcessor using the content type as the key
+     *
+     * @param processor the processor to registrer
+     */
+    void register(ResourceProcessor processor);
+
+    /**
+     * Unregister a ResourceProcessor for a content type
+     *
+     * @param contentType the content
+     */
+    void unregisterResourceProcessor(String contentType);
+
+
+    /**
+     * Process a contribution from the input stream.
      *
      * @param contribution The contribution that will be used to hold the results from the processing
      * @param contentType  The type of content to process
      * @param source       The URI for the contribution/artifact
-     * @param inputStream  The input stream for the contribution. The stream will not be closed but the read position
-     *                     after the call is undefined
-     * @throws org.fabric3.host.contribution.ContributionException
-     *          if there was a problem with the contribution
+     * @throws ContributionException if there was a problem with the contribution
      */
-    void processContent(Contribution contribution, String contentType, URI source, InputStream inputStream)
-            throws ContributionException;
+    void processContribution(Contribution contribution, String contentType, URI source) throws ContributionException;
+
+    /**
+     * Process a resource from the input stream.
+     *
+     * @param inputStream The input stream for the resource. The stream will not be closed but the read position after
+     *                    the call is undefined
+     * @param contentType The type of content to process
+     * @return the resource
+     * @throws ContributionException if there was a problem processing the resoure
+     */
+    Resource processResource(String contentType, InputStream inputStream) throws ContributionException;
 
 }

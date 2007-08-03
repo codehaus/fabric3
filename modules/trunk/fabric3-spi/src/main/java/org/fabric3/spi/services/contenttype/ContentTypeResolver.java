@@ -22,17 +22,17 @@ import java.net.URL;
 
 /**
  * Resolver for content type based on file extensions.
- * 
+ *
  * @version $Revision$ $Date$
  */
 public interface ContentTypeResolver {
-    
+
     /**
      * Gets the content type for the contribution source.
-     * 
+     *
      * @param contentUrl URL for the content.
      * @return Content type for the contribution source.
-     * @throws If unable to resolve content type.
+     * @throws ContentTypeResolutionException if unable to resolve content type.
      */
     String getContentType(URL contentUrl) throws ContentTypeResolutionException;
 

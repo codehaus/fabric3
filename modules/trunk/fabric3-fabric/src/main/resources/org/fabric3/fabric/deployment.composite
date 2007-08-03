@@ -49,13 +49,17 @@
     </component>
 
     <component name="ContributionProcessorRegistry">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.ContributionProcessorRegistryImpl"/>
+        <system:implementation.system class="org.fabric3.fabric.services.contribution.ProcessorRegistryImpl"/>
     </component>
     
     <component name="JarContributionProcessor">
         <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.JarContributionProcessor"/>
     </component>
-    
+
+    <component name="CompositeResourceProcessor">
+        <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.CompositeResourceProcessor"/>
+    </component>
+
     <component name="DefinitionsContributionProcessor">
         <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.DefinitionsContributionProcessor"/>
     </component>

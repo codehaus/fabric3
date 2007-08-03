@@ -19,7 +19,6 @@
 
 package org.fabric3.fabric.services.contribution.processor;
 
-import java.io.InputStream;
 import java.net.URI;
 
 import org.fabric3.extension.contribution.ContributionProcessorExtension;
@@ -34,8 +33,8 @@ public class JavaContributionProcessor extends ContributionProcessorExtension im
         return Constants.JAVA_CONTENT_TYPE;
     }
 
-    public void processContent(Contribution contribution, URI artifactURI, InputStream inputStream)
-            throws ContributionException {
+    public void processContent(Contribution contribution, URI artifactURI) throws ContributionException {
+        throw new UnsupportedOperationException();
     }
 
 }

@@ -48,6 +48,8 @@ import org.fabric3.spi.services.contribution.Export;
 import org.fabric3.spi.services.contribution.Import;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.MetaDataStoreException;
+import org.fabric3.spi.services.contribution.Resource;
+import org.fabric3.spi.services.contribution.ResourceElement;
 
 /**
  * Default IndexStore implementation
@@ -150,14 +152,15 @@ public class MetaDataStoreImpl implements MetaDataStore {
         return cache.get(contributionUri);
     }
 
+    // XCV refactor this method to resolve symbol
     public ModelObject resolve(QName deployable) {
         for (Contribution contribution : cache.values()) {
-            Map<QName, ModelObject> map = contribution.getTypes();
-            if (map == null) {
-                continue;
-            }
-            if (map.containsKey(deployable)) {
-                return map.get(deployable);
+            for (Resource resource : contribution.getResources()) {
+                for (ResourceElement<?, ?> element : resource.getResourceElements()) {
+                    if (element.getSymbol().getKey().equals(deployable)) {
+                        return (ModelObject) element.getValue();
+                    }
+                }
             }
         }
         return null;
@@ -259,11 +262,11 @@ public class MetaDataStoreImpl implements MetaDataStore {
      * @param contribution the contribution containing the exports to add
      */
     private void addToExports(Contribution contribution) {
-        
-        if(contribution.getManifest() == null) {
+
+        if (contribution.getManifest() == null) {
             return;
         }
-        
+
         List<Export> exports = contribution.getManifest().getExports();
         if (exports.size() > 0) {
             for (Export export : exports) {

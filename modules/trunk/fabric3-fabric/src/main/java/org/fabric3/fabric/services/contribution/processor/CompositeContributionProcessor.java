@@ -19,7 +19,6 @@
 
 package org.fabric3.fabric.services.contribution.processor;
 
-import java.io.InputStream;
 import java.net.URI;
 import javax.xml.stream.XMLInputFactory;
 
@@ -48,8 +47,7 @@ public class CompositeContributionProcessor extends ContributionProcessorExtensi
     }
 
 
-    public void processContent(Contribution contribution, URI artifactURI, InputStream inputStream)
-            throws ContributionException {
+    public void processContent(Contribution contribution, URI artifactURI) throws ContributionException {
         throw new UnsupportedOperationException();
     }
 

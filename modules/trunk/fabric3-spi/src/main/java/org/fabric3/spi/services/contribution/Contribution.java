@@ -24,12 +24,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import javax.xml.namespace.QName;
-
-import org.fabric3.scdl.ModelObject;
 
 /**
  * The base representation of a deployed contribution
@@ -44,7 +39,7 @@ public class Contribution implements Serializable {
     private byte[] checksum;
     private long timestamp;
     private ContributionManifest manifest;
-    private Map<QName, ModelObject> types = new HashMap<QName, ModelObject>();
+    private List<Resource> resources = new ArrayList<Resource>();
     private List<URI> resolvedImports = new ArrayList<URI>();
 
     public Contribution(URI uri) {
@@ -121,32 +116,39 @@ public class Contribution implements Serializable {
     }
 
     /**
-     * Adds metadata from a referenceable type introspected in the contribution
+     * Adds a resource to the contribution
      *
-     * @param name the type's qualified name
-     * @param type the component type
+     * @param resource the resource
      */
-    public void addType(QName name, ModelObject type) {
-        types.put(name, type);
+    public void addResource(Resource resource) {
+        resources.add(resource);
     }
 
     /**
-     * Returns the referenceable introspected types by QName for the contribution
+     * Returns the list of resources for the contribution.
      *
-     * @return the introspected component types
+     * @return the list of resources
      */
-    public Map<QName, ModelObject> getTypes() {
-        return Collections.unmodifiableMap(types);
+    public List<Resource> getResources() {
+        return Collections.unmodifiableList(resources);
     }
 
     /**
-     * Returns the referenceable introspected type for corresponding to the QName key
+     * Returns a ResourceElement matching the symbol or null if not found
      *
-     * @param key the component type QName
-     * @return the type or null
+     * @param symbol the symbol to match
+     * @return a ResourceElement matching the symbol or null if not found
      */
-    public ModelObject getType(QName key) {
-        return types.get(key);
+    @SuppressWarnings({"unchecked"})
+    public <T extends Symbol> ResourceElement<T, Object> findResourceElement(Symbol<T> symbol) {
+        for (Resource resource : resources) {
+            for (ResourceElement<?, ?> element : resource.getResourceElements()) {
+                if (element.getSymbol().equals(symbol)) {
+                    return (ResourceElement<T, Object>) element;
+                }
+            }
+        }
+        return null;
     }
 
     /**

@@ -18,7 +18,6 @@
  */
 package org.fabric3.spi.services.contribution;
 
-import java.io.InputStream;
 import java.net.URI;
 
 import org.fabric3.host.contribution.ContributionException;
@@ -42,10 +41,8 @@ public interface ContributionProcessor {
      *
      * @param contribution The contribution that will be used to hold the results from the processing
      * @param source       The URI for the contribution/artifact
-     * @param inputStream  The input stream for the contribution. The stream will not be closed but the read position
-     *                     after the call is undefined
      * @throws ContributionException if there was a problem with the contribution
      */
-    void processContent(Contribution contribution, URI source, InputStream inputStream) throws ContributionException;
+    void processContent(Contribution contribution, URI source) throws ContributionException;
 
 }

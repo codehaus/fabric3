@@ -21,7 +21,6 @@ package org.fabric3.fabric.runtime;
 import java.net.URI;
 import java.net.URL;
 import java.util.List;
-import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.fabric3.extension.component.SimpleWorkContext;
@@ -42,7 +41,6 @@ import org.fabric3.host.runtime.StartException;
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Include;
-import org.fabric3.scdl.ModelObject;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.component.AtomicComponent;
@@ -52,6 +50,9 @@ import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.services.contribution.QNameSymbol;
+import org.fabric3.spi.services.contribution.Resource;
+import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.services.event.RuntimeStart;
 import org.fabric3.spi.services.management.Fabric3ManagementService;
@@ -209,6 +210,7 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
      * @return the extension composite
      * @throws InitializationException if an error occurs creating the composite
      */
+    @SuppressWarnings({"unchecked"})
     private Composite createExensionComposite(List<URI> contributionUris) throws InitializationException {
         MetaDataStore metaDataStore = getSystemComponent(MetaDataStore.class, EXTENSION_METADATA_STORE_URI);
         if (metaDataStore == null) {
@@ -221,19 +223,23 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
             Contribution contribution = metaDataStore.find(uri);
             assert contribution != null;
 
-            for (Map.Entry<QName, ModelObject> entry : contribution.getTypes().entrySet()) {
-                if (!(entry.getValue() instanceof Composite)) {
-                    continue;
-                }
-                QName name = entry.getKey();
-                Composite childComposite = (Composite) entry.getValue();
-                for (Deployable deployable : contribution.getManifest().getDeployables()) {
-                    if (deployable.getName().equals(name)) {
-                        Include include = new Include();
-                        include.setName(name);
-                        include.setIncluded(childComposite);
-                        composite.add(include);
-                        break;
+            for (Resource resource : contribution.getResources()) {
+                for (ResourceElement<?, ?> entry : resource.getResourceElements()) {
+
+                    if (!(entry.getValue() instanceof Composite)) {
+                        continue;
+                    }
+                    ResourceElement<QNameSymbol, Composite> element = (ResourceElement<QNameSymbol, Composite>) entry;
+                    QName name = element.getSymbol().getKey();
+                    Composite childComposite = (Composite) element.getValue();
+                    for (Deployable deployable : contribution.getManifest().getDeployables()) {
+                        if (deployable.getName().equals(name)) {
+                            Include include = new Include();
+                            include.setName(name);
+                            include.setIncluded(childComposite);
+                            composite.add(include);
+                            break;
+                        }
                     }
                 }
             }

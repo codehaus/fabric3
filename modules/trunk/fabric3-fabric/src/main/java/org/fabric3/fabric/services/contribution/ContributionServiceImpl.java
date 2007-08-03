@@ -42,10 +42,10 @@ import org.fabric3.spi.services.archive.ArchiveStoreException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolver;
 import org.fabric3.spi.services.contribution.Contribution;
-import org.fabric3.spi.services.contribution.ContributionProcessorRegistry;
 import org.fabric3.spi.services.contribution.ContributionStoreRegistry;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.MetaDataStoreException;
+import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.StoreNotFoundException;
 
 /**
@@ -56,12 +56,12 @@ import org.fabric3.spi.services.contribution.StoreNotFoundException;
 @Service(ContributionService.class)
 @EagerInit
 public class ContributionServiceImpl implements ContributionService {
-    private ContributionProcessorRegistry processorRegistry;
+    private ProcessorRegistry processorRegistry;
     private ContributionStoreRegistry contributionStoreRegistry;
     private ContentTypeResolver contentTypeResolver;
     private String uriPrefix = "file://contribution/";
 
-    public ContributionServiceImpl(@Reference ContributionProcessorRegistry processorRegistry,
+    public ContributionServiceImpl(@Reference ProcessorRegistry processorRegistry,
                                    @Reference ContributionStoreRegistry contributionStoreRegistry,
                                    @Reference ContentTypeResolver contentTypeResolver)
             throws IOException, ClassNotFoundException {
@@ -78,14 +78,8 @@ public class ContributionServiceImpl implements ContributionService {
     public URI contribute(String id, ContributionSource source) throws ContributionException {
         URL locationUrl;
         URI contributionUri = URI.create(uriPrefix + id + "/" + UUID.randomUUID());
-        InputStream sourceStream;
         if (source.isLocal()) {
-            try {
-                locationUrl = source.getLocation();
-                sourceStream = source.getSource();
-            } catch (IOException e) {
-                throw new ContributionException(e);
-            }
+            locationUrl = source.getLocation();
         } else {
             ArchiveStore archiveStore = contributionStoreRegistry.getArchiveStore(id);
             if (archiveStore == null) {
@@ -95,7 +89,6 @@ public class ContributionServiceImpl implements ContributionService {
             try {
                 stream = source.getSource();
                 locationUrl = archiveStore.store(contributionUri, stream);
-                sourceStream = locationUrl.openStream();
             } catch (IOException e) {
                 throw new ContributionException(e);
             } catch (ArchiveStoreException e) {
@@ -119,7 +112,7 @@ public class ContributionServiceImpl implements ContributionService {
 
             Contribution contribution = new Contribution(contributionUri, locationUrl, checksum, timestamp);
             //process the contribution
-            processMetaData(id, contribution, type, sourceStream);
+            processMetaData(id, contribution, type);
             return contributionUri;
         } catch (IOException e) {
             throw new ContributionException("Contribution error", e);
@@ -221,10 +214,10 @@ public class ContributionServiceImpl implements ContributionService {
         }
     }
 
-    private void processMetaData(String id, Contribution contribution, String contentType, InputStream stream)
+    private void processMetaData(String id, Contribution contribution, String contentType)
             throws ContributionException, IOException, MetaDataStoreException {
         // store the contribution
-        processorRegistry.processContent(contribution, contentType, contribution.getUri(), stream);
+        processorRegistry.processContribution(contribution, contentType, contribution.getUri());
         // TODO rollback storage if an error processing contribution
         // store the contribution index 
         MetaDataStore metaDataStore = contributionStoreRegistry.getMetadataStore(id);

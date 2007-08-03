@@ -26,11 +26,12 @@ import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.ModelObject;
 import org.fabric3.spi.model.type.ContributionResourceDescription;
 import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.services.contribution.Resource;
+import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.contribution.StoreNotFoundException;
 
 /**
@@ -69,9 +70,14 @@ public abstract class ArchiveContributionProcessor extends ContributionProcessor
             URL importedUrl = encoder.encode(imported.getLocation());
             description.addArtifactUrl(importedUrl);
         }
-        for (ModelObject type : contribution.getTypes().values()) {
-            if (type instanceof Composite) {
-                addContributionDescription(description, (Composite) type);
+
+        for (Resource resource : contribution.getResources()) {
+            // XCV FIXME specific composite case
+            for (ResourceElement<?, ?> element : resource.getResourceElements()) {
+                Object value = element.getValue();
+                if (value instanceof Composite) {
+                    addContributionDescription(description, (Composite) value);
+                }
             }
         }
     }

@@ -26,7 +26,7 @@ import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
 import org.fabric3.spi.services.contribution.ContributionProcessor;
-import org.fabric3.spi.services.contribution.ContributionProcessorRegistry;
+import org.fabric3.spi.services.contribution.ProcessorRegistry;
 
 /**
  * The base class for ContributionProcessor implementations
@@ -36,7 +36,7 @@ import org.fabric3.spi.services.contribution.ContributionProcessorRegistry;
 @EagerInit
 @Service(ContributionProcessor.class)
 public abstract class ContributionProcessorExtension implements ContributionProcessor {
-    protected ContributionProcessorRegistry registry;
+    protected ProcessorRegistry registry;
 
     /**
      * Sets the ContributionProcessorRegistry that this processor should register with/
@@ -44,7 +44,7 @@ public abstract class ContributionProcessorExtension implements ContributionProc
      * @param registry the ContributionProcessorRegistry that this processor should register with
      */
     @Reference
-    public void setContributionProcessorRegistry(ContributionProcessorRegistry registry) {
+    public void setContributionProcessorRegistry(ProcessorRegistry registry) {
         this.registry = registry;
     }
 
@@ -61,7 +61,7 @@ public abstract class ContributionProcessorExtension implements ContributionProc
      */
     @Destroy
     public void stop() {
-        registry.unregister(this.getContentType());
+        registry.unregisterContributionProcessor(this.getContentType());
     }
 
 }

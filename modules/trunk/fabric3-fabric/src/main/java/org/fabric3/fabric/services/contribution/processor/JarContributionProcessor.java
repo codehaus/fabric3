@@ -23,10 +23,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -43,12 +41,13 @@ import org.fabric3.extension.contribution.ArchiveContributionProcessor;
 import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.loader.common.LoaderContextImpl;
-import org.fabric3.scdl.Composite;
 import org.fabric3.spi.deployer.CompositeClassLoader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
+import org.fabric3.spi.services.contenttype.ContentTypeResolver;
 import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.spi.services.contribution.Contribution;
@@ -57,6 +56,8 @@ import org.fabric3.spi.services.contribution.ContributionProcessor;
 import org.fabric3.spi.services.contribution.Import;
 import org.fabric3.spi.services.contribution.MatchingExportNotFoundException;
 import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.services.contribution.ProcessorRegistry;
+import org.fabric3.spi.services.contribution.Resource;
 
 /**
  * Processes a JAR contribution
@@ -69,37 +70,41 @@ public class JarContributionProcessor extends ArchiveContributionProcessor imple
     private final XMLInputFactory xmlFactory;
     private final MetaDataStore metaDataStore;
     private final ClasspathProcessorRegistry classpathProcessorRegistry;
+    private final ContentTypeResolver contentTypeResolver;
 
-    public JarContributionProcessor(@Reference LoaderRegistry loaderRegistry,
+    public JarContributionProcessor(@Reference ProcessorRegistry processorRegistry,
+                                    @Reference LoaderRegistry loaderRegistry,
                                     @Reference ClassLoaderRegistry classLoaderRegistry,
                                     @Reference XMLInputFactory xmlFactory,
                                     @Reference MetaDataStore metaDataStore,
                                     @Reference ClasspathProcessorRegistry classpathProcessorRegistry,
-                                    @Reference ArtifactLocationEncoder encoder) {
+                                    @Reference ArtifactLocationEncoder encoder,
+                                    @Reference ContentTypeResolver contentTypeResolver) {
+
         super(metaDataStore, encoder);
+        this.registry = processorRegistry;
         this.loaderRegistry = loaderRegistry;
         this.classLoaderRegistry = classLoaderRegistry;
         this.xmlFactory = xmlFactory;
         this.metaDataStore = metaDataStore;
         this.classpathProcessorRegistry = classpathProcessorRegistry;
+        this.contentTypeResolver = contentTypeResolver;
     }
 
     public String getContentType() {
         return Constants.JAR_CONTENT_TYPE;
     }
 
-    public void processContent(Contribution contribution, URI source, InputStream inputStream)
-            throws ContributionException {
+    public void processContent(Contribution contribution, URI source) throws ContributionException {
         URL sourceUrl = contribution.getLocation();
+        InputStream inputStream;
         // process the contribution manifest
         File jarFile = new File(sourceUrl.getFile());
         ContributionManifest manifest;
-        List<URL> artifactUrls;
         try {
+            inputStream = sourceUrl.openStream();
             manifest = processManifest(jarFile);
             contribution.setManifest(manifest);
-            // process .composite files
-            artifactUrls = getCompositeUrls(inputStream, toJarURL(sourceUrl));
         } catch (IOException e) {
             throw new ContributionException(e);
         }
@@ -126,15 +131,8 @@ public class JarContributionProcessor extends ArchiveContributionProcessor imple
             }
             // set the classloader on the current context so artifacts in the contribution can be introspected
             Thread.currentThread().setContextClassLoader(loader);
-            for (URL artifactUrl : artifactUrls) {
-                Composite componentType = processComponentType(artifactUrl, loader);
-                contribution.addType(componentType.getName(), componentType);
-            }
+            processResources(contribution);
             addContributionDescription(contribution);
-        } catch (LoaderException e) {
-            throw new ContributionException(e);
-        } catch (XMLStreamException e) {
-            throw new ContributionException(e);
         } catch (IOException e) {
             throw new ContributionException(e);
         } finally {
@@ -148,6 +146,33 @@ public class JarContributionProcessor extends ArchiveContributionProcessor imple
             } finally {
                 Thread.currentThread().setContextClassLoader(oldClassloader);
             }
+        }
+    }
+
+    private void processResources(Contribution contribution) throws ContributionException, IOException {
+        URL location = contribution.getLocation();
+        JarInputStream jarStream = new JarInputStream(location.openStream());
+        try {
+            while (true) {
+                JarEntry entry = jarStream.getNextJarEntry();
+                if (entry == null) {
+                    // EOF
+                    break;
+                }
+                if (entry.isDirectory()) {
+                    continue;
+                }
+                URL entryUrl = new URL(location, entry.getName());
+                String contentType = contentTypeResolver.getContentType(entryUrl);
+                Resource resource = registry.processResource(contentType, jarStream);
+                if (resource != null) {
+                    contribution.addResource(resource);
+                }
+            }
+        } catch (ContentTypeResolutionException e) {
+            throw new ContributionException(e);
+        } finally {
+            jarStream.close();
         }
     }
 
@@ -198,81 +223,6 @@ public class JarContributionProcessor extends ArchiveContributionProcessor imple
                 stream.close();
             }
         }
-    }
-
-    /**
-     * Loads a composite component type at the given URL
-     *
-     * @param artifactUrl the URL to load from
-     * @param loader      the classloader to load resources with
-     * @return the component type
-     * @throws IOException        if an error occurs reading the URL stream
-     * @throws XMLStreamException if an error occurs parsing the XML
-     * @throws LoaderException    if an error occurs processing the component type
-     */
-    private Composite processComponentType(URL artifactUrl, ClassLoader loader)
-            throws IOException, XMLStreamException, LoaderException {
-        XMLStreamReader reader = null;
-        InputStream stream = null;
-        try {
-            stream = artifactUrl.openStream();
-            reader = xmlFactory.createXMLStreamReader(stream);
-            reader.nextTag();
-            LoaderContext context = new LoaderContextImpl(loader, null);
-            return loaderRegistry.load(reader, Composite.class, context);
-
-        } finally {
-            try {
-                if (reader != null) {
-                    reader.close();
-                }
-            } catch (XMLStreamException e) {
-                // ignore
-            }
-            if (stream != null) {
-                stream.close();
-            }
-        }
-    }
-
-    /**
-     * Returns a list of composite files inside a jar
-     *
-     * @param sourceUrl the root url
-     * @param stream    the archive stream
-     * @return a list of resources inside a jar
-     * @throws IOException if an error is encountered reading the archive
-     */
-    private List<URL> getCompositeUrls(InputStream stream, URL sourceUrl) throws IOException {
-        List<URL> artifacts = new ArrayList<URL>();
-        JarInputStream jar = new JarInputStream(stream);
-        try {
-            while (true) {
-                JarEntry entry = jar.getNextJarEntry();
-                if (entry == null) {
-                    // EOF
-                    break;
-                }
-                if (entry.isDirectory()) {
-                    continue;
-                }
-                if (entry.getName().endsWith(".composite")) {
-                    artifacts.add(new URL(sourceUrl, entry.getName()));
-                }
-            }
-        } finally {
-            jar.close();
-        }
-        return artifacts;
-    }
-
-    private URL toJarURL(URL sourceUrl) throws MalformedURLException {
-        if (sourceUrl.toString().startsWith("jar:")) {
-            return sourceUrl;
-        } else {
-            return new URL("jar:" + sourceUrl.toExternalForm() + "!/");
-        }
-
     }
 
 }
