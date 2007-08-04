@@ -53,7 +53,7 @@
     </component>
     
     <component name="JarContributionProcessor">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.SCAJarContributionProcessor"/>
+        <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.ZipContributionProcessor"/>
     </component>
 
     <component name="CompositeResourceProcessor">
@@ -65,7 +65,7 @@
     </component>
 
     <component name="FolderContributionProcessor">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.ExplodedJarContributionProcessor"/>
+        <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.ExplodedArchiveContributionProcessor"/>
     </component>
 
     <component name="ClasspathProcessorRegistry">

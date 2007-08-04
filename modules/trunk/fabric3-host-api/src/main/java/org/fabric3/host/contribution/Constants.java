@@ -30,11 +30,10 @@ public final class Constants {
      * An Assembly changeSet represented as XML.
      */
     public static final String CHANGESET_XML = "application/x-fabric3.fabric3.changeSet+xml";
-    public static final String JAR_CONTENT_TYPE = "application/x-compressed";
+    public static final String ZIP_CONTENT_TYPE = "application/x-compressed";
     public static final String FOLDER_CONTENT_TYPE = "application/vnd.fabric3.folder";
     public static final String COMPOSITE_CONTENT_TYPE = "text/vnd.fabric3.composite+xml";
     public static final String DEFINITIONS_TYPE = "text/vnd.fabric3.definitions+xml";
-    public static final String EXTENSION_TYPE = "application/vnd.fabric3.extension";
     public static final String JAVA_CONTENT_TYPE = "application/java-vm";
     public final static String CONTENT_UNKONWN = "content/unknown";
     public final static String CONTENT_DEFAULT = "application/octet-stream";

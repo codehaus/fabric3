@@ -207,6 +207,25 @@ public class FileHelper {
         if (url == null || !url.getProtocol().equals("file")) {
             return null;
         } else {
+            return new File(toFileString(url));
+        }
+    }
+
+    /**
+     * Convert from a <code>URL</code> to a <code>File</code>.
+     * <p/>
+     * From version 1.1 this method will decode the URL. Syntax such as <code>file:///my%20docs/file.txt</code> will be
+     * correctly decoded to <code>/my docs/file.txt</code>.
+     *
+     * @param url the file URL to convert, null returns null
+     * @return the equivalent <code>File</code> object, or <code>null</code> if the URL's protocol is not
+     *         <code>file</code>
+     * @throws IllegalArgumentException if the file is incorrectly encoded
+     */
+    public static String toFileString(URL url) {
+        if (url == null || !url.getProtocol().equals("file")) {
+            return null;
+        } else {
             String filename = url.getFile().replace('/', File.separatorChar);
             int pos = 0;
             while ((pos = filename.indexOf('%', pos)) >= 0) { // NOPMD
@@ -216,7 +235,7 @@ public class FileHelper {
                     filename = filename.substring(0, pos) + ch + filename.substring(pos + 3);
                 }
             }
-            return new File(filename);
+            return filename;
         }
     }
 
