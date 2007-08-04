@@ -31,6 +31,7 @@ import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.scdl.definitions.PolicySetExtension;
 import org.fabric3.spi.policy.registry.PolicyRegistry;
+import org.fabric3.spi.policy.registry.PolicyResolutionException;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.osoa.sca.annotations.Reference;
 
@@ -57,32 +58,34 @@ public class DefaultPolicyRegistry implements PolicyRegistry {
     /**
      * @see org.fabric3.spi.policy.registry.PolicyRegistry#getInterceptors(org.fabric3.spi.model.instance.LogicalScaArtifact)
      */
-    public Set<PolicySetExtension> getPolicy(final LogicalScaArtifact<?> scaArtifact) {
+    public Set<PolicySetExtension> getPolicy(final LogicalScaArtifact<?> scaArtifact) throws PolicyResolutionException {
+        
+        // Aggregate all the intents from the ancestors
+        Set<QName> intentNames = aggregateIntents(scaArtifact);
+        
+        // Expand all the profile intents
+        Set<Intent> requiredIntents = resolveProfileIntents(intentNames);
+        
+        // Remove intents not applicable to the artifact
+        // TODO for default bindings these may need to change
+        filterInvalidIntents(scaArtifact.getType(), requiredIntents);
+
+        // Resolve the policies
+        return resolvePolicies(intentNames);
+        
+    }
+
+    /*
+     * Resolve the policies.
+     */
+    private Set<PolicySetExtension> resolvePolicies(Set<QName> intentNames) {
         
         Set<PolicySetExtension> policies = new HashSet<PolicySetExtension>();
-        
-        LogicalScaArtifact<?> temp = scaArtifact;
-        
-        Set<QName> intentNames = new HashSet<QName>();
-        while(temp != null) {
-            intentNames.addAll(scaArtifact.getIntents());
-            temp = temp.getParent();
-        }
-        
-        for(QName intentName : intentNames) {
-            Intent intent = intents.get(intentName);
-            if(intent == null || !intent.doesConstrain(scaArtifact.getType())) {
-                intentNames.remove(intentName);
-            }
-        }
-        
         for(PolicySet policySet : policySets) {
             if(policySet.doesProvide(intentNames)) {
                 policies.add(policySet.getExtension());
             }
         }
-
-        
         return policies;
         
     }
@@ -112,6 +115,83 @@ public class DefaultPolicyRegistry implements PolicyRegistry {
         } else if(modelObject instanceof PolicySet) {
             registerPolicySet((PolicySet) modelObject);
         }
+        
+    }
+
+    /*
+     * Filter invalid intents.
+     */
+    private void filterInvalidIntents(QName type, Set<Intent> requiredIntents) throws PolicyResolutionException {
+        
+        for(Intent intent : requiredIntents) {
+            
+            QName intentName = intent.getName();
+            
+            if(intent.getIntentType() != null) {
+                if(!intent.doesConstrain(type)) {
+                    requiredIntents.remove(intent);
+                }
+            } else {
+                if(!intent.isQualified()) {
+                    throw new PolicyResolutionException("Unqualified intent without constrained artifact", intentName);
+                }
+                Intent qualifiableIntent = intents.get(intent.getQualifiable());
+                if(qualifiableIntent == null) {
+                    throw new PolicyResolutionException("Unknown intent", intent.getQualifiable());
+                }
+                if(!qualifiableIntent.doesConstrain(type)) {
+                    requiredIntents.remove(intent);
+                }
+            }
+        }
+        
+    }
+
+    /*
+     * Aggregate intents from ancestors.
+     */
+    private Set<QName> aggregateIntents(final LogicalScaArtifact<?> scaArtifact) {
+        
+        LogicalScaArtifact<?> temp = scaArtifact;
+        
+        Set<QName> intentNames = new HashSet<QName>();
+        while(temp != null) {
+            intentNames.addAll(scaArtifact.getIntents());
+            temp = temp.getParent();
+        }
+        return intentNames;
+        
+    }
+
+    /*
+     * Expand profile intents.
+     */
+    private Set<Intent> resolveProfileIntents(Set<QName> intentNames) throws PolicyResolutionException {
+        
+        Set<Intent> requiredIntents = new HashSet<Intent>();
+        
+        for(QName intentName : intentNames) {
+            
+            Intent intent = intents.get(intentName);
+            if(intent == null) {
+                throw new PolicyResolutionException("Unknown intent", intentName);
+            }
+            
+            if(intent.isProfile()) {
+                for(QName requiredInentName : intent.getRequires()) {
+                    Intent requiredIntent = intents.get(requiredInentName);
+                    if(requiredIntent == null) {
+                        throw new PolicyResolutionException("Unknown intent", requiredInentName);
+                    }
+                    requiredIntents.add(requiredIntent);
+                    
+                }
+            } else {
+                requiredIntents.add(intent);
+            }
+            
+        }
+        return requiredIntents;
         
     }
 

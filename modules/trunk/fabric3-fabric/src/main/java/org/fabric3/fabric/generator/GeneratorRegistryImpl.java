@@ -51,6 +51,7 @@ import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
+import org.fabric3.spi.model.instance.LogicalScaArtifact;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
@@ -58,6 +59,7 @@ import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.registry.PolicyRegistry;
+import org.fabric3.spi.policy.registry.PolicyResolutionException;
 
 /**
  * @version $Rev$ $Date$
@@ -156,10 +158,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
 
         ServiceContract<?> contract = service.getDefinition().getServiceContract();
         
-        Set<PolicySetExtension> policies = null;
-        if(policyRegistry != null) {
-            policies = policyRegistry.getPolicy(service);
-        }
+        Set<PolicySetExtension> policies = getPolicies(binding);
         PhysicalWireDefinition wireDefinition = createWireDefinition(contract, context, policies);
         
         Class<?> type = component.getDefinition().getImplementation().getClass();
@@ -202,10 +201,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
 
         ServiceContract<?> contract = reference.getDefinition().getServiceContract();
         
-        Set<PolicySetExtension> policies = null;
-        if(policyRegistry != null) {
-            policies = policyRegistry.getPolicy(reference);
-        }
+        Set<PolicySetExtension> policies = getPolicies(binding);
         PhysicalWireDefinition wireDefinition = createWireDefinition(contract, context, policies);
         
         Class<?> type = binding.getBinding().getClass();
@@ -243,11 +239,8 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         ReferenceDefinition referenceDefinition = reference.getDefinition();
         ServiceContract<?> contract = referenceDefinition.getServiceContract();
         
-        Set<PolicySetExtension> policies = new HashSet<PolicySetExtension>();
-        if(policyRegistry != null) {
-            policies.addAll(policyRegistry.getPolicy(reference));
-            policies.addAll(policyRegistry.getPolicy(service));
-        }
+        Set<PolicySetExtension> policies = getPolicies(reference);
+        policies.addAll(getPolicies(service));
         PhysicalWireDefinition wireDefinition = createWireDefinition(contract, context, policies);
 
         Class<?> type = target.getDefinition().getImplementation().getClass();
@@ -393,6 +386,24 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         }
         
         return wireDefinition;
+        
+    }
+    
+    /*
+     * Resolves the policies.
+     */
+    @SuppressWarnings("unchecked")
+    private Set<PolicySetExtension> getPolicies(LogicalScaArtifact<?> logicalScaArtifact) throws GenerationException {
+        
+        try {
+            if(policyRegistry != null) {
+                return policyRegistry.getPolicy(logicalScaArtifact);
+            } else {
+                return Collections.EMPTY_SET;
+            }
+        } catch(PolicyResolutionException ex) {
+            throw new PolicyException(ex);
+        }
         
     }
 

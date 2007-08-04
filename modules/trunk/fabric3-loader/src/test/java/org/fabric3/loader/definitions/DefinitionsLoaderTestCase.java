@@ -32,17 +32,13 @@ import javax.xml.stream.XMLStreamReader;
 import junit.framework.TestCase;
 
 import org.fabric3.loader.common.LoaderContextImpl;
-import org.fabric3.loader.definitions.DefinitionsLoader;
-import org.fabric3.loader.definitions.IntentLoader;
-import org.fabric3.loader.definitions.PolicySetLoader;
+import org.fabric3.scdl.definitions.Definitions;
+import org.fabric3.scdl.definitions.Intent;
+import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.StAXElementLoader;
-import org.fabric3.scdl.definitions.Definitions;
-import org.fabric3.scdl.definitions.Intent;
-import org.fabric3.scdl.definitions.PolicySet;
-import org.osoa.sca.Constants;
 
 /**
  * @version $Revision$ $Date$
@@ -70,8 +66,6 @@ public class DefinitionsLoaderTestCase extends TestCase {
         assertEquals(1, definitions.getIntents().size());
         Intent intent = definitions.getIntents().iterator().next();
         assertEquals(new QName("http://fabric3.org/xmlns/sca/2.0-alpha", "transactional"), intent.getName());
-        assertTrue(intent.doesConstrain(new QName(Constants.SCA_NS, "service")));
-        assertFalse(intent.doesConstrain(new QName(Constants.SCA_NS, "reference")));
         
         assertEquals(1, definitions.getPolicySets().size());
         PolicySet policySet = definitions.getPolicySets().iterator().next();

@@ -18,12 +18,12 @@
  */
 package org.fabric3.scdl.definitions;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
 
 import org.fabric3.scdl.ModelObject;
+import org.osoa.sca.Constants;
 
 /**
  * Represents a registered intent within the domain.
@@ -32,6 +32,12 @@ import org.fabric3.scdl.ModelObject;
  *
  */
 public final class Intent extends ModelObject {
+    
+    /** Binding QName */
+    private static final QName BINDING = new QName(Constants.SCA_NS, "binding");
+    
+    /** Implementation QName */
+    private static final QName IMPLEMENTATION = new QName(Constants.SCA_NS, "implementation");
 
     /** Qualified name of the intent. */
     private QName name;
@@ -39,23 +45,97 @@ public final class Intent extends ModelObject {
     /** Description of the intent. */
     private String description;
     
-    /** SCA artifacts constrained by this intent. */
-    private Set<QName> constrainedArtifacts = new HashSet<QName>();
+    /** Intent type. */
+    private IntentType intentType;
+    
+    /** Name of the qualifiable intent if this is a qualified intent . */
+    private QName qualifiable;
+    
+    /** Whether this intent requires other intents. */
+    private Set<QName> requires;
+    
+    /** Constrained type. */
+    private QName constrains;
 
     /**
      * Initializes the name, description and the constrained artifacts.
      * 
      * @param name Name of the intent.
      * @param description Description of the intent.
-     * @param constrainedArtifacts SCA artifacts this intent constrains.
+     * @param constrains SCA artifact constrained by this intent.
+     * @param requires The intents this intent requires if this is a profile intent.
      */
-    public Intent(QName name, String description, Set<QName> constrainedArtifacts) {
+    public Intent(QName name, String description, QName constrains, Set<QName> requires) {
+        
         this.name = name;
         this.description = description;
-        this.constrainedArtifacts.addAll(constrainedArtifacts);
+        
+        if(constrains != null) {
+            if(!BINDING.equals(constrains) && !IMPLEMENTATION.equals(constrains)) {
+                throw new IllegalArgumentException("Intents can constrain only bindings or implementations");
+            }
+            intentType = BINDING.equals(constrains) ? IntentType.INTERACTION : IntentType.IMPLEMENTATION;
+            this.constrains = constrains;
+        }
+        
+        String localPart = name.getLocalPart();
+        if(localPart.indexOf('.') > 0) {
+            String qualifiableName = localPart.substring(0, localPart.indexOf('.') + 1);
+            qualifiable = new QName(name.getNamespaceURI(), qualifiableName);
+        }
+        
+        this.requires = requires;
+        
     }
     
     /**
+     * Checks whether this is a profile intent.
+     * 
+     * @return True if this is a profile intent.
+     */
+    public boolean isProfile() {
+        return requires != null && requires.size() > 0;
+    }
+    
+    /**
+     * The intents this intent requires if this is a profile intent.
+     * 
+     * @return Required intents for a profile intent.
+     */
+    public Set<QName> getRequires() {
+        return requires;
+    }
+    
+    /**
+     * Checks whether this is a qualified intent.
+     * 
+     * @return True if this is a qualified intent.
+     */
+    public boolean isQualified() {
+        return qualifiable != null;
+    }
+    
+    /**
+     * Returns the qualifiable intent if this is qualified.
+     * 
+     * @return Name of the qualifiable intent.
+     */
+    public QName getQualifiable() {
+        return qualifiable;
+    }
+    
+    /**
+     * Returns the type of this intent.
+     * 
+     * @return Type of the intent.
+     */
+    public IntentType getIntentType() {
+        return intentType;
+    }
+    
+    /**
+     * Returns the name of the intent.
+     * 
      * @return Name of the intent.
      */
     public QName getName() {
@@ -63,12 +143,13 @@ public final class Intent extends ModelObject {
     }
     
     /**
-     * Checks whether the specified artifact can be constrained by this intent.
-     * @param scaArtifact SCA artifact that needs to be checked.
-     * @return True if this intent can constrain the specified SCA artifact.
+     * Whether this intent constrains the specified type.
+     * 
+     * @param type Type of the SCA artifact.
+     * @return True if this intent constrains the specified type.
      */
-    public boolean doesConstrain(QName scaArtifact) {
-        return constrainedArtifacts.contains(scaArtifact);
+    public boolean doesConstrain(QName type) {
+        return type.equals(constrains);
     }
     
     /**

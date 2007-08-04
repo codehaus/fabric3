@@ -73,7 +73,9 @@ public class PolicySetLoader implements StAXElementLoader<PolicySet> {
             provides.add(StaxUtil.createQName(tok.nextToken(), reader));
         }
         
-        PolicySet policySet = new PolicySet(qName, provides);
+        String appliesTo = reader.getAttributeValue(null, "appliesTo");
+        
+        PolicySet policySet = new PolicySet(qName, provides, appliesTo);
 
         while (true) {
             switch (reader.next()) {

@@ -50,9 +50,10 @@ public interface PolicyRegistry {
      * specified by the SCA policy specification.
      * 
      * @param scaArtifact SCA artifact.
-     * @return List of interceptors.
+     * @return List of policy extensions.
+     * @throws PolicyResolutionException If the policy configuration is invalid.
      */
-    Set<PolicySetExtension> getPolicy(LogicalScaArtifact<?> scaArtifact);
+    Set<PolicySetExtension> getPolicy(LogicalScaArtifact<?> scaArtifact) throws PolicyResolutionException ;
     
     /**
      * Deploys the definition artifact.

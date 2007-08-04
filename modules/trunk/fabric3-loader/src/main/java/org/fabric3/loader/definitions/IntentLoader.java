@@ -62,13 +62,22 @@ public class IntentLoader implements StAXElementLoader<Intent> {
         String name = reader.getAttributeValue(null, "name");
         QName qName = new QName(context.getTargetNamespace(), name);
         
-        Set<QName> constrains = new HashSet<QName>();
-        StringTokenizer tok = new StringTokenizer(reader.getAttributeValue(null, "constrains"));
-        while(tok.hasMoreElements()) {
-            constrains.add(StaxUtil.createQName(tok.nextToken(), reader));
+        String constrainsVal = reader.getAttributeValue(null, "constrains");
+        QName constrains = null;
+        if(constrainsVal != null) {
+            constrains = StaxUtil.createQName(constrainsVal, reader);
         }
         
         String description = null;
+        
+        String requiresVal = reader.getAttributeValue(null, "requires");
+        Set<QName> requires = new HashSet<QName>();
+        if(requiresVal != null) {
+            StringTokenizer tok = new StringTokenizer(requiresVal);
+            while(tok.hasMoreElements()) {
+                requires.add(StaxUtil.createQName(tok.nextToken(), reader));
+            }
+        }
         
         while (true) {
             switch (reader.next()) {
@@ -79,7 +88,7 @@ public class IntentLoader implements StAXElementLoader<Intent> {
                 break;
             case END_ELEMENT:
                 if (DefinitionsLoader.INTENT.equals(reader.getName())) {
-                    return new Intent(qName, description, constrains);
+                    return new Intent(qName, description, constrains, requires);
                 }
             }
         }

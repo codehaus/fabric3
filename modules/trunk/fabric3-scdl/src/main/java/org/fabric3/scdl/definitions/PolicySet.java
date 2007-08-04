@@ -40,6 +40,9 @@ public final class PolicySet extends ModelObject {
     
     /** Policy set extension */
     private PolicySetExtension extension;
+    
+    /** XPath expression for the apples to attribute. */
+    private String appliesTo;
 
     /**
      * Initializes the state for the policy set.
@@ -47,13 +50,17 @@ public final class PolicySet extends ModelObject {
      * @param name Name of the policy set.
      * @param provides Intents provided by this policy set.
      * @param interceptorBuilders Builders for the interceptors that implement this policy set.
+     * @param appliesTo XPath expression for the apples to attribute.
      */
-    public PolicySet(QName name, Set<QName> provides) {
+    public PolicySet(QName name, Set<QName> provides, String appliesTo) {
         this.name = name;
         this.provides.addAll(provides);
+        this.appliesTo = appliesTo;
     }
     
     /**
+     * Name of the policy set.
+     * 
      * @return Qualified name of the policy set.
      */
     public QName getName() {
@@ -61,7 +68,17 @@ public final class PolicySet extends ModelObject {
     }
     
     /**
+     * XPath expression to the element to which the policy set applies.
+     * 
+     * @return The apples to XPath expression.
+     */
+    public String getAppliesTo() {
+        return appliesTo;
+    }
+    
+    /**
      * Checks whether the specified intent is provided by this policy set.
+     * 
      * @param intent Intent that needs to be checked.
      * @return True if this policy set provides to the specified intent.
      */
@@ -71,6 +88,7 @@ public final class PolicySet extends ModelObject {
     
     /**
      * Checks whether the specified intents is provided by this policy set.
+     * 
      * @param intents Intents that need to be checked.
      * @return True if this policy set provides to the specified intent.
      */
