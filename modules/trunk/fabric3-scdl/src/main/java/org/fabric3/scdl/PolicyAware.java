@@ -18,11 +18,11 @@
  */
 package org.fabric3.scdl;
 
-import javax.xml.namespace.QName;
-
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.xml.namespace.QName;
 
 /**
  * Interface that needs to be implemented by any definition object against 
@@ -50,17 +50,17 @@ public abstract class PolicyAware extends ModelObject {
     }
     
     /**
-     * @param intentName Add an intent against the element.
+     * @param intents The declared intents against the element.
      */
-    public void addIntent(QName intentName) {
-        intents.add(intentName);
+    public void setIntents(Set<QName> intents) {
+        this.intents = intents;
     }
     
     /**
-     * @param policySetName Add a policy set against the element.
+     * @param policySets The declared policy sets against the element.
      */
-    public void addPolicySet(QName policySetName) {
-        policySets.add(policySetName);
+    public void setPolicySets(Set<QName> policySets) {
+        this.policySets = policySets;
     }
 
 }

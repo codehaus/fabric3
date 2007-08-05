@@ -37,6 +37,6 @@ public interface PolicyHelper {
      * @param policyAware Element against which policy sets and intents are declared.
      * @param reader XML stream reader from where the attributes are read.
      */
-    void loadPolicySetsAndIntents(PolicyAware policyAware, XMLStreamReader reader);
+    void loadPolicySetsAndIntents(PolicyAware policyAware, XMLStreamReader reader) throws LoaderException;
 
 }
