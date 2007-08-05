@@ -36,6 +36,8 @@ import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.spi.loader.PolicyHelper;
+
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.ComponentReference;
@@ -56,6 +58,7 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
     private final LoaderRegistry registry;
     private final StAXElementLoader<PropertyValue> propertyValueLoader;
     private final StAXElementLoader<ComponentReference> referenceLoader;
+    private final PolicyHelper policyHelper;
 
     /**
      * @param registry
@@ -64,10 +67,12 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
      */
     public ComponentLoader(@Reference LoaderRegistry registry,
                            @Reference (name = "propertyValue") StAXElementLoader<PropertyValue> propertyValueLoader,
-                           @Reference (name = "reference") StAXElementLoader<ComponentReference> referenceLoader) {
+                           @Reference (name = "reference") StAXElementLoader<ComponentReference> referenceLoader,
+                           @Reference (name = "policyHelper") PolicyHelper policyHelper) {
         this.registry = registry;
         this.propertyValueLoader = propertyValueLoader;
         this.referenceLoader = referenceLoader;
+        this.policyHelper = policyHelper;
     }
 
     /**
@@ -88,13 +93,16 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
         Integer initLevel = loadInitLevel(reader);
         String key = loadKey(reader);
 
-        Implementation<?> impl = loadImplementation(reader, context);
-
-        ComponentDefinition<Implementation<?>> componentDefinition = new ComponentDefinition<Implementation<?>>(name, impl);
+        ComponentDefinition<Implementation<?>> componentDefinition = new ComponentDefinition<Implementation<?>>(name);
         componentDefinition.setAutowire(autowire);
         componentDefinition.setRuntimeId(runtimeId);
         componentDefinition.setInitLevel(initLevel);
         componentDefinition.setKey(key);
+        
+        policyHelper.loadPolicySetsAndIntents(componentDefinition, reader);
+
+        Implementation<?> impl = loadImplementation(reader, context);
+        componentDefinition.setImplementation(impl);
 
         while (true) {
             switch (reader.next()) {

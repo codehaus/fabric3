@@ -29,14 +29,17 @@ import org.easymock.EasyMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 
+import org.fabric3.loader.common.DefaultPolicyHelper;
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.CompositeService;
 import org.fabric3.scdl.ModelObject;
+import org.fabric3.scdl.PolicyAware;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
+import org.fabric3.spi.loader.PolicyHelper;
 
 /**
  * Verifies loading of a service definition from an XML-based assembly
@@ -54,6 +57,7 @@ public class CompositeServiceLoaderTestCase extends TestCase {
     private LoaderContext loaderContext;
     private XMLStreamReader mockReader;
     private LoaderRegistry mockRegistry;
+    private PolicyHelper mockPolicyHelper;
 
     public void testPromotedComponent() throws LoaderException, XMLStreamException {
         expect(mockReader.getAttributeValue(null, "name")).andReturn(serviceName);
@@ -114,7 +118,8 @@ public class CompositeServiceLoaderTestCase extends TestCase {
         super.setUp();
         mockReader = EasyMock.createStrictMock(XMLStreamReader.class);
         mockRegistry = EasyMock.createMock(LoaderRegistry.class);
-        loader = new CompositeServiceLoader(mockRegistry);
+        mockPolicyHelper = EasyMock.createMock(PolicyHelper.class);
+        loader = new CompositeServiceLoader(mockRegistry, mockPolicyHelper);
         loaderContext = EasyMock.createMock(LoaderContext.class);
         EasyMock.replay(loaderContext);
     }

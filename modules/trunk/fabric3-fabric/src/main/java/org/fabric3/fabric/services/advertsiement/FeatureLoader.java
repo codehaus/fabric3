@@ -108,7 +108,10 @@ public class FeatureLoader extends LoaderExtension<ComponentDefinition> {
 
         featureImplementation.setComponentType(componentType);
 
-        return new ComponentDefinition<Implementation<?>>(name, featureImplementation);
+        ComponentDefinition<Implementation<?>> def = new ComponentDefinition<Implementation<?>>(name);
+        def.setImplementation(featureImplementation);
+        
+        return def;
 
     }
 

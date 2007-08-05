@@ -137,7 +137,8 @@ public abstract class AbstractAssembly implements Assembly {
         CompositeImplementation impl = new CompositeImplementation();
         impl.setComponentType(composite);
         ComponentDefinition<CompositeImplementation> definition =
-                new ComponentDefinition<CompositeImplementation>("type", impl);
+                new ComponentDefinition<CompositeImplementation>("type");
+        definition.setImplementation(impl);
         activate(definition, true);
         try {
             // record the operation

@@ -31,7 +31,9 @@ import org.fabric3.spi.loader.InvalidValueException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderUtil;
+import org.fabric3.spi.loader.PolicyHelper;
 import org.fabric3.spi.loader.StAXElementLoader;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Loads a reference from an XML-based assembly file
@@ -39,6 +41,12 @@ import org.fabric3.spi.loader.StAXElementLoader;
  * @version $Rev$ $Date$
  */
 public class ComponentReferenceLoader implements StAXElementLoader<ComponentReference> {
+    
+    private final PolicyHelper policyHelper;
+    
+    public ComponentReferenceLoader(@Reference PolicyHelper policyHelper) {
+        this.policyHelper = policyHelper;
+    }
 
     public ComponentReference load(XMLStreamReader reader, LoaderContext context)
         throws XMLStreamException, LoaderException {
@@ -69,6 +77,8 @@ public class ComponentReferenceLoader implements StAXElementLoader<ComponentRefe
             }
         }
         reference.getTargets().addAll(uris);
+        
+        policyHelper.loadPolicySetsAndIntents(reference, reader);
         
         LoaderUtil.skipToEndElement(reader);
         

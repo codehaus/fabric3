@@ -115,7 +115,8 @@ public class JavaPhysicalComponentGeneratorTestCase extends TestCase {
         impl.setComponentType(type);
         impl.setImplementationClass(Foo.class);
         ComponentDefinition<JavaImplementation> definition =
-                new ComponentDefinition<JavaImplementation>(COMPONENT_ID.toString(), impl);
+                new ComponentDefinition<JavaImplementation>(COMPONENT_ID.toString());
+        definition.setImplementation(impl);
         definition.setInitLevel(1);
         return new LogicalComponent<JavaImplementation>(COMPONENT_ID, RUNTIME_ID, definition, parent, definition.getKey());
     }

@@ -36,6 +36,7 @@ import org.fabric3.spi.loader.Loader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderUtil;
+import org.fabric3.spi.loader.PolicyHelper;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.loader.UnrecognizedElementException;
 import org.osoa.sca.annotations.Reference;
@@ -47,9 +48,11 @@ import org.osoa.sca.annotations.Reference;
  */
 public class CompositeReferenceLoader implements StAXElementLoader<CompositeReference> {
     private final Loader loader;
+    private final PolicyHelper policyHelper;
 
-    public CompositeReferenceLoader(@Reference Loader loader) {
+    public CompositeReferenceLoader(@Reference Loader loader, @Reference PolicyHelper policyHelper) {
         this.loader = loader;
+        this.policyHelper = policyHelper;
     }
 
     public CompositeReference load(XMLStreamReader reader, LoaderContext context)
@@ -58,6 +61,7 @@ public class CompositeReferenceLoader implements StAXElementLoader<CompositeRefe
         String name = reader.getAttributeValue(null, "name");
 
         CompositeReference referenceDefinition = new CompositeReference(name, null);
+        policyHelper.loadPolicySetsAndIntents(referenceDefinition, reader);
 
         setPromoted(reader, referenceDefinition, name);
 

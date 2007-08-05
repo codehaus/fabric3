@@ -44,7 +44,7 @@ public class ComponentDefinition<I extends Implementation<?>> extends PolicyAwar
     private URI runtimeId;
     private Autowire autowire = Autowire.INHERITED;
     private Integer initLevel;
-    private final I implementation;
+    private I implementation;
     private final Map<String, ComponentReference> references = new HashMap<String, ComponentReference>();
     private final Map<String, PropertyValue> propertyValues = new HashMap<String, PropertyValue>();
     private String key;
@@ -55,8 +55,16 @@ public class ComponentDefinition<I extends Implementation<?>> extends PolicyAwar
      * @param name           the name of this component
      * @param implementation the implementation of this component
      */
-    public ComponentDefinition(String name, I implementation) {
+    public ComponentDefinition(String name) {
         this.name = name;
+    }
+
+    /**
+     * Sets the {@link Implementation} of this component.
+     * 
+     * @param implementation the implementation of this component
+     */
+    public void setImplementation(I implementation) {
         this.implementation = implementation;
     }
 

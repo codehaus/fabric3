@@ -78,6 +78,10 @@ public class StartCompositeContextGeneratorTestCase extends TestCase {
         Composite type = new Composite(new QName(name));
         CompositeImplementation impl = new CompositeImplementation();
         impl.setComponentType(type);
-        return new ComponentDefinition<CompositeImplementation>(name, impl);
+        ComponentDefinition<CompositeImplementation> def = new ComponentDefinition<CompositeImplementation>(name);
+        def.setImplementation(impl);
+        
+        
+        return def;
     }
 }

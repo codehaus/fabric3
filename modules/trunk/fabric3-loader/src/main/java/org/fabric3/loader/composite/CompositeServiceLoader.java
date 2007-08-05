@@ -33,6 +33,7 @@ import org.fabric3.spi.loader.InvalidValueException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderUtil;
+import org.fabric3.spi.loader.PolicyHelper;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.loader.UnrecognizedElementException;
 import org.fabric3.spi.loader.Loader;
@@ -44,9 +45,11 @@ import org.fabric3.spi.loader.Loader;
  */
 public class CompositeServiceLoader implements StAXElementLoader<CompositeService> {
     private final Loader loader;
+    private final PolicyHelper policyHelper;
 
-    public CompositeServiceLoader(@Reference Loader loader) {
+    public CompositeServiceLoader(@Reference Loader loader, @Reference PolicyHelper policyHelper) {
         this.loader = loader;
+        this.policyHelper = policyHelper;
     }
 
     public CompositeService load(XMLStreamReader reader, LoaderContext context)
@@ -59,6 +62,8 @@ public class CompositeServiceLoader implements StAXElementLoader<CompositeServic
 
         CompositeService def = new CompositeService(name, null);
         def.setTarget(LoaderUtil.getURI(promote));
+        
+        policyHelper.loadPolicySetsAndIntents(def, reader);
         while (true) {
             int i = reader.next();
             switch (i) {

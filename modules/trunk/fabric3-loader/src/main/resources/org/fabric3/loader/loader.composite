@@ -54,6 +54,7 @@
         <system:implementation.system class="org.fabric3.loader.composite.ComponentLoader"/>
         <reference name="propertyValue" target="loader.PropertyValue"/>
         <reference name="reference" target="loader.ComponentReference"/>
+        <reference name="policyHelper" target="policyHelper"/>
     </component>
     <component name="loader.Include">
         <system:implementation.system class="org.fabric3.loader.composite.IncludeLoader"/>
@@ -94,6 +95,11 @@
     </component>
     <component name="loader.policySet">
         <system:implementation.system class="org.fabric3.loader.definitions.PolicySetLoader"/>
+    </component>
+    
+    <!-- Policy helper -->
+    <component name="policyHelper">
+        <system:implementation.system class="org.fabric3.loader.common.DefaultPolicyHelper"/>
     </component>
 
 </composite>

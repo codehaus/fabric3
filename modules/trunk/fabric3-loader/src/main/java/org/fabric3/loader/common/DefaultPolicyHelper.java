@@ -56,7 +56,7 @@ public class DefaultPolicyHelper implements PolicyHelper {
         Set<QName> qNames = new HashSet<QName>();
         
         String val = reader.getAttributeValue(null, attribute);
-        if(val == null) {
+        if(val != null) {
             StringTokenizer tok = new StringTokenizer(val);
             while(tok.hasMoreElements()) {
                 qNames.add(StaxUtil.createQName(tok.nextToken(), reader));

@@ -112,6 +112,7 @@ import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.loader.common.ComponentReferenceLoader;
+import org.fabric3.loader.common.DefaultPolicyHelper;
 import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.loader.composite.ComponentLoader;
 import org.fabric3.loader.composite.CompositeLoader;
@@ -140,6 +141,7 @@ import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
+import org.fabric3.spi.loader.PolicyHelper;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ArtifactResolverRegistry;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
@@ -343,7 +345,9 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
             componentType.add(service);
         }
         SingletonImplementation impl = new SingletonImplementation(componentType, implClass);
-        return new ComponentDefinition<SingletonImplementation>(name, impl);
+        ComponentDefinition<SingletonImplementation> def = new ComponentDefinition<SingletonImplementation>(name);
+        def.setImplementation(impl);
+        return def;
     }
 
     protected CommandExecutorRegistry createCommandExecutorRegistry(ScopeRegistry scopeRegistry) {
@@ -385,10 +389,13 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
         // register element loaders
         PropertyValueLoader propertyValueLoader = new PropertyValueLoader();
-        ComponentReferenceLoader componentReferenceLoader = new ComponentReferenceLoader();
+        PolicyHelper policyHelper = new DefaultPolicyHelper();
+        
+        ComponentReferenceLoader componentReferenceLoader = new ComponentReferenceLoader(policyHelper);
         ComponentLoader componentLoader = new ComponentLoader(loaderRegistry,
                                                               propertyValueLoader,
-                                                              componentReferenceLoader);
+                                                              componentReferenceLoader,
+                                                              policyHelper);
 
         IncludeLoader includeLoader = new IncludeLoader(loaderRegistry);
         CompositeLoader compositeLoader = new CompositeLoader(loaderRegistry,

@@ -139,7 +139,8 @@ public class DefaultWireResolverTestCase extends TestCase {
         CompositeImplementation impl = new CompositeImplementation();
         impl.setComponentType(type);
         ComponentDefinition<CompositeImplementation> definition =
-                new ComponentDefinition<CompositeImplementation>(parentUri.toString(), impl);
+                new ComponentDefinition<CompositeImplementation>(parentUri.toString());
+        definition.setImplementation(impl);
         URI id = URI.create("runtime");
         return new LogicalComponent<CompositeImplementation>(parentUri, id, definition, parent, definition.getKey());
     }
@@ -156,7 +157,8 @@ public class DefaultWireResolverTestCase extends TestCase {
         MockAtomicImpl impl = new MockAtomicImpl();
         impl.setComponentType(type);
         ComponentDefinition<MockAtomicImpl> definition =
-                new ComponentDefinition<MockAtomicImpl>(SOURCE_URI.toString(), impl);
+                new ComponentDefinition<MockAtomicImpl>(SOURCE_URI.toString());
+        definition.setImplementation(impl);
         ComponentReference target = new ComponentReference(REFERENCE_URI.getFragment());
         target.setAutowire(true);
         definition.add(target);
@@ -177,7 +179,8 @@ public class DefaultWireResolverTestCase extends TestCase {
         type.add(service);
         MockAtomicImpl impl = new MockAtomicImpl();
         impl.setComponentType(type);
-        ComponentDefinition<MockAtomicImpl> definition = new ComponentDefinition<MockAtomicImpl>(uri.toString(), impl);
+        ComponentDefinition<MockAtomicImpl> definition = new ComponentDefinition<MockAtomicImpl>(uri.toString());
+        definition.setImplementation(impl);
         URI id = URI.create("runtime");
         return new LogicalComponent<MockAtomicImpl>(uri, id, definition, parent, definition.getKey());
     }
