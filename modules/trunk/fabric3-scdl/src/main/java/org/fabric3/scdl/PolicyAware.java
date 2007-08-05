@@ -20,6 +20,8 @@ package org.fabric3.scdl;
 
 import javax.xml.namespace.QName;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -28,26 +30,37 @@ import java.util.Set;
  * 
  * @version $Revision$ $Date$
  */
-public interface PolicyAware {
+public abstract class PolicyAware extends ModelObject {
+    
+    private Set<QName> intents = new HashSet<QName>();
+    private Set<QName> policySets = new HashSet<QName>();
     
     /**
      * @return Returns all the declared intents against the element.
      */
-    Set<QName> getIntents();
+    public Set<QName> getIntents() {
+        return Collections.unmodifiableSet(intents);
+    }
     
     /**
      * @return Returns all the declared policy sets against the element.
      */
-    Set<QName> getPolicySets();
+    public Set<QName> getPolicySets() {
+        return Collections.unmodifiableSet(policySets);
+    }
     
     /**
      * @param intentName Add an intent against the element.
      */
-    void addIntent(QName intentName);
+    public void addIntent(QName intentName) {
+        intents.add(intentName);
+    }
     
     /**
      * @param policySetName Add a policy set against the element.
      */
-    void addPolicySet(QName policySetName);
+    public void addPolicySet(QName policySetName) {
+        policySets.add(policySetName);
+    }
 
 }

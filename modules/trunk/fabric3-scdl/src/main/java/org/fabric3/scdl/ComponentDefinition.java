@@ -39,7 +39,7 @@ import java.util.Map;
  *
  * @version $Rev$ $Date$
  */
-public class ComponentDefinition<I extends Implementation<?>> extends ModelObject {
+public class ComponentDefinition<I extends Implementation<?>> extends PolicyAware {
     private final String name;
     private URI runtimeId;
     private Autowire autowire = Autowire.INHERITED;

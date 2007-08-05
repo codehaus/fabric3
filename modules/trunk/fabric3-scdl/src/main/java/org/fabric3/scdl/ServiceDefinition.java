@@ -28,9 +28,10 @@ import java.util.List;
  *
  * @version $Rev$ $Date$
  */
-public class ServiceDefinition extends ModelObject {
+public class ServiceDefinition extends PolicyAware {
+    
     private String name;
-    private ServiceContract serviceContract;
+    private ServiceContract<?> serviceContract;
     private final List<BindingDefinition> bindings;
     private URI target;
 
@@ -72,7 +73,7 @@ public class ServiceDefinition extends ModelObject {
      *
      * @param contract the service contract
      */
-    public void setServiceContract(ServiceContract contract) {
+    public void setServiceContract(ServiceContract<?> contract) {
         this.serviceContract = contract;
     }
 

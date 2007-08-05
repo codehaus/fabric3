@@ -99,7 +99,7 @@ public class InstantiationTestCase extends TestCase {
         }
     }
 
-    private class MockImplementation extends Implementation<AbstractComponentType> {
+    private class MockImplementation extends Implementation<AbstractComponentType<?, ?, ?>> {
 
     }
 }

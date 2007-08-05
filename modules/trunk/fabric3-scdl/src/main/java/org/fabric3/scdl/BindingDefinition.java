@@ -25,7 +25,7 @@ import java.net.URI;
  *
  * @version $Rev$ $Date$
  */
-public abstract class BindingDefinition extends ModelObject {
+public abstract class BindingDefinition extends PolicyAware {
     private URI targetUri;
 
     protected BindingDefinition() {

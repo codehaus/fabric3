@@ -28,7 +28,7 @@ import java.util.List;
  *
  * @version $Rev$ $Date$
  */
-public class ReferenceDefinition extends ModelObject {
+public class ReferenceDefinition extends PolicyAware {
     
     private final String name;
     private ServiceContract<?> serviceContract;
