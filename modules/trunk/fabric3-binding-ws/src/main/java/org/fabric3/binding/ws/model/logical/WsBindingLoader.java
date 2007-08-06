@@ -30,6 +30,7 @@ import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
+import org.fabric3.spi.loader.PolicyHelper;
 import org.osoa.sca.Constants;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
@@ -42,13 +43,16 @@ public class WsBindingLoader extends LoaderExtension<WsBindingDefinition> {
 
     /** Qualified name for the binding element. */
     private static final QName BINDING_QNAME =  new QName(Constants.SCA_NS, "binding.ws");
+    
+    private final PolicyHelper policyHelper;
 
     /**
      * Injects the registry.
      * @param registry Loader registry.
      */
-    public WsBindingLoader(@Reference LoaderRegistry registry) {
+    public WsBindingLoader(@Reference LoaderRegistry registry, @Reference PolicyHelper policyHelper) {
         super(registry);
+        this.policyHelper = policyHelper;
     }
 
     /**
@@ -74,6 +78,8 @@ public class WsBindingLoader extends LoaderExtension<WsBindingDefinition> {
                 throw new LoaderException("The uri attribute is not specified");
             }
             bd.setTargetUri(new URI(uri));
+            
+            policyHelper.loadPolicySetsAndIntents(bd, reader);
 
             // TODO Add rest of the WSDL support
 

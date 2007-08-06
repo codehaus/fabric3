@@ -30,6 +30,7 @@ import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
+import org.fabric3.spi.loader.PolicyHelper;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
@@ -43,12 +44,15 @@ public class BurlapBindingLoader extends LoaderExtension<BurlapBindingDefinition
     private static final QName BINDING_QNAME = 
         new QName("http://www.fabric3.org/binding/burlap/0.1", "binding.burlap");
     
+    private final PolicyHelper policyHelper;
+    
     /**
      * Injects the registry.
      * @param registry Loader registry.
      */
-    public BurlapBindingLoader(@Reference LoaderRegistry registry) {
+    public BurlapBindingLoader(@Reference LoaderRegistry registry, @Reference PolicyHelper policyHelper) {
         super(registry);
+        this.policyHelper = policyHelper;
     }
 
     @Override
@@ -68,6 +72,8 @@ public class BurlapBindingLoader extends LoaderExtension<BurlapBindingDefinition
                 throw new LoaderException("The uri attribute is not specified");
             }
             bd.setTargetUri(new URI(uri));
+            
+            policyHelper.loadPolicySetsAndIntents(bd, reader);
             
         } catch(URISyntaxException ex) {
             throw new LoaderException(ex);

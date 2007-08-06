@@ -33,6 +33,7 @@ import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
+import org.fabric3.spi.loader.PolicyHelper;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.loader.MissingResourceException;
 import org.fabric3.pojo.processor.Introspector;
@@ -48,11 +49,14 @@ public class GroovyImplementationLoader implements StAXElementLoader<GroovyImple
 
     private final LoaderRegistry registry;
     private final Introspector introspector;
+    private final PolicyHelper policyHelper;
 
     public GroovyImplementationLoader(@Reference LoaderRegistry registry,
-                                      @Reference Introspector introspector) {
+                                      @Reference Introspector introspector,
+                                      @Reference PolicyHelper policyHelper) {
         this.registry = registry;
         this.introspector = introspector;
+        this.policyHelper = policyHelper;
     }
 
     @Init
@@ -67,9 +71,9 @@ public class GroovyImplementationLoader implements StAXElementLoader<GroovyImple
 
     public GroovyImplementation load(XMLStreamReader reader, LoaderContext context)
             throws XMLStreamException, LoaderException {
+        
         String className = reader.getAttributeValue(null, "class");
         String scriptName = reader.getAttributeValue(null, "script");
-        LoaderUtil.skipToEndElement(reader);
 
         Class<?> implClass;
         GroovyClassLoader gcl = new GroovyClassLoader(context.getTargetClassLoader());
@@ -98,6 +102,12 @@ public class GroovyImplementationLoader implements StAXElementLoader<GroovyImple
         if (componentType.getImplementationScope() == null) {
             componentType.setImplementationScope(Scope.STATELESS);
         }
-        return new GroovyImplementation(scriptName, className, componentType);
+        GroovyImplementation impl = new GroovyImplementation(scriptName, className, componentType);
+        
+        policyHelper.loadPolicySetsAndIntents(impl, reader);
+        
+        LoaderUtil.skipToEndElement(reader);
+        
+        return impl;
     }
 }

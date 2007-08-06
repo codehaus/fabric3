@@ -30,17 +30,21 @@ import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
+import org.fabric3.spi.loader.PolicyHelper;
 
 public class JavaImplementationLoader extends LoaderExtension<JavaImplementation> {
     public static final QName IMPLEMENTATION_JAVA = new QName(SCA_NS, "implementation.java");
 
     private final JavaComponentTypeLoader componentTypeLoader;
+    private final PolicyHelper policyHelper;
 
 
     public JavaImplementationLoader(@Reference LoaderRegistry registry,
-                                    @Reference JavaComponentTypeLoader componentTypeLoader) {
+                                    @Reference JavaComponentTypeLoader componentTypeLoader,
+                                    @Reference PolicyHelper policyHelper) {
         super(registry);
         this.componentTypeLoader = componentTypeLoader;
+        this.policyHelper = policyHelper;
     }
 
     @Override
@@ -50,12 +54,16 @@ public class JavaImplementationLoader extends LoaderExtension<JavaImplementation
 
     public JavaImplementation load(XMLStreamReader reader, LoaderContext loaderContext)
             throws XMLStreamException, LoaderException {
+        
         assert IMPLEMENTATION_JAVA.equals(reader.getName());
+        
+        JavaImplementation implementation = new JavaImplementation();
         String implClass = reader.getAttributeValue(null, "class");
+        
+        policyHelper.loadPolicySetsAndIntents(implementation, reader);
         LoaderUtil.skipToEndElement(reader);
 
         Class<?> implementationClass = LoaderUtil.loadClass(implClass, loaderContext.getTargetClassLoader());
-        JavaImplementation implementation = new JavaImplementation();
         implementation.setClassName(implClass);
         implementation.setImplementationClass(implementationClass);
         componentTypeLoader.load(implementation,  loaderContext);

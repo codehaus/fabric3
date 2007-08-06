@@ -36,6 +36,7 @@ import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
+import org.fabric3.spi.loader.PolicyHelper;
 import org.osoa.sca.Constants;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
@@ -48,14 +49,17 @@ public class JmsBindingLoader extends LoaderExtension<JmsBindingDefinition> {
 
     /** Qualified name for the binding element. */
     private static final QName BINDING_QNAME = new QName(Constants.SCA_NS, "binding.jms");
+    
+    private final PolicyHelper policyHelper;
 
     /**
      * Injects the registry.
      *
      * @param registry Loader registry.
      */
-    public JmsBindingLoader(@Reference LoaderRegistry registry) {
+    public JmsBindingLoader(@Reference LoaderRegistry registry, @Reference PolicyHelper policyHelper) {
         super(registry);
+        this.policyHelper = policyHelper;
     }
 
     /**
@@ -75,6 +79,7 @@ public class JmsBindingLoader extends LoaderExtension<JmsBindingDefinition> {
         throws XMLStreamException, LoaderException {
 
         JmsBindingMetadata metadata = new JmsBindingMetadata();
+        JmsBindingDefinition bd = new JmsBindingDefinition(metadata);
 
         final String correlationScheme = reader.getAttributeValue(null, "correlationScheme");
         if (correlationScheme != null) {
@@ -82,6 +87,8 @@ public class JmsBindingLoader extends LoaderExtension<JmsBindingDefinition> {
         }
         metadata.setJndiUrl(reader.getAttributeValue(null, "jndiURL"));
         metadata.setInitialContextFactory(reader.getAttributeValue(null, "initialContextFactory"));
+        
+        policyHelper.loadPolicySetsAndIntents(bd, reader);
 
         String name = null;
         while (true) {
@@ -103,7 +110,7 @@ public class JmsBindingLoader extends LoaderExtension<JmsBindingDefinition> {
                 case END_ELEMENT:
                     name = reader.getName().getLocalPart();
                     if("binding.jms".equals(name)) {
-                        return new JmsBindingDefinition(metadata);
+                        return bd;
                     }
                     break;
             }
