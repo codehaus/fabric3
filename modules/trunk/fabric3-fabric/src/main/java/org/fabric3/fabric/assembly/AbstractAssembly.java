@@ -18,8 +18,6 @@
  */
 package org.fabric3.fabric.assembly;
 
-import static org.osoa.sca.Constants.SCA_NS;
-
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,8 +25,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
 import javax.xml.namespace.QName;
+
+import static org.osoa.sca.Constants.SCA_NS;
 
 import org.fabric3.fabric.assembly.allocator.AllocationException;
 import org.fabric3.fabric.assembly.allocator.Allocator;
@@ -46,7 +45,6 @@ import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.ModelObject;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.command.Command;
@@ -61,6 +59,8 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.Referenceable;
 import org.fabric3.spi.model.physical.PhysicalChangeSet;
 import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.services.contribution.QNameSymbol;
+import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.util.UriHelper;
 
 /**
@@ -125,7 +125,11 @@ public abstract class AbstractAssembly implements Assembly {
     }
 
     public void includeInDomain(QName deployable) throws ActivateException {
-        ModelObject object = metadataStore.resolve(deployable);
+        ResourceElement<QNameSymbol, ?> element = metadataStore.resolve(new QNameSymbol(deployable));
+        if (element == null) {
+            throw new ArtifactNotFoundException("Deployable not found", deployable.toString());
+        }
+        Object object = element.getValue();
         if (!(object instanceof Composite)) {
             throw new IllegalContributionTypeException("Deployable must be a composite", deployable.toString());
         }
@@ -139,7 +143,7 @@ public abstract class AbstractAssembly implements Assembly {
         ComponentDefinition<CompositeImplementation> definition =
                 new ComponentDefinition<CompositeImplementation>("type");
         definition.setImplementation(impl);
-        activate(definition, true);
+        includeInDomain(definition);
         try {
             // record the operation
             assemblyStore.store(domain);
@@ -244,7 +248,7 @@ public abstract class AbstractAssembly implements Assembly {
         //URI uri = URI.create(baseUri.toString() + "/" + definition.getName());
         URI runtimeId = definition.getRuntimeId();
         String key = definition.getKey();
-        
+
         LogicalComponent<I> component = new LogicalComponent<I>(baseUri, runtimeId, definition, parent, key);
         if (Composite.class.isInstance(type)) {
             Composite compositeType = Composite.class.cast(type);

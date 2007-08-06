@@ -120,7 +120,6 @@
     <!-- Directory Scanner infrastructure -->
     <component name="ContributionDirectoryScanner" initLevel="100">
         <system:implementation.system class="org.fabric3.fabric.services.scanner.ContributionDirectoryScanner"/>
-        <property name="path">target/deployables</property>
     </component>
 
     <component name="FileSystemResourceFactoryRegistry">

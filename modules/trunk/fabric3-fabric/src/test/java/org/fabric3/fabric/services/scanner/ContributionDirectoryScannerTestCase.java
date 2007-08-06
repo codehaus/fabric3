@@ -1,9 +1,24 @@
+/*
+ * See the NOTICE file distributed with this work for information
+ * regarding copyright ownership.  This file is licensed
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.fabric3.fabric.services.scanner;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.namespace.QName;
@@ -20,6 +35,8 @@ import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.monitor.MonitorFactory;
+import org.fabric3.spi.services.event.EventService;
+import org.fabric3.spi.services.event.Fabric3EventListener;
 import org.fabric3.spi.services.scanner.FileSystemResource;
 import org.fabric3.spi.services.scanner.FileSystemResourceFactory;
 import org.fabric3.spi.services.scanner.FileSystemResourceFactoryRegistry;
@@ -40,6 +57,7 @@ public class ContributionDirectoryScannerTestCase extends TestCase {
     private FileSystemResourceFactoryRegistry registry;
     private MonitorFactory monitorFactory;
     private DistributedAssembly assembly;
+    private EventService eventService;
 
     public void testContributeAndActivate() throws Exception {
         File artifact = new File(directory, "test.txt");
@@ -161,7 +179,9 @@ public class ContributionDirectoryScannerTestCase extends TestCase {
                                                  contributionService,
                                                  assembly,
                                                  xstreamFactory,
-                                                 null, monitorFactory);
+                                                 eventService,
+                                                 monitorFactory);
+        recoveredScanner.init();
         recoveredScanner.recover();
         EasyMock.verify(contributionService);
         EasyMock.verify(assembly);
@@ -175,7 +195,6 @@ public class ContributionDirectoryScannerTestCase extends TestCase {
     public void testUpdateRecover() throws Exception {
         File artifact = new File(directory, "test.txt");
 
-        URL url = artifact.toURI().normalize().toURL();
         EasyMock.expect(contributionService.contribute(EasyMock.eq("DefaultStore"),
                                                        EasyMock.isA(ContributionSource.class))).andReturn(ARTIFACT_URI);
         EasyMock.expect(contributionService.getContributionTimestamp(ARTIFACT_URI)).andReturn(0L);
@@ -196,7 +215,9 @@ public class ContributionDirectoryScannerTestCase extends TestCase {
                                                  contributionService,
                                                  assembly,
                                                  xstreamFactory,
-                                                 null, monitorFactory);
+                                                 eventService,
+                                                 monitorFactory);
+        recoveredScanner.init();
         recoveredScanner.recover();
         // initiate a second scan since the recover will cache the added file
         recoveredScanner.run();
@@ -212,7 +233,6 @@ public class ContributionDirectoryScannerTestCase extends TestCase {
     public void testAddRecover() throws Exception {
         File artifact = new File(directory, "test.txt");
 
-        URL url = artifact.toURI().normalize().toURL();
         EasyMock.expect(contributionService.contribute(EasyMock.eq("DefaultStore"),
                                                        EasyMock.isA(ContributionSource.class))).andReturn(ARTIFACT_URI);
         EasyMock.replay(contributionService);
@@ -228,7 +248,9 @@ public class ContributionDirectoryScannerTestCase extends TestCase {
                                                  contributionService,
                                                  assembly,
                                                  xstreamFactory,
-                                                 null, monitorFactory);
+                                                 eventService,
+                                                 monitorFactory);
+        recoveredScanner.init();
         recoveredScanner.recover();
         // initiate a second scan since the recover will cache the added file
         recoveredScanner.run();
@@ -252,11 +274,20 @@ public class ContributionDirectoryScannerTestCase extends TestCase {
         EasyMock.expect(contributionService.getDeployables(ARTIFACT_URI)).andReturn(deployables);
 
         assembly = EasyMock.createMock(DistributedAssembly.class);
-        scanner = new ContributionDirectoryScanner(registry,
-                                                   contributionService, assembly, xstreamFactory, null, monitorFactory);
         directory = new File("../deploy");
         directory.mkdir();
         FileHelper.cleanDirectory(directory);
+        eventService = EasyMock.createMock(EventService.class);
+        eventService.subscribe(EasyMock.isA(Class.class), EasyMock.isA(Fabric3EventListener.class));
+        EasyMock.expectLastCall().anyTimes();
+        EasyMock.replay(eventService);
+        scanner = new ContributionDirectoryScanner(registry,
+                                                   contributionService,
+                                                   assembly,
+                                                   xstreamFactory,
+                                                   eventService,
+                                                   monitorFactory);
+        scanner.init();
     }
 
 

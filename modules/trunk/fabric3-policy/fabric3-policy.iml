@@ -14,6 +14,8 @@
     <orderEntry type="module" module-name="fabric3-extension" exported="" />
     <orderEntry type="module" module-name="fabric3-policy-spi" exported="" />
     <orderEntry type="module" module-name="fabric3-spi" exported="" />
+    <orderEntry type="module" module-name="sca-spec" />
+    <orderEntry type="module" module-name="fabric3-scdl" />
     <orderEntryProperties />
   </component>
 </module>

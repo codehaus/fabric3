@@ -17,12 +17,12 @@
 package org.fabric3.spi.services.contribution;
 
 /**
- * Encapsulates an addressable key for a symbol space
+ * Encapsulates an addressable key for a symbol space.
  *
  * @version $Rev$ $Date$
  */
 public abstract class Symbol<KEY> {
-    private KEY key;
+    protected KEY key;
 
     public Symbol(KEY key) {
         this.key = key;
@@ -31,4 +31,24 @@ public abstract class Symbol<KEY> {
     public KEY getKey() {
         return key;
     }
+
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Symbol symbol = (Symbol) o;
+
+        return !(key != null ? !key.equals(symbol.key) : symbol.key != null);
+
+    }
+
+    public int hashCode() {
+        return (key != null ? key.hashCode() : 0);
+    }
+
+
 }

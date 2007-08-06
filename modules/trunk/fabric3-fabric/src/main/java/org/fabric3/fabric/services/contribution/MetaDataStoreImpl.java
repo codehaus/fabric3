@@ -41,7 +41,6 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.fabric.services.xstream.XStreamFactory;
 import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.host.runtime.HostInfo;
-import org.fabric3.scdl.ModelObject;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionStoreRegistry;
 import org.fabric3.spi.services.contribution.Export;
@@ -50,6 +49,7 @@ import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.MetaDataStoreException;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
+import org.fabric3.spi.services.contribution.Symbol;
 
 /**
  * Default IndexStore implementation
@@ -152,20 +152,19 @@ public class MetaDataStoreImpl implements MetaDataStore {
         return cache.get(contributionUri);
     }
 
-    // XCV refactor this method to resolve symbol
-    public ModelObject resolve(QName deployable) {
+    @SuppressWarnings({"unchecked"})
+    public <S extends Symbol> ResourceElement<S, ?> resolve(S symbol) {
         for (Contribution contribution : cache.values()) {
             for (Resource resource : contribution.getResources()) {
                 for (ResourceElement<?, ?> element : resource.getResourceElements()) {
-                    if (element.getSymbol().getKey().equals(deployable)) {
-                        return (ModelObject) element.getValue();
+                    if (element.getSymbol().equals(symbol)) {
+                        return (ResourceElement<S, ?>) element;
                     }
                 }
             }
         }
         return null;
     }
-
 
     /**
      * Resolves an import to a Contribution that exports it
