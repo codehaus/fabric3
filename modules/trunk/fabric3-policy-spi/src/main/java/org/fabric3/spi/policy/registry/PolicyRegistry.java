@@ -22,6 +22,8 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
+import org.fabric3.scdl.definitions.BindingType;
+import org.fabric3.scdl.definitions.ImplementationType;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.scdl.definitions.PolicySetExtension;
@@ -44,6 +46,16 @@ public interface PolicyRegistry {
      * @param intent Intent that needs to be registered.
      */
     void registerIntent(Intent intent);
+    
+    /**
+     * @param bindingType Binding type to be registered.
+     */
+    void registerBindingType(BindingType bindingType);
+    
+    /**
+     * @param implementationType Implementation type to be registered.
+     */
+    void registerImplementationType(ImplementationType implementationType);
     
     /**
      * Finds the interceptor qnames for the SCA artifact based on the rules 

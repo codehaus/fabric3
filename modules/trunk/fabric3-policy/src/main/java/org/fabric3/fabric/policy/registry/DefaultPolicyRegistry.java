@@ -27,6 +27,8 @@ import javax.xml.namespace.QName;
 
 import org.fabric3.spi.model.instance.LogicalScaArtifact;
 import org.fabric3.scdl.ModelObject;
+import org.fabric3.scdl.definitions.BindingType;
+import org.fabric3.scdl.definitions.ImplementationType;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.scdl.definitions.PolicySetExtension;
@@ -43,6 +45,9 @@ public class DefaultPolicyRegistry implements PolicyRegistry {
 
     private Set<PolicySet> policySets = new HashSet<PolicySet>();
     private Map<QName, Intent> intents = new HashMap<QName, Intent>();
+    private Map<QName, BindingType> bindingTypes = new HashMap<QName, BindingType>();
+    private Map<QName, ImplementationType> implementationTypes = new HashMap<QName, ImplementationType>();
+    
     private MetaDataStore metaDataStore;
     
     /**
@@ -105,6 +110,20 @@ public class DefaultPolicyRegistry implements PolicyRegistry {
     }
 
     /**
+     * @see org.fabric3.spi.policy.registry.PolicyRegistry#registerBindingType(org.fabric3.scdl.definitions.BindingType)
+     */
+    public void registerBindingType(BindingType bindingType) {
+        bindingTypes.put(bindingType.getName(), bindingType);
+    }
+
+    /**
+     * @see org.fabric3.spi.policy.registry.PolicyRegistry#registerImplementationType(org.fabric3.scdl.definitions.ImplementationType)
+     */
+    public void registerImplementationType(ImplementationType implementationType) {
+        implementationTypes.put(implementationType.getName(), implementationType);
+    }
+
+    /**
      * @see org.fabric3.spi.policy.registry.PolicyRegistry#deploy(javax.xml.namespace.QName)
      */
     public void deploy(QName definitionArtifact) {
@@ -114,6 +133,10 @@ public class DefaultPolicyRegistry implements PolicyRegistry {
             registerIntent((Intent) modelObject);
         } else if(modelObject instanceof PolicySet) {
             registerPolicySet((PolicySet) modelObject);
+        } else if(modelObject instanceof BindingType) {
+            registerBindingType((BindingType) modelObject);
+        } else if(modelObject instanceof ImplementationType) {
+            registerImplementationType((ImplementationType) modelObject);
         }
         
     }

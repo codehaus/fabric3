@@ -48,6 +48,8 @@ public class DefinitionsLoader implements StAXElementLoader<Definitions> {
     static final QName INTENT = new QName(SCA_NS, "intent");
     static final QName DESCRIPTION = new QName(SCA_NS, "description");
     static final QName POLICY_SET = new QName(SCA_NS, "policySet");
+    static final QName BINDING_TYPE = new QName(SCA_NS, "bindingType");
+    static final QName IMPLEMENTATION_TYPE = new QName(SCA_NS, "implementationType");
     
     private static final QName DEFINITIONS = new QName(SCA_NS, "definitions");
     

@@ -18,17 +18,11 @@
  */
 package org.fabric3.loader.common;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.StringTokenizer;
-
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.scdl.PolicyAware;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.PolicyHelper;
-import org.fabric3.spi.util.stax.InvalidPrefixException;
 import org.fabric3.spi.util.stax.StaxUtil;
 
 /**
@@ -43,27 +37,9 @@ public class DefaultPolicyHelper implements PolicyHelper {
      */
     public void loadPolicySetsAndIntents(PolicyAware policyAware, XMLStreamReader reader) throws LoaderException {
         
-        policyAware.setIntents(parseListOfQNames(reader, "requires"));
-        policyAware.setIntents(parseListOfQNames(reader, "policySets"));
+        policyAware.setIntents(StaxUtil.parseListOfQNames(reader, "requires"));
+        policyAware.setIntents(StaxUtil.parseListOfQNames(reader, "policySets"));
 
-    }
-    
-    /*
-     * Parses a list of qualified names.
-     */
-    private Set<QName> parseListOfQNames(XMLStreamReader reader, String attribute) throws InvalidPrefixException {
-        
-        Set<QName> qNames = new HashSet<QName>();
-        
-        String val = reader.getAttributeValue(null, attribute);
-        if(val != null) {
-            StringTokenizer tok = new StringTokenizer(val);
-            while(tok.hasMoreElements()) {
-                qNames.add(StaxUtil.createQName(tok.nextToken(), reader));
-            }
-        }
-        
-        return qNames;
     }
 
 }
