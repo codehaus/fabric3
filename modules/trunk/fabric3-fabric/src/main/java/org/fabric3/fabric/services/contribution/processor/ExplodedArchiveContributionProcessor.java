@@ -124,15 +124,16 @@ public class ExplodedArchiveContributionProcessor extends ArchiveContributionPro
                 try {
                     reader.close();
                 } catch (XMLStreamException e) {
-                    // ignore
+                    // TODO log exception
+                    e.printStackTrace();
                 }
             }
             if (stream != null) {
                 try {
                     stream.close();
                 } catch (IOException e) {
-                    //noinspection ThrowFromFinallyBlock
-                    throw new ContributionException(e);
+                    // TODO log exception
+                    e.printStackTrace();
                 }
             }
         }
@@ -157,10 +158,12 @@ public class ExplodedArchiveContributionProcessor extends ArchiveContributionPro
             if (file.isDirectory()) {
                 processDirectory(contribution, dir);
             } else {
+                InputStream stream = null;
                 try {
                     URL entryUrl = file.toURI().toURL();
                     String contentType = contentTypeResolver.getContentType(entryUrl);
-                    Resource resource = registry.processResource(contentType, entryUrl.openStream());
+                    stream = entryUrl.openStream();
+                    Resource resource = registry.processResource(contentType, stream);
                     if (resource != null) {
                         contribution.addResource(resource);
                     }
@@ -170,6 +173,15 @@ public class ExplodedArchiveContributionProcessor extends ArchiveContributionPro
                     throw new ContributionException(e);
                 } catch (ContentTypeResolutionException e) {
                     throw new ContributionException(e);
+                } finally {
+                    try {
+                        if (stream != null) {
+                            stream.close();
+                        }
+                    } catch (IOException e) {
+                        // TODO log exception
+                        e.printStackTrace();
+                    }
                 }
             }
         }

@@ -124,7 +124,6 @@ public class ZipContributionProcessor extends ArchiveContributionProcessor imple
         }
     }
 
-    @SuppressWarnings({"ThrowFromFinallyBlock"})
     protected void processManifest(Contribution contribution) throws ContributionException {
         ZipFile zip = null;
         XMLStreamReader reader = null;
@@ -154,7 +153,8 @@ public class ZipContributionProcessor extends ArchiveContributionProcessor imple
                 try {
                     reader.close();
                 } catch (XMLStreamException e) {
-                    // ignore
+                    // TODO log exception
+                    e.printStackTrace();
                 }
             }
             if (zip != null) {
@@ -162,7 +162,8 @@ public class ZipContributionProcessor extends ArchiveContributionProcessor imple
                     // close zip and input stream
                     zip.close();
                 } catch (IOException e) {
-                    throw new ContributionException(e);
+                    // TODO log exception
+                    e.printStackTrace();
                 }
             }
         }

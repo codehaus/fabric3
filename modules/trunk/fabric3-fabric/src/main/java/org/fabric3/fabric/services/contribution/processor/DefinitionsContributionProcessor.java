@@ -114,8 +114,8 @@ public class DefinitionsContributionProcessor extends ContributionProcessorExten
                     stream.close();
                 }
             } catch (IOException e) {
-                //noinspection ThrowFromFinallyBlock
-                throw new ContributionException(e);
+                // TODO log exception
+                e.printStackTrace();
             }
         }
 

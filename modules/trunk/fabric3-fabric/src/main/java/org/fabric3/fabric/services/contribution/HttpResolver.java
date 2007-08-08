@@ -79,8 +79,8 @@ public class HttpResolver implements ArtifactResolver {
                     stream.close();
                 }
             } catch (IOException e) {
-                //noinspection ThrowFromFinallyBlock
-                throw new ResolutionException("Error closing stream", e);
+                // TODO log exception
+                e.printStackTrace();
             }
         }
     }

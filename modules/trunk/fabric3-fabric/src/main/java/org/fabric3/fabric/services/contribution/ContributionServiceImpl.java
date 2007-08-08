@@ -99,8 +99,8 @@ public class ContributionServiceImpl implements ContributionService {
                         stream.close();
                     }
                 } catch (IOException e) {
-                    //noinspection ThrowFromFinallyBlock
-                    throw new ContributionException(e);
+                    // TODO log exception
+                    e.printStackTrace();
                 }
             }
 
@@ -145,8 +145,8 @@ public class ContributionServiceImpl implements ContributionService {
                     is.close();
                 }
             } catch (IOException e) {
-                //noinspection ThrowFromFinallyBlock
-                throw new ContributionException("Contribution error", e);
+                // TODO log exception
+                e.printStackTrace();
             }
         }
     }

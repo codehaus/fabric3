@@ -82,8 +82,8 @@ public class AssemblyStoreImpl implements AssemblyStore {
                 try {
                     fos.close();
                 } catch (IOException e) {
-                    //noinspection ThrowFromFinallyBlock
-                    throw new RecordException("Error serializing assembly", e);
+                    // TODO log exception
+                    e.printStackTrace();
                 }
             }
         }
@@ -113,8 +113,8 @@ public class AssemblyStoreImpl implements AssemblyStore {
                 try {
                     fin.close();
                 } catch (IOException e) {
-                    //noinspection ThrowFromFinallyBlock
-                    throw new RecoveryException("Error recovering assembly", e);
+                    // TODO log exception
+                    e.printStackTrace();
                 }
             }
         }

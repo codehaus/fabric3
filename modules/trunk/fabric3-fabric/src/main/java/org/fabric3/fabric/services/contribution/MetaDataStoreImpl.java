@@ -136,9 +136,8 @@ public class MetaDataStoreImpl implements MetaDataStore {
                     try {
                         fos.close();
                     } catch (IOException e) {
-                        String identifier = contribution.getUri().toString();
-                        //noinspection ThrowFromFinallyBlock
-                        throw new MetaDataStoreException("Error storing contribution", identifier, e);
+                        // TODO log exception
+                        e.printStackTrace();
                     }
                 }
             }
