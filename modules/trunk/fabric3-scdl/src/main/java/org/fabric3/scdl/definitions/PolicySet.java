@@ -18,53 +18,42 @@
  */
 package org.fabric3.scdl.definitions;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
-
-import org.fabric3.scdl.ModelObject;
 
 /**
  * Model object that represents a policy set.
  *
  * @version $Revision$ $Date$
  */
-public final class PolicySet extends ModelObject {
-    
-    /** Qualified name of the policy set. */
-    private QName name;
+public final class PolicySet extends AbstractDefinition {
     
     /** Intents provided by this policy set. */
-    private Set<QName> provides = new HashSet<QName>();
+    private final Set<QName> provides;
     
     /** Policy set extension */
-    private PolicySetExtension extension;
+    private final PolicySetExtension extension;
     
     /** XPath expression for the apples to attribute. */
-    private String appliesTo;
+    private final String appliesTo;
 
     /**
      * Initializes the state for the policy set.
      * 
      * @param name Name of the policy set.
      * @param provides Intents provided by this policy set.
-     * @param interceptorBuilders Builders for the interceptors that implement this policy set.
      * @param appliesTo XPath expression for the apples to attribute.
+     * @param extension Extension for the policy set.
      */
-    public PolicySet(QName name, Set<QName> provides, String appliesTo) {
-        this.name = name;
-        this.provides.addAll(provides);
+    public PolicySet(QName name, Set<QName> provides, String appliesTo, PolicySetExtension extendion) {
+        
+        super(name);
+
+        this.provides = provides;
         this.appliesTo = appliesTo;
-    }
-    
-    /**
-     * Name of the policy set.
-     * 
-     * @return Qualified name of the policy set.
-     */
-    public QName getName() {
-        return name;
+        this.extension = extendion;
+        
     }
     
     /**
@@ -95,43 +84,12 @@ public final class PolicySet extends ModelObject {
     public boolean doesProvide(Set<QName> intents) {
         return provides.containsAll(intents);
     }
-    
-    /**
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals(Object other) {
-        return other instanceof PolicySet && ((PolicySet) other).name.equals(name);
-    }
-
-    /**
-     * @see java.lang.Object#hashCode()
-     */
-    @Override
-    public int hashCode() {
-        return name.hashCode();
-    }
-
-    /**
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString() {
-        return name.toString();
-    }
 
     /**
      * @return Extension for the policy set.
      */
     public PolicySetExtension getExtension() {
         return extension;
-    }
-
-    /**
-     * @param extension Extension for the policy set.
-     */
-    public void setExtension(PolicySetExtension extension) {
-        this.extension = extension;
     }
 
 }

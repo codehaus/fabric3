@@ -18,6 +18,8 @@
  */
 package org.fabric3.loader.definitions;
 
+import java.util.Set;
+
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -57,14 +59,12 @@ public class BindingTypeLoader implements StAXElementLoader<BindingType> {
         String name = reader.getAttributeValue(null, "name");
         QName qName = new QName(context.getTargetNamespace(), name);
         
-        BindingType bindingType = new BindingType();
-        bindingType.setName(qName);
-        bindingType.setAlwaysProvide(StaxUtil.parseListOfQNames(reader, "alwaysProvides"));
-        bindingType.setAlwaysProvide(StaxUtil.parseListOfQNames(reader, "mayProvide"));
+        Set<QName> alwaysProvides = StaxUtil.parseListOfQNames(reader, "alwaysProvides");
+        Set<QName> mayProvide = StaxUtil.parseListOfQNames(reader, "mayProvide");
         
         LoaderUtil.skipToEndElement(reader);
         
-       return bindingType;
+        return new BindingType(qName, alwaysProvides, mayProvide);
 
         
     }

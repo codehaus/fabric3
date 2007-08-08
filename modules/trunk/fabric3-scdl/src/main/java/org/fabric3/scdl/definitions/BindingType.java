@@ -18,66 +18,45 @@
  */
 package org.fabric3.scdl.definitions;
 
+import java.util.Collections;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
-
-import org.fabric3.scdl.ModelObject;
 
 /**
  * Represents a binding type.
  * 
  * @version $Revision$ $Date$
  */
-public class BindingType extends ModelObject {
+public class BindingType extends AbstractDefinition {
 
-    private Set<QName> alwaysProvide;
-    private Set<QName> mayProvide;
-    private QName name;
-
+    private final Set<QName> alwaysProvide;
+    private final Set<QName> mayProvide;
+    
     /**
-     * @return the alwaysProvide
+     * @param name Name of the binding type.
+     * @param alwaysProvide Intents this binding always provide.
+     * @param mayProvide  Intents this binding may provide.
      */
-    public Set<QName> getAlwaysProvide() {
-        return alwaysProvide;
-    }
-
-    /**
-     * @param alwaysProvide
-     *            the alwaysProvide to set
-     */
-    public void setAlwaysProvide(Set<QName> alwaysProvide) {
+    public BindingType(final QName name, Set<QName> alwaysProvide, Set<QName> mayProvide) {
+        super(name);
         this.alwaysProvide = alwaysProvide;
-    }
-
-    /**
-     * @return the mayProvide
-     */
-    public Set<QName> getMayProvide() {
-        return mayProvide;
-    }
-
-    /**
-     * @param mayProvide
-     *            the mayProvide to set
-     */
-    public void setMayProvide(Set<QName> mayProvide) {
         this.mayProvide = mayProvide;
     }
 
     /**
-     * @return the name
+     * @return Intents this binding always provide.
      */
-    public QName getName() {
-        return name;
+    public Set<QName> getAlwaysProvide() {
+        return Collections.unmodifiableSet(alwaysProvide);
     }
 
     /**
-     * @param name
-     *            the name to set
+     * @return Intents this binding may provide.
      */
-    public void setName(QName name) {
-        this.name = name;
+    public Set<QName> getMayProvide() {
+        return Collections.unmodifiableSet(mayProvide);
     }
+
 
 }

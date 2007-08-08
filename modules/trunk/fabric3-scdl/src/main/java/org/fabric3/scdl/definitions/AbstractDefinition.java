@@ -18,44 +18,54 @@
  */
 package org.fabric3.scdl.definitions;
 
-import java.util.Collections;
-import java.util.Set;
-
 import javax.xml.namespace.QName;
 
+import org.fabric3.scdl.ModelObject;
+
 /**
- * Represents an implementation type.
- * 
  * @version $Revision$ $Date$
  */
-public class ImplementationType extends AbstractDefinition {
-
-    private final Set<QName> alwaysProvide;
-    private final Set<QName> mayProvide;
+public abstract class AbstractDefinition extends ModelObject {
+    
+    private final QName name;
     
     /**
-     * @param name Name of the implementation type.
-     * @param alwaysProvide Intents this implementation always provide.
-     * @param mayProvide  Intents this implementation may provide.
+     * @param name Name of the definition object.
      */
-    public ImplementationType(final QName name, Set<QName> alwaysProvide, Set<QName> mayProvide) {
-        super(name);
-        this.alwaysProvide = alwaysProvide;
-        this.mayProvide = mayProvide;
+    public AbstractDefinition(QName name) {
+        this.name = name;
     }
 
     /**
-     * @return Intents this implementation always provide.
+     * @return Qualified name of the definition.
      */
-    public Set<QName> getAlwaysProvide() {
-        return Collections.unmodifiableSet(alwaysProvide);
+    public final QName getName() {
+        return name;
+    }
+    
+    /**
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object other) {
+        
+        if(other == null) {
+            return false;
+        }
+        
+        if(this.getClass() != other.getClass()) {
+            return false;
+        }
+        
+        return ((AbstractDefinition) other).name.equals(name);
     }
 
     /**
-     * @return Intents this implementation may provide.
+     * @see java.lang.Object#hashCode()
      */
-    public Set<QName> getMayProvide() {
-        return Collections.unmodifiableSet(mayProvide);
+    @Override
+    public int hashCode() {
+        return name.hashCode();
     }
 
 }

@@ -27,9 +27,9 @@
            name="org.fabric3.fabric.Loader"
            autowire="true">
 
-    <!-- Policy registry -->
-    <component name="policyRegistry">
-        <system:implementation.system class="org.fabric3.fabric.policy.registry.DefaultPolicyRegistry"/>
+    <!-- Policy resolver -->
+    <component name="policyResolver">
+        <system:implementation.system class="org.fabric3.fabric.policy.registry.DefaultPolicyResolver"/>
     </component>
     
     <!-- Simple interceptor builder -->

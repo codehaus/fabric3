@@ -22,10 +22,7 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.scdl.definitions.BindingType;
-import org.fabric3.scdl.definitions.ImplementationType;
-import org.fabric3.scdl.definitions.Intent;
-import org.fabric3.scdl.definitions.PolicySet;
+import org.fabric3.scdl.definitions.AbstractDefinition;
 
 /**
  * Registry of binding types, implementation types, intents and policy sets 
@@ -36,67 +33,30 @@ import org.fabric3.scdl.definitions.PolicySet;
 public interface DefinitionsRegistry {
     
     /**
-     * @param policySet Policy set that needs to be registered.
+     * Registers a definition object.
+     * 
+     * @param definition Definition that needs to be registered.
+     * @param definitionClass Definition class.
      */
-    void registerPolicySet(PolicySet policySet);
+    <D extends AbstractDefinition> void registerDefinition(D definition, Class<D> definitionClass);
     
     /**
-     * @param intent Intent that needs to be registered.
+     * Returns all the definitions of a given type.
+     * 
+     * @param <D> Definition type.
+     * @param definitionClass Definition class.
+     * @return All definitions of the given type.
      */
-    void registerIntent(Intent intent);
+    <D extends AbstractDefinition> Set<D> getAllDefinitions(Class<D> definitionClass);
     
     /**
-     * @param bindingType Binding type to be registered.
+     * Returns the definition of specified type and qualified name.
+     * 
+     * @param <D> Definition type.
+     * @param name Qualified name of the definition object.
+     * @param definitionClass Definition class.
+     * @return Requested definition object if available, otherwise null.
      */
-    void registerBindingType(BindingType bindingType);
-    
-    /**
-     * @param implementationType Implementation type to be registered.
-     */
-    void registerImplementationType(ImplementationType implementationType);
-    
-    /**
-     * @return All the policy sets available in the domain.
-     */
-    Set<PolicySet> getAllPolicySets();
-    
-    /**
-     * @param name Name of the policy set queried.
-     * @return Queried policy set if available, otherwise null.
-     */
-    PolicySet getPolicySet(QName name);
-    
-    /**
-     * @return All the policy sets available in the domain.
-     */
-    Set<Intent> getAllIntents();
-    
-    /**
-     * @param name Name of the intent queried.
-     * @return Queried intent if available, otherwise null.
-     */
-    Intent getIntent(QName name);
-    
-    /**
-     * @return All the implementation types available in the domain.
-     */
-    Set<ImplementationType> getAllImplementationTypes();
-    
-    /**
-     * @param name Name of the implementation type queried.
-     * @return Implementation type if available, otherwise null.
-     */
-    ImplementationType getImplementationType(QName name);
-    
-    /**
-     * @return All the binding types available in the domain.
-     */
-    Set<BindingType> getAllBindingTypes();
-    
-    /**
-     * @param name Name of the binding type queried.
-     * @return Binding type if available, otherwise null.
-     */
-    BindingType getBindingType(QName name);
+    <D extends AbstractDefinition> D getDefinition(QName name, Class<D> definitionClass);
 
 }

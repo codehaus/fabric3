@@ -18,6 +18,8 @@
  */
 package org.fabric3.loader.definitions;
 
+import java.util.Set;
+
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -56,15 +58,12 @@ public class ImplementationTypeLoader implements StAXElementLoader<Implementatio
         String name = reader.getAttributeValue(null, "name");
         QName qName = new QName(context.getTargetNamespace(), name);
         
-        ImplementationType implementationType = new ImplementationType();
-        implementationType.setName(qName);
-        implementationType.setAlwaysProvide(StaxUtil.parseListOfQNames(reader, "alwaysProvides"));
-        implementationType.setAlwaysProvide(StaxUtil.parseListOfQNames(reader, "mayProvide"));
+        Set<QName> alwaysProvides = StaxUtil.parseListOfQNames(reader, "alwaysProvides");
+        Set<QName> mayProvide = StaxUtil.parseListOfQNames(reader, "mayProvide");
         
         LoaderUtil.skipToEndElement(reader);
         
-       return implementationType;
-
+        return new ImplementationType(qName, alwaysProvides, mayProvide);
         
     }
 

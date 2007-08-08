@@ -22,7 +22,6 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.scdl.ModelObject;
 import org.osoa.sca.Constants;
 
 /**
@@ -31,19 +30,13 @@ import org.osoa.sca.Constants;
  * @version $Revision$ $Date$
  *
  */
-public final class Intent extends ModelObject {
+public final class Intent extends AbstractDefinition {
     
     /** Binding QName */
-    private static final QName BINDING = new QName(Constants.SCA_NS, "binding");
+    public static final QName BINDING = new QName(Constants.SCA_NS, "binding");
     
     /** Implementation QName */
-    private static final QName IMPLEMENTATION = new QName(Constants.SCA_NS, "implementation");
-
-    /** Qualified name of the intent. */
-    private QName name;
-    
-    /** Description of the intent. */
-    private String description;
+    public static final QName IMPLEMENTATION = new QName(Constants.SCA_NS, "implementation");
     
     /** Intent type. */
     private IntentType intentType;
@@ -67,8 +60,7 @@ public final class Intent extends ModelObject {
      */
     public Intent(QName name, String description, QName constrains, Set<QName> requires) {
         
-        this.name = name;
-        this.description = description;
+        super(name);
         
         if(constrains != null) {
             if(!BINDING.equals(constrains) && !IMPLEMENTATION.equals(constrains)) {
@@ -134,15 +126,6 @@ public final class Intent extends ModelObject {
     }
     
     /**
-     * Returns the name of the intent.
-     * 
-     * @return Name of the intent.
-     */
-    public QName getName() {
-        return name;
-    }
-    
-    /**
      * Whether this intent constrains the specified type.
      * 
      * @param type Type of the SCA artifact.
@@ -150,30 +133,6 @@ public final class Intent extends ModelObject {
      */
     public boolean doesConstrain(QName type) {
         return type.equals(constrains);
-    }
-    
-    /**
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals(Object other) {
-        return other instanceof Intent && ((Intent) other).name.equals(name);
-    }
-
-    /**
-     * @see java.lang.Object#hashCode()
-     */
-    @Override
-    public int hashCode() {
-        return name.hashCode();
-    }
-
-    /**
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString() {
-        return name + "-" + description;
     }
 
 }

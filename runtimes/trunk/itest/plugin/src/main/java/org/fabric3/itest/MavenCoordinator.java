@@ -33,7 +33,7 @@ import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.EXTENSION_CONTRIBUTION_STORE;
-import static org.fabric3.fabric.runtime.ComponentNames.POLICY_REGISTRY_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.DEFINITIONS_DEPLOYER;
 import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
 import org.fabric3.fabric.runtime.ExtensionInitializationException;
 import org.fabric3.host.contribution.ContributionException;
@@ -51,7 +51,8 @@ import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.spi.policy.registry.PolicyRegistry;
+import org.fabric3.spi.services.definitions.DefinitionActivationException;
+import org.fabric3.spi.services.definitions.DefinitionsDeployer;
 import org.fabric3.spi.services.archive.ArchiveStore;
 import org.fabric3.spi.services.archive.ArchiveStoreException;
 
@@ -147,11 +148,13 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
                 ContributionSource source = new ClasspathContributionSource(definitionsFile, cl);
                 URI addedUri = contributionService.contribute("DefaultStore", source);
                 List<Deployable> deployables = contributionService.getDeployables(addedUri);
-                PolicyRegistry policyRegistry = runtime.getSystemComponent(PolicyRegistry.class, POLICY_REGISTRY_URI);
+                DefinitionsDeployer definitionsDeployer = runtime.getSystemComponent(DefinitionsDeployer.class, DEFINITIONS_DEPLOYER);
                 for (Deployable deployable : deployables) {
-                    policyRegistry.deploy(deployable.getName());
+                    definitionsDeployer.activateDefinition(deployable.getName());
                 }
             } catch (ContributionException e) {
+                throw new InitializationException(e);
+            } catch(DefinitionActivationException e) {
                 throw new InitializationException(e);
             }
         }

@@ -74,19 +74,18 @@ public class PolicySetLoader implements StAXElementLoader<PolicySet> {
         }
         
         String appliesTo = reader.getAttributeValue(null, "appliesTo");
-        
-        PolicySet policySet = new PolicySet(qName, provides, appliesTo);
 
+        PolicySetExtension extension = null;
+        
         while (true) {
             switch (reader.next()) {
             case START_ELEMENT:
                 // Only support we have is for extension elements
-                PolicySetExtension extension = registry.load(reader, PolicySetExtension.class, context);
-                policySet.setExtension(extension);
+                extension = registry.load(reader, PolicySetExtension.class, context);
                 break;
             case END_ELEMENT:
                 assert DefinitionsLoader.POLICY_SET.equals(reader.getName());
-                return policySet;
+                return new PolicySet(qName, provides, appliesTo, extension);
             }
         }
         

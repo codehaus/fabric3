@@ -130,4 +130,14 @@
         <system:implementation.system class="org.fabric3.fabric.classloader.ClassLoaderBuilder"/>
     </component>
 
+    <!-- Definitions registry -->
+    <component name="definitionsRegistry">
+        <system:implementation.system class="org.fabric3.fabric.services.definitions.DefaultDefinitionsRegistry"/>
+    </component>
+
+    <!-- Definitions deployer -->
+    <component name="definitionsDeployer">
+        <system:implementation.system class="org.fabric3.fabric.services.definitions.DefaultDefinitionsDeployer"/>
+    </component>
+
 </composite>
