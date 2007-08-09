@@ -18,7 +18,6 @@
  */
 package org.fabric3.spi.policy.registry;
 
-import org.fabric3.scdl.Implementation;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 
