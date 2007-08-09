@@ -52,12 +52,10 @@ public interface Assembly {
      * Activates a component at the domain level by provisioning physical artifacts to service nodes.
      *
      * @param definition the definition f the component to activate
-     * @param include    if true, a domain-level inclusion is performed. That is, for composites, childrent will be
-     *                   directly included in the domain and the containing composite will be discarded.
      * @throws ActivateException if an error is encountered during activation
      */
     @Deprecated
-    void activate(ComponentDefinition<?> definition, boolean include) throws ActivateException;
+    void activate(ComponentDefinition<?> definition) throws ActivateException;
 
     /**
      * Include a deployable Composite in the domain.
@@ -74,14 +72,6 @@ public interface Assembly {
      * @throws ActivateException if an error is encountered during activation
      */
     void includeInDomain(Composite composite) throws ActivateException;
-
-    /**
-     * Include a Component in the domain.
-     *
-     * @param definition the definition of the Component
-     * @throws ActivateException if an error is encountered during activation
-     */
-    void includeInDomain(ComponentDefinition<?> definition) throws ActivateException;
 
     /**
      * Binds a service.

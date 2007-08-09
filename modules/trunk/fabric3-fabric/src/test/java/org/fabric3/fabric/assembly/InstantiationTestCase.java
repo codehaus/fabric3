@@ -97,7 +97,7 @@ public class InstantiationTestCase extends TestCase {
 
         }
 
-        public void activate(ComponentDefinition<?> definition, boolean include) throws ActivateException {
+        public void activate(ComponentDefinition<?> definition) throws ActivateException {
         }
 
         protected Referenceable resolveTarget(URI uri, List<LogicalComponent<CompositeImplementation>> components)

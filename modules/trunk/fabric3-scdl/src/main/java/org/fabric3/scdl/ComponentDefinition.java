@@ -50,13 +50,23 @@ public class ComponentDefinition<I extends Implementation<?>> extends PolicyAwar
     private String key;
 
     /**
+     * Constructor specifying the component's name.
+     *
+     * @param name           the name of this component
+     */
+    public ComponentDefinition(String name) {
+        this.name = name;
+    }
+
+    /**
      * Constructor specifying the component's name and implementation.
      *
      * @param name           the name of this component
      * @param implementation the implementation of this component
      */
-    public ComponentDefinition(String name) {
+    public ComponentDefinition(String name, I implementation) {
         this.name = name;
+        this.implementation = implementation;
     }
 
     /**

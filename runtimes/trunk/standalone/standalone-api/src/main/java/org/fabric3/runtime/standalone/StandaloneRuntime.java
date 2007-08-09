@@ -30,15 +30,5 @@ import org.fabric3.host.runtime.Fabric3Runtime;
  *
  */
 public interface StandaloneRuntime extends Fabric3Runtime<StandaloneHostInfo> {
-    
-    /**
-     * Deploys the specified application SCDL and runs the lauched component within the deployed composite.
-     * 
-     * @param applicationScdl Application SCDL that implements the composite.
-     * @param applicationClassLoader Classloader used to deploy the composite.
-     * @param args Arguments to be passed to the lauched component.
-     * @deprecated This is a hack for deployment and should be removed.
-     */
-    int deployAndRun(URL applicationScdl, ClassLoader applicationClassLoader, String[] args) throws Exception;
 
 }

@@ -37,10 +37,9 @@ public interface WireResolver {
      *
      * @param targetComposite the target composite the component will be deployed into
      * @param component       the logical component to resolve for
-     * @param include         true if the component is being included
      * @throws ResolutionException if an error occurs during resolution
      */
-    void resolve(LogicalComponent<?> targetComposite, LogicalComponent<?> component, boolean include)
+    void resolve(LogicalComponent<?> targetComposite, LogicalComponent<?> component)
             throws ResolutionException;
 
     /**

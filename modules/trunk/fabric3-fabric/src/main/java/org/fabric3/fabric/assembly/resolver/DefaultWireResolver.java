@@ -50,25 +50,18 @@ public class DefaultWireResolver implements WireResolver {
         hostAutowire.put(contract, uri);
     }
 
-    public void resolve(LogicalComponent<?> targetComposite, LogicalComponent<?> component, boolean include)
+    public void resolve(LogicalComponent<?> targetComposite, LogicalComponent<?> component)
             throws ResolutionException {
         if (component.getComponents().isEmpty()) {
             resolveReferences(targetComposite, component, false);
         } else {
             for (LogicalComponent<?> child : component.getComponents()) {
-                // at the top level, if the operation is include, ensure target selection is done from siblings already
-                // in the parent or siblings in the included composite
-                if (include) {
-                    if (!child.getComponents().isEmpty()) {
-                        // resolve children
-                        resolveInternal(targetComposite, child);
-                    } else {
-                        // no children, resolve references directly using include semantics
-                        resolveReferences(targetComposite, child, true);
-                    }
-                } else {
+                if (!child.getComponents().isEmpty()) {
                     // resolve children
-                    resolveInternal(component, child);
+                    resolveInternal(targetComposite, child);
+                } else {
+                    // no children, resolve references directly using include semantics
+                    resolveReferences(targetComposite, child, true);
                 }
             }
         }
