@@ -86,6 +86,13 @@ import org.fabric3.spi.loader.LoaderContext;
  */
 public class Fabric3ITestMojo extends AbstractMojo {
     /**
+     * Do not run if this is set to true. This usage is consistent with the surefire plugin.
+     *
+     * @parameter expression="${maven.test.skip}" 
+     */
+    public boolean skip;
+
+    /**
      * The directory where reports will be written.
      *
      * @parameter expression="${project.build.directory}/surefire-reports"
@@ -214,6 +221,10 @@ public class Fabric3ITestMojo extends AbstractMojo {
     @SuppressWarnings({"ThrowFromFinallyBlock"})
     public void execute() throws MojoExecutionException, MojoFailureException {
         Log log = getLog();
+        if (skip) {
+            log.info("Skipping integration tests by user request.");
+            return;
+        }
         if (!testScdl.exists()) {
             log.info("No itest SCDL found, skipping integration tests");
             return;
