@@ -27,7 +27,7 @@
     <version>0.2-SNAPSHOT</version>
     <name>Fabric3 Hessian Binding</name>
     <description>Fabric3 Hessian Binding Implementation.</description>
-
+    <packaging>sca-contribution-jar</packaging>
     <repositories>
         <repository>
             <id>objectstyle.org</id>
@@ -43,19 +43,28 @@
     </repositories>
 
     <dependencies>
-    
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-extension</artifactId>
-            <version>0.2-SNAPSHOT</version>
-        </dependency>
 
         <dependency>
             <groupId>com.caucho</groupId>
             <artifactId>hessian</artifactId>
             <version>3.0.20</version>
         </dependency>
-		
+
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-extension</artifactId>
+            <version>0.2-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- maven is not picking up the SCDL dependency, so adding it explicitly -->
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-scdl</artifactId>
+            <version>0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
