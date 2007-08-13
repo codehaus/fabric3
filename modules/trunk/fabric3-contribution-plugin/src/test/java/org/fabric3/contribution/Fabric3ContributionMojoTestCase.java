@@ -27,7 +27,7 @@ public class Fabric3ContributionMojoTestCase extends AbstractMojoTestCase {
 	}
 
 	/* configure the mojo for execution */
-	protected Fabric3ContributionMojo configureMojo(String testName) throws Exception{
+	protected Fabric3ContributionMojo configureMojo(String testName, String type) throws Exception{
 		File testDirectory = getTestDirectory(testName);
 		File pomFile =  new File(testDirectory, "pom.xml");
 		Fabric3ContributionMojo mojo = (Fabric3ContributionMojo) lookupMojo("package", pomFile);
@@ -40,15 +40,16 @@ public class Fabric3ContributionMojoTestCase extends AbstractMojoTestCase {
 		SCAMavenProjectStub stub = new SCAMavenProjectStub(model);
 		stub.setFile(pomFile);
 		SCAArtifactStub artifact=new SCAArtifactStub();
+		artifact.setType(type);
 		setVariableValueToObject(mojo, "contributionName", "test");
 		artifact.setFile(new File( testDirectory, "test.zip" ));
 		stub.setArtifact(artifact);
 		setVariableValueToObject(mojo, "project", stub);
 		return mojo;
 	}
-	
+
 	public void testNoClassesDirectory() throws Exception {
-		Fabric3ContributionMojo mojo = configureMojo("no-directory");
+		Fabric3ContributionMojo mojo = configureMojo("no-directory","sca-contribution");
 		try{
 		mojo.execute();
 		}catch (Exception e){
@@ -59,11 +60,11 @@ public class Fabric3ContributionMojoTestCase extends AbstractMojoTestCase {
 		}
 		fail("directory does not exist, should have failed");
 	}
-	
-	
-	
+
+
+
 	public void testNoFile() throws Exception {
-		Fabric3ContributionMojo mojo = configureMojo("no-file");
+		Fabric3ContributionMojo mojo = configureMojo("no-file","sca-contribution");
 		try{
 		mojo.execute();
 		}catch (Exception e){
@@ -74,9 +75,9 @@ public class Fabric3ContributionMojoTestCase extends AbstractMojoTestCase {
 		}
 		fail("directory does not exist, should have failed");
 	}
-	
+
 	public void testCorrect() throws Exception {
-		Fabric3ContributionMojo mojo = configureMojo("correct");
+		Fabric3ContributionMojo mojo = configureMojo("correct","sca-contribution");
 		try{
 		mojo.execute();
 		}catch (Exception e){
@@ -85,7 +86,7 @@ public class Fabric3ContributionMojoTestCase extends AbstractMojoTestCase {
 		}
 		File testFile = new File (getTestDirectory("correct"), "target" + File.separator + "test.zip");
 		assertTrue(testFile.exists());
-		
+
 		HashSet jarContent = new HashSet();
 		JarFile jarFile = new JarFile( testFile );
         JarEntry entry;
@@ -98,11 +99,19 @@ public class Fabric3ContributionMojoTestCase extends AbstractMojoTestCase {
         }
         assertTrue( "sca-contribution.xml file not found", jarContent.contains( "META-INF/sca-contribution.xml" ) );
         assertTrue( "content not found", jarContent.contains( "test.properties" ) );
-        
+
 	}
-	
+
 	public void testDependencies() throws Exception {
-		Fabric3ContributionMojo mojo = configureMojo("dependency");
+		checkDependencies("sca-contribution");
+	}
+
+	public void testDependenciesJarType() throws Exception {
+		checkDependencies("sca-contribution-jar");
+	}
+
+	private void checkDependencies(String type) throws Exception {
+		Fabric3ContributionMojo mojo = configureMojo("dependency",type);
 		MavenProject p = mojo.project;
 		Set artifacts =p.getArtifacts();
 		SCAArtifactStub dep = new SCAArtifactStub();
@@ -115,6 +124,11 @@ public class Fabric3ContributionMojoTestCase extends AbstractMojoTestCase {
 		dep.setFile(new File (getTestDirectory("dependency"), "dep-2.jar"));
 		dep.setType("sca-contribution");
 		artifacts.add(dep);
+		dep = new SCAArtifactStub();
+		dep.setArtifactId("test-dep-3");
+		dep.setFile(new File (getTestDirectory("dependency"), "dep-3.jar"));
+		dep.setType("sca-contribution-jar");
+		artifacts.add(dep);
 		try{
 		mojo.execute();
 		}catch (Exception e){
@@ -123,7 +137,7 @@ public class Fabric3ContributionMojoTestCase extends AbstractMojoTestCase {
 		}
 		File testFile = new File (getTestDirectory("dependency"), "target" + File.separator + "test.zip");
 		assertTrue(testFile.exists());
-		
+
 		HashSet jarContent = new HashSet();
 		JarFile jarFile = new JarFile( testFile );
         JarEntry entry;
@@ -138,7 +152,8 @@ public class Fabric3ContributionMojoTestCase extends AbstractMojoTestCase {
         assertTrue( "content not found", jarContent.contains( "test.properties" ) );
         assertTrue( "dependency not added", jarContent.contains( "META-INF/lib/dep-1.jar" ) );
         assertFalse( "dependency of type sca-contribution should not have been added", jarContent.contains( "META-INF/lib/dep-2.jar" ) );
+        assertFalse( "dependency of type sca-contribution-jar should not have been added", jarContent.contains( "META-INF/lib/dep-3.jar" ) );
 	}
-	
+
 
 }

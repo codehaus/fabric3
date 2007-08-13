@@ -157,7 +157,7 @@ public class Fabric3ContributionMojo extends AbstractMojo {
         }
         return new File(buildDir, finalName + ".zip");
     }
-    
+
     protected void handleContributionFile(File contentDirectory)throws FileNotFoundException{
     	getLog().debug( "checking for sca-contribution.xml file");
     	File contributionFile = new File(contentDirectory,"META-INF"+ File.separator + "sca-contribution.xml");
@@ -166,7 +166,7 @@ public class Fabric3ContributionMojo extends AbstractMojo {
     		throw new FileNotFoundException(String.format("Missing sca-contribution.xml file %s",contributionFile));
     	}
     }
-    
+
     protected void includeDependencies(File contentDirectory) throws FileNotFoundException, IOException{
 	 	getLog().debug( "including dependencies in archive");
 	 	//include all the dependencies that are required for runtime operation and are not sca-contributions(they
@@ -175,7 +175,7 @@ public class Fabric3ContributionMojo extends AbstractMojo {
 	 	ScopeArtifactFilter filter = new ScopeArtifactFilter( Artifact.SCOPE_RUNTIME );
         for (Artifact artifact : (Set<Artifact>)project.getArtifacts() ) {
         	System.out.println("checking " + artifact.getArtifactId());
-        	boolean isSCAContribution = "sca-contribution".equals(artifact.getType());
+        	boolean isSCAContribution = artifact.getType().startsWith("sca-contribution");
             if ( !isSCAContribution && !artifact.isOptional() && filter.include( artifact ) ) {
             	getLog().debug( String.format("including dependency %s", artifact));
             	File destinationFile = new File( libDir, artifact.getFile().getName());
@@ -187,7 +187,7 @@ public class Fabric3ContributionMojo extends AbstractMojo {
             	FileChannel srcChannel = new FileInputStream(artifact.getFile()).getChannel();
             	srcChannel.transferTo(0, srcChannel.size(), destChannel);
             	destChannel.close();
-            	srcChannel.close();                
+            	srcChannel.close();
             }
         }
     }
