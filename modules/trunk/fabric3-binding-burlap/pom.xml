@@ -27,6 +27,7 @@
     <version>0.2-SNAPSHOT</version>
     <name>Fabric3 Burlap Binding</name>
     <description>Fabric3 Burlap Binding Implementation.</description>
+    <packaging>sca-contribution-jar</packaging>
 
     <repositories>
         <repository>
@@ -45,17 +46,18 @@
     <dependencies>
     
         <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-extension</artifactId>
-            <version>0.2-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.caucho</groupId>
             <artifactId>burlap</artifactId>
             <version>2.1.12</version>
         </dependency>
 		
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-extension</artifactId>
+            <version>0.2-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
@@ -76,5 +78,15 @@
         </dependency>
 
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.fabric3</groupId>
+                <artifactId>fabric3-contribution-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration/>
+            </plugin>
+        </plugins>
+    </build>
     
 </project>
