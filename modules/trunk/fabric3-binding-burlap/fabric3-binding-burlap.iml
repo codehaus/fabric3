@@ -15,6 +15,7 @@
     <orderEntry type="module" module-name="fabric3-extension" />
     <orderEntry type="library" name="servlet-api-2.4" level="application" />
     <orderEntry type="library" name="burlap-2.1.12" level="application" />
+    <orderEntry type="module" module-name="sca-spec" />
     <orderEntryProperties />
   </component>
 </module>
