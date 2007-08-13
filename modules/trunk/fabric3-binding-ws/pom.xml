@@ -26,6 +26,7 @@
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-binding-ws</artifactId>
     <version>0.2-SNAPSHOT</version>
+    <packaging>sca-contribution-jar</packaging>
     <name>Fabric3 WS Binding</name>
     <description>Fabric3 WS Binding Implementation using CXF.</description>
 
@@ -66,6 +67,7 @@
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-extension</artifactId>
             <version>0.2-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -110,5 +112,15 @@
         </dependency>
 
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.fabric3</groupId>
+                <artifactId>fabric3-contribution-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration/>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
