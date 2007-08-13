@@ -63,7 +63,7 @@
     <modules>
         <module>../../modules/trunk/fabric3-groovy</module>
     </modules>
-    
+
     <build>
         <defaultGoal>verify</defaultGoal>
         <plugins>
@@ -95,14 +95,13 @@
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-itest-plugin</artifactId>
                 <configuration>
-                    <systemScdl>file:${basedir}/src/test/resources/system.composite</systemScdl>
-                    <extensions>
+                    <contributions>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-groovy</artifactId>
-                            <version>0.1-SNAPSHOT</version>
+                            <version>0.2-SNAPSHOT</version>
                         </dependency>
-                    </extensions>
+                    </contributions>
                 </configuration>
                 <executions>
                     <execution>
