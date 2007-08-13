@@ -26,6 +26,10 @@ public class ExtensionInitializationException extends InitializationException {
         super(message, identifier, cause);
     }
 
+    public ExtensionInitializationException(String message, String identifier) {
+        super(message, identifier);
+    }
+
     public ExtensionInitializationException(String message, Throwable cause) {
         super(message, cause);
     }
