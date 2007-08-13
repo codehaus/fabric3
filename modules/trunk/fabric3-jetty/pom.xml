@@ -27,12 +27,14 @@
     <version>0.2-SNAPSHOT</version>
     <name>Fabric3 Jetty Transport</name>
     <description>Fabric3 HTTP Transport based on Jetty</description>
+    <packaging>sca-contribution-jar</packaging>
 
     <dependencies>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
             <version>0.1</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -57,4 +59,15 @@
             <artifactId>easymock</artifactId>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.fabric3</groupId>
+                <artifactId>fabric3-contribution-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration/>
+            </plugin>
+        </plugins>
+    </build>
+    
 </project>
