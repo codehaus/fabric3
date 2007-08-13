@@ -48,14 +48,6 @@
             <artifactId>sample-hello-common</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.apache.geronimo.specs</groupId>
-            <artifactId>geronimo-j2ee-connector_1.5_spec</artifactId>
-            <version>1.0.1</version>
-            <scope>provided</scope>
-        </dependency>
-
     </dependencies>
 
     <build>
@@ -89,8 +81,7 @@
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-itest-plugin</artifactId>
                 <configuration>
-                    <systemScdl>file:target/classes/META-INF/testSystem.composite</systemScdl>
-                    <extensions>
+                    <contributions>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-binding-burlap</artifactId>
@@ -99,14 +90,9 @@
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-jetty</artifactId>
-                            <version>0.1</version>
+                            <version>0.2-SNAPSHOT</version>
                         </dependency>
-                        <dependency>
-                            <groupId>org.apache.geronimo.specs</groupId>
-                            <artifactId>geronimo-j2ee-connector_1.5_spec</artifactId>
-                            <version>1.0.1</version>
-                        </dependency>
-                    </extensions>
+                    </contributions>
                 </configuration>
                 <executions>
                     <execution>
