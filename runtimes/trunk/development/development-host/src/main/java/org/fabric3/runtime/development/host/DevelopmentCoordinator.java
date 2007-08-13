@@ -184,7 +184,8 @@ public class DevelopmentCoordinator implements RuntimeLifecycleCoordinator<Devel
             List<URI> contributionUris = new ArrayList<URI>();
             File[] files = extensionsDirectory.listFiles(new FileFilter() {
                 public boolean accept(File pathname) {
-                    return pathname.getName().endsWith(".jar");
+                    String name = pathname.getName();
+                    return name.endsWith(".jar") || name.endsWith(".zip");
                 }
             });
             for (File file : files) {
