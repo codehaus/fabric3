@@ -17,7 +17,6 @@
 package org.fabric3.itest;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,14 +25,16 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import org.apache.maven.artifact.Artifact;
+
 import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.fabric.assembly.AssemblyException;
 import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.DEFINITIONS_DEPLOYER;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.EXTENSION_CONTRIBUTION_STORE;
-import static org.fabric3.fabric.runtime.ComponentNames.DEFINITIONS_DEPLOYER;
 import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
 import org.fabric3.fabric.runtime.ExtensionInitializationException;
 import org.fabric3.host.contribution.ContributionException;
@@ -51,10 +52,10 @@ import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.spi.services.definitions.DefinitionActivationException;
-import org.fabric3.spi.services.definitions.DefinitionsDeployer;
 import org.fabric3.spi.services.archive.ArchiveStore;
 import org.fabric3.spi.services.archive.ArchiveStoreException;
+import org.fabric3.spi.services.definitions.DefinitionActivationException;
+import org.fabric3.spi.services.definitions.DefinitionsDeployer;
 
 /**
  * Implementation of a coordinator for the iTest runtime.
@@ -77,7 +78,7 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
         ERROR
     }
 
-    private String[] contributions;
+    private Dependency[] dependencies;
     private State state = State.UNINITIALIZED;
     private MavenEmbeddedRuntime runtime;
     private Bootstrapper bootstrapper;
@@ -88,11 +89,12 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
     }
 
     /**
-     * @param contributions   Contributions to run in the test.
+     * @param dependencies    Runtime extensions to run in the test.
      * @param definitionsFile Definitions file.
+     * @param cl              the classloader to use for loading extensions
      */
-    public MavenCoordinator(String[] contributions, String definitionsFile, ClassLoader cl) {
-        this.contributions = contributions;
+    public MavenCoordinator(Dependency[] dependencies, String definitionsFile, ClassLoader cl) {
+        this.dependencies = dependencies;
         this.definitionsFile = definitionsFile;
         this.cl = cl;
     }
@@ -148,13 +150,14 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
                 ContributionSource source = new ClasspathContributionSource(definitionsFile, cl);
                 URI addedUri = contributionService.contribute("DefaultStore", source);
                 List<Deployable> deployables = contributionService.getDeployables(addedUri);
-                DefinitionsDeployer definitionsDeployer = runtime.getSystemComponent(DefinitionsDeployer.class, DEFINITIONS_DEPLOYER);
+                DefinitionsDeployer definitionsDeployer =
+                        runtime.getSystemComponent(DefinitionsDeployer.class, DEFINITIONS_DEPLOYER);
                 for (Deployable deployable : deployables) {
                     definitionsDeployer.activateDefinition(deployable.getName());
                 }
             } catch (ContributionException e) {
                 throw new InitializationException(e);
-            } catch(DefinitionActivationException e) {
+            } catch (DefinitionActivationException e) {
                 throw new InitializationException(e);
             }
         }
@@ -217,7 +220,7 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
     }
 
     private void includeExtensions(ContributionService contributionService) throws InitializationException {
-        if (contributions != null) {
+        if (dependencies != null) {
             ArchiveStore archiveStore = runtime.getSystemComponent(ArchiveStore.class, EXTENSION_CONTRIBUTION_STORE);
             if (archiveStore == null) {
                 String id = EXTENSION_CONTRIBUTION_STORE.toString();
@@ -225,14 +228,26 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
             }
             // contribute and activate extensions if they exist in the runtime domain
             List<URI> contributionUris = new ArrayList<URI>();
-            for (String contribution : contributions) {
+            for (Dependency dependency : dependencies) {
+                // create a uri from the dependency
+                String contribution;
+                if (dependency.getVersion() == null) {
+                    contribution =
+                            dependency.getGroupId() + ":" + dependency.getArtifactId() + ":" + Artifact.RELEASE_VERSION;
+
+                } else {
+                    contribution =
+                            dependency.getGroupId() + ":" + dependency.getArtifactId() + ":" + dependency.getVersion();
+                }
                 try {
-                    URL url = archiveStore.find(new URI(contribution));
+                    URL url = archiveStore.find(URI.create(contribution));
+                    if (url == null) {
+                        throw new ExtensionInitializationException("Extension not found in Maven Repository",
+                                                                   contribution);
+                    }
                     ContributionSource source = new FileContributionSource(url, -1, new byte[0]);
                     contributionUris.add(contributionService.contribute(EXTENSIONS, source));
                 } catch (ArchiveStoreException e) {
-                    throw new ExtensionInitializationException("Error contributing extension", contribution, e);
-                } catch (URISyntaxException e) {
                     throw new ExtensionInitializationException("Error contributing extension", contribution, e);
                 } catch (ContributionException e) {
                     throw new ExtensionInitializationException("Error contributing extension", contribution, e);

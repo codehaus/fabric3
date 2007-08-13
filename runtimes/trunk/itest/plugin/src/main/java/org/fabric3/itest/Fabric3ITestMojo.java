@@ -152,7 +152,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
      *
      * @parameter
      */
-    public String[] contributions;
+    public Dependency[] contributions;
 
     /**
      * Set of extension artifacts that should be deployed to the runtime.
