@@ -217,7 +217,7 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
             String id = EXTENSION_METADATA_STORE_URI.toString();
             throw new InitializationException("Extensions metadata store not configured", id);
         }
-        QName qName = new QName(org.fabric3.spi.Constants.FABRIC3_SYSTEM_NS, "extensiosn");
+        QName qName = new QName(org.fabric3.spi.Constants.FABRIC3_SYSTEM_NS, "extension");
         Composite composite = new Composite(qName);
         for (URI uri : contributionUris) {
             Contribution contribution = metaDataStore.find(uri);
