@@ -61,6 +61,8 @@
                 <include>org.codehaus.fabric3:fabric3-jmx</include>
                 <include>org.codehaus.fabric3:fabric3-spi</include>
                 <include>org.codehaus.fabric3:fabric3-extension</include>
+                <include>org.apache.geronimo.specs:geronimo-j2ee-connector_1.5_spec</include>
+                <include>org.apache.tuscany:commonj-api_r1.1</include>
                 <include>javax.servlet:servlet-api</include>
                 <include>org.codehaus.woodstox:wstx-asl</include>
                 <include>stax:stax-api</include>
@@ -75,45 +77,32 @@
                 <include>org.codehaus.fabric3:fabric3-loader</include>  
                 <include>org.codehaus.fabric3:fabric3-fabric</include>
                 <include>org.codehaus.fabric3.standalone:standalone-host</include>
-                <include>org.codehaus.fabric3:fabric3-jetty</include>
-                <include>org.codehaus.fabric3:fabric3-console</include>
                 <include>org.codehaus.fabric3:fabric3-messaging-jxta</include>
                 <include>org.codehaus.fabric3:fabric3-discovery-jxta</include>
                 <include>javax.activation:activation</include>
-                <include>org.apache.geronimo.specs:geronimo-j2ee-connector_1.5_spec</include>
-                <include>org.apache.tuscany:commonj-api_r1.1</include>
             </includes>
             <excludes>
-		<exclude>org.codehaus.fabric3.standalone:standalone-api</exclude>
+					 <exclude>org.codehaus.fabric3.standalone:standalone-api</exclude>
                 <exclude>org.codehaus.fabric3:fabric3-api</exclude>
                 <exclude>org.codehaus.fabric3:fabric3-host-api</exclude>
                 <exclude>org.codehaus.fabric3:fabric3-spi</exclude>
                 <exclude>org.codehaus.fabric3:fabric3-extension</exclude>
+                <exclude>org.apache.geronimo.specs:geronimo-j2ee-connector_1.5_spec</exclude>
+                <exclude>org.apache.tuscany:commonj-api_r1.1</exclude>
             </excludes>
             <outputDirectory>profiles/controller/boot</outputDirectory>
         </dependencySet>
 
-        <!-- copy boot dependencies to participant profile -->
+        <!-- copy extension modules to the extensions directory-->
         <dependencySet>
             <includes>
-                <include>org.codehaus.fabric3:fabric3-loader</include>  
-                <include>org.codehaus.fabric3:fabric3-fabric</include>
-                <include>org.codehaus.fabric3.standalone:standalone-host</include>
+                <include>org.codehaus.fabric3:fabric3-console</include>
                 <include>org.codehaus.fabric3:fabric3-jetty</include>
-                <include>org.codehaus.fabric3:fabric3-discovery-jxta</include>
-                <include>org.codehaus.fabric3:fabric3-messaging-jxta</include>
-                <include>javax.activation:activation</include>
-                <include>org.apache.geronimo.specs:geronimo-j2ee-connector_1.5_spec</include>
-                <include>org.apache.tuscany:commonj-api_r1.1</include>
             </includes>
-            <excludes>
-		<exclude>org.codehaus.fabric3.standalone:standalone-api</exclude>
-                <exclude>org.codehaus.fabric3:fabric3-api</exclude>
-                <exclude>org.codehaus.fabric3:fabric3-host-api</exclude>
-					 <exclude>org.codehaus.fabric3:fabric3-extension</exclude>
-               <exclude>org.codehaus.fabric3:fabric3-spi</exclude>
-            </excludes>
-            <outputDirectory>profiles/participant/boot</outputDirectory>
+				<excludes>
+					<exclude>org.mortbay.jetty:jetty</exclude>
+				</excludes>
+            <outputDirectory>extensions</outputDirectory>
         </dependencySet>
 
     </dependencySets>

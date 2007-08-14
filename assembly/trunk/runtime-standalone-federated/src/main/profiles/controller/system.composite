@@ -113,14 +113,6 @@
                 class="org.fabric3.fabric.marshaller.xstream.XStreamMarshallerRegistry"/>
     </component>
 
-    <!-- Console -->
-    <include name="org.apache.tuscany.sca.console" scdlResource="org/fabric3/console/console.composite"/>
-
-    <!-- Jetty service -->
-    <component name="JettyService">
-            <system:implementation.system class="org.fabric3.jetty.JettyServiceImpl"/>
-    </component>
-
     <component name="assemblyRecoveryService">
         <system:implementation.system class="org.fabric3.fabric.assembly.store.AssemblyStoreImpl"/>
     </component>
