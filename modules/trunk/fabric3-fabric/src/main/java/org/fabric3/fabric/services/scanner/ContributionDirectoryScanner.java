@@ -44,7 +44,7 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
-import org.fabric3.fabric.assembly.ActivateException;
+import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.services.xstream.XStreamFactory;
 import org.fabric3.host.contribution.Constants;

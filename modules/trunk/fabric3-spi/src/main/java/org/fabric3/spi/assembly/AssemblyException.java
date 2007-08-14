@@ -16,21 +16,34 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.assembly;
+package org.fabric3.spi.assembly;
 
-import org.fabric3.spi.assembly.ActivateException;
+import org.fabric3.host.Fabric3Exception;
 
 /**
- * Denotes an exception instanitating a LogicalComponent
+ * Base exception for the assembly package
  *
  * @version $Rev$ $Date$
  */
-public class InstantiationException extends ActivateException {
-    public InstantiationException(String message, String identifier) {
+public class AssemblyException extends Fabric3Exception {
+
+    public AssemblyException(String message) {
+        super(message);
+    }
+
+    public AssemblyException(String message, String identifier) {
         super(message, identifier);
     }
 
-    public InstantiationException(Throwable cause) {
+    public AssemblyException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public AssemblyException(String message, String identifier, Throwable cause) {
+        super(message, identifier, cause);
+    }
+
+    public AssemblyException(Throwable cause) {
         super(cause);
     }
 }

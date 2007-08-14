@@ -9,23 +9,24 @@ import org.osoa.sca.ServiceUnavailableException;
 
 import org.fabric3.api.annotation.LogLevel;
 import org.fabric3.extension.component.SimpleWorkContext;
-import org.fabric3.fabric.assembly.BindException;
+import org.fabric3.spi.assembly.BindException;
 import org.fabric3.fabric.assembly.DistributedAssembly;
+import org.fabric3.fabric.implementation.composite.CompositeComponentTypeLoader;
 import org.fabric3.fabric.monitor.JavaLoggingMonitorFactory;
 import org.fabric3.fabric.runtime.AbstractRuntime;
+import static org.fabric3.fabric.runtime.ComponentNames.COMPOSITE_LOADER_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.LOADER_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_NAME;
 import org.fabric3.fabric.util.JavaIntrospectionHelper;
 import org.fabric3.fabric.wire.WireUtils;
 import org.fabric3.host.runtime.StartException;
 import org.fabric3.loader.common.LoaderContextImpl;
-import org.fabric3.scdl.Composite;
+import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.spi.loader.Loader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.ProxyService;
@@ -77,11 +78,15 @@ public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo>
     }
 
     public void activate(URL compositeFile) {
+        CompositeImplementation impl = new CompositeImplementation();
+        ComponentDefinition<CompositeImplementation> definition =
+                new ComponentDefinition<CompositeImplementation>("main", impl);
         try {
-            Loader loader = getSystemComponent(Loader.class, LOADER_URI);
+            CompositeComponentTypeLoader loader =
+                    getSystemComponent(CompositeComponentTypeLoader.class, COMPOSITE_LOADER_URI);
             LoaderContext loaderContext = new LoaderContextImpl(getHostClassLoader(), compositeFile);
-            Composite composite = loader.load(compositeFile, Composite.class, loaderContext);
-            applicationAssembly.includeInDomain(composite);
+            loader.load(impl, loaderContext);
+            applicationAssembly.activate(definition, false);
             WorkContext workContext = new SimpleWorkContext();
             workContext.setScopeIdentifier(Scope.COMPOSITE, DOMAIN_URI);
             scopeContainer.startContext(workContext, DOMAIN_URI);

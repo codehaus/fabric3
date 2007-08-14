@@ -1,6 +1,8 @@
 /*
- * See the NOTICE file distributed with this work for information
- * regarding copyright ownership.  This file is licensed
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
@@ -14,19 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.assembly.store;
-
-import org.fabric3.spi.assembly.AssemblyException;
+package org.fabric3.spi.assembly;
 
 /**
+ * Denotes an error during an activate operation
+ *
  * @version $Rev$ $Date$
  */
-public class RecoveryException extends AssemblyException {
-    public RecoveryException(String message, Throwable cause) {
-        super(message, cause);
+public class ActivateException extends AssemblyException {
+
+    public ActivateException(String message, String identifier) {
+        super(message, identifier);
     }
 
-    public RecoveryException(String message, String identifier, Throwable cause) {
+    public ActivateException(String message, String identifier, Throwable cause) {
         super(message, identifier, cause);
+    }
+
+    public ActivateException(Throwable cause) {
+        super(cause);
     }
 }
