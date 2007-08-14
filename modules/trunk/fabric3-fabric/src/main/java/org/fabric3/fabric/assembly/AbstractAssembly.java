@@ -62,6 +62,10 @@ import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.util.UriHelper;
+import org.fabric3.spi.assembly.AssemblyException;
+import org.fabric3.spi.assembly.ActivateException;
+import org.fabric3.spi.assembly.BindException;
+import org.fabric3.spi.assembly.Assembly;
 
 /**
  * Base class for abstract assemblies

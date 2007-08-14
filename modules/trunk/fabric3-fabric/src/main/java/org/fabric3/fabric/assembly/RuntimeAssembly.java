@@ -21,6 +21,7 @@ package org.fabric3.fabric.assembly;
 import java.net.URI;
 
 import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.spi.assembly.Assembly;
 
 /**
  * Represents an assembly that comprises a single runtime

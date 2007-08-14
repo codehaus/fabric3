@@ -16,24 +16,34 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.assembly;
+package org.fabric3.spi.assembly;
+
+import org.fabric3.host.Fabric3Exception;
 
 /**
- * Denotes an error during an activate operation
+ * Base exception for the assembly package
  *
  * @version $Rev$ $Date$
  */
-public class ActivateException extends AssemblyException {
+public class AssemblyException extends Fabric3Exception {
 
-    public ActivateException(String message, String identifier) {
+    public AssemblyException(String message) {
+        super(message);
+    }
+
+    public AssemblyException(String message, String identifier) {
         super(message, identifier);
     }
 
-    public ActivateException(String message, String identifier, Throwable cause) {
+    public AssemblyException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public AssemblyException(String message, String identifier, Throwable cause) {
         super(message, identifier, cause);
     }
 
-    public ActivateException(Throwable cause) {
+    public AssemblyException(Throwable cause) {
         super(cause);
     }
 }

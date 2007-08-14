@@ -16,7 +16,7 @@
  */
 package org.fabric3.fabric.assembly.store;
 
-import org.fabric3.fabric.assembly.AssemblyException;
+import org.fabric3.spi.assembly.AssemblyException;
 
 /**
  * @version $Rev$ $Date$

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.assembly;
+package org.fabric3.spi.assembly;
 
 import java.net.URI;
 import javax.xml.namespace.QName;
@@ -52,7 +52,8 @@ public interface Assembly {
      * Activates a component at the domain level by provisioning physical artifacts to service nodes.
      *
      * @param definition the definition f the component to activate
-     * @throws ActivateException if an error is encountered during activation
+     * @throws org.fabric3.spi.assembly.ActivateException
+     *          if an error is encountered during activation
      */
     @Deprecated
     void activate(ComponentDefinition<?> definition) throws ActivateException;
@@ -78,7 +79,8 @@ public interface Assembly {
      *
      * @param serviceURI the absolute URI of the service
      * @param binding    the binding definition
-     * @throws BindException if an error occurs binding the service
+     * @throws org.fabric3.spi.assembly.BindException
+     *          if an error occurs binding the service
      */
     void bindService(URI serviceURI, BindingDefinition binding) throws BindException;
 

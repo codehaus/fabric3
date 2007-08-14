@@ -1,4 +1,4 @@
-package org.fabric3.fabric.assembly;
+package org.fabric3.spi.assembly;
 
 /**
  * Denotes an error binding a service or reference

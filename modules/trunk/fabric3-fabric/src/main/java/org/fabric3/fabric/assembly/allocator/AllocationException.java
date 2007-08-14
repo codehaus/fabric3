@@ -16,7 +16,7 @@
  */
 package org.fabric3.fabric.assembly.allocator;
 
-import org.fabric3.fabric.assembly.AssemblyException;
+import org.fabric3.spi.assembly.AssemblyException;
 
 /**
  * Denotes an error allocating a component to a service node.

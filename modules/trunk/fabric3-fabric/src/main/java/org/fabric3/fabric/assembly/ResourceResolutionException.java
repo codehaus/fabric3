@@ -18,6 +18,8 @@
  */
 package org.fabric3.fabric.assembly;
 
+import org.fabric3.spi.assembly.AssemblyException;
+
 /**
  * Abstract class for resource resolution exceptions
  *

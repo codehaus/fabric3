@@ -18,6 +18,8 @@
  */
 package org.fabric3.fabric.assembly;
 
+import org.fabric3.spi.assembly.AssemblyException;
+
 /**
  * Denotes an exception during runtime registration
  *

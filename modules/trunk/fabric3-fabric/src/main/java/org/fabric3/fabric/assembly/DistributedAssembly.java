@@ -18,6 +18,8 @@
  */
 package org.fabric3.fabric.assembly;
 
+import org.fabric3.spi.assembly.Assembly;
+
 /**
  * Represents an assembly that is distributed over a series of federated nodes, also termed a service network
  *
