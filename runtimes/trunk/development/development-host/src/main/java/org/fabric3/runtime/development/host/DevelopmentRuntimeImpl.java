@@ -9,7 +9,7 @@ import org.osoa.sca.ServiceUnavailableException;
 
 import org.fabric3.api.annotation.LogLevel;
 import org.fabric3.extension.component.SimpleWorkContext;
-import org.fabric3.fabric.assembly.BindException;
+import org.fabric3.spi.assembly.BindException;
 import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.monitor.JavaLoggingMonitorFactory;
 import org.fabric3.fabric.runtime.AbstractRuntime;
