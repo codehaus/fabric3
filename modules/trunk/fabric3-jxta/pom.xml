@@ -30,6 +30,7 @@
     <version>0.2-SNAPSHOT</version>
     <name>Fabric3 JXTA Service</name>
     <description>Fabric3 JXTA ServiceA.</description>
+    <packaging>sca-contribution-jar</packaging>
 
     <dependencies>
 
@@ -37,12 +38,14 @@
             <groupId>org.codehaus.fabric3.spec</groupId>
             <artifactId>sca-api-r1.0</artifactId>
             <version>0.1</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-host-api</artifactId>
-            <version>0.1</version>
+            <version>0.2-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -70,6 +73,7 @@
             <groupId>org.codehaus.woodstox</groupId>
             <artifactId>wstx-asl</artifactId>
             <version>3.2.0</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -83,5 +87,14 @@
         </dependency>
 
     </dependencies>
-
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.fabric3</groupId>
+                <artifactId>fabric3-contribution-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration/>
+            </plugin>
+        </plugins>
+    </build>
 </project>
