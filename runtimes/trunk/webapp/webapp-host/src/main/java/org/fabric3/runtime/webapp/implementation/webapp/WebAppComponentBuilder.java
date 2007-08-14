@@ -76,7 +76,7 @@ public class WebAppComponentBuilder
         URI groupId = definition.getGroupId();
         Map<String, ObjectFactory<?>> attributes = definition.getAttributes();
         Map<String, Class<?>> referenceTypes = definition.getReferenceTypes();
-        return new WebappComponent(componentId, proxyService, groupId, attributes, referenceTypes);
+        return new WebappComponent(componentId, proxyService, groupId, attributes, referenceTypes, null);
     }
 
     @SuppressWarnings({"unchecked"})

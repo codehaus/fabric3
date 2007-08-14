@@ -53,17 +53,20 @@ public class WebappComponent<T> extends AbstractLifecycle implements AtomicCompo
     private final Map<String, Class<?>> referenceTypes;
     private final Map<String, Wire> referenceFactories;
     private final ComponentContext context;
+    private final String key;
 
     public WebappComponent(URI uri,
                            ProxyService proxyService,
                            URI groupId,
                            Map<String, ObjectFactory<?>> attributes,
-                           Map<String, Class<?>> referenceTypes) {
+                           Map<String, Class<?>> referenceTypes,
+                           String key) {
         this.uri = uri;
         this.proxyService = proxyService;
         this.groupId = groupId;
         this.propertyFactories = attributes;
         this.referenceTypes = referenceTypes;
+        this.key = key;
         referenceFactories = new ConcurrentHashMap<String, Wire>(referenceTypes.size());
         context = new ComponentContextImpl(this);
     }
@@ -127,6 +130,10 @@ public class WebappComponent<T> extends AbstractLifecycle implements AtomicCompo
 
     public long getMaxAge() {
         return 0;
+    }
+
+    public String getKey() {
+        return key;
     }
 
     public InstanceWrapper<T> createInstanceWrapper(WorkContext workContext) throws ObjectCreationException {
