@@ -30,6 +30,7 @@
     <version>0.2-SNAPSHOT</version>
     <name>Fabric3 JXTA Discovery</name>
     <description>Fabric3 federation discovery based on JXTA.</description>
+    <packaging>sca-contribution-jar</packaging>
 
     <dependencies>
 
@@ -42,40 +43,43 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-extension</artifactId>
-            <version>0.1</version>
+            <version>0.2-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
 
        <dependency>
            <groupId>org.codehaus.fabric3</groupId>
            <artifactId>fabric3-jxta</artifactId>
-           <version>0.1</version>
+           <version>0.2-SNAPSHOT</version>
+           <scope>provided</scope>
        </dependency>
 
         <dependency>
             <groupId>bouncycastle</groupId>
             <artifactId>bcprov-jdk14</artifactId>
             <version>124</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.jxta.platform</groupId>
             <artifactId>jxta</artifactId>
             <version>2.4.1</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.13</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.woodstox</groupId>
             <artifactId>wstx-asl</artifactId>
             <version>3.2.0</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -84,5 +88,15 @@
         </dependency>
 
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.fabric3</groupId>
+                <artifactId>fabric3-contribution-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration/>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
