@@ -75,6 +75,19 @@
             <version>1.0</version>
             <scope>runtime</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-j2ee-connector_1.5_spec</artifactId>
+            <version>1.0.1</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tuscany</groupId>
+            <artifactId>commonj-api_r1.1</artifactId>
+            <version>1.0-incubator-M2</version>
+            <scope>runtime</scope>
+        </dependency>
         
         <dependency>
             <groupId>junit</groupId>
