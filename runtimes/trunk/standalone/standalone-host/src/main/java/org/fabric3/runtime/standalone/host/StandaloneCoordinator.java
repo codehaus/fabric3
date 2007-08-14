@@ -28,7 +28,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
 import org.fabric3.extension.component.SimpleWorkContext;
-import org.fabric3.spi.assembly.AssemblyException;
+import org.fabric3.fabric.assembly.AssemblyException;
 import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
