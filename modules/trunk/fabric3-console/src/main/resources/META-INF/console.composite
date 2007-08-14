@@ -20,11 +20,12 @@
 <!--
     Servlets for the SCA console.
     
-    $Rev$ $Date$
+    $Rev: 458 $ $Date: 2007-07-12 01:39:00 -0700 (Thu, 12 Jul 2007) $
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
-           name="org.apache.fabric3.sca.console"
+           targetNamespace="org.codehaus.fabric3"
+           name="ConsoleExtension"
            autowire="true">
 
     <!-- Servlet that serves the SCDL contribution form -->
@@ -41,6 +42,7 @@
 
     <component name="console.consoleServlet">
         <system:implementation.system class="org.fabric3.console.handler.scdl.ConsoleServlet"/>
+        <reference name="assembly" target="distributedAssembly"/>
         <property name="path">/console/*</property>
     </component>
 

@@ -30,11 +30,11 @@ import javax.xml.namespace.QName;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.assembly.DistributedAssembly;
+import org.fabric3.scdl.CompositeImplementation;
+import org.fabric3.spi.assembly.Assembly;
 import org.fabric3.spi.host.ServletHost;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.topology.RuntimeInfo;
-import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.services.discovery.DiscoveryService;
 
 /**
@@ -43,7 +43,7 @@ import org.fabric3.spi.services.discovery.DiscoveryService;
  * @version $Rev$ $Date$
  */
 public class ConsoleServlet extends Fabric3Servlet {
-    private DistributedAssembly assembly;
+    private Assembly assembly;
     private DiscoveryService discoveryService;
 
     /**
@@ -54,9 +54,9 @@ public class ConsoleServlet extends Fabric3Servlet {
      * @param assembly         the distrbituted assembly
      * @param discoveryService the discovery service
      */
-    public ConsoleServlet(@Reference ServletHost servletHost,
-                          @Reference DistributedAssembly assembly,
-                          @Reference DiscoveryService discoveryService,
+    public ConsoleServlet(@Reference(name = "servletHost")ServletHost servletHost,
+                          @Reference(name = "assembly")Assembly assembly,
+                          @Reference(name = "discoveryService")DiscoveryService discoveryService,
                           @Property(name = "path")String path) {
         super(servletHost, path);
         this.assembly = assembly;
@@ -95,7 +95,7 @@ public class ConsoleServlet extends Fabric3Servlet {
                 writer.write("<tr><td><img src=\"\\console\\runtimes.gif\"></img></td><td>");
                 writer.write(runtimeInfo.getId());
                 writer.write("</td><td>Running</td><td>");
-                for(QName feature : runtimeInfo.getFeatures()) {
+                for (QName feature : runtimeInfo.getFeatures()) {
                     writer.write(feature.getLocalPart() + " - " + feature.getNamespaceURI());
                     writer.write("</br>");
 

@@ -11,7 +11,9 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="servlet-api-2.4" level="application" />
-    <orderEntry type="module" module-name="fabric3-fabric" />
+    <orderEntry type="module" module-name="fabric3-spi" />
+    <orderEntry type="module" module-name="sca-spec" />
+    <orderEntry type="module" module-name="fabric3-scdl" />
     <orderEntryProperties />
   </component>
 </module>
