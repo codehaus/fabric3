@@ -16,30 +16,43 @@
  */
 package org.fabric3.runtime.webapp;
 
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
+import javax.servlet.ServletContext;
 
 import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.fabric.assembly.AssemblyException;
 import org.fabric3.fabric.assembly.DistributedAssembly;
+import org.fabric3.fabric.runtime.ComponentNames;
+import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DISCOVERY_SERVICE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.WORK_SCHEDULER_URI;
-import org.fabric3.fabric.runtime.ComponentNames;
+import org.fabric3.fabric.runtime.ExtensionInitializationException;
+import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.ContributionService;
+import org.fabric3.host.contribution.ContributionSource;
+import org.fabric3.host.contribution.FileContributionSource;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.CoordinatorMonitor;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.host.runtime.StartException;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.scdl.Scope;
 import org.fabric3.spi.services.discovery.DiscoveryException;
 import org.fabric3.spi.services.discovery.DiscoveryService;
 import org.fabric3.spi.services.work.WorkScheduler;
@@ -50,6 +63,8 @@ import org.fabric3.spi.services.work.WorkScheduler;
  * @version $Rev$ $Date$
  */
 public class WebappCoordinator implements RuntimeLifecycleCoordinator<WebappRuntime, Bootstrapper> {
+    private static final String EXTENSIONS = "extensions";
+    public static final String EXTENSIONS_DIR = "/WEB-INF/fabric3/extensions";
 
     private enum State {
         UNINITIALIZED,
@@ -113,6 +128,7 @@ public class WebappCoordinator implements RuntimeLifecycleCoordinator<WebappRunt
             state = State.ERROR;
             throw new InitializationException("WorkScheduler not found", WORK_SCHEDULER_URI.toString());
         }
+        includeExtensions();
         state = State.INITIALIZED;
 
     }
@@ -219,5 +235,48 @@ public class WebappCoordinator implements RuntimeLifecycleCoordinator<WebappRunt
         scheduler.scheduleWork(task);
         return task;
     }
+
+    /**
+     * Processes extensions and includes them in the runtime domain
+     *
+     * @throws InitializationException if an error occurs included the extensions
+     */
+    private void includeExtensions() throws InitializationException {
+        ServletContext context = runtime.getHostInfo().getServletContext();
+        Set paths = context.getResourcePaths(EXTENSIONS_DIR);
+        if (paths == null) {
+            return;
+        }
+        List<URL> files = new ArrayList<URL>();
+        for (Object path : paths) {
+            String str = (String) path;
+            if (str.endsWith(".jar") || str.endsWith(".zip")) {
+                try {
+                    files.add(context.getResource(str).toURI().toURL());
+                } catch (MalformedURLException e) {
+                    throw new AssertionError(e);
+                } catch (URISyntaxException e) {
+                    throw new AssertionError(e);
+                }
+            }
+        }
+        if (!files.isEmpty()) {
+            // contribute and activate extensions if they exist in the runtime domain
+            ContributionService contributionService = runtime.getSystemComponent(ContributionService.class,
+                                                                                 CONTRIBUTION_SERVICE_URI);
+            List<URI> contributionUris = new ArrayList<URI>();
+            for (URL file : files) {
+                try {
+                    ContributionSource source = new FileContributionSource(file, -1, new byte[0]);
+                    contributionUris.add(contributionService.contribute(EXTENSIONS, source));
+                } catch (ContributionException e) {
+                    throw new ExtensionInitializationException("Error loading extension", file.toString(), e);
+                }
+
+            }
+            runtime.includeExtensionContributions(contributionUris);
+        }
+    }
+
 
 }
