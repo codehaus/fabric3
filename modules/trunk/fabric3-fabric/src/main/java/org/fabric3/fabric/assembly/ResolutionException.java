@@ -18,8 +18,6 @@
  */
 package org.fabric3.fabric.assembly;
 
-import org.fabric3.spi.assembly.AssemblyException;
-
 /**
  * Denotes an error during the resolve phase as an assembly is evaluated
  *

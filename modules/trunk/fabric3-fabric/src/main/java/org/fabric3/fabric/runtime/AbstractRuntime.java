@@ -24,7 +24,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.fabric3.extension.component.SimpleWorkContext;
-import org.fabric3.spi.assembly.ActivateException;
+import org.fabric3.fabric.assembly.ActivateException;
 import org.fabric3.fabric.assembly.RuntimeAssembly;
 import org.fabric3.fabric.component.ComponentManagerImpl;
 import org.fabric3.fabric.monitor.NullMonitorFactory;

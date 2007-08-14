@@ -18,8 +18,6 @@
  */
 package org.fabric3.fabric.assembly;
 
-import org.fabric3.spi.assembly.ActivateException;
-
 /**
  * Denotes an exception instanitating a LogicalComponent
  *

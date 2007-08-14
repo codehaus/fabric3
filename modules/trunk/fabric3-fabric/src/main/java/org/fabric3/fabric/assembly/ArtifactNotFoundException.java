@@ -1,7 +1,5 @@
 package org.fabric3.fabric.assembly;
 
-import org.fabric3.spi.assembly.ActivateException;
-
 /**
  * @version $Rev$ $Date$
  */

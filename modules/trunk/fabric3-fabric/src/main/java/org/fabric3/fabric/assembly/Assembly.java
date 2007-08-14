@@ -26,9 +26,6 @@ import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.spi.assembly.AssemblyException;
-import org.fabric3.spi.assembly.ActivateException;
-import org.fabric3.spi.assembly.BindException;
 
 /**
  * Manages a service network
@@ -55,12 +52,10 @@ public interface Assembly {
      * Activates a component at the domain level by provisioning physical artifacts to service nodes.
      *
      * @param definition the definition f the component to activate
-     * @param include    if true, a domain-level inclusion is performed. That is, for composites, childrent will be
-     *                   directly included in the domain and the containing composite will be discarded.
      * @throws ActivateException if an error is encountered during activation
      */
     @Deprecated
-    void activate(ComponentDefinition<?> definition, boolean include) throws ActivateException;
+    void activate(ComponentDefinition<?> definition) throws ActivateException;
 
     /**
      * Include a deployable Composite in the domain.
@@ -79,19 +74,11 @@ public interface Assembly {
     void includeInDomain(Composite composite) throws ActivateException;
 
     /**
-     * Include a Component in the domain.
-     *
-     * @param definition the definition of the Component
-     * @throws ActivateException if an error is encountered during activation
-     */
-    void includeInDomain(ComponentDefinition<?> definition) throws ActivateException;
-
-    /**
      * Binds a service.
      *
      * @param serviceURI the absolute URI of the service
      * @param binding    the binding definition
-     * @throws org.fabric3.spi.assembly.BindException if an error occurs binding the service
+     * @throws BindException if an error occurs binding the service
      */
     void bindService(URI serviceURI, BindingDefinition binding) throws BindException;
 

@@ -25,18 +25,17 @@ import java.util.Map;
 
 import org.fabric3.fabric.assembly.ResolutionException;
 import org.fabric3.fabric.assembly.UnspecifiedTargetException;
-import org.fabric3.scdl.AbstractComponentType;
-import org.fabric3.scdl.Autowire;
-import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.ComponentReference;
-import org.fabric3.scdl.Composite;
-import org.fabric3.scdl.CompositeImplementation;
-import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.ReferenceDefinition;
-import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
+import org.fabric3.scdl.Autowire;
+import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.AbstractComponentType;
+import org.fabric3.scdl.Composite;
+import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.ComponentReference;
+import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.util.UriHelper;
 
 /**
@@ -51,26 +50,18 @@ public class DefaultWireResolver implements WireResolver {
         hostAutowire.put(contract, uri);
     }
 
-    public void resolve(LogicalComponent<CompositeImplementation> targetComposite,
-                        LogicalComponent<?> component,
-                        boolean include) throws ResolutionException {
+    public void resolve(LogicalComponent<?> targetComposite, LogicalComponent<?> component)
+            throws ResolutionException {
         if (component.getComponents().isEmpty()) {
             resolveReferences(targetComposite, component, false);
         } else {
             for (LogicalComponent<?> child : component.getComponents()) {
-                // at the top level, if the operation is include, ensure target selection is done from siblings already
-                // in the parent or siblings in the included composite
-                if (include) {
-                    if (!child.getComponents().isEmpty()) {
-                        // resolve children
-                        resolveInternal(targetComposite, child);
-                    } else {
-                        // no children, resolve references directly using include semantics
-                        resolveReferences(targetComposite, child, true);
-                    }
-                } else {
+                if (!child.getComponents().isEmpty()) {
                     // resolve children
-                    resolveInternal(component, child);
+                    resolveInternal(targetComposite, child);
+                } else {
+                    // no children, resolve references directly using include semantics
+                    resolveReferences(targetComposite, child, true);
                 }
             }
         }

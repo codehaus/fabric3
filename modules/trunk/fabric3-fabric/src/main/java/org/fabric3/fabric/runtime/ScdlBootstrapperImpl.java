@@ -23,8 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.stream.XMLInputFactory;
 
-import org.fabric3.spi.assembly.ActivateException;
-import org.fabric3.spi.assembly.AssemblyException;
+import org.fabric3.fabric.assembly.ActivateException;
+import org.fabric3.fabric.assembly.AssemblyException;
 import org.fabric3.fabric.assembly.InstantiationException;
 import org.fabric3.fabric.assembly.RuntimeAssembly;
 import org.fabric3.fabric.assembly.RuntimeAssemblyImpl;
