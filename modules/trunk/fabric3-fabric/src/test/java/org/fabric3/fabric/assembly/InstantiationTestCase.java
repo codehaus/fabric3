@@ -34,7 +34,7 @@ public class InstantiationTestCase extends TestCase {
 
     public void testInstantiateChildren() throws Exception {
         ComponentDefinition<?> definition = createParentWithChild();
-        LogicalComponent<?> logicalComponent = assembly.instantiate(COMPONENT_BASE, parent, definition);
+        LogicalComponent<?> logicalComponent = assembly.instantiate(parent, definition);
         assertEquals(COMPONENT_URI, logicalComponent.getUri().toString());
         LogicalComponent<?> logicalChild = logicalComponent.getComponent(URI.create(CHILD_URI));
         assertEquals(CHILD_URI, logicalChild.getUri().toString());
@@ -42,7 +42,7 @@ public class InstantiationTestCase extends TestCase {
 
     public void testInstantiateServiceReference() throws Exception {
         ComponentDefinition<?> definition = createParentWithServiceAndReference();
-        LogicalComponent<?> logicalComponent = assembly.instantiate(COMPONENT_BASE, parent, definition);
+        LogicalComponent<?> logicalComponent = assembly.instantiate(parent, definition);
         LogicalService logicalService = logicalComponent.getService("service");
         assertEquals(SERVICE_URI, logicalService.getUri().toString());
         LogicalReference logicalReference = logicalComponent.getReference("reference");

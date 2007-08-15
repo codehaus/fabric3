@@ -308,7 +308,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     protected <I> void registerSystemComponent(URI uri, List<Class<?>> types, I instance)
             throws InitializationException {
         try {
-            String name = uri.toString();
+            String name = RUNTIME_URI.relativize(uri).toString();
             Class<?> implClass = instance.getClass();
             List<JavaServiceContract<?>> contracts = createServiceContacts(types);
             ComponentDefinition<SingletonImplementation> definition = createDefinition(name, contracts, implClass);
@@ -318,7 +318,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
             for (JavaServiceContract<?> contract : contracts) {
                 resolver.addHostUri(contract, uri);
             }
-            runtimeAssembly.instantiateHostComponentDefinition(uri, definition);
+            runtimeAssembly.instantiateHostComponentDefinition(definition);
         } catch (InvalidServiceContractException e) {
             throw new InitializationException(e);
         } catch (RegistrationException e) {

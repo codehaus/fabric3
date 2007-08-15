@@ -18,8 +18,6 @@
  */
 package org.fabric3.fabric.assembly;
 
-import java.net.URI;
-
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.assembly.allocator.Allocator;
@@ -56,9 +54,8 @@ public class RuntimeAssemblyImpl extends AbstractAssembly implements RuntimeAsse
               metaDataStore);
     }
 
-    public void instantiateHostComponentDefinition(URI uri, ComponentDefinition<?> definition)
-            throws InstantiationException {
-        LogicalComponent<?> component = instantiate(uri, domain, definition);
+    public void instantiateHostComponentDefinition(ComponentDefinition<?> definition) throws InstantiationException {
+        LogicalComponent<?> component = instantiate(domain, definition);
         domain.addComponent(component);
         addToDomainMap(component);
     }

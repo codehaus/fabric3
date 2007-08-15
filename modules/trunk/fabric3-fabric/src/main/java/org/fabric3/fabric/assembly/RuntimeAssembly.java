@@ -33,9 +33,8 @@ public interface RuntimeAssembly extends Assembly {
     /**
      * Instantitates a logical host component definition so that it may be wired to
      *
-     * @param uri        the uri of the host component
      * @param definition the host component definition
      * @throws InstantiationException is an error occurs instantiating the logical component
      */
-    void instantiateHostComponentDefinition(URI uri, ComponentDefinition<?> definition) throws InstantiationException;
+    void instantiateHostComponentDefinition(ComponentDefinition<?> definition) throws InstantiationException;
 }

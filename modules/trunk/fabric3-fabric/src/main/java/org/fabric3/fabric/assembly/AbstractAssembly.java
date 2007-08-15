@@ -21,10 +21,10 @@ package org.fabric3.fabric.assembly;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Collections;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.xml.namespace.QName;
 
@@ -45,11 +45,15 @@ import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
+import org.fabric3.scdl.CompositeReference;
+import org.fabric3.scdl.CompositeService;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
-import org.fabric3.scdl.CompositeService;
-import org.fabric3.scdl.CompositeReference;
+import org.fabric3.spi.assembly.ActivateException;
+import org.fabric3.spi.assembly.Assembly;
+import org.fabric3.spi.assembly.AssemblyException;
+import org.fabric3.spi.assembly.BindException;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.command.CommandSet;
 import org.fabric3.spi.generator.GenerationException;
@@ -65,10 +69,6 @@ import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.util.UriHelper;
-import org.fabric3.spi.assembly.AssemblyException;
-import org.fabric3.spi.assembly.ActivateException;
-import org.fabric3.spi.assembly.BindException;
-import org.fabric3.spi.assembly.Assembly;
 
 /**
  * Base class for abstract assemblies
@@ -161,14 +161,14 @@ public abstract class AbstractAssembly implements Assembly {
         }
     }
 
-    public void include(LogicalComponent<CompositeImplementation> parent, Composite composite) throws ActivateException {
+    public void include(LogicalComponent<CompositeImplementation> parent, Composite composite)
+            throws ActivateException {
         // instantiate all the components in the composite and add them to the parent
         String base = parent.getUri().toString();
         Collection<ComponentDefinition<? extends Implementation<?>>> definitions = composite.getComponents().values();
         List<LogicalComponent<?>> components = new ArrayList<LogicalComponent<?>>(definitions.size());
         for (ComponentDefinition<? extends Implementation<?>> definition : definitions) {
-            URI componentURI = URI.create(base + '/' + definition.getName());
-            LogicalComponent<?> logicalComponent = instantiate(componentURI, parent, definition);
+            LogicalComponent<?> logicalComponent = instantiate(parent, definition);
             components.add(logicalComponent);
             parent.addComponent(logicalComponent);
         }
@@ -263,54 +263,81 @@ public abstract class AbstractAssembly implements Assembly {
      *
      * @param parent     the parent logical component
      * @param definition the component definition to instantiate from
-     * @param baseUri    the uri the  component  will be instantiated relative to
      * @return the instantiated logical component
      * @throws InstantiationException if an error occurs during instantiation
      */
-    @SuppressWarnings({"unchecked"})
-    protected <I extends Implementation<?>> LogicalComponent<I> instantiate(URI baseUri,
-                                                                            LogicalComponent<CompositeImplementation> parent,
+    protected <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalComponent<CompositeImplementation> parent,
                                                                             ComponentDefinition<I> definition)
             throws InstantiationException {
-        Implementation<?> impl = definition.getImplementation();
-        AbstractComponentType<?, ?, ?> type = impl.getComponentType();
-        //URI uri = URI.create(baseUri.toString() + "/" + definition.getName());
+
+        // create the LogicalComponent
+        URI uri = URI.create(parent.getUri() + "/" + definition.getName());
         URI runtimeId = definition.getRuntimeId();
         String key = definition.getKey();
+        LogicalComponent<I> component = new LogicalComponent<I>(uri, runtimeId, definition, parent, key);
 
-        LogicalComponent<I> component = new LogicalComponent<I>(baseUri, runtimeId, definition, parent, key);
-        if (Composite.class.isInstance(type)) {
-            Composite compositeType = Composite.class.cast(type);
-            LogicalComponent<CompositeImplementation> composite = (LogicalComponent<CompositeImplementation>) component;
-            for (ComponentDefinition<? extends Implementation<?>> child : compositeType.getComponents().values()) {
-                URI childUri = URI.create(baseUri.toString() + "/" + child.getName());
-                LogicalComponent<? extends Implementation<?>> logicalChild = instantiate(childUri, composite, child);
-                component.addComponent(logicalChild);
+        I impl = definition.getImplementation();
+        if (CompositeImplementation.class.isInstance(impl)) {
+            // this component is implemented by a composite so we need to create its children
+            // and promote services and references
+            @SuppressWarnings({"unchecked"})
+            LogicalComponent<CompositeImplementation> compositeComponent =
+                    (LogicalComponent<CompositeImplementation>) component;
+            Composite composite = compositeComponent.getDefinition().getImplementation().getComponentType();
+
+            // create the child components
+            for (ComponentDefinition<? extends Implementation<?>> child : composite.getComponents().values()) {
+                component.addComponent(instantiate(compositeComponent, child));
+            }
+
+            // promote services
+            for (CompositeService service : composite.getServices().values()) {
+                URI serviceUri = uri.resolve('#' + service.getName());
+                LogicalService logicalService = new LogicalService(serviceUri, service, component);
+                if (service.getTarget() != null) {
+                    logicalService.setTargetUri(URI.create(uri.toString() + "/" + service.getTarget()));
+                }
+                for (BindingDefinition binding : service.getBindings()) {
+                    logicalService.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalService));
+                }
+                component.addService(logicalService);
+            }
+
+            // promote references
+            for (CompositeReference reference : composite.getReferences().values()) {
+                URI referenceUri = uri.resolve('#' + reference.getName());
+                LogicalReference logicalReference = new LogicalReference(referenceUri, reference, component);
+                for (BindingDefinition binding : reference.getBindings()) {
+                    logicalReference.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalReference));
+                }
+                for (URI promotedUri : reference.getPromoted()) {
+                    URI resolvedUri = URI.create(uri.toString() + "/" + promotedUri.toString());
+                    logicalReference.addPromotedUri(resolvedUri);
+                }
+                component.addReference(logicalReference);
+            }
+
+        } else {
+            // this is an atomic component so create and bind its services and references
+            AbstractComponentType<?, ?, ?> componentType = impl.getComponentType();
+            for (ServiceDefinition service : componentType.getServices().values()) {
+                URI serviceUri = uri.resolve('#' + service.getName());
+                LogicalService logicalService = new LogicalService(serviceUri, service, component);
+                for (BindingDefinition binding : service.getBindings()) {
+                    logicalService.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalService));
+                }
+                component.addService(logicalService);
+            }
+            for (ReferenceDefinition reference : componentType.getReferences().values()) {
+                URI referenceUri = uri.resolve('#' + reference.getName());
+                LogicalReference logicalReference = new LogicalReference(referenceUri, reference, component);
+                for (BindingDefinition binding : reference.getBindings()) {
+                    logicalReference.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalReference));
+                }
+                component.addReference(logicalReference);
             }
         }
-        for (ServiceDefinition service : type.getServices().values()) {
-            URI serviceUri = baseUri.resolve('#' + service.getName());
-            LogicalService logicalService = new LogicalService(serviceUri, service, component);
-            if (service.getTarget() != null) {
-                logicalService.setTargetUri(URI.create(baseUri.toString() + "/" + service.getTarget()));
-            }
-            for (BindingDefinition binding : service.getBindings()) {
-                logicalService.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalService));
-            }
-            component.addService(logicalService);
-        }
-        for (ReferenceDefinition reference : type.getReferences().values()) {
-            URI referenceUri = baseUri.resolve('#' + reference.getName());
-            LogicalReference logicalReference = new LogicalReference(referenceUri, reference, component);
-            for (BindingDefinition binding : reference.getBindings()) {
-                logicalReference.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalReference));
-            }
-            for (URI promotedUri : reference.getPromoted()) {
-                URI resolvedUri = URI.create(baseUri.toString() + "/" + promotedUri.toString());
-                logicalReference.addPromotedUri(resolvedUri);
-            }
-            component.addReference(logicalReference);
-        }
+
         return component;
     }
 
@@ -334,13 +361,13 @@ public abstract class AbstractAssembly implements Assembly {
     /**
      * Generate and provision physical change sets for a set of new components.
      *
-     * @param parent the composite containing the new components
+     * @param parent     the composite containing the new components
      * @param components the components to generate
      * @return a Map of Generation contexts keyed by runtimeId
      * @throws ActivateException if there was a problem
      */
     protected Map<URI, GeneratorContext> generate(LogicalComponent<CompositeImplementation> parent,
-                                        Collection<LogicalComponent<?>> components) throws ActivateException {
+                                                  Collection<LogicalComponent<?>> components) throws ActivateException {
         Map<URI, GeneratorContext> contexts = new HashMap<URI, GeneratorContext>();
         List<LogicalComponent<CompositeImplementation>> composites = Collections.singletonList(parent);
         try {
@@ -434,32 +461,28 @@ public abstract class AbstractAssembly implements Assembly {
             if (entry.getBindings().isEmpty()) {
                 for (URI uri : entry.getTargetUris()) {
                     Referenceable target = resolveTarget(uri, targetComposites);
-                    if (target == null) {
-                        String refUri = entry.getUri().toString();
-                        throw new TargetNotFoundException("Target not found for reference " + refUri, uri.toString());
-                    }
-                    if (target instanceof LogicalComponent) {
-                        LogicalComponent<?> targetComponent = (LogicalComponent<?>) target;
-                        String serviceName = uri.getFragment();
-                        LogicalReference reference = component.getReference(entry.getUri().getFragment());
-                        LogicalService targetService = null;
-                        if (serviceName != null) {
-                            targetService = targetComponent.getService(serviceName);
-                        } else if (targetComponent.getServices().size() == 1) {
-                            // default service
-                            targetService = targetComponent.getServices().iterator().next();
-                        }
-                        assert targetService != null;
-                        generatorRegistry.generateUnboundWire(component,
-                                                              reference,
-                                                              targetService,
-                                                              targetComponent,
-                                                              context);
-                    } else {
+                    if (!(target instanceof LogicalComponent)) {
                         String name = target.getClass().getName();
                         URI refUri = entry.getUri();
                         throw new InvalidTargetTypeException("Invalid reference target type", name, refUri, uri);
                     }
+
+                    LogicalComponent<?> targetComponent = (LogicalComponent<?>) target;
+                    String serviceName = uri.getFragment();
+                    LogicalReference reference = component.getReference(entry.getUri().getFragment());
+                    LogicalService targetService = null;
+                    if (serviceName != null) {
+                        targetService = targetComponent.getService(serviceName);
+                    } else if (targetComponent.getServices().size() == 1) {
+                        // default service
+                        targetService = targetComponent.getServices().iterator().next();
+                    }
+                    assert targetService != null;
+                    generatorRegistry.generateUnboundWire(component,
+                                                          reference,
+                                                          targetService,
+                                                          targetComponent,
+                                                          context);
 
                 }
             } else {
