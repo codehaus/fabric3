@@ -117,24 +117,6 @@
                 class="org.fabric3.fabric.services.contribution.FileSystemResolver"/>
     </component>
 
-    <!-- Directory Scanner infrastructure -->
-    <component name="ContributionDirectoryScanner" initLevel="100">
-        <system:implementation.system class="org.fabric3.fabric.services.scanner.ContributionDirectoryScanner"/>
-    </component>
-
-    <component name="FileSystemResourceFactoryRegistry">
-        <system:implementation.system class="org.fabric3.fabric.services.scanner.FileSystemResourceFactoryRegistryImpl"/>
-        <property name="path">target/deployables</property>
-    </component>
-
-    <component name="JarResourceFactory">
-        <system:implementation.system class="org.fabric3.fabric.services.scanner.factory.JarResourceFactory"/>
-    </component>
-    
-    <component name="ExplodedJarResourceFactory">
-        <system:implementation.system class="org.fabric3.fabric.services.scanner.factory.ExplodedJarResourceFactory"/>
-    </component>
-
     <component name="DefinitionsContributionStore">
         <system:implementation.system class="org.fabric3.fabric.services.contribution.ContributionStoreImpl"/>
         <property name="storeId">definitions</property>

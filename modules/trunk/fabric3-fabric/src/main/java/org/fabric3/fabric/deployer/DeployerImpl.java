@@ -24,10 +24,9 @@ import java.util.Set;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
 
-import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
-import org.osoa.sca.annotations.Constructor;
 
 import org.fabric3.fabric.builder.Connector;
 import org.fabric3.host.monitor.MonitorFactory;
@@ -51,7 +50,6 @@ import org.fabric3.spi.services.messaging.RequestListener;
  * @version $Revision$ $Date$
  */
 @Service(Deployer.class)
-@EagerInit
 public class DeployerImpl implements RequestListener, Deployer {
 
     /**
