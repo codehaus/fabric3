@@ -49,16 +49,6 @@ public interface Assembly {
     LogicalComponent<CompositeImplementation> getDomain();
 
     /**
-     * Activates a component at the domain level by provisioning physical artifacts to service nodes.
-     *
-     * @param definition the definition f the component to activate
-     * @throws org.fabric3.spi.assembly.ActivateException
-     *          if an error is encountered during activation
-     */
-    @Deprecated
-    void activate(ComponentDefinition<?> definition) throws ActivateException;
-
-    /**
      * Include a deployable Composite in the domain.
      *
      * @param deployable the name of the deployable composite to include

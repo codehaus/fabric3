@@ -111,10 +111,16 @@ public abstract class AbstractAssembly implements Assembly {
     public void initialize() throws AssemblyException {
         // read the logical model from the store
         domain = assemblyStore.read();
+
         // reindex the model
         for (LogicalComponent<?> child : domain.getComponents()) {
             addToDomainMap(child);
         }
+
+        // TODO we've recovered the domain content so should not need to generate/provision things
+        // TODO once everything is recovered though we may decide to reoptimize the domain
+        // TODO but we should add an API call for that
+/*
         // regenerate the domain components
         if (!domain.getComponents().isEmpty()) {
             try {
@@ -125,6 +131,7 @@ public abstract class AbstractAssembly implements Assembly {
                 throw new AssemblyException(e);
             }
         }
+*/
     }
 
     public LogicalComponent<CompositeImplementation> getDomain() {
@@ -145,14 +152,6 @@ public abstract class AbstractAssembly implements Assembly {
     }
 
     public void includeInDomain(Composite composite) throws ActivateException {
-/*
-        CompositeImplementation impl = new CompositeImplementation();
-        impl.setComponentType(composite);
-        ComponentDefinition<CompositeImplementation> definition =
-                new ComponentDefinition<CompositeImplementation>("type");
-        definition.setImplementation(impl);
-        activate(definition);
-*/
         include(domain, composite);
         try {
             // record the operation
@@ -218,35 +217,6 @@ public abstract class AbstractAssembly implements Assembly {
 
         // generate and provision the new components
         generateAndProvision(parent, components);
-    }
-
-    public void activate(ComponentDefinition<?> definition) throws ActivateException {
-        try {
-            // instantiate a logical component from the definition
-            LogicalComponent<?> component = instantiate(domainUri, domain, definition);
-
-            // resolve wires in the logical component
-            wireResolver.resolve(domain, component);
-            normalize(component);
-
-            // perform the inclusion, which will result in the generation of change sets provisioned to service nodes
-            generateAndProvision(domain, component, false);
-
-            // TODO only add when the service nodes have acked
-            for (LogicalComponent<?> child : component.getComponents()) {
-                domain.addComponent(child);
-                addToDomainMap(child);
-            }
-
-        } catch (ResolutionException e) {
-            throw new ActivateException(e);
-        } catch (RoutingException e) {
-            throw new ActivateException(e);
-        } catch (GenerationException e) {
-            throw new ActivateException(e);
-        } catch (AllocationException e) {
-            throw new ActivateException(e);
-        }
     }
 
     public void bindService(URI serviceUri, BindingDefinition bindingDefinition) throws BindException {
@@ -396,53 +366,6 @@ public abstract class AbstractAssembly implements Assembly {
         } catch (RoutingException e) {
             throw new ActivateException(e);
         }
-    }
-
-    /**
-     * Generates and routes a physical change set to a set of service nodes based on the logical component.
-     *
-     * @param targetComposite     the target composite
-     * @param component           the logical component generate physical artifacts frm
-     * @param synchronizeTopology true if the topological view of the service network should be synchronized during
-     *                            allocation
-     * @throws ResolutionException if an error ocurrs resolving a target
-     * @throws GenerationException if an error is encountered generating a physical change set
-     * @throws RoutingException    if an error is encountered routing the change set
-     * @throws AllocationException if an error occurs during allocation
-     */
-    protected void generateAndProvision(LogicalComponent<CompositeImplementation> targetComposite,
-                                        LogicalComponent<?> component,
-                                        boolean synchronizeTopology)
-            throws ResolutionException, GenerationException, RoutingException, AllocationException {
-        Map<URI, GeneratorContext> contexts = new HashMap<URI, GeneratorContext>();
-        // create physical component definitions for composite children
-        ComponentDefinition<?> definition = component.getDefinition();
-        Implementation<?> implementation = definition.getImplementation();
-        assert CompositeImplementation.class.isInstance(implementation);
-        //noinspection unchecked
-        LogicalComponent<CompositeImplementation> composite =
-                (LogicalComponent<CompositeImplementation>) component;
-        // allocate the components
-        allocator.allocate(composite, synchronizeTopology);
-        for (LogicalComponent<?> child : component.getComponents()) {
-            List<LogicalComponent<CompositeImplementation>> composites =
-                    new ArrayList<LogicalComponent<CompositeImplementation>>();
-            composites.add(composite);
-            composites.add(targetComposite);
-            generateChangeSets(composites, child, contexts);
-        }
-        for (LogicalComponent<?> child : component.getComponents()) {
-            generateCommandSets(child, contexts);
-        }
-        // route the change sets to service nodes
-        for (Map.Entry<URI, GeneratorContext> entry : contexts.entrySet()) {
-            routingService.route(entry.getKey(), entry.getValue().getPhysicalChangeSet());
-        }
-        // route command sets
-        for (Map.Entry<URI, GeneratorContext> entry : contexts.entrySet()) {
-            routingService.route(entry.getKey(), entry.getValue().getCommandSet());
-        }
-
     }
 
     protected void generateChangeSets(List<LogicalComponent<CompositeImplementation>> targetComposites,
