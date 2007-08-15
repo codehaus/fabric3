@@ -29,11 +29,9 @@ import org.easymock.EasyMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 
-import org.fabric3.loader.common.DefaultPolicyHelper;
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.CompositeService;
 import org.fabric3.scdl.ModelObject;
-import org.fabric3.scdl.PolicyAware;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.loader.LoaderContext;
@@ -67,7 +65,7 @@ public class CompositeServiceLoaderTestCase extends TestCase {
         CompositeService serviceDefinition = loader.load(mockReader, loaderContext);
         assertNotNull(serviceDefinition);
         assertEquals(serviceName, serviceDefinition.getName());
-        assertEquals(componentURI, serviceDefinition.getTarget());
+        assertEquals(componentURI, serviceDefinition.getPromote());
     }
 
     public void testPromotedService() throws LoaderException, XMLStreamException {
@@ -78,7 +76,7 @@ public class CompositeServiceLoaderTestCase extends TestCase {
         CompositeService serviceDefinition = loader.load(mockReader, loaderContext);
         assertNotNull(serviceDefinition);
         assertEquals(serviceName, serviceDefinition.getName());
-        assertEquals(componentServiceURI, serviceDefinition.getTarget());
+        assertEquals(componentServiceURI, serviceDefinition.getPromote());
     }
 
     public void testMultipleBindings() throws LoaderException, XMLStreamException {

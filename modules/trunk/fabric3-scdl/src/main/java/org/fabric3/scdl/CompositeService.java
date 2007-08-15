@@ -16,11 +16,35 @@
  */
 package org.fabric3.scdl;
 
+import java.net.URI;
+
 /**
  * @version $Rev$ $Date$
  */
 public class CompositeService extends ServiceDefinition {
+    private URI promote;
+
     public CompositeService(String name, ServiceContract<?> serviceContract) {
         super(name, serviceContract);
     }
+
+    /**
+     * Returns the URI of the component service to promote.
+     *
+     * @return the URI of the component service to promote
+     */
+    public URI getPromote() {
+        return promote;
+    }
+
+    /**
+     * Sets the URI of the component service to promote.
+     *
+     * @param promote the URI of the component service to promote
+     */
+    public void setPromote(URI promote) {
+        this.promote = promote;
+    }
+
+
 }

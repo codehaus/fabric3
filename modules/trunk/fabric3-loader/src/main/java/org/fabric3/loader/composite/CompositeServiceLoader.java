@@ -61,7 +61,7 @@ public class CompositeServiceLoader implements StAXElementLoader<CompositeServic
         }
 
         CompositeService def = new CompositeService(name, null);
-        def.setTarget(LoaderUtil.getURI(promote));
+        def.setPromote(LoaderUtil.getURI(promote));
         
         policyHelper.loadPolicySetsAndIntents(def, reader);
         while (true) {

@@ -164,7 +164,7 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
     protected void verifyCompositeCompleteness(Composite composite) throws InvalidServiceException {
         // check if all of the composite services have been wired
         for (CompositeService svcDefn : composite.getDeclaredServices().values()) {
-            if (svcDefn.getTarget() == null) {
+            if (svcDefn.getPromote() == null) {
                 throw new InvalidServiceException("Composite service not wired to a target", svcDefn.getName());
             }
         }

@@ -18,7 +18,6 @@
  */
 package org.fabric3.scdl;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -33,7 +32,6 @@ public class ServiceDefinition extends PolicyAware {
     private String name;
     private ServiceContract<?> serviceContract;
     private final List<BindingDefinition> bindings;
-    private URI target;
 
     public ServiceDefinition(String name) {
         this(name, null);
@@ -94,24 +92,4 @@ public class ServiceDefinition extends PolicyAware {
     public void addBinding(BindingDefinition binding) {
         this.bindings.add(binding);
     }
-
-    /**
-     * Returns the target URI the service is wired to
-     *
-     * @return the target URI the service is wired to
-     */
-    public URI getTarget() {
-        return target;
-    }
-
-    /**
-     * Sets the target URI the service is wired to
-     *
-     * @param target the target URI the service is wired to
-     */
-    public void setTarget(URI target) {
-        this.target = target;
-    }
-
-
 }

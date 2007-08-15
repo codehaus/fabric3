@@ -294,8 +294,8 @@ public abstract class AbstractAssembly implements Assembly {
             for (CompositeService service : composite.getServices().values()) {
                 URI serviceUri = uri.resolve('#' + service.getName());
                 LogicalService logicalService = new LogicalService(serviceUri, service, component);
-                if (service.getTarget() != null) {
-                    logicalService.setTargetUri(URI.create(uri.toString() + "/" + service.getTarget()));
+                if (service.getPromote() != null) {
+                    logicalService.setTargetUri(URI.create(uri.toString() + "/" + service.getPromote()));
                 }
                 for (BindingDefinition binding : service.getBindings()) {
                     logicalService.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalService));
