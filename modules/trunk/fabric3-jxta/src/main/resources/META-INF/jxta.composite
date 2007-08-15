@@ -18,7 +18,7 @@
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
            targetNamespace="org.codehaus.fabric3"
-           name="fabric3-jxta:0.2-SNAPSHOT"
+           name="JXTAService"
            autowire="true">
 
     <!-- JXTA Network Configurator -->
