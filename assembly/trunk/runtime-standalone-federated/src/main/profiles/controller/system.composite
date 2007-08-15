@@ -67,6 +67,29 @@
     <!-- include transform configuration -->
     <include name="org.fabric3.transform.Transform" scdlResource="org/fabric3/transform/transform.composite"/>
 
+    <component name="launchedLoader">
+        <system:implementation.system class="org.fabric3.runtime.standalone.host.implementation.launched.LaunchedLoader"/>
+    </component>
+
+    <component name="launchedComponentLoader">
+        <system:implementation.system class="org.fabric3.runtime.standalone.host.implementation.launched.LaunchedComponentTypeLoaderImpl"/>
+    </component>
+
+    <component name="wiringExceptionFormatter">
+        <system:implementation.system class="org.fabric3.fabric.builder.WiringExceptionFormatter"/>
+    </component>
+
+    <!-- Marshhaler registry-->
+    <component name="marshallerRegistry">
+        <system:implementation.system
+                class="org.fabric3.fabric.marshaller.xstream.XStreamMarshallerRegistry"/>
+    </component>
+
+    <component name="assemblyRecoveryService">
+        <system:implementation.system class="org.fabric3.fabric.assembly.store.AssemblyStoreImpl"/>
+    </component>
+
+	 <!-- the following entries will be loaded as normal extensions in the next release -->
     <!-- JXTA Network Configurator -->
     <component name="jxtaNetworkConfigurator">
         <system:implementation.system class="net.jxta.platform.NetworkConfigurator"/>
@@ -95,26 +118,24 @@
         <system:implementation.system class="org.fabric3.discovery.jxta.JxtaDiscoveryService"/>
     </component>
 
-    <component name="launchedLoader">
-        <system:implementation.system class="org.fabric3.runtime.standalone.host.implementation.launched.LaunchedLoader"/>
+    <!-- scanner infrastructure -->
+	     <component name="ContributionDirectoryScanner">
+        <system:implementation.system class="org.fabric3.scanner.scanner.ContributionDirectoryScanner"/>
     </component>
 
-    <component name="launchedComponentLoader">
-        <system:implementation.system class="org.fabric3.runtime.standalone.host.implementation.launched.LaunchedComponentTypeLoaderImpl"/>
+    <component name="FileSystemResourceFactoryRegistry">
+        <system:implementation.system class="org.fabric3.scanner.scanner.FileSystemResourceFactoryRegistryImpl"/>
+        <property name="path">target/deployables</property>
     </component>
 
-    <component name="wiringExceptionFormatter">
-        <system:implementation.system class="org.fabric3.fabric.builder.WiringExceptionFormatter"/>
+    <component name="JarResourceFactory">
+        <system:implementation.system class="org.fabric3.scanner.scanner.factory.JarResourceFactory"/>
+    </component>
+    
+    <component name="ExplodedJarResourceFactory">
+        <system:implementation.system class="org.fabric3.scanner.scanner.factory.ExplodedJarResourceFactory"/>
     </component>
 
-    <!-- Marshhaler registry-->
-    <component name="marshallerRegistry">
-        <system:implementation.system
-                class="org.fabric3.fabric.marshaller.xstream.XStreamMarshallerRegistry"/>
-    </component>
-
-    <component name="assemblyRecoveryService">
-        <system:implementation.system class="org.fabric3.fabric.assembly.store.AssemblyStoreImpl"/>
-    </component>
+	 <!-- END the following entries will be loaded as normal extensions in the next release -->
 
 </composite>

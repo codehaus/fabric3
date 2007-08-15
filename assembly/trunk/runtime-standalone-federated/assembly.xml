@@ -77,9 +77,12 @@
                 <include>org.codehaus.fabric3:fabric3-loader</include>  
                 <include>org.codehaus.fabric3:fabric3-fabric</include>
                 <include>org.codehaus.fabric3.standalone:standalone-host</include>
-                <include>org.codehaus.fabric3:fabric3-messaging-jxta</include>
-                <include>org.codehaus.fabric3:fabric3-discovery-jxta</include>
                 <include>javax.activation:activation</include>
+   				 <include>org.codehaus.fabric3:fabric3-jxta</include>
+					 <include>org.codehaus.fabric3:fabric3-discovery-jxta</include>
+					 <include>org.codehaus.fabric3:fabric3-messaging-jxta</include>
+   				 <include>org.codehaus.fabric3:fabric3-contribution-scanner-spi</include>
+   				 <include>org.codehaus.fabric3:fabric3-contribution-scanner</include>
             </includes>
             <excludes>
 					 <exclude>org.codehaus.fabric3.standalone:standalone-api</exclude>
@@ -96,7 +99,7 @@
         <!-- copy extension modules to the extensions directory-->
         <dependencySet>
             <includes>
-                <include>org.codehaus.fabric3:fabric3-console</include>
+	             <include>org.codehaus.fabric3:fabric3-console</include>
                 <include>org.codehaus.fabric3:fabric3-jetty</include>
             </includes>
 				<excludes>
