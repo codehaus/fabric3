@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Collections;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.xml.namespace.QName;
 
@@ -47,6 +48,8 @@ import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.scdl.CompositeService;
+import org.fabric3.scdl.CompositeReference;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.command.CommandSet;
 import org.fabric3.spi.generator.GenerationException;
@@ -142,18 +145,79 @@ public abstract class AbstractAssembly implements Assembly {
     }
 
     public void includeInDomain(Composite composite) throws ActivateException {
+/*
         CompositeImplementation impl = new CompositeImplementation();
         impl.setComponentType(composite);
         ComponentDefinition<CompositeImplementation> definition =
                 new ComponentDefinition<CompositeImplementation>("type");
         definition.setImplementation(impl);
         activate(definition);
+*/
+        include(domain, composite);
         try {
             // record the operation
             assemblyStore.store(domain);
         } catch (RecordException e) {
             throw new ActivateException("Error activating deployable", composite.getName().toString(), e);
         }
+    }
+
+    public void include(LogicalComponent<CompositeImplementation> parent, Composite composite) throws ActivateException {
+        // instantiate all the components in the composite and add them to the parent
+        String base = parent.getUri().toString();
+        Collection<ComponentDefinition<? extends Implementation<?>>> definitions = composite.getComponents().values();
+        List<LogicalComponent<?>> components = new ArrayList<LogicalComponent<?>>(definitions.size());
+        for (ComponentDefinition<? extends Implementation<?>> definition : definitions) {
+            URI componentURI = URI.create(base + '/' + definition.getName());
+            LogicalComponent<?> logicalComponent = instantiate(componentURI, parent, definition);
+            components.add(logicalComponent);
+            parent.addComponent(logicalComponent);
+        }
+
+        // merge the composite service declarations into the parent
+        for (CompositeService compositeService : composite.getServices().values()) {
+            URI serviceURI = URI.create(base + '#' + compositeService.getName());
+            LogicalService logicalService = new LogicalService(serviceURI, compositeService, parent);
+            for (BindingDefinition binding : compositeService.getBindings()) {
+                logicalService.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalService));
+            }
+            parent.addService(logicalService);
+        }
+
+        // merge the composite reference definitions into the parent
+        for (CompositeReference compositeReference : composite.getReferences().values()) {
+            URI referenceURi = URI.create(base + '#' + compositeReference.getName());
+            LogicalReference logicalReference = new LogicalReference(referenceURi, compositeReference, parent);
+            for (BindingDefinition binding : compositeReference.getBindings()) {
+                logicalReference.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalReference));
+            }
+        }
+
+        // resolve wires for each new component
+        try {
+            for (LogicalComponent<?> component : components) {
+                wireResolver.resolve(parent, component);
+            }
+        } catch (ResolutionException e) {
+            throw new ActivateException(e);
+        }
+
+        // normalize bindings for each new component
+        for (LogicalComponent<?> component : components) {
+            normalize(component);
+        }
+
+        // Allocate the components to runtime nodes
+        try {
+            for (LogicalComponent<?> component : components) {
+                allocator.allocate(component, false);
+            }
+        } catch (AllocationException e) {
+            throw new ActivateException(e);
+        }
+
+        // generate and provision the new components
+        generateAndProvision(parent, components);
     }
 
     public void activate(ComponentDefinition<?> definition) throws ActivateException {
@@ -292,6 +356,45 @@ public abstract class AbstractAssembly implements Assembly {
             }
         } else {
             promotionNormalizer.normalize(component);
+        }
+    }
+
+    /**
+     * Generate and provision physical change sets for a set of new components.
+     *
+     * @param parent the composite containing the new components
+     * @param components the components to generate
+     * @throws ActivateException if there was a problem
+     */
+    protected void generateAndProvision(LogicalComponent<CompositeImplementation> parent,
+                                        Collection<LogicalComponent<?>> components) throws ActivateException {
+        Map<URI, GeneratorContext> contexts = new HashMap<URI, GeneratorContext>();
+        List<LogicalComponent<CompositeImplementation>> composites = Collections.singletonList(parent);
+        try {
+            for (LogicalComponent<?> component : components) {
+                generateChangeSets(composites, component, contexts);
+            }
+            for (LogicalComponent<?> component : components) {
+                generateCommandSets(component, contexts);
+            }
+        } catch (GenerationException e) {
+            throw new ActivateException(e);
+        } catch (ResolutionException e) {
+            throw new ActivateException(e);
+        }
+
+        // provision the generated change sets
+        try {
+            // route the change sets to service nodes
+            for (Map.Entry<URI, GeneratorContext> entry : contexts.entrySet()) {
+                routingService.route(entry.getKey(), entry.getValue().getPhysicalChangeSet());
+            }
+            // route command sets
+            for (Map.Entry<URI, GeneratorContext> entry : contexts.entrySet()) {
+                routingService.route(entry.getKey(), entry.getValue().getCommandSet());
+            }
+        } catch (RoutingException e) {
+            throw new ActivateException(e);
         }
     }
 

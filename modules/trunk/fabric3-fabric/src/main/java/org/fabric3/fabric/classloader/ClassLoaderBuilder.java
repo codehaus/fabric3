@@ -30,8 +30,6 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.runtime.ComponentNames;
-import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.builder.resource.ResourceContainerBuilder;
 import org.fabric3.spi.builder.resource.ResourceContainerBuilderRegistry;
 import org.fabric3.spi.deployer.CompositeClassLoader;
@@ -56,18 +54,15 @@ public class ClassLoaderBuilder implements ResourceContainerBuilder<PhysicalClas
     private ClassLoaderRegistry classLoaderRegistry;
     private ArtifactResolverRegistry artifactResolverRegistry;
     private ClasspathProcessorRegistry classpathProcessorRegistry;
-    private URI domainUri;
 
     public ClassLoaderBuilder(@Reference ResourceContainerBuilderRegistry builderRegistry,
                               @Reference ClassLoaderRegistry classLoaderRegistry,
                               @Reference ArtifactResolverRegistry artifactResolverRegistry,
-                              @Reference HostInfo info,
                               @Reference ClasspathProcessorRegistry classpathProcessorRegistry) {
         this.builderRegistry = builderRegistry;
         this.classLoaderRegistry = classLoaderRegistry;
         this.artifactResolverRegistry = artifactResolverRegistry;
         this.classpathProcessorRegistry = classpathProcessorRegistry;
-        domainUri = info.getDomain();
     }
 
     @Init
@@ -101,16 +96,7 @@ public class ClassLoaderBuilder implements ResourceContainerBuilder<PhysicalClas
         for (URI uri : definition.getParentClassLoaders()) {
             ClassLoader parent = classLoaderRegistry.getClassLoader(uri);
             if (parent == null) {
-                if (domainUri.equals(uri)) {
-                    // the classloader is being created in the application compononent heierarchy.
-                    parent = classLoaderRegistry.getClassLoader(APPLICATION_CLASSLOADER);
-                } else if (ComponentNames.RUNTIME_URI.equals(uri)) {
-                    // the classloader is being created in the system compononent heierarchy. Use the boot cl
-                    parent = classLoaderRegistry.getClassLoader(BOOT_CLASSLOADER);
-                }
-                if (parent == null) {
-                    throw new ClassLoaderNotFoundException("Parent classloader not found", uri.toString());
-                }
+                throw new ClassLoaderNotFoundException("Parent classloader not found", uri.toString());
             }
             loader.addParent(parent);
         }

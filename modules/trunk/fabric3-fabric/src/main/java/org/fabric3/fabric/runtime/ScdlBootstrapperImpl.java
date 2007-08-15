@@ -87,6 +87,7 @@ import static org.fabric3.fabric.runtime.ComponentNames.CLASSLOADER_REGISTRY_URI
 import static org.fabric3.fabric.runtime.ComponentNames.EXTENSION_METADATA_STORE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_NAME;
+import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
 import org.fabric3.fabric.services.advertsiement.FeatureLoader;
 import org.fabric3.fabric.services.archive.JarService;
@@ -149,6 +150,7 @@ import org.fabric3.spi.services.contribution.ContributionStoreRegistry;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
+import org.fabric3.spi.deployer.CompositeClassLoader;
 import org.fabric3.transform.DefaultTransformerRegistry;
 import org.fabric3.transform.dom2java.String2Integer;
 import org.fabric3.transform.dom2java.String2String;
@@ -198,7 +200,11 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         createBootstrapComponents(runtime);
         registerBootstrapComponents((AbstractRuntime<?>) runtime);
         classLoaderRegistry.register(BOOT_CLASSLOADER_ID, bootClassLoader);
+        classLoaderRegistry.register(RUNTIME_URI, new CompositeClassLoader(RUNTIME_URI, bootClassLoader));
+
+        URI domainId = runtime.getHostInfo().getDomain();
         classLoaderRegistry.register(APPLICATION_CLASSLOADER_ID, appClassLoader);
+        classLoaderRegistry.register(domainId, new CompositeClassLoader(domainId, appClassLoader));
     }
 
     public void bootSystem(Fabric3Runtime<?> runtime) throws InitializationException {
@@ -474,7 +480,6 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         ClassLoaderBuilder clBuilder = new ClassLoaderBuilder(resourceRegistry,
                                                               classLoaderRegistry,
                                                               artifactResolverRegistry,
-                                                              info,
                                                               classpathProcessorRegistry);
         clBuilder.init();
         return resourceRegistry;
