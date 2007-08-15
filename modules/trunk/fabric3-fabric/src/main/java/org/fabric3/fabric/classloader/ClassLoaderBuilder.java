@@ -22,7 +22,6 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -47,8 +46,6 @@ import org.fabric3.spi.services.contribution.ResolutionException;
  */
 @EagerInit
 public class ClassLoaderBuilder implements ResourceContainerBuilder<PhysicalClassLoaderDefinition> {
-    public static final URI APPLICATION_CLASSLOADER = URI.create("sca://./applicationClassLoader");
-    public static final URI BOOT_CLASSLOADER = URI.create("sca://./bootClassLoader");
 
     private ResourceContainerBuilderRegistry builderRegistry;
     private ClassLoaderRegistry classLoaderRegistry;
@@ -144,50 +141,6 @@ public class ClassLoaderBuilder implements ResourceContainerBuilder<PhysicalClas
         for (URL url : classpath) {
             loader.addURL(url);
         }
-    }
-
-    /**
-     * Creates a child classloader from the PhysicalClassLoaderDefinition. The child classloader classpath will contain
-     * artifacts specified in the definiton and not already on the parent classpath.
-     *
-     * @param parent     the parent classloader
-     * @param definition the PhysicalClassLoaderDefinition to create the classloader from
-     * @return the child classloader
-     * @throws ClassLoaderBuilderException if an error occurs creating the classloader, such as resolving an artifact
-     */
-    private CompositeClassLoader createChildClassLoader(URLClassLoader parent, PhysicalClassLoaderDefinition definition)
-            throws ClassLoaderBuilderException {
-        Set<URL> urls = definition.getResourceUrls();
-        URL[] loaderUrls = parent.getURLs();
-        Set<URL> resolvedUrls = new HashSet<URL>();
-        // resolve the urls and add ones not present in the parent to the child
-        for (URL url : urls) {
-            boolean found = false;
-            // resolve the remote artifact URL and add it to the classloader
-            try {
-                URL resolvedUrl = artifactResolverRegistry.resolve(url);
-                // introspect and expand if necessary
-                File file = new File(resolvedUrl.getFile());
-                List<URL> classpath = classpathProcessorRegistry.process(file);
-                for (URL entry : classpath) {
-                    for (URL loaderUrl : loaderUrls) {
-                        if (loaderUrl.equals(entry)) {
-                            found = true;
-                            break;
-                        }
-                        if (!found) {
-                            resolvedUrls.add(entry);
-                        }
-                    }
-                }
-            } catch (ResolutionException e) {
-                throw new ClassLoaderBuilderException("Error resolving artifact", e);
-            } catch (IOException e) {
-                throw new ClassLoaderBuilderException("Error processing", url.toString(), e);
-            }
-        }
-        URL[] classpath = resolvedUrls.toArray(new URL[resolvedUrls.size()]);
-        return new CompositeClassLoader(definition.getUri(), classpath, parent);
     }
 
     /**
