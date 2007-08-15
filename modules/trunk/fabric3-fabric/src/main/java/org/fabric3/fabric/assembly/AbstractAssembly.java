@@ -124,7 +124,7 @@ public abstract class AbstractAssembly implements Assembly {
         // regenerate the domain components
         if (!domain.getComponents().isEmpty()) {
             try {
-                generateAndProvision(null, domain, true);
+                generate(null, domain, true);
             } catch (GenerationException e) {
                 throw new AssemblyException(e);
             } catch (RoutingException e) {
@@ -216,7 +216,9 @@ public abstract class AbstractAssembly implements Assembly {
         }
 
         // generate and provision the new components
-        generateAndProvision(parent, components);
+        Map<URI, GeneratorContext> contexts = generate(parent, components);
+        provision(contexts);
+
     }
 
     public void bindService(URI serviceUri, BindingDefinition bindingDefinition) throws BindException {
@@ -334,9 +336,10 @@ public abstract class AbstractAssembly implements Assembly {
      *
      * @param parent the composite containing the new components
      * @param components the components to generate
+     * @return a Map of Generation contexts keyed by runtimeId
      * @throws ActivateException if there was a problem
      */
-    protected void generateAndProvision(LogicalComponent<CompositeImplementation> parent,
+    protected Map<URI, GeneratorContext> generate(LogicalComponent<CompositeImplementation> parent,
                                         Collection<LogicalComponent<?>> components) throws ActivateException {
         Map<URI, GeneratorContext> contexts = new HashMap<URI, GeneratorContext>();
         List<LogicalComponent<CompositeImplementation>> composites = Collections.singletonList(parent);
@@ -352,7 +355,10 @@ public abstract class AbstractAssembly implements Assembly {
         } catch (ResolutionException e) {
             throw new ActivateException(e);
         }
+        return contexts;
+    }
 
+    protected void provision(Map<URI, GeneratorContext> contexts) throws ActivateException {
         // provision the generated change sets
         try {
             // route the change sets to service nodes
