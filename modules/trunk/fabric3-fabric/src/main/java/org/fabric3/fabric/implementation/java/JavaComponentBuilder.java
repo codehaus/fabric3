@@ -30,20 +30,18 @@ import org.fabric3.fabric.injection.ListMultiplicityObjectFactory;
 import org.fabric3.fabric.injection.MapMultiplicityObjectFactory;
 import org.fabric3.fabric.injection.MultiplicityObjectFactory;
 import org.fabric3.fabric.injection.SetMultiplicityObjectFactory;
+import org.fabric3.pojo.implementation.PojoComponentBuilder;
 import org.fabric3.pojo.instancefactory.InjectionSiteMapping;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.pojo.instancefactory.MemberSite;
-import org.fabric3.pojo.implementation.PojoComponentBuilder;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
-import org.fabric3.spi.component.ComponentManager;
 import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.scdl.Multiplicity;
-import org.fabric3.scdl.Scope;
 import org.fabric3.spi.model.instance.ValueSource;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.transform.PullTransformer;
@@ -63,7 +61,6 @@ public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaCompone
     private ProxyService proxyService;
 
     public JavaComponentBuilder(@Reference ComponentBuilderRegistry builderRegistry,
-                                @Reference ComponentManager manager,
                                 @Reference ScopeRegistry scopeRegistry,
                                 @Reference InstanceFactoryBuilderRegistry providerBuilders,
                                 @Reference ClassLoaderRegistry classLoaderRegistry,

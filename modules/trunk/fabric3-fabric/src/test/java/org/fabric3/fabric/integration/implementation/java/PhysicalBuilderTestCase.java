@@ -167,7 +167,6 @@ public class PhysicalBuilderTestCase extends TestCase {
         DefaultComponentBuilderRegistry builderRegistry = new DefaultComponentBuilderRegistry();
         componentManager = new ComponentManagerImpl();
         builder = new JavaComponentBuilder(builderRegistry,
-                                           componentManager,
                                            scopeRegistry,
                                            providerBuilders,
                                            classLoaderRegistry,
