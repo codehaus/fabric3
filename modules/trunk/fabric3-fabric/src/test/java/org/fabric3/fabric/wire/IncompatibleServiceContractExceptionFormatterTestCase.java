@@ -21,14 +21,12 @@ package org.fabric3.fabric.wire;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import junit.framework.TestCase;
+import org.easymock.EasyMock;
+
+import org.fabric3.host.monitor.FormatterRegistry;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.fabric.wire.IncompatibleServiceContractException;
-
-import junit.framework.TestCase;
-import org.fabric3.host.monitor.FormatterRegistry;
-
-import org.easymock.EasyMock;
 
 /**
  * @version $Rev$ $Date$
@@ -36,20 +34,19 @@ import org.easymock.EasyMock;
 public class IncompatibleServiceContractExceptionFormatterTestCase extends TestCase {
     FormatterRegistry registry = EasyMock.createNiceMock(FormatterRegistry.class);
     IncompatibleServiceContractExceptionFormatter formatter =
-        new IncompatibleServiceContractExceptionFormatter(registry);
+            new IncompatibleServiceContractExceptionFormatter(registry);
 
     public void testFormat() throws Exception {
-        ServiceContract<Object> source = new ServiceContract<Object>() {
-        };
+        ServiceContract<Object> source = new MockContract();
         source.setInterfaceName("sourceInterface");
-        ServiceContract<Object> target = new ServiceContract<Object>() {
+        ServiceContract<Object> target = new MockContract() {
         };
         target.setInterfaceName("targetInterface");
         Operation<Object> sourceOp = new Operation<Object>("sourceOp", null, null, null);
         Operation<Object> targetOp = new Operation<Object>("targetOp", null, null, null);
 
         IncompatibleServiceContractException e =
-            new IncompatibleServiceContractException("message", source, target, sourceOp, targetOp);
+                new IncompatibleServiceContractException("message", source, target, sourceOp, targetOp);
         StringWriter writer = new StringWriter();
         PrintWriter pw = new PrintWriter(writer);
         formatter.write(pw, e);
@@ -63,15 +60,15 @@ public class IncompatibleServiceContractExceptionFormatterTestCase extends TestC
 
 
     public void testFormatNulls() throws Exception {
-        ServiceContract<Object> source = new ServiceContract<Object>() {
+        ServiceContract<Object> source = new MockContract() {
         };
         source.setInterfaceName("sourceInterface");
-        ServiceContract<Object> target = new ServiceContract<Object>() {
+        ServiceContract<Object> target = new MockContract() {
         };
         target.setInterfaceName("targetInterface");
 
         IncompatibleServiceContractException e =
-            new IncompatibleServiceContractException("message", source, target);
+                new IncompatibleServiceContractException("message", source, target);
         StringWriter writer = new StringWriter();
         PrintWriter pw = new PrintWriter(writer);
         formatter.write(pw, e);
@@ -79,5 +76,12 @@ public class IncompatibleServiceContractExceptionFormatterTestCase extends TestC
         assertTrue(buffer.indexOf("message") >= 0);
         assertTrue(buffer.indexOf("sourceInterface") >= 0);
         assertTrue(buffer.indexOf("targetInterface") >= 0);
+    }
+
+    private static class MockContract extends ServiceContract<Object> {
+        public boolean isAssignableFrom(ServiceContract contract) {
+            return false;
+        }
+
     }
 }

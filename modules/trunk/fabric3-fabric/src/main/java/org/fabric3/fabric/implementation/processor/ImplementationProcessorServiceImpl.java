@@ -28,7 +28,6 @@ import java.util.List;
 import org.osoa.sca.annotations.Callback;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
-import org.osoa.sca.annotations.Remotable;
 
 import org.fabric3.api.annotation.Resource;
 import org.fabric3.fabric.idl.java.IllegalCallbackException;
@@ -59,8 +58,7 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
 
     public JavaMappedService createService(Class<?> interfaze) throws InvalidServiceContractException {
         ServiceContract<?> contract = registry.introspect(interfaze);
-        boolean remotable = interfaze.getAnnotation(Remotable.class) != null;
-        return new JavaMappedService(interfaze.getSimpleName(), contract);
+        return new JavaMappedService(interfaze.getSimpleName(), contract, interfaze);
     }
 
     public void processCallback(Class<?> interfaze, ServiceContract<?> contract) throws IllegalCallbackException {
@@ -75,10 +73,7 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
     }
 
     public boolean areUnique(Class[] collection) {
-        if (collection.length == 0) {
-            return true;
-        }
-        return areUnique(collection, 0);
+        return collection.length == 0 || areUnique(collection, 0);
     }
 
     public void addName(List<String> names, int pos, String name) {
@@ -96,13 +91,13 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
     }
 
     public boolean processParam(
-        Class<?> param,
-        Type genericParam,
-        Annotation[] paramAnnotations,
-        String[] constructorNames,
-        int pos,
-        PojoComponentType type,
-        List<String> injectionNames) throws ProcessingException {
+            Class<?> param,
+            Type genericParam,
+            Annotation[] paramAnnotations,
+            String[] constructorNames,
+            int pos,
+            PojoComponentType type,
+            List<String> injectionNames) throws ProcessingException {
         boolean processed = false;
         for (Annotation annot : paramAnnotations) {
             if (Property.class.equals(annot.annotationType())) {
@@ -124,8 +119,8 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
             for (Annotation annotation : annotations) {
                 Class<? extends Annotation> annotType = annotation.annotationType();
                 if (annotType.equals(Property.class)
-                    || annotType.equals(Reference.class)
-                    || annotType.equals(Resource.class)) {
+                        || annotType.equals(Reference.class)
+                        || annotType.equals(Resource.class)) {
                     return true;
                 }
             }
@@ -134,7 +129,7 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
     }
 
     public JavaMappedReference createReference(String name, Member member, Class<?> paramType)
-        throws ProcessingException {
+            throws ProcessingException {
         ServiceContract contract;
         try {
             contract = registry.introspect(paramType);
@@ -165,11 +160,7 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
                 return false;
             }
         }
-        if (start + 1 < collection.length) {
-            return areUnique(collection, start + 1);
-        } else {
-            return true;
-        }
+        return start + 1 >= collection.length || areUnique(collection, start + 1);
     }
 
     /**
@@ -186,13 +177,13 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
      */
     @SuppressWarnings("unchecked")
     private void processProperty(
-        Annotation annot,
-        String[] constructorNames,
-        int pos,
-        PojoComponentType type,
-        Class<?> param,
-        Type genericParam,
-        List<String> explicitNames) throws ProcessingException {
+            Annotation annot,
+            String[] constructorNames,
+            int pos,
+            PojoComponentType type,
+            Class<?> param,
+            Type genericParam,
+            List<String> explicitNames) throws ProcessingException {
         // the param is marked as a property
         Property propAnnot = (Property) annot;
         JavaMappedProperty property = new JavaMappedProperty();
@@ -204,15 +195,15 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
         String name = propAnnot.name();
         if (name == null || name.length() == 0) {
             if (constructorNames.length < pos + 1 || constructorNames[pos] == null
-                || constructorNames[pos].length() == 0) {
+                    || constructorNames[pos].length() == 0) {
                 throw new InvalidPropertyException("No name specified for property parameter " + (pos + 1));
             }
             name = constructorNames[pos];
         } else if (pos < constructorNames.length && constructorNames[pos] != null
-            && constructorNames[pos].length() != 0 && !name.equals(constructorNames[pos])) {
+                && constructorNames[pos].length() != 0 && !name.equals(constructorNames[pos])) {
             String paramNum = String.valueOf(pos + 1);
             throw new InvalidConstructorException("Name specified by @Constructor does not match property name",
-                paramNum);
+                                                  paramNum);
         }
         if (type.getProperties().get(name) != null) {
             throw new DuplicatePropertyException(name);
@@ -237,13 +228,13 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
      * @throws ProcessingException
      */
     private void processReference(
-        Annotation annot,
-        String[] constructorNames,
-        int pos,
-        PojoComponentType type,
-        Class<?> param,
-        Type genericParam,
-        List<String> explicitNames) throws ProcessingException {
+            Annotation annot,
+            String[] constructorNames,
+            int pos,
+            PojoComponentType type,
+            Class<?> param,
+            Type genericParam,
+            List<String> explicitNames) throws ProcessingException {
 
         // TODO multiplicity
         // the param is marked as a reference
@@ -253,16 +244,16 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
             if (constructorNames.length == 0 || constructorNames[0].length() == 0) {
                 name = "_ref" + pos;
             } else if (constructorNames.length < pos + 1 || constructorNames[pos] == null
-                || constructorNames[pos].length() == 0) {
+                    || constructorNames[pos].length() == 0) {
                 throw new InvalidReferenceException("No name specified for reference parameter " + (pos + 1));
             } else {
                 name = constructorNames[pos];
             }
         } else if (pos < constructorNames.length && constructorNames[pos] != null
-            && constructorNames[pos].length() != 0 && !name.equals(constructorNames[pos])) {
+                && constructorNames[pos].length() != 0 && !name.equals(constructorNames[pos])) {
             String paramNum = String.valueOf(pos + 1);
             throw new InvalidConstructorException("Name specified by @Constructor does not match reference name",
-                paramNum);
+                                                  paramNum);
         }
         if (type.getReferences().get(name) != null) {
             throw new DuplicateReferenceException(name);
@@ -308,32 +299,32 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
      * @throws ProcessingException
      */
     private <T> void processResource(
-        Resource resourceAnnot,
-        String[] constructorNames,
-        int pos,
-        PojoComponentType type,
-        Class<T> param,
-        List<String> explicitNames) throws ProcessingException {
+            Resource resourceAnnot,
+            String[] constructorNames,
+            int pos,
+            PojoComponentType type,
+            Class<T> param,
+            List<String> explicitNames) throws ProcessingException {
 
         String name = resourceAnnot.name();
         if (name == null || name.length() == 0) {
             if (constructorNames.length < pos + 1 || constructorNames[pos] == null
-                || constructorNames[pos].length() == 0) {
+                    || constructorNames[pos].length() == 0) {
                 String paramNum = String.valueOf(pos + 1);
                 throw new InvalidResourceException("No name specified for resource parameter", paramNum);
             }
             name = constructorNames[pos];
         } else if (pos < constructorNames.length && constructorNames[pos] != null
-            && constructorNames[pos].length() != 0 && !name.equals(constructorNames[pos])) {
+                && constructorNames[pos].length() != 0 && !name.equals(constructorNames[pos])) {
             String paramNum = String.valueOf(pos + 1);
             throw new InvalidConstructorException("Name specified by @Constructor does not match resource name",
-                paramNum);
+                                                  paramNum);
         }
         if (type.getResources().get(name) != null) {
             throw new DuplicateResourceException(name);
         }
         org.fabric3.pojo.processor.Resource<T> resource =
-            new org.fabric3.pojo.processor.Resource<T>(name, param, null);
+                new org.fabric3.pojo.processor.Resource<T>(name, param, null);
         resource.setOptional(resourceAnnot.optional());
         String mappedName = resourceAnnot.mappedName();
         if (mappedName.length() > 0) {

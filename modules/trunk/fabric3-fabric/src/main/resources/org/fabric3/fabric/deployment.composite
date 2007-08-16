@@ -25,8 +25,8 @@
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
            name="org.fabric3.fabric.Deployment"
            autowire="true">
-    
-    <!-- Content type resolver -->       
+
+    <!-- Content type resolver -->
     <component name="contentTypeResolver">
         <system:implementation.system class="org.fabric3.fabric.services.contenttype.ExtensionMapContentTypeResolver"/>
     </component>
@@ -51,9 +51,10 @@
     <component name="ContributionProcessorRegistry">
         <system:implementation.system class="org.fabric3.fabric.services.contribution.ProcessorRegistryImpl"/>
     </component>
-    
-    <component name="JarContributionProcessor">
+
+    <component name="ZipContributionProcessor">
         <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.ZipContributionProcessor"/>
+        <reference name="metaDataStore" target="MetadataStore"/>
     </component>
 
     <component name="CompositeResourceProcessor">
@@ -66,6 +67,7 @@
 
     <component name="FolderContributionProcessor">
         <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.ExplodedArchiveContributionProcessor"/>
+        <reference name="metaDataStore" target="MetadataStore"/>
     </component>
 
     <component name="ClasspathProcessorRegistry">

@@ -56,7 +56,7 @@ public class HeuristicAndPropertyTestCase extends TestCase {
         ImplementationProcessorServiceImpl service =
             new ImplementationProcessorServiceImpl(new JavaInterfaceProcessorRegistryImpl());
         propertyProcessor = new PropertyProcessor(service);
-        heuristicProcessor = new HeuristicPojoProcessor(service);
+        heuristicProcessor = new HeuristicPojoProcessor(service, null);
     }
 
     public static class Foo {

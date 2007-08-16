@@ -23,18 +23,17 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
+import junit.framework.TestCase;
 import org.osoa.sca.annotations.Callback;
 import org.osoa.sca.annotations.Conversational;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Remotable;
 
+import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.processor.JavaMappedService;
 import org.fabric3.pojo.processor.PojoComponentType;
-import org.fabric3.scdl.ServiceContract;
-
-import junit.framework.TestCase;
-import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
+import org.fabric3.spi.idl.java.JavaServiceContract;
 
 /**
  * @version $Rev$ $Date$
@@ -42,37 +41,38 @@ import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
 public class ImplementationProcessorServiceTestCase extends TestCase {
 
     private ImplementationProcessorService implService =
-        new ImplementationProcessorServiceImpl(new JavaInterfaceProcessorRegistryImpl());
+            new ImplementationProcessorServiceImpl(new JavaInterfaceProcessorRegistryImpl());
 
     public void testCreateConversationalService() throws Exception {
         JavaMappedService service = implService.createService(Foo.class);
-        assertTrue(Foo.class.equals(service.getServiceContract().getInterfaceClass()));
-        assertTrue(service.getServiceContract().isConversational());
-        ServiceContract serviceContract = service.getServiceContract();
-        assertTrue(Bar.class.equals(serviceContract.getCallbackClass()));
-        assertTrue("ImplementationProcessorServiceTestCase$Bar".equals(serviceContract.getCallbackName()));
+        JavaServiceContract<?> contract = (JavaServiceContract) service.getServiceContract();
+        assertTrue(Foo.class.equals(contract.getInterfaceClass()));
+        assertTrue(contract.isConversational());
+        assertTrue(Bar.class.equals(contract.getCallbackClass()));
+        assertTrue("ImplementationProcessorServiceTestCase$Bar".equals(contract.getCallbackName()));
     }
 
     public void testCreateDefaultService() throws Exception {
         JavaMappedService service = implService.createService(Baz.class);
-        assertTrue(Baz.class.equals(service.getServiceContract().getInterfaceClass()));
+        JavaServiceContract<?> contract = (JavaServiceContract) service.getServiceContract();
+        assertTrue(Baz.class.equals(contract.getInterfaceClass()));
         assertFalse(service.getServiceContract().isConversational());
     }
 
     public void testProcessParamProperty() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+                new PojoComponentType();
         Constructor<PropertyClass> ctor = PropertyClass.class.getConstructor(int.class);
         Annotation[] paramAnnotations = ctor.getParameterAnnotations()[0];
         List<String> injectionNames = new ArrayList<String>();
         String[] names = new String[]{"foo"};
         implService.processParam(int.class,
-            ctor.getGenericParameterTypes()[0],
-            paramAnnotations,
-            names,
-            0,
-            type,
-            injectionNames);
+                                 ctor.getGenericParameterTypes()[0],
+                                 paramAnnotations,
+                                 names,
+                                 0,
+                                 type,
+                                 injectionNames);
         org.fabric3.scdl.Property<?> property = type.getProperties().get("foo");
         assertEquals(int.class, property.getJavaType());
     }

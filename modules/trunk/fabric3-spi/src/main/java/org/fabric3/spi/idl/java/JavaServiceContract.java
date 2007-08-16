@@ -28,12 +28,44 @@ import org.fabric3.scdl.ServiceContract;
  * @version $Rev$ $Date$
  */
 public class JavaServiceContract<I> extends ServiceContract<Type> {
+    protected Class<?> interfaceClass;
 
     public JavaServiceContract() {
     }
 
     public JavaServiceContract(Class<I> interfaceClass) {
-        super(interfaceClass);
+        this.interfaceClass = interfaceClass;
+    }
+
+    /**
+     * Returns the class used to represent the service contract.
+     *
+     * @return the class used to represent the service contract
+     */
+    public Class<?> getInterfaceClass() {
+        return interfaceClass;
+    }
+
+    /**
+     * Sets the class used to represent the service contract.
+     *
+     * @param interfaceClass the class used to represent the service contract
+     */
+    public void setInterfaceClass(Class<?> interfaceClass) {
+        this.interfaceClass = interfaceClass;
+    }
+
+
+    public boolean isAssignableFrom(ServiceContract contract) {
+        if (contract instanceof JavaServiceContract) {
+            // short-circuit test if both are JavaClasses
+            JavaServiceContract<?> jContract = (JavaServiceContract) contract;
+            if (interfaceClass.isAssignableFrom(jContract.interfaceClass)) {
+                return true;
+            }
+        }
+        // TODO handle the case where the contract is defined using a different IDL
+        return false;
     }
 
 }

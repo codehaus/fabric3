@@ -18,16 +18,15 @@
  */
 package org.fabric3.fabric.implementation.processor;
 
+import junit.framework.TestCase;
 import org.osoa.sca.annotations.Callback;
 import org.osoa.sca.annotations.Remotable;
 import org.osoa.sca.annotations.Service;
 
+import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
 import org.fabric3.pojo.processor.JavaMappedService;
 import org.fabric3.pojo.processor.PojoComponentType;
-import org.fabric3.scdl.ServiceContract;
-
-import junit.framework.TestCase;
-import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
+import org.fabric3.spi.idl.java.JavaServiceContract;
 
 /**
  * @version $Rev$ $Date$
@@ -40,7 +39,7 @@ public class ServiceProcessorTestCase extends TestCase {
         processor.visitClass(FooMultiple.class, type, null);
         assertEquals(2, type.getServices().size());
         JavaMappedService service = type.getServices().get(Baz.class.getSimpleName());
-        ServiceContract contract = service.getServiceContract();
+        JavaServiceContract contract = (JavaServiceContract) service.getServiceContract();
         assertEquals(Baz.class, contract.getInterfaceClass());
         assertEquals(Bar.class, contract.getCallbackClass());
         assertEquals("ServiceProcessorTestCase$Bar", contract.getCallbackName());
@@ -70,7 +69,7 @@ public class ServiceProcessorTestCase extends TestCase {
         processor.visitClass(FooRemotableNoService.class, type, null);
         assertEquals(1, type.getServices().size());
         JavaMappedService service = type.getServices().get(BazRemotable.class.getSimpleName());
-        ServiceContract contract = service.getServiceContract();
+        JavaServiceContract contract = (JavaServiceContract) service.getServiceContract();
         assertEquals(BazRemotable.class, contract.getInterfaceClass());
     }
 
@@ -151,7 +150,7 @@ public class ServiceProcessorTestCase extends TestCase {
 
     }
 
-    private class ServiceOnSuper extends FooSingle{
+    private class ServiceOnSuper extends FooSingle {
 
     }
 

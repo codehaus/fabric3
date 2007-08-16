@@ -23,8 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.stream.XMLInputFactory;
 
-import org.fabric3.spi.assembly.ActivateException;
-import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.fabric.assembly.InstantiationException;
 import org.fabric3.fabric.assembly.RuntimeAssembly;
 import org.fabric3.fabric.assembly.RuntimeAssemblyImpl;
@@ -128,6 +126,8 @@ import org.fabric3.pojo.processor.PojoComponentType;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
+import org.fabric3.spi.assembly.ActivateException;
+import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.builder.component.WireAttacherRegistry;
 import org.fabric3.spi.builder.resource.ResourceContainerBuilderRegistry;
@@ -135,6 +135,7 @@ import org.fabric3.spi.command.CommandExecutorRegistry;
 import org.fabric3.spi.component.ComponentManager;
 import org.fabric3.spi.component.RegistrationException;
 import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.spi.deployer.CompositeClassLoader;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.idl.InvalidServiceContractException;
 import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
@@ -150,7 +151,6 @@ import org.fabric3.spi.services.contribution.ContributionStoreRegistry;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
-import org.fabric3.spi.deployer.CompositeClassLoader;
 import org.fabric3.transform.DefaultTransformerRegistry;
 import org.fabric3.transform.dom2java.String2Integer;
 import org.fabric3.transform.dom2java.String2String;
@@ -161,7 +161,6 @@ import org.fabric3.transform.dom2java.String2String;
  * @version $Rev$ $Date$
  */
 public class ScdlBootstrapperImpl implements ScdlBootstrapper {
-    private static final URI WIRE_RESOLVER_URI = URI.create(RUNTIME_NAME + "/WireResolver");
     private static final URI COMPONENT_MGR_URI = URI.create(RUNTIME_NAME + "/ComponentManager");
     private static final URI XML_INPUT_FACTORY_URI = URI.create(RUNTIME_NAME + "/XMLInputFactory");
     private static final URI MONITOR_URI = URI.create(RUNTIME_NAME + "/MonitorFactory");
@@ -279,7 +278,6 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     protected <I extends HostInfo> void registerBootstrapComponents(AbstractRuntime<I> runtime)
             throws InitializationException {
         registerSystemComponent(COMPONENT_MGR_URI, ComponentManager.class, componentManager);
-        registerSystemComponent(WIRE_RESOLVER_URI, WireResolver.class, resolver);
         registerSystemComponent(SCOPE_REGISTRY_URI, ScopeRegistry.class, scopeRegistry);
         registerSystemComponent(RUNTIME_INFO_URI, runtime.getHostInfoType(), runtime.getHostInfo());
         registerSystemComponent(RUNTIME_ASSEMBLY_URI, RuntimeAssembly.class, runtimeAssembly);
@@ -385,7 +383,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         introspectionRegistry.registerProcessor(new ReferenceProcessor(registry));
         introspectionRegistry.registerProcessor(new ResourceProcessor());
         introspectionRegistry.registerProcessor(new ServiceProcessor(service));
-        introspectionRegistry.registerProcessor(new HeuristicPojoProcessor(service));
+        introspectionRegistry.registerProcessor(new HeuristicPojoProcessor(service, interfaceProcessorRegistry));
         introspectionRegistry.registerProcessor(new MonitorProcessor(monitorFactory, service));
         return introspectionRegistry;
     }
@@ -396,7 +394,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         // register element loaders
         PropertyValueLoader propertyValueLoader = new PropertyValueLoader();
         PolicyHelper policyHelper = new DefaultPolicyHelper();
-        
+
         ComponentReferenceLoader componentReferenceLoader = new ComponentReferenceLoader(policyHelper);
         ComponentLoader componentLoader = new ComponentLoader(loaderRegistry,
                                                               propertyValueLoader,

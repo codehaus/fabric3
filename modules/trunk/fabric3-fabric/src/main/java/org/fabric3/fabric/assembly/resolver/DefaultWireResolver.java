@@ -19,23 +19,24 @@
 package org.fabric3.fabric.assembly.resolver;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.fabric3.fabric.assembly.ResolutionException;
 import org.fabric3.fabric.assembly.UnspecifiedTargetException;
-import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.spi.model.instance.LogicalReference;
+import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.AbstractComponentType;
+import org.fabric3.scdl.ComponentReference;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.ReferenceDefinition;
-import org.fabric3.scdl.ComponentReference;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.util.UriHelper;
 
 /**
@@ -199,44 +200,40 @@ public class DefaultWireResolver implements WireResolver {
      * @return URI              the target URI or null if not found
      * @throws AutowireTargetNotFoundException
      *          if an errror resolving occurs
+     * @throws AmbiguousAutowireTargetException
+     *          if more than one target satisfies the type criteria
      */
     private URI resolveByType(LogicalComponent<?> composite,
                               LogicalComponent component,
                               String referenceName,
-                              ServiceContract requiredContract) throws AutowireTargetNotFoundException {
-        // for now, attempt to match on interface, assume the class can be loaded
-        Class<?> requiredInterface = requiredContract.getInterfaceClass();
-        if (requiredInterface == null) {
-            throw new UnsupportedOperationException("Only interfaces support for autowire");
-        }
-        URI targetUri = null;
-        URI candidateUri = null;
+                              ServiceContract requiredContract)
+            throws AutowireTargetNotFoundException, AmbiguousAutowireTargetException {
+        URI targetUri;
+        List<URI> candidateUri = new ArrayList<URI>();
         // find a suitable target, starting with components first
         for (LogicalComponent<?> child : composite.getComponents()) {
             ComponentDefinition<? extends Implementation<?>> candidate = child.getDefinition();
             Implementation<?> candidateImpl = candidate.getImplementation();
             AbstractComponentType<?, ?, ?> candidateType = candidateImpl.getComponentType();
             for (ServiceDefinition service : candidateType.getServices().values()) {
-                Class<?> serviceInterface = service.getServiceContract().getInterfaceClass();
-                if (serviceInterface == null) {
+                ServiceContract targetContract = service.getServiceContract();
+                if (targetContract == null) {
                     continue;
                 }
-                if (requiredInterface.equals(serviceInterface)) {
-                    targetUri = URI.create(candidate.getName() + '#' + service.getName());
+                if (requiredContract.isAssignableFrom(targetContract)) {
+                    candidateUri.add(URI.create(candidate.getName() + '#' + service.getName()));
                     break;
-                } else if (candidateUri == null && requiredInterface.isAssignableFrom(serviceInterface)) {
-                    candidateUri = URI.create(candidate.getName() + '#' + service.getName());
                 }
             }
-            if (targetUri != null) {
-                break;
-            }
         }
-        if (targetUri == null) {
+        if (candidateUri.isEmpty()) {
             targetUri = resolvePrimordial(requiredContract);
-        }
-        if (candidateUri != null) {
-            targetUri = candidateUri;
+        } else {
+            if (candidateUri.size() > 1) {
+                // For now, we have no other criteria to select from
+                throw new AmbiguousAutowireTargetException(component.getUri().toString(), referenceName);
+            }
+            targetUri = candidateUri.get(0);
         }
         if (targetUri != null) {
             LogicalReference logicalReference = component.getReference(referenceName);
@@ -253,9 +250,8 @@ public class DefaultWireResolver implements WireResolver {
      * @return a URI of a service matching the type or null
      */
     private URI resolvePrimordial(ServiceContract contract) {
-        Class<?> requiredClass = contract.getInterfaceClass();
         for (Map.Entry<ServiceContract, URI> entry : hostAutowire.entrySet()) {
-            if (requiredClass.isAssignableFrom(entry.getKey().getInterfaceClass())) {
+            if (contract.isAssignableFrom(entry.getKey())) {
                 return entry.getValue().resolve("#" + entry.getKey().getInterfaceName());
             }
         }
@@ -269,8 +265,7 @@ public class DefaultWireResolver implements WireResolver {
      * @param component       the component
      * @return the autowire setting
      */
-    private Autowire calculateAutowire(LogicalComponent<?> targetComposite, LogicalComponent<?> component
-    ) {
+    private Autowire calculateAutowire(LogicalComponent<?> targetComposite, LogicalComponent<?> component) {
         ComponentDefinition<? extends Implementation<?>> definition = component.getDefinition();
         Autowire autowire = definition.getAutowire();
         if (autowire == Autowire.INHERITED) {

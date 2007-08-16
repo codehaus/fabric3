@@ -27,9 +27,10 @@
            targetNamespace="org.codehaus.fabric3"
            name="ScannerComposite"
            autowire="true">
-    
+
     <component name="ContributionDirectoryScanner">
         <system:implementation.system class="org.fabric3.scanner.scanner.ContributionDirectoryScanner"/>
+        <reference name="assembly" target="distributedAssembly"/>
     </component>
 
     <component name="FileSystemResourceFactoryRegistry">
@@ -40,7 +41,7 @@
     <component name="JarResourceFactory">
         <system:implementation.system class="org.fabric3.scanner.scanner.factory.JarResourceFactory"/>
     </component>
-    
+
     <component name="ExplodedJarResourceFactory">
         <system:implementation.system class="org.fabric3.scanner.scanner.factory.ExplodedJarResourceFactory"/>
     </component>

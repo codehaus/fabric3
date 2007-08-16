@@ -22,18 +22,18 @@ import java.net.URI;
 
 import junit.framework.TestCase;
 
-import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.spi.model.instance.LogicalReference;
-import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.AbstractComponentType;
+import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.ComponentReference;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Property;
-import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.ReferenceDefinition;
-import org.fabric3.scdl.ComponentReference;
+import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.spi.idl.java.JavaServiceContract;
+import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalReference;
 
 /**
  * @version $Rev$ $Date$
@@ -147,8 +147,7 @@ public class DefaultWireResolverTestCase extends TestCase {
 
     private LogicalComponent<?> createSourceAtomic(Class<?> requiredInterface, LogicalComponent<CompositeImplementation> parent) {
 
-        ServiceContract contract = new ServiceContract() {
-        };
+        JavaServiceContract contract = new JavaServiceContract();
         contract.setInterfaceClass(requiredInterface);
         ReferenceDefinition referenceDefinition = new ReferenceDefinition("ref", contract);
         referenceDefinition.setRequired(true);
@@ -163,7 +162,8 @@ public class DefaultWireResolverTestCase extends TestCase {
         target.setAutowire(true);
         definition.add(target);
         URI id = URI.create("runtime");
-        LogicalComponent<?> component = new LogicalComponent<MockAtomicImpl>(SOURCE_URI, id, definition, parent, definition.getKey());
+        LogicalComponent<?> component =
+                new LogicalComponent<MockAtomicImpl>(SOURCE_URI, id, definition, parent, definition.getKey());
         LogicalReference logicalReference = new LogicalReference(REFERENCE_URI, referenceDefinition, component);
         component.addReference(logicalReference);
         return component;
@@ -171,8 +171,7 @@ public class DefaultWireResolverTestCase extends TestCase {
 
     private LogicalComponent<?> createTargetAtomic(Class<?> serviceInterface, LogicalComponent<CompositeImplementation> parent) {
         URI uri = URI.create("target");
-        ServiceContract contract = new ServiceContract() {
-        };
+        JavaServiceContract contract = new JavaServiceContract();
         contract.setInterfaceClass(serviceInterface);
         ServiceDefinition service = new ServiceDefinition("service", contract);
         MockComponentType type = new MockComponentType();

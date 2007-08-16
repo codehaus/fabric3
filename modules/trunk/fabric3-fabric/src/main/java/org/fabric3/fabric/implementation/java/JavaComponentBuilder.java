@@ -64,7 +64,8 @@ public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaCompone
                                 @Reference ScopeRegistry scopeRegistry,
                                 @Reference InstanceFactoryBuilderRegistry providerBuilders,
                                 @Reference ClassLoaderRegistry classLoaderRegistry,
-                                @Reference TransformerRegistry<PullTransformer<?, ?>> transformerRegistry,
+                                @Reference(name = "transformerRegistry")
+                                TransformerRegistry<PullTransformer<?, ?>> transformerRegistry,
                                 @Reference ProxyService proxyService) {
         super(builderRegistry,
               scopeRegistry,
@@ -91,41 +92,43 @@ public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaCompone
 
         // create the InstanceFactoryProvider based on the definition in the model
         InstanceFactoryDefinition providerDefinition = definition.getInstanceFactoryProviderDefinition();
-        
-        
+
+
         InstanceFactoryProvider<T> provider = providerBuilders.build(providerDefinition, classLoader);
 
         Map<String, ObjectFactory<?>> propertyFactories = createPropertyFactories(definition, provider);
-        Map<String, MultiplicityObjectFactory<?>> referenceFactories = createMultiplicityReferenceFactories(providerDefinition);
+        Map<String, MultiplicityObjectFactory<?>> referenceFactories =
+                createMultiplicityReferenceFactories(providerDefinition);
 
         return new JavaComponent<T>(componentId, provider, scopeContainer, groupId, initLevel, -1, -1, proxyService,
                                     propertyFactories, referenceFactories, definition.getKey());
-        
+
     }
-    
+
     /*
-     * Create wrapper object factories for multi-valued references.
-     */
+    * Create wrapper object factories for multi-valued references.
+    */
     private Map<String, MultiplicityObjectFactory<?>> createMultiplicityReferenceFactories(InstanceFactoryDefinition providerDefinition) {
-        
-        Map<String, MultiplicityObjectFactory<?>> referenceFactories = new HashMap<String, MultiplicityObjectFactory<?>>();
-        for(InjectionSiteMapping injectionSiteMapping : providerDefinition.getInjectionSites()) {
-            if(injectionSiteMapping.getSource().getValueType() != ValueSource.ValueSourceType.REFERENCE) {
+
+        Map<String, MultiplicityObjectFactory<?>> referenceFactories =
+                new HashMap<String, MultiplicityObjectFactory<?>>();
+        for (InjectionSiteMapping injectionSiteMapping : providerDefinition.getInjectionSites()) {
+            if (injectionSiteMapping.getSource().getValueType() != ValueSource.ValueSourceType.REFERENCE) {
                 continue;
             }
             MemberSite memberSite = injectionSiteMapping.getSite();
-            if(memberSite == null || memberSite.getSignature() == null) {
+            if (memberSite == null || memberSite.getSignature() == null) {
                 // TODO Handle CDI
                 continue;
             }
             String referenceType = memberSite.getSignature().getParameterTypes().get(0);
-            if("java.util.Map".equals(referenceType)) {
+            if ("java.util.Map".equals(referenceType)) {
                 referenceFactories.put(injectionSiteMapping.getSource().getName(), new MapMultiplicityObjectFactory());
-            } else if("java.util.Set".equals(referenceType)) {
+            } else if ("java.util.Set".equals(referenceType)) {
                 referenceFactories.put(injectionSiteMapping.getSource().getName(), new SetMultiplicityObjectFactory());
-            } else if("java.util.List".equals(referenceType)) {
+            } else if ("java.util.List".equals(referenceType)) {
                 referenceFactories.put(injectionSiteMapping.getSource().getName(), new ListMultiplicityObjectFactory());
-            } else if("java.util.Collection".equals(referenceType)) {
+            } else if ("java.util.Collection".equals(referenceType)) {
                 referenceFactories.put(injectionSiteMapping.getSource().getName(), new ListMultiplicityObjectFactory());
             }
         }

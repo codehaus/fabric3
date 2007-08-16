@@ -32,11 +32,13 @@ import org.fabric3.scdl.ServiceDefinition;
 public class JavaMappedService extends ServiceDefinition {
     private Class<?> serviceInterface;
 
-    public JavaMappedService() {
-    }
-
     public JavaMappedService(String name, ServiceContract contract) {
         super(name, contract);
+    }
+
+    public JavaMappedService(String name, ServiceContract contract, Class<?> serviceInterface) {
+        super(name, contract);
+        this.serviceInterface = serviceInterface;
     }
 
     /**

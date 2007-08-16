@@ -25,7 +25,7 @@
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
            name="org.fabric3.fabric.JavaImplementation"
-			  autowire="true">
+           autowire="true">
 
 
     <component name="org.fabric3.fabric.implementation.java.JavaImplementationLoader">
@@ -42,6 +42,7 @@
 
     <component name="org.fabric3.fabric.implementation.java.JavaComponentBuilder">
         <system:implementation.system class="org.fabric3.fabric.implementation.java.JavaComponentBuilder"/>
+        <reference name="transformerRegistry" target="pullTransformerRegistry"/>
     </component>
 
     <component name="org.fabric3.fabric.implementation.java.JavaWireAttacher">

@@ -21,15 +21,14 @@ package org.fabric3.fabric.implementation.processor;
 import java.util.Collection;
 import java.util.List;
 
+import junit.framework.TestCase;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
 import org.fabric3.pojo.processor.JavaMappedReference;
 import org.fabric3.pojo.processor.PojoComponentType;
 import org.fabric3.scdl.Multiplicity;
-import org.fabric3.scdl.ServiceContract;
-
-import junit.framework.TestCase;
-import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
+import org.fabric3.spi.idl.java.JavaServiceContract;
 
 /**
  * @version $Rev$ $Date$
@@ -37,23 +36,23 @@ import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
 public class ReferenceProcessorTestCase extends TestCase {
 
     PojoComponentType type =
-        new PojoComponentType();
+            new PojoComponentType();
     ReferenceProcessor processor = new ReferenceProcessor(new JavaInterfaceProcessorRegistryImpl());
 
     public void testMethodAnnotation() throws Exception {
         processor.visitMethod(ReferenceProcessorTestCase.Foo.class.getMethod("setFoo", Ref.class), type, null);
         JavaMappedReference reference = type.getReferences().get("foo");
         assertNotNull(reference);
-        ServiceContract contract = reference.getServiceContract();
+        JavaServiceContract contract = (JavaServiceContract) reference.getServiceContract();
         assertEquals(Ref.class, contract.getInterfaceClass());
         assertEquals("ReferenceProcessorTestCase$Ref", contract.getInterfaceName());
     }
 
     public void testMethodRequired() throws Exception {
         processor.visitMethod(
-            ReferenceProcessorTestCase.Foo.class.getMethod("setFooRequired", Ref.class),
-                              type,
-                              null);
+                ReferenceProcessorTestCase.Foo.class.getMethod("setFooRequired", Ref.class),
+                type,
+                null);
         JavaMappedReference prop = type.getReferences().get("fooRequired");
         assertNotNull(prop);
         assertTrue(prop.isRequired());
@@ -61,9 +60,9 @@ public class ReferenceProcessorTestCase extends TestCase {
 
     public void testMethodName() throws Exception {
         processor.visitMethod(
-            ReferenceProcessorTestCase.Foo.class.getMethod("setBarMethod", Ref.class),
-                              type,
-                              null);
+                ReferenceProcessorTestCase.Foo.class.getMethod("setBarMethod", Ref.class),
+                type,
+                null);
         assertNotNull(type.getReferences().get("bar"));
     }
 
@@ -71,7 +70,7 @@ public class ReferenceProcessorTestCase extends TestCase {
         processor.visitField(ReferenceProcessorTestCase.Foo.class.getDeclaredField("baz"), type, null);
         JavaMappedReference reference = type.getReferences().get("baz");
         assertNotNull(reference);
-        ServiceContract contract = reference.getServiceContract();
+        JavaServiceContract contract = (JavaServiceContract) reference.getServiceContract();
         assertEquals(Ref.class, contract.getInterfaceClass());
         assertEquals("ReferenceProcessorTestCase$Ref", contract.getInterfaceName());
     }
@@ -102,9 +101,9 @@ public class ReferenceProcessorTestCase extends TestCase {
         processor.visitMethod(ReferenceProcessorTestCase.Bar.class.getMethod("dupMethod", Ref.class), type, null);
         try {
             processor.visitMethod(
-                ReferenceProcessorTestCase.Bar.class.getMethod("dupSomeMethod", Ref.class),
-                                  type,
-                                  null);
+                    ReferenceProcessorTestCase.Bar.class.getMethod("dupSomeMethod", Ref.class),
+                    type,
+                    null);
             fail();
         } catch (DuplicateReferenceException e) {
             // expected
@@ -195,7 +194,8 @@ public class ReferenceProcessorTestCase extends TestCase {
         processor.visitField(Multiple.class.getDeclaredField("refs1"), type, null);
         JavaMappedReference prop = type.getReferences().get("refs1");
         assertNotNull(prop);
-        assertSame(Ref.class, prop.getServiceContract().getInterfaceClass());
+        JavaServiceContract<?> contract = (JavaServiceContract) prop.getServiceContract();
+        assertSame(Ref.class, contract.getInterfaceClass());
         assertEquals(Multiplicity.ONE_N, prop.getMultiplicity());
         assertTrue(prop.isRequired());
     }
@@ -204,7 +204,8 @@ public class ReferenceProcessorTestCase extends TestCase {
         processor.visitField(Multiple.class.getDeclaredField("refs2"), type, null);
         JavaMappedReference prop = type.getReferences().get("refs2");
         assertNotNull(prop);
-        assertSame(Ref.class, prop.getServiceContract().getInterfaceClass());
+        JavaServiceContract<?> contract = (JavaServiceContract) prop.getServiceContract();
+        assertSame(Ref.class, contract.getInterfaceClass());
         assertEquals(Multiplicity.ZERO_N, prop.getMultiplicity());
         assertFalse(prop.isRequired());
     }
@@ -213,7 +214,8 @@ public class ReferenceProcessorTestCase extends TestCase {
         processor.visitMethod(Multiple.class.getMethod("setRefs3", Ref[].class), type, null);
         JavaMappedReference prop = type.getReferences().get("refs3");
         assertNotNull(prop);
-        assertSame(Ref.class, prop.getServiceContract().getInterfaceClass());
+        JavaServiceContract<?> contract = (JavaServiceContract) prop.getServiceContract();
+        assertSame(Ref.class, contract.getInterfaceClass());
         assertEquals(Multiplicity.ONE_N, prop.getMultiplicity());
         assertTrue(prop.isRequired());
     }
@@ -222,7 +224,8 @@ public class ReferenceProcessorTestCase extends TestCase {
         processor.visitMethod(Multiple.class.getMethod("setRefs4", Collection.class), type, null);
         JavaMappedReference prop = type.getReferences().get("refs4");
         assertNotNull(prop);
-        assertSame(Ref.class, prop.getServiceContract().getInterfaceClass());
+        JavaServiceContract<?> contract = (JavaServiceContract) prop.getServiceContract();
+        assertSame(Ref.class, contract.getInterfaceClass());
         assertEquals(Multiplicity.ZERO_N, prop.getMultiplicity());
         assertFalse(prop.isRequired());
     }

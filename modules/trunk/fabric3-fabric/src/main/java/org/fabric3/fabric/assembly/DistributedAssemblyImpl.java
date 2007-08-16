@@ -44,7 +44,7 @@ public class DistributedAssemblyImpl extends AbstractAssembly implements Distrib
                                    @Reference Allocator allocator,
                                    @Reference RoutingService routingService,
                                    @Reference AssemblyStore store,
-                                   @Reference MetaDataStore metaDataStore,
+                                   @Reference(name = "store")MetaDataStore metaDataStore,
                                    @Reference HostInfo hostInfo) {
         super(hostInfo.getDomain(),
               generatorRegistry,

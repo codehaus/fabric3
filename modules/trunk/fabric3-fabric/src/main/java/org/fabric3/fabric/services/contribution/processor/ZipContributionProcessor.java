@@ -68,7 +68,7 @@ public class ZipContributionProcessor extends ArchiveContributionProcessor imple
                                     @Reference LoaderRegistry loaderRegistry,
                                     @Reference ClassLoaderRegistry classLoaderRegistry,
                                     @Reference XMLInputFactory xmlFactory,
-                                    @Reference MetaDataStore metaDataStore,
+                                    @Reference(name = "metaDataStore")MetaDataStore metaDataStore,
                                     @Reference ClasspathProcessorRegistry classpathProcessorRegistry,
                                     @Reference ArtifactLocationEncoder encoder,
                                     @Reference ContentTypeResolver contentTypeResolver) {

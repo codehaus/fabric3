@@ -19,6 +19,7 @@
 package org.fabric3.loader.composite;
 
 import java.net.URI;
+import java.lang.reflect.Method;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
@@ -98,6 +99,10 @@ public class CompositeServiceLoaderTestCase extends TestCase {
 
     public void testWithInterface() throws LoaderException, XMLStreamException {
         ServiceContract sc = new ServiceContract() {
+            public boolean isAssignableFrom(ServiceContract contract) {
+                return false;
+            }
+
         };
         expect(mockReader.getAttributeValue(null, "name")).andReturn(serviceName);
         expect(mockReader.getAttributeValue(null, "promote")).andReturn(componentName);

@@ -54,14 +54,14 @@ import org.fabric3.host.contribution.FileContributionSource;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.assembly.Assembly;
+import org.fabric3.spi.scanner.FileSystemResource;
+import org.fabric3.spi.scanner.FileSystemResourceFactoryRegistry;
 import org.fabric3.spi.services.VoidService;
 import static org.fabric3.spi.services.contribution.ContributionConstants.DEFAULT_STORE;
 import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.services.event.Fabric3Event;
 import org.fabric3.spi.services.event.Fabric3EventListener;
 import org.fabric3.spi.services.event.RuntimeStart;
-import org.fabric3.spi.scanner.FileSystemResource;
-import org.fabric3.spi.scanner.FileSystemResourceFactoryRegistry;
 
 /**
  * Periodically scans a directory for new, updated, or removed contributions. New contributions are added to the domain
@@ -82,7 +82,7 @@ import org.fabric3.spi.scanner.FileSystemResourceFactoryRegistry;
  * Note update and remove are not fully implemented.
  */
 @Service(VoidService.class)
-@EagerInit    
+@EagerInit
 public class ContributionDirectoryScanner implements Runnable, Fabric3EventListener {
     private final Map<String, FileSystemResource> cache = new HashMap<String, FileSystemResource>();
     private final Map<String, FileSystemResource> errorCache = new HashMap<String, FileSystemResource>();
@@ -103,7 +103,7 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
     @Constructor
     public ContributionDirectoryScanner(@Reference FileSystemResourceFactoryRegistry registry,
                                         @Reference ContributionService contributionService,
-                                        @Reference Assembly assembly,
+                                        @Reference(name = "assembly")Assembly assembly,
                                         @Reference EventService eventService,
                                         @Reference MonitorFactory factory) {
         this.registry = registry;

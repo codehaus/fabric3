@@ -19,6 +19,7 @@
 package org.fabric3.fabric.wire;
 
 import java.lang.reflect.Type;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -322,6 +323,11 @@ public class ContractCompatibilityServiceImplTestCase extends TestCase {
     private class MockContract<T> extends ServiceContract<T> {
         public MockContract() {
         }
+
+        public boolean isAssignableFrom(ServiceContract contract) {
+            return false;
+        }
+
     }
 
 }

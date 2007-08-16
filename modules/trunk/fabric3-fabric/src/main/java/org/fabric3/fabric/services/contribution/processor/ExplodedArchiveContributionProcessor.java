@@ -61,7 +61,7 @@ public class ExplodedArchiveContributionProcessor extends ArchiveContributionPro
     public ExplodedArchiveContributionProcessor(@Reference LoaderRegistry loaderRegistry,
                                                 @Reference ClassLoaderRegistry classLoaderRegistry,
                                                 @Reference XMLInputFactory xmlFactory,
-                                                @Reference MetaDataStore metaDataStore,
+                                                @Reference(name = "metaDataStore")MetaDataStore metaDataStore,
                                                 @Reference ContentTypeResolver contentTypeResolver,
                                                 @Reference ArtifactLocationEncoder encoder) {
         super(metaDataStore, classLoaderRegistry, encoder);

@@ -36,22 +36,23 @@ import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Remotable;
 import org.osoa.sca.annotations.Service;
 
-import org.fabric3.spi.loader.LoaderContext;
-import org.fabric3.spi.idl.InvalidServiceContractException;
-import org.fabric3.pojo.processor.ConstructorDefinition;
-import org.fabric3.pojo.processor.ImplementationProcessorExtension;
-import org.fabric3.pojo.processor.ImplementationProcessorService;
-import org.fabric3.pojo.processor.JavaMappedProperty;
-import org.fabric3.pojo.processor.JavaMappedReference;
-import org.fabric3.pojo.processor.ProcessingException;
-import org.fabric3.pojo.processor.JavaMappedService;
-import org.fabric3.pojo.processor.PojoComponentType;
-
 import static org.fabric3.fabric.util.JavaIntrospectionHelper.getAllInterfaces;
 import static org.fabric3.fabric.util.JavaIntrospectionHelper.getAllPublicAndProtectedFields;
 import static org.fabric3.fabric.util.JavaIntrospectionHelper.getAllUniquePublicProtectedMethods;
 import static org.fabric3.fabric.util.JavaIntrospectionHelper.getBaseName;
 import static org.fabric3.fabric.util.JavaIntrospectionHelper.toPropertyName;
+import org.fabric3.pojo.processor.ConstructorDefinition;
+import org.fabric3.pojo.processor.ImplementationProcessorExtension;
+import org.fabric3.pojo.processor.ImplementationProcessorService;
+import org.fabric3.pojo.processor.JavaMappedProperty;
+import org.fabric3.pojo.processor.JavaMappedReference;
+import org.fabric3.pojo.processor.JavaMappedService;
+import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.pojo.processor.ProcessingException;
+import org.fabric3.scdl.ServiceContract;
+import org.fabric3.spi.idl.InvalidServiceContractException;
+import org.fabric3.spi.idl.java.InterfaceJavaIntrospector;
+import org.fabric3.spi.loader.LoaderContext;
 
 /**
  * Heuristically evaluates an un-annotated Java implementation type to determine services, references, and properties
@@ -66,15 +67,18 @@ import static org.fabric3.fabric.util.JavaIntrospectionHelper.toPropertyName;
  */
 public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
     private ImplementationProcessorService implService;
+    private InterfaceJavaIntrospector interfaceIntrospector;
 
-    public HeuristicPojoProcessor(@Reference ImplementationProcessorService service) {
+    public HeuristicPojoProcessor(
+            @Reference ImplementationProcessorService service, @Reference InterfaceJavaIntrospector introspector) {
         this.implService = service;
+        this.interfaceIntrospector = introspector;
     }
 
     public <T> void visitEnd(
-        Class<T> clazz,
-        PojoComponentType type,
-        LoaderContext context) throws ProcessingException {
+            Class<T> clazz,
+            PojoComponentType type,
+            LoaderContext context) throws ProcessingException {
         Map<String, JavaMappedService> services = type.getServices();
         if (services.isEmpty()) {
             // heuristically determine the service
@@ -123,8 +127,8 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
         // make a first pass through all public methods with one param
         for (Method method : methods) {
             if (method.getParameterTypes().length != 1 || !Modifier.isPublic(method.getModifiers())
-                || !method.getName().startsWith("set")
-                || method.getReturnType() != void.class) {
+                    || !method.getName().startsWith("set")
+                    || method.getReturnType() != void.class) {
                 continue;
             }
             if (!isInServiceInterface(method, services)) {
@@ -144,8 +148,8 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
         // second pass for protected methods with one param
         for (Method method : methods) {
             if (method.getParameterTypes().length != 1 || !Modifier.isProtected(method.getModifiers())
-                || !method.getName().startsWith("set")
-                || method.getReturnType() != void.class) {
+                    || !method.getName().startsWith("set")
+                    || method.getReturnType() != void.class) {
                 continue;
             }
             Class<?> param = method.getParameterTypes()[0];
@@ -181,14 +185,14 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
      */
     @SuppressWarnings("unchecked")
     private <T> void evaluateConstructor(
-        PojoComponentType type,
-        Class<T> clazz) throws ProcessingException {
+            PojoComponentType type,
+            Class<T> clazz) throws ProcessingException {
         // determine constructor if one is not annotated
         ConstructorDefinition<?> definition = type.getConstructorDefinition();
         Constructor constructor;
         boolean explict = false;
         if (definition != null
-            && definition.getConstructor().getAnnotation(org.osoa.sca.annotations.Constructor.class) != null) {
+                && definition.getConstructor().getAnnotation(org.osoa.sca.annotations.Constructor.class) != null) {
             // the constructor was already defined explicitly
             return;
         } else if (definition != null) {
@@ -244,23 +248,24 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
             for (int i = 0; i < params.length; i++) {
                 Class param = params[i];
                 implService.processParam(param,
-                    constructor.getGenericParameterTypes()[i],
-                    annotations[i],
-                    new String[0],
-                    i,
-                    type,
-                    paramNames);
+                                         constructor.getGenericParameterTypes()[i],
+                                         annotations[i],
+                                         new String[0],
+                                         i,
+                                         type,
+                                         paramNames);
             }
         } else {
             if (!implService.areUnique(params)) {
                 throw new AmbiguousConstructorException("Cannot resolve non-unique parameter types, use @Constructor");
             }
-            if (!calcPropRefUniqueness(props.values(), refs.values())) {
-                throw new AmbiguousConstructorException("Cannot resolve non-unique parameter types, use @Constructor");
-            }
             boolean empty = props.size() + refs.size() == 0;
             if (!empty) {
-                calcParamNames(params, props, refs, paramNames);
+                try {
+                    calcParamNames(params, props, refs, paramNames);
+                } catch (InvalidServiceContractException e) {
+                    throw new ProcessingException(e);
+                }
             } else {
                 heuristicParamNames(params, refs, props, paramNames);
 
@@ -272,7 +277,7 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
                                 Map<String, JavaMappedProperty<?>> props,
                                 Map<String, JavaMappedReference> refs,
                                 List<String> paramNames)
-        throws AmbiguousConstructorException {
+            throws AmbiguousConstructorException, InvalidServiceContractException {
         // the constructor param types must unambiguously match defined reference or property types
         for (Class param : params) {
             String name = findReferenceOrProperty(param, props, refs);
@@ -287,7 +292,7 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
                                      Map<String, JavaMappedReference> refs,
                                      Map<String, JavaMappedProperty<?>> props,
                                      List<String> paramNames)
-        throws ProcessingException {
+            throws ProcessingException {
         // heuristically determine refs and props from the parameter types
         for (Class<?> param : params) {
             String name = getBaseName(param).toLowerCase();
@@ -301,52 +306,35 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
     }
 
     /*
-     * Returns true if the union of the given collections of properties and references have unique Java types
-     */
-    private boolean calcPropRefUniqueness(
-        Collection<JavaMappedProperty<?>> props,
-        Collection<JavaMappedReference> refs) {
-
-        Class[] classes = new Class[props.size() + refs.size()];
-        int i = 0;
-        for (JavaMappedProperty<?> property : props) {
-            classes[i] = property.getJavaType();
-            i++;
-        }
-        for (JavaMappedReference reference : refs) {
-            classes[i] = reference.getServiceContract().getInterfaceClass();
-            i++;
-        }
-        return implService.areUnique(classes);
-    }
-
-    /*
      * Unambiguously finds the reference or property associated with the given type
      *
      * @return the name of the reference or property if found, null if not
      * @throws AmbiguousConstructorException if the constructor parameter cannot be resolved to a property or reference
      */
     private String findReferenceOrProperty(
-        Class<?> type,
-        Map<String, JavaMappedProperty<?>> props,
-        Map<String, JavaMappedReference> refs) throws AmbiguousConstructorException {
+            Class<?> type,
+            Map<String, JavaMappedProperty<?>> props,
+            Map<String, JavaMappedReference> refs)
+            throws AmbiguousConstructorException, InvalidServiceContractException {
 
         String name = null;
         for (JavaMappedProperty<?> property : props.values()) {
             if (property.getJavaType().equals(type)) {
                 if (name != null) {
                     throw new AmbiguousConstructorException("Ambiguous property or reference for constructor type",
-                        type.getName());
+                                                            type.getName());
                 }
                 name = property.getName();
                 // do not break since ambiguities must be checked, i.e. more than one prop or ref of the same type
             }
         }
         for (JavaMappedReference reference : refs.values()) {
-            if (reference.getServiceContract().getInterfaceClass().equals(type)) {
+            ServiceContract<?> contractType = interfaceIntrospector.introspect(type);
+            ServiceContract<?> refContract = reference.getServiceContract();
+            if (refContract.isAssignableFrom(contractType)) {
                 if (name != null) {
                     throw new AmbiguousConstructorException("Ambiguous property or reference for constructor type",
-                        type.getName());
+                                                            type.getName());
                 }
                 name = reference.getName();
                 // do not break since ambiguities must be checked, i.e. more than one prop or ref of the same type
@@ -379,7 +367,7 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
         }
         if (referenceType != null) {
             return referenceType.getAnnotation(Remotable.class) != null
-                || referenceType.getAnnotation(Service.class) != null;
+                    || referenceType.getAnnotation(Service.class) != null;
         } else {
             return rawType.getAnnotation(Remotable.class) != null || rawType.getAnnotation(Service.class) != null;
         }
@@ -390,22 +378,29 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
      */
     private boolean isInServiceInterface(Method operation, Map<String, JavaMappedService> services) {
         for (JavaMappedService service : services.values()) {
-            Class<?> clazz = service.getServiceContract().getInterfaceClass();
-            if (operation.getDeclaringClass().equals(clazz)) {
+            //ServiceContract<?> contract = service.getServiceContract();
+            if (hasOperation(service.getServiceInterface(), operation)) {
                 return true;
             }
-            Method[] methods = service.getServiceContract().getInterfaceClass().getMethods();
-            for (Method method : methods) {
-                if (operation.getName().equals(method.getName())
+        }
+        return false;
+    }
+
+    private boolean hasOperation(Class interfaceClass, Method operation) {
+        if (operation.getDeclaringClass().equals(interfaceClass)) {
+            return true;
+        }
+        Method[] methods = interfaceClass.getMethods();
+        for (Method method : methods) {
+            if (operation.getName().equals(method.getName())
                     && operation.getParameterTypes().length == method.getParameterTypes().length) {
-                    Class<?>[] methodTypes = method.getParameterTypes();
-                    for (int i = 0; i < operation.getParameterTypes().length; i++) {
-                        Class<?> paramType = operation.getParameterTypes()[i];
-                        if (!paramType.equals(methodTypes[i])) {
-                            break;
-                        } else if (i == operation.getParameterTypes().length - 1) {
-                            return true;
-                        }
+                Class<?>[] methodTypes = method.getParameterTypes();
+                for (int i = 0; i < operation.getParameterTypes().length; i++) {
+                    Class<?> paramType = operation.getParameterTypes()[i];
+                    if (!paramType.equals(methodTypes[i])) {
+                        break;
+                    } else if (i == operation.getParameterTypes().length - 1) {
+                        return true;
                     }
                 }
             }
@@ -421,7 +416,7 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
      * @param paramType the service interface of the reference
      */
     private JavaMappedReference createReference(String name, Member member, Class<?> paramType)
-        throws ProcessingException {
+            throws ProcessingException {
         return implService.createReference(name, member, paramType);
     }
 
@@ -450,9 +445,9 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
      * @param methods all methods in the class to examine
      */
     private void calculateServiceInterface(
-        Class<?> clazz,
-        PojoComponentType type,
-        Set<Method> methods) throws ProcessingException {
+            Class<?> clazz,
+            PojoComponentType type,
+            Set<Method> methods) throws ProcessingException {
         List<Method> nonPropRefMethods = new ArrayList<Method>();
         // Map<String, JavaMappedService> services = type.getServices();
         Map<String, JavaMappedReference> references = type.getReferences();

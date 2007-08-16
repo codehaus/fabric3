@@ -31,7 +31,6 @@ import org.fabric3.fabric.implementation.processor.InitProcessor;
 import org.fabric3.fabric.implementation.processor.PropertyProcessor;
 import org.fabric3.fabric.implementation.processor.ReferenceProcessor;
 import org.fabric3.fabric.implementation.processor.ServiceProcessor;
-import org.fabric3.fabric.implementation.system.SystemImplementation;
 import org.fabric3.fabric.monitor.NullMonitorFactory;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.processor.PojoComponentType;
@@ -39,6 +38,7 @@ import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.scdl.Property;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.spi.idl.java.JavaServiceContract;
 
 /**
  * @version $Rev$ $Date$
@@ -50,11 +50,13 @@ public class SystemComponentTypeLoaderTestCase extends TestCase {
         SystemImplementation impl = new SystemImplementation(BasicInterfaceImpl.class);
         PojoComponentType componentType = loader.loadByIntrospection(impl, null);
         ServiceDefinition service = componentType.getServices().get(BasicInterface.class.getSimpleName());
-        assertEquals(BasicInterface.class, service.getServiceContract().getInterfaceClass());
+        JavaServiceContract<?> contract = (JavaServiceContract) service.getServiceContract();
+        assertEquals(BasicInterface.class, contract.getInterfaceClass());
         Property<?> property = componentType.getProperties().get("publicProperty");
         assertEquals(String.class, property.getJavaType());
         ReferenceDefinition referenceDefinition = componentType.getReferences().get("protectedReference");
-        assertEquals(BasicInterface.class, referenceDefinition.getServiceContract().getInterfaceClass());
+        JavaServiceContract<?> refContract = (JavaServiceContract) referenceDefinition.getServiceContract();
+        assertEquals(BasicInterface.class, refContract.getInterfaceClass());
     }
 
     protected void setUp() throws Exception {
@@ -70,7 +72,7 @@ public class SystemComponentTypeLoaderTestCase extends TestCase {
         registry.registerProcessor(new PropertyProcessor(service));
         registry.registerProcessor(new ReferenceProcessor(interfaceProcessorRegistry));
         registry.registerProcessor(new ServiceProcessor(service));
-        registry.registerProcessor(new HeuristicPojoProcessor(service));
+        registry.registerProcessor(new HeuristicPojoProcessor(service, null));
         loader = new SystemComponentTypeLoaderImpl(registry);
     }
 

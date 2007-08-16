@@ -19,9 +19,7 @@
 package org.fabric3.scdl;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Base class representing service contract information
@@ -31,20 +29,13 @@ import java.util.Map;
 public abstract class ServiceContract<T> extends ModelObject {
     protected boolean conversational;
     protected boolean remotable;
-    protected Class<?> interfaceClass;
     protected String interfaceName;
     protected String callbackName;
     protected Class<?> callbackClass;
     protected List<Operation<T>> operations;
     protected List<Operation<T>> callbackOperations;
-    protected String dataBinding;
-    protected Map<String, Object> metaData;
 
     protected ServiceContract() {
-    }
-
-    protected ServiceContract(Class<?> interfaceClass) {
-        this.interfaceClass = interfaceClass;
     }
 
     /**
@@ -63,24 +54,6 @@ public abstract class ServiceContract<T> extends ModelObject {
      */
     public void setInterfaceName(String interfaceName) {
         this.interfaceName = interfaceName;
-    }
-
-    /**
-     * Returns the class used to represent the service contract.
-     *
-     * @return the class used to represent the service contract
-     */
-    public Class<?> getInterfaceClass() {
-        return interfaceClass;
-    }
-
-    /**
-     * Sets the class used to represent the service contract.
-     *
-     * @param interfaceClass the class used to represent the service contract
-     */
-    public void setInterfaceClass(Class<?> interfaceClass) {
-        this.interfaceClass = interfaceClass;
     }
 
     /**
@@ -197,83 +170,18 @@ public abstract class ServiceContract<T> extends ModelObject {
         this.callbackOperations = callbacksOperations;
     }
 
-    public String getDataBinding() {
-        return dataBinding;
-    }
-
-    public void setDataBinding(String dataBinding) {
-        this.dataBinding = dataBinding;
-    }
-
     /**
-     * Returns a map of metadata key to value mappings for the operation.
+     * Determines if this contract is compatible with the given contract. Compatibility is determined according to the
+     * specifics of the IDL's compatibility semantics.
      *
-     * @return a map of metadata key to value mappings for the operation.
+     * @param contract the contract to test compatibility with
+     * @return true if the contracts are compatible
      */
-    public Map<String, Object> getMetaData() {
-        if (metaData == null) {
-            return Collections.emptyMap();
-        }
-        return metaData;
-    }
-
-    /**
-     * Adds metadata associated with the operation.
-     *
-     * @param key the metadata key
-     * @param val the metadata value
-     */
-    public void setMetaData(String key, Object val) {
-        if (metaData == null) {
-            metaData = new HashMap<String, Object>();
-        }
-        metaData.put(key, val);
-    }
-
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        final ServiceContract that = (ServiceContract) o;
-
-        if (callbackName != null ? !callbackName.equals(that.callbackName) : that.callbackName != null) {
-            return false;
-        }
-        if (callbackOperations != null ? !callbackOperations.equals(that.callbackOperations)
-                : that.callbackOperations != null) {
-            return false;
-        }
-        if (interfaceClass != null ? !interfaceClass.equals(that.interfaceClass) : that.interfaceClass != null) {
-            return false;
-        }
-        //noinspection SimplifiableIfStatement
-        if (interfaceName != null ? !interfaceName.equals(that.interfaceName) : that.interfaceName != null) {
-            return false;
-        }
-        return !(operations != null ? !operations.equals(that.operations) : that.operations != null);
-
-    }
-
-    public int hashCode() {
-        int result;
-        result = interfaceClass != null ? interfaceClass.hashCode() : 0;
-        result = 29 * result + (interfaceName != null ? interfaceName.hashCode() : 0);
-        result = 29 * result + (callbackName != null ? callbackName.hashCode() : 0);
-        result = 29 * result + (operations != null ? operations.hashCode() : 0);
-        result = 29 * result + (callbackOperations != null ? callbackOperations.hashCode() : 0);
-        return result;
-    }
+    public abstract boolean isAssignableFrom(ServiceContract contract);
 
     public String toString() {
         if (interfaceName != null) {
             return new StringBuilder().append("ServiceContract[").append(interfaceName).append("]").toString();
-        } else if (interfaceClass != null) {
-            return new StringBuilder().append("ServiceContract[").append(interfaceClass.getName()).append("]")
-                    .toString();
         } else {
             return super.toString();
         }

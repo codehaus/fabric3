@@ -19,23 +19,24 @@
 package org.fabric3.fabric.implementation.processor;
 
 import java.lang.reflect.Constructor;
-import java.net.URI;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
+import junit.framework.TestCase;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Remotable;
 import org.osoa.sca.annotations.Service;
 
+import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
 import org.fabric3.pojo.processor.ConstructorDefinition;
 import org.fabric3.pojo.processor.JavaMappedProperty;
 import org.fabric3.pojo.processor.JavaMappedReference;
+import org.fabric3.pojo.processor.JavaMappedService;
 import org.fabric3.pojo.processor.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
-
-import junit.framework.TestCase;
-import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
+import org.fabric3.spi.idl.java.JavaServiceContract;
 
 /**
  * Verfies component type information is properly introspected from an unadorned POJO according to the SCA Java Client
@@ -46,21 +47,23 @@ import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
 public class HeuristicPojoProcessorTestCase extends TestCase {
 
     private HeuristicPojoProcessor processor =
-        new HeuristicPojoProcessor(new ImplementationProcessorServiceImpl(new JavaInterfaceProcessorRegistryImpl()));
+            new HeuristicPojoProcessor(new ImplementationProcessorServiceImpl(new JavaInterfaceProcessorRegistryImpl()),
+                                       null);
 
     /**
      * Verifies a single service interface is computed when only one interface is implemented
      */
     public void testSingleInterface() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+                new PojoComponentType();
         Constructor<SingleInterfaceImpl> ctor = SingleInterfaceImpl.class.getConstructor();
         type.setConstructorDefinition(new ConstructorDefinition<SingleInterfaceImpl>(ctor));
         processor.visitEnd(SingleInterfaceImpl.class, type, null);
         assertEquals(1, type.getServices().size());
-        assertEquals(PropertyInterface.class,
-            type.getServices().get(PropertyInterface.class.getSimpleName())
-                .getServiceContract().getInterfaceClass());
+        Map<String, JavaMappedService> services = type.getServices();
+        JavaMappedService mappedService = services.get(PropertyInterface.class.getSimpleName());
+        JavaServiceContract<?> contract = (JavaServiceContract) mappedService.getServiceContract();
+        assertEquals(PropertyInterface.class, contract.getInterfaceClass());
         assertTrue(type.getProperties().isEmpty());
         assertTrue(type.getReferences().isEmpty());
     }
@@ -70,19 +73,23 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
      */
     public void testPropertyReference() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+                new PojoComponentType();
         Constructor<SingleInterfaceWithPropertyReferenceImpl> ctor =
-            SingleInterfaceWithPropertyReferenceImpl.class.getConstructor();
+                SingleInterfaceWithPropertyReferenceImpl.class.getConstructor();
         type.setConstructorDefinition(new ConstructorDefinition<SingleInterfaceWithPropertyReferenceImpl>(ctor));
         processor.visitEnd(SingleInterfaceWithPropertyReferenceImpl.class, type, null);
         assertEquals(1, type.getServices().size());
-        assertEquals(Interface1.class,
-            type.getServices().get(Interface1.class.getSimpleName())
-                .getServiceContract().getInterfaceClass());
+        Map<String, JavaMappedService> services = type.getServices();
+        JavaMappedService mappedService = services.get(Interface1.class.getSimpleName());
+        JavaServiceContract<?> contract = (JavaServiceContract) mappedService.getServiceContract();
+        assertEquals(Interface1.class, contract.getInterfaceClass());
         assertEquals(1, type.getProperties().size());
         assertEquals(ComplexProperty.class, type.getProperties().get("property").getJavaType());
         assertEquals(1, type.getReferences().size());
-        assertEquals(Ref.class, type.getReferences().get("reference").getServiceContract().getInterfaceClass());
+        Map<String, JavaMappedReference> references = type.getReferences();
+        JavaMappedReference mappedReference = references.get("reference");
+        JavaServiceContract<?> refContract = (JavaServiceContract) mappedReference.getServiceContract();
+        assertEquals(Ref.class, refContract.getInterfaceClass());
     }
 
     /**
@@ -90,7 +97,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
      */
     public void testPropertySetterInInterface() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+                new PojoComponentType();
         Constructor<SingleInterfaceImpl> ctor = SingleInterfaceImpl.class.getConstructor();
         type.setConstructorDefinition(new ConstructorDefinition<SingleInterfaceImpl>(ctor));
         processor.visitEnd(SingleInterfaceImpl.class, type, null);
@@ -102,7 +109,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
      */
     public void testReferenceSetterInInterface() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+                new PojoComponentType();
         Constructor<RefInterfaceImpl> ctor = RefInterfaceImpl.class.getConstructor();
         type.setConstructorDefinition(new ConstructorDefinition<RefInterfaceImpl>(ctor));
         processor.visitEnd(RefInterfaceImpl.class, type, null);
@@ -114,7 +121,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
      */
     public void testReferenceCollectionType() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+                new PojoComponentType();
         Constructor<ReferenceCollectionImpl> ctor = ReferenceCollectionImpl.class.getConstructor();
         type.setConstructorDefinition(new ConstructorDefinition<ReferenceCollectionImpl>(ctor));
         processor.visitEnd(ReferenceCollectionImpl.class, type, null);
@@ -127,7 +134,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
      */
     public void testPropertyCollectionType() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+                new PojoComponentType();
         Constructor<PropertyCollectionImpl> ctor = PropertyCollectionImpl.class.getConstructor();
         type.setConstructorDefinition(new ConstructorDefinition<PropertyCollectionImpl>(ctor));
         processor.visitEnd(PropertyCollectionImpl.class, type, null);
@@ -140,7 +147,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
      */
     public void testRemotableRef() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+                new PojoComponentType();
         Constructor<RemotableRefImpl> ctor = RemotableRefImpl.class.getConstructor();
         type.setConstructorDefinition(new ConstructorDefinition<RemotableRefImpl>(ctor));
         processor.visitEnd(RemotableRefImpl.class, type, null);
@@ -150,7 +157,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
 
     public void testParentInterface() throws ProcessingException, NoSuchMethodException {
         PojoComponentType type =
-            new PojoComponentType();
+                new PojoComponentType();
         Constructor<Child> ctor = Child.class.getConstructor();
         type.setConstructorDefinition(new ConstructorDefinition<Child>(ctor));
         processor.visitEnd(Child.class, type, null);
@@ -162,7 +169,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
      */
     public void testExcludedPropertyAndReference() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+                new PojoComponentType();
         JavaMappedReference ref = new JavaMappedReference("reference", null, null);
         type.add(ref);
         JavaMappedReference ref2 = new JavaMappedReference("reference2", null, null);
@@ -179,7 +186,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
 
     public void testProtectedRemotableRefField() throws ProcessingException, NoSuchMethodException {
         PojoComponentType type =
-            new PojoComponentType();
+                new PojoComponentType();
         Constructor<ProtectedRemotableRefFieldImpl> ctor = ProtectedRemotableRefFieldImpl.class.getConstructor();
         type.setConstructorDefinition(new ConstructorDefinition<ProtectedRemotableRefFieldImpl>(ctor));
         processor.visitEnd(ProtectedRemotableRefFieldImpl.class, type, null);
@@ -188,7 +195,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
 
     public void testProtectedRemotableRefMethod() throws ProcessingException, NoSuchMethodException {
         PojoComponentType type =
-            new PojoComponentType();
+                new PojoComponentType();
         Constructor<ProtectedRemotableRefMethodImpl> ctor = ProtectedRemotableRefMethodImpl.class.getConstructor();
         type.setConstructorDefinition(new ConstructorDefinition<ProtectedRemotableRefMethodImpl>(ctor));
         processor.visitEnd(ProtectedRemotableRefMethodImpl.class, type, null);
@@ -197,7 +204,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
 
     public void testSetDataTypes() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+                new PojoComponentType();
         Constructor<PropertyIntTypeOnConstructor> ctor = PropertyIntTypeOnConstructor.class.getConstructor(int.class);
         type.setConstructorDefinition(new ConstructorDefinition<PropertyIntTypeOnConstructor>(ctor));
         processor.visitEnd(ProtectedRemotableRefMethodImpl.class, type, null);

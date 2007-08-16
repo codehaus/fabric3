@@ -27,6 +27,7 @@
 
     <component name="distributedAssembly">
         <system:implementation.system class="org.fabric3.fabric.assembly.DistributedAssemblyImpl"/>
+        <reference name="store" target="MetadataStore"/>
     </component>
 
     <component name="wireResolver">
@@ -47,10 +48,6 @@
 
     <component name="generatorRegistry">
         <system:implementation.system class="org.fabric3.fabric.generator.GeneratorRegistryImpl"/>
-    </component>
-
-    <component name="modelMarshallerRegistry">
-        <system:implementation.system class="org.fabric3.fabric.marshaller.DefaultMarshallerRegistry"/>
     </component>
 
     <component name="advertismentService">
@@ -93,7 +90,7 @@
     </component>
 
     <!-- Default marshaller registry -->
-    <component name="org.fabric3.itest.defaultMarshallerRegistry">
+    <component name="defaultMarshallerRegistry">
         <system:implementation.system class="org.fabric3.fabric.marshaller.xstream.XStreamMarshallerRegistry"/>
     </component>
 
@@ -138,6 +135,7 @@
     <!-- Definitions deployer -->
     <component name="definitionsDeployer">
         <system:implementation.system class="org.fabric3.fabric.services.definitions.DefaultDefinitionsDeployer"/>
+        <reference name="store" target="MetadataStore"/>
     </component>
 
 </composite>

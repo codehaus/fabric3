@@ -37,7 +37,8 @@ import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
 public class HeutisticExtensibleConstructorTestCase extends TestCase {
 
     private HeuristicPojoProcessor processor =
-        new HeuristicPojoProcessor(new ImplementationProcessorServiceImpl(new JavaInterfaceProcessorRegistryImpl()));
+        new HeuristicPojoProcessor(new ImplementationProcessorServiceImpl(new JavaInterfaceProcessorRegistryImpl()),
+                                   null);
 
     /**
      * Verifies heuristic processing can be called priot to an extension annotation processors being called.
