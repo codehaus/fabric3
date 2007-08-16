@@ -18,20 +18,15 @@
  */
 package org.fabric3.fabric.integration.implementation;
 
+import junit.framework.TestCase;
+import org.easymock.EasyMock;
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Scope;
+
 import org.fabric3.api.annotation.Resource;
-
-import org.fabric3.pojo.processor.ImplementationProcessorService;
-import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.pojo.instancefactory.Signature;
-import static org.fabric3.scdl.Scope.COMPOSITE;
-import org.fabric3.spi.component.ScopeRegistry;
-
-import junit.framework.TestCase;
 import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
 import org.fabric3.fabric.implementation.IntrospectionRegistryImpl;
 import org.fabric3.fabric.implementation.processor.DestroyProcessor;
@@ -42,8 +37,11 @@ import org.fabric3.fabric.implementation.processor.ReferenceProcessor;
 import org.fabric3.fabric.implementation.processor.ResourceProcessor;
 import org.fabric3.fabric.implementation.processor.ScopeProcessor;
 import org.fabric3.fabric.monitor.NullMonitorFactory;
-
-import org.easymock.EasyMock;
+import org.fabric3.pojo.instancefactory.Signature;
+import org.fabric3.pojo.processor.ImplementationProcessorService;
+import org.fabric3.pojo.scdl.PojoComponentType;
+import static org.fabric3.scdl.Scope.COMPOSITE;
+import org.fabric3.spi.component.ScopeRegistry;
 
 /**
  * Sanity check of the <code>IntegrationRegistry</code> to verify operation with processors
@@ -60,7 +58,7 @@ public class IntrospectionRegistryIntegrationTestCase extends TestCase {
         assertEquals(new Signature(Foo.class.getMethod("init")), type.getInitMethod());
         assertEquals(new Signature(Foo.class.getMethod("destroy")), type.getDestroyMethod());
         assertEquals(COMPOSITE, type.getImplementationScope());
-        assertEquals(Foo.class.getMethod("setBar", String.class), type.getProperties().get("bar").getMember());
+        assertEquals("setBar", type.getProperties().get("bar").getMemberSite().getName());
         String targetName = type.getReferences().get("target").getMemberSite().getName();
         assertEquals("setTarget", targetName);
         assertEquals(Foo.class.getMethod("setResource", Foo.class), type.getResources().get("resource").getMember());

@@ -49,6 +49,7 @@ import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.JavaMappedReference;
 import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.pojo.scdl.MemberSite;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.idl.InvalidServiceContractException;
@@ -437,7 +438,8 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
     private <T> JavaMappedProperty<T> createProperty(String name, Member member, Class<T> paramType) {
         JavaMappedProperty<T> property = new JavaMappedProperty<T>();
         property.setName(name);
-        property.setMember(member);
+        MemberSite memberSite = new MemberSite(member);
+        property.setMemberSite(memberSite);
         property.setJavaType(paramType);
         return property;
     }

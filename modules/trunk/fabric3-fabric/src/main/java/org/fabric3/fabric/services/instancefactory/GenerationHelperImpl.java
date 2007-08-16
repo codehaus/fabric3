@@ -16,7 +16,6 @@
  */
 package org.fabric3.fabric.services.instancefactory;
 
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.Map;
 
@@ -25,22 +24,22 @@ import org.w3c.dom.Document;
 import org.fabric3.pojo.implementation.PojoComponentDefinition;
 import org.fabric3.pojo.instancefactory.InjectionSiteMapping;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
-import org.fabric3.pojo.scdl.MemberSite;
-import org.fabric3.pojo.instancefactory.Signature;
 import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
-import org.fabric3.pojo.scdl.JavaMappedService;
-import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.pojo.instancefactory.Signature;
 import org.fabric3.pojo.scdl.ConstructorDefinition;
 import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.JavaMappedReference;
-import org.fabric3.spi.model.instance.ValueSource;
-import static org.fabric3.spi.model.instance.ValueSource.ValueSourceType.PROPERTY;
-import static org.fabric3.spi.model.instance.ValueSource.ValueSourceType.REFERENCE;
-import static org.fabric3.spi.model.instance.ValueSource.ValueSourceType.SERVICE;
+import org.fabric3.pojo.scdl.JavaMappedService;
+import org.fabric3.pojo.scdl.MemberSite;
+import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Property;
 import org.fabric3.scdl.PropertyValue;
+import org.fabric3.spi.model.instance.ValueSource;
+import static org.fabric3.spi.model.instance.ValueSource.ValueSourceType.PROPERTY;
+import static org.fabric3.spi.model.instance.ValueSource.ValueSourceType.REFERENCE;
+import static org.fabric3.spi.model.instance.ValueSource.ValueSourceType.SERVICE;
 
 /**
  * @version $Rev$ $Date$
@@ -109,7 +108,7 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
             mapping.setSource(source);
             mapping.setSite(memberSite);
             mapping.setMultiplicity(reference.getMultiplicity());
-            
+
             providerDefinition.addInjectionSite(mapping);
         }
 
@@ -144,12 +143,11 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
                 continue;
             }
 
-            Member member = property.getMember();
-            if (member != null) {
+            MemberSite memberSite = property.getMemberSite();
+            if (memberSite != null) {
                 // set up the injection site
                 ValueSource source = new ValueSource(PROPERTY, name);
-                MemberSite memberSite = new MemberSite(member);
-                
+
                 InjectionSiteMapping mapping = new InjectionSiteMapping();
                 mapping.setSource(source);
                 mapping.setSite(memberSite);

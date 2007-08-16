@@ -18,7 +18,6 @@
  */
 package org.fabric3.pojo.scdl;
 
-import java.lang.reflect.Member;
 import javax.xml.namespace.QName;
 
 import org.fabric3.scdl.Property;
@@ -30,35 +29,31 @@ import org.fabric3.scdl.Property;
  * @version $Rev$ $Date$
  */
 public class JavaMappedProperty<T> extends Property<T> {
-    private Member member;
+    private MemberSite memberSite;
 
     public JavaMappedProperty() {
     }
 
-    public JavaMappedProperty(String name, QName xmlType, Class<T> javaType) {
+    public JavaMappedProperty(String name, QName xmlType, Class<T> javaType, MemberSite memberSite) {
         super(name, xmlType, javaType);
-    }
-
-    public JavaMappedProperty(String name, QName xmlType, Class<T> javaType, Member member) {
-        super(name, xmlType, javaType);
-        this.member = member;
+        this.memberSite = memberSite;
     }
 
     /**
-     * Returns the Member that this property is mapped to.
+     * Returns the MemberSite that this property is mapped to.
      *
-     * @return the Member that this property is mapped to
+     * @return the MemberSite that this property is mapped to
      */
-    public Member getMember() {
-        return member;
+    public MemberSite getMemberSite() {
+        return memberSite;
     }
 
     /**
-     * Sets the Member that this property is mapped to
+     * Sets the MemberSite that this property is mapped to
      *
-     * @param member the Member that this property is mapped to
+     * @param memberSite the MemberSite that this property is mapped to
      */
-    public void setMember(Member member) {
-        this.member = member;
+    public void setMemberSite(MemberSite memberSite) {
+        this.memberSite = memberSite;
     }
 }

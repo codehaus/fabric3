@@ -30,6 +30,7 @@ import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.scdl.ConstructorDefinition;
+import org.fabric3.pojo.scdl.MemberSite;
 
 /**
  * Base class for ImplementationProcessors that handle annotations that add Properties.
@@ -166,7 +167,8 @@ public abstract class AbstractPropertyProcessor<A extends Annotation> extends Im
 
     protected <T> JavaMappedProperty<T> createProperty(String name, Class<T> javaType, Member member)
             throws ProcessingException {
-        return new JavaMappedProperty<T>(name, null, javaType, member);
+        MemberSite memberSite = new MemberSite(member);
+        return new JavaMappedProperty<T>(name, null, javaType, memberSite);
     }
 
 
