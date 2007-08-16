@@ -79,12 +79,6 @@
         <system:implementation.system class="org.fabric3.fabric.builder.WiringExceptionFormatter"/>
     </component>
 
-    <!-- Marshhaler registry-->
-    <component name="marshallerRegistry">
-        <system:implementation.system
-                class="org.fabric3.fabric.marshaller.xstream.XStreamMarshallerRegistry"/>
-    </component>
-
     <component name="assemblyRecoveryService">
         <system:implementation.system class="org.fabric3.fabric.assembly.store.AssemblyStoreImpl"/>
     </component>
@@ -121,6 +115,7 @@
     <!-- scanner infrastructure -->
 	     <component name="ContributionDirectoryScanner">
         <system:implementation.system class="org.fabric3.scanner.scanner.ContributionDirectoryScanner"/>
+        <reference name="assembly" target="distributedAssembly"/>
     </component>
 
     <component name="FileSystemResourceFactoryRegistry">
