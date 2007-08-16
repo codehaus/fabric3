@@ -20,6 +20,7 @@ package org.fabric3.pojo.instancefactory;
 
 import org.fabric3.scdl.Multiplicity;
 import org.fabric3.spi.model.instance.ValueSource;
+import org.fabric3.pojo.scdl.MemberSite;
 
 /**
  * Maps a MemberSite to an ValueSource for a Java-based component implementations

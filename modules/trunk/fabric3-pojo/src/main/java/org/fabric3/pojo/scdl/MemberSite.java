@@ -1,10 +1,12 @@
-package org.fabric3.pojo.instancefactory;
+package org.fabric3.pojo.scdl;
 
 import java.lang.annotation.ElementType;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
 import java.lang.reflect.Constructor;
+
+import org.fabric3.pojo.instancefactory.Signature;
 
 /**
  * Represents an injection site on a Java-based component implementation.

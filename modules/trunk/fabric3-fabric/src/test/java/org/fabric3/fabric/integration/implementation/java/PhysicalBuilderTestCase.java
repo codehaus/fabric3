@@ -44,11 +44,11 @@ import org.fabric3.fabric.services.instancefactory.DefaultInstanceFactoryBuilder
 import org.fabric3.fabric.services.instancefactory.ReflectiveInstanceFactoryBuilder;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.pojo.PojoWorkContextTunnel;
+import org.fabric3.pojo.scdl.MemberSite;
 import org.fabric3.pojo.instancefactory.InjectionSiteMapping;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
-import org.fabric3.pojo.instancefactory.MemberSite;
 import org.fabric3.spi.builder.component.WireAttacherRegistry;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.ComponentManager;

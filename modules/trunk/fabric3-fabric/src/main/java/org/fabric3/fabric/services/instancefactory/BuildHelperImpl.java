@@ -29,7 +29,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.pojo.instancefactory.InjectionSiteMapping;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderException;
-import org.fabric3.pojo.instancefactory.MemberSite;
+import org.fabric3.pojo.scdl.MemberSite;
 import org.fabric3.pojo.instancefactory.Signature;
 import org.fabric3.spi.model.instance.ValueSource;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;

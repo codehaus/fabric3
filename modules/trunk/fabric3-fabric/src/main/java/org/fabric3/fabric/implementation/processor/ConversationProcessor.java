@@ -29,7 +29,7 @@ import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
-import org.fabric3.pojo.instancefactory.MemberSite;
+import org.fabric3.pojo.scdl.MemberSite;
 
 /**
  * @version $Rev$ $Date$

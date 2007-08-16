@@ -18,7 +18,6 @@
  */
 package org.fabric3.fabric.services.instancefactory;
 
-import java.lang.annotation.ElementType;
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
 
@@ -26,7 +25,7 @@ import junit.framework.TestCase;
 
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.pojo.instancefactory.InjectionSiteMapping;
-import org.fabric3.pojo.instancefactory.MemberSite;
+import org.fabric3.pojo.scdl.MemberSite;
 import org.fabric3.pojo.instancefactory.Signature;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
 import org.fabric3.spi.component.InstanceFactoryProvider;

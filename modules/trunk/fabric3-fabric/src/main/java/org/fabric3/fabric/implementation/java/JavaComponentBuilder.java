@@ -34,7 +34,7 @@ import org.fabric3.pojo.implementation.PojoComponentBuilder;
 import org.fabric3.pojo.instancefactory.InjectionSiteMapping;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
-import org.fabric3.pojo.instancefactory.MemberSite;
+import org.fabric3.pojo.scdl.MemberSite;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.BuilderException;

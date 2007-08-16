@@ -12,7 +12,7 @@ import org.fabric3.fabric.services.instancefactory.GenerationHelperImpl;
 import org.fabric3.pojo.implementation.PojoComponentDefinition;
 import org.fabric3.pojo.instancefactory.InjectionSiteMapping;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
-import org.fabric3.pojo.instancefactory.MemberSite;
+import org.fabric3.pojo.scdl.MemberSite;
 import org.fabric3.pojo.instancefactory.Signature;
 import org.fabric3.pojo.scdl.ConstructorDefinition;
 import org.fabric3.pojo.scdl.JavaMappedProperty;

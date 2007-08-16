@@ -21,7 +21,6 @@ package org.fabric3.pojo.scdl;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.fabric3.pojo.instancefactory.MemberSite;
 import org.fabric3.pojo.instancefactory.Signature;
 import org.fabric3.scdl.AbstractComponentType;
 
