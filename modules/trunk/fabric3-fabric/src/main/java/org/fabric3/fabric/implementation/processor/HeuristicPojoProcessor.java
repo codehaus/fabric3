@@ -383,7 +383,7 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
         for (JavaMappedService service : services.values()) {
             String interfaze = service.getServiceInterface();
             try {
-                Class<?> clazz = JavaIntrospectionHelper.loadClass(interfaze);
+                Class<?> clazz = Class.forName(interfaze);
                 if (hasOperation(clazz, operation)) {
                     return true;
                 }
