@@ -72,8 +72,7 @@ public class JUnitComponentTypeLoaderImpl implements JUnitComponentTypeLoader {
     protected PojoComponentType loadByIntrospection(ImplementationJUnit implementation,
                                                     LoaderContext loaderContext,
                                                     Class<?> implClass) throws ProcessingException {
-        PojoComponentType componentType =
-                new PojoComponentType(implClass);
+        PojoComponentType componentType = new PojoComponentType(implClass.getName());
         introspector.introspect(implClass, componentType, loaderContext);
 
         if (componentType.getInitMethod() == null) {
