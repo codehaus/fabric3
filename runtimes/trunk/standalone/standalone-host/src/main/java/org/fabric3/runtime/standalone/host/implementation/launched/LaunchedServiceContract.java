@@ -18,6 +18,7 @@
  */
 package org.fabric3.runtime.standalone.host.implementation.launched;
 
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -26,12 +27,16 @@ import org.fabric3.scdl.ServiceContract;
 
 /**
  * @version $Revison$ $Date$
- *
  */
 public class LaunchedServiceContract extends ServiceContract<Type> {
-
+                 
     public LaunchedServiceContract(List<Operation<Type>> operations) {
         setOperations(operations);
     }
+
+    public boolean isAssignableFrom(ServiceContract contract) {
+        throw new UnsupportedOperationException();
+    }
+
 }
 
