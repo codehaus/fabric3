@@ -18,11 +18,8 @@
  */
 package org.fabric3.fabric.assembly.resolver;
 
-import java.net.URI;
-
 import org.fabric3.fabric.assembly.ResolutionException;
 import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.scdl.ServiceContract;
 
 /**
  * Implementations are responsible for resolving wire targets and URIs in an SCA Domain, including autowires.
@@ -39,7 +36,6 @@ public interface WireResolver {
      * @param component       the logical component to resolve for
      * @throws ResolutionException if an error occurs during resolution
      */
-    void resolve(LogicalComponent<?> targetComposite, LogicalComponent<?> component)
-            throws ResolutionException;
+    void resolve(LogicalComponent<?> targetComposite, LogicalComponent<?> component) throws ResolutionException;
 
 }
