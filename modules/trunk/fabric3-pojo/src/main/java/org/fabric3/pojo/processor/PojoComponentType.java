@@ -39,14 +39,6 @@ public class PojoComponentType extends AbstractComponentType<JavaMappedService, 
     private MemberSite conversationIDMember;
 
     /**
-     * Deprecated no-arg constructor, replaced with one that takes the POJO class.
-     */
-    @Deprecated
-    public PojoComponentType() {
-        implClass = null;
-    }
-
-    /**
      * Constructor specifying the java class name for the POJO this is describing.
      *
      * @param implClass the java class for the POJO this is describing

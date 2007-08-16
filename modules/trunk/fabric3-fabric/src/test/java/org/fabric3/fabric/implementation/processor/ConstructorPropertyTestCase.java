@@ -40,7 +40,7 @@ public class ConstructorPropertyTestCase extends TestCase {
 
     public void testProperty() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         Constructor<Foo> ctor = Foo.class.getConstructor(String.class);
         processor.visitConstructor(ctor, type, null);
         JavaMappedProperty<?> property = type.getProperties().get("myProp");
@@ -50,7 +50,7 @@ public class ConstructorPropertyTestCase extends TestCase {
 
     public void testTwoPropertiesSameType() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         Constructor<Foo> ctor = Foo.class.getConstructor(String.class, String.class);
         processor.visitConstructor(ctor, type, null);
         assertNotNull(type.getProperties().get("myProp1"));
@@ -59,7 +59,7 @@ public class ConstructorPropertyTestCase extends TestCase {
 
     public void testDuplicateProperty() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         Constructor<BadFoo> ctor = BadFoo.class.getConstructor(String.class, String.class);
         try {
             processor.visitConstructor(ctor, type, null);
@@ -71,7 +71,7 @@ public class ConstructorPropertyTestCase extends TestCase {
 
     public void testNoName() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         Constructor<BadFoo> ctor = BadFoo.class.getConstructor(String.class);
         try {
             processor.visitConstructor(ctor, type, null);
@@ -83,7 +83,7 @@ public class ConstructorPropertyTestCase extends TestCase {
 
     public void testNamesOnConstructor() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         Constructor<Foo> ctor = Foo.class.getConstructor(Integer.class);
         processor.visitConstructor(ctor, type, null);
         assertNotNull(type.getProperties().get("myProp"));
@@ -91,7 +91,7 @@ public class ConstructorPropertyTestCase extends TestCase {
 
     public void testInvalidNumberOfNames() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         Constructor<BadFoo> ctor = BadFoo.class.getConstructor(Integer.class, Integer.class);
         try {
             processor.visitConstructor(ctor, type, null);
@@ -103,7 +103,7 @@ public class ConstructorPropertyTestCase extends TestCase {
 
     public void testNoMatchingNames() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         Constructor<BadFoo> ctor = BadFoo.class.getConstructor(List.class, List.class);
         try {
             processor.visitConstructor(ctor, type, null);

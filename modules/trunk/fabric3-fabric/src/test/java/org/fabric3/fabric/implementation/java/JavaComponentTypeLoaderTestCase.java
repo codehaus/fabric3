@@ -35,7 +35,7 @@ public class JavaComponentTypeLoaderTestCase extends TestCase {
     public void testPojoComponentTypeCreatedForIntrospection() throws Exception {
         IntrospectionRegistry registry = EasyMock.createMock(IntrospectionRegistry.class);
         registry.introspect(
-            (Class) EasyMock.isNull(),
+            (Class) EasyMock.isA(Object.class),
             EasyMock.isA(PojoComponentType.class),
             (LoaderContext) EasyMock.isNull());
         EasyMock.expectLastCall().andStubAnswer(new IAnswer() {
@@ -45,7 +45,7 @@ public class JavaComponentTypeLoaderTestCase extends TestCase {
         });
         EasyMock.replay(registry);
         JavaComponentTypeLoaderImpl loader = new JavaComponentTypeLoaderImpl(registry);
-        loader.loadByIntrospection(new JavaImplementation(), null);
+        loader.loadByIntrospection(new JavaImplementation(Object.class), null);
         EasyMock.verify(registry);
     }
 

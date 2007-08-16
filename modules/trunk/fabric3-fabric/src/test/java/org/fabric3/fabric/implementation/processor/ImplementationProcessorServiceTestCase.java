@@ -60,7 +60,7 @@ public class ImplementationProcessorServiceTestCase extends TestCase {
     }
 
     public void testProcessParamProperty() throws Exception {
-        PojoComponentType type = new PojoComponentType();
+        PojoComponentType type = new PojoComponentType(null);
         Constructor<PropertyClass> ctor = PropertyClass.class.getConstructor(int.class);
         Annotation[] paramAnnotations = ctor.getParameterAnnotations()[0];
         List<String> injectionNames = new ArrayList<String>();

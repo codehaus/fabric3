@@ -42,7 +42,7 @@ public class HeuristicConstructorTestCase extends TestCase {
      * Verifies a single constructor is chosen with a parameter as the type
      */
     public void testSingleConstructorWithParam() throws Exception {
-        PojoComponentType type =  new PojoComponentType();
+        PojoComponentType type =  new PojoComponentType(null);
         JavaMappedProperty<String> prop = new JavaMappedProperty<String>();
         prop.setName("foo");
         prop.setJavaType(String.class);
@@ -56,7 +56,7 @@ public class HeuristicConstructorTestCase extends TestCase {
      * Verifies a single constructor is chosen with a reference as the type
      */
     public void testSingleConstructorWithRef() throws Exception {
-        PojoComponentType type = new PojoComponentType();
+        PojoComponentType type = new PojoComponentType(null);
         ServiceContract contract = new JavaServiceContract(String.class.getName());
         JavaMappedReference ref = new JavaMappedReference("foo", contract, null);
         type.getReferences().put("foo", ref);
@@ -69,7 +69,7 @@ public class HeuristicConstructorTestCase extends TestCase {
      * Verifies a single constructor is chosen with a property and a reference as the type
      */
     public void testSingleConstructorWithPropRef() throws Exception {
-        PojoComponentType type = new PojoComponentType();
+        PojoComponentType type = new PojoComponentType(null);
 
         JavaMappedProperty<String> prop = new JavaMappedProperty<String>();
         prop.setName("foo");
@@ -88,13 +88,13 @@ public class HeuristicConstructorTestCase extends TestCase {
 
     public void testSingleConstructorResolvableParam() throws Exception {
         PojoComponentType type =
-                new PojoComponentType();
+                new PojoComponentType(null);
         processor.visitEnd(Foo5.class, type, null);
         assertEquals(String.class, type.getProperties().get("string").getJavaType());
     }
 
     public void testSingleConstructorResolvableRef() throws Exception {
-        PojoComponentType type = new PojoComponentType();
+        PojoComponentType type = new PojoComponentType(null);
         processor.visitEnd(Foo6.class, type, null);
         ServiceContract<?> contract = type.getReferences().get("heuristicconstructortestcase$ref").getServiceContract();
         JavaServiceContract jContract = JavaServiceContract.class.cast(contract);
@@ -103,7 +103,7 @@ public class HeuristicConstructorTestCase extends TestCase {
 
     public void testSingleConstructorAmbiguousRef() throws Exception {
         PojoComponentType type =
-                new PojoComponentType();
+                new PojoComponentType(null);
         ServiceContract contract = new JavaServiceContract(Foo1.class.getName());
         JavaMappedReference ref = new JavaMappedReference("ref", contract, null);
         type.getReferences().put("ref", ref);
@@ -119,14 +119,14 @@ public class HeuristicConstructorTestCase extends TestCase {
 
     public void testConstructorPropertyAnnotatedParamsOnly() throws Exception {
         PojoComponentType type =
-                new PojoComponentType();
+                new PojoComponentType(null);
         processor.visitEnd(Foo7.class, type, null);
         assertNotNull(type.getProperties().get("myProp"));
     }
 
     public void testConstructorReferenceAnnotatedParamsOnly() throws Exception {
         PojoComponentType type =
-                new PojoComponentType();
+                new PojoComponentType(null);
         processor.visitEnd(Foo8.class, type, null);
         assertNotNull(type.getReferences().get("myRef"));
     }
@@ -134,14 +134,14 @@ public class HeuristicConstructorTestCase extends TestCase {
     @SuppressWarnings("unchecked")
     public void testDefaultConstructor() throws Exception {
         PojoComponentType type =
-                new PojoComponentType();
+                new PojoComponentType(null);
         processor.visitEnd(Foo3.class, type, null);
         assertNotNull(type.getConstructorDefinition().getConstructor());
     }
 
     public void testSameTypesButAnnotated() throws Exception {
         PojoComponentType type =
-                new PojoComponentType();
+                new PojoComponentType(null);
         processor.visitEnd(Foo12.class, type, null);
         assertEquals(2, type.getProperties().size());
         assertNotNull(type.getProperties().get("prop1"));
@@ -153,7 +153,7 @@ public class HeuristicConstructorTestCase extends TestCase {
      */
     public void testRandomAnnotation() throws Exception {
         PojoComponentType type =
-                new PojoComponentType();
+                new PojoComponentType(null);
         processor.visitEnd(Foo11.class, type, null);
         assertEquals(1, type.getProperties().size());
         assertNotNull(type.getProperties().get("prop1"));
@@ -161,7 +161,7 @@ public class HeuristicConstructorTestCase extends TestCase {
 
     public void testPrivateConstructor() throws Exception {
         PojoComponentType type =
-                new PojoComponentType();
+                new PojoComponentType(null);
         try {
             processor.visitEnd(Foo14.class, type, null);
             fail();

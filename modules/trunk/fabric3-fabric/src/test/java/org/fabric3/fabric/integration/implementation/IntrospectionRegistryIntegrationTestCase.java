@@ -55,7 +55,7 @@ public class IntrospectionRegistryIntegrationTestCase extends TestCase {
     private IntrospectionRegistryImpl registry;
 
     public void testSimpleComponentTypeParsing() throws Exception {
-        PojoComponentType type = new PojoComponentType();
+        PojoComponentType type = new PojoComponentType(null);
         registry.introspect(Foo.class, type, null);
         assertEquals(new Signature(Foo.class.getMethod("init")), type.getInitMethod());
         assertEquals(new Signature(Foo.class.getMethod("destroy")), type.getDestroyMethod());

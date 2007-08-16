@@ -104,7 +104,7 @@ public class PropertyProcessorTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        type = new PojoComponentType();
+        type = new PojoComponentType(null);
         JavaInterfaceProcessorRegistryImpl registry = new JavaInterfaceProcessorRegistryImpl();
         processor = new PropertyProcessor(new ImplementationProcessorServiceImpl(registry));
     }

@@ -43,7 +43,7 @@ public class ConstructorProcessorTestCase extends TestCase {
 
     public void testDuplicateConstructor() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         try {
             processor.visitClass(BadFoo.class, type, null);
             fail();
@@ -54,7 +54,7 @@ public class ConstructorProcessorTestCase extends TestCase {
 
     public void testConstructorAnnotation() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         Constructor<Foo> ctor1 = Foo.class.getConstructor(String.class);
         processor.visitConstructor(ctor1, type, null);
         assertEquals("foo", type.getConstructorDefinition().getInjectionNames().get(0));
@@ -62,7 +62,7 @@ public class ConstructorProcessorTestCase extends TestCase {
 
     public void testNoAnnotation() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         Constructor<NoAnnotation> ctor1 = NoAnnotation.class.getConstructor();
         processor.visitConstructor(ctor1, type, null);
         assertNull(type.getConstructorDefinition());
@@ -70,7 +70,7 @@ public class ConstructorProcessorTestCase extends TestCase {
 
     public void testBadAnnotation() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         Constructor<BadAnnotation> ctor1 = BadAnnotation.class.getConstructor(String.class, Foo.class);
         try {
             processor.visitConstructor(ctor1, type, null);
@@ -82,7 +82,7 @@ public class ConstructorProcessorTestCase extends TestCase {
 
     public void testMixedParameters() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         Constructor<Mixed> ctor1 = Mixed.class.getConstructor(String.class, String.class, String.class);
         processor.visitConstructor(ctor1, type, null);
         assertEquals("_ref0", type.getConstructorDefinition().getInjectionNames().get(0));
@@ -142,7 +142,7 @@ public class ConstructorProcessorTestCase extends TestCase {
 
     public void testMultiplicity() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         Constructor<Multiple> ctor1 =
             Multiple.class.getConstructor(Collection.class, String[].class, List.class, Set.class, String[].class);
         processor.visitConstructor(ctor1, type, null);

@@ -91,7 +91,7 @@ public class IntrospectionRegistryTestCase extends TestCase {
         registry.registerProcessor(processor);
         registry.introspect(
             Bar.class,
-            new PojoComponentType(),
+            new PojoComponentType(null),
             EasyMock.createNiceMock(LoaderContext.class));
         EasyMock.verify(processor);
     }

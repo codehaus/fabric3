@@ -38,7 +38,7 @@ public class ConversationProcessorTestCase extends TestCase {
 
     public void testMaxIdleTime() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         processor.visitClass(FooMaxIdle.class, type, null);
         assertEquals(10000L, type.getMaxIdleTime());
         assertEquals(-1, type.getMaxAge());
@@ -46,7 +46,7 @@ public class ConversationProcessorTestCase extends TestCase {
 
     public void testMaxAge() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         processor.visitClass(FooMaxAge.class, type, null);
         assertEquals(10000L, type.getMaxAge());
         assertEquals(-1, type.getMaxIdleTime());
@@ -54,7 +54,7 @@ public class ConversationProcessorTestCase extends TestCase {
 
     public void testBadFooBoth() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         try {
             processor.visitClass(BadFooBoth.class, type, null);
             fail();
@@ -65,14 +65,14 @@ public class ConversationProcessorTestCase extends TestCase {
 
     public void testImplicitScope() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         processor.visitClass(ImplicitFooScope.class, type, null);
         assertEquals(org.fabric3.scdl.Scope.CONVERSATION, type.getImplementationScope());
     }
 
     public void testBadFooScope() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         try {
             processor.visitClass(BadFooScope.class, type, null);
             fail();
@@ -84,7 +84,7 @@ public class ConversationProcessorTestCase extends TestCase {
     public void testJustConversation() throws Exception {
         // TODO do we want these semantics
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         processor.visitClass(FooJustConversation.class, type, null);
         assertEquals(org.fabric3.scdl.Scope.CONVERSATION, type.getImplementationScope());
         assertEquals(-1, type.getMaxAge());
@@ -93,7 +93,7 @@ public class ConversationProcessorTestCase extends TestCase {
 
     public void testSetConversationIDField() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         Field field = FooWithConversationIDField.class.getDeclaredField("conversationID");
         processor.visitField(field, type, null);
         assertNotNull(type.getConversationIDMember());
@@ -102,7 +102,7 @@ public class ConversationProcessorTestCase extends TestCase {
 
     public void testSetConversationIDMethod() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         Method method = FooWithConversationIDMethod.class.getDeclaredMethods()[0];
         processor.visitMethod(method, type, null);
         assertNotNull(type.getConversationIDMember());

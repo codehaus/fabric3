@@ -49,8 +49,8 @@ public class SystemComponentTypeLoaderImpl implements SystemComponentTypeLoader 
 
     protected PojoComponentType loadByIntrospection(SystemImplementation implementation, LoaderContext context)
             throws ProcessingException {
-        PojoComponentType componentType = new PojoComponentType();
         Class<?> implClass = implementation.getImplementationClass();
+        PojoComponentType componentType = new PojoComponentType(implClass.getName());
         introspector.introspect(implClass, componentType, context);
         return componentType;
     }

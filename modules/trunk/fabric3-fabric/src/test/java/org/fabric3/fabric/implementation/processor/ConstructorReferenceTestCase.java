@@ -36,7 +36,7 @@ public class ConstructorReferenceTestCase extends TestCase {
     private ConstructorProcessor processor;
 
     public void testReference() throws Exception {
-        PojoComponentType type = new PojoComponentType();
+        PojoComponentType type = new PojoComponentType(null);
         Constructor<Foo> ctor = Foo.class.getConstructor(String.class);
         processor.visitConstructor(ctor, type, null);
         JavaMappedReference reference = type.getReferences().get("myRef");
@@ -45,7 +45,7 @@ public class ConstructorReferenceTestCase extends TestCase {
     }
 
     public void testTwoReferencesSameType() throws Exception {
-        PojoComponentType type = new PojoComponentType();
+        PojoComponentType type = new PojoComponentType(null);
         Constructor<Foo> ctor = Foo.class.getConstructor(String.class, String.class);
         processor.visitConstructor(ctor, type, null);
         assertNotNull(type.getReferences().get("myRef1"));
@@ -54,7 +54,7 @@ public class ConstructorReferenceTestCase extends TestCase {
 
     public void testDuplicateProperty() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         Constructor<BadFoo> ctor = BadFoo.class.getConstructor(String.class, String.class);
         try {
             processor.visitConstructor(ctor, type, null);
@@ -66,7 +66,7 @@ public class ConstructorReferenceTestCase extends TestCase {
 
     public void testNoName() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         Constructor<NoNameFoo> ctor = NoNameFoo.class.getConstructor(String.class);
         processor.visitConstructor(ctor, type, null);
         assertNotNull(type.getReferences().get("_ref0"));
@@ -74,7 +74,7 @@ public class ConstructorReferenceTestCase extends TestCase {
 
     public void testNamesOnConstructor() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         Constructor<Foo> ctor = Foo.class.getConstructor(Integer.class);
         processor.visitConstructor(ctor, type, null);
         assertNotNull(type.getReferences().get("myRef"));
@@ -82,7 +82,7 @@ public class ConstructorReferenceTestCase extends TestCase {
 
     public void testInvalidNumberOfNames() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         Constructor<BadFoo> ctor = BadFoo.class.getConstructor(Integer.class, Integer.class);
         try {
             processor.visitConstructor(ctor, type, null);
@@ -94,7 +94,7 @@ public class ConstructorReferenceTestCase extends TestCase {
 
     public void testNoMatchingNames() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         Constructor<BadFoo> ctor = BadFoo.class.getConstructor(List.class, List.class);
         try {
             processor.visitConstructor(ctor, type, null);

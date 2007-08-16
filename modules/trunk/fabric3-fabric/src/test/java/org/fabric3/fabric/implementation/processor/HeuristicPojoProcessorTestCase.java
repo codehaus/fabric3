@@ -54,7 +54,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
      * Verifies a single service interface is computed when only one interface is implemented
      */
     public void testSingleInterface() throws Exception {
-        PojoComponentType type =  new PojoComponentType();
+        PojoComponentType type =  new PojoComponentType(null);
         Constructor<SingleInterfaceImpl> ctor = SingleInterfaceImpl.class.getConstructor();
         type.setConstructorDefinition(new ConstructorDefinition<SingleInterfaceImpl>(ctor));
         processor.visitEnd(SingleInterfaceImpl.class, type, null);
@@ -71,7 +71,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
      * Verifies property and reference setters are computed
      */
     public void testPropertyReference() throws Exception {
-        PojoComponentType type = new PojoComponentType();
+        PojoComponentType type = new PojoComponentType(null);
         Constructor<SingleInterfaceWithPropertyReferenceImpl> ctor =
                 SingleInterfaceWithPropertyReferenceImpl.class.getConstructor();
         type.setConstructorDefinition(new ConstructorDefinition<SingleInterfaceWithPropertyReferenceImpl>(ctor));
@@ -95,7 +95,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
      */
     public void testPropertySetterInInterface() throws Exception {
         PojoComponentType type =
-                new PojoComponentType();
+                new PojoComponentType(null);
         Constructor<SingleInterfaceImpl> ctor = SingleInterfaceImpl.class.getConstructor();
         type.setConstructorDefinition(new ConstructorDefinition<SingleInterfaceImpl>(ctor));
         processor.visitEnd(SingleInterfaceImpl.class, type, null);
@@ -107,7 +107,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
      */
     public void testReferenceSetterInInterface() throws Exception {
         PojoComponentType type =
-                new PojoComponentType();
+                new PojoComponentType(null);
         Constructor<RefInterfaceImpl> ctor = RefInterfaceImpl.class.getConstructor();
         type.setConstructorDefinition(new ConstructorDefinition<RefInterfaceImpl>(ctor));
         processor.visitEnd(RefInterfaceImpl.class, type, null);
@@ -119,7 +119,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
      */
     public void testReferenceCollectionType() throws Exception {
         PojoComponentType type =
-                new PojoComponentType();
+                new PojoComponentType(null);
         Constructor<ReferenceCollectionImpl> ctor = ReferenceCollectionImpl.class.getConstructor();
         type.setConstructorDefinition(new ConstructorDefinition<ReferenceCollectionImpl>(ctor));
         processor.visitEnd(ReferenceCollectionImpl.class, type, null);
@@ -132,7 +132,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
      */
     public void testPropertyCollectionType() throws Exception {
         PojoComponentType type =
-                new PojoComponentType();
+                new PojoComponentType(null);
         Constructor<PropertyCollectionImpl> ctor = PropertyCollectionImpl.class.getConstructor();
         type.setConstructorDefinition(new ConstructorDefinition<PropertyCollectionImpl>(ctor));
         processor.visitEnd(PropertyCollectionImpl.class, type, null);
@@ -145,7 +145,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
      */
     public void testRemotableRef() throws Exception {
         PojoComponentType type =
-                new PojoComponentType();
+                new PojoComponentType(null);
         Constructor<RemotableRefImpl> ctor = RemotableRefImpl.class.getConstructor();
         type.setConstructorDefinition(new ConstructorDefinition<RemotableRefImpl>(ctor));
         processor.visitEnd(RemotableRefImpl.class, type, null);
@@ -155,7 +155,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
 
     public void testParentInterface() throws ProcessingException, NoSuchMethodException {
         PojoComponentType type =
-                new PojoComponentType();
+                new PojoComponentType(null);
         Constructor<Child> ctor = Child.class.getConstructor();
         type.setConstructorDefinition(new ConstructorDefinition<Child>(ctor));
         processor.visitEnd(Child.class, type, null);
@@ -167,7 +167,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
      */
     public void testExcludedPropertyAndReference() throws Exception {
         PojoComponentType type =
-                new PojoComponentType();
+                new PojoComponentType(null);
         JavaMappedReference ref = new JavaMappedReference("reference", null, null);
         type.add(ref);
         JavaMappedReference ref2 = new JavaMappedReference("reference2", null, null);
@@ -184,7 +184,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
 
     public void testProtectedRemotableRefField() throws ProcessingException, NoSuchMethodException {
         PojoComponentType type =
-                new PojoComponentType();
+                new PojoComponentType(null);
         Constructor<ProtectedRemotableRefFieldImpl> ctor = ProtectedRemotableRefFieldImpl.class.getConstructor();
         type.setConstructorDefinition(new ConstructorDefinition<ProtectedRemotableRefFieldImpl>(ctor));
         processor.visitEnd(ProtectedRemotableRefFieldImpl.class, type, null);
@@ -193,7 +193,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
 
     public void testProtectedRemotableRefMethod() throws ProcessingException, NoSuchMethodException {
         PojoComponentType type =
-                new PojoComponentType();
+                new PojoComponentType(null);
         Constructor<ProtectedRemotableRefMethodImpl> ctor = ProtectedRemotableRefMethodImpl.class.getConstructor();
         type.setConstructorDefinition(new ConstructorDefinition<ProtectedRemotableRefMethodImpl>(ctor));
         processor.visitEnd(ProtectedRemotableRefMethodImpl.class, type, null);
@@ -202,7 +202,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
 
     public void testSetDataTypes() throws Exception {
         PojoComponentType type =
-                new PojoComponentType();
+                new PojoComponentType(null);
         Constructor<PropertyIntTypeOnConstructor> ctor = PropertyIntTypeOnConstructor.class.getConstructor(int.class);
         type.setConstructorDefinition(new ConstructorDefinition<PropertyIntTypeOnConstructor>(ctor));
         processor.visitEnd(ProtectedRemotableRefMethodImpl.class, type, null);

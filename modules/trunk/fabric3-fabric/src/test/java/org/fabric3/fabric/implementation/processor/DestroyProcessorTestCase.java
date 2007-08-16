@@ -33,7 +33,7 @@ public class DestroyProcessorTestCase extends TestCase {
     public void testDestroy() throws Exception {
         DestroyProcessor processor = new DestroyProcessor();
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         Method method = Foo.class.getMethod("destroy");
         processor.visitMethod(method, type, null);
         assertNotNull(type.getDestroyMethod());
@@ -42,7 +42,7 @@ public class DestroyProcessorTestCase extends TestCase {
     public void testBadDestroy() throws Exception {
         DestroyProcessor processor = new DestroyProcessor();
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         Method method = Bar.class.getMethod("badDestroy", String.class);
         try {
             processor.visitMethod(method, type, null);
@@ -55,7 +55,7 @@ public class DestroyProcessorTestCase extends TestCase {
     public void testTwoDestroy() throws Exception {
         DestroyProcessor processor = new DestroyProcessor();
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         Method method = Bar.class.getMethod("destroy");
         Method method2 = Bar.class.getMethod("destroy2");
         processor.visitMethod(method, type, null);

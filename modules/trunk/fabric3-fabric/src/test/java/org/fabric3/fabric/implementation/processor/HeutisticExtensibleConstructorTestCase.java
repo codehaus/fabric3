@@ -45,7 +45,7 @@ public class HeutisticExtensibleConstructorTestCase extends TestCase {
      */
     public void testBarAnnotationProcessedFirst() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         Constructor<Foo> ctor = Foo.class.getConstructor(String.class, String.class);
         ConstructorDefinition<Foo> definition = new ConstructorDefinition<Foo>(ctor);
         type.setConstructorDefinition(definition);
@@ -69,7 +69,7 @@ public class HeutisticExtensibleConstructorTestCase extends TestCase {
      */
     public void testBarAnnotationProcessedLast() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         processor.visitEnd(Foo.class, type, null);
 
         // now simulate process the bar impl
@@ -90,7 +90,7 @@ public class HeutisticExtensibleConstructorTestCase extends TestCase {
      */
     public void testBarAnnotationProcessedFirstInMiddle() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         Constructor<Foo2> ctor = Foo2.class.getConstructor(String.class, String.class, String.class);
         ConstructorDefinition<Foo2> definition = new ConstructorDefinition<Foo2>(ctor);
         type.setConstructorDefinition(definition);

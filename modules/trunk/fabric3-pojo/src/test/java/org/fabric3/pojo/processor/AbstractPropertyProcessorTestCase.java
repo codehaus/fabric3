@@ -21,7 +21,6 @@ package org.fabric3.pojo.processor;
 import java.lang.annotation.Retention;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -29,7 +28,6 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 
-import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.loader.LoaderContext;
 
 /**
@@ -43,7 +41,7 @@ public class AbstractPropertyProcessorTestCase extends TestCase {
     public void testVisitNoParamsMethod() throws Exception {
         Method method = Foo.class.getMethod("setNoParamsBar");
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         try {
             processor.visitMethod(method, type, null);
             fail();
@@ -55,7 +53,7 @@ public class AbstractPropertyProcessorTestCase extends TestCase {
     public void testVisitNonVoidMethod() throws Exception {
         Method method = Foo.class.getMethod("setBadBar", String.class);
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         try {
             processor.visitMethod(method, type, null);
             fail();
@@ -67,7 +65,7 @@ public class AbstractPropertyProcessorTestCase extends TestCase {
     public void testDuplicateMethod() throws Exception {
         Method method = Foo.class.getMethod("setBar", String.class);
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         processor.visitMethod(method, type, null);
         try {
             processor.visitMethod(method, type, null);
@@ -80,7 +78,7 @@ public class AbstractPropertyProcessorTestCase extends TestCase {
     public void testVisitConstructor() throws Exception {
         Constructor<Foo> ctor = Foo.class.getConstructor(String.class);
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         processor.visitConstructor(ctor, type, null);
         ConstructorDefinition def = type.getConstructorDefinition();
         assertEquals("test", def.getInjectionNames().get(0));

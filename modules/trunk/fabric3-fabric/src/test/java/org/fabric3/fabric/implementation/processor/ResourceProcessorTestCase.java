@@ -83,7 +83,7 @@ public class ResourceProcessorTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        type = new PojoComponentType();
+        type = new PojoComponentType(null);
     }
 
     private class Foo {

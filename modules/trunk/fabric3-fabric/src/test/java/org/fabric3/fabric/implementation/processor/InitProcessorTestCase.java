@@ -34,7 +34,7 @@ public class InitProcessorTestCase extends TestCase {
     public void testInit() throws Exception {
         InitProcessor processor = new InitProcessor();
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         Method method = InitProcessorTestCase.Foo.class.getMethod("init");
         processor.visitMethod(method, type, null);
         assertNotNull(type.getInitMethod());
@@ -44,7 +44,7 @@ public class InitProcessorTestCase extends TestCase {
     public void testBadInit() throws Exception {
         InitProcessor processor = new InitProcessor();
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         Method method = InitProcessorTestCase.Bar.class.getMethod("badInit", String.class);
         try {
             processor.visitMethod(method, type, null);
@@ -57,7 +57,7 @@ public class InitProcessorTestCase extends TestCase {
     public void testTwoInit() throws Exception {
         InitProcessor processor = new InitProcessor();
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         Method method = InitProcessorTestCase.Bar.class.getMethod("init");
         Method method2 = InitProcessorTestCase.Bar.class.getMethod("init2");
         processor.visitMethod(method, type, null);

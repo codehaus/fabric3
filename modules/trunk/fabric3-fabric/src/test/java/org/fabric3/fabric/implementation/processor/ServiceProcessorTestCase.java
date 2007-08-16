@@ -100,7 +100,7 @@ public class ServiceProcessorTestCase extends TestCase {
         super.setUp();
         JavaInterfaceProcessorRegistryImpl registry = new JavaInterfaceProcessorRegistryImpl();
         processor = new ServiceProcessor(new ImplementationProcessorServiceImpl(registry));
-        type = new PojoComponentType();
+        type = new PojoComponentType(null);
     }
 
     @Callback(Bar.class)

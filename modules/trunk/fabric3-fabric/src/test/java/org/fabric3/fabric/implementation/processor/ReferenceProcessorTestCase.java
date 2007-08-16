@@ -35,7 +35,7 @@ import org.fabric3.spi.idl.java.JavaServiceContract;
  */
 public class ReferenceProcessorTestCase extends TestCase {
 
-    PojoComponentType type = new PojoComponentType();
+    PojoComponentType type = new PojoComponentType(null);
     ReferenceProcessor processor = new ReferenceProcessor(new JavaInterfaceProcessorRegistryImpl());
 
     public void testMethodAnnotation() throws Exception {
@@ -120,7 +120,7 @@ public class ReferenceProcessorTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        type = new PojoComponentType();
+        type = new PojoComponentType(null);
         processor = new ReferenceProcessor(new JavaInterfaceProcessorRegistryImpl());
     }
 

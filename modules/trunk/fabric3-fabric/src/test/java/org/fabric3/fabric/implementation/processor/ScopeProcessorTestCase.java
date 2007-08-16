@@ -54,7 +54,7 @@ public class ScopeProcessorTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         scopeRegistry = EasyMock.createMock(ScopeRegistry.class);
-        type = new PojoComponentType();
+        type = new PojoComponentType(null);
         processor = new ScopeProcessor(scopeRegistry);
     }
 

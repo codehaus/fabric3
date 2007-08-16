@@ -63,7 +63,7 @@ public class ContextProcessorTestCase extends TestCase {
     public void testRequestContextMethod() throws Exception {
         Method method = Foo.class.getMethod("setRequestContext", RequestContext.class);
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         processor.visitMethod(method, type, null);
         assertNotNull(type.getResources().get("requestContext"));
     }
@@ -71,7 +71,7 @@ public class ContextProcessorTestCase extends TestCase {
     public void testRequestContextField() throws Exception {
         Field field = Foo.class.getDeclaredField("requestContext");
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         processor.visitField(field, type, null);
         assertNotNull(type.getResources().get("requestContext"));
     }
@@ -79,7 +79,7 @@ public class ContextProcessorTestCase extends TestCase {
     public void testInvalidParamType() throws Exception {
         Method method = Foo.class.getMethod("setContext", String.class);
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         try {
             processor.visitMethod(method, type, null);
             fail();
@@ -91,7 +91,7 @@ public class ContextProcessorTestCase extends TestCase {
     public void testInvalidParamTypeField() throws Exception {
         Field field = Foo.class.getDeclaredField("badContext");
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         try {
             processor.visitField(field, type, null);
             fail();
@@ -104,7 +104,7 @@ public class ContextProcessorTestCase extends TestCase {
     public void testInvalidParamNum() throws Exception {
         Method method = Foo.class.getMethod("setContext", ComponentContext.class, String.class);
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         try {
             processor.visitMethod(method, type, null);
             fail();
@@ -116,7 +116,7 @@ public class ContextProcessorTestCase extends TestCase {
     public void testInvalidNoParams() throws Exception {
         Method method = Foo.class.getMethod("setContext");
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         try {
             processor.visitMethod(method, type, null);
             fail();
@@ -128,7 +128,7 @@ public class ContextProcessorTestCase extends TestCase {
     public void testNoContext() throws Exception {
         Method method = Foo.class.getMethod("noContext", ComponentContext.class);
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         processor.visitMethod(method, type, null);
         assertEquals(0, type.getResources().size());
     }
@@ -136,7 +136,7 @@ public class ContextProcessorTestCase extends TestCase {
     public void testNoContextField() throws Exception {
         Field field = Foo.class.getDeclaredField("noContext");
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         processor.visitField(field, type, null);
         assertEquals(0, type.getResources().size());
     }

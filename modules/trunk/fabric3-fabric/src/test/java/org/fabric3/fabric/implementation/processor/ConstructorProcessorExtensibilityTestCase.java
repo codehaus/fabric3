@@ -39,7 +39,7 @@ public class ConstructorProcessorExtensibilityTestCase extends TestCase {
 
     public void testProcessFirst() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         Constructor<Foo> ctor1 = Foo.class.getConstructor(String.class, String.class);
         processor.visitConstructor(ctor1, type, null);
         assertEquals("foo", type.getConstructorDefinition().getInjectionNames().get(0));
@@ -53,7 +53,7 @@ public class ConstructorProcessorExtensibilityTestCase extends TestCase {
      */
     public void testProcessLast() throws Exception {
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         Constructor<Foo> ctor1 = Foo.class.getConstructor(String.class, String.class);
         ConstructorDefinition<Foo> definition = new ConstructorDefinition<Foo>(ctor1);
         definition.getInjectionNames().add("");

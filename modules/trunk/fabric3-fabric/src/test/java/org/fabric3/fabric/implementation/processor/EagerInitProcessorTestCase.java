@@ -33,7 +33,7 @@ public class EagerInitProcessorTestCase extends TestCase {
     public void testNoLevel() throws ProcessingException {
         EagerInitProcessor processor = new EagerInitProcessor();
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         processor.visitClass(Level.class, type, null);
         assertEquals(50, type.getInitLevel());
     }
@@ -41,7 +41,7 @@ public class EagerInitProcessorTestCase extends TestCase {
     public void testSubclass() throws ProcessingException {
         EagerInitProcessor processor = new EagerInitProcessor();
         PojoComponentType type =
-            new PojoComponentType();
+            new PojoComponentType(null);
         processor.visitClass(SubClass.class, type, null);
         assertEquals(50, type.getInitLevel());
     }
