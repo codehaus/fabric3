@@ -324,7 +324,7 @@ public class ContractCompatibilityServiceImplTestCase extends TestCase {
         public MockContract() {
         }
 
-        public boolean isAssignableFrom(ServiceContract contract) {
+        public boolean isAssignableFrom(ServiceContract<?> contract) {
             return false;
         }
 

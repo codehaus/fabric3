@@ -79,7 +79,7 @@ public class IncompatibleServiceContractExceptionFormatterTestCase extends TestC
     }
 
     private static class MockContract extends ServiceContract<Object> {
-        public boolean isAssignableFrom(ServiceContract contract) {
+        public boolean isAssignableFrom(ServiceContract<?> contract) {
             return false;
         }
 

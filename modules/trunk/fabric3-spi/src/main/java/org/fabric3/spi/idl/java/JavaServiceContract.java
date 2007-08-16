@@ -62,10 +62,10 @@ public class JavaServiceContract extends ServiceContract<Type> {
         this.callbackClass = callbackClass;
     }
 
-    public boolean isAssignableFrom(ServiceContract contract) {
-        if (contract instanceof JavaServiceContract) {
+    public boolean isAssignableFrom(ServiceContract<?> contract) {
+        if (JavaServiceContract.class.isInstance(contract)) {
             // short-circuit test if both are JavaClasses
-            JavaServiceContract jContract = (JavaServiceContract) contract;
+            JavaServiceContract jContract = JavaServiceContract.class.cast(contract);
             Class<?> thisClass;
             Class<?> otherClass;
             try {
