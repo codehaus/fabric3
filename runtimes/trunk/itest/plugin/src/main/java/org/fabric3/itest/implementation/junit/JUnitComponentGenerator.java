@@ -1,6 +1,5 @@
 package org.fabric3.itest.implementation.junit;
 
-import java.lang.reflect.Member;
 import java.net.URI;
 import java.util.Map;
 
@@ -12,12 +11,14 @@ import org.fabric3.fabric.implementation.java.JavaWireSourceDefinition;
 import org.fabric3.fabric.implementation.java.JavaWireTargetDefinition;
 import org.fabric3.pojo.instancefactory.InjectionSiteMapping;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
-import org.fabric3.pojo.scdl.MemberSite;
 import org.fabric3.pojo.scdl.ConstructorDefinition;
 import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.JavaMappedReference;
 import org.fabric3.pojo.scdl.JavaMappedService;
+import org.fabric3.pojo.scdl.MemberSite;
 import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.Property;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
@@ -28,8 +29,6 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.ValueSource;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
-import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.Property;
 
 /**
  * @version $Rev$ $Date$ TODO JFM this class shares commonalities
@@ -144,15 +143,14 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         Map<String, JavaMappedReference> references = type.getReferences();
         for (Map.Entry<String, JavaMappedReference> entry : references.entrySet()) {
             JavaMappedReference reference = entry.getValue();
-            Member member = reference.getMember();
-            if (member == null) {
+            MemberSite memberSite = reference.getMemberSite();
+            if (memberSite == null) {
                 // JFM this is dubious, the reference is mapped to a constructor so skip processing
                 // ImplementationProcessorService does not set the member type to a ctor when creating the ref
                 continue;
             }
             ValueSource source = new ValueSource(ValueSource.ValueSourceType.REFERENCE, entry.getKey());
-            MemberSite memberSite = new MemberSite(member);
-            
+
             InjectionSiteMapping mapping = new InjectionSiteMapping();
             mapping.setSource(source);
             mapping.setSite(memberSite);
