@@ -25,25 +25,18 @@ import org.fabric3.scdl.Implementation;
  * @version $Rev$ $Date$
  */
 public class SingletonImplementation extends Implementation<PojoComponentType> {
-    private Class<?> implementationClass;
-
-    public SingletonImplementation(PojoComponentType componentType, Class<?> implementationClass) {
-        super(componentType);
-        this.implementationClass = implementationClass;
-    }
+    private String implementationClass;
 
     public SingletonImplementation() {
     }
 
-    public SingletonImplementation(Class<?> implementationClass) {
+    public SingletonImplementation(PojoComponentType componentType, String implementationClass) {
+        super(componentType);
         this.implementationClass = implementationClass;
     }
 
-    public Class<?> getImplementationClass() {
+    public String getImplementationClass() {
         return implementationClass;
     }
 
-    public void setImplementationClass(Class<?> implementationClass) {
-        this.implementationClass = implementationClass;
-    }
 }

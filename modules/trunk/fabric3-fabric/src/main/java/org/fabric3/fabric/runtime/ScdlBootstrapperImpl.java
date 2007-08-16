@@ -343,7 +343,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
             JavaMappedService service = new JavaMappedService(serviceName, contract);
             componentType.add(service);
         }
-        SingletonImplementation impl = new SingletonImplementation(componentType, implClass);
+        SingletonImplementation impl = new SingletonImplementation(componentType, implClass.getName());
         ComponentDefinition<SingletonImplementation> def = new ComponentDefinition<SingletonImplementation>(name);
         def.setImplementation(impl);
         return def;
