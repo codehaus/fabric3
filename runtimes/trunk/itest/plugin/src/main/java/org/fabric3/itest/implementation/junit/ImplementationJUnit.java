@@ -25,7 +25,7 @@ import org.fabric3.scdl.Implementation;
  * @version $Rev$ $Date$
  */
 public class ImplementationJUnit extends Implementation<PojoComponentType> {
-    private String className;
+    private String implementationClass;
 
     /**
      * Constructor supplying the name of the JUnit test class
@@ -33,7 +33,7 @@ public class ImplementationJUnit extends Implementation<PojoComponentType> {
      * @param className the name of the JUnit test class
      */
     public ImplementationJUnit(String className) {
-        this.className = className;
+        this.implementationClass = className;
     }
 
     /**
@@ -41,16 +41,8 @@ public class ImplementationJUnit extends Implementation<PojoComponentType> {
      *
      * @return the name of the JUnit test class
      */
-    public String getClassName() {
-        return className;
+    public String getImplementationClass() {
+        return implementationClass;
     }
 
-    /**
-     * Sets the name of the JUnit test class.
-     *
-     * @param className the name of the JUnit test class
-     */
-    public void setClassName(String className) {
-        this.className = className;
-    }
 }

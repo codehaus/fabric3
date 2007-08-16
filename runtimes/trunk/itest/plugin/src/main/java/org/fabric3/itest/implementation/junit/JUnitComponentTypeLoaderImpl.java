@@ -55,7 +55,7 @@ public class JUnitComponentTypeLoaderImpl implements JUnitComponentTypeLoader {
     }
 
     public void load(ImplementationJUnit implementation, LoaderContext context) throws LoaderException {
-        String className = implementation.getClassName();
+        String className = implementation.getImplementationClass();
         Class<?> implClass;
         try {
             implClass = context.getTargetClassLoader().loadClass(className);
