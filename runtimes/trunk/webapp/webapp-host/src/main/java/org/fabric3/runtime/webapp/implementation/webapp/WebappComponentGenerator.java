@@ -25,6 +25,7 @@ import java.util.Map;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.fabric.util.JavaIntrospectionHelper;
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Property;
@@ -67,11 +68,17 @@ public class WebappComponentGenerator implements ComponentGenerator<LogicalCompo
             String name = referenceDefinition.getName();
             // JFM is this correct to assume?
             ServiceContract<?> contract = referenceDefinition.getServiceContract();
-            if (!(contract instanceof JavaServiceContract)) {
+            if (!(JavaServiceContract.class.isInstance(contract))) {
                 throw new AssertionError("Invalid service contract type [" + contract.getClass().getName() + "]");
             }
-            Class<?> type = ((JavaServiceContract) contract).getInterfaceClass();
-            referenceTypes.put(name, type);
+            JavaServiceContract jContract = JavaServiceContract.class.cast(contract);
+            String interfaceClass = jContract.getInterfaceClass();
+            try {
+                Class<?> type = JavaIntrospectionHelper.loadClass(interfaceClass);
+                referenceTypes.put(name, type);
+            } catch (ClassNotFoundException e) {
+                throw new AssertionError(e);
+            }
         }
         pDefinition.setReferenceTypes(referenceTypes);
         context.getPhysicalChangeSet().addComponentDefinition(pDefinition);
