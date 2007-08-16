@@ -27,25 +27,20 @@ import org.fabric3.scdl.Implementation;
  * @version $Rev$ $Date$
  */
 public class SystemImplementation extends Implementation<PojoComponentType> {
-    private Class<?> implementationClass;
-
-    public SystemImplementation(PojoComponentType componentType, Class<?> implementationClass) {
-        super(componentType);
-        this.implementationClass = implementationClass;
-    }
+    private String implementationClass;
 
     public SystemImplementation() {
     }
 
-    public SystemImplementation(Class<?> implementationClass) {
+    public SystemImplementation(String implementationClass) {
         this.implementationClass = implementationClass;
     }
 
-    public Class<?> getImplementationClass() {
+    public String getImplementationClass() {
         return implementationClass;
     }
 
-    public void setImplementationClass(Class<?> implementationClass) {
+    public void setImplementationClass(String implementationClass) {
         this.implementationClass = implementationClass;
     }
 }

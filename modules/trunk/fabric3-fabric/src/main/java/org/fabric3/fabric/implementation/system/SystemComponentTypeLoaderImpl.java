@@ -24,9 +24,11 @@ import org.fabric3.pojo.processor.IntrospectionRegistry;
 import org.fabric3.pojo.processor.Introspector;
 import org.fabric3.pojo.processor.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.scdl.Scope;
+import org.fabric3.spi.loader.LoaderUtil;
+import org.fabric3.spi.loader.MissingResourceException;
 
 /**
  * Loads a system component type
@@ -48,8 +50,9 @@ public class SystemComponentTypeLoaderImpl implements SystemComponentTypeLoader 
     }
 
     protected PojoComponentType loadByIntrospection(SystemImplementation implementation, LoaderContext context)
-            throws ProcessingException {
-        Class<?> implClass = implementation.getImplementationClass();
+            throws ProcessingException, MissingResourceException {
+        ClassLoader cl = context.getTargetClassLoader();
+        Class<?> implClass = LoaderUtil.loadClass(implementation.getImplementationClass(), cl);
         PojoComponentType componentType = new PojoComponentType(implClass.getName());
         introspector.introspect(implClass, componentType, context);
         return componentType;

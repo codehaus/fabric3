@@ -89,7 +89,7 @@ public class MarshallerLoader extends LoaderExtension<SystemImplementation> {
 
         final SystemImplementation marshallerImplementation = new SystemImplementation();
         final Class<ReflectionMarshaller> implClass = ReflectionMarshaller.class;
-        marshallerImplementation.setImplementationClass(implClass);
+        marshallerImplementation.setImplementationClass(implClass.getName());
 
         PojoComponentType componentType = getComponentType(implClass, context);
 

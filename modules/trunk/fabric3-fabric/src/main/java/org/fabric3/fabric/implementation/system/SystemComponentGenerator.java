@@ -64,7 +64,7 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
         InstanceFactoryDefinition providerDefinition = new InstanceFactoryDefinition();
         providerDefinition.setInitMethod(type.getInitMethod());
         providerDefinition.setDestroyMethod(type.getDestroyMethod());
-        providerDefinition.setImplementationClass(implementation.getImplementationClass().getName());
+        providerDefinition.setImplementationClass(implementation.getImplementationClass());
         helper.processConstructorArguments(type.getConstructorDefinition(), providerDefinition);
         helper.processConstructorSites(type, providerDefinition);
         helper.processReferenceSites(type, providerDefinition);

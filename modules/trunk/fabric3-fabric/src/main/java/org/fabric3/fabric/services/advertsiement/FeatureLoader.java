@@ -25,21 +25,21 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.fabric.implementation.system.SystemImplementation;
 import org.fabric3.loader.common.PropertyUtils;
-import org.fabric3.spi.Constants;
 import org.fabric3.pojo.processor.Introspector;
 import org.fabric3.pojo.processor.PojoComponentType;
-import org.fabric3.spi.loader.LoaderContext;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Property;
 import org.fabric3.scdl.Scope;
-
-import org.osoa.sca.annotations.Reference;
+import org.fabric3.spi.Constants;
+import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.spi.loader.LoaderException;
+import org.fabric3.spi.loader.LoaderRegistry;
 
 /**
  * @version $Revision: 1 $ $Date: 2007-05-14 18:40:37 +0100 (Mon, 14 May 2007) $
@@ -96,7 +96,7 @@ public class FeatureLoader extends LoaderExtension<ComponentDefinition> {
 
         final SystemImplementation featureImplementation = new SystemImplementation();
         final Class<FeatureComponent> implClass = FeatureComponent.class;
-        featureImplementation.setImplementationClass(implClass);
+        featureImplementation.setImplementationClass(implClass.getName());
 
         PojoComponentType componentType = getComponentType(implClass, context);
 
@@ -110,7 +110,7 @@ public class FeatureLoader extends LoaderExtension<ComponentDefinition> {
 
         ComponentDefinition<Implementation<?>> def = new ComponentDefinition<Implementation<?>>(name);
         def.setImplementation(featureImplementation);
-        
+
         return def;
 
     }

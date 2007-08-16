@@ -34,11 +34,11 @@ import org.fabric3.fabric.implementation.processor.ServiceProcessor;
 import org.fabric3.fabric.monitor.NullMonitorFactory;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.processor.PojoComponentType;
-import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.scdl.Property;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.idl.java.JavaServiceContract;
+import org.fabric3.loader.common.LoaderContextImpl;
 
 /**
  * @version $Rev$ $Date$
@@ -46,9 +46,11 @@ import org.fabric3.spi.idl.java.JavaServiceContract;
 public class SystemComponentTypeLoaderTestCase extends TestCase {
     private SystemComponentTypeLoaderImpl loader;
 
-    public void testIntrospectUnannotatedClass() throws ProcessingException {
-        SystemImplementation impl = new SystemImplementation(BasicInterfaceImpl.class);
-        PojoComponentType componentType = loader.loadByIntrospection(impl, null);
+    public void testIntrospectUnannotatedClass() throws Exception {
+        SystemImplementation impl = new SystemImplementation(BasicInterfaceImpl.class.getName());
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        LoaderContextImpl context = new LoaderContextImpl(cl, null);
+        PojoComponentType componentType = loader.loadByIntrospection(impl, context);
         ServiceDefinition service = componentType.getServices().get(BasicInterface.class.getSimpleName());
         JavaServiceContract contract = JavaServiceContract.class.cast(service.getServiceContract());
         assertEquals(BasicInterface.class.getName(), contract.getInterfaceClass());
