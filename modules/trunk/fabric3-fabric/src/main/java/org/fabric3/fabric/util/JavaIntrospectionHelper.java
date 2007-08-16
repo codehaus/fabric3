@@ -280,7 +280,15 @@ public final class JavaIntrospectionHelper {
      * @param implClass the implmentation class
      */
     public static String getBaseName(Class<?> implClass) {
-        String baseName = implClass.getName();
+        return getBaseName(implClass.getName());
+    }
+
+    /**
+     * Returns the simple name of a class - i.e. the class name devoid of its package qualifier
+     *
+     * @param baseName the implmentation class
+     */
+    public static String getBaseName(String baseName) {
         int lastDot = baseName.lastIndexOf('.');
         if (lastDot != -1) {
             baseName = baseName.substring(lastDot + 1);

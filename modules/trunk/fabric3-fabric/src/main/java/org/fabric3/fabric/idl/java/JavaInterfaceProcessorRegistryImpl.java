@@ -30,16 +30,16 @@ import org.osoa.sca.annotations.OneWay;
 import org.osoa.sca.annotations.Remotable;
 
 import static org.fabric3.fabric.util.JavaIntrospectionHelper.getBaseName;
+import org.fabric3.scdl.DataType;
+import org.fabric3.scdl.Operation;
+import static org.fabric3.scdl.Operation.CONVERSATION_END;
+import static org.fabric3.scdl.Operation.NO_CONVERSATION;
 import org.fabric3.spi.idl.InvalidConversationalOperationException;
 import org.fabric3.spi.idl.InvalidServiceContractException;
 import org.fabric3.spi.idl.OverloadedOperationException;
 import org.fabric3.spi.idl.java.JavaInterfaceProcessor;
 import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
 import org.fabric3.spi.idl.java.JavaServiceContract;
-import org.fabric3.scdl.DataType;
-import org.fabric3.scdl.Operation;
-import static org.fabric3.scdl.Operation.CONVERSATION_END;
-import static org.fabric3.scdl.Operation.NO_CONVERSATION;
 
 /**
  * Default implementation of an InterfaceJavaIntrospector.
@@ -64,7 +64,7 @@ public class JavaInterfaceProcessorRegistryImpl implements JavaInterfaceProcesso
         processors.remove(processor);
     }
 
-    public <T> JavaServiceContract<T> introspect(Class<T> type) throws InvalidServiceContractException {
+    public <T> JavaServiceContract introspect(Class<T> type) throws InvalidServiceContractException {
         Class<?> callbackClass = null;
         Callback callback = type.getAnnotation(Callback.class);
         if (callback != null && !Void.class.equals(callback.value())) {
@@ -75,11 +75,10 @@ public class JavaInterfaceProcessorRegistryImpl implements JavaInterfaceProcesso
         return introspect(type, callbackClass);
     }
 
-    public <I, C> JavaServiceContract<I> introspect(Class<I> type, Class<C> callback)
+    public <I, C> JavaServiceContract introspect(Class<I> type, Class<C> callback)
             throws InvalidServiceContractException {
-        JavaServiceContract<I> contract = new JavaServiceContract<I>();
+        JavaServiceContract contract = new JavaServiceContract(type.getName());
         contract.setInterfaceName(getBaseName(type));
-        contract.setInterfaceClass(type);
         boolean remotable = type.isAnnotationPresent(Remotable.class);
         contract.setRemotable(remotable);
         //Scope interactionScope = type.getAnnotation(Scope.class);

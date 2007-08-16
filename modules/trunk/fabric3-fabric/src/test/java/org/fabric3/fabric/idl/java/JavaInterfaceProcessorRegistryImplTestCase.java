@@ -48,7 +48,7 @@ public class JavaInterfaceProcessorRegistryImplTestCase extends TestCase {
         JavaServiceContract contract = impl.introspect(Simple.class);
         // TODO spec to clairfy interface name
         assertEquals(JavaIntrospectionHelper.getBaseName(Simple.class), contract.getInterfaceName());
-        assertEquals(Simple.class, contract.getInterfaceClass());
+        assertEquals(Simple.class.getName(), contract.getInterfaceClass());
         List<Operation<Type>> operations = contract.getOperations();
         assertEquals(1, operations.size());
         Operation<Type> baseInt = operations.get(0);

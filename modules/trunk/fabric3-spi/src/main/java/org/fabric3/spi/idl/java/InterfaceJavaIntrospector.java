@@ -32,8 +32,10 @@ public interface InterfaceJavaIntrospector {
      *
      * @param type the interface to inspect
      * @return a JavaServiceContract corresponding to the Java interface
+     * @throws InvalidServiceContractException
+     *          if an error occurs introspecting the interface
      */
-    <I> JavaServiceContract<I> introspect(Class<I> type) throws InvalidServiceContractException;
+    <I> JavaServiceContract introspect(Class<I> type) throws InvalidServiceContractException;
 
     /**
      * Introspect a Java interface and return a service contract definition.
@@ -41,6 +43,8 @@ public interface InterfaceJavaIntrospector {
      * @param type     the interface to inspect
      * @param callback the callback interface to inspec
      * @return a JavaServiceContract corresponding to the Java interface
+     * @throws InvalidServiceContractException
+     *          if an error occurs introspecting the interface
      */
-    <I, C> JavaServiceContract<I> introspect(Class<I> type, Class<C> callback) throws InvalidServiceContractException;
+    <I, C> JavaServiceContract introspect(Class<I> type, Class<C> callback) throws InvalidServiceContractException;
 }

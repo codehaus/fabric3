@@ -42,8 +42,7 @@ public class HeuristicConstructorTestCase extends TestCase {
      * Verifies a single constructor is chosen with a parameter as the type
      */
     public void testSingleConstructorWithParam() throws Exception {
-        PojoComponentType type =
-                new PojoComponentType();
+        PojoComponentType type =  new PojoComponentType();
         JavaMappedProperty<String> prop = new JavaMappedProperty<String>();
         prop.setName("foo");
         prop.setJavaType(String.class);
@@ -58,7 +57,7 @@ public class HeuristicConstructorTestCase extends TestCase {
      */
     public void testSingleConstructorWithRef() throws Exception {
         PojoComponentType type = new PojoComponentType();
-        ServiceContract contract = new JavaServiceContract(String.class);
+        ServiceContract contract = new JavaServiceContract(String.class.getName());
         JavaMappedReference ref = new JavaMappedReference("foo", contract, null);
         type.getReferences().put("foo", ref);
         processor.visitEnd(Foo1.class, type, null);
@@ -77,7 +76,7 @@ public class HeuristicConstructorTestCase extends TestCase {
         prop.setJavaType(String.class);
         type.getProperties().put("foo", prop);
 
-        ServiceContract contract = new JavaServiceContract(Foo1.class);
+        ServiceContract contract = new JavaServiceContract(Foo1.class.getName());
         JavaMappedReference ref = new JavaMappedReference("ref", contract, null);
 
         type.getReferences().put("ref", ref);
@@ -98,13 +97,14 @@ public class HeuristicConstructorTestCase extends TestCase {
         PojoComponentType type = new PojoComponentType();
         processor.visitEnd(Foo6.class, type, null);
         ServiceContract<?> contract = type.getReferences().get("heuristicconstructortestcase$ref").getServiceContract();
-        assertEquals(Ref.class, ((JavaServiceContract) contract).getInterfaceClass());
+        JavaServiceContract jContract = JavaServiceContract.class.cast(contract);
+        assertEquals(Ref.class.getName(), jContract.getInterfaceClass());
     }
 
     public void testSingleConstructorAmbiguousRef() throws Exception {
         PojoComponentType type =
                 new PojoComponentType();
-        ServiceContract contract = new JavaServiceContract(Foo1.class);
+        ServiceContract contract = new JavaServiceContract(Foo1.class.getName());
         JavaMappedReference ref = new JavaMappedReference("ref", contract, null);
         type.getReferences().put("ref", ref);
         JavaMappedReference ref2 = new JavaMappedReference("ref2", contract, null);

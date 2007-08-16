@@ -307,7 +307,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         try {
             String name = RUNTIME_URI.relativize(uri).toString();
             Class<?> implClass = instance.getClass();
-            List<JavaServiceContract<?>> contracts = createServiceContacts(types);
+            List<JavaServiceContract> contracts = createServiceContacts(types);
             ComponentDefinition<SingletonImplementation> definition = createDefinition(name, contracts, implClass);
             SingletonComponent<I> component = new SingletonComponent<I>(uri, contracts, instance, null);
 
@@ -322,25 +322,24 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         }
     }
 
-    protected List<JavaServiceContract<?>> createServiceContacts(List<Class<?>> types)
+    protected List<JavaServiceContract> createServiceContacts(List<Class<?>> types)
             throws InvalidServiceContractException {
-        List<JavaServiceContract<?>> contracts = new ArrayList<JavaServiceContract<?>>(types.size());
+        List<JavaServiceContract> contracts = new ArrayList<JavaServiceContract>(types.size());
         for (Class<?> type : types) {
-            JavaServiceContract<?> contract = interfaceProcessorRegistry.introspect(type);
+            JavaServiceContract contract = interfaceProcessorRegistry.introspect(type);
             contracts.add(contract);
         }
         return contracts;
     }
 
     protected <I> ComponentDefinition<SingletonImplementation> createDefinition(String name,
-                                                                                List<JavaServiceContract<?>> contracts,
+                                                                                List<JavaServiceContract> contracts,
                                                                                 Class<I> implClass)
             throws InvalidServiceContractException {
 
         PojoComponentType componentType = new PojoComponentType(implClass);
-        for (JavaServiceContract<?> contract : contracts) {
-            Class<?> type = contract.getInterfaceClass();
-            String serviceName = JavaIntrospectionHelper.getBaseName(type);
+        for (JavaServiceContract contract : contracts) {
+            String serviceName = JavaIntrospectionHelper.getBaseName(contract.getInterfaceName());
             JavaMappedService service = new JavaMappedService(serviceName, contract);
             componentType.add(service);
         }

@@ -50,13 +50,13 @@ public class SystemComponentTypeLoaderTestCase extends TestCase {
         SystemImplementation impl = new SystemImplementation(BasicInterfaceImpl.class);
         PojoComponentType componentType = loader.loadByIntrospection(impl, null);
         ServiceDefinition service = componentType.getServices().get(BasicInterface.class.getSimpleName());
-        JavaServiceContract<?> contract = (JavaServiceContract) service.getServiceContract();
-        assertEquals(BasicInterface.class, contract.getInterfaceClass());
+        JavaServiceContract contract = JavaServiceContract.class.cast(service.getServiceContract());
+        assertEquals(BasicInterface.class.getName(), contract.getInterfaceClass());
         Property<?> property = componentType.getProperties().get("publicProperty");
         assertEquals(String.class, property.getJavaType());
         ReferenceDefinition referenceDefinition = componentType.getReferences().get("protectedReference");
-        JavaServiceContract<?> refContract = (JavaServiceContract) referenceDefinition.getServiceContract();
-        assertEquals(BasicInterface.class, refContract.getInterfaceClass());
+        JavaServiceContract refContract = JavaServiceContract.class.cast(referenceDefinition.getServiceContract());
+        assertEquals(BasicInterface.class.getName(), refContract.getInterfaceClass());
     }
 
     protected void setUp() throws Exception {

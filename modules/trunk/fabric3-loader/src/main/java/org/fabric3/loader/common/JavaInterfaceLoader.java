@@ -44,7 +44,7 @@ import org.fabric3.spi.loader.StAXElementLoader;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class JavaInterfaceLoader implements StAXElementLoader<JavaServiceContract<?>> {
+public class JavaInterfaceLoader implements StAXElementLoader<JavaServiceContract> {
     private static final QName INTERFACE_JAVA = new QName(SCA_NS, "interface.java");
 
     private final LoaderRegistry registry;
@@ -66,7 +66,7 @@ public class JavaInterfaceLoader implements StAXElementLoader<JavaServiceContrac
         registry.unregisterLoader(INTERFACE_JAVA);
     }
 
-    public JavaServiceContract<?> load(XMLStreamReader reader, LoaderContext loaderContext)
+    public JavaServiceContract load(XMLStreamReader reader, LoaderContext loaderContext)
             throws XMLStreamException, LoaderException {
 
         assert INTERFACE_JAVA.equals(reader.getName());
@@ -89,7 +89,7 @@ public class JavaInterfaceLoader implements StAXElementLoader<JavaServiceContrac
         LoaderUtil.skipToEndElement(reader);
 
         try {
-            JavaServiceContract<?> serviceContract = introspector.introspect(interfaceClass, callbackClass);
+            JavaServiceContract serviceContract = introspector.introspect(interfaceClass, callbackClass);
             serviceContract.setConversational(conversational);
             return serviceContract;
         } catch (InvalidServiceContractException e) {

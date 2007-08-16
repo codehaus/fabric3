@@ -45,8 +45,8 @@ public class ImplementationProcessorServiceTestCase extends TestCase {
 
     public void testCreateConversationalService() throws Exception {
         JavaMappedService service = implService.createService(Foo.class);
-        JavaServiceContract<?> contract = (JavaServiceContract) service.getServiceContract();
-        assertTrue(Foo.class.equals(contract.getInterfaceClass()));
+        JavaServiceContract contract = JavaServiceContract.class.cast(service.getServiceContract());
+        assertTrue(Foo.class.getName().equals(contract.getInterfaceClass()));
         assertTrue(contract.isConversational());
         assertTrue(Bar.class.equals(contract.getCallbackClass()));
         assertTrue("ImplementationProcessorServiceTestCase$Bar".equals(contract.getCallbackName()));
@@ -54,14 +54,13 @@ public class ImplementationProcessorServiceTestCase extends TestCase {
 
     public void testCreateDefaultService() throws Exception {
         JavaMappedService service = implService.createService(Baz.class);
-        JavaServiceContract<?> contract = (JavaServiceContract) service.getServiceContract();
-        assertTrue(Baz.class.equals(contract.getInterfaceClass()));
+        JavaServiceContract contract = JavaServiceContract.class.cast(service.getServiceContract());
+        assertTrue(Baz.class.getName().equals(contract.getInterfaceClass()));
         assertFalse(service.getServiceContract().isConversational());
     }
 
     public void testProcessParamProperty() throws Exception {
-        PojoComponentType type =
-                new PojoComponentType();
+        PojoComponentType type = new PojoComponentType();
         Constructor<PropertyClass> ctor = PropertyClass.class.getConstructor(int.class);
         Annotation[] paramAnnotations = ctor.getParameterAnnotations()[0];
         List<String> injectionNames = new ArrayList<String>();

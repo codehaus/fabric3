@@ -54,16 +54,15 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
      * Verifies a single service interface is computed when only one interface is implemented
      */
     public void testSingleInterface() throws Exception {
-        PojoComponentType type =
-                new PojoComponentType();
+        PojoComponentType type =  new PojoComponentType();
         Constructor<SingleInterfaceImpl> ctor = SingleInterfaceImpl.class.getConstructor();
         type.setConstructorDefinition(new ConstructorDefinition<SingleInterfaceImpl>(ctor));
         processor.visitEnd(SingleInterfaceImpl.class, type, null);
         assertEquals(1, type.getServices().size());
         Map<String, JavaMappedService> services = type.getServices();
         JavaMappedService mappedService = services.get(PropertyInterface.class.getSimpleName());
-        JavaServiceContract<?> contract = (JavaServiceContract) mappedService.getServiceContract();
-        assertEquals(PropertyInterface.class, contract.getInterfaceClass());
+        JavaServiceContract contract = JavaServiceContract.class.cast(mappedService.getServiceContract());
+        assertEquals(PropertyInterface.class.getName(), contract.getInterfaceClass());
         assertTrue(type.getProperties().isEmpty());
         assertTrue(type.getReferences().isEmpty());
     }
@@ -72,8 +71,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
      * Verifies property and reference setters are computed
      */
     public void testPropertyReference() throws Exception {
-        PojoComponentType type =
-                new PojoComponentType();
+        PojoComponentType type = new PojoComponentType();
         Constructor<SingleInterfaceWithPropertyReferenceImpl> ctor =
                 SingleInterfaceWithPropertyReferenceImpl.class.getConstructor();
         type.setConstructorDefinition(new ConstructorDefinition<SingleInterfaceWithPropertyReferenceImpl>(ctor));
@@ -81,15 +79,15 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
         assertEquals(1, type.getServices().size());
         Map<String, JavaMappedService> services = type.getServices();
         JavaMappedService mappedService = services.get(Interface1.class.getSimpleName());
-        JavaServiceContract<?> contract = (JavaServiceContract) mappedService.getServiceContract();
-        assertEquals(Interface1.class, contract.getInterfaceClass());
+        JavaServiceContract contract = JavaServiceContract.class.cast(mappedService.getServiceContract());
+        assertEquals(Interface1.class.getName(), contract.getInterfaceClass());
         assertEquals(1, type.getProperties().size());
         assertEquals(ComplexProperty.class, type.getProperties().get("property").getJavaType());
         assertEquals(1, type.getReferences().size());
         Map<String, JavaMappedReference> references = type.getReferences();
         JavaMappedReference mappedReference = references.get("reference");
-        JavaServiceContract<?> refContract = (JavaServiceContract) mappedReference.getServiceContract();
-        assertEquals(Ref.class, refContract.getInterfaceClass());
+        JavaServiceContract refContract = JavaServiceContract.class.cast(mappedReference.getServiceContract());
+        assertEquals(Ref.class.getName(), refContract.getInterfaceClass());
     }
 
     /**

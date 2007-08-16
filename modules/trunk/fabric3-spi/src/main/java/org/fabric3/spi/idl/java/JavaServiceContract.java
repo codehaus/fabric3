@@ -27,40 +27,37 @@ import org.fabric3.scdl.ServiceContract;
  *
  * @version $Rev$ $Date$
  */
-public class JavaServiceContract<I> extends ServiceContract<Type> {
-    protected Class<?> interfaceClass;
+public class JavaServiceContract extends ServiceContract<Type> {
+    protected String interfaceClass;
 
-    public JavaServiceContract() {
-    }
-
-    public JavaServiceContract(Class<I> interfaceClass) {
+    public JavaServiceContract(String interfaceClass) {
         this.interfaceClass = interfaceClass;
     }
 
     /**
-     * Returns the class used to represent the service contract.
+     * Returns the fully qualified class name used to represent the service contract.
      *
      * @return the class used to represent the service contract
      */
-    public Class<?> getInterfaceClass() {
+    public String getInterfaceClass() {
         return interfaceClass;
     }
-
-    /**
-     * Sets the class used to represent the service contract.
-     *
-     * @param interfaceClass the class used to represent the service contract
-     */
-    public void setInterfaceClass(Class<?> interfaceClass) {
-        this.interfaceClass = interfaceClass;
-    }
-
 
     public boolean isAssignableFrom(ServiceContract contract) {
         if (contract instanceof JavaServiceContract) {
             // short-circuit test if both are JavaClasses
-            JavaServiceContract<?> jContract = (JavaServiceContract) contract;
-            if (interfaceClass.isAssignableFrom(jContract.interfaceClass)) {
+            JavaServiceContract jContract = (JavaServiceContract) contract;
+            Class<?> thisClass;
+            Class<?> otherClass;
+            try {
+                // load classes dynamically since the model cannot reference them directly as they may not be on the
+                // classpath at al times, e.g. if the model is being deserialized.
+                thisClass = Class.forName(interfaceClass);
+                otherClass = Class.forName(jContract.interfaceClass);
+            } catch (ClassNotFoundException e) {
+                throw new AssertionError(e);
+            }
+            if (thisClass.isAssignableFrom(otherClass)) {
                 return true;
             }
         }

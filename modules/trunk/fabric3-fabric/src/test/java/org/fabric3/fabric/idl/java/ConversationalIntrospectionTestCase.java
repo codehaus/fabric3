@@ -35,7 +35,7 @@ public class ConversationalIntrospectionTestCase extends TestCase {
     private JavaInterfaceProcessorRegistryImpl registry = new JavaInterfaceProcessorRegistryImpl();
 
     public void testServiceContractConversationalInformationIntrospection() throws Exception {
-        JavaServiceContract<Foo> contract = registry.introspect(Foo.class);
+        JavaServiceContract contract = registry.introspect(Foo.class);
         assertTrue(contract.isConversational());
         boolean testedContinue = false;
         boolean testedEnd = false;
@@ -62,7 +62,7 @@ public class ConversationalIntrospectionTestCase extends TestCase {
     }
 
     public void testNonConversationalInformationIntrospection() throws Exception {
-        JavaServiceContract<NonConversationalFoo> contract = registry.introspect(NonConversationalFoo.class);
+        JavaServiceContract contract = registry.introspect(NonConversationalFoo.class);
         assertFalse(contract.isConversational());
         boolean tested = false;
         for (Operation<Type> operation : contract.getOperations()) {

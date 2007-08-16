@@ -147,8 +147,7 @@ public class DefaultWireResolverTestCase extends TestCase {
 
     private LogicalComponent<?> createSourceAtomic(Class<?> requiredInterface, LogicalComponent<CompositeImplementation> parent) {
 
-        JavaServiceContract contract = new JavaServiceContract();
-        contract.setInterfaceClass(requiredInterface);
+        JavaServiceContract contract = new JavaServiceContract(requiredInterface.getName());
         ReferenceDefinition referenceDefinition = new ReferenceDefinition("ref", contract);
         referenceDefinition.setRequired(true);
         MockComponentType type = new MockComponentType();
@@ -171,8 +170,7 @@ public class DefaultWireResolverTestCase extends TestCase {
 
     private LogicalComponent<?> createTargetAtomic(Class<?> serviceInterface, LogicalComponent<CompositeImplementation> parent) {
         URI uri = URI.create("target");
-        JavaServiceContract contract = new JavaServiceContract();
-        contract.setInterfaceClass(serviceInterface);
+        JavaServiceContract contract = new JavaServiceContract(serviceInterface.getName());
         ServiceDefinition service = new ServiceDefinition("service", contract);
         MockComponentType type = new MockComponentType();
         type.add(service);

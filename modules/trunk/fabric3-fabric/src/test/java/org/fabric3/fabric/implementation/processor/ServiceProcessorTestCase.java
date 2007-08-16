@@ -39,8 +39,8 @@ public class ServiceProcessorTestCase extends TestCase {
         processor.visitClass(FooMultiple.class, type, null);
         assertEquals(2, type.getServices().size());
         JavaMappedService service = type.getServices().get(Baz.class.getSimpleName());
-        JavaServiceContract contract = (JavaServiceContract) service.getServiceContract();
-        assertEquals(Baz.class, contract.getInterfaceClass());
+        JavaServiceContract contract = JavaServiceContract.class.cast(service.getServiceContract());
+        assertEquals(Baz.class.getName(), contract.getInterfaceClass());
         assertEquals(Bar.class, contract.getCallbackClass());
         assertEquals("ServiceProcessorTestCase$Bar", contract.getCallbackName());
         assertNotNull(type.getServices().get(Bar.class.getSimpleName()));
@@ -69,8 +69,8 @@ public class ServiceProcessorTestCase extends TestCase {
         processor.visitClass(FooRemotableNoService.class, type, null);
         assertEquals(1, type.getServices().size());
         JavaMappedService service = type.getServices().get(BazRemotable.class.getSimpleName());
-        JavaServiceContract contract = (JavaServiceContract) service.getServiceContract();
-        assertEquals(BazRemotable.class, contract.getInterfaceClass());
+        JavaServiceContract contract = JavaServiceContract.class.cast(service.getServiceContract());
+        assertEquals(BazRemotable.class.getName(), contract.getInterfaceClass());
     }
 
     public void testNonInterface() throws Exception {
