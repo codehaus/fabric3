@@ -1,10 +1,10 @@
 package org.fabric3.pojo.scdl;
 
 import java.lang.annotation.ElementType;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
-import java.lang.reflect.Field;
-import java.lang.reflect.Constructor;
 
 import org.fabric3.pojo.instancefactory.Signature;
 
@@ -28,15 +28,15 @@ public class MemberSite {
     }
 
     public MemberSite(Member member) {
-        setName(member.getName());
+        name = member.getName();
         if (member instanceof Method) {
-            setElementType(ElementType.METHOD);
-            setSignature(new Signature((Method) member));
+            elementType = ElementType.METHOD;
+            signature = new Signature((Method) member);
         } else if (member instanceof Field) {
-            setElementType(ElementType.FIELD);
+            elementType = ElementType.FIELD;
         } else if (member instanceof Constructor) {
-            setElementType(ElementType.CONSTRUCTOR);
-            setSignature(new Signature((Constructor) member));
+            elementType = ElementType.CONSTRUCTOR;
+            signature = new Signature((Constructor) member);
         }
     }
 
@@ -54,21 +54,8 @@ public class MemberSite {
         return name;
     }
 
-    /**
-     * Sets the name of the site.
-     *
-     * @param name Name of the site.
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public Signature getSignature() {
         return signature;
-    }
-
-    public void setSignature(Signature signature) {
-        this.signature = signature;
     }
 
     /**
@@ -78,15 +65,6 @@ public class MemberSite {
      */
     public ElementType getElementType() {
         return elementType;
-    }
-
-    /**
-     * Sets the element type.
-     *
-     * @param elementType Element type.
-     */
-    public void setElementType(ElementType elementType) {
-        this.elementType = elementType;
     }
 
 }

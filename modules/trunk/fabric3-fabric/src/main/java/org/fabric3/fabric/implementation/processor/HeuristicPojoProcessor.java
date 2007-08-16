@@ -268,7 +268,7 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
                     throw new ProcessingException(e);
                 }
             } else {
-                heuristicParamNames(params, refs, props, paramNames);
+                heuristicParamNames(constructor, params, refs, props, paramNames);
 
             }
         }
@@ -289,7 +289,8 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
         }
     }
 
-    private void heuristicParamNames(Class[] params,
+    private void heuristicParamNames(Constructor ctor,
+                                     Class[] params,
                                      Map<String, JavaMappedReference> refs,
                                      Map<String, JavaMappedProperty<?>> props,
                                      List<String> paramNames)
@@ -298,9 +299,9 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
         for (Class<?> param : params) {
             String name = getBaseName(param).toLowerCase();
             if (isReferenceType(param)) {
-                refs.put(name, createReference(name, null, param));
+                refs.put(name, createReference(name, ctor, param));
             } else {
-                props.put(name, createProperty(name, null, param));
+                props.put(name, createProperty(name, ctor, param));
             }
             paramNames.add(name);
         }

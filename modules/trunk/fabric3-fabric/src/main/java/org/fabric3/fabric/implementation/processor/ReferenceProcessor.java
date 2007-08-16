@@ -29,6 +29,7 @@ import static org.fabric3.fabric.util.JavaIntrospectionHelper.toPropertyName;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.scdl.JavaMappedReference;
 import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.pojo.scdl.MemberSite;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.scdl.Multiplicity;
 import org.fabric3.scdl.ServiceContract;
@@ -81,7 +82,8 @@ public class ReferenceProcessor extends ImplementationProcessorExtension {
         } catch (InvalidServiceContractException e) {
             throw new ProcessingException(e);
         }
-        JavaMappedReference reference = new JavaMappedReference(name, contract, method);
+        MemberSite memberSite = new MemberSite(method);
+        JavaMappedReference reference = new JavaMappedReference(name, contract, memberSite);
         reference.setRequired(required);
         if (rawType.isArray() || Collection.class.isAssignableFrom(rawType)) {
             if (required) {
@@ -126,7 +128,8 @@ public class ReferenceProcessor extends ImplementationProcessorExtension {
         } catch (InvalidServiceContractException e) {
             throw new ProcessingException(e);
         }
-        JavaMappedReference reference = new JavaMappedReference(name, contract, field);
+        MemberSite memberSite = new MemberSite(field);
+        JavaMappedReference reference = new JavaMappedReference(name, contract, memberSite);
         reference.setRequired(required);
         if (rawType.isArray() || Collection.class.isAssignableFrom(rawType)) {
             if (required) {

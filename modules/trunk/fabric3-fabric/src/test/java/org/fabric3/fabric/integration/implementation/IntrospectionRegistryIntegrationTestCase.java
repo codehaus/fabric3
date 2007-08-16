@@ -61,7 +61,8 @@ public class IntrospectionRegistryIntegrationTestCase extends TestCase {
         assertEquals(new Signature(Foo.class.getMethod("destroy")), type.getDestroyMethod());
         assertEquals(COMPOSITE, type.getImplementationScope());
         assertEquals(Foo.class.getMethod("setBar", String.class), type.getProperties().get("bar").getMember());
-        assertEquals(Foo.class.getMethod("setTarget", Foo.class), type.getReferences().get("target").getMember());
+        String targetName = type.getReferences().get("target").getMemberSite().getName();
+        assertEquals("setTarget", targetName);
         assertEquals(Foo.class.getMethod("setResource", Foo.class), type.getResources().get("resource").getMember());
     }
 

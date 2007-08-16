@@ -97,15 +97,14 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
         Map<String, JavaMappedReference> references = type.getReferences();
         for (Map.Entry<String, JavaMappedReference> entry : references.entrySet()) {
             JavaMappedReference reference = entry.getValue();
-            Member member = reference.getMember();
-            if (member == null) {
+            MemberSite memberSite = reference.getMemberSite();
+            if (memberSite == null) {
                 // JFM this is dubious, the reference is mapped to a constructor so skip processing
                 // ImplementationProcessorService does not set the member type to a ctor when creating the ref
                 continue;
             }
             ValueSource source = new ValueSource(REFERENCE, entry.getKey());
-            MemberSite memberSite = new MemberSite(member);
-            
+
             InjectionSiteMapping mapping = new InjectionSiteMapping();
             mapping.setSource(source);
             mapping.setSite(memberSite);

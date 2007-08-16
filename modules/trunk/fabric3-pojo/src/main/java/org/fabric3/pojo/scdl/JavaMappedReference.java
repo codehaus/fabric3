@@ -18,8 +18,6 @@
  */
 package org.fabric3.pojo.scdl;
 
-import java.lang.reflect.Member;
-
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceContract;
 
@@ -30,28 +28,20 @@ import org.fabric3.scdl.ServiceContract;
  * @version $Rev$ $Date$
  */
 public class JavaMappedReference extends ReferenceDefinition {
-    private Member member;
+    private MemberSite memberSite;
 
-    public JavaMappedReference(String name, ServiceContract serviceContract, Member member) {
+    public JavaMappedReference(String name, ServiceContract serviceContract, MemberSite memberSite) {
         super(name, serviceContract);
-        this.member = member;
+        this.memberSite = memberSite;
     }
 
     /**
-     * Returns the Member that this reference is mapped to.
+     * Returns the memberSiteSite that this reference is mapped to.
      *
-     * @return the Member that this reference is mapped to
+     * @return the memberSiteSite that this reference is mapped to
      */
-    public Member getMember() {
-        return member;
+    public MemberSite getMemberSite() {
+        return memberSite;
     }
 
-    /**
-     * Sets the Member that this reference is mapped to
-     *
-     * @param member the Member that this reference is mapped to
-     */
-    public void setMember(Member member) {
-        this.member = member;
-    }
 }

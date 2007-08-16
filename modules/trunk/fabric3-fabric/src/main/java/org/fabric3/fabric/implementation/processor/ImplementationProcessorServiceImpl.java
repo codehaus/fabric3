@@ -34,11 +34,12 @@ import org.fabric3.fabric.idl.java.IllegalCallbackException;
 import static org.fabric3.fabric.util.JavaIntrospectionHelper.getBaseName;
 import org.fabric3.pojo.processor.DuplicatePropertyException;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
+import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.JavaMappedReference;
 import org.fabric3.pojo.scdl.JavaMappedService;
+import org.fabric3.pojo.scdl.MemberSite;
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.scdl.Multiplicity;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.idl.InvalidServiceContractException;
@@ -142,7 +143,8 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
         } catch (IllegalCallbackException e) {
             throw new ProcessingException(e);
         }
-        JavaMappedReference reference = new JavaMappedReference(name, contract, member);
+        MemberSite memberSite = new MemberSite(member);
+        JavaMappedReference reference = new JavaMappedReference(name, contract, memberSite);
         reference.setRequired(false);
         return reference;
     }

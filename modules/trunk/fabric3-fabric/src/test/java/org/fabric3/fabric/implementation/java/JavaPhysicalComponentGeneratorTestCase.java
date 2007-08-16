@@ -12,11 +12,11 @@ import org.fabric3.fabric.services.instancefactory.GenerationHelperImpl;
 import org.fabric3.pojo.implementation.PojoComponentDefinition;
 import org.fabric3.pojo.instancefactory.InjectionSiteMapping;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
-import org.fabric3.pojo.scdl.MemberSite;
 import org.fabric3.pojo.instancefactory.Signature;
 import org.fabric3.pojo.scdl.ConstructorDefinition;
 import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.JavaMappedReference;
+import org.fabric3.pojo.scdl.MemberSite;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.CompositeImplementation;
@@ -137,7 +137,8 @@ public class JavaPhysicalComponentGeneratorTestCase extends TestCase {
         ctorDef.getInjectionNames().add("ctorProp");
         type.setConstructorDefinition(ctorDef);
 
-        JavaMappedReference setterReference = new JavaMappedReference("setter", null, setterMethod);
+        MemberSite memberSite = new MemberSite(setterMethod);
+        JavaMappedReference setterReference = new JavaMappedReference("setter", null, memberSite);
         type.add(setterReference);
 
         JavaMappedReference ctorReference = new JavaMappedReference("ctorRef", null, null);
