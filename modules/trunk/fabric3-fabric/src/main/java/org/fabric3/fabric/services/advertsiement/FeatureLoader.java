@@ -121,7 +121,7 @@ public class FeatureLoader extends LoaderExtension<ComponentDefinition> {
     private PojoComponentType getComponentType(Class<FeatureComponent> implClass, LoaderContext context)
             throws LoaderException {
 
-        PojoComponentType componentType = new PojoComponentType(implClass);
+        PojoComponentType componentType = new PojoComponentType(implClass.getName());
         introspector.introspect(implClass, componentType, context);
 
         return componentType;

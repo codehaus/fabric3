@@ -31,7 +31,7 @@ import org.fabric3.scdl.AbstractComponentType;
  * @version $$Rev$$ $$Date$$
  */
 public class PojoComponentType extends AbstractComponentType<JavaMappedService, JavaMappedReference, JavaMappedProperty<?>> {
-    private final Class<?> implClass;
+    private final String implClass;
     private ConstructorDefinition<?> constructorDefinition;
     private Signature initMethod;
     private Signature destroyMethod;
@@ -47,20 +47,20 @@ public class PojoComponentType extends AbstractComponentType<JavaMappedService, 
     }
 
     /**
-     * Constructor specifying the java class for the POJO this is describing.
+     * Constructor specifying the java class name for the POJO this is describing.
      *
      * @param implClass the java class for the POJO this is describing
      */
-    public PojoComponentType(Class<?> implClass) {
+    public PojoComponentType(String implClass) {
         this.implClass = implClass;
     }
 
     /**
-     * Returns the java class for the POJO this is describing.
+     * Returns the java class name for the POJO this is describing.
      *
-     * @return the java class for the POJO this is describing
+     * @return the java class name for the POJO this is describing
      */
-    public Class<?> getImplClass() {
+    public String getImplClass() {
         return implClass;
     }
 

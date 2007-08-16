@@ -337,7 +337,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
                                                                                 Class<I> implClass)
             throws InvalidServiceContractException {
 
-        PojoComponentType componentType = new PojoComponentType(implClass);
+        PojoComponentType componentType = new PojoComponentType(implClass.getName());
         for (JavaServiceContract contract : contracts) {
             String serviceName = JavaIntrospectionHelper.getBaseName(contract.getInterfaceName());
             JavaMappedService service = new JavaMappedService(serviceName, contract);

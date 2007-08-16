@@ -10,28 +10,26 @@ import org.easymock.EasyMock;
 
 import org.fabric3.fabric.services.instancefactory.GenerationHelperImpl;
 import org.fabric3.pojo.implementation.PojoComponentDefinition;
-import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.pojo.instancefactory.InjectionSiteMapping;
+import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.pojo.instancefactory.MemberSite;
 import org.fabric3.pojo.instancefactory.Signature;
-import org.fabric3.pojo.processor.JavaMappedReference;
 import org.fabric3.pojo.processor.ConstructorDefinition;
+import org.fabric3.pojo.processor.JavaMappedProperty;
+import org.fabric3.pojo.processor.JavaMappedReference;
 import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.CompositeImplementation;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.command.CommandSet;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
-import org.fabric3.pojo.processor.JavaMappedProperty;
-import org.fabric3.pojo.processor.JavaMappedService;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.ValueSource;
 import static org.fabric3.spi.model.instance.ValueSource.ValueSourceType.REFERENCE;
-import static org.fabric3.spi.model.instance.ValueSource.ValueSourceType.SERVICE;
 import org.fabric3.spi.model.physical.PhysicalChangeSet;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
-import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.CompositeImplementation;
-import org.fabric3.scdl.Scope;
 
 /**
  * @version $Rev$ $Date$
@@ -109,7 +107,8 @@ public class JavaPhysicalComponentGeneratorTestCase extends TestCase {
 
     }
 
-    private LogicalComponent<JavaImplementation> createLogicalComponent(LogicalComponent<CompositeImplementation> parent) throws NoSuchMethodException {
+    private LogicalComponent<JavaImplementation> createLogicalComponent(LogicalComponent<CompositeImplementation> parent)
+            throws NoSuchMethodException {
         PojoComponentType type = createType();
         JavaImplementation impl = new JavaImplementation();
         impl.setComponentType(type);
@@ -118,14 +117,16 @@ public class JavaPhysicalComponentGeneratorTestCase extends TestCase {
                 new ComponentDefinition<JavaImplementation>(COMPONENT_ID.toString());
         definition.setImplementation(impl);
         definition.setInitLevel(1);
-        return new LogicalComponent<JavaImplementation>(COMPONENT_ID, RUNTIME_ID, definition, parent, definition.getKey());
+        return new LogicalComponent<JavaImplementation>(COMPONENT_ID,
+                                                        RUNTIME_ID,
+                                                        definition,
+                                                        parent,
+                                                        definition.getKey());
     }
 
 
-    private PojoComponentType createType()
-            throws NoSuchMethodException {
-        PojoComponentType type =
-                new PojoComponentType(Foo.class);
+    private PojoComponentType createType() throws NoSuchMethodException {
+        PojoComponentType type = new PojoComponentType(Foo.class.getName());
         type.setImplementationScope(Scope.COMPOSITE);
         type.setInitMethod(new Signature(initMethod));
         type.setDestroyMethod(new Signature(destroyMethod));

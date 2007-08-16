@@ -28,15 +28,15 @@ import javax.xml.stream.XMLStreamReader;
 import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.fabric.implementation.system.SystemImplementation;
 import org.fabric3.loader.common.PropertyUtils;
-import org.fabric3.spi.Constants;
 import org.fabric3.pojo.processor.Introspector;
 import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.scdl.Property;
+import org.fabric3.scdl.Scope;
+import org.fabric3.spi.Constants;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
-import org.fabric3.scdl.Property;
-import org.fabric3.scdl.Scope;
 
 /**
  * @version $Revision$ $Date$
@@ -115,7 +115,7 @@ public class MarshallerLoader extends LoaderExtension<SystemImplementation> {
     private PojoComponentType getComponentType(Class<ReflectionMarshaller> implClass, LoaderContext context)
             throws LoaderException {
 
-        PojoComponentType componentType = new PojoComponentType(implClass);
+        PojoComponentType componentType = new PojoComponentType(implClass.getName());
         introspector.introspect(implClass, componentType, context);
 
         return componentType;

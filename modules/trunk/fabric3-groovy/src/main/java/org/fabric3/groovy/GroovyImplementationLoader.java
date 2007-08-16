@@ -97,7 +97,7 @@ public class GroovyImplementationLoader implements StAXElementLoader<GroovyImple
         } else {
             throw new MissingResourceException("No Groovy script or class name");
         }
-        PojoComponentType componentType = new PojoComponentType(implClass);
+        PojoComponentType componentType = new PojoComponentType(implClass.getName());
         introspector.introspect(implClass, componentType, context);
         if (componentType.getImplementationScope() == null) {
             componentType.setImplementationScope(Scope.STATELESS);
