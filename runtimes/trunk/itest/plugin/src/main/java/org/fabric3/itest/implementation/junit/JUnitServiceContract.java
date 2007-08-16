@@ -34,7 +34,7 @@ public class JUnitServiceContract extends ServiceContract<Type> {
         setOperations(operations);
     }
 
-    public boolean isAssignableFrom(ServiceContract contract) {
+    public boolean isAssignableFrom(ServiceContract<?> contract) {
         throw new UnsupportedOperationException();
     }
 
