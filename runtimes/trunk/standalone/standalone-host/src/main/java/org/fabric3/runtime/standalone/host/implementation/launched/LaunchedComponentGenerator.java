@@ -84,7 +84,7 @@ public class LaunchedComponentGenerator implements ComponentGenerator<LogicalCom
         } else {
             pDefinition.setInitLevel(level);
         }
-        providerDefinition.setImplementationClass(implementation.getClassName());
+        providerDefinition.setImplementationClass(implementation.getImplementationClass());
         processConstructorArguments(type.getConstructorDefinition(), providerDefinition);
         processConstructorSites(type, providerDefinition);
         processReferenceSites(type, providerDefinition);

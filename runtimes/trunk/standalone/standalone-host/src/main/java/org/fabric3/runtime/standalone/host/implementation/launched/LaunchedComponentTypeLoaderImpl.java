@@ -50,7 +50,7 @@ public class LaunchedComponentTypeLoaderImpl implements LaunchedComponentTypeLoa
     }
 
     public void load(Launched implementation, LoaderContext loaderContext) throws LoaderException {
-        String className = implementation.getClassName();
+        String className = implementation.getImplementationClass();
         Class<?> implClass;
         try {
             implClass = loaderContext.getTargetClassLoader().loadClass(className);

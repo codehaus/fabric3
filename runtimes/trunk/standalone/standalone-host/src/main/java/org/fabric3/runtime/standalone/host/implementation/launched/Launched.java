@@ -25,20 +25,20 @@ import org.fabric3.scdl.Implementation;
  * @version $Rev$ $Date$
  */
 public class Launched extends Implementation<PojoComponentType> {
-    private String className;
+    private String implementationClass;
     private String factoryName;
 
     public Launched(String className, String factoryName) {
-        this.className = className;
+        this.implementationClass = className;
         this.factoryName = factoryName;
     }
 
-    public String getClassName() {
-        return className;
+    public String getImplementationClass() {
+        return implementationClass;
     }
 
-    public void setClassName(String className) {
-        this.className = className;
+    public void setImplementationClass(String implementationClass) {
+        this.implementationClass = implementationClass;
     }
 
     public String getFactoryName() {
