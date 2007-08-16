@@ -36,6 +36,7 @@ import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Remotable;
 import org.osoa.sca.annotations.Service;
 
+import org.fabric3.fabric.util.JavaIntrospectionHelper;
 import static org.fabric3.fabric.util.JavaIntrospectionHelper.getAllInterfaces;
 import static org.fabric3.fabric.util.JavaIntrospectionHelper.getAllPublicAndProtectedFields;
 import static org.fabric3.fabric.util.JavaIntrospectionHelper.getAllUniquePublicProtectedMethods;
@@ -378,9 +379,14 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
      */
     private boolean isInServiceInterface(Method operation, Map<String, JavaMappedService> services) {
         for (JavaMappedService service : services.values()) {
-            //ServiceContract<?> contract = service.getServiceContract();
-            if (hasOperation(service.getServiceInterface(), operation)) {
-                return true;
+            String interfaze = service.getServiceInterface();
+            try {
+                Class<?> clazz = JavaIntrospectionHelper.loadClass(interfaze);
+                if (hasOperation(clazz, operation)) {
+                    return true;
+                }
+            } catch (ClassNotFoundException e) {
+                throw new AssertionError(e);
             }
         }
         return false;
