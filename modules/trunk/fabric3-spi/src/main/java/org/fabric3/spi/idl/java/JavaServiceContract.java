@@ -28,7 +28,8 @@ import org.fabric3.scdl.ServiceContract;
  * @version $Rev$ $Date$
  */
 public class JavaServiceContract extends ServiceContract<Type> {
-    protected String interfaceClass;
+    private String interfaceClass;
+    private String callbackClass;
 
     public JavaServiceContract(String interfaceClass) {
         this.interfaceClass = interfaceClass;
@@ -37,10 +38,28 @@ public class JavaServiceContract extends ServiceContract<Type> {
     /**
      * Returns the fully qualified class name used to represent the service contract.
      *
-     * @return the class used to represent the service contract
+     * @return the class name used to represent the service contract
      */
     public String getInterfaceClass() {
         return interfaceClass;
+    }
+
+    /**
+     * Returns the fully qualified class name used to represent the callback service.
+     *
+     * @return the class name used to represent the callback service
+     */
+    public String getCallbackClass() {
+        return callbackClass;
+    }
+
+    /**
+     * Sets the class used to represent the callback service.
+     *
+     * @param callbackClass the class used to represent the callback service
+     */
+    public void setCallbackClass(String callbackClass) {
+        this.callbackClass = callbackClass;
     }
 
     public boolean isAssignableFrom(ServiceContract contract) {

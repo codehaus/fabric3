@@ -31,7 +31,6 @@ public abstract class ServiceContract<T> extends ModelObject {
     protected boolean remotable;
     protected String interfaceName;
     protected String callbackName;
-    protected Class<?> callbackClass;
     protected List<Operation<T>> operations;
     protected List<Operation<T>> callbackOperations;
 
@@ -108,24 +107,6 @@ public abstract class ServiceContract<T> extends ModelObject {
      */
     public void setCallbackName(String callbackName) {
         this.callbackName = callbackName;
-    }
-
-    /**
-     * Returns the class used to represent the callback service.
-     *
-     * @return the class used to represent the callback service
-     */
-    public Class<?> getCallbackClass() {
-        return callbackClass;
-    }
-
-    /**
-     * Sets the class used to represent the callback service.
-     *
-     * @param callbackClass the class used to represent the callback service
-     */
-    public void setCallbackClass(Class<?> callbackClass) {
-        this.callbackClass = callbackClass;
     }
 
     /**

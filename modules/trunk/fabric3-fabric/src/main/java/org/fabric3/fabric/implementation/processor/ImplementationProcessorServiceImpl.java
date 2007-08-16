@@ -43,6 +43,7 @@ import org.fabric3.scdl.Multiplicity;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.idl.InvalidServiceContractException;
 import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
+import org.fabric3.spi.idl.java.JavaServiceContract;
 
 /**
  * The default implementation of an <code>ImplementationProcessorService</code>
@@ -61,11 +62,11 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
         return new JavaMappedService(interfaze.getSimpleName(), contract, interfaze);
     }
 
-    public void processCallback(Class<?> interfaze, ServiceContract<?> contract) throws IllegalCallbackException {
+    public void processCallback(Class<?> interfaze, JavaServiceContract contract) throws IllegalCallbackException {
         Callback callback = interfaze.getAnnotation(Callback.class);
         if (callback != null && !Void.class.equals(callback.value())) {
             Class<?> callbackClass = callback.value();
-            contract.setCallbackClass(callbackClass);
+            contract.setCallbackClass(callbackClass.getName());
             contract.setCallbackName(getBaseName(callbackClass));
         } else if (callback != null && Void.class.equals(callback.value())) {
             throw new IllegalCallbackException("No callback interface specified on annotation", interfaze.getName());
@@ -130,7 +131,7 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
 
     public JavaMappedReference createReference(String name, Member member, Class<?> paramType)
             throws ProcessingException {
-        ServiceContract contract;
+        JavaServiceContract contract;
         try {
             contract = registry.introspect(paramType);
         } catch (InvalidServiceContractException e1) {

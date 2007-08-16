@@ -88,7 +88,7 @@ public class JavaInterfaceProcessorRegistryImpl implements JavaInterfaceProcesso
 
         if (callback != null) {
             contract.setCallbackName(getBaseName(callback));
-            contract.setCallbackClass(callback);
+            contract.setCallbackClass(callback.getName());
             contract.setCallbackOperations(getOperations(callback, remotable, conversational, true));
         }
 

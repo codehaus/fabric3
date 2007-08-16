@@ -24,6 +24,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import org.fabric3.spi.idl.InvalidServiceContractException;
+import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.scdl.ServiceContract;
 
 /**
@@ -48,7 +49,7 @@ public interface ImplementationProcessorService {
      * @throws InvalidServiceContractException
      *
      */
-    void processCallback(Class<?> interfaze, ServiceContract<?> contract) throws InvalidServiceContractException;
+    void processCallback(Class<?> interfaze, JavaServiceContract contract) throws InvalidServiceContractException;
 
     /**
      * Determines if all the members of a collection have unique types

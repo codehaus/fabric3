@@ -41,7 +41,7 @@ public class ServiceProcessorTestCase extends TestCase {
         JavaMappedService service = type.getServices().get(Baz.class.getSimpleName());
         JavaServiceContract contract = JavaServiceContract.class.cast(service.getServiceContract());
         assertEquals(Baz.class.getName(), contract.getInterfaceClass());
-        assertEquals(Bar.class, contract.getCallbackClass());
+        assertEquals(Bar.class.getName(), contract.getCallbackClass());
         assertEquals("ServiceProcessorTestCase$Bar", contract.getCallbackName());
         assertNotNull(type.getServices().get(Bar.class.getSimpleName()));
     }
