@@ -66,8 +66,7 @@ public class LaunchedComponentTypeLoaderImpl implements LaunchedComponentTypeLoa
             Launched implementation,
             LoaderContext loaderContext,
             Class<?> implClass) throws ProcessingException {
-        PojoComponentType componentType =
-                new PojoComponentType(implClass);
+        PojoComponentType componentType = new PojoComponentType(implClass.getName());
         introspector.introspect(implClass, componentType, loaderContext);
 
         ServiceContract launchedContract = generateContract(implClass);
