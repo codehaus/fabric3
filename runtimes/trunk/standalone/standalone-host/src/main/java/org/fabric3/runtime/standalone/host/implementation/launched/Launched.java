@@ -18,7 +18,7 @@
  */
 package org.fabric3.runtime.standalone.host.implementation.launched;
 
-import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Implementation;
 
 /**
