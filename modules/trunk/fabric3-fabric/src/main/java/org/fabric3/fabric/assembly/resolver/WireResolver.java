@@ -42,12 +42,4 @@ public interface WireResolver {
     void resolve(LogicalComponent<?> targetComposite, LogicalComponent<?> component)
             throws ResolutionException;
 
-    /**
-     * Adds the uri of a host system service that can be an autowire target
-     *
-     * @param contract the service contract of the system service
-     * @param uri      the component uri
-     */
-    void addHostUri(ServiceContract contract, URI uri);
-
 }

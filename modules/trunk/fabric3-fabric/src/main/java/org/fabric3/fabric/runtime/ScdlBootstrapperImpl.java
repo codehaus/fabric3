@@ -313,9 +313,6 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
             SingletonComponent<I> component = new SingletonComponent<I>(uri, contracts, instance, null);
 
             componentManager.register(component);
-            for (JavaServiceContract<?> contract : contracts) {
-                resolver.addHostUri(contract, uri);
-            }
             runtimeAssembly.instantiateHostComponentDefinition(definition);
         } catch (InvalidServiceContractException e) {
             throw new InitializationException(e);

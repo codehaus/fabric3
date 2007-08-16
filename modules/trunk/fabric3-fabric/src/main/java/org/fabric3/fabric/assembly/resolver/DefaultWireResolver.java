@@ -20,7 +20,6 @@ package org.fabric3.fabric.assembly.resolver;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -45,11 +44,6 @@ import org.fabric3.spi.util.UriHelper;
  * @version $Rev$ $Date$
  */
 public class DefaultWireResolver implements WireResolver {
-    private Map<ServiceContract, URI> hostAutowire = new HashMap<ServiceContract, URI>();
-
-    public void addHostUri(ServiceContract contract, URI uri) {
-        hostAutowire.put(contract, uri);
-    }
 
     public void resolve(LogicalComponent<?> targetComposite, LogicalComponent<?> component)
             throws ResolutionException {
@@ -209,7 +203,7 @@ public class DefaultWireResolver implements WireResolver {
                               ServiceContract requiredContract)
             throws AutowireTargetNotFoundException, AmbiguousAutowireTargetException {
         URI targetUri;
-        List<URI> candidateUri = new ArrayList<URI>();
+        List<URI> candidates = new ArrayList<URI>();
         // find a suitable target, starting with components first
         for (LogicalComponent<?> child : composite.getComponents()) {
             ComponentDefinition<? extends Implementation<?>> candidate = child.getDefinition();
@@ -221,41 +215,24 @@ public class DefaultWireResolver implements WireResolver {
                     continue;
                 }
                 if (requiredContract.isAssignableFrom(targetContract)) {
-                    candidateUri.add(URI.create(candidate.getName() + '#' + service.getName()));
+                    candidates.add(URI.create(candidate.getName() + '#' + service.getName()));
                     break;
                 }
             }
         }
-        if (candidateUri.isEmpty()) {
-            targetUri = resolvePrimordial(requiredContract);
-        } else {
-            if (candidateUri.size() > 1) {
-                // For now, we have no other criteria to select from
-                throw new AmbiguousAutowireTargetException(component.getUri().toString(), referenceName);
-            }
-            targetUri = candidateUri.get(0);
+        if (candidates.isEmpty()) {
+            return null;
+        } else if (candidates.size() > 1) {
+            // For now, we have no other criteria to select from
+            throw new AmbiguousAutowireTargetException(component.getUri().toString(), referenceName);
         }
+        targetUri = candidates.get(0);
         if (targetUri != null) {
             LogicalReference logicalReference = component.getReference(referenceName);
             assert logicalReference != null;
             logicalReference.addTargetUri(component.getUri().resolve(targetUri));
         }
         return targetUri;
-    }
-
-    /**
-     * Resolves a reference type against the registered primordial components
-     *
-     * @param contract the reference type
-     * @return a URI of a service matching the type or null
-     */
-    private URI resolvePrimordial(ServiceContract contract) {
-        for (Map.Entry<ServiceContract, URI> entry : hostAutowire.entrySet()) {
-            if (contract.isAssignableFrom(entry.getKey())) {
-                return entry.getValue().resolve("#" + entry.getKey().getInterfaceName());
-            }
-        }
-        return null;
     }
 
     /**
