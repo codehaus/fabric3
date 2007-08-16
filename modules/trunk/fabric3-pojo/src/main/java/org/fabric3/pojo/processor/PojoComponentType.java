@@ -31,12 +31,18 @@ import org.fabric3.scdl.AbstractComponentType;
  * @version $$Rev$$ $$Date$$
  */
 public class PojoComponentType extends AbstractComponentType<JavaMappedService, JavaMappedReference, JavaMappedProperty<?>> {
-    private final String implClass;
+    private String implClass;
     private ConstructorDefinition<?> constructorDefinition;
     private Signature initMethod;
     private Signature destroyMethod;
     private final Map<String, Resource> resources = new HashMap<String, Resource>();
     private MemberSite conversationIDMember;
+
+    /**
+     * Constructor used only for deserialization
+     */
+    public PojoComponentType() {
+    }
 
     /**
      * Constructor specifying the java class name for the POJO this is describing.

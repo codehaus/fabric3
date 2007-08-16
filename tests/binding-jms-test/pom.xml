@@ -81,13 +81,14 @@ under the License.
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-itest-plugin</artifactId>
                 <configuration>
-                    <systemScdl>file:target/classes/META-INF/testSystem.composite</systemScdl>
-                    <extensions>
+                    <contributions>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-binding-jms</artifactId>
                             <version>0.2-SNAPSHOT</version>
                         </dependency>
+                    </contributions>
+                    <extensions>
                         <dependency>
                             <groupId>geronimo-spec</groupId>
                             <artifactId>geronimo-spec-jms</artifactId>
