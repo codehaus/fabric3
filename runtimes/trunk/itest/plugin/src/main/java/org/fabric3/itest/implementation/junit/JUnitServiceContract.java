@@ -20,6 +20,7 @@ package org.fabric3.itest.implementation.junit;
 
 import java.util.List;
 import java.lang.reflect.Type;
+import java.lang.reflect.Method;
 
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.Operation;
@@ -32,4 +33,9 @@ public class JUnitServiceContract extends ServiceContract<Type> {
     public JUnitServiceContract(List<Operation<Type>> operations) {
         setOperations(operations);
     }
+
+    public boolean isAssignableFrom(ServiceContract contract) {
+        throw new UnsupportedOperationException();
+    }
+
 }
