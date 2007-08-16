@@ -63,9 +63,7 @@ public class JavaImplementationLoader extends LoaderExtension<JavaImplementation
         policyHelper.loadPolicySetsAndIntents(implementation, reader);
         LoaderUtil.skipToEndElement(reader);
 
-        Class<?> implementationClass = LoaderUtil.loadClass(implClass, loaderContext.getTargetClassLoader());
-        implementation.setClassName(implClass);
-        implementation.setImplementationClass(implementationClass);
+        implementation.setImplementationClass(implClass);
         componentTypeLoader.load(implementation,  loaderContext);
         return implementation;
     }

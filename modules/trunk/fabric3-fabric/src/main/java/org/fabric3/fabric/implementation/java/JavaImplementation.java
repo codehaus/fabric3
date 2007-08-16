@@ -25,38 +25,16 @@ import org.fabric3.scdl.Implementation;
  * @version $$Rev$$ $$Date$$
  */
 public class JavaImplementation extends Implementation<PojoComponentType> {
-    private String className;
-    private Class<?> implementationClass;
+    private String implementationClass;
 
     public JavaImplementation() {
     }
 
-    public JavaImplementation(Class<?> implementationClass) {
-        this.implementationClass = implementationClass;
-        this.className = implementationClass.getName();
-    }
-
-    public JavaImplementation(Class<?> implementationClass, PojoComponentType componentType) {
-        super(componentType);
-        this.implementationClass = implementationClass;
-        this.className = implementationClass == null ? null : implementationClass.getName();
-    }
-
-    public String getClassName() {
-        return className;
-    }
-
-    public void setClassName(String className) {
-        this.className = className;
-        this.implementationClass = null;
-    }
-
-    public Class<?> getImplementationClass() {
+    public String getImplementationClass() {
         return implementationClass;
     }
 
-    public void setImplementationClass(Class<?> implementationClass) {
+    public void setImplementationClass(String implementationClass) {
         this.implementationClass = implementationClass;
-        this.className = implementationClass.getName();
     }
 }

@@ -23,20 +23,20 @@ import java.net.URI;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
+import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
+import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
-import org.fabric3.pojo.processor.PojoComponentType;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
-import org.fabric3.scdl.ComponentDefinition;
 
 /**
  * Generates a JavaComponentDefinition from a ComponentDefinition corresponding to a Java component implementation
@@ -66,7 +66,7 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
         InstanceFactoryDefinition providerDefinition = new InstanceFactoryDefinition();
         providerDefinition.setInitMethod(type.getInitMethod());
         providerDefinition.setDestroyMethod(type.getDestroyMethod());
-        providerDefinition.setImplementationClass(implementation.getImplementationClass().getName());
+        providerDefinition.setImplementationClass(implementation.getImplementationClass());
         helper.processConstructorArguments(type.getConstructorDefinition(), providerDefinition);
         helper.processConstructorSites(type, providerDefinition);
         helper.processReferenceSites(type, providerDefinition);

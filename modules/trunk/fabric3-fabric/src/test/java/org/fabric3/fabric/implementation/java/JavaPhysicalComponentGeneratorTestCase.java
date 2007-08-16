@@ -112,7 +112,7 @@ public class JavaPhysicalComponentGeneratorTestCase extends TestCase {
         PojoComponentType type = createType();
         JavaImplementation impl = new JavaImplementation();
         impl.setComponentType(type);
-        impl.setImplementationClass(Foo.class);
+        impl.setImplementationClass(Foo.class.getName());
         ComponentDefinition<JavaImplementation> definition =
                 new ComponentDefinition<JavaImplementation>(COMPONENT_ID.toString());
         definition.setImplementation(impl);

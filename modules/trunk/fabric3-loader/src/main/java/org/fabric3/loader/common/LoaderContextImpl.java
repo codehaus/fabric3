@@ -31,8 +31,7 @@ import org.fabric3.spi.transform.TransformContext;
  * 
  * @version $Rev$ $Date$
  */
-public class LoaderContextImpl extends TransformContext implements
-        LoaderContext {
+public class LoaderContextImpl extends TransformContext implements LoaderContext {
 
     private String targetNamespace;
 

@@ -28,9 +28,11 @@ import org.fabric3.pojo.processor.IntrospectionRegistry;
 import org.fabric3.pojo.processor.Introspector;
 import org.fabric3.pojo.processor.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.scdl.Scope;
+import org.fabric3.spi.loader.LoaderUtil;
+import org.fabric3.spi.loader.MissingResourceException;
 
 /**
  * @version $Rev$ $Date$
@@ -44,7 +46,8 @@ public class JavaComponentTypeLoaderImpl implements JavaComponentTypeLoader {
     }
 
     public void load(JavaImplementation implementation, LoaderContext loaderContext) throws LoaderException {
-        Class<?> implClass = implementation.getImplementationClass();
+        Class<?> implClass =
+                LoaderUtil.loadClass(implementation.getImplementationClass(), loaderContext.getTargetClassLoader());
         URL resource = implClass.getResource(JavaIntrospectionHelper.getBaseName(implClass) + ".componentType");
         PojoComponentType componentType;
         if (resource == null) {
@@ -59,8 +62,9 @@ public class JavaComponentTypeLoaderImpl implements JavaComponentTypeLoader {
     }
 
     protected PojoComponentType loadByIntrospection(JavaImplementation implementation, LoaderContext context)
-            throws ProcessingException {
-        Class<?> implClass = implementation.getImplementationClass();
+            throws ProcessingException, MissingResourceException {
+        Class<?> implClass =
+                LoaderUtil.loadClass(implementation.getImplementationClass(), context.getTargetClassLoader());
         PojoComponentType componentType = new PojoComponentType(implClass.getName());
         introspector.introspect(implClass, componentType, context);
         return componentType;
