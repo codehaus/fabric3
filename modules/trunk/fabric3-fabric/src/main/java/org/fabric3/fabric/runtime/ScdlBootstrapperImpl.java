@@ -171,7 +171,6 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     private JavaInterfaceProcessorRegistry interfaceProcessorRegistry;
 
     private ComponentManager componentManager;
-    private WireResolver resolver;
     private ScopeRegistry scopeRegistry;
     private MonitorFactory monitorFactory;
 
@@ -232,7 +231,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         // create the ClassLoaderRegistry
         classLoaderRegistry = new ClassLoaderRegistryImpl();
         componentManager = ((AbstractRuntime<?>) runtime).getComponentManager();
-        resolver = new DefaultWireResolver();
+        WireResolver resolver = new DefaultWireResolver();
         scopeRegistry = new ScopeRegistryImpl();
         // create the COMPOSITE ScopeContainer
         CompositeScopeContainer scopeContainer = new CompositeScopeContainer(monitorFactory);
