@@ -19,7 +19,7 @@
 package org.fabric3.fabric.implementation.processor;
 
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.scdl.Scope;
 

@@ -24,7 +24,7 @@ import java.lang.reflect.Method;
 
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.pojo.processor.ImplementationProcessor;
-import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.pojo.scdl.PojoComponentType;
 
 import junit.framework.TestCase;
 import org.fabric3.fabric.implementation.IntrospectionRegistryImpl.Monitor;

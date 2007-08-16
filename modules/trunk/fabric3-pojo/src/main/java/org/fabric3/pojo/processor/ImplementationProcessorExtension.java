@@ -32,6 +32,7 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.pojo.scdl.PojoComponentType;
 
 /**
  * A convenience class for annotation processors which alleviates the need to implement unused callbacks
@@ -70,37 +71,37 @@ public abstract class ImplementationProcessorExtension implements Implementation
     }
 
     /**
-     * @see org.fabric3.pojo.processor.ImplementationProcessor#visitClass(java.lang.Class, org.fabric3.pojo.processor.PojoComponentType, org.fabric3.spi.loader.LoaderContext)
+     * @see org.fabric3.pojo.processor.ImplementationProcessor#visitClass(java.lang.Class,org.fabric3.pojo.scdl.PojoComponentType, org.fabric3.spi.loader.LoaderContext)
      */
     public <T> void visitClass(Class<T> clazz, PojoComponentType type, LoaderContext context) throws ProcessingException {
     }
 
     /**
-     * @see org.fabric3.pojo.processor.ImplementationProcessor#visitSuperClass(java.lang.Class, org.fabric3.pojo.processor.PojoComponentType, org.fabric3.spi.loader.LoaderContext)
+     * @see org.fabric3.pojo.processor.ImplementationProcessor#visitSuperClass(java.lang.Class,org.fabric3.pojo.scdl.PojoComponentType, org.fabric3.spi.loader.LoaderContext)
      */
     public <T> void visitSuperClass(Class<T> clazz, PojoComponentType type, LoaderContext context) throws ProcessingException {
     }
 
     /**
-     * @see org.fabric3.pojo.processor.ImplementationProcessor#visitMethod(java.lang.reflect.Method, org.fabric3.pojo.processor.PojoComponentType, org.fabric3.spi.loader.LoaderContext)
+     * @see org.fabric3.pojo.processor.ImplementationProcessor#visitMethod(java.lang.reflect.Method,org.fabric3.pojo.scdl.PojoComponentType, org.fabric3.spi.loader.LoaderContext)
      */
     public void visitMethod(Method method, PojoComponentType type, LoaderContext context) throws ProcessingException {
     }
 
     /**
-     * @see org.fabric3.pojo.processor.ImplementationProcessor#visitConstructor(java.lang.reflect.Constructor, org.fabric3.pojo.processor.PojoComponentType, org.fabric3.spi.loader.LoaderContext)
+     * @see org.fabric3.pojo.processor.ImplementationProcessor#visitConstructor(java.lang.reflect.Constructor,org.fabric3.pojo.scdl.PojoComponentType, org.fabric3.spi.loader.LoaderContext)
      */
     public <T> void visitConstructor(Constructor<T> constructor, PojoComponentType type, LoaderContext context) throws ProcessingException {
     }
 
     /**
-     * @see org.fabric3.pojo.processor.ImplementationProcessor#visitField(java.lang.reflect.Field, org.fabric3.pojo.processor.PojoComponentType, org.fabric3.spi.loader.LoaderContext)
+     * @see org.fabric3.pojo.processor.ImplementationProcessor#visitField(java.lang.reflect.Field,org.fabric3.pojo.scdl.PojoComponentType, org.fabric3.spi.loader.LoaderContext)
      */
     public void visitField(Field field, PojoComponentType type, LoaderContext context) throws ProcessingException {
     }
 
     /**
-     * @see org.fabric3.pojo.processor.ImplementationProcessor#visitEnd(java.lang.Class, org.fabric3.pojo.processor.PojoComponentType, org.fabric3.spi.loader.LoaderContext)
+     * @see org.fabric3.pojo.processor.ImplementationProcessor#visitEnd(java.lang.Class,org.fabric3.pojo.scdl.PojoComponentType, org.fabric3.spi.loader.LoaderContext)
      */
     public <T> void visitEnd(Class<T> clazz, PojoComponentType type, LoaderContext context) throws ProcessingException {
     }

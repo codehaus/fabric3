@@ -22,7 +22,7 @@ import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
-import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
 
 /**

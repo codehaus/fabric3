@@ -24,8 +24,8 @@ import java.util.List;
 import org.osoa.sca.annotations.Property;
 
 import org.fabric3.pojo.processor.DuplicatePropertyException;
-import org.fabric3.pojo.processor.JavaMappedProperty;
-import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.pojo.scdl.JavaMappedProperty;
+import org.fabric3.pojo.scdl.PojoComponentType;
 
 import junit.framework.TestCase;
 import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;

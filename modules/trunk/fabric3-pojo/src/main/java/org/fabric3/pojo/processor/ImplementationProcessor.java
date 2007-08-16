@@ -23,10 +23,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.pojo.scdl.PojoComponentType;
 
 /**
  * Implementations process class-level metadata, typically parsing annotations and updating the corresponding
- * <code>ComponentType</code>. A processor may, for example, create a {@link JavaMappedProperty} which is responsible
+ * <code>ComponentType</code>. A processor may, for example, create a {@link org.fabric3.pojo.scdl.JavaMappedProperty} which is responsible
  * for injecting a complex type on a component implementation instance when it is instantiated.
  * <p/>
  * Processors will receive callbacks as the implementation class is walked while evalauting an assembly. It is the

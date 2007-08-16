@@ -26,7 +26,7 @@ import org.osoa.sca.annotations.Scope;
 import org.fabric3.api.annotation.Resource;
 
 import org.fabric3.pojo.processor.ImplementationProcessorService;
-import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.instancefactory.Signature;
 import static org.fabric3.scdl.Scope.COMPOSITE;
 import org.fabric3.spi.component.ScopeRegistry;

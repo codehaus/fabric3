@@ -30,7 +30,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.pojo.processor.ImplementationProcessor;
 import org.fabric3.pojo.processor.IntrospectionRegistry;
-import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
 
 import org.fabric3.fabric.util.JavaIntrospectionHelper;

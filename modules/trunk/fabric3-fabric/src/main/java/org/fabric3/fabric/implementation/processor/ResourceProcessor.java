@@ -25,15 +25,15 @@ import java.lang.reflect.Method;
 
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
-import org.fabric3.pojo.processor.PojoComponentType;
-import org.fabric3.pojo.processor.Resource;
+import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.pojo.scdl.Resource;
 import org.fabric3.pojo.processor.ProcessingException;
 
 import static org.fabric3.fabric.util.JavaIntrospectionHelper.toPropertyName;
 
 /**
  * Processes an {@link @Resource} annotation, updating the component type with corresponding {@link
- * org.fabric3.pojo.processor.Resource}
+ * org.fabric3.pojo.scdl.Resource}
  *
  * @version $Rev$ $Date$
  */

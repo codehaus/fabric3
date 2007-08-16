@@ -22,7 +22,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
-import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;

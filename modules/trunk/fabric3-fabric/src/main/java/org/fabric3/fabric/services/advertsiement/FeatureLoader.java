@@ -31,7 +31,7 @@ import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.fabric.implementation.system.SystemImplementation;
 import org.fabric3.loader.common.PropertyUtils;
 import org.fabric3.pojo.processor.Introspector;
-import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Property;

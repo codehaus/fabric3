@@ -27,6 +27,9 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.pojo.scdl.JavaMappedProperty;
+import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.pojo.scdl.ConstructorDefinition;
 
 /**
  * Base class for ImplementationProcessors that handle annotations that add Properties.

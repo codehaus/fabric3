@@ -25,10 +25,10 @@ import java.util.List;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.spi.loader.LoaderContext;
-import org.fabric3.pojo.processor.ConstructorDefinition;
+import org.fabric3.pojo.scdl.ConstructorDefinition;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
-import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
 
 

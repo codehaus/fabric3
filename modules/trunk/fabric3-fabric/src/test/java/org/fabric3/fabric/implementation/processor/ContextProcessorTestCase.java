@@ -26,7 +26,7 @@ import org.osoa.sca.RequestContext;
 import org.osoa.sca.annotations.Context;
 
 import org.fabric3.spi.component.Component;
-import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.pojo.scdl.PojoComponentType;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;

@@ -22,15 +22,14 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.pojo.processor.AbstractPropertyProcessor;
-import org.fabric3.spi.SingletonObjectFactory;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
-import org.fabric3.pojo.processor.JavaMappedProperty;
+import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.spi.loader.LoaderContext;
 
 /**
  * Processes an {@link @Monitor} annotation, updating the component type with corresponding {@link
- * org.fabric3.pojo.processor.JavaMappedProperty}
+ * org.fabric3.pojo.scdl.JavaMappedProperty}
  *
  * @version $Rev$ $Date$
  */

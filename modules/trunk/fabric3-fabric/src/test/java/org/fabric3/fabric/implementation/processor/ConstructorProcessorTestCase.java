@@ -26,9 +26,9 @@ import java.util.Set;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.pojo.processor.JavaMappedProperty;
-import org.fabric3.pojo.processor.JavaMappedReference;
-import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.pojo.scdl.JavaMappedProperty;
+import org.fabric3.pojo.scdl.JavaMappedReference;
+import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Multiplicity;
 
 import junit.framework.TestCase;

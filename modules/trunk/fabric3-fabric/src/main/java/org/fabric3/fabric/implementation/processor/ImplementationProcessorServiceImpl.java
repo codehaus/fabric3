@@ -34,10 +34,10 @@ import org.fabric3.fabric.idl.java.IllegalCallbackException;
 import static org.fabric3.fabric.util.JavaIntrospectionHelper.getBaseName;
 import org.fabric3.pojo.processor.DuplicatePropertyException;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
-import org.fabric3.pojo.processor.JavaMappedProperty;
-import org.fabric3.pojo.processor.JavaMappedReference;
-import org.fabric3.pojo.processor.JavaMappedService;
-import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.pojo.scdl.JavaMappedProperty;
+import org.fabric3.pojo.scdl.JavaMappedReference;
+import org.fabric3.pojo.scdl.JavaMappedService;
+import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.scdl.Multiplicity;
 import org.fabric3.scdl.ServiceContract;
@@ -324,8 +324,8 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
         if (type.getResources().get(name) != null) {
             throw new DuplicateResourceException(name);
         }
-        org.fabric3.pojo.processor.Resource<T> resource =
-                new org.fabric3.pojo.processor.Resource<T>(name, param, null);
+        org.fabric3.pojo.scdl.Resource<T> resource =
+                new org.fabric3.pojo.scdl.Resource<T>(name, param, null);
         resource.setOptional(resourceAnnot.optional());
         String mappedName = resourceAnnot.mappedName();
         if (mappedName.length() > 0) {

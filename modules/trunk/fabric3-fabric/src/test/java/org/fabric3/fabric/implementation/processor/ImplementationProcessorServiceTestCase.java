@@ -31,8 +31,8 @@ import org.osoa.sca.annotations.Remotable;
 
 import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
-import org.fabric3.pojo.processor.JavaMappedService;
-import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.pojo.scdl.JavaMappedService;
+import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.spi.idl.java.JavaServiceContract;
 
 /**

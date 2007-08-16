@@ -23,7 +23,7 @@ import java.lang.reflect.Method;
 import org.osoa.sca.annotations.Destroy;
 
 import junit.framework.TestCase;
-import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.pojo.scdl.PojoComponentType;
 
 /**
  * @version $Rev$ $Date$

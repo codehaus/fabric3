@@ -18,7 +18,7 @@
  */
 package org.fabric3.fabric.implementation.system;
 
-import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Implementation;
 
 /**

@@ -23,7 +23,7 @@ import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 
 import org.fabric3.pojo.processor.IntrospectionRegistry;
-import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.loader.common.LoaderContextImpl;
 

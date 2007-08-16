@@ -33,7 +33,7 @@ import org.fabric3.fabric.implementation.processor.ReferenceProcessor;
 import org.fabric3.fabric.implementation.processor.ServiceProcessor;
 import org.fabric3.fabric.monitor.NullMonitorFactory;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
-import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Property;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;

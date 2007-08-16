@@ -22,8 +22,8 @@ import java.lang.reflect.Constructor;
 
 import org.osoa.sca.annotations.Property;
 
-import org.fabric3.pojo.processor.ConstructorDefinition;
-import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.pojo.scdl.ConstructorDefinition;
+import org.fabric3.pojo.scdl.PojoComponentType;
 
 import junit.framework.TestCase;
 import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;

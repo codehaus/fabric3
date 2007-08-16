@@ -21,9 +21,9 @@ package org.fabric3.fabric.implementation.processor;
 import java.lang.reflect.Constructor;
 import java.util.List;
 
-import org.fabric3.pojo.processor.ConstructorDefinition;
-import org.fabric3.pojo.processor.JavaMappedProperty;
-import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.pojo.scdl.ConstructorDefinition;
+import org.fabric3.pojo.scdl.JavaMappedProperty;
+import org.fabric3.pojo.scdl.PojoComponentType;
 
 import junit.framework.TestCase;
 import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;

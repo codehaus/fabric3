@@ -25,7 +25,7 @@ import org.osoa.sca.annotations.ConversationAttributes;
 import org.osoa.sca.annotations.ConversationID;
 import org.osoa.sca.annotations.Scope;
 
-import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.instancefactory.Signature;
 
 import junit.framework.TestCase;

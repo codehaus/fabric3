@@ -24,9 +24,9 @@ import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Remotable;
 
 import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
-import org.fabric3.pojo.processor.JavaMappedProperty;
-import org.fabric3.pojo.processor.JavaMappedReference;
-import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.pojo.scdl.JavaMappedProperty;
+import org.fabric3.pojo.scdl.JavaMappedReference;
+import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
 import org.fabric3.spi.idl.java.JavaServiceContract;

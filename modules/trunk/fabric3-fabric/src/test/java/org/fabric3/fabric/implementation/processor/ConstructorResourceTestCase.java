@@ -23,7 +23,7 @@ import java.util.List;
 
 import org.fabric3.api.annotation.Resource;
 
-import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.pojo.scdl.PojoComponentType;
 
 import junit.framework.TestCase;
 import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
@@ -41,7 +41,7 @@ public class ConstructorResourceTestCase extends TestCase {
             new PojoComponentType(null);
         Constructor<Foo> ctor = Foo.class.getConstructor(String.class);
         processor.visitConstructor(ctor, type, null);
-        org.fabric3.pojo.processor.Resource resource = type.getResources().get("myResource");
+        org.fabric3.pojo.scdl.Resource resource = type.getResources().get("myResource");
         assertFalse(resource.isOptional());
     }
 

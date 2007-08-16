@@ -25,7 +25,9 @@ import java.util.List;
 
 import org.fabric3.spi.idl.InvalidServiceContractException;
 import org.fabric3.spi.idl.java.JavaServiceContract;
-import org.fabric3.scdl.ServiceContract;
+import org.fabric3.pojo.scdl.JavaMappedReference;
+import org.fabric3.pojo.scdl.JavaMappedService;
+import org.fabric3.pojo.scdl.PojoComponentType;
 
 /**
  * Provides utility methods for Java implementation processing

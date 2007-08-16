@@ -16,47 +16,40 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.pojo.processor;
+package org.fabric3.pojo.scdl;
 
 import java.lang.reflect.Member;
-import javax.xml.namespace.QName;
 
-import org.fabric3.scdl.Property;
+import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.ServiceContract;
 
 /**
- * A Property definition that is mapped to a specific location in the implementation class. This location will typically
- * be used to inject property values.
+ * A ReferenceDefinition definition that is mapped to a specific location in the implementation class. This location
+ * will typically be used to inject reference values.
  *
  * @version $Rev$ $Date$
  */
-public class JavaMappedProperty<T> extends Property<T> {
+public class JavaMappedReference extends ReferenceDefinition {
     private Member member;
 
-    public JavaMappedProperty() {
-    }
-
-    public JavaMappedProperty(String name, QName xmlType, Class<T> javaType) {
-        super(name, xmlType, javaType);
-    }
-
-    public JavaMappedProperty(String name, QName xmlType, Class<T> javaType, Member member) {
-        super(name, xmlType, javaType);
+    public JavaMappedReference(String name, ServiceContract serviceContract, Member member) {
+        super(name, serviceContract);
         this.member = member;
     }
 
     /**
-     * Returns the Member that this property is mapped to.
+     * Returns the Member that this reference is mapped to.
      *
-     * @return the Member that this property is mapped to
+     * @return the Member that this reference is mapped to
      */
     public Member getMember() {
         return member;
     }
 
     /**
-     * Sets the Member that this property is mapped to
+     * Sets the Member that this reference is mapped to
      *
-     * @param member the Member that this property is mapped to
+     * @param member the Member that this reference is mapped to
      */
     public void setMember(Member member) {
         this.member = member;

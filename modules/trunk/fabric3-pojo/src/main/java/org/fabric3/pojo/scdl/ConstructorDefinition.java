@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.pojo.processor;
+package org.fabric3.pojo.scdl;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -28,7 +28,6 @@ import java.util.List;
  * @version $Rev$ $Date$
  */
 public class ConstructorDefinition<T> {
-
     private Constructor<T> constructor;
     private List<String> injectionNames;
 

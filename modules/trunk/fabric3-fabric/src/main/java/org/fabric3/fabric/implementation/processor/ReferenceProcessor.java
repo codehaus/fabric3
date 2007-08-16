@@ -27,8 +27,8 @@ import org.osoa.sca.annotations.Reference;
 
 import static org.fabric3.fabric.util.JavaIntrospectionHelper.toPropertyName;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
-import org.fabric3.pojo.processor.JavaMappedReference;
-import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.pojo.scdl.JavaMappedReference;
+import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.scdl.Multiplicity;
 import org.fabric3.scdl.ServiceContract;
@@ -38,7 +38,7 @@ import org.fabric3.spi.loader.LoaderContext;
 
 /**
  * Processes an {@link @Reference} annotation, updating the component type with corresponding {@link
- * org.fabric3.pojo.processor.JavaMappedReference}
+ * org.fabric3.pojo.scdl.JavaMappedReference}
  *
  * @version $Rev$ $Date$
  */

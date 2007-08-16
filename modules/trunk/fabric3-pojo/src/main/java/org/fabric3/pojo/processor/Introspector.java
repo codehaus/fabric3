@@ -19,6 +19,7 @@
 package org.fabric3.pojo.processor;
 
 import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.pojo.scdl.PojoComponentType;
 
 /**
  * Implementations are responsible for walking a component implementation class, adding additional component type

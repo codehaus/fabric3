@@ -29,12 +29,12 @@ import org.fabric3.fabric.injection.RequestContextObjectFactory;
 import org.fabric3.fabric.util.JavaIntrospectionHelper;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
-import org.fabric3.pojo.processor.Resource;
-import org.fabric3.pojo.processor.PojoComponentType;
+import org.fabric3.pojo.scdl.Resource;
+import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
 
 /**
- * Processes {@link @Context} annotations on a component implementation and adds a {@link org.fabric3.pojo.processor.JavaMappedProperty} to the
+ * Processes {@link @Context} annotations on a component implementation and adds a {@link org.fabric3.pojo.scdl.JavaMappedProperty} to the
  * component type which will be used to inject the appropriate context
  *
  * @version $Rev$ $Date$
