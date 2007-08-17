@@ -77,11 +77,10 @@ public class JavaInterfaceProcessorRegistryImpl implements JavaInterfaceProcesso
 
     public <I, C> JavaServiceContract introspect(Class<I> type, Class<C> callback)
             throws InvalidServiceContractException {
-        JavaServiceContract contract = new JavaServiceContract(type.getName());
+        JavaServiceContract contract = new JavaServiceContract(type);
         contract.setInterfaceName(getBaseName(type));
         boolean remotable = type.isAnnotationPresent(Remotable.class);
         contract.setRemotable(remotable);
-        //Scope interactionScope = type.getAnnotation(Scope.class);
         boolean conversational = type.isAnnotationPresent(Conversational.class);
         contract.setConversational(conversational);
         contract.setOperations(getOperations(type, remotable, conversational, false));
