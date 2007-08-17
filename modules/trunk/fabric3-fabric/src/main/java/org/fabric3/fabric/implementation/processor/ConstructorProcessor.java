@@ -71,7 +71,7 @@ public class ConstructorProcessor extends ImplementationProcessorExtension {
             return;
         }
         ConstructorDefinition<?> definition = type.getConstructorDefinition();
-        if (definition != null && !definition.getConstructor().equals(constructor)) {
+        if (definition != null && !definition.match(constructor)) {
             String name = constructor.getDeclaringClass().getName();
             throw new DuplicateConstructorException("Multiple constructor definitions found", name);
         } else if (definition == null) {

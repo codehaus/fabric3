@@ -124,7 +124,7 @@ public abstract class AbstractPropertyProcessor<A extends Annotation> extends Im
                                      LoaderContext context) throws ProcessingException {
 
         ConstructorDefinition<?> definition = type.getConstructorDefinition();
-        if (definition != null && !definition.getConstructor().equals(constructor)){
+        if (definition != null && !definition.match(constructor)){
             // no need to introspect ctor that is not the one to be injected on
             return;
         }

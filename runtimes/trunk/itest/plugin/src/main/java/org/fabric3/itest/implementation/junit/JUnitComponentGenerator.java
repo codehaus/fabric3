@@ -166,8 +166,8 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
      */
     private void processConstructorArguments(ConstructorDefinition<?> ctorDef,
                                              InstanceFactoryDefinition providerDefinition) {
-        for (Class<?> type : ctorDef.getConstructor().getParameterTypes()) {
-            providerDefinition.addConstructorArgument(type.getName());
+        for (String type : ctorDef.getParameterTypes()) {
+            providerDefinition.addConstructorArgument(type);
         }
     }
 

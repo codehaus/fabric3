@@ -182,8 +182,8 @@ public class LaunchedComponentGenerator implements ComponentGenerator<LogicalCom
      */
     private void processConstructorArguments(ConstructorDefinition<?> ctorDef,
                                              InstanceFactoryDefinition providerDefinition) {
-        for (Class<?> type : ctorDef.getConstructor().getParameterTypes()) {
-            providerDefinition.addConstructorArgument(type.getName());
+        for (String type : ctorDef.getParameterTypes()) {
+            providerDefinition.addConstructorArgument(type);
         }
     }
 

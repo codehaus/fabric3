@@ -48,7 +48,6 @@ public class HeuristicConstructorTestCase extends TestCase {
         prop.setJavaType(String.class);
         type.getProperties().put("foo", prop);
         processor.visitEnd(Foo1.class, type, null);
-        assertNotNull(type.getConstructorDefinition().getConstructor());
         assertEquals("foo", type.getConstructorDefinition().getInjectionNames().get(0));
     }
 
@@ -61,7 +60,6 @@ public class HeuristicConstructorTestCase extends TestCase {
         JavaMappedReference ref = new JavaMappedReference("foo", contract, null);
         type.getReferences().put("foo", ref);
         processor.visitEnd(Foo1.class, type, null);
-        assertNotNull(type.getConstructorDefinition().getConstructor());
         assertEquals("foo", type.getConstructorDefinition().getInjectionNames().get(0));
     }
 
@@ -81,7 +79,6 @@ public class HeuristicConstructorTestCase extends TestCase {
 
         type.getReferences().put("ref", ref);
         processor.visitEnd(Foo2.class, type, null);
-        assertNotNull(type.getConstructorDefinition().getConstructor());
         assertEquals(2, type.getConstructorDefinition().getInjectionNames().size());
     }
 
@@ -134,7 +131,7 @@ public class HeuristicConstructorTestCase extends TestCase {
     public void testDefaultConstructor() throws Exception {
         PojoComponentType type = new PojoComponentType(null);
         processor.visitEnd(Foo3.class, type, null);
-        assertNotNull(type.getConstructorDefinition().getConstructor());
+        assertNotNull(type.getConstructorDefinition());
     }
 
     public void testSameTypesButAnnotated() throws Exception {
