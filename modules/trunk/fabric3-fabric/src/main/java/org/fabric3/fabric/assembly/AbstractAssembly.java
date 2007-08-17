@@ -184,7 +184,7 @@ public abstract class AbstractAssembly implements Assembly {
             URI serviceURI = URI.create(base + '#' + compositeService.getName());
             LogicalService logicalService = new LogicalService(serviceURI, compositeService, parent);
             if (compositeService.getPromote() != null) {
-                logicalService.setTargetUri(URI.create(base + "/" + compositeService.getPromote()));
+                logicalService.setPromote(URI.create(base + "/" + compositeService.getPromote()));
             }
             for (BindingDefinition binding : compositeService.getBindings()) {
                 logicalService.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalService));
@@ -304,7 +304,7 @@ public abstract class AbstractAssembly implements Assembly {
                 URI serviceUri = uri.resolve('#' + service.getName());
                 LogicalService logicalService = new LogicalService(serviceUri, service, component);
                 if (service.getPromote() != null) {
-                    logicalService.setTargetUri(URI.create(uri.toString() + "/" + service.getPromote()));
+                    logicalService.setPromote(URI.create(uri.toString() + "/" + service.getPromote()));
                 }
                 for (BindingDefinition binding : service.getBindings()) {
                     logicalService.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalService));

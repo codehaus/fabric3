@@ -19,12 +19,11 @@
 package org.fabric3.spi.model.instance;
 
 import java.net.URI;
-
 import javax.xml.namespace.QName;
 
-import org.fabric3.scdl.ServiceDefinition;
-
 import org.osoa.sca.Constants;
+
+import org.fabric3.scdl.ServiceDefinition;
 
 /**
  * Represents a resolved service
@@ -32,16 +31,18 @@ import org.osoa.sca.Constants;
  * @version $Rev$ $Date$
  */
 public class LogicalService extends Bindable {
-    
+
     private static final QName TYPE = new QName(Constants.SCA_NS, "service");
-    
+
     private final ServiceDefinition definition;
-    private URI targetUri;
+    private URI promote;
 
     /**
-     * @param uri
-     * @param definition
-     * @param parent
+     * Default constructor
+     *
+     * @param uri        the service uri
+     * @param definition the service definition
+     * @param parent     the service parent component
      */
     public LogicalService(URI uri, ServiceDefinition definition, LogicalComponent<?> parent) {
         super(uri, parent, TYPE);
@@ -49,24 +50,30 @@ public class LogicalService extends Bindable {
     }
 
     /**
-     * @return
+     * Returns the service definition for the logical service.
+     *
+     * @return the service definition for the logical service
      */
     public ServiceDefinition getDefinition() {
         return definition;
     }
 
     /**
-     * @return
+     * Returns the component service uri promoted by this service.
+     *
+     * @return the component service uri promoted by this service
      */
-    public URI getTargetUri() {
-        return targetUri;
+    public URI getPromote() {
+        return promote;
     }
 
     /**
-     * @param targetUri
+     * Sets the component service uri promoted by this service
+     *
+     * @param uri the component service uri promoted by this service
      */
-    public void setTargetUri(URI targetUri) {
-        this.targetUri = targetUri;
+    public void setPromote(URI uri) {
+        this.promote = uri;
     }
-    
+
 }

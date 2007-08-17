@@ -1,7 +1,6 @@
 package org.fabric3.fabric.assembly.normalizer;
 
 import java.net.URI;
-import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -15,7 +14,6 @@ import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.Property;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ComponentType;
@@ -85,28 +83,28 @@ public class BindingNormalizerImplTestcase extends TestCase {
         ServiceDefinition serviceDefinition1 = new ServiceDefinition();
         LogicalService service1 = new LogicalService(URI.create("grandParent/parent#service1"), serviceDefinition1, component);
         LogicalBinding<?> binding1 = new LogicalBinding<BindingDefinition>(new MockBinding(), service1);
-        service1.setTargetUri(URI.create("grandParent/parent/component#service"));
+        service1.setPromote(URI.create("grandParent/parent/component#service"));
         service1.addBinding(binding1);
         parent.addService(service1);
 
         ServiceDefinition serviceDefinition2 = new ServiceDefinition();
         LogicalService service2 = new LogicalService(URI.create("grandParent/parent#service2"), serviceDefinition2, component);
         LogicalBinding<?> binding2 = new LogicalBinding<BindingDefinition>(new MockBinding2(), service2);
-        service2.setTargetUri(URI.create("grandParent/parent/component#service"));
+        service2.setPromote(URI.create("grandParent/parent/component#service"));
         service2.addBinding(binding2);
         parent.addService(service2);
 
         ServiceDefinition serviceDefinition3 = new ServiceDefinition();
         LogicalService service3 = new LogicalService(URI.create("grandParent#service3"), serviceDefinition3, component);
         LogicalBinding<?> binding3 = new LogicalBinding<BindingDefinition>(new MockBinding3(), service3);
-        service3.setTargetUri(URI.create("grandParent/parent#service1"));
+        service3.setPromote(URI.create("grandParent/parent#service1"));
         service3.addBinding(binding3);
         grandParent.addService(service3);
 
         ServiceDefinition serviceDefinition4 = new ServiceDefinition();
         LogicalService service4 = new LogicalService(URI.create("grandParent#service4"), serviceDefinition4, component);
         LogicalBinding<?> binding4 = new LogicalBinding<BindingDefinition>(new MockBinding4(), service4);
-        service4.setTargetUri(URI.create("grandParent/parent#service1"));
+        service4.setPromote(URI.create("grandParent/parent#service1"));
         service4.addBinding(binding4);
         grandParent.addService(service4);
 

@@ -165,7 +165,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         if (targetGenerator == null) {
             throw new GeneratorNotFoundException(type);
         }
-        URI targetUri = service.getTargetUri();
+        URI targetUri = service.getPromote();
         LogicalService targetService;
         if (targetUri == null) {
             // the service is on the component
