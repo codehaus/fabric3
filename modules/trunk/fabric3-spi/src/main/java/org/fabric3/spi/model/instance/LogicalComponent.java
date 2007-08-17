@@ -23,15 +23,15 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.xml.namespace.QName;
 
+import org.osoa.sca.Constants;
+
+import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.PropertyValue;
-
-import org.osoa.sca.Constants;
 
 /**
  * Represents an instantiated component in the service network.
@@ -39,9 +39,9 @@ import org.osoa.sca.Constants;
  * @version $Rev$ $Date$
  */
 public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArtifact<LogicalComponent<CompositeImplementation>> {
-    
+
     private static final QName TYPE = new QName(Constants.SCA_NS, "component");
-    
+
     private final ComponentDefinition<I> definition;
     private final Map<String, PropertyValue> propertyValues = new HashMap<String, PropertyValue>();
     private final Map<URI, LogicalComponent<?>> components = new HashMap<URI, LogicalComponent<?>>();
@@ -50,12 +50,13 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
     private URI runtimeId;
     private boolean active;
     private String key;
+    private Autowire autowire;
 
     /**
-     * @param uri URI of the component.
-     * @param runtimeId URI of the runtime to which the component has to be provisioned.
+     * @param uri        URI of the component.
+     * @param runtimeId  URI of the runtime to which the component has to be provisioned.
      * @param definition Definition of the component.
-     * @param parent Parent of the component.
+     * @param parent     Parent of the component.
      */
     public LogicalComponent(URI uri, URI runtimeId,
                             ComponentDefinition<I> definition,
@@ -101,6 +102,24 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
      */
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    /**
+     * Returns the overriden autowire value or null if not overriden
+     *
+     * @return the overriden autowire value or null if not overriden
+     */
+    public Autowire getAutowireOverride() {
+        return autowire;
+    }
+
+    /**
+     * Sets the overriden autowire value
+     *
+     * @param autowire the autowire value
+     */
+    public void setAutowireOverride(Autowire autowire) {
+        this.autowire = autowire;
     }
 
     /**
@@ -221,7 +240,7 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
 
     /**
      * Returns the key to be used if this component is wired to a map of references.
-     * 
+     *
      * @return The value of the key.
      */
     public String getKey() {

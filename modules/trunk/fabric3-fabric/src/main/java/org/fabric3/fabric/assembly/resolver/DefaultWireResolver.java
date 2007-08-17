@@ -244,9 +244,14 @@ public class DefaultWireResolver implements WireResolver {
      */
     private Autowire calculateAutowire(LogicalComponent<?> targetComposite, LogicalComponent<?> component) {
         ComponentDefinition<? extends Implementation<?>> definition = component.getDefinition();
+        // check for an overridden value
+        Autowire overrideAutowire = component.getAutowireOverride();
+        if (overrideAutowire == Autowire.OFF || overrideAutowire == Autowire.ON){
+            return overrideAutowire;
+        }
         Autowire autowire = definition.getAutowire();
         if (autowire == Autowire.INHERITED) {
-            // first check in the original parent composite definition
+            // check in the parent composite definition
             if (component.getParent() != null) {
                 ComponentDefinition<? extends Implementation<?>> def = component.getParent().getDefinition();
                 AbstractComponentType<?, ?, ?> type = def.getImplementation().getComponentType();

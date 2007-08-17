@@ -41,6 +41,7 @@ import org.fabric3.fabric.generator.DefaultGeneratorContext;
 import org.fabric3.fabric.services.routing.RoutingException;
 import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.scdl.AbstractComponentType;
+import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
@@ -169,6 +170,11 @@ public abstract class AbstractAssembly implements Assembly {
         List<LogicalComponent<?>> components = new ArrayList<LogicalComponent<?>>(definitions.size());
         for (ComponentDefinition<? extends Implementation<?>> definition : definitions) {
             LogicalComponent<?> logicalComponent = instantiate(parent, definition);
+            // use autowire settings on the original composite as an override if they are specified
+            Autowire autowire = composite.getAutowire();
+            if (autowire == Autowire.ON || autowire == Autowire.OFF) {
+                logicalComponent.setAutowireOverride(autowire);
+            }
             components.add(logicalComponent);
             parent.addComponent(logicalComponent);
         }
@@ -177,6 +183,9 @@ public abstract class AbstractAssembly implements Assembly {
         for (CompositeService compositeService : composite.getServices().values()) {
             URI serviceURI = URI.create(base + '#' + compositeService.getName());
             LogicalService logicalService = new LogicalService(serviceURI, compositeService, parent);
+            if (compositeService.getPromote() != null) {
+                logicalService.setTargetUri(URI.create(base + "/" + compositeService.getPromote()));
+            }
             for (BindingDefinition binding : compositeService.getBindings()) {
                 logicalService.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalService));
             }
