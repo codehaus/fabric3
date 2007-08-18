@@ -109,6 +109,10 @@ public class JxtaDiscoveryServiceTest extends TestCase {
             return false;
         }
 
+        public String getProperty(String name, String defaultValue) {
+            return null;
+        }
+
     }
 
     private class MyRuntimeInfoService implements RuntimeInfoService {

@@ -52,15 +52,6 @@ public interface StandaloneHostInfo extends HostInfo {
     File getProfileDirectory();
 
     /**
-     * Return the value of the named property.
-     *
-     * @param name         the name of the property
-     * @param defaultValue default value to return if the property is not defined
-     * @return the value of the named property
-     */
-    String getProperty(String name, String defaultValue);
-
-    /**
      * Returns the host's ClassLoader.
      * This is the root classloader for the runtime supplied by the host environment.
      *

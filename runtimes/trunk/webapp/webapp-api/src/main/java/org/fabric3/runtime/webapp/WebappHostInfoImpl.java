@@ -55,6 +55,10 @@ public class WebappHostInfoImpl implements WebappHostInfo {
         return online;
     }
 
+    public String getProperty(String name, String defaultValue) {
+        return null;
+    }
+
     public URI getDomain() {
         return domain;
     }

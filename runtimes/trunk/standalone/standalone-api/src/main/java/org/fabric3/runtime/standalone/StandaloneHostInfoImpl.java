@@ -31,7 +31,6 @@ public class StandaloneHostInfoImpl extends AbstractHostInfo implements Standalo
     private final String profileName;
     private final File profileDirectory;
     private final File installDirectory;
-    private final Properties properties;
     private final ClassLoader hostClassLoader;
     private final ClassLoader bootClassLoader;
 
@@ -55,10 +54,9 @@ public class StandaloneHostInfoImpl extends AbstractHostInfo implements Standalo
                                   final Properties properties,
                                   final ClassLoader hostClassLoader,
                                   final ClassLoader bootClassLoader) {
-        super(domain, BootstrapHelper.toURL(installDirectory), online, profileName);
+        super(domain, BootstrapHelper.toURL(installDirectory), online, profileName, properties);
         this.profileName = profileName;
         this.profileDirectory = profileDirectory;
-        this.properties = properties;
         this.installDirectory = installDirectory;
         this.hostClassLoader = hostClassLoader;
         this.bootClassLoader = bootClassLoader;
@@ -75,10 +73,6 @@ public class StandaloneHostInfoImpl extends AbstractHostInfo implements Standalo
 
     public File getInstallDirectory() {
         return installDirectory;
-    }
-
-    public String getProperty(String name, String defaultValue) {
-        return properties.getProperty(name, defaultValue);
     }
 
     public ClassLoader getHostClassLoader() {

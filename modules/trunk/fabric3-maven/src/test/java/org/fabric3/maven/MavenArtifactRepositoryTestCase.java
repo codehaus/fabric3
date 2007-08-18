@@ -66,6 +66,10 @@ public class MavenArtifactRepositoryTestCase extends TestCase {
                 return true;
             }
 
+            public String getProperty(String name, String defaultValue) {
+                return null;
+            }
+
             public URI getDomain() {
                 throw new UnsupportedOperationException();
             }

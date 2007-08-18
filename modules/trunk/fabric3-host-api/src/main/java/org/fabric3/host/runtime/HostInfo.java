@@ -59,4 +59,14 @@ public interface HostInfo {
      * @return true if the host is online.
      */
     boolean isOnline();
+
+    /**
+     * Return the value of the named property.
+     *
+     * @param name         the name of the property
+     * @param defaultValue default value to return if the property is not defined
+     * @return the value of the named property
+     */
+    String getProperty(String name, String defaultValue);
+
 }

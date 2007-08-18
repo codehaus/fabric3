@@ -48,6 +48,10 @@ public class MavenHostInfoImpl implements MavenHostInfo {
         throw new UnsupportedOperationException();
     }
 
+    public String getProperty(String name, String defaultValue) {
+        return null;
+    }
+
     public URI getDomain() {
         return domain;
     }

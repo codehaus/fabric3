@@ -36,18 +36,18 @@ import org.mortbay.log.Log;
 import org.mortbay.log.Logger;
 import org.mortbay.thread.BoundedThreadPool;
 import org.mortbay.thread.ThreadPool;
+import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
-import org.osoa.sca.annotations.Constructor;
 
-import org.fabric3.api.annotation.Monitor;
+import org.fabric3.host.monitor.MonitorFactory;
+import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.host.ServletHost;
 import org.fabric3.spi.services.work.WorkScheduler;
-import org.fabric3.host.monitor.MonitorFactory;
 
 /**
  * Implements an HTTP transport service using Jetty.
@@ -74,13 +74,14 @@ public class JettyServiceImpl implements JettyService {
     private String certPassword;
     private String keyPassword;
     private boolean sendServerVersion;
-    private boolean https;
+    private boolean isHttps;
     private TransportMonitor monitor;
     private WorkScheduler scheduler;
     private boolean debug;
     private Server server;
     private Connector connector;
     private ServletHandler servletHandler;
+    private HostInfo info;
 
     static {
         // hack to replace the static Jetty logger
@@ -106,7 +107,9 @@ public class JettyServiceImpl implements JettyService {
     @Deprecated
     // JFM remove when @Monitor
     public JettyServiceImpl(@Reference MonitorFactory monitor,
-                            @Reference WorkScheduler scheduler) {
+                            @Reference WorkScheduler scheduler,
+                            @Reference HostInfo info) {
+        this.info = info;
         this.monitor = monitor.getMonitor(TransportMonitor.class);
         this.scheduler = scheduler;
         // Jetty uses a static logger, so jam in the monitor into a static reference
@@ -120,8 +123,9 @@ public class JettyServiceImpl implements JettyService {
         }
     }
 
-    public JettyServiceImpl(TransportMonitor monitor) {
+    public JettyServiceImpl(TransportMonitor monitor, HostInfo info) {
         this.monitor = monitor;
+        this.info = info;
     }
 
     @Property
@@ -129,43 +133,59 @@ public class JettyServiceImpl implements JettyService {
         this.httpPort = Integer.parseInt(httpPort);
     }
 
-    //@Property
+    @Property
     public void setHttpsPort(int httpsPort) {
         this.httpsPort = httpsPort;
     }
 
-    //@Property
+    @Property
     public void setSendServerVersion(boolean sendServerVersion) {
         this.sendServerVersion = sendServerVersion;
     }
 
-    //@Property
+    @Property
     public void setHttps(boolean https) {
-        this.https = https;
+        this.isHttps = https;
     }
 
-    //@Property
+    @Property
     public void setKeystore(String keystore) {
         this.keystore = keystore;
     }
 
-    //@Property
+    @Property
     public void setCertPassword(String certPassword) {
         this.certPassword = certPassword;
     }
 
-    //@Property
+    @Property
     public void setKeyPassword(String keyPassword) {
         this.keyPassword = keyPassword;
     }
 
-    //@Property
+    @Property
     public void setDebug(boolean val) {
         debug = val;
     }
 
     @Init
-    public void init() throws Exception {
+    public void init() throws JettyInitializationException {
+        String http = info.getProperty("http.port", null);
+        if (http != null) {
+            try {
+                httpPort = Integer.parseInt(http);
+            } catch (NumberFormatException e) {
+                throw new JettyInitializationException("Invalid HTTP port", http);
+            }
+        }
+        String https = info.getProperty("https.port", null);
+        if (https != null) {
+            try {
+                httpsPort = Integer.parseInt(http);
+            } catch (NumberFormatException e) {
+                throw new JettyInitializationException("Invalid HTTPS port", https);
+            }
+        }
         try {
             state = STARTING;
             server = new Server();
@@ -177,7 +197,7 @@ public class JettyServiceImpl implements JettyService {
                 server.setThreadPool(new Fabric3ThreadPool());
             }
             if (connector == null) {
-                if (https) {
+                if (isHttps) {
                     Connector httpConnector = new SelectChannelConnector();
                     httpConnector.setPort(httpPort);
                     SslSocketConnector sslConnector = new SslSocketConnector();
@@ -213,7 +233,7 @@ public class JettyServiceImpl implements JettyService {
             state = STARTED;
         } catch (Exception e) {
             state = ERROR;
-            throw e;
+            throw new JettyInitializationException("Error starting Jetty service", e);
         }
     }
 

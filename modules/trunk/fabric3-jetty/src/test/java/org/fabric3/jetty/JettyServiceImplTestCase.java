@@ -30,9 +30,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.fabric3.spi.services.work.WorkScheduler;
-
 import junit.framework.TestCase;
+import org.easymock.EasyMock;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.EasyMock.getCurrentArguments;
@@ -40,33 +39,36 @@ import static org.easymock.EasyMock.isA;
 import static org.easymock.EasyMock.replay;
 import org.easymock.IAnswer;
 
+import org.fabric3.host.runtime.HostInfo;
+import org.fabric3.spi.services.work.WorkScheduler;
+
 /**
  * @version $Rev$ $Date$
  */
 public class JettyServiceImplTestCase extends TestCase {
 
     private static final String REQUEST1_HEADER =
-        "GET / HTTP/1.0\n"
-            + "Host: localhost\n"
-            + "Content-Type: text/xml\n"
-            + "Connection: close\n"
-            + "Content-Length: ";
+            "GET / HTTP/1.0\n"
+                    + "Host: localhost\n"
+                    + "Content-Type: text/xml\n"
+                    + "Connection: close\n"
+                    + "Content-Length: ";
     private static final String REQUEST1_CONTENT =
-        "";
+            "";
     private static final String REQUEST1 =
-        REQUEST1_HEADER + REQUEST1_CONTENT.getBytes().length + "\n\n" + REQUEST1_CONTENT;
+            REQUEST1_HEADER + REQUEST1_CONTENT.getBytes().length + "\n\n" + REQUEST1_CONTENT;
 
     private static final int HTTP_PORT = 8585;
 
     private TransportMonitor monitor;
     private WorkScheduler scheduler;
     private ExecutorService executor = Executors.newCachedThreadPool();
+    private JettyServiceImpl service;
 
     /**
      * Verifies requests are properly routed according to the servlet mapping
      */
     public void testRegisterServletMapping() throws Exception {
-        JettyServiceImpl service = new JettyServiceImpl(monitor);
         service.setHttpPort(String.valueOf(HTTP_PORT));
         service.init();
         TestServlet servlet = new TestServlet();
@@ -114,7 +116,6 @@ public class JettyServiceImplTestCase extends TestCase {
 //    }
 
     public void testRestart() throws Exception {
-        JettyServiceImpl service = new JettyServiceImpl(monitor);
         service.setHttpPort(String.valueOf(HTTP_PORT));
         service.init();
         service.destroy();
@@ -123,7 +124,6 @@ public class JettyServiceImplTestCase extends TestCase {
     }
 
     public void testNoMappings() throws Exception {
-        JettyServiceImpl service = new JettyServiceImpl(monitor);
         service.setHttpPort(String.valueOf(HTTP_PORT));
         service.init();
         Socket client = new Socket("127.0.0.1", HTTP_PORT);
@@ -154,6 +154,10 @@ public class JettyServiceImplTestCase extends TestCase {
             }
         });
         replay(scheduler);
+        HostInfo info = EasyMock.createNiceMock(HostInfo.class);
+        EasyMock.replay(info);
+        service = new JettyServiceImpl(monitor, info);
+
     }
 
     private static String read(Socket socket) throws IOException {
