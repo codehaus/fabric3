@@ -112,27 +112,27 @@ public abstract class AbstractAssembly implements Assembly {
     public void initialize() throws AssemblyException {
         // read the logical model from the store
         domain = assemblyStore.read();
-
+        Collection<LogicalComponent<?>> components = domain.getComponents();
         // reindex the model
-        for (LogicalComponent<?> child : domain.getComponents()) {
+        for (LogicalComponent<?> child : components) {
             addToDomainMap(child);
         }
 
         // TODO we've recovered the domain content so should not need to generate/provision things
         // TODO once everything is recovered though we may decide to reoptimize the domain
         // TODO but we should add an API call for that
-/*
-        // regenerate the domain components
-        if (!domain.getComponents().isEmpty()) {
-            try {
-                generate(null, domain, true);
-            } catch (GenerationException e) {
-                throw new AssemblyException(e);
-            } catch (RoutingException e) {
-                throw new AssemblyException(e);
+        try {
+            for (LogicalComponent<?> component : components) {
+                allocator.allocate(component, false);
             }
+        } catch (AllocationException e) {
+            throw new ActivateException(e);
         }
-*/
+
+        // generate and provision components on nodes that have gone down
+        Map<URI, GeneratorContext> contexts = generate(domain, components);
+        provision(contexts);
+        // TODO temporary recovery code
     }
 
     public LogicalComponent<CompositeImplementation> getDomain() {
