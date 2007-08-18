@@ -70,7 +70,6 @@
     <!-- Null Messaging Service -->
     <component name="MessagingService">
         <system:implementation.system class="org.fabric3.fabric.services.messaging.NullMessagingService"/>
-        <property name="tcpPort">2000</property>
     </component>
 
     <component name="DiscoveryService">
@@ -89,26 +88,32 @@
         <system:implementation.system class="org.fabric3.fabric.builder.WiringExceptionFormatter"/>
     </component>
 
-    <!-- Marshhaler registry-->
-    <component name="marshallerRegistry">
-        <system:implementation.system class="org.fabric3.fabric.marshaller.xstream.XStreamMarshallerRegistry"/>
-    </component>
-
-    <!-- Jetty service -->
-    <!--component name="JettyService">
-            <system:implementation.system class="org.fabric3.jetty.JettyServiceImpl"/>
-    </component-->
-
 	 <component name="assemblyRecoveryService">
         <system:implementation.system class="org.fabric3.fabric.assembly.store.AssemblyStoreImpl"/>
     </component>
 
-	<!--include name="burlapTransportBinding" scdlResource="META-INF/burlap.composite"/>
-	
-	<include name="wsTransportBinding" scdlResource="META-INF/ws.composite"/>
+	 <!-- the following entries will be loaded as normal extensions in the next release -->
+	 
+	 <!-- scanner infrastructure -->
+	 <component name="ContributionDirectoryScanner">
+        <system:implementation.system class="org.fabric3.scanner.scanner.ContributionDirectoryScanner"/>
+        <reference name="assembly" target="distributedAssembly"/>
+    </component>
 
-	<include name="jmsTransportBinding" scdlResource="META-INF/jms.composite"/>
-	
-	<include name="hessianTransportBinding" scdlResource="META-INF/hessian.composite"/-->
+    <component name="FileSystemResourceFactoryRegistry">
+        <system:implementation.system class="org.fabric3.scanner.scanner.FileSystemResourceFactoryRegistryImpl"/>
+        <property name="path">target/deployables</property>
+    </component>
+
+    <component name="JarResourceFactory">
+        <system:implementation.system class="org.fabric3.scanner.scanner.factory.JarResourceFactory"/>
+    </component>
+    
+    <component name="ExplodedJarResourceFactory">
+        <system:implementation.system class="org.fabric3.scanner.scanner.factory.ExplodedJarResourceFactory"/>
+    </component>
+
+	 <!-- END the following entries will be loaded as normal extensions in the next release -->
+
 
 </composite>

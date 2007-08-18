@@ -82,23 +82,41 @@
             <artifactId>stax-api</artifactId>
             <version>1.0</version>
         </dependency>
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <version>1.1</version>
+        </dependency>
 		
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-fabric</artifactId>
-            <version>0.1</version>
+            <version>0.2-SNAPSHOT</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-contribution-scanner-spi</artifactId>
+            <version>0.2-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-contribution-scanner</artifactId>
+            <version>0.2-SNAPSHOT</version>
+        </dependency>
+
         		
         <dependency>
             <groupId>org.codehaus.fabric3.standalone</groupId>
             <artifactId>server</artifactId>
-            <version>0.1</version>
+            <version>0.2-SNAPSHOT</version>
         </dependency>
 		
         <dependency>
             <groupId>org.codehaus.fabric3.standalone</groupId>
             <artifactId>standalone-host</artifactId>
-            <version>0.1</version>
+            <version>0.2-SNAPSHOT</version>
         </dependency>
 		
     </dependencies>
