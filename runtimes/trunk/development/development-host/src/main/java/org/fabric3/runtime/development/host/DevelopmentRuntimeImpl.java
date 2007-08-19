@@ -9,7 +9,6 @@ import org.osoa.sca.ServiceUnavailableException;
 
 import org.fabric3.api.annotation.LogLevel;
 import org.fabric3.extension.component.SimpleWorkContext;
-import org.fabric3.spi.assembly.BindException;
 import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.monitor.JavaLoggingMonitorFactory;
 import org.fabric3.fabric.runtime.AbstractRuntime;
@@ -22,6 +21,7 @@ import org.fabric3.host.runtime.StartException;
 import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Scope;
+import org.fabric3.spi.assembly.BindException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
@@ -45,7 +45,7 @@ import org.fabric3.spi.wire.Wire;
  * @version $Rev$ $Date$
  */
 public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo> implements DevelopmentRuntime {
-    public static final URI DOMAIN_URI = URI.create("fabric3://./domain/main/");
+    public static final URI DOMAIN_URI = URI.create("fabric3://./domain/");
     private static final String DOMAIN_STRING = DOMAIN_URI.toString();
     private static final URI WIRE_CACHE_URI = URI.create(RUNTIME_NAME + "/ClientWireCache");
     private static final URI MOCK_CACHE_URI = URI.create(RUNTIME_NAME + "/MockObjectCache");
@@ -78,6 +78,9 @@ public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo>
 
     public void activate(URL compositeFile) {
         try {
+            if (compositeFile == null) {
+                throw new IllegalArgumentException("Composite URL was null");
+            }
             Loader loader = getSystemComponent(Loader.class, LOADER_URI);
             LoaderContext loaderContext = new LoaderContextImpl(getHostClassLoader(), compositeFile);
             Composite composite = loader.load(compositeFile, Composite.class, loaderContext);
