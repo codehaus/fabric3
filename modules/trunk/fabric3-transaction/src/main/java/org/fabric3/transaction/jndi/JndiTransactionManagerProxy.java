@@ -35,6 +35,7 @@ import javax.transaction.TransactionManager;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Proxy to the JNDI-based transaction manager.
@@ -71,6 +72,7 @@ public class JndiTransactionManagerProxy implements TransactionManager {
      * 
      * @param providerUrl Provider URL.
      */
+    @Property
     public void setProviderUrl(String providerUrl) {
         this.providerUrl = providerUrl;
     }
@@ -80,8 +82,19 @@ public class JndiTransactionManagerProxy implements TransactionManager {
      * 
      * @param initialContextFactory Initial context factory.
      */
+    @Property
     public void setInitialConextFactory(String initialContextFactory) {
         this.initialContextFactory = initialContextFactory;
+    }
+    
+    /**
+     * Injects a transaction manager.
+     * 
+     * @param transactionManager Transaction manager to be injected.
+     */
+    @Reference
+    public void setTransactionManager(TransactionManager delegate) {
+        this.delegate = delegate;
     }
     
     /**
@@ -90,6 +103,10 @@ public class JndiTransactionManagerProxy implements TransactionManager {
      */
     @Init
     public void init() throws NamingException {
+        
+        if(delegate != null) {
+            return;
+        }
         
         Hashtable<String, String> env = new Hashtable<String, String>();
         if(providerUrl != null) {
