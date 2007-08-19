@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="ASCII"?>
-<contribution xmlns="http://www.osoa.org/xmlns/sca/1.0">
+<contribution xmlns="http://www.osoa.org/xmlns/sca/1.0"
+              xmlns:tutorial="http://fabric3.org/xmlns/sca/tutorials/0.2">
     <import.java package="loanapp.credit"/>
     <import.java package="loanapp.loanservice"/>
-    <deployable composite="LoanAppComposite"/>
+    <deployable composite="tutorial:LoanAppComposite"/>
 </contribution>
 
 
