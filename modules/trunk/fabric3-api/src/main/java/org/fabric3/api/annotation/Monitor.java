@@ -24,7 +24,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * A system annotation to inject a monitor
+ * A system annotation to inject a monitor.
  *
  * @version $Rev$ $Date$
  */
