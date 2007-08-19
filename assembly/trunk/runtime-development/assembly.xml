@@ -65,8 +65,11 @@
         <dependencySet>
             <includes>
                 <include>org.codehaus.fabric3.development:development-host</include>
+					 <include>javax.activation:activation</include>
                 <include>org.codehaus.woodstox:wstx-asl</include>
                 <include>org.apache.tuscany:commonj-api_r1.1</include>
+					 <include>org.apache.geronimo.specs:geronimo-j2ee-connector_1.5_spec</include>
+                <include>javax.servlet:servlet-api</include>       
             </includes>
             <excludes>
                 <exclude>org.codehaus.fabric3.development:development-api</exclude>
