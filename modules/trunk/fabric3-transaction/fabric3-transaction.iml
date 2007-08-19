@@ -46,71 +46,71 @@ under the License.
         </library>
       </orderEntry>
      -->  
-    <output url="file://$MODULE_DIR$/target/classes"/>
-    <output-test url="file://$MODULE_DIR$/target/test-classes"/>
-    <orderEntry type="module-library">
-      <library>
+    <output url="file://$MODULE_DIR$/target/classes"/>  
+    <output-test url="file://$MODULE_DIR$/target/test-classes"/>  
+    <orderEntry type="module-library"> 
+      <library> 
         <CLASSES>
           <root url="jar:///Users/meerajk/.m2/repository/stax/stax-api/1.0/stax-api-1.0.jar!/"/>
         </CLASSES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
+      </library> 
+    </orderEntry>  
+    <orderEntry type="module-library"> 
+      <library> 
         <CLASSES>
           <root url="jar:///Users/meerajk/.m2/repository/junit/junit/3.8.2/junit-3.8.2.jar!/"/>
         </CLASSES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
+      </library> 
+    </orderEntry>  
+    <orderEntry type="module-library"> 
+      <library> 
         <CLASSES>
           <root url="jar:///Users/meerajk/.m2/repository/org/codehaus/fabric3/fabric3-api/0.1/fabric3-api-0.1.jar!/"/>
         </CLASSES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
+      </library> 
+    </orderEntry>  
+    <orderEntry type="module-library"> 
+      <library> 
         <CLASSES>
           <root url="jar:///Users/meerajk/.m2/repository/org/codehaus/fabric3/fabric3-extension/0.2-SNAPSHOT/fabric3-extension-0.2-SNAPSHOT.jar!/"/>
         </CLASSES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
+      </library> 
+    </orderEntry>  
+    <orderEntry type="module-library"> 
+      <library> 
         <CLASSES>
           <root url="jar:///Users/meerajk/.m2/repository/org/codehaus/fabric3/fabric3-spi/0.2-SNAPSHOT/fabric3-spi-0.2-SNAPSHOT.jar!/"/>
         </CLASSES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
+      </library> 
+    </orderEntry>  
+    <orderEntry type="module-library"> 
+      <library> 
         <CLASSES>
           <root url="jar:///Users/meerajk/.m2/repository/org/codehaus/fabric3/fabric3-scdl/0.1-SNAPSHOT/fabric3-scdl-0.1-SNAPSHOT.jar!/"/>
         </CLASSES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
+      </library> 
+    </orderEntry>  
+    <orderEntry type="module-library"> 
+      <library> 
         <CLASSES>
           <root url="jar:///Users/meerajk/.m2/repository/geronimo-spec/geronimo-spec-jta/1.0.1B-rc4/geronimo-spec-jta-1.0.1B-rc4.jar!/"/>
         </CLASSES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
+      </library> 
+    </orderEntry>  
+    <orderEntry type="module-library"> 
+      <library> 
         <CLASSES>
           <root url="jar:///Users/meerajk/.m2/repository/org/codehaus/fabric3/fabric3-host-api/0.2-SNAPSHOT/fabric3-host-api-0.2-SNAPSHOT.jar!/"/>
         </CLASSES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
+      </library> 
+    </orderEntry>  
+    <orderEntry type="module-library"> 
+      <library> 
         <CLASSES>
           <root url="jar:///Users/meerajk/.m2/repository/org/codehaus/fabric3/spec/sca-api-r1.0/0.1/sca-api-r1.0-0.1.jar!/"/>
         </CLASSES>
-      </library>
-    </orderEntry>
+      </library> 
+    </orderEntry> 
   </component>  
   <component name="ModuleRootManager"/>  
   <!-- If it's a war project:
