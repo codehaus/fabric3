@@ -38,15 +38,17 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 /**
- * Proxy to the JNDI-based transaction manager.
+ * Transaction manager proxy. This class will proxy an injected transaction manager. If the delegate 
+ * instance is not injected, it will try to lookup the transaction manager from a JNDI namespace. By 
+ * default the name used for lookup is <code>javax/transaction/TransactionManager</code>.
  * 
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class JndiTransactionManagerProxy implements TransactionManager {
+public class TransactionManagerProxy implements TransactionManager {
     
     // JNDI name of the transaction manager
-    private String jndiName;
+    private String jndiName = "javax/transaction/TransactionManager";
     
     // Provider URL
     private String providerUrl;
@@ -62,7 +64,7 @@ public class JndiTransactionManagerProxy implements TransactionManager {
      * 
      * @param jndiName JNDI name of the transaction manager.
      */
-    @Property(required = true)
+    @Property
     public void setJndiName(String jndiName) {
         this.jndiName = jndiName;
     }
