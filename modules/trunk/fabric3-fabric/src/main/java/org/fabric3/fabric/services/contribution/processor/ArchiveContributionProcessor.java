@@ -25,10 +25,13 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.extension.contribution.ContributionProcessorExtension;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionNotFoundException;
+import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.deployer.CompositeClassLoader;
 import org.fabric3.spi.model.type.ContributionResourceDescription;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
@@ -139,10 +142,10 @@ public abstract class ArchiveContributionProcessor extends ContributionProcessor
      * Adds the given resource description pointing to the contribution artifact on contained components.
      *
      * @param description the resource description
-     * @param type        the component type to introspect
+     * @param composite   the component type to introspect
      */
-    private void addContributionDescription(ContributionResourceDescription description, Composite type) {
-        for (ComponentDefinition<?> definition : type.getComponents().values()) {
+    private void addContributionDescription(ContributionResourceDescription description, Composite composite) {
+        for (ComponentDefinition<?> definition : composite.getComponents().values()) {
             Implementation<?> implementation = definition.getImplementation();
             if (CompositeImplementation.class.isInstance(implementation)) {
                 CompositeImplementation compositeImplementation = CompositeImplementation.class.cast(implementation);
@@ -150,6 +153,14 @@ public abstract class ArchiveContributionProcessor extends ContributionProcessor
                 addContributionDescription(description, componentType);
             } else {
                 implementation.addResourceDescription(description);
+                // mark references and services as well;
+                AbstractComponentType<?, ?, ?> type = implementation.getComponentType();
+                for (ServiceDefinition service : type.getServices().values()) {
+                    service.addResourceDescription(description);
+                }
+                for (ReferenceDefinition reference : type.getReferences().values()) {
+                    reference.addResourceDescription(description);
+                }
             }
         }
     }

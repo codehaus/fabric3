@@ -18,32 +18,71 @@ package org.fabric3.fabric.classloader;
 
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.osoa.sca.annotations.EagerInit;
 
+import org.fabric3.scdl.CompositeImplementation;
+import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.ResourceDescription;
+import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
+import org.fabric3.spi.model.instance.Bindable;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalChangeSet;
-import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.model.type.ContributionResourceDescription;
 import org.fabric3.spi.model.type.ExtensionResourceDescription;
-import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.ResourceDescription;
 
 @EagerInit
 public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {
 
-    public URI generate(LogicalComponent<?> component, GeneratorContext context)
-            throws GenerationException {
+    public URI generate(LogicalComponent<?> component, GeneratorContext context) throws GenerationException {
+        LogicalComponent<CompositeImplementation> parent = component.getParent();
+        Implementation<?> impl = component.getDefinition().getImplementation();
+        List<ResourceDescription> descriptions = impl.getResourceDescriptions();
+        return generate(parent, descriptions, context);
+    }
+
+    public URI generate(LogicalBinding<?> binding, GeneratorContext context) throws GenerationException {
+        Bindable bindable = binding.getParent();
+        LogicalComponent<CompositeImplementation> parent =
+                (LogicalComponent<CompositeImplementation>) bindable.getParent();
+        List<ResourceDescription> descriptions = new ArrayList<ResourceDescription>();
+        if (bindable instanceof LogicalReference) {
+            ReferenceDefinition definition = ((LogicalReference) bindable).getDefinition();
+            for (ResourceDescription description : definition.getResourceDescriptions()) {
+                if (!descriptions.contains(description)) {
+                    descriptions.add(description);
+                }
+            }
+        } else if (bindable instanceof LogicalService) {
+            ServiceDefinition definition = ((LogicalService) bindable).getDefinition();
+            for (ResourceDescription description : definition.getResourceDescriptions()) {
+                if (!descriptions.contains(description)) {
+                    descriptions.add(description);
+                }
+            }
+        }
+        for (ResourceDescription description : binding.getBinding().getResourceDescriptions()) {
+            if (!descriptions.contains(description)) {
+                descriptions.add(description);
+            }
+        }
+        return generate(parent, descriptions, context);
+    }
+
+    private URI generate(LogicalComponent<CompositeImplementation> parent,
+                         List<ResourceDescription> resourceDescriptions,
+                         GeneratorContext context) throws GenerationException {
         PhysicalChangeSet changeSet = context.getPhysicalChangeSet();
         // check to see if the classloader has been created
-        LogicalComponent<CompositeImplementation> parent = component.getParent();
         URI parentUri = parent.getUri();
         // first check to see if a classloader definition has already been created. If not, create one.
         PhysicalClassLoaderDefinition definition =
@@ -57,55 +96,21 @@ public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {
             }
             changeSet.addResourceDefinition(definition);
         }
-        Implementation<?> impl = component.getDefinition().getImplementation();
-        for (ResourceDescription description : impl.getResourceDescriptions()) {
+
+        for (ResourceDescription description : resourceDescriptions) {
             if (description instanceof ContributionResourceDescription) {
                 ContributionResourceDescription contribDescription = (ContributionResourceDescription) description;
                 // add the contribution and imported urls to the classpath
                 for (URL url : contribDescription.getArtifactUrls()) {
-                    definition.addResourceUrl(url);
+                    if (!definition.getResourceUrls().contains(url)) {
+                        definition.addResourceUrl(url);
+                    }
                 }
             } else if (description instanceof ExtensionResourceDescription) {
                 // TODO support
             }
         }
-        // add any required resources to the classpath
-        processServices(component);
-        processReferences(component);
         return definition.getUri();
     }
 
-    private void processServices(LogicalComponent<?> logicalComponent) {
-        for (LogicalService service : logicalComponent.getServices()) {
-            for (ResourceDescription description : service.getDefinition().getResourceDescriptions()) {
-                if (description instanceof ExtensionResourceDescription) {
-                    // TODO support
-                }
-            }
-            // check bindings for the service
-            processBindings(service.getBindings());
-        }
-    }
-
-    private void processReferences(LogicalComponent<?> logicalComponent) {
-        for (LogicalReference reference : logicalComponent.getReferences()) {
-            for (ResourceDescription description : reference.getDefinition().getResourceDescriptions()) {
-                if (description instanceof ExtensionResourceDescription) {
-                    // TODO support
-                }
-            }
-            // check bindings for the reference
-            processBindings(reference.getBindings());
-        }
-    }
-
-    private void processBindings(List<LogicalBinding<?>> bindings) {
-        for (LogicalBinding binding : bindings) {
-            for (ResourceDescription description : binding.getBinding().getResourceDescriptions()) {
-                if (description instanceof ExtensionResourceDescription) {
-                    // TODO support
-                }
-            }
-        }
-    }
 }
