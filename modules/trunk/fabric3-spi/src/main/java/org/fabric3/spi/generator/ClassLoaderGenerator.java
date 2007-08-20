@@ -37,5 +37,5 @@ package org.fabric3.spi.generator;
  *
  * @version $Rev$ $Date$
  */
-public interface ClassLoaderGenerator extends ComponentResourceGenerator {
+public interface ClassLoaderGenerator extends ResourceGenerator {
 }

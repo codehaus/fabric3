@@ -18,22 +18,20 @@
  */
 package org.fabric3.spi.generator;
 
-import java.net.URI;
 import java.util.Set;
 
+import org.fabric3.scdl.BindingDefinition;
+import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.definitions.PolicySetExtension;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
-import org.fabric3.scdl.BindingDefinition;
-import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.ResourceDescription;
-import org.fabric3.scdl.definitions.PolicySetExtension;
 
 /**
- * A registry for {@link ComponentGenerator}s, {@link BindingGenerator}s, {@link InterceptorGenerator}s and {@link
- * ComponentResourceGenerator}s. Generators are responsible for producing physical model objects that are provisioned to
+ * A registry for {@link ComponentGenerator}s, {@link BindingGenerator}s, {@link InterceptorDefinitionGenerator}s and
+ * {@link ResourceGenerator}s. Generators are responsible for producing physical model objects that are provisioned to
  * service nodes from their logical counterparts.
  *
  * @version $Rev$ $Date$
@@ -55,23 +53,15 @@ public interface GeneratorRegistry {
      * @param generator the generator to register
      */
     <T extends BindingDefinition> void register(Class<T> clazz, BindingGenerator<?, ?, T> generator);
-    
+
     /**
      * Registers an interceptor generator by type.
-     * 
-     * @param <T> Policy extension type.
-     * @param policyExtension Policy extension class.
+     *
+     * @param <T>       Policy extension type.
+     * @param clazz     the type
      * @param generator Interceptor generator.
      */
     <T extends PolicySetExtension> void register(Class<T> clazz, InterceptorDefinitionGenerator<T, ?> generator);
-
-    /**
-     * Registers a resource generator
-     *
-     * @param clazz     the resource type the generator handles
-     * @param generator the generator to register
-     */
-    void register(Class<?> clazz, ComponentResourceGenerator generator);
 
     /**
      * Registers a command generator
@@ -144,17 +134,6 @@ public interface GeneratorRegistry {
             throws GenerationException;
 
     /**
-     * Generates a PhysicalResourceContainerDefinition from a ResourceDefinition. A physical change set for the runtime
-     * the component will be provisioned to is updated with the physical resource definition
-     *
-     * @param context the generator context
-     * @return a URI representing the unique identifier for the physical  resource
-     * @throws GenerationException if an error ocurrs during generation
-     */
-    URI generateResource(ResourceDescription<?> description, LogicalComponent<?> component, GeneratorContext context)
-            throws GenerationException;
-
-    /**
      * Generates a CommandSet for provisioning the logical component
      *
      * @param component the logical component to generate the command set from
@@ -162,9 +141,10 @@ public interface GeneratorRegistry {
      * @throws GenerationException if an error ocurrs during generation
      */
     void generateCommandSet(LogicalComponent<?> component, GeneratorContext context) throws GenerationException;
-    
+
     /**
      * Generates the physical interceptor definitions corresponding to the policies.
+     *
      * @param policies Policies for which interceptors need to be resolved.
      * @return Resolved physical interceptor definitions.
      */

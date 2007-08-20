@@ -26,39 +26,43 @@ import java.net.URI;
  *
  * @version $Rev$ $Date$
  */
-public abstract class WiringException extends BuilderException {
-    private final URI sourceUri;
-    private final URI targetUri;
+public class WiringException extends BuilderException {
+    private URI sourceUri;
+    private URI targetUri;
 
-    protected WiringException(String message) {
-        super(message);
-        sourceUri = null;
-        targetUri = null;
+    public WiringException(Throwable cause) {
+        super(cause);
     }
 
-    protected WiringException(String message, URI sourceUri, URI targetUri) {
+    public WiringException(String message) {
+        super(message);
+    }
+
+    public WiringException(String message, URI sourceUri, URI targetUri) {
         super(message);
         this.sourceUri = sourceUri;
         this.targetUri = targetUri;
     }
 
-    protected WiringException(String message, URI sourceUri, URI targetUri, Throwable cause) {
+    public WiringException(String message, URI sourceUri, URI targetUri, Throwable cause) {
         super(message, cause);
         this.sourceUri = sourceUri;
         this.targetUri = targetUri;
     }
 
-    protected WiringException(String message, String identifier, URI sourceUri, URI targetUri) {
+    public WiringException(String message, String identifier, URI sourceUri, URI targetUri) {
         super(message, identifier);
         this.sourceUri = sourceUri;
         this.targetUri = targetUri;
     }
 
 
-    protected WiringException(String message, String identifier, Throwable cause) {
+    public WiringException(String message, String identifier, Throwable cause) {
         super(message, identifier, cause);
-        sourceUri = null;
-        targetUri = null;
+    }
+
+    public WiringException(String message, String identifier) {
+        super(message, identifier);
     }
 
     /**
