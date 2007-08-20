@@ -18,55 +18,65 @@
  */
 package org.fabric3.binding.ws.model.physical;
 
+import java.net.URI;
+
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.binding.ws.model.logical.WsBindingDefinition;
 import org.fabric3.extension.generator.BindingGeneratorExtension;
 import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
+import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.spi.model.instance.LogicalBinding;
-import org.osoa.sca.annotations.EagerInit;
 
 /**
  * Implementation of the hessian binding generator.
- * 
+ *
  * @version $Revision$ $Date$
  */
 @EagerInit
 public class WsBindingGenerator extends BindingGeneratorExtension<WsWireSourceDefinition, WsWireTargetDefinition, WsBindingDefinition> {
+    private ClassLoaderGenerator classLoaderGenerator;
 
-    /**
-     * @see org.fabric3.spi.generator.BindingGenerator#generateWireSource(org.fabric3.spi.model.instance.LogicalBinding,
-     *      org.fabric3.spi.generator.GeneratorContext,
-     *      org.fabric3.spi.model.type.ServiceDefinition)
-     */
+    public WsBindingGenerator(@Reference ClassLoaderGenerator classLoaderGenerator) {
+        this.classLoaderGenerator = classLoaderGenerator;
+    }
+
     public WsWireSourceDefinition generateWireSource(LogicalBinding<WsBindingDefinition> logicalBinding,
-                                                          GeneratorContext generatorContext,
-                                                          ServiceDefinition serviceDefinition)
-        throws GenerationException {
-
+                                                     GeneratorContext generatorContext,
+                                                     ServiceDefinition serviceDefinition) throws GenerationException {
         WsWireSourceDefinition hwsd = new WsWireSourceDefinition();
         hwsd.setUri(logicalBinding.getBinding().getTargetUri());
-        hwsd.setServiceInterface(serviceDefinition.getServiceContract().getInterfaceClass());
-
+        ServiceContract<?> contract = serviceDefinition.getServiceContract();
+        if (!(JavaServiceContract.class.isInstance(contract))) {
+            throw new UnsupportedOperationException("Temporarily unsupported: interfaces must be Java types");
+        }
+        hwsd.setServiceInterface((JavaServiceContract.class.cast(contract).getInterfaceClass()));
+        URI classloader = classLoaderGenerator.generate(logicalBinding, generatorContext);
+        hwsd.setClassloaderURI(classloader);
         return hwsd;
 
     }
 
-    /**
-     * @see org.fabric3.spi.generator.BindingGenerator#generateWireTarget(org.fabric3.spi.model.instance.LogicalBinding,
-     *      org.fabric3.spi.generator.GeneratorContext,
-     *      org.fabric3.spi.model.type.ReferenceDefinition)
-     */
     public WsWireTargetDefinition generateWireTarget(LogicalBinding<WsBindingDefinition> logicalBinding,
-                                                          GeneratorContext generatorContext,
-                                                          ReferenceDefinition referenceDefinition)
-        throws GenerationException {
+                                                     GeneratorContext generatorContext,
+                                                     ReferenceDefinition referenceDefinition)
+            throws GenerationException {
 
         WsWireTargetDefinition hwtd = new WsWireTargetDefinition();
         hwtd.setUri(logicalBinding.getBinding().getTargetUri());
-        hwtd.setReferenceInterface(referenceDefinition.getServiceContract().getInterfaceClass());
-
+        ServiceContract<?> contract = referenceDefinition.getServiceContract();
+        if (!(JavaServiceContract.class.isInstance(contract))) {
+            throw new UnsupportedOperationException("Temporarily unsupported: interfaces must be Java types");
+        }
+        hwtd.setReferenceInterface((JavaServiceContract.class.cast(contract).getInterfaceClass()));
+        URI classloader = classLoaderGenerator.generate(logicalBinding, generatorContext);
+        hwtd.setClassloaderURI(classloader);
         return hwtd;
 
     }

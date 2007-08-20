@@ -18,33 +18,47 @@
  */
 package org.fabric3.binding.ws.model.physical;
 
+import java.net.URI;
+
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 
 /**
  * Physical wire target definition for Hessian binding.
- * 
+ *
  * @version $Revision$ $Date$
  */
 public class WsWireTargetDefinition extends PhysicalWireTargetDefinition {
-    
+
     /**
      * Interface for the reference.
      */
-    private Class<?> referenceInterface;
+    private String referenceInterface;
+
+    /**
+     * The classloader for the service
+     */
+    private URI classloaderURI;
 
     /**
      * @return Reference interface.
      */
-    public Class<?> getReferenceInterface() {
+    public String getReferenceInterface() {
         return referenceInterface;
     }
 
     /**
      * @param referenceInterface Reference interface.
      */
-    public void setReferenceInterface(Class<?> referenceInterface) {
+    public void setReferenceInterface(String referenceInterface) {
         this.referenceInterface = referenceInterface;
     }
-    
-    
+
+    public URI getClassloaderURI() {
+        return classloaderURI;
+    }
+
+    public void setClassloaderURI(URI classloaderURI) {
+        this.classloaderURI = classloaderURI;
+    }
+
 }

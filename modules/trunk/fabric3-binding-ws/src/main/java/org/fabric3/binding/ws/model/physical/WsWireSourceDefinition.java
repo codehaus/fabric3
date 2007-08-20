@@ -18,32 +18,46 @@
  */
 package org.fabric3.binding.ws.model.physical;
 
+import java.net.URI;
+
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 
 /**
  * Physical wire source definition for Hessian binding.
- * 
+ *
  * @version $Revision$ $Date$
  */
 public class WsWireSourceDefinition extends PhysicalWireSourceDefinition {
-    
+
     /**
      * Interface for the service.
      */
-    private Class<?> serviceInterface;
+    private String serviceInterface;
+
+    /**
+     * The classloader for the service
+     */
+    private URI classloaderURI;
 
     /**
      * @return Service interface.
      */
-    public Class<?> getServiceInterface() {
+    public String getServiceInterface() {
         return serviceInterface;
     }
 
     /**
      * @param serviceInterface Service interface.
      */
-    public void setServiceInterface(Class<?> serviceInterface) {
+    public void setServiceInterface(String serviceInterface) {
         this.serviceInterface = serviceInterface;
     }
-    
+
+    public URI getClassloaderURI() {
+        return classloaderURI;
+    }
+
+    public void setClassloaderURI(URI classloaderURI) {
+        this.classloaderURI = classloaderURI;
+    }
 }
