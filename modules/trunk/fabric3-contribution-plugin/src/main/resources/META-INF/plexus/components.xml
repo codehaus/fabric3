@@ -25,6 +25,7 @@
                 <type>sca-contribution</type>
                 <extension>zip</extension>
                 <includesDependencies>true</includesDependencies>
+                <language>java</language>
             </configuration>
         </component>    
         <component>
@@ -53,6 +54,7 @@
                 <type>sca-contribution-jar</type>
                 <extension>jar</extension>
                 <includesDependencies>true</includesDependencies>
+                <language>java</language>
             </configuration>
         </component>    
         <component>
