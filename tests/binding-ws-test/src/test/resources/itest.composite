@@ -37,6 +37,7 @@
     <!-- Hello Client -->
     <component name="HelloClient">
         <implementation.java class="org.fabric3.sample.hello.HelloClientImpl"/>
+		  <reference name="helloService" target="HelloService"/>
     </component>
 
     <!-- Hello Service -->
