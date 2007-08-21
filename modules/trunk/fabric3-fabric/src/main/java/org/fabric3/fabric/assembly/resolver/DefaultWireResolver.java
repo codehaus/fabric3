@@ -36,7 +36,6 @@ import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
-import org.fabric3.spi.util.UriHelper;
 
 /**
  * Default WireResolver implementation
@@ -94,15 +93,6 @@ public class DefaultWireResolver implements WireResolver {
             ComponentReference target = targets.get(referenceName);
             if (target == null) {
                 // case where a reference is specified but not configured, e.g. promoted or autowirable
-                // check for promotions first
-                String baseName = UriHelper.getBaseName(component.getUri());
-                // If the composite is being included search siblings for promoted referencea, else search the
-                // target composite
-                if (include && resolvePromotions(baseName, logicalReference, component.getParent())) {
-                    return;
-                } else if (resolvePromotions(baseName, logicalReference, targetComposite)) {
-                    return;
-                }
                 ServiceContract requiredContract = reference.getServiceContract();
                 boolean required = reference.isRequired();
                 Autowire autowire = calculateAutowire(targetComposite, component);
@@ -157,32 +147,6 @@ public class DefaultWireResolver implements WireResolver {
             }
         }
 
-    }
-
-    /**
-     * Resolves reference targets by searching for composite references that promote it
-     *
-     * @param name             the name of the reference's component
-     * @param logicalReference the logical reference to resolve targets for
-     * @param composite        the composite to resolve against
-     * @return true if promoted targets were resolved
-     */
-    private boolean resolvePromotions(String name, LogicalReference logicalReference, LogicalComponent<?> composite) {
-        String referenceName = logicalReference.getUri().getFragment();
-        boolean found = false;
-        for (LogicalReference candidate : composite.getReferences()) {
-            List<URI> uris = candidate.getDefinition().getPromoted();
-            for (URI uri : uris) {
-                if (name.equals(UriHelper.getDefragmentedNameAsString(uri))
-                        && referenceName.equals(uri.getFragment())) {
-                    logicalReference.addTargetUri(candidate.getUri());
-                    // FIXME only works one level
-                    found = true;
-                    break;
-                }
-            }
-        }
-        return found;
     }
 
     /**
@@ -247,7 +211,7 @@ public class DefaultWireResolver implements WireResolver {
         ComponentDefinition<? extends Implementation<?>> definition = component.getDefinition();
         // check for an overridden value
         Autowire overrideAutowire = component.getAutowireOverride();
-        if (overrideAutowire == Autowire.OFF || overrideAutowire == Autowire.ON){
+        if (overrideAutowire == Autowire.OFF || overrideAutowire == Autowire.ON) {
             return overrideAutowire;
         }
         Autowire autowire = definition.getAutowire();
