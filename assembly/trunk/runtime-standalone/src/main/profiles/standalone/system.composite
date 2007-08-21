@@ -91,6 +91,10 @@
 	 <component name="assemblyRecoveryService">
         <system:implementation.system class="org.fabric3.fabric.assembly.store.AssemblyStoreImpl"/>
     </component>
+	 
+	 <component name="MessageDestinationService">
+        <system:implementation.system class="org.fabric3.fabric.services.messaging.NullMessageDestinationService"/>
+    </component>
 
 	 <!-- the following entries will be loaded as normal extensions in the next release -->
 	 
