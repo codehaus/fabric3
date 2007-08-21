@@ -120,7 +120,8 @@ public class DefaultWireResolver implements WireResolver {
                         throw new AutowireTargetNotFoundException("No suitable target found for", fullRef);
                     }
                 } else {
-                    throw new UnspecifiedTargetException("Reference target not specified", referenceName);
+                    String fullRef = component.getUri().toString() + "#" + referenceName;
+                    throw new UnspecifiedTargetException("Reference target not specified", fullRef);
                 }
             } else {
                 // reference element is specified
