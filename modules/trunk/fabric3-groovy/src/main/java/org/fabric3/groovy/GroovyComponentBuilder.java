@@ -25,12 +25,12 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.pojo.implementation.PojoComponentBuilder;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.scdl.Scope;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
@@ -44,7 +44,8 @@ public class GroovyComponentBuilder<T> extends PojoComponentBuilder<T, GroovyCom
                                   @Reference ScopeRegistry scopeRegistry,
                                   @Reference InstanceFactoryBuilderRegistry providerBuilders,
                                   @Reference ClassLoaderRegistry classLoaderRegistry,
-                                  @Reference TransformerRegistry<PullTransformer<?, ?>> transformerRegistry) {
+                                  @Reference(name = "transformerRegistry")
+                                  TransformerRegistry<PullTransformer<?, ?>> transformerRegistry) {
         super(builderRegistry,
               scopeRegistry,
               providerBuilders,
@@ -73,6 +74,13 @@ public class GroovyComponentBuilder<T> extends PojoComponentBuilder<T, GroovyCom
 
         createPropertyFactories(definition, provider);
 
-        return new GroovyComponent<T>(componentId, provider, scopeContainer, groupId, initLevel, -1, -1, definition.getKey());
+        return new GroovyComponent<T>(componentId,
+                                      provider,
+                                      scopeContainer,
+                                      groupId,
+                                      initLevel,
+                                      -1,
+                                      -1,
+                                      definition.getKey());
     }
 }

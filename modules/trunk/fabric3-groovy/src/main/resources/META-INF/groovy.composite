@@ -31,6 +31,7 @@
 
     <component name="org.fabric3.groovy.GroovyComponentBuilder">
         <system:implementation.system class="org.fabric3.groovy.GroovyComponentBuilder"/>
+        <reference name="transformerRegistry" target="pullTransformerRegistry"/>
     </component>
 
     <component name="org.fabric3.groovy.GroovyInstanceFactoryBuilder">
