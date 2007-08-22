@@ -77,7 +77,6 @@
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-itest-plugin</artifactId>
                 <configuration>
-                    <systemScdl>file:target/classes/META-INF/testSystem.composite</systemScdl>
                     <contributions>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
