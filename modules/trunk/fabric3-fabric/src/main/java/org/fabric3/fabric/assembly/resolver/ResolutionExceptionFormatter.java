@@ -14,7 +14,7 @@ import org.fabric3.host.monitor.ExceptionFormatter;
 import org.fabric3.host.monitor.FormatterRegistry;
 
 /**
- * Formats {@link ServiceNotFoundException}s
+ * Formats {@link ResolutionException}s
  *
  * @version $Rev$ $Date$
  */
