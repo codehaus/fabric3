@@ -22,7 +22,7 @@ import org.osoa.sca.annotations.Reference;
 /**
  * @version $Rev$ $Date$
  */
-public class WiringTest extends TestCase {
+public class WiringTestCase extends TestCase {
     private TestService service;
 
     @Reference

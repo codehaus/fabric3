@@ -21,7 +21,7 @@
            name="WiringTest">
 
     <component name="ConstructorWiringTest">
-        <f3:junit class="org.fabric3.test.wiring.WiringTest"/>
+        <f3:junit class="org.fabric3.test.wiring.WiringTestCase"/>
         <reference name="service" target="TestComponent"/>
     </component>
 
