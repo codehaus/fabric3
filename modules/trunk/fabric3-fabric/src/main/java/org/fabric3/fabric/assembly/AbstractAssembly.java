@@ -21,7 +21,6 @@ package org.fabric3.fabric.assembly;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -370,10 +369,9 @@ public abstract class AbstractAssembly implements Assembly {
     protected Map<URI, GeneratorContext> generate(LogicalComponent<CompositeImplementation> parent,
                                                   Collection<LogicalComponent<?>> components) throws ActivateException {
         Map<URI, GeneratorContext> contexts = new HashMap<URI, GeneratorContext>();
-        List<LogicalComponent<CompositeImplementation>> composites = Collections.singletonList(parent);
         try {
             for (LogicalComponent<?> component : components) {
-                generateChangeSets(composites, component, contexts);
+                generateChangeSets(component, contexts);
             }
             for (LogicalComponent<?> component : components) {
                 generateCommandSets(component, contexts);
@@ -402,9 +400,7 @@ public abstract class AbstractAssembly implements Assembly {
         }
     }
 
-    protected void generateChangeSets(List<LogicalComponent<CompositeImplementation>> targetComposites,
-                                      LogicalComponent<?> component,
-                                      Map<URI, GeneratorContext> contexts)
+    protected void generateChangeSets(LogicalComponent<?> component, Map<URI, GeneratorContext> contexts)
             throws GenerationException, ResolutionException {
         ComponentDefinition<? extends Implementation<?>> definition = component.getDefinition();
         Implementation<?> implementation = definition.getImplementation();
@@ -415,14 +411,8 @@ public abstract class AbstractAssembly implements Assembly {
                     continue;
                 }
                 // generate changesets recursively for children
-                //noinspection unchecked
-                LogicalComponent<CompositeImplementation> composite =
-                        (LogicalComponent<CompositeImplementation>) component;
-                List<LogicalComponent<CompositeImplementation>> composites =
-                        new ArrayList<LogicalComponent<CompositeImplementation>>();
-                composites.add(composite);
-                generateChangeSets(composites, child, contexts);
-                generatePhysicalWires(composites, child, contexts);
+                generateChangeSets(child, contexts);
+                generatePhysicalWires(child, contexts);
             }
         } else {
             // leaf component, generate a physical component and update the change sets
@@ -431,7 +421,7 @@ public abstract class AbstractAssembly implements Assembly {
                 return;
             }
             generatePhysicalComponent(component, contexts);
-            generatePhysicalWires(targetComposites, component, contexts);
+            generatePhysicalWires(component, contexts);
         }
     }
 
@@ -440,15 +430,12 @@ public abstract class AbstractAssembly implements Assembly {
      * resolved against the given parent.
      * <p/>
      *
-     * @param targetComposites the composites to resolve against
-     * @param component        the component to generate wires for
-     * @param contexts         the GeneratorContexts to update with physical wire definitions
+     * @param component the component to generate wires for
+     * @param contexts  the GeneratorContexts to update with physical wire definitions
      * @throws GenerationException if an error occurs generating phyasical wire definitions
      * @throws ResolutionException if an error occurs resolving a wire target
      */
-    protected void generatePhysicalWires(List<LogicalComponent<CompositeImplementation>> targetComposites,
-                                         LogicalComponent<?> component,
-                                         Map<URI, GeneratorContext> contexts)
+    protected void generatePhysicalWires(LogicalComponent<?> component, Map<URI, GeneratorContext> contexts)
             throws GenerationException, ResolutionException {
         URI runtimeId = component.getRuntimeId();
         GeneratorContext context = contexts.get(runtimeId);
