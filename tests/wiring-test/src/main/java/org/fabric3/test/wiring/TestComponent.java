@@ -31,11 +31,6 @@ public class TestComponent implements TestService {
         this.constructorTarget = constructorTarget;
     }
 
-    /**
-     * A reference configured on the component with 'target='
-     *
-     * @param target the target
-     */
     @Reference
     public void setTarget(Target target) {
         this.target = target;
