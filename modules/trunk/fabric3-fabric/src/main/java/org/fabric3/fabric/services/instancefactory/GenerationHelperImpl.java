@@ -36,6 +36,8 @@ import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Property;
 import org.fabric3.scdl.PropertyValue;
+import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.ValueSource;
 import static org.fabric3.spi.model.instance.ValueSource.ValueSourceType.PROPERTY;
 import static org.fabric3.spi.model.instance.ValueSource.ValueSourceType.REFERENCE;
@@ -91,8 +93,10 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
 
     }
 
-    public void processReferenceSites(PojoComponentType type,
+    public void processReferenceSites(LogicalComponent<? extends Implementation<PojoComponentType>> component,
                                       InstanceFactoryDefinition providerDefinition) {
+        Implementation<PojoComponentType> implementation = component.getDefinition().getImplementation();
+        PojoComponentType type = implementation.getComponentType();
         Map<String, JavaMappedReference> references = type.getReferences();
         for (Map.Entry<String, JavaMappedReference> entry : references.entrySet()) {
             JavaMappedReference reference = entry.getValue();
@@ -101,6 +105,14 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
                 // JFM this is dubious, the reference is mapped to a constructor so skip processing
                 // ImplementationProcessorService does not set the member type to a ctor when creating the ref
                 continue;
+            } else if (!reference.isRequired()) {
+                // if the reference is not required and is not configured, do not add an injection site
+                // TODO: we should revisit the way this and ctors are handled above
+                LogicalReference logicalReference = component.getReference(reference.getName());
+                if (logicalReference == null
+                        || (logicalReference.getBindings().isEmpty() && logicalReference.getTargetUris().isEmpty())) {
+                    continue;
+                }
             }
             ValueSource source = new ValueSource(REFERENCE, entry.getKey());
 

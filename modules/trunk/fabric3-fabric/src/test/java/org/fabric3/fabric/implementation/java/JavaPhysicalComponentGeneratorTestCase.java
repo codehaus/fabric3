@@ -139,9 +139,11 @@ public class JavaPhysicalComponentGeneratorTestCase extends TestCase {
 
         MemberSite memberSite = new MemberSite(setterMethod);
         JavaMappedReference setterReference = new JavaMappedReference("setter", null, memberSite);
+        setterReference.setRequired(true);
         type.add(setterReference);
 
         JavaMappedReference ctorReference = new JavaMappedReference("ctorRef", null, null);
+        ctorReference.setRequired(true);
         type.add(ctorReference);
 
         JavaMappedProperty<Object> ctorProperty = new JavaMappedProperty<Object>();

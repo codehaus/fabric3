@@ -66,7 +66,7 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
         providerDefinition.setScriptName(implementation.getScriptName());
         helper.processConstructorArguments(type.getConstructorDefinition(), providerDefinition);
         helper.processConstructorSites(type, providerDefinition);
-        helper.processReferenceSites(type, providerDefinition);
+        helper.processReferenceSites(component, providerDefinition);
         // TODO process callbacks
         // TODO process properties
 

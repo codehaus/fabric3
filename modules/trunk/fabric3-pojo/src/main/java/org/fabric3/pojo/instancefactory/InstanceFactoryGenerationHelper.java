@@ -19,10 +19,11 @@ package org.fabric3.pojo.instancefactory;
 import java.lang.reflect.Method;
 
 import org.fabric3.pojo.implementation.PojoComponentDefinition;
-import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.scdl.ConstructorDefinition;
+import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Implementation;
+import org.fabric3.spi.model.instance.LogicalComponent;
 
 /**
  * @version $Rev$ $Date$
@@ -43,10 +44,10 @@ public interface InstanceFactoryGenerationHelper {
     /**
      * Creates InjectionSiteMappings for references declared by the component implementation
      *
-     * @param type               the component type corresponding to the implementation
+     * @param component          the component corresponding to the implementation
      * @param providerDefinition the instance factory provider definition
      */
-    void processReferenceSites(PojoComponentType type, InstanceFactoryDefinition providerDefinition);
+    void processReferenceSites(LogicalComponent<? extends Implementation<PojoComponentType>> component, InstanceFactoryDefinition providerDefinition);
 
     /**
      * Adds the constructor parameter types to the provider definition

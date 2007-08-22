@@ -69,7 +69,7 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
         providerDefinition.setImplementationClass(implementation.getImplementationClass());
         helper.processConstructorArguments(type.getConstructorDefinition(), providerDefinition);
         helper.processConstructorSites(type, providerDefinition);
-        helper.processReferenceSites(type, providerDefinition);
+        helper.processReferenceSites(component, providerDefinition);
         // TODO process callbacks
         // TODO process properties
 

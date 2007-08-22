@@ -112,7 +112,7 @@ public class DefaultWireResolver implements WireResolver {
                         URI source = logicalReference.getUri();
                         throw new AutowireTargetNotFoundException("No suitable target found for", source);
                     }
-                } else {
+                } else if (reference.isRequired()) {
                     // check to see if the reference was a promotion
                     throw new UnspecifiedTargetException("Reference target not specified", logicalReference.getUri());
                 }
@@ -150,7 +150,7 @@ public class DefaultWireResolver implements WireResolver {
                         URI source = logicalReference.getUri();
                         throw new AutowireTargetNotFoundException("No suitable target found for", source);
                     }
-                } else {
+                } else if (reference.isRequired()) {
                     URI source = logicalReference.getUri();
                     throw new UnspecifiedTargetException("Reference target not specified", source);
                 }
