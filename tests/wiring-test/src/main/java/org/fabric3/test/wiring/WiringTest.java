@@ -31,14 +31,14 @@ public class WiringTest extends TestCase {
     }
 
     /**
-     * Tests a very basic wire that is explicitly targeted with a "target="  on a reference
+     * Tests a wire that is explicitly targeted with a "target="  on a reference
      */
     public void testTargetedWire() {
         assertNotNull(service.getTarget());
     }
 
     /**
-     * Tests a very basic wire that is explicitly targeted with a "target=" on a constructor
+     * Tests a wire that is explicitly targeted with a "target=" on a constructor
      */
     public void testTargetedConstructorWire() {
         assertNotNull(service.getConstructorTarget());
