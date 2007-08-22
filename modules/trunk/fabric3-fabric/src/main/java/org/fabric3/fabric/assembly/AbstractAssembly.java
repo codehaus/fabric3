@@ -156,7 +156,7 @@ public abstract class AbstractAssembly implements Assembly {
     }
 
     public void include(LogicalComponent<CompositeImplementation> parent, Composite composite)
-        throws ActivateException {
+            throws ActivateException {
         // instantiate all the components in the composite and add them to the parent
         String base = parent.getUri().toString();
         Collection<ComponentDefinition<? extends Implementation<?>>> definitions = composite.getComponents().values();
@@ -268,9 +268,9 @@ public abstract class AbstractAssembly implements Assembly {
      * @throws InstantiationException if an error occurs during instantiation
      */
     protected <I extends Implementation<?>> LogicalComponent<I> instantiate(
-        LogicalComponent<CompositeImplementation> parent,
-        ComponentDefinition<I> definition)
-        throws InstantiationException {
+            LogicalComponent<CompositeImplementation> parent,
+            ComponentDefinition<I> definition)
+            throws InstantiationException {
 
         // create the LogicalComponent
         URI uri = URI.create(parent.getUri() + "/" + definition.getName());
@@ -284,7 +284,7 @@ public abstract class AbstractAssembly implements Assembly {
             // and promote services and references
             @SuppressWarnings({"unchecked"})
             LogicalComponent<CompositeImplementation> compositeComponent =
-                (LogicalComponent<CompositeImplementation>) component;
+                    (LogicalComponent<CompositeImplementation>) component;
             Composite composite = compositeComponent.getDefinition().getImplementation().getComponentType();
 
             // create the child components
@@ -406,7 +406,7 @@ public abstract class AbstractAssembly implements Assembly {
     protected void generateChangeSets(List<LogicalComponent<CompositeImplementation>> targetComposites,
                                       LogicalComponent<?> component,
                                       Map<URI, GeneratorContext> contexts)
-        throws GenerationException, ResolutionException {
+            throws GenerationException, ResolutionException {
         ComponentDefinition<? extends Implementation<?>> definition = component.getDefinition();
         Implementation<?> implementation = definition.getImplementation();
         if (CompositeImplementation.class.isInstance(implementation)) {
@@ -418,9 +418,9 @@ public abstract class AbstractAssembly implements Assembly {
                 // generate changesets recursively for children
                 //noinspection unchecked
                 LogicalComponent<CompositeImplementation> composite =
-                    (LogicalComponent<CompositeImplementation>) component;
+                        (LogicalComponent<CompositeImplementation>) component;
                 List<LogicalComponent<CompositeImplementation>> composites =
-                    new ArrayList<LogicalComponent<CompositeImplementation>>();
+                        new ArrayList<LogicalComponent<CompositeImplementation>>();
                 composites.add(composite);
                 generateChangeSets(composites, child, contexts);
                 generatePhysicalWires(composites, child, contexts);
@@ -450,7 +450,7 @@ public abstract class AbstractAssembly implements Assembly {
     protected void generatePhysicalWires(List<LogicalComponent<CompositeImplementation>> targetComposites,
                                          LogicalComponent<?> component,
                                          Map<URI, GeneratorContext> contexts)
-        throws GenerationException, ResolutionException {
+            throws GenerationException, ResolutionException {
         URI runtimeId = component.getRuntimeId();
         GeneratorContext context = contexts.get(runtimeId);
         if (context == null) {
@@ -464,27 +464,33 @@ public abstract class AbstractAssembly implements Assembly {
                 for (URI uri : entry.getTargetUris()) {
                     Referenceable target = resolveTarget(uri, targetComposites);
                     if (!(target instanceof LogicalComponent)) {
+                        // programming error
                         String name = target.getClass().getName();
-                        URI refUri = entry.getUri();
-                        throw new InvalidTargetTypeException("Invalid reference target type", name, refUri, uri);
+                        throw new AssertionError("Invalid reference target type [" + name + "]");
                     }
 
                     LogicalComponent<?> targetComponent = (LogicalComponent<?>) target;
                     String serviceName = uri.getFragment();
                     LogicalReference reference = component.getReference(entry.getUri().getFragment());
-                    LogicalService targetService = null;
+                    LogicalService targetService;
                     if (serviceName != null) {
                         targetService = targetComponent.getService(serviceName);
+                        if (targetService == null) {
+                            // programming error
+                            throw new AssertionError("Specified service not found [" + serviceName + "]");
+                        }
                     } else if (targetComponent.getServices().size() == 1) {
                         // default service
                         targetService = targetComponent.getServices().iterator().next();
+                    } else {
+                        // programming error
+                        throw new AssertionError("Wire contains an unspecified target service");
                     }
-                    assert targetService != null;
                     generatorRegistry.generateUnboundWire(component,
-                        reference,
-                        targetService,
-                        targetComponent,
-                        context);
+                                                          reference,
+                                                          targetService,
+                                                          targetComponent,
+                                                          context);
 
                 }
             } else {
@@ -553,7 +559,7 @@ public abstract class AbstractAssembly implements Assembly {
      * @throws GenerationException if an exception occurs during generation
      */
     protected void generatePhysicalComponent(LogicalComponent<?> component, Map<URI, GeneratorContext> contexts)
-        throws GenerationException {
+            throws GenerationException {
         URI id = component.getRuntimeId();
         GeneratorContext context = contexts.get(id);
         if (context == null) {
@@ -583,7 +589,7 @@ public abstract class AbstractAssembly implements Assembly {
      * @throws ResolutionException if an error occurs during resolution, such as the target not being found
      */
     protected Referenceable resolveTarget(URI uri, List<LogicalComponent<CompositeImplementation>> components)
-        throws ResolutionException {
+            throws ResolutionException {
         // TODO only resolves one level deep
         URI defragmentedUri = UriHelper.getDefragmentedName(uri);
         for (LogicalComponent<CompositeImplementation> component : components) {
@@ -596,7 +602,8 @@ public abstract class AbstractAssembly implements Assembly {
                 return target;
             }
         }
-        throw new TargetNotFoundException("Target not found", uri.toString());
+        // programming error
+        throw new AssertionError("Target not found [" + uri.toString() + "]");
     }
 
     /**

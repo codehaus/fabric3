@@ -16,6 +16,10 @@
  */
 package org.fabric3.fabric.assembly.resolver;
 
+import java.net.URI;
+import java.util.Collections;
+import java.util.List;
+
 import org.fabric3.fabric.assembly.ResolutionException;
 
 /**
@@ -24,9 +28,16 @@ import org.fabric3.fabric.assembly.ResolutionException;
  * @version $Rev$ $Date$
  */
 public class AmbiguousAutowireTargetException extends ResolutionException {
+    private List<URI> targets;
 
-    public AmbiguousAutowireTargetException(String message, String identifier) {
-        super(message, identifier);
+    public AmbiguousAutowireTargetException(String message, URI source, List<URI> targets) {
+        super(message, (String) null, source, null);
+        this.targets = targets;
     }
+
+    public List<URI> getTargets() {
+        return Collections.unmodifiableList(targets);
+    }
+
 
 }

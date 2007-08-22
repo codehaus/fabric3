@@ -33,11 +33,11 @@
 
     <component name="IncompatibleServiceContractExceptionFormatter">
         <system:implementation.system
-            class="org.fabric3.fabric.wire.IncompatibleServiceContractExceptionFormatter"/>
+                class="org.fabric3.fabric.wire.IncompatibleServiceContractExceptionFormatter"/>
     </component>
-    <!--
-    <component name="GroupInitializationExceptionFormatter">
-        <system:implementation.system class="org.fabric3.fabric.component.scope.GroupInitializationExceptionFormatter"/>
+
+    <component name="ResolutionExceptionFormatter">
+        <system:implementation.system class="org.fabric3.fabric.assembly.resolver.ResolutionExceptionFormatter"/>
     </component>
-         -->
+
 </composite>

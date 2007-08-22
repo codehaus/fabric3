@@ -1,8 +1,6 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
+ * See the NOTICE file distributed with this work for information
+ * regarding copyright ownership.  This file is licensed
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
@@ -23,10 +21,13 @@ import java.net.URI;
 import org.fabric3.fabric.assembly.ResolutionException;
 
 /**
+ * Thrown when a specified service is not found on a target component.
+ *
  * @version $Rev$ $Date$
  */
-public class AutowireTargetNotFoundException extends ResolutionException {
-    public AutowireTargetNotFoundException(String message, URI source) {
-        super(message, (String) null, source, null);
+public class ServiceNotFoundException extends ResolutionException {
+
+    public ServiceNotFoundException(String message, URI source, URI target) {
+        super(message, source, target);
     }
 }

@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.fabric3.fabric.assembly.ResolutionException;
-import org.fabric3.fabric.assembly.UnspecifiedTargetException;
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
@@ -36,6 +35,8 @@ import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
+import org.fabric3.spi.model.instance.LogicalService;
+import org.fabric3.spi.util.UriHelper;
 
 /**
  * Default WireResolver implementation
@@ -106,12 +107,11 @@ public class DefaultWireResolver implements WireResolver {
                         targetUri = resolveByType(targetComposite, component, referenceName, requiredContract);
                     }
                     if (targetUri == null && required) {
-                        String fullRef = component.getUri().toString() + "#" + referenceName;
-                        throw new AutowireTargetNotFoundException("No suitable target found for", fullRef);
+                        URI source = logicalReference.getUri();
+                        throw new AutowireTargetNotFoundException("No suitable target found for", source);
                     }
                 } else {
-                    String fullRef = component.getUri().toString() + "#" + referenceName;
-                    throw new UnspecifiedTargetException("Reference target not specified", fullRef);
+                    throw new UnspecifiedTargetException("Reference target not specified", logicalReference.getUri());
                 }
             } else {
                 // reference element is specified
@@ -120,7 +120,9 @@ public class DefaultWireResolver implements WireResolver {
                     URI parentUri = targetComposite.getUri();
                     for (URI uri : uris) {
                         // fully resolve URIs
-                        logicalReference.addTargetUri(parentUri.resolve(component.getUri()).resolve(uri));
+                        URI resolved = parentUri.resolve(component.getUri()).resolve(uri);
+                        validateTarget(logicalReference, resolved, targetComposite);
+                        logicalReference.addTargetUri(resolved);
                     }
                     continue;
                 }
@@ -140,8 +142,8 @@ public class DefaultWireResolver implements WireResolver {
                         targetUri = resolveByType(targetComposite, component, fragment, requiredContract);
                     }
                     if (targetUri == null && required) {
-                        String fullRef = component.getUri().toString() + "#" + referenceName;
-                        throw new AutowireTargetNotFoundException("No suitable target found for", fullRef);
+                        throw new AutowireTargetNotFoundException("No suitable target found for",
+                                                                  logicalReference.getUri());
                     }
                 }
             }
@@ -180,7 +182,7 @@ public class DefaultWireResolver implements WireResolver {
                     continue;
                 }
                 if (requiredContract.isAssignableFrom(targetContract)) {
-                    candidates.add(URI.create(candidate.getName() + '#' + service.getName()));
+                    candidates.add(URI.create(child.getUri().toString() + '#' + service.getName()));
                     break;
                 }
             }
@@ -189,7 +191,8 @@ public class DefaultWireResolver implements WireResolver {
             return null;
         } else if (candidates.size() > 1) {
             // For now, we have no other criteria to select from
-            throw new AmbiguousAutowireTargetException(component.getUri().toString(), referenceName);
+            URI uri = URI.create(component.getUri().toString() + "#" + referenceName);
+            throw new AmbiguousAutowireTargetException("More than one target found", uri, candidates);
         }
         targetUri = candidates.get(0);
         if (targetUri != null) {
@@ -243,5 +246,40 @@ public class DefaultWireResolver implements WireResolver {
         }
         return autowire;
     }
+
+    /**
+     * Locates a target URI and verifies it is a valid target for a reference
+     *
+     * @param reference the refrence
+     * @param uri       the target URI to validate
+     * @param composite the composite the target is contained in
+     * @throws ResolutionException if the target is invalid
+     */
+    private void validateTarget(LogicalReference reference, URI uri, LogicalComponent<?> composite)
+            throws ResolutionException {
+        URI defragmentedUri = UriHelper.getDefragmentedName(uri);
+        String serviceName = uri.getFragment();
+        LogicalComponent<?> targetComponent = composite.getComponent(defragmentedUri);
+        if (targetComponent != null) {
+            LogicalService targetService;
+            if (serviceName != null) {
+                targetService = targetComponent.getService(serviceName);
+                if (targetService == null) {
+                    URI source = reference.getUri();
+                    throw new ServiceNotFoundException("Specified service not found on target component", source, uri);
+                }
+            } else if (targetComponent.getServices().size() > 1) {
+                throw new UnspecifiedTargetServiceException("Target service must be specified for a component "
+                        + "that implements more than one service", uri);
+            }
+        } else {
+            LogicalReference targetReference = composite.getReference(uri.getFragment());
+            if (targetReference == null) {
+                throw new TargetNotFoundException("Target not found", reference.getUri(), uri);
+            }
+
+        }
+    }
+
 
 }

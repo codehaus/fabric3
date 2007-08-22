@@ -18,32 +18,66 @@
  */
 package org.fabric3.fabric.assembly;
 
+import java.net.URI;
+
 import org.fabric3.spi.assembly.AssemblyException;
 
 /**
- * Denotes an error during the resolve phase as an assembly is evaluated
+ * Denotes an error resolving a wire target
  *
  * @version $Rev$ $Date$
  */
 public abstract class ResolutionException extends AssemblyException {
+    private URI source;
+    private URI target;
 
-    public ResolutionException(String message) {
+    public ResolutionException(String message, URI source, URI target) {
         super(message);
+        this.target = target;
+        this.source = source;
     }
 
-    public ResolutionException(String message, String identifier) {
+    public ResolutionException(String message, String identifier, URI source, URI target) {
         super(message, identifier);
+        this.target = target;
+        this.source = source;
     }
 
-    public ResolutionException(String message, Throwable cause) {
+    public ResolutionException(String message, URI source, URI target, Throwable cause) {
         super(message, cause);
+        this.target = target;
+        this.source = source;
     }
 
-    public ResolutionException(String message, String identifier, Throwable cause) {
+    public ResolutionException(String message, String identifier, URI source, URI target, Throwable cause) {
         super(message, identifier, cause);
+        this.target = target;
+        this.source = source;
     }
 
-    public ResolutionException(Throwable cause) {
+    public ResolutionException(URI source, URI target, Throwable cause) {
         super(cause);
+        this.target = target;
+        this.source = source;
     }
+
+    /**
+     * Returns the wire source uri.
+     *
+     * @return wire source uri.
+     */
+    public URI getSource() {
+        return source;
+    }
+
+    /**
+     * Returns the wire target uri.
+     *
+     * @return wire target uri.
+     */
+    public URI getTarget() {
+        return target;
+    }
+
+
 }

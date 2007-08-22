@@ -16,17 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.assembly;
+package org.fabric3.fabric.assembly.resolver;
+
+import java.net.URI;
+
+import org.fabric3.fabric.assembly.ResolutionException;
 
 /**
- * Denotes an unspecified wire target
+ * Denotes an error resolving a target
  *
  * @version $Rev$ $Date$
  */
-public class UnspecifiedTargetException extends ResolutionException {
+public class TargetNotFoundException extends ResolutionException {
 
-    public UnspecifiedTargetException(String message, String identifier) {
-        super(message, identifier);
+    public TargetNotFoundException(String message, URI source, URI target) {
+        super(message, source, target);
     }
-
 }
