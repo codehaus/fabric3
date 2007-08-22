@@ -26,6 +26,7 @@ public class TestComponent implements TestService {
     private Target target;
     private Target promotedReference;
     private Target nonConfiguredPromotedReference;
+    private Target optionalNonSetReference;
 
     public TestComponent(@Reference(name = "targetConstructor")Target constructorTarget) {
         this.constructorTarget = constructorTarget;
@@ -46,6 +47,11 @@ public class TestComponent implements TestService {
         this.nonConfiguredPromotedReference = target;
     }
 
+    @Reference(required = false)
+    public void setOptionalNonSetReference(Target optionalNonSetReference) {
+        this.optionalNonSetReference = optionalNonSetReference;
+    }
+
     public Target getTarget() {
         return target;
     }
@@ -62,5 +68,7 @@ public class TestComponent implements TestService {
         return constructorTarget;
     }
 
-
+    public Target getOptionalNonSetReference() {
+        return optionalNonSetReference;
+    }
 }

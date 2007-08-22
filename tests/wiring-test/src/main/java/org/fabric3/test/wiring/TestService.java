@@ -12,4 +12,7 @@ public interface TestService {
     Target getPromotedReference();
 
     Target getNonConfiguredPromotedReference();
+
+    Target getOptionalNonSetReference();
+
 }

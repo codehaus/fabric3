@@ -74,4 +74,10 @@ public class WiringTest extends TestCase {
         assertNotNull(service.getNonConfiguredPromotedReference());
     }
 
+    /**
+     * Verifies a reference of multiplicity 0..n does not need to be configured
+     */
+    public void testOptionalNonSetReference() {
+        assertNull(service.getOptionalNonSetReference());
+    }
 }
