@@ -63,7 +63,6 @@ import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
-import org.fabric3.spi.model.instance.Referenceable;
 import org.fabric3.spi.model.physical.PhysicalChangeSet;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.QNameSymbol;
@@ -125,7 +124,7 @@ public abstract class AbstractAssembly implements Assembly {
         // generate and provision components on nodes that have gone down
         Map<URI, GeneratorContext> contexts = generate(domain, components);
         provision(contexts);
-        // TODO temporary recovery code
+        // TODO end temporary recovery code
     }
 
     public LogicalComponent<CompositeImplementation> getDomain() {
@@ -462,34 +461,15 @@ public abstract class AbstractAssembly implements Assembly {
         for (LogicalReference entry : component.getReferences()) {
             if (entry.getBindings().isEmpty()) {
                 for (URI uri : entry.getTargetUris()) {
-                    Referenceable target = resolveTarget(uri, targetComposites);
-                    if (!(target instanceof LogicalComponent)) {
-                        // programming error
-                        String name = target.getClass().getName();
-                        throw new AssertionError("Invalid reference target type [" + name + "]");
-                    }
-
-                    LogicalComponent<?> targetComponent = (LogicalComponent<?>) target;
+                    LogicalComponent target = findComponent(uri);
                     String serviceName = uri.getFragment();
                     LogicalReference reference = component.getReference(entry.getUri().getFragment());
-                    LogicalService targetService;
-                    if (serviceName != null) {
-                        targetService = targetComponent.getService(serviceName);
-                        if (targetService == null) {
-                            // programming error
-                            throw new AssertionError("Specified service not found [" + serviceName + "]");
-                        }
-                    } else if (targetComponent.getServices().size() == 1) {
-                        // default service
-                        targetService = targetComponent.getServices().iterator().next();
-                    } else {
-                        // programming error
-                        throw new AssertionError("Wire contains an unspecified target service");
-                    }
+                    LogicalService targetService = target.getService(serviceName);
+                    assert targetService != null;
                     generatorRegistry.generateUnboundWire(component,
                                                           reference,
                                                           targetService,
-                                                          targetComponent,
+                                                          target,
                                                           context);
 
                 }
@@ -578,32 +558,6 @@ public abstract class AbstractAssembly implements Assembly {
             return level > 0;
         }
         return definition.getImplementation().getComponentType().getInitLevel() > 0;
-    }
-
-    /**
-     * Algorithm to resolve target URIs against a composite
-     *
-     * @param uri        the target uri to resolve
-     * @param components the composites to resolve against, in order
-     * @return the logical instance
-     * @throws ResolutionException if an error occurs during resolution, such as the target not being found
-     */
-    protected Referenceable resolveTarget(URI uri, List<LogicalComponent<CompositeImplementation>> components)
-            throws ResolutionException {
-        // TODO only resolves one level deep
-        URI defragmentedUri = UriHelper.getDefragmentedName(uri);
-        for (LogicalComponent<CompositeImplementation> component : components) {
-            Referenceable target = component.getComponent(defragmentedUri);
-            if (target != null) {
-                return target;
-            }
-            target = component.getReference(uri.getFragment());
-            if (target != null) {
-                return target;
-            }
-        }
-        // programming error
-        throw new AssertionError("Target not found [" + uri.toString() + "]");
     }
 
     /**

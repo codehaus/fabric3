@@ -121,8 +121,8 @@ public class DefaultWireResolver implements WireResolver {
                     for (URI uri : uris) {
                         // fully resolve URIs
                         URI resolved = parentUri.resolve(component.getUri()).resolve(uri);
-                        validateTarget(logicalReference, resolved, targetComposite);
-                        logicalReference.addTargetUri(resolved);
+                        URI targetURI = resolveByUri(logicalReference, resolved, targetComposite);
+                        logicalReference.addTargetUri(targetURI);
                     }
                     continue;
                 }
@@ -248,14 +248,16 @@ public class DefaultWireResolver implements WireResolver {
     }
 
     /**
-     * Locates a target URI and verifies it is a valid target for a reference
+     * Fully resolves a reference to a target based on a URI. For example, a returned URI may include additional
+     * information such as a selected service if none was spcified in the original.
      *
      * @param reference the refrence
      * @param uri       the target URI to validate
      * @param composite the composite the target is contained in
+     * @return the fully resolved URI
      * @throws ResolutionException if the target is invalid
      */
-    private void validateTarget(LogicalReference reference, URI uri, LogicalComponent<?> composite)
+    private URI resolveByUri(LogicalReference reference, URI uri, LogicalComponent<?> composite)
             throws ResolutionException {
         URI defragmentedUri = UriHelper.getDefragmentedName(uri);
         String serviceName = uri.getFragment();
@@ -264,22 +266,28 @@ public class DefaultWireResolver implements WireResolver {
             LogicalService targetService;
             if (serviceName != null) {
                 targetService = targetComponent.getService(serviceName);
-                if (targetService == null) {
+                if (targetService != null) {
+                    return uri;
+                } else {
                     URI source = reference.getUri();
                     throw new ServiceNotFoundException("Specified service not found on target component", source, uri);
                 }
+            } else if (targetComponent.getServices().size() == 1) {
+                targetService = targetComponent.getServices().iterator().next();
+                return URI.create(uri.toString() + "#" + targetService.getUri().getFragment());
             } else if (targetComponent.getServices().size() > 1) {
                 throw new UnspecifiedTargetServiceException("Target service must be specified for a component "
                         + "that implements more than one service", uri);
+            } else {
+                throw new IllegalTargetException("Target has no services", reference.getUri(), uri);
             }
         } else {
             LogicalReference targetReference = composite.getReference(uri.getFragment());
             if (targetReference == null) {
                 throw new TargetNotFoundException("Target not found", reference.getUri(), uri);
             }
-
+            return uri;
         }
     }
-
 
 }
