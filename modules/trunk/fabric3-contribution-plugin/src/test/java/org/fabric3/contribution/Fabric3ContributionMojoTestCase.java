@@ -29,7 +29,7 @@ public class Fabric3ContributionMojoTestCase extends AbstractMojoTestCase {
 	/* configure the mojo for execution */
 	protected Fabric3ContributionMojo configureMojo(String testName, String type) throws Exception{
 		File testDirectory = getTestDirectory(testName);
-		File pomFile =  new File(testDirectory, "pom.xml");
+		File pomFile =  new File(testDirectory, "test.xml");
 		Fabric3ContributionMojo mojo = (Fabric3ContributionMojo) lookupMojo("package", pomFile);
 		assertNotNull(mojo);
 		File outputDir = new File(testDirectory, "target");
