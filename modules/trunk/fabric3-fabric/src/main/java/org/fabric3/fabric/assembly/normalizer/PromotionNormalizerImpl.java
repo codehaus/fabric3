@@ -83,7 +83,7 @@ public class PromotionNormalizerImpl implements PromotionNormalizer {
             URI referenceUri = reference.getUri();
             List<LogicalReference> references = recurseReferencePromotionPath(parent, referenceUri);
             if (references.isEmpty()) {
-                return;
+                continue;
             }
             List<LogicalBinding<?>> bindings = new ArrayList<LogicalBinding<?>>();
             List<URI> targets = new ArrayList<URI>();

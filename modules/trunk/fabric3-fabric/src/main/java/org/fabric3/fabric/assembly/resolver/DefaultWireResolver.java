@@ -45,17 +45,17 @@ import org.fabric3.spi.util.UriHelper;
  */
 public class DefaultWireResolver implements WireResolver {
 
-    public void resolve(LogicalComponent<?> targetComposite, LogicalComponent<?> component) throws ResolutionException {
+    public void resolve(LogicalComponent<?> composite, LogicalComponent<?> component) throws ResolutionException {
         if (component.getComponents().isEmpty()) {
-            resolveReferences(targetComposite, component, false);
+            resolveReferences(composite, component, false);
         } else {
             for (LogicalComponent<?> child : component.getComponents()) {
                 if (!child.getComponents().isEmpty()) {
                     // resolve children
-                    resolveInternal(targetComposite, child);
+                    resolveInternal(composite, child);
                 } else {
                     // no children, resolve references directly using include semantics
-                    resolveReferences(targetComposite, child, true);
+                    resolveReferences(composite, child, true);
                 }
             }
         }
@@ -76,12 +76,12 @@ public class DefaultWireResolver implements WireResolver {
     /**
      * Resolves component references
      *
-     * @param targetComposite the target parent component
-     * @param component       the component containing the references to resolve
-     * @param include         if true, the component's parent
+     * @param composite the target parent component
+     * @param component the component containing the references to resolve
+     * @param include   if true, the component's parent
      * @throws ResolutionException if an error occurs during resolution
      */
-    private void resolveReferences(LogicalComponent<?> targetComposite, LogicalComponent<?> component, boolean include)
+    private void resolveReferences(LogicalComponent<?> composite, LogicalComponent<?> component, boolean include)
             throws ResolutionException {
         ComponentDefinition<? extends Implementation<?>> definition = component.getDefinition();
         AbstractComponentType<?, ?, ?> componentType = definition.getImplementation().getComponentType();
@@ -93,9 +93,12 @@ public class DefaultWireResolver implements WireResolver {
             ComponentReference target = targets.get(referenceName);
             if (target == null) {
                 // case where a reference is specified but not configured, e.g. promoted or autowirable
+                if (isPromoted(composite, component, referenceName)) {
+                    continue;
+                }
                 ServiceContract requiredContract = reference.getServiceContract();
                 boolean required = reference.isRequired();
-                Autowire autowire = calculateAutowire(targetComposite, component);
+                Autowire autowire = calculateAutowire(composite, component);
                 if (autowire == Autowire.ON) {
                     URI targetUri = null;
                     if (include) {
@@ -103,31 +106,34 @@ public class DefaultWireResolver implements WireResolver {
                         targetUri = resolveByType(component.getParent(), component, referenceName, requiredContract);
                     }
                     if (targetUri == null) {
-                        targetUri = resolveByType(targetComposite, component, referenceName, requiredContract);
+                        targetUri = resolveByType(composite, component, referenceName, requiredContract);
                     }
                     if (targetUri == null && required) {
                         URI source = logicalReference.getUri();
                         throw new AutowireTargetNotFoundException("No suitable target found for", source);
                     }
                 } else {
+                    // check to see if the reference was a promotion
                     throw new UnspecifiedTargetException("Reference target not specified", logicalReference.getUri());
                 }
             } else {
                 // reference element is specified
                 List<URI> uris = target.getTargets();
                 if (!uris.isEmpty()) {
-                    URI parentUri = targetComposite.getUri();
+                    URI parentUri = composite.getUri();
                     for (URI uri : uris) {
                         // fully resolve URIs
                         URI resolved = parentUri.resolve(component.getUri()).resolve(uri);
-                        URI targetURI = resolveByUri(logicalReference, resolved, targetComposite);
+                        URI targetURI = resolveByUri(logicalReference, resolved, composite);
                         logicalReference.addTargetUri(targetURI);
                     }
                     continue;
+                } else if (isPromoted(composite, component, referenceName)) {
+                    // no URIs were specified, check to see if the reference was promoted, and if so continue
+                    continue;
                 }
-
                 if (target.isAutowire()) {
-                    // a reference element is specified with autowire and no target
+                    // a reference is specified with autowire and no target is specified on it or via promition
                     ServiceContract requiredContract = reference.getServiceContract();
                     String fragment = target.getName();
                     boolean required = reference.isRequired();
@@ -138,12 +144,15 @@ public class DefaultWireResolver implements WireResolver {
                     }
                     if (targetUri == null) {
                         // search the target compoisite
-                        targetUri = resolveByType(targetComposite, component, fragment, requiredContract);
+                        targetUri = resolveByType(composite, component, fragment, requiredContract);
                     }
                     if (targetUri == null && required) {
-                        throw new AutowireTargetNotFoundException("No suitable target found for",
-                                                                  logicalReference.getUri());
+                        URI source = logicalReference.getUri();
+                        throw new AutowireTargetNotFoundException("No suitable target found for", source);
                     }
+                } else {
+                    URI source = logicalReference.getUri();
+                    throw new UnspecifiedTargetException("Reference target not specified", source);
                 }
             }
         }
@@ -205,11 +214,11 @@ public class DefaultWireResolver implements WireResolver {
     /**
      * Determines the autowire setting for a component based on the autowire hierarchy
      *
-     * @param targetComposite the component's parent
-     * @param component       the component
+     * @param composite the component's parent
+     * @param component the component
      * @return the autowire setting
      */
-    private Autowire calculateAutowire(LogicalComponent<?> targetComposite, LogicalComponent<?> component) {
+    private Autowire calculateAutowire(LogicalComponent<?> composite, LogicalComponent<?> component) {
         ComponentDefinition<? extends Implementation<?>> definition = component.getDefinition();
         // check for an overridden value
         Autowire overrideAutowire = component.getAutowireOverride();
@@ -228,18 +237,18 @@ public class DefaultWireResolver implements WireResolver {
                 }
             }
             // undefined in the original parent or the component is top-level, check in the target
-            ComponentDefinition<? extends Implementation<?>> parentDefinition = targetComposite.getDefinition();
+            ComponentDefinition<? extends Implementation<?>> parentDefinition = composite.getDefinition();
             AbstractComponentType<?, ?, ?> parentType = parentDefinition.getImplementation().getComponentType();
             while (Composite.class.isInstance(parentType)) {
                 autowire = (Composite.class.cast(parentType)).getAutowire();
                 if (autowire == Autowire.OFF || autowire == Autowire.ON) {
                     break;
                 }
-                targetComposite = targetComposite.getParent();
-                if (targetComposite == null) {
+                composite = composite.getParent();
+                if (composite == null) {
                     break;
                 }
-                parentDefinition = targetComposite.getDefinition();
+                parentDefinition = composite.getDefinition();
                 parentType = parentDefinition.getImplementation().getComponentType();
             }
         }
@@ -289,4 +298,40 @@ public class DefaultWireResolver implements WireResolver {
         }
     }
 
+    /**
+     * Returns true if the reference was promoted in the parent.
+     *
+     * @param composite     the containing composite
+     * @param component     the component containing the reference
+     * @param referenceName the reference name
+     * @return true if the reference is promoted in the parent
+     */
+    private boolean isPromoted(LogicalComponent<?> composite, LogicalComponent<?> component, String referenceName) {
+        for (LogicalReference compositeReference : composite.getReferences()) {
+            List<URI> uris = compositeReference.getPromotedUris();
+            if (component.getReferences().size() == 1) {
+                // special case where reference name does not need to be specified if component has one ref
+                LogicalReference componentRef = component.getReferences().iterator().next();
+                for (URI uri : uris) {
+                    if (uri.getFragment() == null && component.getUri().equals(uri)) {
+                        return true;
+                    } else {
+                        if (componentRef.getUri().equals(uri)) {
+                            return true;
+                        }
+                    }
+                }
+            } else {
+                URI refUri = URI.create(component.getUri().toString() + "#" + referenceName);
+                for (URI uri : uris) {
+                    if (refUri.equals(uri)) {
+                        return true;
+                    }
+                }
+
+            }
+        }
+        return false;
+
+    }
 }

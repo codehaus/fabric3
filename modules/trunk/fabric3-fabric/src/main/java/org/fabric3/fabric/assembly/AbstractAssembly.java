@@ -187,9 +187,15 @@ public abstract class AbstractAssembly implements Assembly {
         for (CompositeReference compositeReference : composite.getReferences().values()) {
             URI referenceURi = URI.create(base + '#' + compositeReference.getName());
             LogicalReference logicalReference = new LogicalReference(referenceURi, compositeReference, parent);
+            for (URI promotedUri : compositeReference.getPromoted()) {
+                URI resolvedUri = URI.create(base + "/" + promotedUri.toString());
+                logicalReference.addPromotedUri(resolvedUri);
+            }
+
             for (BindingDefinition binding : compositeReference.getBindings()) {
                 logicalReference.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalReference));
             }
+            parent.addReference(logicalReference);
         }
 
         // resolve wires for each new component
