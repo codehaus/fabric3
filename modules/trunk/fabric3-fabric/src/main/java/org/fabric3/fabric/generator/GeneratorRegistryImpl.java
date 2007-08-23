@@ -57,6 +57,7 @@ import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.registry.PolicyResolutionException;
 import org.fabric3.spi.policy.registry.PolicyResolver;
+import org.fabric3.spi.policy.registry.ResolvedPolicy;
 
 /**
  * @version $Rev$ $Date$
@@ -360,7 +361,12 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         try {
             if (policyResolver != null) {
                 // TODO this needs to cater for provided intents
-                return policyResolver.resolveIntents(logicalBinding).getResolvedPolicies().keySet();
+                Set<PolicySetExtension> policies = new HashSet<PolicySetExtension>();
+                Set<ResolvedPolicy> resolvedPolicies = policyResolver.resolveIntents(logicalBinding).getResolvedPolicies();
+                for(ResolvedPolicy resolvedPolicy : resolvedPolicies) {
+                    policies.add(resolvedPolicy.getPolicy());
+                }
+                return policies;
             } else {
                 return Collections.EMPTY_SET;
             }

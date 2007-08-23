@@ -18,27 +18,42 @@
  */
 package org.fabric3.spi.policy.registry;
 
-import java.util.Set;
+import org.fabric3.scdl.definitions.PolicySetExtension;
 
 /**
- * Result of resolving all the intents.
+ * Represents a resolved policy.
  * 
  * @version $Revision$ $Date$
  */
-public interface PolicyResolutionResult {
+public final class ResolvedPolicy {
     
-    /**
-     * Returns the set of resolved policies based on the requested intents.
-     * 
-     * @return Set of resolved policies.
-     */
-    Set<ResolvedPolicy> getResolvedPolicies();
+    // Policy extension
+    private final PolicySetExtension policy;
     
+    // Whether the user explictly requested the policy
+    private final boolean explicit;
+
     /**
-     * Set of intents always or may provided by the implementation/binding type.
-     * 
-     * @return Set of provided intents.
+     * @param policy The resolved policy extension.
+     * @param explicit True if the policy was explicitly requested by the user.
      */
-    Set<ProvidedIntent> getProvidedIntents();
+    public ResolvedPolicy(PolicySetExtension policy, boolean explicit) {
+        this.policy = policy;
+        this.explicit = explicit;
+    }
+
+    /**
+     * @return The resolved policy extension.
+     */
+    public final PolicySetExtension getPolicy() {
+        return policy;
+    }
+
+    /**
+     * @return True if the policy was explicitly requested by the user.
+     */
+    public final boolean isExplicit() {
+        return explicit;
+    }
 
 }

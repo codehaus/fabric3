@@ -19,9 +19,7 @@
 package org.fabric3.fabric.policy.registry;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
@@ -35,6 +33,8 @@ import org.fabric3.spi.model.instance.LogicalScaArtifact;
 import org.fabric3.spi.policy.registry.PolicyResolutionException;
 import org.fabric3.spi.policy.registry.PolicyResolutionResult;
 import org.fabric3.spi.policy.registry.PolicyResolver;
+import org.fabric3.spi.policy.registry.ProvidedIntent;
+import org.fabric3.spi.policy.registry.ResolvedPolicy;
 import org.fabric3.spi.services.definitions.DefinitionsRegistry;
 import org.osoa.sca.annotations.Reference;
 
@@ -73,11 +73,11 @@ public class DefaultPolicyResolver implements PolicyResolver {
         // TODO This is not the correct implementatopn based on the chat with Jeremy & Michael
         // We need to go to the binding type to get provided intents
         
-        Map<PolicySetExtension, Boolean> resolvedPolicies = new HashMap<PolicySetExtension, Boolean>();
-        Map<Intent, Boolean> providedIntents = new HashMap<Intent, Boolean>();
+        Set<ResolvedPolicy> resolvedPolicies = new HashSet<ResolvedPolicy>();
+        Set<ProvidedIntent> providedIntents = new HashSet<ProvidedIntent>();
         
         for(PolicySetExtension extension : resolvePolicies(intentNames)) {
-            resolvedPolicies.put(extension, Boolean.TRUE);
+            resolvedPolicies.add(new ResolvedPolicy(extension, Boolean.FALSE));
         }
         
         return new DefaultPolicyResolutionResult(providedIntents, resolvedPolicies);
@@ -103,11 +103,11 @@ public class DefaultPolicyResolver implements PolicyResolver {
         // TODO This is not the correct implementatopn based on the chat with Jeremy & Michael
         // We need to go to the implementation type to get provided intents
         
-        Map<PolicySetExtension, Boolean> resolvedPolicies = new HashMap<PolicySetExtension, Boolean>();
-        Map<Intent, Boolean> providedIntents = new HashMap<Intent, Boolean>();
+        Set<ResolvedPolicy> resolvedPolicies = new HashSet<ResolvedPolicy>();
+        Set<ProvidedIntent> providedIntents = new HashSet<ProvidedIntent>();
         
         for(PolicySetExtension extension : resolvePolicies(intentNames)) {
-            resolvedPolicies.put(extension, Boolean.TRUE);
+            resolvedPolicies.add(new ResolvedPolicy(extension, Boolean.FALSE));
         }
         
         return new DefaultPolicyResolutionResult(providedIntents, resolvedPolicies);
@@ -211,20 +211,20 @@ public class DefaultPolicyResolver implements PolicyResolver {
      */
     private class DefaultPolicyResolutionResult implements PolicyResolutionResult {
         
-        private final Map<Intent, Boolean> providedIntents;
-        private final Map<PolicySetExtension, Boolean> resolvedPolicies;
+        private final Set<ProvidedIntent> providedIntents;
+        private final Set<ResolvedPolicy> resolvedPolicies;
         
-        public DefaultPolicyResolutionResult(Map<Intent, Boolean> providedIntents, Map<PolicySetExtension, Boolean> resolvedPolicies) {
+        public DefaultPolicyResolutionResult(Set<ProvidedIntent> providedIntents, Set<ResolvedPolicy> resolvedPolicies) {
             this.providedIntents = providedIntents;
             this.resolvedPolicies = resolvedPolicies;
         }
 
-        public Map<Intent, Boolean> getProvidedIntents() {
-            return Collections.unmodifiableMap(providedIntents);
+        public Set<ProvidedIntent> getProvidedIntents() {
+            return Collections.unmodifiableSet(providedIntents);
         }
 
-        public Map<PolicySetExtension, Boolean> getResolvedPolicies() {
-            return Collections.unmodifiableMap(resolvedPolicies);
+        public Set<ResolvedPolicy> getResolvedPolicies() {
+            return Collections.unmodifiableSet(resolvedPolicies);
         }
         
     }

@@ -29,13 +29,16 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 public interface PolicyResolver {
     
     /**
-     * Resolves interaction intents defined against a binding.
+     * Resolves interaction intents defined against a binding. This is applicable for 
+     * 
      * 
      * @param logicalBinding Binding against which intents are declared.
      * @return Policy resolution result.
      * @throws PolicyResolutionException If unable to resolve the intents.
      */
     PolicyResolutionResult resolveIntents(LogicalBinding<?> logicalBinding) throws PolicyResolutionException;
+    
+    
     
     /**
      * Resolves implementation intents defined against an implementation.
