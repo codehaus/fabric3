@@ -46,24 +46,24 @@ public class DefaultWireResolverTestCase extends TestCase {
     private DefaultWireResolver resolver;
 
     public void testAutowireAtomicToAtomic() throws Exception {
-        LogicalComponent<CompositeImplementation> composite = createWiredComposite(Foo.class, Foo.class);
-        resolver.resolve(domain, composite);
+        LogicalComponent<CompositeImplementation> composite = createWiredComposite(domain, Foo.class, Foo.class);
+        resolver.resolve(composite);
         LogicalComponent<?> source = composite.getComponent(SOURCE_URI);
         assertEquals(TARGET_URI, source.getReference("ref").getTargetUris().get(0));
     }
 
     public void testAutowireAtomicToAtomicRequiresSuperInterface() throws Exception {
-        LogicalComponent<CompositeImplementation> composite = createWiredComposite(SuperFoo.class, Foo.class);
-        resolver.resolve(domain, composite);
+        LogicalComponent<CompositeImplementation> composite = createWiredComposite(domain, SuperFoo.class, Foo.class);
+        resolver.resolve(composite);
         LogicalComponent<?> source = composite.getComponent(SOURCE_URI);
-        resolver.resolve(domain, composite);
+        resolver.resolve(composite);
         assertEquals(TARGET_URI, source.getReference("ref").getTargetUris().get(0));
     }
 
     public void testAutowireAtomicToAtomicRequiresSubInterface() throws Exception {
-        LogicalComponent<CompositeImplementation> composite = createWiredComposite(Foo.class, SuperFoo.class);
+        LogicalComponent<CompositeImplementation> composite = createWiredComposite(domain, Foo.class, SuperFoo.class);
         try {
-            resolver.resolve(domain, composite);
+            resolver.resolve(composite);
             fail();
         } catch (AutowireTargetNotFoundException e) {
             // expected
@@ -71,9 +71,9 @@ public class DefaultWireResolverTestCase extends TestCase {
     }
 
     public void testAutowireAtomicToAtomicIncompatibleInterfaces() throws Exception {
-        LogicalComponent<CompositeImplementation> composite = createWiredComposite(Foo.class, String.class);
+        LogicalComponent<CompositeImplementation> composite = createWiredComposite(domain, Foo.class, String.class);
         try {
-            resolver.resolve(domain, composite);
+            resolver.resolve(composite);
             fail();
         } catch (AutowireTargetNotFoundException e) {
             // expected
@@ -81,24 +81,24 @@ public class DefaultWireResolverTestCase extends TestCase {
     }
 
     public void testNestedAutowireAtomicToAtomic() throws Exception {
-        LogicalComponent<CompositeImplementation> composite = createWiredComposite(Foo.class, Foo.class);
+        LogicalComponent<CompositeImplementation> composite = createWiredComposite(domain, Foo.class, Foo.class);
         LogicalComponent<CompositeImplementation> parent = createComposite("parent", composite);
         parent.addComponent(composite);
         parent.getDefinition().getImplementation().getComponentType().add(composite.getDefinition());
-        resolver.resolve(domain, parent);
+        resolver.resolve(parent);
         LogicalComponent<?> source = composite.getComponent(SOURCE_URI);
         assertEquals(TARGET_URI, source.getReference("ref").getTargetUris().get(0));
     }
 
     public void testAutowireIncludeInComposite() throws Exception {
-        LogicalComponent<CompositeImplementation> parent = createComposite("parent", null);
+        LogicalComponent<CompositeImplementation> parent = createComposite("parent", domain);
         LogicalComponent<CompositeImplementation> composite = createComposite("composite", parent);
         LogicalComponent<?> source = createSourceAtomic(Foo.class, composite);
         composite.addComponent(source);
         LogicalComponent<?> target = createTargetAtomic(Foo.class, composite);
         parent.addComponent(composite);
         parent.addComponent(target);
-        resolver.resolve(parent, composite);
+        resolver.resolve(composite);
     }
 
     public void testAutowireToSiblingIncludeInComposite() throws Exception {
@@ -109,7 +109,7 @@ public class DefaultWireResolverTestCase extends TestCase {
         LogicalComponent<?> target = createTargetAtomic(Foo.class, composite);
         parent.addComponent(composite);
         composite.addComponent(target);
-        resolver.resolve(parent, composite);
+        resolver.resolve(composite);
     }
 
 
@@ -121,8 +121,10 @@ public class DefaultWireResolverTestCase extends TestCase {
         domain = new LogicalComponent<CompositeImplementation>(domainUri, runtimeUri, null, null, null);
     }
 
-    private LogicalComponent<CompositeImplementation> createWiredComposite(Class<?> sourceClass, Class<?> targetClass) {
-        LogicalComponent<CompositeImplementation> composite = createComposite("composite", null);
+    private LogicalComponent<CompositeImplementation> createWiredComposite(LogicalComponent<CompositeImplementation> parent,
+                                                                           Class<?> sourceClass,
+                                                                           Class<?> targetClass) {
+        LogicalComponent<CompositeImplementation> composite = createComposite("composite", parent);
         LogicalComponent<?> source = createSourceAtomic(sourceClass, composite);
         composite.addComponent(source);
         Composite type = composite.getDefinition().getImplementation().getComponentType();

@@ -45,7 +45,8 @@ import org.fabric3.spi.util.UriHelper;
  */
 public class DefaultWireResolver implements WireResolver {
 
-    public void resolve(LogicalComponent<?> composite, LogicalComponent<?> component) throws ResolutionException {
+    public void resolve(LogicalComponent<?> component) throws ResolutionException {
+        LogicalComponent<?> composite = component.getParent();
         if (component.getComponents().isEmpty()) {
             resolveReferences(composite, component, false);
         } else {

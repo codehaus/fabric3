@@ -201,7 +201,7 @@ public abstract class AbstractAssembly implements Assembly {
         // resolve wires for each new component
         try {
             for (LogicalComponent<?> component : components) {
-                wireResolver.resolve(parent, component);
+                wireResolver.resolve(component);
             }
         } catch (ResolutionException e) {
             throw new ActivateException(e);

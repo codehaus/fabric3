@@ -32,10 +32,9 @@ public interface WireResolver {
      * Resolves wires for a component definition and its decendents. If component is a composite and the operation is an
      * include, the child references will be resolved against the target composite and the component.
      *
-     * @param targetComposite the target composite the component will be deployed into
      * @param component       the logical component to resolve for
      * @throws ResolutionException if an error occurs during resolution
      */
-    void resolve(LogicalComponent<?> targetComposite, LogicalComponent<?> component) throws ResolutionException;
+    void resolve(LogicalComponent<?> component) throws ResolutionException;
 
 }
