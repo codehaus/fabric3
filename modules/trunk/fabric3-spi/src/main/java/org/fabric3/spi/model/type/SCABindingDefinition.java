@@ -23,8 +23,9 @@ import org.fabric3.scdl.BindingDefinition;
  *
  * @version $Rev$ $Date$
  */
-public class SCABindingDefinition extends BindingDefinition {
+public final class SCABindingDefinition extends BindingDefinition {
     
     public static final SCABindingDefinition INSTANCE = new SCABindingDefinition();
+    
     
 }
