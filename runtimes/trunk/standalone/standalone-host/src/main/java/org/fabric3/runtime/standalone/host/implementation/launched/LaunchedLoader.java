@@ -25,7 +25,6 @@ import javax.xml.stream.XMLStreamReader;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.extension.loader.LoaderExtension;
-import org.fabric3.spi.Constants;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
@@ -35,7 +34,6 @@ import org.fabric3.spi.loader.LoaderUtil;
  * @version $Rev$ $Date$
  */
 public class LaunchedLoader extends LoaderExtension<Launched> {
-    private static final QName LAUNCHED = new QName(Constants.FABRIC3_NS, "launched");
 
     private final LaunchedComponentTypeLoader componentTypeLoader;
 
@@ -46,7 +44,7 @@ public class LaunchedLoader extends LoaderExtension<Launched> {
     }
 
     public QName getXMLType() {
-        return LAUNCHED;
+        return Launched.IMPLEMENTATION_LAUNCHED;
     }
 
     public Launched load(XMLStreamReader reader, LoaderContext loaderContext)

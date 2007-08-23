@@ -18,19 +18,27 @@
  */
 package org.fabric3.runtime.standalone.host.implementation.launched;
 
+import javax.xml.namespace.QName;
+
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Implementation;
+import org.fabric3.spi.Constants;
 
 /**
  * @version $Rev$ $Date$
  */
 public class Launched extends Implementation<PojoComponentType> {
+    public static final QName IMPLEMENTATION_LAUNCHED = new QName(Constants.FABRIC3_NS, "launched");
     private String implementationClass;
     private String factoryName;
 
     public Launched(String className, String factoryName) {
         this.implementationClass = className;
         this.factoryName = factoryName;
+    }
+
+    public QName getType() {
+        return IMPLEMENTATION_LAUNCHED;
     }
 
     public String getImplementationClass() {

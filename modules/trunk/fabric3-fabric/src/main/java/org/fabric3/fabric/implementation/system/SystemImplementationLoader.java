@@ -25,7 +25,6 @@ import javax.xml.stream.XMLStreamReader;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.extension.loader.LoaderExtension;
-import org.fabric3.spi.Constants;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
@@ -37,7 +36,6 @@ import org.fabric3.spi.loader.LoaderUtil;
  * @version $Rev$ $Date$
  */
 public class SystemImplementationLoader extends LoaderExtension<SystemImplementation> {
-    public static final QName SYSTEM_IMPLEMENTATION = new QName(Constants.FABRIC3_SYSTEM_NS, "implementation.system");
 
     private final SystemComponentTypeLoader componentTypeLoader;
 
@@ -49,7 +47,7 @@ public class SystemImplementationLoader extends LoaderExtension<SystemImplementa
 
     public SystemImplementation load(XMLStreamReader reader, LoaderContext loaderContext)
             throws XMLStreamException, LoaderException {
-        assert SYSTEM_IMPLEMENTATION.equals(reader.getName());
+        assert SystemImplementation.IMPLEMENTATION_SYSTEM.equals(reader.getName());
         String implClass = reader.getAttributeValue(null, "class");
         LoaderUtil.skipToEndElement(reader);
 
@@ -60,7 +58,7 @@ public class SystemImplementationLoader extends LoaderExtension<SystemImplementa
     }
 
     public QName getXMLType() {
-        return SYSTEM_IMPLEMENTATION;
+        return SystemImplementation.IMPLEMENTATION_SYSTEM;
     }
 
 }

@@ -16,6 +16,8 @@
  */
 package org.fabric3.groovy;
 
+import javax.xml.namespace.QName;
+
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Implementation;
 
@@ -25,6 +27,8 @@ import org.fabric3.scdl.Implementation;
  * @version $Rev$ $Date$
  */
 public class GroovyImplementation extends Implementation<PojoComponentType> {
+    public static final QName IMPLEMENTATION_GROOVY = new QName("http://www.fabric3.org/xmlns/groovy/1.0", "groovy");
+
     private String scriptName;
     private String className;
 
@@ -35,6 +39,10 @@ public class GroovyImplementation extends Implementation<PojoComponentType> {
         super(componentType);
         this.scriptName = scriptName;
         this.className = className;
+    }
+
+    public QName getType() {
+        return IMPLEMENTATION_GROOVY;
     }
 
     /**

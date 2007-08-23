@@ -18,6 +18,8 @@
  */
 package org.fabric3.fabric.implementation.singleton;
 
+import javax.xml.namespace.QName;
+
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Implementation;
 
@@ -33,6 +35,10 @@ public class SingletonImplementation extends Implementation<PojoComponentType> {
     public SingletonImplementation(PojoComponentType componentType, String implementationClass) {
         super(componentType);
         this.implementationClass = implementationClass;
+    }
+
+    public QName getType() {
+        throw new UnsupportedOperationException();
     }
 
     public String getImplementationClass() {

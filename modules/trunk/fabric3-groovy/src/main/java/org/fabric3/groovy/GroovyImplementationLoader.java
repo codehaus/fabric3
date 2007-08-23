@@ -18,7 +18,6 @@ package org.fabric3.groovy;
 
 import java.net.URL;
 import java.io.IOException;
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
@@ -45,7 +44,6 @@ import org.fabric3.scdl.Scope;
  */
 @EagerInit
 public class GroovyImplementationLoader implements StAXElementLoader<GroovyImplementation> {
-    private static final QName GROOVY = new QName("http://www.fabric3.org/xmlns/groovy/1.0", "groovy");
 
     private final LoaderRegistry registry;
     private final Introspector introspector;
@@ -61,12 +59,12 @@ public class GroovyImplementationLoader implements StAXElementLoader<GroovyImple
 
     @Init
     public void init() {
-        registry.registerLoader(GROOVY, this);
+        registry.registerLoader(GroovyImplementation.IMPLEMENTATION_GROOVY, this);
     }
 
     @Destroy
     public void destroy() {
-        registry.unregisterLoader(GROOVY);
+        registry.unregisterLoader(GroovyImplementation.IMPLEMENTATION_GROOVY);
     }
 
     public GroovyImplementation load(XMLStreamReader reader, LoaderContext context)

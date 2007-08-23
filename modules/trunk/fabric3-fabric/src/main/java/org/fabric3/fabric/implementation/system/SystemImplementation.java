@@ -18,8 +18,11 @@
  */
 package org.fabric3.fabric.implementation.system;
 
+import javax.xml.namespace.QName;
+
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Implementation;
+import org.fabric3.spi.Constants;
 
 /**
  * Represents the system composite implementation
@@ -27,9 +30,14 @@ import org.fabric3.scdl.Implementation;
  * @version $Rev$ $Date$
  */
 public class SystemImplementation extends Implementation<PojoComponentType> {
+    public static final QName IMPLEMENTATION_SYSTEM = new QName(Constants.FABRIC3_SYSTEM_NS, "implementation.system");
     private String implementationClass;
 
     public SystemImplementation() {
+    }
+
+    public QName getType() {
+        return IMPLEMENTATION_SYSTEM;
     }
 
     public SystemImplementation(String implementationClass) {

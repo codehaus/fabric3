@@ -18,13 +18,17 @@
  */
 package org.fabric3.itest.implementation.junit;
 
+import javax.xml.namespace.QName;
+
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Implementation;
+import org.fabric3.spi.Constants;
 
 /**
  * @version $Rev$ $Date$
  */
 public class ImplementationJUnit extends Implementation<PojoComponentType> {
+    public static final QName IMPLEMENTATION_JUNIT = new QName(Constants.FABRIC3_NS, "junit");
     private String implementationClass;
 
     /**
@@ -34,6 +38,10 @@ public class ImplementationJUnit extends Implementation<PojoComponentType> {
      */
     public ImplementationJUnit(String className) {
         this.implementationClass = className;
+    }
+
+    public QName getType() {
+        return IMPLEMENTATION_JUNIT;
     }
 
     /**

@@ -24,7 +24,6 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.osoa.sca.Constants;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.extension.loader.LoaderExtension;
@@ -43,20 +42,19 @@ import org.fabric3.spi.loader.MissingResourceException;
  * @version $Rev$ $Date$
  */
 public class ImplementationCompositeLoader extends LoaderExtension<CompositeImplementation> {
-    private static final QName IMPLEMENTATION_COMPOSITE = new QName(Constants.SCA_NS, "implementation.composite");
 
     public ImplementationCompositeLoader(@Reference LoaderRegistry registry) {
         super(registry);
     }
 
     public QName getXMLType() {
-        return IMPLEMENTATION_COMPOSITE;
+        return CompositeImplementation.IMPLEMENTATION_COMPOSITE;
     }
 
     public CompositeImplementation load(XMLStreamReader reader, LoaderContext loaderContext)
             throws XMLStreamException, LoaderException {
 
-        assert IMPLEMENTATION_COMPOSITE.equals(reader.getName());
+        assert CompositeImplementation.IMPLEMENTATION_COMPOSITE.equals(reader.getName());
         String nameAttr = reader.getAttributeValue(null, "name");
         if (nameAttr == null || nameAttr.length() == 0) {
             throw new InvalidNameException(nameAttr);

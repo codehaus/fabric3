@@ -18,6 +18,8 @@
  */
 package org.fabric3.scdl;
 
+import javax.xml.namespace.QName;
+
 /**
  * Represents a component implementation
  *
@@ -40,4 +42,11 @@ public abstract class Implementation<T extends AbstractComponentType<?, ?, ?>> e
     public void setComponentType(T componentType) {
         this.componentType = componentType;
     }
+
+    /**
+     * Returns the SCDL XML element corresponding to this type.
+     *
+     * @return the SCDL XML element corresponding to this type
+     */
+    public abstract QName getType();
 }

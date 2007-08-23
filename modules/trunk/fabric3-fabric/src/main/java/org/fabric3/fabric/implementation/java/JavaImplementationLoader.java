@@ -22,7 +22,6 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.extension.loader.LoaderExtension;
@@ -33,7 +32,6 @@ import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.PolicyHelper;
 
 public class JavaImplementationLoader extends LoaderExtension<JavaImplementation> {
-    public static final QName IMPLEMENTATION_JAVA = new QName(SCA_NS, "implementation.java");
 
     private final JavaComponentTypeLoader componentTypeLoader;
     private final PolicyHelper policyHelper;
@@ -49,13 +47,13 @@ public class JavaImplementationLoader extends LoaderExtension<JavaImplementation
 
     @Override
     public QName getXMLType() {
-        return IMPLEMENTATION_JAVA;
+        return JavaImplementation.IMPLEMENTATION_JAVA;
     }
 
     public JavaImplementation load(XMLStreamReader reader, LoaderContext loaderContext)
             throws XMLStreamException, LoaderException {
         
-        assert IMPLEMENTATION_JAVA.equals(reader.getName());
+        assert JavaImplementation.IMPLEMENTATION_JAVA.equals(reader.getName());
         
         JavaImplementation implementation = new JavaImplementation();
         String implClass = reader.getAttributeValue(null, "class");

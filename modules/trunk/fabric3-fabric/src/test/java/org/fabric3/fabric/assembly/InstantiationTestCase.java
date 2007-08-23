@@ -3,6 +3,8 @@ package org.fabric3.fabric.assembly;
 import java.net.URI;
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
 import junit.framework.TestCase;
 
 import org.fabric3.scdl.AbstractComponentType;
@@ -104,6 +106,9 @@ public class InstantiationTestCase extends TestCase {
     }
 
     private class MockImplementation extends Implementation<AbstractComponentType<?, ?, ?>> {
+        public QName getType() {
+            throw new UnsupportedOperationException();
+        }
 
     }
 }

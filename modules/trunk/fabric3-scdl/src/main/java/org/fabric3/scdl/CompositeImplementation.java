@@ -20,13 +20,20 @@ package org.fabric3.scdl;
 
 import javax.xml.namespace.QName;
 
+import org.osoa.sca.Constants;
+
 /**
  * A specialization of an implementation associated with composite components
  *
  * @version $Rev$ $Date$
  */
 public class CompositeImplementation extends Implementation<Composite> {
+    public static final QName IMPLEMENTATION_COMPOSITE = new QName(Constants.SCA_NS, "implementation.composite");
     private QName name;
+
+    public QName getType() {
+        return IMPLEMENTATION_COMPOSITE;
+    }
 
     public QName getName() {
         return name;

@@ -20,6 +20,8 @@ package org.fabric3.fabric.assembly.resolver;
 
 import java.net.URI;
 
+import javax.xml.namespace.QName;
+
 import junit.framework.TestCase;
 
 import org.fabric3.scdl.AbstractComponentType;
@@ -185,7 +187,9 @@ public class DefaultWireResolverTestCase extends TestCase {
     }
 
     private class MockAtomicImpl extends Implementation<MockComponentType> {
-
+        public QName getType() {
+            throw new UnsupportedOperationException();
+        }
     }
 
     private class MockComponentType extends AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property<?>> {

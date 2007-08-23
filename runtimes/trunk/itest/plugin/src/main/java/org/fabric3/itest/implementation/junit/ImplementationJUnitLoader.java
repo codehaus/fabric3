@@ -25,7 +25,6 @@ import javax.xml.stream.XMLStreamReader;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.extension.loader.LoaderExtension;
-import org.fabric3.spi.Constants;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
@@ -35,7 +34,6 @@ import org.fabric3.spi.loader.LoaderUtil;
  * @version $Rev$ $Date$
  */
 public class ImplementationJUnitLoader extends LoaderExtension<ImplementationJUnit> {
-    private static final QName JUNIT = new QName(Constants.FABRIC3_NS, "junit");
 
     private final JUnitComponentTypeLoader componentTypeLoader;
 
@@ -46,7 +44,7 @@ public class ImplementationJUnitLoader extends LoaderExtension<ImplementationJUn
     }
 
     public QName getXMLType() {
-        return JUNIT;
+        return ImplementationJUnit.IMPLEMENTATION_JUNIT;
     }
 
     public ImplementationJUnit load(XMLStreamReader reader, LoaderContext loaderContext)

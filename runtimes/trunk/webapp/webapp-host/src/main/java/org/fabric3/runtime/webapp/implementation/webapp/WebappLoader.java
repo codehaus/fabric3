@@ -35,7 +35,6 @@ import org.fabric3.scdl.Scope;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.ComponentType;
-import org.fabric3.spi.Constants;
 import org.fabric3.spi.idl.InvalidServiceContractException;
 import org.fabric3.spi.idl.java.InterfaceJavaIntrospector;
 import org.fabric3.spi.loader.LoaderContext;
@@ -48,7 +47,6 @@ import org.fabric3.spi.loader.UnrecognizedElementException;
  * @version $Rev$ $Date$
  */
 public class WebappLoader extends LoaderExtension<WebappImplementation> {
-    private static final QName WEBAPP = new QName(Constants.FABRIC3_NS, "webapp");
 
     private final InterfaceJavaIntrospector introspector;
 
@@ -59,7 +57,7 @@ public class WebappLoader extends LoaderExtension<WebappImplementation> {
     }
 
     public QName getXMLType() {
-        return WEBAPP;
+        return WebappImplementation.IMPLEMENTATION_WEBAPP;
     }
 
     public WebappImplementation load(XMLStreamReader reader, LoaderContext loaderContext)

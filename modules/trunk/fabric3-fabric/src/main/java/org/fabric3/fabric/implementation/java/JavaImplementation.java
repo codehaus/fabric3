@@ -18,6 +18,10 @@
  */
 package org.fabric3.fabric.implementation.java;
 
+import javax.xml.namespace.QName;
+
+import org.osoa.sca.Constants;
+
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Implementation;
 
@@ -26,8 +30,13 @@ import org.fabric3.scdl.Implementation;
  */
 public class JavaImplementation extends Implementation<PojoComponentType> {
     private String implementationClass;
+    public static final QName IMPLEMENTATION_JAVA = new QName(Constants.SCA_NS, "implementation.java");
 
     public JavaImplementation() {
+    }
+
+    public QName getType() {
+        return IMPLEMENTATION_JAVA;
     }
 
     public String getImplementationClass() {
