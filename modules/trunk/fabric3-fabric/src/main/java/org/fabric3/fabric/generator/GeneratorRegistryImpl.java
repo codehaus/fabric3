@@ -55,6 +55,7 @@ import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.type.SCABindingDefinition;
 import org.fabric3.spi.policy.registry.PolicyResolutionException;
 import org.fabric3.spi.policy.registry.PolicyResolver;
 import org.fabric3.spi.policy.registry.ResolvedPolicy;
@@ -219,7 +220,9 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         ServiceContract<?> contract = referenceDefinition.getServiceContract();
 
         Set<PolicySetExtension> policies = new HashSet<PolicySetExtension>();
-        // TODO handle default bindings
+        policies.addAll(getPolicies(new LogicalBinding<SCABindingDefinition>(SCABindingDefinition.INSTANCE, service)));
+        policies.addAll(getPolicies(new LogicalBinding<SCABindingDefinition>(SCABindingDefinition.INSTANCE, reference)));
+        
         PhysicalWireDefinition wireDefinition = createWireDefinition(contract, policies);
 
         Class<?> type = target.getDefinition().getImplementation().getClass();
