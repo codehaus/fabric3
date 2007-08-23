@@ -18,6 +18,8 @@
  */
 package org.fabric3.fabric.implementation.composite;
 
+import java.net.URL;
+import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -27,11 +29,13 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.loader.common.InvalidNameException;
+import org.fabric3.scdl.Composite;
+import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
-import org.fabric3.scdl.CompositeImplementation;
+import org.fabric3.spi.loader.MissingResourceException;
 
 /**
  * Loader that handles an &lt;implementation.composite&gt; element.
@@ -39,8 +43,7 @@ import org.fabric3.scdl.CompositeImplementation;
  * @version $Rev$ $Date$
  */
 public class ImplementationCompositeLoader extends LoaderExtension<CompositeImplementation> {
-    private static final QName IMPLEMENTATION_COMPOSITE =
-            new QName(Constants.SCA_NS, "implementation.composite");
+    private static final QName IMPLEMENTATION_COMPOSITE = new QName(Constants.SCA_NS, "implementation.composite");
 
     public ImplementationCompositeLoader(@Reference LoaderRegistry registry) {
         super(registry);
@@ -58,10 +61,21 @@ public class ImplementationCompositeLoader extends LoaderExtension<CompositeImpl
         if (nameAttr == null || nameAttr.length() == 0) {
             throw new InvalidNameException(nameAttr);
         }
-        QName name = LoaderUtil.getQName(nameAttr, loaderContext.getTargetNamespace(), reader.getNamespaceContext());
+        String namespace = loaderContext.getTargetNamespace();
+        NamespaceContext namespaceContext = reader.getNamespaceContext();
+        QName name = LoaderUtil.getQName(nameAttr, namespace, namespaceContext);
+        // for now, assume file name is the local name part
+        String file = name.getLocalPart() + ".composite";
+        URL url = loaderContext.getTargetClassLoader().getResource(file);
+        if (url == null) {
+            throw new MissingResourceException("Composite file not found", file);
+        }
+        Composite composite = registry.load(url, Composite.class, loaderContext);
         LoaderUtil.skipToEndElement(reader);
         CompositeImplementation impl = new CompositeImplementation();
-        impl.setName(name);
+        impl.setName(composite.getName());
+        impl.setComponentType(composite);
         return impl;
+
     }
 }
