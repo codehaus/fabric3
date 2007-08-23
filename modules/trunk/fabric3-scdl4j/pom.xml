@@ -44,4 +44,18 @@
             <artifactId>junit</artifactId>
         </dependency>
     </dependencies>
+    
+    <repositories>
+        <repository>
+            <id>repository.codehaus.org</id>
+            <name>Fabric3 Developer Snapshot Releases</name>
+            <url>http://codehaus.org/~aanderson/snapshots.repository/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>    
 </project>
