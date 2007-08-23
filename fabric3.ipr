@@ -339,7 +339,6 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-policy/fabric3-policy.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-policy/fabric3-policy.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-policy-spi/fabric3-policy-spi.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-policy-spi/fabric3-policy-spi.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-scdl/fabric3-scdl.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-scdl/fabric3-scdl.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-scdl4j/fabric3-scdl4j.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-scdl4j/fabric3-scdl4j.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-spi/fabric3-spi.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-spi/fabric3-spi.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-transform/fabric3-transform.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-transform/fabric3-transform.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-webapp-plugin/fabric3-webapp-plugin.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-webapp-plugin/fabric3-webapp-plugin.iml" />
