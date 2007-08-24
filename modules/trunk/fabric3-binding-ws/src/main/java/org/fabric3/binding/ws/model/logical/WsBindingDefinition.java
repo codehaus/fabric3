@@ -19,6 +19,8 @@
 
 package org.fabric3.binding.ws.model.logical;
 
+import java.net.URI;
+
 import org.fabric3.scdl.BindingDefinition;
 
 /**
@@ -27,5 +29,9 @@ import org.fabric3.scdl.BindingDefinition;
  * @version $Revision$ $Date$
  */
 public class WsBindingDefinition extends BindingDefinition {
+    
+    public WsBindingDefinition(URI targetUri) {
+        super(targetUri, WsBindingLoader.BINDING_QNAME);
+    }
 
 }

@@ -20,26 +20,32 @@ package org.fabric3.scdl;
 
 import java.net.URI;
 
+import javax.xml.namespace.QName;
+
 /**
  * The base representation of a binding specified in an assembly
  *
  * @version $Rev$ $Date$
  */
 public abstract class BindingDefinition extends PolicyAware {
+    
     private URI targetUri;
+    private QName type;
 
-    protected BindingDefinition() {
+    protected BindingDefinition(QName type) {
+        this(null, type);
     }
 
-    public BindingDefinition(URI targetUri) {
+    public BindingDefinition(URI targetUri, QName type) {
         this.targetUri = targetUri;
     }
 
     public URI getTargetUri() {
         return targetUri;
     }
-
-    public void setTargetUri(URI targetUri) {
-        this.targetUri = targetUri;
+    
+    public QName getType() {
+        return type;
     }
+    
 }

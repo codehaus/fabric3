@@ -18,10 +18,16 @@
  */
 package org.fabric3.binding.hessian.model.logical;
 
+import java.net.URI;
+
 import org.fabric3.scdl.BindingDefinition;
 
 /**
  * @version $Revision$ $Date$
  */
 public class HessianBindingDefinition extends BindingDefinition {
+    
+    public HessianBindingDefinition(URI targetUri) {
+        super(targetUri, HessianBindingLoader.BINDING_QNAME);
+    }
 }

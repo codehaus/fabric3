@@ -41,7 +41,7 @@ import org.osoa.sca.annotations.Reference;
 public class BurlapBindingLoader extends LoaderExtension<BurlapBindingDefinition> {
 
     /** Qualified name for the binding element. */
-    private static final QName BINDING_QNAME = 
+    public static final QName BINDING_QNAME = 
         new QName("http://www.fabric3.org/binding/burlap/0.2", "binding.burlap");
     
     private final PolicyHelper policyHelper;
@@ -63,7 +63,7 @@ public class BurlapBindingLoader extends LoaderExtension<BurlapBindingDefinition
     public BurlapBindingDefinition load(XMLStreamReader reader, LoaderContext loaderContext)
         throws XMLStreamException, LoaderException {
         
-        BurlapBindingDefinition bd = new BurlapBindingDefinition();
+        BurlapBindingDefinition bd = null;
         
         try {
 
@@ -71,7 +71,7 @@ public class BurlapBindingLoader extends LoaderExtension<BurlapBindingDefinition
             if(uri == null) {
                 throw new LoaderException("The uri attribute is not specified");
             }
-            bd.setTargetUri(new URI(uri));
+            bd = new BurlapBindingDefinition(new URI(uri));
             
             policyHelper.loadPolicySetsAndIntents(bd, reader);
             

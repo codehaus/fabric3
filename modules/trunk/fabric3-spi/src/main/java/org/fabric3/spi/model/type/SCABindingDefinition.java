@@ -16,7 +16,10 @@
  */
 package org.fabric3.spi.model.type;
 
+import javax.xml.namespace.QName;
+
 import org.fabric3.scdl.BindingDefinition;
+import org.osoa.sca.Constants;
 
 /**
  * Represents the SCA binding
@@ -26,6 +29,10 @@ import org.fabric3.scdl.BindingDefinition;
 public final class SCABindingDefinition extends BindingDefinition {
     
     public static final SCABindingDefinition INSTANCE = new SCABindingDefinition();
+    
+    private SCABindingDefinition() {
+        super(new QName(Constants.SCA_NS, "binding.sca"));
+    }
     
     
 }

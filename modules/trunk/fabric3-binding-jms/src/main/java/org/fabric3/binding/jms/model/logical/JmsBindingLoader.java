@@ -48,7 +48,7 @@ import org.osoa.sca.annotations.Reference;
 public class JmsBindingLoader extends LoaderExtension<JmsBindingDefinition> {
 
     /** Qualified name for the binding element. */
-    private static final QName BINDING_QNAME = new QName(Constants.SCA_NS, "binding.jms");
+    public static final QName BINDING_QNAME = new QName(Constants.SCA_NS, "binding.jms");
     
     private final PolicyHelper policyHelper;
 

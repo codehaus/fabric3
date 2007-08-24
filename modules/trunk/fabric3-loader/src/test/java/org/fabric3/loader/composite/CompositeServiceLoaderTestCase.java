@@ -87,7 +87,7 @@ public class CompositeServiceLoaderTestCase extends TestCase {
         expect(mockReader.next()).andReturn(END_ELEMENT);
         replay(mockReader);
 
-        BindingDefinition binding = new BindingDefinition() {
+        BindingDefinition binding = new BindingDefinition(null) {
         };
         expect(mockRegistry.load(mockReader, ModelObject.class, loaderContext)).andReturn(binding).times(2);
         replay(mockRegistry);

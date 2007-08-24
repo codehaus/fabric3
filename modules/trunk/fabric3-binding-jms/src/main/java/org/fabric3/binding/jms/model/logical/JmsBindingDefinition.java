@@ -36,15 +36,10 @@ public class JmsBindingDefinition extends BindingDefinition {
     private JmsBindingMetadata metadata;
 
     /**
-     * Default constructor.
-     */
-    public JmsBindingDefinition() {
-    }
-
-    /**
      * @param metadata Metadata to be initialized.
      */
     public JmsBindingDefinition(JmsBindingMetadata metadata) {
+        super(JmsBindingLoader.BINDING_QNAME);
         this.metadata = metadata;
     }
 

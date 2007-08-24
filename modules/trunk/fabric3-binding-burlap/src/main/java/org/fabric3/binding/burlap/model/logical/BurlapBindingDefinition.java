@@ -18,10 +18,16 @@
  */
 package org.fabric3.binding.burlap.model.logical;
 
+import java.net.URI;
+
 import org.fabric3.scdl.BindingDefinition;
 
 /**
  * @version $Revision$ $Date$
  */
 public class BurlapBindingDefinition extends BindingDefinition {
+    
+    public BurlapBindingDefinition(URI targetUri) {
+        super(targetUri, BurlapBindingLoader.BINDING_QNAME);
+    }
 }

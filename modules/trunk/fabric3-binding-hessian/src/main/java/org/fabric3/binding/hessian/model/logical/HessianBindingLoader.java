@@ -41,7 +41,7 @@ import org.osoa.sca.annotations.Reference;
 public class HessianBindingLoader extends LoaderExtension<HessianBindingDefinition> {
 
     /** Qualified name for the binding element. */
-    private static final QName BINDING_QNAME = 
+    public static final QName BINDING_QNAME = 
         new QName("http://www.fabric3.org/binding/hessian/0.1", "binding.hessian");
     
     private final PolicyHelper policyHelper;
@@ -69,7 +69,7 @@ public class HessianBindingLoader extends LoaderExtension<HessianBindingDefiniti
     public HessianBindingDefinition load(XMLStreamReader reader, LoaderContext loaderContext)
         throws XMLStreamException, LoaderException {
         
-        HessianBindingDefinition bd = new HessianBindingDefinition();
+        HessianBindingDefinition bd = null;
         
         try {
 
@@ -77,7 +77,7 @@ public class HessianBindingLoader extends LoaderExtension<HessianBindingDefiniti
             if(uri == null) {
                 throw new LoaderException("The uri attribute is not specified");
             }
-            bd.setTargetUri(new URI(uri));
+            bd = new HessianBindingDefinition(new URI(uri));
             
             policyHelper.loadPolicySetsAndIntents(bd, reader);
             

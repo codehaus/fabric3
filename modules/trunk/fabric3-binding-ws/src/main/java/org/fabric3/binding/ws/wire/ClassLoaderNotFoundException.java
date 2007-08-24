@@ -22,6 +22,12 @@ import org.fabric3.spi.builder.WiringException;
  * @version $Rev$ $Date$
  */
 public class ClassLoaderNotFoundException extends WiringException {
+    
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -1214253981735887867L;
+
     protected ClassLoaderNotFoundException(String message, String identifier) {
         super(message, identifier);
     }

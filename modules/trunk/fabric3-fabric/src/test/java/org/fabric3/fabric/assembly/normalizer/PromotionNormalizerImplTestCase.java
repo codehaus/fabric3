@@ -218,18 +218,26 @@ public class PromotionNormalizerImplTestCase extends TestCase {
     }
 
     private class MockBinding extends BindingDefinition {
-
+        private MockBinding() {
+            super(null);
+        }
     }
 
     private class MockBinding2 extends BindingDefinition {
-
+        private MockBinding2() {
+            super(null);
+        }
     }
 
     private class MockBinding3 extends BindingDefinition {
-
+        private MockBinding3() {
+            super(null);
+        }
     }
 
     private class MockBinding4 extends BindingDefinition {
-
+        private MockBinding4() {
+            super(null);
+        }
     }
 }

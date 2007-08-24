@@ -22,8 +22,6 @@ import java.util.Hashtable;
 
 import javax.naming.Context;
 
-import org.fabric3.scdl.BindingDefinition;
-
 /**
  * Logical model object for JMS binding definition. TODO Support for overriding
  * request connection, response connection and operation properties from a
@@ -31,7 +29,7 @@ import org.fabric3.scdl.BindingDefinition;
  * 
  * @version $Revision$ $Date$
  */
-public class JmsBindingMetadata extends BindingDefinition {
+public class JmsBindingMetadata {
 
     /**
      * Correlation scheme.

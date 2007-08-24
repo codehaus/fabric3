@@ -42,7 +42,7 @@ import org.osoa.sca.annotations.Reference;
 public class WsBindingLoader extends LoaderExtension<WsBindingDefinition> {
 
     /** Qualified name for the binding element. */
-    private static final QName BINDING_QNAME =  new QName(Constants.SCA_NS, "binding.ws");
+    public static final QName BINDING_QNAME =  new QName(Constants.SCA_NS, "binding.ws");
     
     private final PolicyHelper policyHelper;
 
@@ -69,7 +69,7 @@ public class WsBindingLoader extends LoaderExtension<WsBindingDefinition> {
     public WsBindingDefinition load(XMLStreamReader reader, LoaderContext loaderContext)
         throws XMLStreamException, LoaderException {
 
-        WsBindingDefinition bd = new WsBindingDefinition();
+        WsBindingDefinition bd = null;
 
         try {
 
@@ -77,7 +77,7 @@ public class WsBindingLoader extends LoaderExtension<WsBindingDefinition> {
             if(uri == null) {
                 throw new LoaderException("The uri attribute is not specified");
             }
-            bd.setTargetUri(new URI(uri));
+            bd = new WsBindingDefinition(new URI(uri));
             
             policyHelper.loadPolicySetsAndIntents(bd, reader);
 
