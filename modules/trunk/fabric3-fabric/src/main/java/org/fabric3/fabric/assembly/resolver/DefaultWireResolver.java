@@ -46,30 +46,11 @@ import org.fabric3.spi.util.UriHelper;
 public class DefaultWireResolver implements WireResolver {
 
     public void resolve(LogicalComponent<?> component) throws ResolutionException {
-        LogicalComponent<?> composite = component.getParent();
         if (component.getComponents().isEmpty()) {
-            resolveReferences(composite, component, false);
+            resolveReferences(component);
         } else {
             for (LogicalComponent<?> child : component.getComponents()) {
-                if (!child.getComponents().isEmpty()) {
-                    // resolve children
-                    resolveInternal(composite, child);
-                } else {
-                    // no children, resolve references directly using include semantics
-                    resolveReferences(composite, child, true);
-                }
-            }
-        }
-    }
-
-    private void resolveInternal(LogicalComponent<?> targetComposite, LogicalComponent<?> component)
-            throws ResolutionException {
-        if (component.getComponents().isEmpty()) {
-            resolveReferences(targetComposite, component, false);
-        } else {
-            for (LogicalComponent<?> child : component.getComponents()) {
-                // resolve children
-                resolveInternal(component, child);
+                resolve(child);
             }
         }
     }
@@ -77,13 +58,11 @@ public class DefaultWireResolver implements WireResolver {
     /**
      * Resolves component references
      *
-     * @param composite the target parent component
      * @param component the component containing the references to resolve
-     * @param include   if true, the component's parent
      * @throws ResolutionException if an error occurs during resolution
      */
-    private void resolveReferences(LogicalComponent<?> composite, LogicalComponent<?> component, boolean include)
-            throws ResolutionException {
+    private void resolveReferences(LogicalComponent<?> component) throws ResolutionException {
+        LogicalComponent<?> composite = component.getParent();
         ComponentDefinition<? extends Implementation<?>> definition = component.getDefinition();
         AbstractComponentType<?, ?, ?> componentType = definition.getImplementation().getComponentType();
         Map<String, ComponentReference> targets = definition.getReferences();
@@ -101,14 +80,7 @@ public class DefaultWireResolver implements WireResolver {
                 boolean required = reference.isRequired();
                 Autowire autowire = calculateAutowire(composite, component);
                 if (autowire == Autowire.ON) {
-                    URI targetUri = null;
-                    if (include) {
-                        // for an include, search the siblings prior to the target composite
-                        targetUri = resolveByType(component.getParent(), component, referenceName, requiredContract);
-                    }
-                    if (targetUri == null) {
-                        targetUri = resolveByType(composite, component, referenceName, requiredContract);
-                    }
+                    URI targetUri = resolveByType(composite, component, referenceName, requiredContract);
                     if (targetUri == null && required) {
                         URI source = logicalReference.getUri();
                         throw new AutowireTargetNotFoundException("No suitable target found for", source);
@@ -138,11 +110,7 @@ public class DefaultWireResolver implements WireResolver {
                     ServiceContract requiredContract = reference.getServiceContract();
                     String fragment = target.getName();
                     boolean required = reference.isRequired();
-                    URI targetUri = null;
-                    if (include) {
-                        // for an include, search the siblings prior to the target composite
-                        targetUri = resolveByType(component.getParent(), component, referenceName, requiredContract);
-                    }
+                    URI targetUri = resolveByType(component.getParent(), component, referenceName, requiredContract);
                     if (targetUri == null) {
                         // search the target compoisite
                         targetUri = resolveByType(composite, component, fragment, requiredContract);

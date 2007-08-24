@@ -93,14 +93,12 @@ public class DefaultWireResolverTestCase extends TestCase {
     }
 
     public void testAutowireIncludeInComposite() throws Exception {
-        LogicalComponent<CompositeImplementation> parent = createComposite("parent", domain);
-        LogicalComponent<CompositeImplementation> composite = createComposite("composite", parent);
+        LogicalComponent<CompositeImplementation> composite = createComposite("composite", domain);
         LogicalComponent<?> source = createSourceAtomic(Foo.class, composite);
         composite.addComponent(source);
         LogicalComponent<?> target = createTargetAtomic(Foo.class, composite);
-        parent.addComponent(composite);
-        parent.addComponent(target);
-        resolver.resolve(composite);
+        composite.addComponent(target);
+        resolver.resolve(source);
     }
 
     public void testAutowireToSiblingIncludeInComposite() throws Exception {
