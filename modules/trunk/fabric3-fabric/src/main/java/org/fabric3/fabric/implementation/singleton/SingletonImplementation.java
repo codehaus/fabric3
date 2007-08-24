@@ -38,7 +38,7 @@ public class SingletonImplementation extends Implementation<PojoComponentType> {
     }
 
     public QName getType() {
-        throw new UnsupportedOperationException();
+        return null;
     }
 
     public String getImplementationClass() {

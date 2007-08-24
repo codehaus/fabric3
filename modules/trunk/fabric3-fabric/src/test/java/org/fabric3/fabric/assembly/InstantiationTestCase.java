@@ -107,7 +107,7 @@ public class InstantiationTestCase extends TestCase {
 
     private class MockImplementation extends Implementation<AbstractComponentType<?, ?, ?>> {
         public QName getType() {
-            throw new UnsupportedOperationException();
+            return null;
         }
 
     }

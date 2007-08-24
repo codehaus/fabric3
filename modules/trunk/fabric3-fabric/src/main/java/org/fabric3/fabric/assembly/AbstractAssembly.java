@@ -283,7 +283,7 @@ public abstract class AbstractAssembly implements Assembly {
         LogicalComponent<I> component = new LogicalComponent<I>(uri, runtimeId, definition, parent, key);
 
         I impl = definition.getImplementation();
-        if (CompositeImplementation.class.isInstance(impl)) {
+        if (CompositeImplementation.IMPLEMENTATION_COMPOSITE.equals(impl.getType())) {
             // this component is implemented by a composite so we need to create its children
             // and promote services and references
             @SuppressWarnings({"unchecked"})
@@ -354,8 +354,7 @@ public abstract class AbstractAssembly implements Assembly {
      */
     protected void normalize(LogicalComponent<?> component) {
         Implementation<?> implementation = component.getDefinition().getImplementation();
-        AbstractComponentType<?, ?, ?> type = implementation.getComponentType();
-        if (Composite.class.isInstance(type)) {
+        if (CompositeImplementation.IMPLEMENTATION_COMPOSITE.equals(implementation.getType())) {
             for (LogicalComponent<?> child : component.getComponents()) {
                 normalize(child);
             }
@@ -410,7 +409,7 @@ public abstract class AbstractAssembly implements Assembly {
             throws GenerationException, ResolutionException {
         ComponentDefinition<? extends Implementation<?>> definition = component.getDefinition();
         Implementation<?> implementation = definition.getImplementation();
-        if (CompositeImplementation.class.isInstance(implementation)) {
+        if (CompositeImplementation.IMPLEMENTATION_COMPOSITE.equals(implementation.getType())) {
             for (LogicalComponent<?> child : component.getComponents()) {
                 // if the component is already running on a node (e.g. during recovery), skip provisioning
                 if (child.isActive()) {
