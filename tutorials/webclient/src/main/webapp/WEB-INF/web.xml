@@ -31,7 +31,7 @@
 
     <context-param>
         <param-name>fabric3.systemScdlPath</param-name>
-        <param-value>webclient.scdl</param-value>
+        <!--<param-value>webclient.composite</param-value>-->
     </context-param>
     <context-param>
         <param-name>fabric3.component</param-name>

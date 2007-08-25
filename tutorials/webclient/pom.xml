@@ -47,13 +47,13 @@
         <dependency>
             <groupId>org.codehaus.fabric3.spec</groupId>
             <artifactId>sca-api-r1.0</artifactId>
-            <version>0.1</version>
+            <version>0.2-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3.webapp</groupId>
             <artifactId>webapp-host</artifactId>
-            <version>0.1</version>
+            <version>0.2-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -67,21 +67,25 @@
             <artifactId>geronimo-j2ee-connector_1.5_spec</artifactId>
             <version>1.0.1</version>
         </dependency>
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <version>1.1</version>
+        </dependency>
         <!--
         Dependencies for Web Services
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-binding-ws</artifactId>
-            <version>0.1</version>
+            <version>0.2-SNAPSHOT</version>
         </dependency>
 
         -->
-        <!--
-        Dependencies for Hessian/Burlap
+        <!--Dependencies for Hessian/Burlap
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-binding-hessian</artifactId>
-            <version>0.1</version>
+            <version>0.2-SNAPSHOT</version>
         </dependency>
         -->
         <!--
@@ -89,7 +93,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-binding-jms</artifactId>
-            <version>0.1</version>
+            <version>0.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.activemq</groupId>
@@ -104,4 +108,33 @@
 
     </dependencies>
 
+    <build>
+        <finalName>${artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.fabric3</groupId>
+                <artifactId>fabric3-webapp-plugin</artifactId>
+                <version>0.2-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <id>fabric3-war</id>
+                        <goals>
+                            <goal>fabric3-war</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <runTimeVersion>0.2-SNAPSHOT</runTimeVersion>
+                    <extensions>
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-binding-hessian</artifactId>
+                            <version>0.2-SNAPSHOT</version>
+                        </dependency>
+                    </extensions>
+
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
