@@ -2,16 +2,16 @@
   <name>fabric3-itest-plugin</name>
   <comment>Fabric3 Integration Test Maven Plugin.</comment>
   <projects>
-    <project>fabric3-maven</project>
-    <project>fabric3-policy-spi</project>
-    <project>fabric3-extension</project>
-    <project>fabric3-transform</project>
     <project>fabric3-scdl</project>
-    <project>fabric3-fabric</project>
-    <project>fabric3-loader</project>
-    <project>fabric3-pojo</project>
+    <project>fabric3-transform</project>
     <project>fabric3-spi</project>
+    <project>fabric3-policy-spi</project>
+    <project>fabric3-pojo</project>
+    <project>fabric3-maven</project>
     <project>fabric3-policy</project>
+    <project>fabric3-extension</project>
+    <project>fabric3-loader</project>
+    <project>fabric3-fabric</project>
   </projects>
   <buildSpec>
     <buildCommand>
