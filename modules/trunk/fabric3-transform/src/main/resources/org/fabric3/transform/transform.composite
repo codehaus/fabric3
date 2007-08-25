@@ -72,6 +72,11 @@
         <system:implementation.system class="org.fabric3.transform.dom2java.String2Class"/>
         <reference name="registry" target="pullTransformerRegistry"/>
     </component>
+    
+    <component name="String2Date">
+        <system:implementation.system class="org.fabric3.transform.dom2java.String2Date"/>
+        <reference name="registry" target="pullTransformerRegistry"/>
+    </component>
 
     <component name="String2String">
         <system:implementation.system class="org.fabric3.transform.dom2java.String2String"/>

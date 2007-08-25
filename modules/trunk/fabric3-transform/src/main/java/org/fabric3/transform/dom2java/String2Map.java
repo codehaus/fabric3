@@ -19,16 +19,15 @@ package org.fabric3.transform.dom2java;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.fabric3.scdl.DataType;
+import org.fabric3.spi.model.type.JavaClass;
+import org.fabric3.spi.model.type.XSDSimpleType;
+import org.fabric3.spi.transform.TransformContext;
+import org.fabric3.spi.transform.TransformationException;
+import org.fabric3.transform.AbstractPullTransformer;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
-import org.fabric3.transform.AbstractPullTransformer;
-import org.fabric3.spi.model.type.XSDSimpleType;
-import org.fabric3.spi.model.type.JavaClass;
-import org.fabric3.scdl.DataType;
-import org.fabric3.spi.transform.TransformationException;
-import org.fabric3.spi.transform.TransformContext;
 
 /**
  * Expects the property to be dfined in the format,
@@ -40,7 +39,10 @@ import org.fabric3.spi.transform.TransformContext;
  * @version $Rev$ $Date$
  */
 public class String2Map extends AbstractPullTransformer<Node, Map<String, String>> {
+    
     private static final XSDSimpleType SOURCE = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
+    
+    @SuppressWarnings("unchecked")
     private static final JavaClass<Map> TARGET = new JavaClass<Map>(Map.class);
 
     public DataType<?> getSourceType() {

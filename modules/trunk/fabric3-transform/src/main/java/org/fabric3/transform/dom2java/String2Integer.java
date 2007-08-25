@@ -41,6 +41,10 @@ public class String2Integer extends AbstractPullTransformer<Node, Integer> {
     }
 
     public Integer transform(Node node, TransformContext context) throws TransformationException {
-        return Integer.valueOf(node.getTextContent());
+        try {
+            return Integer.valueOf(node.getTextContent());
+        } catch(NumberFormatException ex) {
+            throw new TransformationException("Unsupportable integer " + node.getTextContent(), ex);
+        }
     }
 }

@@ -16,29 +16,31 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-
 package org.fabric3.transform.dom2java;
 
-import java.util.Map;
+import java.io.ByteArrayInputStream;
+
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Node;
 
-public class String2MapTestCase extends BaseTransformTest {
+import junit.framework.TestCase;
 
-    public void testTransform() throws Exception {
-
-        String2Map string2Map = new String2Map();
-
-        String xml = "<value><apple>yellow</apple><lime>green</lime><grape>black</grape></value>";
-
-        Node node = getNode(xml);
-        
-        Map<String, String> map = string2Map.transform(node, null);
-
-        assertEquals(3, map.size());
-        assertEquals("yellow", map.get("apple"));
-        assertEquals("green", map.get("lime"));
-        assertEquals("black", map.get("grape"));
-    }
-
+/**
+ * Base class for Transform Tests
+ */
+public class BaseTransformTest extends TestCase {
+	
+	
+	/**
+	 * @param xml - the xml to built into a dom node
+	 * @return dom Node
+	 */
+	protected Node getNode(final String xml) throws Exception {
+		final Node node = DocumentBuilderFactory.newInstance()
+				.newDocumentBuilder().parse(
+						new ByteArrayInputStream(xml.getBytes()))
+				.getDocumentElement();
+		return node;
+	}
 }
