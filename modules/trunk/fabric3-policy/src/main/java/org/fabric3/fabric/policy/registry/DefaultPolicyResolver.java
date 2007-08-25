@@ -24,6 +24,9 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
+import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.definitions.BindingType;
+import org.fabric3.scdl.definitions.ImplementationType;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.scdl.definitions.PolicySetExtension;
@@ -59,28 +62,25 @@ public class DefaultPolicyResolver implements PolicyResolver {
      * @see org.fabric3.spi.policy.registry.PolicyResolver#resolveIntents(org.fabric3.spi.model.instance.LogicalBinding)
      */
     public PolicyResolutionResult resolveIntents(LogicalBinding<?> logicalBinding) throws PolicyResolutionException {
+        
+        QName type = logicalBinding.getType();
+        BindingType bindingType = definitionsRegistry.getDefinition(type, BindingType.class);
+        
+        Set<QName> alwaysProvidedIntents = bindingType.getAlwaysProvide();
+        Set<QName> mayProvidedIntents = bindingType.getMayProvide();
 
         // Aggregate all the intents from the ancestors
         Set<QName> intentNames = aggregateIntents(logicalBinding);
+        intentNames.removeAll(alwaysProvidedIntents);
+        intentNames.removeAll(mayProvidedIntents);
 
         // Expand all the profile intents
         Set<Intent> requiredIntents = resolveProfileIntents(intentNames);
 
         // Remove intents not applicable to the artifact
-        // TODO for default bindings these may need to change
         filterInvalidIntents(Intent.BINDING, requiredIntents);
         
-        // TODO This is not the correct implementatopn based on the chat with Jeremy & Michael
-        // We need to go to the binding type to get provided intents
-        
-        Set<ResolvedPolicy> resolvedPolicies = new HashSet<ResolvedPolicy>();
-        Set<ProvidedIntent> providedIntents = new HashSet<ProvidedIntent>();
-        
-        for(PolicySetExtension extension : resolvePolicies(intentNames)) {
-            resolvedPolicies.add(new ResolvedPolicy(extension, Boolean.FALSE));
-        }
-        
-        return new DefaultPolicyResolutionResult(providedIntents, resolvedPolicies);
+        return resolvePolicy(alwaysProvidedIntents, mayProvidedIntents, intentNames);
         
     }
 
@@ -88,11 +88,20 @@ public class DefaultPolicyResolver implements PolicyResolver {
      * @see org.fabric3.spi.policy.registry.PolicyResolver#resolveIntents(org.fabric3.spi.model.instance.LogicalComponent)
      */
     public PolicyResolutionResult resolveIntents(LogicalComponent<?> logicalComponent) throws PolicyResolutionException {
+        
+        Implementation<?> implementation = logicalComponent.getDefinition().getImplementation();
+        QName type = implementation.getType();
+        ImplementationType implementationType = definitionsRegistry.getDefinition(type, ImplementationType.class);
+        
+        Set<QName> alwaysProvidedIntents = implementationType.getAlwaysProvide();
+        Set<QName> mayProvidedIntents = implementationType.getMayProvide();
 
         // Aggregate all the intents from the ancestors
         Set<QName> intentNames = new HashSet<QName>();
         intentNames.addAll(logicalComponent.getDefinition().getImplementation().getIntents());
         intentNames.addAll(aggregateIntents(logicalComponent));
+        intentNames.removeAll(alwaysProvidedIntents);
+        intentNames.removeAll(mayProvidedIntents);
 
         // Expand all the profile intents
         Set<Intent> requiredIntents = resolveProfileIntents(intentNames);
@@ -100,17 +109,7 @@ public class DefaultPolicyResolver implements PolicyResolver {
         // Remove intents not applicable to the artifact
         filterInvalidIntents(Intent.IMPLEMENTATION, requiredIntents);
         
-        // TODO This is not the correct implementatopn based on the chat with Jeremy & Michael
-        // We need to go to the implementation type to get provided intents
-        
-        Set<ResolvedPolicy> resolvedPolicies = new HashSet<ResolvedPolicy>();
-        Set<ProvidedIntent> providedIntents = new HashSet<ProvidedIntent>();
-        
-        for(PolicySetExtension extension : resolvePolicies(intentNames)) {
-            resolvedPolicies.add(new ResolvedPolicy(extension, Boolean.FALSE));
-        }
-        
-        return new DefaultPolicyResolutionResult(providedIntents, resolvedPolicies);
+        return resolvePolicy(alwaysProvidedIntents, mayProvidedIntents, intentNames);
         
     }
 
@@ -226,6 +225,28 @@ public class DefaultPolicyResolver implements PolicyResolver {
         public Set<ResolvedPolicy> getResolvedPolicies() {
             return Collections.unmodifiableSet(resolvedPolicies);
         }
+        
+    }
+
+    /*
+     * Resolves the policy.
+     */
+    private PolicyResolutionResult resolvePolicy(Set<QName> alwaysProvidedIntents, Set<QName> mayProvidedIntents, Set<QName> intentNames) {
+        
+        Set<ResolvedPolicy> resolvedPolicies = new HashSet<ResolvedPolicy>();
+        for(PolicySetExtension extension : resolvePolicies(intentNames)) {
+            resolvedPolicies.add(new ResolvedPolicy(extension, Boolean.FALSE));
+        }
+        
+        Set<ProvidedIntent> providedIntents = new HashSet<ProvidedIntent>();
+        for(QName intentName : alwaysProvidedIntents) {
+            providedIntents.add(new ProvidedIntent(definitionsRegistry.getDefinition(intentName, Intent.class), true));
+        }
+        for(QName intentName : mayProvidedIntents) {
+            providedIntents.add(new ProvidedIntent(definitionsRegistry.getDefinition(intentName, Intent.class), false));
+        }
+        
+        return new DefaultPolicyResolutionResult(providedIntents, resolvedPolicies);
         
     }
 
