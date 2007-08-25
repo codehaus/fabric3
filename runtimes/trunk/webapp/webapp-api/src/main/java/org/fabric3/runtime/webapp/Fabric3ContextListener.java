@@ -20,14 +20,15 @@ package org.fabric3.runtime.webapp;
 
 import java.net.URI;
 import java.net.URL;
-import java.util.concurrent.Future;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import org.fabric3.host.Fabric3RuntimeException;
 import org.fabric3.host.runtime.Bootstrapper;
+import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.host.runtime.ShutdownException;
@@ -73,6 +74,9 @@ public class Fabric3ContextListener implements ServletContextListener {
             URI componentId = new URI(utils.getInitParameter(COMPONENT_PARAM, "webapp"));
             String scdlPath = utils.getInitParameter(APPLICATION_SCDL_PATH_PARAM, APPLICATION_SCDL_PATH_DEFAULT);
             URL scdl = servletContext.getResource(scdlPath);
+            if (scdl == null) {
+                throw new InitializationException("Web composite not found");
+            }
 
             boolean online = Boolean.valueOf(utils.getInitParameter(ONLINE_PARAM, "true"));
             WebappHostInfo info = new WebappHostInfoImpl(servletContext,
@@ -123,7 +127,7 @@ public class Fabric3ContextListener implements ServletContextListener {
             servletContext.removeAttribute(RUNTIME_ATTRIBUTE);
         }
         try {
-            Future<Void> future=  coordinator.shutdown();
+            Future<Void> future = coordinator.shutdown();
             future.get();
         } catch (ShutdownException e) {
             servletContext.log("Error shutting runtume down", e);
