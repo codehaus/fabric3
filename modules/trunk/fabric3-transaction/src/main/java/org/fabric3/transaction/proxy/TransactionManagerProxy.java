@@ -32,6 +32,7 @@ import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
+import org.fabric3.transaction.TxException;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
@@ -40,7 +41,8 @@ import org.osoa.sca.annotations.Reference;
 /**
  * Transaction manager proxy. This class will proxy an injected transaction manager. If the delegate 
  * instance is not injected, it will try to lookup the transaction manager from a JNDI namespace. By 
- * default the name used for lookup is <code>javax/transaction/TransactionManager</code>.
+ * default the name used for lookup is <code>javax/transaction/TransactionManager</code>. This class 
+ * also propogates a uniform exception.
  * 
  * @version $Revision$ $Date$
  */
@@ -134,64 +136,112 @@ public class TransactionManagerProxy implements TransactionManager {
     /**
      * @see javax.transaction.TransactionManager#begin()
      */
-    public void begin() throws NotSupportedException, SystemException {
-        delegate.begin();
+    public void begin() throws TxException {
+        try {
+            delegate.begin();
+        } catch (NotSupportedException e) {
+            throw new TxException(e);
+        } catch (SystemException e) {
+            throw new TxException(e);
+        }
     }
 
     /**
      * @see javax.transaction.TransactionManager#commit()
      */
-    public void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException, RollbackException, SecurityException, SystemException {
-        delegate.commit();
+    public void commit() throws TxException {
+        try {
+            delegate.commit();
+        } catch (HeuristicMixedException e) {
+            throw new TxException(e);
+        } catch (HeuristicRollbackException e) {
+            throw new TxException(e);
+        } catch (RollbackException e) {
+            throw new TxException(e);
+        } catch (SystemException e) {
+            throw new TxException(e);
+        }
     }
 
     /**
      * @see javax.transaction.TransactionManager#getStatus()
      */
-    public int getStatus() throws SystemException {
-        return delegate.getStatus();
+    public int getStatus() throws TxException {
+        try {
+            return delegate.getStatus();
+        } catch (SystemException e) {
+            throw new TxException(e);
+        }
     }
 
     /**
      * @see javax.transaction.TransactionManager#getTransaction()
      */
-    public Transaction getTransaction() throws SystemException {
-        return delegate.getTransaction();
+    public Transaction getTransaction() throws TxException {
+        try {
+            return delegate.getTransaction();
+        } catch (SystemException e) {
+            throw new TxException(e);
+        }
     }
 
     /**
      * @see javax.transaction.TransactionManager#resume(javax.transaction.Transaction)
      */
-    public void resume(Transaction transaction) throws IllegalStateException, InvalidTransactionException, SystemException {
-        delegate.resume(transaction);
+    public void resume(Transaction transaction) throws TxException {
+        try {
+            delegate.resume(transaction);
+        } catch (InvalidTransactionException e) {
+            throw new TxException(e);
+        } catch (SystemException e) {
+            throw new TxException(e);
+        }
     }
 
     /**
      * @see javax.transaction.TransactionManager#rollback()
      */
-    public void rollback() throws IllegalStateException, SecurityException, SystemException {
-        delegate.rollback();
+    public void rollback() throws TxException {
+        try {
+            delegate.rollback();
+        } catch (SecurityException e) {
+            throw new TxException(e);
+        } catch (SystemException e) {
+            throw new TxException(e);
+        }
     }
 
     /**
      * @see javax.transaction.TransactionManager#setRollbackOnly()
      */
-    public void setRollbackOnly() throws IllegalStateException, SystemException {
-        delegate.setRollbackOnly();
+    public void setRollbackOnly() throws TxException {
+        try {
+            delegate.setRollbackOnly();
+        } catch (SystemException e) {
+            throw new TxException(e);
+        }
     }
 
     /**
      * @see javax.transaction.TransactionManager#setTransactionTimeout(int)
      */
-    public void setTransactionTimeout(int timeout) throws SystemException {
-        delegate.setTransactionTimeout(timeout);
+    public void setTransactionTimeout(int timeout) throws TxException {
+        try {
+            delegate.setTransactionTimeout(timeout);
+        } catch (SystemException e) {
+            throw new TxException(e);
+        }
     }
 
     /**
      * @see javax.transaction.TransactionManager#suspend()
      */
-    public Transaction suspend() throws SystemException {
-        return delegate.suspend();
+    public Transaction suspend() throws TxException {
+        try {
+            return delegate.suspend();
+        } catch (SystemException e) {
+            throw new TxException(e);
+        }
     }
 
 }

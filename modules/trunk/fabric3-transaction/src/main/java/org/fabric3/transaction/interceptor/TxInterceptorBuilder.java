@@ -16,21 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.transaction.interceptor.suspend;
-
-import javax.transaction.TransactionManager;
+package org.fabric3.transaction.interceptor;
 
 import org.fabric3.extension.interceptor.InterceptorBuilderExtension;
 import org.fabric3.spi.builder.BuilderException;
+import org.fabric3.transaction.proxy.TransactionManagerProxy;
 import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Revision$ $Date$
  */
-public class SuspendTransactionInterceptorBuilder extends InterceptorBuilderExtension<SuspendTransactionInterceptorDefinition, SuspendTransactionInterceptor> {
+public class TxInterceptorBuilder extends InterceptorBuilderExtension<TxInterceptorDefinition, TxInterceptor> {
 
     // Transaction manager
-    private TransactionManager transactionManager;
+    private TransactionManagerProxy transactionManager;
     
     /**
      * Injects the transaction manager.
@@ -38,7 +37,7 @@ public class SuspendTransactionInterceptorBuilder extends InterceptorBuilderExte
      * @param transactionManager Injected transaction manager.
      */
     @Reference(required = true)
-    public void setTransactionManager(TransactionManager transactionManager) {
+    public void setTransactionManager(TransactionManagerProxy transactionManager) {
         this.transactionManager = transactionManager;
     }
     
@@ -46,15 +45,15 @@ public class SuspendTransactionInterceptorBuilder extends InterceptorBuilderExte
      * @see org.fabric3.extension.interceptor.InterceptorBuilderExtension#getInterceptorDefinitionClass()
      */
     @Override
-    protected Class<SuspendTransactionInterceptorDefinition> getInterceptorDefinitionClass() {
-        return SuspendTransactionInterceptorDefinition.class;
+    protected Class<TxInterceptorDefinition> getInterceptorDefinitionClass() {
+        return TxInterceptorDefinition.class;
     }
 
     /**
      * @see org.fabric3.spi.builder.interceptor.InterceptorBuilder#build(org.fabric3.spi.model.physical.PhysicalInterceptorDefinition)
      */
-    public SuspendTransactionInterceptor build(SuspendTransactionInterceptorDefinition interceptorDefinition) throws BuilderException {
-        return new SuspendTransactionInterceptor(transactionManager);
+    public TxInterceptor build(TxInterceptorDefinition interceptorDefinition) throws BuilderException {
+        return new TxInterceptor(transactionManager, interceptorDefinition.getAction());
     }
 
 

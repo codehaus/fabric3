@@ -16,32 +16,37 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.transaction.interceptor.suspend;
+package org.fabric3.transaction.interceptor;
 
 import javax.transaction.Transaction;
-import javax.transaction.TransactionManager;
 
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.Message;
+import org.fabric3.transaction.TxAction;
+import org.fabric3.transaction.proxy.TransactionManagerProxy;
 
 /**
  * @version $Revision$ $Date$
  */
-public class SuspendTransactionInterceptor implements Interceptor {
+public class TxInterceptor implements Interceptor {
     
     // Next interceptor
     private Interceptor next;
     
     // Transaction manager
-    private TransactionManager transactionManager;
+    private TransactionManagerProxy transactionManager;
+    
+    // Transaction action
+    private TxAction txAction;
     
     /**
      * Initializes the transaction manager.
      * 
      * @param transactionManager Transaction manager to be initialized.
      */
-    public SuspendTransactionInterceptor(TransactionManager transactionManager) {
+    public TxInterceptor(TransactionManagerProxy transactionManager, TxAction txAction) {
         this.transactionManager = transactionManager;
+        this.txAction = txAction;
     }
 
     /**
@@ -56,24 +61,25 @@ public class SuspendTransactionInterceptor implements Interceptor {
      */
     public Message invoke(Message message) {
         
-        Transaction transaction = null;
+        Transaction transaction = transactionManager.getTransaction();
         try {
-            if(transactionManager.getTransaction() != null) {
-                transaction = transactionManager.suspend();
+            
+            if(txAction == TxAction.BEGIN && transaction == null) {
+                transactionManager.begin();
+            } else if(txAction == TxAction.SUSPEND && transaction != null) {
+                transactionManager.suspend();
             }
+
             return next.invoke(message);
-        } catch(Exception ex) {
-            // JTA exception clauses are crap and we need to imtpove our interceptor contract
-            throw new RuntimeException(ex);
+            
         } finally {
-            if(transaction != null) {
-                try {
-                    transactionManager.resume(transaction); 
-                } catch(Exception ex) {
-                    // JTA exception clauses are crap and we need to imtpove our interceptor contract
-                    throw new RuntimeException(ex);
-                }
+            
+            if(txAction == TxAction.BEGIN && transaction == null) {
+                transactionManager.commit();
+            } else if(txAction == TxAction.SUSPEND && transaction != null) {
+                transactionManager.resume(transaction);
             }
+
         }
         
     }

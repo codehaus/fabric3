@@ -16,13 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.transaction.interceptor.suspend;
-
-import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
+package org.fabric3.transaction;
 
 /**
  * @version $Revision$ $Date$
  */
-public class SuspendTransactionInterceptorDefinition extends PhysicalInterceptorDefinition {
+public enum TxAction {
+    
+    BEGIN,
+    PROPOGATE,
+    SUSPEND;
 
 }
