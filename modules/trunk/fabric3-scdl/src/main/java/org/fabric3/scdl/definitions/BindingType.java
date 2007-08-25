@@ -18,7 +18,6 @@
  */
 package org.fabric3.scdl.definitions;
 
-import java.util.Collections;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
@@ -28,10 +27,7 @@ import javax.xml.namespace.QName;
  * 
  * @version $Revision$ $Date$
  */
-public class BindingType extends AbstractDefinition {
-
-    private final Set<QName> alwaysProvide;
-    private final Set<QName> mayProvide;
+public class BindingType extends AbstractType {
     
     /**
      * @param name Name of the binding type.
@@ -39,24 +35,7 @@ public class BindingType extends AbstractDefinition {
      * @param mayProvide  Intents this binding may provide.
      */
     public BindingType(final QName name, Set<QName> alwaysProvide, Set<QName> mayProvide) {
-        super(name);
-        this.alwaysProvide = alwaysProvide;
-        this.mayProvide = mayProvide;
+        super(name, alwaysProvide, mayProvide);
     }
-
-    /**
-     * @return Intents this binding always provide.
-     */
-    public Set<QName> getAlwaysProvide() {
-        return Collections.unmodifiableSet(alwaysProvide);
-    }
-
-    /**
-     * @return Intents this binding may provide.
-     */
-    public Set<QName> getMayProvide() {
-        return Collections.unmodifiableSet(mayProvide);
-    }
-
 
 }

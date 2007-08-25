@@ -18,24 +18,45 @@
  */
 package org.fabric3.scdl.definitions;
 
+import java.util.Collections;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
 
 /**
- * Represents an implementation type.
+ * Represents a type.
  * 
  * @version $Revision$ $Date$
  */
-public class ImplementationType extends AbstractType {
+public class AbstractType extends AbstractDefinition {
+
+    private final Set<QName> alwaysProvide;
+    private final Set<QName> mayProvide;
     
     /**
-     * @param name Name of the implementation type.
-     * @param alwaysProvide Intents this implementation always provide.
-     * @param mayProvide  Intents this implementation may provide.
+     * @param name Name of the binding type.
+     * @param alwaysProvide Intents this binding always provide.
+     * @param mayProvide  Intents this binding may provide.
      */
-    public ImplementationType(final QName name, Set<QName> alwaysProvide, Set<QName> mayProvide) {
-        super(name, alwaysProvide, mayProvide);
+    public AbstractType(final QName name, Set<QName> alwaysProvide, Set<QName> mayProvide) {
+        super(name);
+        this.alwaysProvide = alwaysProvide;
+        this.mayProvide = mayProvide;
     }
+
+    /**
+     * @return Intents this binding always provide.
+     */
+    public Set<QName> getAlwaysProvide() {
+        return Collections.unmodifiableSet(alwaysProvide);
+    }
+
+    /**
+     * @return Intents this binding may provide.
+     */
+    public Set<QName> getMayProvide() {
+        return Collections.unmodifiableSet(mayProvide);
+    }
+
 
 }
