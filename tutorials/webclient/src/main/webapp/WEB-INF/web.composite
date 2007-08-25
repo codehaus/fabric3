@@ -19,7 +19,6 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:fabric3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:hessian="http://www.fabric3.org/binding/hessian/0.1"
            name="Demo Web Client">
 
     <component name="calculator">
@@ -30,7 +29,6 @@
 
     <reference name="calculatorReference" promote="calculator/calculatorReference">
         <interface.java interface="calculator.CalculatorService"/>
-        <hessian:binding.hessian uri="http://localhost:8101/calculator"/>
         <!-- Insert a binding definition -->
     </reference>
 
