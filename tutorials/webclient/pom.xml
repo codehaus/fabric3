@@ -73,22 +73,6 @@
             <version>1.1</version>
         </dependency>
         <!--
-        Dependencies for Web Services
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-binding-ws</artifactId>
-            <version>0.2-SNAPSHOT</version>
-        </dependency>
-
-        -->
-        <!--Dependencies for Hessian/Burlap
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-binding-hessian</artifactId>
-            <version>0.2-SNAPSHOT</version>
-        </dependency>
-        -->
-        <!--
         Dependencies for JMS using ActiveMQ
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
@@ -126,11 +110,12 @@
                 <configuration>
                     <runTimeVersion>0.2-SNAPSHOT</runTimeVersion>
                     <extensions>
+                        <!--  Hessian extension
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-binding-hessian</artifactId>
                             <version>0.2-SNAPSHOT</version>
-                        </dependency>
+                        </dependency>  -->
                     </extensions>
 
                 </configuration>
