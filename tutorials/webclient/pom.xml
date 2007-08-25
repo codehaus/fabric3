@@ -52,7 +52,7 @@
 
         <dependency>
             <groupId>org.codehaus.fabric3.webapp</groupId>
-            <artifactId>webapp-host</artifactId>
+            <artifactId>webapp-api</artifactId>
             <version>0.2-SNAPSHOT</version>
         </dependency>
 
