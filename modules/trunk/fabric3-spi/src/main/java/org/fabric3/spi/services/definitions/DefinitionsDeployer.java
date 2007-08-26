@@ -18,6 +18,9 @@
  */
 package org.fabric3.spi.services.definitions;
 
+import java.net.URI;
+import java.util.Set;
+
 import javax.xml.namespace.QName;
 
 /**
@@ -34,5 +37,13 @@ public interface DefinitionsDeployer {
      * @throws DefinitionActivationException If unable to find definition.
      */
     void activateDefinition(QName definitionName) throws DefinitionActivationException;
+    
+    /**
+     * Activates all the definitions in the specified contributions.
+     * 
+     * @param contributionUris The URIs for the contribution.
+     * @throws DefinitionActivationException If unable to find definition.
+     */
+    void activateDefinitions(Set<URI> contributionUris) throws DefinitionActivationException;
 
 }
