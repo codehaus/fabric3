@@ -38,6 +38,7 @@ public abstract class BindingDefinition extends PolicyAware {
 
     public BindingDefinition(URI targetUri, QName type) {
         this.targetUri = targetUri;
+        this.type = type;
     }
 
     public URI getTargetUri() {
