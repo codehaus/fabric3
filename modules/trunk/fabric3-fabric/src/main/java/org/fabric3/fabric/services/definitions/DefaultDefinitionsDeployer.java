@@ -19,7 +19,7 @@
 package org.fabric3.fabric.services.definitions;
 
 import java.net.URI;
-import java.util.Set;
+import java.util.List;
 
 import javax.xml.namespace.QName;
 
@@ -77,9 +77,9 @@ public class DefaultDefinitionsDeployer implements DefinitionsDeployer {
     }
 
     /**
-     * @see org.fabric3.spi.services.definitions.DefinitionsDeployer#activateDefinitions(java.util.Set)
+     * @see org.fabric3.spi.services.definitions.DefinitionsDeployer#activateDefinitions(java.util.List)
      */
-    public void activateDefinitions(Set<URI> contributionUris) throws DefinitionActivationException {
+    public void activateDefinitions(List<URI> contributionUris) throws DefinitionActivationException {
 
         for (URI uri : contributionUris) {
             Contribution contribution = metaDataStore.find(uri);

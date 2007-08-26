@@ -143,23 +143,10 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
         ContributionService contributionService =
                 runtime.getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
 
-        includeExtensions(contributionService);
-
-        if (definitionsFile != null) {
-            try {
-                ContributionSource source = new ClasspathContributionSource(definitionsFile, cl);
-                URI addedUri = contributionService.contribute("DefaultStore", source);
-                List<Deployable> deployables = contributionService.getDeployables(addedUri);
-                DefinitionsDeployer definitionsDeployer =
-                        runtime.getSystemComponent(DefinitionsDeployer.class, DEFINITIONS_DEPLOYER);
-                for (Deployable deployable : deployables) {
-                    definitionsDeployer.activateDefinition(deployable.getName());
-                }
-            } catch (ContributionException e) {
-                throw new InitializationException(e);
-            } catch (DefinitionActivationException e) {
-                throw new InitializationException(e);
-            }
+        try {
+            includeExtensions(contributionService);
+        } catch (DefinitionActivationException e) {
+            throw new InitializationException(e);
         }
 
         state = State.INITIALIZED;
@@ -219,7 +206,7 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
         return new SyncFuture();
     }
 
-    private void includeExtensions(ContributionService contributionService) throws InitializationException {
+    private void includeExtensions(ContributionService contributionService) throws InitializationException, DefinitionActivationException {
         if (dependencies != null) {
             ArchiveStore archiveStore = runtime.getSystemComponent(ArchiveStore.class, EXTENSION_CONTRIBUTION_STORE);
             if (archiveStore == null) {
@@ -254,6 +241,8 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
                 }
             }
             runtime.includeExtensionContributions(contributionUris);
+            DefinitionsDeployer definitionsDeployer = runtime.getSystemComponent(DefinitionsDeployer.class, DEFINITIONS_DEPLOYER);
+            definitionsDeployer.activateDefinitions(contributionUris);
         }
     }
 
