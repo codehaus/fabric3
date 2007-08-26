@@ -19,6 +19,11 @@
 package org.fabric3.spi.model.physical;
 
 import java.net.URI;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.xml.namespace.QName;
 
 import org.fabric3.scdl.ModelObject;
 import org.fabric3.scdl.Scope;
@@ -34,6 +39,7 @@ public abstract class PhysicalComponentDefinition extends ModelObject {
     private Scope scope;
     private URI groupId;
     private int initLevel;
+    private Set<QName> requestedIntents = new HashSet<QName>();;
 
     /**
      * Gets the component id.
@@ -93,5 +99,17 @@ public abstract class PhysicalComponentDefinition extends ModelObject {
      */
     public void setScope(Scope scope) {
         this.scope = scope;
+    }
+
+    public Set<QName> getRequestedIntents() {
+        return Collections.unmodifiableSet(requestedIntents);
+    }
+
+    public void setRequestedIntents(Set<QName> requestedIntents) {
+        this.requestedIntents = requestedIntents;
+    }
+    
+    public void addRequestedIntent(QName requestedIntent) {
+        requestedIntents.add(requestedIntent);
     }
 }
