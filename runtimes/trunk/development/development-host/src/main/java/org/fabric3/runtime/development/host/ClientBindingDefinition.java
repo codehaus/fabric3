@@ -16,7 +16,10 @@
  */
 package org.fabric3.runtime.development.host;
 
+import javax.xml.namespace.QName;
+
 import org.fabric3.scdl.BindingDefinition;
+import org.fabric3.spi.Constants;
 
 /**
  * Represents a wire bound to client code
@@ -24,4 +27,9 @@ import org.fabric3.scdl.BindingDefinition;
  * @version $Rev$ $Date$
  */
 public class ClientBindingDefinition extends BindingDefinition {
+    public static final QName BINDING_QNAME = new QName(Constants.FABRIC3_SYSTEM_NS, "binding.development");
+
+    public ClientBindingDefinition() {
+        super(BINDING_QNAME);
+    }
 }
