@@ -19,11 +19,6 @@
 package org.fabric3.spi.model.physical;
 
 import java.net.URI;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.xml.namespace.QName;
 
 import org.fabric3.scdl.ModelObject;
 import org.fabric3.scdl.Scope;
@@ -36,10 +31,9 @@ import org.fabric3.scdl.Scope;
 public abstract class PhysicalComponentDefinition extends ModelObject {
 
     private URI componentId;
-    private Scope scope;
+    private Scope<?> scope;
     private URI groupId;
     private int initLevel;
-    private Set<QName> requestedIntents = new HashSet<QName>();;
 
     /**
      * Gets the component id.
@@ -75,10 +69,16 @@ public abstract class PhysicalComponentDefinition extends ModelObject {
         this.groupId = groupId;
     }
 
+    /**
+     * @return
+     */
     public int getInitLevel() {
         return initLevel;
     }
 
+    /**
+     * @param initLevel
+     */
     public void setInitLevel(int initLevel) {
         this.initLevel = initLevel;
     }
@@ -88,7 +88,7 @@ public abstract class PhysicalComponentDefinition extends ModelObject {
      *
      * @return The scope for the component.
      */
-    public Scope getScope() {
+    public Scope<?> getScope() {
         return scope;
     }
 
@@ -97,19 +97,8 @@ public abstract class PhysicalComponentDefinition extends ModelObject {
      *
      * @param scope The scope for the component.
      */
-    public void setScope(Scope scope) {
+    public void setScope(Scope<?> scope) {
         this.scope = scope;
     }
 
-    public Set<QName> getRequestedIntents() {
-        return Collections.unmodifiableSet(requestedIntents);
-    }
-
-    public void setRequestedIntents(Set<QName> requestedIntents) {
-        this.requestedIntents = requestedIntents;
-    }
-    
-    public void addRequestedIntent(QName requestedIntent) {
-        requestedIntents.add(requestedIntent);
-    }
 }

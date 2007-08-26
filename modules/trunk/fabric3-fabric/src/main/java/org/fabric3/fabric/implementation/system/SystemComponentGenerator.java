@@ -19,6 +19,9 @@
 package org.fabric3.fabric.implementation.system;
 
 import java.net.URI;
+import java.util.Set;
+
+import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
@@ -55,7 +58,9 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
         this.helper = helper;
     }
 
-    public PhysicalComponentDefinition generate(LogicalComponent<SystemImplementation> component, GeneratorContext context)
+    public PhysicalComponentDefinition generate(LogicalComponent<SystemImplementation> component, 
+                                                Set<QName> intentsToBeProvided,
+                                                GeneratorContext context)
             throws GenerationException {
         ComponentDefinition<SystemImplementation> definition = component.getDefinition();
         SystemImplementation implementation = definition.getImplementation();
@@ -89,16 +94,15 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<SystemImplementation> source,
                                                            LogicalReference reference,
-                                                           boolean optimizable, GeneratorContext context)
-            throws GenerationException {
+                                                           boolean optimizable) throws GenerationException {
         SystemWireSourceDefinition wireDefinition = new SystemWireSourceDefinition();
         wireDefinition.setUri(reference.getUri());
         wireDefinition.setOptimizable(true);
         return wireDefinition;
     }
 
-    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, LogicalComponent<SystemImplementation> logical,
-                                                           GeneratorContext context) throws GenerationException {
+    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, 
+                                                           LogicalComponent<SystemImplementation> logical) throws GenerationException {
         SystemWireTargetDefinition wireDefinition = new SystemWireTargetDefinition();
         wireDefinition.setUri(service.getUri());
         return wireDefinition;

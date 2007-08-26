@@ -131,7 +131,8 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         if (generator == null) {
             throw new GeneratorNotFoundException(type);
         }
-        return generator.generate(component, context);
+        // TODO Pass the intents to be provided by the implementation
+        return generator.generate(component, null, context);
     }
 
     @SuppressWarnings({"unchecked"})
@@ -160,16 +161,15 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
             // service is defined on a composite and wired to a component service
             targetService = component.getService(targetUri.getFragment());
         }
-        PhysicalWireTargetDefinition targetDefinition =
-                targetGenerator.generateWireTarget(targetService, component, context);
+        PhysicalWireTargetDefinition targetDefinition = targetGenerator.generateWireTarget(targetService, component);
         wireDefinition.setTarget(targetDefinition);
         BindingGenerator sourceGenerator = bindingGenerators.get(binding.getBinding().getClass());
         if (sourceGenerator == null) {
             throw new GeneratorNotFoundException(type);
         }
-        PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(binding,
-                                                                                           context,
-                                                                                           service.getDefinition());
+
+        // TODO Pass the intents to be provided by the binding
+        PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(binding, null, context, service.getDefinition());
         wireDefinition.setSource(sourceDefinition);
         context.getPhysicalChangeSet().addWireDefinition(wireDefinition);
 
@@ -192,8 +192,9 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         if (targetGenerator == null) {
             throw new GeneratorNotFoundException(bindingType);
         }
-        PhysicalWireTargetDefinition targetDefinition =
-                targetGenerator.generateWireTarget(binding, context, reference.getDefinition());
+
+        // TODO Pass the intents to be provided by the binding
+        PhysicalWireTargetDefinition targetDefinition = targetGenerator.generateWireTarget(binding, null, context, reference.getDefinition());
         wireDefinition.setTarget(targetDefinition);
 
         Class<? extends Implementation> implType = source.getDefinition().getImplementation().getClass();
@@ -201,8 +202,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         if (sourceGenerator == null) {
             throw new GeneratorNotFoundException(implType);
         }
-        PhysicalWireSourceDefinition sourceDefinition =
-                sourceGenerator.generateWireSource(source, reference, false, context);
+        PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(source, reference, false);
         wireDefinition.setSource(sourceDefinition);
 
         context.getPhysicalChangeSet().addWireDefinition(wireDefinition);
@@ -224,6 +224,8 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         policies.addAll(getPolicies(new LogicalBinding<SCABindingDefinition>(SCABindingDefinition.INSTANCE, service)));
         policies.addAll(getPolicies(new LogicalBinding<SCABindingDefinition>(SCABindingDefinition.INSTANCE, reference)));
         
+        // TODO Add interceptors for the implementation policies
+        
         PhysicalWireDefinition wireDefinition = createWireDefinition(contract, policies);
 
         Class<?> type = target.getDefinition().getImplementation().getClass();
@@ -231,8 +233,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         if (targetGenerator == null) {
             throw new GeneratorNotFoundException(type);
         }
-        PhysicalWireTargetDefinition targetDefinition =
-                targetGenerator.generateWireTarget(service, target, context);
+        PhysicalWireTargetDefinition targetDefinition = targetGenerator.generateWireTarget(service, target);
         wireDefinition.setTarget(targetDefinition);
 
         type = source.getDefinition().getImplementation().getClass();
@@ -250,8 +251,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
                 }
             }
         }
-        PhysicalWireSourceDefinition sourceDefinition =
-                sourceGenerator.generateWireSource(source, reference, optimizable, context);
+        PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(source, reference, optimizable);
         wireDefinition.setSource(sourceDefinition);
         context.getPhysicalChangeSet().addWireDefinition(wireDefinition);
 

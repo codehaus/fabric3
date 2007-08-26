@@ -18,6 +18,10 @@
  */
 package org.fabric3.binding.hessian.model.physical;
 
+import java.util.Set;
+
+import javax.xml.namespace.QName;
+
 import org.fabric3.binding.hessian.model.logical.HessianBindingDefinition;
 import org.fabric3.extension.generator.BindingGeneratorExtension;
 import org.fabric3.scdl.ReferenceDefinition;
@@ -41,9 +45,9 @@ public class HessianBindingGenerator extends BindingGeneratorExtension<HessianWi
      *      org.fabric3.spi.model.type.ServiceDefinition)
      */
     public HessianWireSourceDefinition generateWireSource(LogicalBinding<HessianBindingDefinition> logicalBinding,
+                                                          Set<QName> intentsToBeProvided,     
                                                           GeneratorContext generatorContext,
-                                                          ServiceDefinition serviceDefinition)
-        throws GenerationException {
+                                                          ServiceDefinition serviceDefinition) throws GenerationException {
 
         HessianWireSourceDefinition hwsd = new HessianWireSourceDefinition();
         hwsd.setUri(logicalBinding.getBinding().getTargetUri());
@@ -58,9 +62,9 @@ public class HessianBindingGenerator extends BindingGeneratorExtension<HessianWi
      *      org.fabric3.spi.model.type.ReferenceDefinition)
      */
     public HessianWireTargetDefinition generateWireTarget(LogicalBinding<HessianBindingDefinition> logicalBinding,
+                                                          Set<QName> intentsToBeProvided,     
                                                           GeneratorContext generatorContext,
-                                                          ReferenceDefinition referenceDefinition)
-        throws GenerationException {
+                                                          ReferenceDefinition referenceDefinition) throws GenerationException {
 
         HessianWireTargetDefinition hwtd = new HessianWireTargetDefinition();
         hwtd.setUri(logicalBinding.getBinding().getTargetUri());

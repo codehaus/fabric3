@@ -2,6 +2,9 @@ package org.fabric3.itest.implementation.junit;
 
 import java.net.URI;
 import java.util.Map;
+import java.util.Set;
+
+import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
@@ -43,7 +46,10 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
     }
 
     @SuppressWarnings({"unchecked"})
-    public PhysicalComponentDefinition generate(LogicalComponent<ImplementationJUnit> component, GeneratorContext context) {
+    public PhysicalComponentDefinition generate(LogicalComponent<ImplementationJUnit> component, 
+                                                Set<QName> intentsToBeProvided, 
+                                                GeneratorContext context) {
+        
         ComponentDefinition<ImplementationJUnit> definition = component.getDefinition();
         ImplementationJUnit implementation = definition.getImplementation();
         // TODO not a safe cast
@@ -78,8 +84,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<ImplementationJUnit> source,
                                                            LogicalReference reference,
-                                                           boolean optimizable,
-                                                           GeneratorContext context) throws GenerationException {
+                                                           boolean optimizable) throws GenerationException {
         JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
         wireDefinition.setUri(reference.getUri());
         wireDefinition.setOptimizable(optimizable);
@@ -87,8 +92,8 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         return wireDefinition;
     }
 
-    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, LogicalComponent<ImplementationJUnit> target,
-                                                           GeneratorContext context) throws GenerationException {
+    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, 
+                                                           LogicalComponent<ImplementationJUnit> target) throws GenerationException {
         JavaWireTargetDefinition wireDefinition = new JavaWireTargetDefinition();
         wireDefinition.setUri(service.getUri());
         return wireDefinition;

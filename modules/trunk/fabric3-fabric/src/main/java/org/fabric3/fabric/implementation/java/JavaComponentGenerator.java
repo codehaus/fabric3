@@ -19,6 +19,9 @@
 package org.fabric3.fabric.implementation.java;
 
 import java.net.URI;
+import java.util.Set;
+
+import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
@@ -57,7 +60,7 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
         this.helper = helper;
     }
 
-    public PhysicalComponentDefinition generate(LogicalComponent<JavaImplementation> component, GeneratorContext context)
+    public PhysicalComponentDefinition generate(LogicalComponent<JavaImplementation> component, Set<QName> intentsToBeProvided, GeneratorContext context)
             throws GenerationException {
         ComponentDefinition<JavaImplementation> definition = component.getDefinition();
         JavaImplementation implementation = definition.getImplementation();
@@ -94,8 +97,7 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<JavaImplementation> source,
                                                            LogicalReference reference,
-                                                           boolean optimizable,
-                                                           GeneratorContext context) throws GenerationException {
+                                                           boolean optimizable) throws GenerationException {
         JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
         wireDefinition.setUri(reference.getUri());
         wireDefinition.setOptimizable(optimizable);
@@ -104,8 +106,7 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
     }
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
-                                                           LogicalComponent<JavaImplementation> target,
-                                                           GeneratorContext context)
+                                                           LogicalComponent<JavaImplementation> target)
             throws GenerationException {
         JavaWireTargetDefinition wireDefinition = new JavaWireTargetDefinition();
         URI uri;

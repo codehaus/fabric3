@@ -4,6 +4,7 @@ import java.lang.annotation.ElementType;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.URI;
+import java.util.Collections;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
@@ -49,7 +50,7 @@ public class JavaPhysicalComponentGeneratorTestCase extends TestCase {
      */
     @SuppressWarnings({"unchecked"})
     public void testGeneration() throws Exception {
-        context.getPhysicalChangeSet().addComponentDefinition(generator.generate(createLogicalComponent(null), context));
+        context.getPhysicalChangeSet().addComponentDefinition(generator.generate(createLogicalComponent(null), Collections.EMPTY_SET, context));
         PhysicalChangeSet changeSet = context.getPhysicalChangeSet();
         PhysicalComponentDefinition pDefinition = changeSet.getComponentDefinitions().iterator().next();
         assertTrue(pDefinition instanceof PojoComponentDefinition);

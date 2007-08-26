@@ -18,6 +18,10 @@
  */
 package org.fabric3.binding.jms.model.physical;
 
+import java.util.Set;
+
+import javax.xml.namespace.QName;
+
 import org.fabric3.binding.jms.model.logical.JmsBindingDefinition;
 import org.fabric3.extension.generator.BindingGeneratorExtension;
 import org.fabric3.scdl.ReferenceDefinition;
@@ -35,22 +39,24 @@ public class JmsBindingGenerator extends BindingGeneratorExtension<JmsWireSource
 
     /**
      * @see org.fabric3.spi.generator.BindingGenerator#generateWireSource(org.fabric3.spi.model.instance.LogicalBinding,
-     *      org.fabric3.spi.generator.GeneratorContext,
-     *      org.fabric3.spi.model.type.ServiceDefinition)
+     *                                                                    java.util.Set,
+     *                                                                    org.fabric3.spi.model.type.ServiceDefinition)
      */
     public JmsWireSourceDefinition generateWireSource(LogicalBinding<JmsBindingDefinition> logicalBinding,
-                                                      GeneratorContext generatorContext,
+                                                      Set<QName> intentsToBeProvided,
+                                                      GeneratorContext context,
                                                       ServiceDefinition serviceDefinition) throws GenerationException {
         return new JmsWireSourceDefinition(logicalBinding.getBinding().getMetadata());
     }
 
     /**
      * @see org.fabric3.spi.generator.BindingGenerator#generateWireTarget(org.fabric3.spi.model.instance.LogicalBinding,
-     *      org.fabric3.spi.generator.GeneratorContext,
-     *      org.fabric3.spi.model.type.ReferenceDefinition)
+     *                                                                    java.util.Set,
+     *                                                                    org.fabric3.spi.model.type.ReferenceDefinition)
      */
     public JmsWireTargetDefinition generateWireTarget(LogicalBinding<JmsBindingDefinition> logicalBinding,
-                                                      GeneratorContext generatorContext,
+                                                      Set<QName> intentsToBeProvided,
+                                                      GeneratorContext context,
                                                       ReferenceDefinition referenceDefinition)
         throws GenerationException {
         return new JmsWireTargetDefinition(logicalBinding.getBinding().getMetadata());

@@ -19,6 +19,9 @@
 package org.fabric3.fabric.implementation.singleton;
 
 import java.net.URI;
+import java.util.Set;
+
+import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.Reference;
 
@@ -42,24 +45,24 @@ public class SingletonGenerator implements ComponentGenerator<LogicalComponent<S
         registry.register(SingletonImplementation.class, this);
     }
 
-    public PhysicalComponentDefinition generate(LogicalComponent<SingletonImplementation> component, GeneratorContext context)
-            throws GenerationException {
+    public PhysicalComponentDefinition generate(LogicalComponent<SingletonImplementation> component, 
+                                                Set<QName> intentsToBeProvided, 
+                                                GeneratorContext context) throws GenerationException {
         throw new UnsupportedOperationException();
     }
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<SingletonImplementation> source,
                                                            LogicalReference reference,
-                                                           boolean optimizable,
-                                                           GeneratorContext context)
-            throws GenerationException {
+                                                           boolean optimizable) throws GenerationException {
         throw new UnsupportedOperationException();
     }
 
-    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, LogicalComponent<SingletonImplementation> logical,
-                                                           GeneratorContext context) throws GenerationException {
+    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, 
+                                                           LogicalComponent<SingletonImplementation> logical) throws GenerationException {
         SingletonWireTargetDefinition wireDefinition = new SingletonWireTargetDefinition();
         URI uri = logical.getUri().resolve(service.getUri());
         wireDefinition.setUri(uri);
         return wireDefinition;
     }
+    
 }

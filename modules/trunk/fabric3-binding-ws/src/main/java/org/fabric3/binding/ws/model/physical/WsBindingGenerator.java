@@ -19,6 +19,9 @@
 package org.fabric3.binding.ws.model.physical;
 
 import java.net.URI;
+import java.util.Set;
+
+import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
@@ -48,6 +51,7 @@ public class WsBindingGenerator extends BindingGeneratorExtension<WsWireSourceDe
     }
 
     public WsWireSourceDefinition generateWireSource(LogicalBinding<WsBindingDefinition> logicalBinding,
+                                                     Set<QName> intentsToBeProvided,
                                                      GeneratorContext generatorContext,
                                                      ServiceDefinition serviceDefinition) throws GenerationException {
         WsWireSourceDefinition hwsd = new WsWireSourceDefinition();
@@ -64,6 +68,7 @@ public class WsBindingGenerator extends BindingGeneratorExtension<WsWireSourceDe
     }
 
     public WsWireTargetDefinition generateWireTarget(LogicalBinding<WsBindingDefinition> logicalBinding,
+                                                     Set<QName> intentsToBeProvided,
                                                      GeneratorContext generatorContext,
                                                      ReferenceDefinition referenceDefinition)
             throws GenerationException {

@@ -18,44 +18,50 @@
  */
 package org.fabric3.spi.generator;
 
-import org.fabric3.spi.model.instance.LogicalBinding;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import java.util.Set;
+
+import javax.xml.namespace.QName;
+
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.spi.model.instance.LogicalBinding;
+import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
+import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 
 /**
  * Generates {@link PhysicalWireSourceDefinition}s and {@link PhysicalWireTargetDefinition}s for a resolved binding
  *
  * @version $Rev$ $Date$
  */
-public interface BindingGenerator<PWSD extends PhysicalWireSourceDefinition,
-        PWTD extends PhysicalWireTargetDefinition,
-        BD extends BindingDefinition> {
+public interface BindingGenerator<PWSD extends PhysicalWireSourceDefinition, PWTD extends PhysicalWireTargetDefinition, BD extends BindingDefinition> {
 
     /**
      * Generates a physical wire source definition from a logical binding.
      *
-     * @param binding           Logical binding.
-     * @param context           Generator context.
+     * @param binding Logical binding.
+     * @param intentsToBeProvided Intents to be provided explictly by the binding.
      * @param serviceDefinition Service definition for the target.
      * @return Physical wire source definition.
      * @throws GenerationException
      */
-    PWSD generateWireSource(LogicalBinding<BD> binding, GeneratorContext context, ServiceDefinition serviceDefinition)
-            throws GenerationException;
+    PWSD generateWireSource(LogicalBinding<BD> binding, 
+                            Set<QName> intentsToBeProvided, 
+                            GeneratorContext context,
+                            ServiceDefinition serviceDefinition) throws GenerationException;
 
     /**
      * Generates a physical wire target definition from a logical binding.
      *
-     * @param binding             Logical binding.
-     * @param context             Generator context.
+     * @param binding Logical binding.
+     * @param intentsToBeProvided Intents to be provided explictly by the binding.
      * @param referenceDefinition Reference definition for the target.
      * @return Physical wire target definition.
      * @throws GenerationException
      */
-    PWTD generateWireTarget(LogicalBinding<BD> binding, GeneratorContext context, ReferenceDefinition referenceDefinition)
-            throws GenerationException;
+    PWTD generateWireTarget(LogicalBinding<BD> binding, 
+                            Set<QName> intentsToBeProvided,  
+                            GeneratorContext context,
+                            ReferenceDefinition referenceDefinition) throws GenerationException;
 
 }

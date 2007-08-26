@@ -18,6 +18,10 @@
  */
 package org.fabric3.binding.burlap.model.physical;
 
+import java.util.Set;
+
+import javax.xml.namespace.QName;
+
 import org.fabric3.binding.burlap.model.logical.BurlapBindingDefinition;
 import org.fabric3.extension.generator.BindingGeneratorExtension;
 import org.fabric3.scdl.ReferenceDefinition;
@@ -36,12 +40,13 @@ import org.osoa.sca.annotations.EagerInit;
 public class BurlapBindingGenerator extends BindingGeneratorExtension<BurlapWireSourceDefinition, BurlapWireTargetDefinition, BurlapBindingDefinition> {
 
     /**
-     * @see org.fabric3.spi.generator.BindingGenerator#generateWireSource(org.fabric3.spi.model.instance.LogicalBinding,
-     *      org.fabric3.spi.generator.GeneratorContext,
-     *org.fabric3.scdl.ServiceDefinition)
+     * @see org.fabric3.spi.generator.BindingGenerator#generateWireSource(org.fabric3.spi.model.instance.LogicalBinding, 
+     *                                                                    java.util.Set, 
+     *                                                                    org.fabric3.scdl.ServiceDefinition)
      */
     public BurlapWireSourceDefinition generateWireSource(LogicalBinding<BurlapBindingDefinition> logicalBinding,
-                                                         GeneratorContext generatorContext,
+                                                         Set<QName> intentsToBeProvided,
+                                                         GeneratorContext context,
                                                          ServiceDefinition serviceDefinition)
         throws GenerationException {
         
@@ -55,12 +60,13 @@ public class BurlapBindingGenerator extends BindingGeneratorExtension<BurlapWire
     }
 
     /**
-     * @see org.fabric3.spi.generator.BindingGenerator#generateWireTarget(org.fabric3.spi.model.instance.LogicalBinding,
-     *      org.fabric3.spi.generator.GeneratorContext,
-     *org.fabric3.scdl.ReferenceDefinition)
+     * @see org.fabric3.spi.generator.BindingGenerator#generateWireTarget(org.fabric3.spi.model.instance.LogicalBinding, 
+     *                                                                    java.util.Set, 
+     *                                                                    org.fabric3.scdl.ReferenceDefinition)
      */
     public BurlapWireTargetDefinition generateWireTarget(LogicalBinding<BurlapBindingDefinition> logicalBinding,
-                                                         GeneratorContext generatorContext,
+                                                         Set<QName> intentsToBeProvided,
+                                                         GeneratorContext context,
                                                          ReferenceDefinition referenceDefinition)
         throws GenerationException {
         
