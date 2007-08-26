@@ -35,6 +35,7 @@ import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
+import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 
@@ -56,7 +57,7 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
         this.helper = helper;
     }
 
-    public void generate(LogicalComponent<JavaImplementation> component, GeneratorContext context)
+    public PhysicalComponentDefinition generate(LogicalComponent<JavaImplementation> component, GeneratorContext context)
             throws GenerationException {
         ComponentDefinition<JavaImplementation> definition = component.getDefinition();
         JavaImplementation implementation = definition.getImplementation();
@@ -86,7 +87,9 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
         // generate the classloader resource definition
         URI classLoaderId = classLoaderGenerator.generate(component, context);
         physical.setClassLoaderId(classLoaderId);
-        context.getPhysicalChangeSet().addComponentDefinition(physical);
+        
+        return physical;
+        
     }
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<JavaImplementation> source,

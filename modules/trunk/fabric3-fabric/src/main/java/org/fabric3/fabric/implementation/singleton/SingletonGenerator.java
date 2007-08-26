@@ -29,6 +29,7 @@ import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
+import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 
@@ -41,7 +42,7 @@ public class SingletonGenerator implements ComponentGenerator<LogicalComponent<S
         registry.register(SingletonImplementation.class, this);
     }
 
-    public void generate(LogicalComponent<SingletonImplementation> component, GeneratorContext context)
+    public PhysicalComponentDefinition generate(LogicalComponent<SingletonImplementation> component, GeneratorContext context)
             throws GenerationException {
         throw new UnsupportedOperationException();
     }

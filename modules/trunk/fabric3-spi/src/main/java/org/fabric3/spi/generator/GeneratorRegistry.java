@@ -27,6 +27,7 @@ import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
+import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 
 /**
@@ -78,7 +79,7 @@ public interface GeneratorRegistry {
      * @param context the generator context containing the current physical changes sets
      * @throws GenerationException if an error ocurrs during generation
      */
-    <C extends LogicalComponent<?>> void generatePhysicalComponent(C logical, GeneratorContext context)
+    <C extends LogicalComponent<?>> PhysicalComponentDefinition generatePhysicalComponent(C logical, GeneratorContext context)
             throws GenerationException;
 
 

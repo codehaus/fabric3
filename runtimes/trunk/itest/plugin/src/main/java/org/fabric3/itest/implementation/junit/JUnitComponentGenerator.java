@@ -27,6 +27,7 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.ValueSource;
+import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 
@@ -42,7 +43,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
     }
 
     @SuppressWarnings({"unchecked"})
-    public void generate(LogicalComponent<ImplementationJUnit> component, GeneratorContext context) {
+    public PhysicalComponentDefinition generate(LogicalComponent<ImplementationJUnit> component, GeneratorContext context) {
         ComponentDefinition<ImplementationJUnit> definition = component.getDefinition();
         ImplementationJUnit implementation = definition.getImplementation();
         // TODO not a safe cast
@@ -72,7 +73,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         processReferenceSites(type, providerDefinition);
         // TODO process properties
         pDefinition.setInstanceFactoryProviderDefinition(providerDefinition);
-        context.getPhysicalChangeSet().addComponentDefinition(pDefinition);
+        return pDefinition;
     }
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<ImplementationJUnit> source,

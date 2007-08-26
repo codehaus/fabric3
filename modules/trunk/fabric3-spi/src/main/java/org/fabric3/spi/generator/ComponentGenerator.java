@@ -22,6 +22,7 @@ import org.fabric3.scdl.Implementation;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 
@@ -31,7 +32,7 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
  *
  * @version $Rev$ $Date$
  */
-public interface ComponentGenerator<C extends LogicalComponent<? extends Implementation>> {
+public interface ComponentGenerator<C extends LogicalComponent<? extends Implementation<?>>> {
 
     /**
      * Generates an {@link org.fabric3.spi.model.physical.PhysicalComponentDefinition} based on a {@link
@@ -42,7 +43,7 @@ public interface ComponentGenerator<C extends LogicalComponent<? extends Impleme
      * @param context   the current generator context, which contains the PhysicalChangeSet to be marshalled
      * @throws GenerationException if an error occurs during the generation process
      */
-    void generate(C component, GeneratorContext context) throws GenerationException;
+    PhysicalComponentDefinition generate(C component, GeneratorContext context) throws GenerationException;
 
     /**
      * Generates a {@link PhysicalWireSourceDefinition} used to attach a wire to a source component. Metadata contained

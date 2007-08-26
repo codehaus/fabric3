@@ -49,7 +49,7 @@ public class JavaPhysicalComponentGeneratorTestCase extends TestCase {
      */
     @SuppressWarnings({"unchecked"})
     public void testGeneration() throws Exception {
-        generator.generate(createLogicalComponent(null), context);
+        context.getPhysicalChangeSet().addComponentDefinition(generator.generate(createLogicalComponent(null), context));
         PhysicalChangeSet changeSet = context.getPhysicalChangeSet();
         PhysicalComponentDefinition pDefinition = changeSet.getComponentDefinitions().iterator().next();
         assertTrue(pDefinition instanceof PojoComponentDefinition);

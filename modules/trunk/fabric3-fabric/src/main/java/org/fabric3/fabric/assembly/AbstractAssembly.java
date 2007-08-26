@@ -540,7 +540,7 @@ public abstract class AbstractAssembly implements Assembly {
             context = new DefaultGeneratorContext(changeSet, commandSet);
             contexts.put(id, context);
         }
-        generatorRegistry.generatePhysicalComponent(component, context);
+        context.getPhysicalChangeSet().addComponentDefinition(generatorRegistry.generatePhysicalComponent(component, context));
     }
 
     protected boolean isEagerInit(LogicalComponent<?> component) {

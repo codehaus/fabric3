@@ -50,6 +50,7 @@ import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
+import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
@@ -122,7 +123,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
     }
 
     @SuppressWarnings({"unchecked"})
-    public <C extends LogicalComponent<?>> void generatePhysicalComponent(C component, GeneratorContext context)
+    public <C extends LogicalComponent<?>> PhysicalComponentDefinition generatePhysicalComponent(C component, GeneratorContext context)
             throws GenerationException {
         ComponentDefinition definition = component.getDefinition();
         Class<?> type = definition.getImplementation().getClass();
@@ -130,7 +131,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         if (generator == null) {
             throw new GeneratorNotFoundException(type);
         }
-        generator.generate(component, context);
+        return generator.generate(component, context);
     }
 
     @SuppressWarnings({"unchecked"})
