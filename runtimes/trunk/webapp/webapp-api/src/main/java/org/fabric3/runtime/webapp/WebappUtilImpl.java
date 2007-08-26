@@ -18,17 +18,14 @@
  */
 package org.fabric3.runtime.webapp;
 
-import static org.fabric3.runtime.webapp.Constants.EXTENSIONDIR_DEFAULT;
-import static org.fabric3.runtime.webapp.Constants.EXTENSIONDIR_PARAM;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Set;
 import javax.servlet.ServletContext;
 
-import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.Bootstrapper;
+import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import static org.fabric3.runtime.webapp.Constants.APPLICATION_SCDL_PATH_DEFAULT;
 import static org.fabric3.runtime.webapp.Constants.APPLICATION_SCDL_PATH_PARAM;
@@ -101,18 +98,9 @@ public class WebappUtilImpl implements WebappUtil {
             // nothing in boot directory, assume everything is in the webapp classloader
             return webappClassLoader;
         }
-        String extensionDirName = getInitParameter(EXTENSIONDIR_PARAM, EXTENSIONDIR_DEFAULT);
-        Set extensionPaths = servletContext.getResourcePaths(extensionDirName);
-        URL[] urls = new URL[bootPaths.size() + extensionPaths.size()];
+        URL[] urls = new URL[bootPaths.size()];
         int i = 0;
         for (Object path : bootPaths) {
-            try {
-                urls[i++] = servletContext.getResource((String) path);
-            } catch (MalformedURLException e) {
-                throw new InvalidResourcePath(APPLICATION_SCDL_PATH_PARAM, path.toString(), e);
-            }
-        }
-        for (Object path : extensionPaths) {
             try {
                 urls[i++] = servletContext.getResource((String) path);
             } catch (MalformedURLException e) {

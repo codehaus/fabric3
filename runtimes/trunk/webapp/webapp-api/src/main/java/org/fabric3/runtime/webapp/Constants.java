@@ -76,11 +76,6 @@ public final class Constants {
     static final String EXTENSIONDIR_PARAM = "fabric3.extensionDir";
 
     /**
-     * Default value for BOOTDIR_PARAM.
-     */
-    static final String EXTENSIONDIR_DEFAULT = "/WEB-INF/fabric3/extensions";
-
-    /**
      * Name of the parameter that defines the class to load to launch the runtime.
      */
     static final String RUNTIME_PARAM = "fabric3.runtimeImpl";
