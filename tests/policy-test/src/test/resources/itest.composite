@@ -21,13 +21,13 @@
     
     <!-- Unit test -->
     <component name="GreeterTest">
-        <f3:junit class="org.fabric3.policy.policy.GreeterTest"/>
+        <f3:junit class="org.fabric3.fabric.policy.GreeterTest"/>
         <reference name="greeter" target="Greeter"/>
     </component>
 
     <!-- Greeter Impl -->
     <component name="Greeter">
-        <implementation.java class="org.fabric3.policy.policy.GreeterImpl" requires="f3:globalTransaction"/>
+        <implementation.java class="org.fabric3.fabric.policy.GreeterImpl" requires="f3:globalTransaction"/>
     </component>
     
 </composite>
