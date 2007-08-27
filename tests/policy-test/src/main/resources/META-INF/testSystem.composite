@@ -24,4 +24,10 @@
     <!-- Include system SCDL -->
     <include name="org.fabric3.fabric.SystemImplementation" scdlResource="META-INF/fabric3/embeddedMaven.composite"/>
     
+    <!-- JOTM Transaction manager -->
+    <component name="transactionManager">
+        <!-- system:implementation.system class="org.objectweb.jotm.Current"/-->
+        <system:implementation.system class="org.fabric3.fabric.policy.DummyTransactionManager"/>
+    </component>
+    
 </composite>

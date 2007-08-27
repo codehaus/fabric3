@@ -19,20 +19,15 @@
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            name="PolicyTestComposite">
     
-    <component name="HelloTest">
+    <!-- Unit test -->
+    <component name="GreeterTest">
         <f3:junit class="org.fabric3.sample.hello.HelloTest"/>
-        <reference name="helloClient" target="HelloClient"/>
+        <reference name="greeter" target="Greeter"/>
     </component>
 
-    <!-- Hello Client -->
-    <component name="HelloClient">
-        <implementation.java class="org.fabric3.sample.hello.HelloClientImpl"/>
-        <reference name="helloService" target="HelloService" requires="greeting"/>
-    </component>
-
-    <!-- Hello Service -->
-    <component name="HelloService">
-        <implementation.java class="org.fabric3.sample.hello.HelloServiceImpl"/>
+    <!-- Greeter Impl -->
+    <component name="Greeter">
+        <implementation.java class="org.fabric3.policy.policy.GreeterImpl" requires="f3:globalTransaction"/>
     </component>
     
 </composite>

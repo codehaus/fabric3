@@ -38,29 +38,64 @@
 			<groupId>org.codehaus.fabric3.spec</groupId>
 			<artifactId>sca-api-r1.0</artifactId>
 			<version>0.1</version>
+            <scope>compile</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.codehaus.fabric3</groupId>
 			<artifactId>fabric3-spi</artifactId>
 			<version>0.2-SNAPSHOT</version>
+            <scope>compile</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.codehaus.fabric3.spec</groupId>
 			<artifactId>sca-api-r1.0</artifactId>
 			<version>0.1</version>
+            <scope>compile</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
+            <scope>compile</scope>
+		</dependency>
+		
+		<dependency>
+		    <groupId>jotm</groupId>
+            <artifactId>jotm</artifactId>
+            <version>2.0.10</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.resource</groupId>
+                    <artifactId>connector</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.transaction</groupId>
+                    <artifactId>jta</artifactId>
+                </exclusion>
+            </exclusions>
+            <scope>compile</scope>
 		</dependency>
 
         <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>sample-hello-common</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <groupId>geronimo-spec</groupId>
+            <artifactId>geronimo-spec-jta</artifactId>
+            <version>1.0.1B-rc4</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>geronimo-spec</groupId>
+            <artifactId>geronimo-spec-j2ee-connector</artifactId>
+            <version>1.5-rc4</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>compile</scope>
         </dependency>
 
 	</dependencies>
@@ -104,12 +139,14 @@
 					<systemScdl>
 						file:target/classes/META-INF/testSystem.composite
 					</systemScdl>
-					<definitionsFile>
-					    test.definitions
-					</definitionsFile>
-					<!--extensions>
-					</extensions-->
-				</configuration>
+                    <contributions>
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-transaction</artifactId>
+                            <version>0.1-SNAPSHOT</version>
+                        </dependency>
+                    </contributions>
+                </configuration>
 				<executions>
 					<execution>
 						<goals>

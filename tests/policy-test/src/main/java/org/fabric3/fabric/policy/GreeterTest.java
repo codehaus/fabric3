@@ -18,28 +18,24 @@
  */
 package org.fabric3.fabric.policy;
 
-import org.fabric3.spi.wire.Interceptor;
-import org.fabric3.spi.wire.Message;
+import org.osoa.sca.annotations.Reference;
+
+import junit.framework.TestCase;
 
 /**
  * @version $Revision$ $Date$
  */
-public class GreetingInterceptor implements Interceptor {
+public class GreeterTest extends TestCase {
     
-    private Interceptor next;
-
-    public Interceptor getNext() {
-        return next;
+    private Greeter greeter;
+    
+    @Reference
+    public void setGreeter(Greeter greeter) {
+        this.greeter = greeter;
     }
-
-    public Message invoke(Message in) {
-        Message out = next.invoke(in);
-        out.setBody("Hello " + out.getBody());
-        return out;
-    }
-
-    public void setNext(Interceptor next) {
-        this.next = next;
+    
+    public void testHello() {
+        greeter.greet("Fred");
     }
 
 }
