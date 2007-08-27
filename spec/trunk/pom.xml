@@ -101,15 +101,15 @@
 
     <profiles>
         <profile>
-            <id>release</id>
+            <id>release-profile</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
             <build>
                 <plugins>
-                    <plugin>
-                        <artifactId>maven-source-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                    </plugin>
                     <plugin>
                         <artifactId>maven-gpg-plugin</artifactId>
                     </plugin>
