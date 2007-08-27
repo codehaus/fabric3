@@ -38,7 +38,7 @@ public class DefaultPolicyHelper implements PolicyHelper {
     public void loadPolicySetsAndIntents(PolicyAware policyAware, XMLStreamReader reader) throws LoaderException {
         
         policyAware.setIntents(StaxUtil.parseListOfQNames(reader, "requires"));
-        policyAware.setIntents(StaxUtil.parseListOfQNames(reader, "policySets"));
+        policyAware.setPolicySets(StaxUtil.parseListOfQNames(reader, "policySets"));
 
     }
 
