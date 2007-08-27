@@ -18,12 +18,9 @@
  */
 package org.fabric3.fabric.policy;
 
-import org.osoa.sca.annotations.EagerInit;
-
 /**
  * @version $Revision$ $Date$
  */
-@EagerInit
 public class GreeterImpl implements Greeter {
 
     public String greet(String name) {
