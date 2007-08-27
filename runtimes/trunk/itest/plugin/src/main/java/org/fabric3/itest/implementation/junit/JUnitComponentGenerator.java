@@ -4,11 +4,6 @@ import java.net.URI;
 import java.util.Map;
 import java.util.Set;
 
-import javax.xml.namespace.QName;
-
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
-
 import org.fabric3.fabric.implementation.java.JavaComponentDefinition;
 import org.fabric3.fabric.implementation.java.JavaWireSourceDefinition;
 import org.fabric3.fabric.implementation.java.JavaWireTargetDefinition;
@@ -22,6 +17,7 @@ import org.fabric3.pojo.scdl.MemberSite;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Property;
+import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
@@ -33,6 +29,8 @@ import org.fabric3.spi.model.instance.ValueSource;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Rev$ $Date$ TODO JFM this class shares commonalities
@@ -47,7 +45,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
 
     @SuppressWarnings({"unchecked"})
     public PhysicalComponentDefinition generate(LogicalComponent<ImplementationJUnit> component, 
-                                                Set<QName> intentsToBeProvided, 
+                                                Set<Intent> intentsToBeProvided, 
                                                 GeneratorContext context) {
         
         ComponentDefinition<ImplementationJUnit> definition = component.getDefinition();

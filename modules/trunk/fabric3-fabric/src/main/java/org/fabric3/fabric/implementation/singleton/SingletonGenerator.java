@@ -21,10 +21,7 @@ package org.fabric3.fabric.implementation.singleton;
 import java.net.URI;
 import java.util.Set;
 
-import javax.xml.namespace.QName;
-
-import org.osoa.sca.annotations.Reference;
-
+import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
@@ -35,6 +32,7 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Rev$ $Date$
@@ -46,7 +44,7 @@ public class SingletonGenerator implements ComponentGenerator<LogicalComponent<S
     }
 
     public PhysicalComponentDefinition generate(LogicalComponent<SingletonImplementation> component, 
-                                                Set<QName> intentsToBeProvided, 
+                                                Set<Intent> intentsToBeProvided, 
                                                 GeneratorContext context) throws GenerationException {
         throw new UnsupportedOperationException();
     }

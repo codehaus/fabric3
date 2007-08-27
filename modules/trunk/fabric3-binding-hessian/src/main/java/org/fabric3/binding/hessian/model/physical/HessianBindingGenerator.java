@@ -20,12 +20,11 @@ package org.fabric3.binding.hessian.model.physical;
 
 import java.util.Set;
 
-import javax.xml.namespace.QName;
-
 import org.fabric3.binding.hessian.model.logical.HessianBindingDefinition;
 import org.fabric3.extension.generator.BindingGeneratorExtension;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.model.instance.LogicalBinding;
@@ -45,7 +44,7 @@ public class HessianBindingGenerator extends BindingGeneratorExtension<HessianWi
      *      org.fabric3.spi.model.type.ServiceDefinition)
      */
     public HessianWireSourceDefinition generateWireSource(LogicalBinding<HessianBindingDefinition> logicalBinding,
-                                                          Set<QName> intentsToBeProvided,     
+                                                          Set<Intent> intentsToBeProvided,     
                                                           GeneratorContext generatorContext,
                                                           ServiceDefinition serviceDefinition) throws GenerationException {
 
@@ -62,7 +61,7 @@ public class HessianBindingGenerator extends BindingGeneratorExtension<HessianWi
      *      org.fabric3.spi.model.type.ReferenceDefinition)
      */
     public HessianWireTargetDefinition generateWireTarget(LogicalBinding<HessianBindingDefinition> logicalBinding,
-                                                          Set<QName> intentsToBeProvided,     
+                                                          Set<Intent> intentsToBeProvided,     
                                                           GeneratorContext generatorContext,
                                                           ReferenceDefinition referenceDefinition) throws GenerationException {
 

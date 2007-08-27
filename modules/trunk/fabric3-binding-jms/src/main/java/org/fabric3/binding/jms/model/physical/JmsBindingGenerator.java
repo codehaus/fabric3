@@ -20,12 +20,11 @@ package org.fabric3.binding.jms.model.physical;
 
 import java.util.Set;
 
-import javax.xml.namespace.QName;
-
 import org.fabric3.binding.jms.model.logical.JmsBindingDefinition;
 import org.fabric3.extension.generator.BindingGeneratorExtension;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.model.instance.LogicalBinding;
@@ -43,7 +42,7 @@ public class JmsBindingGenerator extends BindingGeneratorExtension<JmsWireSource
      *                                                                    org.fabric3.spi.model.type.ServiceDefinition)
      */
     public JmsWireSourceDefinition generateWireSource(LogicalBinding<JmsBindingDefinition> logicalBinding,
-                                                      Set<QName> intentsToBeProvided,
+                                                      Set<Intent> intentsToBeProvided,
                                                       GeneratorContext context,
                                                       ServiceDefinition serviceDefinition) throws GenerationException {
         return new JmsWireSourceDefinition(logicalBinding.getBinding().getMetadata());
@@ -55,7 +54,7 @@ public class JmsBindingGenerator extends BindingGeneratorExtension<JmsWireSource
      *                                                                    org.fabric3.spi.model.type.ReferenceDefinition)
      */
     public JmsWireTargetDefinition generateWireTarget(LogicalBinding<JmsBindingDefinition> logicalBinding,
-                                                      Set<QName> intentsToBeProvided,
+                                                      Set<Intent> intentsToBeProvided,
                                                       GeneratorContext context,
                                                       ReferenceDefinition referenceDefinition)
         throws GenerationException {

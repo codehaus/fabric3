@@ -18,6 +18,10 @@
  */
 package org.fabric3.spi.policy.registry;
 
+import java.util.Set;
+
+import org.fabric3.scdl.definitions.Intent;
+import org.fabric3.scdl.definitions.PolicySetExtension;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 
@@ -27,26 +31,45 @@ import org.fabric3.spi.model.instance.LogicalComponent;
  * @version $Revision$ $Date$
  */
 public interface PolicyResolver {
+
+    /**
+     * Returns the set of intents that need to be explictly provided by the binding. These are the 
+     * intents requested by the use and available in the <code>mayProvide</code> list of intents 
+     * declared by the binding type.
+     * 
+     * @param logicalBinding Logical binding for which intents are to be resolved.
+     * @return Set of intents that need to be explictly provided by the binding.
+     * @throws PolicyResolutionException If there are any unidentified intents.
+     */
+    Set<Intent> getInteractionIntentsToBeProvided(LogicalBinding<?> logicalBinding) throws PolicyResolutionException;
     
     /**
-     * Resolves interaction intents defined against a binding. This is applicable for 
+     * Returns the set of intents that need to be explictly provided by the implementation. These 
+     * are the intents requested by the use and available in the <code>mayProvide</code> list of intents 
+     * declared by the implementation type.
      * 
-     * 
-     * @param logicalBinding Binding against which intents are declared.
-     * @return Policy resolution result.
-     * @throws PolicyResolutionException If unable to resolve the intents.
+     * @param logicalComponent Logical component for which intents are to be resolved.
+     * @return Set of intents that need to be explictly provided by the implementation.
+     * @throws PolicyResolutionException If there are any unidentified intents.
      */
-    PolicyResolutionResult resolveIntents(LogicalBinding<?> logicalBinding) throws PolicyResolutionException;
-    
-    
+    Set<Intent> getImplementationIntentsToBeProvided(LogicalComponent<?> logicalComponent) throws PolicyResolutionException;
     
     /**
-     * Resolves implementation intents defined against an implementation.
+     * Returns the set of policies that will address the intents that are not provided by the binding type.
      * 
-     * @param logicalComponent Logical component against which intents are declared.
-     * @return Policy resolution result.
-     * @throws PolicyResolutionException If unable to resolve the intents.
+     * @param binding Binding for which policies are to be resolved.
+     * @return Set of resolved policies.
+     * @throws PolicyResolutionException If all intents cannot be resolved.
      */
-    PolicyResolutionResult resolveIntents(LogicalComponent<?> logicalComponent) throws PolicyResolutionException;
+    Set<PolicySetExtension> resolveInteractionIntents(LogicalBinding<?> binding) throws PolicyResolutionException;
+    
+    /**
+     * Returns the set of policies that will address the intents that are not provided by the implementation type.
+     * 
+     * @param logicalComponent Logical component for which policies are to be resolved.
+     * @return Set of resolved policies.
+     * @throws PolicyResolutionException If all intents cannot be resolved.
+     */
+    Set<PolicySetExtension> resolveImplementationIntents(LogicalComponent<?> logicalComponent) throws PolicyResolutionException;
 
 }

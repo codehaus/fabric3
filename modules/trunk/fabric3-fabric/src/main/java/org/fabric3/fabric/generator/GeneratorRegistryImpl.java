@@ -38,6 +38,7 @@ import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySetExtension;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.CommandGenerator;
@@ -59,7 +60,7 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.model.type.SCABindingDefinition;
 import org.fabric3.spi.policy.registry.PolicyResolutionException;
 import org.fabric3.spi.policy.registry.PolicyResolver;
-import org.fabric3.spi.policy.registry.ResolvedPolicy;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Rev$ $Date$
@@ -118,6 +119,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
      *
      * @param policyResolver Policy registry.
      */
+    @Reference(required = true)
     public void setPolicyResolver(PolicyResolver policyResolver) {
         this.policyResolver = policyResolver;
     }
@@ -131,8 +133,15 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         if (generator == null) {
             throw new GeneratorNotFoundException(type);
         }
-        // TODO Pass the intents to be provided by the implementation
-        return generator.generate(component, null, context);
+        
+        Set<Intent> intentsToBeProvided = null;
+        try {
+            intentsToBeProvided = policyResolver.getImplementationIntentsToBeProvided(component);
+        } catch (PolicyResolutionException e) {
+            throw new PolicyException(e);
+        }
+        return generator.generate(component, intentsToBeProvided, context);
+        
     }
 
     @SuppressWarnings({"unchecked"})
@@ -144,7 +153,13 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
 
         ServiceContract<?> contract = service.getDefinition().getServiceContract();
 
-        Set<PolicySetExtension> policies = getPolicies(binding);
+        Set<PolicySetExtension> policies = null;
+        try {
+            policies = policyResolver.resolveInteractionIntents(binding);
+            policies.addAll(policyResolver.resolveImplementationIntents(component));
+        } catch (PolicyResolutionException e) {
+            throw new PolicyException(e);
+        }
         PhysicalWireDefinition wireDefinition = createWireDefinition(contract, policies);
 
         Class<?> type = component.getDefinition().getImplementation().getClass();
@@ -168,8 +183,13 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
             throw new GeneratorNotFoundException(type);
         }
 
-        // TODO Pass the intents to be provided by the binding
-        PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(binding, null, context, service.getDefinition());
+        Set<Intent> intentsToBeProvided = null;
+        try {
+            intentsToBeProvided = policyResolver.getInteractionIntentsToBeProvided(binding);
+        } catch (PolicyResolutionException e) {
+            throw new PolicyException(e);
+        }
+        PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(binding, intentsToBeProvided, context, service.getDefinition());
         wireDefinition.setSource(sourceDefinition);
         context.getPhysicalChangeSet().addWireDefinition(wireDefinition);
 
@@ -179,12 +199,16 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
     public <C extends LogicalComponent<?>> void generateBoundReferenceWire(C source,
                                                                            LogicalReference reference,
                                                                            LogicalBinding<?> binding,
-                                                                           GeneratorContext context)
-            throws GenerationException {
+                                                                           GeneratorContext context) throws GenerationException {
 
         ServiceContract<?> contract = reference.getDefinition().getServiceContract();
 
-        Set<PolicySetExtension> policies = getPolicies(binding);
+        Set<PolicySetExtension> policies = null;
+        try {
+            policies = policyResolver.resolveInteractionIntents(binding);
+        } catch(PolicyResolutionException e) {
+            throw new PolicyException(e);
+        }
         PhysicalWireDefinition wireDefinition = createWireDefinition(contract, policies);
 
         Class<? extends BindingDefinition> bindingType = binding.getBinding().getClass();
@@ -193,8 +217,14 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
             throw new GeneratorNotFoundException(bindingType);
         }
 
-        // TODO Pass the intents to be provided by the binding
-        PhysicalWireTargetDefinition targetDefinition = targetGenerator.generateWireTarget(binding, null, context, reference.getDefinition());
+
+        Set<Intent> intentsToBeProvided = null;
+        try {
+            intentsToBeProvided = policyResolver.getInteractionIntentsToBeProvided(binding);
+        } catch (PolicyResolutionException e) {
+            throw new PolicyException(e);
+        }
+        PhysicalWireTargetDefinition targetDefinition = targetGenerator.generateWireTarget(binding, intentsToBeProvided, context, reference.getDefinition());
         wireDefinition.setTarget(targetDefinition);
 
         Class<? extends Implementation> implType = source.getDefinition().getImplementation().getClass();
@@ -221,10 +251,14 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         ServiceContract<?> contract = referenceDefinition.getServiceContract();
 
         Set<PolicySetExtension> policies = new HashSet<PolicySetExtension>();
-        policies.addAll(getPolicies(new LogicalBinding<SCABindingDefinition>(SCABindingDefinition.INSTANCE, service)));
-        policies.addAll(getPolicies(new LogicalBinding<SCABindingDefinition>(SCABindingDefinition.INSTANCE, reference)));
         
-        // TODO Add interceptors for the implementation policies
+        try {
+            policies.addAll(policyResolver.resolveInteractionIntents((new LogicalBinding<SCABindingDefinition>(SCABindingDefinition.INSTANCE, service))));
+            policies.addAll(policyResolver.resolveInteractionIntents((new LogicalBinding<SCABindingDefinition>(SCABindingDefinition.INSTANCE, reference))));
+            policies.addAll(policyResolver.resolveImplementationIntents((target)));
+        } catch (PolicyResolutionException e) {
+            throw new PolicyException(e);
+        }
         
         PhysicalWireDefinition wireDefinition = createWireDefinition(contract, policies);
 
@@ -353,30 +387,6 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         }
 
         return wireDefinition;
-
-    }
-
-    /*
-    * Resolves the policies.
-    */
-    @SuppressWarnings("unchecked")
-    private Set<PolicySetExtension> getPolicies(LogicalBinding<?> logicalBinding) throws GenerationException {
-
-        try {
-            if (policyResolver != null) {
-                // TODO this needs to cater for provided intents
-                Set<PolicySetExtension> policies = new HashSet<PolicySetExtension>();
-                Set<ResolvedPolicy> resolvedPolicies = policyResolver.resolveIntents(logicalBinding).getResolvedPolicies();
-                for(ResolvedPolicy resolvedPolicy : resolvedPolicies) {
-                    policies.add(resolvedPolicy.getPolicy());
-                }
-                return policies;
-            } else {
-                return Collections.EMPTY_SET;
-            }
-        } catch (PolicyResolutionException ex) {
-            throw new PolicyException(ex);
-        }
 
     }
 

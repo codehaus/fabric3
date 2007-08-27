@@ -34,10 +34,7 @@ import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalScaArtifact;
 import org.fabric3.spi.policy.registry.PolicyResolutionException;
-import org.fabric3.spi.policy.registry.PolicyResolutionResult;
 import org.fabric3.spi.policy.registry.PolicyResolver;
-import org.fabric3.spi.policy.registry.ProvidedIntent;
-import org.fabric3.spi.policy.registry.ResolvedPolicy;
 import org.fabric3.spi.services.definitions.DefinitionsRegistry;
 import org.osoa.sca.annotations.Reference;
 
@@ -54,25 +51,25 @@ public class DefaultPolicyResolver implements PolicyResolver {
      * 
      * @param definitionsRegistry Definitions registry.
      */
-    public DefaultPolicyResolver(@Reference DefinitionsRegistry definitionsRegistry) {
+    public DefaultPolicyResolver(@Reference(required = true) DefinitionsRegistry definitionsRegistry) {
         this.definitionsRegistry = definitionsRegistry;
     }
 
     /**
-     * @see org.fabric3.spi.policy.registry.PolicyResolver#resolveIntents(org.fabric3.spi.model.instance.LogicalBinding)
+     * @see org.fabric3.spi.policy.registry.PolicyResolver#getInteractionIntentsToBeProvided(org.fabric3.spi.model.instance.LogicalBinding)
      */
-    public PolicyResolutionResult resolveIntents(LogicalBinding<?> logicalBinding) throws PolicyResolutionException {
+    public Set<Intent> getInteractionIntentsToBeProvided(LogicalBinding<?> logicalBinding) throws PolicyResolutionException {
         
         QName type = logicalBinding.getType();
         BindingType bindingType = definitionsRegistry.getDefinition(type, BindingType.class);
         
-        Set<QName> alwaysProvidedIntents = bindingType.getAlwaysProvide();
-        Set<QName> mayProvidedIntents = bindingType.getMayProvide();
+        // FIXME This should not happen, all binding types should be registsred
+        if(bindingType == null) {
+            return Collections.emptySet();
+        }
 
-        // Aggregate all the intents from the ancestors
+        Set<QName> mayProvidedIntents = bindingType.getMayProvide();
         Set<QName> intentNames = aggregateIntents(logicalBinding);
-        intentNames.removeAll(alwaysProvidedIntents);
-        intentNames.removeAll(mayProvidedIntents);
 
         // Expand all the profile intents
         Set<Intent> requiredIntents = resolveProfileIntents(intentNames);
@@ -80,27 +77,36 @@ public class DefaultPolicyResolver implements PolicyResolver {
         // Remove intents not applicable to the artifact
         filterInvalidIntents(Intent.BINDING, requiredIntents);
         
-        return resolvePolicy(alwaysProvidedIntents, mayProvidedIntents, intentNames);
+        Set<Intent> intentsToBeProvided = new HashSet<Intent>();
+        for(Intent intent : requiredIntents) {
+            if(mayProvidedIntents.contains(intent.getName())) {
+                intentsToBeProvided.add(intent);
+            }
+        }
+        return intentsToBeProvided;
         
     }
-
+    
     /**
-     * @see org.fabric3.spi.policy.registry.PolicyResolver#resolveIntents(org.fabric3.spi.model.instance.LogicalComponent)
+     * @see org.fabric3.spi.policy.registry.PolicyResolver#getImplementationIntentsToBeProvided(org.fabric3.spi.model.instance.LogicalComponent)
      */
-    public PolicyResolutionResult resolveIntents(LogicalComponent<?> logicalComponent) throws PolicyResolutionException {
+    public Set<Intent> getImplementationIntentsToBeProvided(LogicalComponent<?> logicalComponent) throws PolicyResolutionException {
         
         Implementation<?> implementation = logicalComponent.getDefinition().getImplementation();
         QName type = implementation.getType();
         ImplementationType implementationType = definitionsRegistry.getDefinition(type, ImplementationType.class);
         
-        Set<QName> alwaysProvidedIntents = implementationType.getAlwaysProvide();
+        // FIXME This should not happen, all implementation types should be registsred
+        if(implementationType == null) {
+            return Collections.emptySet();
+        }
+        
         Set<QName> mayProvidedIntents = implementationType.getMayProvide();
 
         // Aggregate all the intents from the ancestors
         Set<QName> intentNames = new HashSet<QName>();
         intentNames.addAll(logicalComponent.getDefinition().getImplementation().getIntents());
         intentNames.addAll(aggregateIntents(logicalComponent));
-        intentNames.removeAll(alwaysProvidedIntents);
         intentNames.removeAll(mayProvidedIntents);
 
         // Expand all the profile intents
@@ -109,21 +115,121 @@ public class DefaultPolicyResolver implements PolicyResolver {
         // Remove intents not applicable to the artifact
         filterInvalidIntents(Intent.IMPLEMENTATION, requiredIntents);
         
-        return resolvePolicy(alwaysProvidedIntents, mayProvidedIntents, intentNames);
+        Set<Intent> intentsToBeProvided = new HashSet<Intent>();
+        for(Intent intent : requiredIntents) {
+            if(mayProvidedIntents.contains(intent.getName())) {
+                intentsToBeProvided.add(intent);
+            }
+        }
+        return intentsToBeProvided;
+        
+    }
+    
+    /**
+     * @see org.fabric3.spi.policy.registry.PolicyResolver#resolveInteractionIntents(org.fabric3.spi.model.instance.LogicalBinding)
+     */
+    public Set<PolicySetExtension> resolveInteractionIntents(LogicalBinding<?> logicalBinding) throws PolicyResolutionException {
+        
+        QName type = logicalBinding.getType();
+        BindingType bindingType = definitionsRegistry.getDefinition(type, BindingType.class);
+        
+        Set<QName> alwaysProvidedIntents = new HashSet<QName>();
+        Set<QName> mayProvidedIntents = new HashSet<QName>();
+
+        // FIXME This should not happen, all binding types should be registsred
+        if(bindingType != null) {
+            alwaysProvidedIntents = bindingType.getAlwaysProvide();
+            mayProvidedIntents = bindingType.getMayProvide();
+        }
+
+        // Aggregate all the intents from the ancestors
+        Set<QName> intentNames = aggregateIntents(logicalBinding);
+        
+        // Expand all the profile intents
+        Set<Intent> requiredIntents = resolveProfileIntents(intentNames);
+        
+        // Remove intents not applicable to the artifact
+        filterInvalidIntents(Intent.BINDING, requiredIntents);
+        
+        // Remove intents that are provided
+        for(Intent intent : requiredIntents) {
+            QName intentName = intent.getName();
+            if(alwaysProvidedIntents.contains(intentName) || mayProvidedIntents.contains(intentName)) {
+                requiredIntents.remove(intent);
+            }
+        }
+        
+        Set<PolicySetExtension> policies = resolvePolicies(requiredIntents);        
+        if(requiredIntents.size() > 0) {
+            throw new PolicyResolutionException("Unable to resolve all intents", type);
+        }
+        
+        return policies;
+        
+    }
+    
+    /**
+     * @see org.fabric3.spi.policy.registry.PolicyResolver#resolveImplementationIntents(org.fabric3.spi.model.instance.LogicalComponent)
+     */
+    public Set<PolicySetExtension> resolveImplementationIntents(LogicalComponent<?> logicalComponent) throws PolicyResolutionException {
+        
+        Implementation<?> implementation = logicalComponent.getDefinition().getImplementation();
+        QName type = implementation.getType();
+        ImplementationType implementationType = definitionsRegistry.getDefinition(type, ImplementationType.class);
+        
+        Set<QName> alwaysProvidedIntents = new HashSet<QName>();
+        Set<QName> mayProvidedIntents = new HashSet<QName>();
+
+        // FIXME This should not happen, all implementation types should be registsred
+        if(implementationType != null) {
+            alwaysProvidedIntents = implementationType.getAlwaysProvide();
+            mayProvidedIntents = implementationType.getMayProvide();
+        }
+
+        // Aggregate all the intents from the ancestors
+        Set<QName> intentNames = new HashSet<QName>();
+        intentNames.addAll(logicalComponent.getDefinition().getImplementation().getIntents());
+        intentNames.addAll(aggregateIntents(logicalComponent));
+
+        // Expand all the profile intents
+        Set<Intent> requiredIntents = resolveProfileIntents(intentNames);
+
+        // Remove intents not applicable to the artifact
+        filterInvalidIntents(Intent.IMPLEMENTATION, requiredIntents);
+        
+        // Remove intents that are provided
+        for(Intent intent : requiredIntents) {
+            QName intentName = intent.getName();
+            if(alwaysProvidedIntents.contains(intentName) || mayProvidedIntents.contains(intentName)) {
+                requiredIntents.remove(intent);
+            }
+        }
+        
+        Set<PolicySetExtension> policies = resolvePolicies(requiredIntents);        
+        if(requiredIntents.size() > 0) {
+            throw new PolicyResolutionException("Unable to resolve all intents", type);
+        }
+        
+        return policies;
         
     }
 
     /*
      * Resolve the policies.
      */
-    private Set<PolicySetExtension> resolvePolicies(Set<QName> intentNames) {
+    private Set<PolicySetExtension> resolvePolicies(Set<Intent> requiredIntents) throws PolicyResolutionException {
 
         Set<PolicySetExtension> policies = new HashSet<PolicySetExtension>();
+        
         for (PolicySet policySet : definitionsRegistry.getAllDefinitions(PolicySet.class)) {
-            if (policySet.doesProvide(intentNames)) {
-                policies.add(policySet.getExtension());
+            for(Intent intent : requiredIntents) {
+                if(policySet.doesProvide(intent.getName())) {
+                    policies.add(policySet.getExtension());
+                    requiredIntents.remove(intent);
+                }
             }
         }
+        
         return policies;
 
     }
@@ -203,51 +309,6 @@ public class DefaultPolicyResolver implements PolicyResolver {
         }
         return requiredIntents;
 
-    }
-    
-    /*
-     * Implementation of policy resolution result.
-     */
-    private class DefaultPolicyResolutionResult implements PolicyResolutionResult {
-        
-        private final Set<ProvidedIntent> providedIntents;
-        private final Set<ResolvedPolicy> resolvedPolicies;
-        
-        public DefaultPolicyResolutionResult(Set<ProvidedIntent> providedIntents, Set<ResolvedPolicy> resolvedPolicies) {
-            this.providedIntents = providedIntents;
-            this.resolvedPolicies = resolvedPolicies;
-        }
-
-        public Set<ProvidedIntent> getProvidedIntents() {
-            return Collections.unmodifiableSet(providedIntents);
-        }
-
-        public Set<ResolvedPolicy> getResolvedPolicies() {
-            return Collections.unmodifiableSet(resolvedPolicies);
-        }
-        
-    }
-
-    /*
-     * Resolves the policy.
-     */
-    private PolicyResolutionResult resolvePolicy(Set<QName> alwaysProvidedIntents, Set<QName> mayProvidedIntents, Set<QName> intentNames) {
-        
-        Set<ResolvedPolicy> resolvedPolicies = new HashSet<ResolvedPolicy>();
-        for(PolicySetExtension extension : resolvePolicies(intentNames)) {
-            resolvedPolicies.add(new ResolvedPolicy(extension, Boolean.FALSE));
-        }
-        
-        Set<ProvidedIntent> providedIntents = new HashSet<ProvidedIntent>();
-        for(QName intentName : alwaysProvidedIntents) {
-            providedIntents.add(new ProvidedIntent(definitionsRegistry.getDefinition(intentName, Intent.class), true));
-        }
-        for(QName intentName : mayProvidedIntents) {
-            providedIntents.add(new ProvidedIntent(definitionsRegistry.getDefinition(intentName, Intent.class), false));
-        }
-        
-        return new DefaultPolicyResolutionResult(providedIntents, resolvedPolicies);
-        
     }
 
 }

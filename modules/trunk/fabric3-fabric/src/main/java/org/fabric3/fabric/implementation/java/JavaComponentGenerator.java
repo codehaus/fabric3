@@ -21,15 +21,11 @@ package org.fabric3.fabric.implementation.java;
 import java.net.URI;
 import java.util.Set;
 
-import javax.xml.namespace.QName;
-
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
-
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
@@ -41,6 +37,8 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Generates a JavaComponentDefinition from a ComponentDefinition corresponding to a Java component implementation
@@ -60,7 +58,9 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
         this.helper = helper;
     }
 
-    public PhysicalComponentDefinition generate(LogicalComponent<JavaImplementation> component, Set<QName> intentsToBeProvided, GeneratorContext context)
+    public PhysicalComponentDefinition generate(LogicalComponent<JavaImplementation> component, 
+                                                Set<Intent> intentsToBeProvided, 
+                                                GeneratorContext context)
             throws GenerationException {
         ComponentDefinition<JavaImplementation> definition = component.getDefinition();
         JavaImplementation implementation = definition.getImplementation();

@@ -20,12 +20,11 @@ package org.fabric3.binding.burlap.model.physical;
 
 import java.util.Set;
 
-import javax.xml.namespace.QName;
-
 import org.fabric3.binding.burlap.model.logical.BurlapBindingDefinition;
 import org.fabric3.extension.generator.BindingGeneratorExtension;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.model.instance.LogicalBinding;
@@ -45,7 +44,7 @@ public class BurlapBindingGenerator extends BindingGeneratorExtension<BurlapWire
      *                                                                    org.fabric3.scdl.ServiceDefinition)
      */
     public BurlapWireSourceDefinition generateWireSource(LogicalBinding<BurlapBindingDefinition> logicalBinding,
-                                                         Set<QName> intentsToBeProvided,
+                                                         Set<Intent> intentsToBeProvided,
                                                          GeneratorContext context,
                                                          ServiceDefinition serviceDefinition)
         throws GenerationException {
@@ -65,7 +64,7 @@ public class BurlapBindingGenerator extends BindingGeneratorExtension<BurlapWire
      *                                                                    org.fabric3.scdl.ReferenceDefinition)
      */
     public BurlapWireTargetDefinition generateWireTarget(LogicalBinding<BurlapBindingDefinition> logicalBinding,
-                                                         Set<QName> intentsToBeProvided,
+                                                         Set<Intent> intentsToBeProvided,
                                                          GeneratorContext context,
                                                          ReferenceDefinition referenceDefinition)
         throws GenerationException {

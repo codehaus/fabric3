@@ -144,6 +144,7 @@ import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.PolicyHelper;
+import org.fabric3.spi.policy.registry.NullPolicyResolver;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ArtifactResolverRegistry;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
@@ -418,7 +419,8 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     }
 
     protected GeneratorRegistry createGeneratorRegistry() {
-        GeneratorRegistry registry = new GeneratorRegistryImpl();
+        GeneratorRegistryImpl registry = new GeneratorRegistryImpl();
+        registry.setPolicyResolver(new NullPolicyResolver());
         new SystemComponentGenerator(registry, new ClassLoaderGeneratorImpl(), new GenerationHelperImpl());
         new SingletonGenerator(registry);
         StartCompositeContextGenerator contextGenerator = new StartCompositeContextGenerator(registry);

@@ -20,12 +20,11 @@ package org.fabric3.spi.generator;
 
 import java.util.Set;
 
-import javax.xml.namespace.QName;
-
 import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.definitions.Intent;
+import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
-import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
@@ -47,7 +46,7 @@ public interface ComponentGenerator<C extends LogicalComponent<? extends Impleme
      * @param intentsToBeProvided Intents that need to explicitly provided by the implementation.
      * @throws GenerationException if an error occurs during the generation process
      */
-    PhysicalComponentDefinition generate(C component, Set<QName> intentsToBeProvided, GeneratorContext context) throws GenerationException;
+    PhysicalComponentDefinition generate(C component, Set<Intent> intentsToBeProvided, GeneratorContext context) throws GenerationException;
 
     /**
      * Generates a {@link PhysicalWireSourceDefinition} used to attach a wire to a source component. Metadata contained
