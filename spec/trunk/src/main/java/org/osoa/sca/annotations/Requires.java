@@ -32,14 +32,14 @@ import java.lang.annotation.Target;
  * class such as methods, fields or constructor parameters.
  * <p/>
  * Intents are specified as XML QNames in the representation defined by
- * {@link javax.xml.namespace.QName#toString()}. Intents may be qualified with one or more
+ * {@link javax.xml.namespace.QName#toString() QName#toString()}. Intents may be qualified with one or more
  * suffixes separated by a "." such as:
  * <ul>
  * <li>{http://www.osoa.org/xmlns/sca/1.0}confidentiality</li>
  * <li>{http://www.osoa.org/xmlns/sca/1.0}confidentiality.message</li>
  * </ul>
  * This annotation supports general purpose intents specified as strings.  Users may also define
- * specific intents using the {@link @org.osoa.sca.annotations.Intent} annotation.
+ * specific intents using the {@link Intent} annotation.
  *
  * @version $Rev$ $Date$
  */

@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
  * Adding this annotation allows SCA runtimes to automatically detect user-defined intents.
  * <p/>
  * Applications must specify a value, a pairing of targetNamespace and localPort, or both.
- * If both value and pairing are supplied they must define the name qualified name.
+ * If both value and pairing are supplied they must define the same qualified name.
  *
  * @version $Rev$ $Date$
  */
@@ -36,7 +36,8 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 public @interface Intent {
     /**
-     * The qualified name of the intent, in the form defined by {@link javax.xml.namespace.QName#toString}.
+     * The qualified name of the intent, in the form defined by
+     * {@link javax.xml.namespace.QName#toString() QName.toString()}.
      *
      * @return the qualified name of the intent
      */
