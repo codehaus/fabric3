@@ -17,6 +17,7 @@
 package org.fabric3.groovy;
 
 import java.net.URI;
+import java.util.Set;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
@@ -31,9 +32,11 @@ import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
+import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.definitions.Intent;
 
 /**
  * @version $Rev$ $Date$
@@ -51,7 +54,9 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
         this.helper = helper;
     }
 
-    public void generate(LogicalComponent<GroovyImplementation> component, GeneratorContext context)
+    public PhysicalComponentDefinition generate(LogicalComponent<GroovyImplementation> component, 
+                                          Set<Intent> intentsToBeProvided,
+                                          GeneratorContext context)
             throws GenerationException {
 
         ComponentDefinition<GroovyImplementation> definition = component.getDefinition();
@@ -82,13 +87,13 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
         // generate the classloader resource definition
         URI classLoaderId = classLoaderGenerator.generate(component, context);
         physical.setClassLoaderId(classLoaderId);
-        context.getPhysicalChangeSet().addComponentDefinition(physical);
+        
+        return physical;
     }
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<GroovyImplementation> source,
                                                            LogicalReference reference,
-                                                           boolean optimizable,
-                                                           GeneratorContext context)
+                                                           boolean optimizable)
             throws GenerationException {
         GroovyWireSourceDefinition wireDefinition = new GroovyWireSourceDefinition();
         wireDefinition.setUri(reference.getUri());
@@ -98,8 +103,7 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
     }
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
-                                                           LogicalComponent<GroovyImplementation> target,
-                                                           GeneratorContext context)
+                                                           LogicalComponent<GroovyImplementation> target)
             throws GenerationException {
         GroovyWireTargetDefinition wireDefinition = new GroovyWireTargetDefinition();
         URI uri;
