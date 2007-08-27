@@ -33,6 +33,7 @@ import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.scdl.definitions.Intent;
 
 /**
  * Implementation of the EJB binding generator.
@@ -64,7 +65,7 @@ public class EjbBindingGenerator implements
      *      org.fabric3.scdl.ServiceDefinition)
      */
     public EjbWireSourceDefinition generateWireSource(LogicalBinding<EjbBindingDefinition> logicalBinding,
-                                                      Set<QName> intentsToBeProvided,
+                                                      Set<Intent> intentsToBeProvided,
                                                       GeneratorContext generatorContext,
                                                       ServiceDefinition serviceDefinition)
         throws GenerationException {
@@ -88,7 +89,7 @@ public class EjbBindingGenerator implements
      *      org.fabric3.scdl.ReferenceDefinition)
      */
     public EjbWireTargetDefinition generateWireTarget(LogicalBinding<EjbBindingDefinition> logicalBinding,
-                                                      Set<QName> intentsToBeProvided,
+                                                      Set<Intent> intentsToBeProvided,
                                                       GeneratorContext generatorContext,
                                                       ReferenceDefinition referenceDefinition)
         throws GenerationException {
