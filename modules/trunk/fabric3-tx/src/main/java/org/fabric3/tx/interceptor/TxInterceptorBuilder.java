@@ -16,11 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.transaction.interceptor;
+package org.fabric3.tx.interceptor;
 
 import org.fabric3.extension.interceptor.InterceptorBuilderExtension;
 import org.fabric3.spi.builder.BuilderException;
-import org.fabric3.transaction.proxy.TransactionManagerProxy;
+import org.fabric3.tx.proxy.TransactionManagerProxy;
 import org.osoa.sca.annotations.Reference;
 
 /**

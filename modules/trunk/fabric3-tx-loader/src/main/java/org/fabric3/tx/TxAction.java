@@ -16,24 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.transaction.interceptor;
-
-import org.fabric3.scdl.definitions.PolicySetExtension;
-import org.fabric3.transaction.TxAction;
+package org.fabric3.tx;
 
 /**
  * @version $Revision$ $Date$
  */
-public class TxPolicyExtension extends PolicySetExtension {
+public enum TxAction {
     
-    private final TxAction txAction;
-    
-    public TxPolicyExtension(TxAction txAction) {
-        this.txAction = txAction;
-    }
-    
-    public final TxAction getAction() {
-        return txAction;
-    }
+    BEGIN,
+    PROPOGATE,
+    SUSPEND;
 
 }

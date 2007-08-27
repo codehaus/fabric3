@@ -16,19 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.transaction.interceptor;
+package org.fabric3.tx.policy;
 
-import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
-import org.fabric3.transaction.TxAction;
+import org.fabric3.scdl.definitions.PolicySetExtension;
+import org.fabric3.tx.TxAction;
 
 /**
  * @version $Revision$ $Date$
  */
-public class TxInterceptorDefinition extends PhysicalInterceptorDefinition {
+public class TxPolicyExtension extends PolicySetExtension {
     
     private final TxAction txAction;
     
-    public TxInterceptorDefinition(TxAction txAction) {
+    public TxPolicyExtension(TxAction txAction) {
         this.txAction = txAction;
     }
     

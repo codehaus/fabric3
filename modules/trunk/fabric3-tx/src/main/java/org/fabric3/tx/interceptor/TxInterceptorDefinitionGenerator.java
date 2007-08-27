@@ -16,10 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.transaction.interceptor;
+package org.fabric3.tx.interceptor;
 
 import org.fabric3.extension.generator.InterceptorDefinitionGeneratorExtension;
 import org.fabric3.spi.generator.GeneratorContext;
+import org.fabric3.tx.policy.TxPolicyExtension;
 
 /**
  * Interceptor definition generator for suspend transaction policy extensions.

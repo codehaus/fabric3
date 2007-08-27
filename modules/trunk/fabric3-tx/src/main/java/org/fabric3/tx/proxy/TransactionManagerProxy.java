@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.transaction.proxy;
+package org.fabric3.tx.proxy;
 
 import java.util.Hashtable;
 
@@ -32,7 +32,7 @@ import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
-import org.fabric3.transaction.TxException;
+import org.fabric3.tx.TxException;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;

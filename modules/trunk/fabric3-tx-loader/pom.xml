@@ -23,11 +23,11 @@
         <version>2</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
-    <artifactId>fabric3-transaction</artifactId>
+    <artifactId>fabric3-tx-loader</artifactId>
     <version>0.1-SNAPSHOT</version>
     <name>Fabric3 Transaction</name>
-    <description>Fabric3 Transaction Extension.</description>
-    <packaging>sca-contribution-jar</packaging>
+    <description>Fabric3 Transaction Loader.</description>
+    <packaging>jar</packaging>
 
     <dependencies>
 
@@ -58,17 +58,5 @@
         </dependency>
 
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.fabric3</groupId>
-                <artifactId>fabric3-contribution-plugin</artifactId>
-                <version>0.1-SNAPSHOT</version>
-                <extensions>true</extensions>
-                <configuration/>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

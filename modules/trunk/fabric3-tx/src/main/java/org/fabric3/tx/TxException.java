@@ -16,15 +16,25 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.transaction;
+package org.fabric3.tx;
+
+import org.fabric3.host.Fabric3RuntimeException;
 
 /**
  * @version $Revision$ $Date$
  */
-public enum TxAction {
+public class TxException extends Fabric3RuntimeException {
+
+    /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = -7133317647521054046L;
     
-    BEGIN,
-    PROPOGATE,
-    SUSPEND;
+    /**
+     * @param th Root exception.
+     */
+    public TxException(Throwable th) {
+        super(th);
+    }
 
 }

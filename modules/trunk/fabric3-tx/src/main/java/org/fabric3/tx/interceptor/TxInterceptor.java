@@ -16,14 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.transaction.interceptor;
+package org.fabric3.tx.interceptor;
 
 import javax.transaction.Transaction;
 
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.Message;
-import org.fabric3.transaction.TxAction;
-import org.fabric3.transaction.proxy.TransactionManagerProxy;
+import org.fabric3.tx.TxAction;
+import org.fabric3.tx.proxy.TransactionManagerProxy;
 
 /**
  * @version $Revision$ $Date$
