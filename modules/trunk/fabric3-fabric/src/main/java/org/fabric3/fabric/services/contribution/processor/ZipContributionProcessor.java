@@ -23,6 +23,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -129,7 +131,12 @@ public class ZipContributionProcessor extends ArchiveContributionProcessor imple
         XMLStreamReader reader = null;
         try {
             URL sourceUrl = contribution.getLocation();
-            zip = new ZipFile(sourceUrl.getFile());
+            try {
+                zip = new ZipFile(new File(sourceUrl.toURI()));
+            } catch(URISyntaxException e) {
+                zip = new ZipFile(new File(sourceUrl.getPath()));
+            }
+            
             ZipEntry entry = zip.getEntry("META-INF/sca-contribution.xml");
             if (entry == null) {
                 ContributionManifest manifest = new ContributionManifest();

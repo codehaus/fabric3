@@ -46,10 +46,10 @@
                dest="${basedir}/target/jxta-download/jxta"
                overwrite="false"/>
         <exec executable="mvn${maven.suffix}" dir="${basedir}" failonerror="false">
-            <arg line="install:install-file -DgroupId=org.jxta.platform  -DartifactId=jxta -Dversion=${jxta.version} -Dpackaging=jar -DgeneratePom=true -Dfile=${basedir}/target/jxta-download/jxta/jxta.jar"/>
+            <arg line="install:install-file -DgroupId=org.jxta.platform  -DartifactId=jxta -Dversion=${jxta.version} -Dpackaging=jar -DgeneratePom=true -Dfile=&quot;${basedir}/target/jxta-download/jxta/jxta.jar&quot;"/>
         </exec>
         <exec executable="mvn${maven.suffix}" dir="${basedir}" failonerror="false">
-            <arg line="install:install-file -DgroupId=org.jxta.platform  -DartifactId=jxtaext -Dversion=${jxta.version} -Dpackaging=jar -DgeneratePom=true -Dfile=${basedir}/target/jxta-download/jxta/jxtaext.jar"/>
+            <arg line="install:install-file -DgroupId=org.jxta.platform  -DartifactId=jxtaext -Dversion=${jxta.version} -Dpackaging=jar -DgeneratePom=true -Dfile=&quot;${basedir}/target/jxta-download/jxta/jxtaext.jar&quot;"/>
         </exec>
     </target>
 			

@@ -58,7 +58,7 @@ public class HttpResolverTestCase extends TestCase {
         FileOutputStream stream = new FileOutputStream(file);
         stream.write("test".getBytes());
         stream.close();
-        url = file.toURL();
+        url = file.toURI().toURL();
     }
 
 
