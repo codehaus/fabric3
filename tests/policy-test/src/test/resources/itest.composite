@@ -21,7 +21,7 @@
     
     <!-- Unit test -->
     <component name="GreeterTest">
-        <f3:junit class="org.fabric3.sample.hello.HelloTest"/>
+        <f3:junit class="org.fabric3.policy.policy.GreeterTest"/>
         <reference name="greeter" target="Greeter"/>
     </component>
 

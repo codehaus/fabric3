@@ -29,8 +29,8 @@ import org.fabric3.scdl.definitions.ImplementationType;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.services.contribution.Contribution;
+import org.fabric3.spi.services.contribution.ContributionStoreRegistry;
 import org.fabric3.spi.services.contribution.MetaDataStore;
-import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.definitions.DefinitionActivationException;
@@ -45,11 +45,14 @@ import org.osoa.sca.annotations.Reference;
  */
 public class DefaultDefinitionsDeployer implements DefinitionsDeployer {
 
-    // Metadata store
-    private MetaDataStore metaDataStore;
+    // Contribution store registry
+    private ContributionStoreRegistry storeRegistry;
 
     // Definitions registry
     private DefinitionsRegistry definitionsRegistry;
+    
+    // URI prefix
+    private String uriPrefix = "file://contribution/";
 
     /**
      * Injects the metadata store and definitions registry.
@@ -57,8 +60,8 @@ public class DefaultDefinitionsDeployer implements DefinitionsDeployer {
      * @param metaDataStore Injected metadata store.
      * @param definitionsRegistry Injected definitions registry.
      */
-    public DefaultDefinitionsDeployer(@Reference(name = "store") MetaDataStore metaDataStore, @Reference DefinitionsRegistry definitionsRegistry) {
-        this.metaDataStore = metaDataStore;
+    public DefaultDefinitionsDeployer(@Reference ContributionStoreRegistry storeRegistry, @Reference DefinitionsRegistry definitionsRegistry) {
+        this.storeRegistry = storeRegistry;
         this.definitionsRegistry = definitionsRegistry;
     }
 
@@ -66,14 +69,7 @@ public class DefaultDefinitionsDeployer implements DefinitionsDeployer {
      * @see org.fabric3.spi.services.definitions.DefinitionsDeployer#activateDefinition(javax.xml.namespace.QName)
      */
     public void activateDefinition(QName definitionName) throws DefinitionActivationException {
-
-        ResourceElement<QNameSymbol, ?> resourceElement = metaDataStore.resolve(new QNameSymbol(definitionName));
-        if (resourceElement == null) {
-            throw new DefinitionActivationException("Definition not found", definitionName.toString());
-        }
-
-        activate(resourceElement);
-
+        throw new UnsupportedOperationException("Not supported");
     }
 
     /**
@@ -82,6 +78,9 @@ public class DefaultDefinitionsDeployer implements DefinitionsDeployer {
     public void activateDefinitions(List<URI> contributionUris) throws DefinitionActivationException {
 
         for (URI uri : contributionUris) {
+            
+            String storeId = parseStoreId(uri);
+            MetaDataStore metaDataStore = storeRegistry.getMetadataStore(storeId);
             Contribution contribution = metaDataStore.find(uri);
 
             for (Resource resource : contribution.getResources()) {
@@ -116,6 +115,23 @@ public class DefaultDefinitionsDeployer implements DefinitionsDeployer {
             throw new DefinitionActivationException("Resource element not a definition", definition.getClass().getName());
         }
         
+    }
+    
+    /*
+     * Parse the store id.
+     */
+    private String parseStoreId(URI uri) {
+        
+        String s = uri.toString();
+        assert s.length() > uriPrefix.length();
+        s = s.substring(uriPrefix.length());
+        int index = s.indexOf("/");
+        if (index > 0) {
+            return s.substring(0, index);
+        } else {
+            return s;
+        }
+
     }
 
 }
