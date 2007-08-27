@@ -1,7 +1,6 @@
 package org.fabric3.runtime.development.host;
 
 import java.util.Set;
-import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
@@ -9,6 +8,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
@@ -36,16 +36,7 @@ public class ClientBindingGenerator implements
     }
 
     public ClientWireSourceDefinition generateWireSource(LogicalBinding<ClientBindingDefinition> logicalBinding,
-                                                         GeneratorContext generatorContext,
-                                                         ServiceDefinition serviceDefinition)
-            throws GenerationException {
-        ClientWireSourceDefinition hwsd = new ClientWireSourceDefinition();
-        hwsd.setUri(logicalBinding.getBinding().getTargetUri());
-        return hwsd;
-    }
-
-    public ClientWireSourceDefinition generateWireSource(LogicalBinding<ClientBindingDefinition> logicalBinding,
-                                                         Set<QName> intentsToBeProvided,
+                                                         Set<Intent> intentsToBeProvided,
                                                          GeneratorContext context,
                                                          ServiceDefinition serviceDefinition)
             throws GenerationException {
@@ -55,7 +46,7 @@ public class ClientBindingGenerator implements
     }
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalBinding<ClientBindingDefinition> logicalBinding,
-                                                           Set<QName> intentsToBeProvided,
+                                                           Set<Intent> intentsToBeProvided,
                                                            GeneratorContext context,
                                                            ReferenceDefinition referenceDefinition)
             throws GenerationException {

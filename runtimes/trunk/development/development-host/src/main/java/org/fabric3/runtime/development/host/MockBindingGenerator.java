@@ -17,7 +17,6 @@
 package org.fabric3.runtime.development.host;
 
 import java.util.Set;
-import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
@@ -25,6 +24,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
@@ -52,7 +52,7 @@ public class MockBindingGenerator implements
     }
 
     public ClientWireSourceDefinition generateWireSource(LogicalBinding<SCABindingDefinition> logicalBinding,
-                                                         Set<QName> intentsToBeProvided,
+                                                         Set<Intent> intentsToBeProvided,
                                                          GeneratorContext context,
                                                          ServiceDefinition serviceDefinition)
             throws GenerationException {
@@ -60,7 +60,7 @@ public class MockBindingGenerator implements
     }
 
     public MockWireTargetDefinition generateWireTarget(LogicalBinding<SCABindingDefinition> logicalBinding,
-                                                       Set<QName> intentsToBeProvided,
+                                                       Set<Intent> intentsToBeProvided,
                                                        GeneratorContext context,
                                                        ReferenceDefinition referenceDefinition)
             throws GenerationException {
