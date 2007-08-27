@@ -16,18 +16,21 @@
  */
 package org.fabric3.runtime.development.host;
 
+import java.util.Set;
+import javax.xml.namespace.QName;
+
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalBinding;
-import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.spi.model.type.SCABindingDefinition;
-import org.fabric3.scdl.ServiceDefinition;
 
 /**
  * Implementation of the mock binding generator.
@@ -49,18 +52,19 @@ public class MockBindingGenerator implements
     }
 
     public ClientWireSourceDefinition generateWireSource(LogicalBinding<SCABindingDefinition> logicalBinding,
-                                                         GeneratorContext generatorContext,
+                                                         Set<QName> intentsToBeProvided,
+                                                         GeneratorContext context,
                                                          ServiceDefinition serviceDefinition)
             throws GenerationException {
         throw new UnsupportedOperationException();
     }
 
     public MockWireTargetDefinition generateWireTarget(LogicalBinding<SCABindingDefinition> logicalBinding,
-                                                         GeneratorContext generatorContext,
-                                                         ReferenceDefinition referenceDefinition)
+                                                       Set<QName> intentsToBeProvided,
+                                                       GeneratorContext context,
+                                                       ReferenceDefinition referenceDefinition)
             throws GenerationException {
         String name = referenceDefinition.getName();
         return new MockWireTargetDefinition(name);
     }
-
 }
