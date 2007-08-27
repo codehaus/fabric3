@@ -25,6 +25,7 @@
     <groupId>org.codehaus.fabric3.spec</groupId>
     <artifactId>sca-api-r1.0</artifactId>
     <version>0.2-SNAPSHOT</version>
+    <packaging>bundle</packaging>
     <name>SCA API Version 1.0</name>
     <description>Service Component Architecture V1.0 Java API and Annotations</description>
 
@@ -76,6 +77,20 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>1.0.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Export-Package>org.osoa.sca,org.osoa.sca.annotations</Export-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 
     <scm>
