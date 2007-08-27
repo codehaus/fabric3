@@ -19,6 +19,8 @@
 package org.osoa.sca;
 
 /**
+ * Values for constants used by this API.
+ *
  * @version $Rev$ $Date$
  */
 public interface Constants {
