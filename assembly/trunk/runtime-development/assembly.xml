@@ -57,6 +57,8 @@
                 <include>org.codehaus.fabric3.spec:sca-api-r1.0</include>
                 <include>org.codehaus.fabric3:fabric3-api</include>
                 <include>org.codehaus.fabric3:fabric3-host-api</include>
+                <include>org.codehaus.woodstox:wstx-asl</include>
+                <include>stax:stax-api</include>
             </includes>
             <outputDirectory>lib</outputDirectory>
             <outputFileNameMapping>${artifactId}-${baseVersion}.${extension}</outputFileNameMapping>
@@ -72,7 +74,11 @@
                 <include>javax.servlet:servlet-api</include>       
             </includes>
             <excludes>
+                <exclude>org.codehaus.fabric3.development:fabric3-api</exclude>
                 <exclude>org.codehaus.fabric3.development:development-api</exclude>
+                <exclude>org.codehaus.woodstox:wstx-asl</exclude>
+                <exclude>stax:stax-api</exclude>
+					 <exclude>xpp3:xpp3_min</exclude>
             </excludes>
             <outputDirectory>boot</outputDirectory>
         </dependencySet>
