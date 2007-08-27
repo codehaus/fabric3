@@ -60,6 +60,11 @@ public class XmlResourceProcessor implements ResourceProcessor {
         try {
             reader = xmlFactory.createXMLStreamReader(stream);
             reader.nextTag();
+            
+            // TODO : This is an evil hack
+            if(!"definitions".equals(reader.getName().getLocalPart())) {
+                return new Resource();
+            }
             LoaderContext context = new LoaderContextImpl((ClassLoader) null, null);
             return loaderRegistry.load(reader, Resource.class, context);
         } catch (XMLStreamException e) {

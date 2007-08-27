@@ -41,7 +41,7 @@ import org.osoa.sca.annotations.Reference;
 public class TxPolicySetExtensionLoader implements StAXElementLoader<TxPolicyExtension> {
     
     // Qualified name of the handled element
-    private static final QName QNAME = new QName(Constants.SCA_NS, "transaction");
+    private static final QName QNAME = new QName("http://fabric3.org/xmlns/sca/2.0-alpha", "transaction");
     
     /**
      * Registers with the loader registry.

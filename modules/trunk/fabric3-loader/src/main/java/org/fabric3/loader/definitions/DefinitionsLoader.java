@@ -27,13 +27,18 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.loader.common.LoaderContextImpl;
+import org.fabric3.scdl.definitions.AbstractDefinition;
+import org.fabric3.scdl.definitions.BindingType;
+import org.fabric3.scdl.definitions.ImplementationType;
+import org.fabric3.scdl.definitions.Intent;
+import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.StAXElementLoader;
-import org.fabric3.scdl.definitions.Definitions;
-import org.fabric3.scdl.definitions.Intent;
-import org.fabric3.scdl.definitions.PolicySet;
+import org.fabric3.spi.services.contribution.QNameSymbol;
+import org.fabric3.spi.services.contribution.Resource;
+import org.fabric3.spi.services.contribution.ResourceElement;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
@@ -43,7 +48,7 @@ import org.osoa.sca.annotations.Reference;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class DefinitionsLoader implements StAXElementLoader<Definitions> {
+public class DefinitionsLoader implements StAXElementLoader<Resource> {
     
     static final QName INTENT = new QName(SCA_NS, "intent");
     static final QName DESCRIPTION = new QName(SCA_NS, "description");
@@ -63,10 +68,11 @@ public class DefinitionsLoader implements StAXElementLoader<Definitions> {
     /**
      * @see org.fabric3.spi.loader.StAXElementLoader#load(javax.xml.stream.XMLStreamReader, org.fabric3.spi.loader.LoaderContext)
      */
-    public Definitions load(XMLStreamReader reader, LoaderContext parentContext) throws XMLStreamException, LoaderException {
+    public Resource load(XMLStreamReader reader, LoaderContext parentContext) throws XMLStreamException, LoaderException {
 
+        Resource resource = new Resource();
+        
         String targetNamespace = reader.getAttributeValue(null, "targetNamespace");
-        Definitions definitions = new Definitions(targetNamespace);
         
         LoaderContext context = new LoaderContextImpl(parentContext, targetNamespace);
         
@@ -74,17 +80,26 @@ public class DefinitionsLoader implements StAXElementLoader<Definitions> {
             switch (reader.next()) {
             case START_ELEMENT:
                 QName qname = reader.getName();
+                AbstractDefinition definition = null;
                 if (INTENT.equals(qname)) {
-                    Intent intent = loaderRegistry.load(reader, Intent.class, context);
-                    definitions.addIntent(intent);
+                    definition = loaderRegistry.load(reader, Intent.class, context);
                 } else if (POLICY_SET.equals(qname)) {
-                    PolicySet policySet = loaderRegistry.load(reader, PolicySet.class, context);
-                    definitions.addPolicySet(policySet);
+                    definition = loaderRegistry.load(reader, PolicySet.class, context);
+                } else if (BINDING_TYPE.equals(qname)) {
+                    definition = loaderRegistry.load(reader, BindingType.class, context);
+                } else if (IMPLEMENTATION_TYPE.equals(qname)) {
+                    definition = loaderRegistry.load(reader, ImplementationType.class, context);
+                }
+                if(definition != null) {
+                    QNameSymbol symbol = new QNameSymbol(definition.getName());
+                    ResourceElement<QNameSymbol, AbstractDefinition> element = 
+                        new ResourceElement<QNameSymbol, AbstractDefinition>(symbol, definition);
+                    resource.addResourceElement(element);
                 }
                 break;
             case END_ELEMENT:
                 assert DEFINITIONS.equals(reader.getName());
-                return definitions;
+                return resource;
             }
         }
         

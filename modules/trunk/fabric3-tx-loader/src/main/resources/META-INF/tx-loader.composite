@@ -24,7 +24,7 @@
 
     <!-- Tx Policy Extension Loader -->
     <component name="txPolicyExtensionLoader">
-        <system:implementation.system class="org.fabric3.tx.policy.TxPolicyExtensionLoader"/>
+        <system:implementation.system class="org.fabric3.tx.policy.TxPolicySetExtensionLoader"/>
     </component>
 
 </composite>

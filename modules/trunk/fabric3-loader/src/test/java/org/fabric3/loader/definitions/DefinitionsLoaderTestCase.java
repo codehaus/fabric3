@@ -39,6 +39,7 @@ import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.spi.services.contribution.Resource;
 
 /**
  * @version $Revision$ $Date$
@@ -61,15 +62,7 @@ public class DefinitionsLoaderTestCase extends TestCase {
         while(reader.next() != XMLStreamConstants.START_ELEMENT) {
         }
         
-        Definitions definitions = loader.load(reader, context);
-        
-        assertEquals(1, definitions.getIntents().size());
-        Intent intent = definitions.getIntents().iterator().next();
-        assertEquals(new QName("http://fabric3.org/xmlns/sca/2.0-alpha", "transactional"), intent.getName());
-        
-        assertEquals(1, definitions.getPolicySets().size());
-        PolicySet policySet = definitions.getPolicySets().iterator().next();
-        assertTrue(policySet.doesProvide(new QName("http://fabric3.org/xmlns/sca/2.0-alpha", "transactional")));
+        Resource resource = loader.load(reader, context);
     }
     
     private static class LoaderRegistryImpl implements LoaderRegistry {

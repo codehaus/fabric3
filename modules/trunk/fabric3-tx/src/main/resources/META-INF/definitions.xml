@@ -45,7 +45,7 @@
     
     <!-- No op -->
     <policySet name="propagatesTransactionPolicy" provides="f3:propagatesTransaction">
-        <f3:transaction action="PROPOGATES"/>
+        <f3:transaction action="PROPOGATE"/>
     </policySet>
  
 
