@@ -20,6 +20,7 @@ package org.fabric3.runtime.standalone.host.implementation.launched;
 
 import java.net.URI;
 import java.util.Map;
+import java.util.Set;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
@@ -37,6 +38,7 @@ import org.fabric3.pojo.scdl.MemberSite;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Property;
+import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
@@ -45,6 +47,7 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.ValueSource;
+import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 
@@ -59,7 +62,8 @@ public class LaunchedComponentGenerator implements ComponentGenerator<LogicalCom
     }
 
     @SuppressWarnings({"unchecked"})
-    public void generate(LogicalComponent<Launched> component, GeneratorContext context) {
+    public PhysicalComponentDefinition generate(LogicalComponent<Launched> component, Set<Intent> intentsToBeProvided, GeneratorContext context)
+            throws GenerationException {
         ComponentDefinition<Launched> definition = component.getDefinition();
         Launched implementation = definition.getImplementation();
         // TODO not a safe cast
@@ -89,12 +93,12 @@ public class LaunchedComponentGenerator implements ComponentGenerator<LogicalCom
         processReferenceSites(type, providerDefinition);
         // TODO process properties
         pDefinition.setInstanceFactoryProviderDefinition(providerDefinition);
-        context.getPhysicalChangeSet().addComponentDefinition(pDefinition);
+        return pDefinition;
     }
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<Launched> source,
                                                            LogicalReference reference,
-                                                           boolean optimizable, GeneratorContext context)
+                                                           boolean optimizable)
             throws GenerationException {
         JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
         wireDefinition.setUri(reference.getUri());
@@ -102,8 +106,9 @@ public class LaunchedComponentGenerator implements ComponentGenerator<LogicalCom
         return wireDefinition;
     }
 
-    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, LogicalComponent<Launched> logical,
-                                                           GeneratorContext context) throws GenerationException {
+    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
+                                                           LogicalComponent<Launched> target)
+            throws GenerationException {
         JavaWireTargetDefinition wireDefinition = new JavaWireTargetDefinition();
         wireDefinition.setUri(service.getUri());
         return wireDefinition;
@@ -186,6 +191,5 @@ public class LaunchedComponentGenerator implements ComponentGenerator<LogicalCom
             providerDefinition.addConstructorArgument(type);
         }
     }
-
 
 }
