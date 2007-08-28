@@ -15,7 +15,7 @@
  specific language governing permissions and limitations
  under the License.
 -->
-<project>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>parent</artifactId>
@@ -24,7 +24,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric</artifactId>
-    <version>3-SNAPSHOT</version>
+    <version>3</version>
     <packaging>pom</packaging>
     <name>Fabric3 Fabric Modules Parent</name>
     <description>Parent POM defining settings for fabric modules.</description>
@@ -103,7 +103,7 @@
                             <link>http://java.sun.com/j2se/1.5.0/docs/api</link>
                         </links>
                         <header>${pom.name}</header>
-                        <bottom><![CDATA[Copyright &copy; {inceptionYear}-{currentYear} Fabric3 project contributors. All Rights Reserved. <br/>Licensed under the terms of the <a href="http://www.opensource.org/licenses/apache2.0.php">Apache License 2.0</a>.]]></bottom>
+                        <bottom><![CDATA[Copyright &copy; {inceptionYear}-{currentYear} Fabric3 project contributors. All Rights Reserved. <br />Licensed under the terms of the <a href="http://www.opensource.org/licenses/apache2.0.php">Apache License 2.0</a>.]]></bottom>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -124,9 +124,9 @@
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/fabric-pom/trunk</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/fabric-pom/trunk</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/fabric-pom/trunk</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/fabric-pom/tags/3</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/fabric-pom/tags/3</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/fabric-pom/tags/3</url>
     </scm>
 
     <profiles>
