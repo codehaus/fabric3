@@ -24,7 +24,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric</artifactId>
-    <version>3</version>
+    <version>4-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Fabric3 Fabric Modules Parent</name>
     <description>Parent POM defining settings for fabric modules.</description>
@@ -124,9 +124,9 @@
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/fabric-pom/tags/3</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/fabric-pom/tags/3</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/fabric-pom/tags/3</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/fabric-pom/trunk</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/fabric-pom/trunk</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/fabric-pom/trunk</url>
     </scm>
 
     <profiles>
