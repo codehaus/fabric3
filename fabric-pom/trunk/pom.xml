@@ -57,7 +57,7 @@
             <plugins>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>2.0.2</version>
+                    <version>RELEASE</version>
                     <configuration>
                         <source>1.5</source>
                         <target>1.5</target>
@@ -65,7 +65,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.3</version>
+                    <version>RELEASE</version>
                     <configuration>
                         <includes>
                             <include>**/*TestCase.java</include>
@@ -76,7 +76,75 @@
                         <argLine>-ea</argLine>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>RELEASE</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>RELEASE</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <quiet>true</quiet>
+                        <links>
+                            <link>http://java.sun.com/j2se/1.5.0/docs/api</link>
+                        </links>
+                        <header>${pom.name}</header>
+                        <bottom><![CDATA[Copyright &copy; {inceptionYear}-{currentYear} Fabric3 project contributors. All Rights Reserved. <br/>Licensed under the terms of the <a href="http://www.opensource.org/licenses/apache2.0.php">Apache License 2.0</a>.]]></bottom>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>RELEASE</version>
+                    <executions>
+                        <execution>
+                            <id>sign-artifacts</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>sign</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
+
+    <scm>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/fabric-pom/trunk</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/fabric-pom/trunk</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/fabric-pom/trunk</url>
+    </scm>
+
+    <profiles>
+        <profile>
+            <id>release-profile</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
