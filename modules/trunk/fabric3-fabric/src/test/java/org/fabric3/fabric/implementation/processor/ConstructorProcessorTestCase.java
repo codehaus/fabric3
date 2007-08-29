@@ -134,7 +134,7 @@ public class ConstructorProcessorTestCase extends TestCase {
         @org.osoa.sca.annotations.Constructor
         public Multiple(@Reference Collection<String> param1,
                         @Property(name = "foo")String[] param2,
-                        @Reference(name = "bar", required = true)List<String> param3,
+                        @Reference(name = "bar", required = false)List<String> param3,
                         @Property(name = "abc")Set<String> param4,
                         @Reference(name = "xyz")String[] param5) {
         }
@@ -148,13 +148,13 @@ public class ConstructorProcessorTestCase extends TestCase {
         processor.visitConstructor(ctor1, type, null);
         JavaMappedReference ref0 = type.getReferences().get("_ref0");
         assertNotNull(ref0);
-        assertEquals(Multiplicity.ZERO_N, ref0.getMultiplicity());
+        assertEquals(Multiplicity.ONE_N, ref0.getMultiplicity());
         JavaMappedReference ref1 = type.getReferences().get("bar");
         assertNotNull(ref1);
-        assertEquals(Multiplicity.ONE_N, ref1.getMultiplicity());
+        assertEquals(Multiplicity.ZERO_N, ref1.getMultiplicity());
         JavaMappedReference ref2 = type.getReferences().get("xyz");
         assertNotNull(ref2);
-        assertEquals(Multiplicity.ZERO_N, ref2.getMultiplicity());
+        assertEquals(Multiplicity.ONE_N, ref2.getMultiplicity());
         JavaMappedProperty prop1 = type.getProperties().get("foo");
         assertNotNull(prop1);
         assertTrue(prop1.isMany());
