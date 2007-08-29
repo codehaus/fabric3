@@ -18,12 +18,13 @@
 <project>
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.codehaus.fabric3.itest</groupId>
-        <artifactId>itest-parent</artifactId>
-        <version>0.2-SNAPSHOT</version>
+        <groupId>org.codehaus.fabric3</groupId>
+        <artifactId>fabric</artifactId>
+        <version>3</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-itest-plugin</artifactId>
+    <version>0.2-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
     <name>Fabric3 Integration Test Maven Plugin</name>
     <description>Fabric3 Integration Test Maven Plugin.</description>
@@ -67,30 +68,29 @@
             <version>2.0</version>
             <scope>compile</scope>
         </dependency>
-
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-fabric</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-policy</artifactId>
-            <version>0.2-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-maven</artifactId>
-            <version>0.2-SNAPSHOT</version>
-        </dependency>
-
         <dependency>
             <groupId>stax</groupId>
             <artifactId>stax-api</artifactId>
             <version>1.0.1</version>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-fabric</artifactId>
+            <version>0.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-policy</artifactId>
+            <version>0.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-maven</artifactId>
+            <version>0.2-SNAPSHOT</version>
+        </dependency>
+
         <dependency>
             <groupId>org.codehaus.woodstox</groupId>
             <artifactId>wstx-asl</artifactId>
@@ -109,7 +109,6 @@
             <version>2.4</version>
             <scope>runtime</scope>
         </dependency>
-        
         <dependency>
             <groupId>javax.activation</groupId>
             <artifactId>activation</artifactId>
@@ -127,4 +126,10 @@
             </plugin>
         </plugins>
     </build>
+
+    <scm>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/fabric3-itest-plugin</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/fabric3-itest-plugin</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/fabric3-itest-plugin</url>
+    </scm>
 </project>

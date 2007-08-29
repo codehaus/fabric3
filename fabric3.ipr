@@ -328,6 +328,7 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-groovy/fabric3-groovy.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-groovy/fabric3-groovy.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-host-api/fabric3-host-api.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-host-api/fabric3-host-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-interface-wsdl/fabric3-interface-wsdl.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-interface-wsdl/fabric3-interface-wsdl.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-itest-plugin/fabric3-itest-plugin.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-itest-plugin/fabric3-itest-plugin.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-jetty/fabric3-jetty.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-jetty/fabric3-jetty.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-jmx/fabric3-jmx.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-jmx/fabric3-jmx.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-jxta/fabric3-jxta.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-jxta/fabric3-jxta.iml" />
@@ -343,9 +344,9 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-transform/fabric3-transform.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-transform/fabric3-transform.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-webapp-plugin/fabric3-webapp-plugin.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-webapp-plugin/fabric3-webapp-plugin.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/function/function-tests.iml" filepath="$PROJECT_DIR$/tests/function/function-tests.iml" />
-      <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/itest/plugin/itest-plugin.iml" filepath="$PROJECT_DIR$/runtimes/trunk/itest/plugin/itest-plugin.iml" group="itest" />
-      <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/itest/smoketest/itest-smoketest.iml" filepath="$PROJECT_DIR$/runtimes/trunk/itest/smoketest/itest-smoketest.iml" group="itest" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/module-parent/module-parent.iml" filepath="$PROJECT_DIR$/modules/trunk/module-parent/module-parent.iml" />
       <module fileurl="file://$PROJECT_DIR$/parent-pom/trunk/parent-pom.iml" filepath="$PROJECT_DIR$/parent-pom/trunk/parent-pom.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tests/policy-test/policy-test.iml" filepath="$PROJECT_DIR$/tests/policy-test/policy-test.iml" />
       <module fileurl="file://$PROJECT_DIR$/spec/trunk/sca-spec.iml" filepath="$PROJECT_DIR$/spec/trunk/sca-spec.iml" />
       <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/standalone/standalone-api/standalone-api.iml" filepath="$PROJECT_DIR$/runtimes/trunk/standalone/standalone-api/standalone-api.iml" group="standalone" />
       <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/standalone/standalone-host/standalone-host.iml" filepath="$PROJECT_DIR$/runtimes/trunk/standalone/standalone-host/standalone-host.iml" group="standalone" />
