@@ -51,6 +51,7 @@ import org.apache.maven.surefire.report.BriefFileReporter;
 import org.apache.maven.surefire.report.Reporter;
 import org.apache.maven.surefire.report.ReporterException;
 import org.apache.maven.surefire.report.ReporterManager;
+import org.apache.maven.surefire.report.XMLReporter;
 import org.apache.maven.surefire.suite.SurefireTestSuite;
 import org.apache.maven.surefire.testset.TestSetFailedException;
 
@@ -388,6 +389,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
         int totalTests = suite.getNumTests();
 
         List<Reporter> reports = new ArrayList<Reporter>();
+        reports.add(new XMLReporter(reportsDirectory, trimStackTrace));
         reports.add(new BriefFileReporter(reportsDirectory, trimStackTrace));
         reports.add(new BriefConsoleReporter(trimStackTrace));
         ReporterManager reporterManager = new ReporterManager(reports);
