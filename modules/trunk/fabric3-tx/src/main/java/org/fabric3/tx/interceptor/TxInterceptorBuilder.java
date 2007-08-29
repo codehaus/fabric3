@@ -18,9 +18,10 @@
  */
 package org.fabric3.tx.interceptor;
 
+import javax.transaction.TransactionManager;
+
 import org.fabric3.extension.interceptor.InterceptorBuilderExtension;
 import org.fabric3.spi.builder.BuilderException;
-import org.fabric3.tx.proxy.TransactionManagerProxy;
 import org.osoa.sca.annotations.Reference;
 
 /**
@@ -29,7 +30,7 @@ import org.osoa.sca.annotations.Reference;
 public class TxInterceptorBuilder extends InterceptorBuilderExtension<TxInterceptorDefinition, TxInterceptor> {
 
     // Transaction manager
-    private TransactionManagerProxy transactionManager;
+    private TransactionManager transactionManager;
     
     /**
      * Injects the transaction manager.
@@ -37,7 +38,7 @@ public class TxInterceptorBuilder extends InterceptorBuilderExtension<TxIntercep
      * @param transactionManager Injected transaction manager.
      */
     @Reference(required = true)
-    public void setTransactionManager(TransactionManagerProxy transactionManager) {
+    public void setTransactionManager(TransactionManager transactionManager) {
         this.transactionManager = transactionManager;
     }
     

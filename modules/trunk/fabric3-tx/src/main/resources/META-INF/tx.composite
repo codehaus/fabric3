@@ -33,9 +33,9 @@
     </component>
 
     <!-- Tx Manager Proxy -->
-    <component name="txManagerProxy">
+    <!-- component name="txManagerProxy">
         <system:implementation.system class="org.fabric3.tx.proxy.TransactionManagerProxy"/>
-    </component>
+    </component-->
 
     <!-- Feature -->
     <system:feature name="TransactionFeature">{http://fabric3.org/xmlns/policy}transaction</system:feature>

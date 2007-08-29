@@ -18,11 +18,15 @@
  */
 package org.fabric3.tx.interceptor;
 
+import javax.transaction.InvalidTransactionException;
+import javax.transaction.SystemException;
 import javax.transaction.Transaction;
+import javax.transaction.TransactionManager;
 
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.tx.TxAction;
+import org.fabric3.tx.TxException;
 import org.fabric3.tx.proxy.TransactionManagerProxy;
 
 /**
@@ -34,7 +38,7 @@ public class TxInterceptor implements Interceptor {
     private Interceptor next;
     
     // Transaction manager
-    private TransactionManagerProxy transactionManager;
+    private TransactionManager transactionManager;
     
     // Transaction action
     private TxAction txAction;
@@ -44,7 +48,7 @@ public class TxInterceptor implements Interceptor {
      * 
      * @param transactionManager Transaction manager to be initialized.
      */
-    public TxInterceptor(TransactionManagerProxy transactionManager, TxAction txAction) {
+    public TxInterceptor(TransactionManager transactionManager, TxAction txAction) {
         this.transactionManager = transactionManager;
         this.txAction = txAction;
     }
@@ -61,8 +65,10 @@ public class TxInterceptor implements Interceptor {
      */
     public Message invoke(Message message) {
         
-        Transaction transaction = transactionManager.getTransaction();
+        Transaction transaction = null;
         try {
+
+            transaction = transactionManager.getTransaction();
             
             if(txAction == TxAction.BEGIN && transaction == null) {
                 transactionManager.begin();
@@ -72,12 +78,22 @@ public class TxInterceptor implements Interceptor {
 
             return next.invoke(message);
             
+        } catch(Exception ex) {
+            throw new TxException(ex);
         } finally {
             
             if(txAction == TxAction.BEGIN && transaction == null) {
-                transactionManager.commit();
+                try {
+                    transactionManager.commit();
+                } catch(Exception ex) {
+                    throw new TxException(ex);
+                }
             } else if(txAction == TxAction.SUSPEND && transaction != null) {
-                transactionManager.resume(transaction);
+                try {
+                    transactionManager.resume(transaction);
+                } catch(Exception ex) {
+                    throw new TxException(ex);
+                }
             }
 
         }
