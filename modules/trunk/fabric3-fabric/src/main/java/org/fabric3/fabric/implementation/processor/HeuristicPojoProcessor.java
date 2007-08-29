@@ -382,7 +382,9 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
         for (JavaMappedService service : services.values()) {
             String interfaze = service.getServiceInterface();
             try {
-                Class<?> clazz = Class.forName(interfaze);
+                // Class<?> clazz = Class.forName(interfaze);
+                // TODO The classloader needs to be passed in
+                Class<?> clazz = operation.getDeclaringClass().getClassLoader().loadClass(interfaze);
                 if (hasOperation(clazz, operation)) {
                     return true;
                 }
