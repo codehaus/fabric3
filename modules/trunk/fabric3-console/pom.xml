@@ -54,4 +54,10 @@
             <artifactId>junit</artifactId>
         </dependency>
     </dependencies>
+
+    <scm>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/fabric3-console</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/fabric3-console</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/fabric3-console</url>
+    </scm>
 </project>

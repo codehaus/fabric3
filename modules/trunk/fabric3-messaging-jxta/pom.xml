@@ -94,4 +94,10 @@
         </plugins>
     </build>
 
+
+    <scm>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/fabric3-messaging-jxta</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/fabric3-messaging-jxta</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/fabric3-messaging-jxta</url>
+    </scm>
 </project>

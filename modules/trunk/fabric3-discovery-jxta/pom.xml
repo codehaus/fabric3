@@ -100,4 +100,10 @@
         </plugins>
     </build>
 
+
+    <scm>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/fabric3-discovery-jxta</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/fabric3-discovery-jxta</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/fabric3-discovery-jxta</url>
+    </scm>
 </project>
