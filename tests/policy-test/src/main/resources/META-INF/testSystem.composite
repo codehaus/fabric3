@@ -29,7 +29,7 @@
     
     <!-- JOTM Transaction manager -->
     <component name="transactionManager">
-        <system:implementation.system class="org.objectweb.jotm.Current"/>
+        <system:implementation.system class="org.fabric3.tx.jotm.JotmTransactionManager"/>
         <!-- system:implementation.system class="org.fabric3.fabric.policy.DummyTransactionManager"/ -->
     </component>
     
