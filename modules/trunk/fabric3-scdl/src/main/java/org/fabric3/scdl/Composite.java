@@ -36,6 +36,7 @@ public class Composite extends AbstractComponentType<CompositeService, Composite
 
     private final QName name;
     private URI contributionUri;
+    private boolean local;
     private Autowire autowire;
     private final Map<String, ComponentDefinition<? extends Implementation<?>>> components =
             new HashMap<String, ComponentDefinition<? extends Implementation<?>>>();
@@ -81,6 +82,22 @@ public class Composite extends AbstractComponentType<CompositeService, Composite
      */
     public void setContributionUri(URI contributionUri) {
         this.contributionUri = contributionUri;
+    }
+
+    /**
+     * Indicates that components in this composite should be co-located.
+     * @return true if components in this composite should be co-located
+     */
+    public boolean isLocal() {
+        return local;
+    }
+
+    /**
+     * Sets whether components in this composite should be co-located.
+     * @param local true if components in this composite should be co-located
+     */
+    public void setLocal(boolean local) {
+        this.local = local;
     }
 
     /**

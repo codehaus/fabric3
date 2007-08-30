@@ -109,6 +109,7 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
             throws XMLStreamException, LoaderException {
         String name = reader.getAttributeValue(null, "name");
         String targetNamespace = reader.getAttributeValue(null, "targetNamespace");
+        boolean local = Boolean.valueOf(reader.getAttributeValue(null, "local"));
         loaderContext = new LoaderContextImpl(loaderContext, targetNamespace);
         QName compositeName = new QName(targetNamespace, name);
         QName constrainingType = LoaderUtil.getQName(reader.getAttributeValue(null, "constrainingType"),
@@ -116,6 +117,7 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
                                                      reader.getNamespaceContext());
 
         Composite type = new Composite(compositeName);
+        type.setLocal(local);
         type.setAutowire(Autowire.fromString(reader.getAttributeValue(null, "autowire")));
         type.setConstrainingType(constrainingType);
         policyHelper.loadPolicySetsAndIntents(type, reader);
