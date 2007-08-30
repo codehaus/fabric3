@@ -29,27 +29,17 @@
     <name>Fabric3 RMI Binding</name>
     <description>Fabric3 RMI Binding Implementation.</description>
 
-    <repositories>
-        <repository>
-            <id>objectstyle.org</id>
-            <name>Object Style</name>
-            <url>http://objectstyle.org/maven2/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-
     <dependencies>
-    
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-extension</artifactId>
             <version>0.2-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>asm</groupId>
+            <artifactId>asm</artifactId>
+            <version>3.0</version>
         </dependency>
 
         <dependency>
@@ -60,16 +50,9 @@
         </dependency>
 
         <dependency>
-            <groupId>asm</groupId>
-            <artifactId>asm</artifactId>
-            <version>3.0</version>
-        </dependency>
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <scope>test</scope>
         </dependency>
-
     </dependencies>
 
 
