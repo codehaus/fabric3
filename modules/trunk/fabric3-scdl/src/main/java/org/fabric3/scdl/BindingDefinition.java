@@ -27,7 +27,7 @@ import javax.xml.namespace.QName;
  *
  * @version $Rev$ $Date$
  */
-public abstract class BindingDefinition extends PolicyAware {
+public abstract class BindingDefinition extends AbstractPolicyAware {
     
     private URI targetUri;
     private QName type;

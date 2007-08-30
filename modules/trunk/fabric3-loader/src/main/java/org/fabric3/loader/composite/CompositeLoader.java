@@ -45,6 +45,7 @@ import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.spi.loader.PolicyHelper;
 
 /**
  * Loads a composite component definition from an XML-based assembly file
@@ -68,6 +69,7 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
     private final StAXElementLoader<CompositeReference> referenceLoader;
     private final StAXElementLoader<ComponentDefinition<?>> componentLoader;
     private final StAXElementLoader<WireDefinition> wireLoader;
+    private final PolicyHelper policyHelper;
 
     public CompositeLoader(@Reference LoaderRegistry registry,
                            @Reference(name = "include")StAXElementLoader<Include> includeLoader,
@@ -75,7 +77,8 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
                            @Reference(name = "service")StAXElementLoader<CompositeService> serviceLoader,
                            @Reference(name = "reference")StAXElementLoader<CompositeReference> referenceLoader,
                            @Reference(name = "component")StAXElementLoader<ComponentDefinition<?>> componentLoader,
-                           @Reference(name = "wire")StAXElementLoader<WireDefinition> wireLoader
+                           @Reference(name = "wire")StAXElementLoader<WireDefinition> wireLoader,
+                           @Reference(name = "policyHelper")PolicyHelper policyHelper
     ) {
         this.registry = registry;
         this.includeLoader = includeLoader;
@@ -84,6 +87,7 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
         this.referenceLoader = referenceLoader;
         this.componentLoader = componentLoader;
         this.wireLoader = wireLoader;
+        this.policyHelper = policyHelper;
     }
 
     public QName getXMLType() {
@@ -106,9 +110,10 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
         String targetNamespace = reader.getAttributeValue(null, "targetNamespace");
         loaderContext = new LoaderContextImpl(loaderContext, targetNamespace);
         QName compositeName = new QName(targetNamespace, name);
-        Composite type = new Composite(compositeName);
 
+        Composite type = new Composite(compositeName);
         type.setAutowire(Autowire.fromString(reader.getAttributeValue(null, "autowire")));
+        policyHelper.loadPolicySetsAndIntents(type, reader);
 
         while (true) {
             switch (reader.next()) {

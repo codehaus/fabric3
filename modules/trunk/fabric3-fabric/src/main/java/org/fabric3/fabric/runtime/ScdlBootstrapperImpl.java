@@ -404,7 +404,8 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
                                                               null,
                                                               null,
                                                               componentLoader,
-                                                              null);
+                                                              null,
+                                                              policyHelper);
         compositeLoader.init();
 
         SystemComponentTypeLoader typeLoader = new SystemComponentTypeLoaderImpl(introspector);

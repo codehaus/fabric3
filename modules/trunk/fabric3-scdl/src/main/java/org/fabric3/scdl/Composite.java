@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.xml.namespace.QName;
 
 /**
@@ -31,7 +32,7 @@ import javax.xml.namespace.QName;
  *
  * @version $Rev$ $Date$
  */
-public class Composite extends AbstractComponentType<CompositeService, CompositeReference, Property<?>> {
+public class Composite extends AbstractComponentType<CompositeService, CompositeReference, Property<?>> implements PolicyAware {
 
     private final QName name;
     private URI contributionUri;
@@ -40,6 +41,8 @@ public class Composite extends AbstractComponentType<CompositeService, Composite
             new HashMap<String, ComponentDefinition<? extends Implementation<?>>>();
     private final Map<QName, Include> includes = new HashMap<QName, Include>();
     private final List<WireDefinition> wires = new ArrayList<WireDefinition>();
+    private Set<QName> intents;
+    private Set<QName> policySets;
 
     /**
      * Constructor defining the composite name.
@@ -218,6 +221,22 @@ public class Composite extends AbstractComponentType<CompositeService, Composite
         includes.put(include.getName(), include);
     }
 
+
+    public Set<QName> getIntents() {
+        return intents;
+    }
+
+    public void setIntents(Set<QName> intents) {
+        this.intents = intents;
+    }
+
+    public Set<QName> getPolicySets() {
+        return policySets;
+    }
+
+    public void setPolicySets(Set<QName> policySets) {
+        this.policySets = policySets;
+    }
 
     public int hashCode() {
         return name.hashCode();

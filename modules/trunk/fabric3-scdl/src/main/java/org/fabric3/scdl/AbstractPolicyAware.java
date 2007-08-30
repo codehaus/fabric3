@@ -18,35 +18,35 @@
  */
 package org.fabric3.scdl;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import javax.xml.namespace.QName;
 
 /**
- * Represents a component implementation
+ * Base class for SCA definitions that support references to intents and policySets.
  *
- * @version $Rev$ $Date$
+ * @version $Revision$ $Date$
  */
-public abstract class Implementation<T extends AbstractComponentType<?, ?, ?>> extends AbstractPolicyAware {
-    private T componentType;
+public abstract class AbstractPolicyAware extends ModelObject implements PolicyAware {
 
-    protected Implementation() {
+    private Set<QName> intents = new HashSet<QName>();
+    private Set<QName> policySets = new HashSet<QName>();
+
+    public Set<QName> getIntents() {
+        return Collections.unmodifiableSet(intents);
     }
 
-    protected Implementation(T componentType) {
-        this.componentType = componentType;
+    public Set<QName> getPolicySets() {
+        return Collections.unmodifiableSet(policySets);
     }
 
-    public T getComponentType() {
-        return componentType;
+    public void setIntents(Set<QName> intents) {
+        this.intents = intents;
     }
 
-    public void setComponentType(T componentType) {
-        this.componentType = componentType;
+    public void setPolicySets(Set<QName> policySets) {
+        this.policySets = policySets;
     }
 
-    /**
-     * Returns the SCDL XML element corresponding to this type.
-     *
-     * @return the SCDL XML element corresponding to this type
-     */
-    public abstract QName getType();
 }

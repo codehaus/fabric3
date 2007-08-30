@@ -27,7 +27,7 @@ import java.util.List;
  *
  * @version $Rev$ $Date$
  */
-public class ServiceDefinition extends PolicyAware {
+public class ServiceDefinition extends AbstractPolicyAware {
     
     private String name;
     private ServiceContract<?> serviceContract;

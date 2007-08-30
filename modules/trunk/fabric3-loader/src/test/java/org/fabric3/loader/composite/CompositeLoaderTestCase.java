@@ -27,8 +27,10 @@ import org.easymock.EasyMock;
 import static org.osoa.sca.Constants.SCA_NS;
 
 import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.spi.loader.PolicyHelper;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.Composite;
+import org.fabric3.scdl.PolicyAware;
 
 /**
  * @version $Rev$ $Date$
@@ -72,7 +74,11 @@ public class CompositeLoaderTestCase extends TestCase {
         EasyMock.expect(loaderContext.getSourceBase()).andStubReturn(null);
         EasyMock.expect(loaderContext.getTargetClassLoader()).andStubReturn(null);
 
-        loader = new CompositeLoader(null, null, null, null, null, null, null);
+        PolicyHelper policyHelper = EasyMock.createMock(PolicyHelper.class);
+        policyHelper.loadPolicySetsAndIntents(EasyMock.isA(PolicyAware.class), EasyMock.isA(XMLStreamReader.class));
+        EasyMock.replay(policyHelper);
+
+        loader = new CompositeLoader(null, null, null, null, null, null, null, policyHelper);
         name = new QName("http://example.com", "composite");
     }
 }
