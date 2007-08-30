@@ -90,11 +90,21 @@
     <component name="loader.definitions">
         <system:implementation.system class="org.fabric3.loader.definitions.DefinitionsLoader"/>
     </component>
+    
     <component name="loader.intent">
         <system:implementation.system class="org.fabric3.loader.definitions.IntentLoader"/>
     </component>
+    
     <component name="loader.policySet">
         <system:implementation.system class="org.fabric3.loader.definitions.PolicySetLoader"/>
+    </component>
+    
+    <component name="loader.bindingType">
+        <system:implementation.system class="org.fabric3.loader.definitions.BindingTypeLoader"/>
+    </component>
+    
+    <component name="loader.implementationType">
+        <system:implementation.system class="org.fabric3.loader.definitions.ImplementationTypeLoader"/>
     </component>
     
     <!-- Policy helper -->
