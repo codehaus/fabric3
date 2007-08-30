@@ -46,6 +46,7 @@ import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.loader.PolicyHelper;
+import org.fabric3.spi.loader.LoaderUtil;
 
 /**
  * Loads a composite component definition from an XML-based assembly file
@@ -110,9 +111,13 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
         String targetNamespace = reader.getAttributeValue(null, "targetNamespace");
         loaderContext = new LoaderContextImpl(loaderContext, targetNamespace);
         QName compositeName = new QName(targetNamespace, name);
+        QName constrainingType = LoaderUtil.getQName(reader.getAttributeValue(null, "constrainingType"),
+                                                     targetNamespace,
+                                                     reader.getNamespaceContext());
 
         Composite type = new Composite(compositeName);
         type.setAutowire(Autowire.fromString(reader.getAttributeValue(null, "autowire")));
+        type.setConstrainingType(constrainingType);
         policyHelper.loadPolicySetsAndIntents(type, reader);
 
         while (true) {

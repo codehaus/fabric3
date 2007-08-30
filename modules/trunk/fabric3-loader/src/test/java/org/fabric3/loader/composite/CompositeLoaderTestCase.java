@@ -43,8 +43,10 @@ public class CompositeLoaderTestCase extends TestCase {
 
     public void testLoadNameAndDefaultAutowire() throws Exception {
         XMLStreamReader reader = EasyMock.createMock(XMLStreamReader.class);
+        EasyMock.expect(reader.getNamespaceContext()).andStubReturn(null);
         EasyMock.expect(reader.getAttributeValue(null, "name")).andReturn(name.getLocalPart());
         EasyMock.expect(reader.getAttributeValue(null, "targetNamespace")).andReturn(name.getNamespaceURI());
+        EasyMock.expect(reader.getAttributeValue(null, "constrainingType")).andReturn(null);
         EasyMock.expect(reader.getAttributeValue(null, "autowire")).andReturn(null);
         EasyMock.expect(reader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
         EasyMock.expect(reader.getName()).andReturn(COMPOSITE);
@@ -57,8 +59,10 @@ public class CompositeLoaderTestCase extends TestCase {
 
     public void testAutowire() throws Exception {
         XMLStreamReader reader = EasyMock.createMock(XMLStreamReader.class);
+        EasyMock.expect(reader.getNamespaceContext()).andStubReturn(null);
         EasyMock.expect(reader.getAttributeValue(null, "name")).andReturn(name.getLocalPart());
         EasyMock.expect(reader.getAttributeValue(null, "targetNamespace")).andReturn(name.getNamespaceURI());
+        EasyMock.expect(reader.getAttributeValue(null, "constrainingType")).andReturn(null);
         EasyMock.expect(reader.getAttributeValue(null, "autowire")).andReturn("true");
         EasyMock.expect(reader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
         EasyMock.expect(reader.getName()).andReturn(COMPOSITE);

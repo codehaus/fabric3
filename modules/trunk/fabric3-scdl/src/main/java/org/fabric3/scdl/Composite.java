@@ -41,6 +41,7 @@ public class Composite extends AbstractComponentType<CompositeService, Composite
             new HashMap<String, ComponentDefinition<? extends Implementation<?>>>();
     private final Map<QName, Include> includes = new HashMap<QName, Include>();
     private final List<WireDefinition> wires = new ArrayList<WireDefinition>();
+    private QName constrainingType;
     private Set<QName> intents;
     private Set<QName> policySets;
 
@@ -98,6 +99,24 @@ public class Composite extends AbstractComponentType<CompositeService, Composite
      */
     public void setAutowire(Autowire autowire) {
         this.autowire = autowire;
+    }
+
+    /**
+     * Returns the name of the constraining type for this composite.
+     *
+     * @return the name of the constraining type for this composite
+     */
+    public QName getConstrainingType() {
+        return constrainingType;
+    }
+
+    /**
+     * Sets the name of the constraining type for this composite.
+     *
+     * @param constrainingType the name of the constraining type for this composite
+     */
+    public void setConstrainingType(QName constrainingType) {
+        this.constrainingType = constrainingType;
     }
 
     @Override

@@ -82,8 +82,7 @@ public class ComponentTypeLoader implements StAXElementLoader<ComponentType> {
     }
 
     public ComponentType load(XMLStreamReader reader, LoaderContext loaderContext) throws XMLStreamException, LoaderException {
-        String constrainingAttr = reader.getAttributeValue(null, "constrainingType");
-        QName constrainingType = LoaderUtil.getQName(constrainingAttr,
+        QName constrainingType = LoaderUtil.getQName(reader.getAttributeValue(null, "constrainingType"),
                                                      loaderContext.getTargetNamespace(),
                                                      reader.getNamespaceContext());
 
