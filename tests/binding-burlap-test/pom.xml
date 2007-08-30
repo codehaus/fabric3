@@ -93,6 +93,13 @@
                             <version>0.2-SNAPSHOT</version>
                         </dependency>
                     </contributions>
+                    <extensions>
+                        <dependency>
+                            <groupId>org.apache.geronimo.specs</groupId>
+                            <artifactId>geronimo-j2ee-connector_1.5_spec</artifactId>
+                            <version>1.0.1</version>
+                        </dependency>
+                    </extensions>
                 </configuration>
                 <executions>
                     <execution>
