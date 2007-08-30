@@ -91,17 +91,28 @@ public class JavaWireAttacher implements WireAttacher<JavaWireSourceDefinition, 
         ValueSource referenceSource = new ValueSource(ValueSource.ValueSourceType.REFERENCE, sourceUri.getFragment());
 
         Class<?> type = source.getMemberType(referenceSource);
-        URI targetName = UriHelper.getDefragmentedName(targetDefinition.getUri());
-        Component target = manager.getComponent(targetName);
+        URI targetUri = targetDefinition.getUri();
+        Component target = null;
+        if(targetUri != null) {
+            URI targetName = UriHelper.getDefragmentedName(targetDefinition.getUri());
+            target = manager.getComponent(targetName);
+        }
+        
         
         if (sourceDefinition.isOptimizable()) {
             assert target instanceof AtomicComponent;
             ObjectFactory<?> factory = ((AtomicComponent<?>) target).createObjectFactory();
             source.setObjectFactory(referenceSource, factory);
-            source.attachReferenceToTarget(referenceSource, factory, (AtomicComponent<?>) target);
+            if(target != null) {
+                source.attachReferenceToTarget(referenceSource, factory, (AtomicComponent<?>) target);
+            }
         } else {
             ObjectFactory<?> factory = createWireObjectFactory(type, sourceDefinition.isConversational(), wire);
-            source.attachReferenceToTarget(referenceSource, factory, (AtomicComponent<?>) target);
+            if(target != null) {
+                source.attachReferenceToTarget(referenceSource, factory, (AtomicComponent<?>) target);
+            } else {
+                source.setObjectFactory(referenceSource, factory);
+            }
             if (!wire.getCallbackInvocationChains().isEmpty()) {
                 URI callbackUri = sourceDefinition.getCallbackUri();
                 ValueSource callbackSource =
@@ -110,6 +121,7 @@ public class JavaWireAttacher implements WireAttacher<JavaWireSourceDefinition, 
                 source.setObjectFactory(callbackSource, createCallbackWireObjectFactory(callbackType));
             }
         }
+        
     }
 
     /**
