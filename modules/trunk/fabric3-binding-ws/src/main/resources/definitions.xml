@@ -4,6 +4,6 @@
     targetNamespace="http://www.osoa.org/xmlns/sca/1.02" 
     xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha">
     
-    <bindingType type="ws"/>
+    <bindingType name="ws"/>
     
 </definitions>
