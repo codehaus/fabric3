@@ -36,7 +36,6 @@ import org.fabric3.tx.TxException;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Transaction manager proxy. This class will proxy an injected transaction manager. If the delegate 
@@ -92,25 +91,11 @@ public class TransactionManagerProxy implements TransactionManager {
     }
     
     /**
-     * Injects a transaction manager.
-     * 
-     * @param transactionManager Transaction manager to be injected.
-     */
-    @Reference
-    public void setTransactionManager(TransactionManager delegate) {
-        this.delegate = delegate;
-    }
-    
-    /**
      * Looks up the transaction manager.
      * @throws NamingException In case JNDI operation fails.
      */
     @Init
     public void init() throws NamingException {
-        
-        if(delegate != null) {
-            return;
-        }
         
         Hashtable<String, String> env = new Hashtable<String, String>();
         if(providerUrl != null) {
