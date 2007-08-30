@@ -316,6 +316,7 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-binding-burlap/fabric3-binding-burlap.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-binding-burlap/fabric3-binding-burlap.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-binding-hessian/fabric3-binding-hessian.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-binding-hessian/fabric3-binding-hessian.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-binding-jms/fabric3-binding-jms.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-binding-jms/fabric3-binding-jms.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-binding-rmi/fabric3-binding-rmi.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-binding-rmi/fabric3-binding-rmi.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-binding-ws/fabric3-binding-ws.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-binding-ws/fabric3-binding-ws.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-console/fabric3-console.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-console/fabric3-console.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-contribution-plugin/fabric3-contribution-plugin.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-contribution-plugin/fabric3-contribution-plugin.iml" />
@@ -344,7 +345,6 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-transform/fabric3-transform.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-transform/fabric3-transform.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-webapp-plugin/fabric3-webapp-plugin.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-webapp-plugin/fabric3-webapp-plugin.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/function/function-tests.iml" filepath="$PROJECT_DIR$/tests/function/function-tests.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/module-parent/module-parent.iml" filepath="$PROJECT_DIR$/modules/trunk/module-parent/module-parent.iml" />
       <module fileurl="file://$PROJECT_DIR$/parent-pom/trunk/parent-pom.iml" filepath="$PROJECT_DIR$/parent-pom/trunk/parent-pom.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/policy-test/policy-test.iml" filepath="$PROJECT_DIR$/tests/policy-test/policy-test.iml" />
       <module fileurl="file://$PROJECT_DIR$/spec/trunk/sca-spec.iml" filepath="$PROJECT_DIR$/spec/trunk/sca-spec.iml" />
@@ -356,6 +356,7 @@
       <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/webapp/webapp-api/webapp-api.iml" filepath="$PROJECT_DIR$/runtimes/trunk/webapp/webapp-api/webapp-api.iml" group="webapp" />
       <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/webapp/webapp-host/webapp-host.iml" filepath="$PROJECT_DIR$/runtimes/trunk/webapp/webapp-host/webapp-host.iml" group="webapp" />
       <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/webapp/smoketest/webapp-smoketest.iml" filepath="$PROJECT_DIR$/runtimes/trunk/webapp/smoketest/webapp-smoketest.iml" group="webapp" />
+      <module fileurl="file://$PROJECT_DIR$/tests/wiring-composite-test/wiring-composite-test.iml" filepath="$PROJECT_DIR$/tests/wiring-composite-test/wiring-composite-test.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/wiring-test/wiring-test.iml" filepath="$PROJECT_DIR$/tests/wiring-test/wiring-test.iml" />
     </modules>
   </component>
