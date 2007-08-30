@@ -356,7 +356,6 @@
       <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/webapp/webapp-api/webapp-api.iml" filepath="$PROJECT_DIR$/runtimes/trunk/webapp/webapp-api/webapp-api.iml" group="webapp" />
       <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/webapp/webapp-host/webapp-host.iml" filepath="$PROJECT_DIR$/runtimes/trunk/webapp/webapp-host/webapp-host.iml" group="webapp" />
       <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/webapp/smoketest/webapp-smoketest.iml" filepath="$PROJECT_DIR$/runtimes/trunk/webapp/smoketest/webapp-smoketest.iml" group="webapp" />
-      <module fileurl="file://$PROJECT_DIR$/tests/wiring-composite-test/wiring-composite-test.iml" filepath="$PROJECT_DIR$/tests/wiring-composite-test/wiring-composite-test.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/wiring-test/wiring-test.iml" filepath="$PROJECT_DIR$/tests/wiring-test/wiring-test.iml" />
     </modules>
   </component>
