@@ -60,10 +60,6 @@
         </dependency>
     </dependencies>
 
-    <modules>
-        <module>../../modules/trunk/fabric3-groovy</module>
-    </modules>
-
     <build>
         <defaultGoal>verify</defaultGoal>
         <plugins>
