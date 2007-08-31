@@ -18,25 +18,32 @@
 <project>
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.codehaus.fabric3.webapp</groupId>
-        <artifactId>webapp-parent</artifactId>
-        <version>0.2-SNAPSHOT</version>
+        <groupId>org.codehaus.fabric3</groupId>
+        <artifactId>fabric</artifactId>
+        <version>3</version>
     </parent>
-    <groupId>org.codehaus.fabric3.webapp</groupId>
-    <artifactId>webapp-smoketest</artifactId>
+    <groupId>org.codehaus.fabric3.tests</groupId>
+    <artifactId>runtime-webapp</artifactId>
+    <version>0.1-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>Fabric3 Webapp Runtime Smoketest</name>
     <description>Fabric3 Webapp Runtime Smoketest.</description>
 
+    <properties>
+        <runtimeVersion>0.2-SNAPSHOT</runtimeVersion>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>org.codehaus.fabric3.webapp</groupId>
             <artifactId>webapp-api</artifactId>
+            <version>${runtimeVersion}</version>
         </dependency>
 
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
+            <version>2.4</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -61,7 +68,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <runTimeVersion>${project.version}</runTimeVersion>
+                    <runTimeVersion>${runtimeVersion}</runTimeVersion>
                 </configuration>
             </plugin>
 

@@ -18,31 +18,27 @@
 <project>
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.codehaus.fabric3.webapp</groupId>
-        <artifactId>webapp-parent</artifactId>
-        <version>0.2-SNAPSHOT</version>
+        <groupId>org.codehaus.fabric3</groupId>
+        <artifactId>fabric</artifactId>
+        <version>3</version>
     </parent>
     <groupId>org.codehaus.fabric3.webapp</groupId>
     <artifactId>webapp-host</artifactId>
+    <version>0.2-SNAPSHOT</version>
     <name>Fabric3 Webapp Runtime Host</name>
     <description>Fabric3 Webapp Runtime Host.</description>
 
     <dependencies>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.codehaus.fabric3.webapp</groupId>
             <artifactId>webapp-api</artifactId>
+            <version>0.2-SNAPSHOT</version>
         </dependency>
-
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-fabric</artifactId>
+            <version>0.2-SNAPSHOT</version>
         </dependency>
-
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-policy</artifactId>
@@ -50,13 +46,21 @@
         </dependency>
 
         <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.4</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.codehaus.woodstox</groupId>
             <artifactId>wstx-asl</artifactId>
+            <version>3.2.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.tuscany</groupId>
             <artifactId>commonj-api_r1.1</artifactId>
+            <version>1.0-incubator-M2</version>
             <scope>runtime</scope>
         </dependency>
 

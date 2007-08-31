@@ -15,7 +15,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="sca-spec" />
     <orderEntry type="library" name="servlet-api-2.4" level="application" />
-    <orderEntry type="module" module-name="webapp-host" />
     <orderEntryProperties />
   </component>
   <component name="WebModuleBuildComponent">
@@ -60,14 +59,6 @@
     <containerElement type="module" name="sca-spec">
       <attribute name="method" value="0" />
       <attribute name="URI" value="&lt;N/A&gt;" />
-    </containerElement>
-    <containerElement type="module" name="webapp-api">
-      <attribute name="method" value="1" />
-      <attribute name="URI" value="/WEB-INF/classes" />
-    </containerElement>
-    <containerElement type="module" name="webapp-host">
-      <attribute name="method" value="1" />
-      <attribute name="URI" value="/WEB-INF/classes" />
     </containerElement>
     <containerElement type="library" name="cglib-nodep-2.1_3" level="application">
       <attribute name="method" value="1" />
