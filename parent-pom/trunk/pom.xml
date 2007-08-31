@@ -112,4 +112,10 @@
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
+
+    <scm>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/parent-pom/trunk</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/parent-pom/trunk</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/parent-pom/trunk</url>
+    </scm>
 </project>
