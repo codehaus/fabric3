@@ -68,7 +68,7 @@ public class WebappComponentGenerator implements ComponentGenerator<LogicalCompo
         AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property<?>> componentType =
                 definition.getImplementation().getComponentType();
 
-        WebappPhysicalComponentDefinition pDefinition = new WebappPhysicalComponentDefinition();
+        WebappComponentDefinition pDefinition = new WebappComponentDefinition();
         URI componentId = component.getUri();
         pDefinition.setComponentId(componentId);
         pDefinition.setGroupId(componentId.resolve("."));
@@ -102,11 +102,11 @@ public class WebappComponentGenerator implements ComponentGenerator<LogicalCompo
      *     org.fabric3.spi.model.instance.LogicalReference, 
      *     boolean)
      */
-    public WebAppPhysicalWireSourceDefinition generateWireSource(LogicalComponent<WebappImplementation> source,
+    public WebappWireSourceDefinition generateWireSource(LogicalComponent<WebappImplementation> source,
                                                                  LogicalReference reference,
                                                                  boolean optimizable) throws GenerationException {
 
-        WebAppPhysicalWireSourceDefinition sourceDefinition = new WebAppPhysicalWireSourceDefinition();
+        WebappWireSourceDefinition sourceDefinition = new WebappWireSourceDefinition();
         sourceDefinition.setUri(reference.getUri());
         return sourceDefinition;
     }

@@ -27,7 +27,7 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 /**
  * @version $Rev$ $Date$
  */
-public class WebappPhysicalComponentDefinition extends PhysicalComponentDefinition {
+public class WebappComponentDefinition extends PhysicalComponentDefinition {
     private Map<String, ObjectFactory<?>> attributes = new HashMap<String, ObjectFactory<?>>();
     private Map<String, Class<?>> referenceTypes = new HashMap<String, Class<?>>();
 

@@ -95,7 +95,7 @@
     </component>
 
     <component name="webappPhysicalComponentBuilder">
-        <system:implementation.system class="org.fabric3.runtime.webapp.implementation.webapp.WebAppComponentBuilder"/>
+        <system:implementation.system class="org.fabric3.runtime.webapp.implementation.webapp.WebappComponentBuilder"/>
     </component>
 
     <component name="webappComponentGenerator">

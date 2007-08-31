@@ -45,16 +45,16 @@ import org.fabric3.spi.wire.Wire;
  */
 @EagerInit
 @Service(interfaces = {ComponentBuilder.class, WireAttacher.class})
-public class WebAppComponentBuilder
-        implements ComponentBuilder<WebappPhysicalComponentDefinition, WebappComponent>,
-        WireAttacher<WebAppPhysicalWireSourceDefinition, PhysicalWireTargetDefinition> {
+public class WebappComponentBuilder
+        implements ComponentBuilder<WebappComponentDefinition, WebappComponent>,
+        WireAttacher<WebappWireSourceDefinition, PhysicalWireTargetDefinition> {
 
     private ProxyService proxyService;
     private ComponentBuilderRegistry builderRegistry;
     private ComponentManager manager;
     private WireAttacherRegistry wireAttacherRegistry;
 
-    public WebAppComponentBuilder(@Reference ProxyService proxyService,
+    public WebappComponentBuilder(@Reference ProxyService proxyService,
                                   @Reference ComponentManager manager,
                                   @Reference ComponentBuilderRegistry builderRegistry,
                                   @Reference WireAttacherRegistry wireAttacherRegistry) {
@@ -67,11 +67,11 @@ public class WebAppComponentBuilder
 
     @Init
     public void init() {
-        builderRegistry.register(WebappPhysicalComponentDefinition.class, this);
-        wireAttacherRegistry.register(WebAppPhysicalWireSourceDefinition.class, this);
+        builderRegistry.register(WebappComponentDefinition.class, this);
+        wireAttacherRegistry.register(WebappWireSourceDefinition.class, this);
     }
 
-    public WebappComponent build(WebappPhysicalComponentDefinition definition) throws BuilderException {
+    public WebappComponent build(WebappComponentDefinition definition) throws BuilderException {
         URI componentId = definition.getComponentId();
         URI groupId = definition.getGroupId();
         Map<String, ObjectFactory<?>> attributes = definition.getAttributes();
@@ -80,7 +80,7 @@ public class WebAppComponentBuilder
     }
 
     @SuppressWarnings({"unchecked"})
-    public void attachToSource(WebAppPhysicalWireSourceDefinition sourceDefinition,
+    public void attachToSource(WebappWireSourceDefinition sourceDefinition,
                                PhysicalWireTargetDefinition targetDefinition,
                                Wire wire) {
         URI sourceName = UriHelper.getDefragmentedName(sourceDefinition.getUri());

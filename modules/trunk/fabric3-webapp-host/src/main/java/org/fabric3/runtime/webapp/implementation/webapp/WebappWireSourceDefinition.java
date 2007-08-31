@@ -16,29 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.runtime.webapp;
+package org.fabric3.runtime.webapp.implementation.webapp;
 
-import org.fabric3.host.Fabric3RuntimeException;
+import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 
 /**
- * Thrown when an error is encountered booting the runtme in a web app environment
- *
  * @version $Rev$ $Date$
  */
-public class UnSupportedRuntimeException extends Fabric3RuntimeException {
-
-    public UnSupportedRuntimeException() {
-    }
-
-    public UnSupportedRuntimeException(String message) {
-        super(message);
-    }
-
-    public UnSupportedRuntimeException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public UnSupportedRuntimeException(Throwable cause) {
-        super(cause);
-    }
+public class WebappWireSourceDefinition extends PhysicalWireSourceDefinition {
 }
