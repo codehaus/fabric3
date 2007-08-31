@@ -17,20 +17,21 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:burlap="http://www.fabric3.org/binding/burlap/0.1"
-           name="MapOfReferenceTest">
+           name="MapComposite">
 
-    <component name="GreetingTest">
-        <f3:junit class="org.fabric3.test.map.GreetingClientTest"/>
-        <reference name="greetingServices" target="HelloService BonjourService" multiplicity="0..n" />
+    <component f3:key="one" name="map.one">
+        <implementation.java class="org.fabric3.tests.function.common.IdentityServiceImpl"/>
+        <property name="id">map.one</property>
     </component>
 
-    <component f3:key="HE" name="HelloService">
-        <implementation.java class="org.fabric3.test.map.HelloGreetingService"/>
+    <component f3:key="two" name="map.two">
+        <implementation.java class="org.fabric3.tests.function.common.IdentityServiceImpl"/>
+        <property name="id">map.two</property>
     </component>
 
-    <component f3:key="BN" name="BonjourService">
-        <implementation.java class="org.fabric3.test.map.BonjourGreetingService"/>
+    <component f3:key="three" name="map.three">
+        <implementation.java class="org.fabric3.tests.function.common.IdentityServiceImpl"/>
+        <property name="id">map.three</property>
     </component>
-    
+
 </composite>
