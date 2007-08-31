@@ -18,12 +18,13 @@
 <project>
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.codehaus.fabric3.standalone</groupId>
-        <artifactId>standalone-parent</artifactId>
-        <version>0.2-SNAPSHOT</version>
+        <groupId>org.codehaus.fabric3</groupId>
+        <artifactId>fabric</artifactId>
+        <version>3</version>
     </parent>
     <groupId>org.codehaus.fabric3.standalone</groupId>
     <artifactId>shutdown</artifactId>
+    <version>0.2-SNAPSHOT</version>
     <name>Fabric3 Standalone Runtime Shutdown</name>
     <description>Fabric3 Standalone Runtime Server Shutdown Command.</description>
 
@@ -31,11 +32,12 @@
        <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-host-api</artifactId>
-				<version>0.2-SNAPSHOT</version>
+            <version>0.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3.standalone</groupId>
             <artifactId>standalone-api</artifactId>
+            <version>0.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
