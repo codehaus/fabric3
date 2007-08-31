@@ -59,6 +59,7 @@
             <id>dav.codehaus.org</id>
             <name>Fabric3 Snapshot Repository</name>
             <url>dav:https://dav.codehaus.org/snapshots.repository/fabric3/</url>
+            <uniqueVersion>false</uniqueVersion>
         </snapshotRepository>
     </distributionManagement>
 
