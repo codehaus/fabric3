@@ -30,6 +30,11 @@
         <maven>2.0.7</maven>
     </prerequisites>
 
+    <organization>
+        <name>Fabric3 Projec</name>
+        <url>http://fabric3.codehaus.org</url>
+    </organization>
+
     <inceptionYear>2007</inceptionYear>
 
     <licenses>
