@@ -21,9 +21,7 @@ package org.fabric3.runtime.webapp.implementation.webapp;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
+import java.util.Set;
 
 import org.fabric3.fabric.util.JavaIntrospectionHelper;
 import org.fabric3.scdl.AbstractComponentType;
@@ -32,6 +30,7 @@ import org.fabric3.scdl.Property;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
@@ -40,7 +39,10 @@ import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
+import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Rev$ $Date$
@@ -52,8 +54,16 @@ public class WebappComponentGenerator implements ComponentGenerator<LogicalCompo
         registry.register(WebappImplementation.class, this);
     }
 
+    /**
+     * @see org.fabric3.spi.generator.ComponentGenerator#generate(
+     *     org.fabric3.spi.model.instance.LogicalComponent, 
+     *     java.util.Set, 
+     *     org.fabric3.spi.generator.GeneratorContext)
+     */
     @SuppressWarnings({"unchecked"})
-    public void generate(LogicalComponent<WebappImplementation> component, GeneratorContext context) {
+    public PhysicalComponentDefinition generate(LogicalComponent<WebappImplementation> component, 
+                                                Set<Intent> intentsToBeProvided, 
+                                                GeneratorContext context) {
         ComponentDefinition<WebappImplementation> definition = component.getDefinition();
         AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property<?>> componentType =
                 definition.getImplementation().getComponentType();
@@ -82,21 +92,34 @@ public class WebappComponentGenerator implements ComponentGenerator<LogicalCompo
         }
         pDefinition.setReferenceTypes(referenceTypes);
         context.getPhysicalChangeSet().addComponentDefinition(pDefinition);
+        
+        return pDefinition;
     }
 
+    /**
+     * @see org.fabric3.spi.generator.ComponentGenerator#generateWireSource(
+     *     org.fabric3.spi.model.instance.LogicalComponent, 
+     *     org.fabric3.spi.model.instance.LogicalReference, 
+     *     boolean)
+     */
     public WebAppPhysicalWireSourceDefinition generateWireSource(LogicalComponent<WebappImplementation> source,
                                                                  LogicalReference reference,
-                                                                 boolean optimizable,
-                                                                 GeneratorContext context) throws GenerationException {
+                                                                 boolean optimizable) throws GenerationException {
 
         WebAppPhysicalWireSourceDefinition sourceDefinition = new WebAppPhysicalWireSourceDefinition();
         sourceDefinition.setUri(reference.getUri());
         return sourceDefinition;
     }
 
-    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, LogicalComponent<WebappImplementation> target,
-                                                           GeneratorContext context) throws GenerationException {
-        throw new UnsupportedOperationException();
+    /**
+     * @see org.fabric3.spi.generator.ComponentGenerator#generateWireTarget(
+     *     org.fabric3.spi.model.instance.LogicalService, 
+     *     org.fabric3.spi.model.instance.LogicalComponent)
+     */
+    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, 
+                                                           LogicalComponent<WebappImplementation> arg1) throws GenerationException {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }
