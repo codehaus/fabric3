@@ -45,6 +45,11 @@
         </license>
     </licenses>
 
+    <issueManagement>
+        <system>jira</system>
+        <url>http://jira.codehaus.org/browse/FABRICTHREE</url>
+    </issueManagement>
+
     <build>
         <extensions>
             <!-- WebDAV extension to support deployment to Codehaus repositories -->
