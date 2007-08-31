@@ -31,7 +31,6 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
-import org.fabric3.runtime.webapp.ServletRequestInjector;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.host.ServletHost;
 

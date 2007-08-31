@@ -23,9 +23,13 @@ import java.util.StringTokenizer;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.XMLStreamConstants;
 
 import org.fabric3.scdl.ComponentReference;
 import org.fabric3.scdl.Multiplicity;
+import org.fabric3.scdl.ModelObject;
+import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.spi.loader.InvalidReferenceException;
 import org.fabric3.spi.loader.InvalidValueException;
 import org.fabric3.spi.loader.LoaderContext;
@@ -33,6 +37,9 @@ import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.PolicyHelper;
 import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.spi.loader.UnrecognizedElementException;
+import org.fabric3.spi.loader.Loader;
+
 import org.osoa.sca.annotations.Reference;
 
 /**
@@ -41,10 +48,13 @@ import org.osoa.sca.annotations.Reference;
  * @version $Rev$ $Date$
  */
 public class ComponentReferenceLoader implements StAXElementLoader<ComponentReference> {
-    
+
+    private final Loader loader;
     private final PolicyHelper policyHelper;
     
-    public ComponentReferenceLoader(@Reference PolicyHelper policyHelper) {
+    public ComponentReferenceLoader(@Reference Loader loader,
+                                    @Reference PolicyHelper policyHelper) {
+        this.loader = loader;
         this.policyHelper = policyHelper;
     }
 
@@ -80,9 +90,21 @@ public class ComponentReferenceLoader implements StAXElementLoader<ComponentRefe
         
         policyHelper.loadPolicySetsAndIntents(reference, reader);
         
-        LoaderUtil.skipToEndElement(reader);
-        
-        return reference;
-        
+        while (true) {
+            switch (reader.next()) {
+                case XMLStreamConstants.START_ELEMENT:
+                    ModelObject type = loader.load(reader, ModelObject.class, context);
+                    if (type instanceof ServiceContract) {
+                        reference.setServiceContract((ServiceContract<?>)type);
+                    } else if (type instanceof BindingDefinition) {
+                        reference.addBinding((BindingDefinition)type);
+                    } else {
+                        throw new UnrecognizedElementException(reader.getName());
+                    }
+                    break;
+                case XMLStreamConstants.END_ELEMENT:
+                    return reference;
+            }
+        }
     }
 }

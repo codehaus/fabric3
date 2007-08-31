@@ -18,98 +18,68 @@
  */
 package org.fabric3.runtime.webapp.implementation.webapp;
 
-import javax.xml.namespace.QName;
-import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
-import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
+import java.net.MalformedURLException;
+import java.net.URL;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.extension.loader.LoaderExtension;
-import org.fabric3.pojo.processor.ProcessingException;
-import org.fabric3.scdl.AbstractComponentType;
-import org.fabric3.scdl.Property;
-import org.fabric3.scdl.ReferenceDefinition;
-import org.fabric3.scdl.Scope;
-import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.scdl.ComponentType;
-import org.fabric3.spi.idl.InvalidServiceContractException;
-import org.fabric3.spi.idl.java.InterfaceJavaIntrospector;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.loader.MissingResourceException;
-import org.fabric3.spi.loader.UnrecognizedElementException;
+import org.fabric3.spi.loader.LoaderUtil;
+import org.fabric3.spi.loader.StAXElementLoader;
 
 /**
  * @version $Rev$ $Date$
  */
-public class WebappLoader extends LoaderExtension<WebappImplementation> {
+@EagerInit
+public class WebappLoader implements StAXElementLoader<WebappImplementation> {
 
-    private final InterfaceJavaIntrospector introspector;
+    private final LoaderRegistry registry;
 
-    public WebappLoader(@Reference LoaderRegistry registry,
-                        @Reference InterfaceJavaIntrospector introspector) {
-        super(registry);
-        this.introspector = introspector;
+    public WebappLoader(@Reference LoaderRegistry registry
+    ) {
+        this.registry = registry;
     }
 
-    public QName getXMLType() {
-        return WebappImplementation.IMPLEMENTATION_WEBAPP;
+    @Init
+    public void init() {
+        registry.registerLoader(WebappImplementation.IMPLEMENTATION_WEBAPP, this);
+    }
+
+    @Destroy
+    public void destroy() {
+        registry.unregisterLoader(WebappImplementation.IMPLEMENTATION_WEBAPP);
     }
 
     public WebappImplementation load(XMLStreamReader reader, LoaderContext loaderContext)
             throws XMLStreamException, LoaderException {
 
-        ComponentType componentType = new ComponentType();
-        componentType.setImplementationScope(Scope.COMPOSITE);
+        ComponentType componentType = loadComponentType(loaderContext);
         WebappImplementation impl = new WebappImplementation();
         impl.setComponentType(componentType);
-
-        while (true) {
-            switch (reader.next()) {
-            case START_ELEMENT:
-                QName qname = reader.getName();
-                if ("reference".equals(qname.getLocalPart())) {
-                    defineReference(componentType, reader, loaderContext);
-                } else {
-                    throw new UnrecognizedElementException(qname);
-                }
-                reader.next();
-                break;
-            case END_ELEMENT:
-                return impl;
-            }
-        }
+        LoaderUtil.skipToEndElement(reader);
+        return impl;
     }
 
-    protected void defineReference(AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property<?>> componentType,
-                                   XMLStreamReader reader,
-                                   LoaderContext context) throws LoaderException {
-        String name = reader.getAttributeValue(null, "name");
-
-        String className = reader.getAttributeValue(null, "interface");
-        if (className == null) {
-            className = reader.getAttributeValue(null, "class");
-        }
-
-        Class<?> referenceType;
+    private ComponentType loadComponentType(LoaderContext context) throws LoaderException {
+        URL url;
         try {
-            referenceType = context.getTargetClassLoader().loadClass(className);
-        } catch (ClassNotFoundException e) {
-            throw new MissingResourceException(className, e);
+            url = new URL(context.getSourceBase(), "web.componentType");
+        } catch (MalformedURLException e) {
+            throw new LoaderException(e.getMessage(), e);
         }
-
-        ServiceContract serviceContract;
-        try {
-            serviceContract = introspector.introspect(referenceType);
-        } catch (InvalidServiceContractException e) {
-            throw new ProcessingException("Invalid service contract", name, e);
-        }
-
-        ReferenceDefinition definition = new ReferenceDefinition(name, serviceContract);
-        componentType.add(definition);
+        LoaderContext childContext = new LoaderContextImpl(context.getTargetClassLoader(), url);
+        ComponentType componentType = registry.load(url, ComponentType.class, childContext);
+        componentType.setImplementationScope(Scope.COMPOSITE);
+        return componentType;
     }
 }

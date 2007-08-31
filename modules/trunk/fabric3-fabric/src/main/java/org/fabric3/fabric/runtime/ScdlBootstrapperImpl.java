@@ -391,7 +391,8 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         PropertyValueLoader propertyValueLoader = new PropertyValueLoader();
         PolicyHelper policyHelper = new DefaultPolicyHelper();
 
-        ComponentReferenceLoader componentReferenceLoader = new ComponentReferenceLoader(policyHelper);
+        ComponentReferenceLoader componentReferenceLoader = new ComponentReferenceLoader(loaderRegistry,
+                                                                                         policyHelper);
         ComponentLoader componentLoader = new ComponentLoader(loaderRegistry,
                                                               propertyValueLoader,
                                                               componentReferenceLoader,

@@ -31,14 +31,6 @@ public class HelloServiceImpl implements HelloService {
         this.greeting = greeting;
     }
 
-    /**
-     * @Deprecated JFM FIXME remove when properties work
-     */
-    @Constructor
-    public HelloServiceImpl() {
-        this.greeting = "Hello World";
-    }
-
     public String getGreeting() {
         return greeting;
     }

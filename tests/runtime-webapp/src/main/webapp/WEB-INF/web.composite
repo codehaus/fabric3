@@ -22,14 +22,12 @@
            name="WebappSmoketestComposite">
 
     <component name="smoketest">
-        <fabric3:webapp>
-            <reference name="hello" interface="org.fabric3.runtime.webapp.smoketest.HelloService"/>
-        </fabric3:webapp>
+        <fabric3:webapp/>
         <reference name="hello" target="HelloComponent"/>
     </component>
 
     <component name="HelloComponent">
         <implementation.java class="org.fabric3.runtime.webapp.smoketest.HelloServiceImpl"/>
-        <!-- JFM FIXME <property name="greeting">Hello World</property> -->
+        <property name="greeting">Hello World</property> 
     </component>
 </composite>
