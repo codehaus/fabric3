@@ -31,6 +31,6 @@ public class WebappImplementation extends Implementation<ComponentType> {
     public static final QName IMPLEMENTATION_WEBAPP = new QName(Constants.FABRIC3_NS, "webapp");
 
     public QName getType() {
-        return null;
+        return IMPLEMENTATION_WEBAPP;
     }
 }
