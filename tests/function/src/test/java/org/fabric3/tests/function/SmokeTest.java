@@ -19,6 +19,8 @@ package org.fabric3.tests.function;
 import junit.framework.TestCase;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.tests.function.common.IdentityService;
+
 /**
  * Simple test case that checks that the test harness is running.
  *
@@ -26,9 +28,9 @@ import org.osoa.sca.annotations.Reference;
  */
 public class SmokeTest extends TestCase {
     @Reference
-    public SmokeTestService service;
+    public IdentityService service;
 
     public void testCallingComponent() {
-        assertEquals("Hello World", service.message("World"));
+        assertEquals("one", service.getIdentity());
     }
 }

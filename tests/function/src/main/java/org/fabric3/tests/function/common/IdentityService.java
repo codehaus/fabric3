@@ -14,18 +14,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.tests.function;
-
-import org.osoa.sca.annotations.Property;
+package org.fabric3.tests.function.common;
 
 /**
  * @version $Rev$ $Date$
  */
-public class SmokeTestServiceImpl implements SmokeTestService {
-    @Property
-    public String message;
-
-    public String message(String name) {
-        return message + name;
-    }
+public interface IdentityService {
+    String getIdentity();
 }

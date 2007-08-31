@@ -19,7 +19,10 @@
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            name="FunctionTestHarnessComposite">
 
-    <include name="SmokeTestComposite" scdlLocation="smoketest.composite"/>
-    <include name="ConversationComposite" scdlLocation="conversation.composite"/>
-    <include name="PropertiesComposite" scdlLocation="properties.composite"/>
+    <include name="CommonComposite" scdlResource="org/fabric3/tests/function/common/common.composite"/>
+
+    <include name="SmokeTestComposite" scdlLocation="org/fabric3/tests/function/smoketest.composite"/>
+    <include name="ConversationComposite" scdlLocation="org/fabric3/tests/function/conversation/conversation.composite"/>
+    <include name="PropertiesComposite" scdlLocation="org/fabric3/tests/function/properties/properties.composite"/>
+    <include name="ReferencesComposite" scdlLocation="org/fabric3/tests/function/references/references.composite"/>
 </composite>

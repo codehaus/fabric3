@@ -17,11 +17,21 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
-           name="BurlapTestSystemScdl"
-           autowire="true">
-           
-    <!-- Include system SCDL -->
-    <include name="org.fabric3.fabric.SystemImplementation" scdlResource="META-INF/fabric3/embeddedMaven.composite"/>
-    
+           name="CommonComposite">
+
+    <component name="one">
+        <implementation.java class="org.fabric3.tests.function.common.IdentityServiceImpl"/>
+        <property name="id">one</property>
+    </component>
+
+    <component name="two">
+        <implementation.java class="org.fabric3.tests.function.common.IdentityServiceImpl"/>
+        <property name="id">two</property>
+    </component>
+
+    <component name="three">
+        <implementation.java class="org.fabric3.tests.function.common.IdentityServiceImpl"/>
+        <property name="id">three</property>
+    </component>
+
 </composite>

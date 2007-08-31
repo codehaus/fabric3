@@ -19,13 +19,8 @@
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            name="SmokeTestComposite">
 
-    <component name="SmokeTestServiceImpl">
-        <implementation.java class="org.fabric3.tests.function.SmokeTestServiceImpl"/>
-        <property name="message">Hello </property>
-    </component>
-
     <component name="SmokeTest">
         <f3:junit class="org.fabric3.tests.function.SmokeTest"/>
-        <reference name="service" target="SmokeTestServiceImpl"/>
+        <reference name="service" target="one"/>
     </component>
 </composite>
