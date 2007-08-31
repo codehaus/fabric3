@@ -21,7 +21,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>parent</artifactId>
-    <version>4-SNAPSHOT</version>
+    <version>3</version>
     <packaging>pom</packaging>
     <name>Fabric3 Project Parent</name>
     <description>Parent POM defining project wide settings.</description>
@@ -126,8 +126,8 @@
     </pluginRepositories>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/parent-pom/trunk</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/parent-pom/trunk</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/parent-pom/trunk</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/parent-pom/tags/3</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/parent-pom/tags/3</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/parent-pom/tags/3</url>
     </scm>
 </project>
