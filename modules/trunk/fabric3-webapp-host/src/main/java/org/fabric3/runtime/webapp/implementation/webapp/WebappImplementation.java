@@ -28,7 +28,7 @@ import org.fabric3.spi.Constants;
  * @version $Rev$ $Date$
  */
 public class WebappImplementation extends Implementation<ComponentType> {
-    public static final QName IMPLEMENTATION_WEBAPP = new QName(Constants.FABRIC3_NS, "webapp");
+    public static final QName IMPLEMENTATION_WEBAPP = new QName(Constants.FABRIC3_NS, "web");
 
     public QName getType() {
         return IMPLEMENTATION_WEBAPP;

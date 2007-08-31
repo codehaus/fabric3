@@ -22,7 +22,7 @@
            name="WebappSmoketestComposite">
 
     <component name="smoketest">
-        <fabric3:webapp/>
+        <fabric3:web/>
         <reference name="hello" target="HelloComponent"/>
     </component>
 
