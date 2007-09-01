@@ -174,7 +174,7 @@ public class Fabric3ContributionMojo extends AbstractMojo {
                 File libDir = new File( contentDirectory,"META-INF" + File.separator + "lib" );
 	 	ScopeArtifactFilter filter = new ScopeArtifactFilter( Artifact.SCOPE_RUNTIME );
         for (Artifact artifact : (Set<Artifact>)project.getArtifacts() ) {
-        	System.out.println("checking " + artifact.getArtifactId());
+        	getLog().debug("checking " + artifact.getArtifactId());
         	boolean isSCAContribution = artifact.getType().startsWith("sca-contribution");
             if ( !isSCAContribution && !artifact.isOptional() && filter.include( artifact ) ) {
             	getLog().debug( String.format("including dependency %s", artifact));
