@@ -342,6 +342,10 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-policy-spi/fabric3-policy-spi.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-policy-spi/fabric3-policy-spi.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-scdl/fabric3-scdl.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-scdl/fabric3-scdl.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-spi/fabric3-spi.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-spi/fabric3-spi.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-standalone-api/fabric3-standalone-api.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-standalone-api/fabric3-standalone-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-standalone-host/fabric3-standalone-host.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-standalone-host/fabric3-standalone-host.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-standalone-server/fabric3-standalone-server.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-standalone-server/fabric3-standalone-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-standalone-shutdown/fabric3-standalone-shutdown.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-standalone-shutdown/fabric3-standalone-shutdown.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-transform/fabric3-transform.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-transform/fabric3-transform.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-webapp-api/fabric3-webapp-api.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-webapp-api/fabric3-webapp-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-webapp-host/fabric3-webapp-host.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-webapp-host/fabric3-webapp-host.iml" />
@@ -351,10 +355,6 @@
       <module fileurl="file://$PROJECT_DIR$/tests/policy-test/policy-test.iml" filepath="$PROJECT_DIR$/tests/policy-test/policy-test.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/runtime-webapp/runtime-webapp.iml" filepath="$PROJECT_DIR$/tests/runtime-webapp/runtime-webapp.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/spec/trunk/sca-spec.iml" filepath="$PROJECT_DIR$/spec/trunk/sca-spec.iml" />
-      <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/standalone/standalone-api/standalone-api.iml" filepath="$PROJECT_DIR$/runtimes/trunk/standalone/standalone-api/standalone-api.iml" group="standalone" />
-      <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/standalone/standalone-host/standalone-host.iml" filepath="$PROJECT_DIR$/runtimes/trunk/standalone/standalone-host/standalone-host.iml" group="standalone" />
-      <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/standalone/server.shutdown/standalone-shutdown.iml" filepath="$PROJECT_DIR$/runtimes/trunk/standalone/server.shutdown/standalone-shutdown.iml" group="standalone" />
-      <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/standalone/server.start/standalone-start.iml" filepath="$PROJECT_DIR$/runtimes/trunk/standalone/server.start/standalone-start.iml" group="standalone" />
       <module fileurl="file://$PROJECT_DIR$/tests/groovy/test-groovy.iml" filepath="$PROJECT_DIR$/tests/groovy/test-groovy.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/wiring-test/wiring-test.iml" filepath="$PROJECT_DIR$/tests/wiring-test/wiring-test.iml" group="tests" />
     </modules>

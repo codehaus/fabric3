@@ -20,10 +20,10 @@
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric</artifactId>
-        <version>3</version>
+        <version>4</version>
     </parent>
     <groupId>org.codehaus.fabric3.standalone</groupId>
-    <artifactId>shutdown</artifactId>
+    <artifactId>fabric3-standalone-shutdown</artifactId>
     <version>0.2-SNAPSHOT</version>
     <name>Fabric3 Standalone Runtime Shutdown</name>
     <description>Fabric3 Standalone Runtime Server Shutdown Command.</description>
@@ -36,7 +36,7 @@
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3.standalone</groupId>
-            <artifactId>standalone-api</artifactId>
+            <artifactId>fabric3-standalone-api</artifactId>
             <version>0.2-SNAPSHOT</version>
         </dependency>
         <dependency>
