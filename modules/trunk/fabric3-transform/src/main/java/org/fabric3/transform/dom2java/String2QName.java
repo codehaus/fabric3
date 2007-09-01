@@ -20,29 +20,37 @@ import javax.xml.namespace.QName;
 
 import org.w3c.dom.Node;
 
-import org.fabric3.transform.AbstractPullTransformer;
-import org.fabric3.spi.model.type.XSDSimpleType;
-import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.scdl.DataType;
-import org.fabric3.spi.transform.TransformationException;
+import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.transform.TransformContext;
+import org.fabric3.spi.transform.TransformationException;
+import org.fabric3.transform.AbstractPullTransformer;
 
 /**
  * @version $Rev: 42 $ $Date: 2007-05-16 18:58:55 +0100 (Wed, 16 May 2007) $
  */
 public class String2QName extends AbstractPullTransformer<Node, QName> {
-    private static final XSDSimpleType SOURCE = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
+    /**
+     * Target Class (Long)
+     */
     private static final JavaClass<QName> TARGET = new JavaClass<QName>(QName.class);
 
-    public DataType<?> getSourceType() {
-        return SOURCE;
-    }
-
+    /**
+     * @see org.fabric3.spi.transform.Transformer#getTargetType()
+     */
     public DataType<?> getTargetType() {
         return TARGET;
     }
 
-    public QName transform(Node node, TransformContext context) throws TransformationException {
-        return QName.valueOf(node.getTextContent());
-    }
+    /**
+     * @see org.fabric3.spi.transform.PullTransformer#transform(java.lang.Object,org.fabric3.spi.transform.TransformContext)
+     *      Applies Transformation for QName
+     */
+    public QName transform(final Node node, final TransformContext context) throws TransformationException {
+        try {
+            return QName.valueOf(node.getTextContent());
+        } catch (IllegalArgumentException ie) {
+            throw new TransformationException("Unable to transform on QName ", ie);
+		}
+	}
 }

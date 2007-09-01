@@ -18,23 +18,17 @@ package org.fabric3.transform.dom2java;
 
 import org.w3c.dom.Node;
 
-import org.fabric3.transform.AbstractPullTransformer;
-import org.fabric3.spi.model.type.XSDSimpleType;
-import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.scdl.DataType;
-import org.fabric3.spi.transform.TransformationException;
+import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.transform.TransformContext;
+import org.fabric3.spi.transform.TransformationException;
+import org.fabric3.transform.AbstractPullTransformer;
 
 /**
  * @version $Rev$ $Date$
  */
 public class String2Boolean extends AbstractPullTransformer<Node, Boolean> {
-    private static final XSDSimpleType SOURCE = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
     private static final JavaClass<Boolean> TARGET = new JavaClass<Boolean>(Boolean.class);
-
-    public DataType<?> getSourceType() {
-        return SOURCE;
-    }
 
     public DataType<?> getTargetType() {
         return TARGET;

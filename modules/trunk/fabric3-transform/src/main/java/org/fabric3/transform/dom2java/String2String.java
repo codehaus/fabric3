@@ -20,21 +20,15 @@ import org.w3c.dom.Node;
 
 import org.fabric3.scdl.DataType;
 import org.fabric3.spi.model.type.JavaClass;
-import org.fabric3.spi.model.type.XSDSimpleType;
-import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.TransformContext;
+import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.transform.AbstractPullTransformer;
 
 /**
  * @version $Rev$ $Date$
  */
 public class String2String extends AbstractPullTransformer<Node, String> {
-    private static final XSDSimpleType SOURCE = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
     private static final JavaClass<String> TARGET = new JavaClass<String>(String.class);
-
-    public DataType<?> getSourceType() {
-        return SOURCE;
-    }
 
     public DataType<?> getTargetType() {
         return TARGET;

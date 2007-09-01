@@ -19,53 +19,52 @@ package org.fabric3.transform.dom2java;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.fabric3.scdl.DataType;
-import org.fabric3.spi.model.type.JavaClass;
-import org.fabric3.spi.model.type.XSDSimpleType;
-import org.fabric3.spi.transform.TransformContext;
-import org.fabric3.spi.transform.TransformationException;
-import org.fabric3.transform.AbstractPullTransformer;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import org.fabric3.scdl.DataType;
+import org.fabric3.spi.model.type.JavaClass;
+import org.fabric3.spi.transform.TransformContext;
+import org.fabric3.spi.transform.TransformationException;
+import org.fabric3.transform.AbstractPullTransformer;
+
 /**
  * Expects the property to be dfined in the format,
- * 
- * <code>
- *   <key1>value1</key1>
- *   <key2>value2</key2>
- * </code>
+ * <p/>
+ * <code> <key1>value1</key1> <key2>value2</key2> </code>
+ *
  * @version $Rev$ $Date$
  */
 public class String2Map extends AbstractPullTransformer<Node, Map<String, String>> {
-    
-    private static final XSDSimpleType SOURCE = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
-    
-    @SuppressWarnings("unchecked")
+    /**
+     * Target class Map
+     */
     private static final JavaClass<Map> TARGET = new JavaClass<Map>(Map.class);
 
-    public DataType<?> getSourceType() {
-        return SOURCE;
-    }
-
+    /**
+     * @see org.fabric3.spi.transform.Transformer#getTargetType()
+     */
     public DataType<?> getTargetType() {
         return TARGET;
     }
 
-    public Map<String, String> transform(Node node, TransformContext context) throws TransformationException {
-        
-        Map<String, String> map = new HashMap<String, String>();
-        NodeList nodeList = node.getChildNodes();
-        for(int i = 0;i < nodeList.getLength();i++) {
+    /**
+     * @see org.fabric3.spi.transform.PullTransformer#transform(java.lang.Object,org.fabric3.spi.transform.TransformContext)
+     */
+    public Map<String, String> transform(final Node node, final TransformContext context)
+            throws TransformationException {
+
+        final Map<String, String> map = new HashMap<String, String>();
+        final NodeList nodeList = node.getChildNodes();
+
+        for (int i = 0; i < nodeList.getLength(); i++) {
             Node child = nodeList.item(i);
-            if(child instanceof Element) {
+            if (child instanceof Element) {
                 Element element = (Element) child;
                 map.put(element.getTagName(), child.getTextContent());
             }
         }
         return map;
-        
     }
-    
 }

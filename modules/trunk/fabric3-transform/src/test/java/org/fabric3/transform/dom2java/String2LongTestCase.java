@@ -24,18 +24,18 @@ import org.fabric3.spi.transform.TransformationException;
 /**
  * Tests String to Integer Transform
  */
-public class  String2IntegerTestCase extends BaseTransformTest {
+public class  String2LongTestCase extends BaseTransformTest {
 
 	/**
-	 * Test of converting String to Integer
+	 * Test of converting String to Long
 	 */
-	public void testIntegerTransform() {
-		final String ANY_NUMBER = "99";
-		final String xml = "<string_to_integer>" + ANY_NUMBER + "</string_to_integer>";
+	public void testLongTransform() {
+		final String ANY_LONG = "9965732839230";
+		final String xml = "<string_to_long>" + ANY_LONG + "</string_to_long>";
 		try {
-			final int convertedInt = getStringToInteger().transform(getNode(xml), null);
-			assertNotNull(convertedInt);
-            assertEquals(99, convertedInt);
+			final long convertedLong = getStringToLong().transform(getNode(xml), null);
+			assertNotNull(convertedLong);
+            assertEquals(9965732839230l, convertedLong);
 		} catch (TransformationException te) {
 			fail("Transform exception should not occur " + te);
 		} catch (Exception e) {
@@ -46,12 +46,12 @@ public class  String2IntegerTestCase extends BaseTransformTest {
 	/**
 	 * Test failure of converting String to Integer
 	 */
-	public void testIntegerTransformFailure() {
-	    final String NON_INTEGER = "1009876548888899";
-		final String xml = "<string_to_integer>" + NON_INTEGER + "</string_to_integer>";
+	public void testLongTransformFailure() {
+	    final String NON_INTEGER = "11l";
+		final String xml = "<string_to_long>" + NON_INTEGER + "</string_to_long>";
 		try {
-			getStringToInteger().transform(getNode(xml), null);
-			fail("Should not reach here something wrong in [ String2Integer ] code");
+			getStringToLong().transform(getNode(xml), null);
+			fail("Should not reach here something wrong in [ String2Long ] code");
 		} catch (TransformationException te) {
 			assertNotNull(te);
 			assertTrue(NumberFormatException.class.isAssignableFrom(te.getCause().getClass()));
@@ -63,7 +63,7 @@ public class  String2IntegerTestCase extends BaseTransformTest {
 	/**
 	 * @return
 	 */
-	private String2Integer getStringToInteger() {
-		return new String2Integer();
+	private String2Long getStringToLong() {
+		return new String2Long();
 	}
 }

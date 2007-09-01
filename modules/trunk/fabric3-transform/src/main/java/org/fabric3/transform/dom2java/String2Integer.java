@@ -20,21 +20,15 @@ import org.w3c.dom.Node;
 
 import org.fabric3.scdl.DataType;
 import org.fabric3.spi.model.type.JavaClass;
-import org.fabric3.spi.model.type.XSDSimpleType;
-import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.TransformContext;
+import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.transform.AbstractPullTransformer;
 
 /**
  * @version $Rev$ $Date$
  */
 public class String2Integer extends AbstractPullTransformer<Node, Integer> {
-    private static final XSDSimpleType SOURCE = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
     private static final JavaClass<Integer> TARGET = new JavaClass<Integer>(Integer.class);
-
-    public DataType<?> getSourceType() {
-        return SOURCE;
-    }
 
     public DataType<?> getTargetType() {
         return TARGET;
@@ -43,7 +37,7 @@ public class String2Integer extends AbstractPullTransformer<Node, Integer> {
     public Integer transform(Node node, TransformContext context) throws TransformationException {
         try {
             return Integer.valueOf(node.getTextContent());
-        } catch(NumberFormatException ex) {
+        } catch (NumberFormatException ex) {
             throw new TransformationException("Unsupportable integer " + node.getTextContent(), ex);
         }
     }

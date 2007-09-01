@@ -16,42 +16,41 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-
 package org.fabric3.transform.dom2java;
 
 import org.fabric3.spi.transform.TransformationException;
 
 /**
- * Tests String to Integer Transform
+ * Tests String to Byte Transform
  */
-public class  String2IntegerTestCase extends BaseTransformTest {
+public class String2ByteTestCase extends BaseTransformTest {
 
 	/**
-	 * Test of converting String to Integer
+	 * Test of converting String to Byte success
 	 */
-	public void testIntegerTransform() {
-		final String ANY_NUMBER = "99";
-		final String xml = "<string_to_integer>" + ANY_NUMBER + "</string_to_integer>";
+	public void testByteTransform() {
+		final String BYTE = "125";
+		final String xml = "<string_to_byte>" + BYTE + "</string_to_byte>";
 		try {
-			final int convertedInt = getStringToInteger().transform(getNode(xml), null);
-			assertNotNull(convertedInt);
-            assertEquals(99, convertedInt);
+			final byte convertedByte = getStringToByte().transform(getNode(xml), null);
+			assertNotNull(convertedByte);
+            assertEquals(Byte.valueOf(BYTE).byteValue(), convertedByte);
 		} catch (TransformationException te) {
 			fail("Transform exception should not occur " + te);
 		} catch (Exception e) {
 			fail("Unexpexcted Exception Should not occur " + e);
 		}
 	}
-	
+
 	/**
-	 * Test failure of converting String to Integer
+	 * Test failure of converting String to Byte
 	 */
-	public void testIntegerTransformFailure() {
-	    final String NON_INTEGER = "1009876548888899";
-		final String xml = "<string_to_integer>" + NON_INTEGER + "</string_to_integer>";
+	public void testDateTransformFailure() {
+		final String OUT_OF_RANGE_BYTE = "129";
+		final String xml = "<string_to_byte>" + OUT_OF_RANGE_BYTE + "</string_to_byte>";
 		try {
-			getStringToInteger().transform(getNode(xml), null);
-			fail("Should not reach here something wrong in [ String2Integer ] code");
+			getStringToByte().transform(getNode(xml), null);
+			fail("Should not reach here something wrong in [ String2Byte ] code");
 		} catch (TransformationException te) {
 			assertNotNull(te);
 			assertTrue(NumberFormatException.class.isAssignableFrom(te.getCause().getClass()));
@@ -61,9 +60,9 @@ public class  String2IntegerTestCase extends BaseTransformTest {
 	}
 
 	/**
-	 * @return
+	 * @return StringToBoolean
 	 */
-	private String2Integer getStringToInteger() {
-		return new String2Integer();
+	private String2Byte getStringToByte() {
+		return new String2Byte();
 	}
 }

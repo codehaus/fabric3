@@ -18,29 +18,27 @@ package org.fabric3.transform.dom2java;
 
 import org.w3c.dom.Node;
 
-import org.fabric3.transform.AbstractPullTransformer;
-import org.fabric3.spi.model.type.XSDSimpleType;
-import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.scdl.DataType;
-import org.fabric3.spi.transform.TransformationException;
+import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.transform.TransformContext;
+import org.fabric3.spi.transform.TransformationException;
+import org.fabric3.transform.AbstractPullTransformer;
 
 /**
  * @version $Rev$ $Date$
  */
 public class String2Float extends AbstractPullTransformer<Node, Float> {
-    private static final XSDSimpleType SOURCE = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
     private static final JavaClass<Float> TARGET = new JavaClass<Float>(Float.class);
-
-    public DataType<?> getSourceType() {
-        return SOURCE;
-    }
 
     public DataType<?> getTargetType() {
         return TARGET;
     }
 
     public Float transform(Node node, TransformContext context) throws TransformationException {
-        return Float.valueOf(node.getTextContent());
+        try {
+            return Float.valueOf(node.getTextContent());
+        } catch (NumberFormatException ex) {
+            throw new TransformationException("Unsupportable float " + node.getTextContent(), ex);
+        }
     }
 }

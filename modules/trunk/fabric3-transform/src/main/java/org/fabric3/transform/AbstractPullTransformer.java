@@ -36,18 +36,25 @@ public abstract class AbstractPullTransformer<SOURCE, TARGET> implements PullTra
 	/** Default source to be used */
 	private static final XSDSimpleType DEFAULT_SOURCE = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
 	
+    /** Transform Registry to be used*/
     private TransformerRegistry<PullTransformer<SOURCE, TARGET>> registry;
 
+    /**
+     * Set Registry
+     * @param registry
+     */
     @Reference
     public void setRegistry(TransformerRegistry<PullTransformer<SOURCE, TARGET>> registry) {
         this.registry = registry;
     }
 
+    /** Register Transformer*/
     @Init
     public void init() {
         registry.register(this);
     }
 
+    /** Unregister Registry*/
     @Destroy
     public void destroy() {
         registry.unregister(this);

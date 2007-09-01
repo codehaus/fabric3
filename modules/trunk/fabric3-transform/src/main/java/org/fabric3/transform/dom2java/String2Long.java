@@ -18,29 +18,27 @@ package org.fabric3.transform.dom2java;
 
 import org.w3c.dom.Node;
 
-import org.fabric3.transform.AbstractPullTransformer;
-import org.fabric3.spi.model.type.XSDSimpleType;
-import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.scdl.DataType;
-import org.fabric3.spi.transform.TransformationException;
+import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.transform.TransformContext;
+import org.fabric3.spi.transform.TransformationException;
+import org.fabric3.transform.AbstractPullTransformer;
 
 /**
  * @version $Rev$ $Date$
  */
 public class String2Long extends AbstractPullTransformer<Node, Long> {
-    private static final XSDSimpleType SOURCE = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
     private static final JavaClass<Long> TARGET = new JavaClass<Long>(Long.class);
-
-    public DataType<?> getSourceType() {
-        return SOURCE;
-    }
 
     public DataType<?> getTargetType() {
         return TARGET;
     }
 
     public Long transform(Node node, TransformContext context) throws TransformationException {
-        return Long.valueOf(node.getTextContent());
+        try {
+            return Long.valueOf(node.getTextContent());
+        } catch (NumberFormatException ex) {
+            throw new TransformationException("Unsupportable long " + node.getTextContent(), ex);
+        }
     }
 }

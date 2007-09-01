@@ -22,20 +22,20 @@ package org.fabric3.transform.dom2java;
 import org.fabric3.spi.transform.TransformationException;
 
 /**
- * Tests String to Integer Transform
+ * Tests String to Double Transform
  */
-public class  String2IntegerTestCase extends BaseTransformTest {
+public class  String2DoubleTestCase extends BaseTransformTest {
 
 	/**
-	 * Test of converting String to Integer
+	 * Test of converting String to Double
 	 */
-	public void testIntegerTransform() {
-		final String ANY_NUMBER = "99";
-		final String xml = "<string_to_integer>" + ANY_NUMBER + "</string_to_integer>";
+	public void testDoubleTransform() {
+		final String ANY_DOUBLE_NUMBER = "99919329323.00102345";
+		final String xml = "<string_to_double>" + ANY_DOUBLE_NUMBER + "</string_to_double>";
 		try {
-			final int convertedInt = getStringToInteger().transform(getNode(xml), null);
-			assertNotNull(convertedInt);
-            assertEquals(99, convertedInt);
+			double convertedDouble = getStringToDouble().transform(getNode(xml), null);
+			assertNotNull(convertedDouble);
+            assertEquals(99919329323.00102345, convertedDouble);
 		} catch (TransformationException te) {
 			fail("Transform exception should not occur " + te);
 		} catch (Exception e) {
@@ -44,14 +44,14 @@ public class  String2IntegerTestCase extends BaseTransformTest {
 	}
 	
 	/**
-	 * Test failure of converting String to Integer
+	 * Test failure of converting String to Double
 	 */
-	public void testIntegerTransformFailure() {
-	    final String NON_INTEGER = "1009876548888899";
-		final String xml = "<string_to_integer>" + NON_INTEGER + "</string_to_integer>";
+	public void testDoubleTransformFailure() {
+	    final String NON_DOUBLE = "NOT DOUBLE";
+		final String xml = "<string_to_double>" + NON_DOUBLE + "</string_to_double>";
 		try {
-			getStringToInteger().transform(getNode(xml), null);
-			fail("Should not reach here something wrong in [ String2Integer ] code");
+			getStringToDouble().transform(getNode(xml), null);
+			fail("Should not reach here something wrong in [ String2Double ] code");
 		} catch (TransformationException te) {
 			assertNotNull(te);
 			assertTrue(NumberFormatException.class.isAssignableFrom(te.getCause().getClass()));
@@ -63,7 +63,7 @@ public class  String2IntegerTestCase extends BaseTransformTest {
 	/**
 	 * @return
 	 */
-	private String2Integer getStringToInteger() {
-		return new String2Integer();
+	private String2Double getStringToDouble() {
+		return new String2Double();
 	}
 }

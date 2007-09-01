@@ -19,23 +19,26 @@
 
 package org.fabric3.transform.dom2java;
 
+import javax.xml.namespace.QName;
+
 import org.fabric3.spi.transform.TransformationException;
 
 /**
- * Tests String to Integer Transform
+ * Tests String to QName Transform
  */
-public class  String2IntegerTestCase extends BaseTransformTest {
+public class  String2QNameTestCase extends BaseTransformTest {
 
 	/**
-	 * Test of converting String to Integer
+	 * Test of converting String to QName
 	 */
-	public void testIntegerTransform() {
-		final String ANY_NUMBER = "99";
-		final String xml = "<string_to_integer>" + ANY_NUMBER + "</string_to_integer>";
+	public void testQNameTransform() {
+		final String Q_NAME = "<string_to_qname>{http://f3.com/ns/fabric/test}f3</string_to_qname>";
 		try {
-			final int convertedInt = getStringToInteger().transform(getNode(xml), null);
-			assertNotNull(convertedInt);
-            assertEquals(99, convertedInt);
+			final QName qname= getStringToQName().transform(getNode(Q_NAME), null);
+			assertNotNull(qname);
+			assertEquals("{http://f3.com/ns/fabric/test}f3", qname.toString());
+			assertEquals("http://f3.com/ns/fabric/test", qname.getNamespaceURI());
+			assertEquals("f3", qname.getLocalPart());
 		} catch (TransformationException te) {
 			fail("Transform exception should not occur " + te);
 		} catch (Exception e) {
@@ -44,17 +47,16 @@ public class  String2IntegerTestCase extends BaseTransformTest {
 	}
 	
 	/**
-	 * Test failure of converting String to Integer
+	 * Test failure of converting String to QName
 	 */
-	public void testIntegerTransformFailure() {
-	    final String NON_INTEGER = "1009876548888899";
-		final String xml = "<string_to_integer>" + NON_INTEGER + "</string_to_integer>";
+	public void testQNameTransformFailure() {
+		final String Q_NAME = "<string_to_qname>{}</string_to_qname>";
 		try {
-			getStringToInteger().transform(getNode(xml), null);
-			fail("Should not reach here something wrong in [ String2Integer ] code");
+			getStringToQName().transform(getNode(Q_NAME), null);
+			fail("Should not reach here something wrong in [ String2QName ] code");
 		} catch (TransformationException te) {
 			assertNotNull(te);
-			assertTrue(NumberFormatException.class.isAssignableFrom(te.getCause().getClass()));
+			assertTrue(IllegalArgumentException.class.isAssignableFrom(te.getCause().getClass()));
 		} catch (Exception e) {
 			fail("Unexpexcted Exception Should not occur " + e);
 		}
@@ -63,7 +65,7 @@ public class  String2IntegerTestCase extends BaseTransformTest {
 	/**
 	 * @return
 	 */
-	private String2Integer getStringToInteger() {
-		return new String2Integer();
+	private String2QName getStringToQName() {
+		return new String2QName();
 	}
 }
