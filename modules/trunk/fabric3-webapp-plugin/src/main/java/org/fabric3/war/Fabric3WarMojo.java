@@ -173,7 +173,7 @@ public class Fabric3WarMojo extends AbstractMojo {
         getLog().info("Using fabric3 runtime version " + runTimeVersion);
 
         if (bootLibs == null) {
-            Dependency dependancy = new Dependency("org.codehaus.fabric3.webapp", "webapp-host", runTimeVersion);
+            Dependency dependancy = new Dependency("org.codehaus.fabric3.webapp", "fabric3-webapp-host", runTimeVersion);
             bootLibs = new Dependency[]{dependancy};
         }
 

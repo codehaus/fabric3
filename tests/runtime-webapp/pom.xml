@@ -35,7 +35,7 @@
     <dependencies>
         <dependency>
             <groupId>org.codehaus.fabric3.webapp</groupId>
-            <artifactId>webapp-api</artifactId>
+            <artifactId>fabric3-webapp-api</artifactId>
             <version>${runtimeVersion}</version>
         </dependency>
 
