@@ -23,11 +23,8 @@
     <includeBaseDirectory>false</includeBaseDirectory>
 
     <formats>
-        <format>dir</format>
-        <!--
-                <format>zip</format>
-                <format>tar.gz</format>
-        -->
+        <format>zip</format>
+        <format>tar.gz</format>
     </formats>
 
     <!-- include assembly files -->
