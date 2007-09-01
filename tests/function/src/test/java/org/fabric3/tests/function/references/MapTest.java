@@ -28,6 +28,9 @@ import org.fabric3.tests.function.common.IdentityService;
  */
 public class MapTest extends TestCase {
 
+    @Reference
+    public Map<String, IdentityService> field;
+
     private Map<String, IdentityService> setter;
 
     @Reference
@@ -37,6 +40,10 @@ public class MapTest extends TestCase {
 
     public void testSetter() {
         checkMap(setter);
+    }
+
+    public void testField() {
+        checkMap(field);
     }
 
     private void checkMap(Map<String, IdentityService> map) {

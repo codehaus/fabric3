@@ -28,6 +28,7 @@
     <component name="MapTest">
         <f3:junit class="org.fabric3.tests.function.references.MapTest"/>
         <reference name="setter" target="map.one map.two map.three"/>
+        <reference name="field" target="map.one map.two map.three"/>
     </component>
 
     <include name="MapComposite" scdlResource="org/fabric3/tests/function/references/map.composite"/>
