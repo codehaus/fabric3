@@ -22,7 +22,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.maven.archiver.MavenArchiveConfiguration;
@@ -167,13 +166,16 @@ public class Fabric3ContributionMojo extends AbstractMojo {
     	}
     }
 
-    protected void includeDependencies(File contentDirectory) throws FileNotFoundException, IOException{
+    protected void includeDependencies(File contentDirectory) throws IOException{
 	 	getLog().debug( "including dependencies in archive");
 	 	//include all the dependencies that are required for runtime operation and are not sca-contributions(they
 	 	// will be deployed separately);
                 File libDir = new File( contentDirectory,"META-INF" + File.separator + "lib" );
 	 	ScopeArtifactFilter filter = new ScopeArtifactFilter( Artifact.SCOPE_RUNTIME );
-        for (Artifact artifact : (Set<Artifact>)project.getArtifacts() ) {
+
+        @SuppressWarnings("unchecked")
+        Set<Artifact> artifacts = (Set<Artifact>) project.getArtifacts();
+        for (Artifact artifact : artifacts) {
         	getLog().debug("checking " + artifact.getArtifactId());
         	boolean isSCAContribution = artifact.getType().startsWith("sca-contribution");
             if ( !isSCAContribution && !artifact.isOptional() && filter.include( artifact ) ) {
