@@ -27,15 +27,17 @@ import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.implementation.java.JavaComponent;
 import org.fabric3.fabric.runtime.AbstractRuntime;
+import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.pojo.reflection.InvokerInterceptor;
+import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.Scope;
-import org.fabric3.scdl.Composite;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
+import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.spi.wire.MessageImpl;
@@ -58,6 +60,16 @@ public class MavenEmbeddedRuntime extends AbstractRuntime<MavenHostInfo> {
         workContext.setScopeIdentifier(Scope.COMPOSITE, compositeId);
         getScopeRegistry().getScopeContainer(Scope.COMPOSITE).startContext(workContext,
                                                                            URI.create(compositeId.toString() + "/"));
+    }
+
+    public void destroy() {
+        // destroy system components
+        ScopeRegistry scopeRegistry = getScopeRegistry();
+        ScopeContainer scopeContainer = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
+        WorkContext workContext = new SimpleWorkContext();
+        URI systemGroupId = URI.create(ComponentNames.RUNTIME_NAME + "/");
+        workContext.setScopeIdentifier(Scope.COMPOSITE, systemGroupId);
+        scopeContainer.stopContext(workContext);
     }
 
     @SuppressWarnings({"unchecked"})

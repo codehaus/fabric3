@@ -28,7 +28,6 @@ import java.util.concurrent.TimeoutException;
 import org.apache.maven.artifact.Artifact;
 
 import org.fabric3.extension.component.SimpleWorkContext;
-import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
@@ -40,7 +39,6 @@ import org.fabric3.fabric.runtime.ExtensionInitializationException;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
-import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.contribution.FileContributionSource;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.InitializationException;
@@ -48,6 +46,7 @@ import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.host.runtime.StartException;
 import org.fabric3.scdl.Scope;
+import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
@@ -64,7 +63,6 @@ import org.fabric3.spi.services.definitions.DefinitionsDeployer;
  */
 public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbeddedRuntime, Bootstrapper> {
     private static final String EXTENSIONS = "extensions";
-    private static final String DEFINITIONS = "definitions";
 
     private enum State {
         UNINITIALIZED,
@@ -201,12 +199,13 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
         if (state != State.STARTED) {
             throw new IllegalStateException("Not in STARTED state");
         }
+        runtime.destroy();
         state = State.SHUTDOWN;
-        // TODO implement
         return new SyncFuture();
     }
 
-    private void includeExtensions(ContributionService contributionService) throws InitializationException, DefinitionActivationException {
+    private void includeExtensions(ContributionService contributionService)
+            throws InitializationException, DefinitionActivationException {
         if (dependencies != null) {
             ArchiveStore archiveStore = runtime.getSystemComponent(ArchiveStore.class, EXTENSION_CONTRIBUTION_STORE);
             if (archiveStore == null) {
@@ -241,7 +240,8 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
                 }
             }
             runtime.includeExtensionContributions(contributionUris);
-            DefinitionsDeployer definitionsDeployer = runtime.getSystemComponent(DefinitionsDeployer.class, DEFINITIONS_DEPLOYER);
+            DefinitionsDeployer definitionsDeployer =
+                    runtime.getSystemComponent(DefinitionsDeployer.class, DEFINITIONS_DEPLOYER);
             definitionsDeployer.activateDefinitions(contributionUris);
         }
     }
