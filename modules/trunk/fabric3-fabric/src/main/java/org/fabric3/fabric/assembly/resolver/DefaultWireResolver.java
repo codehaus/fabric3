@@ -83,7 +83,7 @@ public class DefaultWireResolver implements WireResolver {
                     URI targetUri = resolveByType(composite, component, referenceName, requiredContract);
                     if (targetUri == null && required) {
                         URI source = logicalReference.getUri();
-                        throw new AutowireTargetNotFoundException("No suitable target found for", source);
+                        throw new AutowireTargetNotFoundException("No suitable target found for " + source, source);
                     }
                 } else if (reference.isRequired()) {
                     // check to see if the reference was a promotion
