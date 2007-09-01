@@ -12,6 +12,7 @@ import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.monitor.JavaLoggingMonitorFactory;
 import org.fabric3.fabric.runtime.AbstractRuntime;
+import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.LOADER_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_NAME;
@@ -100,6 +101,13 @@ public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo>
             WorkContext workContext = new SimpleWorkContext();
             workContext.setScopeIdentifier(Scope.COMPOSITE, DOMAIN_URI);
             scopeContainer.stopContext(workContext);
+
+            // shut system components down
+            workContext = new SimpleWorkContext();
+            URI systemGroupId = URI.create(ComponentNames.RUNTIME_NAME + "/");
+            workContext.setScopeIdentifier(Scope.COMPOSITE, systemGroupId);
+            scopeContainer.stopContext(workContext);
+            
             scopeContainer = null;
             wireCache = null;
             applicationAssembly = null;

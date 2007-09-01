@@ -43,6 +43,11 @@
             <version>0.2-SNAPSHOT</version>
         </dependency>
         <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-policy</artifactId>
+            <version>0.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>stax</groupId>
             <artifactId>stax-api</artifactId>
         </dependency>
