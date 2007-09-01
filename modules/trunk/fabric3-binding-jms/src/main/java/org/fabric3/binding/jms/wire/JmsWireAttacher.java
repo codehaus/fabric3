@@ -26,6 +26,8 @@ import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.MessageListener;
 
+import org.fabric3.binding.jms.host.JmsHost;
+import org.fabric3.binding.jms.host.impl.StandaloneJmsHost;
 import org.fabric3.binding.jms.model.ConnectionFactoryDefinition;
 import org.fabric3.binding.jms.model.CorrelationScheme;
 import org.fabric3.binding.jms.model.CreateOption;
@@ -33,7 +35,6 @@ import org.fabric3.binding.jms.model.DestinationDefinition;
 import org.fabric3.binding.jms.model.JmsBindingMetadata;
 import org.fabric3.binding.jms.model.physical.JmsWireSourceDefinition;
 import org.fabric3.binding.jms.model.physical.JmsWireTargetDefinition;
-import org.fabric3.binding.jms.transport.impl.StandaloneJmsHost;
 import org.fabric3.binding.jms.wire.lookup.connectionfactory.AlwaysConnectionFactoryStrategy;
 import org.fabric3.binding.jms.wire.lookup.connectionfactory.ConnectionFactoryStrategy;
 import org.fabric3.binding.jms.wire.lookup.connectionfactory.IfNotExistConnectionFactoryStrategy;
@@ -62,11 +63,9 @@ import org.osoa.sca.annotations.Reference;
  */
 @EagerInit
 public class JmsWireAttacher implements WireAttacher<JmsWireSourceDefinition, JmsWireTargetDefinition> {
-
-    /**
-     * Number of receiver threads.
-     */
-    private int receiverThreads;
+    
+    // JMS host
+    private JmsHost jmsHost;
     
     /**
      * Destination strategies.
@@ -79,6 +78,15 @@ public class JmsWireAttacher implements WireAttacher<JmsWireSourceDefinition, Jm
      */
     private Map<CreateOption, ConnectionFactoryStrategy> connectionFactoryStrategies = 
         new HashMap<CreateOption, ConnectionFactoryStrategy>();
+    
+    /**
+     * Injected JMS host.
+     * @param jmsHost JMS Host to use.
+     */
+    @Reference(required = true)
+    public void setJmsHost(JmsHost jmsHost) {
+        this.jmsHost = jmsHost;
+    }
 
     /**
      * Injects the wire attacher registry and servlet host.
@@ -86,12 +94,10 @@ public class JmsWireAttacher implements WireAttacher<JmsWireSourceDefinition, Jm
      * @param wireAttacherRegistry Wire attacher rehistry.
      * @param servletHost Servlet host.
      */
-    public JmsWireAttacher(@Reference WireAttacherRegistry wireAttacherRegistry, 
-                           @Property(name = "receiverThreads") int receiverThreads) {
+    public JmsWireAttacher(@Reference WireAttacherRegistry wireAttacherRegistry) {
         
         wireAttacherRegistry.register(JmsWireSourceDefinition.class, this);
         wireAttacherRegistry.register(JmsWireTargetDefinition.class, this);
-        this.receiverThreads = receiverThreads;
         
         destinationStrategies.put(CreateOption.always, new AlwaysDestinationStrategy());
         destinationStrategies.put(CreateOption.never, new NeverDestinationStrategy());
@@ -141,10 +147,9 @@ public class JmsWireAttacher implements WireAttacher<JmsWireSourceDefinition, Jm
         Destination resDestination = destinationStrategies.get(create).getDestination(destinationDefinition, resCf, env);
         
         MessageListener messageListener = new Fabric3MessageListener(resDestination, resCf, ops, correlationScheme, wire);
-        StandaloneJmsHost serviceHandler = new StandaloneJmsHost(reqCf, reqDestination, receiverThreads, messageListener);
         
-        serviceHandler.start();
-
+        jmsHost.registerListener(reqDestination, reqCf, messageListener, false);
+        
     }
 
     /**

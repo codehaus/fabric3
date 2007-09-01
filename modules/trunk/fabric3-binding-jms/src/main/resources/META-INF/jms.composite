@@ -21,6 +21,11 @@
            targetNamespace="org.codehaus.fabric3"
            name="JMSBindingExtension">
 
+    <!-- JMS Host -->
+    <component name="JMSHost">
+        <system:implementation.system class="org.fabric3.binding.jms.host.impl.StandaloneJmsHost"/>
+    </component>
+
     <!-- JMS Binding Loader -->
     <component name="JMSBindingLoader">
         <system:implementation.system class="org.fabric3.binding.jms.model.logical.JmsBindingLoader"/>

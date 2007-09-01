@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.binding.jms.transport.impl;
+package org.fabric3.binding.jms.host.impl;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -30,8 +30,9 @@ import javax.jms.MessageListener;
 import javax.jms.Session;
 
 import org.fabric3.binding.jms.Fabric3JmsException;
-import org.fabric3.binding.jms.transport.JmsHost;
+import org.fabric3.binding.jms.host.JmsHost;
 import org.fabric3.binding.jms.wire.helper.JmsHelper;
+import org.osoa.sca.annotations.Property;
 
 /**
  * Service handler for JMS.
@@ -39,26 +40,6 @@ import org.fabric3.binding.jms.wire.helper.JmsHelper;
  * @version $Revsion$ $Date: 2007-05-22 00:19:04 +0100 (Tue, 22 May 2007) $
  */
 public class StandaloneJmsHost implements JmsHost {
-
-    /**
-     * Connection factory for receiving requests.
-     */
-    private ConnectionFactory connectionFactory;
-
-    /**
-     * Destination for receiving requests.
-     */
-    private Destination destination;
-
-    /**
-     * Receiver threads.
-     */
-    private int receiverThreads;
-
-    /**
-     * Message listener for processing messages.
-     */
-    private MessageListener messageListener;
 
     /**
      * Receiver connection.
@@ -69,42 +50,20 @@ public class StandaloneJmsHost implements JmsHost {
      * Sessions.
      */
     private List<Session> sessions = new LinkedList<Session>();
-
+    
     /**
-     * @param connectionFactory Connection factory for receeving requests.
-     * @param destination Destination for receiving requests.
-     * @param receiverThreads Number of receivers for service requests.
-     * @param messageListener Message listener for processing messages.
+     * Receiver threads.
      */
-    public StandaloneJmsHost(ConnectionFactory connectionFactory,
-                             Destination destination,
-                             int receiverThreads,
-                             MessageListener messageListener) {
-        this.connectionFactory = connectionFactory;
-        this.destination = destination;
+    private int receiverThreads = 10;
+    
+    /**
+     * Sets the number of receiver threads.
+     * 
+     * @param receiverThreads Number of receiver threads.
+     */
+    @Property 
+    public void setReceiverThreads(int receiverThreads) {
         this.receiverThreads = receiverThreads;
-        this.messageListener = messageListener;
-    }
-
-    /**
-     * Starts the receiver threads.
-     */
-    public void start() {
-
-        try {
-
-            connection = connectionFactory.createConnection();
-            for (int i = 0; i < receiverThreads; i++) {
-                Session session = connection.createSession(true, Session.SESSION_TRANSACTED);
-                MessageConsumer consumer = session.createConsumer(destination);
-                consumer.setMessageListener(messageListener);
-                sessions.add(session);
-            }
-            connection.start();
-        } catch (JMSException ex) {
-            throw new Fabric3JmsException("Unable to activate service", ex);
-        }
-        
     }
 
     /**
@@ -119,10 +78,27 @@ public class StandaloneJmsHost implements JmsHost {
 
     }
 
-    public void registerListener(Destination destination,
-            ConnectionFactory factory, MessageListener listener,
-            boolean transactional) {
-        // TODO Auto-generated method stub
+    /**
+     * @see org.fabric3.binding.jms.host.JmsHost#registerListener(javax.jms.Destination, javax.jms.ConnectionFactory, javax.jms.MessageListener, boolean)
+     */
+    public void registerListener(Destination destination, 
+                                 ConnectionFactory connectionFactory, 
+                                 MessageListener messageListener, 
+                                 boolean transactional) {
+        
+        try {
+
+            connection = connectionFactory.createConnection();
+            for (int i = 0; i < receiverThreads; i++) {
+                Session session = connection.createSession(true, Session.SESSION_TRANSACTED);
+                MessageConsumer consumer = session.createConsumer(destination);
+                consumer.setMessageListener(messageListener);
+                sessions.add(session);
+            }
+            connection.start();
+        } catch (JMSException ex) {
+            throw new Fabric3JmsException("Unable to activate service", ex);
+        }
         
     }
 

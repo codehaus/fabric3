@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.binding.jms.transport;
+package org.fabric3.binding.jms.host;
 
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
