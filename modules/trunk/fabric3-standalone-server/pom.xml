@@ -44,10 +44,18 @@
             <artifactId>fabric3-jmx</artifactId>
             <version>0.2-SNAPSHOT</version>
         </dependency>
+
+        <!-- dependencies that are defined as provided in the spi module -->
         <dependency>
             <groupId>stax</groupId>
             <artifactId>stax-api</artifactId>
             <version>1.0</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.4</version>
             <scope>runtime</scope>
         </dependency>
     </dependencies>
