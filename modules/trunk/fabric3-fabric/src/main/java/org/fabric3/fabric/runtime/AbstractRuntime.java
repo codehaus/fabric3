@@ -24,7 +24,6 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.fabric3.extension.component.SimpleWorkContext;
-import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.fabric.assembly.RuntimeAssembly;
 import org.fabric3.fabric.component.ComponentManagerImpl;
 import org.fabric3.fabric.monitor.NullMonitorFactory;
@@ -43,8 +42,8 @@ import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Include;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.ObjectCreationException;
+import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.component.AtomicComponent;
-import org.fabric3.spi.component.Component;
 import org.fabric3.spi.component.ComponentManager;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
@@ -81,8 +80,6 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
      */
     private ComponentManager componentManager;
 
-    private Component systemComponent;
-    private Component fabric3System;
     private ClassLoader hostClassLoader;
 
 
@@ -159,14 +156,6 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
     }
 
     public void destroy() {
-        if (fabric3System != null) {
-            fabric3System.stop();
-            fabric3System = null;
-        }
-        if (systemComponent != null) {
-            systemComponent.stop();
-            systemComponent = null;
-        }
     }
 
     public <I> I getSystemComponent(Class<I> service, URI uri) {
