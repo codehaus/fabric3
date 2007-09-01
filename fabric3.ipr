@@ -353,6 +353,7 @@
       <module fileurl="file://$PROJECT_DIR$/tests/function/function-tests.iml" filepath="$PROJECT_DIR$/tests/function/function-tests.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/parent-pom/trunk/parent-pom.iml" filepath="$PROJECT_DIR$/parent-pom/trunk/parent-pom.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/policy-test/policy-test.iml" filepath="$PROJECT_DIR$/tests/policy-test/policy-test.iml" group="tests" />
+      <module fileurl="file://$PROJECT_DIR$/assembly/trunk/runtime-standalone/runtime-standalone.iml" filepath="$PROJECT_DIR$/assembly/trunk/runtime-standalone/runtime-standalone.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/runtime-webapp/runtime-webapp.iml" filepath="$PROJECT_DIR$/tests/runtime-webapp/runtime-webapp.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/spec/trunk/sca-spec.iml" filepath="$PROJECT_DIR$/spec/trunk/sca-spec.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/groovy/test-groovy.iml" filepath="$PROJECT_DIR$/tests/groovy/test-groovy.iml" group="tests" />
