@@ -18,14 +18,10 @@
  */
 package org.fabric3.spi.util.stax;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
-
 import javax.xml.namespace.QName;
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -36,12 +32,6 @@ import javax.xml.stream.XMLStreamReader;
  * @version $Revision$ $Date$
  */
 public abstract class StaxUtil {
-
-    /**
-     * XML input factory.
-     */
-    private static final XMLInputFactory XML_FACTORY =
-            XMLInputFactory.newInstance("javax.xml.stream.XMLInputFactory", StaxUtil.class.getClassLoader());
 
     private StaxUtil() {
     }
@@ -116,54 +106,6 @@ public abstract class StaxUtil {
             reader.close();
         }
 
-    }
-
-    /**
-     * Creates a stream reader to the serialized XML.
-     *
-     * @param xml Serialized XML to which reader is to be created.
-     * @return XML stream reader instance.
-     * @throws XMLStreamException In case of an xml stream error.
-     */
-    public static XMLStreamReader createReader(String xml) throws XMLStreamException {
-
-        InputStream in = new ByteArrayInputStream(xml.getBytes());
-        return XML_FACTORY.createXMLStreamReader(in);
-
-    }
-
-    /**
-     * Creates a stream reader to the serialized XML.
-     *
-     * @param xml XML stream to which reader is to be created.
-     * @return XML stream reader instance.
-     * @throws XMLStreamException In case of an xml stream error.
-     */
-    public static XMLStreamReader createReader(InputStream xml) throws XMLStreamException {
-
-        return XML_FACTORY.createXMLStreamReader(xml);
-
-    }
-
-    /**
-     * Returns the qualified name of the document element.
-     *
-     * @param xml Serialized xml that needs to be checked.
-     * @return Qualified name of the document element.
-     * @throws XMLStreamException In case of an xml stream error.
-     */
-    public static QName getDocumentElementQName(String xml) throws XMLStreamException {
-
-        XMLStreamReader reader = null;
-        try {
-            reader = createReader(xml);
-            reader.next();
-            return reader.getName();
-        } finally {
-            if (reader != null) {
-                reader.close();
-            }
-        }
     }
 
     /**

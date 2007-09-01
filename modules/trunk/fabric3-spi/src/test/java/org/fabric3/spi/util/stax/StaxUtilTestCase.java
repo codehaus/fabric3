@@ -19,9 +19,11 @@
 package org.fabric3.spi.util.stax;
 
 import java.io.InputStream;
+import java.io.ByteArrayInputStream;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.XMLInputFactory;
 
 import junit.framework.TestCase;
 
@@ -34,6 +36,7 @@ public class StaxUtilTestCase extends TestCase {
 
     public static final String XML = "<composite xmlns=\"http://www.osoa.org/xmlns/sca/1.0\" " +
             "xmlns:f3=\"http://fabric3.org/xmlns/sca/2.0-alpha\"/>";
+    private XMLInputFactory xmlFactory;
 
     public StaxUtilTestCase(String name) {
         super(name);
@@ -42,22 +45,13 @@ public class StaxUtilTestCase extends TestCase {
     public void testSerialize() throws XMLStreamException {
 
         InputStream in = getClass().getClassLoader().getResourceAsStream("test.composite");
-        XMLStreamReader reader = StaxUtil.createReader(in);
+        XMLStreamReader reader = xmlFactory.createXMLStreamReader(in);
         StaxUtil.serialize(reader);
         // TODO Do assertions
     }
 
-    public void testGetDocumentElementQName() throws XMLStreamException {
-        InputStream in = getClass().getClassLoader().getResourceAsStream("test.composite");
-        XMLStreamReader reader = StaxUtil.createReader(in);
-        String xml = StaxUtil.serialize(reader);
-        QName qname = StaxUtil.getDocumentElementQName(xml);
-        assertEquals("http://www.osoa.org/xmlns/sca/1.0", qname.getNamespaceURI());
-        assertEquals("composite", qname.getLocalPart());
-    }
-
     public void testCreateQName() throws Exception {
-        XMLStreamReader reader = StaxUtil.createReader(XML);
+        XMLStreamReader reader = createReader(XML);
         reader.nextTag();
         QName qName = StaxUtil.createQName("f3:bar", reader);
         assertEquals("http://fabric3.org/xmlns/sca/2.0-alpha", qName.getNamespaceURI());
@@ -65,14 +59,14 @@ public class StaxUtilTestCase extends TestCase {
     }
 
     public void testCreateQNameContext() throws Exception {
-        XMLStreamReader reader = StaxUtil.createReader(XML);
+        XMLStreamReader reader = createReader(XML);
         reader.nextTag();
         QName qName = StaxUtil.createQName("bar", reader);
         assertEquals("http://www.osoa.org/xmlns/sca/1.0", qName.getNamespaceURI());
     }
 
     public void testCreateQNameInvalidPrefix() throws Exception {
-        XMLStreamReader reader = StaxUtil.createReader(XML);
+        XMLStreamReader reader = createReader(XML);
         reader.nextTag();
         try {
             StaxUtil.createQName("bad:bar", reader);
@@ -82,4 +76,15 @@ public class StaxUtilTestCase extends TestCase {
         }
     }
 
+    protected void setUp() throws Exception {
+        super.setUp();
+        xmlFactory = XMLInputFactory.newInstance();
+    }
+
+    private XMLStreamReader createReader(String xml) throws XMLStreamException {
+
+        InputStream in = new ByteArrayInputStream(xml.getBytes());
+        return xmlFactory.createXMLStreamReader(in);
+
+    }
 }
