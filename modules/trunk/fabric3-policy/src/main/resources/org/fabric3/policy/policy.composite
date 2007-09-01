@@ -24,7 +24,7 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
-           name="org.fabric3.fabric.Loader"
+           name="org.fabric3.policy.Policy"
            autowire="true">
 
     <!-- Policy resolver -->
