@@ -134,7 +134,13 @@ public class CompositeClassLoader extends URLClassLoader {
         }
 
         // look in our classpath
-        clazz = findClass(name);
+        try {
+            clazz = findClass(name);
+        } catch (NoClassDefFoundError e) {
+            throw e;
+        } catch (ClassNotFoundException e) {
+            throw e;
+        }
         if (resolve) {
             resolveClass(clazz);
         }
