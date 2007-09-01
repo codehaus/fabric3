@@ -30,78 +30,20 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.codehaus.fabric3.spec</groupId>
-            <artifactId>sca-api-r1.0</artifactId>
-            <version>0.2.1</version>
-        </dependency>
-
-       <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-host-api</artifactId>
-            <version>0.2-SNAPSHOT</version>
-        </dependency>
-		
-        <dependency>
             <groupId>org.codehaus.fabric3.standalone</groupId>
             <artifactId>fabric3-standalone-api</artifactId>
             <version>0.2-SNAPSHOT</version>
         </dependency>
-		
         <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-spi</artifactId>
-            <version>0.2-SNAPSHOT</version>
-        </dependency>	
-
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-extension</artifactId>
-            <version>0.2-SNAPSHOT</version>
-        </dependency>	
-		  
+             <groupId>org.codehaus.fabric3</groupId>
+             <artifactId>fabric3-api</artifactId>
+             <version>0.2-SNAPSHOT</version>
+         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-jmx</artifactId>
             <version>0.1</version>
-        </dependency>	
-			
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.4</version>
-        </dependency>	
-
-        <dependency>
-            <groupId>org.codehaus.woodstox</groupId>
-            <artifactId>wstx-asl</artifactId>
-            <version>3.2.0</version>
         </dependency>
-
-        <dependency>
-            <groupId>stax</groupId>
-            <artifactId>stax-api</artifactId>
-            <version>1.0</version>
-            <scope>runtime</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.geronimo.specs</groupId>
-            <artifactId>geronimo-j2ee-connector_1.5_spec</artifactId>
-            <version>1.0.1</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.tuscany</groupId>
-            <artifactId>commonj-api_r1.1</artifactId>
-            <version>1.0-incubator-M2</version>
-            <scope>runtime</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
-
     </dependencies>
 
     <build>
