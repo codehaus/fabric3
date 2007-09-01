@@ -17,6 +17,7 @@
     <orderEntry type="library" name="log4j-1.2.13" level="application" />
     <orderEntry type="library" name="bcprov-jdk14-124" level="application" />
     <orderEntry type="module" module-name="fabric3-jxta" />
+    <orderEntry type="module" module-name="fabric3-spi" />
     <orderEntryProperties />
   </component>
 </module>

@@ -18,7 +18,11 @@
  */
 package org.fabric3.messaging.jxta.prp;
 
+import java.io.Reader;
+import java.io.StringReader;
 import javax.xml.namespace.QName;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
@@ -30,7 +34,6 @@ import net.jxta.resolver.ResolverService;
 import org.fabric3.messaging.jxta.JxtaException;
 import org.fabric3.messaging.jxta.JxtaMessagingService;
 import org.fabric3.spi.services.messaging.RequestListener;
-import org.fabric3.spi.util.stax.StaxUtil;
 
 /**
  * Generic quety handler for Fabric3 PRP (Peer Resolver Protocol) messages. The
@@ -44,14 +47,16 @@ public class Fabric3QueryHandler implements QueryHandler {
     /** Discovery service. */
     private final JxtaMessagingService messagingService;
 
+    private final XMLInputFactory xmlFactory;
+
     /**
      * Initializes the JXTA resolver service and Fabric3 discovery service.
      *
-     * @param resolverService Resolver service.
      * @param messagingService Fabric3 messaging service.
      */
     public Fabric3QueryHandler(final JxtaMessagingService messagingService) {
         this.messagingService = messagingService;
+        xmlFactory = XMLInputFactory.newInstance("javax.xml.stream.XMLInputFactory", getClass().getClassLoader());
     }
 
     /**
@@ -62,13 +67,15 @@ public class Fabric3QueryHandler implements QueryHandler {
         try {
 
             final String message = queryMessage.getQuery();
+            Reader reader = new StringReader(message);
+            XMLStreamReader xmlReader = xmlFactory.createXMLStreamReader(reader);
+            //noinspection StatementWithEmptyBody
+            while (xmlReader.next() != XMLStreamConstants.START_ELEMENT);
 
-            final QName messageType = StaxUtil.getDocumentElementQName(message);
+            final QName messageType = xmlReader.getName();
             RequestListener messageListener = messagingService.getRequestListener(messageType);
             if(messageListener != null) {
-
-                XMLStreamReader requestReader = StaxUtil.createReader(message);
-                messageListener.onRequest(requestReader);
+                messageListener.onRequest(xmlReader);
 
             }
             return ResolverService.OK;
