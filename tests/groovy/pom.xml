@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3.tests</groupId>
     <artifactId>groovy</artifactId>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
     <version>0.1-SNAPSHOT</version>
     <name>Fabric3 Tests for Groovy Container</name>
     <description>Fabric3 Tests for Groovy Container.</description>

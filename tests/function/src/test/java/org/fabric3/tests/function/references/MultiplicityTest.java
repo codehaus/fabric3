@@ -30,11 +30,10 @@ import org.fabric3.tests.function.common.IdentityService;
  * @version $Rev$ $Date$
  */
 public class MultiplicityTest extends TestCase {
-/*
+
     @Reference
     public List<IdentityService> listField;
-*/
-
+    
     private List<IdentityService> listSetter;
 
     @Reference
@@ -46,27 +45,24 @@ public class MultiplicityTest extends TestCase {
         checkContent(listSetter);
     }
 
-/*
     public void testListField() {
         checkContent(listField);
     }
-*/
 
     private static final Set<String> IDS;
 
     static {
         IDS = new HashSet<String>(3);
-        IDS.add("one");
-        IDS.add("two");
-        IDS.add("three");
+        IDS.add("map.one");
+        IDS.add("map.two");
+        IDS.add("map.three");
     }
 
     private void checkContent(Collection<IdentityService> refs) {
         assertEquals(3, refs.size());
-        Set<String> ids = new HashSet<String>(3);
         for (IdentityService ref : refs) {
-            ids.add(ref.getIdentity());
+            // Sets dont guarantee insert order
+            assertTrue(IDS.contains(ref.getIdentity()));
         }
-        assertEquals(IDS, ids);
     }
 }

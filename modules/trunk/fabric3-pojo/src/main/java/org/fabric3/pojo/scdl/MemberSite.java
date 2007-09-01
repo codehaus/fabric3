@@ -23,6 +23,9 @@ public class MemberSite {
 
     // Signature of the method or constructor
     private Signature signature;
+    
+    // Type if the member is a field
+    private String type;
 
     public MemberSite() {
     }
@@ -34,15 +37,25 @@ public class MemberSite {
             signature = new Signature((Method) member);
         } else if (member instanceof Field) {
             elementType = ElementType.FIELD;
+            type = ((Field) member).getType().getName();
         } else if (member instanceof Constructor) {
             elementType = ElementType.CONSTRUCTOR;
-            signature = new Signature((Constructor) member);
+            signature = new Signature((Constructor<?>) member);
         }
     }
 
     public MemberSite(ElementType elementType, String name) {
         this.elementType = elementType;
         this.name = name;
+    }
+    
+    /**
+     * Returns the type of the field.
+     * 
+     * @return Type of the field.
+     */
+    public String getType() {
+        return type;
     }
 
     /**

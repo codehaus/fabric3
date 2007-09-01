@@ -21,10 +21,8 @@
 
     <component name="MultiplicityTest">
         <f3:junit class="org.fabric3.tests.function.references.MultiplicityTest"/>
-        <reference name="listSetter" target="one two three"/>
-<!--
-        <reference name="listField" target="one two three"/>
--->
+        <reference name="listSetter" target="map.one map.two map.three"/>
+        <reference name="listField" target="map.one map.two map.three"/>
     </component>
 
     <component name="MapTest">

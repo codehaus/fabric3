@@ -18,6 +18,7 @@
  */
 package org.fabric3.fabric.implementation.java;
 
+import java.lang.annotation.ElementType;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
@@ -110,18 +111,24 @@ public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaCompone
     */
     private Map<String, MultiplicityObjectFactory<?>> createMultiplicityReferenceFactories(InstanceFactoryDefinition providerDefinition) {
 
-        Map<String, MultiplicityObjectFactory<?>> referenceFactories =
-                new HashMap<String, MultiplicityObjectFactory<?>>();
+        Map<String, MultiplicityObjectFactory<?>> referenceFactories = new HashMap<String, MultiplicityObjectFactory<?>>();
+        
         for (InjectionSiteMapping injectionSiteMapping : providerDefinition.getInjectionSites()) {
+            
             if (injectionSiteMapping.getSource().getValueType() != ValueSource.ValueSourceType.REFERENCE) {
                 continue;
             }
+            
             MemberSite memberSite = injectionSiteMapping.getSite();
-            if (memberSite == null || memberSite.getSignature() == null) {
-                // TODO Handle CDI
-                continue;
+            ElementType elementType = memberSite.getElementType();
+            
+            String referenceType = null;
+            if(ElementType.METHOD == elementType) {
+                referenceType = memberSite.getSignature().getParameterTypes().get(0);
+            } else if(ElementType.FIELD == elementType) {
+                referenceType = memberSite.getType();
             }
-            String referenceType = memberSite.getSignature().getParameterTypes().get(0);
+            
             if ("java.util.Map".equals(referenceType)) {
                 referenceFactories.put(injectionSiteMapping.getSource().getName(), new MapMultiplicityObjectFactory());
             } else if ("java.util.Set".equals(referenceType)) {
@@ -131,7 +138,10 @@ public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaCompone
             } else if ("java.util.Collection".equals(referenceType)) {
                 referenceFactories.put(injectionSiteMapping.getSource().getName(), new ListMultiplicityObjectFactory());
             }
+            
         }
+        
         return referenceFactories;
+        
     }
 }
