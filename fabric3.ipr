@@ -309,8 +309,6 @@
       <module fileurl="file://$PROJECT_DIR$/demo/assembly/demo-assembly.iml" filepath="$PROJECT_DIR$/demo/assembly/demo-assembly.iml" group="demo" />
       <module fileurl="file://$PROJECT_DIR$/demo/calculator/demo-calculator.iml" filepath="$PROJECT_DIR$/demo/calculator/demo-calculator.iml" group="demo" />
       <module fileurl="file://$PROJECT_DIR$/demo/controller/demo-controller.iml" filepath="$PROJECT_DIR$/demo/controller/demo-controller.iml" group="demo" />
-      <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/development/development-api/development-api.iml" filepath="$PROJECT_DIR$/runtimes/trunk/development/development-api/development-api.iml" group="development" />
-      <module fileurl="file://$PROJECT_DIR$/runtimes/trunk/development/development-host/development-host.iml" filepath="$PROJECT_DIR$/runtimes/trunk/development/development-host/development-host.iml" group="development" />
       <module fileurl="file://$PROJECT_DIR$/fabric-pom/trunk/fabric-pom.iml" filepath="$PROJECT_DIR$/fabric-pom/trunk/fabric-pom.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-api/fabric3-api.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-api/fabric3-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-binding-burlap/fabric3-binding-burlap.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-binding-burlap/fabric3-binding-burlap.iml" />
@@ -323,6 +321,8 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-contribution-scanner/fabric3-contribution-scanner.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-contribution-scanner/fabric3-contribution-scanner.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-contribution-scanner-spi/fabric3-contribution-scanner-spi.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-contribution-scanner-spi/fabric3-contribution-scanner-spi.iml" />
       <module fileurl="file://$PROJECT_DIR$/demo/webclient/fabric3-demo-webclient.iml" filepath="$PROJECT_DIR$/demo/webclient/fabric3-demo-webclient.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-development-api/fabric3-development-api.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-development-api/fabric3-development-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-development-host/fabric3-development-host.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-development-host/fabric3-development-host.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-discovery-jxta/fabric3-discovery-jxta.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-discovery-jxta/fabric3-discovery-jxta.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-extension/fabric3-extension.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-extension/fabric3-extension.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-fabric/fabric3-fabric.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-fabric/fabric3-fabric.iml" />

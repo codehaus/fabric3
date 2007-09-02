@@ -11,7 +11,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="development-api" />
+    <orderEntry type="module" module-name="fabric3-development-api" />
     <orderEntry type="module" module-name="fabric3-fabric" />
     <orderEntry type="library" name="junit-3.8.1" level="application" />
     <orderEntryProperties />
