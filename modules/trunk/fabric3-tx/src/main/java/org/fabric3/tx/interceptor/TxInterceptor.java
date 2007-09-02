@@ -18,8 +18,6 @@
  */
 package org.fabric3.tx.interceptor;
 
-import javax.transaction.InvalidTransactionException;
-import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
@@ -27,7 +25,6 @@ import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.tx.TxAction;
 import org.fabric3.tx.TxException;
-import org.fabric3.tx.proxy.TransactionManagerProxy;
 
 /**
  * @version $Revision$ $Date$
