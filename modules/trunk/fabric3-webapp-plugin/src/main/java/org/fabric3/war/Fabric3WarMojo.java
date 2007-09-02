@@ -149,12 +149,21 @@ public class Fabric3WarMojo extends AbstractMojo {
      * Executes the MOJO.
      */
     public void execute() throws MojoExecutionException {
+        try {
+            installRuntime();
+            installExtensions();
+
+            // TODO add user dependencies to the war in the way the contribution service expects
+        } catch (Exception e) {
+            throw new MojoExecutionException(e.getMessage(), e);
+        }
+    }
+
+    private void installRuntime() throws IOException, ArtifactResolutionException, ArtifactNotFoundException,
+            ArtifactMetadataRetrievalException {
+
         if (runTimeVersion == null) {
-            try {
-                runTimeVersion = getPluginVersion();
-            } catch (IOException e) {
-                throw new MojoExecutionException(e.getMessage(), e);
-            }
+            runTimeVersion = getPluginVersion();
         }
         getLog().info("Using fabric3 runtime version " + runTimeVersion);
 
@@ -163,19 +172,12 @@ public class Fabric3WarMojo extends AbstractMojo {
             bootLibs = new Dependency[]{dependancy};
         }
 
-        try {
-            File bootDir = new File(webappDirectory, BOOT_PATH);
-            bootDir.mkdirs();
-            for (Dependency dependency : bootLibs) {
-                for (Artifact artifact : resolveArtifact(dependency.getArtifact(artifactFactory), true)) {
-                    FileUtils.copyFileToDirectoryIfModified(artifact.getFile(), bootDir);
-                }
+        File bootDir = new File(webappDirectory, BOOT_PATH);
+        bootDir.mkdirs();
+        for (Dependency dependency : bootLibs) {
+            for (Artifact artifact : resolveArtifact(dependency.getArtifact(artifactFactory), true)) {
+                FileUtils.copyFileToDirectoryIfModified(artifact.getFile(), bootDir);
             }
-            installExtensions();
-
-            // TODO add user dependencies to the war in the way the contribution service expects
-        } catch (Exception e) {
-            throw new MojoExecutionException(e.getMessage(), e);
         }
     }
 
