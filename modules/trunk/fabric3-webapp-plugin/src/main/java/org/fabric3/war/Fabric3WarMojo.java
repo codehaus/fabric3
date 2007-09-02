@@ -201,17 +201,15 @@ public class Fabric3WarMojo extends AbstractMojo {
             bootDir.mkdirs();
             for (Dependency dependency : bootLibs) {
                 for (Artifact artifact : resolveArtifact(dependency.getArtifact(artifactFactory), true)) {
-                    // FIXME use this when maven updates to plexus-utils-1.4
-                    // FileUtils.copyFileToDirectoryIfModified(bootDir, artifact.getFile());
                     if (!spiArtifacts.contains(artifact)) {
                         // don't copy dependencies related to SPIs as those are loaded in the host classloader
-                        copyFileToDirectoryIfModified(artifact.getFile(), bootDir);
+                        FileUtils.copyFileToDirectoryIfModified(artifact.getFile(), bootDir);
                     }
                 }
             }
             File libDir = new File(webappDirectory, "WEB-INF/lib");
             for (Artifact artifact : spiArtifacts) {
-                copyFileToDirectoryIfModified(artifact.getFile(), libDir);
+                FileUtils.copyFileToDirectoryIfModified(artifact.getFile(), libDir);
             }
             installExtensions();
 
@@ -230,22 +228,8 @@ public class Fabric3WarMojo extends AbstractMojo {
         File bootDir = new File(webappDirectory, EXTENSIONS_PATH);
         for (Dependency dependency : extensions) {
             for (Artifact artifact : resolveArtifact(dependency.getArtifact(artifactFactory), false)) {
-                // FIXME use this when maven updates to plexus-utils-1.4
-                // FileUtils.copyFileToDirectoryIfModified(bootDir, artifact.getFile());
-                copyFileToDirectoryIfModified(artifact.getFile(), bootDir);
+                FileUtils.copyFileToDirectoryIfModified(artifact.getFile(), bootDir);
             }
-        }
-    }
-
-    // Use copyFileToDirectoryIfModified from plexus-utils-1.4
-    @Deprecated
-    private static boolean copyFileToDirectoryIfModified(File source, File targetDir) throws IOException {
-        File target = new File(targetDir, source.getName());
-        if (target.lastModified() < source.lastModified()) {
-            FileUtils.copyFile(source, target);
-            return true;
-        } else {
-            return false;
         }
     }
 
