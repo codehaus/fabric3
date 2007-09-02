@@ -132,13 +132,6 @@ public class Fabric3WarMojo extends AbstractMojo {
     public Dependency[] bootLibs;
 
     /**
-     * The spi dependencies.
-     *
-     * @parameter
-     */
-    public Dependency[] spiLibs;
-
-    /**
      * Set of extension artifacts that should be deployed to the runtime.
      *
      * @parameter
@@ -151,13 +144,6 @@ public class Fabric3WarMojo extends AbstractMojo {
      * @parameter
      */
     public String runTimeVersion;
-
-    /**
-     * The default version of the spi to use.
-     *
-     * @parameter
-     */
-    public String spiVersion;
 
     /**
      * Executes the MOJO.
@@ -177,39 +163,13 @@ public class Fabric3WarMojo extends AbstractMojo {
             bootLibs = new Dependency[]{dependancy};
         }
 
-        if (spiLibs == null) {
-            String version;
-            if (spiVersion == null) {
-                version = runTimeVersion;
-            } else {
-                version = spiVersion;
-            }
-            Dependency dep1 = new Dependency("org.codehaus.fabric3", "fabric3-extension", version);
-            Dependency dep2 = new Dependency("stax", "stax-api", "1.0");
-            Dependency dep3 = new Dependency("org.codehaus.woodstox", "wstx-asl", "3.2.0");
-            Dependency dep4 = new Dependency("org.apache.tuscany", "commonj-api_r1.1", "1.0-incubator-M2");
-            Dependency dep5 = new Dependency("org.apache.geronimo.specs", "geronimo-j2ee-connector_1.5_spec", "1.0.1");
-            spiLibs = new Dependency[]{dep1, dep2, dep3, dep4, dep5};
-        }
         try {
-            Set<Artifact> spiArtifacts = new HashSet<Artifact>();
-            for (Dependency dependency : spiLibs) {
-                Set<Artifact> artifacts = resolveArtifact(dependency.getArtifact(artifactFactory), true);
-                spiArtifacts.addAll(artifacts);
-            }
             File bootDir = new File(webappDirectory, BOOT_PATH);
             bootDir.mkdirs();
             for (Dependency dependency : bootLibs) {
                 for (Artifact artifact : resolveArtifact(dependency.getArtifact(artifactFactory), true)) {
-                    if (!spiArtifacts.contains(artifact)) {
-                        // don't copy dependencies related to SPIs as those are loaded in the host classloader
-                        FileUtils.copyFileToDirectoryIfModified(artifact.getFile(), bootDir);
-                    }
+                    FileUtils.copyFileToDirectoryIfModified(artifact.getFile(), bootDir);
                 }
-            }
-            File libDir = new File(webappDirectory, "WEB-INF/lib");
-            for (Artifact artifact : spiArtifacts) {
-                FileUtils.copyFileToDirectoryIfModified(artifact.getFile(), libDir);
             }
             installExtensions();
 
