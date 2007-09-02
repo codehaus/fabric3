@@ -21,7 +21,6 @@ package org.fabric3.runtime.standalone.server.agent;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.concurrent.atomic.AtomicBoolean;
-
 import javax.management.MBeanServer;
 import javax.management.MBeanServerFactory;
 import javax.management.ObjectName;
@@ -31,31 +30,40 @@ import javax.management.remote.JMXServiceURL;
 
 /**
  * Abstract super class for all the agents.
- * @version $Revison$ $Date$
  *
+ * @version $Revison$ $Date$
  */
 public abstract class AbstractAgent implements Agent {
 
-    /** Root domain */
+    /**
+     * Root domain
+     */
     private static final String DOMAIN = "fabric3";
 
-    /** MBean server to use. */
+    /**
+     * MBean server to use.
+     */
     private MBeanServer mBeanServer;
-    
-    /** Start flag. */
+
+    /**
+     * Start flag.
+     */
     private AtomicBoolean started = new AtomicBoolean();
-    
-    /** RMI connector adaptor. */
+
+    /**
+     * RMI connector adaptor.
+     */
     private JMXConnectorServer connectorServer;
 
     /**
      * Initialies the server.
+     *
      * @throws ManagementException If unable to start the agent.
      */
-    protected AbstractAgent() throws ManagementException {        
-        mBeanServer = MBeanServerFactory.createMBeanServer(DOMAIN);        
+    protected AbstractAgent() throws ManagementException {
+        mBeanServer = MBeanServerFactory.createMBeanServer(DOMAIN);
     }
-    
+
     /**
      * @see org.fabric3.runtime.standalone.server.agent.Agent#getMBeanServer()
      */
@@ -64,16 +72,16 @@ public abstract class AbstractAgent implements Agent {
     }
 
     /**
-     * @see org.fabric3.runtime.standalone.server.agent.Agent#register(java.lang.Object, java.lang.String)
+     * @see org.fabric3.runtime.standalone.server.agent.Agent#register(java.lang.Object,java.lang.String)
      */
     public final void register(Object instance, String name) throws ManagementException {
-        
+
         try {
             mBeanServer.registerMBean(instance, new ObjectName(name));
         } catch (Exception ex) {
             throw new ManagementException(ex);
         }
-        
+
     }
 
     /**
@@ -82,20 +90,20 @@ public abstract class AbstractAgent implements Agent {
     public final void start() throws ManagementException {
 
         try {
-            
-            if(started.get()) {
+
+            if (started.get()) {
                 throw new IllegalArgumentException("Agent already started");
             }
-            
+
             preStart();
-            
+
             JMXServiceURL url = getAdaptorUrl();
             connectorServer = JMXConnectorServerFactory.newJMXConnectorServer(url, null, mBeanServer);
-            
+
             connectorServer.start();
-            
+
             started.set(true);
-            
+
         } catch (MalformedURLException ex) {
             throw new ManagementException(ex);
         } catch (IOException ex) {
@@ -104,50 +112,65 @@ public abstract class AbstractAgent implements Agent {
 
     }
 
+    public final void run() {
+        while (started.get()) {
+            synchronized (this) {
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    // continue;
+                }
+            }
+        }
+    }
+
     /**
      * @see org.fabric3.runtime.standalone.server.agent.Agent#shutdown()
      */
     public final void shutdown() throws ManagementException {
-        
+
         try {
-            
-            if(!started.get()) {
+
+            if (!started.get()) {
                 throw new IllegalArgumentException("Agent not started");
             }
-            
+
             connectorServer.stop();
             postStop();
             started.set(false);
-            
+            synchronized (this) {
+                notify();
+            }
+
         } catch (IOException ex) {
             throw new ManagementException(ex);
         }
-        
+
     }
-    
+
     /**
      * Gets the underlying MBean server.
+     *
      * @return A reference to the mbean server.
      */
     protected MBeanServer getMbeanServer() {
         return mBeanServer;
     }
-    
+
     /**
      * Gets the adaptor URL.
+     *
      * @return Adaptor URL.
      */
     protected abstract JMXServiceURL getAdaptorUrl();
-    
+
     /**
      * Any initialiation required for protocol specific agent.
-     *
      */
     protected abstract void preStart();
-    
+
     /**
      * Any initialiation required for protocol specific agent.
-     *
      */
     protected abstract void postStop();
 

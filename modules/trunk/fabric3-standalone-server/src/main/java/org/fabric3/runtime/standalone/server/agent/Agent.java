@@ -41,6 +41,8 @@ public interface Agent {
      */
     void start() throws ManagementException;
 
+    void run();
+
     /**
      * Shuts down the JMX server.
      * @throws ManagementException If unable to shutdown the server.

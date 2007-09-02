@@ -90,6 +90,14 @@ public class Fabric3Server implements Fabric3ServerMBean {
         for (String profile : args) {
             server.startRuntime(profile);
         }
+
+        server.run();
+
+        System.out.println("Shutdown");
+        for (String bootPath : server.bootedRuntimes.keySet()) {
+            server.shutdownRuntime(bootPath);
+        }
+        System.exit(0);
     }
 
     /**
@@ -181,18 +189,15 @@ public class Fabric3Server implements Fabric3ServerMBean {
 
     }
 
+    public final void run() {
+        agent.run();
+    }
+
     /**
      * Shuts the server down.
      */
     public final void shutdown() {
-
-        for (String bootPath : bootedRuntimes.keySet()) {
-            shutdownRuntime(bootPath);
-        }
         agent.shutdown();
-        System.err.println("Shutdown");
-        System.exit(0);
-
     }
 
     /**
