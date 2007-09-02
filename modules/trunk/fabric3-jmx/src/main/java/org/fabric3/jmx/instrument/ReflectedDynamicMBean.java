@@ -75,7 +75,7 @@ public class ReflectedDynamicMBean implements DynamicMBean {
     /**
      * Runtime type of the managed object.
      */
-    private Class delegateClass;
+    private Class<?> delegateClass;
 
     /**
      * Delegate class name.
