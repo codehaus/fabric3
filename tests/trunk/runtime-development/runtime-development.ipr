@@ -2,6 +2,13 @@
 <project version="4" relativePaths="false">
   <component name="AntConfiguration">
     <defaultAnt bundledAnt="true" />
+    <buildFile url="file://build.xml">
+      <additionalClassPath />
+      <antReference projectDefault="true" />
+      <customJdkName value="" />
+      <maximumHeapSize value="128" />
+      <properties />
+    </buildFile>
   </component>
   <component name="BuildJarProjectSettings">
     <option name="BUILD_JARS_ON_MAKE" value="false" />
@@ -11,34 +18,8 @@
     <option name="USE_PROJECT_LEVEL_SETTINGS" value="false" />
   </component>
   <component name="CodeStyleSettingsManager">
-    <option name="PER_PROJECT_SETTINGS">
-      <value>
-        <option name="INDENT_CASE_FROM_SWITCH" value="false" />
-        <option name="ALIGN_MULTILINE_PARAMETERS_IN_CALLS" value="true" />
-        <option name="CLASS_COUNT_TO_USE_IMPORT_ON_DEMAND" value="9999" />
-        <option name="NAMES_COUNT_TO_USE_IMPORT_ON_DEMAND" value="999" />
-        <option name="IMPORT_LAYOUT_TABLE">
-          <value>
-            <package name="java" withSubpackages="true" />
-            <package name="javax" withSubpackages="true" />
-            <emptyLine />
-            <package name="" withSubpackages="true" />
-            <emptyLine />
-            <package name="org.fabric3" withSubpackages="true" />
-          </value>
-        </option>
-        <option name="CALL_PARAMETERS_WRAP" value="5" />
-        <option name="THROWS_LIST_WRAP" value="1" />
-        <option name="THROWS_KEYWORD_WRAP" value="1" />
-        <option name="ASSIGNMENT_WRAP" value="1" />
-        <option name="WRAP_COMMENTS" value="true" />
-        <option name="XML_ATTRIBUTE_WRAP" value="0" />
-        <option name="XML_TEXT_WRAP" value="0" />
-        <option name="PARAMETER_ANNOTATION_WRAP" value="1" />
-        <option name="VARIABLE_ANNOTATION_WRAP" value="2" />
-      </value>
-    </option>
-    <option name="USE_PER_PROJECT_SETTINGS" value="true" />
+    <option name="PER_PROJECT_SETTINGS" />
+    <option name="USE_PER_PROJECT_SETTINGS" value="false" />
   </component>
   <component name="CompilerConfiguration">
     <option name="DEFAULT_COMPILER" value="Javac" />
@@ -57,6 +38,7 @@
       <entry name="?*.html" />
       <entry name="?*.dtd" />
       <entry name="?*.tld" />
+      <entry name="?*.composite" />
     </wildcardResourcePatterns>
   </component>
   <component name="DataSourceManagerImpl" />
@@ -302,66 +284,12 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/tests/trunk/binding-burlap-test/binding-burlap-test.iml" filepath="$PROJECT_DIR$/tests/trunk/binding-burlap-test/binding-burlap-test.iml" group="tests" />
-      <module fileurl="file://$PROJECT_DIR$/tests/trunk/binding-hessian-test/binding-hessian-test.iml" filepath="$PROJECT_DIR$/tests/trunk/binding-hessian-test/binding-hessian-test.iml" group="tests" />
-      <module fileurl="file://$PROJECT_DIR$/tests/trunk/binding-jms-test/binding-jms-test.iml" filepath="$PROJECT_DIR$/tests/trunk/binding-jms-test/binding-jms-test.iml" group="tests" />
-      <module fileurl="file://$PROJECT_DIR$/tests/trunk/binding-ws-test/binding-ws-test.iml" filepath="$PROJECT_DIR$/tests/trunk/binding-ws-test/binding-ws-test.iml" group="tests" />
-      <module fileurl="file://$PROJECT_DIR$/demo/assembly/demo-assembly.iml" filepath="$PROJECT_DIR$/demo/assembly/demo-assembly.iml" group="demo" />
-      <module fileurl="file://$PROJECT_DIR$/demo/calculator/demo-calculator.iml" filepath="$PROJECT_DIR$/demo/calculator/demo-calculator.iml" group="demo" />
-      <module fileurl="file://$PROJECT_DIR$/demo/controller/demo-controller.iml" filepath="$PROJECT_DIR$/demo/controller/demo-controller.iml" group="demo" />
-      <module fileurl="file://$PROJECT_DIR$/fabric-pom/trunk/fabric-pom.iml" filepath="$PROJECT_DIR$/fabric-pom/trunk/fabric-pom.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-api/fabric3-api.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-api/fabric3-api.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-binding-burlap/fabric3-binding-burlap.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-binding-burlap/fabric3-binding-burlap.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-binding-hessian/fabric3-binding-hessian.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-binding-hessian/fabric3-binding-hessian.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-binding-jms/fabric3-binding-jms.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-binding-jms/fabric3-binding-jms.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-binding-rmi/fabric3-binding-rmi.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-binding-rmi/fabric3-binding-rmi.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-binding-ws/fabric3-binding-ws.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-binding-ws/fabric3-binding-ws.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-console/fabric3-console.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-console/fabric3-console.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-contribution-plugin/fabric3-contribution-plugin.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-contribution-plugin/fabric3-contribution-plugin.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-contribution-scanner/fabric3-contribution-scanner.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-contribution-scanner/fabric3-contribution-scanner.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-contribution-scanner-spi/fabric3-contribution-scanner-spi.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-contribution-scanner-spi/fabric3-contribution-scanner-spi.iml" />
-      <module fileurl="file://$PROJECT_DIR$/demo/webclient/fabric3-demo-webclient.iml" filepath="$PROJECT_DIR$/demo/webclient/fabric3-demo-webclient.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-development-api/fabric3-development-api.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-development-api/fabric3-development-api.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-development-host/fabric3-development-host.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-development-host/fabric3-development-host.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-discovery-jxta/fabric3-discovery-jxta.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-discovery-jxta/fabric3-discovery-jxta.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-extension/fabric3-extension.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-extension/fabric3-extension.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-fabric/fabric3-fabric.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-fabric/fabric3-fabric.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-groovy/fabric3-groovy.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-groovy/fabric3-groovy.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-host-api/fabric3-host-api.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-host-api/fabric3-host-api.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-interface-wsdl/fabric3-interface-wsdl.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-interface-wsdl/fabric3-interface-wsdl.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-itest-plugin/fabric3-itest-plugin.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-itest-plugin/fabric3-itest-plugin.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-jetty/fabric3-jetty.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-jetty/fabric3-jetty.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-jmx/fabric3-jmx.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-jmx/fabric3-jmx.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-jxta/fabric3-jxta.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-jxta/fabric3-jxta.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-loader/fabric3-loader.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-loader/fabric3-loader.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-maven/fabric3-maven.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-maven/fabric3-maven.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-messaging-jms/fabric3-messaging-jms.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-messaging-jms/fabric3-messaging-jms.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-messaging-jxta/fabric3-messaging-jxta.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-messaging-jxta/fabric3-messaging-jxta.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-pojo/fabric3-pojo.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-pojo/fabric3-pojo.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-policy/fabric3-policy.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-policy/fabric3-policy.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-policy-spi/fabric3-policy-spi.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-policy-spi/fabric3-policy-spi.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-scdl/fabric3-scdl.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-scdl/fabric3-scdl.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-spi/fabric3-spi.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-spi/fabric3-spi.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-standalone-api/fabric3-standalone-api.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-standalone-api/fabric3-standalone-api.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-standalone-host/fabric3-standalone-host.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-standalone-host/fabric3-standalone-host.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-standalone-server/fabric3-standalone-server.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-standalone-server/fabric3-standalone-server.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-standalone-shutdown/fabric3-standalone-shutdown.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-standalone-shutdown/fabric3-standalone-shutdown.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-transform/fabric3-transform.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-transform/fabric3-transform.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-webapp-api/fabric3-webapp-api.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-webapp-api/fabric3-webapp-api.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-webapp-host/fabric3-webapp-host.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-webapp-host/fabric3-webapp-host.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-webapp-plugin/fabric3-webapp-plugin.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-webapp-plugin/fabric3-webapp-plugin.iml" />
-      <module fileurl="file://$PROJECT_DIR$/tests/trunk/function/function-tests.iml" filepath="$PROJECT_DIR$/tests/trunk/function/function-tests.iml" group="tests" />
-      <module fileurl="file://$PROJECT_DIR$/parent-pom/trunk/parent-pom.iml" filepath="$PROJECT_DIR$/parent-pom/trunk/parent-pom.iml" />
-      <module fileurl="file://$PROJECT_DIR$/tests/trunk/policy-test/policy-test.iml" filepath="$PROJECT_DIR$/tests/trunk/policy-test/policy-test.iml" group="tests" />
-      <module fileurl="file://$PROJECT_DIR$/assembly/trunk/runtime-development/runtime-development.iml" filepath="$PROJECT_DIR$/assembly/trunk/runtime-development/runtime-development.iml" />
-      <module fileurl="file://$PROJECT_DIR$/assembly/trunk/runtime-standalone/runtime-standalone.iml" filepath="$PROJECT_DIR$/assembly/trunk/runtime-standalone/runtime-standalone.iml" />
-      <module fileurl="file://$PROJECT_DIR$/tests/trunk/runtime-webapp/runtime-webapp.iml" filepath="$PROJECT_DIR$/tests/trunk/runtime-webapp/runtime-webapp.iml" group="tests" />
-      <module fileurl="file://$PROJECT_DIR$/spec/trunk/sca-spec.iml" filepath="$PROJECT_DIR$/spec/trunk/sca-spec.iml" />
-      <module fileurl="file://$PROJECT_DIR$/tests/trunk/groovy/test-groovy.iml" filepath="$PROJECT_DIR$/tests/trunk/groovy/test-groovy.iml" group="tests" />
-      <module fileurl="file://$PROJECT_DIR$/tests/trunk/wiring-test/wiring-test.iml" filepath="$PROJECT_DIR$/tests/trunk/wiring-test/wiring-test.iml" group="tests" />
+      <module fileurl="file://$PROJECT_DIR$/tests-runtime-development.iml" filepath="$PROJECT_DIR$/tests-runtime-development.iml" />
     </modules>
   </component>
-  <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.5" project-jdk-type="JavaSDK" />
+  <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.5" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/target/classes" />
+  </component>
   <component name="ProjectRunConfigurationManager" />
   <component name="RmicSettings">
     <option name="IS_EANABLED" value="false" />

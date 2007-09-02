@@ -1,0 +1,71 @@
+<project name="tests-runtime-development" default="test" basedir=".">
+    <property name="maven.build.directory" value="target"/>
+    <property name="maven.build.output" value="${maven.build.directory}/classes"/>
+    <property name="maven.test.output" value="${maven.build.directory}/test-classes"/>
+    <property name="maven.test.reports" value="${maven.build.directory}/surefire-reports"/>
+    <property name="fabric3.home" value="${maven.build.directory}/assembly"/>
+
+    <path id="fabric3.classpath">
+        <fileset dir="${fabric3.home}/lib"/>
+    </path>
+
+    <path id="build.classpath">
+        <fileset dir="${maven.build.directory}/lib"/>
+    </path>
+
+    <path id="test.classpath">
+        <path refid="build.classpath"/>
+        <pathelement location="${maven.build.output}"/>
+        <path refid="fabric3.classpath"/>
+    </path>
+
+    <target name="clean" description="Clean the output directory">
+        <delete dir="${maven.build.directory}"/>
+    </target>
+
+    <target name="compile" description="Compile the code">
+        <mkdir dir="${maven.build.output}"/>
+        <javac destdir="${maven.build.output}" debug="true" deprecation="true" optimize="false">
+            <src>
+                <pathelement location="src/main/java"/>
+            </src>
+            <classpath refid="build.classpath"/>
+        </javac>
+        <copy todir="${maven.build.output}">
+            <fileset dir="src/main/resources"/>
+        </copy>
+    </target>
+
+    <target name="compile-tests" depends="compile" description="Compile the test code">
+        <mkdir dir="${maven.test.output}"/>
+        <javac destdir="${maven.test.output}" debug="true" deprecation="true" optimize="false">
+            <src>
+                <pathelement location="src/test/java"/>
+            </src>
+            <classpath refid="test.classpath"/>
+        </javac>
+    </target>
+
+    <target name="test" depends="compile-tests" description="Run the test cases">
+        <mkdir dir="${maven.test.reports}"/>
+        <junit printSummary="yes" haltonerror="true" haltonfailure="true" fork="true" dir=".">
+            <sysproperty key="basedir" value="."/>
+            <formatter type="xml"/>
+            <formatter type="plain" usefile="false"/>
+            <classpath>
+                <path refid="test.classpath"/>
+                <pathelement location="${maven.test.output}"/>
+            </classpath>
+            <batchtest todir="${maven.test.reports}">
+                <fileset dir="src/test/java">
+                    <include name="**/*Test.java"/>
+                </fileset>
+            </batchtest>
+        </junit>
+    </target>
+
+    <taskdef name="junit" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask">
+        <classpath refid="build.classpath"/>
+    </taskdef>
+
+</project>

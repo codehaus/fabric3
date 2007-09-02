@@ -50,36 +50,39 @@
     </fileSets>
 
     <dependencySets>
-        <!-- copy dependencies used by the executable commands to the lib directory -->
+        <!-- copy dependencies for the user's classpath to the lib directory -->
         <dependencySet>
             <includes>
-                <include>org.codehaus.fabric3.development:development-api</include>
                 <include>org.codehaus.fabric3.spec:sca-api-r1.0</include>
                 <include>org.codehaus.fabric3:fabric3-api</include>
                 <include>org.codehaus.fabric3:fabric3-host-api</include>
-                <include>org.codehaus.woodstox:wstx-asl</include>
-                <include>stax:stax-api</include>
+                <include>org.codehaus.fabric3.development:fabric3-development-api</include>
             </includes>
             <outputDirectory>lib</outputDirectory>
-            <outputFileNameMapping>${artifactId}-${baseVersion}.${extension}</outputFileNameMapping>
         </dependencySet>
 
+        <!-- copy dependencies for the runtime itself to the boot directory -->
         <dependencySet>
             <includes>
-                <include>org.codehaus.fabric3.development:development-host</include>
-					 <include>javax.activation:activation</include>
+                <include>org.codehaus.fabric3:fabric3-scdl</include>
+                <include>org.codehaus.fabric3:fabric3-spi</include>
+                <include>org.codehaus.fabric3:fabric3-extension</include>
+                <include>org.codehaus.fabric3:fabric3-policy-spi</include>
+                <include>org.codehaus.fabric3:fabric3-pojo</include>
+                <include>org.codehaus.fabric3:fabric3-transform</include>
+                <include>org.codehaus.fabric3:fabric3-loader</include>
+                <include>org.codehaus.fabric3:fabric3-policy</include>
+                <include>org.codehaus.fabric3:fabric3-fabric</include>
+                <include>org.codehaus.fabric3.development:fabric3-development-host</include>
+                <include>javax.servlet:servlet-api</include>
+                <include>stax:stax-api</include>
                 <include>org.codehaus.woodstox:wstx-asl</include>
+                <include>com.thoughtworks.xstream:xstream</include>
                 <include>org.apache.tuscany:commonj-api_r1.1</include>
-					 <include>org.apache.geronimo.specs:geronimo-j2ee-connector_1.5_spec</include>
-                <include>javax.servlet:servlet-api</include>       
+                <include>javax.activation:activation</include>
+                <include>org.codehaus.fabric3:fabric3-contribution-scanner-spi</include>
+                <include>org.codehaus.fabric3:fabric3-contribution-scanner</include>
             </includes>
-            <excludes>
-                <exclude>org.codehaus.fabric3.development:fabric3-api</exclude>
-                <exclude>org.codehaus.fabric3.development:development-api</exclude>
-                <exclude>org.codehaus.woodstox:wstx-asl</exclude>
-                <exclude>stax:stax-api</exclude>
-					 <exclude>xpp3:xpp3_min</exclude>
-            </excludes>
             <outputDirectory>boot</outputDirectory>
         </dependencySet>
     </dependencySets>
