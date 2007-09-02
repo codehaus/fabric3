@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.jmx.agent;
+package org.fabric3.runtime.standalone.server.agent;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -84,7 +84,7 @@ public class RmiAgent extends AbstractAgent {
     }
 
     /**
-     * @see org.fabric3.jmx.agent.AbstractAgent#preStart()
+     * @see org.fabric3.runtime.standalone.server.agent.AbstractAgent#preStart()
      */
     @Override
     public void preStart() throws ManagementException {
@@ -104,7 +104,7 @@ public class RmiAgent extends AbstractAgent {
     }
 
     /**
-     * @see org.fabric3.jmx.agent.AbstractAgent#postStop()
+     * @see org.fabric3.runtime.standalone.server.agent.AbstractAgent#postStop()
      */
     @Override
     public void postStop() throws ManagementException {

@@ -19,6 +19,7 @@
 package org.fabric3.runtime.standalone.server;
 
 import java.io.File;
+import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -30,12 +31,11 @@ import org.fabric3.host.management.ManagementService;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ShutdownException;
-import org.fabric3.jmx.JmxManagementService;
-import org.fabric3.jmx.agent.Agent;
-import org.fabric3.jmx.agent.RmiAgent;
 import org.fabric3.runtime.standalone.BootstrapHelper;
 import org.fabric3.runtime.standalone.StandaloneHostInfo;
 import org.fabric3.runtime.standalone.StandaloneRuntime;
+import org.fabric3.runtime.standalone.server.agent.Agent;
+import org.fabric3.runtime.standalone.server.agent.RmiAgent;
 
 /**
  * This class provides the commandline interface for starting the Fabric3 standalone server.
@@ -117,21 +117,25 @@ public class Fabric3Server implements Fabric3ServerMBean {
             ex.printStackTrace();
             throw new Fabric3ServerException(ex);
         }
+
         monitor = runtime.getMonitorFactory().getMonitor(ServerMonitor.class);
         try {
-            final MBeanServer mBeanServer = agent.getMBeanServer();
-            final ManagementService<?> managementService = new JmxManagementService(mBeanServer, profileName);
-            final Bootstrapper bootstrapper = BootstrapHelper.createBootstrapper(hostInfo);
-            final RuntimeLifecycleCoordinator<StandaloneRuntime, Bootstrapper> coordinator =
-                    BootstrapHelper.createCoordinator(hostInfo);
-            runtime.setManagementService(managementService);
-            // perform the boot sequence.
             ClassLoader bootLoader = hostInfo.getBootClassLoader();
             ClassLoader hostLoader = hostInfo.getHostClassLoader();
+
+            MBeanServer mBeanServer = agent.getMBeanServer();
+            ManagementService<?> managementService = createManagementService(mBeanServer, profileName, bootLoader);
+            Bootstrapper bootstrapper = BootstrapHelper.createBootstrapper(hostInfo);
+            RuntimeLifecycleCoordinator<StandaloneRuntime, Bootstrapper> coordinator =
+                    BootstrapHelper.createCoordinator(hostInfo);
+            runtime.setManagementService(managementService);
+
             // load the primordial system components
             coordinator.bootPrimordial(runtime, bootstrapper, bootLoader, hostLoader);
+
             // load and initialize runtime extension components and the local runtime domain
             coordinator.initialize();
+
             // join a distributed domain
             Future<Void> future = coordinator.joinDomain(10000);
             future.get();
@@ -147,6 +151,16 @@ public class Fabric3Server implements Fabric3ServerMBean {
             monitor.runError(ex);
             throw new Fabric3ServerException(ex);
         }
+    }
+
+    private ManagementService<?> createManagementService(MBeanServer mBeanServer, String profileName, ClassLoader cl)
+            throws Exception {
+        @SuppressWarnings("unchecked")
+        Class<ManagementService<?>> clazz =
+                (Class<ManagementService<?>>) cl.loadClass("org.fabric3.jmx.JmxManagementService");
+        Constructor<ManagementService<?>> ctr = clazz.getConstructor(MBeanServer.class, String.class);
+        return ctr.newInstance(mBeanServer, profileName);
+
     }
 
     /**

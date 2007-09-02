@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.jmx.agent;
+package org.fabric3.runtime.standalone.server.agent;
 
 import org.fabric3.host.Fabric3RuntimeException;
 

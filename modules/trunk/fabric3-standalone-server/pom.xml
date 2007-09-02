@@ -39,11 +39,6 @@
              <artifactId>fabric3-api</artifactId>
              <version>0.2-SNAPSHOT</version>
          </dependency>
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-jmx</artifactId>
-            <version>0.2-SNAPSHOT</version>
-        </dependency>
 
         <!-- dependencies that are defined as provided in the spi module -->
         <dependency>

@@ -25,6 +25,8 @@
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-console</artifactId>
     <version>0.2-SNAPSHOT</version>
+    <packaging>sca-contribution-jar</packaging>
+
     <name>Fabric3 Console</name>
     <description>Fabric3 Console applications.</description>
 
@@ -39,21 +41,30 @@
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
             <version>2.4</version>
-            <scope>provided</scope>
-        </dependency>	
-
-        <dependency>
-            <groupId>org.codehaus.woodstox</groupId>
-            <artifactId>wstx-asl</artifactId>
-            <version>3.2.0</version>
-            <scope>provided</scope>
         </dependency>
-        
+        <dependency>
+            <groupId>stax</groupId>
+            <artifactId>stax-api</artifactId>
+            <version>1.0</version>
+        </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.fabric3</groupId>
+                <artifactId>fabric3-contribution-plugin</artifactId>
+                <version>0.1-SNAPSHOT</version>
+                <extensions>true</extensions>
+                <configuration/>
+            </plugin>
+        </plugins>
+    </build>
 
     <scm>
         <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/fabric3-console</connection>
