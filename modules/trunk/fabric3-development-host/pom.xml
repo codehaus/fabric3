@@ -18,38 +18,45 @@
 <project>
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.codehaus.fabric3.development</groupId>
-        <artifactId>development-parent</artifactId>
-        <version>0.2-SNAPSHOT</version>
+        <groupId>org.codehaus.fabric3</groupId>
+        <artifactId>fabric</artifactId>
+        <version>4</version>
     </parent>
     <groupId>org.codehaus.fabric3.development</groupId>
-    <artifactId>development-host</artifactId>
+    <artifactId>fabric3-development-host</artifactId>
+    <version>0.2-SNAPSHOT</version>
     <name>Fabric3 Development Runtime Host</name>
     <description>Fabric3 Development Runtime Host.</description>
 
     <dependencies>
-		 <dependency>
+         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3.development</groupId>
-            <artifactId>development-api</artifactId>
+            <artifactId>fabric3-development-api</artifactId>
+            <version>0.2-SNAPSHOT</version>
         </dependency>
+
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-fabric</artifactId>
             <version>0.2-SNAPSHOT</version>
         </dependency>
+
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-policy</artifactId>
             <version>0.2-SNAPSHOT</version>
         </dependency>
+
         <dependency>
             <groupId>stax</groupId>
             <artifactId>stax-api</artifactId>
+            <version>1.0</version>
         </dependency>
+
     </dependencies>
 </project>

@@ -18,17 +18,18 @@
 <project>
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.codehaus.fabric3.development</groupId>
-        <artifactId>development-parent</artifactId>
-        <version>0.2-SNAPSHOT</version>
+        <groupId>org.codehaus.fabric3</groupId>
+        <artifactId>fabric</artifactId>
+        <version>4</version>
     </parent>
     <groupId>org.codehaus.fabric3.development</groupId>
-    <artifactId>development-api</artifactId>
+    <artifactId>fabric3-development-api</artifactId>
+    <version>0.2-SNAPSHOT</version>
     <name>Fabric3 Development Runtime API</name>
     <description>Fabric3 Development Runtime API.</description>
 
     <dependencies>
-		  <dependency>
+         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
@@ -36,7 +37,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-host-api</artifactId>
-				<version>0.2-SNAPSHOT</version>
+            <version>0.2-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>
