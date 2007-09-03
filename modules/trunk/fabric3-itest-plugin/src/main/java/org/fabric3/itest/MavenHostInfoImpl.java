@@ -20,6 +20,7 @@ package org.fabric3.itest;
 
 import java.net.URI;
 import java.net.URL;
+import java.util.Properties;
 
 import org.fabric3.spi.services.artifact.ArtifactRepository;
 
@@ -29,11 +30,13 @@ import org.fabric3.spi.services.artifact.ArtifactRepository;
 public class MavenHostInfoImpl implements MavenHostInfo {
     private final URI domain;
     private final ArtifactRepository artifactRepository;
+    private final Properties hostProperties;
 
 
-    public MavenHostInfoImpl(URI domain, ArtifactRepository artifactRepository) {
+    public MavenHostInfoImpl(URI domain, ArtifactRepository artifactRepository, Properties hostProperties) {
         this.domain = domain;
         this.artifactRepository = artifactRepository;
+        this.hostProperties = hostProperties;
     }
 
     public ArtifactRepository getArtifactRepository() {
@@ -49,7 +52,7 @@ public class MavenHostInfoImpl implements MavenHostInfo {
     }
 
     public String getProperty(String name, String defaultValue) {
-        return null;
+        return hostProperties.getProperty(name, defaultValue);
     }
 
     public URI getDomain() {

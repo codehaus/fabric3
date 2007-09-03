@@ -219,6 +219,13 @@ public class Fabric3ITestMojo extends AbstractMojo {
      */
     public ArtifactFactory artifactFactory;
 
+    /**
+     * Properties passed to the runtime throught the HostInfo interface.
+     *
+     * @parameter
+     */
+    public Properties properties;
+
     @SuppressWarnings({"ThrowFromFinallyBlock"})
     public void execute() throws MojoExecutionException, MojoFailureException {
         Log log = getLog();
@@ -414,7 +421,8 @@ public class Fabric3ITestMojo extends AbstractMojo {
                                                                                                  metadataSource,
                                                                                                  localRepository,
                                                                                                  remoteRepositories);
-        MavenHostInfoImpl hostInfo = new MavenHostInfoImpl(URI.create(testDomain), artifactRepository);
+        Properties hostProperties = properties != null ? properties : System.getProperties();
+        MavenHostInfoImpl hostInfo = new MavenHostInfoImpl(URI.create(testDomain), artifactRepository, hostProperties);
         MavenMonitorFactory monitorFactory = new MavenMonitorFactory(getLog());
 
         MavenEmbeddedRuntime runtime = new MavenEmbeddedRuntime();
