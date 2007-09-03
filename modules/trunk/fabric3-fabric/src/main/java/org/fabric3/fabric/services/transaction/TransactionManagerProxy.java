@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.tx.proxy;
+package org.fabric3.fabric.services.transaction;
 
 import java.util.Hashtable;
 
@@ -32,10 +32,10 @@ import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
-import org.fabric3.tx.TxException;
-import org.osoa.sca.annotations.EagerInit;
+import org.fabric3.host.runtime.HostInfo;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Transaction manager proxy. This class will proxy an injected transaction manager. If the delegate 
@@ -45,11 +45,13 @@ import org.osoa.sca.annotations.Property;
  * 
  * @version $Revision$ $Date$
  */
-@EagerInit
 public class TransactionManagerProxy implements TransactionManager {
     
+    // JNDI name property
+    private static final String TXM_JNDI_NAME = "fabric3.jta.txm.jndi.name";
+    
     // JNDI name of the transaction manager
-    private String jndiName = "javax/transaction/TransactionManager";
+    private String jndiName;
     
     // Provider URL
     private String providerUrl;
@@ -57,8 +59,21 @@ public class TransactionManagerProxy implements TransactionManager {
     // Initial context factory
     private String initialContextFactory;
     
+    // Host info
+    private HostInfo hostInfo;
+    
     // Transaction manager
     private TransactionManager delegate;
+    
+    /**
+     * Inject host info.
+     * 
+     * @param hostInfo Host info for the runtime environment.
+     */
+    @Reference(required = true)
+    public void setHostInfo(HostInfo hostInfo) {
+        this.hostInfo = hostInfo;
+    }
     
     /**
      * JNDI name of the transaction manager.
@@ -105,6 +120,9 @@ public class TransactionManagerProxy implements TransactionManager {
             env.put(Context.INITIAL_CONTEXT_FACTORY, initialContextFactory);
         }
         
+        if(jndiName != null) {
+            jndiName = hostInfo.getProperty(TXM_JNDI_NAME, "javax/transaction/TransactionManager");
+        }
         Context context = null;
         
         try {
@@ -119,114 +137,80 @@ public class TransactionManagerProxy implements TransactionManager {
     }
 
     /**
+     * @throws SystemException 
+     * @throws NotSupportedException 
      * @see javax.transaction.TransactionManager#begin()
      */
-    public void begin() throws TxException {
-        try {
-            delegate.begin();
-        } catch (NotSupportedException e) {
-            throw new TxException(e);
-        } catch (SystemException e) {
-            throw new TxException(e);
-        }
+    public void begin() throws NotSupportedException, SystemException {
+        delegate.begin();
     }
 
     /**
+     * @throws SystemException 
+     * @throws RollbackException 
+     * @throws HeuristicRollbackException 
+     * @throws HeuristicMixedException 
      * @see javax.transaction.TransactionManager#commit()
      */
-    public void commit() throws TxException {
-        try {
-            delegate.commit();
-        } catch (HeuristicMixedException e) {
-            throw new TxException(e);
-        } catch (HeuristicRollbackException e) {
-            throw new TxException(e);
-        } catch (RollbackException e) {
-            throw new TxException(e);
-        } catch (SystemException e) {
-            throw new TxException(e);
-        }
+    public void commit() throws HeuristicMixedException, HeuristicRollbackException, RollbackException, SystemException {
+        delegate.commit();
     }
 
     /**
+     * @throws SystemException 
      * @see javax.transaction.TransactionManager#getStatus()
      */
-    public int getStatus() throws TxException {
-        try {
-            return delegate.getStatus();
-        } catch (SystemException e) {
-            throw new TxException(e);
-        }
+    public int getStatus() throws SystemException {
+        return delegate.getStatus();
     }
 
     /**
+     * @throws SystemException 
      * @see javax.transaction.TransactionManager#getTransaction()
      */
-    public Transaction getTransaction() throws TxException {
-        try {
-            return delegate.getTransaction();
-        } catch (SystemException e) {
-            throw new TxException(e);
-        }
+    public Transaction getTransaction() throws SystemException {
+        return delegate.getTransaction();
     }
 
     /**
+     * @throws SystemException 
+     * @throws InvalidTransactionException 
      * @see javax.transaction.TransactionManager#resume(javax.transaction.Transaction)
      */
-    public void resume(Transaction transaction) throws TxException {
-        try {
-            delegate.resume(transaction);
-        } catch (InvalidTransactionException e) {
-            throw new TxException(e);
-        } catch (SystemException e) {
-            throw new TxException(e);
-        }
+    public void resume(Transaction transaction) throws InvalidTransactionException, SystemException {
+        delegate.resume(transaction);
     }
 
     /**
+     * @throws SystemException  
      * @see javax.transaction.TransactionManager#rollback()
      */
-    public void rollback() throws TxException {
-        try {
-            delegate.rollback();
-        } catch (SecurityException e) {
-            throw new TxException(e);
-        } catch (SystemException e) {
-            throw new TxException(e);
-        }
+    public void rollback() throws SystemException {
+        delegate.rollback();
     }
 
     /**
+     * @throws SystemException 
      * @see javax.transaction.TransactionManager#setRollbackOnly()
      */
-    public void setRollbackOnly() throws TxException {
-        try {
-            delegate.setRollbackOnly();
-        } catch (SystemException e) {
-            throw new TxException(e);
-        }
+    public void setRollbackOnly() throws SystemException {
+        delegate.setRollbackOnly();
     }
 
     /**
+     * @throws SystemException 
      * @see javax.transaction.TransactionManager#setTransactionTimeout(int)
      */
-    public void setTransactionTimeout(int timeout) throws TxException {
-        try {
-            delegate.setTransactionTimeout(timeout);
-        } catch (SystemException e) {
-            throw new TxException(e);
-        }
+    public void setTransactionTimeout(int timeout) throws SystemException {
+        delegate.setTransactionTimeout(timeout);
     }
 
     /**
+     * @throws SystemException 
      * @see javax.transaction.TransactionManager#suspend()
      */
-    public Transaction suspend() throws TxException {
-        try {
-            return delegate.suspend();
-        } catch (SystemException e) {
-            throw new TxException(e);
-        }
+    public Transaction suspend() throws SystemException {
+        return delegate.suspend();
     }
 
 }

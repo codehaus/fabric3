@@ -26,6 +26,11 @@
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
            name="org.fabric3.runtime.webapp.System"
            autowire="true">
+           
+    <!-- Transaction manager -->
+    <component name="transactionManager">
+        <system:implementation.system class="org.fabric3.fabric.services.transaction.TransactionManagerProxy"/>
+    </component>
 
     <!-- include host services configuration -->
     <include name="org.fabric3.fabric.host.services" scdlResource="org/fabric3/fabric/hostServices.composite"/>

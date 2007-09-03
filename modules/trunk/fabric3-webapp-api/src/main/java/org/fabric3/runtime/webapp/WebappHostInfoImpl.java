@@ -21,6 +21,8 @@ package org.fabric3.runtime.webapp;
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
+import java.util.Properties;
+
 import javax.servlet.ServletContext;
 
 /**
@@ -56,7 +58,8 @@ public class WebappHostInfoImpl implements WebappHostInfo {
     }
 
     public String getProperty(String name, String defaultValue) {
-        return null;
+        String val = servletContext.getInitParameter(name);
+        return val == null ? defaultValue : val;
     }
 
     public URI getDomain() {
