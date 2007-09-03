@@ -20,6 +20,15 @@
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
            targetNamespace="org.codehaus.fabric3"
            name="CXFWebServicesBindingExtension">
+    <!--
+        Ws Wire Attacher
+        This must come first as it is responsible for initializing CXF's StAXUtil class
+        which caches the XMLInputFactory implementation from the TCCL.
+    -->
+    <component name="WsWireAttacher">
+        <system:implementation.system class="org.fabric3.binding.ws.wire.WsWireAttacher"/>
+        <property name="contextPath">/services/*</property>
+    </component>
 
     <!-- Ws Binding Loader -->
     <component name="WsBindingLoader">
@@ -29,12 +38,6 @@
     <!-- Ws Binding Generator -->
     <component name="WsBindingGenerator">
         <system:implementation.system class="org.fabric3.binding.ws.model.physical.WsBindingGenerator"/>
-    </component>
-
-    <!-- Ws Wire Attacher -->
-    <component name="WsWireAttacher">
-        <system:implementation.system class="org.fabric3.binding.ws.wire.WsWireAttacher"/>
-        <property name="contextPath">/services/*</property>
     </component>
 
     <!-- Feature -->

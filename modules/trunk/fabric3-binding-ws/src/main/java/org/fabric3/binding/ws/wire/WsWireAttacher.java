@@ -52,6 +52,25 @@ import org.fabric3.spi.wire.Wire;
 @EagerInit
 public class WsWireAttacher implements WireAttacher<WsWireSourceDefinition, WsWireTargetDefinition> {
 
+    /*
+         Force initialization of CXF's StAXUtil class using our classloader (which should also be the TCCL).
+         StAXUtil loads and caches an XmlInputFactory loaded from the TCCL.
+    */
+    static {
+
+        ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+        ClassLoader cl = WsWireAttacher.class.getClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(cl);
+            Class.forName("org.apache.cxf.tools.util.StAXUtil", true, cl);
+            Class.forName("org.apache.cxf.staxutils.StaxUtils", true, cl);
+        } catch (ClassNotFoundException e) {
+            throw new AssertionError();
+        } finally {
+            Thread.currentThread().setContextClassLoader(oldCl);
+        }
+    }
+
     /**
      * CXF Servlet that serves the request.
      */
