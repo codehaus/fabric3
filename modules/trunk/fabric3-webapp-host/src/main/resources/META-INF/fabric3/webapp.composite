@@ -74,6 +74,7 @@
 
     <!-- include deployment configuration -->
     <include name="org.fabric3.fabric.Deployment" scdlResource="org/fabric3/fabric/deployment.composite"/>
+    <include name="org.fabric3.fabric.Stores" scdlResource="org/fabric3/fabric/nonPersistentStore.composite"/>
     <include name="org.fabric3.fabric.ExtensionsDeployment" scdlResource="org/fabric3/fabric/extensionsDeployment.composite"/>
 
     <!-- include transform configuration -->
