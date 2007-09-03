@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
@@ -94,6 +93,9 @@ public class ArchiveStoreImpl implements ArchiveStore {
 
     @Init
     public void init() throws IOException {
+        if (!persistent) {
+            return;
+        }
         if (repository != null) {
             root = new File(repository + separator + "index" + separator);
         } else {
@@ -103,23 +105,9 @@ public class ArchiveStoreImpl implements ArchiveStore {
         if (!root.exists() || !this.root.isDirectory() || !root.canRead()) {
             throw new IOException("The repository location is not a directory: " + repository);
         }
-
-
-        if (!persistent && root.exists()) {
-            // remove any old contents of the directory
-            FileHelper.forceDelete(root);
-        }
-
         FileHelper.forceMkdir(root);
         if (!root.exists() || !this.root.isDirectory() || !root.canRead()) {
             throw new IOException("The repository location is not a directory: " + repository);
-        }
-    }
-
-    @Destroy
-    public void destroy() throws IOException {
-        if (!persistent && root.exists()) {
-            FileHelper.forceDelete(root);
         }
     }
 

@@ -32,16 +32,8 @@
     </component>
 
     <!-- Contribution Service -->
-    <component name="ContributionService" initLevel="90">
+    <component name="ContributionService">
         <system:implementation.system class="org.fabric3.fabric.services.contribution.ContributionServiceImpl"/>
-    </component>
-
-    <component name="ContributionStore" initLevel="40">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.ContributionStoreImpl"/>
-    </component>
-
-    <component name="MetadataStore" initLevel="40">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.MetaDataStoreImpl"/>
     </component>
 
     <component name="JarService">
@@ -121,12 +113,6 @@
     <component name="FileSystemResolver">
         <system:implementation.system
                 class="org.fabric3.fabric.services.contribution.FileSystemResolver"/>
-    </component>
-
-    <component name="DefinitionsContributionStore">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.ContributionStoreImpl"/>
-        <property name="storeId">definitions</property>
-        <property name="persistent">false</property>
     </component>
 
 </composite>
