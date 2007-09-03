@@ -27,7 +27,7 @@
 
     <reference name="HelloBurlapReference" promote="HelloClient/helloService">
         <interface.java interface="org.fabric3.sample.hello.HelloService"/>
-        <burlap:binding.burlap uri="http://localhost:8080/helloService"/>
+        <burlap:binding.burlap uri="http://localhost:8900/helloService"/>
     </reference>
     
     <component name="HelloTest">
