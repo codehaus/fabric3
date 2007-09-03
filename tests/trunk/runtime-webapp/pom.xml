@@ -83,7 +83,7 @@
                     <wait>false</wait>
                     <configuration>
                         <properties>
-                            <cargo.servlet.port>8088</cargo.servlet.port>
+                            <cargo.servlet.port>8900</cargo.servlet.port>
                         </properties>
                     </configuration>
                 </configuration>

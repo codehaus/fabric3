@@ -89,6 +89,12 @@
                             <version>0.2-SNAPSHOT</version>
                         </dependency>
                     </contributions>
+                    <properties>
+                        <property>
+                            <name>http.port</name>
+                            <value>8900</value>
+                        </property>
+                    </properties>
                 </configuration>
                 <executions>
                     <execution>

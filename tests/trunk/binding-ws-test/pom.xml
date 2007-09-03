@@ -131,6 +131,12 @@
                             <version>1.0.1</version>
                         </dependency>
                     </extensions>
+                    <properties>
+                        <property>
+                            <name>http.port</name>
+                            <value>8900</value>
+                        </property>
+                    </properties>
                 </configuration>
                 <executions>
                     <execution>

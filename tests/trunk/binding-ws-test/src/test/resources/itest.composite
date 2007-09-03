@@ -26,7 +26,7 @@
 
     <reference name="HelloWsReference" promote="HelloClient/helloService">
         <interface.java interface="org.fabric3.sample.hello.HelloService"/>
-        <binding.ws uri="http://localhost:8080/services/hello"/>
+        <binding.ws uri="http://localhost:8900/services/hello"/>
     </reference>
     
     <component name="HelloTest">

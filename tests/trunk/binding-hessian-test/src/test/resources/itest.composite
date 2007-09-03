@@ -27,7 +27,7 @@
 
     <reference name="HelloHessianReference" promote="HelloClient/helloService">
         <interface.java interface="org.fabric3.sample.hello.HelloService"/>
-        <hessian:binding.hessian uri="http://localhost:8080/helloService"/>
+        <hessian:binding.hessian uri="http://localhost:8900/helloService"/>
     </reference>
     
     <component name="HelloTest">
