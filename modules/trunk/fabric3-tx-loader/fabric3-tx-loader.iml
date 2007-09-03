@@ -9,12 +9,8 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="fabric3-extension" />
-    <orderEntry type="module" module-name="fabric3-spi" />
-    <orderEntry type="module" module-name="sca-spec" />
-    <orderEntry type="module" module-name="fabric3-scdl" />
-    <orderEntry type="library" name="cxf-rt-core-2.0-incubator-RC" level="application" />
-    <orderEntry type="library" name="cxf-rt-frontend-simple-2.0-incubator-RC" level="application" />
-    <orderEntry type="library" name="cxf-rt-transports-http-2.0-incubator-RC" level="application" />
+    <orderEntry type="library" name="geronimo-jta_1.0.1B_spec-1.0.1" level="application" />
+    <orderEntry type="library" name="stax-api-1.0.1" level="application" />
     <orderEntryProperties />
   </component>
 </module>
