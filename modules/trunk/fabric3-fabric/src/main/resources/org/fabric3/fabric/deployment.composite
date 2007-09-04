@@ -36,10 +36,6 @@
         <system:implementation.system class="org.fabric3.fabric.services.contribution.ContributionServiceImpl"/>
     </component>
 
-    <component name="JarService">
-        <system:implementation.system class="org.fabric3.fabric.services.archive.JarServiceImpl"/>
-    </component>
-
     <component name="ContributionProcessorRegistry">
         <system:implementation.system class="org.fabric3.fabric.services.contribution.ProcessorRegistryImpl"/>
     </component>
@@ -66,14 +62,6 @@
         <reference name="metaDataStore" target="MetadataStore"/>
     </component>
 
-    <component name="ClasspathProcessorRegistry">
-        <system:implementation.system
-                class="org.fabric3.fabric.services.contribution.ClasspathProcessorRegistryImpl"/>
-    </component>
-
-    <component name="JarClasspathProcessor">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.JarClasspathProcessor"/>
-    </component>
 
     <component name="ContributionElementLoader">
         <system:implementation.system
@@ -100,19 +88,5 @@
                 class="org.fabric3.fabric.services.contribution.manifest.JavaImportLoader"/>
     </component>
 
-    <component name="ArtifactResolverRegistry">
-        <system:implementation.system
-                class="org.fabric3.fabric.services.contribution.ArtifactResolverRegistryImpl"/>
-    </component>
-
-    <component name="FSArtifactLocationEncoder">
-        <system:implementation.system
-                class="org.fabric3.fabric.services.contribution.FSArtifactLocationEncoder"/>
-    </component>
-
-    <component name="FileSystemResolver">
-        <system:implementation.system
-                class="org.fabric3.fabric.services.contribution.FileSystemResolver"/>
-    </component>
-
+ 
 </composite>
