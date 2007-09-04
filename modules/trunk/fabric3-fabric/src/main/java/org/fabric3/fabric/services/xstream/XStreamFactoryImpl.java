@@ -1,7 +1,6 @@
 package org.fabric3.fabric.services.xstream;
 
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.StaxDriver;
 
 /**
  * Default implemenation of XStreamFactory. The factory may be configured with custom converters and drivers.
@@ -11,7 +10,7 @@ import com.thoughtworks.xstream.io.xml.StaxDriver;
 public class XStreamFactoryImpl implements XStreamFactory {
 
     public XStream createInstance() {
-        return new XStream(new StaxDriver());
+        return new XStream(new ClassLoaderStaxDriver(XStreamFactoryImpl.class.getClassLoader()));
     }
 
 }
