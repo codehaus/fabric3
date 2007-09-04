@@ -60,8 +60,12 @@
     <!-- Java implementation type -->
     <include name="org.fabric3.fabric.JavaImplementation" scdlResource="org/fabric3/fabric/javaImplementation.composite"/>
 
+    <!-- include policy configuration -->
+    <include name="org.fabric3.policy.Policy" scdlResource="org/fabric3/policy/policy.composite"/>
+
     <!-- include deployment configuration -->
     <include name="org.fabric3.fabric.Deployment" scdlResource="org/fabric3/fabric/deployment.composite"/>
+    <include name="org.fabric3.fabric.Stores" scdlResource="org/fabric3/fabric/persistentStore.composite"/>
 	 <include name="org.fabric3.fabric.ExtensionsDeployment" scdlResource="org/fabric3/fabric/extensionsDeployment.composite"/>
 
     <!-- include transform configuration -->
@@ -112,24 +116,6 @@
         <system:implementation.system class="org.fabric3.discovery.jxta.JxtaDiscoveryService"/>
     </component>
 
-    <!-- scanner infrastructure -->
-	     <component name="ContributionDirectoryScanner">
-        <system:implementation.system class="org.fabric3.scanner.scanner.ContributionDirectoryScanner"/>
-        <reference name="assembly" target="distributedAssembly"/>
-    </component>
-
-    <component name="FileSystemResourceFactoryRegistry">
-        <system:implementation.system class="org.fabric3.scanner.scanner.FileSystemResourceFactoryRegistryImpl"/>
-        <property name="path">target/deployables</property>
-    </component>
-
-    <component name="JarResourceFactory">
-        <system:implementation.system class="org.fabric3.scanner.scanner.factory.JarResourceFactory"/>
-    </component>
-    
-    <component name="ExplodedJarResourceFactory">
-        <system:implementation.system class="org.fabric3.scanner.scanner.factory.ExplodedJarResourceFactory"/>
-    </component>
 
 	 <!-- END the following entries will be loaded as normal extensions in the next release -->
 

@@ -34,80 +34,76 @@
             <outputDirectory>/</outputDirectory>
         </fileSet>
     </fileSets>        
-
     <dependencySets>
-		
         <!-- copy executable commands to the bin directory without version info -->
         <dependencySet>
             <includes>
-                <include>org.codehaus.fabric3.standalone:server</include>
+                <include>org.codehaus.fabric3.standalone:fabric3-standalone-server</include>
             </includes>
-            <excludes>
-                <exclude>org.codehaus.fabric3:fabric3-jmx</exclude>
-                <exclude>org.codehaus.fabric3.standalone:standalone-api</exclude>
-            </excludes>
             <outputDirectory>bin</outputDirectory>
-            <outputFileNameMapping>${artifactId}.${extension}</outputFileNameMapping>
+            <outputFileNameMapping>server.jar</outputFileNameMapping>
             <fileMode>0755</fileMode>
         </dependencySet>
-        
+        <dependencySet>
+            <includes>
+                <include>org.codehaus.fabric3.standalone:fabric3-standalone-shutdown</include>
+            </includes>
+            <outputDirectory>bin</outputDirectory>
+            <outputFileNameMapping>shutdown.jar</outputFileNameMapping>
+            <fileMode>0755</fileMode>
+        </dependencySet>
+
         <!-- copy dependencies used by the executable commands to the lib directory -->
         <dependencySet>
             <includes>
-                <include>org.codehaus.fabric3.standalone:standalone-api</include>
                 <include>org.codehaus.fabric3.spec:sca-api-r1.0</include>
                 <include>org.codehaus.fabric3:fabric3-api</include>
                 <include>org.codehaus.fabric3:fabric3-host-api</include>
-                <include>org.codehaus.fabric3:fabric3-jmx</include>
-                <include>org.codehaus.fabric3:fabric3-spi</include>
-                <include>org.codehaus.fabric3:fabric3-extension</include>
-                <include>org.apache.geronimo.specs:geronimo-j2ee-connector_1.5_spec</include>
-                <include>org.apache.tuscany:commonj-api_r1.1</include>
-                <include>javax.servlet:servlet-api</include>
-                <include>org.codehaus.woodstox:wstx-asl</include>
-                <include>stax:stax-api</include>
+                <include>org.codehaus.fabric3.standalone:fabric3-standalone-api</include>
             </includes>
             <outputDirectory>lib</outputDirectory>
-            <outputFileNameMapping>${artifactId}-${baseVersion}.${extension}</outputFileNameMapping>
         </dependencySet>
 
-        <!-- copy boot dependencies to controller profile -->
+        <!-- copy boot dependencies to standalone profile -->
         <dependencySet>
             <includes>
-                <include>org.codehaus.fabric3:fabric3-loader</include>  
+                <include>org.codehaus.fabric3:fabric3-scdl</include>
+                <include>org.codehaus.fabric3:fabric3-spi</include>
+                <include>org.codehaus.fabric3:fabric3-jmx</include>
+                <include>org.codehaus.fabric3:fabric3-extension</include>
+                <include>org.codehaus.fabric3:fabric3-policy-spi</include>
+                <include>org.codehaus.fabric3:fabric3-pojo</include>
+                <include>org.codehaus.fabric3:fabric3-transform</include>
+                <include>org.codehaus.fabric3:fabric3-loader</include>
+                <include>org.codehaus.fabric3:fabric3-policy</include>
                 <include>org.codehaus.fabric3:fabric3-fabric</include>
-                <include>org.codehaus.fabric3.standalone:standalone-host</include>
-                <include>javax.activation:activation</include>
+                <include>org.codehaus.fabric3.standalone:fabric3-standalone-host</include>
+                <include>javax.servlet:servlet-api</include>
+                <include>stax:stax-api</include>
+                <include>org.codehaus.woodstox:wstx-asl</include>
+                <include>com.thoughtworks.xstream:xstream</include>
+                <include>org.apache.tuscany:commonj-api_r1.1</include>
+   				 <include>bouncycastle:bcprov-jdk14</include>
+   				 <include>org.jxta.platform:jxta</include>
+   				 <include>log4j:log4j</include>
    				 <include>org.codehaus.fabric3:fabric3-jxta</include>
 					 <include>org.codehaus.fabric3:fabric3-discovery-jxta</include>
 					 <include>org.codehaus.fabric3:fabric3-messaging-jxta</include>
-   				 <include>org.codehaus.fabric3:fabric3-contribution-scanner-spi</include>
-   				 <include>org.codehaus.fabric3:fabric3-contribution-scanner</include>
+                <include>javax.activation:activation</include>
+                <include>org.codehaus.fabric3:fabric3-contribution-scanner-spi</include>
             </includes>
-            <excludes>
-					 <exclude>org.codehaus.fabric3.standalone:standalone-api</exclude>
-                <exclude>org.codehaus.fabric3:fabric3-api</exclude>
-                <exclude>org.codehaus.fabric3:fabric3-host-api</exclude>
-                <exclude>org.codehaus.fabric3:fabric3-spi</exclude>
-                <exclude>org.codehaus.fabric3:fabric3-extension</exclude>
-                <exclude>org.apache.geronimo.specs:geronimo-j2ee-connector_1.5_spec</exclude>
-                <exclude>org.apache.tuscany:commonj-api_r1.1</exclude>
-            </excludes>
             <outputDirectory>profiles/controller/boot</outputDirectory>
         </dependencySet>
 
         <!-- copy extension modules to the extensions directory-->
         <dependencySet>
             <includes>
-	             <include>org.codehaus.fabric3:fabric3-console</include>
+                <include>org.codehaus.fabric3:fabric3-console</include>
                 <include>org.codehaus.fabric3:fabric3-jetty</include>
+                <include>org.codehaus.fabric3:fabric3-contribution-scanner</include>
             </includes>
-				<excludes>
-					<exclude>org.mortbay.jetty:jetty</exclude>
-				</excludes>
             <outputDirectory>extensions</outputDirectory>
         </dependencySet>
-
     </dependencySets>
     
 </assembly>
