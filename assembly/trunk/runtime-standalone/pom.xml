@@ -77,11 +77,6 @@
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-contribution-scanner</artifactId>
-            <version>0.2-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-contribution-scanner-spi</artifactId>
             <version>0.2-SNAPSHOT</version>
         </dependency>
@@ -107,6 +102,12 @@
         </dependency>
 
         <!-- extensions -->
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-contribution-scanner</artifactId>
+            <version>0.2-SNAPSHOT</version>
+        </dependency>
+
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-jetty</artifactId>
