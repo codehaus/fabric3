@@ -36,7 +36,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.StaxDriver;
 import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
@@ -110,7 +109,8 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
         this.contributionService = contributionService;
         this.assembly = assembly;
         this.eventService = eventService;
-        this.xstream = new XStream(new StaxDriver());
+        ClassLoaderStaxDriver driver = new ClassLoaderStaxDriver(this.getClass().getClassLoader());
+        this.xstream = new XStream(driver);
         this.monitor = factory.getMonitor(ScannerMonitor.class);
     }
 
@@ -337,7 +337,8 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
         try {
             os = new BufferedOutputStream(new FileOutputStream(processedIndex));
             xstream.toXML(processed, os);
-
+        }catch(Error e) {
+            e.printStackTrace();
         } finally {
             if (os != null) {
                 try {
