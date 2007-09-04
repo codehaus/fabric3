@@ -48,8 +48,16 @@ public class ClassLoaderStaxDriver extends StaxDriver {
     }
 
     public XMLOutputFactory getOutputFactory() {
+        // set the classloader to load STaX in on the TCCL as XMLOutputFactory.newInstance(String, ClassLoader)
+        // mistakenly returns an XMLInputFactory in STaX 1.0 and Sun has decided not to fix it in JDK 6.
         if (outputFactory == null) {
-            outputFactory = XMLOutputFactory.newInstance("javax.xml.stream.XMLOutputFactory", classLoader);
+            ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+            try {
+                Thread.currentThread().setContextClassLoader(classLoader);
+                outputFactory = XMLOutputFactory.newInstance();
+            } finally {
+                Thread.currentThread().setContextClassLoader(oldCl);
+            }
         }
         return outputFactory;
     }
