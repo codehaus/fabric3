@@ -33,7 +33,7 @@ public interface ContributionProcessor {
      *
      * @return the content type this implementation handles
      */
-    public abstract String getContentType();
+    public abstract String[] getContentTypes();
 
     /**
      * Process a contribution or an artifact in the contribution from the input stream. The processor might add

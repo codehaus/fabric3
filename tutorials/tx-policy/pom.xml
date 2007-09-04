@@ -39,7 +39,7 @@
 
         <dependency>
             <groupId>org.codehaus.fabric3.webapp</groupId>
-            <artifactId>webapp-api</artifactId>
+            <artifactId>fabric3-webapp-api</artifactId>
             <version>0.2-SNAPSHOT</version>
         </dependency>
 
@@ -50,6 +50,9 @@
             <scope>provided</scope>
         </dependency>
 
+    </dependencies>
+
+    <build>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
@@ -69,11 +72,12 @@
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-tx</artifactId>
-                            <version>0.2-SNAPSHOT</version>
+                            <version>0.1-SNAPSHOT</version>
                         </dependency> 
                     </extensions>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+
 </project>

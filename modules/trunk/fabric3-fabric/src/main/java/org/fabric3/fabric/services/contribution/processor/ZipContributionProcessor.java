@@ -27,6 +27,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
+import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -83,8 +84,8 @@ public class ZipContributionProcessor extends ArchiveContributionProcessor imple
         this.contentTypeResolver = contentTypeResolver;
     }
 
-    public String getContentType() {
-        return Constants.ZIP_CONTENT_TYPE;
+    public String[] getContentTypes() {
+        return new String[] {Constants.ZIP_CONTENT_TYPE, "application/octet-stream"};
     }
 
     protected void processResources(Contribution contribution) throws ContributionException {

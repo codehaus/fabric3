@@ -70,8 +70,8 @@ public class ExplodedArchiveContributionProcessor extends ArchiveContributionPro
         this.xmlFactory = xmlFactory;
     }
 
-    public String getContentType() {
-        return Constants.FOLDER_CONTENT_TYPE;
+    public String[] getContentTypes() {
+        return new String[] {Constants.FOLDER_CONTENT_TYPE};
     }
 
     protected List<URL> createClasspath(Contribution contribution) throws ContributionException {

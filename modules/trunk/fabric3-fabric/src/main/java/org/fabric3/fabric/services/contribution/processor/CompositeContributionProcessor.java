@@ -42,8 +42,8 @@ public class CompositeContributionProcessor extends ContributionProcessorExtensi
         this.xmlFactory = XMLInputFactory.newInstance("javax.xml.stream.XMLInputFactory", getClass().getClassLoader());
     }
 
-    public String getContentType() {
-        return Constants.COMPOSITE_CONTENT_TYPE;
+    public String[] getContentTypes() {
+        return new String[] {Constants.COMPOSITE_CONTENT_TYPE};
     }
 
 

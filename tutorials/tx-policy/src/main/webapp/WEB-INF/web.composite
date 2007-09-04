@@ -21,26 +21,19 @@
            xmlns:fabric3="http://fabric3.org/xmlns/sca/2.0-alpha"
            name="Demo Web Client">
 
-    <component name="calculator">
+    <component name="catalogWebapp">
         <fabric3:webapp>
-            <reference name="calculatorReference" interface="calculator.CalculatorService"/>
+            <reference name="catalogReference" interface="tx.catalogService" target="catalog"/>
         </fabric3:webapp>
     </component>
 
-    <reference name="calculatorReference" promote="calculator/calculatorReference">
-        <interface.java interface="calculator.CalculatorService"/>
-        <!-- Insert a binding definition -->
+    <reference name="catalogReference" promote="catalogWebapp/catalogReference" target="catalog">
+        <interface.java interface="tx.catalogService"/>
     </reference>
 
-    <!--
-        Hessian Binding:
-        <hessian:binding.hessian uri="http://localhost:8101/calculator"/>
-
-        Hessian namespace:
-        xmlns:hessian="http://www.fabric3.org/binding/hessian/0.1"
-
-        Web Services Binding:
-        <binding.ws uri="http://localhost:8101/services/calculator"/>
-    -->
+    <component name="catalog">
+        <implementation.java class="tx.CatalogServiceImpl" requires="managedTransaction"/>
+        <property name="dataSourceName">productDb</property>
+    </component>
     
 </composite>

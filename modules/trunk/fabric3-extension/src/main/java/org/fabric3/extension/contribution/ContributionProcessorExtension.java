@@ -61,7 +61,9 @@ public abstract class ContributionProcessorExtension implements ContributionProc
      */
     @Destroy
     public void stop() {
-        registry.unregisterContributionProcessor(this.getContentType());
+        for(String contentType : getContentTypes()) {
+            registry.unregisterContributionProcessor(contentType);
+        }
     }
 
 }

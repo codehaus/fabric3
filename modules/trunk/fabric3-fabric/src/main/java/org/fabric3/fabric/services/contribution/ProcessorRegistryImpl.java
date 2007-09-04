@@ -50,7 +50,9 @@ public class ProcessorRegistryImpl implements ProcessorRegistry {
     }
 
     public void register(ContributionProcessor processor) {
-        contributionProcessorCache.put(processor.getContentType(), processor);
+        for(String contentType : processor.getContentTypes()) {
+            contributionProcessorCache.put(contentType, processor);
+        }
     }
 
     public void unregisterContributionProcessor(String contentType) {

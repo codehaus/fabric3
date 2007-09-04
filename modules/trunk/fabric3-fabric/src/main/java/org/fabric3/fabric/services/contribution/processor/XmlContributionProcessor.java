@@ -56,8 +56,8 @@ public class XmlContributionProcessor implements ContributionProcessor, XmlProce
         processorRegistry.register(this);
     }
 
-    public String getContentType() {
-        return "application/xml";
+    public String[] getContentTypes() {
+        return new String[] {"application/xml"};
     }
 
     public void register(XmlProcessor processor) {

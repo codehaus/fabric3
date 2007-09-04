@@ -16,25 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
+package tx;
 
-package org.fabric3.fabric.services.contribution.processor;
+import java.sql.SQLException;
 
-import java.net.URI;
-
-import org.fabric3.extension.contribution.ContributionProcessorExtension;
-import org.fabric3.host.contribution.Constants;
-import org.fabric3.host.contribution.ContributionException;
-import org.fabric3.spi.services.contribution.Contribution;
-import org.fabric3.spi.services.contribution.ContributionProcessor;
-
-public class JavaContributionProcessor extends ContributionProcessorExtension implements ContributionProcessor {
-
-    public String[] getContentTypes() {
-        return new String[] {Constants.JAVA_CONTENT_TYPE};
-    }
-
-    public void processContent(Contribution contribution, URI artifactURI) throws ContributionException {
-        throw new UnsupportedOperationException();
-    }
+/**
+ * @version $Revision$ $Date$
+ */
+public interface CatalogService {
+    
+    void addProduct(String name, String description) throws SQLException;
 
 }

@@ -72,8 +72,8 @@ public class DefinitionsContributionProcessor extends ContributionProcessorExten
     /**
      * @see org.fabric3.spi.services.contribution.ContributionProcessor#getContentType()
      */
-    public String getContentType() {
-        return Constants.DEFINITIONS_TYPE;
+    public String[] getContentTypes() {
+        return new String[] {Constants.DEFINITIONS_TYPE};
     }
 
     /**

@@ -30,11 +30,13 @@
     </listener>
 
     <context-param>
-        <param-name>fabric3.systemScdlPath</param-name>
-    </context-param>
-    <context-param>
         <param-name>fabric3.component</param-name>
-        <param-value>calculator</param-value>
+        <param-value>catalogWebapp</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>fabric3.jta.txm.jndi.name</param-name>
+        <param-value>java:/TransactionManager</param-value>
     </context-param>
 
 </web-app>
