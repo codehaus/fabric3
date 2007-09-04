@@ -87,7 +87,6 @@
                 <include>org.apache.tuscany:commonj-api_r1.1</include>
                 <include>javax.activation:activation</include>
                 <include>org.codehaus.fabric3:fabric3-contribution-scanner-spi</include>
-                <include>org.codehaus.fabric3:fabric3-contribution-scanner</include>
             </includes>
             <outputDirectory>profiles/standalone/boot</outputDirectory>
         </dependencySet>
@@ -97,6 +96,7 @@
             <includes>
                 <include>org.codehaus.fabric3:fabric3-console</include>
                 <include>org.codehaus.fabric3:fabric3-jetty</include>
+                <include>org.codehaus.fabric3:fabric3-contribution-scanner</include>
             </includes>
             <outputDirectory>extensions</outputDirectory>
         </dependencySet>
