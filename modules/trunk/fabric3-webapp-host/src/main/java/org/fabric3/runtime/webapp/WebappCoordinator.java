@@ -33,6 +33,7 @@ import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.DEFINITIONS_DEPLOYER;
 import static org.fabric3.fabric.runtime.ComponentNames.DISCOVERY_SERVICE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
@@ -53,6 +54,8 @@ import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.services.definitions.DefinitionActivationException;
+import org.fabric3.spi.services.definitions.DefinitionsDeployer;
 import org.fabric3.spi.services.discovery.DiscoveryException;
 import org.fabric3.spi.services.discovery.DiscoveryService;
 import org.fabric3.spi.services.work.WorkScheduler;
@@ -128,7 +131,13 @@ public class WebappCoordinator implements RuntimeLifecycleCoordinator<WebappRunt
             state = State.ERROR;
             throw new InitializationException("WorkScheduler not found", WORK_SCHEDULER_URI.toString());
         }
-        includeExtensions();
+
+        try {
+            includeExtensions();
+        } catch (DefinitionActivationException e) {
+            throw new InitializationException(e);
+        }
+        
         state = State.INITIALIZED;
 
     }
@@ -241,7 +250,7 @@ public class WebappCoordinator implements RuntimeLifecycleCoordinator<WebappRunt
      *
      * @throws InitializationException if an error occurs included the extensions
      */
-    private void includeExtensions() throws InitializationException {
+    private void includeExtensions() throws InitializationException, DefinitionActivationException {
         ServletContext context = runtime.getHostInfo().getServletContext();
         Set paths = context.getResourcePaths(EXTENSIONS_DIR);
         if (paths == null) {
@@ -275,6 +284,9 @@ public class WebappCoordinator implements RuntimeLifecycleCoordinator<WebappRunt
 
             }
             runtime.includeExtensionContributions(contributionUris);
+            DefinitionsDeployer definitionsDeployer =
+                runtime.getSystemComponent(DefinitionsDeployer.class, DEFINITIONS_DEPLOYER);
+            definitionsDeployer.activateDefinitions(contributionUris);
         }
     }
 
