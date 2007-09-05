@@ -16,7 +16,6 @@
  */
 package org.fabric3.fabric.services.contribution;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -39,15 +38,15 @@ public class ClasspathProcessorRegistryImpl implements ClasspathProcessorRegistr
         processors.remove(processor);
     }
 
-    public List<URL> process(File file) throws IOException {
+    public List<URL> process(URL url) throws IOException {
         for (ClasspathProcessor processor : processors) {
-            if (processor.canProcess(file)) {
-                return processor.process(file);
+            if (processor.canProcess(url)) {
+                return processor.process(url);
             }
         }
         // artifact does not need to be expanded, just return its base url
         List<URL> classpath = new ArrayList<URL>();
-        classpath.add(file.toURI().toURL());
+        classpath.add(url);
         return classpath;
     }
 }

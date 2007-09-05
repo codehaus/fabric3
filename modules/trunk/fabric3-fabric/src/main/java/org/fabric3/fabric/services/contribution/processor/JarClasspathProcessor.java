@@ -56,17 +56,20 @@ public class JarClasspathProcessor implements ClasspathProcessor {
         registry.register(this);
     }
 
-    public boolean canProcess(File file) {
-        return !file.isDirectory() && (file.getName().endsWith(".jar") || file.getName().endsWith(".zip"));
+    public boolean canProcess(URL url) {
+        String name = url.getFile().toLowerCase();
+        return name.endsWith(".jar") || name.endsWith(".zip");
     }
 
-    public List<URL> process(File jarFile) throws IOException {
+    public List<URL> process(URL url) throws IOException {
         List<URL> classpath = new ArrayList<URL>();
         // add the the jar itself to the classpath
-        classpath.add(jarFile.toURI().toURL());
-        File expandedDir = generateTempDir(jarFile);
-        // expand contents of the lib directory (if it exists) 
-        jarService.expand(jarFile, expandedDir, true);
+        classpath.add(url);
+
+        // expand contents of the lib directory (if it exists) and add the expanded content
+        String name = url.getFile();
+        File expandedDir = generateTempDir(name);
+        jarService.expand(url, expandedDir, true);
         File libDir = new File(expandedDir, "META-INF/lib");
         File[] libraries = libDir.listFiles(new FilenameFilter() {
             public boolean accept(File dir, String name) {
@@ -81,11 +84,11 @@ public class JarClasspathProcessor implements ClasspathProcessor {
         return classpath;
     }
 
-    private File generateTempDir(File jarFile) {
-        File expandedDir = new File(tempDir, jarFile.getName());
+    private File generateTempDir(String name) {
+        File expandedDir = new File(tempDir, name);
         int i = 1;
         while (expandedDir.exists()) {
-            expandedDir = new File(tempDir, jarFile.getName() + String.valueOf(i));
+            expandedDir = new File(tempDir, name + String.valueOf(i));
             ++i;
         }
         return expandedDir;

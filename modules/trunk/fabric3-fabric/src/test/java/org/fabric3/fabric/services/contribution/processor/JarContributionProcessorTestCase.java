@@ -1,6 +1,5 @@
 package org.fabric3.fabric.services.contribution.processor;
 
-import java.io.File;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
@@ -63,7 +62,7 @@ public class JarContributionProcessorTestCase extends TestCase {
         List<URL> urls = new ArrayList<URL>();
         urls.add(location);
         ClasspathProcessorRegistry registry = EasyMock.createMock(ClasspathProcessorRegistry.class);
-        EasyMock.expect(registry.process(EasyMock.isA(File.class))).andReturn(urls);
+        EasyMock.expect(registry.process(EasyMock.isA(URL.class))).andReturn(urls);
         EasyMock.replay(registry);
 
         ArtifactLocationEncoder encoder = EasyMock.createMock(ArtifactLocationEncoder.class);

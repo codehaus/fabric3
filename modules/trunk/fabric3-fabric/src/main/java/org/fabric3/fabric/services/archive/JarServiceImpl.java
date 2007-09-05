@@ -19,9 +19,9 @@
 package org.fabric3.fabric.services.archive;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
@@ -34,8 +34,8 @@ import org.fabric3.fabric.util.IOHelper;
  */
 public class JarServiceImpl implements JarService {
 
-    public void expand(File jar, File expandDirectory, boolean deleteOnExit) throws IOException {
-        JarInputStream stream = new JarInputStream(new FileInputStream(jar));
+    public void expand(URL jar, File expandDirectory, boolean deleteOnExit) throws IOException {
+        JarInputStream stream = new JarInputStream(jar.openStream());
         JarEntry entry;
         while ((entry = stream.getNextJarEntry()) != null) {
             String path = entry.getName();

@@ -16,7 +16,6 @@
  */
 package org.fabric3.spi.services.contribution;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -33,18 +32,18 @@ public interface ClasspathProcessor {
     /**
      * Returns true if the processor can introspect the given archive
      *
-     * @param file a pointer to the archive
+     * @param url the location of the archive
      * @return true if the processor can introspect the archive
      */
-    public boolean canProcess(File file);
+    public boolean canProcess(URL url);
 
     /**
      * Constructs the classpath by introspecting the archive
      *
-     * @param file a pointer to the archive
+     * @param url the location of the archive
      * @return the classpath
      * @throws IOException if an error occurs during introspection
      */
-    public List<URL> process(File file) throws IOException;
+    public List<URL> process(URL url) throws IOException;
 
 }

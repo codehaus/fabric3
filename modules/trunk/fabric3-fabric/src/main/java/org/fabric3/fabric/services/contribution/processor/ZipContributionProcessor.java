@@ -19,7 +19,6 @@
 
 package org.fabric3.fabric.services.contribution.processor;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -159,7 +158,7 @@ public class ZipContributionProcessor extends ArchiveContributionProcessor imple
 
     protected List<URL> createClasspath(Contribution contribution) throws ContributionException {
         try {
-            return classpathProcessorRegistry.process(new File(contribution.getLocation().getFile()));
+            return classpathProcessorRegistry.process(contribution.getLocation());
         } catch (IOException e) {
             throw new ContributionException(e);
         }

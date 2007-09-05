@@ -16,7 +16,6 @@
  */
 package org.fabric3.fabric.classloader;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
@@ -129,8 +128,7 @@ public class ClassLoaderBuilder implements ResourceContainerBuilder<PhysicalClas
                     // resolve the remote artifact URL and add it to the classloader
                     URL resolvedUrl = artifactResolverRegistry.resolve(url);
                     // introspect and expand if necessary
-                    File file = new File(resolvedUrl.getFile());
-                    classpath.addAll(classpathProcessorRegistry.process(file));
+                    classpath.addAll(classpathProcessorRegistry.process(resolvedUrl));
                 } catch (ResolutionException e) {
                     throw new ClassLoaderBuilderException("Error resolving artifact", e);
                 } catch (IOException e) {
@@ -157,8 +155,7 @@ public class ClassLoaderBuilder implements ResourceContainerBuilder<PhysicalClas
                 // resolve the remote artifact URLs and cache them locally
                 URL resolvedUrl = artifactResolverRegistry.resolve(url);
                 // introspect and expand if necessary
-                File file = new File(resolvedUrl.getFile());
-                classpath.addAll(classpathProcessorRegistry.process(file));
+                classpath.addAll(classpathProcessorRegistry.process(resolvedUrl));
             } catch (ResolutionException e) {
                 throw new ClassLoaderBuilderException("Error resolving artifact", e);
             } catch (IOException e) {

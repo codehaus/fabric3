@@ -18,6 +18,7 @@ package org.fabric3.fabric.services.archive;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 /**
  * Service for Jar file operations
@@ -34,6 +35,6 @@ public interface JarService {
      * @param deleteOnExit true if the jar should be deleted when the runtime shutsdown
      * @throws IOException if an error occurs expanding the jar
      */
-    void expand(File jar, File directory, boolean deleteOnExit) throws IOException;
+    void expand(URL jar, File directory, boolean deleteOnExit) throws IOException;
 
 }

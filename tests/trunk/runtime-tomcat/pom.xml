@@ -83,6 +83,15 @@
                 </executions>
                 <configuration>
                     <runTimeVersion>${runtimeVersion}</runTimeVersion>
+<!--
+                    <extensions>
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-groovy</artifactId>
+                            <version>${runtimeVersion}</version>
+                        </dependency>
+                    </extensions>
+-->
                 </configuration>
             </plugin>
 

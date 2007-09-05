@@ -358,7 +358,7 @@
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/policy-test/policy-test.iml" filepath="$PROJECT_DIR$/tests/trunk/policy-test/policy-test.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/assembly/trunk/runtime-development/runtime-development.iml" filepath="$PROJECT_DIR$/assembly/trunk/runtime-development/runtime-development.iml" />
       <module fileurl="file://$PROJECT_DIR$/assembly/trunk/runtime-standalone/runtime-standalone.iml" filepath="$PROJECT_DIR$/assembly/trunk/runtime-standalone/runtime-standalone.iml" />
-      <module fileurl="file://$PROJECT_DIR$/tests/trunk/runtime-tomcat/runtime-tomcat.iml" filepath="$PROJECT_DIR$/tests/trunk/runtime-tomcat/runtime-tomcat.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tests/trunk/runtime-tomcat/runtime-tomcat.iml" filepath="$PROJECT_DIR$/tests/trunk/runtime-tomcat/runtime-tomcat.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/runtime-webapp/runtime-webapp.iml" filepath="$PROJECT_DIR$/tests/trunk/runtime-webapp/runtime-webapp.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/spec/trunk/sca-spec.iml" filepath="$PROJECT_DIR$/spec/trunk/sca-spec.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/groovy/test-groovy.iml" filepath="$PROJECT_DIR$/tests/trunk/groovy/test-groovy.iml" group="tests" />

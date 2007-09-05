@@ -16,7 +16,6 @@
  */
 package org.fabric3.spi.services.contribution;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -43,11 +42,11 @@ public interface ClasspathProcessorRegistry {
     void unregister(ClasspathProcessor processor);
 
     /**
-     * Processes the given file
+     * Processes the given url
      *
-     * @param file the file to process
+     * @param url the url to process
      * @return the classpath
-     * @throws IOException if an error occurs processing the file
+     * @throws IOException if an error occurs processing the url
      */
-    List<URL> process(File file) throws IOException;
+    List<URL> process(URL url) throws IOException;
 }
