@@ -83,7 +83,7 @@
                 </executions>
                 <configuration>
                     <runTimeVersion>${runtimeVersion}</runTimeVersion>
-<!--
+                    <!-- include the Groovy extension to verify extensions are handled correctly -->
                     <extensions>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
@@ -91,7 +91,6 @@
                             <version>${runtimeVersion}</version>
                         </dependency>
                     </extensions>
--->
                 </configuration>
             </plugin>
 
