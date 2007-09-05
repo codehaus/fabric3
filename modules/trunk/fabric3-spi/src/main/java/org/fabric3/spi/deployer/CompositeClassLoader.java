@@ -41,6 +41,7 @@ public class CompositeClassLoader extends URLClassLoader {
     private static final URL[] NOURLS = {};
 
     private final URI name;
+    private final ClassLoader parent;
     private final List<ClassLoader> parents = new CopyOnWriteArrayList<ClassLoader>();
 
     /**
@@ -61,11 +62,9 @@ public class CompositeClassLoader extends URLClassLoader {
      * @param parent the initial parent
      */
     public CompositeClassLoader(URI name, URL[] urls, ClassLoader parent) {
-        super(urls);
+        super(urls, parent);
         this.name = name;
-        if (parent != null) {
-            parents.add(parent);
-        }
+        this.parent = parent;
     }
 
 
@@ -113,33 +112,34 @@ public class CompositeClassLoader extends URLClassLoader {
     protected synchronized Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
         // look for already loaded classes
         Class clazz = findLoadedClass(name);
-        if (clazz != null) {
-            if (resolve) {
-                resolveClass(clazz);
-            }
-            return clazz;
-        }
-
-        // look in our parents
-        for (ClassLoader parent : parents) {
+        if (clazz == null) {
             try {
-                clazz = parent.loadClass(name);
-                if (resolve) {
-                    resolveClass(clazz);
+                // look in the primary parent
+                try {
+                    clazz = this.parent.loadClass(name);
+                } catch (ClassNotFoundException e) {
+                    // continue
                 }
-                return clazz;
+                if (clazz == null) {
+                    // look in our parents
+                    for (ClassLoader parent : parents) {
+                        try {
+                            clazz = parent.loadClass(name);
+                            break;
+                        } catch (ClassNotFoundException e) {
+                            continue;
+                        }
+                    }
+                }
+                // look in our classpath
+                if (clazz == null) {
+                    clazz = findClass(name);
+                }
+            } catch (NoClassDefFoundError e) {
+                throw e;
             } catch (ClassNotFoundException e) {
-                continue;
+                throw e;
             }
-        }
-
-        // look in our classpath
-        try {
-            clazz = findClass(name);
-        } catch (NoClassDefFoundError e) {
-            throw e;
-        } catch (ClassNotFoundException e) {
-            throw e;
         }
         if (resolve) {
             resolveClass(clazz);
