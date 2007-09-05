@@ -36,12 +36,11 @@
             <artifactId>fabric3-extension</artifactId>
             <version>0.2-SNAPSHOT</version>
         </dependency>
-
+        
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-tx-loader</artifactId>
             <version>0.1-SNAPSHOT</version>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>

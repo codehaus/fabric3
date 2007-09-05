@@ -22,13 +22,13 @@
            name="Demo Web Client">
 
     <component name="catalogWebapp">
-        <fabric3:webapp>
+        <fabric3:web>
             <reference name="catalogReference" interface="tx.catalogService" target="catalog"/>
-        </fabric3:webapp>
+        </fabric3:web>
     </component>
 
     <reference name="catalogReference" promote="catalogWebapp/catalogReference" target="catalog">
-        <interface.java interface="tx.catalogService"/>
+        <interface.java interface="tx.CatalogService"/>
     </reference>
 
     <component name="catalog">

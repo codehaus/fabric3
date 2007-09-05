@@ -120,7 +120,7 @@ public class TransactionManagerProxy implements TransactionManager {
             env.put(Context.INITIAL_CONTEXT_FACTORY, initialContextFactory);
         }
         
-        if(jndiName != null) {
+        if(jndiName == null) {
             jndiName = hostInfo.getProperty(TXM_JNDI_NAME, "javax/transaction/TransactionManager");
         }
         Context context = null;
