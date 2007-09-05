@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with this work for information
+ regarding copyright ownership.  This file is licensed
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
+<project>
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.codehaus.fabric3</groupId>
+        <artifactId>fabric</artifactId>
+        <version>3</version>
+    </parent>
+    <groupId>org.codehaus.fabric3.tests</groupId>
+    <artifactId>runtime-tomcat</artifactId>
+    <version>0.1-SNAPSHOT</version>
+    <packaging>war</packaging>
+    <name>Fabric3 Webapp Tomcat Smoketest</name>
+    <description>Fabric3 Webapp Tomcat Smoketest.</description>
+
+    <properties>
+        <runtimeVersion>0.2-SNAPSHOT</runtimeVersion>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.codehaus.fabric3.webapp</groupId>
+            <artifactId>fabric3-webapp-api</artifactId>
+            <version>${runtimeVersion}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.4</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- JavaEE APIs needed by Fabric3 Runtime but not supplied by Tomcat -->
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <version>1.1</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-jta_1.0.1B_spec</artifactId>
+            <version>1.1.1</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>${artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.fabric3</groupId>
+                <artifactId>fabric3-webapp-plugin</artifactId>
+                <version>0.2-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <id>fabric3-war</id>
+                        <goals>
+                            <goal>fabric3-war</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <runTimeVersion>${runtimeVersion}</runTimeVersion>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.cargo</groupId>
+                <artifactId>cargo-maven2-plugin</artifactId>
+                <configuration>
+                    <container>
+                        <containerId>tomcat5x</containerId>
+                        <zipUrlInstaller>
+                            <url>http://www.apache.org/dist/jakarta/tomcat-5/v5.0.30/bin/jakarta-tomcat-5.0.30.zip</url>
+                            <installDir>${project.build.directory}/install</installDir>
+                        </zipUrlInstaller>
+                    </container>
+                    <wait>false</wait>
+                    <configuration>
+                        <home>${project.build.directory}/tomcat5x</home>
+                        <properties>
+                            <cargo.servlet.port>8900</cargo.servlet.port>
+                        </properties>
+                    </configuration>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>start-container</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>start</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>stop-container</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>stop</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>**/SmokeTest*.java</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
