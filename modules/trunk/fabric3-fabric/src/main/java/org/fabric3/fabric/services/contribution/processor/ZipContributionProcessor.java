@@ -20,23 +20,18 @@
 package org.fabric3.fabric.services.contribution.processor;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
-import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.Constants;
@@ -61,7 +56,6 @@ import org.fabric3.spi.services.contribution.Resource;
  * Introspects a Zip-based contribution, delegating to ResourceProcessors for handling leaf-level children.
  */
 public class ZipContributionProcessor extends ArchiveContributionProcessor implements ContributionProcessor {
-    public static final QName COMPOSITE = new QName(SCA_NS, "composite");
     private final LoaderRegistry loaderRegistry;
     private final XMLInputFactory xmlFactory;
     private final ClasspathProcessorRegistry classpathProcessorRegistry;
@@ -128,23 +122,18 @@ public class ZipContributionProcessor extends ArchiveContributionProcessor imple
     }
 
     protected void processManifest(Contribution contribution) throws ContributionException {
-        ZipFile zip = null;
         XMLStreamReader reader = null;
         try {
             URL sourceUrl = contribution.getLocation();
+            URL manifestURL = new URL("jar:" + sourceUrl.toExternalForm() + "!/META-INF/sca-contribution.xml");
+            InputStream stream;
             try {
-                zip = new ZipFile(new File(sourceUrl.toURI()));
-            } catch(URISyntaxException e) {
-                zip = new ZipFile(new File(sourceUrl.getPath()));
-            }
-            
-            ZipEntry entry = zip.getEntry("META-INF/sca-contribution.xml");
-            if (entry == null) {
+                stream = manifestURL.openStream();
+            } catch (FileNotFoundException e) {
                 ContributionManifest manifest = new ContributionManifest();
                 contribution.setManifest(manifest);
                 return;
             }
-            InputStream stream = zip.getInputStream(entry);
             reader = xmlFactory.createXMLStreamReader(stream);
             reader.nextTag();
             LoaderContext context = new LoaderContextImpl(getClass().getClassLoader(), null);
@@ -161,15 +150,6 @@ public class ZipContributionProcessor extends ArchiveContributionProcessor imple
                 try {
                     reader.close();
                 } catch (XMLStreamException e) {
-                    // TODO log exception
-                    e.printStackTrace();
-                }
-            }
-            if (zip != null) {
-                try {
-                    // close zip and input stream
-                    zip.close();
-                } catch (IOException e) {
                     // TODO log exception
                     e.printStackTrace();
                 }
