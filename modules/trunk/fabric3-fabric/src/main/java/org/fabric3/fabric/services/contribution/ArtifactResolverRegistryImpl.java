@@ -43,9 +43,9 @@ public class ArtifactResolverRegistryImpl implements ArtifactResolverRegistry {
     public URL resolve(URL url) throws ResolutionException {
         String scheme = url.getProtocol();
         ArtifactResolver resolver = resolvers.get(scheme);
-        if (resolver == null) {
-            throw new ArtifactResolverNotFoundException("Resolver not found for scheme", scheme);
+        if (resolver != null) {
+            url = resolver.resolve(url);
         }
-        return resolver.resolve(url);
+        return url;
     }
 }
