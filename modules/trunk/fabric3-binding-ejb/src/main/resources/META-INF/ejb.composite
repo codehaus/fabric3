@@ -35,9 +35,9 @@
         <system:implementation.system class="org.fabric3.binding.ejb.wire.EjbWireAttacher"/>
     </component>
 
-    <!-- EJB Link Resolver -->
-    <component name="EjbLinkResolver">
-        <system:implementation.system class="org.fabric3.binding.ejb.wire.DefaultEjbLinkResolver"/>
+    <!-- EJB Registry -->
+    <component name="EjbRegistry">
+        <system:implementation.system class="org.fabric3.binding.ejb.wire.DefaultEjbRegistry"/>
     </component>
 
 </composite>

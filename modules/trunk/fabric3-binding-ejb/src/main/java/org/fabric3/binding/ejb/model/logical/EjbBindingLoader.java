@@ -63,35 +63,8 @@ public class EjbBindingLoader extends LoaderExtension<EjbBindingDefinition> {
 
         String uri = reader.getAttributeValue(null, "uri");
 
-        // In EJB 3, the @Stateless & @Stateful annotations contain an attribute named mappedName.
-        // Although the specification doesn't spell out what this attribute is used for, it is
-        // commonly used to specify a JNDI name for the EJB.  However, EJB 3 beans can have multiple
-        // interfaces.  As a result, most containers including Glassfish and WebLogic calculate a JNDI
-        // name for each interface based on the mappedName.  In both Glassfish and WebLogic, the JNDI
-        // name for each interface is calculated using the following formula:
-        // <mappedName>#<fully qualified interface name>
-        // The problem is that the '#' char is a URI fragment delimitor and therefore can't legally be used
-        // in a URI.  Constructing a URI from such a JNDI name leads to an URISyntaxException being thrown.
-        // As such, we'll strip off the "corbaname:rir:#" portion of the URI before setting the targetURI on
-        // the Binding definition.
-
-        URI targetUri = null;
-        if (uri != null) {
-
-            // TODO: This really needs to be cleaned up.
-            if(uri.startsWith("corbaname:rir:#")) {
-                uri = uri.substring(uri.indexOf('#') + 1);
-            }
-
-            try {
-                targetUri = new URI(uri);
-            } catch (URISyntaxException ex) {
-                throw new LoaderException(ex);
-            }
-        }
-
-        EjbBindingDefinition bd = new EjbBindingDefinition(targetUri);
-        bd.setJndiName(uri);
+        EjbBindingDefinition bd = new EjbBindingDefinition(createURI(uri));
+        
         String homeInterface = reader.getAttributeValue(null, "homeInterface");
         bd.setHomeInterface(homeInterface);
 
@@ -120,6 +93,34 @@ public class EjbBindingLoader extends LoaderExtension<EjbBindingDefinition> {
         LoaderUtil.skipToEndElement(reader);
         return bd;
         
+    }
+
+    private URI createURI(String uri) throws LoaderException {
+        if(uri == null) return null;
+
+        // In EJB 3, the @Stateless & @Stateful annotations contain an attribute named mappedName.
+        // Although the specification doesn't spell out what this attribute is used for, it is
+        // commonly used to specify a JNDI name for the EJB.  However, EJB 3 beans can have multiple
+        // interfaces.  As a result, most containers including Glassfish and WebLogic calculate a JNDI
+        // name for each interface based on the mappedName.  In both Glassfish and WebLogic, the JNDI
+        // name for each interface is calculated using the following formula:
+        // <mappedName>#<fully qualified interface name>
+        // The problem is that the '#' char is a URI fragment delimitor and therefore can't legally be used
+        // in a URI.  Constructing a URI from such a JNDI name leads to an URISyntaxException being thrown.
+        // As such, we'll attempt to account for this issue by stripping off the "corbaname:rir:#" portion
+        // of the URI string before we actually construct the URI object.
+
+        if(uri.indexOf('#') != uri.lastIndexOf('#')) {
+           if(uri.startsWith("corbaname:rir:#")) {
+               uri = uri.substring(uri.indexOf('#') + 1);
+           }
+        }
+
+        try {
+            return new URI(uri);
+        } catch (URISyntaxException ex) {
+            throw new LoaderException(ex);
+        }
     }
 
 }

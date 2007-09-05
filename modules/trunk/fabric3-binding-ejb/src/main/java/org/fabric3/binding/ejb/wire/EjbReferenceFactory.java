@@ -2,16 +2,15 @@ package org.fabric3.binding.ejb.wire;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
+import java.net.URI;
 
 import org.osoa.sca.ServiceRuntimeException;
-import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.ejb.model.logical.EjbBindingDefinition;
 import org.fabric3.binding.ejb.model.physical.EjbWireTargetDefinition;
-import org.fabric3.binding.ejb.spi.EjbLinkResolver;
-import org.fabric3.binding.ejb.spi.EjbLinkException;
+import org.fabric3.binding.ejb.spi.EjbRegistry;
+
+import org.fabric3.spi.builder.WiringException;
 
 /**
  * Created by IntelliJ IDEA. User: mshinn Date: Jul 5, 2007 Time: 3:11:40 PM To change this template use File | Settings
@@ -21,23 +20,23 @@ public class EjbReferenceFactory {
 
     //TODO improve error messages.  eg. jndiName might not be set.
     
-    private final String jndiName;
+    private final URI uri;
     private final String ejbLink;
     private final String homeInterfaceName;
     private final String interfaceName;
 
-    private final EjbLinkResolver ejbLinkResolver;
+    private final EjbRegistry ejbRegistry;
 
     private Object cachedReference = null;
 
 
-    public EjbReferenceFactory(EjbWireTargetDefinition wireTarget, EjbLinkResolver ejbLinkResolver) {
+    public EjbReferenceFactory(EjbWireTargetDefinition wireTarget, EjbRegistry ejbRegistry) {
         EjbBindingDefinition bindingDefinition = wireTarget.getBindingDefinition();
-        jndiName = bindingDefinition.getJndiName();
+        uri = bindingDefinition.getTargetUri();
         ejbLink = bindingDefinition.getEjbLink();
         homeInterfaceName = bindingDefinition.getHomeInterface();
         interfaceName = wireTarget.getInterfaceName();
-        this.ejbLinkResolver = ejbLinkResolver;
+        this.ejbRegistry = ejbRegistry;
     }
 
     public Object getEjbReference() {
@@ -51,10 +50,10 @@ public class EjbReferenceFactory {
                 ejb = method.invoke(ejb, null);
             } catch(NoSuchMethodException nsme) {
                 throw new ServiceRuntimeException("Invalid EJB 2.x binding: the object at the JNDI name "+
-                        jndiName + " does not define a method with the signature create();");
+                        uri + " does not define a method with the signature create();");
             } catch(InvocationTargetException ite) {
                 throw new ServiceRuntimeException("An error occurred while invoking the create() method "+
-                        "of the EJB with the following JNDI name: "+jndiName, ite.getCause());
+                        "of the EJB with the following JNDI name: "+uri, ite.getCause());
             } catch(IllegalAccessException iae) {
                 throw new ServiceRuntimeException(iae);
             }
@@ -64,40 +63,22 @@ public class EjbReferenceFactory {
     }
 
     private Object resolveEjb() {
-        if(jndiName == null && ejbLink == null) {
+
+        if(uri == null && ejbLink == null) {
             //TODO: This should be a deployment time check
             throw new ServiceRuntimeException("Ejb bindings must specify either an ejbLink or a JNDI name");
         }
 
-        if(jndiName != null)
-            return resolveJndiName();
-        else
-            return resolveEjbLink();
-    }
-
-    private Object resolveJndiName() {
         try {
-            InitialContext ic = new InitialContext();
-            return ic.lookup(jndiName);
-        } catch(NamingException ne) {
-            throw new ServiceRuntimeException(ne);
+            if(uri != null) {
+                return ejbRegistry.resolveEjb(uri);
+            } else {
+                String ifaceName = homeInterfaceName != null ? homeInterfaceName : interfaceName;
+                return ejbRegistry.resolveEjbLink(ejbLink, ifaceName);
+            }
+        } catch(WiringException we) {
+            throw new ServiceRuntimeException(we);
         }
     }
-
-    private Object resolveEjbLink() {
-        // resolve the target EJB using an ejb-link.
-        if(ejbLinkResolver == null) {
-            throw new ServiceRuntimeException("The ejb-link resolver has not been set in the Fabric3 runtime");
-        }
-
-        try {
-            String ifaceName = homeInterfaceName != null ? homeInterfaceName : interfaceName;
-            return ejbLinkResolver.resolveEjbLink(ejbLink, ifaceName);
-        } catch(EjbLinkException ele) {
-            throw new ServiceRuntimeException(ele);
-        }
-    }
-
-
 
 }

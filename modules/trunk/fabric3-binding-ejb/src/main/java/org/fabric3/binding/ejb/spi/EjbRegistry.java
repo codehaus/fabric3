@@ -18,18 +18,22 @@
  */
 package org.fabric3.binding.ejb.spi;
 
-import javax.naming.NamingException;
+import java.net.URI;
+import org.fabric3.spi.builder.WiringException;
 
 /**
- * Various application servers may have different mechanisms for resolving ejb-links.
+ * Various application servers may have different mechanisms for resolving EJBs.
  * This interface is intended to allow users to hook into a particular app server's
  * resolution mechanism.
  *
  * @version $Revision: 1 $ $Date: 2007-05-14 10:40:37 -0700 (Mon, 14 May 2007) $
  */
-public interface EjbLinkResolver {
+public interface EjbRegistry {
 
-    public Object resolveEjbLink(String ejbLink, String interfaceName) throws EjbLinkException;
-    public void registerEjbLink(String ejbLink, Object ejb) throws EjbLinkException;    
+    public Object resolveEjbLink(String ejbLink, String interfaceName) throws WiringException;
+    public void registerEjbLink(String ejbLink, Object ejb) throws WiringException;
+
+    public Object resolveEjb(URI uri) throws WiringException;
+    public void registerEjb(URI uri, Object ejb) throws WiringException;
 
 }

@@ -32,7 +32,6 @@ public class EjbBindingDefinition extends BindingDefinition {
     private boolean isStateless = true;
     private boolean isEjb3;
     private String name;
-    private String jndiName;
 
     public EjbBindingDefinition(URI targetUri) {
         super(targetUri, EjbBindingLoader.BINDING_QNAME);
@@ -80,11 +79,4 @@ public class EjbBindingDefinition extends BindingDefinition {
         this.name = name;
     }
 
-    public String getJndiName() {
-        return jndiName;
-    }
-
-    public void setJndiName(String jndiName) {
-        this.jndiName = jndiName;
-    }
 }

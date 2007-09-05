@@ -31,6 +31,7 @@ import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalBinding;
+import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.definitions.Intent;
@@ -75,7 +76,8 @@ public class EjbBindingGenerator implements
         EjbWireSourceDefinition ewsd = new EjbWireSourceDefinition();
         ewsd.setUri(logicalBinding.getBinding().getTargetUri());
         ewsd.setBindingDefinition(logicalBinding.getBinding());
-        ewsd.setInterfaceName(serviceDefinition.getServiceContract().getInterfaceName());
+        JavaServiceContract contract = JavaServiceContract.class.cast(serviceDefinition.getServiceContract());
+        ewsd.setInterfaceName(contract.getInterfaceClass());
         ewsd.setClassLoaderURI(classLoaderGenerator.generate(logicalBinding, generatorContext));
 
         return ewsd;
@@ -99,7 +101,8 @@ public class EjbBindingGenerator implements
         EjbWireTargetDefinition ewtd = new EjbWireTargetDefinition();
         ewtd.setUri(logicalBinding.getBinding().getTargetUri());
         ewtd.setBindingDefinition(logicalBinding.getBinding());
-        ewtd.setInterfaceName(referenceDefinition.getServiceContract().getInterfaceName());
+        JavaServiceContract contract = JavaServiceContract.class.cast(referenceDefinition.getServiceContract());
+        ewtd.setInterfaceName(contract.getInterfaceClass());
         ewtd.setClassLoaderURI(classLoaderGenerator.generate(logicalBinding, generatorContext));
 
         return ewtd;
