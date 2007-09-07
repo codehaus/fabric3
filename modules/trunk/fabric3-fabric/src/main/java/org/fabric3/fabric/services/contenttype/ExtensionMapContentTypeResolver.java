@@ -65,18 +65,14 @@ public class ExtensionMapContentTypeResolver implements ContentTypeResolver {
             URLConnection connection = contentUrl.openConnection();
             String contentType = connection.getContentType();
 
-            if(contentType == null || UNKNOWN_CONTENT.equals(contentType)) {
+            if(contentType == null || UNKNOWN_CONTENT.equals(contentType) || "application/octet-stream".equals(contentType)) {
                 String filename = contentUrl.getFile();
                 contentType = typeMap.getContentType(filename);
             }
 
-            if(contentType == null || UNKNOWN_CONTENT.equals(contentType)) {
+            if(contentType == null || UNKNOWN_CONTENT.equals(contentType) || "application/octet-stream".equals(contentType)) {
                 String extension = urlString.substring(urlString.lastIndexOf('.') + 1);
                 contentType = extensionMap.get(extension);
-            }
-
-            if(contentType == null) {
-                throw new ContentTypeResolutionException("Unable to resolve content type", urlString);
             }
 
             return contentType;

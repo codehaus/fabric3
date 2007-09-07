@@ -20,14 +20,18 @@ package tx;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
@@ -38,8 +42,10 @@ import org.osoa.sca.annotations.Property;
 @EagerInit
 public class CatalogServiceImpl implements CatalogService {
     
-    private static final String INSERT = "INSERT INTO PRODUCT (NAME, DESCRIPTION) VALUES (?, ?)";
-    private static final String CREATE = "CREATE TABLE PRODUCT (NAME VARCHAR(30), DESCRIPTION VARCHAR(100)";
+    private static final String INSERT = "INSERT INTO PRODUCT (NAME) VALUES (?, ?)";
+    private static final String CREATE = "CREATE TABLE PRODUCT (NAME VARCHAR(30))";
+    private static final String SELECT = "SELECT * FROM PRODUCT";
+    private static final String DROP = "DROP TABLE PRODUCT";
     
     private String dataSourceName;
     
@@ -83,8 +89,32 @@ public class CatalogServiceImpl implements CatalogService {
         }
         
     }
+    
+    @Destroy
+    public void destroy() throws SQLException {
+        
+        Connection con = null;
+        Statement stmt = null;
+        
+        try {
+            con = dataSource.getConnection();
+            stmt = con.createStatement();
+            stmt.executeUpdate(DROP);
+        } finally {
+            try {
+                if(stmt != null) {
+                    stmt.close();
+                } 
+            } finally {
+                if(con != null) {
+                    con.close();
+                }
+            }
+        }
+        
+    }
 
-    public void addProduct(String name, String description) throws SQLException {
+    public void addProduct(String name) throws SQLException {
         
         Connection con = null;
         PreparedStatement stmt = null;
@@ -95,7 +125,6 @@ public class CatalogServiceImpl implements CatalogService {
             stmt = con.prepareStatement(INSERT);
             
             stmt.setString(1, name);
-            stmt.setString(2, name);
             
             stmt.executeUpdate(CREATE);
             
@@ -107,6 +136,46 @@ public class CatalogServiceImpl implements CatalogService {
             } finally {
                 if(con != null) {
                     con.close();
+                }
+            }
+        }
+
+    }
+
+    public Set<String> getProducts() throws SQLException {
+        
+        Set<String> products = new HashSet<String>();
+        
+        Connection con = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        
+        try {
+            
+            con = dataSource.getConnection();
+            stmt = con.prepareStatement(SELECT);
+            rs = stmt.executeQuery();
+            
+            while(rs.next()) {
+                products.add(rs.getString(1));
+            }
+            
+            return products;
+            
+        } finally {
+            try {
+                if(rs != null) {
+                    rs.close();
+                } 
+            } finally {
+                try {
+                    if(stmt != null) {
+                        stmt.close();
+                    }
+                } finally {
+                    if(con != null) {
+                        con.close();
+                    }
                 }
             }
         }

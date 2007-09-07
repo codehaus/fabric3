@@ -53,6 +53,7 @@
     </dependencies>
 
     <build>
+        <finalName>catalog</finalName>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>

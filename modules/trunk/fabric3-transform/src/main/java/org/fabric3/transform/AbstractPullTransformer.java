@@ -51,7 +51,7 @@ public abstract class AbstractPullTransformer<SOURCE, TARGET> implements PullTra
     /** Register Transformer*/
     @Init
     public void init() {
-        registry.register(this);
+        System.err.println(this);
     }
 
     /** Unregister Registry*/

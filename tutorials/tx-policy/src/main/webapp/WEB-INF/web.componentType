@@ -16,7 +16,7 @@
  under the License.
 -->
 <componentType xmlns="http://www.osoa.org/xmlns/sca/1.0">
-    <reference name="catalog">
+    <reference name="catalogReference">
         <interface.java interface="tx.CatalogService"/>
     </reference>
 </componentType>

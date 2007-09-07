@@ -29,6 +29,13 @@
     <!-- Content type resolver -->
     <component name="contentTypeResolver">
         <system:implementation.system class="org.fabric3.fabric.services.contenttype.ExtensionMapContentTypeResolver"/>
+        <property name="extensionMap">
+            <xml>application/xml</xml>
+            <composite>text/vnd.fabric3.composite+xml</composite>
+            <zip>application/zip</zip>
+            <jar>application/zip</jar>
+            <definitions>text/vnd.fabric3.definitions+xml</definitions>
+        </property>
     </component>
 
     <!-- Contribution Service -->

@@ -31,6 +31,9 @@
     <component name="transactionManager">
         <system:implementation.system class="org.fabric3.fabric.services.transaction.TransactionManagerProxy"/>
     </component>
+           
+    <!-- Include transaction loader -->
+    <include name="org.fabric3.tx.txLoader" scdlResource="META-INF/tx-loader.composite"/>
 
     <!-- include host services configuration -->
     <include name="org.fabric3.fabric.host.services" scdlResource="org/fabric3/fabric/hostServices.composite"/>

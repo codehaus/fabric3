@@ -19,12 +19,15 @@
 package tx;
 
 import java.sql.SQLException;
+import java.util.Set;
 
 /**
  * @version $Revision$ $Date$
  */
 public interface CatalogService {
     
-    void addProduct(String name, String description) throws SQLException;
+    void addProduct(String name) throws SQLException;
+    
+    Set<String> getProducts() throws SQLException;
 
 }
