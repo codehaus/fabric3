@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with this work for information
+ regarding copyright ownership.  This file is licensed
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           name="org.fabric3.transform.Transformers"
+           autowire="true">
+
+    <component name="pushTransformerRegistry">
+        <system:implementation.system class="org.fabric3.transform.DefaultTransformerRegistry"/>
+    </component>
+
+    <component name="pullTransformerRegistry">
+        <system:implementation.system class="org.fabric3.transform.DefaultTransformerRegistry"/>
+    </component>
+
+    <component name="String2Boolean">
+        <system:implementation.system class="org.fabric3.transform.dom2java.String2Boolean"/>
+        <reference name="registry" target="pullTransformerRegistry"/>
+    </component>
+
+    <component name="String2Byte">
+        <system:implementation.system class="org.fabric3.transform.dom2java.String2Byte"/>
+        <reference name="registry" target="pullTransformerRegistry"/>
+    </component>
+
+    <component name="String2Short">
+        <system:implementation.system class="org.fabric3.transform.dom2java.String2Short"/>
+        <reference name="registry" target="pullTransformerRegistry"/>
+    </component>
+
+    <component name="String2Integer">
+        <system:implementation.system class="org.fabric3.transform.dom2java.String2Integer"/>
+        <reference name="registry" target="pullTransformerRegistry"/>
+    </component>
+
+    <component name="String2Long">
+        <system:implementation.system class="org.fabric3.transform.dom2java.String2Long"/>
+        <reference name="registry" target="pullTransformerRegistry"/>
+    </component>
+
+    <component name="String2Float">
+        <system:implementation.system class="org.fabric3.transform.dom2java.String2Float"/>
+        <reference name="registry" target="pullTransformerRegistry"/>
+    </component>
+
+    <component name="String2Double">
+        <system:implementation.system class="org.fabric3.transform.dom2java.String2Double"/>
+        <reference name="registry" target="pullTransformerRegistry"/>
+    </component>
+
+    <component name="String2QName">
+        <system:implementation.system class="org.fabric3.transform.dom2java.String2QName"/>
+        <reference name="registry" target="pullTransformerRegistry"/>
+    </component>
+
+    <component name="String2Class">
+        <system:implementation.system class="org.fabric3.transform.dom2java.String2Class"/>
+        <reference name="registry" target="pullTransformerRegistry"/>
+    </component>
+    
+    <component name="String2Date">
+        <system:implementation.system class="org.fabric3.transform.dom2java.String2Date"/>
+        <reference name="registry" target="pullTransformerRegistry"/>
+    </component>
+
+    <component name="String2String">
+        <system:implementation.system class="org.fabric3.transform.dom2java.String2String"/>
+        <reference name="registry" target="pullTransformerRegistry"/>
+    </component>
+
+    <component name="Dom2Map">
+        <system:implementation.system class="org.fabric3.transform.dom2java.String2Map"/>
+        <reference name="registry" target="pullTransformerRegistry"/>
+    </component>
+
+<!--
+    <component name="Element2Stream">
+        <system:implementation.system class="org.fabric3.transform.xml.Element2Stream"/>
+        <reference name="registry" target="pullTransformerRegistry"/>
+    </component>
+
+    <component name="Stream2Stream">
+        <system:implementation.system class="org.fabric3.transform.xml.Stream2Stream"/>
+        <reference name="registry" target="pushTransformerRegistry"/>
+    </component>
+
+    <component name="Stream2Element">
+        <system:implementation.system class="org.fabric3.transform.xml.Stream2Element"/>
+        <reference name="registry" target="pushTransformerRegistry"/>
+    </component>
+-->
+
+</composite>
