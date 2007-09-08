@@ -33,7 +33,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3.spec</groupId>
             <artifactId>sca-api-r1.0</artifactId>
-            <version>0.2-SNAPSHOT</version>
+            <version>0.2.1</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -45,32 +45,9 @@
         <defaultGoal>verify</defaultGoal>
         <plugins>
             <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>RELEASE</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>compile</goal>
-                            <goal>testCompile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>RELEASE</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>resources</goal>
-                            <goal>testResources</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-itest-plugin</artifactId>
+                <version>0.3-SNAPSHOT</version>
                 <executions>
                     <execution>
                         <goals>
