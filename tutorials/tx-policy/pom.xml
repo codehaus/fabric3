@@ -50,10 +50,17 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>geronimo-spec</groupId>
+            <artifactId>geronimo-spec-jta</artifactId>
+            <version>1.0.1B-rc4</version>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
-        <finalName>catalog</finalName>
+        <finalName>txapp</finalName>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>

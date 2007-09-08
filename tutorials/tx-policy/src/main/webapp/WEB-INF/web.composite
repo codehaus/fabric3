@@ -22,13 +22,14 @@
            xmlns:fabric3="http://fabric3.org/xmlns/sca/2.0-alpha"
            name="CatalogWebappComposite">
 
-    <component name="CatalogWebappComponent">
+    <component name="TransactionalWebappComponent">
         <fabric3:web/>
-        <reference name="catalogReference" target="CatalogComponent"/>
+        <reference name="transactionalReference" target="TransactionalComponent"/>
     </component>
 
-    <component name="CatalogComponent">
-        <implementation.java class="tx.CatalogServiceImpl" requires="fabric3:managedTransaction"/>
+    <component name="TransactionalComponent">
+        <implementation.java class="tx.TransactionalServiceImpl" requires="fabric3:managedTransaction"/>
+        <property name="txmName">java:/TransactionManager</property>
     </component>
     
 </composite>

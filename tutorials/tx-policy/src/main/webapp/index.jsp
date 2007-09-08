@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!--
  See the NOTICE file distributed with this work for information
  regarding copyright ownership.  This file is licensed
@@ -15,8 +14,15 @@
  specific language governing permissions and limitations
  under the License.
 -->
-<componentType xmlns="http://www.osoa.org/xmlns/sca/1.0">
-    <reference name="transactionalReference">
-        <interface.java interface="tx.TransactionalService"/>
-    </reference>
-</componentType>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="tx.TransactionalService" %>
+<%@ page import="java.util.Iterator"%>
+<html>
+    <head><title>Fabric3 Demo Web Client</title></head>
+    <body>
+        <%
+        TransactionalService service = (TransactionalService) application.getAttribute("transactionalReference");
+        out.println("Transaction started: " + service.isTransactionStarted());
+        %>
+    </body>
+</html>

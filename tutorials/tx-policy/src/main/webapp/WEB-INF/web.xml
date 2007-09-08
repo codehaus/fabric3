@@ -31,12 +31,16 @@
 
     <context-param>
         <param-name>fabric3.component</param-name>
-        <param-value>CatalogWebappComponent</param-value>
+        <param-value>TransactionalWebappComponent</param-value>
     </context-param>
 
     <context-param>
         <param-name>fabric3.jta.txm.jndi.name</param-name>
         <param-value>java:/TransactionManager</param-value>
     </context-param>
+    
+    <welcome-file-list>
+        <welcome-file>/index.jsp</welcome-file>
+    </welcome-file-list>
 
 </web-app>
