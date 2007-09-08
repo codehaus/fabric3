@@ -20,10 +20,8 @@ package org.fabric3.war;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Properties;
 import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
@@ -39,7 +37,6 @@ import org.apache.maven.artifact.resolver.ArtifactResolver;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.IOUtil;
 
 /**
  * Add fabric3 runtime dependencies to a webapp.
@@ -141,7 +138,7 @@ public class Fabric3WarMojo extends AbstractMojo {
     /**
      * The default version of the runtime to use.
      *
-     * @parameter
+     * @parameter expression="RELEASE"
      */
     public String runTimeVersion;
 
@@ -162,9 +159,6 @@ public class Fabric3WarMojo extends AbstractMojo {
     private void installRuntime() throws IOException, ArtifactResolutionException, ArtifactNotFoundException,
             ArtifactMetadataRetrievalException {
 
-        if (runTimeVersion == null) {
-            runTimeVersion = getPluginVersion();
-        }
         getLog().info("Using fabric3 runtime version " + runTimeVersion);
 
         if (bootLibs == null) {
@@ -235,17 +229,5 @@ public class Fabric3WarMojo extends AbstractMojo {
         }
         return resolvedArtifacts;
 
-    }
-
-    private String getPluginVersion() throws IOException {
-        Properties pomProperties = new Properties();
-        String propFile = "/META-INF/maven/org.codehaus.fabric3/fabric3-webapp-plugin/pom.properties";
-        InputStream is = getClass().getResourceAsStream(propFile);
-        try {
-            pomProperties.load(is);
-            return pomProperties.getProperty("version");
-        } finally {
-            IOUtil.close(is);
-        }
     }
 }
