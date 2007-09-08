@@ -58,7 +58,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-install-jxta</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <version>0.1</version>
             <type>pom</type>
             <scope>provided</scope>
         </dependency>
@@ -100,7 +100,7 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-contribution-plugin</artifactId>
-                <version>0.1-SNAPSHOT</version>
+                <version>RELEASE</version>
                 <extensions>true</extensions>
                 <configuration/>
             </plugin>
