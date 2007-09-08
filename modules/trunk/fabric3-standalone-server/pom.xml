@@ -29,15 +29,17 @@
     <description>Fabric3 Standalone Runtime Server Start Command.</description>
 
     <dependencies>
+
         <dependency>
             <groupId>org.codehaus.fabric3.standalone</groupId>
             <artifactId>fabric3-standalone-api</artifactId>
             <version>0.2-SNAPSHOT</version>
         </dependency>
+
         <dependency>
              <groupId>org.codehaus.fabric3</groupId>
              <artifactId>fabric3-api</artifactId>
-             <version>0.2-SNAPSHOT</version>
+             <version>0.2</version>
          </dependency>
 
         <!-- dependencies that are defined as provided in the spi module -->
@@ -48,6 +50,7 @@
             <version>1.0.</version>
             <scope>runtime</scope>
         </dependency>
+
     </dependencies>
 
     <build>
