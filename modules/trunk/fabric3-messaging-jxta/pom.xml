@@ -27,7 +27,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-messaging-jxta</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.2</version>
     <name>Fabric3 JXTA Messaging</name>
     <description>Fabric3 Federation messaging based on JXTA.</description>
     <packaging>sca-contribution-jar</packaging>
@@ -89,15 +89,15 @@
                 <artifactId>fabric3-contribution-plugin</artifactId>
                 <version>RELEASE</version>
                 <extensions>true</extensions>
-                <configuration/>
+                <configuration />
             </plugin>
         </plugins>
     </build>
 
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/fabric3-messaging-jxta</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/fabric3-messaging-jxta</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/fabric3-messaging-jxta</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/fabric3-messaging-jxta-0.2</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/fabric3-messaging-jxta-0.2</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/fabric3-messaging-jxta-0.2</url>
     </scm>
 </project>
