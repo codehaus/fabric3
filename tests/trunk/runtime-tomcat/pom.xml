@@ -29,14 +29,11 @@
     <name>Fabric3 Webapp Tomcat Smoketest</name>
     <description>Fabric3 Webapp Tomcat Smoketest.</description>
 
-    <properties>
-        <runtimeVersion>0.2-SNAPSHOT</runtimeVersion>
-    </properties>
     <dependencies>
         <dependency>
             <groupId>org.codehaus.fabric3.webapp</groupId>
             <artifactId>fabric3-webapp-api</artifactId>
-            <version>${runtimeVersion}</version>
+            <version>RELEASE</version>
         </dependency>
 
         <dependency>
@@ -72,7 +69,7 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-webapp-plugin</artifactId>
-                <version>0.2-SNAPSHOT</version>
+                <version>RELEASE</version>
                 <executions>
                     <execution>
                         <id>fabric3-war</id>
@@ -82,13 +79,13 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <runTimeVersion>${runtimeVersion}</runTimeVersion>
+                    <runTimeVersion>0.3-SNAPSHOT</runTimeVersion>
                     <!-- include the Groovy extension to verify extensions are handled correctly -->
                     <extensions>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-groovy</artifactId>
-                            <version>${runtimeVersion}</version>
+                            <version>RELEASE</version>
                         </dependency>
                     </extensions>
                 </configuration>
