@@ -1,0 +1,352 @@
+/*
+ * See the NOTICE file distributed with this work for information
+ * regarding copyright ownership.  This file is licensed
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.fabric3.scanner.scanner;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URI;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+import com.thoughtworks.xstream.XStream;
+import org.osoa.sca.annotations.Constructor;
+import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Property;
+import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Service;
+
+import org.fabric3.host.contribution.Constants;
+import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.ContributionService;
+import org.fabric3.host.contribution.ContributionSource;
+import org.fabric3.host.contribution.Deployable;
+import org.fabric3.host.contribution.FileContributionSource;
+import org.fabric3.host.monitor.MonitorFactory;
+import org.fabric3.spi.assembly.ActivateException;
+import org.fabric3.spi.assembly.Assembly;
+import org.fabric3.spi.scanner.FileSystemResource;
+import org.fabric3.spi.scanner.FileSystemResourceFactoryRegistry;
+import org.fabric3.spi.services.VoidService;
+import static org.fabric3.spi.services.contribution.ContributionConstants.DEFAULT_STORE;
+import org.fabric3.spi.services.event.EventService;
+import org.fabric3.spi.services.event.Fabric3Event;
+import org.fabric3.spi.services.event.Fabric3EventListener;
+import org.fabric3.spi.services.event.RuntimeStart;
+
+/**
+ * Periodically scans a directory for new, updated, or removed contributions. New contributions are added to the domain
+ * and any deployable components activated. Updated components will trigger re-activation of previously deployed
+ * components. Removal will remove the contribution from the domain and de-activate any associated deployed components.
+ * <p/>
+ * The scanner watches the deployment directory at a fixed-delay interval. Files are tracked as a {@link
+ * FileSystemResource}, which provides a consistent metadata view across various types such as jars and exploded
+ * directories. Unknown file types are ignored. At the specified interval, removed files are determined by comparing the
+ * current directory contents with the contents from the previous pass. Changes or additions are also determined by
+ * comparing the current directory state with that of the previous pass. Detected changes and additions are cached for
+ * the following interval. Detected changes and additions from the previous interval are then checked using a checksum
+ * to see if they have changed again. If so, they remain cached. If they have not changed, they are processed,
+ * contributed via the ContributionService and activated in the domain.
+ * <p/>
+ * The scanner is persistent and supports recovery on re-start.
+ * <p/>
+ * Note update and remove are not fully implemented.
+ */
+@Service(VoidService.class)
+@EagerInit
+public class ContributionDirectoryScanner implements Runnable, Fabric3EventListener {
+    private final Map<String, FileSystemResource> cache = new HashMap<String, FileSystemResource>();
+    private final Map<String, FileSystemResource> errorCache = new HashMap<String, FileSystemResource>();
+    private final ContributionService contributionService;
+    private final EventService eventService;
+    private final ScannerMonitor monitor;
+    private final XStream xstream;
+    private final Assembly assembly;
+    private Map<String, URI> processed = new HashMap<String, URI>();
+    private FileSystemResourceFactoryRegistry registry;
+    private String path = "../deploy";
+    private File processedIndex;
+    private String storeId = DEFAULT_STORE;
+
+    private long delay = 5000;
+    private ScheduledExecutorService executor;
+
+    @Constructor
+    public ContributionDirectoryScanner(@Reference FileSystemResourceFactoryRegistry registry,
+                                        @Reference ContributionService contributionService,
+                                        @Reference(name = "assembly")Assembly assembly,
+                                        @Reference EventService eventService,
+                                        @Reference MonitorFactory factory) {
+        this.registry = registry;
+        this.contributionService = contributionService;
+        this.assembly = assembly;
+        this.eventService = eventService;
+        ClassLoaderStaxDriver driver = new ClassLoaderStaxDriver(this.getClass().getClassLoader());
+        this.xstream = new XStream(driver);
+        this.monitor = factory.getMonitor(ScannerMonitor.class);
+    }
+
+    /**
+     * Configures the store id to contribute to
+     *
+     * @param storeId the store id
+     */
+    @Property(required = false)
+    public void setStoreId(String storeId) {
+        this.storeId = storeId;
+    }
+
+    @Property(required = false)
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    @Property(required = false)
+    public void setDelay(long delay) {
+        this.delay = delay;
+    }
+
+    @Init
+    public void init() {
+        processedIndex = new File(path + "/.processed");
+        // register to be notified when the runtime starts so the scanner thread can be initialized
+        eventService.subscribe(RuntimeStart.class, this);
+    }
+
+
+    public void onEvent(Fabric3Event event) {
+        executor = Executors.newSingleThreadScheduledExecutor();
+        try {
+            recover();
+            executor.scheduleWithFixedDelay(this, 10, delay, TimeUnit.MILLISECONDS);
+        } catch (FileNotFoundException e) {
+            monitor.recoveryError(e);
+        }
+    }
+
+    @Destroy
+    public void destroy() {
+        executor.shutdownNow();
+    }
+
+    public synchronized void run() {
+        File extensionDir = new File(path);
+        if (!extensionDir.isDirectory()) {
+            // we don't have an extension directory, there's nothing to do
+            return;
+        }
+        try {
+            File[] files = extensionDir.listFiles();
+            remove(files);
+            addAndUpdate(files);
+            // persist changes
+            save();
+        } catch (FileNotFoundException e) {
+            monitor.recoveryError(e);
+        } catch (RuntimeException e) {
+            monitor.error(e);
+        }
+
+    }
+
+    @SuppressWarnings({"unchecked"})
+    synchronized void recover() throws FileNotFoundException {
+        File extensionDir = new File(path);
+        if (!extensionDir.isDirectory()) {
+            // we don't have an extension directory, there's nothing to do
+            return;
+        }
+        if (!processedIndex.exists()) {
+            // no index which means there is nothing to recover
+            return;
+        }
+        InputStream is = null;
+        try {
+            is = new BufferedInputStream(new FileInputStream(processedIndex));
+            processed = (HashMap<String, URI>) xstream.fromXML(is);
+        } finally {
+            try {
+                if (is != null) {
+                    is.close();
+                }
+            } catch (IOException e) {
+                monitor.error(e);
+            }
+        }
+        File[] files = extensionDir.listFiles();
+        remove(files);
+        // check for updates and additions
+        addAndUpdate(files);
+        save();
+    }
+
+    private void addAndUpdate(File[] files) {
+        for (File file : files) {
+            try {
+                String name = file.getName();
+                FileSystemResource cached;
+                FileSystemResource resource = null;
+                cached = errorCache.get(name);
+                if (cached != null) {
+                    resource = registry.createResource(file);
+                    assert resource != null;
+                    if (cached.getChecksum().equals(resource)) {
+                        // corrupt file from a previous run, continue
+                        continue;
+                    } else {
+                        // file has changed since the error was reported, retry
+                        errorCache.remove(name);
+                    }
+                }
+                cached = cache.get(name);
+                if (cached == null) {
+                    if (resource == null) {
+                        resource = registry.createResource(file);
+                    }
+                    if (resource == null) {
+                        // not a known type, ignore
+                        continue;
+                    }
+                    resource.reset();
+                    // cache the resource and wait to the next run to see if it has changed
+                    cache.put(name, resource);
+                } else {
+                    // cached
+                    if (cached.isChanged()) {
+                        // contents are still being updated, wait until next run
+                        continue;
+                    }
+                    processCachedResource(name, file, cached);
+                }
+            } catch (IOException e) {
+                monitor.error(e);
+            }
+        }
+    }
+
+    private void processCachedResource(String name, File file, FileSystemResource cached) throws IOException {
+        cache.remove(name);
+        // check if it is in the store
+        URI artifactUri = processed.get(name);
+        URL location = file.toURI().normalize().toURL();
+        byte[] checksum = cached.getChecksum();
+        long timestamp = file.lastModified();
+        if (artifactUri != null) {
+            // updated
+            long previousTimestamp = contributionService.getContributionTimestamp(artifactUri);
+            if (timestamp > previousTimestamp) {
+                try {
+                    ContributionSource source = new FileContributionSource(artifactUri, location, timestamp, checksum);
+                    contributionService.update(source);
+                } catch (ContributionException e) {
+                    errorCache.put(name, cached);
+                    monitor.error(e);
+                }
+            }
+            monitor.update(location.toString());
+            // TODO undeploy and redeploy
+        } else {
+            // added
+            try {
+                ContributionSource source = new FileContributionSource(location, timestamp, checksum);
+                URI addedUri = contributionService.contribute(storeId, source);
+                List<Deployable> deployables = contributionService.getDeployables(addedUri);
+                for (Deployable deployable : deployables) {
+                    if (Constants.COMPOSITE_TYPE.equals(deployable.getType())) {
+                        // include composite deployables at the domain level
+                        assembly.includeInDomain(deployable.getName());
+                    }
+                }
+                processed.put(name, addedUri);
+                monitor.add(location.toString());
+            } catch (ContributionException e) {
+                errorCache.put(name, cached);
+                monitor.error(e);
+            } catch (ActivateException e) {
+                errorCache.put(name, cached);
+                monitor.error(e);
+            }
+        }
+    }
+
+    private void remove(File[] files) {
+        Map<String, File> index = new HashMap<String, File>(files.length);
+        for (File file : files) {
+            index.put(file.getName(), file);
+        }
+
+        List<String> removed = new ArrayList<String>();
+        for (Map.Entry<String, URI> entry : processed.entrySet()) {
+            String filename = entry.getKey();
+            URI uri = entry.getValue();
+            if (index.get(filename) == null) {
+                // artifact was removed
+                try {
+                    // check that the resurce was not deleted by another process
+                    if (contributionService.exists(uri)) {
+                        // TODO get Deployables and remove from assembly
+                        contributionService.remove(uri);
+                    }
+                    removed.add(filename);
+                    monitor.remove(filename);
+                } catch (ContributionException e) {
+                    monitor.removalError(filename, e);
+                }
+            }
+        }
+        for (String removedName : removed) {
+            processed.remove(removedName);
+        }
+    }
+
+    /**
+     * Persists the list of processed resources for recovery
+     *
+     * @throws java.io.FileNotFoundException if an error occurs opening the persisted file
+     */
+    private synchronized void save() throws FileNotFoundException {
+        OutputStream os = null;
+        try {
+            os = new BufferedOutputStream(new FileOutputStream(processedIndex));
+            xstream.toXML(processed, os);
+        }catch(Error e) {
+            e.printStackTrace();
+        } finally {
+            if (os != null) {
+                try {
+                    os.close();
+                } catch (IOException e) {
+                    monitor.error(e);
+                }
+            }
+        }
+    }
+}
