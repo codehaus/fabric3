@@ -87,6 +87,9 @@ public class WebappCoordinator implements RuntimeLifecycleCoordinator<WebappRunt
     private WorkScheduler scheduler;
     private CoordinatorMonitor monitor;
 
+    public WebappCoordinator() {
+    }
+
     public void bootPrimordial(WebappRuntime runtime,
                                Bootstrapper bootstrapper,
                                ClassLoader bootClassLoader,
