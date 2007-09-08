@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-policy-spi</artifactId>
-    <version>0.2</version>
+    <version>0.3-SNAPSHOT</version>
     <name>Fabric3 Policy SPI</name>
     <description>Fabric3 Policy SPI.</description>
 
@@ -58,8 +58,8 @@
     
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/fabric3-policy-spi-0.2</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/fabric3-policy-spi-0.2</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/fabric3-policy-spi-0.2</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/fabric3-policy-spi</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/fabric3-policy-spi</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/fabric3-policy-spi</url>
     </scm>
 </project>
