@@ -97,6 +97,10 @@ public class ZipContributionProcessor extends ArchiveContributionProcessor imple
                 }
                 URL entryUrl = new URL(location, entry.getName());
                 String contentType = contentTypeResolver.getContentType(entryUrl);
+                // skip entry if we don't recognize the content type
+                if (contentType == null) {
+                    continue;
+                }
                 Resource resource = registry.processResource(contentType, zipStream);
                 if (resource != null) {
                     contribution.addResource(resource);
