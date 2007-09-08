@@ -39,7 +39,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-policy-spi</artifactId>
-            <version>0.2-SNAPSHOT</version>
+            <version>0.2</version>
         </dependency>
 
         <dependency>
