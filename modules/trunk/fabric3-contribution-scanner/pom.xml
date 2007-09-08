@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-contribution-scanner</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.2</version>
     <name>Fabric3 Contribution Scanner</name>
     <description>Fabric3 Contribution Scanner Implementation.</description>
     <packaging>sca-contribution-jar</packaging>
@@ -83,8 +83,8 @@
 
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/fabric3-contribution-scanner</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/fabric3-contribution-scanner</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/fabric3-contribution-scanner</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/fabric3-contribution-scanner-0.2</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/fabric3-contribution-scanner-0.2</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/fabric3-contribution-scanner-0.2</url>
     </scm>
 </project>
