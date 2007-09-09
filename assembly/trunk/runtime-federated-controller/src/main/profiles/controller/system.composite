@@ -65,7 +65,7 @@
 
     <!-- include deployment configuration -->
     <include name="org.fabric3.fabric.Deployment" scdlResource="org/fabric3/fabric/deployment.composite"/>
-    <include name="org.fabric3.fabric.Stores" scdlResource="org/fabric3/fabric/persistentStore.composite"/>
+    <include name="org.fabric3.fabric.Stores" scdlResource="org/fabric3/fabric/nonPersistentStore.composite"/>
 	 <include name="org.fabric3.fabric.ExtensionsDeployment" scdlResource="org/fabric3/fabric/extensionsDeployment.composite"/>
 
     <include name="org.fabric3.fabric.FileSystemResolver" scdlResource="org/fabric3/fabric/fileSystemResolver.composite"/>
@@ -86,7 +86,7 @@
     </component>
 
     <component name="assemblyRecoveryService">
-        <system:implementation.system class="org.fabric3.fabric.assembly.store.AssemblyStoreImpl"/>
+        <system:implementation.system class="org.fabric3.fabric.assembly.store.NonPersistentAssemblyStore"/>
     </component>
 
 	 <!-- the following entries will be loaded as normal extensions in the next release -->
