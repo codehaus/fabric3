@@ -105,7 +105,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-contribution-scanner</artifactId>
-            <version>0.2</version>
+            <version>0.2.1</version>
         </dependency>
 
         <dependency>
