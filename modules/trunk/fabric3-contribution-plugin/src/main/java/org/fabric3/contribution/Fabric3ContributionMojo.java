@@ -108,6 +108,14 @@ public class Fabric3ContributionMojo extends AbstractMojo {
      * @readonly
      */
     protected MavenProjectHelper projectHelper;
+    
+    /**
+     * @parameter expression="${project.packaging}
+     * @required
+     * @readonly
+     */
+    protected String packaging;
+    
 
     public void execute() throws MojoExecutionException, MojoFailureException {
         File contribution = createArchive();
@@ -154,7 +162,11 @@ public class Fabric3ContributionMojo extends AbstractMojo {
                 finalName = finalName + '-' + classifier;
             }
         }
-        return new File(buildDir, finalName + ".zip");
+        String extension=".zip";
+        if ("sca-contribution-jar".endsWith(packaging)){
+            extension=".jar";
+        }
+        return new File(buildDir, finalName + extension);
     }
 
     protected void handleContributionFile(File contentDirectory)throws FileNotFoundException{

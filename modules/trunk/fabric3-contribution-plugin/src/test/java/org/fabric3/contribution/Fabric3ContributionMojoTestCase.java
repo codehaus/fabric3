@@ -36,15 +36,15 @@ public class Fabric3ContributionMojoTestCase extends AbstractMojoTestCase {
 		setVariableValueToObject(mojo, "outputDirectory", outputDir);
 		setVariableValueToObject(mojo, "classesDirectory", new File(outputDir,"classes"));
 		setVariableValueToObject(mojo, "jarArchiver", new JarArchiver());
-	    Model model = new SCAModelStub();
+                Model model = new SCAModelStub();
 		SCAMavenProjectStub stub = new SCAMavenProjectStub(model);
 		stub.setFile(pomFile);
 		SCAArtifactStub artifact=new SCAArtifactStub();
 		artifact.setType(type);
-		setVariableValueToObject(mojo, "contributionName", "test");
-		artifact.setFile(new File( testDirectory, "test.zip" ));
 		stub.setArtifact(artifact);
-		setVariableValueToObject(mojo, "project", stub);
+                setVariableValueToObject(mojo, "packaging", type);
+                setVariableValueToObject(mojo, "contributionName", "test");
+                setVariableValueToObject(mojo, "project", stub);
 		return mojo;
 	}
 
@@ -135,7 +135,8 @@ public class Fabric3ContributionMojoTestCase extends AbstractMojoTestCase {
 			e.printStackTrace();
 			fail("should have succeeded");
 		}
-		File testFile = new File (getTestDirectory("dependency"), "target" + File.separator + "test.zip");
+		File testFile = new File (getTestDirectory("dependency"), "target" + File.separator + mojo.contributionName + "." + getExtension(type));
+                System.out.println("******"+testFile.getAbsolutePath());
 		assertTrue(testFile.exists());
 
 		HashSet jarContent = new HashSet();
@@ -154,6 +155,14 @@ public class Fabric3ContributionMojoTestCase extends AbstractMojoTestCase {
         assertFalse( "dependency of type sca-contribution should not have been added", jarContent.contains( "META-INF/lib/dep-2.jar" ) );
         assertFalse( "dependency of type sca-contribution-jar should not have been added", jarContent.contains( "META-INF/lib/dep-3.jar" ) );
 	}
+        
+        protected String getExtension(String packaging){
+            if ("sca-contribution-jar".equals(packaging)){
+                return "jar";
+            }
+            return "zip";
+            
+        }
 
 
 }
