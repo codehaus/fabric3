@@ -23,7 +23,7 @@
         <version>2</version>
     </parent>
     <groupId>org.codehaus.fabric3.tutorials</groupId>
-    <artifactId>fabric3-tutorial-webclient</artifactId>
+    <artifactId>fabric3-tutorial-calculator-webclient</artifactId>
     <version>0.1</version>
     <packaging>war</packaging>
     <name>Fabric3 Tutorial Web Client</name>
