@@ -26,7 +26,7 @@
         <version>4</version>
     </parent>
     <artifactId>fabric3-federated-controller</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.2</version>
     <packaging>pom</packaging>
     <name>Fabric3 Federated Standalone Distribution</name>
     <description>Assembly distribution for Fabric3 Federated Standalone Server.</description>
@@ -168,9 +168,9 @@
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/assembly/trunk/runtime-federated-controller</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/assembly/trunk/runtime-federated-controller</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/assembly/trunk/runtime-federated-controller</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/assembly/tags/fabric3-federated-controller-0.2</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/assembly/tags/fabric3-federated-controller-0.2</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/assembly/tags/fabric3-federated-controller-0.2</url>
     </scm>
     
 </project>
