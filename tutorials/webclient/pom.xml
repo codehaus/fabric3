@@ -110,12 +110,12 @@
                 <configuration>
                     <runTimeVersion>0.2-SNAPSHOT</runTimeVersion>
                     <extensions>
-                        <!--  Hessian extension
+                        <!--  Hessian extension  -->
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-binding-hessian</artifactId>
                             <version>0.2-SNAPSHOT</version>
-                        </dependency>  -->
+                        </dependency>  
                         <!--  Web services extension
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
