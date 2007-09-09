@@ -33,7 +33,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3.spec</groupId>
             <artifactId>sca-api-r1.0</artifactId>
-            <version>0.2</version>
+            <version>0.2.1</version>
         </dependency>
         <dependency>
             <groupId>groovy</groupId>
@@ -95,7 +95,7 @@
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-groovy</artifactId>
-                            <version>0.2-SNAPSHOT</version>
+                            <version>0.2</version>
                         </dependency>
                     </contributions>
                 </configuration>
