@@ -22,7 +22,6 @@
            autowire="true">
 
     <service name="calculatorService" promote="calculator">
-        <interface.java interface="calculator.CalculatorService"/>
         <!-- Insert binding definition here -->
     </service>
     <!--
