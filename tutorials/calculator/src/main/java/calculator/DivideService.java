@@ -18,6 +18,9 @@
  */
 package calculator;
 
+/**
+ * Service that divides two operands
+ */
 public interface DivideService {
 
     double divide(double n1, double n2);

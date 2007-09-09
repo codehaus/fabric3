@@ -17,20 +17,13 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:fabric3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:hessian="http://www.fabric3.org/binding/hessian/0.1"
+           xmlns:hessian="http://www.fabric3.org/binding/hessian/0.2"
+           targetNamespace="http://fabric3.org/xmlns/sca/tutorials/0.2"
            name="CalculatorTestComposite"
-           autowire="false">
-
-    <include name="CalculatorComposite" scdlLocation="calculator.scdl"/>
-
-    <service name="calculatorRemote" promote="calculator">
-        <interface.java interface="calculator.CalculatorService"/>
-        <hessian:binding.hessian uri="/calculator" />
-    </service>
+           autowire="true">
 
     <reference name="client" promote="testComponent/calculator">
-        <interface.java interface="calculator.CalculatorService"/>
-        <hessian:binding.hessian uri="http://localhost:8100/calculator"/>
+        <hessian:binding.hessian uri="http://localhost:8080/calculator"/>
     </reference>
 
     <component name="testComponent">

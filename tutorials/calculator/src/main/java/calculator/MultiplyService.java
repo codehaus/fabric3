@@ -18,6 +18,9 @@
  */
 package calculator;
 
+/**
+ * Service that multiplies two operands
+ */
 public interface MultiplyService {
 
     double multiply(double n1, double n2);

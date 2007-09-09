@@ -17,16 +17,16 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:fabric3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:hessian="http://www.fabric3.org/binding/hessian/0.1"
-           name="CalculatorTestComposite"
+           xmlns:hessian="http://www.fabric3.org/binding/hessian/0.2"
+           targetNamespace="http://fabric3.org/xmlns/sca/tutorials/0.2"
+           name="LocalTestComposite"
            autowire="true">
 
-    <reference name="client" promote="testComponent/calculator">
-        <interface.java interface="calculator.CalculatorService"/>
-        <hessian:binding.hessian uri="http://localhost:8101/calculator"/>
-    </reference>
+    <include name="CalculatorComposite" scdlResource="META-INF/calculator.composite"/>
 
     <component name="testComponent">
         <fabric3:junit class="calculator.TestComponent"/>
+        <reference name="calculator" target="calculator"/>
     </component>
+
 </composite>

@@ -18,6 +18,9 @@
  */
 package calculator;
 
+/**
+ * Service that adds two operands
+ */
 public interface AddService {
 
     double add(double n1, double n2);

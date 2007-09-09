@@ -25,30 +25,27 @@ import org.osoa.sca.annotations.Reference;
  * An implementation of the Calculator service.
  */
 public class CalculatorServiceImpl implements CalculatorService {
-
     private AddService addService;
     private SubtractService subtractService;
     private MultiplyService multiplyService;
     private DivideService divideService;
 
-    @Reference
-    public void setAddService(AddService addService) {
+    /**
+     * Creates a calculator component, taking references to dependent services.
+     *
+     * @param addService      the service for performing addition
+     * @param subtractService the service for performing subtraction
+     * @param multiplyService the service for performing multiplication
+     * @param divideService   the service for performing division
+     */
+    public CalculatorServiceImpl(@Reference AddService addService,
+                                 @Reference SubtractService subtractService,
+                                 @Reference MultiplyService multiplyService,
+                                 @Reference DivideService divideService) {
         this.addService = addService;
-    }
-
-    @Reference
-    public void setSubtractService(SubtractService subtractService) {
         this.subtractService = subtractService;
-    }
-
-    @Reference
-    public void setDivideService(DivideService divideService) {
-        this.divideService = divideService;
-    }
-
-    @Reference
-    public void setMultiplyService(MultiplyService multiplyService) {
         this.multiplyService = multiplyService;
+        this.divideService = divideService;
     }
 
     public Double add(Double n1, Double n2) {
