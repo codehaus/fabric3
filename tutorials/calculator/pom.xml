@@ -131,6 +131,11 @@
                                     <artifactId>fabric3-binding-hessian</artifactId>
                                     <version>0.2</version>
                                 </dependency>
+                                <dependency>
+                                    <groupId>org.codehaus.fabric3</groupId>
+                                    <artifactId>fabric3-binding-ws</artifactId>
+                                    <version>0.2</version>
+                                </dependency>
                             </contributions>
                         </configuration>
                         <executions>

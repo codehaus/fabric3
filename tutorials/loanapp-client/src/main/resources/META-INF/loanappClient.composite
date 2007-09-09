@@ -29,9 +29,9 @@
 
     <reference name="loanService" promote="LoanAppClient/loanService">
         <interface.java interface="loanapp.loanservice.LoanApplicationService"/>
-        <hessian:binding.hessian uri="http://localhost:8101/calculator"/>
-        <!--<burlap:binding.burlap uri="http://localhost:8101/calculator"/>-->
-        <!--<binding.ws uri="http://localhost:8101/services/calculator"/>-->
+        <!--<hessian:binding.hessian uri="http://localhost:8181/calculator"/>-->
+        <!--<burlap:binding.burlap uri="http://localhost:8181/calculator"/>-->
+        <!--<binding.ws uri="http://localhost:8181/services/calculator"/>-->
     </reference>
 
 

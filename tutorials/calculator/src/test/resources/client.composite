@@ -22,11 +22,15 @@
            name="CalculatorTestComposite"
            autowire="true">
 
-    <reference name="client" promote="testComponent/calculator">
-        <hessian:binding.hessian uri="http://localhost:8080/calculator"/>
-    </reference>
-
     <component name="testComponent">
         <fabric3:junit class="calculator.TestComponent"/>
     </component>
+
+    <reference name="client" promote="testComponent/calculator">
+        <!--<hessian:binding.hessian uri="http://localhost:8181/calculator"/>-->
+        <!--Web Services Binding:-->
+        <binding.ws uri="http://localhost:8181/services/calculator"/>
+    </reference>
+
+
 </composite>
