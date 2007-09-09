@@ -24,28 +24,15 @@
            name="LoanAppClientComposite">
 
     <component name="LoanAppClient">
-        <implementation.java class="loanapp.loanservice.impl.LoanServiceClient"/>
-        <reference name="loanService">
-            <hessian:binding.hessian uri="http://localhost:8101/calculator"/>
-            <!--<<burlap:binding.burlap uri="http://localhost:8101/calculator"/>-->
-            <!--<binding.ws uri="http://localhost:8101/services/calculator"/>-->
-        </reference>
+        <implementation.java class="loanapp.loanservice.LoanServiceClient"/>
     </component>
 
-    <!--<reference name="loanService" promote="LoanAppClient/loanService">-->
-    <!--<interface.java interface="loanapp.loanservice.LoanApplicationService"/>-->
-    <!--<hessian:binding.hessian uri="http://localhost:8101/calculator"/>-->
-    <!--<burlap:binding.burlap uri="http://localhost:8101/calculator"/>-->
-    <!--<binding.ws uri="http://localhost:8101/services/calculator"/>-->
-    <!--</reference>-->
-
-    <!--<component name="Main">-->
-    <!--<fabric3:launched class="loanapp.ClientComponent"/>-->
-    <!--</component>-->
-
-    <!--<reference name="client" promote="LoanAppClientComponent/loanService">-->
-    <!--<interface.java interface="loanapp.loanservice.LoanApplicationService"/>-->
-    <!--</reference>-->
+    <reference name="loanService" promote="LoanAppClient/loanService">
+        <interface.java interface="loanapp.loanservice.LoanApplicationService"/>
+        <hessian:binding.hessian uri="http://localhost:8101/calculator"/>
+        <!--<burlap:binding.burlap uri="http://localhost:8101/calculator"/>-->
+        <!--<binding.ws uri="http://localhost:8101/services/calculator"/>-->
+    </reference>
 
 
 </composite>
