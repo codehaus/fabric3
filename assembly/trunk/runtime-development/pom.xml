@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-development</artifactId>
-    <version>0.2</version>
+    <version>0.3-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Fabric3 Development Runtime Assembly</name>
     <description>Fabric3 Development Distribution Assembly.</description>
@@ -102,8 +102,8 @@
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/assembly/trunk/fabric3-development-0.2</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/assembly/trunk/fabric3-development-0.2</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/assembly/trunk/fabric3-development-0.2</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/runtime/trunk/runtime-development</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/assembly/trunk/runtime-development</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/assembly/trunk/runtime-development</url>
     </scm>
 </project>
