@@ -95,6 +95,7 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
     private String path = "../deploy";
     private File processedIndex;
     private String storeId = DEFAULT_STORE;
+    private boolean persistent = true;
 
     private long delay = 5000;
     private ScheduledExecutorService executor;
@@ -132,6 +133,12 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
     @Property(required = false)
     public void setDelay(long delay) {
         this.delay = delay;
+    }
+
+    @Property(required = false)
+    // JFM fix me when boolean types supported
+    public void setPersistent(String persistent) {
+        this.persistent = Boolean.valueOf(persistent);
     }
 
     @Init
@@ -333,11 +340,14 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
      * @throws java.io.FileNotFoundException if an error occurs opening the persisted file
      */
     private synchronized void save() throws FileNotFoundException {
+        if (!persistent) {
+            return;
+        }
         OutputStream os = null;
         try {
             os = new BufferedOutputStream(new FileOutputStream(processedIndex));
             xstream.toXML(processed, os);
-        }catch(Error e) {
+        } catch (Error e) {
             e.printStackTrace();
         } finally {
             if (os != null) {
