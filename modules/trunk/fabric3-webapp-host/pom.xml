@@ -80,4 +80,10 @@
             <artifactId>easymockclassextension</artifactId>
         </dependency>
     </dependencies>
+
+    <scm>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/fabric3-webapp-host</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/fabric3-webapp-host</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/fabric3-webapp-host</url>
+    </scm>
 </project>
