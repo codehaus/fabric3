@@ -26,7 +26,7 @@
         <version>2</version>
     </parent>
     <artifactId>fabric3-federated-participant</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.2</version>
     <packaging>pom</packaging>
     <name>Fabric3 Federated Participant Distribution</name>
     <description>Assembly distribution for Fabric3 Federated Participant.</description>
@@ -149,9 +149,9 @@
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/assembly/trunk/runtime-federated-participant</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/assembly/trunk/runtime-federated-participant</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/assembly/trunk/runtime-federated-participant</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/assembly/tags/fabric3-federated-participant-0.2</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/assembly/tags/fabric3-federated-participant-0.2</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/assembly/tags/fabric3-federated-participant-0.2</url>
     </scm>
     
     
