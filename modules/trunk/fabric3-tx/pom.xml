@@ -47,7 +47,6 @@
             <groupId>geronimo-spec</groupId>
             <artifactId>geronimo-spec-jta</artifactId>
             <version>1.0.1B-rc4</version>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -55,7 +54,6 @@
             <artifactId>stax-api</artifactId>
             <!-- use version 1.0 as it is the version bundled in JDK 6 -->
             <version>1.0.</version>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -70,17 +68,17 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-contribution-plugin</artifactId>
-                <version>0.1-SNAPSHOT</version>
+                <version>RELEASE</version>
                 <extensions>true</extensions>
                 <configuration/>
             </plugin>
         </plugins>
     </build>
 
-
     <scm>
         <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/fabric3-tx</connection>
         <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/fabric3-tx</developerConnection>
         <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/fabric3-tx</url>
     </scm>
+
 </project>
