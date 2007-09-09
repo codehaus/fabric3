@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3.tutorials</groupId>
     <artifactId>fabric3-tutorial-loanapp-common</artifactId>
-    <version>0.1</version>
+    <version>0.2-SNAPSHOT</version>
     <name>Fabric3 Loan App Common</name>
     <description>Fabric3 Loan Application Tutorial Common Classes.</description>
 
@@ -46,7 +46,8 @@
         <dependency>
             <groupId>org.codehaus.fabric3.spec</groupId>
             <artifactId>sca-api-r1.0</artifactId>
-            <version>0.1</version>
+            <version>0.2</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
