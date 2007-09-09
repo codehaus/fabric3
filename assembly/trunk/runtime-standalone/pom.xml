@@ -145,9 +145,9 @@
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/runtime/trunk/runtime-standalone</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/runtime/trunk/runtime-standalone</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/runtime/trunk/runtime-standalone</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/assembly/trunk/runtime-standalone</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/assembly/trunk/runtime-standalone</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/assembly/trunk/runtime-standalone</url>
     </scm>
     
 </project>
