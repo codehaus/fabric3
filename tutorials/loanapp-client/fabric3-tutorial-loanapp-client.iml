@@ -11,8 +11,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="fabric3-tutorial-loanapp-common" exported="" />
     <orderEntry type="library" name="junit-3.8.1" level="application" />
+    <orderEntry type="library" name="fabric3-dev-runtime" level="application" />
     <orderEntryProperties />
   </component>
 </module>

@@ -19,9 +19,7 @@ package loanapp.loanservice.impl;
 import org.osoa.sca.annotations.Reference;
 
 import loanapp.credit.CreditCheckService;
-import loanapp.loanservice.LoanApplication;
 import loanapp.loanservice.LoanApplicationService;
-import loanapp.loanservice.LoanResult;
 
 /**
  * Implementation that handles a loan application
@@ -31,18 +29,17 @@ import loanapp.loanservice.LoanResult;
 public class LoanApplicationComponent implements LoanApplicationService {
     private CreditCheckService creditService;
 
-
     public LoanApplicationComponent(
         @Reference(name = "creditService", required = true)CreditCheckService creditService) {
         this.creditService = creditService;
     }
 
-    public LoanResult applyForLoan(LoanApplication application) {
-        int score = creditService.checkCredit(application.getCustomerID());
+    public double applyForLoan(String id, double amount, double downpayment) {
+        int score = creditService.checkCredit(id);
         if (score > 100) {
-            return new LoanResultImpl(LoanResult.APPROVED);
+            return 7.5;
         } else {
-            return new LoanResultImpl(LoanResult.DECLINED);
+            return DECLINED;
         }
 
     }

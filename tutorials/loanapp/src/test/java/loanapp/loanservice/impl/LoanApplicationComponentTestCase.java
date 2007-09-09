@@ -18,8 +18,7 @@ package loanapp.loanservice.impl;
 
 import junit.framework.TestCase;
 import loanapp.credit.CreditCheckService;
-import loanapp.loanservice.LoanApplication;
-import loanapp.loanservice.LoanResult;
+import loanapp.loanservice.LoanApplicationService;
 
 /**
  * Demonstrates unit testing outside the Fabric3 container. For automated mock object creation and verification,
@@ -34,8 +33,7 @@ public class LoanApplicationComponentTestCase extends TestCase {
      * Verifies the loan application component can receive and application and approve it.
      */
     public void testLoanApplication() {
-        LoanApplication app = new LoanApplicationImpl("123", 1000, 100);
-        assertEquals(LoanResult.APPROVED, component.applyForLoan(app).getCode());
+        assertTrue(LoanApplicationService.DECLINED != component.applyForLoan("123", 1000, 100));
     }
 
     /**

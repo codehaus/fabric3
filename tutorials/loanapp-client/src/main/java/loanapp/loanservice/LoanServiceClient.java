@@ -14,31 +14,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package loanapp.loanservice.impl;
+package loanapp.loanservice;
 
-import loanapp.loanservice.LoanResult;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Rev$ $Date$
  */
-public class LoanResultImpl implements LoanResult {
-    private int code;
-    private double rate;
+public class LoanServiceClient implements LoanApplicationService {
+    private LoanApplicationService service;
 
-    public LoanResultImpl(int result, double rate) {
-        this.code = result;
-        this.rate = rate;
+    public LoanServiceClient(@Reference(name = "loanService")LoanApplicationService service) {
+        this.service = service;
     }
 
-    public int getCode() {
-        return code;
-    }
-
-    public double getRate() {
-        return rate;
-    }
-
-    public LoanResultImpl(int result) {
-        this.code = result;
+    public double applyForLoan(String id, double amount, double downPayment) {
+        return service.applyForLoan(id, amount, downPayment);
     }
 }

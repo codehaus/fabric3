@@ -14,31 +14,34 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package loanapp.loanservice.impl;
-
-import loanapp.loanservice.LoanResult;
+package loanapp.loanservice;
 
 /**
+ * A Loan application message
+ *
  * @version $Rev$ $Date$
  */
-public class LoanResultImpl implements LoanResult {
-    private int code;
-    private double rate;
+public interface LoanApplication {
 
-    public LoanResultImpl(int result, double rate) {
-        this.code = result;
-        this.rate = rate;
-    }
+    /**
+     * The customer id making the loan application
+     *
+     * @return the customer id
+     */
+    String getCustomerID();
 
-    public int getCode() {
-        return code;
-    }
+    /**
+     * The loan amount.
+     *
+     * @return the loan amount
+     */
+    double getAmount();
 
-    public double getRate() {
-        return rate;
-    }
+    /**
+     * The loan downpayment amount.
+     *
+     * @return the loan downpayment amount
+     */
+    double getDownPayment();
 
-    public LoanResultImpl(int result) {
-        this.code = result;
-    }
 }
