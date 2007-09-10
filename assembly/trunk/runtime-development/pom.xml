@@ -23,7 +23,7 @@
         <version>4</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
-    <artifactId>fabric3-development</artifactId>
+    <artifactId>runtime-development</artifactId>
     <version>0.3-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Fabric3 Development Runtime Assembly</name>
