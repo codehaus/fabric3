@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.binding.jms.host.impl;
+package org.fabric3.binding.jms.host.standalone;
 
 import java.util.LinkedList;
 import java.util.List;

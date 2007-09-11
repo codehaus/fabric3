@@ -23,7 +23,7 @@
 
     <!-- JMS Host -->
     <component name="JMSHost">
-        <system:implementation.system class="org.fabric3.binding.jms.host.impl.StandaloneJmsHost"/>
+        <system:implementation.system class="org.fabric3.binding.jms.host.standalone.StandaloneJmsHost"/>
     </component>
 
     <!-- JMS Binding Loader -->
