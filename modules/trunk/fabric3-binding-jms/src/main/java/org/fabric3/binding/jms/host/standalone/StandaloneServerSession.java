@@ -25,11 +25,13 @@ import javax.jms.Session;
 import org.fabric3.binding.jms.TransactionType;
 
 /**
+ * Server session used in standalone JMS host.
+ * 
  * @version $Revision$ $Date$
  */
-public class F3ServerSession implements ServerSession {
+public class StandaloneServerSession implements ServerSession {
     
-    private F3ServerSessionPool serverSessionPool;
+    private StandaloneServerSessionPool serverSessionPool;
     private Session session;
     private TransactionType transactionType;
     
@@ -40,7 +42,7 @@ public class F3ServerSession implements ServerSession {
      * @param serverSessionPool Server session pool.
      * @param transactionType Transaction type (XA or Local)
      */
-    public F3ServerSession(Session session, F3ServerSessionPool serverSessionPool, TransactionType transactionType) {
+    public StandaloneServerSession(Session session, StandaloneServerSessionPool serverSessionPool, TransactionType transactionType) {
         this.session = session;
         this.serverSessionPool = serverSessionPool;
         this.transactionType = transactionType;
