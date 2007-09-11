@@ -18,6 +18,7 @@
  */
 package org.fabric3.binding.jms.model.physical;
 
+import org.fabric3.binding.jms.TransactionType;
 import org.fabric3.binding.jms.model.JmsBindingMetadata;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 
@@ -32,6 +33,11 @@ public class JmsWireTargetDefinition extends PhysicalWireTargetDefinition {
     private JmsBindingMetadata metadata;
     
     /**
+     * Transaction mode.
+     */
+    private TransactionType transactionType;
+    
+    /**
      * Default constructor.
      */
     public JmsWireTargetDefinition() {
@@ -39,9 +45,11 @@ public class JmsWireTargetDefinition extends PhysicalWireTargetDefinition {
     
     /**
      * @param metadata Metadata to be initialized.
+     * @param transactionType Transaction type.
      */
-    public JmsWireTargetDefinition(JmsBindingMetadata metadata) {
+    public JmsWireTargetDefinition(JmsBindingMetadata metadata, TransactionType transactionType) {
         this.metadata = metadata;
+        this.transactionType = transactionType;
     }
 
     /**
@@ -56,6 +64,20 @@ public class JmsWireTargetDefinition extends PhysicalWireTargetDefinition {
      */
     public void setMetadata(JmsBindingMetadata metadata) {
         this.metadata = metadata;
+    }
+
+    /**
+     * @return Transaction type.
+     */
+    public TransactionType getTransactionType() {
+        return transactionType;
+    }
+
+    /**
+     * @param transactionType Transaction type.
+     */
+    public void setTransactionType(TransactionType transactionType) {
+        this.transactionType = transactionType;
     }
 
 }

@@ -27,7 +27,6 @@ import javax.jms.Destination;
 import javax.jms.MessageListener;
 
 import org.fabric3.binding.jms.host.JmsHost;
-import org.fabric3.binding.jms.host.impl.StandaloneJmsHost;
 import org.fabric3.binding.jms.model.ConnectionFactoryDefinition;
 import org.fabric3.binding.jms.model.CorrelationScheme;
 import org.fabric3.binding.jms.model.CreateOption;
@@ -53,7 +52,6 @@ import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 /**

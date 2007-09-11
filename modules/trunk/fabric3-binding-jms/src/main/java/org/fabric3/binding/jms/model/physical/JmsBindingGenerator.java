@@ -20,22 +20,35 @@ package org.fabric3.binding.jms.model.physical;
 
 import java.util.Set;
 
+import javax.xml.namespace.QName;
+
+import org.fabric3.binding.jms.TransactionType;
 import org.fabric3.binding.jms.model.logical.JmsBindingDefinition;
 import org.fabric3.extension.generator.BindingGeneratorExtension;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.definitions.Intent;
+import org.fabric3.spi.Constants;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.osoa.sca.annotations.EagerInit;
 
 /**
+ * Binding generator that creates the physical source and target definitions for wires. Message 
+ * acknowledgement is always expected to be using transactions, either local or global, as expressed by 
+ * the intents transactedOneWay, transactedOneWay.local or transactedOneWay.global.
+ * 
  * @version $Revision$ $Date$
  */
 @EagerInit
 public class JmsBindingGenerator extends BindingGeneratorExtension<JmsWireSourceDefinition, JmsWireTargetDefinition, JmsBindingDefinition> {
 
+    // Transacted one way intent
+    private static final QName TRANSACTED_ONEWAY = new QName(Constants.FABRIC3_NS, "transactedOneWay");
+    private static final QName TRANSACTED_ONEWAY_LOCAL = new QName(Constants.FABRIC3_NS, "transactedOneWay.local");
+    private static final QName TRANSACTED_ONEWAY_GLOBAL = new QName(Constants.FABRIC3_NS, "transactedOneWay.global");
+    
     /**
      * @see org.fabric3.spi.generator.BindingGenerator#generateWireSource(org.fabric3.spi.model.instance.LogicalBinding,
      *                                                                    java.util.Set,
@@ -45,7 +58,10 @@ public class JmsBindingGenerator extends BindingGeneratorExtension<JmsWireSource
                                                       Set<Intent> intentsToBeProvided,
                                                       GeneratorContext context,
                                                       ServiceDefinition serviceDefinition) throws GenerationException {
-        return new JmsWireSourceDefinition(logicalBinding.getBinding().getMetadata());
+        
+        TransactionType transactionType = getTransactionType(intentsToBeProvided);
+        return new JmsWireSourceDefinition(logicalBinding.getBinding().getMetadata(), transactionType);
+        
     }
 
     /**
@@ -56,9 +72,11 @@ public class JmsBindingGenerator extends BindingGeneratorExtension<JmsWireSource
     public JmsWireTargetDefinition generateWireTarget(LogicalBinding<JmsBindingDefinition> logicalBinding,
                                                       Set<Intent> intentsToBeProvided,
                                                       GeneratorContext context,
-                                                      ReferenceDefinition referenceDefinition)
-        throws GenerationException {
-        return new JmsWireTargetDefinition(logicalBinding.getBinding().getMetadata());
+                                                      ReferenceDefinition referenceDefinition) throws GenerationException {
+        
+        TransactionType transactionType = getTransactionType(intentsToBeProvided);
+        return new JmsWireTargetDefinition(logicalBinding.getBinding().getMetadata(), transactionType);
+        
     }
 
     /**
@@ -67,6 +85,21 @@ public class JmsBindingGenerator extends BindingGeneratorExtension<JmsWireSource
     @Override
     protected Class<JmsBindingDefinition> getBindingDefinitionClass() {
         return JmsBindingDefinition.class;
+    }
+
+    /*
+     * Gets the transaction type.
+     */
+    private TransactionType getTransactionType(Set<Intent> intentsToBeProvided) {
+        
+        TransactionType transactionType = null;
+        if(intentsToBeProvided.contains(TRANSACTED_ONEWAY) || intentsToBeProvided.contains(TRANSACTED_ONEWAY_GLOBAL)) {
+            transactionType = TransactionType.GLOBAL;
+        } else if(intentsToBeProvided.contains(TRANSACTED_ONEWAY_LOCAL)) {
+            transactionType = TransactionType.LOCAL;
+        }
+        return transactionType;
+        
     }
 
 }
