@@ -20,19 +20,23 @@ package org.fabric3.binding.jms.host.standalone;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.jms.Connection;
+import javax.jms.ConnectionConsumer;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
-import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.Session;
 
 import org.fabric3.binding.jms.Fabric3JmsException;
+import org.fabric3.binding.jms.TransactionType;
 import org.fabric3.binding.jms.host.JmsHost;
-import org.fabric3.binding.jms.wire.helper.JmsHelper;
-import org.osoa.sca.annotations.Property;
+import org.fabric3.binding.jms.tx.TransactionHandler;
+import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Service handler for JMS.
@@ -47,35 +51,43 @@ public class StandaloneJmsHost implements JmsHost {
     private Connection connection;
 
     /**
-     * Sessions.
+     * Server session pools.
      */
-    private List<Session> sessions = new LinkedList<Session>();
+    private List<StandaloneServerSessionPool> serverSessionPools = new CopyOnWriteArrayList<StandaloneServerSessionPool>();
+
+    /**
+     * Connection consumers.
+     */
+    private List<ConnectionConsumer> connectionConsumers = new CopyOnWriteArrayList<ConnectionConsumer>();
     
     /**
-     * Receiver threads.
+     * Transaction handlers.
      */
-    private int receiverThreads = 10;
+    private Map<TransactionType, TransactionHandler> transactionHandlers;
     
     /**
-     * Sets the number of receiver threads.
-     * 
-     * @param receiverThreads Number of receiver threads.
+     * Injects the transaction handlers.
+     * @param txHandlers Transaction handlers.
      */
-    @Property 
-    public void setReceiverThreads(int receiverThreads) {
-        this.receiverThreads = receiverThreads;
+    @Reference
+    public void setTransactionHandlers(Map<String, TransactionHandler> txHandlers) {
+        for(Map.Entry<String, TransactionHandler> entry: txHandlers.entrySet()) {
+            transactionHandlers.put(TransactionType.valueOf(entry.getKey()), entry.getValue());
+        }
     }
 
     /**
      * Stops the receiver threads.
+     * @throws JMSException 
      */
-    public void stop() {
-
-        for (Session session : sessions) {
-            JmsHelper.closeQuietly(session);
+    @Destroy
+    public void stop() throws JMSException {
+        for(StandaloneServerSessionPool sessionPool : serverSessionPools) {
+            sessionPool.stop();
         }
-        JmsHelper.closeQuietly(connection);
-
+        for(ConnectionConsumer connectionConsumer : connectionConsumers) {
+            connectionConsumer.close();
+        }
     }
 
     /**
@@ -83,19 +95,28 @@ public class StandaloneJmsHost implements JmsHost {
      */
     public void registerListener(Destination destination, 
                                  ConnectionFactory connectionFactory, 
-                                 MessageListener messageListener, 
-                                 boolean transactional) {
+                                 List<MessageListener> listeners, 
+                                 TransactionType transactionType) {
         
         try {
 
             connection = connectionFactory.createConnection();
-            for (int i = 0; i < receiverThreads; i++) {
-                Session session = connection.createSession(true, Session.SESSION_TRANSACTED);
-                MessageConsumer consumer = session.createConsumer(destination);
-                consumer.setMessageListener(messageListener);
-                sessions.add(session);
+            List<Session> sessions = new LinkedList<Session>();
+            for (MessageListener listener : listeners) {
+                boolean transacted = transactionType != TransactionType.GLOBAL;
+                Session session = connection.createSession(transacted, Session.SESSION_TRANSACTED);
+                session.setMessageListener(listener);
             }
+            
+            TransactionHandler transactionHandler = transactionHandlers.get(transactionType);
+            StandaloneServerSessionPool serverSessionPool = new StandaloneServerSessionPool(sessions, transactionHandler);
+            
+            ConnectionConsumer connectionConsumer = connection.createConnectionConsumer(destination, null, serverSessionPool, 1);
+            serverSessionPools.add(serverSessionPool);
+            connectionConsumers.add(connectionConsumer);
+            
             connection.start();
+            
         } catch (JMSException ex) {
             throw new Fabric3JmsException("Unable to activate service", ex);
         }

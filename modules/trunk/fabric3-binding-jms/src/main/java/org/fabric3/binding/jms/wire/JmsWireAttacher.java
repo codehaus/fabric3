@@ -20,6 +20,8 @@ package org.fabric3.binding.jms.wire;
 
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import javax.jms.ConnectionFactory;
@@ -52,6 +54,7 @@ import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 /**
@@ -64,6 +67,9 @@ public class JmsWireAttacher implements WireAttacher<JmsWireSourceDefinition, Jm
     
     // JMS host
     private JmsHost jmsHost;
+    
+    // Number of listeners
+    private int receiverCount = 10;
     
     /**
      * Destination strategies.
@@ -84,6 +90,15 @@ public class JmsWireAttacher implements WireAttacher<JmsWireSourceDefinition, Jm
     @Reference(required = true)
     public void setJmsHost(JmsHost jmsHost) {
         this.jmsHost = jmsHost;
+    }
+    
+    /**
+     * Configurable property for receiver count.
+     * @param receiverCount Receiver count.
+     */
+    @Property
+    public void setReceiverCount(int receiverCount) {
+        this.receiverCount = receiverCount;
     }
 
     /**
@@ -144,9 +159,12 @@ public class JmsWireAttacher implements WireAttacher<JmsWireSourceDefinition, Jm
         create = destinationDefinition.getCreate();
         Destination resDestination = destinationStrategies.get(create).getDestination(destinationDefinition, resCf, env);
         
-        MessageListener messageListener = new Fabric3MessageListener(resDestination, resCf, ops, correlationScheme, wire);
+        List<MessageListener> listeners = new LinkedList<MessageListener>();
         
-        jmsHost.registerListener(reqDestination, reqCf, messageListener, false);
+        for(int i = 0;i < receiverCount;i++) {
+            listeners.add(new Fabric3MessageListener(resDestination, resCf, ops, correlationScheme, wire));
+        }
+        jmsHost.registerListener(reqDestination, reqCf, listeners, sourceDefinition.getTransactionType());
         
     }
 

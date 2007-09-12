@@ -48,6 +48,13 @@ public class StandaloneServerSessionPool implements ServerSessionPool {
             this.serverSessions.push(serverSession);
         }
     }
+    
+    /**
+     * Closes the underlying sessions.
+     */
+    public void stop() {
+        //TODO To implement
+    }
 
     /**
      * @see javax.jms.ServerSessionPool#getServerSession()

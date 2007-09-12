@@ -18,9 +18,13 @@
  */
 package org.fabric3.binding.jms.host;
 
+import java.util.List;
+
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.MessageListener;
+
+import org.fabric3.binding.jms.TransactionType;
 
 /**
  * @version $Revision$ $Date$
@@ -30,9 +34,12 @@ public interface JmsHost {
     /**
      * @param destination Destination to listen on.
      * @param factory Factory to create connections.
-     * @param listener Message listener.
-     * @param transactional Whether to receive in transactions.
+     * @param listeners Message listeners.
+     * @param transactionType Transaction demarcation mode.
      */
-    void registerListener(Destination destination, ConnectionFactory factory, MessageListener listener, boolean transactional);
+    void registerListener(Destination destination, 
+                          ConnectionFactory factory, 
+                          List<MessageListener> listeners, 
+                          TransactionType transactionType);
 
 }
