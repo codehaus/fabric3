@@ -49,6 +49,11 @@
             <version>0.2</version>
         </dependency>
         <dependency>
+            <groupId>org.codehaus.fabric3.development</groupId>
+            <artifactId>development-api</artifactId>
+            <version>0.1</version>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>

@@ -21,9 +21,9 @@
            name="CalculatorComposite"
            autowire="true">
 
-    <service name="calculatorService" promote="calculator">
+    <!--<service name="calculatorService" promote="calculator">-->
         <!-- Insert binding definition here -->
-    </service>
+    <!--</service>-->
     <!--
         Hessian binding:
         <hessian:binding.hessian uri="/calculator" />

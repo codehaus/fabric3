@@ -52,8 +52,8 @@
 
         <dependency>
             <groupId>org.codehaus.fabric3.webapp</groupId>
-            <artifactId>webapp-api</artifactId>
-            <version>0.2-SNAPSHOT</version>
+            <artifactId>fabric3-webapp-api</artifactId>
+            <version>0.2</version>
         </dependency>
 
         <dependency>
@@ -77,7 +77,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-binding-jms</artifactId>
-            <version>0.2-SNAPSHOT</version>
+            <version>0.2</version>
         </dependency>
         <dependency>
             <groupId>org.apache.activemq</groupId>
@@ -108,19 +108,19 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <runTimeVersion>0.2-SNAPSHOT</runTimeVersion>
+                    <runTimeVersion>0.2</runTimeVersion>
                     <extensions>
                         <!--  Hessian extension  -->
                         <!--<dependency>-->
                             <!--<groupId>org.codehaus.fabric3</groupId>-->
                             <!--<artifactId>fabric3-binding-hessian</artifactId>-->
-                            <!--<version>0.2-SNAPSHOT</version>-->
+                            <!--<version>0.2</version>-->
                         <!--</dependency>  -->
                         <!--  Web services extension
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-binding-ws</artifactId>
-                            <version>0.2-SNAPSHOT</version>
+                            <version>0.2</version>
                         </dependency>   -->
 
                     </extensions>
