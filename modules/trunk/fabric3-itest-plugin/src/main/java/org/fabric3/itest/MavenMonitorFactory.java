@@ -81,17 +81,20 @@ public class MavenMonitorFactory extends ProxyMonitorFactory {
                     message = MessageFormat.format(message, objects);
                 } else {
                     StringBuilder builder = new StringBuilder();
-                    builder.append(key).append(":");
-                    for (Object o : objects) {
-                        builder.append(' ');
-                        if (o instanceof Exception) {
-                            StringWriter sw = new StringWriter();
-                            PrintWriter pw = new PrintWriter(sw);
-                            formatException(pw, (Exception) o);
-                            builder.append(sw.toString());
-                            pw.close();
-                        } else {
-                            builder.append(String.valueOf(o));
+                    builder.append(key);
+                    if (objects != null) {
+                        builder.append(":");
+                        for (Object o : objects) {
+                            builder.append(' ');
+                            if (o instanceof Exception) {
+                                StringWriter sw = new StringWriter();
+                                PrintWriter pw = new PrintWriter(sw);
+                                formatException(pw, (Exception) o);
+                                builder.append(sw.toString());
+                                pw.close();
+                            } else {
+                                builder.append(String.valueOf(o));
+                            }
                         }
                     }
                     message = builder.toString();
@@ -131,6 +134,9 @@ public class MavenMonitorFactory extends ProxyMonitorFactory {
         }
 
         private Throwable getFirstException(Object[] objects) {
+            if (objects == null) {
+                return null;
+            }
             for (Object object : objects) {
                 if (object instanceof Throwable) {
                     return (Throwable) object;
