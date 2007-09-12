@@ -20,6 +20,16 @@
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
            targetNamespace="org.codehaus.fabric3"
            name="JMSBindingExtension">
+           
+    <!-- JMS Transaction Handler -->
+    <component name="JMSTransactionHandler" f3:key="LOCAL">
+        <system:implementation.system class="org.fabric3.binding.jms.tx.JmsTransactionHandler"/>
+    </component>
+           
+    <!-- JTA Transaction Handler -->
+    <component name="JTATransactionHandler" f3:key="GLOBAL">
+        <system:implementation.system class="org.fabric3.binding.jms.tx.JtaTransactionHandler"/>
+    </component>
 
     <!-- JMS Host -->
     <component name="JMSHost">
