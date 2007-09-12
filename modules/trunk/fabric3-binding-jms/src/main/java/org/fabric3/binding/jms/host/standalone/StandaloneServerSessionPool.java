@@ -24,6 +24,9 @@ import java.util.Stack;
 import javax.jms.JMSException;
 import javax.jms.ServerSession;
 import javax.jms.ServerSessionPool;
+import javax.jms.Session;
+
+import org.fabric3.binding.jms.tx.TransactionHandler;
 
 /**
  * Server session pool used by the standalone JMS server.
@@ -39,8 +42,9 @@ public class StandaloneServerSessionPool implements ServerSessionPool {
      * Initializes the server sessions.
      * @param serverSessions Server sessions.
      */
-    public StandaloneServerSessionPool(List<ServerSession> serverSessions) {
-        for(ServerSession serverSession : serverSessions) {
+    public StandaloneServerSessionPool(List<Session> sessions, TransactionHandler transactionHandler) {
+        for(Session session : sessions) {
+            ServerSession serverSession = new StandaloneServerSession(session, this, transactionHandler);
             this.serverSessions.push(serverSession);
         }
     }
@@ -62,6 +66,7 @@ public class StandaloneServerSessionPool implements ServerSessionPool {
             return serverSessions.pop();
             
         }
+        
     }
     
     /**

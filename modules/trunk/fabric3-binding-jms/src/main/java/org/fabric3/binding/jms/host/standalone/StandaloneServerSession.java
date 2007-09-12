@@ -22,7 +22,7 @@ import javax.jms.JMSException;
 import javax.jms.ServerSession;
 import javax.jms.Session;
 
-import org.fabric3.binding.jms.TransactionType;
+import org.fabric3.binding.jms.tx.TransactionHandler;
 
 /**
  * Server session used in standalone JMS host.
@@ -33,19 +33,19 @@ public class StandaloneServerSession implements ServerSession {
     
     private StandaloneServerSessionPool serverSessionPool;
     private Session session;
-    private TransactionType transactionType;
+    private TransactionHandler transactionHandler;
     
     /**
      * Initializes the server session.
      * 
      * @param session Underlying JMS session.
      * @param serverSessionPool Server session pool.
-     * @param transactionType Transaction type (XA or Local)
+     * @param transactionHandler Transaction handler (XA or Local)
      */
-    public StandaloneServerSession(Session session, StandaloneServerSessionPool serverSessionPool, TransactionType transactionType) {
+    public StandaloneServerSession(Session session, StandaloneServerSessionPool serverSessionPool, TransactionHandler transactionHandler) {
         this.session = session;
         this.serverSessionPool = serverSessionPool;
-        this.transactionType = transactionType;
+        this.transactionHandler = transactionHandler;
     }
 
     /**
@@ -61,10 +61,11 @@ public class StandaloneServerSession implements ServerSession {
     public void start() throws JMSException {
         
         try {
+            transactionHandler.begin(session);
             session.run();
-            if(transactionType == TransactionType.LOCAL) {
-                session.commit();
-            }
+            transactionHandler.commit(session);
+        } catch(Exception ex) {
+            transactionHandler.rollback(session);
         } finally {
             serverSessionPool.returnSession(this);
         }
