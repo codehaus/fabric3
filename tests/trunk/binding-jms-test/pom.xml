@@ -81,13 +81,23 @@ under the License.
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-itest-plugin</artifactId>
-                <version>RELEASE</version>
+                <version>0.3-SNAPSHOT</version>
                 <configuration>
                     <contributions>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-binding-jms</artifactId>
-                            <version>0.2.1</version>
+                            <version>0.3-SNAPSHOT</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-tx-jotm</artifactId>
+                            <version>0.1-SNAPSHOT</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-tx</artifactId>
+                            <version>0.2-SNAPSHOT</version>
                         </dependency>
                     </contributions>
                     <extensions>

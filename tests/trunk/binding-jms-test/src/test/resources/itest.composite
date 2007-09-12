@@ -24,7 +24,8 @@
         <binding.jms 
             correlationScheme="RequestMsgIDToCorrelID" 
             jndiURL="vm://localhost" 
-            initialContextFactory="org.apache.activemq.jndi.ActiveMQInitialContextFactory">
+            initialContextFactory="org.apache.activemq.jndi.ActiveMQInitialContextFactory"
+            requires="f3:transactedOneWay.global">
             <destination name="serviceQueue" type="queue" create="always"/>
             <connectionFactory name="QueueConnectionFactory" create="never"/>
             <response>
