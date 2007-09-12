@@ -111,14 +111,9 @@ public class EjbWireAttacher implements WireAttacher<EjbWireSourceDefinition, Ej
         String homeInterface = sourceDefinition.getBindingDefinition().getHomeInterface();
         if(homeInterface != null) {
             EjbHomeServiceHandler homeHandler = new EjbHomeServiceHandler(proxy);
-            try {
-                Class homeInterfaceClass = Class.forName(homeInterface, true, interfaceClass.getClassLoader());
-                proxy = Proxy.newProxyInstance(homeInterfaceClass.getClassLoader(),
-                                               new Class[] {homeInterfaceClass}, homeHandler);
-            } catch(ClassNotFoundException cnfe) {
-                throw new WireAttachException("Error attaching EJB binding source",
-                                              sourceDefinition.getUri(), targetDefinition.getUri(), cnfe);  
-            }
+            Class homeInterfaceClass = loadClass(homeInterface, sourceDefinition.getClassLoaderURI());
+            proxy = Proxy.newProxyInstance(homeInterfaceClass.getClassLoader(),
+                                           new Class[] {homeInterfaceClass}, homeHandler);
         }
 
         URI uri = sourceDefinition.getBindingDefinition().getTargetUri();
