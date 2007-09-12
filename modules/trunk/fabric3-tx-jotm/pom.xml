@@ -27,7 +27,7 @@
     <version>0.1-SNAPSHOT</version>
     <name>Fabric3 JOTM Transaction Manager</name>
     <description>Fabric3 JOTM Transaction Manager.</description>
-    <packaging>jar</packaging>
+    <packaging>sca-contribution-jar</packaging>
 
     <dependencies>
 
@@ -79,10 +79,22 @@
 
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.fabric3</groupId>
+                <artifactId>fabric3-contribution-plugin</artifactId>
+                <version>RELEASE</version>
+                <extensions>true</extensions>
+                <configuration />
+            </plugin>
+        </plugins>
+    </build>
 
     <scm>
         <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/fabric3-tx-jotm</connection>
         <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/fabric3-tx-jotm</developerConnection>
         <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/fabric3-tx-jotm</url>
     </scm>
+    
 </project>
