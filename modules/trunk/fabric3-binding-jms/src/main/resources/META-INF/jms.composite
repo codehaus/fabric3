@@ -34,7 +34,10 @@
     <!-- JMS Host -->
     <component name="JMSHost">
         <system:implementation.system class="org.fabric3.binding.jms.host.standalone.StandaloneJmsHost"/>
-        <reference name="transactionHandlers" target="JMSTransactionHandler JTATransactionHandler"/>
+        <!-- TODO Fix this when maps are enabled in the system tree -->
+        <!-- reference name="transactionHandlers" target="JMSTransactionHandler JTATransactionHandler" multiplicity="0..n"/-->
+        <reference name="jmsTransactionHandler" target="JMSTransactionHandler"/>
+        <reference name="jtaTransactionHandler" target="JTATransactionHandler"/>
     </component>
 
     <!-- JMS Binding Loader -->

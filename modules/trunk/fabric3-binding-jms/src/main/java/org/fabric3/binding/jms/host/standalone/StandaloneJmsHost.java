@@ -18,6 +18,7 @@
  */
 package org.fabric3.binding.jms.host.standalone;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,8 @@ import javax.jms.Session;
 import org.fabric3.binding.jms.Fabric3JmsException;
 import org.fabric3.binding.jms.TransactionType;
 import org.fabric3.binding.jms.host.JmsHost;
+import org.fabric3.binding.jms.tx.JmsTransactionHandler;
+import org.fabric3.binding.jms.tx.JtaTransactionHandler;
 import org.fabric3.binding.jms.tx.TransactionHandler;
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.Reference;
@@ -63,17 +66,28 @@ public class StandaloneJmsHost implements JmsHost {
     /**
      * Transaction handlers.
      */
-    private Map<TransactionType, TransactionHandler> transactionHandlers;
+    private Map<TransactionType, TransactionHandler> transactionHandlers = new HashMap<TransactionType, TransactionHandler>();
     
     /**
      * Injects the transaction handlers.
      * @param txHandlers Transaction handlers.
+     * TODO Fix this when map support is enabled in the system tree.
      */
-    @Reference
+    /*@Reference
     public void setTransactionHandlers(Map<String, TransactionHandler> txHandlers) {
         for(Map.Entry<String, TransactionHandler> entry: txHandlers.entrySet()) {
             transactionHandlers.put(TransactionType.valueOf(entry.getKey()), entry.getValue());
         }
+    }*/
+    
+    @Reference
+    public void setJmsTransactionHandler(JmsTransactionHandler transactionHandler) {
+        transactionHandlers.put(TransactionType.LOCAL, transactionHandler);
+    }
+    
+    @Reference
+    public void setJtaTransactionHandler(JtaTransactionHandler transactionHandler) {
+        transactionHandlers.put(TransactionType.GLOBAL, transactionHandler);
     }
 
     /**
@@ -106,6 +120,7 @@ public class StandaloneJmsHost implements JmsHost {
                 boolean transacted = transactionType != TransactionType.GLOBAL;
                 Session session = connection.createSession(transacted, Session.SESSION_TRANSACTED);
                 session.setMessageListener(listener);
+                sessions.add(session);
             }
             
             TransactionHandler transactionHandler = transactionHandlers.get(transactionType);
