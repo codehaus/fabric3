@@ -32,6 +32,20 @@
             transaction or include message receipt on a service in a transaction.
         </description>
     </intent> 
+
+    <!-- Needs to be implemented by the binding type --> 
+    <intent name="transactedOneWay.global" constrains="binding">
+        <description>
+            Qualifies transactedOneWay to use global transactions.
+        </description>
+    </intent>
+
+    <!-- Needs to be implemented by the binding type --> 
+    <intent name="transactedOneWay.local" constrains="binding">
+        <description>
+            Qualifies transactedOneWay to use local transactions.
+        </description>
+    </intent>
     
     <!-- Begins a transaction if one not already in progress and commits it -->
     <policySet name="managedTransactionPolicy" provides="f3:managedTransaction">
@@ -47,6 +61,5 @@
     <policySet name="propagatesTransactionPolicy" provides="f3:propagatesTransaction">
         <f3:transaction action="PROPOGATE"/>
     </policySet>
- 
 
 </definitions>
