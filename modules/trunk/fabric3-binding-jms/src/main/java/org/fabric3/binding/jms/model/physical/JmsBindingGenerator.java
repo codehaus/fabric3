@@ -92,13 +92,17 @@ public class JmsBindingGenerator extends BindingGeneratorExtension<JmsWireSource
      */
     private TransactionType getTransactionType(Set<Intent> intentsToBeProvided) {
         
-        TransactionType transactionType = null;
-        if(intentsToBeProvided.contains(TRANSACTED_ONEWAY) || intentsToBeProvided.contains(TRANSACTED_ONEWAY_GLOBAL)) {
-            transactionType = TransactionType.GLOBAL;
-        } else if(intentsToBeProvided.contains(TRANSACTED_ONEWAY_LOCAL)) {
-            transactionType = TransactionType.LOCAL;
+        for(Intent intent : intentsToBeProvided) {
+            if(TRANSACTED_ONEWAY_GLOBAL.equals(intent.getName())) {
+                return TransactionType.GLOBAL;
+            } else if(TRANSACTED_ONEWAY_LOCAL.equals(intent.getName())) {
+                return TransactionType.LOCAL;
+            } else if(TRANSACTED_ONEWAY.equals(intent.getName())) {
+                return TransactionType.GLOBAL;
+            }
         }
-        return transactionType;
+
+        return null;
         
     }
 

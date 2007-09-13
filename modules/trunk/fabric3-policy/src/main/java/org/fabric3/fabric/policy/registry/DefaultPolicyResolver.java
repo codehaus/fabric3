@@ -24,6 +24,7 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
+import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.definitions.BindingType;
 import org.fabric3.scdl.definitions.ImplementationType;
@@ -59,8 +60,9 @@ public class DefaultPolicyResolver implements PolicyResolver {
      * @see org.fabric3.spi.policy.registry.PolicyResolver#getInteractionIntentsToBeProvided(org.fabric3.spi.model.instance.LogicalBinding)
      */
     public Set<Intent> getInteractionIntentsToBeProvided(LogicalBinding<?> logicalBinding) throws PolicyResolutionException {
-        
-        QName type = logicalBinding.getType();
+
+        BindingDefinition bindingDefinition = logicalBinding.getBinding();
+        QName type = logicalBinding.getBinding().getType();
         BindingType bindingType = definitionsRegistry.getDefinition(type, BindingType.class);
         
         // FIXME This should not happen, all binding types should be registsred
@@ -69,7 +71,11 @@ public class DefaultPolicyResolver implements PolicyResolver {
         }
 
         Set<QName> mayProvidedIntents = bindingType.getMayProvide();
-        Set<QName> intentNames = aggregateIntents(logicalBinding);
+        
+        // Aggregate all the intents from the ancestors
+        Set<QName> intentNames = new HashSet<QName>();
+        intentNames.addAll(bindingDefinition.getIntents());
+        intentNames.addAll(aggregateIntents(logicalBinding));
 
         // Expand all the profile intents
         Set<Intent> requiredIntents = resolveProfileIntents(intentNames);
@@ -105,7 +111,7 @@ public class DefaultPolicyResolver implements PolicyResolver {
 
         // Aggregate all the intents from the ancestors
         Set<QName> intentNames = new HashSet<QName>();
-        intentNames.addAll(logicalComponent.getDefinition().getImplementation().getIntents());
+        intentNames.addAll(implementation.getIntents());
         intentNames.addAll(aggregateIntents(logicalComponent));
         intentNames.removeAll(mayProvidedIntents);
 

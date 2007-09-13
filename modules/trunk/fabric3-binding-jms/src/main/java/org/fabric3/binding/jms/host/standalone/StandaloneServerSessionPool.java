@@ -52,8 +52,11 @@ public class StandaloneServerSessionPool implements ServerSessionPool {
     /**
      * Closes the underlying sessions.
      */
-    public void stop() {
-        //TODO To implement
+    public void stop() throws JMSException {
+        ServerSession serverSession = null;
+        while((serverSession = getServerSession()) != null) {
+            serverSession.getSession().close();
+        }
     }
 
     /**
