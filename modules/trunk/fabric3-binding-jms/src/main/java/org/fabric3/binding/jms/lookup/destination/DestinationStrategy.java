@@ -17,35 +17,31 @@
  * under the License.    
  */
 
-package org.fabric3.binding.jms.wire.lookup.destination;
+package org.fabric3.binding.jms.lookup.destination;
 
 import java.util.Hashtable;
 
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
-import javax.naming.NameNotFoundException;
 
-import org.fabric3.binding.jms.Fabric3JmsException;
 import org.fabric3.binding.jms.model.DestinationDefinition;
-import org.fabric3.binding.jms.wire.helper.JndiHelper;
 
 /**
- * The destination is always looked up and never created.
+ * Strategy for looking up destinations.
+ * 
+ * @version $Revsion$ $Date$
  *
  */
-public class NeverDestinationStrategy implements DestinationStrategy {
+public interface DestinationStrategy {
 
     /**
-     * @see org.fabric3.binding.jms.wire.lookup.destination.DestinationStrategy#getDestination(org.fabric3.binding.jms.model.DestinationDefinition, javax.jms.ConnectionFactory, java.util.Hashtable)
+     * Gets the destination based on SCA JMS binding rules.
+     * 
+     * @param definition Destination definition.
+     * @param cf Connection factory.
+     * @param env JNDI environment.
+     * @return Lokked up or created destination.
      */
-    public Destination getDestination(DestinationDefinition definition,
-                                      ConnectionFactory cf,
-                                      Hashtable<String, String> env) {
-        try {
-            return (Destination) JndiHelper.lookup(definition.getName(), env);
-        } catch(NameNotFoundException ex) {
-            throw new Fabric3JmsException(definition.getName() + " not found", ex);
-        }
-    }
+    Destination getDestination(DestinationDefinition definition, ConnectionFactory cf, Hashtable<String, String> env);
 
 }

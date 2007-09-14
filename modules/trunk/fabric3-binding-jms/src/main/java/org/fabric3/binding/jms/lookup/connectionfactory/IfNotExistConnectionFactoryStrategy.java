@@ -17,29 +17,35 @@
  * under the License.    
  */
 
-package org.fabric3.binding.jms.wire.lookup.connectionfactory;
+package org.fabric3.binding.jms.lookup.connectionfactory;
 
 import java.util.Hashtable;
 
 import javax.jms.ConnectionFactory;
+import javax.naming.NameNotFoundException;
 
+import org.fabric3.binding.jms.helper.JndiHelper;
 import org.fabric3.binding.jms.model.ConnectionFactoryDefinition;
 
 /**
- * Strategy for looking up connection factories.
- * 
- * @version $Revsion$ $Date$
+ * The destination is looked up, if not found it is created.
  *
  */
-public interface ConnectionFactoryStrategy {
+public class IfNotExistConnectionFactoryStrategy implements ConnectionFactoryStrategy {
+    
+    /** Always strategy. */
+    private ConnectionFactoryStrategy always = new AlwaysConnectionFactoryStrategy();
 
     /**
-     * Gets the connection factory based on SCA JMS binding rules.
-     * 
-     * @param definition Connection factory definition.
-     * @param env JNDI environment.
-     * @return Lokked up or created destination.
+     * @see org.fabric3.binding.jms.lookup.connectionfactory.ConnectionFactoryStrategy#getConnectionFactory(org.fabric3.binding.jms.model.ConnectionFactoryDefinition, java.util.Hashtable)
      */
-    ConnectionFactory getConnectionFactory(ConnectionFactoryDefinition definition, Hashtable<String, String> env);
+    public ConnectionFactory getConnectionFactory(ConnectionFactoryDefinition definition, Hashtable<String, String> env) {
+        try {
+            return (ConnectionFactory) JndiHelper.lookup(definition.getName(), env);
+        } catch(NameNotFoundException ex) {
+            return always.getConnectionFactory(definition, env);
+        }
+        
+    }
 
 }

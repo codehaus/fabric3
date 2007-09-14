@@ -17,7 +17,7 @@
  * under the License.    
  */
 
-package org.fabric3.binding.jms.wire.lookup.destination;
+package org.fabric3.binding.jms.lookup.destination;
 
 import java.util.Hashtable;
 
@@ -30,8 +30,8 @@ import javax.jms.Session;
 import javax.jms.TopicConnection;
 
 import org.fabric3.binding.jms.Fabric3JmsException;
+import org.fabric3.binding.jms.helper.JmsHelper;
 import org.fabric3.binding.jms.model.DestinationDefinition;
-import org.fabric3.binding.jms.wire.helper.JmsHelper;
 
 /**
  * The destination is never looked up, it is always created.
@@ -40,7 +40,7 @@ import org.fabric3.binding.jms.wire.helper.JmsHelper;
 public class AlwaysDestinationStrategy implements DestinationStrategy {
 
     /**
-     * @see org.fabric3.binding.jms.wire.lookup.destination.DestinationStrategy#getDestination(org.fabric3.binding.jms.model.DestinationDefinition, javax.jms.ConnectionFactory, java.util.Hashtable)
+     * @see org.fabric3.binding.jms.lookup.destination.DestinationStrategy#getDestination(org.fabric3.binding.jms.model.DestinationDefinition, javax.jms.ConnectionFactory, java.util.Hashtable)
      */
     public Destination getDestination(DestinationDefinition definition,
                                       ConnectionFactory cf,

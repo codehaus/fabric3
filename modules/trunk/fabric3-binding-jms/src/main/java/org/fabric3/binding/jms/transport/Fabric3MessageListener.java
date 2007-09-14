@@ -17,7 +17,7 @@
  * under the License.    
  */
 
-package org.fabric3.binding.jms.wire;
+package org.fabric3.binding.jms.transport;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -34,8 +34,8 @@ import javax.jms.ObjectMessage;
 import javax.jms.Session;
 
 import org.fabric3.binding.jms.Fabric3JmsException;
+import org.fabric3.binding.jms.helper.JmsHelper;
 import org.fabric3.binding.jms.model.CorrelationScheme;
-import org.fabric3.binding.jms.wire.helper.JmsHelper;
 import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.wire.Interceptor;

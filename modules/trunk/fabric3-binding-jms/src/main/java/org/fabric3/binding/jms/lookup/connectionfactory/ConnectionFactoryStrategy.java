@@ -17,31 +17,29 @@
  * under the License.    
  */
 
-package org.fabric3.binding.jms.wire.lookup.destination;
+package org.fabric3.binding.jms.lookup.connectionfactory;
 
 import java.util.Hashtable;
 
 import javax.jms.ConnectionFactory;
-import javax.jms.Destination;
 
-import org.fabric3.binding.jms.model.DestinationDefinition;
+import org.fabric3.binding.jms.model.ConnectionFactoryDefinition;
 
 /**
- * Strategy for looking up destinations.
+ * Strategy for looking up connection factories.
  * 
  * @version $Revsion$ $Date$
  *
  */
-public interface DestinationStrategy {
+public interface ConnectionFactoryStrategy {
 
     /**
-     * Gets the destination based on SCA JMS binding rules.
+     * Gets the connection factory based on SCA JMS binding rules.
      * 
-     * @param definition Destination definition.
-     * @param cf Connection factory.
+     * @param definition Connection factory definition.
      * @param env JNDI environment.
      * @return Lokked up or created destination.
      */
-    Destination getDestination(DestinationDefinition definition, ConnectionFactory cf, Hashtable<String, String> env);
+    ConnectionFactory getConnectionFactory(ConnectionFactoryDefinition definition, Hashtable<String, String> env);
 
 }

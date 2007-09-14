@@ -17,7 +17,7 @@
  * under the License.    
  */
 
-package org.fabric3.binding.jms.wire.helper;
+package org.fabric3.binding.jms.helper;
 
 import javax.jms.Connection;
 import javax.jms.JMSException;

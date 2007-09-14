@@ -17,33 +17,36 @@
  * under the License.    
  */
 
-package org.fabric3.binding.jms.wire.lookup.connectionfactory;
+package org.fabric3.binding.jms.lookup.connectionfactory;
 
 import java.util.Hashtable;
 
 import javax.jms.ConnectionFactory;
-import javax.naming.NameNotFoundException;
 
+import org.fabric3.binding.jms.Fabric3JmsException;
 import org.fabric3.binding.jms.model.ConnectionFactoryDefinition;
-import org.fabric3.binding.jms.wire.helper.JndiHelper;
 
 /**
- * The destination is looked up, if not found it is created.
+ * The connection factory is never looked up, it is always created.
+ * 
+ * @version $Revision$ $Date$
  *
  */
-public class IfNotExistConnectionFactoryStrategy implements ConnectionFactoryStrategy {
-    
-    /** Always strategy. */
-    private ConnectionFactoryStrategy always = new AlwaysConnectionFactoryStrategy();
+public class AlwaysConnectionFactoryStrategy implements ConnectionFactoryStrategy {
 
     /**
-     * @see org.fabric3.binding.jms.wire.lookup.connectionfactory.ConnectionFactoryStrategy#getConnectionFactory(org.fabric3.binding.jms.model.ConnectionFactoryDefinition, java.util.Hashtable)
+     * @see org.fabric3.binding.jms.lookup.connectionfactory.ConnectionFactoryStrategy#getConnectionFactory(org.fabric3.binding.jms.model.ConnectionFactoryDefinition, java.util.Hashtable)
      */
     public ConnectionFactory getConnectionFactory(ConnectionFactoryDefinition definition, Hashtable<String, String> env) {
-        try {
-            return (ConnectionFactory) JndiHelper.lookup(definition.getName(), env);
-        } catch(NameNotFoundException ex) {
-            return always.getConnectionFactory(definition, env);
+        
+        try {            
+            return (ConnectionFactory) Class.forName(definition.getName()).newInstance();            
+        } catch (InstantiationException ex) {
+            throw new Fabric3JmsException("Unable to create connection factory", ex);
+        } catch (IllegalAccessException ex) {
+            throw new Fabric3JmsException("Unable to create connection factory", ex);
+        } catch (ClassNotFoundException ex) {
+            throw new Fabric3JmsException("Unable to create connection factory", ex);
         }
         
     }

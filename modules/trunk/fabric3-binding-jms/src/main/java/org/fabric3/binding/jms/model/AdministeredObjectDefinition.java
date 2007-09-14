@@ -18,6 +18,8 @@
  */
 package org.fabric3.binding.jms.model;
 
+import java.util.Properties;
+
 import org.fabric3.scdl.ModelObject;
 
 /**
@@ -41,6 +43,11 @@ public class AdministeredObjectDefinition extends ModelObject {
      * Destination creation.
      */
     private CreateOption create = CreateOption.ifnotexist;
+    
+    /**
+     * Properties.
+     */
+    private Properties properties = new Properties();
 
     /**
      * @return the create
@@ -82,6 +89,28 @@ public class AdministeredObjectDefinition extends ModelObject {
      */
     public void setType(DestinationType type) {
         this.type = type;
+    }
+
+    /**
+     * @return Properties used to create the administered object.
+     */
+    public Properties getProperties() {
+        return properties;
+    }
+
+    /**
+     * @param Properties used to create the administered object.
+     */
+    public void setProperties(Properties properties) {
+        this.properties = properties;
+    }
+    
+    /**
+     * @param name Name of the property.
+     * @param value Value of the property.
+     */
+    public void addProperty(String name, String value) {
+        properties.put(name, value);
     }
 
 }

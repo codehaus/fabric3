@@ -27,8 +27,9 @@ import javax.jms.ObjectMessage;
 import javax.jms.Session;
 
 import org.fabric3.binding.jms.Fabric3JmsException;
+import org.fabric3.binding.jms.helper.JmsHelper;
 import org.fabric3.binding.jms.model.CorrelationScheme;
-import org.fabric3.binding.jms.wire.helper.JmsHelper;
+import org.fabric3.binding.jms.transport.Fabric3MessageReceiver;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.spi.wire.MessageImpl;

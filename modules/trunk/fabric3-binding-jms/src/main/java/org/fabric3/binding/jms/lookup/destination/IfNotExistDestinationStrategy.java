@@ -17,32 +17,38 @@
  * under the License.    
  */
 
-package org.fabric3.binding.jms.wire.lookup.connectionfactory;
+package org.fabric3.binding.jms.lookup.destination;
 
 import java.util.Hashtable;
 
 import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
 import javax.naming.NameNotFoundException;
 
-import org.fabric3.binding.jms.Fabric3JmsException;
-import org.fabric3.binding.jms.model.ConnectionFactoryDefinition;
-import org.fabric3.binding.jms.wire.helper.JndiHelper;
+import org.fabric3.binding.jms.helper.JndiHelper;
+import org.fabric3.binding.jms.model.DestinationDefinition;
 
 /**
- * The connection factory is always looked up and never created.
+ * The destination is looked up, if not found it is created.
  *
  */
-public class NeverConnectionFactoryStrategy implements ConnectionFactoryStrategy {
+public class IfNotExistDestinationStrategy implements DestinationStrategy {
+    
+    /** Always strategy. */
+    private DestinationStrategy always = new AlwaysDestinationStrategy();
 
     /**
-     * @see org.fabric3.binding.jms.wire.lookup.connectionfactory.ConnectionFactoryStrategy#getConnectionFactory(org.fabric3.binding.jms.model.ConnectionFactoryDefinition, java.util.Hashtable)
+     * @see org.fabric3.binding.jms.lookup.destination.DestinationStrategy#getDestination(org.fabric3.binding.jms.model.DestinationDefinition, javax.jms.ConnectionFactory, java.util.Hashtable)
      */
-    public ConnectionFactory getConnectionFactory(ConnectionFactoryDefinition definition, Hashtable<String, String> env) {
+    public Destination getDestination(DestinationDefinition definition,
+                                      ConnectionFactory cf,
+                                      Hashtable<String, String> env) {
         try {
-            return (ConnectionFactory) JndiHelper.lookup(definition.getName(), env);
+            return (Destination) JndiHelper.lookup(definition.getName(), env);
         } catch(NameNotFoundException ex) {
-            throw new Fabric3JmsException(definition.getName() + " not found", ex);
+            return always.getDestination(definition, cf, env);
         }
+        
     }
 
 }

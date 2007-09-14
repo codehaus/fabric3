@@ -17,7 +17,7 @@
  * under the License.    
  */
 
-package org.fabric3.binding.jms.wire.lookup.destination;
+package org.fabric3.binding.jms.lookup.destination;
 
 import java.util.Hashtable;
 
@@ -25,20 +25,18 @@ import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.naming.NameNotFoundException;
 
+import org.fabric3.binding.jms.Fabric3JmsException;
+import org.fabric3.binding.jms.helper.JndiHelper;
 import org.fabric3.binding.jms.model.DestinationDefinition;
-import org.fabric3.binding.jms.wire.helper.JndiHelper;
 
 /**
- * The destination is looked up, if not found it is created.
+ * The destination is always looked up and never created.
  *
  */
-public class IfNotExistDestinationStrategy implements DestinationStrategy {
-    
-    /** Always strategy. */
-    private DestinationStrategy always = new AlwaysDestinationStrategy();
+public class NeverDestinationStrategy implements DestinationStrategy {
 
     /**
-     * @see org.fabric3.binding.jms.wire.lookup.destination.DestinationStrategy#getDestination(org.fabric3.binding.jms.model.DestinationDefinition, javax.jms.ConnectionFactory, java.util.Hashtable)
+     * @see org.fabric3.binding.jms.lookup.destination.DestinationStrategy#getDestination(org.fabric3.binding.jms.model.DestinationDefinition, javax.jms.ConnectionFactory, java.util.Hashtable)
      */
     public Destination getDestination(DestinationDefinition definition,
                                       ConnectionFactory cf,
@@ -46,9 +44,8 @@ public class IfNotExistDestinationStrategy implements DestinationStrategy {
         try {
             return (Destination) JndiHelper.lookup(definition.getName(), env);
         } catch(NameNotFoundException ex) {
-            return always.getDestination(definition, cf, env);
+            throw new Fabric3JmsException(definition.getName() + " not found", ex);
         }
-        
     }
 
 }

@@ -25,6 +25,7 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import org.fabric3.binding.jms.model.AdministeredObjectDefinition;
 import org.fabric3.binding.jms.model.ConnectionFactoryDefinition;
 import org.fabric3.binding.jms.model.CorrelationScheme;
 import org.fabric3.binding.jms.model.CreateOption;
@@ -125,8 +126,7 @@ public class JmsBindingLoader extends LoaderExtension<JmsBindingDefinition> {
     private ResponseDefinition loadResponse(XMLStreamReader reader) throws XMLStreamException {
 
         ResponseDefinition response = new ResponseDefinition();
-
-
+        
         String name = null;
         while (true) {
 
@@ -156,7 +156,7 @@ public class JmsBindingLoader extends LoaderExtension<JmsBindingDefinition> {
     /*
      * Loads connection factory definition.
      */
-    private ConnectionFactoryDefinition loadConnectionFactory(XMLStreamReader reader) {
+    private ConnectionFactoryDefinition loadConnectionFactory(XMLStreamReader reader) throws XMLStreamException {
 
         ConnectionFactoryDefinition connectionFactory = new ConnectionFactoryDefinition();
 
@@ -166,7 +166,8 @@ public class JmsBindingLoader extends LoaderExtension<JmsBindingDefinition> {
         if (create != null) {
             connectionFactory.setCreate(CreateOption.valueOf(create));
         }
-
+        loadProperties(reader, connectionFactory, "connectionFactory");
+        
         return connectionFactory;
 
     }
@@ -189,9 +190,42 @@ public class JmsBindingLoader extends LoaderExtension<JmsBindingDefinition> {
         if(type != null) {
             destination.setDestinationType(DestinationType.valueOf(type));
         }
-
+        
+        loadProperties(reader, destination, "destination");
+        
         return destination;
 
+    }
+    
+    /*
+     * Loads properties. TODO Support property type.
+     */
+    private void loadProperties(XMLStreamReader reader, 
+                                AdministeredObjectDefinition parent,
+                                String parentName) throws XMLStreamException {
+        
+        String name = null;
+        while (true) {
+
+            switch(reader.next()) {
+                case START_ELEMENT:
+                    name = reader.getName().getLocalPart();
+                    if ("property".equals(name)) {
+                        final String key = reader.getAttributeValue(null, "key");
+                        final String value = reader.getElementText();
+                        parent.addProperty(key, value);
+                    }
+                    break;
+                case END_ELEMENT:
+                    name = reader.getName().getLocalPart();
+                    if(parentName.equals(name)) {
+                        return;
+                    }
+                    break;
+            }
+
+        }
+        
     }
 
 }

@@ -17,38 +17,32 @@
  * under the License.    
  */
 
-package org.fabric3.binding.jms.wire.lookup.connectionfactory;
+package org.fabric3.binding.jms.lookup.connectionfactory;
 
 import java.util.Hashtable;
 
 import javax.jms.ConnectionFactory;
+import javax.naming.NameNotFoundException;
 
 import org.fabric3.binding.jms.Fabric3JmsException;
+import org.fabric3.binding.jms.helper.JndiHelper;
 import org.fabric3.binding.jms.model.ConnectionFactoryDefinition;
 
 /**
- * The connection factory is never looked up, it is always created.
- * 
- * @version $Revision$ $Date$
+ * The connection factory is always looked up and never created.
  *
  */
-public class AlwaysConnectionFactoryStrategy implements ConnectionFactoryStrategy {
+public class NeverConnectionFactoryStrategy implements ConnectionFactoryStrategy {
 
     /**
-     * @see org.fabric3.binding.jms.wire.lookup.connectionfactory.ConnectionFactoryStrategy#getConnectionFactory(org.fabric3.binding.jms.model.ConnectionFactoryDefinition, java.util.Hashtable)
+     * @see org.fabric3.binding.jms.lookup.connectionfactory.ConnectionFactoryStrategy#getConnectionFactory(org.fabric3.binding.jms.model.ConnectionFactoryDefinition, java.util.Hashtable)
      */
     public ConnectionFactory getConnectionFactory(ConnectionFactoryDefinition definition, Hashtable<String, String> env) {
-        
-        try {            
-            return (ConnectionFactory) Class.forName(definition.getName()).newInstance();            
-        } catch (InstantiationException ex) {
-            throw new Fabric3JmsException("Unable to create connection factory", ex);
-        } catch (IllegalAccessException ex) {
-            throw new Fabric3JmsException("Unable to create connection factory", ex);
-        } catch (ClassNotFoundException ex) {
-            throw new Fabric3JmsException("Unable to create connection factory", ex);
+        try {
+            return (ConnectionFactory) JndiHelper.lookup(definition.getName(), env);
+        } catch(NameNotFoundException ex) {
+            throw new Fabric3JmsException(definition.getName() + " not found", ex);
         }
-        
     }
 
 }
