@@ -65,9 +65,9 @@ public class ConsumerWorker implements Runnable {
             if(message != null) {
                 listener.onMessage(message);
             }
-            transactionHandler.commit(session);
+            transactionHandler.commit();
         } catch(Exception ex) {
-            transactionHandler.rollback(session);
+            transactionHandler.rollback();
             // TODO use the monitor
             ex.printStackTrace();
         }

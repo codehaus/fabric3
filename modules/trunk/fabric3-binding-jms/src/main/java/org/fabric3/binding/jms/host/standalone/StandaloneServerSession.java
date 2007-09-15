@@ -63,9 +63,9 @@ public class StandaloneServerSession implements ServerSession {
         try {
             transactionHandler.enlist(session);
             session.run();
-            transactionHandler.commit(session);
+            transactionHandler.commit();
         } catch(RuntimeException ex) {
-            transactionHandler.rollback(session);
+            transactionHandler.rollback();
             throw ex;
         } finally {
             serverSessionPool.returnSession(this);

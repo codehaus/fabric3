@@ -34,7 +34,6 @@ import javax.jms.ObjectMessage;
 import javax.jms.Session;
 
 import org.fabric3.binding.jms.Fabric3JmsException;
-import org.fabric3.binding.jms.helper.JmsHelper;
 import org.fabric3.binding.jms.model.CorrelationScheme;
 import org.fabric3.binding.jms.tx.TransactionHandler;
 import org.fabric3.extension.component.SimpleWorkContext;
@@ -144,9 +143,8 @@ public class Fabric3MessageListener implements MessageListener {
             
         } catch(JMSException ex) {
             throw new Fabric3JmsException("Unable to send response", ex);
-        } finally {
-            JmsHelper.closeQuietly(connection);
         }
+
     }
 
     /*

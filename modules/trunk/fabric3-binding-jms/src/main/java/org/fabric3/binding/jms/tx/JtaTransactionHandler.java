@@ -74,7 +74,7 @@ public class JtaTransactionHandler implements TransactionHandler {
     /**
      * @see org.fabric3.binding.jms.tx.TransactionHandler#commit(javax.jms.Session)
      */
-    public void commit(Session session) throws JmsTxException {
+    public void commit() throws JmsTxException {
         
         if(transactionManager == null) {
             throw new IllegalStateException("No transaction manager available");
@@ -92,7 +92,7 @@ public class JtaTransactionHandler implements TransactionHandler {
     /**
      * @see org.fabric3.binding.jms.tx.TransactionHandler#rollback(javax.jms.Session)
      */
-    public void rollback(Session session) throws JmsTxException {
+    public void rollback() throws JmsTxException {
         
         if(transactionManager == null) {
             throw new IllegalStateException("No transaction manager available");

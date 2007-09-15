@@ -18,40 +18,62 @@
  */
 package org.fabric3.binding.jms.tx;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.jms.Connection;
 import javax.jms.JMSException;
 import javax.jms.Session;
+
+import org.fabric3.binding.jms.helper.JmsHelper;
 
 /**
  * @version $Revision$ $Date$
  */
 public class JmsTransactionHandler implements TransactionHandler {
+    
+    private ThreadLocal<Set<Session>> sessions = new ThreadLocal<Set<Session>>() {
+        protected synchronized Set<Session> initialValue() {
+            return new HashSet<Session>();
+        }
+    };
 
     /**
      * @see org.fabric3.binding.jms.tx.TransactionHandler#begin(javax.jms.Session)
      */
     public void enlist(Session session) throws JmsTxException {
+        sessions.get().add(session);
     }
 
     /**
      * @see org.fabric3.binding.jms.tx.TransactionHandler#commit(javax.jms.Session)
      */
-    public void commit(Session session) throws JmsTxException {
+    public void commit() throws JmsTxException {
         try {
-            session.commit();
+            for(Session session : sessions.get()) {
+                session.commit();
+                JmsHelper.closeQuietly(session);
+            }
         } catch (JMSException e) {
             throw new JmsTxException(e);
+        } finally {
+            sessions.remove();
         }
     }
 
     /**
      * @see org.fabric3.binding.jms.tx.TransactionHandler#rollback(javax.jms.Session)
      */
-    public void rollback(Session session) throws JmsTxException {
+    public void rollback() throws JmsTxException {
         try {
-            session.rollback();
+            for(Session session : sessions.get()) {
+                session.rollback();
+                JmsHelper.closeQuietly(session);
+            }
         } catch (JMSException e) {
             throw new JmsTxException(e);
+        } finally {
+            sessions.remove();
         }
     }
 
