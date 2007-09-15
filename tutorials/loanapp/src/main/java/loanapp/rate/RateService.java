@@ -14,34 +14,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package loanapp.loanservice;
+package loanapp.rate;
+
+import org.osoa.sca.annotations.Remotable;
 
 /**
- * A Loan application message
+ * Service that returns rates for a given credit score.
  *
  * @version $Rev$ $Date$
  */
-public interface LoanApplication {
+@Remotable
+public interface RateService {
 
     /**
-     * The customer id making the loan application
+     * Returns the current rates corresponding to the given credit score.
      *
-     * @return the customer id
+     * @param score the credit score
+     * @return a collection containing the current rates
      */
-    String getCustomerID();
-
-    /**
-     * The loan amount.
-     *
-     * @return the loan amount
-     */
-    double getAmount();
-
-    /**
-     * The loan downpayment amount.
-     *
-     * @return the loan downpayment amount
-     */
-    double getDownPayment();
-
+    RateResults getRates(int score);
 }

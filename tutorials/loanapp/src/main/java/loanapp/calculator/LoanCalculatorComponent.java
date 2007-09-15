@@ -14,24 +14,33 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package loanapp.loanservice;
+package loanapp.calculator;
 
 import org.osoa.sca.annotations.Reference;
 
-import loanapp.message.LoanRequest;
+import loanapp.message.LoanApplication;
 import loanapp.message.LoanResult;
+import loanapp.rate.RateResults;
+import loanapp.rate.RateService;
 
 /**
+ * Default implementation of the LoanCalculator that uses a RateService to compile up-to-date loan options.
+ *
  * @version $Rev$ $Date$
  */
-public class LoanServiceClient implements LoanApplicationService {
-    private LoanApplicationService service;
+public class LoanCalculatorComponent implements LoanCalculator {
+    private RateService rateService;
 
-    public LoanServiceClient(@Reference(name = "loanService")LoanApplicationService service) {
-        this.service = service;
+    public LoanCalculatorComponent(@Reference(name = "rateService")RateService rateService) {
+        this.rateService = rateService;
     }
 
-    public LoanResult apply(LoanRequest request) {
-        return service.apply(request);
+    public LoanResult calculateOptions(LoanApplication application) {
+        RateResults rateResults = rateService.getRates(application.getRisk());
+        LoanResult result = new LoanResult();
+        rateResults.getRates();
+        result.setResult(LoanResult.Approved);
+        
+        return result;
     }
 }

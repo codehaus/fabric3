@@ -14,24 +14,36 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package loanapp.loanservice;
+package loanapp.rate;
 
-import org.osoa.sca.annotations.Reference;
-
-import loanapp.message.LoanRequest;
-import loanapp.message.LoanResult;
+import java.io.Serializable;
 
 /**
+ * Contains rate information for a given loan type
+ *
  * @version $Rev$ $Date$
  */
-public class LoanServiceClient implements LoanApplicationService {
-    private LoanApplicationService service;
+public class Rate implements Serializable {
+    private static final long serialVersionUID = -2068873111891197563L;
+    private String type;
+    private float rate;
+    private float apr;
 
-    public LoanServiceClient(@Reference(name = "loanService")LoanApplicationService service) {
-        this.service = service;
+    public Rate(String type, float rate, float apr) {
+        this.type = type;
+        this.rate = rate;
+        this.apr = apr;
     }
 
-    public LoanResult apply(LoanRequest request) {
-        return service.apply(request);
+    public String getType() {
+        return type;
+    }
+
+    public float getRate() {
+        return rate;
+    }
+
+    public float getApr() {
+        return apr;
     }
 }

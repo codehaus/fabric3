@@ -14,22 +14,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package loanapp.credit.impl;
-
-import loanapp.credit.CreditCheckService;
+package loanapp.rate;
 
 /**
- * Implementation that performs a simple credit check.
- *
  * @version $Rev$ $Date$
  */
-public class CreditCheckComponent implements CreditCheckService {
+public class RateServiceComponent implements RateService {
 
-    public int checkCredit(String id) {
-        if ("345".equals(id)) {
-            return 100;
-        } else {
-            return 700;
-        }
+    public RateResults getRates(int risk) {
+        Rate fixed30 = new Rate("30 Year FIXED", 5.9f, 2f);
+        Rate arm30 = new Rate("30 Year ARM", 5.0f, 1f);
+        RateResults results = new RateResults();
+        results.addRate(fixed30);
+        results.addRate(arm30);
+        return results;
     }
 }

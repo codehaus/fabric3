@@ -14,24 +14,27 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package loanapp.loanservice;
+package loanapp.calculator;
 
-import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Remotable;
 
-import loanapp.message.LoanRequest;
+import loanapp.message.LoanApplication;
 import loanapp.message.LoanResult;
 
 /**
+ * Implementations compile a set of different loan options that fit the characteristics of an applicant and loan
+ * amount.
+ *
  * @version $Rev$ $Date$
  */
-public class LoanServiceClient implements LoanApplicationService {
-    private LoanApplicationService service;
+@Remotable
+public interface LoanCalculator {
 
-    public LoanServiceClient(@Reference(name = "loanService")LoanApplicationService service) {
-        this.service = service;
-    }
-
-    public LoanResult apply(LoanRequest request) {
-        return service.apply(request);
-    }
+    /**
+     * Compiles the set of loan options for an application
+     *
+     * @param application the loan application data
+     * @return a set of loan options
+     */
+    LoanResult calculateOptions(LoanApplication application);
 }

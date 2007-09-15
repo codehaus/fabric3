@@ -14,24 +14,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package loanapp.loanservice;
+package loanapp.message;
 
-import org.osoa.sca.annotations.Reference;
-
-import loanapp.message.LoanRequest;
-import loanapp.message.LoanResult;
+import java.io.Serializable;
 
 /**
  * @version $Rev$ $Date$
  */
-public class LoanServiceClient implements LoanApplicationService {
-    private LoanApplicationService service;
-
-    public LoanServiceClient(@Reference(name = "loanService")LoanApplicationService service) {
-        this.service = service;
-    }
-
-    public LoanResult apply(LoanRequest request) {
-        return service.apply(request);
-    }
+public class LoanOption implements Serializable {
+    private static final long serialVersionUID = -969237495348560552L;
 }

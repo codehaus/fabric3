@@ -14,24 +14,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package loanapp.loanservice;
+package loanapp.risk;
 
-import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Remotable;
 
-import loanapp.message.LoanRequest;
-import loanapp.message.LoanResult;
+import loanapp.message.LoanApplication;
 
 /**
  * @version $Rev$ $Date$
  */
-public class LoanServiceClient implements LoanApplicationService {
-    private LoanApplicationService service;
+@Remotable
+public interface RiskAssessmentService {
 
-    public LoanServiceClient(@Reference(name = "loanService")LoanApplicationService service) {
-        this.service = service;
-    }
-
-    public LoanResult apply(LoanRequest request) {
-        return service.apply(request);
-    }
+    int assessRisk(LoanApplication loanApp);
 }

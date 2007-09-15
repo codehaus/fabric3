@@ -14,33 +14,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package loanapp.loanservice.impl;
-
-import org.osoa.sca.annotations.Reference;
-
-import loanapp.credit.CreditCheckService;
-import loanapp.loanservice.LoanApplicationService;
+package loanapp.credit;
 
 /**
- * Implementation that handles a loan application
+ * Implementation that performs a simple credit check.
  *
  * @version $Rev$ $Date$
  */
-public class LoanApplicationComponent implements LoanApplicationService {
-    private CreditCheckService creditService;
+public class CreditCheckComponent implements CreditCheckService {
 
-    public LoanApplicationComponent(
-        @Reference(name = "creditService", required = true)CreditCheckService creditService) {
-        this.creditService = creditService;
-    }
-
-    public double applyForLoan(String id, double amount, double downpayment) {
-        int score = creditService.checkCredit(id);
-        if (score > 100) {
-            return 7.5;
+    public int checkCredit(String ssn) {
+        if ("345".equals(ssn)) {
+            return 100;
         } else {
-            return DECLINED;
+            return 700;
         }
-
     }
 }

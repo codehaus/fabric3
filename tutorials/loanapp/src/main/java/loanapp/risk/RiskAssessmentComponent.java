@@ -14,24 +14,32 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package loanapp.loanservice;
+package loanapp.risk;
 
-import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Property;
 
-import loanapp.message.LoanRequest;
-import loanapp.message.LoanResult;
+import loanapp.message.LoanApplication;
 
 /**
  * @version $Rev$ $Date$
  */
-public class LoanServiceClient implements LoanApplicationService {
-    private LoanApplicationService service;
+public class RiskAssessmentComponent implements RiskAssessmentService {
+    private double ratioMinimum;
 
-    public LoanServiceClient(@Reference(name = "loanService")LoanApplicationService service) {
-        this.service = service;
+
+    public RiskAssessmentComponent(@Property(name = "ratioMinimum", required = true)Double ratioMinimum) {
+        this.ratioMinimum = ratioMinimum;
     }
 
-    public LoanResult apply(LoanRequest request) {
-        return service.apply(request);
+    public int assessRisk(LoanApplication loanApp) {
+        int score = loanApp.getCreditScore();
+        if (score < 700) {
+            return 10;
+        }
+        double ratio = loanApp.getDownPayment() / loanApp.getAmount();
+        if (ratio < ratioMinimum) {
+            return 10;
+        }
+        return 1;
     }
 }

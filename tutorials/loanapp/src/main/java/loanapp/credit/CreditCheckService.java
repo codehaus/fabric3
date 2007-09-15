@@ -29,9 +29,9 @@ public interface CreditCheckService {
     /**
      * Performs the credit check, returning the credit score for a customer.
      *
-     * @param id the customer id
+     * @param ssn the applicant's social security number
      * @return the credit score
      */
-    int checkCredit(String id);
+    int checkCredit(String ssn);
 
 }

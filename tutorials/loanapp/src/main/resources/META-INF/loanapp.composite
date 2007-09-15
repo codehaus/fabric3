@@ -18,22 +18,43 @@
 
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:fabric3="http://fabric3.org/xmlns/sca/0.1"
-           xmlns:hessian="http://www.fabric3.org/binding/hessian/0.1"
+           xmlns:hessian="http://www.fabric3.org/binding/hessian/0.2"
            targetNamespace="http://fabric3.org/xmlns/sca/tutorials/0.2"
            name="LoanAppComposite">
-    <!--
     <service name="LoanApplicationService" promote="LoanApplicationComponent">
-        <interface.java interface="loanapp.loanservice.LoanApplicationService"/>
-        <hessian:binding.hessian uri="/loanApplication"/>
-    </service>  -->
-    
+        <!--<binding.ws uri="/loanService"/>-->
+        <!--<binding.rmi serviceName="loanService"/>-->
+        <!--<hessian:binding.hessian uri="/loanServiceHessian"/>-->
+    </service>
+
+    <service name="RateService" promote="RateServiceComponent">
+        <binding.ws uri="/rateService"/>
+        <!--<hessian:binding.hessian uri="/rateService"/>-->
+    </service>
+
     <component name="LoanApplicationComponent">
-        <implementation.java class="loanapp.loanservice.impl.LoanApplicationComponent"/>
+        <implementation.java class="loanapp.loanservice.LoanApplicationComponent"/>
         <reference name="creditService" target="CreditCheckComponent"/>
+        <reference name="riskService" target="RiskAssessmentComponent"/>
+        <reference name="loanCalculator" target="LoanCalculatorComponent"/>
     </component>
 
     <component name="CreditCheckComponent">
-        <implementation.java class="loanapp.credit.impl.CreditCheckComponent"/>
+        <implementation.java class="loanapp.credit.CreditCheckComponent"/>
+    </component>
+
+    <component name="RiskAssessmentComponent">
+        <implementation.java class="loanapp.risk.RiskAssessmentComponent"/>
+        <property name="ratioMinimum">.10</property>
+    </component>
+
+    <component name="LoanCalculatorComponent">
+        <implementation.java class="loanapp.calculator.LoanCalculatorComponent"/>
+        <reference name="rateService" target="RateServiceComponent"/>
+    </component>
+
+    <component name="RateServiceComponent">
+        <implementation.java class="loanapp.rate.RateServiceComponent"/>
     </component>
 
 </composite>

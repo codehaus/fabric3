@@ -17,6 +17,8 @@
 package loanapp;
 
 import loanapp.loanservice.LoanApplicationService;
+import loanapp.message.LoanRequest;
+import loanapp.message.LoanResult;
 import org.fabric3.runtime.development.Domain;
 
 /**
@@ -30,8 +32,12 @@ public class LoanApp {
         Domain domain = new Domain();
         domain.activate(Thread.currentThread().getContextClassLoader().getResource("META-INF/loanapp.composite"));
         LoanApplicationService loanService = domain.connectTo(LoanApplicationService.class, "LoanApplicationComponent");
-        double result = loanService.applyForLoan("100", 100000, 10000);
-        if (result == LoanApplicationService.DECLINED) {
+        LoanRequest request = new LoanRequest();
+        request.setSSN("111-11-1111");
+        request.setAmount(100000);
+        request.setDownPayment(10000);
+        LoanResult result = loanService.apply(request);
+        if (result.getResult() == LoanResult.DECLINED) {
             System.out.println("Sorry, your loan was declined");
         } else {
             System.out.println("Congratulations, your loan was approved");

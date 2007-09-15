@@ -16,22 +16,25 @@
  */
 package loanapp.loanservice;
 
-import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Remotable;
 
 import loanapp.message.LoanRequest;
 import loanapp.message.LoanResult;
 
 /**
+ * Implementations process a loan application.
+ *
  * @version $Rev$ $Date$
  */
-public class LoanServiceClient implements LoanApplicationService {
-    private LoanApplicationService service;
+@Remotable
+public interface LoanApplicationService {
 
-    public LoanServiceClient(@Reference(name = "loanService")LoanApplicationService service) {
-        this.service = service;
-    }
-
-    public LoanResult apply(LoanRequest request) {
-        return service.apply(request);
-    }
+    /**
+     * Initiates the loan application process.
+     *
+     * @param request the loan request data
+     * @return a result that indicates if the application was accepted or declined. In the case the application is
+     *         accepted, the result message will contain the available options an applicant may select from.
+     */
+    LoanResult apply(LoanRequest request);
 }

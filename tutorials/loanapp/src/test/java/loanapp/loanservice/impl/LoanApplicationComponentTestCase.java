@@ -17,8 +17,13 @@
 package loanapp.loanservice.impl;
 
 import junit.framework.TestCase;
+import loanapp.calculator.LoanCalculator;
 import loanapp.credit.CreditCheckService;
-import loanapp.loanservice.LoanApplicationService;
+import loanapp.loanservice.LoanApplicationComponent;
+import loanapp.message.LoanApplication;
+import loanapp.message.LoanRequest;
+import loanapp.message.LoanResult;
+import loanapp.risk.RiskAssessmentService;
 
 /**
  * Demonstrates unit testing outside the Fabric3 container. For automated mock object creation and verification,
@@ -27,13 +32,18 @@ import loanapp.loanservice.LoanApplicationService;
  * @version $Rev$ $Date$
  */
 public class LoanApplicationComponentTestCase extends TestCase {
-    private LoanApplicationComponent component;
+    private LoanApplicationComponent loanService;
 
     /**
      * Verifies the loan application component can receive and application and approve it.
      */
     public void testLoanApplication() {
-        assertTrue(LoanApplicationService.DECLINED != component.applyForLoan("123", 1000, 100));
+        LoanRequest request = new LoanRequest();
+        request.setSSN("111-11-1111");
+        request.setAmount(100000);
+        request.setDownPayment(10000);
+        LoanResult result = loanService.apply(request);
+        assertTrue(LoanResult.DECLINED != result.getResult());
     }
 
     /**
@@ -43,15 +53,34 @@ public class LoanApplicationComponentTestCase extends TestCase {
      */
     protected void setUp() throws Exception {
         super.setUp();
-        component = new LoanApplicationComponent(new CreditCheckServiceMock());
+        CreditCheckService checkService = new CreditCheckServiceMock();
+        LoanCalculator calculatorService = new LoanCalculatorMock();
+        RiskAssessmentService riskService = new RiskAssessmentMock();
+        loanService = new LoanApplicationComponent(checkService, riskService, calculatorService);
     }
 
     /**
      * Mock for the credit check service
      */
     private class CreditCheckServiceMock implements CreditCheckService {
-        public int checkCredit(String id) {
+        public int checkCredit(String ssn) {
             return 700;
+        }
+    }
+
+    private class LoanCalculatorMock implements LoanCalculator {
+
+        public LoanResult calculateOptions(LoanApplication application) {
+            LoanResult result = new LoanResult();
+            result.setResult(LoanResult.Approved);
+            return result;
+        }
+    }
+
+    private class RiskAssessmentMock implements RiskAssessmentService {
+
+        public int assessRisk(LoanApplication loanApp) {
+            return 0;
         }
     }
 }

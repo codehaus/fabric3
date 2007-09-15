@@ -1,6 +1,8 @@
 package loanapp;
 
 import loanapp.loanservice.LoanApplicationService;
+import loanapp.message.LoanRequest;
+import loanapp.message.LoanResult;
 import org.fabric3.runtime.development.Domain;
 
 /**
@@ -19,7 +21,7 @@ public class LoanApp {
      */
     public static void main(String[] args) {
         if (args.length < 3) {
-            throw new IllegalArgumentException("ID, amount, and downpayment required");
+            throw new IllegalArgumentException("SSN, amount, and downpayment required");
         }
         LoanApp app = new LoanApp();
         app.setup();
@@ -38,14 +40,18 @@ public class LoanApp {
     /**
      * Makes a loan application request
      *
-     * @param id     the customer id
+     * @param ssn     the customer id
      * @param amount the amount of the lown
-     * @param down   the downpayment amount
+     * @param downPayment   the downpayment amount
      */
-    public void run(String id, double amount, double down) {
+    public void run(String ssn, double amount, double downPayment) {
         LoanApplicationService loanService = domain.connectTo(LoanApplicationService.class, "LoanAppClient");
-        double result = loanService.applyForLoan(id, amount, down);
-        if (result == LoanApplicationService.DECLINED) {
+        LoanRequest request = new LoanRequest();
+        request.setSSN(ssn);
+        request.setAmount(amount);
+        request.setDownPayment(downPayment);
+        LoanResult result = loanService.apply(request);
+        if (result.getResult() == LoanResult.DECLINED) {
             System.out.println("Sorry, your loan was declined");
         } else {
             System.out.println("Congratulations, your loan was approved");

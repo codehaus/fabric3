@@ -44,15 +44,14 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.codehaus.fabric3.tutorials</groupId>
+            <artifactId>fabric3-tutorial-loanapp-common</artifactId>
+				<version>0.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>org.codehaus.fabric3.development</groupId>
             <artifactId>development-api</artifactId>
             <version>0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.fabric3.spec</groupId>
-            <artifactId>sca-api-r1.0</artifactId>
-            <version>0.2</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
