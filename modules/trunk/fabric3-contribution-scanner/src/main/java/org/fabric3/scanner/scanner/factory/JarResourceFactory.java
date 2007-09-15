@@ -27,7 +27,7 @@ public class JarResourceFactory implements FileSystemResourceFactory {
     }
 
     public FileSystemResource createResource(File file) {
-        if (!file.getName().endsWith(".jar")) {
+        if (!file.getName().endsWith(".jar") && !file.getName().endsWith(".zip")) {
             return null;
         }
         JarFile jarFile = null;
