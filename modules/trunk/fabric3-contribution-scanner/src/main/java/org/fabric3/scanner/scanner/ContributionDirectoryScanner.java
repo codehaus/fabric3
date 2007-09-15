@@ -28,6 +28,7 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -225,7 +226,8 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
                 if (cached != null) {
                     resource = registry.createResource(file);
                     assert resource != null;
-                    if (cached.getChecksum().equals(resource)) {
+                    resource.reset();
+                    if (Arrays.equals(cached.getChecksum(), resource.getChecksum())) {
                         // corrupt file from a previous run, continue
                         continue;
                     } else {
