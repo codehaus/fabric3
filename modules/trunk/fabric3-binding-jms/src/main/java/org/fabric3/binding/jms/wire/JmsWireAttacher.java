@@ -47,8 +47,6 @@ import org.fabric3.binding.jms.model.physical.JmsWireSourceDefinition;
 import org.fabric3.binding.jms.model.physical.JmsWireTargetDefinition;
 import org.fabric3.binding.jms.transport.Fabric3MessageListener;
 import org.fabric3.binding.jms.transport.Fabric3MessageReceiver;
-import org.fabric3.binding.jms.tx.JmsTransactionHandler;
-import org.fabric3.binding.jms.tx.JtaTransactionHandler;
 import org.fabric3.binding.jms.tx.TransactionHandler;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.WireAttacher;
@@ -92,28 +90,15 @@ public class JmsWireAttacher implements WireAttacher<JmsWireSourceDefinition, Jm
     /**
      * Transaction handlers.
      */
-    private Map<TransactionType, TransactionHandler> transactionHandlers = new HashMap<TransactionType, TransactionHandler>();
+    private TransactionHandler transactionHandler;
     
     /**
-     * Injects the transaction handlers.
-     * @param txHandlers Transaction handlers.
-     * TODO Fix this when map support is enabled in the system tree.
+     * Injects the transaction handler.
+     * @param transactionHandler Transaction handler.
      */
-    /*@Reference
-    public void setTransactionHandlers(Map<String, TransactionHandler> txHandlers) {
-        for(Map.Entry<String, TransactionHandler> entry: txHandlers.entrySet()) {
-            transactionHandlers.put(TransactionType.valueOf(entry.getKey()), entry.getValue());
-        }
-    }*/
-    
     @Reference
-    public void setJmsTransactionHandler(JmsTransactionHandler transactionHandler) {
-        transactionHandlers.put(TransactionType.LOCAL, transactionHandler);
-    }
-    
-    @Reference
-    public void setJtaTransactionHandler(JtaTransactionHandler transactionHandler) {
-        transactionHandlers.put(TransactionType.GLOBAL, transactionHandler);
+    public void setTransactionHandler(TransactionHandler transactionHandler) {
+        this.transactionHandler = transactionHandler;
     }
     
     /**
@@ -195,13 +180,12 @@ public class JmsWireAttacher implements WireAttacher<JmsWireSourceDefinition, Jm
         List<MessageListener> listeners = new LinkedList<MessageListener>();
         
         TransactionType transactionType = sourceDefinition.getTransactionType();
-        TransactionHandler transactionHandler = transactionHandlers.get(transactionType);
         
         for(int i = 0;i < receiverCount;i++) {
-            MessageListener listener = new Fabric3MessageListener(resDestination, resCf, ops, correlationScheme, wire, transactionHandler);
+            MessageListener listener = new Fabric3MessageListener(resDestination, resCf, ops, correlationScheme, wire, transactionHandler, transactionType);
             listeners.add(listener);
         }
-        jmsHost.registerListener(reqDestination, reqCf, listeners, transactionHandler);
+        jmsHost.registerListener(reqDestination, reqCf, listeners, transactionType, transactionHandler);
         
     }
 

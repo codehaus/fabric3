@@ -34,6 +34,8 @@ import javax.jms.ObjectMessage;
 import javax.jms.Session;
 
 import org.fabric3.binding.jms.Fabric3JmsException;
+import org.fabric3.binding.jms.TransactionType;
+import org.fabric3.binding.jms.helper.JmsHelper;
 import org.fabric3.binding.jms.model.CorrelationScheme;
 import org.fabric3.binding.jms.tx.TransactionHandler;
 import org.fabric3.extension.component.SimpleWorkContext;
@@ -81,6 +83,11 @@ public class Fabric3MessageListener implements MessageListener {
     private TransactionHandler transactionHandler;
     
     /**
+     * Transaction type.
+     */
+    private TransactionType transactionType;
+    
+    /**
      * @param destination Destination for sending responses.
      * @param connectionFactory Connection factory for sending responses.
      * @param ops Map of operation definitions.
@@ -93,13 +100,15 @@ public class Fabric3MessageListener implements MessageListener {
                                   Map<String, Entry<PhysicalOperationDefinition, InvocationChain>> ops,
                                   CorrelationScheme correlationScheme,
                                   Wire wire,
-                                  TransactionHandler transactionHandler) {
+                                  TransactionHandler transactionHandler,
+                                  TransactionType transactionType) {
         this.destination = destination;
         this.connectionFactory = connectionFactory;
         this.ops = ops;
         this.correlationScheme = correlationScheme;
         this.wire = wire;
         this.transactionHandler = transactionHandler;
+        this.transactionType = transactionType;
     }
 
     /**
@@ -123,7 +132,9 @@ public class Fabric3MessageListener implements MessageListener {
             connection = connectionFactory.createConnection();
             Session session = connection.createSession(true, Session.SESSION_TRANSACTED);
             
-            transactionHandler.enlist(session);
+            if(transactionType == TransactionType.GLOBAL) {
+                transactionHandler.enlist(session);
+            }
             
             MessageProducer producer = session.createProducer(destination);
             Message response = session.createObjectMessage((Serializable) outMessage.getBody());
@@ -141,8 +152,14 @@ public class Fabric3MessageListener implements MessageListener {
             
             producer.send(response);
             
+            if(transactionType == TransactionType.LOCAL) {
+                session.commit();
+            }
+            
         } catch(JMSException ex) {
             throw new Fabric3JmsException("Unable to send response", ex);
+        } finally {
+            JmsHelper.closeQuietly(connection);
         }
 
     }

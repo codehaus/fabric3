@@ -29,6 +29,7 @@ import javax.jms.MessageListener;
 import javax.jms.Session;
 
 import org.fabric3.binding.jms.Fabric3JmsException;
+import org.fabric3.binding.jms.TransactionType;
 import org.fabric3.binding.jms.helper.JmsHelper;
 import org.fabric3.binding.jms.host.JmsHost;
 import org.fabric3.binding.jms.tx.TransactionHandler;
@@ -90,20 +91,22 @@ public class StandaloneJmsHost implements JmsHost {
      * @see org.fabric3.binding.jms.host.JmsHost#registerListener(javax.jms.Destination, 
      *                                                            javax.jms.ConnectionFactory, 
      *                                                            java.util.List, 
+     *                                                            org.fabric3.binding.jms.TransactionType, 
      *                                                            org.fabric3.binding.jms.tx.TransactionHandler)
      */
     public void registerListener(final Destination destination, 
                                  final ConnectionFactory connectionFactory, 
                                  final List<MessageListener> listeners, 
+                                 final TransactionType transactionType,
                                  final TransactionHandler transactionHandler) {
         
         try {
 
             connection = connectionFactory.createConnection();
             for (final MessageListener listener : listeners) {
-                final Session session = transactionHandler.createSession(connection);
+                final Session session = connection.createSession(transactionType == TransactionType.LOCAL, Session.SESSION_TRANSACTED);
                 final MessageConsumer consumer = session.createConsumer(destination);
-                Runnable work = new ConsumerWorker(session, transactionHandler, consumer,listener, readTimeout);
+                Runnable work = new ConsumerWorker(session, transactionHandler, transactionType, consumer ,listener, readTimeout);
                 workScheduler.scheduleWork(work);
             }
             

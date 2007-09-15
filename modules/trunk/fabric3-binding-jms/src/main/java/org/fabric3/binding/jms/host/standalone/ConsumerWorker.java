@@ -18,11 +18,13 @@
  */
 package org.fabric3.binding.jms.host.standalone;
 
+import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.Session;
 
+import org.fabric3.binding.jms.TransactionType;
 import org.fabric3.binding.jms.tx.TransactionHandler;
 
 /**
@@ -35,6 +37,7 @@ public class ConsumerWorker implements Runnable {
     private final MessageConsumer consumer;
     private final MessageListener listener;
     private final long readTimeout;
+    private final TransactionType transactionType;
 
     /**
      * @param session Session used to receive messages.
@@ -45,11 +48,13 @@ public class ConsumerWorker implements Runnable {
      */
     public ConsumerWorker(Session session, 
                           TransactionHandler transactionHandler, 
+                          TransactionType transactionType,
                           MessageConsumer consumer, 
                           MessageListener listener,
                           long readTimeout) {
         this.session = session;
         this.transactionHandler = transactionHandler;
+        this.transactionType = transactionType;
         this.consumer = consumer;
         this.listener = listener;
         this.readTimeout = readTimeout;
@@ -60,14 +65,29 @@ public class ConsumerWorker implements Runnable {
      */
     public void run() {
         try {
-            transactionHandler.enlist(session);
+            if(transactionType == TransactionType.GLOBAL) {
+                transactionHandler.enlist(session);
+            }
             Message message = consumer.receive(readTimeout);
             if(message != null) {
                 listener.onMessage(message);
             }
-            transactionHandler.commit();
+            if(transactionType == TransactionType.GLOBAL) {
+                transactionHandler.commit();
+            } else {
+                session.commit();
+            }
         } catch(Exception ex) {
-            transactionHandler.rollback();
+            if(transactionType == TransactionType.GLOBAL) {
+                transactionHandler.rollback();
+            } else {
+                try {
+                    session.rollback();
+                } catch (JMSException e) {
+                    // TODO use the monitor
+                    e.printStackTrace();
+                }
+            }
             // TODO use the monitor
             ex.printStackTrace();
         }
