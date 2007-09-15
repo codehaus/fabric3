@@ -32,7 +32,7 @@ public class LoanApp {
     /**
      * Initializes the local domain and activates the loan app composite
      */
-    public void setup() {
+    private void setup() {
         domain = new Domain();
         domain.activate(Thread.currentThread().getContextClassLoader().getResource("META-INF/loanappClient.composite"));
     }
@@ -40,11 +40,11 @@ public class LoanApp {
     /**
      * Makes a loan application request
      *
-     * @param ssn     the customer id
-     * @param amount the amount of the lown
-     * @param downPayment   the downpayment amount
+     * @param ssn         the customer id
+     * @param amount      the amount of the lown
+     * @param downPayment the downpayment amount
      */
-    public void run(String ssn, double amount, double downPayment) {
+    private void run(String ssn, double amount, double downPayment) {
         LoanApplicationService loanService = domain.connectTo(LoanApplicationService.class, "LoanAppClient");
         LoanRequest request = new LoanRequest();
         request.setSSN(ssn);

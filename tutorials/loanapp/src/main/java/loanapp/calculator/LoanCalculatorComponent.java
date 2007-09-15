@@ -40,7 +40,6 @@ public class LoanCalculatorComponent implements LoanCalculator {
         LoanResult result = new LoanResult();
         rateResults.getRates();
         result.setResult(LoanResult.Approved);
-        
         return result;
     }
 }
