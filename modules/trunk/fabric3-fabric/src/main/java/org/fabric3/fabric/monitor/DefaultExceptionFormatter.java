@@ -52,6 +52,8 @@ public class DefaultExceptionFormatter implements ExceptionFormatter<Throwable> 
         } else if (exception instanceof Fabric3RuntimeException) {
             Fabric3RuntimeException e = (Fabric3RuntimeException) exception;
             e.appendBaseMessage(writer);
+        } else if (exception.getMessage() != null) {
+            writer.write(exception.getMessage());
         }
         writer.append("\n");
         Throwable cause = exception.getCause();
