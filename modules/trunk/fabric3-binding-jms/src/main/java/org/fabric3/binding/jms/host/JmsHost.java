@@ -24,7 +24,7 @@ import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.MessageListener;
 
-import org.fabric3.binding.jms.TransactionType;
+import org.fabric3.binding.jms.tx.TransactionHandler;
 
 /**
  * @version $Revision$ $Date$
@@ -35,11 +35,11 @@ public interface JmsHost {
      * @param destination Destination to listen on.
      * @param factory Factory to create connections.
      * @param listeners Message listeners.
-     * @param transactionType Transaction demarcation mode.
+     * @param transactionHandler Transaction handler.
      */
     void registerListener(Destination destination, 
-                          ConnectionFactory factory, 
+                          ConnectionFactory connectionFactory, 
                           List<MessageListener> listeners, 
-                          TransactionType transactionType);
+                          TransactionHandler transactionHandler);
 
 }

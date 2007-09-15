@@ -28,6 +28,7 @@ import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.MessageListener;
 
+import org.fabric3.binding.jms.TransactionType;
 import org.fabric3.binding.jms.host.JmsHost;
 import org.fabric3.binding.jms.lookup.connectionfactory.AlwaysConnectionFactoryStrategy;
 import org.fabric3.binding.jms.lookup.connectionfactory.ConnectionFactoryStrategy;
@@ -46,6 +47,9 @@ import org.fabric3.binding.jms.model.physical.JmsWireSourceDefinition;
 import org.fabric3.binding.jms.model.physical.JmsWireTargetDefinition;
 import org.fabric3.binding.jms.transport.Fabric3MessageListener;
 import org.fabric3.binding.jms.transport.Fabric3MessageReceiver;
+import org.fabric3.binding.jms.tx.JmsTransactionHandler;
+import org.fabric3.binding.jms.tx.JtaTransactionHandler;
+import org.fabric3.binding.jms.tx.TransactionHandler;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.WireAttacher;
 import org.fabric3.spi.builder.component.WireAttacherRegistry;
@@ -71,7 +75,7 @@ public class JmsWireAttacher implements WireAttacher<JmsWireSourceDefinition, Jm
     private JmsHost jmsHost;
     
     // Number of listeners
-    private int receiverCount = 10;
+    private int receiverCount = 1;
     
     /**
      * Destination strategies.
@@ -84,6 +88,33 @@ public class JmsWireAttacher implements WireAttacher<JmsWireSourceDefinition, Jm
      */
     private Map<CreateOption, ConnectionFactoryStrategy> connectionFactoryStrategies = 
         new HashMap<CreateOption, ConnectionFactoryStrategy>();
+    
+    /**
+     * Transaction handlers.
+     */
+    private Map<TransactionType, TransactionHandler> transactionHandlers = new HashMap<TransactionType, TransactionHandler>();
+    
+    /**
+     * Injects the transaction handlers.
+     * @param txHandlers Transaction handlers.
+     * TODO Fix this when map support is enabled in the system tree.
+     */
+    /*@Reference
+    public void setTransactionHandlers(Map<String, TransactionHandler> txHandlers) {
+        for(Map.Entry<String, TransactionHandler> entry: txHandlers.entrySet()) {
+            transactionHandlers.put(TransactionType.valueOf(entry.getKey()), entry.getValue());
+        }
+    }*/
+    
+    @Reference
+    public void setJmsTransactionHandler(JmsTransactionHandler transactionHandler) {
+        transactionHandlers.put(TransactionType.LOCAL, transactionHandler);
+    }
+    
+    @Reference
+    public void setJtaTransactionHandler(JtaTransactionHandler transactionHandler) {
+        transactionHandlers.put(TransactionType.GLOBAL, transactionHandler);
+    }
     
     /**
      * Injected JMS host.
@@ -163,10 +194,14 @@ public class JmsWireAttacher implements WireAttacher<JmsWireSourceDefinition, Jm
         
         List<MessageListener> listeners = new LinkedList<MessageListener>();
         
+        TransactionType transactionType = sourceDefinition.getTransactionType();
+        TransactionHandler transactionHandler = transactionHandlers.get(transactionType);
+        
         for(int i = 0;i < receiverCount;i++) {
-            listeners.add(new Fabric3MessageListener(resDestination, resCf, ops, correlationScheme, wire));
+            MessageListener listener = new Fabric3MessageListener(resDestination, resCf, ops, correlationScheme, wire, transactionHandler);
+            listeners.add(listener);
         }
-        jmsHost.registerListener(reqDestination, reqCf, listeners, sourceDefinition.getTransactionType());
+        jmsHost.registerListener(reqDestination, reqCf, listeners, transactionHandler);
         
     }
 

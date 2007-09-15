@@ -34,10 +34,6 @@
     <!-- JMS Host -->
     <component name="JMSHost">
         <system:implementation.system class="org.fabric3.binding.jms.host.standalone.StandaloneJmsHost"/>
-        <!-- TODO Fix this when maps are enabled in the system tree -->
-        <!-- reference name="transactionHandlers" target="JMSTransactionHandler JTATransactionHandler" multiplicity="0..n"/-->
-        <reference name="jmsTransactionHandler" target="JMSTransactionHandler"/>
-        <reference name="jtaTransactionHandler" target="JTATransactionHandler"/>
     </component>
 
     <!-- JMS Binding Loader -->
@@ -54,6 +50,10 @@
     <component name="JmsWireAttacher">
         <system:implementation.system class="org.fabric3.binding.jms.wire.JmsWireAttacher"/>
         <property name="receiverThreads">10</property>
+        <!-- TODO Fix this when maps are enabled in the system tree -->
+        <!-- reference name="transactionHandlers" target="JMSTransactionHandler JTATransactionHandler" multiplicity="0..n"/-->
+        <reference name="jmsTransactionHandler" target="JMSTransactionHandler"/>
+        <reference name="jtaTransactionHandler" target="JTATransactionHandler"/>
     </component>
 
     <!-- Feature -->

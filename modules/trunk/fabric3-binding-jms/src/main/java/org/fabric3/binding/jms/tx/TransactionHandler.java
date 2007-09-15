@@ -18,6 +18,7 @@
  */
 package org.fabric3.binding.jms.tx;
 
+import javax.jms.Connection;
 import javax.jms.Session;
 
 /**
@@ -25,10 +26,12 @@ import javax.jms.Session;
  */
 public interface TransactionHandler {
     
-    void begin(Session session) throws JmsTxException;
+    void enlist(Session session) throws JmsTxException;
     
     void commit(Session session) throws JmsTxException;
     
     void rollback(Session session) throws JmsTxException;
+    
+    Session createSession(Connection con) throws JmsTxException;
 
 }

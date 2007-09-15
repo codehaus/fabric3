@@ -19,7 +19,13 @@
 
 package org.fabric3.binding.jms.lookup.connectionfactory;
 
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Hashtable;
+import java.util.Properties;
 
 import javax.jms.ConnectionFactory;
 
@@ -40,12 +46,30 @@ public class AlwaysConnectionFactoryStrategy implements ConnectionFactoryStrateg
     public ConnectionFactory getConnectionFactory(ConnectionFactoryDefinition definition, Hashtable<String, String> env) {
         
         try {            
-            return (ConnectionFactory) Class.forName(definition.getName()).newInstance();            
+            
+            ConnectionFactory cf =  (ConnectionFactory) Class.forName(definition.getName()).newInstance(); 
+            Properties props = definition.getProperties();
+            // TODO We may need to factor this into provider specific classes rather than making the general assumption on bean style props
+            for(PropertyDescriptor pd : Introspector.getBeanInfo(cf.getClass()).getPropertyDescriptors()) {
+                String propName = pd.getName();
+                String propValue = props.getProperty(propName);
+                Method writeMethod = pd.getWriteMethod();
+                if(propValue != null && writeMethod != null) {
+                    writeMethod.invoke(cf, propValue);
+                }
+            }
+            
+            return cf;
+            
         } catch (InstantiationException ex) {
             throw new Fabric3JmsException("Unable to create connection factory", ex);
         } catch (IllegalAccessException ex) {
             throw new Fabric3JmsException("Unable to create connection factory", ex);
         } catch (ClassNotFoundException ex) {
+            throw new Fabric3JmsException("Unable to create connection factory", ex);
+        } catch (IntrospectionException ex) {
+            throw new Fabric3JmsException("Unable to create connection factory", ex);
+        } catch (InvocationTargetException ex) {
             throw new Fabric3JmsException("Unable to create connection factory", ex);
         }
         

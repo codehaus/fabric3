@@ -18,59 +18,51 @@
  */
 package org.fabric3.binding.jms.host.standalone;
 
-import javax.jms.JMSException;
-import javax.jms.ServerSession;
+import javax.jms.Message;
+import javax.jms.MessageConsumer;
+import javax.jms.MessageListener;
 import javax.jms.Session;
 
+import org.fabric3.binding.jms.Fabric3JmsException;
 import org.fabric3.binding.jms.tx.TransactionHandler;
 
 /**
- * Server session used in standalone JMS host.
- * 
  * @version $Revision$ $Date$
  */
-public class StandaloneServerSession implements ServerSession {
+public class ConsumerWorker implements Runnable {
     
-    private StandaloneServerSessionPool serverSessionPool;
-    private Session session;
-    private TransactionHandler transactionHandler;
-    
+    private final Session session;
+    private final TransactionHandler transactionHandler;
+    private final MessageConsumer consumer;
+    private final MessageListener listener;
+
     /**
-     * Initializes the server session.
-     * 
-     * @param session Underlying JMS session.
-     * @param serverSessionPool Server session pool.
-     * @param transactionHandler Transaction handler (XA or Local)
+     * @param session Session used to receive messages.
+     * @param transactionHandler Transaction handler.
+     * @param consumer Message consumer.
+     * @param listener Delegate message listener.
      */
-    public StandaloneServerSession(Session session, StandaloneServerSessionPool serverSessionPool, TransactionHandler transactionHandler) {
+    public ConsumerWorker(Session session, TransactionHandler transactionHandler, MessageConsumer consumer, MessageListener listener) {
         this.session = session;
-        this.serverSessionPool = serverSessionPool;
         this.transactionHandler = transactionHandler;
+        this.consumer = consumer;
+        this.listener = listener;
     }
 
     /**
-     * @see javax.jms.ServerSession#getSession()
+     * @see java.lang.Runnable#run()
      */
-    public Session getSession() throws JMSException {
-        return session;
-    }
-
-    /**
-     * @see javax.jms.ServerSession#start()
-     */
-    public void start() throws JMSException {
-        
+    public void run() {
         try {
             transactionHandler.enlist(session);
-            session.run();
+            Message message = consumer.receive(1000);
+            if(message != null) {
+                listener.onMessage(message);
+            }
             transactionHandler.commit(session);
-        } catch(RuntimeException ex) {
-            transactionHandler.rollback(session);
-            throw ex;
-        } finally {
-            serverSessionPool.returnSession(this);
+        } catch(Exception ex) {
+            throw new Fabric3JmsException(ex.getMessage(), ex);
         }
-        
     }
 
 }

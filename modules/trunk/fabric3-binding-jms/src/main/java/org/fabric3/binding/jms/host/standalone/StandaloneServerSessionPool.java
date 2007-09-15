@@ -26,6 +26,7 @@ import javax.jms.ServerSession;
 import javax.jms.ServerSessionPool;
 import javax.jms.Session;
 
+import org.fabric3.binding.jms.helper.JmsHelper;
 import org.fabric3.binding.jms.tx.TransactionHandler;
 
 /**
@@ -55,7 +56,7 @@ public class StandaloneServerSessionPool implements ServerSessionPool {
     public void stop() throws JMSException {
         ServerSession serverSession = null;
         while((serverSession = getServerSession()) != null) {
-            serverSession.getSession().close();
+            JmsHelper.closeQuietly(serverSession.getSession());
         }
     }
 

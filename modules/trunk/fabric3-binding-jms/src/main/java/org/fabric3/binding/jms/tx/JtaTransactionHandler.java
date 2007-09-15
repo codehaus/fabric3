@@ -18,8 +18,11 @@
  */
 package org.fabric3.binding.jms.tx;
 
+import javax.jms.Connection;
+import javax.jms.JMSException;
 import javax.jms.Session;
 import javax.jms.XASession;
+import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 import javax.transaction.xa.XAResource;
 
@@ -40,7 +43,7 @@ public class JtaTransactionHandler implements TransactionHandler {
     /**
      * @see org.fabric3.binding.jms.tx.TransactionHandler#begin(javax.jms.Session)
      */
-    public void begin(Session session) throws JmsTxException {
+    public void enlist(Session session) throws JmsTxException {
         
         if(transactionManager == null) {
             throw new IllegalStateException("No transaction manager available");
@@ -48,7 +51,10 @@ public class JtaTransactionHandler implements TransactionHandler {
         
         try {
             
-            transactionManager.begin();
+            Transaction transaction = transactionManager.getTransaction();
+            if(transaction == null) {
+                transactionManager.begin();
+            }
             
             if(!(session instanceof XASession)) {
                 throw new JmsTxException("XA session required for global transactions");
@@ -95,6 +101,19 @@ public class JtaTransactionHandler implements TransactionHandler {
         try {
             transactionManager.rollback();
         } catch (Exception e) {
+            throw new JmsTxException(e);
+        }
+        
+    }
+
+    /**
+     * @see org.fabric3.binding.jms.tx.TransactionHandler#createSession(javax.jms.Connection)
+     */
+    public Session createSession(Connection con) throws JmsTxException {
+        
+        try {   
+            return con.createSession(false, Session.SESSION_TRANSACTED);
+        } catch(JMSException e) {
             throw new JmsTxException(e);
         }
         

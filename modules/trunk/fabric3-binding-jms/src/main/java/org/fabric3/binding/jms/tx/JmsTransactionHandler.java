@@ -18,6 +18,7 @@
  */
 package org.fabric3.binding.jms.tx;
 
+import javax.jms.Connection;
 import javax.jms.JMSException;
 import javax.jms.Session;
 
@@ -29,7 +30,7 @@ public class JmsTransactionHandler implements TransactionHandler {
     /**
      * @see org.fabric3.binding.jms.tx.TransactionHandler#begin(javax.jms.Session)
      */
-    public void begin(Session session) throws JmsTxException {
+    public void enlist(Session session) throws JmsTxException {
     }
 
     /**
@@ -52,6 +53,19 @@ public class JmsTransactionHandler implements TransactionHandler {
         } catch (JMSException e) {
             throw new JmsTxException(e);
         }
+    }
+
+    /**
+     * @see org.fabric3.binding.jms.tx.TransactionHandler#createSession(javax.jms.Connection)
+     */
+    public Session createSession(Connection con) throws JmsTxException {
+        
+        try {   
+            return con.createSession(true, Session.SESSION_TRANSACTED);
+        } catch(JMSException e) {
+            throw new JmsTxException(e);
+        }
+        
     }
 
 }

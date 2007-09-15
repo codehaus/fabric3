@@ -167,8 +167,12 @@ public class JmsBindingMetadata {
         
         Hashtable<String, String> props = new Hashtable<String, String>();
         
-        props.put(Context.PROVIDER_URL, getJndiUrl());
-        props.put(Context.INITIAL_CONTEXT_FACTORY, getInitialContextFactory());
+        if(jndiUrl != null) {
+            props.put(Context.PROVIDER_URL, getJndiUrl());
+        }
+        if(initialContextFactory != null) {
+            props.put(Context.INITIAL_CONTEXT_FACTORY, getInitialContextFactory());
+        }
         
         return props;
         

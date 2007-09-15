@@ -211,7 +211,7 @@ public class JmsBindingLoader extends LoaderExtension<JmsBindingDefinition> {
                 case START_ELEMENT:
                     name = reader.getName().getLocalPart();
                     if ("property".equals(name)) {
-                        final String key = reader.getAttributeValue(null, "key");
+                        final String key = reader.getAttributeValue(null, "name");
                         final String value = reader.getElementText();
                         parent.addProperty(key, value);
                     }
