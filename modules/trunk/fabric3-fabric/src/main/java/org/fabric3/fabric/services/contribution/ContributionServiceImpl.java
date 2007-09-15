@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import javax.xml.namespace.QName;
@@ -209,7 +210,7 @@ public class ContributionServiceImpl implements ContributionService {
         long archivedTimestamp = contribution.getTimestamp();
         if (timestamp > archivedTimestamp) {
             // TODO update
-        } else if (timestamp == archivedTimestamp && checksum.equals(contribution.getChecksum())) {
+        } else if (timestamp == archivedTimestamp && Arrays.equals(checksum, contribution.getChecksum())) {
             // TODO update
         }
     }
