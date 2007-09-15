@@ -103,7 +103,11 @@ public class CompositeResourceProcessor implements ResourceProcessor {
 
         } finally {
             if (reader != null) {
-                reader.close();
+                try {
+                    reader.close();
+                } catch (XMLStreamException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

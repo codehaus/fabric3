@@ -118,8 +118,7 @@ public class ZipContributionProcessor extends ArchiveContributionProcessor imple
                     zipStream.close();
                 }
             } catch (IOException e) {
-                //noinspection ThrowFromFinallyBlock
-                throw new ContributionException(e);
+                e.printStackTrace();
             }
         }
     }
