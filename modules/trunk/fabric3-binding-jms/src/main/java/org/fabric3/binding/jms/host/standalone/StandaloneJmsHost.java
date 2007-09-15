@@ -18,12 +18,9 @@
  */
 package org.fabric3.binding.jms.host.standalone;
 
-import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.jms.Connection;
-import javax.jms.ConnectionConsumer;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
@@ -32,9 +29,13 @@ import javax.jms.MessageListener;
 import javax.jms.Session;
 
 import org.fabric3.binding.jms.Fabric3JmsException;
+import org.fabric3.binding.jms.helper.JmsHelper;
 import org.fabric3.binding.jms.host.JmsHost;
 import org.fabric3.binding.jms.tx.TransactionHandler;
+import org.fabric3.spi.services.work.WorkScheduler;
 import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.Property;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Service handler for JMS.
@@ -42,21 +43,39 @@ import org.osoa.sca.annotations.Destroy;
  * @version $Revsion$ $Date: 2007-05-22 00:19:04 +0100 (Tue, 22 May 2007) $
  */
 public class StandaloneJmsHost implements JmsHost {
+    
+    /**
+     * Work scheduler.
+     */
+    private WorkScheduler workScheduler;
 
     /**
      * Receiver connection.
      */
     private Connection connection;
-
+    
     /**
-     * Server session pools.
+     * Read timeout.
      */
-    private List<StandaloneServerSessionPool> serverSessionPools = new CopyOnWriteArrayList<StandaloneServerSessionPool>();
-
+    private long readTimeout = 1000L;
+    
     /**
-     * Connection consumers.
+     * Sets the read timeout.
+     * @param readTimeout Read timeout for blocking receive.
      */
-    private List<ConnectionConsumer> connectionConsumers = new CopyOnWriteArrayList<ConnectionConsumer>();
+    @Property
+    public void setReadTimeout(long readTimeout) {
+        this.readTimeout = readTimeout;
+    }
+    
+    /**
+     * Injects the work scheduler.
+     * @param workScheduler Work scheduler to be used.
+     */
+    @Reference
+    public void setWorkScheduler(WorkScheduler workScheduler) {
+        this.workScheduler = workScheduler;
+    }
 
     /**
      * Stops the receiver threads.
@@ -64,12 +83,7 @@ public class StandaloneJmsHost implements JmsHost {
      */
     @Destroy
     public void stop() throws JMSException {
-        for(StandaloneServerSessionPool sessionPool : serverSessionPools) {
-            sessionPool.stop();
-        }
-        for(ConnectionConsumer connectionConsumer : connectionConsumers) {
-            connectionConsumer.close();
-        }
+        JmsHelper.closeQuietly(connection);
     }
 
     /**
@@ -78,21 +92,19 @@ public class StandaloneJmsHost implements JmsHost {
      *                                                            java.util.List, 
      *                                                            org.fabric3.binding.jms.tx.TransactionHandler)
      */
-    public void registerListener(Destination destination, 
-                                 ConnectionFactory connectionFactory, 
-                                 List<MessageListener> listeners, 
+    public void registerListener(final Destination destination, 
+                                 final ConnectionFactory connectionFactory, 
+                                 final List<MessageListener> listeners, 
                                  final TransactionHandler transactionHandler) {
         
         try {
 
             connection = connectionFactory.createConnection();
-            List<Session> sessions = new LinkedList<Session>();
             for (final MessageListener listener : listeners) {
                 final Session session = transactionHandler.createSession(connection);
                 final MessageConsumer consumer = session.createConsumer(destination);
-                // TODO Use the work scheduler
-                new Thread(new ConsumerWorker(session, transactionHandler, consumer,listener)).start();
-                sessions.add(session);
+                Runnable work = new ConsumerWorker(session, transactionHandler, consumer,listener, readTimeout);
+                workScheduler.scheduleWork(work);
             }
             
             connection.start();

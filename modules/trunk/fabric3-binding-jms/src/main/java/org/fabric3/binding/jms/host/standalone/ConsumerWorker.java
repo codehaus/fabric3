@@ -23,7 +23,6 @@ import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.Session;
 
-import org.fabric3.binding.jms.Fabric3JmsException;
 import org.fabric3.binding.jms.tx.TransactionHandler;
 
 /**
@@ -35,18 +34,25 @@ public class ConsumerWorker implements Runnable {
     private final TransactionHandler transactionHandler;
     private final MessageConsumer consumer;
     private final MessageListener listener;
+    private final long readTimeout;
 
     /**
      * @param session Session used to receive messages.
      * @param transactionHandler Transaction handler.
      * @param consumer Message consumer.
      * @param listener Delegate message listener.
+     * @param readTimeout Read timeout.
      */
-    public ConsumerWorker(Session session, TransactionHandler transactionHandler, MessageConsumer consumer, MessageListener listener) {
+    public ConsumerWorker(Session session, 
+                          TransactionHandler transactionHandler, 
+                          MessageConsumer consumer, 
+                          MessageListener listener,
+                          long readTimeout) {
         this.session = session;
         this.transactionHandler = transactionHandler;
         this.consumer = consumer;
         this.listener = listener;
+        this.readTimeout = readTimeout;
     }
 
     /**
@@ -55,13 +61,15 @@ public class ConsumerWorker implements Runnable {
     public void run() {
         try {
             transactionHandler.enlist(session);
-            Message message = consumer.receive(1000);
+            Message message = consumer.receive(readTimeout);
             if(message != null) {
                 listener.onMessage(message);
             }
             transactionHandler.commit(session);
         } catch(Exception ex) {
-            throw new Fabric3JmsException(ex.getMessage(), ex);
+            transactionHandler.rollback(session);
+            // TODO use the monitor
+            ex.printStackTrace();
         }
     }
 

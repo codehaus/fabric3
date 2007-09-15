@@ -108,8 +108,6 @@ public class Fabric3MessageListener implements MessageListener {
      */
     public void onMessage(Message request) {
         
-        System.err.println("Message received");
-        
         Connection connection = null;
         
         try {
@@ -143,7 +141,6 @@ public class Fabric3MessageListener implements MessageListener {
             }
             
             producer.send(response);
-            System.err.println("Response sent");
             
         } catch(JMSException ex) {
             throw new Fabric3JmsException("Unable to send response", ex);

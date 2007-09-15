@@ -124,7 +124,6 @@ public class JmsTargetInterceptor implements Interceptor {
                     correlationId = jmsMessage.getJMSMessageID();
             }
             session.commit();
-            System.err.println("Message sent");
             
             ObjectMessage responseMessage = (ObjectMessage) messageReceiver.receive(correlationId);
             Message response = new MessageImpl();
