@@ -20,6 +20,7 @@ package org.fabric3.binding.rmi.transport;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 
 import org.osoa.sca.ServiceRuntimeException;
 
@@ -52,10 +53,15 @@ public final class RmiTargetInterceptor implements Interceptor {
         Object[] parameters = (Object[]) message.getBody();
         Message result = new MessageImpl();
         try {
-            result.setBody(method.invoke(object, parameters));
+            result.setBody(Proxy.getInvocationHandler(object).invoke(object, method, parameters));
+//            result.setBody(method.invoke(object, parameters));
         } catch (InvocationTargetException ite) {
             result.setBodyWithFault(ite.getCause());
-        } catch (Exception e) {
+        } catch (Throwable e) {
+            if (e instanceof Error) {
+                // re-throw an error since it should not be caught
+                throw (Error) e;
+            }
             throw new ServiceRuntimeException(e);
         }
         return result;

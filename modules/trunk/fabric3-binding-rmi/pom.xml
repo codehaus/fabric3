@@ -25,7 +25,7 @@
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-binding-rmi</artifactId>
     <version>0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>sca-contribution-jar</packaging>
     <name>Fabric3 RMI Binding</name>
     <description>Fabric3 RMI Binding Implementation.</description>
 
@@ -34,7 +34,6 @@
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-extension</artifactId>
             <version>0.2</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>asm</groupId>
@@ -47,7 +46,6 @@
             <artifactId>stax-api</artifactId>
             <!-- use version 1.0 as it is the version bundled in JDK 6 -->
             <version>1.0.</version>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -55,6 +53,18 @@
             <artifactId>junit</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.fabric3</groupId>
+                <artifactId>fabric3-contribution-plugin</artifactId>
+                <version>RELEASE</version>
+                <extensions>true</extensions>
+                <configuration />
+            </plugin>
+        </plugins>
+    </build>
 
 
     <scm>
