@@ -32,7 +32,7 @@ public interface ScannerMonitor {
      *
      * @param name the name of the resource
      */
-    @LogLevel("FINE")
+    @LogLevel("INFO")
     void add(String name);
 
     /**
@@ -50,14 +50,6 @@ public interface ScannerMonitor {
      */
     @LogLevel("FINE")
     void update(String name);
-
-    /**
-     * Called when a resource has been processed
-     *
-     * @param name the name of the resource
-     */
-    @LogLevel("FINE")
-    void processed(String name);
 
     /**
      * Called when a general error is encountered processing an entry
