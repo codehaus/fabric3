@@ -29,6 +29,7 @@
     <orderEntry type="library" name="easymockclassextension-2.2" level="application" />
     <orderEntry type="library" name="cglib-nodep-2.1_3" level="application" />
     <orderEntry type="library" name="activation-1.1" level="application" />
+    <orderEntry type="library" name="geronimo-annotation_1.0_spec-1.1" level="application" />
     <orderEntryProperties />
   </component>
 </module>
