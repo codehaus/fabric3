@@ -43,6 +43,7 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
+import org.fabric3.host.monitor.MonitorFactory;
 
 /**
  * Wire attacher for web services.
@@ -76,6 +77,7 @@ public class WsWireAttacher implements WireAttacher<WsWireSourceDefinition, WsWi
      */
     private CXFServlet cxfServlet = new CXFServlet();
     private ClassLoaderRegistry classLoaderRegistry;
+    private WsWireAttacherMonitor monitor;
 
     /**
      * Injects the wire attacher registry and servlet host.
@@ -88,9 +90,10 @@ public class WsWireAttacher implements WireAttacher<WsWireSourceDefinition, WsWi
     public WsWireAttacher(@Reference WireAttacherRegistry wireAttacherRegistry,
                           @Reference ServletHost servletHost,
                           @Reference ClassLoaderRegistry classLoaderRegistry,
+                          @Reference MonitorFactory monitorFactory,
                           @Property(name = "contextPath")String contextPath) {
         this.classLoaderRegistry = classLoaderRegistry;
-
+        this.monitor = monitorFactory.getMonitor(WsWireAttacherMonitor.class);
         wireAttacherRegistry.register(WsWireSourceDefinition.class, this);
         wireAttacherRegistry.register(WsWireTargetDefinition.class, this);
         servletHost.registerMapping(contextPath, cxfServlet);
@@ -126,12 +129,14 @@ public class WsWireAttacher implements WireAttacher<WsWireSourceDefinition, WsWi
             Object implementor = ServiceProxyHandler.newInstance(service, headInterceptors, wire);
 
             ServerFactoryBean serverFactoryBean = new ServerFactoryBean();
-            serverFactoryBean.setAddress(sourceDefinition.getUri().toASCIIString());
+            URI uri = sourceDefinition.getUri();
+            serverFactoryBean.setAddress(uri.toASCIIString());
             serverFactoryBean.setServiceClass(service);
             serverFactoryBean.setServiceBean(implementor);
 
             serverFactoryBean.setBus(cxfServlet.getBus());
             serverFactoryBean.create();
+            monitor.provisionedEndpoint(uri);
 
         } catch (ClassNotFoundException e) {
             throw new WiringException(e);
