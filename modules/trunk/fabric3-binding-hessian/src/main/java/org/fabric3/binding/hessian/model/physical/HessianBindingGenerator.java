@@ -18,52 +18,54 @@
  */
 package org.fabric3.binding.hessian.model.physical;
 
+import java.net.URI;
 import java.util.Set;
+
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.hessian.model.logical.HessianBindingDefinition;
 import org.fabric3.extension.generator.BindingGeneratorExtension;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.definitions.Intent;
+import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.model.instance.LogicalBinding;
-import org.osoa.sca.annotations.EagerInit;
 
 /**
  * Implementation of the hessian binding generator.
- * 
+ *
  * @version $Revision$ $Date$
  */
 @EagerInit
 public class HessianBindingGenerator extends BindingGeneratorExtension<HessianWireSourceDefinition, HessianWireTargetDefinition, HessianBindingDefinition> {
+    private ClassLoaderGenerator classLoaderGenerator;
 
-    /**
-     * @see org.fabric3.spi.generator.BindingGenerator#generateWireSource(org.fabric3.spi.model.instance.LogicalBinding,
-     *      org.fabric3.spi.generator.GeneratorContext,
-     *      org.fabric3.spi.model.type.ServiceDefinition)
-     */
+    public HessianBindingGenerator(@Reference ClassLoaderGenerator classLoaderGenerator) {
+        this.classLoaderGenerator = classLoaderGenerator;
+    }
+
     public HessianWireSourceDefinition generateWireSource(LogicalBinding<HessianBindingDefinition> logicalBinding,
-                                                          Set<Intent> intentsToBeProvided,     
+                                                          Set<Intent> intentsToBeProvided,
                                                           GeneratorContext generatorContext,
-                                                          ServiceDefinition serviceDefinition) throws GenerationException {
+                                                          ServiceDefinition serviceDefinition)
+            throws GenerationException {
 
-        HessianWireSourceDefinition hwsd = new HessianWireSourceDefinition();
+        URI id = classLoaderGenerator.generate(logicalBinding, generatorContext);
+        HessianWireSourceDefinition hwsd = new HessianWireSourceDefinition(id);
         hwsd.setUri(logicalBinding.getBinding().getTargetUri());
 
         return hwsd;
 
     }
 
-    /**
-     * @see org.fabric3.spi.generator.BindingGenerator#generateWireTarget(org.fabric3.spi.model.instance.LogicalBinding,
-     *      org.fabric3.spi.generator.GeneratorContext,
-     *      org.fabric3.spi.model.type.ReferenceDefinition)
-     */
     public HessianWireTargetDefinition generateWireTarget(LogicalBinding<HessianBindingDefinition> logicalBinding,
-                                                          Set<Intent> intentsToBeProvided,     
+                                                          Set<Intent> intentsToBeProvided,
                                                           GeneratorContext generatorContext,
-                                                          ReferenceDefinition referenceDefinition) throws GenerationException {
+                                                          ReferenceDefinition referenceDefinition)
+            throws GenerationException {
 
         HessianWireTargetDefinition hwtd = new HessianWireTargetDefinition();
         hwtd.setUri(logicalBinding.getBinding().getTargetUri());
@@ -72,9 +74,6 @@ public class HessianBindingGenerator extends BindingGeneratorExtension<HessianWi
 
     }
 
-    /**
-     * @see org.fabric3.extension.generator.BindingGeneratorExtension#getBindingDefinitionClass()
-     */
     @Override
     protected Class<HessianBindingDefinition> getBindingDefinitionClass() {
         return HessianBindingDefinition.class;

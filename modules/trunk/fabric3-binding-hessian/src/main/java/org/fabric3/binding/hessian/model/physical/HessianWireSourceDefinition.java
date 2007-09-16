@@ -18,12 +18,34 @@
  */
 package org.fabric3.binding.hessian.model.physical;
 
+import java.net.URI;
+
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 
 /**
  * Physical wire source definition for Hessian binding.
- * 
+ *
  * @version $Revision$ $Date$
  */
 public class HessianWireSourceDefinition extends PhysicalWireSourceDefinition {
+    private URI classLoaderId;
+
+    /**
+     * Constructor.
+     *
+     * @param classLoaderId the classloader id to deserialize parameters in
+     */
+
+    public HessianWireSourceDefinition(URI classLoaderId) {
+        this.classLoaderId = classLoaderId;
+    }
+
+    /**
+     * Returns the classloader id to deserialize parameters in.
+     *
+     * @return the classloader id to deserialize parameters in
+     */
+    public URI getClassLoaderId() {
+        return classLoaderId;
+    }
 }
