@@ -38,6 +38,7 @@ import org.fabric3.spi.host.ServletHost;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
@@ -48,6 +49,7 @@ import org.fabric3.spi.wire.Wire;
  */
 @EagerInit
 public class BurlapWireAttacher implements WireAttacher<BurlapWireSourceDefinition, BurlapWireTargetDefinition> {
+    private ClassLoaderRegistry classLoaderRegistry;
 
     /**
      * Servlet host.
@@ -57,50 +59,60 @@ public class BurlapWireAttacher implements WireAttacher<BurlapWireSourceDefiniti
     /**
      * Injects the wire attacher registry and servlet host.
      *
-     * @param wireAttacherRegistry Wire attacher rehistry.
+     * @param wireAttacherRegistry Wire attacher registry.
      * @param servletHost          Servlet host.
+     * @param classLoaderRegistry  the classloader registry to resolve the target classloader from
      */
     public BurlapWireAttacher(@Reference WireAttacherRegistry wireAttacherRegistry,
-                              @Reference ServletHost servletHost) {
+                              @Reference ServletHost servletHost,
+                              @Reference ClassLoaderRegistry classLoaderRegistry) {
         wireAttacherRegistry.register(BurlapWireSourceDefinition.class, this);
         wireAttacherRegistry.register(BurlapWireTargetDefinition.class, this);
         this.servletHost = servletHost;
+        this.classLoaderRegistry = classLoaderRegistry;
     }
 
     /**
-     * @see org.fabric3.spi.builder.component.WireAttacher#attachToSource(org.fabric3.spi.model.physical.PhysicalWireSourceDefinition, org.fabric3.spi.model.physical.PhysicalWireTargetDefinition, org.fabric3.spi.wire.Wire)
+     * @see org.fabric3.spi.builder.component.WireAttacher#attachToSource(org.fabric3.spi.model.physical.PhysicalWireSourceDefinition,
+     *org.fabric3.spi.model.physical.PhysicalWireTargetDefinition,org.fabric3.spi.wire.Wire)
      */
     public void attachToSource(BurlapWireSourceDefinition sourceDefinition,
                                PhysicalWireTargetDefinition targetDefinition,
                                Wire wire) throws WiringException {
-        
-        Map<String, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops = new HashMap<String, Map.Entry<PhysicalOperationDefinition, InvocationChain>>();
+
+        Map<String, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops =
+                new HashMap<String, Map.Entry<PhysicalOperationDefinition, InvocationChain>>();
 
         for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
             ops.put(entry.getKey().getName(), entry);
         }
-        
-        BurlapServiceHandler handler = new BurlapServiceHandler(wire, ops);
+        URI id = sourceDefinition.getClassLoaderId();
+        ClassLoader loader = classLoaderRegistry.getClassLoader(id);
+        if (loader == null) {
+            throw new WiringException("Classloader not found", id.toString());
+        }
+        BurlapServiceHandler handler = new BurlapServiceHandler(wire, ops, loader);
         String servicePath = sourceDefinition.getUri().getPath();
         servletHost.registerMapping(servicePath, handler);
     }
 
     /**
-     * @see org.fabric3.spi.builder.component.WireAttacher#attachToTarget(org.fabric3.spi.model.physical.PhysicalWireSourceDefinition, org.fabric3.spi.model.physical.PhysicalWireTargetDefinition, org.fabric3.spi.wire.Wire)
+     * @see org.fabric3.spi.builder.component.WireAttacher#attachToTarget(org.fabric3.spi.model.physical.PhysicalWireSourceDefinition,
+     *org.fabric3.spi.model.physical.PhysicalWireTargetDefinition,org.fabric3.spi.wire.Wire)
      */
     public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition,
                                BurlapWireTargetDefinition targetDefinition,
                                Wire wire) throws WiringException {
 
         URI uri = targetDefinition.getUri();
-        
+
         try {
             for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
                 PhysicalOperationDefinition op = entry.getKey();
                 InvocationChain chain = entry.getValue();
                 chain.addInterceptor(new BurlapTargetInterceptor(uri.toURL(), op.getName()));
             }
-        } catch(MalformedURLException ex) {
+        } catch (MalformedURLException ex) {
             throw new WireAttachException("Invalid URI", sourceDefinition.getUri(), uri, ex);
         }
 

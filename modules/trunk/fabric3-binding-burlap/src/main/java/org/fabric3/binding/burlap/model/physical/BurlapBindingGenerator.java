@@ -18,57 +18,54 @@
  */
 package org.fabric3.binding.burlap.model.physical;
 
+import java.net.URI;
 import java.util.Set;
+
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.burlap.model.logical.BurlapBindingDefinition;
 import org.fabric3.extension.generator.BindingGeneratorExtension;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.definitions.Intent;
+import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.model.instance.LogicalBinding;
-import org.osoa.sca.annotations.EagerInit;
 
 /**
  * Implementation of the hessian binding generator.
- * 
+ *
  * @version $Revision$ $Date$
  */
 @EagerInit
 public class BurlapBindingGenerator extends BindingGeneratorExtension<BurlapWireSourceDefinition, BurlapWireTargetDefinition, BurlapBindingDefinition> {
+    private ClassLoaderGenerator classLoaderGenerator;
 
-    /**
-     * @see org.fabric3.spi.generator.BindingGenerator#generateWireSource(org.fabric3.spi.model.instance.LogicalBinding, 
-     *                                                                    java.util.Set, 
-     *                                                                    org.fabric3.scdl.ServiceDefinition)
-     */
+    public BurlapBindingGenerator(@Reference ClassLoaderGenerator classLoaderGenerator) {
+        this.classLoaderGenerator = classLoaderGenerator;
+    }
+
     public BurlapWireSourceDefinition generateWireSource(LogicalBinding<BurlapBindingDefinition> logicalBinding,
                                                          Set<Intent> intentsToBeProvided,
                                                          GeneratorContext context,
                                                          ServiceDefinition serviceDefinition)
-        throws GenerationException {
-        
+            throws GenerationException {
+
         // TODO Pass the contract information to physical
-
-        BurlapWireSourceDefinition hwsd = new BurlapWireSourceDefinition();
+        URI id = classLoaderGenerator.generate(logicalBinding, context);
+        BurlapWireSourceDefinition hwsd = new BurlapWireSourceDefinition(id);
         hwsd.setUri(logicalBinding.getBinding().getTargetUri());
-
         return hwsd;
-
     }
 
-    /**
-     * @see org.fabric3.spi.generator.BindingGenerator#generateWireTarget(org.fabric3.spi.model.instance.LogicalBinding, 
-     *                                                                    java.util.Set, 
-     *                                                                    org.fabric3.scdl.ReferenceDefinition)
-     */
     public BurlapWireTargetDefinition generateWireTarget(LogicalBinding<BurlapBindingDefinition> logicalBinding,
                                                          Set<Intent> intentsToBeProvided,
                                                          GeneratorContext context,
                                                          ReferenceDefinition referenceDefinition)
-        throws GenerationException {
-        
+            throws GenerationException {
+
         // TODO Pass the contract information to the physical
 
         BurlapWireTargetDefinition hwtd = new BurlapWireTargetDefinition();
