@@ -30,6 +30,7 @@ import org.fabric3.binding.hessian.model.physical.HessianWireSourceDefinition;
 import org.fabric3.binding.hessian.model.physical.HessianWireTargetDefinition;
 import org.fabric3.binding.hessian.transport.HessianServiceHandler;
 import org.fabric3.binding.hessian.transport.HessianTargetInterceptor;
+import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.builder.component.WireAttacher;
@@ -54,6 +55,7 @@ public class HessianWireAttacher implements WireAttacher<HessianWireSourceDefini
      * Servlet host.
      */
     private ServletHost servletHost;
+    private HessianWireAttacherMonitor monitor;
 
     /**
      * Injects the wire attacher registry and servlet host.
@@ -61,14 +63,17 @@ public class HessianWireAttacher implements WireAttacher<HessianWireSourceDefini
      * @param wireAttacherRegistry Wire attacher rehistry.
      * @param servletHost          Servlet host.
      * @param classLoaderRegistry  the classloader registry
+     * @param monitorFactory       the monitor factory
      */
     public HessianWireAttacher(@Reference WireAttacherRegistry wireAttacherRegistry,
                                @Reference ServletHost servletHost,
-                               @Reference ClassLoaderRegistry classLoaderRegistry) {
+                               @Reference ClassLoaderRegistry classLoaderRegistry,
+                               @Reference MonitorFactory monitorFactory) {
         wireAttacherRegistry.register(HessianWireSourceDefinition.class, this);
         wireAttacherRegistry.register(HessianWireTargetDefinition.class, this);
         this.servletHost = servletHost;
         this.classLoaderRegistry = classLoaderRegistry;
+        this.monitor = monitorFactory.getMonitor(HessianWireAttacherMonitor.class);
     }
 
     /**
@@ -91,8 +96,10 @@ public class HessianWireAttacher implements WireAttacher<HessianWireSourceDefini
             throw new WiringException("Classloader not found", id.toString());
         }
         HessianServiceHandler handler = new HessianServiceHandler(wire, ops, loader);
-        String servicePath = sourceDefinition.getUri().getPath();
+        URI uri = sourceDefinition.getUri();
+        String servicePath = uri.getPath();
         servletHost.registerMapping(servicePath, handler);
+        monitor.provisionedEndpoint(uri);
 
     }
 
