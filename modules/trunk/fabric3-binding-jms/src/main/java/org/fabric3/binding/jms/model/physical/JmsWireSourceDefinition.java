@@ -18,6 +18,8 @@
  */
 package org.fabric3.binding.jms.model.physical;
 
+import java.net.URI;
+
 import org.fabric3.binding.jms.TransactionType;
 import org.fabric3.binding.jms.model.JmsBindingMetadata;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
@@ -36,6 +38,11 @@ public class JmsWireSourceDefinition extends PhysicalWireSourceDefinition {
      * Transaction mode.
      */
     private TransactionType transactionType;
+
+    /**
+     * The classloader for the service
+     */
+    private URI classloaderURI;
     
     /**
      * Default constructor.
@@ -47,9 +54,24 @@ public class JmsWireSourceDefinition extends PhysicalWireSourceDefinition {
      * @param metadata Metadata to be initialized.
      * @param transactionType Transaction type.
      */
-    public JmsWireSourceDefinition(JmsBindingMetadata metadata, TransactionType transactionType) {
+    public JmsWireSourceDefinition(JmsBindingMetadata metadata, TransactionType transactionType, URI classloaderUri) {
         this.metadata = metadata;
         this.transactionType = transactionType;
+        this.classloaderURI = classloaderUri;
+    }
+
+    /**
+     * @return Classloader UTI.
+     */
+    public URI getClassloaderURI() {
+        return classloaderURI;
+    }
+
+    /**
+     * @param classloaderURI Classloader URI.
+     */
+    public void setClassloaderURI(URI classloaderURI) {
+        this.classloaderURI = classloaderURI;
     }
 
     /**

@@ -54,6 +54,7 @@ import org.fabric3.spi.builder.component.WireAttacherRegistry;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
@@ -91,6 +92,20 @@ public class JmsWireAttacher implements WireAttacher<JmsWireSourceDefinition, Jm
      * Transaction handlers.
      */
     private TransactionHandler transactionHandler;
+    
+    /**
+     * Classloader registry.
+     */
+    private ClassLoaderRegistry classLoaderRegistry;
+    
+    /**
+     * Injects the classloader registry.
+     * @param classLoaderRegistry Classloader registry.
+     */
+    @Reference
+    public void setClassloaderRegistry(ClassLoaderRegistry classLoaderRegistry) {
+        this.classLoaderRegistry = classLoaderRegistry;
+    }
     
     /**
      * Injects the transaction handler.
@@ -149,6 +164,8 @@ public class JmsWireAttacher implements WireAttacher<JmsWireSourceDefinition, Jm
                                PhysicalWireTargetDefinition targetDefinition,
                                Wire wire) throws WiringException {
 
+        ClassLoader cl = classLoaderRegistry.getClassLoader(sourceDefinition.getClassloaderURI());
+        
         Map<String, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops =
             new HashMap<String, Map.Entry<PhysicalOperationDefinition, InvocationChain>>();
 
@@ -185,7 +202,7 @@ public class JmsWireAttacher implements WireAttacher<JmsWireSourceDefinition, Jm
             MessageListener listener = new Fabric3MessageListener(resDestination, resCf, ops, correlationScheme, wire, transactionHandler, transactionType);
             listeners.add(listener);
         }
-        jmsHost.registerListener(reqDestination, reqCf, listeners, transactionType, transactionHandler);
+        jmsHost.registerListener(reqDestination, reqCf, listeners, transactionType, transactionHandler, cl);
         
     }
 
@@ -198,6 +215,8 @@ public class JmsWireAttacher implements WireAttacher<JmsWireSourceDefinition, Jm
                                JmsWireTargetDefinition targetDefinition,
                                Wire wire) throws WiringException {
 
+        ClassLoader cl = classLoaderRegistry.getClassLoader(targetDefinition.getClassloaderURI());
+        
         JmsBindingMetadata metadata = targetDefinition.getMetadata();
 
         Hashtable<String, String> env = metadata.getEnv();
@@ -225,7 +244,7 @@ public class JmsWireAttacher implements WireAttacher<JmsWireSourceDefinition, Jm
             InvocationChain chain = entry.getValue();
             
             Fabric3MessageReceiver messageReceiver = new Fabric3MessageReceiver(resDestination, resCf);
-            Interceptor interceptor = new JmsTargetInterceptor(op.getName(), reqDestination, reqCf, correlationScheme, messageReceiver);
+            Interceptor interceptor = new JmsTargetInterceptor(op.getName(), reqDestination, reqCf, correlationScheme, messageReceiver, cl);
             
             chain.addInterceptor(interceptor);
             

@@ -68,6 +68,11 @@ public class JmsTargetInterceptor implements Interceptor {
      * Message receiver.
      */
     private Fabric3MessageReceiver messageReceiver;
+    
+    /**
+     * Classloader to use.
+     */
+    private ClassLoader cl;
 
     /**
      * @param methodName Method name.
@@ -80,12 +85,14 @@ public class JmsTargetInterceptor implements Interceptor {
                                 Destination destination,
                                 ConnectionFactory connectionFactory,
                                 CorrelationScheme correlationScheme,
-                                Fabric3MessageReceiver messageReceiver) {
+                                Fabric3MessageReceiver messageReceiver,
+                                ClassLoader cl) {
         this.methodName = methodName;
         this.destination = destination;
         this.connectionFactory = connectionFactory;
         this.correlationScheme = correlationScheme;
         this.messageReceiver = messageReceiver;
+        this.cl = cl;
     }
 
     /**
@@ -102,7 +109,11 @@ public class JmsTargetInterceptor implements Interceptor {
         
         Connection connection = null;
         
+        ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+        
         try {
+            
+            Thread.currentThread().setContextClassLoader(cl);
             
             connection = connectionFactory.createConnection();
             Session session = connection.createSession(true, Session.SESSION_TRANSACTED);
@@ -135,6 +146,7 @@ public class JmsTargetInterceptor implements Interceptor {
             throw new Fabric3JmsException("Unable to receive response", ex);
         } finally {
             JmsHelper.closeQuietly(connection);
+            Thread.currentThread().setContextClassLoader(oldCl);
         }
         
     }

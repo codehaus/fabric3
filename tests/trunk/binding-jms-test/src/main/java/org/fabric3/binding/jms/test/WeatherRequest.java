@@ -16,33 +16,32 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.binding.jms.host;
+package org.fabric3.binding.jms.test;
 
-import java.util.List;
-
-import javax.jms.ConnectionFactory;
-import javax.jms.Destination;
-import javax.jms.MessageListener;
-
-import org.fabric3.binding.jms.TransactionType;
-import org.fabric3.binding.jms.tx.TransactionHandler;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @version $Revision$ $Date$
  */
-public interface JmsHost {
+public class WeatherRequest implements Serializable {
     
-    /**
-     * @param destination Destination to listen on.
-     * @param factory Factory to create connections.
-     * @param listeners Message listeners.
-     * @param transactionType Transaction type.
-     */
-    void registerListener(Destination destination, 
-                          ConnectionFactory connectionFactory, 
-                          List<MessageListener> listeners, 
-                          TransactionType transactionType,
-                          TransactionHandler transactionHandler,
-                          ClassLoader cl);
+    private static final long serialVersionUID = -3896071380449163733L;
+    
+    private String city;
+    private Date date;
+    
+    public String getCity() {
+        return city;
+    }
+    public void setCity(String city) {
+        this.city = city;
+    }
+    public Date getDate() {
+        return date;
+    }
+    public void setDate(Date date) {
+        this.date = date;
+    }
 
 }

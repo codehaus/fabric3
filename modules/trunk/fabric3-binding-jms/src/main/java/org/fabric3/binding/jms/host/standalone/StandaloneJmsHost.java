@@ -98,7 +98,8 @@ public class StandaloneJmsHost implements JmsHost {
                                  final ConnectionFactory connectionFactory, 
                                  final List<MessageListener> listeners, 
                                  final TransactionType transactionType,
-                                 final TransactionHandler transactionHandler) {
+                                 final TransactionHandler transactionHandler,
+                                 final ClassLoader cl) {
         
         try {
 
@@ -106,7 +107,7 @@ public class StandaloneJmsHost implements JmsHost {
             for (final MessageListener listener : listeners) {
                 final Session session = connection.createSession(transactionType == TransactionType.LOCAL, Session.SESSION_TRANSACTED);
                 final MessageConsumer consumer = session.createConsumer(destination);
-                Runnable work = new ConsumerWorker(session, transactionHandler, transactionType, consumer ,listener, readTimeout);
+                Runnable work = new ConsumerWorker(session, transactionHandler, transactionType, consumer ,listener, readTimeout, cl);
                 workScheduler.scheduleWork(work);
             }
             

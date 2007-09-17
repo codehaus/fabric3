@@ -19,8 +19,8 @@
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            name="BurlapTestComposite">
 
-    <service name="HelloJmsService" promote="HelloService">
-        <interface.java interface="org.fabric3.sample.hello.HelloService"/>
+    <service name="WeatherJmsService" promote="WeatherService">
+        <interface.java interface="org.fabric3.binding.jms.test.WeatherService"/>
         <binding.jms correlationScheme="RequestMsgIDToCorrelID" requires="f3:transactedOneWay.global">
             <destination name="serviceQueue" type="queue" create="always"/>
             <connectionFactory name="org.apache.activemq.ActiveMQXAConnectionFactory" create="always">
@@ -35,8 +35,8 @@
         </binding.jms>
     </service>
 
-    <reference name="HelloJmsReference" promote="HelloClient/helloService">
-        <interface.java interface="org.fabric3.sample.hello.HelloService"/>
+    <reference name="WeatherJmsReference" promote="WeatherTest/weatherService">
+        <interface.java interface="org.fabric3.binding.jms.test.WeatherService"/>
         <binding.jms correlationScheme="RequestMsgIDToCorrelID" >
             <destination name="serviceQueue" type="queue" create="always"/>
             <connectionFactory name="org.apache.activemq.ActiveMQConnectionFactory" create="always">
@@ -51,19 +51,12 @@
         </binding.jms>
     </reference>
     
-    <component name="HelloTest">
-        <f3:junit class="org.fabric3.sample.hello.HelloTest"/>
-        <reference name="helloClient" target="HelloClient"/>
+    <component name="WeatherTest">
+        <f3:junit class="org.fabric3.binding.jms.test.WeatherTest"/>
     </component>
 
-    <!-- Hello Client -->
-    <component name="HelloClient">
-        <implementation.java class="org.fabric3.sample.hello.HelloClientImpl"/>
-    </component>
-
-    <!-- Hello Service -->
-    <component name="HelloService">
-        <implementation.java class="org.fabric3.sample.hello.HelloServiceImpl"/>
+    <component name="WeatherService">
+        <implementation.java class="org.fabric3.binding.jms.test.WeatherServiceImpl"/>
     </component>
     
 </composite>

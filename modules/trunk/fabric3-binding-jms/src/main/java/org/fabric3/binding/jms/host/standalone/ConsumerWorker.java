@@ -38,6 +38,7 @@ public class ConsumerWorker implements Runnable {
     private final MessageListener listener;
     private final long readTimeout;
     private final TransactionType transactionType;
+    private final ClassLoader cl;
 
     /**
      * @param session Session used to receive messages.
@@ -51,20 +52,28 @@ public class ConsumerWorker implements Runnable {
                           TransactionType transactionType,
                           MessageConsumer consumer, 
                           MessageListener listener,
-                          long readTimeout) {
+                          long readTimeout,
+                          ClassLoader cl) {
         this.session = session;
         this.transactionHandler = transactionHandler;
         this.transactionType = transactionType;
         this.consumer = consumer;
         this.listener = listener;
         this.readTimeout = readTimeout;
+        this.cl = cl;
     }
 
     /**
      * @see java.lang.Runnable#run()
      */
     public void run() {
+        
+        ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+        
         try {
+            
+            Thread.currentThread().setContextClassLoader(cl);
+            
             if(transactionType == TransactionType.GLOBAL) {
                 transactionHandler.enlist(session);
             }
@@ -77,7 +86,9 @@ public class ConsumerWorker implements Runnable {
             } else {
                 session.commit();
             }
+            
         } catch(Exception ex) {
+            
             if(transactionType == TransactionType.GLOBAL) {
                 transactionHandler.rollback();
             } else {
@@ -90,7 +101,11 @@ public class ConsumerWorker implements Runnable {
             }
             // TODO use the monitor
             ex.printStackTrace();
+            
+        } finally {
+            Thread.currentThread().setContextClassLoader(oldCl);
         }
+        
     }
 
 }

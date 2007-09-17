@@ -16,33 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.binding.jms.host;
-
-import java.util.List;
-
-import javax.jms.ConnectionFactory;
-import javax.jms.Destination;
-import javax.jms.MessageListener;
-
-import org.fabric3.binding.jms.TransactionType;
-import org.fabric3.binding.jms.tx.TransactionHandler;
+package org.fabric3.binding.jms.test;
 
 /**
  * @version $Revision$ $Date$
  */
-public interface JmsHost {
-    
-    /**
-     * @param destination Destination to listen on.
-     * @param factory Factory to create connections.
-     * @param listeners Message listeners.
-     * @param transactionType Transaction type.
-     */
-    void registerListener(Destination destination, 
-                          ConnectionFactory connectionFactory, 
-                          List<MessageListener> listeners, 
-                          TransactionType transactionType,
-                          TransactionHandler transactionHandler,
-                          ClassLoader cl);
+public class WeatherServiceImpl implements WeatherService {
+
+    public WeatherResponse getWeather(WeatherRequest weatherRequest) {
+        
+        WeatherResponse weatherResponse = new WeatherResponse();
+        weatherResponse.setCondition(WeatherCondition.SUNNY);
+        weatherResponse.setTemperatureMinimum(25);
+        weatherResponse.setTemperatureMaximum(40);
+
+        return weatherResponse;
+        
+    }
 
 }

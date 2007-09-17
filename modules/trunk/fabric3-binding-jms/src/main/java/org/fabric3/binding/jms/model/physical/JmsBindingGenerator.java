@@ -18,6 +18,7 @@
  */
 package org.fabric3.binding.jms.model.physical;
 
+import java.net.URI;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
@@ -29,10 +30,12 @@ import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.spi.Constants;
+import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Binding generator that creates the physical source and target definitions for wires. Message 
@@ -50,6 +53,19 @@ public class JmsBindingGenerator extends BindingGeneratorExtension<JmsWireSource
     private static final QName TRANSACTED_ONEWAY_GLOBAL = new QName(Constants.FABRIC3_NS, "transactedOneWay.global");
     
     /**
+     * Classloader generator.
+     */
+    private ClassLoaderGenerator classLoaderGenerator;
+
+    /**
+     * Injects the classloader generator.
+     * @param classLoaderGenerator Classloader generator.
+     */
+    public JmsBindingGenerator(@Reference ClassLoaderGenerator classLoaderGenerator) {
+        this.classLoaderGenerator = classLoaderGenerator;
+    }
+    
+    /**
      * @see org.fabric3.spi.generator.BindingGenerator#generateWireSource(org.fabric3.spi.model.instance.LogicalBinding,
      *                                                                    java.util.Set,
      *                                                                    org.fabric3.spi.model.type.ServiceDefinition)
@@ -60,7 +76,8 @@ public class JmsBindingGenerator extends BindingGeneratorExtension<JmsWireSource
                                                       ServiceDefinition serviceDefinition) throws GenerationException {
         
         TransactionType transactionType = getTransactionType(intentsToBeProvided);
-        return new JmsWireSourceDefinition(logicalBinding.getBinding().getMetadata(), transactionType);
+        URI classloader = classLoaderGenerator.generate(logicalBinding, context);
+        return new JmsWireSourceDefinition(logicalBinding.getBinding().getMetadata(), transactionType, classloader);
         
     }
 
@@ -75,7 +92,8 @@ public class JmsBindingGenerator extends BindingGeneratorExtension<JmsWireSource
                                                       ReferenceDefinition referenceDefinition) throws GenerationException {
         
         TransactionType transactionType = getTransactionType(intentsToBeProvided);
-        return new JmsWireTargetDefinition(logicalBinding.getBinding().getMetadata(), transactionType);
+        URI classloader = classLoaderGenerator.generate(logicalBinding, context);
+        return new JmsWireTargetDefinition(logicalBinding.getBinding().getMetadata(), transactionType, classloader);
         
     }
 
