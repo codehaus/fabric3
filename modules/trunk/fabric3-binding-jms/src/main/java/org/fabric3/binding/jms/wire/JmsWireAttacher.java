@@ -97,6 +97,51 @@ public class JmsWireAttacher implements WireAttacher<JmsWireSourceDefinition, Jm
      * Classloader registry.
      */
     private ClassLoaderRegistry classLoaderRegistry;
+
+    /**
+     * Injects the wire attacher registry and servlet host.
+     * 
+     * @param wireAttacherRegistry Wire attacher rehistry.
+     * @param servletHost Servlet host.
+     */
+    public JmsWireAttacher(@Reference WireAttacherRegistry wireAttacherRegistry) {
+        
+        wireAttacherRegistry.register(JmsWireSourceDefinition.class, this);
+        wireAttacherRegistry.register(JmsWireTargetDefinition.class, this);
+        
+        /*destinationStrategies.put(CreateOption.always, new AlwaysDestinationStrategy());
+        destinationStrategies.put(CreateOption.never, new NeverDestinationStrategy());
+        destinationStrategies.put(CreateOption.ifnotexist, new IfNotExistDestinationStrategy());
+        
+        connectionFactoryStrategies.put(CreateOption.always, new AlwaysConnectionFactoryStrategy());
+        connectionFactoryStrategies.put(CreateOption.never, new NeverConnectionFactoryStrategy());
+        connectionFactoryStrategies.put(CreateOption.ifnotexist, new IfNotExistConnectionFactoryStrategy());*/
+        
+    }
+    
+    /**
+     * Injects the destination strategies.
+     * 
+     * @param strategies Destination strategies.
+     */
+    @Reference
+    public void setDestinationStrategies(Map<String, DestinationStrategy> strategies) {
+        for(Map.Entry<String, DestinationStrategy> entry : strategies.entrySet()) {
+            destinationStrategies.put(CreateOption.valueOf(entry.getKey()), entry.getValue());
+        }
+    }
+    
+    /**
+     * Injects the connection factory strategies.
+     * 
+     * @param strategies Connection factory strategies.
+     */
+    @Reference
+    public void setConnectionFactoryStrategies(Map<String, ConnectionFactoryStrategy> strategies) {
+        for(Map.Entry<String, ConnectionFactoryStrategy> entry : strategies.entrySet()) {
+            connectionFactoryStrategies.put(CreateOption.valueOf(entry.getKey()), entry.getValue());
+        }
+    }
     
     /**
      * Injects the classloader registry.
@@ -132,27 +177,6 @@ public class JmsWireAttacher implements WireAttacher<JmsWireSourceDefinition, Jm
     @Property
     public void setReceiverCount(int receiverCount) {
         this.receiverCount = receiverCount;
-    }
-
-    /**
-     * Injects the wire attacher registry and servlet host.
-     * 
-     * @param wireAttacherRegistry Wire attacher rehistry.
-     * @param servletHost Servlet host.
-     */
-    public JmsWireAttacher(@Reference WireAttacherRegistry wireAttacherRegistry) {
-        
-        wireAttacherRegistry.register(JmsWireSourceDefinition.class, this);
-        wireAttacherRegistry.register(JmsWireTargetDefinition.class, this);
-        
-        destinationStrategies.put(CreateOption.always, new AlwaysDestinationStrategy());
-        destinationStrategies.put(CreateOption.never, new NeverDestinationStrategy());
-        destinationStrategies.put(CreateOption.ifnotexist, new IfNotExistDestinationStrategy());
-        
-        connectionFactoryStrategies.put(CreateOption.always, new AlwaysConnectionFactoryStrategy());
-        connectionFactoryStrategies.put(CreateOption.never, new NeverConnectionFactoryStrategy());
-        connectionFactoryStrategies.put(CreateOption.ifnotexist, new IfNotExistConnectionFactoryStrategy());
-        
     }
 
     /**
