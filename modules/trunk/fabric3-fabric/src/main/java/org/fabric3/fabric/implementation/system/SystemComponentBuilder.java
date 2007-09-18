@@ -19,11 +19,13 @@
 package org.fabric3.fabric.implementation.system;
 
 import java.net.URI;
+import java.util.Map;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.pojo.injection.MultiplicityObjectFactory;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.implementation.PojoComponentBuilder;
 import org.fabric3.spi.builder.BuilderException;
@@ -76,7 +78,8 @@ public class SystemComponentBuilder<T> extends PojoComponentBuilder<T, SystemCom
         InstanceFactoryProvider<T> provider = providerBuilders.build(providerDefinition, classLoader);
 
         createPropertyFactories(definition, provider);
+        Map<String, MultiplicityObjectFactory<?>> referenceFactories = createMultiplicityReferenceFactories(providerDefinition);
 
-        return new SystemComponent<T>(componentId, provider, scopeContainer, groupId, initLevel, -1, -1, null);
+        return new SystemComponent<T>(componentId, provider, scopeContainer, groupId, initLevel, -1, -1, definition.getKey(), referenceFactories);
     }
 }

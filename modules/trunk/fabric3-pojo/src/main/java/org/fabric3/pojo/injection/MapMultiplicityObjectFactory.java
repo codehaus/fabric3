@@ -16,41 +16,41 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.injection;
+package org.fabric3.pojo.injection;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.AtomicComponent;
 
 /**
- * A set based object factory.
+ * A map based object factory.
  *
  * @version $Rev: 1 $ $Date: 2007-05-14 18:40:37 +0100 (Mon, 14 May 2007) $
  */
-public class SetMultiplicityObjectFactory implements MultiplicityObjectFactory<Set<?>> {
+public class MapMultiplicityObjectFactory implements MultiplicityObjectFactory<Map<?, ?>> {
 
     // Object factories
-    private Set<ObjectFactory<?>> factories = new HashSet<ObjectFactory<?>>();
+    private Map<Object, ObjectFactory<?>> factories = new HashMap<Object, ObjectFactory<?>>();
 
     /**
      * @see org.fabric3.spi.ObjectFactory#getInstance()
      */
-    public Set<Object> getInstance() throws ObjectCreationException {
-        Set<Object> set = new HashSet<Object>();
-        for (ObjectFactory<?> factory : factories) {
-            set.add(factory.getInstance());
+    public Map<Object, Object> getInstance() throws ObjectCreationException {
+        Map<Object, Object> map = new HashMap<Object, Object>();
+        for (Map.Entry<Object, ObjectFactory<?>> entry : factories.entrySet()) {
+            map.put(entry.getKey(), entry.getValue().getInstance());
         }
-        return set;
+        return map;
     }
 
     /**
-     * @see org.fabric3.fabric.injection.MultiplicityObjectFactory#addObjectFactory(org.fabric3.spi.ObjectFactory, org.fabric3.spi.component.AtomicComponent)
+     * @see org.fabric3.pojo.injection.MultiplicityObjectFactory#addObjectFactory(org.fabric3.spi.ObjectFactory, org.fabric3.spi.component.AtomicComponent)
      */
     public void addObjectFactory(ObjectFactory<?> objectFactory, AtomicComponent<?> targetComponent) {
-        factories.add(objectFactory);
+        factories.put(targetComponent.getKey(), objectFactory);
     }
 
 }

@@ -18,6 +18,7 @@
  */
 package org.fabric3.pojo.implementation;
 
+import java.lang.annotation.ElementType;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,7 +27,14 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import org.fabric3.pojo.injection.ListMultiplicityObjectFactory;
+import org.fabric3.pojo.injection.MapMultiplicityObjectFactory;
+import org.fabric3.pojo.injection.MultiplicityObjectFactory;
+import org.fabric3.pojo.injection.SetMultiplicityObjectFactory;
+import org.fabric3.pojo.instancefactory.InjectionSiteMapping;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
+import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
+import org.fabric3.pojo.scdl.MemberSite;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.SingletonObjectFactory;
 import org.fabric3.spi.builder.BuilderException;
@@ -123,5 +131,41 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
     @SuppressWarnings("unchecked")
     protected <T> PullTransformer<Node,T> getTransformer(XSDSimpleType source, JavaClass<T> target) {
         return (PullTransformer<Node,T>) transformerRegistry.getTransformer(source, target);
+    }
+
+    protected Map<String, MultiplicityObjectFactory<?>> createMultiplicityReferenceFactories(InstanceFactoryDefinition providerDefinition) {
+
+        Map<String, MultiplicityObjectFactory<?>> referenceFactories = new HashMap<String, MultiplicityObjectFactory<?>>();
+        
+        for (InjectionSiteMapping injectionSiteMapping : providerDefinition.getInjectionSites()) {
+            
+            if (injectionSiteMapping.getSource().getValueType() != ValueSource.ValueSourceType.REFERENCE) {
+                continue;
+            }
+            
+            MemberSite memberSite = injectionSiteMapping.getSite();
+            ElementType elementType = memberSite.getElementType();
+            
+            String referenceType = null;
+            if(ElementType.METHOD == elementType) {
+                referenceType = memberSite.getSignature().getParameterTypes().get(0);
+            } else if(ElementType.FIELD == elementType) {
+                referenceType = memberSite.getType();
+            }
+            
+            if ("java.util.Map".equals(referenceType)) {
+                referenceFactories.put(injectionSiteMapping.getSource().getName(), new MapMultiplicityObjectFactory());
+            } else if ("java.util.Set".equals(referenceType)) {
+                referenceFactories.put(injectionSiteMapping.getSource().getName(), new SetMultiplicityObjectFactory());
+            } else if ("java.util.List".equals(referenceType)) {
+                referenceFactories.put(injectionSiteMapping.getSource().getName(), new ListMultiplicityObjectFactory());
+            } else if ("java.util.Collection".equals(referenceType)) {
+                referenceFactories.put(injectionSiteMapping.getSource().getName(), new ListMultiplicityObjectFactory());
+            }
+            
+        }
+        
+        return referenceFactories;
+        
     }
 }

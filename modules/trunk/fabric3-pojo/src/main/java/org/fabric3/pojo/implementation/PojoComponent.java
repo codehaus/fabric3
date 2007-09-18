@@ -21,20 +21,20 @@ package org.fabric3.pojo.implementation;
 import java.net.URI;
 import java.util.Map;
 
-import org.osoa.sca.ComponentContext;
-
 import org.fabric3.pojo.ComponentObjectFactory;
+import org.fabric3.pojo.injection.MultiplicityObjectFactory;
+import org.fabric3.scdl.PropertyValue;
+import org.fabric3.spi.AbstractLifecycle;
+import org.fabric3.spi.ObjectCreationException;
+import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.InstanceFactory;
 import org.fabric3.spi.component.InstanceFactoryProvider;
-import org.fabric3.spi.model.instance.ValueSource;
-import org.fabric3.spi.AbstractLifecycle;
-import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.ObjectCreationException;
-import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.scdl.PropertyValue;
+import org.fabric3.spi.model.instance.ValueSource;
+import org.osoa.sca.ComponentContext;
 
 /**
  * Base class for Component implementations based on Java objects.
@@ -52,6 +52,7 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
     private final long maxAge;
     private InstanceFactory<T> instanceFactory;
     private String key;
+    private final Map<String, MultiplicityObjectFactory<?>> referenceFactories;
 
     public PojoComponent(URI componentId,
                          InstanceFactoryProvider<T> provider,
@@ -60,7 +61,8 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
                          int initLevel,
                          long maxIdleTime,
                          long maxAge,
-                         String key) {
+                         String key,
+                         Map<String, MultiplicityObjectFactory<?>> referenceFactories) {
         this.uri = componentId;
         this.provider = provider;
         this.scopeContainer = scopeContainer;
@@ -69,6 +71,7 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
         this.maxIdleTime = maxIdleTime;
         this.maxAge = maxAge;
         this.key = key;
+        this.referenceFactories = referenceFactories;
     }
     
     public String getKey() {
@@ -149,6 +152,24 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
 
     public String toString() {
         return "[" + uri.toString() + "] in state [" + super.toString() + ']';
+    }
+    
+    /**
+     * Attaches a reference source to the target.
+     * 
+     * @param referenceSource Reference source.
+     * @param objectFactory Object factory.
+     * @param target Target component.
+     */
+    public void attachReferenceToTarget(ValueSource referenceSource, ObjectFactory<?> objectFactory, AtomicComponent<?> target) {
+        
+        MultiplicityObjectFactory<?> factory = referenceFactories.get(referenceSource.getName());
+        if(factory != null) {
+            factory.addObjectFactory(objectFactory, target);
+            setObjectFactory(referenceSource, factory);
+        } else {
+            setObjectFactory(referenceSource, objectFactory);
+        }
     }
 
 }

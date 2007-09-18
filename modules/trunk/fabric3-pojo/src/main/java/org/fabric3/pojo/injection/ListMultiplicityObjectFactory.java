@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.injection;
+package org.fabric3.pojo.injection;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -48,7 +48,7 @@ public class ListMultiplicityObjectFactory implements MultiplicityObjectFactory<
     }
 
     /**
-     * @see org.fabric3.fabric.injection.MultiplicityObjectFactory#addObjectFactory(org.fabric3.spi.ObjectFactory, org.fabric3.spi.component.AtomicComponent)
+     * @see org.fabric3.pojo.injection.MultiplicityObjectFactory#addObjectFactory(org.fabric3.spi.ObjectFactory, org.fabric3.spi.component.AtomicComponent)
      */
     public void addObjectFactory(ObjectFactory<?> objectFactory, AtomicComponent<?> targetComponent) {
         factories.add(objectFactory);

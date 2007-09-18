@@ -18,24 +18,13 @@
  */
 package org.fabric3.fabric.implementation.java;
 
-import java.lang.annotation.ElementType;
 import java.net.URI;
-import java.util.HashMap;
 import java.util.Map;
 
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
-
-import org.fabric3.fabric.injection.ListMultiplicityObjectFactory;
-import org.fabric3.fabric.injection.MapMultiplicityObjectFactory;
-import org.fabric3.fabric.injection.MultiplicityObjectFactory;
-import org.fabric3.fabric.injection.SetMultiplicityObjectFactory;
 import org.fabric3.pojo.implementation.PojoComponentBuilder;
-import org.fabric3.pojo.instancefactory.InjectionSiteMapping;
+import org.fabric3.pojo.injection.MultiplicityObjectFactory;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
-import org.fabric3.pojo.scdl.MemberSite;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.BuilderException;
@@ -43,11 +32,13 @@ import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.model.instance.ValueSource;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.spi.wire.ProxyService;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * The component builder for Java implementation types. Responsible for creating the Component runtime artifact from a
@@ -104,44 +95,5 @@ public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaCompone
         return new JavaComponent<T>(componentId, provider, scopeContainer, groupId, initLevel, -1, -1, proxyService,
                                     propertyFactories, referenceFactories, definition.getKey());
 
-    }
-
-    /*
-    * Create wrapper object factories for multi-valued references.
-    */
-    private Map<String, MultiplicityObjectFactory<?>> createMultiplicityReferenceFactories(InstanceFactoryDefinition providerDefinition) {
-
-        Map<String, MultiplicityObjectFactory<?>> referenceFactories = new HashMap<String, MultiplicityObjectFactory<?>>();
-        
-        for (InjectionSiteMapping injectionSiteMapping : providerDefinition.getInjectionSites()) {
-            
-            if (injectionSiteMapping.getSource().getValueType() != ValueSource.ValueSourceType.REFERENCE) {
-                continue;
-            }
-            
-            MemberSite memberSite = injectionSiteMapping.getSite();
-            ElementType elementType = memberSite.getElementType();
-            
-            String referenceType = null;
-            if(ElementType.METHOD == elementType) {
-                referenceType = memberSite.getSignature().getParameterTypes().get(0);
-            } else if(ElementType.FIELD == elementType) {
-                referenceType = memberSite.getType();
-            }
-            
-            if ("java.util.Map".equals(referenceType)) {
-                referenceFactories.put(injectionSiteMapping.getSource().getName(), new MapMultiplicityObjectFactory());
-            } else if ("java.util.Set".equals(referenceType)) {
-                referenceFactories.put(injectionSiteMapping.getSource().getName(), new SetMultiplicityObjectFactory());
-            } else if ("java.util.List".equals(referenceType)) {
-                referenceFactories.put(injectionSiteMapping.getSource().getName(), new ListMultiplicityObjectFactory());
-            } else if ("java.util.Collection".equals(referenceType)) {
-                referenceFactories.put(injectionSiteMapping.getSource().getName(), new ListMultiplicityObjectFactory());
-            }
-            
-        }
-        
-        return referenceFactories;
-        
     }
 }

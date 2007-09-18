@@ -61,18 +61,24 @@ public class SystemWireAttacher implements WireAttacher<SystemWireSourceDefiniti
     public void attachToSource(SystemWireSourceDefinition sourceDefinition,
                                PhysicalWireTargetDefinition targetDefinition,
                                Wire wire) throws WiringException {
+        
         URI sourceName = UriHelper.getDefragmentedName(sourceDefinition.getUri());
-        Component source = manager.getComponent(sourceName);
-        assert source instanceof SystemComponent;
+        Component source = manager.getComponent(sourceName);        
+        assert source instanceof SystemComponent;        
         SystemComponent<?> sourceComponent = (SystemComponent) source;
-        URI targetName = UriHelper.getDefragmentedName(targetDefinition.getUri());
+        
+        URI targetName = UriHelper.getDefragmentedName(targetDefinition.getUri());        
         Component target = manager.getComponent(targetName);
         assert target instanceof AtomicComponent;
         AtomicComponent<?> targetComponent = (AtomicComponent<?>) target;
+        
         URI sourceUri = sourceDefinition.getUri();
         ValueSource referenceSource = new ValueSource(ValueSource.ValueSourceType.REFERENCE, sourceUri.getFragment());
         ObjectFactory<?> factory = targetComponent.createObjectFactory();
         sourceComponent.setObjectFactory(referenceSource, factory);
+        
+        sourceComponent.attachReferenceToTarget(referenceSource, factory, (AtomicComponent<?>) target);
+        
     }
 
     public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition,
