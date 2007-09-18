@@ -44,8 +44,8 @@
     <!-- JMS Wire Attacher -->
     <component name="JmsWireAttacher">
         <system:implementation.system class="org.fabric3.binding.jms.wire.JmsWireAttacher"/>
-        <reference name="destinationStrategies" target="AlwaysCreateDestination NeverCreateDestination IfNotExistCreateDestination"/>
-        <reference name="connectionFactoryStrategies" target="AlwaysCreateConnectionFactory NeverCreateConnectionFactory IfNotExistCreateConnectionFactory"/>
+        <!-- reference name="destinationStrategies" target="AlwaysCreateDestination NeverCreateDestination IfNotExistCreateDestination"/>
+        <reference name="connectionFactoryStrategies" target="AlwaysCreateConnectionFactory NeverCreateConnectionFactory IfNotExistCreateConnectionFactory"/-->
     </component>
     
     <!-- Always create destination strategy -->
