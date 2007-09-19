@@ -22,6 +22,7 @@ package org.fabric3.spi.model.physical;
 import java.net.URI;
 
 import org.fabric3.scdl.ModelObject;
+import org.w3c.dom.Document;
 
 /**
  * Represents a physical wire source definition.
@@ -35,6 +36,7 @@ public class PhysicalWireSourceDefinition extends ModelObject {
     private URI callbackUri;
     private boolean optimizable;
     private boolean conversational;
+    private String key;
 
     /**
      * Gets the URI.
@@ -97,5 +99,23 @@ public class PhysicalWireSourceDefinition extends ModelObject {
 
     public void setConversational(boolean conversational) {
         this.conversational = conversational;
+    }
+
+    /**
+     * Gets the key if the wire is for a map based reference.
+     * 
+     * @return The key if the wire is for a map based reference.
+     */
+    public String getKey() {
+        return key;
+    }
+
+    /**
+     * Gets the key if the wire is for a map based reference.
+     * 
+     * @param key The key if the wire is for a map based reference.
+     */
+    public void setKey(String key) {
+        this.key = key;
     }
 }
