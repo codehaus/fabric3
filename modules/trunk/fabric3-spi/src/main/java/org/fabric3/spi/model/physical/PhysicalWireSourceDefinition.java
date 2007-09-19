@@ -36,7 +36,7 @@ public class PhysicalWireSourceDefinition extends ModelObject {
     private URI callbackUri;
     private boolean optimizable;
     private boolean conversational;
-    private String key;
+    private Document key;
 
     /**
      * Gets the URI.
@@ -106,7 +106,7 @@ public class PhysicalWireSourceDefinition extends ModelObject {
      * 
      * @return The key if the wire is for a map based reference.
      */
-    public String getKey() {
+    public Document getKey() {
         return key;
     }
 
@@ -115,7 +115,7 @@ public class PhysicalWireSourceDefinition extends ModelObject {
      * 
      * @param key The key if the wire is for a map based reference.
      */
-    public void setKey(String key) {
+    public void setKey(Document key) {
         this.key = key;
     }
 }
