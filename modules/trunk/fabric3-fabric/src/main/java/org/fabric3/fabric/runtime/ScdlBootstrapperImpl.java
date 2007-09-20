@@ -159,6 +159,8 @@ import org.fabric3.transform.DefaultTransformerRegistry;
 import org.fabric3.transform.dom2java.String2Integer;
 import org.fabric3.transform.dom2java.String2String;
 import org.fabric3.transform.dom2java.String2Map;
+import org.fabric3.transform.dom2java.String2Class;
+import org.fabric3.transform.dom2java.String2QName;
 
 /**
  * Bootstrapper that initializes a runtime by reading a system SCDL file.
@@ -451,6 +453,8 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         transformerRegistry.register(new String2String());
         transformerRegistry.register(new String2Integer());
         transformerRegistry.register(new String2Map());
+        transformerRegistry.register(new String2Class(classLoaderRegistry));
+        transformerRegistry.register(new String2QName());
 
         SystemComponentBuilder<?> builder = new SystemComponentBuilder<Object>(registry,
                                                                                scopeRegistry,
