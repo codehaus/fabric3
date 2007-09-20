@@ -27,25 +27,23 @@ import org.osoa.sca.CallableReference;
 import org.osoa.sca.ComponentContext;
 import org.osoa.sca.ServiceReference;
 
-import org.fabric3.spi.AbstractLifecycle;
-import org.fabric3.fabric.component.ComponentContextImpl;
-import org.fabric3.fabric.component.ComponentContextProvider;
 import org.fabric3.fabric.component.ServiceReferenceImpl;
 import org.fabric3.fabric.wire.WireObjectFactory;
 import org.fabric3.runtime.webapp.Constants;
+import org.fabric3.scdl.PropertyValue;
+import org.fabric3.spi.AbstractLifecycle;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.scdl.PropertyValue;
 import org.fabric3.spi.wire.ProxyService;
 import org.fabric3.spi.wire.Wire;
 
 /**
  * @version $Rev$ $Date$
  */
-public class WebappComponent<T> extends AbstractLifecycle implements AtomicComponent<T>, ComponentContextProvider {
+public class WebappComponent<T> extends AbstractLifecycle implements AtomicComponent<T> {
     private final URI uri;
     private ProxyService proxyService;
     private URI groupId;
@@ -68,7 +66,7 @@ public class WebappComponent<T> extends AbstractLifecycle implements AtomicCompo
         this.referenceTypes = referenceTypes;
         this.key = key;
         referenceFactories = new ConcurrentHashMap<String, Wire>(referenceTypes.size());
-        context = new ComponentContextImpl(this);
+        context = new WebappComponentContext(this);
     }
 
     public URI getUri() {

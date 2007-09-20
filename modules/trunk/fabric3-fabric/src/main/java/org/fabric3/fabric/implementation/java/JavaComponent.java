@@ -21,7 +21,6 @@ package org.fabric3.fabric.implementation.java;
 import java.net.URI;
 import java.util.Map;
 
-import org.fabric3.fabric.component.ComponentContextProvider;
 import org.fabric3.pojo.implementation.PojoComponent;
 import org.fabric3.pojo.injection.MultiplicityObjectFactory;
 import org.fabric3.spi.ObjectCreationException;
@@ -38,7 +37,7 @@ import org.osoa.sca.ServiceReference;
  * @version $Revision$ $Date$
  * @param <T> the implementation class for the defined component
  */
-public class JavaComponent<T> extends PojoComponent<T> implements ComponentContextProvider {
+public class JavaComponent<T> extends PojoComponent<T> {
     private final ProxyService proxyService;
     private final Map<String, ObjectFactory<?>> propertyFactories;
 
