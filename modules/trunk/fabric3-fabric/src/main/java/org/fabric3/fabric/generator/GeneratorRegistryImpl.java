@@ -31,6 +31,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.DataType;
@@ -61,6 +64,7 @@ import org.fabric3.spi.model.type.SCABindingDefinition;
 import org.fabric3.spi.policy.registry.PolicyResolutionException;
 import org.fabric3.spi.policy.registry.PolicyResolver;
 import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Document;
 
 /**
  * @version $Rev$ $Date$
@@ -287,6 +291,9 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         }
         PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(source, reference, optimizable);
         wireDefinition.setSource(sourceDefinition);
+        
+        populateKey(target, sourceDefinition);
+        
         context.getPhysicalChangeSet().addWireDefinition(wireDefinition);
 
     }
@@ -388,6 +395,21 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
 
         return wireDefinition;
 
+    }
+
+    private <T extends LogicalComponent<?>> void populateKey(T target, PhysicalWireSourceDefinition sourceDefinition) {
+        
+        try {
+            String key = target.getKey();
+            if(key != null) {
+                Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+                document.createElement("key").appendChild(document.createTextNode(key));
+                sourceDefinition.setKey(document);
+            }
+        } catch (ParserConfigurationException e) {
+            throw new AssertionError(e);
+        }
+        
     }
 
 }
