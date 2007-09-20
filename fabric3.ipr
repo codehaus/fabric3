@@ -331,6 +331,7 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-host-api/fabric3-host-api.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-host-api/fabric3-host-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-interface-wsdl/fabric3-interface-wsdl.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-interface-wsdl/fabric3-interface-wsdl.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-itest-plugin/fabric3-itest-plugin.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-itest-plugin/fabric3-itest-plugin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-java/fabric3-java.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-java/fabric3-java.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-jetty/fabric3-jetty.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-jetty/fabric3-jetty.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-jmx/fabric3-jmx.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-jmx/fabric3-jmx.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-jxta/fabric3-jxta.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-jxta/fabric3-jxta.iml" />
