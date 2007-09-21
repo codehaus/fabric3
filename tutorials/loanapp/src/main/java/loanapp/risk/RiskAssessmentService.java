@@ -26,5 +26,5 @@ import loanapp.message.LoanApplication;
 @Remotable
 public interface RiskAssessmentService {
 
-    int assessRisk(LoanApplication loanApp);
+    LoanApplication assessRisk(LoanApplication loanApp);
 }

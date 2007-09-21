@@ -17,9 +17,12 @@
 package loanapp.calculator;
 
 import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Scope;
 
 import loanapp.message.LoanApplication;
+import loanapp.message.LoanOption;
 import loanapp.message.LoanResult;
+import loanapp.rate.Rate;
 import loanapp.rate.RateResults;
 import loanapp.rate.RateService;
 
@@ -28,6 +31,7 @@ import loanapp.rate.RateService;
  *
  * @version $Rev$ $Date$
  */
+//@Scope("COMPOSITE")
 public class LoanCalculatorComponent implements LoanCalculator {
     private RateService rateService;
 
@@ -36,10 +40,18 @@ public class LoanCalculatorComponent implements LoanCalculator {
     }
 
     public LoanResult calculateOptions(LoanApplication application) {
-        RateResults rateResults = rateService.getRates(application.getRisk());
         LoanResult result = new LoanResult();
-        rateResults.getRates();
-        result.setResult(LoanResult.Approved);
+        if (application.getResult() == LoanResult.DECLINED) {
+            result.setResult(LoanResult.DECLINED);
+            result.addReasons(application.getRiskReasons());
+            return result;
+        }
+        result.setResult(LoanResult.APPROVED);
+        RateResults rateResults = rateService.getRates(application.getRisk());
+        for (Rate rate : rateResults.getRates()) {
+            LoanOption option = new LoanOption(rate.getType(), rate.getRate(), rate.getApr());
+            result.addOption(option);
+        }
         return result;
     }
 }

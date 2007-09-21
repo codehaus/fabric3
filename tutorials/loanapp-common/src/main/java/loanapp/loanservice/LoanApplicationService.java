@@ -37,4 +37,5 @@ public interface LoanApplicationService {
      *         accepted, the result message will contain the available options an applicant may select from.
      */
     LoanResult apply(LoanRequest request);
+
 }

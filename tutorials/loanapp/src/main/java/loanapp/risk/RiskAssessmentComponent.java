@@ -17,12 +17,15 @@
 package loanapp.risk;
 
 import org.osoa.sca.annotations.Property;
+import org.osoa.sca.annotations.Scope;
 
 import loanapp.message.LoanApplication;
+import loanapp.message.LoanResult;
 
 /**
  * @version $Rev$ $Date$
  */
+//@Scope("COMPOSITE")
 public class RiskAssessmentComponent implements RiskAssessmentService {
     private double ratioMinimum;
 
@@ -31,15 +34,29 @@ public class RiskAssessmentComponent implements RiskAssessmentService {
         this.ratioMinimum = ratioMinimum;
     }
 
-    public int assessRisk(LoanApplication loanApp) {
-        int score = loanApp.getCreditScore();
+    public LoanApplication assessRisk(LoanApplication application) {
+        int score = application.getCreditScore();
         if (score < 700) {
-            return 10;
+            application.addRiskReason("Poor credit history");
+            application.setRisk(10);
+            application.setResult(LoanResult.DECLINED);
+            return application;
         }
-        double ratio = loanApp.getDownPayment() / loanApp.getAmount();
+        double ratio = application.getDownPayment() / application.getAmount();
         if (ratio < ratioMinimum) {
-            return 10;
+            // less than a minimum percentage down, so assign it the highest risk
+            application.addRiskReason("Downpayment was to little");
+            application.addRiskReason("Suspect credit history");
+            application.setRisk(10);
+            application.setResult(LoanResult.DECLINED);
         }
-        return 1;
+        if (score > 750) {
+            application.setRisk(1);
+            application.setResult(LoanResult.APPROVED);
+        } else {
+            application.setRisk(5);
+            application.setResult(LoanResult.APPROVED);
+        }
+        return application;
     }
 }

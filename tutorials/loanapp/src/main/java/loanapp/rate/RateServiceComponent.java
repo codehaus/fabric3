@@ -16,17 +16,35 @@
  */
 package loanapp.rate;
 
+import org.osoa.sca.annotations.Scope;
+
 /**
  * @version $Rev$ $Date$
  */
+//@Scope("COMPOSITE")
 public class RateServiceComponent implements RateService {
 
     public RateResults getRates(int risk) {
-        Rate fixed30 = new Rate("30 Year FIXED", 5.9f, 2f);
-        Rate arm30 = new Rate("30 Year ARM", 5.0f, 1f);
         RateResults results = new RateResults();
-        results.addRate(fixed30);
-        results.addRate(arm30);
+        if (risk == 1) {
+            Rate fixed30 = new Rate("30 Year FIXED", 5.5f, 1f);
+            Rate arm30 = new Rate("30 Year ARM", 5.0f, 0f);
+            results.addRate(fixed30);
+            results.addRate(arm30);
+        } else if (risk > 1 && risk < 5) {
+            Rate fixed30 = new Rate("30 Year FIXED", 5.3f, 2f);
+            Rate arm30 = new Rate("30 Year ARM", 5.1f, 1f);
+            results.addRate(fixed30);
+            results.addRate(arm30);
+        } else if (risk == 5) {
+            Rate fixed30 = new Rate("30 Year FIXED", 5.5f, 3f);
+            Rate arm30 = new Rate("30 Year ARM", 5.2f, 2f);
+            results.addRate(fixed30);
+            results.addRate(arm30);
+        } else if (risk > 5 && risk < 10) {
+            Rate fixed30 = new Rate("30 Year FIXED", 6.0f, 4f);
+            results.addRate(fixed30);
+        }
         return results;
     }
 }

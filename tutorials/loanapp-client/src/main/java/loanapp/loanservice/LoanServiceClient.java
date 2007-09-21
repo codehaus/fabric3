@@ -34,4 +34,5 @@ public class LoanServiceClient implements LoanApplicationService {
     public LoanResult apply(LoanRequest request) {
         return service.apply(request);
     }
+
 }

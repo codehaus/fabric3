@@ -16,16 +16,21 @@
  */
 package loanapp.credit;
 
+import org.osoa.sca.annotations.Scope;
+
 /**
  * Implementation that performs a simple credit check.
  *
  * @version $Rev$ $Date$
  */
+//@Scope("COMPOSITE")
 public class CreditCheckComponent implements CreditCheckService {
 
     public int checkCredit(String ssn) {
-        if ("345".equals(ssn)) {
+        if ("111111111".equals(ssn)) {
             return 100;
+        } else if ("222222222".equals(ssn)) {
+            return 790;
         } else {
             return 700;
         }

@@ -29,6 +29,9 @@ public class Rate implements Serializable {
     private float rate;
     private float apr;
 
+    public Rate() {
+    }
+
     public Rate(String type, float rate, float apr) {
         this.type = type;
         this.rate = rate;

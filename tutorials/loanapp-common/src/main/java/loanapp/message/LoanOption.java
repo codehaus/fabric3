@@ -23,4 +23,40 @@ import java.io.Serializable;
  */
 public class LoanOption implements Serializable {
     private static final long serialVersionUID = -969237495348560552L;
+    private String type;
+    private float rate;
+    private float apr;
+
+    public LoanOption() {
+    }
+
+    public LoanOption(String type, float rate, float apr) {
+        this.type = type;
+        this.rate = rate;
+        this.apr = apr;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public float getRate() {
+        return rate;
+    }
+
+    public void setRate(float rate) {
+        this.rate = rate;
+    }
+
+    public float getApr() {
+        return apr;
+    }
+
+    public void setApr(float apr) {
+        this.apr = apr;
+    }
 }

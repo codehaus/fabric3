@@ -60,13 +60,9 @@ public class LoanApplicationComponent implements LoanApplicationService {
         application.setDownPayment(request.getDownPayment());
         application.setCreditScore(score);
         // assess the loan risk
-        int risk = riskService.assessRisk(application);
-        if (risk >= 10) {
-            // too risky, decline the loan
-            LoanResult result = new LoanResult();
-            result.setResult(LoanResult.DECLINED);
-        }
-        // calculate the rates
+        application = riskService.assessRisk(application);
+        // calculate the options
         return loanCalculator.calculateOptions(application);
     }
+
 }

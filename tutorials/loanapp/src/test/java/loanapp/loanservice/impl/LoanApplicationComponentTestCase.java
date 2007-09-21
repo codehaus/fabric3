@@ -72,15 +72,15 @@ public class LoanApplicationComponentTestCase extends TestCase {
 
         public LoanResult calculateOptions(LoanApplication application) {
             LoanResult result = new LoanResult();
-            result.setResult(LoanResult.Approved);
+            result.setResult(LoanResult.APPROVED);
             return result;
         }
     }
 
     private class RiskAssessmentMock implements RiskAssessmentService {
 
-        public int assessRisk(LoanApplication loanApp) {
-            return 0;
+        public LoanApplication assessRisk(LoanApplication loanApp) {
+            return loanApp;
         }
     }
 }

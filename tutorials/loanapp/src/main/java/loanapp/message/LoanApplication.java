@@ -17,6 +17,9 @@
 package loanapp.message;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -33,6 +36,8 @@ public class LoanApplication implements Serializable {
     private double downPayment;
     private int creditScore;
     private int risk;
+    private List<String> reasons = new ArrayList<String>();
+    private int result;
 
     /**
      * Sets the applicant's Social Security Number
@@ -123,4 +128,22 @@ public class LoanApplication implements Serializable {
     public void setRisk(int risk) {
         this.risk = risk;
     }
+
+    public List<String> getRiskReasons() {
+        return Collections.unmodifiableList(reasons);
+    }
+
+    public void addRiskReason(String reason) {
+        reasons.add(reason);
+    }
+
+    public int getResult() {
+        return result;
+    }
+
+    public void setResult(int result) {
+        this.result = result;
+    }
+
+
 }

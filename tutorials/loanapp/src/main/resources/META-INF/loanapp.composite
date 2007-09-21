@@ -18,17 +18,18 @@
 
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:hessian="http://www.fabric3.org/binding/hessian/0.2"
+           xmlns:burlap="http://www.fabric3.org/binding/burlap/0.2"
            targetNamespace="http://fabric3.org/xmlns/sca/tutorials/0.2"
            name="LoanAppComposite">
     <service name="LoanApplicationService" promote="LoanApplicationComponent">
-        <!--<binding.ws uri="/loanService"/>-->
-        <!--<binding.rmi serviceName="loanService"/>-->
-        <!--<hessian:binding.hessian uri="/loanServiceHessian"/>-->
-    </service>                         
+        <binding.ws uri="/loanService"/>
+        <binding.rmi serviceName="loanService"/>
+        <hessian:binding.hessian uri="/loanServiceHessian"/>
+        <burlap:binding.burlap uri="/loanServiceBurlap"/>
+    </service>
 
     <service name="RateService" promote="RateServiceComponent">
         <binding.ws uri="/rateService"/>
-        <!--<hessian:binding.hessian uri="/rateService"/>-->
     </service>
 
     <component name="LoanApplicationComponent">
