@@ -19,11 +19,11 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:fabric3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           name="WebappSmoketestComposite">
+           name="WebappSmoketestComposite"
+           autowire="true">
 
     <component name="smoketest">
         <fabric3:web/>
-        <reference name="hello" target="HelloComponent"/>
     </component>
 
     <component name="HelloComponent">
