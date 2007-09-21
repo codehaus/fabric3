@@ -30,14 +30,8 @@ import javax.jms.MessageListener;
 
 import org.fabric3.binding.jms.TransactionType;
 import org.fabric3.binding.jms.host.JmsHost;
-import org.fabric3.binding.jms.lookup.connectionfactory.AlwaysConnectionFactoryStrategy;
 import org.fabric3.binding.jms.lookup.connectionfactory.ConnectionFactoryStrategy;
-import org.fabric3.binding.jms.lookup.connectionfactory.IfNotExistConnectionFactoryStrategy;
-import org.fabric3.binding.jms.lookup.connectionfactory.NeverConnectionFactoryStrategy;
-import org.fabric3.binding.jms.lookup.destination.AlwaysDestinationStrategy;
 import org.fabric3.binding.jms.lookup.destination.DestinationStrategy;
-import org.fabric3.binding.jms.lookup.destination.IfNotExistDestinationStrategy;
-import org.fabric3.binding.jms.lookup.destination.NeverDestinationStrategy;
 import org.fabric3.binding.jms.model.ConnectionFactoryDefinition;
 import org.fabric3.binding.jms.model.CorrelationScheme;
 import org.fabric3.binding.jms.model.CreateOption;

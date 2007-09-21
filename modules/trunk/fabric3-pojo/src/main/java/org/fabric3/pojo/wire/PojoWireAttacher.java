@@ -49,6 +49,7 @@ public abstract class PojoWireAttacher<PWSD extends PhysicalWireSourceDefinition
         this.transformerRegistry = transformerRegistry;
     }
 
+    @SuppressWarnings("unchecked")
     protected Object getKey(PhysicalWireSourceDefinition sourceDefinition, PojoComponent<?> source, ValueSource referenceSource) {
         
         if(! Map.class.isAssignableFrom(source.getMemberType(referenceSource))) {

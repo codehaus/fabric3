@@ -18,14 +18,9 @@ package org.fabric3.fabric.implementation.system;
 
 import java.net.URI;
 
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
-
 import org.fabric3.pojo.wire.PojoWireAttacher;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
-import org.fabric3.spi.builder.component.WireAttacher;
 import org.fabric3.spi.builder.component.WireAttacherRegistry;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.Component;
@@ -37,6 +32,8 @@ import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.Wire;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 
 /**
  * @version $Rev$ $Date$
@@ -63,6 +60,7 @@ public class SystemWireAttacher extends PojoWireAttacher<SystemWireSourceDefinit
         wireAttacherRegistry.register(SystemWireTargetDefinition.class, this);
     }
 
+    @SuppressWarnings("unchecked")
     public void attachToSource(SystemWireSourceDefinition sourceDefinition,
                                PhysicalWireTargetDefinition targetDefinition,
                                Wire wire) throws WiringException {
