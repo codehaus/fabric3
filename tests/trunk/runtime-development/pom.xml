@@ -46,10 +46,10 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>org.codehaus.fabric3</groupId>
-                                    <artifactId>fabric3-development-assembly</artifactId>
+                                    <artifactId>runtime-development</artifactId>
                                     <classifier>bin</classifier>
                                     <type>zip</type>
-                                    <version>0.2-SNAPSHOT</version>
+                                    <version>0.3-SNAPSHOT</version>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${project.build.directory}/assembly</outputDirectory>
                                 </artifactItem>
