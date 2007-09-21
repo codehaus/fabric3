@@ -121,8 +121,7 @@ public class JavaPhysicalComponentGeneratorTestCase extends TestCase {
         return new LogicalComponent<JavaImplementation>(COMPONENT_ID,
                                                         RUNTIME_ID,
                                                         definition,
-                                                        parent,
-                                                        definition.getKey());
+                                                        parent);
     }
 
 

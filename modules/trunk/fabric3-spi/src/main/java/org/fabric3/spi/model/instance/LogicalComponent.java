@@ -50,7 +50,6 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
     private final Map<String, LogicalReference> references = new HashMap<String, LogicalReference>();
     private URI runtimeId;
     private boolean active;
-    private Document key;
     private Autowire autowire;
 
     /**
@@ -61,12 +60,10 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
      */
     public LogicalComponent(URI uri, URI runtimeId,
                             ComponentDefinition<I> definition,
-                            LogicalComponent<CompositeImplementation> parent,
-                            Document key) {
+                            LogicalComponent<CompositeImplementation> parent) {
         super(uri, parent, TYPE);
         this.runtimeId = runtimeId;
         this.definition = definition;
-        this.key = key;
     }
 
     /**
@@ -237,15 +234,6 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
      */
     public ComponentDefinition<I> getDefinition() {
         return definition;
-    }
-
-    /**
-     * Returns the key to be used if this component is wired to a map of references.
-     *
-     * @return The value of the key.
-     */
-    public Document getKey() {
-        return key;
     }
 
 }

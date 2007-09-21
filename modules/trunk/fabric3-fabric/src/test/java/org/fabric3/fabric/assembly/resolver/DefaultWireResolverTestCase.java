@@ -118,7 +118,7 @@ public class DefaultWireResolverTestCase extends TestCase {
         resolver = new DefaultWireResolver();
         URI domainUri = URI.create("fabric3://./runtime");
         URI runtimeUri = URI.create("runtime");
-        domain = new LogicalComponent<CompositeImplementation>(domainUri, runtimeUri, null, null, null);
+        domain = new LogicalComponent<CompositeImplementation>(domainUri, runtimeUri, null, null);
     }
 
     private LogicalComponent<CompositeImplementation> createWiredComposite(LogicalComponent<CompositeImplementation> parent,
@@ -144,7 +144,7 @@ public class DefaultWireResolverTestCase extends TestCase {
                 new ComponentDefinition<CompositeImplementation>(parentUri.toString());
         definition.setImplementation(impl);
         URI id = URI.create("runtime");
-        return new LogicalComponent<CompositeImplementation>(parentUri, id, definition, parent, definition.getKey());
+        return new LogicalComponent<CompositeImplementation>(parentUri, id, definition, parent);
     }
 
     private LogicalComponent<?> createSourceAtomic(Class<?> requiredInterface, LogicalComponent<CompositeImplementation> parent) {
@@ -164,7 +164,7 @@ public class DefaultWireResolverTestCase extends TestCase {
         definition.add(target);
         URI id = URI.create("runtime");
         LogicalComponent<?> component =
-                new LogicalComponent<MockAtomicImpl>(SOURCE_URI, id, definition, parent, definition.getKey());
+                new LogicalComponent<MockAtomicImpl>(SOURCE_URI, id, definition, parent);
         LogicalReference logicalReference = new LogicalReference(REFERENCE_URI, referenceDefinition, component);
         component.addReference(logicalReference);
         return component;
@@ -181,7 +181,7 @@ public class DefaultWireResolverTestCase extends TestCase {
         ComponentDefinition<MockAtomicImpl> definition = new ComponentDefinition<MockAtomicImpl>(uri.toString());
         definition.setImplementation(impl);
         URI id = URI.create("runtime");
-        return new LogicalComponent<MockAtomicImpl>(uri, id, definition, parent, definition.getKey());
+        return new LogicalComponent<MockAtomicImpl>(uri, id, definition, parent);
     }
 
     private class MockAtomicImpl extends Implementation<MockComponentType> {

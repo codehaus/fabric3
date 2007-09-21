@@ -291,7 +291,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         }
         
         PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(source, reference, optimizable);
-        sourceDefinition.setKey(target.getKey());
+        sourceDefinition.setKey(target.getDefinition().getKey());
         wireDefinition.setSource(sourceDefinition);
         
         context.getPhysicalChangeSet().addWireDefinition(wireDefinition);

@@ -182,7 +182,7 @@ public class PromotionNormalizerImplTestCase extends TestCase {
         ComponentDefinition<CompositeImplementation> definition =
                 new ComponentDefinition<CompositeImplementation>(uri.toString());
         definition.setImplementation(impl);
-        return new LogicalComponent<CompositeImplementation>(uri, runtimeID, definition, parent, definition.getKey());
+        return new LogicalComponent<CompositeImplementation>(uri, runtimeID, definition, parent);
 
     }
 
@@ -195,7 +195,7 @@ public class PromotionNormalizerImplTestCase extends TestCase {
                 new ComponentDefinition<MockImplementation>(uri.toString());
         definition.setImplementation(impl);
         LogicalComponent<MockImplementation> component =
-                new LogicalComponent<MockImplementation>(uri, runtimeID, definition, parent, definition.getKey());
+                new LogicalComponent<MockImplementation>(uri, runtimeID, definition, parent);
         ServiceDefinition serviceDefinition = new ServiceDefinition();
         LogicalService service =
                 new LogicalService(URI.create("grandParent/parent/component#service"), serviceDefinition, component);

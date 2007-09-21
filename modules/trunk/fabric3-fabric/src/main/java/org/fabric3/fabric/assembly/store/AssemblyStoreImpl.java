@@ -99,7 +99,7 @@ public class AssemblyStoreImpl implements AssemblyStore {
             ComponentDefinition<CompositeImplementation> definition =
                     new ComponentDefinition<CompositeImplementation>(domainUri.toString());
             definition.setImplementation(impl);
-            return new LogicalComponent<CompositeImplementation>(domainUri, domainUri, definition, null, definition.getKey());
+            return new LogicalComponent<CompositeImplementation>(domainUri, domainUri, definition, null);
         }
         FileInputStream fin = null;
         try {

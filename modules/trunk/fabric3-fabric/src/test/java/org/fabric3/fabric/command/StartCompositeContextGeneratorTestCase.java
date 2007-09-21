@@ -69,8 +69,8 @@ public class StartCompositeContextGeneratorTestCase extends TestCase {
         ComponentDefinition<CompositeImplementation> childDefinition = createComposite("child");
 
         URI runtimeUri = URI.create("runtime1");
-        component = new LogicalComponent<CompositeImplementation>(PARENT, runtimeUri, parentDefinition, null, parentDefinition.getKey());
-        LogicalComponent<?> child = new LogicalComponent<CompositeImplementation>(CHILD, runtimeUri, childDefinition, null, childDefinition.getKey());
+        component = new LogicalComponent<CompositeImplementation>(PARENT, runtimeUri, parentDefinition, null);
+        LogicalComponent<?> child = new LogicalComponent<CompositeImplementation>(CHILD, runtimeUri, childDefinition, null);
         component.addComponent(child);
     }
 

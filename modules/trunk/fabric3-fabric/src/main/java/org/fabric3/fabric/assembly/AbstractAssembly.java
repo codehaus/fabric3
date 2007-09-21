@@ -281,7 +281,7 @@ public abstract class AbstractAssembly implements Assembly {
         URI uri = URI.create(parent.getUri() + "/" + definition.getName());
         URI runtimeId = definition.getRuntimeId();
         Document key = definition.getKey();
-        LogicalComponent<I> component = new LogicalComponent<I>(uri, runtimeId, definition, parent, key);
+        LogicalComponent<I> component = new LogicalComponent<I>(uri, runtimeId, definition, parent);
 
         I impl = definition.getImplementation();
         if (CompositeImplementation.IMPLEMENTATION_COMPOSITE.equals(impl.getType())) {
