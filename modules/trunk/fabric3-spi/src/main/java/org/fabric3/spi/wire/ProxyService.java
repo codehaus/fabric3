@@ -23,22 +23,37 @@ import java.util.Map;
 
 import org.osoa.sca.CallableReference;
 
+import org.fabric3.spi.ObjectFactory;
+
 /**
  * Creates proxies that implement Java interfaces and invocation handlers for fronting wires
  *
- * @version $$Rev$$ $$Date$$
+ * @version $Rev$ $Date$
  */
 
 public interface ProxyService {
+    /**
+     * Create an ObjectFactory that will create proxies for the supplied interface.
+     *
+     * @param interfaze      the interface the proxy implements
+     * @param conversational true if conversational
+     * @param wire           the wire to proxy
+     * @param <T>            the type of the proxy
+     * @return an ObjectFactory that will create proxies
+     * @throws ProxyCreationException if there was a problem creating the proxy
+     */
+    <T> ObjectFactory<T> createObjectFactory(Class<T> interfaze, boolean conversational, Wire wire)
+            throws ProxyCreationException;
+
     /**
      * Creates a Java proxy for the given wire
      *
      * @param interfaze      the interface the proxy implements
      * @param conversational true if conversational
-     * @param wire           the wire to proxy @return the proxy
+     * @param wire           the wire to proxy
      * @param mappings       the method to invocation chain mappings
      * @return the proxy
-     * @throws ProxyCreationException
+     * @throws ProxyCreationException if there was a problem creating the proxy
      */
     <T> T createProxy(Class<T> interfaze, boolean conversational, Wire wire, Map<Method, InvocationChain> mappings)
             throws ProxyCreationException;

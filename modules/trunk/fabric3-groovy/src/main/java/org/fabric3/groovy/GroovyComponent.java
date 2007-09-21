@@ -17,8 +17,10 @@
 package org.fabric3.groovy;
 
 import java.net.URI;
+import java.util.Map;
 
 import org.fabric3.pojo.implementation.PojoComponent;
+import org.fabric3.pojo.injection.MultiplicityObjectFactory;
 import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeContainer;
 
@@ -35,7 +37,7 @@ public class GroovyComponent<T> extends PojoComponent<T> {
                            int initLevel,
                            long maxIdleTime,
                            long maxAge,
-                           String key) {
-        super(componentId, instanceFactoryProvider, scopeContainer, groupId, initLevel, maxIdleTime, maxAge, key);
+                           Map<String, MultiplicityObjectFactory<?>> referenceFactories) {
+        super(componentId, instanceFactoryProvider, scopeContainer, groupId, initLevel, maxIdleTime, maxAge, referenceFactories);
     }
 }

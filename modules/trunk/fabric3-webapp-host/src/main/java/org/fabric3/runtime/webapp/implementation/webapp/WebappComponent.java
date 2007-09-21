@@ -28,7 +28,6 @@ import org.osoa.sca.ComponentContext;
 import org.osoa.sca.ServiceReference;
 
 import org.fabric3.fabric.component.ServiceReferenceImpl;
-import org.fabric3.fabric.wire.WireObjectFactory;
 import org.fabric3.runtime.webapp.Constants;
 import org.fabric3.scdl.PropertyValue;
 import org.fabric3.spi.AbstractLifecycle;
@@ -93,7 +92,7 @@ public class WebappComponent<T> extends AbstractLifecycle implements AtomicCompo
     }
 
     protected <B> ObjectFactory<B> createWireFactory(Class<B> interfaze, Wire wire) {
-        return new WireObjectFactory<B>(interfaze, false, wire, proxyService);
+        return proxyService.createObjectFactory(interfaze, false, wire);
     }
 
     public void bind(ServletContext servletContext) throws ObjectCreationException {

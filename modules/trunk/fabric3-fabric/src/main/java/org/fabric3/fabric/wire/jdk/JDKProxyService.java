@@ -22,6 +22,8 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
 
 import org.osoa.sca.CallableReference;
 import org.osoa.sca.Conversation;
@@ -34,6 +36,11 @@ import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.ProxyCreationException;
 import org.fabric3.spi.wire.ProxyService;
 import org.fabric3.spi.wire.Wire;
+import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
+import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.fabric.wire.NoMethodForOperationException;
+import org.fabric3.fabric.wire.WireObjectFactory;
 
 /**
  * the default implementation of a wire service that uses JDK dynamic proxies
@@ -42,10 +49,19 @@ import org.fabric3.spi.wire.Wire;
  */
 public class JDKProxyService implements ProxyService {
     private final ScopeRegistry scopeRegistry;
+    private final ClassLoaderRegistry classLoaderRegistry;
 
-    public JDKProxyService(@Reference ScopeRegistry scopeRegistry) {
+    public JDKProxyService(@Reference ScopeRegistry scopeRegistry, 
+                           @Reference ClassLoaderRegistry classLoaderRegistry) {
         super();
         this.scopeRegistry = scopeRegistry;
+        this.classLoaderRegistry = classLoaderRegistry;
+    }
+
+    public <T> ObjectFactory<T> createObjectFactory(Class<T> interfaze, boolean conversational, Wire wire)
+            throws ProxyCreationException {
+        Map<Method, InvocationChain> mappings = createInterfaceToWireMapping(interfaze, wire);
+        return new WireObjectFactory<T>(interfaze, conversational, wire, this, mappings);
     }
 
     public <T> T createProxy(Class<T> interfaze,
@@ -78,5 +94,44 @@ public class JDKProxyService implements ProxyService {
         } else {
             throw new IllegalArgumentException("Not a Fabric3 SCA proxy");
         }
+    }
+
+    private Map<Method, InvocationChain> createInterfaceToWireMapping(Class<?> interfaze, Wire wire)
+            throws NoMethodForOperationException {
+        Map<PhysicalOperationDefinition, InvocationChain> invocationChains = wire.getInvocationChains();
+
+        Map<Method, InvocationChain> chains = new HashMap<Method, InvocationChain>(invocationChains.size());
+        for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : invocationChains.entrySet()) {
+            PhysicalOperationDefinition operation = entry.getKey();
+            try {
+                Method method = findMethod(interfaze, operation);
+                chains.put(method, entry.getValue());
+            } catch (NoSuchMethodException e) {
+                throw new NoMethodForOperationException(operation.getName());
+            } catch (ClassNotFoundException e) {
+                throw new ProxyCreationException(e);
+            }
+        }
+        return chains;
+    }
+
+    /**
+     * Returns the matching method from the class for a given operation.
+     *
+     * @param clazz     the class to introspect
+     * @param operation the operation to match
+     * @return a matching method
+     * @throws NoSuchMethodException  if a matching method is not found
+     * @throws ClassNotFoundException if a parameter type specified in the operation is not found
+     */
+    private Method findMethod(Class<?> clazz, PhysicalOperationDefinition operation)
+            throws NoSuchMethodException, ClassNotFoundException {
+        String name = operation.getName();
+        List<String> params = operation.getParameters();
+        Class<?>[] types = new Class<?>[params.size()];
+        for (int i = 0; i < params.size(); i++) {
+            types[i] = classLoaderRegistry.loadClass(clazz.getClassLoader(), params.get(i));
+        }
+        return clazz.getMethod(name, types);
     }
 }

@@ -1,9 +1,7 @@
 package org.fabric3.runtime.development.host;
 
-import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
-import java.util.Map;
 
 import org.osoa.sca.ServiceUnavailableException;
 
@@ -17,18 +15,17 @@ import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI
 import static org.fabric3.fabric.runtime.ComponentNames.LOADER_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_NAME;
 import org.fabric3.fabric.util.JavaIntrospectionHelper;
-import org.fabric3.fabric.wire.WireUtils;
 import org.fabric3.host.runtime.StartException;
 import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Scope;
+import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.assembly.BindException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.loader.Loader;
 import org.fabric3.spi.loader.LoaderContext;
-import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.ProxyService;
 import org.fabric3.spi.wire.Wire;
 
@@ -129,9 +126,10 @@ public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo>
                 applicationAssembly.bindService(uri, definition);
             }
             wire = wireCache.getWire(uri);
-            Map<Method, InvocationChain> mappings = WireUtils.createInterfaceToWireMapping(interfaze, wire);
-            return proxyService.createProxy(interfaze, false, wire, mappings);
+            return proxyService.createObjectFactory(interfaze, false, wire).getInstance();
         } catch (BindException e) {
+            throw new ServiceUnavailableException(e);
+        } catch (ObjectCreationException e) {
             throw new ServiceUnavailableException(e);
         }
     }

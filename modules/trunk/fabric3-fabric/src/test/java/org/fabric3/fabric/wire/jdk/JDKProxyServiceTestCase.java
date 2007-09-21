@@ -53,7 +53,7 @@ public class JDKProxyServiceTestCase extends TestCase {
         wire = EasyMock.createMock(Wire.class);
         EasyMock.expect(wire.getCallbackInvocationChains()).andStubReturn(Collections.emptyMap());
         EasyMock.replay(wire);
-        proxyService = new JDKProxyService(scopeRegistry);
+        proxyService = new JDKProxyService(scopeRegistry, null);
     }
 
     public interface Foo {

@@ -25,8 +25,6 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.injection.CallbackWireObjectFactory;
-import org.fabric3.fabric.wire.WireObjectFactory;
 import org.fabric3.pojo.reflection.InvokerInterceptor;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.component.WireAttachException;
@@ -103,11 +101,11 @@ public class GroovyWireAttacher implements WireAttacher<GroovyWireSourceDefiniti
     }
 
     private <T> ObjectFactory<T> createWireObjectFactory(Class<T> type, boolean isConversational, Wire wire) {
-        return new WireObjectFactory<T>(type, isConversational, wire, proxyService);
+        return proxyService.createObjectFactory(type, isConversational, wire);
     }
 
     private <T> ObjectFactory<T> createCallbackWireObjectFactory(Class<T> type) {
-        return new CallbackWireObjectFactory<T>(type, proxyService);
+        throw new UnsupportedOperationException();
     }
 
     public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition,

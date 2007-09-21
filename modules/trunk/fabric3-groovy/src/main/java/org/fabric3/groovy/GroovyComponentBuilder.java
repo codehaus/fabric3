@@ -17,6 +17,7 @@
 package org.fabric3.groovy;
 
 import java.net.URI;
+import java.util.Map;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
@@ -25,6 +26,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.pojo.implementation.PojoComponentBuilder;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
+import org.fabric3.pojo.injection.MultiplicityObjectFactory;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
@@ -73,6 +75,8 @@ public class GroovyComponentBuilder<T> extends PojoComponentBuilder<T, GroovyCom
         InstanceFactoryProvider<T> provider = providerBuilders.build(providerDefinition, classLoader);
 
         createPropertyFactories(definition, provider);
+        Map<String, MultiplicityObjectFactory<?>> referenceFactories =
+                createMultiplicityReferenceFactories(providerDefinition);
 
         return new GroovyComponent<T>(componentId,
                                       provider,
@@ -81,6 +85,6 @@ public class GroovyComponentBuilder<T> extends PojoComponentBuilder<T, GroovyCom
                                       initLevel,
                                       -1,
                                       -1,
-                                      definition.getKey());
+                                      referenceFactories);
     }
 }

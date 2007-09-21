@@ -17,23 +17,18 @@
 package org.fabric3.fabric.implementation.java;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.transform.TransformerConfigurationException;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.injection.CallbackWireObjectFactory;
-import org.fabric3.fabric.wire.WireObjectFactory;
-import org.fabric3.pojo.implementation.PojoComponent;
 import org.fabric3.pojo.reflection.InvokerInterceptor;
 import org.fabric3.pojo.wire.PojoWireAttacher;
-import org.fabric3.scdl.DataType;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.component.WireAttachException;
-import org.fabric3.spi.builder.component.WireAttacher;
 import org.fabric3.spi.builder.component.WireAttacherRegistry;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.Component;
@@ -43,19 +38,13 @@ import org.fabric3.spi.model.instance.ValueSource;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
-import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.transform.PullTransformer;
-import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.ProxyService;
 import org.fabric3.spi.wire.Wire;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
-import org.w3c.dom.Document;
 
 /**
  * The component builder for Java implementation types. Responsible for creating the Component runtime artifact from a
@@ -191,10 +180,10 @@ public class JavaWireAttacher extends PojoWireAttacher<JavaWireSourceDefinition,
     }
 
     private <T> ObjectFactory<T> createWireObjectFactory(Class<T> type, boolean isConversational, Wire wire) {
-        return new WireObjectFactory<T>(type, isConversational, wire, proxyService);
+        return proxyService.createObjectFactory(type, isConversational, wire);
     }
 
     private <T> ObjectFactory<T> createCallbackWireObjectFactory(Class<T> type) {
-        return new CallbackWireObjectFactory<T>(type, proxyService);
+        throw new UnsupportedOperationException();
     }
 }
