@@ -32,6 +32,8 @@ public class DefaultTransformerRegistry<T extends Transformer> implements Transf
     public void register(T transformer) {
         TransformerPair pair = new TransformerPair(transformer.getSourceType(), transformer.getTargetType());
         transformers.put(pair, transformer);
+        // System.err.println("Registered, source:" + transformer.getSourceType().getPhysical() + "; target:" + transformer.getTargetType().getPhysical());
+        System.err.println(this);
     }
 
     public void unregister(T transformer) {
@@ -40,7 +42,15 @@ public class DefaultTransformerRegistry<T extends Transformer> implements Transf
     }
 
     public T getTransformer(DataType<?> source, DataType<?> target) {
+        System.err.println(this);
         TransformerPair pair = new TransformerPair(source, target);
+        T transformer = transformers.get(pair);
+        if(transformer == null) {
+            // System.err.println("Unable to find, source:" + source.getPhysical() + "; target:" + target.getPhysical());
+            //for(TransformerPair pair1 : transformers.keySet()) {
+            //    System.err.println("Available, source:" + pair1.source.getPhysical() + "; target:" + pair1.target.getPhysical());
+            //}
+        }
         return transformers.get(pair);
     }
 

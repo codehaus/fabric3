@@ -27,16 +27,20 @@ import org.fabric3.spi.model.instance.ValueSource;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.model.type.JavaClass;
+import org.fabric3.spi.model.type.XSDSimpleType;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformerRegistry;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
  * @version $Revision$ $Date$
  */
 public abstract class PojoWireAttacher<PWSD extends PhysicalWireSourceDefinition, PWTD extends PhysicalWireTargetDefinition> implements WireAttacher<PWSD, PWTD> {
+
+    private static final XSDSimpleType SOURCE_TYPE = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
 
     private TransformerRegistry<PullTransformer<?, ?>> transformerRegistry;
     
@@ -49,6 +53,10 @@ public abstract class PojoWireAttacher<PWSD extends PhysicalWireSourceDefinition
         Document keyDocument = sourceDefinition.getKey();
         
         if(keyDocument != null) {
+            
+
+            Element element = keyDocument.getDocumentElement();
+            
             Class<?> formalType = null;
             Type type = source.getGerenricMemberType(referenceSource);
             
@@ -58,19 +66,31 @@ public abstract class PojoWireAttacher<PWSD extends PhysicalWireSourceDefinition
             } else {
                 formalType = String.class;
             }
-            PullTransformer transformer = transformerRegistry.getTransformer(new JavaClass<Node>(Node.class), new JavaClass(formalType));
             // TODO Pass the parameters in
             TransformContext context = new TransformContext(null, null, null, null);
             try {
-                // TODO This needs fixing, too late to fix now, will fix tomorrow, sleepy
-                // return transformer.transform(keyDocument, context);
-                // Temporary hack
-                return keyDocument.getDocumentElement().getTextContent();
+                return createKey(formalType, element, context);
+                // return keyDocument.getDocumentElement().getTextContent();
             } catch (Exception e) {
                 throw new AssertionError(e);
             }
         }
         return null;
+    }
+
+    private <T> T createKey(Class<T> type, Element value, TransformContext context) {
+        JavaClass<T> targetType = new JavaClass<T>(type);
+        PullTransformer<Node, T> transformer = getTransformer(SOURCE_TYPE, targetType);
+        try {
+            return type.cast(transformer.transform(value, context));
+        } catch (Exception e) {
+            throw new AssertionError(e);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> PullTransformer<Node,T> getTransformer(XSDSimpleType source, JavaClass<T> target) {
+        return (PullTransformer<Node,T>) transformerRegistry.getTransformer(source, target);
     }
 
 }
