@@ -109,14 +109,6 @@ public class JmsWireAttacher implements WireAttacher<JmsWireSourceDefinition, Jm
         wireAttacherRegistry.register(JmsWireSourceDefinition.class, this);
         wireAttacherRegistry.register(JmsWireTargetDefinition.class, this);
         
-        /*destinationStrategies.put(CreateOption.always, new AlwaysDestinationStrategy());
-        destinationStrategies.put(CreateOption.never, new NeverDestinationStrategy());
-        destinationStrategies.put(CreateOption.ifnotexist, new IfNotExistDestinationStrategy());
-        
-        connectionFactoryStrategies.put(CreateOption.always, new AlwaysConnectionFactoryStrategy());
-        connectionFactoryStrategies.put(CreateOption.never, new NeverConnectionFactoryStrategy());
-        connectionFactoryStrategies.put(CreateOption.ifnotexist, new IfNotExistConnectionFactoryStrategy());*/
-        
     }
     
     /**

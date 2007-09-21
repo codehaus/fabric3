@@ -61,6 +61,8 @@ import org.fabric3.spi.model.physical.PhysicalChangeSet;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.transform.TransformerRegistry;
+import org.fabric3.transform.DefaultTransformerRegistry;
 
 /**
  * @version $Rev$ $Date$
@@ -173,7 +175,7 @@ public class PhysicalBuilderTestCase extends TestCase {
         builder.init();
 
         WireAttacherRegistry wireAttacherRegistry = new WireAttacherRegistryImpl();
-        SystemWireAttacher wireAttacher = new SystemWireAttacher(componentManager, wireAttacherRegistry);
+        SystemWireAttacher wireAttacher = new SystemWireAttacher(componentManager, wireAttacherRegistry, new DefaultTransformerRegistry());
         wireAttacher.init();
         connector = new ConnectorImpl(null, wireAttacherRegistry);
         DeployerMonitor monitor = EasyMock.createNiceMock(DeployerMonitor.class);

@@ -22,6 +22,8 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.w3c.dom.Document;
+
 /**
  * Represents a component. <p>A component is a configured instance of an implementation. The services provided and
  * consumed and the available configuration properties are defined by the implementation (represented by its
@@ -40,6 +42,7 @@ import java.util.Map;
  * @version $Rev$ $Date$
  */
 public class ComponentDefinition<I extends Implementation<?>> extends AbstractPolicyAware {
+    
     private final String name;
     private URI runtimeId;
     private Autowire autowire = Autowire.INHERITED;
@@ -47,7 +50,7 @@ public class ComponentDefinition<I extends Implementation<?>> extends AbstractPo
     private I implementation;
     private final Map<String, ComponentReference> references = new HashMap<String, ComponentReference>();
     private final Map<String, PropertyValue> propertyValues = new HashMap<String, PropertyValue>();
-    private String key;
+    private Document key;
 
     /**
      * Constructor specifying the component's name.
@@ -193,7 +196,7 @@ public class ComponentDefinition<I extends Implementation<?>> extends AbstractPo
      * Returns the key to be used if this component is wired to a map of references.
      * @return The value of the key.
      */
-    public String getKey() {
+    public Document getKey() {
         return key;
     }
 
@@ -201,7 +204,7 @@ public class ComponentDefinition<I extends Implementation<?>> extends AbstractPo
      * Returns the key to be used if this component is wired to a map of references.
      * @param key The value of the key.
      */
-    public void setKey(String key) {
+    public void setKey(Document key) {
         this.key = key;
     }
 }

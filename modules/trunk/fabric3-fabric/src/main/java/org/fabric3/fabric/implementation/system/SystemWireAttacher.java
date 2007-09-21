@@ -22,6 +22,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.pojo.wire.PojoWireAttacher;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.WireAttacher;
@@ -32,6 +33,8 @@ import org.fabric3.spi.component.ComponentManager;
 import org.fabric3.spi.model.instance.ValueSource;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.transform.PullTransformer;
+import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.Wire;
 
@@ -39,15 +42,17 @@ import org.fabric3.spi.wire.Wire;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class SystemWireAttacher implements WireAttacher<SystemWireSourceDefinition, SystemWireTargetDefinition> {
+public class SystemWireAttacher extends PojoWireAttacher<SystemWireSourceDefinition, SystemWireTargetDefinition> {
 
     private WireAttacherRegistry wireAttacherRegistry;
     private ComponentManager manager;
 
     public SystemWireAttacher(
             @Reference ComponentManager manager,
-            @Reference WireAttacherRegistry wireAttacherRegistry
+            @Reference WireAttacherRegistry wireAttacherRegistry,
+            @Reference TransformerRegistry<PullTransformer<?, ?>> transformerRegistry
     ) {
+        super(transformerRegistry);
         this.manager = manager;
         this.wireAttacherRegistry = wireAttacherRegistry;
     }
@@ -77,7 +82,8 @@ public class SystemWireAttacher implements WireAttacher<SystemWireSourceDefiniti
         ObjectFactory<?> factory = targetComponent.createObjectFactory();
         sourceComponent.setObjectFactory(referenceSource, factory);
         
-        sourceComponent.attachReferenceToTarget(referenceSource, factory, (AtomicComponent<?>) target);
+        Object key = getKey(sourceDefinition, sourceComponent, referenceSource);
+        sourceComponent.attachReferenceToTarget(referenceSource, factory, key);
         
     }
 

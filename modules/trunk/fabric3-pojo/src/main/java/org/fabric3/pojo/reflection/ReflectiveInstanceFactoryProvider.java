@@ -22,6 +22,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,6 +85,24 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
             }
         }
         return null;
+    }
+
+    public Type getGenericType(ValueSource valueSource) {
+        Member member = injectionSites.get(valueSource);
+        if(member != null) {
+            if(member instanceof Field) {
+                return ((Field) member).getGenericType();
+            } else {
+                return ((Method) member).getGenericParameterTypes()[0];
+            }
+        } else {
+            int index = constructorNames.indexOf(valueSource);
+            if(index >= 0) {
+                return constructor.getGenericParameterTypes()[index];
+            }
+        }
+        return null;
+        
     }
 
     public Class<T> getImplementationClass() {

@@ -19,7 +19,6 @@
 package org.fabric3.pojo.injection;
 
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.component.AtomicComponent;
 
 /**
  * Common  interface for all multiplicity object factories.
@@ -36,6 +35,6 @@ public interface MultiplicityObjectFactory<T> extends ObjectFactory<T> {
      * @param objectFactory Constituent object factory.
      * @param targetComponent Target component.
      */
-    void addObjectFactory(ObjectFactory<?> objectFactory, AtomicComponent<?> targetComponent);
+    void addObjectFactory(ObjectFactory<?> objectFactory, Object key);
 
 }

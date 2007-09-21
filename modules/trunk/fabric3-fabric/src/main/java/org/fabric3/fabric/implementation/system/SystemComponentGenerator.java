@@ -81,7 +81,6 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
         physical.setScope(type.getImplementationScope());
         physical.setInitLevel(helper.getInitLevel(definition, type));
         physical.setInstanceFactoryProviderDefinition(providerDefinition);
-        physical.setKey(component.getKey());
         helper.processProperties(physical, definition);
 
         // generate the classloader resource definition

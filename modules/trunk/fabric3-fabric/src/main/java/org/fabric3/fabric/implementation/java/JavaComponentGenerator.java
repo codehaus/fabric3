@@ -80,7 +80,6 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
         // create the physical component definition
         URI componentId = component.getUri();
         JavaComponentDefinition physical = new JavaComponentDefinition();
-        physical.setKey(component.getKey());
         physical.setComponentId(componentId);
         physical.setGroupId(componentId.resolve("."));
         physical.setScope(type.getImplementationScope());

@@ -23,7 +23,6 @@ import java.util.List;
 
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.component.AtomicComponent;
 
 /**
  * Resolves targets configured in a multiplicity by delegating to object factories and returning an <code>List</code>
@@ -50,7 +49,7 @@ public class ListMultiplicityObjectFactory implements MultiplicityObjectFactory<
     /**
      * @see org.fabric3.pojo.injection.MultiplicityObjectFactory#addObjectFactory(org.fabric3.spi.ObjectFactory, org.fabric3.spi.component.AtomicComponent)
      */
-    public void addObjectFactory(ObjectFactory<?> objectFactory, AtomicComponent<?> targetComponent) {
+    public void addObjectFactory(ObjectFactory<?> objectFactory, Object key) {
         factories.add(objectFactory);
     }
 

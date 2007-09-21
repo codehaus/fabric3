@@ -23,7 +23,6 @@ import java.util.Map;
 
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.component.AtomicComponent;
 
 /**
  * A map based object factory.
@@ -49,8 +48,8 @@ public class MapMultiplicityObjectFactory implements MultiplicityObjectFactory<M
     /**
      * @see org.fabric3.pojo.injection.MultiplicityObjectFactory#addObjectFactory(org.fabric3.spi.ObjectFactory, org.fabric3.spi.component.AtomicComponent)
      */
-    public void addObjectFactory(ObjectFactory<?> objectFactory, AtomicComponent<?> targetComponent) {
-        factories.put(targetComponent.getKey(), objectFactory);
+    public void addObjectFactory(ObjectFactory<?> objectFactory, Object key) {
+        factories.put(key, objectFactory);
     }
 
 }

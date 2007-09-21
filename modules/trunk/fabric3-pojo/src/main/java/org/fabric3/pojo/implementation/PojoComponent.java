@@ -18,6 +18,7 @@
  */
 package org.fabric3.pojo.implementation;
 
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.Map;
 
@@ -51,7 +52,6 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
     private final long maxIdleTime;
     private final long maxAge;
     private InstanceFactory<T> instanceFactory;
-    private String key;
     private final Map<String, MultiplicityObjectFactory<?>> referenceFactories;
 
     public PojoComponent(URI componentId,
@@ -61,7 +61,6 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
                          int initLevel,
                          long maxIdleTime,
                          long maxAge,
-                         String key,
                          Map<String, MultiplicityObjectFactory<?>> referenceFactories) {
         this.uri = componentId;
         this.provider = provider;
@@ -70,12 +69,7 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
         this.initLevel = initLevel;
         this.maxIdleTime = maxIdleTime;
         this.maxAge = maxAge;
-        this.key = key;
         this.referenceFactories = referenceFactories;
-    }
-    
-    public String getKey() {
-        return key;
     }
 
     public URI getUri() {
@@ -149,6 +143,10 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
     public Class<?> getMemberType(ValueSource injectionSite) {
         return provider.getMemberType(injectionSite);
     }
+    
+    public Type getGerenricMemberType(ValueSource injectionSite) {
+        return provider.getMemberType(injectionSite);
+    }
 
     public String toString() {
         return "[" + uri.toString() + "] in state [" + super.toString() + ']';
@@ -161,11 +159,11 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
      * @param objectFactory Object factory.
      * @param target Target component.
      */
-    public void attachReferenceToTarget(ValueSource referenceSource, ObjectFactory<?> objectFactory, AtomicComponent<?> target) {
+    public void attachReferenceToTarget(ValueSource referenceSource, ObjectFactory<?> objectFactory, Object key) {
         
         MultiplicityObjectFactory<?> factory = referenceFactories.get(referenceSource.getName());
         if(factory != null) {
-            factory.addObjectFactory(objectFactory, target);
+            factory.addObjectFactory(objectFactory, key);
             setObjectFactory(referenceSource, factory);
         } else {
             setObjectFactory(referenceSource, objectFactory);

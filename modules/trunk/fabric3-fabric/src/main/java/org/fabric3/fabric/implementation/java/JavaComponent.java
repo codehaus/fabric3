@@ -63,9 +63,8 @@ public class JavaComponent<T> extends PojoComponent<T> {
                          long maxAge,
                          ProxyService proxyService,
                          Map<String, ObjectFactory<?>> propertyFactories,
-                         Map<String, MultiplicityObjectFactory<?>> referenceFactories,
-                         String key) {
-        super(componentId, instanceFactoryProvider, scopeContainer, groupId, initLevel, maxIdleTime, maxAge, key, referenceFactories);
+                         Map<String, MultiplicityObjectFactory<?>> referenceFactories) {
+        super(componentId, instanceFactoryProvider, scopeContainer, groupId, initLevel, maxIdleTime, maxAge, referenceFactories);
         this.proxyService = proxyService;
         this.propertyFactories = propertyFactories;
     }

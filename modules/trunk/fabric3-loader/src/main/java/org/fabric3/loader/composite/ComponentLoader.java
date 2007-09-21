@@ -21,6 +21,9 @@ package org.fabric3.loader.composite;
 import java.net.URI;
 import java.net.URISyntaxException;
 import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
@@ -28,6 +31,8 @@ import javax.xml.stream.XMLStreamReader;
 
 import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import org.fabric3.spi.Constants;
 import org.fabric3.spi.loader.InvalidValueException;
@@ -91,7 +96,7 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
         Autowire autowire = Autowire.fromString(reader.getAttributeValue(null, "autowire"));
         URI runtimeId = loadRuntimeId(reader);
         Integer initLevel = loadInitLevel(reader);
-        String key = loadKey(reader);
+        Document key = loadKey(reader);
 
         ComponentDefinition<Implementation<?>> componentDefinition = new ComponentDefinition<Implementation<?>>(name);
         componentDefinition.setAutowire(autowire);
@@ -129,8 +134,21 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
     /*
      * Loads the key when the component is wired to a map based reference.
      */
-    private String loadKey(XMLStreamReader reader) {
-        return reader.getAttributeValue(Constants.FABRIC3_NS, "key");
+    private Document loadKey(XMLStreamReader reader) {
+        
+        try {
+            String key = reader.getAttributeValue(Constants.FABRIC3_NS, "key");
+            if(key != null) {
+                Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+                Element element = document.createElement("key");
+                document.appendChild(element);
+                element.appendChild(document.createTextNode(key));
+                return document;
+            }
+            return null;
+        } catch (ParserConfigurationException e) {
+            throw new AssertionError(e);
+        }
     }
 
     /*

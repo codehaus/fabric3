@@ -93,7 +93,7 @@ public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaCompone
                 createMultiplicityReferenceFactories(providerDefinition);
 
         return new JavaComponent<T>(componentId, provider, scopeContainer, groupId, initLevel, -1, -1, proxyService,
-                                    propertyFactories, referenceFactories, definition.getKey());
+                                    propertyFactories, referenceFactories);
 
     }
 }

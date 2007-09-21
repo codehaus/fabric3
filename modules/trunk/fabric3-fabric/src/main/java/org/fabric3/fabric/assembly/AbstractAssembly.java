@@ -67,6 +67,7 @@ import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.util.UriHelper;
+import org.w3c.dom.Document;
 
 /**
  * Base class for abstract assemblies
@@ -279,7 +280,7 @@ public abstract class AbstractAssembly implements Assembly {
         // create the LogicalComponent
         URI uri = URI.create(parent.getUri() + "/" + definition.getName());
         URI runtimeId = definition.getRuntimeId();
-        String key = definition.getKey();
+        Document key = definition.getKey();
         LogicalComponent<I> component = new LogicalComponent<I>(uri, runtimeId, definition, parent, key);
 
         I impl = definition.getImplementation();

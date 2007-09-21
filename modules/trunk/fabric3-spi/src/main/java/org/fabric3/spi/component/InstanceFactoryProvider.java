@@ -18,6 +18,8 @@
  */
 package org.fabric3.spi.component;
 
+import java.lang.reflect.Type;
+
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.model.instance.ValueSource;
 
@@ -47,6 +49,14 @@ public interface InstanceFactoryProvider<T> {
      * @return the required type
      */
     Class<?> getMemberType(ValueSource injectionSite);
+
+    /**
+     * Returns the generic type for the injection site
+     *
+     * @param injectionSite the injection site name
+     * @return the required type
+     */
+    Type getGenericType(ValueSource innectionSite);
 
     /**
      * Create an instance factory that can be used to create component instances.

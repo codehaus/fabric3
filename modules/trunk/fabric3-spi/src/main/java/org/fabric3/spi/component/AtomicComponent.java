@@ -82,12 +82,5 @@ public interface AtomicComponent<T> extends Component {
      * @return an ObjectFactory that returns an instance of this AtomicComponent
      */
     ObjectFactory<T> createObjectFactory();
-    
-    /**
-     * Key used when this component is used in a map of references.
-     * 
-     * @return Key value.
-     */
-    String getKey();
 
 }

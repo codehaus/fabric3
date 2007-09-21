@@ -289,10 +289,10 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
                 }
             }
         }
-        PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(source, reference, optimizable);
-        wireDefinition.setSource(sourceDefinition);
         
-        populateKey(target, sourceDefinition);
+        PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(source, reference, optimizable);
+        sourceDefinition.setKey(target.getKey());
+        wireDefinition.setSource(sourceDefinition);
         
         context.getPhysicalChangeSet().addWireDefinition(wireDefinition);
 
@@ -395,21 +395,6 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
 
         return wireDefinition;
 
-    }
-
-    private <T extends LogicalComponent<?>> void populateKey(T target, PhysicalWireSourceDefinition sourceDefinition) {
-        
-        try {
-            String key = target.getKey();
-            if(key != null) {
-                Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-                document.createElement("key").appendChild(document.createTextNode(key));
-                sourceDefinition.setKey(document);
-            }
-        } catch (ParserConfigurationException e) {
-            throw new AssertionError(e);
-        }
-        
     }
 
 }

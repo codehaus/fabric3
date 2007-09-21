@@ -80,6 +80,6 @@ public class SystemComponentBuilder<T> extends PojoComponentBuilder<T, SystemCom
         createPropertyFactories(definition, provider);
         Map<String, MultiplicityObjectFactory<?>> referenceFactories = createMultiplicityReferenceFactories(providerDefinition);
 
-        return new SystemComponent<T>(componentId, provider, scopeContainer, groupId, initLevel, -1, -1, definition.getKey(), referenceFactories);
+        return new SystemComponent<T>(componentId, provider, scopeContainer, groupId, initLevel, -1, -1, referenceFactories);
     }
 }

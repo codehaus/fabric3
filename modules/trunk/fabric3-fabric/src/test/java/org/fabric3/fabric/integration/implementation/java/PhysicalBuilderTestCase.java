@@ -174,7 +174,7 @@ public class PhysicalBuilderTestCase extends TestCase {
         builder.init();
 
         WireAttacherRegistry wireAttacherRegistry = new WireAttacherRegistryImpl();
-        JavaWireAttacher wireAttacher = new JavaWireAttacher(componentManager, wireAttacherRegistry, null, classLoaderRegistry);
+        JavaWireAttacher wireAttacher = new JavaWireAttacher(componentManager, wireAttacherRegistry, null, classLoaderRegistry, null);
         wireAttacher.init();
         connector = new ConnectorImpl(null, wireAttacherRegistry);
 

@@ -26,6 +26,7 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.osoa.sca.Constants;
+import org.w3c.dom.Document;
 
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
@@ -49,7 +50,7 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
     private final Map<String, LogicalReference> references = new HashMap<String, LogicalReference>();
     private URI runtimeId;
     private boolean active;
-    private String key;
+    private Document key;
     private Autowire autowire;
 
     /**
@@ -61,7 +62,7 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
     public LogicalComponent(URI uri, URI runtimeId,
                             ComponentDefinition<I> definition,
                             LogicalComponent<CompositeImplementation> parent,
-                            String key) {
+                            Document key) {
         super(uri, parent, TYPE);
         this.runtimeId = runtimeId;
         this.definition = definition;
@@ -243,7 +244,7 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
      *
      * @return The value of the key.
      */
-    public String getKey() {
+    public Document getKey() {
         return key;
     }
 

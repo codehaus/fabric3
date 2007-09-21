@@ -17,16 +17,20 @@
 package org.fabric3.fabric.implementation.java;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
+import javax.xml.transform.TransformerConfigurationException;
 
 import org.fabric3.fabric.injection.CallbackWireObjectFactory;
 import org.fabric3.fabric.wire.WireObjectFactory;
+import org.fabric3.pojo.implementation.PojoComponent;
+import org.fabric3.pojo.reflection.InvokerInterceptor;
+import org.fabric3.pojo.wire.PojoWireAttacher;
+import org.fabric3.scdl.DataType;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.builder.component.WireAttacher;
@@ -39,12 +43,19 @@ import org.fabric3.spi.model.instance.ValueSource;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.transform.PullTransformer;
+import org.fabric3.spi.transform.TransformContext;
+import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.ProxyService;
 import org.fabric3.spi.wire.Wire;
-import org.fabric3.pojo.reflection.InvokerInterceptor;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Document;
 
 /**
  * The component builder for Java implementation types. Responsible for creating the Component runtime artifact from a
@@ -53,7 +64,7 @@ import org.fabric3.pojo.reflection.InvokerInterceptor;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class JavaWireAttacher implements WireAttacher<JavaWireSourceDefinition, JavaWireTargetDefinition> {
+public class JavaWireAttacher extends PojoWireAttacher<JavaWireSourceDefinition, JavaWireTargetDefinition> {
 
     private WireAttacherRegistry wireAttacherRegistry;
     private ComponentManager manager;
@@ -63,7 +74,9 @@ public class JavaWireAttacher implements WireAttacher<JavaWireSourceDefinition, 
     public JavaWireAttacher(@Reference ComponentManager manager,
                             @Reference WireAttacherRegistry wireAttacherRegistry,
                             @Reference ProxyService proxyService,
-                            @Reference ClassLoaderRegistry classLoaderRegistry) {
+                            @Reference ClassLoaderRegistry classLoaderRegistry,
+                            @Reference TransformerRegistry<PullTransformer<?, ?>> transformerRegistry) {
+        super(transformerRegistry);
         this.wireAttacherRegistry = wireAttacherRegistry;
         this.manager = manager;
         this.proxyService = proxyService;
@@ -98,18 +111,19 @@ public class JavaWireAttacher implements WireAttacher<JavaWireSourceDefinition, 
             target = manager.getComponent(targetName);
         }
         
+        Object key = getKey(sourceDefinition, source, referenceSource);
         
         if (sourceDefinition.isOptimizable()) {
             assert target instanceof AtomicComponent;
             ObjectFactory<?> factory = ((AtomicComponent<?>) target).createObjectFactory();
             source.setObjectFactory(referenceSource, factory);
             if(target != null) {
-                source.attachReferenceToTarget(referenceSource, factory, (AtomicComponent<?>) target);
+                source.attachReferenceToTarget(referenceSource, factory, key);
             }
         } else {
             ObjectFactory<?> factory = createWireObjectFactory(type, sourceDefinition.isConversational(), wire);
             if(target != null) {
-                source.attachReferenceToTarget(referenceSource, factory, (AtomicComponent<?>) target);
+                source.attachReferenceToTarget(referenceSource, factory, key);
             } else {
                 source.setObjectFactory(referenceSource, factory);
             }

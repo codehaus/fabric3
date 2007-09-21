@@ -37,15 +37,6 @@ public abstract class PojoComponentDefinition extends PhysicalComponentDefinitio
     private InstanceFactoryDefinition instanceFactoryProviderDefinition;
     private URI classLoaderId;
     private final Map<String, Document> propertyValues = new HashMap<String, Document>();
-    private String key;
-    
-    public void setKey(String key) {
-        this.key = key;
-    }
-    
-    public String getKey() {
-        return key;
-    }
 
     /**
      * Gets the instance factory provider definition.
