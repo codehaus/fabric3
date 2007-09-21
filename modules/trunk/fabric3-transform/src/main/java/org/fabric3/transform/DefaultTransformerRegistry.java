@@ -29,10 +29,10 @@ import org.fabric3.spi.transform.TransformerRegistry;
 public class DefaultTransformerRegistry<T extends Transformer> implements TransformerRegistry<T> {
     private final Map<TransformerPair, T> transformers = new ConcurrentHashMap<TransformerPair, T>();
 
+    
     public void register(T transformer) {
         TransformerPair pair = new TransformerPair(transformer.getSourceType(), transformer.getTargetType());
         transformers.put(pair, transformer);
-        //System.err.println(this);
     }
 
     public void unregister(T transformer) {
@@ -41,7 +41,6 @@ public class DefaultTransformerRegistry<T extends Transformer> implements Transf
     }
 
     public T getTransformer(DataType<?> source, DataType<?> target) {
-        //System.err.println(this);
         TransformerPair pair = new TransformerPair(source, target);
         return transformers.get(pair);
     }

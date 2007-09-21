@@ -75,7 +75,7 @@ public class JavaWireAttacher extends PojoWireAttacher<JavaWireSourceDefinition,
                             @Reference WireAttacherRegistry wireAttacherRegistry,
                             @Reference ProxyService proxyService,
                             @Reference ClassLoaderRegistry classLoaderRegistry,
-                            @Reference TransformerRegistry<PullTransformer<?, ?>> transformerRegistry) {
+                            @Reference(name = "transformerRegistry") TransformerRegistry<PullTransformer<?, ?>> transformerRegistry) {
         super(transformerRegistry);
         this.wireAttacherRegistry = wireAttacherRegistry;
         this.manager = manager;

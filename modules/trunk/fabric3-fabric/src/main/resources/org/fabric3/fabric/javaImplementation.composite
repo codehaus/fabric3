@@ -47,6 +47,7 @@
 
     <component name="org.fabric3.fabric.implementation.java.JavaWireAttacher">
         <system:implementation.system class="org.fabric3.fabric.implementation.java.JavaWireAttacher"/>
+        <reference name="transformerRegistry" target="pullTransformerRegistry"/>
     </component>
 
 </composite>

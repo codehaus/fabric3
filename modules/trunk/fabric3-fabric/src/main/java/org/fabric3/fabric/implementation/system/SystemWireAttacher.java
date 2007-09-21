@@ -48,9 +48,9 @@ public class SystemWireAttacher extends PojoWireAttacher<SystemWireSourceDefinit
     private ComponentManager manager;
 
     public SystemWireAttacher(
-            @Reference ComponentManager manager,
-            @Reference WireAttacherRegistry wireAttacherRegistry,
-            @Reference TransformerRegistry<PullTransformer<?, ?>> transformerRegistry
+            ComponentManager manager,
+            WireAttacherRegistry wireAttacherRegistry,
+            TransformerRegistry<PullTransformer<?, ?>> transformerRegistry
     ) {
         super(transformerRegistry);
         this.manager = manager;
