@@ -44,11 +44,11 @@ under the License.
             <scope>compile</scope>
         </dependency>
 
-        <dependency>
+        <!-- dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>sample-hello-common</artifactId>
             <version>0.1-SNAPSHOT</version>
-        </dependency>
+        </dependency-->
 
     </dependencies>
 

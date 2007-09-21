@@ -20,6 +20,7 @@ package org.fabric3.pojo.wire;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Map;
 
 import org.fabric3.pojo.implementation.PojoComponent;
 import org.fabric3.spi.builder.component.WireAttacher;
@@ -50,10 +51,14 @@ public abstract class PojoWireAttacher<PWSD extends PhysicalWireSourceDefinition
 
     protected Object getKey(PhysicalWireSourceDefinition sourceDefinition, PojoComponent<?> source, ValueSource referenceSource) {
         
+        if(! Map.class.isAssignableFrom(source.getMemberType(referenceSource))) {
+            return null;
+        }
+        
         Document keyDocument = sourceDefinition.getKey();
         
+        
         if(keyDocument != null) {
-            
 
             Element element = keyDocument.getDocumentElement();
             
@@ -63,6 +68,10 @@ public abstract class PojoWireAttacher<PWSD extends PhysicalWireSourceDefinition
             if(type instanceof ParameterizedType) { 
                 ParameterizedType genericType = (ParameterizedType) type;
                 formalType = (Class<?>) genericType.getActualTypeArguments()[0];
+                if(Enum.class.isAssignableFrom(formalType)) {
+                    Class<Enum> enumClass = (Class<Enum>) formalType;
+                    return Enum.valueOf(enumClass, element.getTextContent());
+                }
             } else {
                 formalType = String.class;
             }
@@ -75,10 +84,13 @@ public abstract class PojoWireAttacher<PWSD extends PhysicalWireSourceDefinition
                 throw new AssertionError(e);
             }
         }
+        
         return null;
+        
     }
 
     private <T> T createKey(Class<T> type, Element value, TransformContext context) {
+        
         JavaClass<T> targetType = new JavaClass<T>(type);
         PullTransformer<Node, T> transformer = getTransformer(SOURCE_TYPE, targetType);
         try {

@@ -83,6 +83,7 @@ public class SystemWireAttacher extends PojoWireAttacher<SystemWireSourceDefinit
         sourceComponent.setObjectFactory(referenceSource, factory);
         
         Object key = getKey(sourceDefinition, sourceComponent, referenceSource);
+
         sourceComponent.attachReferenceToTarget(referenceSource, factory, key);
         
     }

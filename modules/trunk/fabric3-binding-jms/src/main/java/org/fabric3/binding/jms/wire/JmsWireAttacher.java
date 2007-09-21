@@ -117,10 +117,11 @@ public class JmsWireAttacher implements WireAttacher<JmsWireSourceDefinition, Jm
      * @param strategies Destination strategies.
      */
     @Reference
-    public void setDestinationStrategies(Map<String, DestinationStrategy> strategies) {
-        for(Map.Entry<String, DestinationStrategy> entry : strategies.entrySet()) {
+    public void setDestinationStrategies(Map<CreateOption, DestinationStrategy> strategies) {
+        /*for(Map.Entry<String, DestinationStrategy> entry : strategies.entrySet()) {
             destinationStrategies.put(CreateOption.valueOf(entry.getKey()), entry.getValue());
-        }
+        }*/
+        this.destinationStrategies = strategies;
     }
     
     /**
@@ -129,10 +130,11 @@ public class JmsWireAttacher implements WireAttacher<JmsWireSourceDefinition, Jm
      * @param strategies Connection factory strategies.
      */
     @Reference
-    public void setConnectionFactoryStrategies(Map<String, ConnectionFactoryStrategy> strategies) {
-        for(Map.Entry<String, ConnectionFactoryStrategy> entry : strategies.entrySet()) {
+    public void setConnectionFactoryStrategies(Map<CreateOption, ConnectionFactoryStrategy> strategies) {
+        /*for(Map.Entry<String, ConnectionFactoryStrategy> entry : strategies.entrySet()) {
             connectionFactoryStrategies.put(CreateOption.valueOf(entry.getKey()), entry.getValue());
-        }
+        }*/
+        this.connectionFactoryStrategies = strategies;
     }
     
     /**
@@ -195,7 +197,8 @@ public class JmsWireAttacher implements WireAttacher<JmsWireSourceDefinition, Jm
         CorrelationScheme correlationScheme = metadata.getCorrelationScheme();
 
         ConnectionFactoryDefinition connectionFactoryDefinition = metadata.getConnectionFactory();
-        CreateOption create = connectionFactoryDefinition.getCreate();        
+        CreateOption create = connectionFactoryDefinition.getCreate();
+        
         ConnectionFactory reqCf = connectionFactoryStrategies.get(create).getConnectionFactory(connectionFactoryDefinition, env);
         
         connectionFactoryDefinition = metadata.getResponseConnectionFactory();
@@ -239,7 +242,8 @@ public class JmsWireAttacher implements WireAttacher<JmsWireSourceDefinition, Jm
         CorrelationScheme correlationScheme = metadata.getCorrelationScheme();
 
         ConnectionFactoryDefinition connectionFactoryDefinition = metadata.getConnectionFactory();
-        CreateOption create = connectionFactoryDefinition.getCreate();        
+        CreateOption create = connectionFactoryDefinition.getCreate();   
+
         ConnectionFactory reqCf = connectionFactoryStrategies.get(create).getConnectionFactory(connectionFactoryDefinition, env);
         
         connectionFactoryDefinition = metadata.getResponseConnectionFactory();
