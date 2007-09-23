@@ -28,25 +28,25 @@
            autowire="true">
 
 
-    <component name="org.fabric3.fabric.implementation.java.JavaImplementationLoader">
-        <system:implementation.system class="org.fabric3.fabric.implementation.java.JavaImplementationLoader"/>
+    <component name="org.fabric3.java.JavaImplementationLoader">
+        <system:implementation.system class="org.fabric3.java.JavaImplementationLoader"/>
     </component>
 
-    <component name="org.fabric3.fabric.implementation.java.JavaComponentTypeLoaderImpl">
-        <system:implementation.system class="org.fabric3.fabric.implementation.java.JavaComponentTypeLoaderImpl"/>
+    <component name="org.fabric3.java.JavaComponentTypeLoaderImpl">
+        <system:implementation.system class="org.fabric3.java.JavaComponentTypeLoaderImpl"/>
     </component>
 
-    <component name="org.fabric3.fabric.implementation.java.JavaComponentGenerator">
-        <system:implementation.system class="org.fabric3.fabric.implementation.java.JavaComponentGenerator"/>
+    <component name="org.fabric3.java.JavaComponentGenerator">
+        <system:implementation.system class="org.fabric3.java.JavaComponentGenerator"/>
     </component>
 
-    <component name="org.fabric3.fabric.implementation.java.JavaComponentBuilder">
-        <system:implementation.system class="org.fabric3.fabric.implementation.java.JavaComponentBuilder"/>
+    <component name="org.fabric3.java.JavaComponentBuilder">
+        <system:implementation.system class="org.fabric3.java.JavaComponentBuilder"/>
         <reference name="transformerRegistry" target="pullTransformerRegistry"/>
     </component>
 
-    <component name="org.fabric3.fabric.implementation.java.JavaWireAttacher">
-        <system:implementation.system class="org.fabric3.fabric.implementation.java.JavaWireAttacher"/>
+    <component name="org.fabric3.java.JavaWireAttacher">
+        <system:implementation.system class="org.fabric3.java.JavaWireAttacher"/>
         <reference name="transformerRegistry" target="pullTransformerRegistry"/>
     </component>
 

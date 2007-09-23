@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.implementation.java;
+package org.fabric3.java;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
@@ -25,7 +25,6 @@ import org.easymock.IAnswer;
 import org.fabric3.pojo.processor.IntrospectionRegistry;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.spi.loader.LoaderContext;
-import org.fabric3.loader.common.LoaderContextImpl;
 
 /**
  * @version $Rev$ $Date$
@@ -36,21 +35,23 @@ public class JavaComponentTypeLoaderTestCase extends TestCase {
     public void testPojoComponentTypeCreatedForIntrospection() throws Exception {
         IntrospectionRegistry registry = EasyMock.createMock(IntrospectionRegistry.class);
         registry.introspect(
-            (Class) EasyMock.isA(Object.class),
-            EasyMock.isA(PojoComponentType.class),
-            EasyMock.isA(LoaderContext.class));
+                (Class) EasyMock.isA(Object.class),
+                EasyMock.isA(PojoComponentType.class),
+                EasyMock.isA(LoaderContext.class));
         EasyMock.expectLastCall().andStubAnswer(new IAnswer() {
             public Object answer() throws Throwable {
                 return null;
             }
         });
-        EasyMock.replay(registry);
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        LoaderContext context = EasyMock.createMock(LoaderContext.class);
+        EasyMock.expect(context.getTargetClassLoader()).andStubReturn(cl);
+        EasyMock.replay(registry, context);
         JavaComponentTypeLoaderImpl loader = new JavaComponentTypeLoaderImpl(registry);
         JavaImplementation implementation = new JavaImplementation();
         implementation.setImplementationClass(Object.class.getName());
-        ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        loader.loadByIntrospection(implementation, new LoaderContextImpl(cl, null));
-        EasyMock.verify(registry);
+        loader.loadByIntrospection(implementation, context);
+        EasyMock.verify(registry, context);
     }
 
 /*

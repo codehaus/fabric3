@@ -16,10 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.implementation.java;
+package org.fabric3.java;
 
 import java.net.URI;
 import java.util.Set;
+
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
@@ -37,8 +40,6 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Generates a JavaComponentDefinition from a ComponentDefinition corresponding to a Java component implementation
@@ -58,8 +59,8 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
         this.helper = helper;
     }
 
-    public PhysicalComponentDefinition generate(LogicalComponent<JavaImplementation> component, 
-                                                Set<Intent> intentsToBeProvided, 
+    public PhysicalComponentDefinition generate(LogicalComponent<JavaImplementation> component,
+                                                Set<Intent> intentsToBeProvided,
                                                 GeneratorContext context)
             throws GenerationException {
         ComponentDefinition<JavaImplementation> definition = component.getDefinition();
@@ -89,9 +90,9 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
         // generate the classloader resource definition
         URI classLoaderId = classLoaderGenerator.generate(component, context);
         physical.setClassLoaderId(classLoaderId);
-        
+
         return physical;
-        
+
     }
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<JavaImplementation> source,

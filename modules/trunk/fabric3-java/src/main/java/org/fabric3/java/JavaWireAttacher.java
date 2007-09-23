@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.implementation.java;
+package org.fabric3.java;
 
 import java.lang.reflect.Method;
 import java.net.URI;
@@ -64,7 +64,8 @@ public class JavaWireAttacher extends PojoWireAttacher<JavaWireSourceDefinition,
                             @Reference WireAttacherRegistry wireAttacherRegistry,
                             @Reference ProxyService proxyService,
                             @Reference ClassLoaderRegistry classLoaderRegistry,
-                            @Reference(name = "transformerRegistry") TransformerRegistry<PullTransformer<?, ?>> transformerRegistry) {
+                            @Reference(name = "transformerRegistry")
+                            TransformerRegistry<PullTransformer<?, ?>> transformerRegistry) {
         super(transformerRegistry);
         this.wireAttacherRegistry = wireAttacherRegistry;
         this.manager = manager;
@@ -79,12 +80,13 @@ public class JavaWireAttacher extends PojoWireAttacher<JavaWireSourceDefinition,
     }
 
     /**
-     * @see org.fabric3.spi.builder.component.WireAttacher#attachToSource(org.fabric3.spi.model.physical.PhysicalWireSourceDefinition, org.fabric3.spi.model.physical.PhysicalWireTargetDefinition, org.fabric3.spi.wire.Wire)
+     * @see org.fabric3.spi.builder.component.WireAttacher#attachToSource(org.fabric3.spi.model.physical.PhysicalWireSourceDefinition,
+     *org.fabric3.spi.model.physical.PhysicalWireTargetDefinition,org.fabric3.spi.wire.Wire)
      */
     public void attachToSource(JavaWireSourceDefinition sourceDefinition,
                                PhysicalWireTargetDefinition targetDefinition,
                                Wire wire) {
-        
+
         URI sourceUri = sourceDefinition.getUri();
         URI sourceName = UriHelper.getDefragmentedName(sourceDefinition.getUri());
         Component component = manager.getComponent(sourceName);
@@ -95,23 +97,23 @@ public class JavaWireAttacher extends PojoWireAttacher<JavaWireSourceDefinition,
         Class<?> type = source.getMemberType(referenceSource);
         URI targetUri = targetDefinition.getUri();
         Component target = null;
-        if(targetUri != null) {
+        if (targetUri != null) {
             URI targetName = UriHelper.getDefragmentedName(targetDefinition.getUri());
             target = manager.getComponent(targetName);
         }
-        
+
         Object key = getKey(sourceDefinition, source, referenceSource);
-        
+
         if (sourceDefinition.isOptimizable()) {
             assert target instanceof AtomicComponent;
             ObjectFactory<?> factory = ((AtomicComponent<?>) target).createObjectFactory();
             source.setObjectFactory(referenceSource, factory);
-            if(target != null) {
+            if (target != null) {
                 source.attachReferenceToTarget(referenceSource, factory, key);
             }
         } else {
             ObjectFactory<?> factory = createWireObjectFactory(type, sourceDefinition.isConversational(), wire);
-            if(target != null) {
+            if (target != null) {
                 source.attachReferenceToTarget(referenceSource, factory, key);
             } else {
                 source.setObjectFactory(referenceSource, factory);
@@ -124,11 +126,12 @@ public class JavaWireAttacher extends PojoWireAttacher<JavaWireSourceDefinition,
                 source.setObjectFactory(callbackSource, createCallbackWireObjectFactory(callbackType));
             }
         }
-        
+
     }
 
     /**
-     * @see org.fabric3.spi.builder.component.WireAttacher#attachToTarget(org.fabric3.spi.model.physical.PhysicalWireSourceDefinition, org.fabric3.spi.model.physical.PhysicalWireTargetDefinition, org.fabric3.spi.wire.Wire)
+     * @see org.fabric3.spi.builder.component.WireAttacher#attachToTarget(org.fabric3.spi.model.physical.PhysicalWireSourceDefinition,
+     *org.fabric3.spi.model.physical.PhysicalWireTargetDefinition,org.fabric3.spi.wire.Wire)
      */
     public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition,
                                JavaWireTargetDefinition targetDefinition,
@@ -174,8 +177,8 @@ public class JavaWireAttacher extends PojoWireAttacher<JavaWireSourceDefinition,
     }
 
     private <T, CONTEXT> InvokerInterceptor<T, CONTEXT> createInterceptor(Method method,
-                                                                              JavaComponent<T> component,
-                                                                              ScopeContainer<CONTEXT> scopeContainer) {
+                                                                          JavaComponent<T> component,
+                                                                          ScopeContainer<CONTEXT> scopeContainer) {
         return new InvokerInterceptor<T, CONTEXT>(method, component, scopeContainer);
     }
 

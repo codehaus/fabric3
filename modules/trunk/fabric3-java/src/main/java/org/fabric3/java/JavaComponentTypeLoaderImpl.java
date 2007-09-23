@@ -16,18 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.implementation.java;
+package org.fabric3.java;
 
 import java.net.URL;
 
 import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.pojo.processor.JavaIntrospectionHelper;
 import org.fabric3.pojo.processor.IntrospectionRegistry;
 import org.fabric3.pojo.processor.Introspector;
-import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.pojo.processor.JavaIntrospectionHelper;
 import org.fabric3.pojo.processor.ProcessingException;
+import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;

@@ -25,7 +25,7 @@ import org.apache.maven.surefire.testset.TestSetFailedException;
 
 import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.fabric.assembly.DistributedAssembly;
-import org.fabric3.fabric.implementation.java.JavaComponent;
+import org.fabric3.java.JavaComponent;
 import org.fabric3.fabric.runtime.AbstractRuntime;
 import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;

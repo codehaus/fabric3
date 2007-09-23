@@ -19,6 +19,7 @@
     <orderEntry type="module" module-name="fabric3-pojo" exported="" />
     <orderEntry type="module" module-name="fabric3-transform" exported="" />
     <orderEntry type="module" module-name="fabric3-loader" exported="" />
+    <orderEntry type="module" module-name="fabric3-java" exported="" />
     <orderEntry type="library" name="commonj-api_r1.1-1.0-incubator-M2" level="application" />
     <orderEntry type="library" name="geronimo-j2ee-connector_1.5_spec-1.0.1" level="application" />
     <orderEntry type="library" name="geronimo-jta_1.0.1B_spec-1.0.1" level="application" />

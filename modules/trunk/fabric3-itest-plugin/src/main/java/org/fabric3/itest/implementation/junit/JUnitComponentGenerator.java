@@ -4,9 +4,9 @@ import java.net.URI;
 import java.util.Map;
 import java.util.Set;
 
-import org.fabric3.fabric.implementation.java.JavaComponentDefinition;
-import org.fabric3.fabric.implementation.java.JavaWireSourceDefinition;
-import org.fabric3.fabric.implementation.java.JavaWireTargetDefinition;
+import org.fabric3.java.JavaComponentDefinition;
+import org.fabric3.java.JavaWireSourceDefinition;
+import org.fabric3.java.JavaWireTargetDefinition;
 import org.fabric3.pojo.instancefactory.InjectionSiteMapping;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.pojo.scdl.ConstructorDefinition;

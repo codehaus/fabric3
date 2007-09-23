@@ -16,10 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.implementation.java;
+package org.fabric3.java;
 
 import java.net.URI;
 import java.util.Map;
+
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.pojo.implementation.PojoComponentBuilder;
 import org.fabric3.pojo.injection.MultiplicityObjectFactory;
@@ -36,9 +40,6 @@ import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.spi.wire.ProxyService;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * The component builder for Java implementation types. Responsible for creating the Component runtime artifact from a

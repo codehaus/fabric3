@@ -58,7 +58,7 @@
     <include name="org.fabric3.fabric.SystemImplementation" scdlResource="org/fabric3/fabric/systemImplementation.composite"/>
 
     <!-- Java implementation type -->
-    <include name="org.fabric3.fabric.JavaImplementation" scdlResource="org/fabric3/fabric/javaImplementation.composite"/>
+    <include name="org.fabric3.fabric.JavaImplementation" scdlResource="org/fabric3/java/javaImplementation.composite"/>
 
     <!-- include policy configuration -->
     <include name="org.fabric3.policy.Policy" scdlResource="org/fabric3/policy/policy.composite"/>

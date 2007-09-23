@@ -73,6 +73,7 @@
                 <include>org.codehaus.fabric3:fabric3-loader</include>
                 <include>org.codehaus.fabric3:fabric3-policy</include>
                 <include>org.codehaus.fabric3:fabric3-fabric</include>
+                <include>org.codehaus.fabric3:fabric3-java</include>
                 <include>org.codehaus.fabric3.development:fabric3-development-host</include>
                 <include>javax.servlet:servlet-api</include>
                 <include>stax:stax-api</include>

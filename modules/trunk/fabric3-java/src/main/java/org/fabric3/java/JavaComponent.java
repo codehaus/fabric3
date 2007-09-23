@@ -16,10 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.implementation.java;
+package org.fabric3.java;
 
 import java.net.URI;
 import java.util.Map;
+
+import org.osoa.sca.CallableReference;
+import org.osoa.sca.ServiceReference;
 
 import org.fabric3.pojo.implementation.PojoComponent;
 import org.fabric3.pojo.injection.MultiplicityObjectFactory;
@@ -28,8 +31,6 @@ import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.wire.ProxyService;
-import org.osoa.sca.CallableReference;
-import org.osoa.sca.ServiceReference;
 
 /**
  * The runtime instantiation of Java component implementations
@@ -44,15 +45,15 @@ public class JavaComponent<T> extends PojoComponent<T> {
     /**
      * Constructor for a Java Component.
      *
-     * @param componentId the component's uri
+     * @param componentId             the component's uri
      * @param instanceFactoryProvider the provider for the instance factory
-     * @param scopeContainer the container for the component's implementation scope
-     * @param groupId the component group this component belongs to
-     * @param initLevel the initialization level
-     * @param maxIdleTime the time after which idle instances of this component can be expired
-     * @param maxAge the time after which instances of this component can be expired
-     * @param proxyService the service used to create reference proxies
-     * @param propertyFactories map of factories for property values
+     * @param scopeContainer          the container for the component's implementation scope
+     * @param groupId                 the component group this component belongs to
+     * @param initLevel               the initialization level
+     * @param maxIdleTime             the time after which idle instances of this component can be expired
+     * @param maxAge                  the time after which instances of this component can be expired
+     * @param proxyService            the service used to create reference proxies
+     * @param propertyFactories       map of factories for property values
      */
     public JavaComponent(URI componentId,
                          InstanceFactoryProvider<T> instanceFactoryProvider,
@@ -64,7 +65,14 @@ public class JavaComponent<T> extends PojoComponent<T> {
                          ProxyService proxyService,
                          Map<String, ObjectFactory<?>> propertyFactories,
                          Map<String, MultiplicityObjectFactory<?>> referenceFactories) {
-        super(componentId, instanceFactoryProvider, scopeContainer, groupId, initLevel, maxIdleTime, maxAge, referenceFactories);
+        super(componentId,
+              instanceFactoryProvider,
+              scopeContainer,
+              groupId,
+              initLevel,
+              maxIdleTime,
+              maxAge,
+              referenceFactories);
         this.proxyService = proxyService;
         this.propertyFactories = propertyFactories;
     }
@@ -91,5 +99,5 @@ public class JavaComponent<T> extends PojoComponent<T> {
     public <B, R extends CallableReference<B>> R cast(B target) {
         return (R) proxyService.cast(target);
     }
-    
+
 }

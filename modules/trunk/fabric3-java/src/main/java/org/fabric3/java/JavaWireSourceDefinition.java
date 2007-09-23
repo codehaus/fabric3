@@ -16,34 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.implementation.java;
+package org.fabric3.java;
 
-import javax.xml.namespace.QName;
-
-import org.osoa.sca.Constants;
-
-import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.scdl.Implementation;
+import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 
 /**
- * @version $$Rev$$ $$Date$$
+ * Models a Java physical wire source definition.
+ *
+ * @version $Revision$ $Date$
  */
-public class JavaImplementation extends Implementation<PojoComponentType> {
-    private String implementationClass;
-    public static final QName IMPLEMENTATION_JAVA = new QName(Constants.SCA_NS, "implementation.java");
+public class JavaWireSourceDefinition extends PhysicalWireSourceDefinition {
 
-    public JavaImplementation() {
-    }
-
-    public QName getType() {
-        return IMPLEMENTATION_JAVA;
-    }
-
-    public String getImplementationClass() {
-        return implementationClass;
-    }
-
-    public void setImplementationClass(String implementationClass) {
-        this.implementationClass = implementationClass;
-    }
 }

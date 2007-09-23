@@ -6,35 +6,44 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- *
+ * 
  *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License.
+ * under the License.    
  */
-package org.fabric3.fabric.implementation.java;
+package org.fabric3.java;
 
-import junit.framework.TestCase;
-import org.easymock.EasyMock;
-import org.fabric3.spi.generator.GeneratorRegistry;
+import javax.xml.namespace.QName;
+
+import org.osoa.sca.Constants;
+
+import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.scdl.Implementation;
 
 /**
- * @version $Rev$ $Date$
+ * @version $$Rev$$ $$Date$$
  */
-public class JavaPhysicalComponentGeneratorRegistrationTestCase extends TestCase {
+public class JavaImplementation extends Implementation<PojoComponentType> {
+    private String implementationClass;
+    public static final QName IMPLEMENTATION_JAVA = new QName(Constants.SCA_NS, "implementation.java");
 
-    @SuppressWarnings({"unchecked"})
-    public void testRegistration() throws Exception {
-        GeneratorRegistry registry = EasyMock.createMock(GeneratorRegistry.class);
-        registry.register(EasyMock.isA(Class.class),
-            EasyMock.isA(JavaComponentGenerator.class));
-        EasyMock.replay(registry);
-        new JavaComponentGenerator(registry, null, null);
-        EasyMock.verify(registry);
+    public JavaImplementation() {
     }
 
+    public QName getType() {
+        return IMPLEMENTATION_JAVA;
+    }
+
+    public String getImplementationClass() {
+        return implementationClass;
+    }
+
+    public void setImplementationClass(String implementationClass) {
+        this.implementationClass = implementationClass;
+    }
 }

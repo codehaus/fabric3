@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.implementation.java;
+package org.fabric3.java;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -62,17 +62,17 @@ public class JavaImplementationLoader implements StAXElementLoader<JavaImplement
 
     public JavaImplementation load(XMLStreamReader reader, LoaderContext loaderContext)
             throws XMLStreamException, LoaderException {
-        
+
         assert JavaImplementation.IMPLEMENTATION_JAVA.equals(reader.getName());
-        
+
         JavaImplementation implementation = new JavaImplementation();
         String implClass = reader.getAttributeValue(null, "class");
-        
+
         policyHelper.loadPolicySetsAndIntents(implementation, reader);
         LoaderUtil.skipToEndElement(reader);
 
         implementation.setImplementationClass(implClass);
-        componentTypeLoader.load(implementation,  loaderContext);
+        componentTypeLoader.load(implementation, loaderContext);
         return implementation;
     }
 

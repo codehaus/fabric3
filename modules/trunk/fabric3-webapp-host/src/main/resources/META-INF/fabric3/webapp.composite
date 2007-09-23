@@ -73,7 +73,7 @@
     <include name="org.fabric3.launcher.SystemImplementation" scdlResource="org/fabric3/fabric/systemImplementation.composite"/>
 
     <!-- Java implementation type -->
-    <include name="org.fabric3.launcher.JavaImplementation" scdlResource="org/fabric3/fabric/javaImplementation.composite"/>
+    <include name="org.fabric3.launcher.JavaImplementation" scdlResource="org/fabric3/java/javaImplementation.composite"/>
 
     <!-- include deployment configuration -->
     <include name="org.fabric3.fabric.Deployment" scdlResource="org/fabric3/fabric/deployment.composite"/>

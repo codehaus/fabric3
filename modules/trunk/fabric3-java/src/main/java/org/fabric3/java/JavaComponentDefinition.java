@@ -16,16 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.implementation.java;
+package org.fabric3.java;
 
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
+import org.fabric3.pojo.implementation.PojoComponentDefinition;
 
 /**
- * Models a Java physical wire source definition.
- * 
- * @version $Revision$ $Date: 2007-02-28 06:29:37 +0000 (Wed, 28 Feb
- *          2007) $
+ * Represents the physical component definition for a Java implementation.
+ *
+ * @version $Rev$ $Date$
  */
-public class JavaWireSourceDefinition extends PhysicalWireSourceDefinition {
-
+public class JavaComponentDefinition extends PojoComponentDefinition {
 }
