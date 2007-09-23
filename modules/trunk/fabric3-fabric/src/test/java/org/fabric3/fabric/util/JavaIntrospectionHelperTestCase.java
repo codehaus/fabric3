@@ -25,6 +25,9 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.fabric3.pojo.processor.JavaIntrospectionHelper;
+
+@Deprecated
 public class JavaIntrospectionHelperTestCase extends TestCase {
 
     public JavaIntrospectionHelperTestCase() {

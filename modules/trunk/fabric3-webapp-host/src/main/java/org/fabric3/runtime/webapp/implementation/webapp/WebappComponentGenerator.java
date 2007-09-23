@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.fabric3.fabric.util.JavaIntrospectionHelper;
+import org.fabric3.pojo.processor.JavaIntrospectionHelper;
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Property;

@@ -26,7 +26,7 @@ import org.osoa.sca.RequestContext;
 import org.osoa.sca.annotations.Context;
 
 import org.fabric3.fabric.injection.RequestContextObjectFactory;
-import org.fabric3.fabric.util.JavaIntrospectionHelper;
+import org.fabric3.pojo.processor.JavaIntrospectionHelper;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.scdl.Resource;

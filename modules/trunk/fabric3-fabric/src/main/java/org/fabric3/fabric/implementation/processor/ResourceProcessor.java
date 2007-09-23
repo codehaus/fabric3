@@ -29,7 +29,7 @@ import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.scdl.Resource;
 import org.fabric3.pojo.processor.ProcessingException;
 
-import static org.fabric3.fabric.util.JavaIntrospectionHelper.toPropertyName;
+import static org.fabric3.pojo.processor.JavaIntrospectionHelper.toPropertyName;
 
 /**
  * Processes an {@link @Resource} annotation, updating the component type with corresponding {@link

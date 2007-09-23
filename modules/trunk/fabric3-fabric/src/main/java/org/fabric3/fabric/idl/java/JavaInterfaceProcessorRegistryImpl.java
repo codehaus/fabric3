@@ -29,7 +29,7 @@ import org.osoa.sca.annotations.EndsConversation;
 import org.osoa.sca.annotations.OneWay;
 import org.osoa.sca.annotations.Remotable;
 
-import static org.fabric3.fabric.util.JavaIntrospectionHelper.getBaseName;
+import static org.fabric3.pojo.processor.JavaIntrospectionHelper.getBaseName;
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.Operation;
 import static org.fabric3.scdl.Operation.CONVERSATION_END;

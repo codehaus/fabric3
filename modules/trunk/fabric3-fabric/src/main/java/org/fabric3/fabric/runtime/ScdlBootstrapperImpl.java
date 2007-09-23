@@ -106,7 +106,7 @@ import org.fabric3.fabric.services.instancefactory.GenerationHelperImpl;
 import org.fabric3.fabric.services.instancefactory.ReflectiveInstanceFactoryBuilder;
 import org.fabric3.fabric.services.routing.RuntimeRoutingService;
 import org.fabric3.fabric.services.xstream.XStreamFactoryImpl;
-import org.fabric3.fabric.util.JavaIntrospectionHelper;
+import org.fabric3.pojo.processor.JavaIntrospectionHelper;
 import org.fabric3.host.monitor.FormatterRegistry;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.host.runtime.Fabric3Runtime;

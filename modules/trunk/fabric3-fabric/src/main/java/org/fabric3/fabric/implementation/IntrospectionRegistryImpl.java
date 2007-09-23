@@ -32,8 +32,8 @@ import org.fabric3.pojo.processor.ImplementationProcessor;
 import org.fabric3.pojo.processor.IntrospectionRegistry;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
+import org.fabric3.pojo.processor.JavaIntrospectionHelper;
 
-import org.fabric3.fabric.util.JavaIntrospectionHelper;
 import org.fabric3.host.monitor.MonitorFactory;
 
 /**

@@ -30,7 +30,7 @@ import static org.easymock.EasyMock.isA;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
-import org.fabric3.fabric.util.JavaIntrospectionHelper;
+import org.fabric3.pojo.processor.JavaIntrospectionHelper;
 import org.fabric3.spi.idl.InvalidServiceContractException;
 import org.fabric3.spi.idl.java.JavaInterfaceProcessor;
 import org.fabric3.spi.idl.java.JavaServiceContract;

@@ -14,7 +14,7 @@ import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.LOADER_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_NAME;
-import org.fabric3.fabric.util.JavaIntrospectionHelper;
+import org.fabric3.pojo.processor.JavaIntrospectionHelper;
 import org.fabric3.host.runtime.StartException;
 import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.scdl.Composite;

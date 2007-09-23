@@ -31,7 +31,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Resource;
 import org.fabric3.fabric.idl.java.IllegalCallbackException;
-import static org.fabric3.fabric.util.JavaIntrospectionHelper.getBaseName;
+import static org.fabric3.pojo.processor.JavaIntrospectionHelper.getBaseName;
 import org.fabric3.pojo.processor.DuplicatePropertyException;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.processor.ProcessingException;

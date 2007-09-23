@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.util;
+package org.fabric3.pojo.processor;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -32,6 +32,7 @@ import java.util.Set;
  *
  * @version $Rev$ $Date$
  */
+@Deprecated
 public final class JavaIntrospectionHelper {
 
     private static final Class[] EMPTY_CLASS_ARRY = new Class[0];

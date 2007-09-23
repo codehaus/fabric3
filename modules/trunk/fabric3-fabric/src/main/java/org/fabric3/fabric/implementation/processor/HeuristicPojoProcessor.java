@@ -36,11 +36,11 @@ import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Remotable;
 import org.osoa.sca.annotations.Service;
 
-import static org.fabric3.fabric.util.JavaIntrospectionHelper.getAllInterfaces;
-import static org.fabric3.fabric.util.JavaIntrospectionHelper.getAllPublicAndProtectedFields;
-import static org.fabric3.fabric.util.JavaIntrospectionHelper.getAllUniquePublicProtectedMethods;
-import static org.fabric3.fabric.util.JavaIntrospectionHelper.getBaseName;
-import static org.fabric3.fabric.util.JavaIntrospectionHelper.toPropertyName;
+import static org.fabric3.pojo.processor.JavaIntrospectionHelper.getAllInterfaces;
+import static org.fabric3.pojo.processor.JavaIntrospectionHelper.getAllPublicAndProtectedFields;
+import static org.fabric3.pojo.processor.JavaIntrospectionHelper.getAllUniquePublicProtectedMethods;
+import static org.fabric3.pojo.processor.JavaIntrospectionHelper.getBaseName;
+import static org.fabric3.pojo.processor.JavaIntrospectionHelper.toPropertyName;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.processor.ProcessingException;

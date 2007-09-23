@@ -23,7 +23,7 @@ import java.net.URL;
 import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.util.JavaIntrospectionHelper;
+import org.fabric3.pojo.processor.JavaIntrospectionHelper;
 import org.fabric3.pojo.processor.IntrospectionRegistry;
 import org.fabric3.pojo.processor.Introspector;
 import org.fabric3.pojo.scdl.PojoComponentType;

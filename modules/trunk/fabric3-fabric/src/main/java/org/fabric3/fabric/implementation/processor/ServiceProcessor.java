@@ -26,7 +26,7 @@ import org.osoa.sca.annotations.Callback;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Remotable;
 
-import static org.fabric3.fabric.util.JavaIntrospectionHelper.getAllInterfaces;
+import static org.fabric3.pojo.processor.JavaIntrospectionHelper.getAllInterfaces;
 import org.fabric3.spi.idl.InvalidServiceContractException;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.processor.ProcessingException;
