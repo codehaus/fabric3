@@ -18,21 +18,25 @@
  */
 package org.fabric3.fabric.implementation.java;
 
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.PolicyHelper;
+import org.fabric3.spi.loader.StAXElementLoader;
 
-public class JavaImplementationLoader extends LoaderExtension<JavaImplementation> {
+@EagerInit
+public class JavaImplementationLoader implements StAXElementLoader<JavaImplementation> {
 
+    private final LoaderRegistry registry;
     private final JavaComponentTypeLoader componentTypeLoader;
     private final PolicyHelper policyHelper;
 
@@ -40,14 +44,20 @@ public class JavaImplementationLoader extends LoaderExtension<JavaImplementation
     public JavaImplementationLoader(@Reference LoaderRegistry registry,
                                     @Reference JavaComponentTypeLoader componentTypeLoader,
                                     @Reference PolicyHelper policyHelper) {
-        super(registry);
+        this.registry = registry;
         this.componentTypeLoader = componentTypeLoader;
         this.policyHelper = policyHelper;
     }
 
-    @Override
-    public QName getXMLType() {
-        return JavaImplementation.IMPLEMENTATION_JAVA;
+
+    @Init
+    public void init() {
+        registry.registerLoader(JavaImplementation.IMPLEMENTATION_JAVA, this);
+    }
+
+    @Destroy
+    public void destroy() {
+        registry.unregisterLoader(JavaImplementation.IMPLEMENTATION_JAVA);
     }
 
     public JavaImplementation load(XMLStreamReader reader, LoaderContext loaderContext)
