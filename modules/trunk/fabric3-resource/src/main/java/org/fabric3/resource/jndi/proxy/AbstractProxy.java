@@ -18,7 +18,15 @@
  */
 package org.fabric3.resource.jndi.proxy;
 
+import java.util.Properties;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Property;
 
 /**
  *
@@ -27,26 +35,63 @@ import org.osoa.sca.annotations.EagerInit;
 @EagerInit
 public class AbstractProxy<D> {
     
+    private static final String COMP_ENV = "java:comp/env/";
+    
     private D delegate;
     private String jndiName;
     private String providerUrl;
     private String initialContextFactory;
     private boolean env;
     
+    /**
+     * Gets a reference to the delegate that is proxied.
+     * 
+     * @return Delegate that is proxied.
+     */
     protected D getDelegate() {
         return delegate;
     }
     
     /**
+     * @throws NamingException 
      * 
      */
-    public void init() {
+    @Init
+    @SuppressWarnings("unchecked")
+    public void init() throws NamingException {
+        
+        Context ctx = null;
+        
+        try {
+            
+            Properties prop = new Properties();
+            if(providerUrl != null) {
+                prop.put(Context.PROVIDER_URL, providerUrl);
+            }
+            if(initialContextFactory != null) {
+                prop.put(Context.INITIAL_CONTEXT_FACTORY, initialContextFactory);
+            }
+            
+            if(env) {
+                jndiName = COMP_ENV + jndiName;
+            }
+            
+            ctx = new InitialContext(prop);
+            
+            delegate = (D) ctx.lookup(jndiName);
+            
+        } finally {
+            if(ctx != null) {
+                ctx.close();
+            }
+        }
         
     }
 
     /**
      * @param jndiName the jndiName to set
      */
+    @Property(required = true)
     public void setJndiName(String jndiName) {
         this.jndiName = jndiName;
     }
@@ -54,6 +99,7 @@ public class AbstractProxy<D> {
     /**
      * @param providerUrl the providerUrl to set
      */
+    @Property
     public void setProviderUrl(String providerUrl) {
         this.providerUrl = providerUrl;
     }
@@ -61,6 +107,7 @@ public class AbstractProxy<D> {
     /**
      * @param initialContextFactory the initialContextFactory to set
      */
+    @Property
     public void setInitialContextFactory(String initialContextFactory) {
         this.initialContextFactory = initialContextFactory;
     }
@@ -68,6 +115,7 @@ public class AbstractProxy<D> {
     /**
      * @param env the env to set
      */
+    @Property
     public void setEnv(boolean env) {
         this.env = env;
     }

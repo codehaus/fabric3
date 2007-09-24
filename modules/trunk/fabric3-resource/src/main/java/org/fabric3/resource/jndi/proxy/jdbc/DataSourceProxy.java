@@ -27,6 +27,7 @@ import javax.sql.DataSource;
 import org.fabric3.resource.jndi.proxy.AbstractProxy;
 
 /**
+ * Proxy class for a JNDI-based datasource.
  * 
  * @version $Revision$ $Date$
  */
@@ -36,48 +37,42 @@ public class DataSourceProxy extends AbstractProxy<DataSource> implements DataSo
      * @see javax.sql.DataSource#getConnection()
      */
     public Connection getConnection() throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+        return getDelegate().getConnection();
     }
 
     /**
      * @see javax.sql.DataSource#getConnection(java.lang.String, java.lang.String)
      */
-    public Connection getConnection(String arg0, String arg1) throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+    public Connection getConnection(String userName, String password) throws SQLException {
+        return getDelegate().getConnection(userName, password);
     }
 
     /**
      * @see javax.sql.DataSource#getLogWriter()
      */
     public PrintWriter getLogWriter() throws SQLException {
-        // TODO Auto-generated method stub
-        return null;
+        return getDelegate().getLogWriter();
     }
 
     /**
      * @see javax.sql.DataSource#getLoginTimeout()
      */
     public int getLoginTimeout() throws SQLException {
-        // TODO Auto-generated method stub
-        return 0;
+        return getDelegate().getLoginTimeout();
     }
 
     /**
      * @see javax.sql.DataSource#setLogWriter(java.io.PrintWriter)
      */
-    public void setLogWriter(PrintWriter arg0) throws SQLException {
-        // TODO Auto-generated method stub
-
+    public void setLogWriter(PrintWriter writer) throws SQLException {
+        getDelegate().setLogWriter(writer);
     }
 
     /**
      * @see javax.sql.DataSource#setLoginTimeout(int)
      */
-    public void setLoginTimeout(int arg0) throws SQLException {
-        // TODO Auto-generated method stub
-
+    public void setLoginTimeout(int timeout) throws SQLException {
+        getDelegate().setLoginTimeout(timeout);
     }
 
 }
