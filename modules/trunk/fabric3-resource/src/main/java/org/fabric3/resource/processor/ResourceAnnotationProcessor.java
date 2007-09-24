@@ -18,13 +18,15 @@
  */
 package org.fabric3.resource.processor;
 
-import java.lang.reflect.Constructor;
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.pojo.scdl.Resource;
 import org.fabric3.spi.loader.LoaderContext;
 
 /**
@@ -35,23 +37,13 @@ import org.fabric3.spi.loader.LoaderContext;
 public class ResourceAnnotationProcessor extends ImplementationProcessorExtension {
 
     /**
-     * @see org.fabric3.pojo.processor.ImplementationProcessorExtension#visitConstructor(java.lang.reflect.Constructor,
-     *      org.fabric3.pojo.scdl.PojoComponentType,
-     *      org.fabric3.spi.loader.LoaderContext)
-     */
-    @Override
-    public <T> void visitConstructor(Constructor<T> constructor, PojoComponentType type, LoaderContext context) throws ProcessingException {
-        super.visitConstructor(constructor, type, context);
-    }
-
-    /**
      * @see org.fabric3.pojo.processor.ImplementationProcessorExtension#visitField(java.lang.reflect.Field,
      *      org.fabric3.pojo.scdl.PojoComponentType,
      *      org.fabric3.spi.loader.LoaderContext)
      */
     @Override
     public void visitField(Field field, PojoComponentType type, LoaderContext context) throws ProcessingException {
-        super.visitField(field, type, context);
+        processResource(field, type);
     }
 
     /**
@@ -61,7 +53,59 @@ public class ResourceAnnotationProcessor extends ImplementationProcessorExtensio
      */
     @Override
     public void visitMethod(Method method, PojoComponentType type, LoaderContext context) throws ProcessingException {
-        super.visitMethod(method, type, context);
+        processResource(method, type);
+    }
+    
+    /*
+     * Generic method for processing resources.
+     */
+    private void processResource(AccessibleObject member, PojoComponentType type) throws ProcessingException {
+        
+        javax.annotation.Resource jsr250Annotation = member.getAnnotation(javax.annotation.Resource.class);
+        org.fabric3.api.annotation.Resource f3Annotation = member.getAnnotation(org.fabric3.api.annotation.Resource.class);
+        
+        if(jsr250Annotation == null && f3Annotation == null) {
+            return;
+        }
+        
+        if(jsr250Annotation != null && f3Annotation != null) {
+            throw new ProcessingException("Either JSR 250 or F3 annotation is allowed");
+        }
+        
+        String name = null;
+        String mappedName = null;
+        Class<?> resourceType = null;
+        
+        if(jsr250Annotation != null) {
+            
+            name = jsr250Annotation.name();
+            mappedName = jsr250Annotation.mappedName();
+            resourceType = jsr250Annotation.annotationType();
+            
+        } else {
+            
+            name = f3Annotation.name();
+            mappedName = f3Annotation.mappedName();
+            resourceType = f3Annotation.annotationType();
+            
+        }
+        
+        Resource<?> resource = createResource(name, resourceType, (Member) member);
+        resource.setMappedName(mappedName);
+
+        if (type.getResources().get(name) != null) {
+            throw new ProcessingException("Duplicate resource:" + name);
+        }
+        
+        type.add(resource);
+        
+    }
+    
+    /*
+     * Creates resource object.
+     */
+    private <T> Resource<T> createResource(String name, Class<T> type, Member member) {
+        return new Resource<T>(name, type, member);
     }
 
 }
