@@ -20,14 +20,14 @@
            name="PolicyTestComposite">
     
     <!-- Unit test -->
-    <component name="GreeterTest">
-        <f3:junit class="org.fabric3.fabric.policy.GreeterTest"/>
-        <reference name="greeter" target="Greeter"/>
+    <component name="TransactionalServiceTest">
+        <f3:junit class="org.fabric3.fabric.policy.TransactionalServiceTest"/>
+        <reference name="transactionalService" target="TransactionalService"/>
     </component>
 
-    <!-- Greeter Impl -->
-    <component name="Greeter">
-        <implementation.java class="org.fabric3.fabric.policy.GreeterImpl" requires="f3:managedTransaction"/>
+    <!-- Transactional Service Impl -->
+    <component name="TransactionalService">
+        <implementation.java class="org.fabric3.fabric.policy.TransactionalServiceImpl" requires="f3:managedTransaction"/>
     </component>
     
 </composite>

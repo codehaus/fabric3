@@ -23,14 +23,5 @@
            
     <!-- Include system SCDL -->
     <include name="org.fabric3.fabric.SystemImplementation" scdlResource="META-INF/fabric3/embeddedMaven.composite"/>
-           
-    <!-- Include transaction loader -->
-    <include name="org.fabric3.tx.txLoader" scdlResource="META-INF/tx-loader.composite"/>
-    
-    <!-- JOTM Transaction manager -->
-    <component name="transactionManager">
-        <system:implementation.system class="org.fabric3.tx.jotm.JotmTransactionManager"/>
-        <!-- system:implementation.system class="org.fabric3.fabric.policy.DummyTransactionManager"/ -->
-    </component>
     
 </composite>

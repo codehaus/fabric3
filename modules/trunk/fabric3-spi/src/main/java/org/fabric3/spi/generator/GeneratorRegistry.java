@@ -48,7 +48,7 @@ public interface GeneratorRegistry {
     <T extends Implementation<?>> void register(Class<T> clazz, ComponentGenerator<LogicalComponent<T>> generator);
 
     /**
-     * Registers a component generator
+     * Registers a binding generator
      *
      * @param clazz     the binding type type the generator handles
      * @param generator the generator to register

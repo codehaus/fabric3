@@ -22,8 +22,8 @@ package org.fabric3.fabric.policy;
 /**
  * @version $Revision$ $Date$
  */
-public interface Greeter {
-    
-    String greet(String name);
+public interface TransactionalService {
+
+    boolean isInTransaction() throws Exception;
 
 }

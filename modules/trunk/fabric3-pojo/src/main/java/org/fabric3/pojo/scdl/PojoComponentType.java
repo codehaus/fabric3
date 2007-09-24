@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.fabric3.pojo.instancefactory.Signature;
 import org.fabric3.scdl.AbstractComponentType;
+import org.fabric3.spi.idl.java.JavaServiceContract;
 
 /**
  * A component type specialization for POJO implementations
@@ -120,7 +121,18 @@ public class PojoComponentType extends AbstractComponentType<JavaMappedService, 
     }
 
     public void add(Resource resource) {
+        
         resources.put(resource.getName(), resource);
+        
+        JavaServiceContract serviceContract = new JavaServiceContract(resource.getType());
+        MemberSite memberSite = new MemberSite(resource.getMember());
+        
+        JavaMappedReference mappedReference = new JavaMappedReference(resource.getName(), serviceContract, memberSite);
+        mappedReference.setRequired(true);
+        
+        super.add(mappedReference);
+        
+        // TODO Figure out how to set the target to the mapped name
     }
 
     public MemberSite getConversationIDMember() {

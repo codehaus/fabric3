@@ -38,6 +38,7 @@ import org.fabric3.fabric.command.InitializeComponentCommand;
 import org.fabric3.fabric.generator.DefaultGeneratorContext;
 import org.fabric3.fabric.services.routing.RoutingException;
 import org.fabric3.fabric.services.routing.RoutingService;
+import org.fabric3.pojo.scdl.Resource;
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.BindingDefinition;
@@ -280,7 +281,6 @@ public abstract class AbstractAssembly implements Assembly {
         // create the LogicalComponent
         URI uri = URI.create(parent.getUri() + "/" + definition.getName());
         URI runtimeId = definition.getRuntimeId();
-        Document key = definition.getKey();
         LogicalComponent<I> component = new LogicalComponent<I>(uri, runtimeId, definition, parent);
 
         I impl = definition.getImplementation();
@@ -443,14 +443,17 @@ public abstract class AbstractAssembly implements Assembly {
      */
     protected void generatePhysicalWires(LogicalComponent<?> component, Map<URI, GeneratorContext> contexts)
             throws GenerationException, ResolutionException {
+        
         URI runtimeId = component.getRuntimeId();
         GeneratorContext context = contexts.get(runtimeId);
+        
         if (context == null) {
             PhysicalChangeSet changeSet = new PhysicalChangeSet();
             CommandSet commandSet = new CommandSet();
             context = new DefaultGeneratorContext(changeSet, commandSet);
             contexts.put(runtimeId, context);
         }
+        
         for (LogicalReference entry : component.getReferences()) {
             if (entry.getBindings().isEmpty()) {
                 for (URI uri : entry.getTargetUris()) {
@@ -473,6 +476,7 @@ public abstract class AbstractAssembly implements Assembly {
             }
 
         }
+        
         // generate changesets for bound service wires
         for (LogicalService service : component.getServices()) {
             List<LogicalBinding<?>> bindings = service.getBindings();
@@ -484,6 +488,7 @@ public abstract class AbstractAssembly implements Assembly {
                 generatorRegistry.generateBoundServiceWire(service, binding, component, context);
             }
         }
+
     }
 
     protected void generateCommandSets(LogicalComponent<?> component,

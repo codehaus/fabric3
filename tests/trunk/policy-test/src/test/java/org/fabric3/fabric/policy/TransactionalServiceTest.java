@@ -25,17 +25,17 @@ import junit.framework.TestCase;
 /**
  * @version $Revision$ $Date$
  */
-public class GreeterTest extends TestCase {
+public class TransactionalServiceTest extends TestCase {
     
-    private Greeter greeter;
+    private TransactionalService transactionalService;
     
     @Reference
-    public void setGreeter(Greeter greeter) {
-        this.greeter = greeter;
+    public void setTransactionalService(TransactionalService transactionalService) {
+        this.transactionalService = transactionalService;
     }
     
-    public void testHello() {
-        greeter.greet("Fred");
+    public void testIsInTransaction() throws Exception {
+        assertTrue(transactionalService.isInTransaction());
     }
 
 }

@@ -71,9 +71,9 @@
     <component name="implementation.Monitor">
         <system:implementation.system class="org.fabric3.fabric.implementation.processor.MonitorProcessor"/>
     </component>
-    <component name="implementation.Resource">
+    <!-- component name="implementation.Resource">
         <system:implementation.system class="org.fabric3.fabric.implementation.processor.ResourceProcessor"/>
-    </component>
+    </component-->
     <component name="implementation.Conversation">
         <system:implementation.system class="org.fabric3.fabric.implementation.processor.ConversationProcessor"/>
     </component>
