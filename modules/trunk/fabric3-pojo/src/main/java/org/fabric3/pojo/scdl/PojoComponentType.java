@@ -124,13 +124,13 @@ public class PojoComponentType extends AbstractComponentType<JavaMappedService, 
         
         resources.put(resource.getName(), resource);
         
-        JavaServiceContract serviceContract = new JavaServiceContract(resource.getType());
+        /*JavaServiceContract serviceContract = new JavaServiceContract(resource.getType());
         MemberSite memberSite = new MemberSite(resource.getMember());
         
         JavaMappedReference mappedReference = new JavaMappedReference(resource.getName(), serviceContract, memberSite);
         mappedReference.setRequired(true);
         
-        super.add(mappedReference);
+        super.add(mappedReference);*/
         
         // TODO Figure out how to set the target to the mapped name
     }
