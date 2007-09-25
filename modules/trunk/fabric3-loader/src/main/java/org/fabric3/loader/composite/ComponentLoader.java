@@ -21,9 +21,10 @@ package org.fabric3.loader.composite;
 import java.net.URI;
 import java.net.URISyntaxException;
 import javax.xml.namespace.QName;
+import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
+import javax.xml.parsers.DocumentBuilder;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
@@ -34,20 +35,19 @@ import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import org.fabric3.scdl.Autowire;
+import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.ComponentReference;
+import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.PropertyValue;
 import org.fabric3.spi.Constants;
 import org.fabric3.spi.loader.InvalidValueException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
-import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.loader.PolicyHelper;
-
-import org.fabric3.scdl.Autowire;
-import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.ComponentReference;
-import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.PropertyValue;
+import org.fabric3.spi.loader.StAXElementLoader;
 
 /**
  * Loads a component definition from an XML-based assembly file
@@ -55,10 +55,18 @@ import org.fabric3.scdl.PropertyValue;
  * @version $Rev$ $Date$
  */
 public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>> {
-    
+
     private static final QName COMPONENT = new QName(SCA_NS, "component");
     private static final QName PROPERTY = new QName(SCA_NS, "property");
     private static final QName REFERENCE = new QName(SCA_NS, "reference");
+    private static final DocumentBuilder documentBuilder;
+    static {
+        try {
+            documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            throw new ExceptionInInitializerError(e);
+        }
+    }
 
     private final LoaderRegistry registry;
     private final StAXElementLoader<PropertyValue> propertyValueLoader;
@@ -71,9 +79,9 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
      * @param referenceLoader
      */
     public ComponentLoader(@Reference LoaderRegistry registry,
-                           @Reference (name = "propertyValue") StAXElementLoader<PropertyValue> propertyValueLoader,
-                           @Reference (name = "reference") StAXElementLoader<ComponentReference> referenceLoader,
-                           @Reference (name = "policyHelper") PolicyHelper policyHelper) {
+                           @Reference(name = "propertyValue")StAXElementLoader<PropertyValue> propertyValueLoader,
+                           @Reference(name = "reference")StAXElementLoader<ComponentReference> referenceLoader,
+                           @Reference(name = "policyHelper")PolicyHelper policyHelper) {
         this.registry = registry;
         this.propertyValueLoader = propertyValueLoader;
         this.referenceLoader = referenceLoader;
@@ -88,10 +96,12 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
     }
 
     /**
-     * @see org.fabric3.spi.loader.StAXElementLoader#load(javax.xml.stream.XMLStreamReader, org.fabric3.spi.loader.LoaderContext)
+     * @see org.fabric3.spi.loader.StAXElementLoader#load(javax.xml.stream.XMLStreamReader,
+     *org.fabric3.spi.loader.LoaderContext)
      */
-    public ComponentDefinition<?> load(XMLStreamReader reader, LoaderContext context) throws XMLStreamException, LoaderException {
-        
+    public ComponentDefinition<?> load(XMLStreamReader reader, LoaderContext context)
+            throws XMLStreamException, LoaderException {
+
         String name = reader.getAttributeValue(null, "name");
         Autowire autowire = Autowire.fromString(reader.getAttributeValue(null, "autowire"));
         URI runtimeId = loadRuntimeId(reader);
@@ -103,7 +113,7 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
         componentDefinition.setRuntimeId(runtimeId);
         componentDefinition.setInitLevel(initLevel);
         componentDefinition.setKey(key);
-        
+
         policyHelper.loadPolicySetsAndIntents(componentDefinition, reader);
 
         Implementation<?> impl = loadImplementation(reader, context);
@@ -130,25 +140,27 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
             }
         }
     }
-    
-    /*
+
+    /**
      * Loads the key when the component is wired to a map based reference.
+     *
+     * @return a Document containing the key value.
      */
     private Document loadKey(XMLStreamReader reader) {
-        
-        try {
-            String key = reader.getAttributeValue(Constants.FABRIC3_NS, "key");
-            if(key != null) {
-                Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-                Element element = document.createElement("key");
-                document.appendChild(element);
-                element.appendChild(document.createTextNode(key));
-                return document;
-            }
+
+        String key = reader.getAttributeValue(Constants.FABRIC3_NS, "key");
+        if (key == null) {
             return null;
-        } catch (ParserConfigurationException e) {
-            throw new AssertionError(e);
         }
+
+        // create a document with a root element to hold the key value
+        Document document = documentBuilder.newDocument();
+        Element element = document.createElement("key");
+        document.appendChild(element);
+
+        // set the text value
+        element.appendChild(document.createTextNode(key));
+        return document;
     }
 
     /*
