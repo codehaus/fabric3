@@ -148,6 +148,14 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         
     }
 
+    /**
+     * @see org.fabric3.spi.generator.GeneratorRegistry#generateResourceWires(
+     *     org.fabric3.spi.model.instance.LogicalComponent, 
+     *     org.fabric3.spi.generator.GeneratorContext)
+     */
+    public void generateResourceWires(LogicalComponent<?> logical, GeneratorContext context) {
+    }
+
     @SuppressWarnings({"unchecked"})
     public <C extends LogicalComponent<?>> void generateBoundServiceWire(LogicalService service,
                                                                          LogicalBinding<?> binding,

@@ -157,6 +157,7 @@ public abstract class AbstractAssembly implements Assembly {
 
     public void include(LogicalComponent<CompositeImplementation> parent, Composite composite)
             throws ActivateException {
+
         // instantiate all the components in the composite and add them to the parent
         String base = parent.getUri().toString();
         Collection<ComponentDefinition<? extends Implementation<?>>> definitions = composite.getComponents().values();
