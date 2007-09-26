@@ -50,18 +50,26 @@ import org.fabric3.spi.loader.UnrecognizedElementException;
 public class LoaderRegistryImpl implements LoaderRegistry {
     private Monitor monitor;
     private final XMLInputFactory xmlFactory;
+    private Map<QName, StAXElementLoader<?>> mappedLoaders;
     private final Map<QName, StAXElementLoader<?>> loaders = new HashMap<QName, StAXElementLoader<?>>();
 
     @Constructor
-    public LoaderRegistryImpl(@Reference MonitorFactory monitorFactory, @Reference XMLInputFactory factory) {
+    public LoaderRegistryImpl(@Reference MonitorFactory monitorFactory,
+                              @Reference XMLInputFactory factory) {
         // JFM FIXME use @Monitor when resources are fixed
         this.monitor = monitorFactory.getMonitor(Monitor.class);
         this.xmlFactory = factory;
     }
 
-    public LoaderRegistryImpl(Monitor monitor, XMLInputFactory factory) {
+    public LoaderRegistryImpl(Monitor monitor,
+                              XMLInputFactory factory) {
         this.monitor = monitor;
         this.xmlFactory = factory;
+    }
+
+    @Reference(required=false)
+    public void setLoaders(Map<QName, StAXElementLoader<?>> mappedLoaders) {
+        this.mappedLoaders = mappedLoaders;
     }
 
     public void registerLoader(QName element, StAXElementLoader<?> loader) {
@@ -82,6 +90,9 @@ public class LoaderRegistryImpl implements LoaderRegistry {
         QName name = reader.getName();
         monitor.elementLoad(name);
         StAXElementLoader<?> loader = loaders.get(name);
+        if (loader == null) {
+            loader = mappedLoaders.get(name);
+        }
         if (loader == null) {
             throw new UnrecognizedElementException(name);
         }

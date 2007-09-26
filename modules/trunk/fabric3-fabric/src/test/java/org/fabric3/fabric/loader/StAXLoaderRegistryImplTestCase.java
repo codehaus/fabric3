@@ -18,6 +18,8 @@
  */
 package org.fabric3.fabric.loader;
 
+import java.util.Collections;
+import java.util.Map;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -118,7 +120,8 @@ public class StAXLoaderRegistryImplTestCase extends TestCase {
         mockMonitor = EasyMock.createMock(LoaderRegistryImpl.Monitor.class);
         XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance("javax.xml.stream.XMLInputFactory", cl);
         registry = new LoaderRegistryImpl(mockMonitor, xmlInputFactory);
-
+        Map<QName, StAXElementLoader<?>> map = Collections.emptyMap();
+        registry.setLoaders(map);
         mockLoader = EasyMock.createMock(StAXElementLoader.class);
         mockReader = EasyMock.createMock(XMLStreamReader.class);
         modelType = new ModelObject() {

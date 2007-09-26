@@ -136,7 +136,15 @@ public abstract class ImplementationProcessorExtension implements Implementation
                 return Object.class;
             } else {
                 ParameterizedType parameterizedType = (ParameterizedType) genericType;
-                return (Class<?>) parameterizedType.getActualTypeArguments()[1];
+                Type type = parameterizedType.getActualTypeArguments()[1];
+                if (type instanceof Class) {
+                    return (Class<?>) type;
+                } else if (type instanceof ParameterizedType) {
+                    ParameterizedType valueType = (ParameterizedType) type;
+                    return (Class<?>) valueType.getRawType();
+                } else {
+                    throw new AssertionError();
+                }
             }
         } else {
             return cls;

@@ -22,6 +22,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.Map;
 
 import org.osoa.sca.annotations.Reference;
 
@@ -85,7 +86,7 @@ public class ReferenceProcessor extends ImplementationProcessorExtension {
         MemberSite memberSite = new MemberSite(method);
         JavaMappedReference reference = new JavaMappedReference(name, contract, memberSite);
         reference.setRequired(required);
-        if (rawType.isArray() || Collection.class.isAssignableFrom(rawType)) {
+        if (rawType.isArray() || Collection.class.isAssignableFrom(rawType) || Map.class.isAssignableFrom(rawType)) {
             if (required) {
                 reference.setMultiplicity(Multiplicity.ONE_N);
             } else {
