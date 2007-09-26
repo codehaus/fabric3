@@ -19,28 +19,27 @@
 package org.fabric3.transform.dom2java;
 
 import java.io.ByteArrayInputStream;
-
+import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.w3c.dom.Node;
-
 import junit.framework.TestCase;
+import org.w3c.dom.Node;
 
 /**
  * Base class for Transform Tests
  */
-public class BaseTransformTest extends TestCase {
-	
-	
-	/**
-	 * @param xml - the xml to built into a dom node
-	 * @return dom Node
-	 */
-	protected Node getNode(final String xml) throws Exception {
-		final Node node = DocumentBuilderFactory.newInstance()
-				.newDocumentBuilder().parse(
-						new ByteArrayInputStream(xml.getBytes()))
-				.getDocumentElement();
-		return node;
-	}
+public abstract class BaseTransformTest extends TestCase {
+
+
+    /**
+     * @param xml - the xml to built into a dom node
+     * @return dom Node
+     */
+    protected Node getNode(final String xml) throws Exception {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setNamespaceAware(true);
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Node node = builder.parse(new ByteArrayInputStream(xml.getBytes())).getDocumentElement();
+        return node;
+    }
 }

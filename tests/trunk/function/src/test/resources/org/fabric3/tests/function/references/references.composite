@@ -31,5 +31,10 @@
         <reference name="field" target="map.one map.two map.three"/>
     </component>
 
+    <component name="QNameMapTest">
+        <f3:junit class="org.fabric3.tests.function.references.QNameMapTest"/>
+        <reference name="field" target="test.test"/>
+    </component>
+
     <include name="MapComposite" scdlResource="org/fabric3/tests/function/references/map.composite"/>
 </composite>

@@ -34,4 +34,9 @@
         <property name="id">map.three</property>
     </component>
 
+    <component xmlns:test="file://./foo" f3:key="test:test" name="test.test">
+        <implementation.java class="org.fabric3.tests.function.common.IdentityServiceImpl"/>
+        <property name="id">test.test</property>
+    </component>
+
 </composite>

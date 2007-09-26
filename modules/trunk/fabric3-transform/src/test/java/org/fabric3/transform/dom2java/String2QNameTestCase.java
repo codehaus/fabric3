@@ -26,7 +26,7 @@ import org.fabric3.spi.transform.TransformationException;
 /**
  * Tests String to QName Transform
  */
-public class  String2QNameTestCase extends BaseTransformTest {
+public class String2QNameTestCase extends BaseTransformTest {
 
 	/**
 	 * Test of converting String to QName
@@ -46,6 +46,25 @@ public class  String2QNameTestCase extends BaseTransformTest {
 		}
 	}
 	
+	/**
+	 * Test of converting String to QName
+	 */
+	public void testQNameTransformWithNamespace() {
+		final String Q_NAME = "<string_to_qname xmlns:foo='http://f3.com/ns/fabric/test'>foo:f3</string_to_qname>";
+		try {
+			final QName qname= getStringToQName().transform(getNode(Q_NAME), null);
+			assertNotNull(qname);
+			assertEquals("{http://f3.com/ns/fabric/test}f3", qname.toString());
+			assertEquals("http://f3.com/ns/fabric/test", qname.getNamespaceURI());
+			assertEquals("f3", qname.getLocalPart());
+			assertEquals("foo", qname.getPrefix());
+		} catch (TransformationException te) {
+			fail("Transform exception should not occur " + te);
+		} catch (Exception e) {
+			fail("Unexpexcted Exception Should not occur " + e);
+		}
+	}
+
 	/**
 	 * Test failure of converting String to QName
 	 */

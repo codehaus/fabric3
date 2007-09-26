@@ -47,10 +47,22 @@ public class String2QName extends AbstractPullTransformer<Node, QName> {
      *      Applies Transformation for QName
      */
     public QName transform(final Node node, final TransformContext context) throws TransformationException {
+        String content = node.getTextContent();
+        // see if the content looks like it might reference a namespace
+        int index = content.indexOf(':');
+        if (index != -1) {
+            String prefix = content.substring(0, index);
+            String uri = node.lookupNamespaceURI(prefix);
+            // a prefix was found that resolved to a namespace - return the associated QName
+            if (uri != null) {
+                String localPart = content.substring(index + 1);
+                return new QName(uri, localPart, prefix);
+            }
+        }
         try {
-            return QName.valueOf(node.getTextContent());
+            return QName.valueOf(content);
         } catch (IllegalArgumentException ie) {
             throw new TransformationException("Unable to transform on QName ", ie);
-		}
+        }
 	}
 }

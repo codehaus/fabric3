@@ -21,7 +21,6 @@ package org.fabric3.loader.composite;
 import java.net.URI;
 import java.net.URISyntaxException;
 import javax.xml.namespace.QName;
-import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.DocumentBuilder;
@@ -29,6 +28,7 @@ import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import javax.xml.XMLConstants;
 
 import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.Reference;
@@ -59,10 +59,13 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
     private static final QName COMPONENT = new QName(SCA_NS, "component");
     private static final QName PROPERTY = new QName(SCA_NS, "property");
     private static final QName REFERENCE = new QName(SCA_NS, "reference");
+
     private static final DocumentBuilder documentBuilder;
     static {
         try {
-            documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setNamespaceAware(true);
+            documentBuilder = factory.newDocumentBuilder();
         } catch (ParserConfigurationException e) {
             throw new ExceptionInInitializerError(e);
         }
@@ -143,6 +146,7 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
 
     /**
      * Loads the key when the component is wired to a map based reference.
+     * @param reader a reader positioned on the element containing the key definition
      *
      * @return a Document containing the key value.
      */
@@ -158,6 +162,16 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
         Element element = document.createElement("key");
         document.appendChild(element);
 
+        // TODO: we should copy all in-context namespaces to the declaration if we can find what they are
+        // in the mean time, see if the value looks like it might contain a prefix
+        int index = key.indexOf(':');
+        if (index != -1) {
+            String prefix = key.substring(0, index);
+            String uri = reader.getNamespaceURI(prefix);
+            if (uri != null) {
+                element.setAttributeNS(XMLConstants.XMLNS_ATTRIBUTE_NS_URI, "xmlns:" + prefix, uri);
+            }
+        }
         // set the text value
         element.appendChild(document.createTextNode(key));
         return document;
