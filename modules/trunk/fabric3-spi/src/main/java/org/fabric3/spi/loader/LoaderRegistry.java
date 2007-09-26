@@ -32,6 +32,7 @@ import javax.xml.namespace.QName;
  *
  * @version $Rev$ $Date$
  */
+@Deprecated
 public interface LoaderRegistry extends Loader {
     /**
      * Register a loader. This operation will typically be called by a loader during its initialization.
