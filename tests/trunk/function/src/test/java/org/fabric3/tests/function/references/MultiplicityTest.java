@@ -36,19 +36,27 @@ public class MultiplicityTest extends TestCase {
     
     private List<IdentityService> listSetter;
     
-    private List<IdentityService> listCdi;
+    private List<IdentityService> listCdi1;
+    
+    private List<IdentityService> listCdi2;
 
     @Reference
     public void setListSetter(List<IdentityService> listSetter) {
         this.listSetter = listSetter;
     }
     
-    public MultiplicityTest(@Reference(name="listCdi") List<IdentityService> listCdi) {
-        this.listCdi = listCdi;
+    public MultiplicityTest(@Reference(name="listCdi1") List<IdentityService> listCdi1,
+                            @Reference(name="listCdi2") List<IdentityService> listCdi2) {
+        this.listCdi1 = listCdi1;
+        this.listCdi2 = listCdi2;
     }
 
-    public void _testListCdi() {
-        checkContent(listCdi);
+    public void testListCdi1() {
+        checkContent(listCdi1);
+    }
+
+    public void testListCdi2() {
+        checkContent(listCdi2);
     }
 
     public void testListSetter() {
