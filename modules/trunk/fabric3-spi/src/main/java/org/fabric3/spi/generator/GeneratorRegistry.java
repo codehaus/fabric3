@@ -70,6 +70,14 @@ public interface GeneratorRegistry {
      * @param generator the generator to register
      */
     void register(CommandGenerator generator);
+    
+    /**
+     * Generates the physical wires for the resources in this component.
+     * 
+     * @param logical Logical component.
+     * @param context Generator context.
+     */
+    void generateResourceWires(LogicalComponent<?> logical, GeneratorContext context);
 
     /**
      * Generates a PhysicalComponentDefinition from the logical component. A physical change set for the runtime the

@@ -20,6 +20,7 @@ package org.fabric3.pojo.implementation;
 
 import java.lang.annotation.ElementType;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -44,6 +45,7 @@ import org.fabric3.spi.component.Component;
 import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.model.instance.ValueSource;
+import org.fabric3.spi.model.instance.ValueSource.ValueSourceType;
 import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.model.type.XSDSimpleType;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
@@ -133,6 +135,12 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
         return (PullTransformer<Node,T>) transformerRegistry.getTransformer(source, target);
     }
 
+    /**
+     * Creates object factories for references of multiplicty greater than one.
+     * 
+     * @param providerDefinition Instance factory provider definition.
+     * @return Map of reference names to multiplicty object factories.
+     */
     protected Map<String, MultiplicityObjectFactory<?>> createMultiplicityReferenceFactories(InstanceFactoryDefinition providerDefinition) {
 
         Map<String, MultiplicityObjectFactory<?>> referenceFactories = new HashMap<String, MultiplicityObjectFactory<?>>();
@@ -153,19 +161,43 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
                 referenceType = memberSite.getType();
             }
             
-            if ("java.util.Map".equals(referenceType)) {
-                referenceFactories.put(injectionSiteMapping.getSource().getName(), new MapMultiplicityObjectFactory());
-            } else if ("java.util.Set".equals(referenceType)) {
-                referenceFactories.put(injectionSiteMapping.getSource().getName(), new SetMultiplicityObjectFactory());
-            } else if ("java.util.List".equals(referenceType)) {
-                referenceFactories.put(injectionSiteMapping.getSource().getName(), new ListMultiplicityObjectFactory());
-            } else if ("java.util.Collection".equals(referenceType)) {
-                referenceFactories.put(injectionSiteMapping.getSource().getName(), new ListMultiplicityObjectFactory());
+            addMultiplicityFactory(referenceType, injectionSiteMapping.getSource(), referenceFactories);
+            
+        }
+        
+        List<String> ctrArguments = providerDefinition.getConstructorArguments();
+        List<ValueSource> cdiSources = providerDefinition.getCdiSources();
+        
+        for (int i = 0;i < cdiSources.size();i++) {
+            
+            ValueSource cdiSource = cdiSources.get(i);
+            
+            if(cdiSource.getValueType() != ValueSourceType.REFERENCE) {
+                continue;
             }
+            
+            String referenceType = ctrArguments.get(i);
+            addMultiplicityFactory(referenceType, cdiSource, referenceFactories);
             
         }
         
         return referenceFactories;
         
+    }
+    
+    /*
+     * Adds the multiplicty reference factories.
+     */
+    private void addMultiplicityFactory(String referenceType, ValueSource valueSource, Map<String, MultiplicityObjectFactory<?>> referenceFactories) {
+
+        if ("java.util.Map".equals(referenceType)) {
+            referenceFactories.put(valueSource.getName(), new MapMultiplicityObjectFactory());
+        } else if ("java.util.Set".equals(referenceType)) {
+            referenceFactories.put(valueSource.getName(), new SetMultiplicityObjectFactory());
+        } else if ("java.util.List".equals(referenceType)) {
+            referenceFactories.put(valueSource.getName(), new ListMultiplicityObjectFactory());
+        } else if ("java.util.Collection".equals(referenceType)) {
+            referenceFactories.put(valueSource.getName(), new ListMultiplicityObjectFactory());
+        }
     }
 }

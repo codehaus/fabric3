@@ -35,10 +35,20 @@ public class MultiplicityTest extends TestCase {
     public List<IdentityService> listField;
     
     private List<IdentityService> listSetter;
+    
+    private List<IdentityService> listCdi;
 
     @Reference
     public void setListSetter(List<IdentityService> listSetter) {
         this.listSetter = listSetter;
+    }
+    
+    public MultiplicityTest(@Reference(name="listCdi") List<IdentityService> listCdi) {
+        this.listCdi = listCdi;
+    }
+
+    public void _testListCdi() {
+        checkContent(listCdi);
     }
 
     public void testListSetter() {
