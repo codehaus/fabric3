@@ -28,6 +28,7 @@ import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Property;
 import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.ResourceDefinition;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.definitions.Intent;
@@ -65,7 +66,7 @@ public class WebappComponentGenerator implements ComponentGenerator<LogicalCompo
                                                 Set<Intent> intentsToBeProvided, 
                                                 GeneratorContext context) {
         ComponentDefinition<WebappImplementation> definition = component.getDefinition();
-        AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property<?>> componentType =
+        AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property<?>, ResourceDefinition> componentType =
                 definition.getImplementation().getComponentType();
 
         WebappComponentDefinition pDefinition = new WebappComponentDefinition();

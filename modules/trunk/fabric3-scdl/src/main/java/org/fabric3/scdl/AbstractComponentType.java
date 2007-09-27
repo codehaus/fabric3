@@ -35,7 +35,10 @@ import java.util.Map;
  *
  * @version $Rev$ $Date$
  */
-public abstract class AbstractComponentType<S extends ServiceDefinition, R extends ReferenceDefinition, P extends Property<?>>
+public abstract class AbstractComponentType<S extends ServiceDefinition, 
+                                            R extends ReferenceDefinition, 
+                                            P extends Property<?>,
+                                            RD extends ResourceDefinition>
         extends ModelObject {
     private Scope<?> implementationScope;
     private int initLevel;
@@ -44,6 +47,7 @@ public abstract class AbstractComponentType<S extends ServiceDefinition, R exten
     private final Map<String, S> services = new HashMap<String, S>();
     private final Map<String, R> references = new HashMap<String, R>();
     private final Map<String, P> properties = new HashMap<String, P>();
+    private final Map<String, RD> resources = new HashMap<String, RD>();
 
     protected AbstractComponentType() {
     }
@@ -181,5 +185,24 @@ public abstract class AbstractComponentType<S extends ServiceDefinition, R exten
      */
     public void add(P property) {
         properties.put(property.getName(), property);
+    }
+
+    /**
+     * Returns a live Map of resoures that can be used to configure the implementation.
+     *
+     * @return a live Map of resources that can be used to configure the implementation
+     */
+    public Map<String, RD> getResources() {
+        return resources;
+    }
+
+    /**
+     * Add a resource that can be used to configure the implementation. Any existing resource with the same name is
+     * replaced.
+     *
+     * @param resource a resource that can be used to configure the implementation
+     */
+    public void add(RD resource) {
+        resources.put(resource.getName(), resource);
     }
 }

@@ -154,7 +154,7 @@ public abstract class ArchiveContributionProcessor extends ContributionProcessor
             } else {
                 implementation.addResourceDescription(description);
                 // mark references and services as well;
-                AbstractComponentType<?, ?, ?> type = implementation.getComponentType();
+                AbstractComponentType<?, ?, ?, ?> type = implementation.getComponentType();
                 for (ServiceDefinition service : type.getServices().values()) {
                     service.addResourceDescription(description);
                 }

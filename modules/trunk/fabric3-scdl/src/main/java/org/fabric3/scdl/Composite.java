@@ -32,7 +32,7 @@ import javax.xml.namespace.QName;
  *
  * @version $Rev$ $Date$
  */
-public class Composite extends AbstractComponentType<CompositeService, CompositeReference, Property<?>> implements PolicyAware {
+public class Composite extends AbstractComponentType<CompositeService, CompositeReference, Property<?>, ResourceDefinition> implements PolicyAware {
 
     private final QName name;
     private URI contributionUri;

@@ -327,7 +327,7 @@ public abstract class AbstractAssembly implements Assembly {
 
         } else {
             // this is an atomic component so create and bind its services and references
-            AbstractComponentType<?, ?, ?> componentType = impl.getComponentType();
+            AbstractComponentType<?, ?, ?, ?> componentType = impl.getComponentType();
             for (ServiceDefinition service : componentType.getServices().values()) {
                 URI serviceUri = uri.resolve('#' + service.getName());
                 LogicalService logicalService = new LogicalService(serviceUri, service, component);

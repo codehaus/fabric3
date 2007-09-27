@@ -210,7 +210,7 @@ public class PromotionNormalizerImplTestCase extends TestCase {
         return component;
     }
 
-    private class MockImplementation extends Implementation<AbstractComponentType<?, ?, ?>> {
+    private class MockImplementation extends Implementation<AbstractComponentType<?, ?, ?, ?>> {
         public QName getType() {
             throw new UnsupportedOperationException();
         }

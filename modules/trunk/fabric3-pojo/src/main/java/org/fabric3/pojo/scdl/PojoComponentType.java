@@ -30,12 +30,14 @@ import org.fabric3.spi.idl.java.JavaServiceContract;
  *
  * @version $$Rev$$ $$Date$$
  */
-public class PojoComponentType extends AbstractComponentType<JavaMappedService, JavaMappedReference, JavaMappedProperty<?>> {
+public class PojoComponentType extends AbstractComponentType<JavaMappedService, 
+                                                             JavaMappedReference,
+                                                             JavaMappedProperty<?>,
+                                                             JavaMappedResource<?>> {
     private String implClass;
     private ConstructorDefinition<?> constructorDefinition;
     private Signature initMethod;
     private Signature destroyMethod;
-    private final Map<String, JavaMappedResource> resources = new HashMap<String, JavaMappedResource>();
     private MemberSite conversationIDMember;
 
     /**
@@ -114,25 +116,6 @@ public class PojoComponentType extends AbstractComponentType<JavaMappedService, 
      */
     public void setDestroyMethod(Signature destroyMethod) {
         this.destroyMethod = destroyMethod;
-    }
-
-    public Map<String, JavaMappedResource> getResources() {
-        return resources;
-    }
-
-    public void add(JavaMappedResource resource) {
-        
-        resources.put(resource.getName(), resource);
-        
-        /*JavaServiceContract serviceContract = new JavaServiceContract(resource.getType());
-        MemberSite memberSite = new MemberSite(resource.getMember());
-        
-        JavaMappedReference mappedReference = new JavaMappedReference(resource.getName(), serviceContract, memberSite);
-        mappedReference.setRequired(true);
-        
-        super.add(mappedReference);*/
-        
-        // TODO Figure out how to set the target to the mapped name
     }
 
     public MemberSite getConversationIDMember() {

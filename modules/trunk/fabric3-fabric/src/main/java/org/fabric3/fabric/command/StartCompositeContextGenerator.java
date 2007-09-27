@@ -75,7 +75,7 @@ public class StartCompositeContextGenerator implements CommandGenerator {
 
     private boolean isComposite(LogicalComponent<?> component) {
         Implementation<?> implementation = component.getDefinition().getImplementation();
-        AbstractComponentType<?, ?, ?> type = implementation.getComponentType();
+        AbstractComponentType<?, ?, ?, ?> type = implementation.getComponentType();
         return Composite.class.isInstance(type);
     }
 }

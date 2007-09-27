@@ -21,7 +21,7 @@ import javax.xml.namespace.QName;
 /**
  * @version $Rev$ $Date$
  */
-public class ComponentType extends AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property<?>> {
+public class ComponentType extends AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property<?>, ResourceDefinition> {
     private QName constrainingType;
 
     /**

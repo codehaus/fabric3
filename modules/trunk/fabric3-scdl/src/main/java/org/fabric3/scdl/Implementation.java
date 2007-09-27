@@ -25,7 +25,7 @@ import javax.xml.namespace.QName;
  *
  * @version $Rev$ $Date$
  */
-public abstract class Implementation<T extends AbstractComponentType<?, ?, ?>> extends AbstractPolicyAware {
+public abstract class Implementation<T extends AbstractComponentType<?, ?, ?, ?>> extends AbstractPolicyAware {
     private T componentType;
 
     protected Implementation() {

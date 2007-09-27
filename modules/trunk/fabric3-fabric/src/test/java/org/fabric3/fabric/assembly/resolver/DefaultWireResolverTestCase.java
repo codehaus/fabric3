@@ -32,6 +32,7 @@ import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Property;
 import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.ResourceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -190,7 +191,7 @@ public class DefaultWireResolverTestCase extends TestCase {
         }
     }
 
-    private class MockComponentType extends AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property<?>> {
+    private class MockComponentType extends AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property<?>, ResourceDefinition> {
 
     }
 
