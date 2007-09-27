@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.model.type;
+package org.fabric3.scdl;
 
 /**
  * Represents a resource definition. Resources are provisioned to runtime nodes.

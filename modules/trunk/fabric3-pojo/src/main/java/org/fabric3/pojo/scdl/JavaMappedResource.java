@@ -20,8 +20,8 @@ package org.fabric3.pojo.scdl;
 
 import java.lang.reflect.Member;
 
+import org.fabric3.scdl.ResourceDefinition;
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.model.type.ResourceDefinition;
 
 /**
  * A resource dependency declared by a Java component implementation
