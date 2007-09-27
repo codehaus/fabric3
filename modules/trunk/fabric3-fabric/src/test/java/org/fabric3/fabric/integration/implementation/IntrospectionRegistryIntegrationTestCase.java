@@ -34,13 +34,14 @@ import org.fabric3.fabric.implementation.processor.ImplementationProcessorServic
 import org.fabric3.fabric.implementation.processor.InitProcessor;
 import org.fabric3.fabric.implementation.processor.PropertyProcessor;
 import org.fabric3.fabric.implementation.processor.ReferenceProcessor;
-import org.fabric3.fabric.implementation.processor.ResourceProcessor;
 import org.fabric3.fabric.implementation.processor.ScopeProcessor;
 import org.fabric3.fabric.monitor.NullMonitorFactory;
 import org.fabric3.pojo.instancefactory.Signature;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import static org.fabric3.scdl.Scope.COMPOSITE;
+
+import org.fabric3.resource.processor.ResourceProcessor;
 import org.fabric3.spi.component.ScopeRegistry;
 
 /**

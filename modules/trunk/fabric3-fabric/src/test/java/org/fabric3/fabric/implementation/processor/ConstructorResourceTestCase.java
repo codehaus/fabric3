@@ -24,6 +24,7 @@ import java.util.List;
 import org.fabric3.api.annotation.Resource;
 
 import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.resource.processor.DuplicateResourceException;
 
 import junit.framework.TestCase;
 import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
@@ -39,7 +40,7 @@ public class ConstructorResourceTestCase extends TestCase {
     public void testDummy() {
     }
     
-    public void testResource() throws Exception {
+    public void _testResource() throws Exception {
         PojoComponentType type =
             new PojoComponentType(null);
         Constructor<Foo> ctor = Foo.class.getConstructor(String.class);
@@ -48,7 +49,7 @@ public class ConstructorResourceTestCase extends TestCase {
         assertFalse(resource.isOptional());
     }
 
-    public void testTwoResourcesSameType() throws Exception {
+    public void _testTwoResourcesSameType() throws Exception {
         PojoComponentType type =
             new PojoComponentType(null);
         Constructor<Foo> ctor = Foo.class.getConstructor(String.class, String.class);
@@ -57,7 +58,7 @@ public class ConstructorResourceTestCase extends TestCase {
         assertNotNull(type.getResources().get("myResource2"));
     }
 
-    public void testDuplicateResource() throws Exception {
+    public void _testDuplicateResource() throws Exception {
         PojoComponentType type =
             new PojoComponentType(null);
         Constructor<BadFoo> ctor = BadFoo.class.getConstructor(String.class, String.class);
@@ -69,7 +70,7 @@ public class ConstructorResourceTestCase extends TestCase {
         }
     }
 
-    public void testNoName() throws Exception {
+    public void _testNoName() throws Exception {
         PojoComponentType type =
             new PojoComponentType(null);
         Constructor<ConstructorResourceTestCase.BadFoo> ctor =
@@ -82,7 +83,7 @@ public class ConstructorResourceTestCase extends TestCase {
         }
     }
 
-    public void testNamesOnConstructor() throws Exception {
+    public void _testNamesOnConstructor() throws Exception {
         PojoComponentType type =
             new PojoComponentType(null);
         Constructor<Foo> ctor = Foo.class.getConstructor(Integer.class);
@@ -90,7 +91,7 @@ public class ConstructorResourceTestCase extends TestCase {
         assertNotNull(type.getResources().get("myResource"));
     }
 
-    public void testInvalidNumberOfNames() throws Exception {
+    public void _testInvalidNumberOfNames() throws Exception {
         PojoComponentType type =
             new PojoComponentType(null);
         Constructor<ConstructorResourceTestCase.BadFoo> ctor =
@@ -103,7 +104,7 @@ public class ConstructorResourceTestCase extends TestCase {
         }
     }
 
-    public void testNoMatchingNames() throws Exception {
+    public void _testNoMatchingNames() throws Exception {
         PojoComponentType type =
             new PojoComponentType(null);
         Constructor<ConstructorResourceTestCase.BadFoo> ctor =

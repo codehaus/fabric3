@@ -40,6 +40,7 @@ import org.fabric3.pojo.scdl.JavaMappedReference;
 import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.MemberSite;
 import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.resource.processor.DuplicateResourceException;
 import org.fabric3.scdl.Multiplicity;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.idl.InvalidServiceContractException;
@@ -108,10 +109,10 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
             } else if (Reference.class.equals(annot.annotationType())) {
                 processed = true;
                 processReference(annot, constructorNames, pos, type, param, genericParam, injectionNames);
-            } else if (Resource.class.equals(annot.annotationType())) {
+            }/* else if (Resource.class.equals(annot.annotationType())) {
                 processed = true;
                 processResource((Resource) annot, constructorNames, pos, type, param, injectionNames);
-            }
+            }*/
         }
         return processed;
     }
@@ -301,7 +302,7 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
      * @param explicitNames    the collection of injection names to update
      * @throws ProcessingException
      */
-    private <T> void processResource(
+    /*private <T> void processResource(
             Resource resourceAnnot,
             String[] constructorNames,
             int pos,
@@ -335,7 +336,7 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
         }
         type.add(resource);
         addName(explicitNames, pos, name);
-    }
+    }*/
 
     protected static Class<?> getBaseType(Class<?> cls, Type genericType) {
         if (cls.isArray()) {

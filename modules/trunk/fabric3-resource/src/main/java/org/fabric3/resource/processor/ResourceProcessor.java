@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.implementation.processor;
+package org.fabric3.resource.processor;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -42,13 +42,8 @@ public class ResourceProcessor extends ImplementationProcessorExtension {
     public ResourceProcessor() {
     }
 
-    public void visitMethod(
-        Method method,
-        PojoComponentType type,
-        LoaderContext context)
-        throws ProcessingException {
-        org.fabric3.api.annotation.Resource annotation =
-            method.getAnnotation(org.fabric3.api.annotation.Resource.class);
+    public void visitMethod(Method method, PojoComponentType type, LoaderContext context) throws ProcessingException {
+        org.fabric3.api.annotation.Resource annotation = method.getAnnotation(org.fabric3.api.annotation.Resource.class);
         if (annotation == null) {
             return;
         }
@@ -74,13 +69,9 @@ public class ResourceProcessor extends ImplementationProcessorExtension {
         type.add(resource);
     }
 
-    public void visitField(
-        Field field,
-        PojoComponentType type,
-        LoaderContext context) throws ProcessingException {
+    public void visitField(Field field, PojoComponentType type, LoaderContext context) throws ProcessingException {
 
-        org.fabric3.api.annotation.Resource annotation =
-            field.getAnnotation(org.fabric3.api.annotation.Resource.class);
+        org.fabric3.api.annotation.Resource annotation = field.getAnnotation(org.fabric3.api.annotation.Resource.class);
         if (annotation == null) {
             return;
         }
@@ -107,12 +98,8 @@ public class ResourceProcessor extends ImplementationProcessorExtension {
         return new Resource<T>(name, type, member);
     }
 
-    public <T> void visitConstructor(
-        Constructor<T> constructor,
-        PojoComponentType type,
-        LoaderContext context) throws ProcessingException {
+    public <T> void visitConstructor(Constructor<T> constructor, PojoComponentType type, LoaderContext context) throws ProcessingException {
 
     }
-
 
 }

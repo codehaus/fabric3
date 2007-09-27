@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.implementation.processor;
+package org.fabric3.resource.processor;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -27,7 +27,6 @@ import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.scdl.Resource;
 import org.fabric3.pojo.processor.ProcessingException;
-
 
 /**
  * Processes an {@link @Resource} annotation, updating the component type with corresponding {@link
@@ -68,22 +67,21 @@ public class JSR250ResourceProcessor extends ImplementationProcessorExtension {
         if (method.getParameterTypes().length != 1) {
             throw new IllegalResourceException("Resource setter must have one parameter", method.toString());
         }
-        
+
         String methodName = method.getName();
         if (methodName.startsWith("set") && methodName.length() > 3) {
             methodName = Character.toLowerCase(methodName.charAt(3)) + methodName.substring(4);
         } else {
             throw new IllegalResourceException("Setter method names must begin with set", method.toString());
         }
-        
+
         if (void.class != method.getReturnType()) {
             throw new IllegalResourceException("Setter method must have void return type", method.toString());
         }
-        
 
         String name = annotation.name();
-        if(name.length() < 1){
-            name=methodName;
+        if (name.length() < 1) {
+            name = methodName;
         }
 
         if (type.getResources().get(name) != null) {
@@ -94,7 +92,7 @@ public class JSR250ResourceProcessor extends ImplementationProcessorExtension {
         Class<?> declaredType = annotation.type();
         if (declaredType != Object.class) {
             if (!methodParameterType.isAssignableFrom(declaredType)) {
-                throw new IllegalResourceException("Resource type " + declaredType+ " is not compatible with method parameter", method.toString());
+                throw new IllegalResourceException("Resource type " + declaredType + " is not compatible with method parameter", method.toString());
             }
         } else {
             declaredType = methodParameterType;
@@ -128,7 +126,7 @@ public class JSR250ResourceProcessor extends ImplementationProcessorExtension {
         Class<?> declaredType = annotation.type();
         if (declaredType != Object.class) {
             if (!fieldType.isAssignableFrom(declaredType)) {
-                throw new IllegalResourceException("Resource type " + declaredType+ " is not compatible with field ", field.toString());
+                throw new IllegalResourceException("Resource type " + declaredType + " is not compatible with field ", field.toString());
             }
         } else {
             declaredType = fieldType;

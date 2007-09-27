@@ -15,23 +15,24 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- */
-package org.fabric3.fabric.implementation.processor;
+ */ 
+package org.fabric3.resource.processor;
 
 import org.fabric3.pojo.processor.ProcessingException;
 
 /**
- * Denotes an illegal resource definition in a component type
+ * Thrown when an implementation has more than one resource injection site with the same name
  *
  * @version $Rev$ $Date$
  */
-public class IllegalResourceException extends ProcessingException {
+@SuppressWarnings("serial")
+public class DuplicateResourceException extends ProcessingException {
 
-    public IllegalResourceException(String message) {
+    public DuplicateResourceException(String message) {
         super(message);
     }
 
-    public IllegalResourceException(String message, String identifier) {
+    public DuplicateResourceException(String message, String identifier) {
         super(message, identifier);
     }
 }
