@@ -44,7 +44,7 @@ public class ConstructorResourceTestCase extends TestCase {
             new PojoComponentType(null);
         Constructor<Foo> ctor = Foo.class.getConstructor(String.class);
         processor.visitConstructor(ctor, type, null);
-        org.fabric3.pojo.scdl.Resource resource = type.getResources().get("myResource");
+        org.fabric3.pojo.scdl.JavaMappedResource resource = type.getResources().get("myResource");
         assertFalse(resource.isOptional());
     }
 

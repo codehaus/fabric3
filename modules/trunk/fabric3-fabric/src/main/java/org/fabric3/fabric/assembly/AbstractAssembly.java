@@ -38,7 +38,7 @@ import org.fabric3.fabric.command.InitializeComponentCommand;
 import org.fabric3.fabric.generator.DefaultGeneratorContext;
 import org.fabric3.fabric.services.routing.RoutingException;
 import org.fabric3.fabric.services.routing.RoutingService;
-import org.fabric3.pojo.scdl.Resource;
+import org.fabric3.pojo.scdl.JavaMappedResource;
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.BindingDefinition;

@@ -26,7 +26,7 @@ import java.lang.reflect.Method;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.pojo.scdl.Resource;
+import org.fabric3.pojo.scdl.JavaMappedResource;
 import org.fabric3.spi.loader.LoaderContext;
 
 /**
@@ -90,7 +90,7 @@ public class ResourceAnnotationProcessor extends ImplementationProcessorExtensio
             
         }
         
-        Resource<?> resource = createResource(name, resourceType, (Member) member);
+        JavaMappedResource<?> resource = createResource(name, resourceType, (Member) member);
         resource.setMappedName(mappedName);
 
         if (type.getResources().get(name) != null) {
@@ -104,8 +104,8 @@ public class ResourceAnnotationProcessor extends ImplementationProcessorExtensio
     /*
      * Creates resource object.
      */
-    private <T> Resource<T> createResource(String name, Class<T> type, Member member) {
-        return new Resource<T>(name, type, member);
+    private <T> JavaMappedResource<T> createResource(String name, Class<T> type, Member member) {
+        return new JavaMappedResource<T>(name, type, member);
     }
 
 }

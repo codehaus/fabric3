@@ -25,7 +25,7 @@ import org.fabric3.fabric.implementation.processor.DuplicateResourceException;
 import org.fabric3.fabric.implementation.processor.IllegalResourceException;
 import org.fabric3.fabric.implementation.processor.JSR250ResourceProcessor;
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.pojo.scdl.Resource;
+import org.fabric3.pojo.scdl.JavaMappedResource;
 
 import junit.framework.TestCase;
 
@@ -40,7 +40,7 @@ public class JSR250ResourceProcessorTestCase extends TestCase {
     public void testVisitField() throws Exception {
         Field field = JSR250ResourceProcessorTestCase.Foo.class.getDeclaredField("bar");
         processor.visitField(field, type, null);
-        Resource resource = type.getResources().get("bar");
+        JavaMappedResource resource = type.getResources().get("bar");
         assertNotNull(resource);
         assertFalse(resource.isOptional());
         assertNull(resource.getMappedName());
@@ -58,7 +58,7 @@ public class JSR250ResourceProcessorTestCase extends TestCase {
     public void testVisitMethod() throws Exception {
         Method method = JSR250ResourceProcessorTestCase.Foo.class.getMethod("setBar", JSR250ResourceProcessorTestCase.Bar.class);
         processor.visitMethod(method, type, null);
-        Resource resource = type.getResources().get("bar");
+        JavaMappedResource resource = type.getResources().get("bar");
         assertNotNull(resource);
         assertFalse(resource.isOptional());
         assertNull(resource.getMappedName());

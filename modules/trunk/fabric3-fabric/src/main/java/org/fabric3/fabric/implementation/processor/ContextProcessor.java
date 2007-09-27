@@ -29,7 +29,7 @@ import org.fabric3.fabric.injection.RequestContextObjectFactory;
 import org.fabric3.pojo.processor.JavaIntrospectionHelper;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
-import org.fabric3.pojo.scdl.Resource;
+import org.fabric3.pojo.scdl.JavaMappedResource;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
 
@@ -54,11 +54,11 @@ public class ContextProcessor extends ImplementationProcessorExtension {
         Class<?> paramType = method.getParameterTypes()[0];
         if (ComponentContext.class.equals(paramType)) {
             String name = JavaIntrospectionHelper.toPropertyName(method.getName());
-            Resource<ComponentContext> resource = new Resource<ComponentContext>(name, ComponentContext.class, method);
+            JavaMappedResource<ComponentContext> resource = new JavaMappedResource<ComponentContext>(name, ComponentContext.class, method);
             type.getResources().put(name, resource);
         } else if (RequestContext.class.equals(paramType)) {
             String name = JavaIntrospectionHelper.toPropertyName(method.getName());
-            Resource<RequestContext> resource = new Resource<RequestContext>(name, RequestContext.class, method);
+            JavaMappedResource<RequestContext> resource = new JavaMappedResource<RequestContext>(name, RequestContext.class, method);
             resource.setObjectFactory(new RequestContextObjectFactory());
             type.getResources().put(name, resource);
         } else {
@@ -75,12 +75,12 @@ public class ContextProcessor extends ImplementationProcessorExtension {
         Class<?> paramType = field.getType();
         if (ComponentContext.class.equals(paramType)) {
             String name = field.getName();
-            Resource<ComponentContext> resource = new Resource<ComponentContext>(name, ComponentContext.class, field);
+            JavaMappedResource<ComponentContext> resource = new JavaMappedResource<ComponentContext>(name, ComponentContext.class, field);
             type.getResources().put(name, resource);
         } else if (RequestContext.class.equals(paramType)) {
             String name = field.getName();
             name = JavaIntrospectionHelper.toPropertyName(name);
-            Resource<RequestContext> resource = new Resource<RequestContext>(name, RequestContext.class, field);
+            JavaMappedResource<RequestContext> resource = new JavaMappedResource<RequestContext>(name, RequestContext.class, field);
             resource.setObjectFactory(new RequestContextObjectFactory());
             type.getResources().put(name, resource);
         } else {

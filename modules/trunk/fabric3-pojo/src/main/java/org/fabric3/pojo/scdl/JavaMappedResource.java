@@ -28,7 +28,7 @@ import org.fabric3.spi.ObjectFactory;
  * @version $Rev$ $Date$
  * @param <T> the Java type of the resource
  */
-public class Resource<T> {
+public class JavaMappedResource<T> {
 
     private String name;
     private String mappedName;
@@ -37,7 +37,7 @@ public class Resource<T> {
     private Class<T> type;
     private ObjectFactory<T> objectFactory;
 
-    public Resource(String name, Class<T> type, Member member) {
+    public JavaMappedResource(String name, Class<T> type, Member member) {
         this.name = name;
         this.type = type;
         this.member = member;

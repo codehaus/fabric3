@@ -35,7 +35,7 @@ public class PojoComponentType extends AbstractComponentType<JavaMappedService, 
     private ConstructorDefinition<?> constructorDefinition;
     private Signature initMethod;
     private Signature destroyMethod;
-    private final Map<String, Resource> resources = new HashMap<String, Resource>();
+    private final Map<String, JavaMappedResource> resources = new HashMap<String, JavaMappedResource>();
     private MemberSite conversationIDMember;
 
     /**
@@ -116,11 +116,11 @@ public class PojoComponentType extends AbstractComponentType<JavaMappedService, 
         this.destroyMethod = destroyMethod;
     }
 
-    public Map<String, Resource> getResources() {
+    public Map<String, JavaMappedResource> getResources() {
         return resources;
     }
 
-    public void add(Resource resource) {
+    public void add(JavaMappedResource resource) {
         
         resources.put(resource.getName(), resource);
         

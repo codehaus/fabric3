@@ -26,14 +26,14 @@ import java.lang.reflect.Method;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.pojo.scdl.Resource;
+import org.fabric3.pojo.scdl.JavaMappedResource;
 import org.fabric3.pojo.processor.ProcessingException;
 
 import static org.fabric3.pojo.processor.JavaIntrospectionHelper.toPropertyName;
 
 /**
  * Processes an {@link @Resource} annotation, updating the component type with corresponding {@link
- * org.fabric3.pojo.scdl.Resource}
+ * org.fabric3.pojo.scdl.JavaMappedResource}
  *
  * @version $Rev$ $Date$
  */
@@ -61,7 +61,7 @@ public class ResourceProcessor extends ImplementationProcessorExtension {
         }
 
         String mappedName = annotation.mappedName();
-        Resource<?> resource = createResource(name, resourceType, method);
+        JavaMappedResource<?> resource = createResource(name, resourceType, method);
         resource.setOptional(annotation.optional());
         if (mappedName.length() > 0) {
             resource.setMappedName(mappedName);
@@ -86,7 +86,7 @@ public class ResourceProcessor extends ImplementationProcessorExtension {
         Class<?> fieldType = field.getType();
         String mappedName = annotation.mappedName();
 
-        Resource<?> resource = createResource(name, fieldType, field);
+        JavaMappedResource<?> resource = createResource(name, fieldType, field);
         resource.setOptional(annotation.optional());
         if (mappedName.length() > 0) {
             resource.setMappedName(mappedName);
@@ -94,8 +94,8 @@ public class ResourceProcessor extends ImplementationProcessorExtension {
         type.add(resource);
     }
 
-    public <T> Resource<T> createResource(String name, Class<T> type, Member member) {
-        return new Resource<T>(name, type, member);
+    public <T> JavaMappedResource<T> createResource(String name, Class<T> type, Member member) {
+        return new JavaMappedResource<T>(name, type, member);
     }
 
     public <T> void visitConstructor(Constructor<T> constructor, PojoComponentType type, LoaderContext context) throws ProcessingException {
