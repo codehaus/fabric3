@@ -16,16 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.resource.processor;
+package org.fabric3.fabric.implementation.processor;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import org.fabric3.fabric.implementation.processor.DuplicateResourceException;
+import org.fabric3.fabric.implementation.processor.IllegalResourceException;
+import org.fabric3.fabric.implementation.processor.JSR250ResourceProcessor;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.scdl.Resource;
-import org.fabric3.resource.processor.DuplicateResourceException;
-import org.fabric3.resource.processor.IllegalResourceException;
-import org.fabric3.resource.processor.JSR250ResourceProcessor;
 
 import junit.framework.TestCase;
 
