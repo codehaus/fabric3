@@ -24,4 +24,62 @@ package org.fabric3.spi.model.type;
  * @version $Rev$ $Date$
  */
 public class ResourceDefinition {
+
+    private String name;
+    private String mappedName;
+    private boolean optional;
+    
+    public ResourceDefinition(String name) {
+        this.name = name;
+    }
+
+    /**
+     * The name of the resource
+     * 
+     * @return the name of the resource
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Sets the name of the resource
+     * 
+     * @param name the name of the resource
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Returns the URI of the resource
+     * 
+     * @return the URI of the resource
+     */
+    public String getMappedName() {
+        return mappedName;
+    }
+
+    /**
+     * Sets the resource URI
+     */
+    public void setMappedName(String mappedName) {
+        this.mappedName = mappedName;
+    }
+
+    /**
+     * If true, the resource is optional
+     * 
+     * @return true if the resource is optional
+     */
+    public boolean isOptional() {
+        return optional;
+    }
+
+    /**
+     * Sets whether the resource is optional
+     */
+    public void setOptional(boolean optional) {
+        this.optional = optional;
+    }
 }

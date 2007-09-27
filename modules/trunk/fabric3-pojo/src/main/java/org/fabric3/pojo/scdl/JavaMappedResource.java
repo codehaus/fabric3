@@ -21,6 +21,7 @@ package org.fabric3.pojo.scdl;
 import java.lang.reflect.Member;
 
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.model.type.ResourceDefinition;
 
 /**
  * A resource dependency declared by a Java component implementation
@@ -28,69 +29,16 @@ import org.fabric3.spi.ObjectFactory;
  * @version $Rev$ $Date$
  * @param <T> the Java type of the resource
  */
-public class JavaMappedResource<T> {
+public class JavaMappedResource<T> extends ResourceDefinition {
 
-    private String name;
-    private String mappedName;
-    private boolean optional;
     private Member member;
     private Class<T> type;
     private ObjectFactory<T> objectFactory;
 
     public JavaMappedResource(String name, Class<T> type, Member member) {
-        this.name = name;
+        super(name);
         this.type = type;
         this.member = member;
-    }
-
-    /**
-     * The name of the resource
-     * 
-     * @return the name of the resource
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Sets the name of the resource
-     * 
-     * @param name the name of the resource
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * Returns the URI of the resource
-     * 
-     * @return the URI of the resource
-     */
-    public String getMappedName() {
-        return mappedName;
-    }
-
-    /**
-     * Sets the resource URI
-     */
-    public void setMappedName(String mappedName) {
-        this.mappedName = mappedName;
-    }
-
-    /**
-     * If true, the resource is optional
-     * 
-     * @return true if the resource is optional
-     */
-    public boolean isOptional() {
-        return optional;
-    }
-
-    /**
-     * Sets whether the resource is optional
-     */
-    public void setOptional(boolean optional) {
-        this.optional = optional;
     }
 
     /**
@@ -103,28 +51,12 @@ public class JavaMappedResource<T> {
     }
 
     /**
-     * Sets the Member that this resource is mapped to
-     * 
-     * @param member the Member that this resource is mapped to
-     */
-    public void setMember(Member member) {
-        this.member = member;
-    }
-
-    /**
      * Returns the resource type
      * 
      * @return the resource type
      */
     public Class<T> getType() {
         return type;
-    }
-
-    /**
-     * Sets the resource type
-     */
-    public void setType(Class<T> type) {
-        this.type = type;
     }
 
     /**
@@ -142,4 +74,5 @@ public class JavaMappedResource<T> {
     public void setObjectFactory(ObjectFactory<T> objectFactory) {
         this.objectFactory = objectFactory;
     }
+    
 }
