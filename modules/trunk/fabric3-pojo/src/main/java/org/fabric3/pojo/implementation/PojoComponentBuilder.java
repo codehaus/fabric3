@@ -118,21 +118,21 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
         return factories;
     }
 
-    protected <T> ObjectFactory<T> createObjectFactory(String name, Class<T> type, Element value, TransformContext context)
+    protected <I> ObjectFactory<I> createObjectFactory(String name, Class<I> type, Element value, TransformContext context)
             throws BuilderException {
-        JavaClass<T> targetType = new JavaClass<T>(type);
-        PullTransformer<Node, T> transformer = getTransformer(SOURCE_TYPE, targetType);
+        JavaClass<I> targetType = new JavaClass<I>(type);
+        PullTransformer<Node, I> transformer = getTransformer(SOURCE_TYPE, targetType);
         try {
-            T instance = type.cast(transformer.transform(value, context));
-            return new SingletonObjectFactory<T>(instance);
+            I instance = type.cast(transformer.transform(value, context));
+            return new SingletonObjectFactory<I>(instance);
         } catch (Exception e) {
             throw new PropertyTransformException("Unable to transform property value", name, e);
         }
     }
 
     @SuppressWarnings("unchecked")
-    protected <T> PullTransformer<Node,T> getTransformer(XSDSimpleType source, JavaClass<T> target) {
-        return (PullTransformer<Node,T>) transformerRegistry.getTransformer(source, target);
+    protected <I> PullTransformer<Node,I> getTransformer(XSDSimpleType source, JavaClass<I> target) {
+        return (PullTransformer<Node,I>) transformerRegistry.getTransformer(source, target);
     }
 
     /**
