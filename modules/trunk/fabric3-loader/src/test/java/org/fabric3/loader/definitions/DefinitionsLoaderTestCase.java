@@ -21,6 +21,7 @@ package org.fabric3.loader.definitions;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
@@ -39,12 +40,14 @@ import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
+import org.fabric3.spi.services.contribution.ResourceElement;
 
 /**
  * @version $Revision$ $Date$
  */
-public abstract class DefinitionsLoaderTestCase extends TestCase {
+public class DefinitionsLoaderTestCase extends TestCase {
 
     public void testLoad() throws Exception {
         
@@ -59,10 +62,41 @@ public abstract class DefinitionsLoaderTestCase extends TestCase {
         IntentLoader intentLoader = new IntentLoader();
         PolicySetLoader policySetLoader = new PolicySetLoader(loaderRegistry);
         
+        loaderRegistry.registerLoader(DefinitionsLoader.INTENT, intentLoader);
+        
         while(reader.next() != XMLStreamConstants.START_ELEMENT) {
         }
         
         Resource resource = loader.load(reader, context);
+        
+        assertNotNull(resource);
+
+        List<ResourceElement<?, ?>> resourceElements = resource.getResourceElements();
+        assertEquals(2, resourceElements.size());
+        
+        ResourceElement<QNameSymbol, Intent> intentResourceElement = (ResourceElement<QNameSymbol, Intent>) resourceElements.get(0);
+        assertNotNull(intentResourceElement);
+        
+        QNameSymbol symbol = intentResourceElement.getSymbol();
+        assertEquals(new QName("http://fabric3.org/xmlns/sca/2.0-alpha", "transactional"), symbol.getKey());
+        
+        Intent intent = (Intent) intentResourceElement.getValue();
+        assertEquals(new QName("http://fabric3.org/xmlns/sca/2.0-alpha", "transactional"), intent.getName());
+        assertTrue(intent.doesConstrain(new QName("http://www.osoa.org/xmlns/sca/1.0", "binding")));
+        assertFalse(intent.isProfile());
+        assertFalse(intent.isQualified());
+        assertNull(intent.getQualifiable());
+        assertEquals(0, intent.getRequires().size());
+        
+        ResourceElement<QNameSymbol, PolicySet> policySetResourceElement = (ResourceElement<QNameSymbol, PolicySet>) resourceElements.get(1);
+        assertNotNull(policySetResourceElement);
+        
+        symbol = policySetResourceElement.getSymbol();
+        assertEquals(new QName("http://fabric3.org/xmlns/sca/2.0-alpha", "transactionalPolicy"), symbol.getKey());
+        
+        PolicySet policySet = (PolicySet) policySetResourceElement.getValue();
+        assertEquals(new QName("http://fabric3.org/xmlns/sca/2.0-alpha", "transactionalPolicy"), policySet.getName());
+        assertTrue(policySet.doesProvide(new QName("http://fabric3.org/xmlns/sca/2.0-alpha", "transactional")));
     }
     
     private static class LoaderRegistryImpl implements LoaderRegistry {
