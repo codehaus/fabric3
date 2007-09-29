@@ -31,7 +31,7 @@
     <description>Fabric3 WS Binding Implementation using CXF.</description>
 
     <properties>
-        <cxfVersion>2.0.1-incubator</cxfVersion>
+        <cxfVersion>2.0-incubator</cxfVersion>
     </properties>
     <repositories>
         <repository>
