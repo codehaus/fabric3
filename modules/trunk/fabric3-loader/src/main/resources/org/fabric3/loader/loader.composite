@@ -23,6 +23,8 @@
     $Rev$ $Date$
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
            name="org.fabric3.fabric.Loader"
            autowire="true">
@@ -42,7 +44,7 @@
     <component name="loader.Property">
         <system:implementation.system class="org.fabric3.loader.common.PropertyLoader"/>
     </component>
-    <component name="loader.JavaInterface">
+    <component f3:key="sca:interface.java" name="loader.JavaInterface">
         <system:implementation.system class="org.fabric3.loader.common.JavaInterfaceLoader"/>
     </component>
 

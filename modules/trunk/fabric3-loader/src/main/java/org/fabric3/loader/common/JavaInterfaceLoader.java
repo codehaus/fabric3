@@ -18,14 +18,9 @@
  */
 package org.fabric3.loader.common;
 
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import static org.osoa.sca.Constants.SCA_NS;
-import org.osoa.sca.annotations.Destroy;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.spi.idl.InvalidServiceContractException;
@@ -34,7 +29,6 @@ import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.spi.loader.InvalidValueException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.StAXElementLoader;
 
@@ -43,33 +37,17 @@ import org.fabric3.spi.loader.StAXElementLoader;
  *
  * @version $Rev$ $Date$
  */
-@EagerInit
 public class JavaInterfaceLoader implements StAXElementLoader<JavaServiceContract> {
-    private static final QName INTERFACE_JAVA = new QName(SCA_NS, "interface.java");
 
-    private final LoaderRegistry registry;
     private final InterfaceJavaIntrospector introspector;
 
-    public JavaInterfaceLoader(@Reference LoaderRegistry registry,
-                               @Reference InterfaceJavaIntrospector introspector) {
+    public JavaInterfaceLoader(@Reference InterfaceJavaIntrospector introspector) {
         this.introspector = introspector;
-        this.registry = registry;
-    }
-
-    @Init
-    public void init() {
-        registry.registerLoader(INTERFACE_JAVA, this);
-    }
-
-    @Destroy
-    public void destroy() {
-        registry.unregisterLoader(INTERFACE_JAVA);
     }
 
     public JavaServiceContract load(XMLStreamReader reader, LoaderContext loaderContext)
             throws XMLStreamException, LoaderException {
 
-        assert INTERFACE_JAVA.equals(reader.getName());
         String conversationalAttr = reader.getAttributeValue(null, "conversational");
         boolean conversational = Boolean.parseBoolean(conversationalAttr);
         String name = reader.getAttributeValue(null, "interface");
