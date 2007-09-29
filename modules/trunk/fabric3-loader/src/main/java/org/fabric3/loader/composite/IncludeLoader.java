@@ -24,7 +24,6 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.loader.common.InvalidNameException;
@@ -44,16 +43,10 @@ import org.fabric3.spi.loader.StAXElementLoader;
  * @version $Rev$ $Date$
  */
 public class IncludeLoader implements StAXElementLoader<Include> {
-    private static final QName INCLUDE = new QName(SCA_NS, "Include");
+    private final Loader loader;
 
-    private final Loader registry;
-
-    public IncludeLoader(@Reference Loader registry) {
-        this.registry = registry;
-    }
-
-    public QName getXMLType() {
-        return INCLUDE;
+    public IncludeLoader(@Reference Loader loader) {
+        this.loader = loader;
     }
 
     public Include load(XMLStreamReader reader, LoaderContext loaderContext)
@@ -98,6 +91,6 @@ public class IncludeLoader implements StAXElementLoader<Include> {
     }
 
     protected Composite loadFromSidefile(URL url, LoaderContext context) throws LoaderException {
-        return registry.load(url, Composite.class, context);
+        return loader.load(url, Composite.class, context);
     }
 }
