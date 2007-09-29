@@ -29,14 +29,14 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.loader.common.InvalidNameException;
 import org.fabric3.loader.common.LoaderContextImpl;
+import org.fabric3.scdl.Composite;
+import org.fabric3.scdl.Include;
+import org.fabric3.spi.loader.Loader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.MissingResourceException;
 import org.fabric3.spi.loader.StAXElementLoader;
-import org.fabric3.scdl.Composite;
-import org.fabric3.scdl.Include;
 
 /**
  * Loader that handles &lt;include&gt; elements.
@@ -46,9 +46,9 @@ import org.fabric3.scdl.Include;
 public class IncludeLoader implements StAXElementLoader<Include> {
     private static final QName INCLUDE = new QName(SCA_NS, "Include");
 
-    private final LoaderRegistry registry;
+    private final Loader registry;
 
-    public IncludeLoader(@Reference LoaderRegistry registry) {
+    public IncludeLoader(@Reference Loader registry) {
         this.registry = registry;
     }
 

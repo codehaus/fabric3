@@ -20,15 +20,15 @@ package org.fabric3.loader.composite;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.DocumentBuilder;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.XMLConstants;
 
 import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.Reference;
@@ -42,9 +42,9 @@ import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.PropertyValue;
 import org.fabric3.spi.Constants;
 import org.fabric3.spi.loader.InvalidValueException;
+import org.fabric3.spi.loader.Loader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.PolicyHelper;
 import org.fabric3.spi.loader.StAXElementLoader;
@@ -71,31 +71,24 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
         }
     }
 
-    private final LoaderRegistry registry;
+    private final Loader loader;
     private final StAXElementLoader<PropertyValue> propertyValueLoader;
     private final StAXElementLoader<ComponentReference> referenceLoader;
     private final PolicyHelper policyHelper;
 
     /**
-     * @param registry
+     * @param loader
      * @param propertyValueLoader
      * @param referenceLoader
      */
-    public ComponentLoader(@Reference LoaderRegistry registry,
+    public ComponentLoader(@Reference Loader loader,
                            @Reference(name = "propertyValue")StAXElementLoader<PropertyValue> propertyValueLoader,
                            @Reference(name = "reference")StAXElementLoader<ComponentReference> referenceLoader,
                            @Reference(name = "policyHelper")PolicyHelper policyHelper) {
-        this.registry = registry;
+        this.loader = loader;
         this.propertyValueLoader = propertyValueLoader;
         this.referenceLoader = referenceLoader;
         this.policyHelper = policyHelper;
-    }
-
-    /**
-     * @return
-     */
-    public QName getXMLType() {
-        return COMPONENT;
     }
 
     /**
@@ -215,7 +208,7 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
     private Implementation<?> loadImplementation(XMLStreamReader reader, LoaderContext context)
             throws XMLStreamException, LoaderException {
         reader.nextTag();
-        return registry.load(reader, Implementation.class, context);
+        return loader.load(reader, Implementation.class, context);
     }
 
 }

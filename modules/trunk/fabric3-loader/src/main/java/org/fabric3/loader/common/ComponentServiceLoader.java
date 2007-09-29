@@ -16,23 +16,22 @@
  */
 package org.fabric3.loader.common;
 
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.ModelObject;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.spi.loader.Loader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.PolicyHelper;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.loader.UnrecognizedElementException;
-import org.osoa.sca.Constants;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Loads a service definition from an XML-based assembly file
@@ -40,19 +39,13 @@ import org.osoa.sca.annotations.Reference;
  * @version $Rev$ $Date$
  */
 public class ComponentServiceLoader implements StAXElementLoader<ServiceDefinition> {
-    private static final QName SERVICE = new QName(Constants.SCA_NS, "Service");
-
-    private final LoaderRegistry registry;
+    private final Loader loader;
     private final PolicyHelper policyHelper;
 
-    public ComponentServiceLoader(@Reference LoaderRegistry registry,
+    public ComponentServiceLoader(@Reference Loader loader,
                                   @Reference PolicyHelper policyHelper) {
-        this.registry = registry;
+        this.loader = loader;
         this.policyHelper = policyHelper;
-    }
-
-    public QName getXMLType() {
-        return SERVICE;
     }
 
     public ServiceDefinition load(XMLStreamReader reader, LoaderContext context)
@@ -67,7 +60,7 @@ public class ComponentServiceLoader implements StAXElementLoader<ServiceDefiniti
             int i = reader.next();
             switch (i) {
             case XMLStreamConstants.START_ELEMENT:
-                ModelObject type = registry.load(reader, ModelObject.class, context);
+                ModelObject type = loader.load(reader, ModelObject.class, context);
                 if (type instanceof ServiceContract) {
                     def.setServiceContract((ServiceContract<?>) type);
                 } else if (type instanceof BindingDefinition) {

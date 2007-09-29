@@ -18,8 +18,6 @@
  */
 package org.fabric3.loader.common;
 
-import static org.osoa.sca.Constants.SCA_NS;
-
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -27,11 +25,12 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import org.w3c.dom.Document;
+
 import org.fabric3.scdl.Property;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.StAXElementLoader;
-import org.w3c.dom.Document;
 
 /**
  * Loads a property declaration from an XML-based assembly file
@@ -39,7 +38,6 @@ import org.w3c.dom.Document;
  * @version $Rev$ $Date$
  */
 public class PropertyLoader implements StAXElementLoader<Property<?>> {
-    private static final QName PROPERTY = new QName(SCA_NS, "Property");
     private static final String NAME = "name";
     private static final String TYPE = "type";
     private static final String MANY = "many";
@@ -56,13 +54,8 @@ public class PropertyLoader implements StAXElementLoader<Property<?>> {
         }
     }
 
-    public QName getXMLType() {
-        return PROPERTY;
-    }
-
     public Property<?> load(XMLStreamReader reader, LoaderContext ctx)
             throws XMLStreamException, LoaderException {
-        assert PROPERTY.equals(reader.getName());
         String name = reader.getAttributeValue(null, NAME);
         String typeName = reader.getAttributeValue(null, TYPE);
         QName xmlType = null;
