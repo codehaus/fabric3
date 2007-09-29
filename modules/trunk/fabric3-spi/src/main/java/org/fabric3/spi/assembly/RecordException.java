@@ -14,9 +14,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.assembly.store;
+package org.fabric3.spi.assembly;
 
-import org.fabric3.spi.assembly.AssemblyException;
 
 /**
  * Denotes an exception recording an assembly operation

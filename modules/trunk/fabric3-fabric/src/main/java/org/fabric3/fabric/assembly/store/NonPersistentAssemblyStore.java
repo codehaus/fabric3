@@ -22,6 +22,8 @@ import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.runtime.HostInfo;
+import org.fabric3.spi.assembly.AssemblyStore;
+import org.fabric3.spi.assembly.RecoveryException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
