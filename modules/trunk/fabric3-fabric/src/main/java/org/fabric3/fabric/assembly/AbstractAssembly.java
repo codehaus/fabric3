@@ -49,6 +49,7 @@ import org.fabric3.scdl.CompositeReference;
 import org.fabric3.scdl.CompositeService;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.ResourceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.assembly.Assembly;
@@ -62,6 +63,7 @@ import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
+import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalChangeSet;
 import org.fabric3.spi.services.contribution.MetaDataStore;
@@ -326,8 +328,10 @@ public abstract class AbstractAssembly implements Assembly {
             }
 
         } else {
-            // this is an atomic component so create and bind its services and references
+            
+            // this is an atomic component so create and bind its services, references and resources
             AbstractComponentType<?, ?, ?, ?> componentType = impl.getComponentType();
+            
             for (ServiceDefinition service : componentType.getServices().values()) {
                 URI serviceUri = uri.resolve('#' + service.getName());
                 LogicalService logicalService = new LogicalService(serviceUri, service, component);
@@ -336,6 +340,7 @@ public abstract class AbstractAssembly implements Assembly {
                 }
                 component.addService(logicalService);
             }
+            
             for (ReferenceDefinition reference : componentType.getReferences().values()) {
                 URI referenceUri = uri.resolve('#' + reference.getName());
                 LogicalReference logicalReference = new LogicalReference(referenceUri, reference, component);
@@ -344,9 +349,17 @@ public abstract class AbstractAssembly implements Assembly {
                 }
                 component.addReference(logicalReference);
             }
+            
+            for (ResourceDefinition resource : componentType.getResources().values()) {
+                URI resourceUri = uri.resolve('#' + resource.getMappedName());
+                LogicalResource logicalResource = new LogicalResource(resourceUri, resource, component);
+                component.addResource(logicalResource);
+            }
+            
         }
 
         return component;
+        
     }
 
     /**

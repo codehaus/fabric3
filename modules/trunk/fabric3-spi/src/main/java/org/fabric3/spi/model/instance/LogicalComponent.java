@@ -48,6 +48,7 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
     private final Map<URI, LogicalComponent<?>> components = new HashMap<URI, LogicalComponent<?>>();
     private final Map<String, LogicalService> services = new HashMap<String, LogicalService>();
     private final Map<String, LogicalReference> references = new HashMap<String, LogicalReference>();
+    private final Map<String, LogicalResource> resources = new HashMap<String, LogicalResource>();
     private URI runtimeId;
     private boolean active;
     private Autowire autowire;
@@ -174,6 +175,34 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
      */
     public void addService(LogicalService service) {
         services.put(service.getUri().getFragment(), service);
+    }
+
+    /**
+     * Returns the resources required by the current component.
+     *
+     * @return the resources required by the current component
+     */
+    public Collection<LogicalResource> getResources() {
+        return Collections.unmodifiableCollection(resources.values());
+    }
+
+    /**
+     * Returns a resource with the given URI.
+     *
+     * @param name the resource name
+     * @return the resource.
+     */
+    public LogicalResource getResource(String name) {
+        return resources.get(name);
+    }
+
+    /**
+     * Adds a the resolved resource
+     *
+     * @param reference the resource to add
+     */
+    public void addResource(LogicalResource resource) {
+        resources.put(resource.getUri().getFragment(), resource);
     }
 
     /**

@@ -29,7 +29,7 @@
 
     <!-- Resource Annotation Processor -->
     <component name="resourceAnnotationProcessor">
-        <system:implementation.system class="org.fabric3.resource.processor.ResourceAnnotationProcessor"/>
+        <system:implementation.system class="org.fabric3.fabric.implementation.processor.ResourceAnnotationProcessor"/>
     </component>
     
 </composite>
