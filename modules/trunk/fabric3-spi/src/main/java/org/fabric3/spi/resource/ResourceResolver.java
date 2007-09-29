@@ -16,12 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.resource.resolver;
+package org.fabric3.spi.resource;
+
+import org.fabric3.scdl.AbstractComponentType;
+import org.fabric3.scdl.Implementation;
+import org.fabric3.spi.model.instance.LogicalComponent;
 
 /**
  *
+ * Abstraction for resolving resource references.
+ * 
  * @version $Revision$ $Date$
  */
 public interface ResourceResolver {
+    
+    /**
+     * @param component Component whose resources need to be resolved.
+     * @throws ResourceResolutionException If the resource cannot be resolved.
+     */
+    void resolve(LogicalComponent<? extends Implementation<AbstractComponentType<?,?,?,?>>> component) throws ResourceResolutionException;
 
 }

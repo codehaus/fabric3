@@ -23,16 +23,16 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.xml.namespace.QName;
 
-import org.osoa.sca.Constants;
-import org.w3c.dom.Document;
-
+import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.PropertyValue;
+import org.osoa.sca.Constants;
 
 /**
  * Represents an instantiated component in the service network.
@@ -213,6 +213,12 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
         return Collections.unmodifiableCollection(propertyValues.values());
     }
 
+    /**
+     * Gets the value of a property.
+     * 
+     * @param name Name of the property.
+     * @return Propert value for the specified property.
+     */
     public PropertyValue getPropertyValue(String name) {
         return propertyValues.get(name);
     }
@@ -234,6 +240,14 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
      */
     public ComponentDefinition<I> getDefinition() {
         return definition;
+    }
+    
+    /**
+     * Gets the component type.
+     * @return Component type.
+     */
+    public AbstractComponentType<?, ?, ?, ?> getComponentType() {
+        return getDefinition().getComponentType();
     }
 
 }

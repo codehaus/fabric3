@@ -207,4 +207,13 @@ public class ComponentDefinition<I extends Implementation<?>> extends AbstractPo
     public void setKey(Document key) {
         this.key = key;
     }
+    
+    /**
+     * Gets the component type.
+     * @return Component type.
+     */
+    public AbstractComponentType<?, ?, ?, ?> getComponentType() {
+        return getImplementation().getComponentType();
+    }
+    
 }

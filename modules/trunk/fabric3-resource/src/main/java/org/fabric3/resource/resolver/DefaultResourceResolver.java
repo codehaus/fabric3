@@ -18,10 +18,42 @@
  */
 package org.fabric3.resource.resolver;
 
+import org.fabric3.scdl.AbstractComponentType;
+import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.ResourceDefinition;
+import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.resource.ResourceResolutionException;
+import org.fabric3.spi.resource.ResourceResolver;
+
 /**
- *
+ * Default implementation of the resource resolver that maps the requested 
+ * resources to components from the system tree. The implementation expects 
+ * the <code>mappedName</code> of the resource to the name of the component
+ * in the system tree.
+ * 
  * @version $Revision$ $Date$
  */
 public class DefaultResourceResolver implements ResourceResolver {
+
+    /**
+     * @see org.fabric3.spi.resource.ResourceResolver#resolve(org.fabric3.spi.model.instance.LogicalComponent)
+     */
+    public void resolve(LogicalComponent<? extends Implementation<AbstractComponentType<?,?,?,?>>> component) throws ResourceResolutionException {
+        
+        AbstractComponentType<?, ?, ?, ?> componentType = component.getComponentType();
+        
+        for(ResourceDefinition resourceDefinition : componentType.getResources().values()) {
+            
+            String name = resourceDefinition.getName();
+            String mappedName = resourceDefinition.getMappedName();
+            
+            if(mappedName == null) {
+                throw new ResourceResolutionException("Mapped name is not specified for the resource: " + name);
+            }
+
+        }
+        
+    }
+
 
 }
