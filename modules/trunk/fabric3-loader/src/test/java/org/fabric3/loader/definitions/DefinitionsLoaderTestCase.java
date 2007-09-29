@@ -44,7 +44,7 @@ import org.fabric3.spi.services.contribution.Resource;
 /**
  * @version $Revision$ $Date$
  */
-public class DefinitionsLoaderTestCase extends TestCase {
+public abstract class DefinitionsLoaderTestCase extends TestCase {
 
     public void testLoad() throws Exception {
         
@@ -56,7 +56,7 @@ public class DefinitionsLoaderTestCase extends TestCase {
         LoaderRegistry loaderRegistry = new LoaderRegistryImpl();
         
         DefinitionsLoader loader = new DefinitionsLoader(loaderRegistry);
-        IntentLoader intentLoader = new IntentLoader(loaderRegistry);
+        IntentLoader intentLoader = new IntentLoader();
         PolicySetLoader policySetLoader = new PolicySetLoader(loaderRegistry);
         
         while(reader.next() != XMLStreamConstants.START_ELEMENT) {

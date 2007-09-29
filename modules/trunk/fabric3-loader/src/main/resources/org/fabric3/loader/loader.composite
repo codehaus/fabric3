@@ -93,7 +93,7 @@
         <system:implementation.system class="org.fabric3.loader.definitions.DefinitionsLoader"/>
     </component>
     
-    <component name="loader.intent">
+    <component f3:key="sca:intent" name="loader.intent">
         <system:implementation.system class="org.fabric3.loader.definitions.IntentLoader"/>
     </component>
     
