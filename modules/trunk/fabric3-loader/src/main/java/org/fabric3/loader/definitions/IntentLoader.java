@@ -18,45 +18,28 @@
  */
 package org.fabric3.loader.definitions;
 
-import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
-import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
-
 import javax.xml.namespace.QName;
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.StAXElementLoader;
-import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.spi.util.stax.StaxUtil;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Loader for definitions.
  * 
  * @version $Revision$ $Date$
  */
-@EagerInit
 public class IntentLoader implements StAXElementLoader<Intent> {
 
-    /**
-     * Registers the loader with the registry.
-     * @param registry Injected registry
-     */
-    public IntentLoader(@Reference LoaderRegistry registry) {
-        registry.registerLoader(DefinitionsLoader.INTENT, this);
-    }
-
-    /**
-     * @see org.fabric3.spi.loader.StAXElementLoader#load(javax.xml.stream.XMLStreamReader, org.fabric3.spi.loader.LoaderContext)
-     */
     public Intent load(XMLStreamReader reader, LoaderContext context) throws XMLStreamException, LoaderException {
         
         String name = reader.getAttributeValue(null, "name");
