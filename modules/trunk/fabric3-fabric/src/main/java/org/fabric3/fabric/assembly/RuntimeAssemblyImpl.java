@@ -29,6 +29,7 @@ import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.resource.ResourceResolver;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 
 /**
@@ -43,7 +44,8 @@ public class RuntimeAssemblyImpl extends AbstractAssembly implements RuntimeAsse
                                @Reference Allocator allocator,
                                @Reference RoutingService routingService,
                                @Reference AssemblyStore store,
-                               @Reference MetaDataStore metaDataStore) {
+                               @Reference MetaDataStore metaDataStore,
+                               @Reference ResourceResolver resourceResolver) {
         super(ComponentNames.RUNTIME_URI,
               generatorRegistry,
               wireResolver,
@@ -51,7 +53,8 @@ public class RuntimeAssemblyImpl extends AbstractAssembly implements RuntimeAsse
               allocator,
               routingService,
               store,
-              metaDataStore);
+              metaDataStore,
+              resourceResolver);
     }
 
     public void instantiateHostComponentDefinition(ComponentDefinition<?> definition) throws InstantiationException {

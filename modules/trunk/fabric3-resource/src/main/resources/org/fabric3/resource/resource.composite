@@ -27,9 +27,9 @@
            name="org.fabric3.resource.Resource"
            autowire="true">
 
-    <!-- Resource Annotation Processor -->
-    <component name="resourceAnnotationProcessor">
-        <system:implementation.system class="org.fabric3.fabric.implementation.processor.ResourceAnnotationProcessor"/>
+    <!-- Resource Resolver -->
+    <component name="resourceResolver">
+        <system:implementation.system class="org.fabric3.resource.resolver.DefaultResourceResolver"/>
     </component>
     
 </composite>

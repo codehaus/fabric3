@@ -18,15 +18,16 @@
  */
 package org.fabric3.fabric.assembly;
 
+import static org.osoa.sca.Constants.SCA_NS;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.xml.namespace.QName;
 
-import static org.osoa.sca.Constants.SCA_NS;
+import javax.xml.namespace.QName;
 
 import org.fabric3.fabric.assembly.allocator.AllocationException;
 import org.fabric3.fabric.assembly.allocator.Allocator;
@@ -38,7 +39,6 @@ import org.fabric3.fabric.command.InitializeComponentCommand;
 import org.fabric3.fabric.generator.DefaultGeneratorContext;
 import org.fabric3.fabric.services.routing.RoutingException;
 import org.fabric3.fabric.services.routing.RoutingService;
-import org.fabric3.pojo.scdl.JavaMappedResource;
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.BindingDefinition;
@@ -66,11 +66,12 @@ import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalChangeSet;
+import org.fabric3.spi.resource.ResourceResolutionException;
+import org.fabric3.spi.resource.ResourceResolver;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.util.UriHelper;
-import org.w3c.dom.Document;
 
 /**
  * Base class for abstract assemblies
@@ -83,6 +84,7 @@ public abstract class AbstractAssembly implements Assembly {
     protected final URI domainUri;
     protected final GeneratorRegistry generatorRegistry;
     protected final WireResolver wireResolver;
+    protected final ResourceResolver resourceResolver;
     protected final Allocator allocator;
     protected final RoutingService routingService;
     protected final MetaDataStore metadataStore;
@@ -97,7 +99,8 @@ public abstract class AbstractAssembly implements Assembly {
                             Allocator allocator,
                             RoutingService routingService,
                             AssemblyStore assemblyStore,
-                            MetaDataStore metadataStore) {
+                            MetaDataStore metadataStore,
+                            ResourceResolver resourceResolver) {
         this.domainUri = domainUri;
         this.generatorRegistry = generatorRegistry;
         this.wireResolver = wireResolver;
@@ -106,6 +109,7 @@ public abstract class AbstractAssembly implements Assembly {
         this.routingService = routingService;
         this.assemblyStore = assemblyStore;
         this.metadataStore = metadataStore;
+        this.resourceResolver = resourceResolver;
     }
 
     public void initialize() throws AssemblyException {
@@ -209,6 +213,15 @@ public abstract class AbstractAssembly implements Assembly {
                 wireResolver.resolve(component);
             }
         } catch (ResolutionException e) {
+            throw new ActivateException(e);
+        }
+        
+        // resolve resources for each new component
+        try {
+            for(LogicalComponent<?> component : components) {
+                resourceResolver.resolve(component, domainUri);
+            }
+        } catch(ResourceResolutionException e) {
             throw new ActivateException(e);
         }
 

@@ -21,7 +21,6 @@ package org.fabric3.resource.resolver;
 import java.net.URI;
 
 import org.fabric3.scdl.AbstractComponentType;
-import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.ResourceDefinition;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.resource.ResourceResolutionException;
@@ -40,7 +39,7 @@ public class DefaultResourceResolver implements ResourceResolver {
     /**
      * @see org.fabric3.spi.resource.ResourceResolver#resolve(org.fabric3.spi.model.instance.LogicalComponent, java.net.URI)
      */
-    public void resolve(LogicalComponent<? extends Implementation<AbstractComponentType<?,?,?,?>>> component, URI domainUri) throws ResourceResolutionException {
+    public void resolve(LogicalComponent<?> component, URI domainUri) throws ResourceResolutionException {
         
         AbstractComponentType<?, ?, ?, ?> componentType = component.getComponentType();
         

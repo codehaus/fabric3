@@ -129,6 +129,7 @@ import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.processor.IntrospectionRegistry;
 import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.resource.resolver.DefaultResourceResolver;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
@@ -152,6 +153,7 @@ import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.PolicyHelper;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.policy.registry.NullPolicyResolver;
+import org.fabric3.spi.resource.ResourceResolver;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ArtifactResolverRegistry;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
@@ -271,13 +273,17 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
         // enable autowire for the runtime domain
         AssemblyStore store = new NonPersistentAssemblyStore(ComponentNames.RUNTIME_URI, Autowire.ON);
+        
+        ResourceResolver resourceResolver = new DefaultResourceResolver();
+        
         runtimeAssembly = new RuntimeAssemblyImpl(generatorRegistry,
                                                   resolver,
                                                   normalizer,
                                                   allocator,
                                                   routingService,
                                                   store,
-                                                  metaDataStore);
+                                                  metaDataStore,
+                                                  resourceResolver);
         try {
             runtimeAssembly.initialize();
         } catch (AssemblyException e) {

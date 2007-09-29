@@ -28,6 +28,7 @@ import org.fabric3.fabric.assembly.store.AssemblyStore;
 import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.generator.GeneratorRegistry;
+import org.fabric3.spi.resource.ResourceResolver;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 
 /**
@@ -45,7 +46,8 @@ public class DistributedAssemblyImpl extends AbstractAssembly implements Distrib
                                    @Reference RoutingService routingService,
                                    @Reference AssemblyStore store,
                                    @Reference(name = "store")MetaDataStore metaDataStore,
-                                   @Reference HostInfo hostInfo) {
+                                   @Reference HostInfo hostInfo,
+                                   @Reference ResourceResolver resourceResolver) {
         super(hostInfo.getDomain(),
               generatorRegistry,
               wireResolver,
@@ -53,6 +55,7 @@ public class DistributedAssemblyImpl extends AbstractAssembly implements Distrib
               allocator,
               routingService,
               store,
-              metaDataStore);
+              metaDataStore,
+              resourceResolver);
     }
 }

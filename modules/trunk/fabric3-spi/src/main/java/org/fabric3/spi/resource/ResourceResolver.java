@@ -20,8 +20,6 @@ package org.fabric3.spi.resource;
 
 import java.net.URI;
 
-import org.fabric3.scdl.AbstractComponentType;
-import org.fabric3.scdl.Implementation;
 import org.fabric3.spi.model.instance.LogicalComponent;
 
 /**
@@ -37,6 +35,6 @@ public interface ResourceResolver {
      * @param domainUri URI of the domain.
      * @throws ResourceResolutionException If the resource cannot be resolved.
      */
-    void resolve(LogicalComponent<? extends Implementation<AbstractComponentType<?,?,?,?>>> component, URI domainUri) throws ResourceResolutionException;
+    void resolve(LogicalComponent<?> component, URI domainUri) throws ResourceResolutionException;
 
 }
