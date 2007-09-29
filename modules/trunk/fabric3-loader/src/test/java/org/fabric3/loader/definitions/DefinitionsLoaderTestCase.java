@@ -33,7 +33,6 @@ import javax.xml.stream.XMLStreamReader;
 import junit.framework.TestCase;
 
 import org.fabric3.loader.common.LoaderContextImpl;
-import org.fabric3.scdl.definitions.Definitions;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.loader.LoaderContext;

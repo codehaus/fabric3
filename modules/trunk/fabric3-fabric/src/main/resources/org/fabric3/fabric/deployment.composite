@@ -60,10 +60,6 @@
         <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.CompositeResourceProcessor"/>
     </component>
 
-    <component name="DefinitionsContributionProcessor">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.DefinitionsContributionProcessor"/>
-    </component>
-
     <component name="FolderContributionProcessor">
         <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.ExplodedArchiveContributionProcessor"/>
         <reference name="metaDataStore" target="MetadataStore"/>
