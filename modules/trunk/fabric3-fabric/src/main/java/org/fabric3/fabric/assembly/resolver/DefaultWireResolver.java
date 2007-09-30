@@ -111,7 +111,8 @@ public class DefaultWireResolver implements WireResolver {
                     ServiceContract<?> requiredContract = reference.getServiceContract();
                     String fragment = target.getName();
                     boolean required = reference.isRequired();
-                    List<URI> targetUris = resolveByType(component.getParent(), component, referenceName, requiredContract);
+                    List<URI> targetUris =
+                            resolveByType(component.getParent(), component, referenceName, requiredContract);
                     if (targetUris.isEmpty()) {
                         // search the target compoisite
                         targetUris = resolveByType(composite, component, fragment, requiredContract);
@@ -120,7 +121,8 @@ public class DefaultWireResolver implements WireResolver {
                         URI source = logicalReference.getUri();
                         throw new AutowireTargetNotFoundException("No suitable target found for", source);
                     }
-                } else if (reference.isRequired()) {
+                } else if (reference.isRequired() && reference.getBindings().size() > 0) {
+                    // an unbound and un-targeted reference that is required
                     URI source = logicalReference.getUri();
                     throw new UnspecifiedTargetException("Reference target not specified", source);
                 }
@@ -143,9 +145,9 @@ public class DefaultWireResolver implements WireResolver {
      *          if more than one target satisfies the type criteria
      */
     private List<URI> resolveByType(LogicalComponent<?> composite,
-                              LogicalComponent<?> component,
-                              String referenceName,
-                              ServiceContract<?> requiredContract)
+                                    LogicalComponent<?> component,
+                                    String referenceName,
+                                    ServiceContract<?> requiredContract)
             throws AutowireTargetNotFoundException, AmbiguousAutowireTargetException {
 
         List<URI> candidates = new ArrayList<URI>();
@@ -172,7 +174,7 @@ public class DefaultWireResolver implements WireResolver {
             URI uri = URI.create(component.getUri().toString() + "#" + referenceName);
             throw new AmbiguousAutowireTargetException("More than one target found", uri, candidates);
         }*/
-        for(URI target : candidates) {
+        for (URI target : candidates) {
             LogicalReference logicalReference = component.getReference(referenceName);
             assert logicalReference != null;
             logicalReference.addTargetUri(component.getUri().resolve(target));

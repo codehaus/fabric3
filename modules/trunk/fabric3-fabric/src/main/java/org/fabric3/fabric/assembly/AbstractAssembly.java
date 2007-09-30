@@ -41,6 +41,7 @@ import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.ComponentReference;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.CompositeReference;
@@ -355,10 +356,15 @@ public abstract class AbstractAssembly implements Assembly {
             }
             
             for (ReferenceDefinition reference : componentType.getReferences().values()) {
-                URI referenceUri = uri.resolve('#' + reference.getName());
+                String name = reference.getName();
+                URI referenceUri = uri.resolve('#' + name);
                 LogicalReference logicalReference = new LogicalReference(referenceUri, reference, component);
-                for (BindingDefinition binding : reference.getBindings()) {
-                    logicalReference.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalReference));
+                ComponentReference componentReference = definition.getReferences().get(name);
+                if (componentReference != null) {
+                    // reference is configured
+                    for (BindingDefinition binding : componentReference.getBindings()) {
+                        logicalReference.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalReference));
+                    }
                 }
                 component.addReference(logicalReference);
             }
@@ -470,17 +476,17 @@ public abstract class AbstractAssembly implements Assembly {
      */
     protected void generatePhysicalWires(LogicalComponent<?> component, Map<URI, GeneratorContext> contexts)
             throws GenerationException, ResolutionException {
-        
+
         URI runtimeId = component.getRuntimeId();
         GeneratorContext context = contexts.get(runtimeId);
-        
+
         if (context == null) {
             PhysicalChangeSet changeSet = new PhysicalChangeSet();
             CommandSet commandSet = new CommandSet();
             context = new DefaultGeneratorContext(changeSet, commandSet);
             contexts.put(runtimeId, context);
         }
-        
+
         for (LogicalReference entry : component.getReferences()) {
             if (entry.getBindings().isEmpty()) {
                 for (URI uri : entry.getTargetUris()) {
@@ -503,7 +509,7 @@ public abstract class AbstractAssembly implements Assembly {
             }
 
         }
-        
+
         // generate changesets for bound service wires
         for (LogicalService service : component.getServices()) {
             List<LogicalBinding<?>> bindings = service.getBindings();
@@ -573,7 +579,8 @@ public abstract class AbstractAssembly implements Assembly {
             context = new DefaultGeneratorContext(changeSet, commandSet);
             contexts.put(id, context);
         }
-        context.getPhysicalChangeSet().addComponentDefinition(generatorRegistry.generatePhysicalComponent(component, context));
+        context.getPhysicalChangeSet().addComponentDefinition(generatorRegistry.generatePhysicalComponent(component,
+                                                                                                          context));
     }
 
     protected boolean isEagerInit(LogicalComponent<?> component) {
