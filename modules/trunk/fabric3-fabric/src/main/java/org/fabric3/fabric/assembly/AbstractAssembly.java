@@ -219,7 +219,7 @@ public abstract class AbstractAssembly implements Assembly {
         // resolve resources for each new component
         try {
             for(LogicalComponent<?> component : components) {
-                resourceResolver.resolve(component, domainUri);
+                resourceResolver.resolve(component, domain);
             }
         } catch(ResourceResolutionException e) {
             throw new ActivateException(e);
@@ -484,7 +484,7 @@ public abstract class AbstractAssembly implements Assembly {
         for (LogicalReference entry : component.getReferences()) {
             if (entry.getBindings().isEmpty()) {
                 for (URI uri : entry.getTargetUris()) {
-                    LogicalComponent target = findComponent(uri);
+                    LogicalComponent<?> target = findComponent(uri);
                     String serviceName = uri.getFragment();
                     LogicalReference reference = component.getReference(entry.getUri().getFragment());
                     LogicalService targetService = target.getService(serviceName);
