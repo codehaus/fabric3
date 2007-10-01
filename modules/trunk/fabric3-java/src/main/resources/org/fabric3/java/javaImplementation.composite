@@ -56,9 +56,5 @@
     <component name="org.fabric3.java.JavaMappedResourceWireGenerator">
         <system:implementation.system class="org.fabric3.java.JavaMappedResourceWireGenerator"/>
     </component>
-    
-    <component name="org.fabric3.java.JavaMappedResourceWireAttacher">
-        <system:implementation.system class="org.fabric3.java.JavaMappedResourceWireAttacher"/>
-    </component>
 
 </composite>
