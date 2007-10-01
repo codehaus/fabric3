@@ -21,10 +21,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Collections;
 import javax.xml.stream.XMLInputFactory;
-import javax.xml.namespace.QName;
 
 import org.fabric3.fabric.assembly.InstantiationException;
 import org.fabric3.fabric.assembly.RuntimeAssembly;
@@ -108,7 +105,6 @@ import org.fabric3.fabric.services.instancefactory.GenerationHelperImpl;
 import org.fabric3.fabric.services.instancefactory.ReflectiveInstanceFactoryBuilder;
 import org.fabric3.fabric.services.routing.RuntimeRoutingService;
 import org.fabric3.fabric.services.xstream.XStreamFactoryImpl;
-import org.fabric3.pojo.processor.JavaIntrospectionHelper;
 import org.fabric3.host.monitor.FormatterRegistry;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.host.runtime.Fabric3Runtime;
@@ -116,6 +112,7 @@ import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.loader.common.ComponentReferenceLoader;
+import org.fabric3.loader.common.ComponentServiceLoader;
 import org.fabric3.loader.common.DefaultPolicyHelper;
 import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.loader.composite.ComponentLoader;
@@ -126,6 +123,7 @@ import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.processor.IntrospectionRegistry;
+import org.fabric3.pojo.processor.JavaIntrospectionHelper;
 import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.resource.resolver.DefaultResourceResolver;
@@ -151,7 +149,6 @@ import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.PolicyHelper;
-import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.policy.registry.NullPolicyResolver;
 import org.fabric3.spi.resource.ResourceResolver;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
@@ -162,11 +159,11 @@ import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.transform.DefaultTransformerRegistry;
-import org.fabric3.transform.dom2java.String2Integer;
-import org.fabric3.transform.dom2java.String2String;
-import org.fabric3.transform.dom2java.String2Map;
 import org.fabric3.transform.dom2java.String2Class;
+import org.fabric3.transform.dom2java.String2Integer;
+import org.fabric3.transform.dom2java.String2Map;
 import org.fabric3.transform.dom2java.String2QName;
+import org.fabric3.transform.dom2java.String2String;
 
 /**
  * Bootstrapper that initializes a runtime by reading a system SCDL file.
@@ -273,9 +270,9 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
         // enable autowire for the runtime domain
         AssemblyStore store = new NonPersistentAssemblyStore(ComponentNames.RUNTIME_URI, Autowire.ON);
-        
+
         ResourceResolver resourceResolver = new DefaultResourceResolver();
-        
+
         runtimeAssembly = new RuntimeAssemblyImpl(generatorRegistry,
                                                   resolver,
                                                   normalizer,
@@ -412,9 +409,12 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
         ComponentReferenceLoader componentReferenceLoader = new ComponentReferenceLoader(loaderRegistry,
                                                                                          policyHelper);
+        ComponentServiceLoader componentServiceLoader = new ComponentServiceLoader(loaderRegistry,
+                                                                                   policyHelper);
         ComponentLoader componentLoader = new ComponentLoader(loaderRegistry,
                                                               propertyValueLoader,
                                                               componentReferenceLoader,
+                                                              componentServiceLoader,
                                                               policyHelper);
 
         IncludeLoader includeLoader = new IncludeLoader(loaderRegistry);
@@ -476,7 +476,8 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         WireAttacherRegistry wireAttacherRegistry = new WireAttacherRegistryImpl();
         SingletonWireAttacher<?, ?> singletonWireAttacher = new SingletonWireAttacher();
         wireAttacherRegistry.register(SingletonWireTargetDefinition.class, singletonWireAttacher);
-        SystemWireAttacher wireAttacher = new SystemWireAttacher(componentManager, wireAttacherRegistry, transformerRegistry);
+        SystemWireAttacher wireAttacher =
+                new SystemWireAttacher(componentManager, wireAttacherRegistry, transformerRegistry);
         wireAttacher.init();
 
         deployer.setBuilderRegistry(registry);

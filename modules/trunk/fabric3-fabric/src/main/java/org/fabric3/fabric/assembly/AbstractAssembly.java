@@ -18,16 +18,15 @@
  */
 package org.fabric3.fabric.assembly;
 
-import static org.osoa.sca.Constants.SCA_NS;
-
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.xml.namespace.QName;
+
+import static org.osoa.sca.Constants.SCA_NS;
 
 import org.fabric3.fabric.assembly.allocator.AllocationException;
 import org.fabric3.fabric.assembly.allocator.Allocator;
@@ -42,6 +41,7 @@ import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.ComponentReference;
+import org.fabric3.scdl.ComponentService;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.CompositeReference;
@@ -216,13 +216,13 @@ public abstract class AbstractAssembly implements Assembly {
         } catch (ResolutionException e) {
             throw new ActivateException(e);
         }
-        
+
         // resolve resources for each new component
         try {
-            for(LogicalComponent<?> component : components) {
+            for (LogicalComponent<?> component : components) {
                 resourceResolver.resolve(component);
             }
-        } catch(ResourceResolutionException e) {
+        } catch (ResourceResolutionException e) {
             throw new ActivateException(e);
         }
 
@@ -342,19 +342,24 @@ public abstract class AbstractAssembly implements Assembly {
             }
 
         } else {
-            
+
             // this is an atomic component so create and bind its services, references and resources
             AbstractComponentType<?, ?, ?, ?> componentType = impl.getComponentType();
-            
+
             for (ServiceDefinition service : componentType.getServices().values()) {
-                URI serviceUri = uri.resolve('#' + service.getName());
+                String name = service.getName();
+                URI serviceUri = uri.resolve('#' + name);
                 LogicalService logicalService = new LogicalService(serviceUri, service, component);
-                for (BindingDefinition binding : service.getBindings()) {
-                    logicalService.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalService));
+                ComponentService componentService = definition.getServices().get(name);
+                if (componentService != null) {
+                    // service is configured in the component definition
+                    for (BindingDefinition binding : componentService.getBindings()) {
+                        logicalService.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalService));
+                    }
                 }
                 component.addService(logicalService);
             }
-            
+
             for (ReferenceDefinition reference : componentType.getReferences().values()) {
                 String name = reference.getName();
                 URI referenceUri = uri.resolve('#' + name);
@@ -368,17 +373,17 @@ public abstract class AbstractAssembly implements Assembly {
                 }
                 component.addReference(logicalReference);
             }
-            
+
             for (ResourceDefinition resource : componentType.getResources().values()) {
                 URI resourceUri = uri.resolve('#' + resource.getName());
                 LogicalResource<?> logicalResource = createLogicalResource(resource, resourceUri, component);
                 component.addResource(logicalResource);
             }
-            
+
         }
 
         return component;
-        
+
     }
 
     /**

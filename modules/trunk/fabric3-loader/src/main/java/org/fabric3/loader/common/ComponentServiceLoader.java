@@ -23,9 +23,9 @@ import javax.xml.stream.XMLStreamReader;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.scdl.BindingDefinition;
+import org.fabric3.scdl.ComponentService;
 import org.fabric3.scdl.ModelObject;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.loader.Loader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
@@ -38,7 +38,7 @@ import org.fabric3.spi.loader.UnrecognizedElementException;
  *
  * @version $Rev$ $Date$
  */
-public class ComponentServiceLoader implements StAXElementLoader<ServiceDefinition> {
+public class ComponentServiceLoader implements StAXElementLoader<ComponentService> {
     private final Loader loader;
     private final PolicyHelper policyHelper;
 
@@ -48,12 +48,12 @@ public class ComponentServiceLoader implements StAXElementLoader<ServiceDefiniti
         this.policyHelper = policyHelper;
     }
 
-    public ServiceDefinition load(XMLStreamReader reader, LoaderContext context)
+    public ComponentService load(XMLStreamReader reader, LoaderContext context)
             throws XMLStreamException, LoaderException {
-        
+
         String name = reader.getAttributeValue(null, "name");
-        ServiceDefinition def = new ServiceDefinition(name, null);
-        
+        ComponentService def = new ComponentService(name, null);
+
         policyHelper.loadPolicySetsAndIntents(def, reader);
 
         while (true) {

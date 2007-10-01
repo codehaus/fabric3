@@ -25,29 +25,31 @@ import java.util.Map;
 import org.w3c.dom.Document;
 
 /**
- * Represents a component. <p>A component is a configured instance of an implementation. The services provided and
- * consumed and the available configuration properties are defined by the implementation (represented by its
+ * Represents a component. <p>A component is a configured instance of an implementation. The provided and consumed
+ * services, as well as the available configuration properties are defined by the implementation (represented by its
  * componentType).</p> <p>Every component has a name which uniquely identifies it within the scope of the composite that
  * contains it; the name must be different from the names of all other components, services and references immediately
  * contained in the composite (directly or through an &lt;include&gt; element).</p> <p>A component may define a {@link
- * PropertyValue} that overrides the default value of a {@link org.fabric3.scdl.Property} defined in the
+ * PropertyValue} that overrides the default value of a {@link org.fabric3.scdl.Property} specified in the
  * componentType.</p> <p>It may also define a {@link ComponentReference} for a {@link
  * org.fabric3.scdl.ReferenceDefinition} defined in the componentType. The ComponentReference must resolve to another
- * component or a reference in the enclosing composite.</p> <p>Components may specify an initialization level that will
- * determine the order in which it will be eagerly initialized relative to other components from the enclosing composite
- * that are in the same scope. This can be used to define a startup sequence for components that are otherwise
- * independent. Any initialization required to resolve references between components will override this initialization
- * order.</p>
+ * component or a reference in the enclosing composite.</p> <p>A component may define a {@link ComponentService} for a
+ * {@link org.fabric3.scdl.ServiceDefinition} specified in the componentType.</p> <p>Components may specify an
+ * initialization level that will determine the order in which it will be eagerly initialized relative to other
+ * components from the enclosing composite that are in the same scope. This can be used to define a startup sequence for
+ * components that are otherwise independent. Any initialization required to resolve references between components will
+ * override this initialization order.</p>
  *
  * @version $Rev$ $Date$
  */
 public class ComponentDefinition<I extends Implementation<?>> extends AbstractPolicyAware {
-    
+
     private final String name;
     private URI runtimeId;
     private Autowire autowire = Autowire.INHERITED;
     private Integer initLevel;
     private I implementation;
+    private final Map<String, ComponentService> services = new HashMap<String, ComponentService>();
     private final Map<String, ComponentReference> references = new HashMap<String, ComponentReference>();
     private final Map<String, PropertyValue> propertyValues = new HashMap<String, PropertyValue>();
     private Document key;
@@ -55,7 +57,7 @@ public class ComponentDefinition<I extends Implementation<?>> extends AbstractPo
     /**
      * Constructor specifying the component's name.
      *
-     * @param name           the name of this component
+     * @param name the name of this component
      */
     public ComponentDefinition(String name) {
         this.name = name;
@@ -74,7 +76,7 @@ public class ComponentDefinition<I extends Implementation<?>> extends AbstractPo
 
     /**
      * Sets the {@link Implementation} of this component.
-     * 
+     *
      * @param implementation the implementation of this component
      */
     public void setImplementation(I implementation) {
@@ -174,6 +176,24 @@ public class ComponentDefinition<I extends Implementation<?>> extends AbstractPo
     }
 
     /**
+     * Returns a live Map of the {@link ComponentService}s configured by this component definition.
+     *
+     * @return the services configured by this component
+     */
+    public Map<String, ComponentService> getServices() {
+        return services;
+    }
+
+    /**
+     * Add a service configuration to this component. Any existing configuration for the service is replaced.
+     *
+     * @param service the service to add
+     */
+    public void add(ComponentService service) {
+        services.put(service.getName(), service);
+    }
+
+    /**
      * Returns a live Map of {@link PropertyValue property values} configured by this component definition.
      *
      * @return the property values configured by this component
@@ -194,6 +214,7 @@ public class ComponentDefinition<I extends Implementation<?>> extends AbstractPo
 
     /**
      * Returns the key to be used if this component is wired to a map of references.
+     *
      * @return The value of the key.
      */
     public Document getKey() {
@@ -202,18 +223,20 @@ public class ComponentDefinition<I extends Implementation<?>> extends AbstractPo
 
     /**
      * Returns the key to be used if this component is wired to a map of references.
+     *
      * @param key The value of the key.
      */
     public void setKey(Document key) {
         this.key = key;
     }
-    
+
     /**
      * Gets the component type.
+     *
      * @return Component type.
      */
     public AbstractComponentType<?, ?, ?, ?> getComponentType() {
         return getImplementation().getComponentType();
     }
-    
+
 }

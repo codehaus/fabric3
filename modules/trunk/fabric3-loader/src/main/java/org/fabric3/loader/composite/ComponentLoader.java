@@ -38,6 +38,7 @@ import org.w3c.dom.Element;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.ComponentReference;
+import org.fabric3.scdl.ComponentService;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.PropertyValue;
 import org.fabric3.spi.Constants;
@@ -58,9 +59,11 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
 
     private static final QName COMPONENT = new QName(SCA_NS, "component");
     private static final QName PROPERTY = new QName(SCA_NS, "property");
+    private static final QName SERVICE = new QName(SCA_NS, "service");
     private static final QName REFERENCE = new QName(SCA_NS, "reference");
 
     private static final DocumentBuilder documentBuilder;
+
     static {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -74,27 +77,21 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
     private final Loader loader;
     private final StAXElementLoader<PropertyValue> propertyValueLoader;
     private final StAXElementLoader<ComponentReference> referenceLoader;
+    private final StAXElementLoader<ComponentService> serviceLoader;
     private final PolicyHelper policyHelper;
 
-    /**
-     * @param loader
-     * @param propertyValueLoader
-     * @param referenceLoader
-     */
     public ComponentLoader(@Reference Loader loader,
                            @Reference(name = "propertyValue")StAXElementLoader<PropertyValue> propertyValueLoader,
                            @Reference(name = "reference")StAXElementLoader<ComponentReference> referenceLoader,
+                           @Reference(name = "service")StAXElementLoader<ComponentService> serviceLoader,
                            @Reference(name = "policyHelper")PolicyHelper policyHelper) {
         this.loader = loader;
         this.propertyValueLoader = propertyValueLoader;
         this.referenceLoader = referenceLoader;
+        this.serviceLoader = serviceLoader;
         this.policyHelper = policyHelper;
     }
 
-    /**
-     * @see org.fabric3.spi.loader.StAXElementLoader#load(javax.xml.stream.XMLStreamReader,
-     *org.fabric3.spi.loader.LoaderContext)
-     */
     public ComponentDefinition<?> load(XMLStreamReader reader, LoaderContext context)
             throws XMLStreamException, LoaderException {
 
@@ -125,6 +122,9 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
                 } else if (REFERENCE.equals(qname)) {
                     ComponentReference reference = referenceLoader.load(reader, context);
                     componentDefinition.add(reference);
+                } else if (SERVICE.equals(qname)) {
+                    ComponentService service = serviceLoader.load(reader, context);
+                    componentDefinition.add(service);
                 } else {
                     // Unknown extension element - ignore
                     LoaderUtil.skipToEndElement(reader);
@@ -139,8 +139,8 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
 
     /**
      * Loads the key when the component is wired to a map based reference.
-     * @param reader a reader positioned on the element containing the key definition
      *
+     * @param reader a reader positioned on the element containing the key definition
      * @return a Document containing the key value.
      */
     private Document loadKey(XMLStreamReader reader) {

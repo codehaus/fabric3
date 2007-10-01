@@ -56,6 +56,7 @@
         <system:implementation.system class="org.fabric3.loader.composite.ComponentLoader"/>
         <reference name="propertyValue" target="loader.PropertyValue"/>
         <reference name="reference" target="loader.ComponentReference"/>
+        <reference name="service" target="loader.ComponentService"/>
         <reference name="policyHelper" target="policyHelper"/>
     </component>
     <component name="loader.Include">
@@ -87,28 +88,28 @@
         <reference name="service" target="loader.ComponentService"/>
         <reference name="reference" target="loader.ComponentReference"/>
     </component>
-    
+
     <!-- Definitions SCDL loader implementation -->
     <component name="loader.definitions">
         <system:implementation.system class="org.fabric3.loader.definitions.DefinitionsLoader"/>
     </component>
-    
+
     <component f3:key="sca:intent" name="loader.intent">
         <system:implementation.system class="org.fabric3.loader.definitions.IntentLoader"/>
     </component>
-    
+
     <component name="loader.policySet">
         <system:implementation.system class="org.fabric3.loader.definitions.PolicySetLoader"/>
     </component>
-    
+
     <component name="loader.bindingType">
         <system:implementation.system class="org.fabric3.loader.definitions.BindingTypeLoader"/>
     </component>
-    
+
     <component name="loader.implementationType">
         <system:implementation.system class="org.fabric3.loader.definitions.ImplementationTypeLoader"/>
     </component>
-    
+
     <!-- Policy helper -->
     <component name="policyHelper">
         <system:implementation.system class="org.fabric3.loader.common.DefaultPolicyHelper"/>
