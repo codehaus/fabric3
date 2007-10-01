@@ -95,7 +95,7 @@ public class JavaMappedResourceWireAttacher implements WireAttacher<PhysicalWire
     public void attachToTarget(PhysicalWireSourceDefinition source, JavaMappedResourceWireTargetDefinition targetDefinition, Wire wire) throws WiringException {
 
 
-        Component component = componentManager.getComponent(URI.create(targetDefinition.getMappedName()));
+        Component component = componentManager.getComponent(targetDefinition.getUri());
         assert component instanceof PojoComponent;
         PojoComponent<?> target = (PojoComponent<?>) component;
 

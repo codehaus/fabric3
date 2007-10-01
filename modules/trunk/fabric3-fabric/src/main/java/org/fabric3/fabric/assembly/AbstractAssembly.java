@@ -370,7 +370,7 @@ public abstract class AbstractAssembly implements Assembly {
             }
             
             for (ResourceDefinition resource : componentType.getResources().values()) {
-                URI resourceUri = uri.resolve('#' + resource.getMappedName());
+                URI resourceUri = uri.resolve('#' + resource.getName());
                 LogicalResource<?> logicalResource = createLogicalResource(resource, resourceUri, component);
                 component.addResource(logicalResource);
             }

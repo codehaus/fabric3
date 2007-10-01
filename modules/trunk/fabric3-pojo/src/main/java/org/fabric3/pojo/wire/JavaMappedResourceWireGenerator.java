@@ -49,7 +49,6 @@ public class JavaMappedResourceWireGenerator implements ResourceWireGenerator<Ja
     public JavaMappedResourceWireTargetDefinition genearteWireTargetDefinition(LogicalResource<JavaMappedResource> logicalResource) {
         
         JavaMappedResourceWireTargetDefinition wtd = new JavaMappedResourceWireTargetDefinition();
-        wtd.setMappedName(logicalResource.getResourceDefinition().getMappedName());
         wtd.setUri(logicalResource.getTarget());
 
         return wtd;

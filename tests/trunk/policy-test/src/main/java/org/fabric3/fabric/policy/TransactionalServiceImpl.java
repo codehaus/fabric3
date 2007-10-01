@@ -28,7 +28,7 @@ public class TransactionalServiceImpl implements TransactionalService {
     
     private TransactionManager transactionManager;
     
-    @Resource(name = "transactionManager", mappedName="transactionManager")
+    @Resource(name = "transactionManager", mappedName="TransactionManager")
     public void setTransactionManager(TransactionManager transactionManager) {
         this.transactionManager = transactionManager;
     }

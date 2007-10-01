@@ -25,22 +25,4 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
  * @version $Revision$ $Date$
  */
 public class JavaMappedResourceWireTargetDefinition extends PhysicalWireTargetDefinition {
-    
-    private String mappedName;
-
-    /**
-     * @return Mapped name for the resource.
-     */
-    public String getMappedName() {
-        return mappedName;
-    }
-
-    /**
-     * @param mappedName Mapped name for the resource.
-     */
-    public void setMappedName(String mappedName) {
-        this.mappedName = mappedName;
-    }
-    
-
 }
