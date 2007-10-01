@@ -16,22 +16,25 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.resource;
+package org.fabric3.spi.generator;
 
-import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.scdl.ResourceDefinition;
+import org.fabric3.spi.model.instance.LogicalResource;
+import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 
 /**
- *
- * Abstraction for resolving resource references.
+ * Wire generator for resources.
  * 
  * @version $Revision$ $Date$
  */
-public interface ResourceResolver {
+public interface ResourceWireGenerator<PWTD extends PhysicalWireTargetDefinition, RD extends ResourceDefinition> {
     
     /**
-     * @param component Component whose resources need to be resolved.
-     * @throws ResourceResolutionException If the resource cannot be resolved.
+     * Generate the target wire definition for logical resource.
+     * 
+     * @param logicalResource Logical resource.
+     * @return Source wire definition.
      */
-    void resolve(LogicalComponent<?> component) throws ResourceResolutionException;
+    PWTD genearteWireTargetDefinition(LogicalResource<RD> logicalResource);
 
 }

@@ -18,9 +18,12 @@
  */
 package org.fabric3.resource.resolver;
 
+import java.net.URI;
+
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.ResourceDefinition;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.resource.ResourceResolutionException;
 import org.fabric3.spi.resource.ResourceResolver;
 
@@ -33,12 +36,13 @@ import org.fabric3.spi.resource.ResourceResolver;
  * @version $Revision$ $Date$
  */
 public class DefaultResourceResolver implements ResourceResolver {
+    
+    private static final String SYSTEM_URI = "fabric3://./runtime/";
 
     /**
-     * @see org.fabric3.spi.resource.ResourceResolver#resolve(org.fabric3.spi.model.instance.LogicalComponent, 
-     *                                                        org.fabric3.spi.model.instance.LogicalComponent)
+     * @see org.fabric3.spi.resource.ResourceResolver#resolve(org.fabric3.spi.model.instance.LogicalComponent)
      */
-    public void resolve(LogicalComponent<?> component, LogicalComponent<?> domain) throws ResourceResolutionException {
+    public void resolve(LogicalComponent<?> component) throws ResourceResolutionException {
         
         AbstractComponentType<?, ?, ?, ?> componentType = component.getComponentType();
         
@@ -50,6 +54,10 @@ public class DefaultResourceResolver implements ResourceResolver {
             if(mappedName == null) {
                 throw new ResourceResolutionException("Mapped name is not specified for the resource: " + name);
             }
+            
+            LogicalResource logicalResource = component.getResource(mappedName);
+            URI targetUri = URI.create(SYSTEM_URI + mappedName);
+            logicalResource.setTarget(targetUri);
 
         }
         

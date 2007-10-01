@@ -31,6 +31,7 @@ import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
+import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
@@ -114,6 +115,15 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
             uri = target.getUri();
         }
         wireDefinition.setUri(uri);
+        return wireDefinition;
+    }
+
+    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<GroovyImplementation> source, 
+                                                                   LogicalResource<?> resource) throws GenerationException {
+        GroovyWireSourceDefinition wireDefinition = new GroovyWireSourceDefinition();
+        wireDefinition.setUri(resource.getUri());
+        wireDefinition.setOptimizable(true);
+        wireDefinition.setConversational(false);
         return wireDefinition;
     }
 }

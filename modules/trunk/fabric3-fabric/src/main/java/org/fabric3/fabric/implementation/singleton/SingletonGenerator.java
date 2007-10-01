@@ -28,6 +28,7 @@ import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
+import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
@@ -61,6 +62,11 @@ public class SingletonGenerator implements ComponentGenerator<LogicalComponent<S
         URI uri = logical.getUri().resolve(service.getUri());
         wireDefinition.setUri(uri);
         return wireDefinition;
+    }
+
+    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<SingletonImplementation> source, 
+                                                                   LogicalResource<?> resource) throws GenerationException {
+        throw new UnsupportedOperationException();
     }
     
 }

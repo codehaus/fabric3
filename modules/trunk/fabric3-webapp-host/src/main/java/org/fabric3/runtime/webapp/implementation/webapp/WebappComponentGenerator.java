@@ -39,8 +39,10 @@ import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
+import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
+import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
@@ -119,6 +121,12 @@ public class WebappComponentGenerator implements ComponentGenerator<LogicalCompo
      */
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, 
                                                            LogicalComponent<WebappImplementation> arg1) throws GenerationException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<WebappImplementation> source, 
+                                                                   LogicalResource<?> resource) throws GenerationException {
         // TODO Auto-generated method stub
         return null;
     }

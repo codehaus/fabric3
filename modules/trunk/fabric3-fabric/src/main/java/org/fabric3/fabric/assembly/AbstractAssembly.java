@@ -220,7 +220,7 @@ public abstract class AbstractAssembly implements Assembly {
         // resolve resources for each new component
         try {
             for(LogicalComponent<?> component : components) {
-                resourceResolver.resolve(component, domain);
+                resourceResolver.resolve(component);
             }
         } catch(ResourceResolutionException e) {
             throw new ActivateException(e);

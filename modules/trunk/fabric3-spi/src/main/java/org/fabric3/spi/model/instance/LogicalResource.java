@@ -30,11 +30,11 @@ import org.fabric3.spi.Constants;
  * 
  * @version $Revision$ $Date$
  */
-public class LogicalResource extends LogicalScaArtifact<LogicalComponent<?>> {
+public class LogicalResource<RD extends ResourceDefinition> extends LogicalScaArtifact<LogicalComponent<?>> {
     
     private static final QName TYPE = new QName(Constants.FABRIC3_NS, "resource");
     
-    private final ResourceDefinition resourceDefinition;
+    private final RD resourceDefinition;
     private URI target;
 
     /**
@@ -43,7 +43,7 @@ public class LogicalResource extends LogicalScaArtifact<LogicalComponent<?>> {
      * @param uri URI of the resource.
      * @param resourceDefinition Definition of the resource.
      */
-    public LogicalResource(URI uri, ResourceDefinition resourceDefinition, LogicalComponent<?> parent) {
+    public LogicalResource(URI uri, RD resourceDefinition, LogicalComponent<?> parent) {
         super(uri, parent, TYPE);
         this.resourceDefinition = resourceDefinition;
     }
@@ -53,7 +53,7 @@ public class LogicalResource extends LogicalScaArtifact<LogicalComponent<?>> {
      * 
      * @return Definition for this resource.
      */
-    public final ResourceDefinition getResourceDefinition() {
+    public final RD getResourceDefinition() {
         return resourceDefinition;
     }
     

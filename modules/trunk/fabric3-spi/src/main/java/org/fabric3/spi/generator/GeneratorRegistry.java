@@ -22,10 +22,12 @@ import java.util.Set;
 
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.ResourceDefinition;
 import org.fabric3.scdl.definitions.PolicySetExtension;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
+import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
@@ -72,12 +74,24 @@ public interface GeneratorRegistry {
     void register(CommandGenerator generator);
     
     /**
+     * Registers a resource wire generator.
+     * 
+     * @param <R> Resource type.
+     * @param clazz Resource type class.
+     * @param resourceWireGenerator Resource wire generator.
+     */
+    <R extends ResourceDefinition> void register(Class<R> clazz, ResourceWireGenerator<?, R> resourceWireGenerator);
+    
+    /**
      * Generates the physical wires for the resources in this component.
      * 
-     * @param logical Logical component.
+     * @param source Source component.
+     * @param resourceDefinition Resource definition.
      * @param context Generator context.
      */
-    void generateResourceWires(LogicalComponent<?> logical, GeneratorContext context);
+    <C extends LogicalComponent<?>> void generateResourceWire(C source, 
+                                                              LogicalResource<?> resource, 
+                                                              GeneratorContext context) throws GenerationException;
 
     /**
      * Generates a PhysicalComponentDefinition from the logical component. A physical change set for the runtime the

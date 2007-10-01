@@ -31,15 +31,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.ResourceDefinition;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySetExtension;
@@ -50,9 +48,12 @@ import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
+import org.fabric3.spi.generator.ResourceGenerator;
+import org.fabric3.spi.generator.ResourceWireGenerator;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
+import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
@@ -64,7 +65,6 @@ import org.fabric3.spi.model.type.SCABindingDefinition;
 import org.fabric3.spi.policy.registry.PolicyResolutionException;
 import org.fabric3.spi.policy.registry.PolicyResolver;
 import org.osoa.sca.annotations.Reference;
-import org.w3c.dom.Document;
 
 /**
  * @version $Rev$ $Date$
@@ -77,6 +77,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
     private List<CommandGenerator> commandGenerators = new ArrayList<CommandGenerator>();
     private PolicyResolver policyResolver;
     private Map<Class<? extends PolicySetExtension>, InterceptorDefinitionGenerator<? extends PolicySetExtension, ?>> interceptorDefinitionGenerators;
+    private Map<Class<? extends ResourceDefinition>, ResourceWireGenerator<?, ? extends ResourceDefinition>> resourceWireGenerators;
 
     /**
      *
@@ -94,7 +95,44 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         interceptorDefinitionGenerators =
                 new ConcurrentHashMap<Class<? extends PolicySetExtension>,
                         InterceptorDefinitionGenerator<? extends PolicySetExtension, ?>>();
+        
+        resourceWireGenerators = 
+                new ConcurrentHashMap<Class<? extends ResourceDefinition>, 
+                        ResourceWireGenerator<?, ? extends ResourceDefinition>>();
 
+    }
+    
+    /**
+     * @see org.fabric3.spi.generator.GeneratorRegistry#register(java.lang.Class, org.fabric3.spi.generator.ResourceWireGenerator)
+     */
+    public <R extends ResourceDefinition> void register(Class<R> clazz, ResourceWireGenerator<?,  R> resourceWireGenerator) {
+        resourceWireGenerators.put(clazz, resourceWireGenerator);
+    }
+
+    /**
+     * @see org.fabric3.spi.generator.GeneratorRegistry#generateResourceWires(org.fabric3.scdl.ResourceDefinition, 
+     *                                                                        org.fabric3.spi.generator.GeneratorContext)
+     */
+    public <C extends LogicalComponent<?>> void generateResourceWire(C source, 
+                                                                     LogicalResource<?> resource, 
+                                                                     GeneratorContext context) throws GenerationException {
+
+        Class<? extends Implementation> implType = source.getDefinition().getImplementation().getClass();
+        ComponentGenerator<C> sourceGenerator = (ComponentGenerator<C>) componentGenerators.get(implType);
+        if (sourceGenerator == null) {
+            throw new GeneratorNotFoundException(implType);
+        }
+        PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateResourceWireSource(source, resource);
+        
+        Class<? extends ResourceDefinition> resType = resource.getResourceDefinition().getClass();
+        ResourceWireGenerator targetGenerator = resourceWireGenerators.get(resType);
+        if (targetGenerator == null) {
+            throw new GeneratorNotFoundException(resType);
+        }
+        PhysicalWireTargetDefinition targetDefinition = targetGenerator.genearteWireTargetDefinition(resource);
+        
+        
+        // TODO Implement
     }
 
     /**
@@ -146,14 +184,6 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         }
         return generator.generate(component, intentsToBeProvided, context);
         
-    }
-
-    /**
-     * @see org.fabric3.spi.generator.GeneratorRegistry#generateResourceWires(
-     *     org.fabric3.spi.model.instance.LogicalComponent, 
-     *     org.fabric3.spi.generator.GeneratorContext)
-     */
-    public void generateResourceWires(LogicalComponent<?> logical, GeneratorContext context) {
     }
 
     @SuppressWarnings({"unchecked"})

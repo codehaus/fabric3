@@ -33,6 +33,7 @@ import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
+import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
@@ -104,6 +105,12 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
         SystemWireTargetDefinition wireDefinition = new SystemWireTargetDefinition();
         wireDefinition.setUri(service.getUri());
         return wireDefinition;
+    }
+
+    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<SystemImplementation> source, 
+                                                                   LogicalResource<?> resource) throws GenerationException {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 

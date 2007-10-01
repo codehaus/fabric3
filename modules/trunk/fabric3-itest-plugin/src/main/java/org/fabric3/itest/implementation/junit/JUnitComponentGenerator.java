@@ -24,6 +24,7 @@ import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
+import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.ValueSource;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
@@ -173,6 +174,13 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         for (String type : ctorDef.getParameterTypes()) {
             providerDefinition.addConstructorArgument(type);
         }
+    }
+
+    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<ImplementationJUnit> source, 
+                                                                   LogicalResource<?> resource) throws GenerationException {
+        JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
+        wireDefinition.setUri(resource.getUri());
+        return wireDefinition;
     }
 
 
