@@ -48,7 +48,6 @@ import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
-import org.fabric3.spi.generator.ResourceGenerator;
 import org.fabric3.spi.generator.ResourceWireGenerator;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -113,26 +112,35 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
      * @see org.fabric3.spi.generator.GeneratorRegistry#generateResourceWires(org.fabric3.scdl.ResourceDefinition, 
      *                                                                        org.fabric3.spi.generator.GeneratorContext)
      */
+    @SuppressWarnings("unchecked")
     public <C extends LogicalComponent<?>> void generateResourceWire(C source, 
                                                                      LogicalResource<?> resource, 
                                                                      GeneratorContext context) throws GenerationException {
 
+        // Generates the source side of the wire
         Class<? extends Implementation> implType = source.getDefinition().getImplementation().getClass();
         ComponentGenerator<C> sourceGenerator = (ComponentGenerator<C>) componentGenerators.get(implType);
         if (sourceGenerator == null) {
             throw new GeneratorNotFoundException(implType);
         }
-        PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateResourceWireSource(source, resource);
+        PhysicalWireSourceDefinition pwsd = sourceGenerator.generateResourceWireSource(source, resource);
         
+        // Generates the target side of the wire
         Class<? extends ResourceDefinition> resType = resource.getResourceDefinition().getClass();
         ResourceWireGenerator targetGenerator = resourceWireGenerators.get(resType);
         if (targetGenerator == null) {
             throw new GeneratorNotFoundException(resType);
         }
-        PhysicalWireTargetDefinition targetDefinition = targetGenerator.genearteWireTargetDefinition(resource);
+        PhysicalWireTargetDefinition pwtd = targetGenerator.genearteWireTargetDefinition(resource);
         
+        // Create the wire from the component to the resource
+        ServiceContract<?> serviceContract = resource.getResourceDefinition().getServiceContract();
+        PhysicalWireDefinition pwd = createWireDefinition(serviceContract, Collections.EMPTY_SET);
+        pwd.setSource(pwsd);
+        pwd.setTarget(pwtd);
         
-        // TODO Implement
+        context.getPhysicalChangeSet().addWireDefinition(pwd);
+
     }
 
     /**
@@ -383,6 +391,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
 
     }
 
+    @SuppressWarnings("unchecked")
     private String getClassName(Type paramType) {
 
         // TODO this needs to be fixed

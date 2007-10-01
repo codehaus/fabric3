@@ -371,7 +371,7 @@ public abstract class AbstractAssembly implements Assembly {
             
             for (ResourceDefinition resource : componentType.getResources().values()) {
                 URI resourceUri = uri.resolve('#' + resource.getMappedName());
-                LogicalResource logicalResource = new LogicalResource(resourceUri, resource, component);
+                LogicalResource<?> logicalResource = createLogicalResource(resource, resourceUri, component);
                 component.addResource(logicalResource);
             }
             
@@ -521,6 +521,11 @@ public abstract class AbstractAssembly implements Assembly {
                 generatorRegistry.generateBoundServiceWire(service, binding, component, context);
             }
         }
+        
+        // generate wire definitions for resources
+        for (LogicalResource<?> resource : component.getResources()) {
+            generatorRegistry.generateResourceWire(component, resource, context);
+        }
 
     }
 
@@ -612,6 +617,13 @@ public abstract class AbstractAssembly implements Assembly {
             }
         }
         return currentComponent;
+    }
+    
+    /*
+     * Creates a logical resource.
+     */
+    <RD extends ResourceDefinition> LogicalResource<RD> createLogicalResource(RD resourceDefinition, URI resourceUri, LogicalComponent<?> component) {
+        return new LogicalResource<RD>(resourceUri, resourceDefinition, component);
     }
 
 

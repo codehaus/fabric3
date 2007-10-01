@@ -28,9 +28,11 @@ public class ResourceDefinition {
     private String name;
     private String mappedName;
     private boolean optional;
+    private ServiceContract<?> serviceContract;
     
-    public ResourceDefinition(String name) {
+    public ResourceDefinition(String name, ServiceContract<?> serviceContract) {
         this.name = name;
+        this.serviceContract = serviceContract;
     }
 
     /**
@@ -81,5 +83,12 @@ public class ResourceDefinition {
      */
     public void setOptional(boolean optional) {
         this.optional = optional;
+    }
+    
+    /**
+     * Returned the service contract for the resource.
+     */
+    public ServiceContract<?> getServiceContract() {
+        return serviceContract;
     }
 }

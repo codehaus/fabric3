@@ -50,6 +50,14 @@ public interface InstanceFactoryGenerationHelper {
     void processReferenceSites(LogicalComponent<? extends Implementation<PojoComponentType>> component, InstanceFactoryDefinition providerDefinition);
 
     /**
+     * Creates InjectionSiteMappings for resources declared by the component implementation
+     *
+     * @param component          the component corresponding to the implementation
+     * @param providerDefinition the instance factory provider definition
+     */
+    void processResourceSites(LogicalComponent<? extends Implementation<PojoComponentType>> component, InstanceFactoryDefinition providerDefinition);
+
+    /**
      * Adds the constructor parameter types to the provider definition
      *
      * @param ctorDef            the constructor definition

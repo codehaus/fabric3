@@ -29,6 +29,7 @@ import org.fabric3.pojo.instancefactory.Signature;
 import org.fabric3.pojo.scdl.ConstructorDefinition;
 import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.JavaMappedReference;
+import org.fabric3.pojo.scdl.JavaMappedResource;
 import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.MemberSite;
 import org.fabric3.pojo.scdl.PojoComponentType;
@@ -38,6 +39,7 @@ import org.fabric3.scdl.Property;
 import org.fabric3.scdl.PropertyValue;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
+import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.ValueSource;
 import static org.fabric3.spi.model.instance.ValueSource.ValueSourceType.PROPERTY;
 import static org.fabric3.spi.model.instance.ValueSource.ValueSourceType.REFERENCE;
@@ -169,4 +171,32 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
             physical.setPropertyValue(name, value);
         }
     }
+
+    public void processResourceSites(LogicalComponent<? extends Implementation<PojoComponentType>> component, InstanceFactoryDefinition providerDefinition) {
+        
+        Implementation<PojoComponentType> implementation = component.getDefinition().getImplementation();
+        PojoComponentType type = implementation.getComponentType();
+        
+        for (Map.Entry<String, JavaMappedResource<?>> entry : type.getResources().entrySet()) {
+            
+            JavaMappedResource<?> resource = entry.getValue();
+            MemberSite memberSite = new MemberSite(resource.getMember());
+            
+            if (memberSite != null) {
+                LogicalResource<?> logicalResource = component.getResource(resource.getName());
+                if (logicalResource != null) {
+                    ValueSource source = new ValueSource(REFERENCE, entry.getKey());
+
+                    InjectionSiteMapping mapping = new InjectionSiteMapping();
+                    mapping.setSource(source);
+                    mapping.setSite(memberSite);
+
+                    providerDefinition.addInjectionSite(mapping);
+                }
+            }
+            
+        }
+        
+    }
+    
 }

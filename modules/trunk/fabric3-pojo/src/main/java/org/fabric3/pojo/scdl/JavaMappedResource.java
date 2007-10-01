@@ -22,9 +22,10 @@ import java.lang.reflect.Member;
 
 import org.fabric3.scdl.ResourceDefinition;
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.idl.java.JavaServiceContract;
 
 /**
- * A resource dependency declared by a Java component implementation
+ * A resource dependency declared by a Java component implementation.
  * 
  * @version $Rev$ $Date$
  * @param <T> the Java type of the resource
@@ -36,7 +37,7 @@ public class JavaMappedResource<T> extends ResourceDefinition {
     private ObjectFactory<T> objectFactory;
 
     public JavaMappedResource(String name, Class<T> type, Member member) {
-        super(name);
+        super(name, new JavaServiceContract(type));
         this.type = type;
         this.member = member;
     }

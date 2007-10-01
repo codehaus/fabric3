@@ -96,6 +96,7 @@ public class JavaWireAttacher extends PojoWireAttacher<JavaWireSourceDefinition,
 
         Class<?> type = source.getMemberType(referenceSource);
         URI targetUri = targetDefinition.getUri();
+        
         Component target = null;
         if (targetUri != null) {
             URI targetName = UriHelper.getDefragmentedName(targetDefinition.getUri());
