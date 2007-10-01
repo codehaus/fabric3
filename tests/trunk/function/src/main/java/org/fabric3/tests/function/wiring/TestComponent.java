@@ -14,61 +14,63 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.test.wiring;
+package org.fabric3.tests.function.wiring;
 
 import org.osoa.sca.annotations.Reference;
+
+import org.fabric3.tests.function.common.HelloService;
 
 /**
  * @version $Rev$ $Date$
  */
 public class TestComponent implements TestService {
-    private Target constructorTarget;
-    private Target target;
-    private Target promotedReference;
-    private Target nonConfiguredPromotedReference;
-    private Target optionalNonSetReference;
+    private HelloService constructorService;
+    private HelloService service;
+    private HelloService promotedReference;
+    private HelloService nonConfiguredPromotedReference;
+    private HelloService optionalNonSetReference;
 
-    public TestComponent(@Reference(name = "targetConstructor")Target constructorTarget) {
-        this.constructorTarget = constructorTarget;
+    public TestComponent(@Reference(name = "targetConstructor")HelloService constructorHelloService) {
+        this.constructorService = constructorHelloService;
     }
 
     @Reference
-    public void setTarget(Target target) {
-        this.target = target;
+    public void setService(HelloService service) {
+        this.service = service;
     }
 
     @Reference
-    public void setPromotedReference(Target promotedReference) {
+    public void setPromotedReference(HelloService promotedReference) {
         this.promotedReference = promotedReference;
     }
 
     @Reference
-    public void setNonConfiguredPromotedReference(Target target) {
+    public void setNonConfiguredPromotedReference(HelloService target) {
         this.nonConfiguredPromotedReference = target;
     }
 
     @Reference(required = false)
-    public void setOptionalNonSetReference(Target optionalNonSetReference) {
+    public void setOptionalNonSetReference(HelloService optionalNonSetReference) {
         this.optionalNonSetReference = optionalNonSetReference;
     }
 
-    public Target getTarget() {
-        return target;
+    public HelloService getService() {
+        return service;
     }
 
-    public Target getPromotedReference() {
+    public HelloService getPromotedReference() {
         return promotedReference;
     }
 
-    public Target getNonConfiguredPromotedReference() {
+    public HelloService getNonConfiguredPromotedReference() {
         return nonConfiguredPromotedReference;
     }
 
-    public Target getConstructorTarget() {
-        return constructorTarget;
+    public HelloService getConstructorService() {
+        return constructorService;
     }
 
-    public Target getOptionalNonSetReference() {
+    public HelloService getOptionalNonSetReference() {
         return optionalNonSetReference;
     }
 }

@@ -14,11 +14,27 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.test.wiring;
+package org.fabric3.tests.function.binding;
+
+import junit.framework.TestCase;
+import org.osoa.sca.annotations.Reference;
+
+import org.fabric3.tests.function.common.HelloService;
 
 /**
+ * Verifies service and reference promotion.
+ *
  * @version $Rev$ $Date$
  */
-public interface Target {
-    String getTargetName();
+public class PromotionTest extends TestCase {
+    private HelloService helloService;
+
+    @Reference
+    public void setHelloService(HelloService helloService) {
+        this.helloService = helloService;
+    }
+
+    public void testReferenceIsBound() {
+        assertEquals("hello", helloService.send("hello"));
+    }
 }

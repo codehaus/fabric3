@@ -17,14 +17,11 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           name="FunctionTestHarnessComposite">
+           xmlns:hessian="http://www.fabric3.org/binding/hessian/0.2"
+           name="BindingComposite">
 
-    <include name="CommonComposite" scdlResource="org/fabric3/tests/function/common/common.composite"/>
+    <include name="ExplicitBindingComposite" scdlLocation="explicitbinding.composite"/>
+    <include name="PromotionComposite" scdlLocation="promotion.composite"/>
 
-    <include name="SmokeTestComposite" scdlLocation="org/fabric3/tests/function/smoketest.composite"/>
-    <include name="ConversationComposite" scdlLocation="org/fabric3/tests/function/conversation/conversation.composite"/>
-    <include name="PropertiesComposite" scdlLocation="org/fabric3/tests/function/properties/properties.composite"/>
-    <include name="ReferencesComposite" scdlLocation="org/fabric3/tests/function/references/references.composite"/>
-    <include name="BindingComposite" scdlLocation="org/fabric3/tests/function/binding/binding.composite"/>
-    <include name="WiringComposite" scdlLocation="org/fabric3/tests/function/wiring/wiring.composite"/>
+
 </composite>

@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.test.wiring;
+package org.fabric3.tests.function.wiring;
 
 import junit.framework.TestCase;
 import org.osoa.sca.annotations.Reference;
@@ -22,11 +22,11 @@ import org.osoa.sca.annotations.Reference;
 /**
  * @version $Rev$ $Date$
  */
-public class WiringTestCase extends TestCase {
+public class WiringTest extends TestCase {
     private TestService service;
 
     @Reference
-    public void setService(TestService service) {
+    public void setTestService(TestService service) {
         this.service = service;
     }
 
@@ -34,14 +34,14 @@ public class WiringTestCase extends TestCase {
      * Tests a wire that is explicitly targeted with a "target="  on a reference
      */
     public void testTargetedWire() {
-        assertNotNull(service.getTarget());
+        assertNotNull(service.getService());
     }
 
     /**
      * Tests a wire that is explicitly targeted with a "target=" on a constructor
      */
     public void testTargetedConstructorWire() {
-        assertNotNull(service.getConstructorTarget());
+        assertNotNull(service.getConstructorService());
     }
 
     /**

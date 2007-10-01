@@ -14,22 +14,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.test.wiring;
+package org.fabric3.tests.function.binding;
 
-import org.osoa.sca.annotations.Property;
+import junit.framework.TestCase;
+import org.osoa.sca.annotations.Reference;
+
+import org.fabric3.tests.function.common.HelloService;
 
 /**
+ * Verifies a service and reference explictly bound in respective component definitions (as opposed to through
+ * promotion)are handled properly.
+ *
  * @version $Rev$ $Date$
  */
-public class TargetImpl implements Target {
-    private String targetName;
+public class BoundServiceReferenceTest extends TestCase {
+    private HelloService helloService;
 
-
-    public TargetImpl(@Property(name = "targetName")String targetName) {
-        this.targetName = targetName;
+    @Reference
+    public void setHelloService(HelloService helloService) {
+        this.helloService = helloService;
     }
 
-    public String getTargetName() {
-        return targetName;
+    public void testReferenceIsBound() {
+        assertEquals("hello", helloService.send("hello"));
     }
 }

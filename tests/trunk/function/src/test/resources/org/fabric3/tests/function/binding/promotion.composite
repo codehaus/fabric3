@@ -18,29 +18,22 @@
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:hessian="http://www.fabric3.org/binding/hessian/0.2"
-           name="WiringTest">
+           name="PromotionComposite">
 
-    <component name="ConstructorWiringTest">
-        <f3:junit class="org.fabric3.test.wiring.WiringTestCase"/>
-        <reference name="service" target="TestComponent"/>
+    <component name="PromotionTestComponent">
+        <f3:junit class="org.fabric3.tests.function.binding.PromotionTest"/>
     </component>
 
-    <component name="TestComponent">
-        <implementation.java class="org.fabric3.test.wiring.TestComponent"/>
-        <reference name="targetConstructor" target="Target"/>
-        <reference name="target" target="Target"/>
-        <reference name="promotedReference"/>
-    </component>
-
-    <component name="Target">
-        <implementation.java class="org.fabric3.test.wiring.TargetImpl"/>
-    </component>
-
-    <reference name="promotedReference" promote="TestComponent/promotedReference TestComponent/nonConfiguredPromotedReference">
-        <interface.java interface="org.fabric3.test.wiring.TestService"/>
-        <!-- temporarily use hessian -->
+    <reference name ="PromotedReference" promote="PromotionTestComponent/helloService">
         <hessian:binding.hessian uri="http://localhost:8900/helloService"/>
     </reference>
 
+    <service name="HelloService" promote="HelloComponent/HelloService">
+        <hessian:binding.hessian uri="/helloService"/>
+    </service>
+
+    <component name="HelloComponent">
+        <implementation.java class="org.fabric3.tests.function.common.HelloServiceImpl"/>
+    </component>
 
 </composite>
