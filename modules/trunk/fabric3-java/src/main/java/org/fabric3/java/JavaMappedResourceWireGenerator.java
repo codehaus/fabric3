@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.pojo.wire;
+package org.fabric3.java;
 
 import org.fabric3.pojo.scdl.JavaMappedResource;
 import org.fabric3.spi.generator.GeneratorRegistry;
@@ -31,7 +31,7 @@ import org.osoa.sca.annotations.Reference;
  */
 @SuppressWarnings("unchecked")
 @EagerInit
-public class JavaMappedResourceWireGenerator implements ResourceWireGenerator<JavaMappedResourceWireTargetDefinition, JavaMappedResource> {
+public class JavaMappedResourceWireGenerator implements ResourceWireGenerator<JavaWireTargetDefinition, JavaMappedResource> {
 
     /**
      * Injects the generator registry.
@@ -46,9 +46,9 @@ public class JavaMappedResourceWireGenerator implements ResourceWireGenerator<Ja
     /**
      * @see org.fabric3.spi.generator.ResourceWireGenerator#genearteWireTargetDefinition(org.fabric3.spi.model.instance.LogicalResource)
      */
-    public JavaMappedResourceWireTargetDefinition genearteWireTargetDefinition(LogicalResource<JavaMappedResource> logicalResource) {
+    public JavaWireTargetDefinition genearteWireTargetDefinition(LogicalResource<JavaMappedResource> logicalResource) {
         
-        JavaMappedResourceWireTargetDefinition wtd = new JavaMappedResourceWireTargetDefinition();
+        JavaWireTargetDefinition wtd = new JavaWireTargetDefinition();
         wtd.setUri(logicalResource.getTarget());
 
         return wtd;

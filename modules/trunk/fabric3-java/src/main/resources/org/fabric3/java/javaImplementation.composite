@@ -53,12 +53,12 @@
     </component>
     
     <!-- TODO Below to should be pulled up to POJO level -->
-    <component name="org.fabric3.pojo.wire.JavaMappedResourceWireGenerator">
-        <system:implementation.system class="org.fabric3.pojo.wire.JavaMappedResourceWireGenerator"/>
+    <component name="org.fabric3.java.JavaMappedResourceWireGenerator">
+        <system:implementation.system class="org.fabric3.java.JavaMappedResourceWireGenerator"/>
     </component>
     
-    <component name="org.fabric3.pojo.wire.JavaMappedResourceWireAttacher">
-        <system:implementation.system class="org.fabric3.pojo.wire.JavaMappedResourceWireAttacher"/>
+    <component name="org.fabric3.java.JavaMappedResourceWireAttacher">
+        <system:implementation.system class="org.fabric3.java.JavaMappedResourceWireAttacher"/>
     </component>
 
 </composite>

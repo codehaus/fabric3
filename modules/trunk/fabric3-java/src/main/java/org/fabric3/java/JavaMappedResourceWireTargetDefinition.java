@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.pojo.wire;
+package org.fabric3.java;
 
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 
