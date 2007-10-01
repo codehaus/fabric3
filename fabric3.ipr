@@ -366,7 +366,6 @@
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/runtime-webapp/runtime-webapp.iml" filepath="$PROJECT_DIR$/tests/trunk/runtime-webapp/runtime-webapp.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/spec/trunk/sca-spec.iml" filepath="$PROJECT_DIR$/spec/trunk/sca-spec.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/groovy/test-groovy.iml" filepath="$PROJECT_DIR$/tests/trunk/groovy/test-groovy.iml" group="tests" />
-      <module fileurl="file://$PROJECT_DIR$/tests/trunk/wiring-test/wiring-test.iml" filepath="$PROJECT_DIR$/tests/trunk/wiring-test/wiring-test.iml" group="tests" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.5" project-jdk-type="JavaSDK" />
