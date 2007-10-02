@@ -110,7 +110,7 @@ public class PersistenceUnitAnnotationProcessor extends ImplementationProcessorE
                 Method writeMethod = pd.getWriteMethod();
                 if(writeMethod != null && method.equals(writeMethod)) {
                     Class<?> propertyType = pd.getPropertyType();
-                    if(EntityManagerFactory.class.isAssignableFrom(propertyType)) {
+                    if(!EntityManagerFactory.class.isAssignableFrom(propertyType)) {
                         throw new ProcessingException("Invalid property type " + propertyType);
                     }
                     propertyFound = true;
@@ -121,7 +121,7 @@ public class PersistenceUnitAnnotationProcessor extends ImplementationProcessorE
             throw new ProcessingException(e);
         }
         
-        if(propertyFound) {
+        if(!propertyFound) {
             throw new ProcessingException("Method is not a property setter " + method.toString());
         }
         

@@ -19,14 +19,16 @@
 package org.fabric3.jpa.processor;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 
-import org.fabric3.jpa.PersistenceUnitResource;
-import org.fabric3.pojo.scdl.PojoComponentType;
-
 import junit.framework.TestCase;
+
+import org.fabric3.jpa.PersistenceUnitResource;
+import org.fabric3.pojo.processor.ProcessingException;
+import org.fabric3.pojo.scdl.PojoComponentType;
 
 /**
  *
@@ -49,16 +51,55 @@ public class PersistenceUnitAnnotationProcessorTestCase extends TestCase {
         
     }
 
-    public void testInvalidFieldWithIncorrectType() {
+    public void testInvalidFieldWithIncorrectType() throws Exception {
+        
+        try {
+            Field field = Foo.class.getDeclaredField("emf2");
+            processor.visitField(field, type, null);
+        } catch(ProcessingException ex) {
+            return;
+        }
+        
+        fail("Expected processing exception");
+        
     }
 
-    public void testValidMethod() {
+    public void testValidMethod() throws Exception {
+        
+        Method method = Foo.class.getDeclaredMethod("setEmf3", EntityManagerFactory.class);
+        processor.visitMethod(method, type, null);
+        
+        PersistenceUnitResource resource = (PersistenceUnitResource) type.getResources().get("someName");
+        assertNotNull(resource);
+        assertEquals("someName", resource.getName());
+        assertEquals("someUnitName", resource.getUnitName());
+        
     }
 
-    public void testInvalidMethodWithIncorrectType() {
+    public void testInvalidMethodWithIncorrectType() throws Exception {
+        
+        try {
+            Method method = Foo.class.getDeclaredMethod("setEmf4", String.class);
+            processor.visitMethod(method, type, null);
+        } catch(ProcessingException ex) {
+            return;
+        }
+        
+        fail("Expected processing exception");
+        
     }
 
-    public void testInvalidMethodWithIncorrectNumberOfArguments() {
+    public void testInvalidMethodWithIncorrectNumberOfArguments() throws Exception {
+        
+        try {
+            Method method = Foo.class.getDeclaredMethod("setEmf5", EntityManagerFactory.class, String.class);
+            processor.visitMethod(method, type, null);
+        } catch(ProcessingException ex) {
+            return;
+        }
+        
+        fail("Expected processing exception");
+        
     }
     
     private static class Foo {
