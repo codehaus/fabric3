@@ -44,9 +44,9 @@ import org.fabric3.spi.loader.InvalidServiceException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.loader.StAXElementLoader;
-import org.fabric3.spi.loader.PolicyHelper;
 import org.fabric3.spi.loader.LoaderUtil;
+import org.fabric3.spi.loader.PolicyHelper;
+import org.fabric3.spi.loader.StAXElementLoader;
 
 /**
  * Loads a composite component definition from an XML-based assembly file
@@ -132,6 +132,12 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
                     if (type.getIncludes().containsKey(includeName)) {
                         throw new DuplicateIncludeException("Include already defined with name",
                                                             includeName.toString());
+                    }
+                    for (ComponentDefinition definition : include.getIncluded().getComponents().values()) {
+                        String key = definition.getName();
+                        if (type.getComponents().containsKey(key)) {
+                            throw new DuplicateComponentNameException("Component with name already defined", key);
+                        }
                     }
                     type.add(include);
                 } else if (PROPERTY.equals(qname)) {
