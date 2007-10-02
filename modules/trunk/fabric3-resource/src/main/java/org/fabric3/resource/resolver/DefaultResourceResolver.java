@@ -51,13 +51,11 @@ public class DefaultResourceResolver implements ResourceResolver {
             String name = resourceDefinition.getName();
             String mappedName = resourceDefinition.getMappedName();
             
-            if(mappedName == null) {
-                throw new ResourceResolutionException("Mapped name is not specified for the resource: " + name);
+            if(mappedName != null) {
+                LogicalResource<?> logicalResource = component.getResource(name);
+                URI targetUri = URI.create(SYSTEM_URI + mappedName);
+                logicalResource.setTarget(targetUri);
             }
-            
-            LogicalResource<?> logicalResource = component.getResource(name);
-            URI targetUri = URI.create(SYSTEM_URI + mappedName);
-            logicalResource.setTarget(targetUri);
 
         }
         
