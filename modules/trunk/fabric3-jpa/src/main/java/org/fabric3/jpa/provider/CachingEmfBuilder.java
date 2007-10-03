@@ -18,12 +18,17 @@
  */
 package org.fabric3.jpa.provider;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.spi.PersistenceProvider;
+import javax.persistence.spi.PersistenceUnitInfo;
 
+import org.fabric3.jpa.Fabric3JpaException;
 import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Creates entity manager factories using the JPA provider SPI. Creation of entity manager 
@@ -34,6 +39,16 @@ import org.osoa.sca.annotations.Destroy;
 public class CachingEmfBuilder implements EmfBuilder {
     
     private Map<String, EntityManagerFactory> cache = new HashMap<String, EntityManagerFactory>();
+    private PersistenceUnitScanner scanner;
+    
+    /**
+     * Injects the scanner.
+     * 
+     * @param scanner Injected scanner.
+     */
+    public CachingEmfBuilder(@Reference PersistenceUnitScanner scanner) {
+        this.scanner = scanner;
+    }
 
     /**
      * @see org.fabric3.jpa.provider.EmfBuilder#build(java.lang.String, java.lang.ClassLoader)
@@ -44,7 +59,7 @@ public class CachingEmfBuilder implements EmfBuilder {
             return cache.get(unitName);
         }
         
-        EntityManagerFactory emf = createEntityManagerFactory(unitName);
+        EntityManagerFactory emf = createEntityManagerFactory(unitName, classLoader);
         cache.put(unitName, emf);
         
         return emf;
@@ -64,9 +79,22 @@ public class CachingEmfBuilder implements EmfBuilder {
     /*
      * Creates the entity manager factory using the JPA provider API.
      */
-    private EntityManagerFactory createEntityManagerFactory(String unitName) {
-        // TODO Auto-generated method stub
-        return null;
+    private EntityManagerFactory createEntityManagerFactory(String unitName, ClassLoader classLoader) {
+        
+        PersistenceUnitInfo info = scanner.getPersistenceUnitInfo(unitName, classLoader);
+        String providerClass = info.getPersistenceProviderClassName();
+
+        try {
+            PersistenceProvider provider = (PersistenceProvider) Class.forName(providerClass).newInstance();
+            return provider.createContainerEntityManagerFactory(info, Collections.emptyMap());
+        } catch (InstantiationException ex) {
+            throw new Fabric3JpaException(ex);
+        } catch (IllegalAccessException ex) {
+            throw new Fabric3JpaException(ex);
+        } catch (ClassNotFoundException ex) {
+            throw new Fabric3JpaException(ex);
+        }
+
     }
 
 }

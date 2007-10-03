@@ -16,29 +16,25 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.jpa;
+package org.fabric3.jpa.provider;
 
-import org.fabric3.host.Fabric3RuntimeException;
+import javax.persistence.spi.PersistenceUnitInfo;
 
 /**
  *
  * @version $Revision$ $Date$
  */
-@SuppressWarnings("serial")
-public class Fabric3JpaException extends Fabric3RuntimeException {
+public interface PersistenceUnitScanner {
 
     /**
-     * @param cause Root cause of the exception.
+     * Scans the lassloader for the specified persistence unit and creates 
+     * an immutable representation of the information present in the matching 
+     * persistence.xml file.
+     * 
+     * @param unitName Persistence unit name.
+     * @param classLoader Classloader to scan.
+     * @return Persistence unit information.
      */
-    public Fabric3JpaException(Throwable cause) {
-        super(cause);
-    }
-
-    /**
-     * @param message Message for the exception.
-     */
-    public Fabric3JpaException(String message) {
-        super(message);
-    }
+    public abstract PersistenceUnitInfo getPersistenceUnitInfo(String unitName, ClassLoader classLoader);
 
 }
