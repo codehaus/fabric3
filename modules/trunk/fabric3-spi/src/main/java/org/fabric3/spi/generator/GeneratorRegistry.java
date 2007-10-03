@@ -74,15 +74,6 @@ public interface GeneratorRegistry {
     void register(CommandGenerator generator);
     
     /**
-     * Registers a resource wire generator.
-     * 
-     * @param <R> Resource type.
-     * @param clazz Resource type class.
-     * @param resourceWireGenerator Resource wire generator.
-     */
-    <R extends ResourceDefinition> void register(Class<R> clazz, ResourceWireGenerator<?, R> resourceWireGenerator);
-    
-    /**
      * Generates the physical wires for the resources in this component.
      * 
      * @param source Source component.

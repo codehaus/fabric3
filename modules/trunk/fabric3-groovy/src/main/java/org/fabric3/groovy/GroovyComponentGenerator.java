@@ -94,7 +94,8 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<GroovyImplementation> source,
                                                            LogicalReference reference,
-                                                           boolean optimizable)
+                                                           boolean optimizable, 
+                                                           GeneratorContext context)
             throws GenerationException {
         GroovyWireSourceDefinition wireDefinition = new GroovyWireSourceDefinition();
         wireDefinition.setUri(reference.getUri());
@@ -104,7 +105,8 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
     }
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
-                                                           LogicalComponent<GroovyImplementation> target)
+                                                           LogicalComponent<GroovyImplementation> target, 
+                                                           GeneratorContext context)
             throws GenerationException {
         GroovyWireTargetDefinition wireDefinition = new GroovyWireTargetDefinition();
         URI uri;
@@ -119,7 +121,8 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
     }
 
     public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<GroovyImplementation> source, 
-                                                                   LogicalResource<?> resource) throws GenerationException {
+                                                                   LogicalResource<?> resource, 
+                                                                   GeneratorContext context) throws GenerationException {
         GroovyWireSourceDefinition wireDefinition = new GroovyWireSourceDefinition();
         wireDefinition.setUri(resource.getUri());
         wireDefinition.setOptimizable(true);

@@ -83,7 +83,8 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<ImplementationJUnit> source,
                                                            LogicalReference reference,
-                                                           boolean optimizable) throws GenerationException {
+                                                           boolean optimizable, 
+                                                           GeneratorContext context) throws GenerationException {
         JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
         wireDefinition.setUri(reference.getUri());
         wireDefinition.setOptimizable(optimizable);
@@ -92,7 +93,8 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
     }
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, 
-                                                           LogicalComponent<ImplementationJUnit> target) throws GenerationException {
+                                                           LogicalComponent<ImplementationJUnit> target, 
+                                                           GeneratorContext context) throws GenerationException {
         JavaWireTargetDefinition wireDefinition = new JavaWireTargetDefinition();
         wireDefinition.setUri(service.getUri());
         return wireDefinition;
@@ -177,7 +179,8 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
     }
 
     public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<ImplementationJUnit> source, 
-                                                                   LogicalResource<?> resource) throws GenerationException {
+                                                                   LogicalResource<?> resource, 
+                                                                   GeneratorContext context) throws GenerationException {
         JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
         wireDefinition.setUri(resource.getUri());
         return wireDefinition;

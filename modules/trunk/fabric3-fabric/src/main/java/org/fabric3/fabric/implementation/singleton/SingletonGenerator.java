@@ -52,12 +52,14 @@ public class SingletonGenerator implements ComponentGenerator<LogicalComponent<S
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<SingletonImplementation> source,
                                                            LogicalReference reference,
-                                                           boolean optimizable) throws GenerationException {
+                                                           boolean optimizable,
+                                                           GeneratorContext context) throws GenerationException {
         throw new UnsupportedOperationException();
     }
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, 
-                                                           LogicalComponent<SingletonImplementation> logical) throws GenerationException {
+                                                           LogicalComponent<SingletonImplementation> logical,
+                                                           GeneratorContext context) throws GenerationException {
         SingletonWireTargetDefinition wireDefinition = new SingletonWireTargetDefinition();
         URI uri = logical.getUri().resolve(service.getUri());
         wireDefinition.setUri(uri);
@@ -65,7 +67,8 @@ public class SingletonGenerator implements ComponentGenerator<LogicalComponent<S
     }
 
     public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<SingletonImplementation> source, 
-                                                                   LogicalResource<?> resource) throws GenerationException {
+                                                                   LogicalResource<?> resource,
+                                                                   GeneratorContext context) throws GenerationException {
         throw new UnsupportedOperationException();
     }
     

@@ -175,7 +175,7 @@ public class PhysicalBuilderTestCase extends TestCase {
         builder.init();
 
         WireAttacherRegistry wireAttacherRegistry = new WireAttacherRegistryImpl();
-        SystemWireAttacher wireAttacher = new SystemWireAttacher(componentManager, wireAttacherRegistry, new DefaultTransformerRegistry());
+        SystemWireAttacher wireAttacher = new SystemWireAttacher(componentManager, wireAttacherRegistry, new DefaultTransformerRegistry(), new ClassLoaderRegistryImpl());
         wireAttacher.init();
         connector = new ConnectorImpl(null, wireAttacherRegistry);
         DeployerMonitor monitor = EasyMock.createNiceMock(DeployerMonitor.class);

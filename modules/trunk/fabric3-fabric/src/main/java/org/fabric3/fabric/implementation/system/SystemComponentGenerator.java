@@ -93,22 +93,30 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<SystemImplementation> source,
                                                            LogicalReference reference,
-                                                           boolean optimizable) throws GenerationException {
+                                                           boolean optimizable,
+                                                           GeneratorContext context) throws GenerationException {
+        
         SystemWireSourceDefinition wireDefinition = new SystemWireSourceDefinition();
         wireDefinition.setUri(reference.getUri());
         wireDefinition.setOptimizable(true);
+
+        URI classLoaderId = classLoaderGenerator.generate(source, context);
+        wireDefinition.setClassLoaderId(classLoaderId);
+        
         return wireDefinition;
     }
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, 
-                                                           LogicalComponent<SystemImplementation> logical) throws GenerationException {
+                                                           LogicalComponent<SystemImplementation> logical,
+                                                           GeneratorContext context) throws GenerationException {
         SystemWireTargetDefinition wireDefinition = new SystemWireTargetDefinition();
         wireDefinition.setUri(service.getUri());
         return wireDefinition;
     }
 
     public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<SystemImplementation> source, 
-                                                                   LogicalResource<?> resource) throws GenerationException {
+                                                                   LogicalResource<?> resource,
+                                                                   GeneratorContext context) throws GenerationException {
         // TODO Auto-generated method stub
         return null;
     }

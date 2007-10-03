@@ -28,6 +28,7 @@ import org.fabric3.spi.component.ComponentManager;
 import org.fabric3.spi.model.instance.ValueSource;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.spi.util.UriHelper;
@@ -47,9 +48,10 @@ public class SystemWireAttacher extends PojoWireAttacher<SystemWireSourceDefinit
     public SystemWireAttacher(
             ComponentManager manager,
             WireAttacherRegistry wireAttacherRegistry,
-            TransformerRegistry<PullTransformer<?, ?>> transformerRegistry
+            TransformerRegistry<PullTransformer<?, ?>> transformerRegistry,
+            ClassLoaderRegistry classLoaderRegistry
     ) {
-        super(transformerRegistry);
+        super(transformerRegistry, classLoaderRegistry);
         this.manager = manager;
         this.wireAttacherRegistry = wireAttacherRegistry;
     }

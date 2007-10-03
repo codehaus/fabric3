@@ -109,11 +109,16 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
      */
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<JavaImplementation> source,
                                                            LogicalReference reference,
-                                                           boolean optimizable) throws GenerationException {
+                                                           boolean optimizable, 
+                                                           GeneratorContext context) throws GenerationException {
         JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
         wireDefinition.setUri(reference.getUri());
         wireDefinition.setOptimizable(optimizable);
         wireDefinition.setConversational(reference.getDefinition().getServiceContract().isConversational());
+
+        URI classLoaderId = classLoaderGenerator.generate(source, context);
+        wireDefinition.setClassLoaderId(classLoaderId);
+        
         return wireDefinition;
     }
 
@@ -122,7 +127,8 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
      *                                                                      org.fabric3.spi.model.instance.LogicalComponent)
      */
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
-                                                           LogicalComponent<JavaImplementation> target) throws GenerationException {
+                                                           LogicalComponent<JavaImplementation> target, 
+                                                           GeneratorContext context) throws GenerationException {
         JavaWireTargetDefinition wireDefinition = new JavaWireTargetDefinition();
         URI uri;
         if (service != null) {
@@ -140,7 +146,8 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
      *                                                                              org.fabric3.spi.model.instance.LogicalResource)
      */
     public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<JavaImplementation> source, 
-                                                                   LogicalResource<?> resource) throws GenerationException {
+                                                                   LogicalResource<?> resource, 
+                                                                   GeneratorContext context) throws GenerationException {
         JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
         wireDefinition.setUri(resource.getUri());
         wireDefinition.setOptimizable(true);

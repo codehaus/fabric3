@@ -18,6 +18,7 @@
  */
 package org.fabric3.java;
 
+import org.fabric3.pojo.wire.PojoWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 
 /**
@@ -25,6 +26,6 @@ import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
  *
  * @version $Revision$ $Date$
  */
-public class JavaWireSourceDefinition extends PhysicalWireSourceDefinition {
+public class JavaWireSourceDefinition extends PojoWireSourceDefinition {
 
 }

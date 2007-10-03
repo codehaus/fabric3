@@ -477,7 +477,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         SingletonWireAttacher<?, ?> singletonWireAttacher = new SingletonWireAttacher();
         wireAttacherRegistry.register(SingletonWireTargetDefinition.class, singletonWireAttacher);
         SystemWireAttacher wireAttacher =
-                new SystemWireAttacher(componentManager, wireAttacherRegistry, transformerRegistry);
+                new SystemWireAttacher(componentManager, wireAttacherRegistry, transformerRegistry, classLoaderRegistry);
         wireAttacher.init();
 
         deployer.setBuilderRegistry(registry);

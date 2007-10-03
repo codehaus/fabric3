@@ -20,12 +20,9 @@ package org.fabric3.java;
 
 import org.fabric3.pojo.scdl.JavaMappedResource;
 import org.fabric3.spi.generator.GeneratorContext;
-import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.ResourceWireGenerator;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
 
 /**
  *
@@ -34,26 +31,6 @@ import org.osoa.sca.annotations.Reference;
 @SuppressWarnings("unchecked")
 @EagerInit
 public class JavaMappedResourceWireGenerator implements ResourceWireGenerator<JavaWireTargetDefinition, JavaMappedResource> {
-    
-    private GeneratorRegistry generatorRegistry;
-    
-    /**
-     * Registers with the registry.
-     */
-    @Init
-    public void start() {
-        generatorRegistry.register(JavaMappedResource.class, this);   
-    }
-
-    /**
-     * Injects the generator registry.
-     * 
-     * @param generatorRegistry Generator registry to be injected.
-     */
-    @Reference
-    public void setGeneratorRegistry(GeneratorRegistry generatorRegistry) {
-        this.generatorRegistry = generatorRegistry;
-    }
     
     /**
      * @see org.fabric3.spi.generator.ResourceWireGenerator#genearteWireTargetDefinition(org.fabric3.spi.model.instance.LogicalResource)

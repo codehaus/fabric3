@@ -16,15 +16,32 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.implementation.system;
+package org.fabric3.pojo.wire;
 
-import org.fabric3.pojo.wire.PojoWireSourceDefinition;
+import java.net.URI;
+
+import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 
 /**
- * Models a System physical wire source definition.
  *
- * @version $Revision$ $Date: 2007-02-28 06:29:37 +0000 (Wed, 28 Feb
- *          2007) $
+ * @version $Revision$ $Date$
  */
-public class SystemWireSourceDefinition extends PojoWireSourceDefinition {
+public class PojoWireSourceDefinition extends PhysicalWireSourceDefinition {
+    
+    private URI classLoaderId;
+
+    /**
+     * @return the classLoaderId
+     */
+    public URI getClassLoaderId() {
+        return classLoaderId;
+    }
+
+    /**
+     * @param classLoaderId the classLoaderId to set
+     */
+    public void setClassLoaderId(URI classLoaderId) {
+        this.classLoaderId = classLoaderId;
+    }
+
 }

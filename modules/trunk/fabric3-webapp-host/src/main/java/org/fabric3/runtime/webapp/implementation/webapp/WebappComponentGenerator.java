@@ -107,7 +107,8 @@ public class WebappComponentGenerator implements ComponentGenerator<LogicalCompo
      */
     public WebappWireSourceDefinition generateWireSource(LogicalComponent<WebappImplementation> source,
                                                                  LogicalReference reference,
-                                                                 boolean optimizable) throws GenerationException {
+                                                                 boolean optimizable,
+                                                                 GeneratorContext context) throws GenerationException {
 
         WebappWireSourceDefinition sourceDefinition = new WebappWireSourceDefinition();
         sourceDefinition.setUri(reference.getUri());
@@ -120,13 +121,15 @@ public class WebappComponentGenerator implements ComponentGenerator<LogicalCompo
      *     org.fabric3.spi.model.instance.LogicalComponent)
      */
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, 
-                                                           LogicalComponent<WebappImplementation> arg1) throws GenerationException {
+                                                           LogicalComponent<WebappImplementation> arg1,
+                                                           GeneratorContext context) throws GenerationException {
         // TODO Auto-generated method stub
         return null;
     }
 
     public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<WebappImplementation> source, 
-                                                                   LogicalResource<?> resource) throws GenerationException {
+                                                                   LogicalResource<?> resource,
+                                                                   GeneratorContext context) throws GenerationException {
         // TODO Auto-generated method stub
         return null;
     }

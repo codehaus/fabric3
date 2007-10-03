@@ -24,7 +24,6 @@ import org.fabric3.jpa.PersistenceUnitResource;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
-import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.ResourceWireGenerator;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.osoa.sca.annotations.Reference;
@@ -42,9 +41,7 @@ public class PersistenceUnitResourceWireGenerator implements ResourceWireGenerat
      * 
      * @param generatorRegistry Generator registry to be injected.
      */
-    public PersistenceUnitResourceWireGenerator(@Reference GeneratorRegistry generatorRegistry,
-                                                @Reference ClassLoaderGenerator classLoaderGenerator) {
-        generatorRegistry.register(PersistenceUnitResource.class, this);
+    public PersistenceUnitResourceWireGenerator(@Reference ClassLoaderGenerator classLoaderGenerator) {
         this.classLoaderGenerator = classLoaderGenerator;
     }
 

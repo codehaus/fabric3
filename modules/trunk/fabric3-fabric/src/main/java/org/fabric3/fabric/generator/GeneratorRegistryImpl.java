@@ -101,11 +101,10 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
 
     }
     
-    /**
-     * @see org.fabric3.spi.generator.GeneratorRegistry#register(java.lang.Class, org.fabric3.spi.generator.ResourceWireGenerator)
-     */
-    public <R extends ResourceDefinition> void register(Class<R> clazz, ResourceWireGenerator<?,  R> resourceWireGenerator) {
-        resourceWireGenerators.put(clazz, resourceWireGenerator);
+    @Reference
+    public void setResourceWireGenerators(Map<Class<? extends ResourceDefinition>, 
+                                          ResourceWireGenerator<?, ? extends ResourceDefinition>> resourceWireGenerators) {
+        this.resourceWireGenerators = resourceWireGenerators;
     }
 
     /**
@@ -123,7 +122,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         if (sourceGenerator == null) {
             throw new GeneratorNotFoundException(implType);
         }
-        PhysicalWireSourceDefinition pwsd = sourceGenerator.generateResourceWireSource(source, resource);
+        PhysicalWireSourceDefinition pwsd = sourceGenerator.generateResourceWireSource(source, resource, context);
         
         // Generates the target side of the wire
         Class<? extends ResourceDefinition> resType = resource.getResourceDefinition().getClass();
@@ -226,7 +225,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
             // service is defined on a composite and wired to a component service
             targetService = component.getService(targetUri.getFragment());
         }
-        PhysicalWireTargetDefinition targetDefinition = targetGenerator.generateWireTarget(targetService, component);
+        PhysicalWireTargetDefinition targetDefinition = targetGenerator.generateWireTarget(targetService, component, context);
         wireDefinition.setTarget(targetDefinition);
         BindingGenerator sourceGenerator = bindingGenerators.get(binding.getBinding().getClass());
         if (sourceGenerator == null) {
@@ -282,7 +281,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         if (sourceGenerator == null) {
             throw new GeneratorNotFoundException(implType);
         }
-        PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(source, reference, false);
+        PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(source, reference, false, context);
         wireDefinition.setSource(sourceDefinition);
 
         context.getPhysicalChangeSet().addWireDefinition(wireDefinition);
@@ -317,7 +316,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         if (targetGenerator == null) {
             throw new GeneratorNotFoundException(type);
         }
-        PhysicalWireTargetDefinition targetDefinition = targetGenerator.generateWireTarget(service, target);
+        PhysicalWireTargetDefinition targetDefinition = targetGenerator.generateWireTarget(service, target, context);
         wireDefinition.setTarget(targetDefinition);
 
         type = source.getDefinition().getImplementation().getClass();
@@ -336,7 +335,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
             }
         }
         
-        PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(source, reference, optimizable);
+        PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(source, reference, optimizable, context);
         sourceDefinition.setKey(target.getDefinition().getKey());
         wireDefinition.setSource(sourceDefinition);
         

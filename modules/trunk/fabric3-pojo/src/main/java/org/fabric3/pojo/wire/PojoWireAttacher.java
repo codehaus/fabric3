@@ -20,6 +20,7 @@ package org.fabric3.pojo.wire;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.net.URI;
 import java.util.Map;
 
 import org.fabric3.pojo.implementation.PojoComponent;
@@ -29,6 +30,7 @@ import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.model.type.XSDSimpleType;
+import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformerRegistry;
@@ -44,13 +46,15 @@ public abstract class PojoWireAttacher<PWSD extends PhysicalWireSourceDefinition
     private static final XSDSimpleType SOURCE_TYPE = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
 
     private TransformerRegistry<PullTransformer<?, ?>> transformerRegistry;
+    private ClassLoaderRegistry classLoaderRegistry;
     
-    protected PojoWireAttacher(TransformerRegistry<PullTransformer<?, ?>> transformerRegistry) {
+    protected PojoWireAttacher(TransformerRegistry<PullTransformer<?, ?>> transformerRegistry, ClassLoaderRegistry classLoaderRegistry) {
         this.transformerRegistry = transformerRegistry;
+        this.classLoaderRegistry = classLoaderRegistry;
     }
 
     @SuppressWarnings("unchecked")
-    protected Object getKey(PhysicalWireSourceDefinition sourceDefinition, PojoComponent<?> source, ValueSource referenceSource) {
+    protected Object getKey(PojoWireSourceDefinition sourceDefinition, PojoComponent<?> source, ValueSource referenceSource) {
         
         if(! Map.class.isAssignableFrom(source.getMemberType(referenceSource))) {
             return null;
@@ -68,7 +72,12 @@ public abstract class PojoWireAttacher<PWSD extends PhysicalWireSourceDefinition
             
             if(type instanceof ParameterizedType) { 
                 ParameterizedType genericType = (ParameterizedType) type;
-                formalType = (Class<?>) genericType.getActualTypeArguments()[0];
+                Type typeArgument = genericType.getActualTypeArguments()[0];
+                if(typeArgument instanceof Class) {
+                    formalType = (Class<?>) genericType.getActualTypeArguments()[0];
+                } else {
+                    formalType = (Class<?>) ((ParameterizedType) typeArgument).getRawType();
+                }
                 if(Enum.class.isAssignableFrom(formalType)) {
                     Class<Enum> enumClass = (Class<Enum>) formalType;
                     return Enum.valueOf(enumClass, element.getTextContent());
@@ -76,8 +85,11 @@ public abstract class PojoWireAttacher<PWSD extends PhysicalWireSourceDefinition
             } else {
                 formalType = String.class;
             }
-            // TODO Pass the parameters in
-            TransformContext context = new TransformContext(null, null, null, null);
+            
+            URI classLoaderId = sourceDefinition.getClassLoaderId();
+            ClassLoader cl = classLoaderRegistry.getClassLoader(classLoaderId);
+            
+            TransformContext context = new TransformContext(cl, cl, null, null);
             try {
                 return createKey(formalType, element, context);
                 // return keyDocument.getDocumentElement().getTextContent();
