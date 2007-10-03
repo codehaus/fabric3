@@ -131,7 +131,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         if (targetGenerator == null) {
             throw new GeneratorNotFoundException(resType);
         }
-        PhysicalWireTargetDefinition pwtd = targetGenerator.genearteWireTargetDefinition(resource);
+        PhysicalWireTargetDefinition pwtd = targetGenerator.genearteWireTargetDefinition(resource, context);
         
         // Create the wire from the component to the resource
         ServiceContract<?> serviceContract = resource.getResourceDefinition().getServiceContract();

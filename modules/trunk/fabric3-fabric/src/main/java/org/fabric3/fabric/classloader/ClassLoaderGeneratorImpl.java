@@ -35,6 +35,7 @@ import org.fabric3.spi.model.instance.Bindable;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
+import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalChangeSet;
 import org.fabric3.spi.model.type.ContributionResourceDescription;
@@ -48,6 +49,19 @@ public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {
         Implementation<?> impl = component.getDefinition().getImplementation();
         List<ResourceDescription> descriptions = impl.getResourceDescriptions();
         return generate(parent, descriptions, context);
+    }
+    
+    public URI generate(LogicalResource<?> resource, GeneratorContext context) throws GenerationException {
+        
+        LogicalComponent<?> component = resource.getParent();
+        LogicalComponent<CompositeImplementation> parent =
+            (LogicalComponent<CompositeImplementation>) component.getParent();
+
+        List<ResourceDescription> descriptions = new ArrayList<ResourceDescription>();
+        descriptions.addAll(resource.getResourceDefinition().getResourceDescriptions());
+        
+        return generate(parent, descriptions, context);
+        
     }
 
     public URI generate(LogicalBinding<?> binding, GeneratorContext context) throws GenerationException {

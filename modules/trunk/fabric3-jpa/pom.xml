@@ -34,9 +34,10 @@
 
     <repositories>
         <repository>
-	    <id>java.net</id>
-	    <url>https://maven-repository.dev.java.net/nonav/repository</url>
-	    <layout>legacy</layout>
+	        <id>java.net</id>
+	        <url>https://maven-repository.dev.java.net/nonav/repository</url>
+	        <layout>legacy</layout>
+	        <snapshots><enabled>false</enabled></snapshots>
         </repository>
     </repositories>
 

@@ -19,6 +19,7 @@
 package org.fabric3.java;
 
 import org.fabric3.pojo.scdl.JavaMappedResource;
+import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.ResourceWireGenerator;
 import org.fabric3.spi.model.instance.LogicalResource;
@@ -46,7 +47,8 @@ public class JavaMappedResourceWireGenerator implements ResourceWireGenerator<Ja
     /**
      * @see org.fabric3.spi.generator.ResourceWireGenerator#genearteWireTargetDefinition(org.fabric3.spi.model.instance.LogicalResource)
      */
-    public JavaWireTargetDefinition genearteWireTargetDefinition(LogicalResource<JavaMappedResource> logicalResource) {
+    public JavaWireTargetDefinition genearteWireTargetDefinition(LogicalResource<JavaMappedResource> logicalResource,
+                                                                 GeneratorContext context) {
         
         JavaWireTargetDefinition wtd = new JavaWireTargetDefinition();
         wtd.setUri(logicalResource.getTarget());

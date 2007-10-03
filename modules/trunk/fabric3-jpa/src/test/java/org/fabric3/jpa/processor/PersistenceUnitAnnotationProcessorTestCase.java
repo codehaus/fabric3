@@ -28,6 +28,7 @@ import junit.framework.TestCase;
 
 import org.fabric3.jpa.PersistenceUnitResource;
 import org.fabric3.pojo.processor.ProcessingException;
+import org.fabric3.pojo.scdl.JavaMappedResource;
 import org.fabric3.pojo.scdl.PojoComponentType;
 
 /**
@@ -44,8 +45,9 @@ public class PersistenceUnitAnnotationProcessorTestCase extends TestCase {
         Field field = Foo.class.getDeclaredField("emf1");
         processor.visitField(field, type, null);
         
-        PersistenceUnitResource resource = (PersistenceUnitResource) type.getResources().get("someName");
-        assertNotNull(resource);
+        JavaMappedResource<?> jmr = type.getResources().get("someName");
+        assertNotNull(jmr);
+        PersistenceUnitResource resource = PersistenceUnitResource.class.cast(jmr);
         assertEquals("someName", resource.getName());
         assertEquals("someUnitName", resource.getUnitName());
         
@@ -69,8 +71,9 @@ public class PersistenceUnitAnnotationProcessorTestCase extends TestCase {
         Method method = Foo.class.getDeclaredMethod("setEmf3", EntityManagerFactory.class);
         processor.visitMethod(method, type, null);
         
-        PersistenceUnitResource resource = (PersistenceUnitResource) type.getResources().get("someName");
-        assertNotNull(resource);
+        JavaMappedResource<?> jmr = type.getResources().get("someName");
+        assertNotNull(jmr);
+        PersistenceUnitResource resource = PersistenceUnitResource.class.cast(jmr);
         assertEquals("someName", resource.getName());
         assertEquals("someUnitName", resource.getUnitName());
         

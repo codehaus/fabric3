@@ -23,7 +23,7 @@ package org.fabric3.scdl;
  *
  * @version $Rev$ $Date$
  */
-public class ResourceDefinition {
+public class ResourceDefinition extends ModelObject {
 
     private String name;
     private String mappedName;

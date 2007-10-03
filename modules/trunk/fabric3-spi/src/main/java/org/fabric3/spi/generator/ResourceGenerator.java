@@ -22,6 +22,7 @@ import java.net.URI;
 
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalResource;
 
 /**
  * Implementations generate physical resource definitions for components and bindings.
@@ -51,5 +52,16 @@ public interface ResourceGenerator {
      * @throws GenerationException if an error occurs during the generation process
      */
     URI generate(LogicalBinding<?> binding, GeneratorContext context) throws GenerationException;
+
+    /**
+     * Updates the change set with a physical resource definition for the logical resource. If the resource definition
+     * already exits, it will be updated with resources required by the binding.
+     *
+     * @param resource the logical resource to generate the physical definition from
+     * @param context the current generator context
+     * @return the id of the physical resource
+     * @throws GenerationException if an error occurs during the generation process
+     */
+    URI generate(LogicalResource<?> resource, GeneratorContext context) throws GenerationException;
 
 }

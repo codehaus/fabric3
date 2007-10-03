@@ -31,6 +31,7 @@ import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.ResourceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.deployer.CompositeClassLoader;
 import org.fabric3.spi.model.type.ContributionResourceDescription;
@@ -160,6 +161,9 @@ public abstract class ArchiveContributionProcessor extends ContributionProcessor
                 }
                 for (ReferenceDefinition reference : type.getReferences().values()) {
                     reference.addResourceDescription(description);
+                }
+                for (ResourceDefinition resource : type.getResources().values()) {
+                    resource.addResourceDescription(description);
                 }
             }
         }

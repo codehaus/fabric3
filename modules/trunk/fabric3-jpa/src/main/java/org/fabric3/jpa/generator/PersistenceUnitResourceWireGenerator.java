@@ -18,7 +18,12 @@
  */
 package org.fabric3.jpa.generator;
 
+import java.net.URI;
+
 import org.fabric3.jpa.PersistenceUnitResource;
+import org.fabric3.spi.generator.ClassLoaderGenerator;
+import org.fabric3.spi.generator.GenerationException;
+import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.ResourceWireGenerator;
 import org.fabric3.spi.model.instance.LogicalResource;
@@ -29,25 +34,32 @@ import org.osoa.sca.annotations.Reference;
  * @version $Revision$ $Date$
  */
 public class PersistenceUnitResourceWireGenerator implements ResourceWireGenerator<PersistenceUnitWireTargetDefinition, PersistenceUnitResource> {
+    
+    private ClassLoaderGenerator classLoaderGenerator;
 
     /**
      * Injects the generator registry.
      * 
      * @param generatorRegistry Generator registry to be injected.
      */
-    @Reference
-    public void setGeneratorRegistry(GeneratorRegistry generatorRegistry) {
+    public PersistenceUnitResourceWireGenerator(@Reference GeneratorRegistry generatorRegistry,
+                                                @Reference ClassLoaderGenerator classLoaderGenerator) {
         generatorRegistry.register(PersistenceUnitResource.class, this);
+        this.classLoaderGenerator = classLoaderGenerator;
     }
 
     /**
      * @see org.fabric3.spi.generator.ResourceWireGenerator#genearteWireTargetDefinition(org.fabric3.spi.model.instance.LogicalResource)
      */
-    public PersistenceUnitWireTargetDefinition genearteWireTargetDefinition(LogicalResource<PersistenceUnitResource> logicalResource) {
+    public PersistenceUnitWireTargetDefinition genearteWireTargetDefinition(LogicalResource<PersistenceUnitResource> logicalResource,
+                                                                            GeneratorContext context) throws GenerationException {
         
+        URI classLoaderUri = classLoaderGenerator.generate(logicalResource, context);
+            
         PersistenceUnitWireTargetDefinition pwtd = new PersistenceUnitWireTargetDefinition();
         pwtd.setUnitName(logicalResource.getResourceDefinition().getUnitName());
-        
+        pwtd.setClassLoaderUri(classLoaderUri);
+            
         return pwtd;
         
     }
