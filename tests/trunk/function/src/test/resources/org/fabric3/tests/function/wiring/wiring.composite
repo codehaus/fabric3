@@ -17,7 +17,6 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:hessian="http://www.fabric3.org/binding/hessian/0.2"
            name="WiringComposite">
 
     <component name="WiringTest">
@@ -37,7 +36,7 @@
     </component>
 
     <reference name="promotedReference" promote="TestComponent/promotedReference TestComponent/nonConfiguredPromotedReference">
-        <hessian:binding.hessian uri="http://localhost:8900/helloService"/>
+        <f3:binding.test uri="WiringCompositeHelloService"/>
     </reference>
 
 </composite>

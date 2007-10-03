@@ -17,7 +17,6 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:hessian="http://www.fabric3.org/binding/hessian/0.2"
            name="PromotionComposite">
 
     <component name="PromotionTestComponent">
@@ -25,11 +24,11 @@
     </component>
 
     <reference name ="PromotedReference" promote="PromotionTestComponent/helloService">
-        <hessian:binding.hessian uri="http://localhost:8900/helloService"/>
+        <f3:binding.test uri="PromotedHelloService"/>
     </reference>
 
     <service name="HelloService" promote="HelloComponent/HelloService">
-        <hessian:binding.hessian uri="/helloService"/>
+        <f3:binding.test uri="PromotedHelloService"/>
     </service>
 
     <component name="HelloComponent">
