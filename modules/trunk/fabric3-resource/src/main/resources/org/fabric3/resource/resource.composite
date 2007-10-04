@@ -25,11 +25,32 @@
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
            name="org.fabric3.resource.Resource"
+           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            autowire="true">
 
-    <!-- Resource Resolver -->
-    <component name="resourceResolver">
-        <system:implementation.system class="org.fabric3.resource.resolver.DefaultResourceResolver"/>
+    <!-- System Sourced Resource Resolver -->
+    <component name="org.fabric3.resource.resolver.SystemSourcedResourceResolver" f3:key="org.fabric3.resource.model.SystemSourcedResource">
+        <system:implementation.system class="org.fabric3.resource.resolver.SystemSourcedResourceResolver"/>
+    </component>
+    
+    <!-- Processor for F3 resources -->
+    <component name="org.fabric3.resource.processor.ResourceProcessor">
+        <system:implementation.system class="org.fabric3.resource.processor.ResourceProcessor"/>
+    </component>
+    
+    <!-- Processor for JSR250 resources -->
+    <component name="org.fabric3.resource.processor.JSR250ResourceProcessor">
+        <system:implementation.system class="org.fabric3.resource.processor.JSR250ResourceProcessor"/>
+    </component>
+    
+    <!-- Wire Target Definition Generator -->
+    <component name="org.fabric3.resource.generator.SystemSourcedResourceWireGenerator" f3:key="org.fabric3.resource.model.SystemSourcedResource">
+        <system:implementation.system class="org.fabric3.resource.generator.SystemSourcedResourceWireGenerator"/>
+    </component>
+    
+    <!-- Wire Attacher for System Sourced Resources -->
+    <component name="org.fabric3.resource.wire.SystemSourcedResourceWireAttacher">
+        <system:implementation.system class="org.fabric3.resource.wire.SystemSourcedResourceWireAttacher"/>
     </component>
     
 </composite>

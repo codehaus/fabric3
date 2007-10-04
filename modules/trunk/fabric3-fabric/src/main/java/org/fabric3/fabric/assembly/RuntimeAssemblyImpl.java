@@ -18,8 +18,6 @@
  */
 package org.fabric3.fabric.assembly;
 
-import org.osoa.sca.annotations.Reference;
-
 import org.fabric3.fabric.assembly.allocator.Allocator;
 import org.fabric3.fabric.assembly.normalizer.PromotionNormalizer;
 import org.fabric3.fabric.assembly.resolver.WireResolver;
@@ -29,8 +27,8 @@ import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.spi.assembly.AssemblyStore;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.spi.resource.ResourceResolver;
 import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * The default RuntimeAssembly implementation
@@ -44,8 +42,7 @@ public class RuntimeAssemblyImpl extends AbstractAssembly implements RuntimeAsse
                                @Reference Allocator allocator,
                                @Reference RoutingService routingService,
                                @Reference AssemblyStore store,
-                               @Reference MetaDataStore metaDataStore,
-                               @Reference ResourceResolver resourceResolver) {
+                               @Reference MetaDataStore metaDataStore ) {
         super(ComponentNames.RUNTIME_URI,
               generatorRegistry,
               wireResolver,
@@ -53,8 +50,7 @@ public class RuntimeAssemblyImpl extends AbstractAssembly implements RuntimeAsse
               allocator,
               routingService,
               store,
-              metaDataStore,
-              resourceResolver);
+              metaDataStore);
     }
 
     public void instantiateHostComponentDefinition(ComponentDefinition<?> definition) throws InstantiationException {

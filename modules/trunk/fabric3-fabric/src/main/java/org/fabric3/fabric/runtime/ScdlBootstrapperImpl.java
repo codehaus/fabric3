@@ -16,11 +16,21 @@
  */
 package org.fabric3.fabric.runtime;
 
+import static org.fabric3.fabric.runtime.ComponentNames.APPLICATION_CLASSLOADER_ID;
+import static org.fabric3.fabric.runtime.ComponentNames.BOOT_CLASSLOADER_ID;
+import static org.fabric3.fabric.runtime.ComponentNames.CLASSLOADER_REGISTRY_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.EXTENSION_METADATA_STORE_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_ASSEMBLY_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_NAME;
+import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.stream.XMLInputFactory;
 
 import org.fabric3.fabric.assembly.InstantiationException;
@@ -60,13 +70,11 @@ import org.fabric3.fabric.implementation.processor.EagerInitProcessor;
 import org.fabric3.fabric.implementation.processor.HeuristicPojoProcessor;
 import org.fabric3.fabric.implementation.processor.ImplementationProcessorServiceImpl;
 import org.fabric3.fabric.implementation.processor.InitProcessor;
-import org.fabric3.fabric.implementation.processor.JSR250ResourceProcessor;
 import org.fabric3.fabric.implementation.processor.MonitorProcessor;
 import org.fabric3.fabric.implementation.processor.PostConstructProcessor;
 import org.fabric3.fabric.implementation.processor.PreDestroyProcessor;
 import org.fabric3.fabric.implementation.processor.PropertyProcessor;
 import org.fabric3.fabric.implementation.processor.ReferenceProcessor;
-import org.fabric3.fabric.implementation.processor.ResourceProcessor;
 import org.fabric3.fabric.implementation.processor.ScopeProcessor;
 import org.fabric3.fabric.implementation.processor.ServiceProcessor;
 import org.fabric3.fabric.implementation.singleton.SingletonComponent;
@@ -81,14 +89,6 @@ import org.fabric3.fabric.implementation.system.SystemComponentTypeLoaderImpl;
 import org.fabric3.fabric.implementation.system.SystemImplementationLoader;
 import org.fabric3.fabric.implementation.system.SystemWireAttacher;
 import org.fabric3.fabric.loader.LoaderRegistryImpl;
-import static org.fabric3.fabric.runtime.ComponentNames.APPLICATION_CLASSLOADER_ID;
-import static org.fabric3.fabric.runtime.ComponentNames.BOOT_CLASSLOADER_ID;
-import static org.fabric3.fabric.runtime.ComponentNames.CLASSLOADER_REGISTRY_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.EXTENSION_METADATA_STORE_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_ASSEMBLY_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_NAME;
-import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
 import org.fabric3.fabric.services.advertsiement.FeatureLoader;
 import org.fabric3.fabric.services.archive.JarService;
 import org.fabric3.fabric.services.archive.JarServiceImpl;
@@ -126,7 +126,8 @@ import org.fabric3.pojo.processor.IntrospectionRegistry;
 import org.fabric3.pojo.processor.JavaIntrospectionHelper;
 import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.resource.resolver.DefaultResourceResolver;
+import org.fabric3.resource.processor.JSR250ResourceProcessor;
+import org.fabric3.resource.processor.ResourceProcessor;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
@@ -150,7 +151,6 @@ import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.PolicyHelper;
 import org.fabric3.spi.policy.registry.NullPolicyResolver;
-import org.fabric3.spi.resource.ResourceResolver;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ArtifactResolverRegistry;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
@@ -271,16 +271,13 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         // enable autowire for the runtime domain
         AssemblyStore store = new NonPersistentAssemblyStore(ComponentNames.RUNTIME_URI, Autowire.ON);
 
-        ResourceResolver resourceResolver = new DefaultResourceResolver();
-
         runtimeAssembly = new RuntimeAssemblyImpl(generatorRegistry,
                                                   resolver,
                                                   normalizer,
                                                   allocator,
                                                   routingService,
                                                   store,
-                                                  metaDataStore,
-                                                  resourceResolver);
+                                                  metaDataStore);
         try {
             runtimeAssembly.initialize();
         } catch (AssemblyException e) {

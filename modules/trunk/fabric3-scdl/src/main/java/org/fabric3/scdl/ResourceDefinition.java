@@ -26,13 +26,13 @@ package org.fabric3.scdl;
 public class ResourceDefinition extends ModelObject {
 
     private String name;
-    private String mappedName;
     private boolean optional;
     private ServiceContract<?> serviceContract;
     
-    public ResourceDefinition(String name, ServiceContract<?> serviceContract) {
+    public ResourceDefinition(String name, ServiceContract<?> serviceContract, boolean optional) {
         this.name = name;
         this.serviceContract = serviceContract;
+        this.optional = optional;
     }
 
     /**
@@ -45,44 +45,12 @@ public class ResourceDefinition extends ModelObject {
     }
 
     /**
-     * Sets the name of the resource
-     * 
-     * @param name the name of the resource
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * Returns the URI of the resource
-     * 
-     * @return the URI of the resource
-     */
-    public String getMappedName() {
-        return mappedName;
-    }
-
-    /**
-     * Sets the resource URI
-     */
-    public void setMappedName(String mappedName) {
-        this.mappedName = mappedName;
-    }
-
-    /**
      * If true, the resource is optional
      * 
      * @return true if the resource is optional
      */
     public boolean isOptional() {
         return optional;
-    }
-
-    /**
-     * Sets whether the resource is optional
-     */
-    public void setOptional(boolean optional) {
-        this.optional = optional;
     }
     
     /**
@@ -91,4 +59,5 @@ public class ResourceDefinition extends ModelObject {
     public ServiceContract<?> getServiceContract() {
         return serviceContract;
     }
+    
 }

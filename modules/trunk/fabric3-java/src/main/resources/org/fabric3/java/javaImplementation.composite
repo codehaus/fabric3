@@ -51,10 +51,5 @@
         <system:implementation.system class="org.fabric3.java.JavaWireAttacher"/>
         <reference name="transformerRegistry" target="pullTransformerRegistry"/>
     </component>
-    
-    <!-- TODO Below to should be pulled up to POJO level -->
-    <component name="org.fabric3.java.JavaMappedResourceWireGenerator" f3:key="org.fabric3.pojo.scdl.JavaMappedResource">
-        <system:implementation.system class="org.fabric3.java.JavaMappedResourceWireGenerator"/>
-    </component>
 
 </composite>

@@ -16,33 +16,37 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.java;
+package org.fabric3.resource.model;
+
+import java.lang.reflect.Member;
 
 import org.fabric3.pojo.scdl.JavaMappedResource;
-import org.fabric3.spi.generator.GeneratorContext;
-import org.fabric3.spi.generator.ResourceWireGenerator;
-import org.fabric3.spi.model.instance.LogicalResource;
-import org.osoa.sca.annotations.EagerInit;
 
 /**
  *
  * @version $Revision$ $Date$
  */
-@SuppressWarnings("unchecked")
-@EagerInit
-public class JavaMappedResourceWireGenerator implements ResourceWireGenerator<JavaWireTargetDefinition, JavaMappedResource> {
+public class SystemSourcedResource<T> extends JavaMappedResource<T> {
+    
+    private String mappedName;
+
+    /**
+     * @param name
+     * @param type
+     * @param member
+     * @param optional
+     * @param mappedName
+     */
+    public SystemSourcedResource(String name, Class<T> type, Member member, boolean optional, String mappedName) {
+        super(name, type, member, optional);
+        this.mappedName = mappedName;
+    }
     
     /**
-     * @see org.fabric3.spi.generator.ResourceWireGenerator#genearteWireTargetDefinition(org.fabric3.spi.model.instance.LogicalResource)
+     * @return
      */
-    public JavaWireTargetDefinition genearteWireTargetDefinition(LogicalResource<JavaMappedResource> logicalResource,
-                                                                 GeneratorContext context) {
-        
-        JavaWireTargetDefinition wtd = new JavaWireTargetDefinition();
-        wtd.setUri(logicalResource.getTarget());
-
-        return wtd;
-        
+    public String getMappedName() {
+        return this.mappedName;
     }
 
 }

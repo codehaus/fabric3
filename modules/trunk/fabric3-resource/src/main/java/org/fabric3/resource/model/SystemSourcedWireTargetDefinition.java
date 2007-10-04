@@ -16,22 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.resource.resolver;
+package org.fabric3.resource.model;
 
-import junit.framework.TestCase;
+import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 
 /**
  *
  * @version $Revision$ $Date$
  */
-public class DefaultResourceResolverTest extends TestCase {
-
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
-    public void testResolve() {
-        // TODO to implement
-    }
+public class SystemSourcedWireTargetDefinition extends PhysicalWireTargetDefinition {
 
 }

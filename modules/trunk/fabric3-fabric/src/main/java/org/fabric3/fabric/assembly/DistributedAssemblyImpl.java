@@ -18,9 +18,6 @@
  */
 package org.fabric3.fabric.assembly;
 
-import org.osoa.sca.annotations.Reference;
-import org.osoa.sca.annotations.Service;
-
 import org.fabric3.fabric.assembly.allocator.Allocator;
 import org.fabric3.fabric.assembly.normalizer.PromotionNormalizer;
 import org.fabric3.fabric.assembly.resolver.WireResolver;
@@ -28,8 +25,9 @@ import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.assembly.AssemblyStore;
 import org.fabric3.spi.generator.GeneratorRegistry;
-import org.fabric3.spi.resource.ResourceResolver;
 import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Service;
 
 /**
  * Default implementation of a DistributedAssembly
@@ -46,8 +44,7 @@ public class DistributedAssemblyImpl extends AbstractAssembly implements Distrib
                                    @Reference RoutingService routingService,
                                    @Reference AssemblyStore store,
                                    @Reference(name = "store")MetaDataStore metaDataStore,
-                                   @Reference HostInfo hostInfo,
-                                   @Reference ResourceResolver resourceResolver) {
+                                   @Reference HostInfo hostInfo) {
         super(hostInfo.getDomain(),
               generatorRegistry,
               wireResolver,
@@ -55,7 +52,6 @@ public class DistributedAssemblyImpl extends AbstractAssembly implements Distrib
               allocator,
               routingService,
               store,
-              metaDataStore,
-              resourceResolver);
+              metaDataStore);
     }
 }

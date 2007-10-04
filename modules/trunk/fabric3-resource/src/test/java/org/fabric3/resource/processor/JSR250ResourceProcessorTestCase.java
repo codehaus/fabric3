@@ -16,16 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.implementation.processor;
+package org.fabric3.resource.processor;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import org.fabric3.fabric.implementation.processor.DuplicateResourceException;
-import org.fabric3.fabric.implementation.processor.IllegalResourceException;
-import org.fabric3.fabric.implementation.processor.JSR250ResourceProcessor;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.scdl.JavaMappedResource;
+import org.fabric3.resource.model.SystemSourcedResource;
+import org.fabric3.resource.processor.DuplicateResourceException;
+import org.fabric3.resource.processor.IllegalResourceException;
+import org.fabric3.resource.processor.JSR250ResourceProcessor;
 
 import junit.framework.TestCase;
 
@@ -40,15 +41,15 @@ public class JSR250ResourceProcessorTestCase extends TestCase {
     public void testVisitField() throws Exception {
         Field field = JSR250ResourceProcessorTestCase.Foo.class.getDeclaredField("bar");
         processor.visitField(field, type, null);
-        JavaMappedResource resource = type.getResources().get("bar");
+        SystemSourcedResource<?> resource = (SystemSourcedResource<?>) type.getResources().get("bar");
         assertNotNull(resource);
         assertFalse(resource.isOptional());
-        assertNull(resource.getMappedName());
+        assertEquals("", resource.getMappedName());
         assertEquals(field.getType(), resource.getType());
         
         field = JSR250ResourceProcessorTestCase.Foo.class.getDeclaredField("subBar");
         processor.visitField(field, type, null);
-        resource = type.getResources().get("someName");
+        resource = (SystemSourcedResource<?>) type.getResources().get("someName");
         assertNotNull(resource);
         assertFalse(resource.isOptional());
         assertEquals("mapped",resource.getMappedName());
@@ -58,15 +59,15 @@ public class JSR250ResourceProcessorTestCase extends TestCase {
     public void testVisitMethod() throws Exception {
         Method method = JSR250ResourceProcessorTestCase.Foo.class.getMethod("setBar", JSR250ResourceProcessorTestCase.Bar.class);
         processor.visitMethod(method, type, null);
-        JavaMappedResource resource = type.getResources().get("bar");
+        SystemSourcedResource<?> resource = (SystemSourcedResource<?>) type.getResources().get("bar");
         assertNotNull(resource);
         assertFalse(resource.isOptional());
-        assertNull(resource.getMappedName());
+        assertEquals("", resource.getMappedName());
         assertEquals(method.getParameterTypes()[0], resource.getType());
         
         method = JSR250ResourceProcessorTestCase.Foo.class.getMethod("setSubBar", JSR250ResourceProcessorTestCase.Bar.class);
         processor.visitMethod(method, type, null);
-        resource = type.getResources().get("someName");
+        resource = (SystemSourcedResource<?>) type.getResources().get("someName");
         assertNotNull(resource);
         assertFalse(resource.isOptional());
         assertEquals("mapped",resource.getMappedName());

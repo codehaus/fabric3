@@ -41,7 +41,7 @@ public final class PersistenceUnitResource extends JavaMappedResource<EntityMana
      * @param member Member against which the annotation is declared.
      */
     public PersistenceUnitResource(String name, String unitName, Member member) {
-        super(name, EntityManagerFactory.class, member);
+        super(name, EntityManagerFactory.class, member, true);
         this.unitName = unitName;
     }
     

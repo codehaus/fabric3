@@ -16,17 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.implementation.processor;
+package org.fabric3.resource.processor;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
-import org.fabric3.spi.loader.LoaderContext;
+
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
-import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.pojo.scdl.JavaMappedResource;
 import org.fabric3.pojo.processor.ProcessingException;
+import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.resource.model.SystemSourcedResource;
+import org.fabric3.spi.loader.LoaderContext;
 
 /**
  * Processes an {@link @Resource} annotation, updating the component type with corresponding {@link
@@ -38,25 +38,6 @@ public class JSR250ResourceProcessor extends ImplementationProcessorExtension {
 
     //TODO suport superclass injections
     public JSR250ResourceProcessor() {
-    }
-
-    public <T> void visitClass(Class<T> clazz, PojoComponentType type, LoaderContext context) throws ProcessingException {
-        /* TODO according to the JSR250 spec if a class is annotated with the
-        resource annotation it signifies that the class will look up the
-        resource at runtime. Since the JSR does not define a lookup method
-        method (maybe jndi?) I am unsure if this needs to be processed or not
-        since we are only interested in dependency injection
-         */
-        javax.annotation.Resources resources = clazz.getAnnotation(javax.annotation.Resources.class);
-        if (resources != null) {
-            for (javax.annotation.Resource resource : resources.value()) {
-                //TODO declare intent
-            }
-        }
-        javax.annotation.Resource resource = clazz.getAnnotation(javax.annotation.Resource.class);
-        if (resource != null) {
-            //TODO declare intent
-        }
     }
 
     public void visitMethod(Method method, PojoComponentType type, LoaderContext context) throws ProcessingException {
@@ -98,13 +79,8 @@ public class JSR250ResourceProcessor extends ImplementationProcessorExtension {
             declaredType = methodParameterType;
         }
 
-        String mappedName = annotation.mappedName();
-        JavaMappedResource<?> resource = createResource(name, declaredType, method);
-        resource.setOptional(false);
-        if (mappedName.length() > 0) {
-            resource.setMappedName(mappedName);
-        }
-        //TODO test handling of super methods, support sharable
+        SystemSourcedResource<?> resource = createResource(name, declaredType, method, false, annotation.mappedName());
+
         type.add(resource);
     }
 
@@ -131,21 +107,14 @@ public class JSR250ResourceProcessor extends ImplementationProcessorExtension {
         } else {
             declaredType = fieldType;
         }
-        String mappedName = annotation.mappedName();
 
-        JavaMappedResource<?> resource = createResource(name, declaredType, field);
-        resource.setOptional(false);
-        if (mappedName.length() > 0) {
-            resource.setMappedName(mappedName);
-        }
-        //TODO test handling of super fields, support sharable
+        SystemSourcedResource<?> resource = createResource(name, declaredType, field, false, annotation.mappedName());
+
         type.add(resource);
     }
 
-    public <T> JavaMappedResource<T> createResource(String name, Class<T> type, Member member) {
-        return new JavaMappedResource<T>(name, type, member);
+    private <T> SystemSourcedResource<T> createResource(String name, Class<T> type, Member member, boolean optional, String mappedName) {
+        return new SystemSourcedResource<T>(name, type, member, optional, mappedName);
     }
 
-    public <T> void visitConstructor(Constructor<T> constructor, PojoComponentType type, LoaderContext context) throws ProcessingException {
-    }
 }

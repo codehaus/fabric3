@@ -20,12 +20,11 @@ package org.fabric3.resource.resolver;
 
 import java.net.URI;
 
-import org.fabric3.scdl.AbstractComponentType;
-import org.fabric3.scdl.ResourceDefinition;
-import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.resource.model.SystemSourcedResource;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.resource.ResourceResolutionException;
 import org.fabric3.spi.resource.ResourceResolver;
+import org.osoa.sca.annotations.EagerInit;
 
 /**
  * Default implementation of the resource resolver that maps the requested 
@@ -35,29 +34,25 @@ import org.fabric3.spi.resource.ResourceResolver;
  * 
  * @version $Revision$ $Date$
  */
-public class DefaultResourceResolver implements ResourceResolver {
+@EagerInit
+public class SystemSourcedResourceResolver implements ResourceResolver<SystemSourcedResource<?>> {
     
     private static final String SYSTEM_URI = "fabric3://./runtime/";
 
     /**
-     * @see org.fabric3.spi.resource.ResourceResolver#resolve(org.fabric3.spi.model.instance.LogicalComponent)
+     * @see org.fabric3.spi.resource.ResourceResolver#resolve(org.fabric3.spi.model.instance.LogicalResource)
      */
-    public void resolve(LogicalComponent<?> component) throws ResourceResolutionException {
-        
-        AbstractComponentType<?, ?, ?, ?> componentType = component.getComponentType();
-        
-        for(ResourceDefinition resourceDefinition : componentType.getResources().values()) {
+    public void resolve(LogicalResource<SystemSourcedResource<?>> logicalResource) throws ResourceResolutionException {
+       
+       SystemSourcedResource<?> resourceDefinition = logicalResource.getResourceDefinition();
+       String mappedName = resourceDefinition.getMappedName();
             
-            String name = resourceDefinition.getName();
-            String mappedName = resourceDefinition.getMappedName();
-            
-            if(mappedName != null) {
-                LogicalResource<?> logicalResource = component.getResource(name);
-                URI targetUri = URI.create(SYSTEM_URI + mappedName);
-                logicalResource.setTarget(targetUri);
-            }
+       if(mappedName == null) {
+           throw new ResourceResolutionException("Mapped name is required for system sourced resources");
+       }
 
-        }
+       URI targetUri = URI.create(SYSTEM_URI + mappedName);
+       logicalResource.setTarget(targetUri);
         
     }
 

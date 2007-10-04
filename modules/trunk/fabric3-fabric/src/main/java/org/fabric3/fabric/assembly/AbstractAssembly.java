@@ -73,6 +73,7 @@ import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.util.UriHelper;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Base class for abstract assemblies
@@ -85,13 +86,14 @@ public abstract class AbstractAssembly implements Assembly {
     protected final URI domainUri;
     protected final GeneratorRegistry generatorRegistry;
     protected final WireResolver wireResolver;
-    protected final ResourceResolver resourceResolver;
     protected final Allocator allocator;
     protected final RoutingService routingService;
     protected final MetaDataStore metadataStore;
     protected final PromotionNormalizer promotionNormalizer;
     protected LogicalComponent<CompositeImplementation> domain;
     protected AssemblyStore assemblyStore;
+    private Map<Class<? extends ResourceDefinition>, ResourceResolver<? extends ResourceDefinition>> resourceResolvers =
+        new HashMap<Class<? extends ResourceDefinition>, ResourceResolver<? extends ResourceDefinition>>();
 
     public AbstractAssembly(URI domainUri,
                             GeneratorRegistry generatorRegistry,
@@ -100,8 +102,7 @@ public abstract class AbstractAssembly implements Assembly {
                             Allocator allocator,
                             RoutingService routingService,
                             AssemblyStore assemblyStore,
-                            MetaDataStore metadataStore,
-                            ResourceResolver resourceResolver) {
+                            MetaDataStore metadataStore) {
         this.domainUri = domainUri;
         this.generatorRegistry = generatorRegistry;
         this.wireResolver = wireResolver;
@@ -110,7 +111,11 @@ public abstract class AbstractAssembly implements Assembly {
         this.routingService = routingService;
         this.assemblyStore = assemblyStore;
         this.metadataStore = metadataStore;
-        this.resourceResolver = resourceResolver;
+    }
+    
+    @Reference
+    public void setResourceResolvers(Map<Class<? extends ResourceDefinition>, ResourceResolver<? extends ResourceDefinition>> resourceResolvers) {
+        this.resourceResolvers = resourceResolvers;
     }
 
     public void initialize() throws AssemblyException {
@@ -162,6 +167,7 @@ public abstract class AbstractAssembly implements Assembly {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void include(LogicalComponent<CompositeImplementation> parent, Composite composite)
             throws ActivateException {
 
@@ -220,7 +226,13 @@ public abstract class AbstractAssembly implements Assembly {
         // resolve resources for each new component
         try {
             for (LogicalComponent<?> component : components) {
-                resourceResolver.resolve(component);
+                for(LogicalResource<? extends ResourceDefinition> logicalResource : component.getResources()) {
+                    Class<? extends ResourceDefinition> resourceDefinitionClass = logicalResource.getResourceDefinition().getClass();
+                    ResourceResolver resourceResolver = resourceResolvers.get(resourceDefinitionClass);
+                    if(resourceResolver != null) {
+                        resourceResolver.resolve(logicalResource);
+                    }
+                }
             }
         } catch (ResourceResolutionException e) {
             throw new ActivateException(e);

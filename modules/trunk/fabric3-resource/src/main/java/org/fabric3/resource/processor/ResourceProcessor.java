@@ -16,20 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.implementation.processor;
+package org.fabric3.resource.processor;
 
-import java.lang.reflect.Constructor;
+import static org.fabric3.pojo.processor.JavaIntrospectionHelper.toPropertyName;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 
-import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
-import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.pojo.scdl.JavaMappedResource;
 import org.fabric3.pojo.processor.ProcessingException;
-
-import static org.fabric3.pojo.processor.JavaIntrospectionHelper.toPropertyName;
+import org.fabric3.pojo.scdl.JavaMappedResource;
+import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.resource.model.SystemSourcedResource;
+import org.fabric3.spi.loader.LoaderContext;
 
 /**
  * Processes an {@link @Resource} annotation, updating the component type with corresponding {@link
@@ -60,13 +60,10 @@ public class ResourceProcessor extends ImplementationProcessorExtension {
             throw new DuplicateResourceException(name);
         }
 
-        String mappedName = annotation.mappedName();
-        JavaMappedResource<?> resource = createResource(name, resourceType, method);
-        resource.setOptional(annotation.optional());
-        if (mappedName.length() > 0) {
-            resource.setMappedName(mappedName);
-        }
+        SystemSourcedResource<?> resource = createResource(name, resourceType, method, annotation.optional(), annotation.mappedName());
+
         type.add(resource);
+        
     }
 
     public void visitField(Field field, PojoComponentType type, LoaderContext context) throws ProcessingException {
@@ -86,20 +83,14 @@ public class ResourceProcessor extends ImplementationProcessorExtension {
         Class<?> fieldType = field.getType();
         String mappedName = annotation.mappedName();
 
-        JavaMappedResource<?> resource = createResource(name, fieldType, field);
-        resource.setOptional(annotation.optional());
-        if (mappedName.length() > 0) {
-            resource.setMappedName(mappedName);
-        }
+        JavaMappedResource<?> resource = createResource(name, fieldType, field, annotation.optional(), annotation.mappedName());
+
         type.add(resource);
+        
     }
 
-    public <T> JavaMappedResource<T> createResource(String name, Class<T> type, Member member) {
-        return new JavaMappedResource<T>(name, type, member);
-    }
-
-    public <T> void visitConstructor(Constructor<T> constructor, PojoComponentType type, LoaderContext context) throws ProcessingException {
-
+    private <T> SystemSourcedResource<T> createResource(String name, Class<T> type, Member member, boolean optional, String mappedName) {
+        return new SystemSourcedResource<T>(name, type, member, optional, mappedName);
     }
 
 }
