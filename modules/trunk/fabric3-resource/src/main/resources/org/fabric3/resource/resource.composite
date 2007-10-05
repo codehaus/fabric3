@@ -25,7 +25,6 @@
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
            name="org.fabric3.resource.Resource"
-           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            autowire="true">
     
     <!-- Processor for F3 resources -->
@@ -39,7 +38,7 @@
     </component>
     
     <!-- Wire Target Definition Generator -->
-    <component name="org.fabric3.resource.generator.SystemSourcedResourceWireGenerator" f3:key="org.fabric3.resource.model.SystemSourcedResource">
+    <component name="org.fabric3.resource.generator.SystemSourcedResourceWireGenerator">
         <system:implementation.system class="org.fabric3.resource.generator.SystemSourcedResourceWireGenerator"/>
     </component>
     
