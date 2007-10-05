@@ -248,7 +248,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
         MavenEmbeddedRuntime runtime = createRuntime(cl);
         MojoMonitor monitor = runtime.getMonitorFactory().getMonitor(MojoMonitor.class);
         // FIXME this should probably be an isolated classloader
-        ClassLoader testClassLoader = createTestClassLoader(getClass().getClassLoader());
+        ClassLoader testClassLoader = createTestClassLoader(cl);
         RuntimeLifecycleCoordinator<MavenEmbeddedRuntime, Bootstrapper> coordinator;
         try {
             ScdlBootstrapper bootstrapper = new ScdlBootstrapperImpl();
