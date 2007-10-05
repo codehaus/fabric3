@@ -126,8 +126,6 @@ import org.fabric3.pojo.processor.IntrospectionRegistry;
 import org.fabric3.pojo.processor.JavaIntrospectionHelper;
 import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.resource.processor.JSR250ResourceProcessor;
-import org.fabric3.resource.processor.ResourceProcessor;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
@@ -389,8 +387,6 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         introspectionRegistry.registerProcessor(new ScopeProcessor(scopeRegistry));
         introspectionRegistry.registerProcessor(new PropertyProcessor(service));
         introspectionRegistry.registerProcessor(new ReferenceProcessor(registry));
-        introspectionRegistry.registerProcessor(new ResourceProcessor());
-        introspectionRegistry.registerProcessor(new JSR250ResourceProcessor());
         introspectionRegistry.registerProcessor(new ServiceProcessor(service));
         introspectionRegistry.registerProcessor(new HeuristicPojoProcessor(service, interfaceProcessorRegistry));
         introspectionRegistry.registerProcessor(new MonitorProcessor(monitorFactory, service));

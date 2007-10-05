@@ -42,11 +42,14 @@ public class MethodInjector<T> implements Injector<T> {
     }
 
     public void inject(T instance) throws ObjectCreationException {
+        Object target = objectFactory.getInstance();
         try {
-            method.invoke(instance, objectFactory.getInstance());
+            method.invoke(instance, target);
         } catch (IllegalAccessException e) {
             throw new AssertionError("Method is not accessible [" + method + "]");
         } catch (IllegalArgumentException e) {
+            // System.err.println(method.getDeclaringClass() + ":" + method.getName());
+            // System.err.println(method.getParameterTypes()[0].isAssignableFrom(target.getClass()));
             throw new ObjectCreationException("Exception thrown by setter", method.getName(), e);
         } catch (InvocationTargetException e) {
             throw new ObjectCreationException("Exception thrown by setter", method.getName(), e);

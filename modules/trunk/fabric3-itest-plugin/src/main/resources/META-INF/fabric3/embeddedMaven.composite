@@ -36,9 +36,6 @@
     <!-- include policy configuration -->
     <include name="org.fabric3.fabric.Policy" scdlResource="org/fabric3/policy/policy.composite"/>
 
-    <!-- include resource configuration -->
-    <include name="org.fabric3.resource.Resource" scdlResource="org/fabric3/resource/resource.composite"/>
-
     <!-- include physical deployment configuration -->
     <include name="org.fabric3.fabric.Common" scdlResource="org/fabric3/fabric/common.composite"/>
 

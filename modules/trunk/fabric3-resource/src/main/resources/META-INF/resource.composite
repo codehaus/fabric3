@@ -23,8 +23,10 @@
     $Rev: 593 $ $Date: 2007-07-26 04:55:15 +0100 (Thu, 26 Jul 2007) $
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
-           name="org.fabric3.resource.Resource"
+           targetNamespace="org.codehaus.fabric3"
+           name="ResourceExtension"
            autowire="true">
     
     <!-- Processor for F3 resources -->

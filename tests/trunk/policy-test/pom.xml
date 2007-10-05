@@ -96,6 +96,11 @@
                             <artifactId>fabric3-tx-jotm</artifactId>
                             <version>0.1-SNAPSHOT</version>
                         </dependency>
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-resource</artifactId>
+                            <version>0.1-SNAPSHOT</version>
+                        </dependency>
                     </contributions>
                 </configuration>
                 <executions>
