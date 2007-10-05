@@ -30,6 +30,7 @@
     <version>0.1-SNAPSHOT</version>
     <name>Fabric3 JPA Integration</name>
     <description>Fabric3 JPA Integration.</description>
+    
     <packaging>sca-contribution-jar</packaging>
 
     <repositories>
