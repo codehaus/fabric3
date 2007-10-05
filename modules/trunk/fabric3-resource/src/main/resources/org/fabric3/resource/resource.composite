@@ -27,11 +27,6 @@
            name="org.fabric3.resource.Resource"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            autowire="true">
-
-    <!-- System Sourced Resource Resolver -->
-    <component name="org.fabric3.resource.resolver.SystemSourcedResourceResolver" f3:key="org.fabric3.resource.model.SystemSourcedResource">
-        <system:implementation.system class="org.fabric3.resource.resolver.SystemSourcedResourceResolver"/>
-    </component>
     
     <!-- Processor for F3 resources -->
     <component name="org.fabric3.resource.processor.ResourceProcessor">

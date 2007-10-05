@@ -67,8 +67,6 @@ import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalChangeSet;
-import org.fabric3.spi.resource.ResourceResolutionException;
-import org.fabric3.spi.resource.ResourceResolver;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.ResourceElement;
@@ -92,8 +90,6 @@ public abstract class AbstractAssembly implements Assembly {
     protected final PromotionNormalizer promotionNormalizer;
     protected LogicalComponent<CompositeImplementation> domain;
     protected AssemblyStore assemblyStore;
-    private Map<Class<? extends ResourceDefinition>, ResourceResolver<? extends ResourceDefinition>> resourceResolvers =
-        new HashMap<Class<? extends ResourceDefinition>, ResourceResolver<? extends ResourceDefinition>>();
 
     public AbstractAssembly(URI domainUri,
                             GeneratorRegistry generatorRegistry,
@@ -111,11 +107,6 @@ public abstract class AbstractAssembly implements Assembly {
         this.routingService = routingService;
         this.assemblyStore = assemblyStore;
         this.metadataStore = metadataStore;
-    }
-    
-    @Reference
-    public void setResourceResolvers(Map<Class<? extends ResourceDefinition>, ResourceResolver<? extends ResourceDefinition>> resourceResolvers) {
-        this.resourceResolvers = resourceResolvers;
     }
 
     public void initialize() throws AssemblyException {
@@ -220,21 +211,6 @@ public abstract class AbstractAssembly implements Assembly {
                 wireResolver.resolve(component);
             }
         } catch (ResolutionException e) {
-            throw new ActivateException(e);
-        }
-
-        // resolve resources for each new component
-        try {
-            for (LogicalComponent<?> component : components) {
-                for(LogicalResource<? extends ResourceDefinition> logicalResource : component.getResources()) {
-                    Class<? extends ResourceDefinition> resourceDefinitionClass = logicalResource.getResourceDefinition().getClass();
-                    ResourceResolver resourceResolver = resourceResolvers.get(resourceDefinitionClass);
-                    if(resourceResolver != null) {
-                        resourceResolver.resolve(logicalResource);
-                    }
-                }
-            }
-        } catch (ResourceResolutionException e) {
             throw new ActivateException(e);
         }
 

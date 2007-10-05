@@ -58,6 +58,14 @@ public interface GeneratorRegistry {
     <T extends BindingDefinition> void register(Class<T> clazz, BindingGenerator<?, ?, T> generator);
 
     /**
+     * Registers a resource wire generator
+     *
+     * @param clazz     the resource type type the generator handles
+     * @param generator the generator to register
+     */
+    <T extends ResourceDefinition> void register(Class<T> clazz, ResourceWireGenerator<?, T> generator);
+
+    /**
      * Registers an interceptor generator by type.
      *
      * @param <T>       Policy extension type.

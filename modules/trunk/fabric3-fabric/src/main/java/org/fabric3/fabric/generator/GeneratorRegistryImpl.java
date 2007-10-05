@@ -101,10 +101,11 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
 
     }
     
-    @Reference
-    public void setResourceWireGenerators(Map<Class<? extends ResourceDefinition>, 
-                                          ResourceWireGenerator<?, ? extends ResourceDefinition>> resourceWireGenerators) {
-        this.resourceWireGenerators = resourceWireGenerators;
+    /**
+     * @see org.fabric3.spi.generator.GeneratorRegistry#register(java.lang.Class, org.fabric3.spi.generator.ResourceWireGenerator)
+     */
+    public <T extends ResourceDefinition> void register(Class<T> clazz, ResourceWireGenerator<?, T> generator) {
+        resourceWireGenerators.put(clazz, generator);
     }
 
     /**

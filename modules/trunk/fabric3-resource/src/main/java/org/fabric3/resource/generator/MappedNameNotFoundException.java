@@ -16,23 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.resource;
+package org.fabric3.resource.generator;
 
-import org.fabric3.scdl.ResourceDefinition;
-import org.fabric3.spi.model.instance.LogicalResource;
+import org.fabric3.spi.generator.GenerationException;
 
 /**
  *
- * Abstraction for resolving resource references.
- * 
  * @version $Revision$ $Date$
  */
-public interface ResourceResolver<RD extends ResourceDefinition> {
-    
-    /**
-     * @param logicalResource Logical resource that needs t be resolved.
-     * @throws ResourceResolutionException If the resource cannot be resolved.
-     */
-    void resolve(LogicalResource<RD> logicalResource) throws ResourceResolutionException;
+@SuppressWarnings("serial")
+public class MappedNameNotFoundException extends GenerationException {
+
+    public MappedNameNotFoundException() {
+        super("Mapped name is required for system sourced resources");
+    }
 
 }

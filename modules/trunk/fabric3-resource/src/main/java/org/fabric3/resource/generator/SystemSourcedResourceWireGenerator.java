@@ -18,12 +18,18 @@
  */
 package org.fabric3.resource.generator;
 
+import java.net.URI;
+
 import org.fabric3.resource.model.SystemSourcedResource;
 import org.fabric3.resource.model.SystemSourcedWireTargetDefinition;
+import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
+import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.ResourceWireGenerator;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
 
 /**
  *
@@ -31,16 +37,45 @@ import org.osoa.sca.annotations.EagerInit;
  */
 @SuppressWarnings("unchecked")
 @EagerInit
-public class SystemSourcedResourceWireGenerator implements ResourceWireGenerator<SystemSourcedWireTargetDefinition, SystemSourcedResource<?>> {
+public class SystemSourcedResourceWireGenerator implements ResourceWireGenerator<SystemSourcedWireTargetDefinition, SystemSourcedResource> {
+    
+    private static final String SYSTEM_URI = "fabric3://./runtime/";
+    
+    private GeneratorRegistry registry;
+    
+    /**
+     * @param registry Injected registry.
+     */
+    @Reference
+    public void setRegistry(@Reference GeneratorRegistry registry) {
+        this.registry = registry;
+    }
+    
+    /**
+     * Registers with the registry.
+     */
+    @Init
+    public void start() {
+        registry.register(SystemSourcedResource.class, this);
+    }
     
     /**
      * @see org.fabric3.spi.generator.ResourceWireGenerator#genearteWireTargetDefinition(org.fabric3.spi.model.instance.LogicalResource)
      */
-    public SystemSourcedWireTargetDefinition genearteWireTargetDefinition(LogicalResource<SystemSourcedResource<?>> logicalResource,
-                                                                 GeneratorContext context) {
+    public SystemSourcedWireTargetDefinition genearteWireTargetDefinition(LogicalResource<SystemSourcedResource> logicalResource,
+                                                                 GeneratorContext context) throws GenerationException {
+        
+        SystemSourcedResource<?> resourceDefinition = logicalResource.getResourceDefinition();
+        String mappedName = resourceDefinition.getMappedName();
+             
+        if(mappedName == null) {
+            throw new MappedNameNotFoundException();
+        }
+
+        URI targetUri = URI.create(SYSTEM_URI + mappedName);
         
         SystemSourcedWireTargetDefinition wtd = new SystemSourcedWireTargetDefinition();
-        wtd.setUri(logicalResource.getTarget());
+        wtd.setUri(targetUri);
 
         return wtd;
         
