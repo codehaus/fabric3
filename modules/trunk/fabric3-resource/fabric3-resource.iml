@@ -10,6 +10,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="fabric3-spi" />
+    <orderEntry type="library" name="geronimo-jta_1.0.1B_spec-1.0.1" level="application" />
     <orderEntryProperties />
   </component>
 </module>
