@@ -14,6 +14,7 @@
     <orderEntry type="module" module-name="fabric3-standalone-api" />
     <orderEntry type="module" module-name="fabric3-fabric" />
     <orderEntry type="library" name="junit-3.8.1" level="application" />
+    <orderEntry type="module" module-name="fabric3-java" />
     <orderEntryProperties />
   </component>
 </module>

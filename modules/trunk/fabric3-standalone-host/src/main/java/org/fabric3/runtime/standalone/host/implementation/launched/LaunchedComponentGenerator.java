@@ -25,9 +25,9 @@ import java.util.Set;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.implementation.java.JavaComponentDefinition;
-import org.fabric3.fabric.implementation.java.JavaWireSourceDefinition;
-import org.fabric3.fabric.implementation.java.JavaWireTargetDefinition;
+import org.fabric3.java.JavaComponentDefinition;
+import org.fabric3.java.JavaWireSourceDefinition;
+import org.fabric3.java.JavaWireTargetDefinition;
 import org.fabric3.pojo.instancefactory.InjectionSiteMapping;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.pojo.scdl.ConstructorDefinition;
@@ -45,6 +45,7 @@ import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
+import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.ValueSource;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
@@ -98,7 +99,8 @@ public class LaunchedComponentGenerator implements ComponentGenerator<LogicalCom
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<Launched> source,
                                                            LogicalReference reference,
-                                                           boolean optimizable)
+                                                           boolean optimizable,
+                                                           GeneratorContext context)
             throws GenerationException {
         JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
         wireDefinition.setUri(reference.getUri());
@@ -106,8 +108,14 @@ public class LaunchedComponentGenerator implements ComponentGenerator<LogicalCom
         return wireDefinition;
     }
 
+    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<Launched> source, LogicalResource<?> resource, GeneratorContext context)
+            throws GenerationException {
+        throw new UnsupportedOperationException();
+    }
+
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
-                                                           LogicalComponent<Launched> target)
+                                                           LogicalComponent<Launched> target,
+                                                           GeneratorContext context)
             throws GenerationException {
         JavaWireTargetDefinition wireDefinition = new JavaWireTargetDefinition();
         wireDefinition.setUri(service.getUri());
