@@ -86,7 +86,7 @@ public class ClasspathPersistenceUnitScanner implements PersistenceUnitScanner {
 
         }
 
-        throw new Fabric3JpaException("Unabel to find persistence unit: " + unitName);
+        throw new Fabric3JpaException("Unable to find persistence unit: " + unitName);
 
     }
 

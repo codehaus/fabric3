@@ -36,8 +36,8 @@ public class JavaMappedResource<T> extends ResourceDefinition {
     private Class<T> type;
     private ObjectFactory<T> objectFactory;
 
-    public JavaMappedResource(String name, Class<T> type, Member member, boolean optional) {
-        super(name, new JavaServiceContract(type), optional);
+    public JavaMappedResource(String name, Class<T> type, Member member, boolean optional, JavaServiceContract serviceContract) {
+        super(name, serviceContract, optional);
         this.type = type;
         this.member = member;
     }

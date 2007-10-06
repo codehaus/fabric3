@@ -29,7 +29,11 @@ import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.scdl.JavaMappedResource;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.resource.model.SystemSourcedResource;
+import org.fabric3.spi.idl.InvalidServiceContractException;
+import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
+import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.spi.loader.LoaderContext;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Processes an {@link @Resource} annotation, updating the component type with corresponding {@link
@@ -38,8 +42,15 @@ import org.fabric3.spi.loader.LoaderContext;
  * @version $Rev$ $Date$
  */
 public class ResourceProcessor extends ImplementationProcessorExtension {
-
-    public ResourceProcessor() {
+    
+    private JavaInterfaceProcessorRegistry interfaceProcessorRegistry;
+    
+    /**
+     * @param interfaceProcessorRegistry Injects the interface processor registry.
+     */
+    @Reference
+    public void setJavaInterfaceProcessorRegistry(JavaInterfaceProcessorRegistry interfaceProcessorRegistry) {
+        this.interfaceProcessorRegistry = interfaceProcessorRegistry;
     }
 
     public void visitMethod(Method method, PojoComponentType type, LoaderContext context) throws ProcessingException {
@@ -81,7 +92,6 @@ public class ResourceProcessor extends ImplementationProcessorExtension {
         }
 
         Class<?> fieldType = field.getType();
-        String mappedName = annotation.mappedName();
 
         JavaMappedResource<?> resource = createResource(name, fieldType, field, annotation.optional(), annotation.mappedName());
 
@@ -90,7 +100,14 @@ public class ResourceProcessor extends ImplementationProcessorExtension {
     }
 
     private <T> SystemSourcedResource<T> createResource(String name, Class<T> type, Member member, boolean optional, String mappedName) {
-        return new SystemSourcedResource<T>(name, type, member, optional, mappedName);
+        
+        try {
+            JavaServiceContract serviceContract = interfaceProcessorRegistry.introspect(type);
+            return new SystemSourcedResource<T>(name, type, member, optional, mappedName, serviceContract);
+        }  catch (InvalidServiceContractException e) {
+            throw new AssertionError(e);
+        }
+        
     }
 
 }

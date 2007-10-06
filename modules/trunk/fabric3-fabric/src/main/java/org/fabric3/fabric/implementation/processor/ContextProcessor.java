@@ -54,11 +54,11 @@ public class ContextProcessor extends ImplementationProcessorExtension {
         Class<?> paramType = method.getParameterTypes()[0];
         if (ComponentContext.class.equals(paramType)) {
             String name = JavaIntrospectionHelper.toPropertyName(method.getName());
-            JavaMappedResource<ComponentContext> resource = new JavaMappedResource<ComponentContext>(name, ComponentContext.class, method, true);
+            JavaMappedResource<ComponentContext> resource = new JavaMappedResource<ComponentContext>(name, ComponentContext.class, method, true, null);
             type.getResources().put(name, resource);
         } else if (RequestContext.class.equals(paramType)) {
             String name = JavaIntrospectionHelper.toPropertyName(method.getName());
-            JavaMappedResource<RequestContext> resource = new JavaMappedResource<RequestContext>(name, RequestContext.class, method,true);
+            JavaMappedResource<RequestContext> resource = new JavaMappedResource<RequestContext>(name, RequestContext.class, method, true, null);
             resource.setObjectFactory(new RequestContextObjectFactory());
             type.getResources().put(name, resource);
         } else {
@@ -75,12 +75,12 @@ public class ContextProcessor extends ImplementationProcessorExtension {
         Class<?> paramType = field.getType();
         if (ComponentContext.class.equals(paramType)) {
             String name = field.getName();
-            JavaMappedResource<ComponentContext> resource = new JavaMappedResource<ComponentContext>(name, ComponentContext.class, field, true);
+            JavaMappedResource<ComponentContext> resource = new JavaMappedResource<ComponentContext>(name, ComponentContext.class, field, true, null);
             type.getResources().put(name, resource);
         } else if (RequestContext.class.equals(paramType)) {
             String name = field.getName();
             name = JavaIntrospectionHelper.toPropertyName(name);
-            JavaMappedResource<RequestContext> resource = new JavaMappedResource<RequestContext>(name, RequestContext.class, field, true);
+            JavaMappedResource<RequestContext> resource = new JavaMappedResource<RequestContext>(name, RequestContext.class, field, true, null);
             resource.setObjectFactory(new RequestContextObjectFactory());
             type.getResources().put(name, resource);
         } else {

@@ -98,6 +98,11 @@
                             <artifactId>persistence-api</artifactId>
                             <version>1.0</version>
                         </dependency>
+                        <dependency>
+                            <groupId>org.apache.openjpa</groupId>
+                            <artifactId>openjpa-persistence-jdbc</artifactId>
+                            <version>1.0.0</version>
+                        </dependency>
                     </extensions>
                 </configuration>
                 <executions>

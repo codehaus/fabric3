@@ -21,6 +21,7 @@ package org.fabric3.resource.model;
 import java.lang.reflect.Member;
 
 import org.fabric3.pojo.scdl.JavaMappedResource;
+import org.fabric3.spi.idl.java.JavaServiceContract;
 
 /**
  *
@@ -37,8 +38,12 @@ public class SystemSourcedResource<T> extends JavaMappedResource<T> {
      * @param optional
      * @param mappedName
      */
-    public SystemSourcedResource(String name, Class<T> type, Member member, boolean optional, String mappedName) {
-        super(name, type, member, optional);
+    public SystemSourcedResource(String name, Class<T> type, 
+                                 Member member, 
+                                 boolean optional, 
+                                 String mappedName, 
+                                 JavaServiceContract serviceContract) {
+        super(name, type, member, optional, serviceContract);
         this.mappedName = mappedName;
     }
     

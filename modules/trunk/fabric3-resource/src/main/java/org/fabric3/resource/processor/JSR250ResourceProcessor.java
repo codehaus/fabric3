@@ -26,7 +26,11 @@ import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.resource.model.SystemSourcedResource;
+import org.fabric3.spi.idl.InvalidServiceContractException;
+import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
+import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.spi.loader.LoaderContext;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Processes an {@link @Resource} annotation, updating the component type with corresponding {@link
@@ -35,9 +39,15 @@ import org.fabric3.spi.loader.LoaderContext;
  * @version $Rev: 751 $ $Date: 2007-08-16 14:50:14 -0500 (Thu, 16 Aug 2007) $
  */
 public class JSR250ResourceProcessor extends ImplementationProcessorExtension {
-
-    //TODO suport superclass injections
-    public JSR250ResourceProcessor() {
+    
+    private JavaInterfaceProcessorRegistry interfaceProcessorRegistry;
+    
+    /**
+     * @param interfaceProcessorRegistry Injects the interface processor registry.
+     */
+    @Reference
+    public void setJavaInterfaceProcessorRegistry(JavaInterfaceProcessorRegistry interfaceProcessorRegistry) {
+        this.interfaceProcessorRegistry = interfaceProcessorRegistry;
     }
 
     public void visitMethod(Method method, PojoComponentType type, LoaderContext context) throws ProcessingException {
@@ -114,7 +124,14 @@ public class JSR250ResourceProcessor extends ImplementationProcessorExtension {
     }
 
     private <T> SystemSourcedResource<T> createResource(String name, Class<T> type, Member member, boolean optional, String mappedName) {
-        return new SystemSourcedResource<T>(name, type, member, optional, mappedName);
+        
+        try {
+            JavaServiceContract serviceContract = interfaceProcessorRegistry.introspect(type);
+            return new SystemSourcedResource<T>(name, type, member, optional, mappedName, serviceContract);
+        }  catch (InvalidServiceContractException e) {
+            throw new AssertionError(e);
+        }
+        
     }
 
 }

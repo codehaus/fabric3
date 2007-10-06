@@ -27,6 +27,7 @@ import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.ResourceWireGenerator;
 import org.fabric3.spi.model.instance.LogicalResource;
+import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
@@ -34,6 +35,7 @@ import org.osoa.sca.annotations.Reference;
  *
  * @version $Revision$ $Date$
  */
+@EagerInit
 public class PersistenceUnitResourceWireGenerator implements ResourceWireGenerator<PersistenceUnitWireTargetDefinition, PersistenceUnitResource> {
     
     private ClassLoaderGenerator classLoaderGenerator;

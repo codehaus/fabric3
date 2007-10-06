@@ -37,6 +37,8 @@ import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.spi.wire.MessageImpl;
 import org.fabric3.spi.wire.Wire;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 /**
@@ -44,10 +46,12 @@ import org.osoa.sca.annotations.Reference;
  * 
  * @version $Revision$ $Date$
  */
+@EagerInit
 public class PersistenceUnitWireAttacher implements WireAttacher<PhysicalWireSourceDefinition, PersistenceUnitWireTargetDefinition> {
     
     private EmfBuilder emfBuilder;
     private ClassLoaderRegistry classLoaderRegistry;
+    private WireAttacherRegistry wireAttacherRegistry;
     
     /**
      * Injects the dependencies.
@@ -59,10 +63,17 @@ public class PersistenceUnitWireAttacher implements WireAttacher<PhysicalWireSou
     public PersistenceUnitWireAttacher(@Reference WireAttacherRegistry wireAttacherRegistry, 
                                        @Reference ClassLoaderRegistry classLoaderRegistry, 
                                        @Reference EmfBuilder emfBuilder) {
-        wireAttacherRegistry.register(PersistenceUnitWireTargetDefinition.class, this);
+        this.wireAttacherRegistry = wireAttacherRegistry;
         this.emfBuilder = emfBuilder;
         this.classLoaderRegistry = classLoaderRegistry;
-        
+    }
+    
+    /**
+     * Registers with the wire attacher registry.
+     */
+    @Init
+    public void start() {
+        wireAttacherRegistry.register(PersistenceUnitWireTargetDefinition.class, this);
     }
 
     /**

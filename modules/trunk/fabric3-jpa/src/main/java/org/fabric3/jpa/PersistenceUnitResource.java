@@ -23,6 +23,7 @@ import java.lang.reflect.Member;
 import javax.persistence.EntityManagerFactory;
 
 import org.fabric3.pojo.scdl.JavaMappedResource;
+import org.fabric3.spi.idl.java.JavaServiceContract;
 
 /**
  * Represents an entity manager factory treated as a resource.
@@ -40,8 +41,8 @@ public final class PersistenceUnitResource extends JavaMappedResource<EntityMana
      * @param unitName Persistence unit name.
      * @param member Member against which the annotation is declared.
      */
-    public PersistenceUnitResource(String name, String unitName, Member member) {
-        super(name, EntityManagerFactory.class, member, true);
+    public PersistenceUnitResource(String name, String unitName, Member member, JavaServiceContract serviceContract) {
+        super(name, EntityManagerFactory.class, member, true, serviceContract);
         this.unitName = unitName;
     }
     

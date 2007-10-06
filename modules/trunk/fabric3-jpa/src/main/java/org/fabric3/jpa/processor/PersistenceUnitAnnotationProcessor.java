@@ -34,7 +34,11 @@ import org.fabric3.jpa.PersistenceUnitResource;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.spi.idl.InvalidServiceContractException;
+import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
+import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.spi.loader.LoaderContext;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Implementation processor for persistence unit annotations.
@@ -42,6 +46,16 @@ import org.fabric3.spi.loader.LoaderContext;
  * @version $Revision$ $Date$
  */
 public class PersistenceUnitAnnotationProcessor extends ImplementationProcessorExtension {
+    
+    private JavaInterfaceProcessorRegistry interfaceProcessorRegistry;
+    
+    /**
+     * @param interfaceProcessorRegistry Injects the interface processor registry.
+     */
+    @Reference
+    public void setJavaInterfaceProcessorRegistry(JavaInterfaceProcessorRegistry interfaceProcessorRegistry) {
+        this.interfaceProcessorRegistry = interfaceProcessorRegistry;
+    }
 
     /**
      * @see org.fabric3.pojo.processor.ImplementationProcessorExtension#visitMethod(java.lang.reflect.Method, 
@@ -90,7 +104,14 @@ public class PersistenceUnitAnnotationProcessor extends ImplementationProcessorE
         String name = annotation.name();
         String unitName = annotation.unitName();
 
-        type.add(new PersistenceUnitResource(name, unitName, (Member) accessibleObject));
+        JavaServiceContract serviceContract;
+        try {
+            serviceContract = interfaceProcessorRegistry.introspect(EntityManagerFactory.class);
+        } catch (InvalidServiceContractException e) {
+            throw new AssertionError(e);
+        }
+        
+        type.add(new PersistenceUnitResource(name, unitName, (Member) accessibleObject, serviceContract));
         
     }
 
