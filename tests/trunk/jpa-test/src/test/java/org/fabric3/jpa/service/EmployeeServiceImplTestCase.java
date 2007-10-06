@@ -28,7 +28,7 @@ public class EmployeeServiceImplTestCase extends TestCase {
     
     private EmployeeService employeeService;
     
-    @Reference
+    @Reference(required = true)
     public void setEmployeeService(EmployeeService employeeService) {
         this.employeeService = employeeService;
     }

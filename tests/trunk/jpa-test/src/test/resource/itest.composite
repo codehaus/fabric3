@@ -17,7 +17,8 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           name="PolicyTestComposite">
+           name="PolicyTestComposite"
+           autowire="true">
     
     <!-- Unit test -->
     <component name="org.fabric3.jpa.service.EmployeeServiceImplTestCase">
@@ -27,7 +28,7 @@
 
     <!-- Employee Service -->
     <component name="org.fabric3.jpa.service.EmployeeServiceImpl">
-        <implementation.java class="org.fabric3.jpa.service.EmployeeServiceImplTestCase"/>
+        <implementation.java class="org.fabric3.jpa.service.EmployeeServiceImpl"/>
     </component>
     
 </composite>
