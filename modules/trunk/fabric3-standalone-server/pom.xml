@@ -42,6 +42,12 @@
              <version>0.2</version>
          </dependency>
 
+        <dependency>
+             <groupId>org.apache.geronimo.specs</groupId>
+             <artifactId>geronimo-annotation_1.0_spec</artifactId>
+             <version>1.1</version>
+         </dependency>
+         
         <!-- dependencies that are defined as provided in the spi module -->
         <dependency>
             <groupId>stax</groupId>
