@@ -46,11 +46,6 @@
 			<version>RELEASE</version>
 		</dependency>
 		<dependency>
-			<groupId>org.codehaus.fabric3</groupId>
-			<artifactId>fabric3-itest-plugin</artifactId>
-			<version>RELEASE</version>
-		</dependency>
-		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>3.8.2</version>
