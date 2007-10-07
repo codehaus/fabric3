@@ -27,6 +27,10 @@ import org.fabric3.resource.model.SystemSourcedResource;
 import org.fabric3.resource.processor.DuplicateResourceException;
 import org.fabric3.resource.processor.IllegalResourceException;
 import org.fabric3.resource.processor.JSR250ResourceProcessor;
+import org.fabric3.spi.idl.InvalidServiceContractException;
+import org.fabric3.spi.idl.java.JavaInterfaceProcessor;
+import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
+import org.fabric3.spi.idl.java.JavaServiceContract;
 
 import junit.framework.TestCase;
 
@@ -36,7 +40,30 @@ import junit.framework.TestCase;
 public class JSR250ResourceProcessorTestCase extends TestCase {
 
     PojoComponentType type;
-    JSR250ResourceProcessor processor = new JSR250ResourceProcessor();
+    JSR250ResourceProcessor processor;
+    
+    public void setUp() {
+        processor = new JSR250ResourceProcessor();
+        type = new PojoComponentType(null);
+        processor.setJavaInterfaceProcessorRegistry(new JavaInterfaceProcessorRegistry() {
+
+            public void registerProcessor(JavaInterfaceProcessor processor) {
+            }
+
+            public void unregisterProcessor(JavaInterfaceProcessor processor) {
+            }
+
+            public <I> JavaServiceContract introspect(Class<I> type) throws InvalidServiceContractException {
+                return new JavaServiceContract(type);
+            }
+
+            public <I, C> JavaServiceContract introspect(Class<I> type, Class<C> callback)
+                    throws InvalidServiceContractException {
+                return null;
+            }
+            
+        });
+    }
 
     public void testVisitField() throws Exception {
         Field field = JSR250ResourceProcessorTestCase.Foo.class.getDeclaredField("bar");
@@ -119,11 +146,6 @@ public class JSR250ResourceProcessorTestCase extends TestCase {
         } catch (DuplicateResourceException e) {
             //expected
         }
-    }
-
-    protected void setUp() throws Exception {
-        super.setUp();
-        type = new PojoComponentType(null);
     }
 
     private class Foo {

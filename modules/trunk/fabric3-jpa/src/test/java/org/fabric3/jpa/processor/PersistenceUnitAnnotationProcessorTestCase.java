@@ -30,6 +30,10 @@ import org.fabric3.jpa.PersistenceUnitResource;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.scdl.JavaMappedResource;
 import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.spi.idl.InvalidServiceContractException;
+import org.fabric3.spi.idl.java.JavaInterfaceProcessor;
+import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
+import org.fabric3.spi.idl.java.JavaServiceContract;
 
 /**
  *
@@ -37,8 +41,31 @@ import org.fabric3.pojo.scdl.PojoComponentType;
  */
 public class PersistenceUnitAnnotationProcessorTestCase extends TestCase {
 
-    private PojoComponentType type = new PojoComponentType();
-    private PersistenceUnitAnnotationProcessor processor = new PersistenceUnitAnnotationProcessor();
+    private PojoComponentType type;
+    private PersistenceUnitAnnotationProcessor processor;
+    
+    public void setUp() {
+        type = new PojoComponentType();
+        processor = new PersistenceUnitAnnotationProcessor();
+        processor.setJavaInterfaceProcessorRegistry(new JavaInterfaceProcessorRegistry() {
+
+            public void registerProcessor(JavaInterfaceProcessor processor) {
+            }
+
+            public void unregisterProcessor(JavaInterfaceProcessor processor) {
+            }
+
+            public <I> JavaServiceContract introspect(Class<I> type) throws InvalidServiceContractException {
+                return new JavaServiceContract(type);
+            }
+
+            public <I, C> JavaServiceContract introspect(Class<I> type, Class<C> callback)
+                    throws InvalidServiceContractException {
+                return null;
+            }
+            
+        });
+    }
 
     public void testValidField() throws Exception {
         
