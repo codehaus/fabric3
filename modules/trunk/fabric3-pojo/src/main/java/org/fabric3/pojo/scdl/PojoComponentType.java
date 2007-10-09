@@ -18,22 +18,18 @@
  */
 package org.fabric3.pojo.scdl;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.fabric3.pojo.instancefactory.Signature;
 import org.fabric3.scdl.AbstractComponentType;
-import org.fabric3.spi.idl.java.JavaServiceContract;
 
 /**
  * A component type specialization for POJO implementations
  *
  * @version $$Rev$$ $$Date$$
  */
-public class PojoComponentType extends AbstractComponentType<JavaMappedService, 
-                                                             JavaMappedReference,
-                                                             JavaMappedProperty<?>,
-                                                             JavaMappedResource<?>> {
+public class PojoComponentType extends AbstractComponentType<JavaMappedService,
+        JavaMappedReference,
+        JavaMappedProperty<?>,
+        JavaMappedResource<?>> {
     private String implClass;
     private ConstructorDefinition<?> constructorDefinition;
     private Signature initMethod;
