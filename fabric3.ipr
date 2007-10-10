@@ -307,9 +307,6 @@
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/binding-jms-test/binding-jms-test.iml" filepath="$PROJECT_DIR$/tests/trunk/binding-jms-test/binding-jms-test.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/binding-test-harness/binding-test-harness.iml" filepath="$PROJECT_DIR$/modules/trunk/binding-test-harness/binding-test-harness.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/binding-ws-test/binding-ws-test.iml" filepath="$PROJECT_DIR$/tests/trunk/binding-ws-test/binding-ws-test.iml" group="tests" />
-      <module fileurl="file://$PROJECT_DIR$/demo/assembly/demo-assembly.iml" filepath="$PROJECT_DIR$/demo/assembly/demo-assembly.iml" group="demo" />
-      <module fileurl="file://$PROJECT_DIR$/demo/calculator/demo-calculator.iml" filepath="$PROJECT_DIR$/demo/calculator/demo-calculator.iml" group="demo" />
-      <module fileurl="file://$PROJECT_DIR$/demo/controller/demo-controller.iml" filepath="$PROJECT_DIR$/demo/controller/demo-controller.iml" group="demo" />
       <module fileurl="file://$PROJECT_DIR$/fabric-pom/trunk/fabric-pom.iml" filepath="$PROJECT_DIR$/fabric-pom/trunk/fabric-pom.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-api/fabric3-api.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-api/fabric3-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-binding-burlap/fabric3-binding-burlap.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-binding-burlap/fabric3-binding-burlap.iml" />
@@ -360,7 +357,6 @@
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/hello-common/hello-common.iml" filepath="$PROJECT_DIR$/tests/trunk/hello-common/hello-common.iml" />
       <module fileurl="file://$PROJECT_DIR$/parent-pom/trunk/parent-pom.iml" filepath="$PROJECT_DIR$/parent-pom/trunk/parent-pom.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/policy-test/policy-test.iml" filepath="$PROJECT_DIR$/tests/trunk/policy-test/policy-test.iml" group="tests" />
-      <module fileurl="file://$PROJECT_DIR$/assembly/trunk/runtime-development/runtime-development.iml" filepath="$PROJECT_DIR$/assembly/trunk/runtime-development/runtime-development.iml" />
       <module fileurl="file://$PROJECT_DIR$/assembly/trunk/runtime-standalone/runtime-standalone.iml" filepath="$PROJECT_DIR$/assembly/trunk/runtime-standalone/runtime-standalone.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/runtime-tomcat/runtime-tomcat.iml" filepath="$PROJECT_DIR$/tests/trunk/runtime-tomcat/runtime-tomcat.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/runtime-webapp/runtime-webapp.iml" filepath="$PROJECT_DIR$/tests/trunk/runtime-webapp/runtime-webapp.iml" group="tests" />
