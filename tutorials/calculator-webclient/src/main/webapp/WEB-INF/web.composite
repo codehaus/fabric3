@@ -19,7 +19,7 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:fabric3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           name="Demo Web Client">
+           name="Calculator Web Client">
 
     <component name="calculator">
         <fabric3:web/>
@@ -35,7 +35,7 @@
         <hessian:binding.hessian uri="http://localhost:8181/calculator"/>
 
         Hessian namespace:
-        xmlns:hessian="http://www.fabric3.org/binding/hessian/0.1"
+        xmlns:hessian="http://www.fabric3.org/binding/hessian/0.3"
 
         Web Services Binding:
         <binding.ws uri="http://localhost:8181/services/calculator"/>
