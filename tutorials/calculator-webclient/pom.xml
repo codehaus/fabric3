@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3.tutorials</groupId>
     <artifactId>fabric3-tutorial-calculator-webclient</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.3-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>Fabric3 Tutorial Web Client</name>
     <description>Fabric3 Web Client demonstrating distributed domains.</description>
@@ -108,7 +108,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <runTimeVersion>0.2</runTimeVersion>
+                    <runTimeVersion>0.3-SNAPSHOT</runTimeVersion>
                     <extensions>
                         <!--  Hessian extension  -->
                         <!--<dependency>-->
