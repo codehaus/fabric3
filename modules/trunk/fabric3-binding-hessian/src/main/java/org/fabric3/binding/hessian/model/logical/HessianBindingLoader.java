@@ -34,7 +34,7 @@ import org.fabric3.spi.loader.PolicyHelper;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-/**
+/**               
  * @version $Revision$ $Date$
  */
 @EagerInit
@@ -42,7 +42,7 @@ public class HessianBindingLoader extends LoaderExtension<HessianBindingDefiniti
 
     /** Qualified name for the binding element. */
     public static final QName BINDING_QNAME = 
-        new QName("http://www.fabric3.org/binding/hessian/0.2", "binding.hessian");
+        new QName("http://www.fabric3.org/binding/hessian/0.3", "binding.hessian");
     
     private final PolicyHelper policyHelper;
     
