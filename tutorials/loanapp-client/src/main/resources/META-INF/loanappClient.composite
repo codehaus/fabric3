@@ -32,7 +32,7 @@
         <!--<binding.rmi host="localhost" port="7701" serviceName="loanService"/>-->
         <!--<hessian:binding.hessian uri="http://localhost:8181/loanServiceHessian"/>-->
         <!--<burlap:binding.burlap uri="http://localhost:8181/loanServiceBurlap"/>-->
-        <binding.ws uri="http://localhost:8181/services/loanService"/>
+        <!--<binding.ws uri="http://localhost:8181/services/loanService"/>-->
     </reference>
 
                                         

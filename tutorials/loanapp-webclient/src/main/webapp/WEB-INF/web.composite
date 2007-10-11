@@ -19,7 +19,7 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:fabric3="http://fabric3.org/xmlns/sca/2.0-alpha"
-          name="Demo Web Client">
+           name="LoanApp Web Client">
 
     <component name="loanapp">
         <fabric3:web/>
@@ -39,6 +39,10 @@
 
         Web Services Binding:
         <binding.ws uri="http://localhost:8181/services/calculator"/>
+
+        RMI Binding
+        <binding.rmi host="localhost" port="7701" serviceName="loanService"/>
+
     -->
-    
+
 </composite>
