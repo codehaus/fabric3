@@ -22,7 +22,6 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLEncoder;
-
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
@@ -67,9 +66,9 @@ public class JarClasspathProcessor implements ClasspathProcessor {
         List<URL> classpath = new ArrayList<URL>();
         // add the the jar itself to the classpath
         classpath.add(url);
-
         // expand contents of the lib directory (if it exists) and add the expanded content
-        String name = URLEncoder.encode(url.getFile(),"UTF-8");
+        String file = url.getFile();
+        String name = URLEncoder.encode(file.substring(file.lastIndexOf("/") + 1), "UTF-8");
         File expandedDir = generateTempDir(name);
         jarService.expand(url, expandedDir, true);
         File libDir = new File(expandedDir, "META-INF/lib");
