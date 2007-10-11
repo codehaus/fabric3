@@ -30,9 +30,6 @@
     </listener>
 
     <context-param>
-        <param-name>fabric3.systemScdlPath</param-name>
-    </context-param>
-    <context-param>
         <param-name>fabric3.component</param-name>
         <param-value>calculator</param-value>
     </context-param>
