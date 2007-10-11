@@ -19,18 +19,13 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:fabric3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:hessian="http://www.fabric3.org/binding/hessian/0.3"
-           xmlns:burlap="http://www.fabric3.org/binding/burlap/0.3"
           name="Demo Web Client">
 
     <component name="loanapp">
-        <implementation.web/>
+        <fabric3:web/>
         <reference name="loanService" promote="loanapp/loanService">
             <interface.java interface="loanapp.loanservice.LoanApplicationService"/>
-            <!--<binding.rmi host="localhost" port="7701" serviceName="loanService"/>-->
-            <hessian:binding.hessian uri="http://localhost:8181/loanServiceHessian"/>
-            <!--<burlap:binding.burlap uri="http://localhost:8181/loanServiceBurlap"/>-->
-            <!--<binding.ws uri="http://localhost:8181/services/loanService"/>-->
+            <!--insert binding -->
         </reference>
     </component>
 
