@@ -61,6 +61,7 @@
                 <include>org.codehaus.fabric3:fabric3-api</include>
                 <include>org.codehaus.fabric3:fabric3-host-api</include>
                 <include>org.codehaus.fabric3.standalone:fabric3-standalone-api</include>
+                <include>org.apache.geronimo.specs:geronimo-annotation_1.0_spec</include>
             </includes>
             <outputDirectory>lib</outputDirectory>
         </dependencySet>
@@ -74,7 +75,9 @@
                 <include>org.codehaus.fabric3:fabric3-extension</include>
                 <include>org.codehaus.fabric3:fabric3-policy-spi</include>
                 <include>org.codehaus.fabric3:fabric3-pojo</include>
-                <include>org.codehaus.fabric3:fabric3-transform</include>
+                <include>org.codehaus.fabric3:fabric3-java</include>
+                <include>org.codehaus.fabric3:fabric3-resource</include>
+					 <include>org.codehaus.fabric3:fabric3-transform</include>
                 <include>org.codehaus.fabric3:fabric3-loader</include>
                 <include>org.codehaus.fabric3:fabric3-policy</include>
                 <include>org.codehaus.fabric3:fabric3-fabric</include>
