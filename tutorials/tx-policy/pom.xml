@@ -34,13 +34,13 @@
         <dependency>
             <groupId>org.codehaus.fabric3.spec</groupId>
             <artifactId>sca-api-r1.0</artifactId>
-            <version>0.2-SNAPSHOT</version>
+            <version>0.2</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3.webapp</groupId>
             <artifactId>fabric3-webapp-api</artifactId>
-            <version>0.2-SNAPSHOT</version>
+            <version>0.2</version>
         </dependency>
 
         <dependency>
@@ -65,7 +65,7 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-webapp-plugin</artifactId>
-                <version>0.2-SNAPSHOT</version>
+                <version>0.3-SNAPSHOT</version>
                 <executions>
                     <execution>
                         <id>fabric3-war</id>
@@ -75,12 +75,12 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <runTimeVersion>0.2-SNAPSHOT</runTimeVersion>
+                    <runTimeVersion>0.3-SNAPSHOT</runTimeVersion>
                     <extensions>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-tx</artifactId>
-                            <version>0.1-SNAPSHOT</version>
+                            <version>0.2-SNAPSHOT</version>
                         </dependency> 
                     </extensions>
                 </configuration>
