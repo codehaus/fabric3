@@ -67,7 +67,7 @@
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-jpa</artifactId>
+            <artifactId>fabric3-jpa-spi</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
 
