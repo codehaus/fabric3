@@ -18,8 +18,6 @@
  */
 package calculator;
 
-import org.osoa.sca.annotations.Scope;
-
 /**
  * An implementation of the subtract service.
  */

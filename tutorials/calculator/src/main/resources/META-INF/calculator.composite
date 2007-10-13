@@ -22,7 +22,7 @@
            autowire="true">
 
     <!--<service name="calculatorService" promote="calculator">-->
-         <!--Insert binding definition here -->
+        <!--Insert binding definition here -->
     <!--</service>-->
     <!--
         Hessian binding:
@@ -33,7 +33,10 @@
 
         Web Services:
         <binding.ws uri="/calculator" />
-    -->
+
+        RMI:
+       <binding.rmi host="localhost" port="7701" serviceName="calculatorService"/>
+     -->
     <component name="calculator">
         <implementation.java class="calculator.CalculatorServiceImpl"/>
     </component>

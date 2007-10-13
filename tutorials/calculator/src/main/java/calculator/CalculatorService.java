@@ -24,12 +24,12 @@ package calculator;
  */
 public interface CalculatorService {
 
-    Double add(Double n1, Double n2);
+    Double add(double n1, double n2);
 
-    Double subtract(Double n1, Double n2);
+    Double subtract(double n1, double n2);
 
-    Double multiply(Double n1, Double n2);
+    Double multiply(double n1, double n2);
 
-    Double divide(Double n1, Double n2);
+    Double divide(double n1, double n2);
 
 }
