@@ -27,6 +27,7 @@ import javax.persistence.spi.PersistenceProvider;
 import javax.persistence.spi.PersistenceUnitInfo;
 
 import org.fabric3.jpa.Fabric3JpaException;
+import org.fabric3.jpa.spi.delegate.EmfBuilderDelegate;
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.Reference;
 
@@ -40,6 +41,7 @@ public class CachingEmfBuilder implements EmfBuilder {
     
     private Map<String, EntityManagerFactory> cache = new HashMap<String, EntityManagerFactory>();
     private PersistenceUnitScanner scanner;
+    private Map<String, EmfBuilderDelegate> delegates = new HashMap<String, EmfBuilderDelegate>();
     
     /**
      * Injects the scanner.
@@ -48,6 +50,16 @@ public class CachingEmfBuilder implements EmfBuilder {
      */
     public CachingEmfBuilder(@Reference PersistenceUnitScanner scanner) {
         this.scanner = scanner;
+    }
+    
+    /**
+     * Injects the delegates.
+     * 
+     * @param delegates Provider specific delegates.
+     */
+    @Reference
+    public void setDelegates(Map<String, EmfBuilderDelegate> delegates) {
+        this.delegates = delegates;
     }
 
     /**
@@ -83,7 +95,13 @@ public class CachingEmfBuilder implements EmfBuilder {
         
         PersistenceUnitInfo info = scanner.getPersistenceUnitInfo(unitName, classLoader);
         String providerClass = info.getPersistenceProviderClassName();
+        
+        EmfBuilderDelegate delegate = delegates.get(providerClass);
+        if(delegate != null) {
+            return delegate.build(info, classLoader);
+        }
 
+        // No configured delegates, try standard JPA
         try {
             PersistenceProvider provider = (PersistenceProvider) Class.forName(providerClass).newInstance();
             return provider.createContainerEntityManagerFactory(info, Collections.emptyMap());

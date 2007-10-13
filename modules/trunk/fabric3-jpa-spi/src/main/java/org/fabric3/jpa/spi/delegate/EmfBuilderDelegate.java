@@ -14,9 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.jpa.provider;
-
-import java.util.Properties;
+package org.fabric3.jpa.spi.delegate;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.spi.PersistenceUnitInfo;
@@ -30,11 +28,12 @@ import javax.persistence.spi.PersistenceUnitInfo;
 public interface EmfBuilderDelegate {
     
     /**
-     * @param info
-     * @param classLoader
-     * @param props
-     * @return
+     * Builds the entity managed factory.
+     * 
+     * @param info Persistence unit info.
+     * @param classLoader Classloader to use.
+     * @return Entity manager factory.
      */
-    EntityManagerFactory build(PersistenceUnitInfo info, ClassLoader classLoader, Properties props);
+    EntityManagerFactory build(PersistenceUnitInfo info, ClassLoader classLoader);
 
 }
