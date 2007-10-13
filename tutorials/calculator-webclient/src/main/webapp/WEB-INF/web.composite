@@ -28,7 +28,7 @@
     <reference name="calculatorReference" promote="calculator/calculatorReference">
         <interface.java interface="calculator.CalculatorService"/>
         <!-- Insert a binding definition -->
-    </reference>
+    </reference>              
 
     <!--
         Hessian Binding:
@@ -39,6 +39,10 @@
 
         Web Services Binding:
         <binding.ws uri="http://localhost:8181/services/calculator"/>
+
+        RMI Binding:
+        <binding.rmi host="localhost" port="7701" serviceName="calculatorService"/>
+
     -->
     
 </composite>

@@ -96,26 +96,33 @@
                 <configuration>
                     <runTimeVersion>0.3-SNAPSHOT</runTimeVersion>
                     <extensions>
-                        <!--  Uncomment to enable the Hessian extension  -->
-<!--
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-binding-hessian</artifactId>
-                            <version>0.3-SNAPSHOT</version>
-                        </dependency>
--->
+                        <!--  Uncomment to enable the Hessian binding extension  -->
+                        <!--
+                            <dependency>
+                                <groupId>org.codehaus.fabric3</groupId>
+                                <artifactId>fabric3-binding-hessian</artifactId>
+                                <version>0.3-SNAPSHOT</version>
+                            </dependency>
+                        -->
 
-                        <!--  Uncomment to enable the Web services extension -->
-<!--
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-binding-ws</artifactId>
-                            <version>0.3-SNAPSHOT</version>
-                        </dependency>
--->
+                        <!--  Uncomment to enable the Web Services binding extension -->
+                        <!--
+                            <dependency>
+                                <groupId>org.codehaus.fabric3</groupId>
+                                <artifactId>fabric3-binding-ws</artifactId>
+                                <version>0.3-SNAPSHOT</version>
+                            </dependency>
+                        -->
 
+                        <!--  Uncomment to enable the RMI binding extension -->
+                        <!--
+                            <dependency>
+                                <groupId>org.codehaus.fabric3</groupId>
+                                <artifactId>fabric3-binding-rmi</artifactId>
+                                <version>0.1-SNAPSHOT</version>
+                            </dependency>
+                        -->
                     </extensions>
-
                 </configuration>
             </plugin>
         </plugins>
