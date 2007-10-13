@@ -44,8 +44,14 @@
         <reference name="service" target="PropertyTypesImpl"/>
     </component>
 
+    <component name="PropertyFromFileImpl">
+        <implementation.java class="org.fabric3.tests.function.properties.PropertyFromFileImpl"/>
+        <property name="string" file="string.xml"/>
+    </component>
+
     <component name="PropertyFileTest">
         <f3:junit class="org.fabric3.tests.function.properties.PropertyFileTest"/>
         <property name="string" file="string.xml"/>
+        <reference name="javaComponent" target="PropertyFromFileImpl"/>
     </component>
 </composite>

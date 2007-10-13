@@ -16,25 +16,9 @@
  */
 package org.fabric3.tests.function.properties;
 
-import junit.framework.TestCase;
-import org.osoa.sca.annotations.Property;
-import org.osoa.sca.annotations.Reference;
-
 /**
  * @version $Rev$ $Date$
  */
-public class PropertyFileTest extends TestCase {
-    @Property
-    public String string;
-
-    @Reference
-    public PropertyFromFile javaComponent;
-
-    public void testStringInJUnit() {
-        assertEquals("Hello World", string);
-    }
-
-    public void testStringInJava() {
-        assertEquals("Hello World", javaComponent.getString());
-    }
+public interface PropertyFromFile {
+    String getString();
 }
