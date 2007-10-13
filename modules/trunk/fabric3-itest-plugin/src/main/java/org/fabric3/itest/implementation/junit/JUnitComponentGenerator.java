@@ -89,6 +89,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         wireDefinition.setUri(reference.getUri());
         wireDefinition.setOptimizable(optimizable);
         wireDefinition.setConversational(reference.getDefinition().getServiceContract().isConversational());
+        wireDefinition.setClassLoaderId(URI.create("sca://./applicationClassLoader"));
         return wireDefinition;
     }
 
