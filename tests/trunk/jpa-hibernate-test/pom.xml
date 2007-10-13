@@ -26,11 +26,11 @@
     </parent>
 
     <groupId>org.codehaus.fabric3</groupId>
-    <artifactId>jpa-test</artifactId>
+    <artifactId>jpa--hibernatetest</artifactId>
     <version>0.1-SNAPSHOT</version>
-    <name>Fabric3 JPA Test</name>
+    <name>Fabric3 JPA Hibernate Test</name>
     <packaging>jar</packaging>
-    <description>Fabric3 JPA Test.</description>
+    <description>Fabric3 JPA Hibernate Test.</description>
 
     <dependencies>
 
