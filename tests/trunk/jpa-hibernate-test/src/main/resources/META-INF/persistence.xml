@@ -21,8 +21,8 @@
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
    version="1.0">
-   <persistence-unit name="employee" transaction-type="RESOURCE_LOCAL">
-      <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
+   <persistence-unit name="employee" transaction-type="JTA">
+      <provider>org.hibernate.ejb.HibernatePersistence</provider>
       <class>org.fabric3.jpa.model.Employee</class>
       <properties>
          <property name="openjpa.ConnectionURL" value="jdbc:hsqldb:tutorial_database"/>

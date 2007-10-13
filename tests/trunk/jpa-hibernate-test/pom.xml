@@ -67,12 +67,6 @@
             <version>1.0</version>
         </dependency>
         
-        <dependency>
-            <groupId>org.apache.openjpa</groupId>
-            <artifactId>openjpa-persistence-jdbc</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        
     </dependencies>
 
     <build>
@@ -88,7 +82,17 @@
                     <contributions>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-jpa</artifactId>
+                            <artifactId>fabric3-jpa-core</artifactId>
+                            <version>0.1-SNAPSHOT</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-tx-jotm</artifactId>
+                            <version>0.1-SNAPSHOT</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-jpa-hibernate</artifactId>
                             <version>0.1-SNAPSHOT</version>
                         </dependency>
                     </contributions>

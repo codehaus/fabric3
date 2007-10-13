@@ -21,6 +21,10 @@ import javax.persistence.spi.PersistenceUnitInfo;
 import javax.transaction.TransactionManager;
 
 import org.fabric3.jpa.spi.delegate.EmfBuilderDelegate;
+import org.hibernate.cfg.AnnotationConfiguration;
+import org.hibernate.cfg.SettingsFactory;
+import org.hibernate.ejb.EntityManagerFactoryImpl;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 /**
@@ -29,6 +33,7 @@ import org.osoa.sca.annotations.Reference;
 public class HibernateDelegate implements EmfBuilderDelegate {
     
     private TransactionManager transactionManager;
+    private SettingsFactory settingsFactory;
     
     /**
      * Injects the transaction manager.
@@ -39,16 +44,23 @@ public class HibernateDelegate implements EmfBuilderDelegate {
     public void setTransactionManager(TransactionManager transactionManager) {
         this.transactionManager = transactionManager;
     }
+    
+    /**
+     * Creates the setting factor.
+     */
+    @Init
+    public void start() {
+        settingsFactory = new F3SettingsFactory(transactionManager);
+    }
 
     /**
      * @see org.fabric3.jpa.spi.delegate.EmfBuilderDelegate#build(javax.persistence.spi.PersistenceUnitInfo, 
      *                                                            java.lang.ClassLoader)
      */
     public EntityManagerFactory build(PersistenceUnitInfo info, ClassLoader classLoader) {
-        
-        assert transactionManager != null;
-        // TODO Auto-generated method stub
-        return null;
+        AnnotationConfiguration cfg = new AnnotationConfiguration(settingsFactory);
+        // TODO Build the configuration
+        return new EntityManagerFactoryImpl(cfg.buildSessionFactory(), info.getTransactionType(), true);
     }
 
 }

@@ -57,7 +57,7 @@ public class CachingEmfBuilder implements EmfBuilder {
      * 
      * @param delegates Provider specific delegates.
      */
-    @Reference
+    @Reference(required = true)
     public void setDelegates(Map<String, EmfBuilderDelegate> delegates) {
         this.delegates = delegates;
     }
@@ -84,7 +84,9 @@ public class CachingEmfBuilder implements EmfBuilder {
     @Destroy
     public void destroy() {
         for (EntityManagerFactory emf : cache.values()) {
-            emf.close();
+            if(emf != null) {
+                emf.close();
+            }
         }
     }
 
