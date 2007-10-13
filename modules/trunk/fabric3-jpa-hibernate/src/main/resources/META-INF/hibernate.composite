@@ -30,7 +30,8 @@
            autowire="true">
     
     <!-- EMF Builder Delegate -->
-    <component name="org.fabric3.jpa.hibernate.HibernateDelegate">
+    <component name="org.fabric3.jpa.hibernate.HibernateDelegate" 
+               f3:key="org.apache.openjpa.persistence.PersistenceProviderImpl">
         <system:implementation.system class="org.fabric3.jpa.hibernate.HibernateDelegate"/>
     </component>
     
