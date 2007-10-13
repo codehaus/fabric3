@@ -318,7 +318,6 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-contribution-plugin/fabric3-contribution-plugin.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-contribution-plugin/fabric3-contribution-plugin.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-contribution-scanner/fabric3-contribution-scanner.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-contribution-scanner/fabric3-contribution-scanner.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-contribution-scanner-spi/fabric3-contribution-scanner-spi.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-contribution-scanner-spi/fabric3-contribution-scanner-spi.iml" />
-      <module fileurl="file://$PROJECT_DIR$/demo/webclient/fabric3-demo-webclient.iml" filepath="$PROJECT_DIR$/demo/webclient/fabric3-demo-webclient.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-development-api/fabric3-development-api.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-development-api/fabric3-development-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-development-host/fabric3-development-host.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-development-host/fabric3-development-host.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-discovery-jxta/fabric3-discovery-jxta.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-discovery-jxta/fabric3-discovery-jxta.iml" />
@@ -331,6 +330,7 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-java/fabric3-java.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-java/fabric3-java.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-jetty/fabric3-jetty.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-jetty/fabric3-jetty.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-jmx/fabric3-jmx.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-jmx/fabric3-jmx.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-jpa/fabric3-jpa.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-jpa/fabric3-jpa.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-jxta/fabric3-jxta.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-jxta/fabric3-jxta.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-loader/fabric3-loader.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-loader/fabric3-loader.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/fabric3-maven/fabric3-maven.iml" filepath="$PROJECT_DIR$/modules/trunk/fabric3-maven/fabric3-maven.iml" />
