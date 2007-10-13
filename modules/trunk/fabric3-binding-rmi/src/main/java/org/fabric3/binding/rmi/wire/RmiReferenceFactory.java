@@ -23,6 +23,8 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
+import org.osoa.sca.ServiceUnavailableException;
+
 public class RmiReferenceFactory {
 
     private final String host;
@@ -40,14 +42,10 @@ public class RmiReferenceFactory {
         try {
             registry = LocateRegistry.getRegistry(host, port);
             return registry.lookup(serviceName);
-        } catch (RemoteException ne) {
-            AssertionError ae = new AssertionError("Unexpected exception");
-            ae.initCause(ne);
-            throw ae;
-        } catch (NotBoundException nbe) {
-            AssertionError ae = new AssertionError("Unexpected exception");
-            ae.initCause(nbe);
-            throw ae;
+        } catch (RemoteException e) {
+            throw new ServiceUnavailableException(serviceName, e);
+        } catch (NotBoundException e) {
+            throw new ServiceUnavailableException(serviceName, e);
         }
     }
 
