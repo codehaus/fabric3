@@ -113,9 +113,7 @@ public class CompositeClassLoader extends URLClassLoader {
             try {
                 // look in the primary parent
                 try {
-                    if (parent != null) {
-                        clazz = this.parent.loadClass(name);
-                    }
+                    clazz = Class.forName(name, resolve, parent);
                 } catch (ClassNotFoundException e) {
                     // continue
                 }
