@@ -30,10 +30,9 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * ClassLoader associated with a composite.
- * Each classloader has a name that can be used to reference it in the runtime.
- * The classloader supports multiple parents allowing application code to share selected
- * libraries with the runtime infrastructure as determined by the component's implementation type.
+ * ClassLoader associated with a composite. Each classloader has a name that can be used to reference it in the runtime.
+ * The classloader supports multiple parents allowing application code to share selected libraries with the runtime
+ * infrastructure as determined by the component's implementation type.
  *
  * @version $Rev$ $Date$
  */
@@ -69,8 +68,7 @@ public class CompositeClassLoader extends URLClassLoader {
 
 
     /**
-     * Add a resource URL to this classloader's classpath.
-     * The "createClassLoader" RuntimePermission is required.
+     * Add a resource URL to this classloader's classpath. The "createClassLoader" RuntimePermission is required.
      *
      * @param url an additional URL from which to load classes and resources
      */
@@ -84,8 +82,7 @@ public class CompositeClassLoader extends URLClassLoader {
     }
 
     /**
-     * Add a parent to this classloader.
-     * The "createClassLoader" RuntimePermission is required.
+     * Add a parent to this classloader. The "createClassLoader" RuntimePermission is required.
      *
      * @param parent an additional parent classloader
      */
@@ -116,7 +113,9 @@ public class CompositeClassLoader extends URLClassLoader {
             try {
                 // look in the primary parent
                 try {
-                    clazz = this.parent.loadClass(name);
+                    if (parent != null) {
+                        clazz = this.parent.loadClass(name);
+                    }
                 } catch (ClassNotFoundException e) {
                     // continue
                 }
