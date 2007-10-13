@@ -31,7 +31,7 @@
     <name>Fabric3 JPA Integration</name>
     <description>Fabric3 JPA Integration.</description>
     
-    <packaging>sca-contribution-jar</packaging>
+    <packaging>jar</packaging>
 
     <repositories>
         <repository>
@@ -82,18 +82,6 @@
         </dependency>
 
     </dependencies>
-    
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.fabric3</groupId>
-                <artifactId>fabric3-contribution-plugin</artifactId>
-                <version>0.2-SNAPSHOT</version>
-                <extensions>true</extensions>
-                <configuration/>
-            </plugin>
-        </plugins>
-    </build>
 
     <scm>
         <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/fabric3-jpa</connection>
