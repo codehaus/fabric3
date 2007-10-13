@@ -4,7 +4,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Description of a method signature.
@@ -14,6 +16,19 @@ import java.util.List;
  * @version $Rev$ $Date$
  */
 public class Signature {
+    private static final Map<String, Class<?>> PRIMITIVES_TYPES;
+
+    static {
+        PRIMITIVES_TYPES = new HashMap<String, Class<?>>();
+        PRIMITIVES_TYPES.put("boolean", Boolean.TYPE);
+        PRIMITIVES_TYPES.put("byte", Byte.TYPE);
+        PRIMITIVES_TYPES.put("short", Short.TYPE);
+        PRIMITIVES_TYPES.put("int", Integer.TYPE);
+        PRIMITIVES_TYPES.put("long", Long.TYPE);
+        PRIMITIVES_TYPES.put("float", Float.TYPE);
+        PRIMITIVES_TYPES.put("double", Double.TYPE);
+    }
+
     private String name;
     private List<String> parameterTypes;
     private boolean isConstructor = false;
@@ -109,7 +124,9 @@ public class Signature {
     private Class<?>[] getParameterTypes(ClassLoader cl) throws ClassNotFoundException {
         Class<?>[] types = new Class<?>[parameterTypes.size()];
         for (int i = 0; i < types.length; i++) {
-            types[i] = Class.forName(parameterTypes.get(i), true, cl);
+            String type = parameterTypes.get(i);
+            Class clazz = PRIMITIVES_TYPES.get(type);
+            types[i] = (clazz != null) ? clazz : Class.forName(type, true, cl);
         }
         return types;
     }
