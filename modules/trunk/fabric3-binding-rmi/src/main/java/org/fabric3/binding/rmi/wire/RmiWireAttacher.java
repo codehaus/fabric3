@@ -137,7 +137,7 @@ public class RmiWireAttacher implements
     }
 
     private Class generateRemoteInterface(String name, URI uri)
-            throws IOException {
+            throws IOException, ClassNotFoundException {
         String key = uri.toString();
         CodeGenClassLoader cl = classLoaderMap.get(name);
         CompositeClassLoader compositeCL;
@@ -217,6 +217,8 @@ public class RmiWireAttacher implements
             sb.append(targetDefn.getInterfaceName()).append(" using ");
             sb.append(targetDefn.getClassLoaderURI().toString());
             throw new WireAttachException(sb.toString(), null, null, ioe);
+        } catch (ClassNotFoundException e) {
+            throw new WireAttachException("Class not found", sourceDefinition.getUri(), targetDefn.getUri(), e);
         }
     }
 
@@ -229,7 +231,11 @@ public class RmiWireAttacher implements
         int i = 0;
         try {
             for (String str : paramsAsString) {
-                params[i++] = cl.loadClass(str);
+                if (str.equals("double")) {
+                    params[i++] = Double.TYPE;
+                } else {
+                    params[i++] = cl.loadClass(str);
+                }
             }
             return clazz.getMethod(operation.getName(), params);
         } catch (NoSuchMethodException e) {

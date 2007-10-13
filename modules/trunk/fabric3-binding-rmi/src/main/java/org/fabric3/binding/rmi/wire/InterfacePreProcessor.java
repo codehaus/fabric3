@@ -37,12 +37,17 @@ public class InterfacePreProcessor {
     private static final Class REMOTABLE = Remotable.class;
 
     public static Class generateRemoteInterface(String name, InputStream in, CodeGenClassLoader cl)
-            throws IOException {
+            throws IOException, ClassNotFoundException {
         ClassReader cr = new ClassReader(new BufferedInputStream(in));
         ClassWriter cw = new ClassWriter(cr, 0);
         Local2RemoteInterfaceTransformer transformer = new Local2RemoteInterfaceTransformer(cw);
         cr.accept(transformer, 0);
-        return cl.defineClass(name, cw.toByteArray());
+        try {
+            return cl.defineClass(name, cw.toByteArray());
+        } catch (LinkageError e) {
+            // the class was already defined, just return it. 
+            return cl.loadClass(name);
+        }
     }
 
 
