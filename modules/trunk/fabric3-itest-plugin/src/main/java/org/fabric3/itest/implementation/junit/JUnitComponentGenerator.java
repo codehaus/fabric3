@@ -9,6 +9,7 @@ import org.fabric3.java.JavaWireSourceDefinition;
 import org.fabric3.java.JavaWireTargetDefinition;
 import org.fabric3.pojo.instancefactory.InjectionSiteMapping;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
+import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
 import org.fabric3.pojo.scdl.ConstructorDefinition;
 import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.JavaMappedReference;
@@ -39,15 +40,19 @@ import org.osoa.sca.annotations.Reference;
  */
 @EagerInit
 public class JUnitComponentGenerator implements ComponentGenerator<LogicalComponent<ImplementationJUnit>> {
+    private final InstanceFactoryGenerationHelper helper;
 
-    public JUnitComponentGenerator(@Reference GeneratorRegistry registry) {
+    public JUnitComponentGenerator(@Reference GeneratorRegistry registry,
+                                   @Reference InstanceFactoryGenerationHelper helper) {
         registry.register(ImplementationJUnit.class, this);
+        this.helper = helper;
     }
 
     @SuppressWarnings({"unchecked"})
     public PhysicalComponentDefinition generate(LogicalComponent<ImplementationJUnit> component, 
                                                 Set<Intent> intentsToBeProvided, 
-                                                GeneratorContext context) {
+                                                GeneratorContext context)
+        throws GenerationException {
         
         ComponentDefinition<ImplementationJUnit> definition = component.getDefinition();
         ImplementationJUnit implementation = definition.getImplementation();
@@ -76,8 +81,8 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         processConstructorArguments(type.getConstructorDefinition(), providerDefinition);
         processConstructorSites(type, providerDefinition);
         processReferenceSites(type, providerDefinition);
-        // TODO process properties
         pDefinition.setInstanceFactoryProviderDefinition(providerDefinition);
+        helper.processProperties(pDefinition, definition);
         return pDefinition;
     }
 

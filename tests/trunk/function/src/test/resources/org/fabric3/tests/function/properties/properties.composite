@@ -43,4 +43,9 @@
         <f3:junit class="org.fabric3.tests.function.properties.PropertyTypeTest"/>
         <reference name="service" target="PropertyTypesImpl"/>
     </component>
+
+    <component name="PropertyFileTest">
+        <f3:junit class="org.fabric3.tests.function.properties.PropertyFileTest"/>
+        <property name="string" file="string.xml"/>
+    </component>
 </composite>

@@ -34,6 +34,7 @@ import org.fabric3.spi.loader.InvalidValueException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.PropertyValue;
 import org.fabric3.spi.model.type.XSDSimpleType;
@@ -65,6 +66,7 @@ public class PropertyValueLoader implements StAXElementLoader<PropertyValue> {
         String source = reader.getAttributeValue(null, "source");
         String file = reader.getAttributeValue(null, "file");
         if (source != null) {
+            LoaderUtil.skipToEndElement(reader);
             return new PropertyValue(name, source);
         } else if (file != null) {
             try {
@@ -72,6 +74,7 @@ public class PropertyValueLoader implements StAXElementLoader<PropertyValue> {
                 if (!uri.isAbsolute()) {
                     uri = context.getSourceBase().toURI().resolve(uri);
                 }
+                LoaderUtil.skipToEndElement(reader);
                 return new PropertyValue(name, uri);
             } catch (URISyntaxException e) {
                 throw new InvalidValueException(file, name, e);

@@ -65,6 +65,13 @@ public interface InstanceFactoryGenerationHelper {
      */
     void processConstructorArguments(ConstructorDefinition<?> ctorDef, InstanceFactoryDefinition providerDefinition);
 
+    /**
+     * Sets the physical property values for the component properties
+     * @param physical the physical component whose properties should be set
+     * @param logical  the logical definition
+     * @throws InvalidPropertyFileException if there was a problem loading a property value from a file
+     */
     void processProperties(PojoComponentDefinition physical,
-                           ComponentDefinition<? extends Implementation<PojoComponentType>> logical);
+                           ComponentDefinition<? extends Implementation<PojoComponentType>> logical)
+            throws InvalidPropertyFileException;
 }

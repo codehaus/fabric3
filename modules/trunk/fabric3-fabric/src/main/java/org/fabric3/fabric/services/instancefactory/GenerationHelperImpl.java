@@ -18,14 +18,25 @@ package org.fabric3.fabric.services.instancefactory;
 
 import java.lang.reflect.Method;
 import java.util.Map;
+import java.net.URI;
+import java.net.URL;
+import java.net.MalformedURLException;
+import java.io.InputStream;
+import java.io.IOException;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import org.fabric3.pojo.implementation.PojoComponentDefinition;
 import org.fabric3.pojo.instancefactory.InjectionSiteMapping;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
 import org.fabric3.pojo.instancefactory.Signature;
+import org.fabric3.pojo.instancefactory.InvalidPropertyFileException;
 import org.fabric3.pojo.scdl.ConstructorDefinition;
 import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.JavaMappedReference;
@@ -49,6 +60,11 @@ import static org.fabric3.spi.model.instance.ValueSource.ValueSourceType.SERVICE
  * @version $Rev$ $Date$
  */
 public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
+    private static final DocumentBuilderFactory DOCUMENT_FACTORY;
+    static {
+        DOCUMENT_FACTORY = DocumentBuilderFactory.newInstance();
+        DOCUMENT_FACTORY.setNamespaceAware(true);
+    }
 
     public Integer getInitLevel(ComponentDefinition<?> definition, PojoComponentType type) {
         Integer initLevel = definition.getInitLevel();
@@ -136,7 +152,8 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
     }
 
     public void processProperties(PojoComponentDefinition physical,
-                                  ComponentDefinition<? extends Implementation<PojoComponentType>> logical) {
+                                  ComponentDefinition<? extends Implementation<PojoComponentType>> logical)
+            throws InvalidPropertyFileException {
         PojoComponentType type = logical.getImplementation().getComponentType();
         InstanceFactoryDefinition providerDefinition = physical.getInstanceFactoryProviderDefinition();
         Map<String, JavaMappedProperty<?>> properties = type.getProperties();
@@ -147,7 +164,19 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
             PropertyValue propertyValue = propertyValues.get(name);
             Document value;
             if (propertyValue != null) {
-                value = propertyValue.getValue();
+                // the user specified a property value so we need to get it's value
+                // the spec defines the following sequence
+                if (propertyValue.getFile() != null) {
+                    // load the value from an external resource
+                    value = loadValueFromFile(property.getName(), propertyValue.getFile());
+                } else if (propertyValue.getSource() != null) {
+                    // get the value by evaluating an XPath against the composite properties
+                    // TODO implement this
+                    throw new UnsupportedOperationException();
+                } else {
+                    // use inline XML file
+                    value = propertyValue.getValue();
+                }
             } else {
                 value = property.getDefaultValue();
             }
@@ -172,6 +201,43 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
         }
     }
 
+    protected Document loadValueFromFile(String name, URI file) throws InvalidPropertyFileException {
+        DocumentBuilder builder;
+        try {
+            builder = DOCUMENT_FACTORY.newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            throw new AssertionError();
+        }
+
+        URL resource;
+        try {
+            resource = file.toURL();
+        } catch (MalformedURLException e) {
+            throw new InvalidPropertyFileException(e.getMessage(), name, e, file);
+        }
+
+        InputStream inputStream;
+        try {
+            inputStream = resource.openStream();
+        } catch (IOException e) {
+            throw new InvalidPropertyFileException(e.getMessage(), name, e, file);
+        }
+
+        try {
+            return builder.parse(inputStream);
+        } catch (IOException e) {
+            throw new InvalidPropertyFileException(e.getMessage(), name, e, file);
+        } catch (SAXException e) {
+            throw new InvalidPropertyFileException(e.getMessage(), name, e, file);
+        } finally {
+            try {
+                inputStream.close();
+            } catch (IOException e) {
+                // ignore
+            }
+        }
+    }
+
     public void processResourceSites(LogicalComponent<? extends Implementation<PojoComponentType>> component, InstanceFactoryDefinition providerDefinition) {
         
         Implementation<PojoComponentType> implementation = component.getDefinition().getImplementation();
@@ -181,22 +247,18 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
             
             JavaMappedResource<?> resource = entry.getValue();
             MemberSite memberSite = new MemberSite(resource.getMember());
-            
-            if (memberSite != null) {
-                LogicalResource<?> logicalResource = component.getResource(resource.getName());
-                if (logicalResource != null) {
-                    ValueSource source = new ValueSource(REFERENCE, entry.getKey());
 
-                    InjectionSiteMapping mapping = new InjectionSiteMapping();
-                    mapping.setSource(source);
-                    mapping.setSite(memberSite);
+            LogicalResource<?> logicalResource = component.getResource(resource.getName());
+            if (logicalResource != null) {
+                ValueSource source = new ValueSource(REFERENCE, entry.getKey());
 
-                    providerDefinition.addInjectionSite(mapping);
-                }
+                InjectionSiteMapping mapping = new InjectionSiteMapping();
+                mapping.setSource(source);
+                mapping.setSite(memberSite);
+
+                providerDefinition.addInjectionSite(mapping);
             }
-            
         }
-        
     }
     
 }
