@@ -65,7 +65,10 @@ class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
     private String rootUrl;
 
     /** XPath API */
-    XPath xpath = XPathFactory.newInstance().newXPath();
+    private XPath xpath = XPathFactory.newInstance().newXPath();
+    
+    /** Datasource */
+    private DataSource dataSource;
 
     /**
      * Initializes the properties.
@@ -125,13 +128,7 @@ class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
      * @see javax.persistence.spi.PersistenceUnitInfo#getJtaDataSource()
      */
     public DataSource getJtaDataSource() {
-
-        String jtaDsName = getSingleValue(persistenceDom, JTA_DATA_SOURCE);
-        if (jtaDsName == null || "".equals(jtaDsName)) {
-            return null;
-        }
-        return lookupDataSource(jtaDsName);
-
+        return dataSource;
     }
 
     /**
@@ -159,13 +156,7 @@ class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
      * @see javax.persistence.spi.PersistenceUnitInfo#getNonJtaDataSource()
      */
     public DataSource getNonJtaDataSource() {
-
-        String nonJtaDsName = getSingleValue(persistenceDom, NON_JTA_DATA_SOURCE);
-        if (nonJtaDsName == null || "".equals(nonJtaDsName)) {
-            return null;
-        }
-        return lookupDataSource(nonJtaDsName);
-
+        return dataSource;
     }
 
     /**
@@ -211,6 +202,28 @@ class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
         return "JTA".equals(transactionType) ? PersistenceUnitTransactionType.JTA : PersistenceUnitTransactionType.RESOURCE_LOCAL;
 
     }
+    
+    /**
+     * Set the datasource.
+     * 
+     * @param dataSource Injects the datasource.
+     */
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+    
+    /**
+     * @return Datasource name.
+     */
+    public String getDataSourceName() {
+        
+        String dataSourceName = getSingleValue(persistenceDom, JTA_DATA_SOURCE);
+        if(dataSourceName == null) {
+            dataSourceName = getSingleValue(persistenceDom, NON_JTA_DATA_SOURCE);
+        }
+        return dataSourceName;
+        
+    }
 
     /*
      * Extracts additional properties.
@@ -255,7 +268,8 @@ class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
     private String getSingleValue(Node context, String expression) {
 
         try {
-            return xpath.evaluate(expression, context);
+            String val = xpath.evaluate(expression, context);
+            return "".equals(val) ? null : val;
         } catch (XPathExpressionException ex) {
             throw new Fabric3JpaException(ex);
         }
@@ -267,30 +281,6 @@ class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
      */
     private boolean getBooleanValue(Node context, String expression) {
         return Boolean.valueOf(getSingleValue(context, expression));
-    }
-
-    /*
-     * Looks up datasource.
-     */
-    private DataSource lookupDataSource(String dsName) {
-
-        Context ctx = null;
-        
-        try {
-            ctx = new InitialContext();
-            return (DataSource) ctx.lookup(dsName);
-        } catch (NamingException ex) {
-            throw new Fabric3JpaException(ex);
-        } finally {
-            if (ctx != null) {
-                try {
-                    ctx.close();
-                } catch (NamingException ex) {
-                    throw new Fabric3JpaException(ex);
-                }
-            }
-        }
-
     }
 
 }

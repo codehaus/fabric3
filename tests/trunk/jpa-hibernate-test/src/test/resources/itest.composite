@@ -26,7 +26,7 @@
     </component>
 
     <!-- Employee Service -->
-    <component name="org.fabric3.jpa.service.EmployeeServiceImpl">
+    <component name="org.fabric3.jpa.service.EmployeeServiceImpl" requires="f3:managedTransaction">
         <implementation.java class="org.fabric3.jpa.service.EmployeeServiceImpl"/>
     </component>
     

@@ -18,7 +18,6 @@ package org.fabric3.jpa.service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceUnit;
 
 import org.fabric3.jpa.model.Employee;
@@ -42,13 +41,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         
         EntityManager em = emf.createEntityManager();
         
-        EntityTransaction transaction = em.getTransaction();
-        transaction.begin();
-        
         Employee employee = new Employee(id, name);
         em.persist(employee);
-        
-        transaction.commit();
 
         return employee;
         

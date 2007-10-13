@@ -95,17 +95,27 @@ public class PersistenceUnitWireAttacher implements WireAttacher<PhysicalWireSou
         String unitName = target.getUnitName();
         URI classLoaderUri = target.getClassLoaderUri();
         
-        ClassLoader classLoader = classLoaderRegistry.getClassLoader(classLoaderUri);        
-        final EntityManagerFactory entityManagerFactory = emfBuilder.build(unitName, classLoader);
-
-        for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
+        ClassLoader classLoader = classLoaderRegistry.getClassLoader(classLoaderUri); 
+        ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
+        
+        try {
             
-            final PhysicalOperationDefinition op = entry.getKey();
-            final String opName = op.getName();
-            InvocationChain chain = entry.getValue();
+            Thread.currentThread().setContextClassLoader(classLoader);
             
-            chain.addInterceptor(new EmfInterceptor(opName, entityManagerFactory));
+            final EntityManagerFactory entityManagerFactory = emfBuilder.build(unitName, classLoader);
+    
+            for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
+                
+                final PhysicalOperationDefinition op = entry.getKey();
+                final String opName = op.getName();
+                InvocationChain chain = entry.getValue();
+                
+                chain.addInterceptor(new EmfInterceptor(opName, entityManagerFactory));
+                
+            }
             
+        } finally {
+            Thread.currentThread().setContextClassLoader(oldClassLoader);
         }
         
     }

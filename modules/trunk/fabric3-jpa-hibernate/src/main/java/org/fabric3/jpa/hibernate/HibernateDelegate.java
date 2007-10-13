@@ -16,14 +16,16 @@
  */
 package org.fabric3.jpa.hibernate;
 
+import java.lang.reflect.Field;
+import java.util.Collections;
+
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.spi.PersistenceUnitInfo;
 import javax.transaction.TransactionManager;
 
 import org.fabric3.jpa.spi.delegate.EmfBuilderDelegate;
-import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.cfg.SettingsFactory;
-import org.hibernate.ejb.EntityManagerFactoryImpl;
+import org.hibernate.ejb.Ejb3Configuration;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
@@ -58,9 +60,22 @@ public class HibernateDelegate implements EmfBuilderDelegate {
      *                                                            java.lang.ClassLoader)
      */
     public EntityManagerFactory build(PersistenceUnitInfo info, ClassLoader classLoader) {
-        AnnotationConfiguration cfg = new AnnotationConfiguration(settingsFactory);
-        // TODO Build the configuration
-        return new EntityManagerFactoryImpl(cfg.buildSessionFactory(), info.getTransactionType(), true);
+        
+        Ejb3Configuration cfg = new Ejb3Configuration();
+        
+        // TODO this is an evil hack, request feature addition to hibernate to have overridable settings factory
+        try {
+            Field field = Ejb3Configuration.class.getDeclaredField("settingsFactory");
+            field.setAccessible(true);
+            field.set(cfg, settingsFactory);
+        } catch (NoSuchFieldException e) {
+            throw new AssertionError(e);
+        } catch (IllegalAccessException e) {
+            throw new AssertionError(e);
+        }
+        cfg.configure(info, Collections.emptyMap());
+        
+        return cfg.buildEntityManagerFactory();
     }
 
 }
