@@ -19,12 +19,22 @@
 package org.fabric3.fabric.assembly;
 
 import java.net.URI;
+import java.net.URL;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.io.InputStream;
+import java.io.IOException;
 import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import static org.osoa.sca.Constants.SCA_NS;
 
@@ -50,6 +60,8 @@ import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ResourceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.scdl.Property;
+import org.fabric3.scdl.PropertyValue;
 import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.assembly.Assembly;
 import org.fabric3.spi.assembly.AssemblyException;
@@ -71,7 +83,6 @@ import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.util.UriHelper;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Base class for abstract assemblies
@@ -81,6 +92,12 @@ import org.osoa.sca.annotations.Reference;
 public abstract class AbstractAssembly implements Assembly {
 
     public static final QName COMPOSITE = new QName(SCA_NS, "composite");
+    private static final DocumentBuilderFactory DOCUMENT_FACTORY;
+    static {
+        DOCUMENT_FACTORY = DocumentBuilderFactory.newInstance();
+        DOCUMENT_FACTORY.setNamespaceAware(true);
+    }
+
     protected final URI domainUri;
     protected final GeneratorRegistry generatorRegistry;
     protected final WireResolver wireResolver;
@@ -287,6 +304,7 @@ public abstract class AbstractAssembly implements Assembly {
         URI uri = URI.create(parent.getUri() + "/" + definition.getName());
         URI runtimeId = definition.getRuntimeId();
         LogicalComponent<I> component = new LogicalComponent<I>(uri, runtimeId, definition, parent);
+        initializeProperties(component, definition);
 
         I impl = definition.getImplementation();
         if (CompositeImplementation.IMPLEMENTATION_COMPOSITE.equals(impl.getType())) {
@@ -372,6 +390,80 @@ public abstract class AbstractAssembly implements Assembly {
 
         return component;
 
+    }
+
+    /**
+     * Set the initial actual property values of a component.
+     * @param component the component to initialize
+     * @param definition the definition of the component
+     * @throws InstantiationException if there was a problem initializing a property value
+     */
+    protected <I extends Implementation<?>> void initializeProperties(LogicalComponent<I> component,
+                                                                      ComponentDefinition<I> definition)
+        throws InstantiationException {
+        Map<String, PropertyValue> propertyValues = definition.getPropertyValues();
+        AbstractComponentType<?, ?, ?, ?> componentType = definition.getComponentType();
+        for (Property<?> property : componentType.getProperties().values()) {
+            String name = property.getName();
+            PropertyValue propertyValue = propertyValues.get(name);
+            Document value;
+            if (propertyValue == null) {
+                // use default value from component type
+                value = property.getDefaultValue();
+            } else {
+                // the spec defines the following sequence
+                if (propertyValue.getFile() != null) {
+                    // load the value from an external resource
+                    value = loadValueFromFile(property.getName(), propertyValue.getFile());
+                } else if (propertyValue.getSource() != null) {
+                    // get the value by evaluating an XPath against the composite properties
+                    // TODO implement this
+                    throw new UnsupportedOperationException();
+                } else {
+                    // use inline XML file
+                    value = propertyValue.getValue();
+                }
+
+            }
+            component.setPropertyValue(name, value);
+        }
+    }
+
+    protected Document loadValueFromFile(String name, URI file) throws InvalidPropertyFileException {
+        DocumentBuilder builder;
+        try {
+            builder = DOCUMENT_FACTORY.newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            throw new AssertionError();
+        }
+
+        URL resource;
+        try {
+            resource = file.toURL();
+        } catch (MalformedURLException e) {
+            throw new InvalidPropertyFileException(e.getMessage(), name, e, file);
+        }
+
+        InputStream inputStream;
+        try {
+            inputStream = resource.openStream();
+        } catch (IOException e) {
+            throw new InvalidPropertyFileException(e.getMessage(), name, e, file);
+        }
+
+        try {
+            return builder.parse(inputStream);
+        } catch (IOException e) {
+            throw new InvalidPropertyFileException(e.getMessage(), name, e, file);
+        } catch (SAXException e) {
+            throw new InvalidPropertyFileException(e.getMessage(), name, e, file);
+        } finally {
+            try {
+                inputStream.close();
+            } catch (IOException e) {
+                // ignore
+            }
+        }
     }
 
     /**

@@ -31,8 +31,8 @@ import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.PropertyValue;
 import org.osoa.sca.Constants;
+import org.w3c.dom.Document;
 
 /**
  * Represents an instantiated component in the service network.
@@ -44,7 +44,7 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
     private static final QName TYPE = new QName(Constants.SCA_NS, "component");
 
     private final ComponentDefinition<I> definition;
-    private final Map<String, PropertyValue> propertyValues = new HashMap<String, PropertyValue>();
+    private final Map<String, Document> propertyValues = new HashMap<String, Document>();
     private final Map<URI, LogicalComponent<?>> components = new HashMap<URI, LogicalComponent<?>>();
     private final Map<String, LogicalService> services = new HashMap<String, LogicalService>();
     private final Map<String, LogicalReference> references = new HashMap<String, LogicalReference>();
@@ -199,7 +199,7 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
     /**
      * Adds a the resolved resource
      *
-     * @param reference the resource to add
+     * @param resource the resource to add
      */
     public void addResource(LogicalResource resource) {
         resources.put(resource.getUri().getFragment(), resource);
@@ -238,27 +238,27 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
      *
      * @return the resolved property values for the component
      */
-    public Collection<PropertyValue> getPropertyValues() {
-        return Collections.unmodifiableCollection(propertyValues.values());
+    public Map<String, Document> getPropertyValues() {
+        return Collections.unmodifiableMap(propertyValues);
     }
 
     /**
      * Gets the value of a property.
      * 
      * @param name Name of the property.
-     * @return Propert value for the specified property.
+     * @return Property value for the specified property.
      */
-    public PropertyValue getPropertyValue(String name) {
+    public Document getPropertyValue(String name) {
         return propertyValues.get(name);
     }
 
     /**
-     * Adds a resolved property value
+     * Sets a resolved property value
      *
      * @param name  the property name
      * @param value the property value
      */
-    public void addPropertyValue(String name, PropertyValue value) {
+    public void setPropertyValue(String name, Document value) {
         propertyValues.put(name, value);
     }
 

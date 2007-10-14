@@ -50,6 +50,14 @@ public interface InstanceFactoryGenerationHelper {
     void processReferenceSites(LogicalComponent<? extends Implementation<PojoComponentType>> component, InstanceFactoryDefinition providerDefinition);
 
     /**
+     * Creates InjectionSiteMappings for properties declared by the component implementation
+     *
+     * @param component          the component corresponding to the implementation
+     * @param providerDefinition the instance factory provider definition
+     */
+    void processPropertySites(LogicalComponent<? extends Implementation<PojoComponentType>> component, InstanceFactoryDefinition providerDefinition);
+
+    /**
      * Creates InjectionSiteMappings for resources declared by the component implementation
      *
      * @param component          the component corresponding to the implementation
@@ -66,12 +74,10 @@ public interface InstanceFactoryGenerationHelper {
     void processConstructorArguments(ConstructorDefinition<?> ctorDef, InstanceFactoryDefinition providerDefinition);
 
     /**
-     * Sets the physical property values for the component properties
-     * @param physical the physical component whose properties should be set
-     * @param logical  the logical definition
-     * @throws InvalidPropertyFileException if there was a problem loading a property value from a file
+     * Set the actual values of the physical properties.
+     *
+     * @param component the component corresponding to the implementation
+     * @param physical  the physical component whose properties should be set
      */
-    void processProperties(PojoComponentDefinition physical,
-                           ComponentDefinition<? extends Implementation<PojoComponentType>> logical)
-            throws InvalidPropertyFileException;
+    void processPropertyValues(LogicalComponent<?> component, PojoComponentDefinition physical);
 }

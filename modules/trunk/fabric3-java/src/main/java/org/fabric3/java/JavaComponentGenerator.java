@@ -82,8 +82,8 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
         helper.processConstructorSites(type, providerDefinition);
         helper.processReferenceSites(component, providerDefinition);
         helper.processResourceSites(component, providerDefinition);
+        helper.processPropertySites(component, providerDefinition);
         // TODO process callbacks
-        // TODO process properties
 
         // create the physical component definition
         URI componentId = component.getUri();
@@ -93,7 +93,7 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
         physical.setScope(type.getImplementationScope());
         physical.setInitLevel(helper.getInitLevel(definition, type));
         physical.setInstanceFactoryProviderDefinition(providerDefinition);
-        helper.processProperties(physical, definition);
+        helper.processPropertyValues(component, physical);
         // generate the classloader resource definition
         URI classLoaderId = classLoaderGenerator.generate(component, context);
         physical.setClassLoaderId(classLoaderId);

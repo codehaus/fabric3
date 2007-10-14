@@ -30,6 +30,10 @@ public class InstantiationException extends ActivateException {
         super(message, identifier);
     }
 
+    public InstantiationException(String message, String identifier, Throwable cause) {
+        super(message, identifier, cause);
+    }
+
     public InstantiationException(Throwable cause) {
         super(cause);
     }

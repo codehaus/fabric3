@@ -58,13 +58,13 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         ImplementationJUnit implementation = definition.getImplementation();
         // TODO not a safe cast
         PojoComponentType type = implementation.getComponentType();
-        JavaComponentDefinition pDefinition = new JavaComponentDefinition();
+        JavaComponentDefinition physical = new JavaComponentDefinition();
         URI componentId = component.getUri();
-        pDefinition.setGroupId(componentId.resolve("."));
-        pDefinition.setComponentId(componentId);
+        physical.setGroupId(componentId.resolve("."));
+        physical.setComponentId(componentId);
         // set the classloader id temporarily until multiparent classloading is in palce
-        pDefinition.setClassLoaderId(URI.create("sca://./applicationClassLoader"));
-        pDefinition.setScope(type.getImplementationScope());
+        physical.setClassLoaderId(URI.create("sca://./applicationClassLoader"));
+        physical.setScope(type.getImplementationScope());
         // TODO get classloader id
         InstanceFactoryDefinition providerDefinition = new InstanceFactoryDefinition();
         providerDefinition.setInitMethod(type.getInitMethod());
@@ -73,17 +73,18 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         // JFM FIXME seems hacky and add to JavaPCDG
         Integer level = definition.getInitLevel();
         if (level == null) {
-            pDefinition.setInitLevel(type.getInitLevel());
+            physical.setInitLevel(type.getInitLevel());
         } else {
-            pDefinition.setInitLevel(level);
+            physical.setInitLevel(level);
         }
         providerDefinition.setImplementationClass(implementation.getImplementationClass());
         processConstructorArguments(type.getConstructorDefinition(), providerDefinition);
         processConstructorSites(type, providerDefinition);
         processReferenceSites(type, providerDefinition);
-        pDefinition.setInstanceFactoryProviderDefinition(providerDefinition);
-        helper.processProperties(pDefinition, definition);
-        return pDefinition;
+        helper.processPropertySites(component, providerDefinition);
+        physical.setInstanceFactoryProviderDefinition(providerDefinition);
+        helper.processPropertyValues(component, physical);
+        return physical;
     }
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<ImplementationJUnit> source,

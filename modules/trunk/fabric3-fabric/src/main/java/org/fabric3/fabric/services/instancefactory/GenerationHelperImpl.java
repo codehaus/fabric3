@@ -18,25 +18,14 @@ package org.fabric3.fabric.services.instancefactory;
 
 import java.lang.reflect.Method;
 import java.util.Map;
-import java.net.URI;
-import java.net.URL;
-import java.net.MalformedURLException;
-import java.io.InputStream;
-import java.io.IOException;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
 import org.fabric3.pojo.implementation.PojoComponentDefinition;
 import org.fabric3.pojo.instancefactory.InjectionSiteMapping;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
 import org.fabric3.pojo.instancefactory.Signature;
-import org.fabric3.pojo.instancefactory.InvalidPropertyFileException;
 import org.fabric3.pojo.scdl.ConstructorDefinition;
 import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.JavaMappedReference;
@@ -47,7 +36,6 @@ import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Property;
-import org.fabric3.scdl.PropertyValue;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
@@ -60,11 +48,6 @@ import static org.fabric3.spi.model.instance.ValueSource.ValueSourceType.SERVICE
  * @version $Rev$ $Date$
  */
 public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
-    private static final DocumentBuilderFactory DOCUMENT_FACTORY;
-    static {
-        DOCUMENT_FACTORY = DocumentBuilderFactory.newInstance();
-        DOCUMENT_FACTORY.setNamespaceAware(true);
-    }
 
     public Integer getInitLevel(ComponentDefinition<?> definition, PojoComponentType type) {
         Integer initLevel = definition.getInitLevel();
@@ -144,6 +127,40 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
 
     }
 
+    public void processPropertySites(LogicalComponent<? extends Implementation<PojoComponentType>> component,
+                                     InstanceFactoryDefinition providerDefinition) {
+        Implementation<PojoComponentType> implementation = component.getDefinition().getImplementation();
+        PojoComponentType type = implementation.getComponentType();
+        for (JavaMappedProperty<?> property : type.getProperties().values()) {
+            String name = property.getName();
+            MemberSite memberSite = property.getMemberSite();
+            if (memberSite == null) {
+                continue;
+            }
+            Document value = component.getPropertyValue(name);
+            if (value == null) {
+                continue;
+            }
+
+            ValueSource source = new ValueSource(PROPERTY, name);
+
+            InjectionSiteMapping mapping = new InjectionSiteMapping();
+            mapping.setSource(source);
+            mapping.setSite(memberSite);
+            providerDefinition.addInjectionSite(mapping);
+        }
+    }
+
+    public void processPropertyValues(LogicalComponent<?> component, PojoComponentDefinition physical) {
+        for (Map.Entry<String, Document> entry : component.getPropertyValues().entrySet()) {
+            String name = entry.getKey();
+            Document value = entry.getValue();
+            if (value != null) {
+                physical.setPropertyValue(name, value);
+            }
+        }
+    }
+
     public void processConstructorArguments(ConstructorDefinition<?> ctorDef,
                                             InstanceFactoryDefinition providerDefinition) {
         for (String type : ctorDef.getParameterTypes()) {
@@ -151,100 +168,13 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
         }
     }
 
-    public void processProperties(PojoComponentDefinition physical,
-                                  ComponentDefinition<? extends Implementation<PojoComponentType>> logical)
-            throws InvalidPropertyFileException {
-        PojoComponentType type = logical.getImplementation().getComponentType();
-        InstanceFactoryDefinition providerDefinition = physical.getInstanceFactoryProviderDefinition();
-        Map<String, JavaMappedProperty<?>> properties = type.getProperties();
-        Map<String, PropertyValue> propertyValues = logical.getPropertyValues();
-        for (Map.Entry<String, JavaMappedProperty<?>> entry : properties.entrySet()) {
-            String name = entry.getKey();
-            JavaMappedProperty<?> property = entry.getValue();
-            PropertyValue propertyValue = propertyValues.get(name);
-            Document value;
-            if (propertyValue != null) {
-                // the user specified a property value so we need to get it's value
-                // the spec defines the following sequence
-                if (propertyValue.getFile() != null) {
-                    // load the value from an external resource
-                    value = loadValueFromFile(property.getName(), propertyValue.getFile());
-                } else if (propertyValue.getSource() != null) {
-                    // get the value by evaluating an XPath against the composite properties
-                    // TODO implement this
-                    throw new UnsupportedOperationException();
-                } else {
-                    // use inline XML file
-                    value = propertyValue.getValue();
-                }
-            } else {
-                value = property.getDefaultValue();
-            }
-
-            if (value == null) {
-                // nothing to inject
-                continue;
-            }
-
-            MemberSite memberSite = property.getMemberSite();
-            if (memberSite != null) {
-                // set up the injection site
-                ValueSource source = new ValueSource(PROPERTY, name);
-
-                InjectionSiteMapping mapping = new InjectionSiteMapping();
-                mapping.setSource(source);
-                mapping.setSite(memberSite);
-                providerDefinition.addInjectionSite(mapping);
-            }
-
-            physical.setPropertyValue(name, value);
-        }
-    }
-
-    protected Document loadValueFromFile(String name, URI file) throws InvalidPropertyFileException {
-        DocumentBuilder builder;
-        try {
-            builder = DOCUMENT_FACTORY.newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
-            throw new AssertionError();
-        }
-
-        URL resource;
-        try {
-            resource = file.toURL();
-        } catch (MalformedURLException e) {
-            throw new InvalidPropertyFileException(e.getMessage(), name, e, file);
-        }
-
-        InputStream inputStream;
-        try {
-            inputStream = resource.openStream();
-        } catch (IOException e) {
-            throw new InvalidPropertyFileException(e.getMessage(), name, e, file);
-        }
-
-        try {
-            return builder.parse(inputStream);
-        } catch (IOException e) {
-            throw new InvalidPropertyFileException(e.getMessage(), name, e, file);
-        } catch (SAXException e) {
-            throw new InvalidPropertyFileException(e.getMessage(), name, e, file);
-        } finally {
-            try {
-                inputStream.close();
-            } catch (IOException e) {
-                // ignore
-            }
-        }
-    }
-
     public void processResourceSites(LogicalComponent<? extends Implementation<PojoComponentType>> component, InstanceFactoryDefinition providerDefinition) {
-        
+
         Implementation<PojoComponentType> implementation = component.getDefinition().getImplementation();
         PojoComponentType type = implementation.getComponentType();
-        
+
         for (Map.Entry<String, JavaMappedResource<?>> entry : type.getResources().entrySet()) {
-            
+
             JavaMappedResource<?> resource = entry.getValue();
             MemberSite memberSite = new MemberSite(resource.getMember());
 
@@ -260,5 +190,5 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
             }
         }
     }
-    
+
 }
