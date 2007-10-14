@@ -18,6 +18,9 @@
  */
 package org.fabric3.itest;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
 
@@ -28,25 +31,14 @@ import org.apache.maven.artifact.factory.ArtifactFactory;
  */
 public class Dependency {
 
-    /**
-     * JAR type artifact.
-     */
     private static final String TYPE_JAR = "jar";
 
-    /**
-     * Group Id that is injected in from configuration.
-     */
     private String groupId;
-
-    /**
-     * Artifact Id that is injected in from configuration.
-     */
     private String artifactId;
-
-    /**
-     * Version that is injected in from configuration.
-     */
     private String version;
+    private Set<Exclusion> exclusions = new HashSet<Exclusion>();
+    
+    
 
     /**
      * Default constructor.
@@ -61,11 +53,12 @@ public class Dependency {
      * @param artifactId Artifact id.
      * @param version    Artifact version.
      */
-    public Dependency(String groupId, String artifactId, String version) {
+    public Dependency(String groupId, String artifactId, String version, Set<Exclusion> exclusions) {
         super();
         this.groupId = groupId;
         this.artifactId = artifactId;
         this.version = version;
+        this.exclusions = exclusions;
     }
 
     /**
@@ -89,4 +82,9 @@ public class Dependency {
     public String getVersion() {
         return version;
     }
+
+    public Set<Exclusion> getExclusions() {
+        return exclusions;
+    }
+    
 }

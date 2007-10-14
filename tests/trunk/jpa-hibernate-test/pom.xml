@@ -126,6 +126,17 @@
                             <artifactId>persistence-api</artifactId>
                             <version>1.0</version>
                         </dependency>
+                        <dependency>
+                            <groupId>org.hibernate</groupId>
+                            <artifactId>hibernate-entitymanager</artifactId>
+                            <version>3.3.1.ga</version>
+                            <exclusions>
+                                <exclusion>
+                                    <groupId>javax.transaction</groupId>
+                                    <artifactId>jta</artifactId>
+                                </exclusion>
+                            </exclusions>
+                        </dependency>
                     </extensions>
                 </configuration>
                 <executions>

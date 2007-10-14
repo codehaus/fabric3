@@ -24,6 +24,7 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +43,7 @@ import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
 import org.apache.maven.artifact.resolver.ArtifactResolver;
+import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -334,17 +336,37 @@ public class Fabric3ITestMojo extends AbstractMojo {
 
         Set<Artifact> artifacts = new HashSet<Artifact>();
         for (Dependency extension : extensions) {
+            
+            final Set<Exclusion> exclusions = extension.getExclusions();
+            
             Artifact artifact = extension.getArtifact(artifactFactory);
             try {
                 resolver.resolve(artifact, remoteRepositories, localRepository);
                 ResolutionGroup resolutionGroup = metadataSource.retrieve(artifact,
                                                                           localRepository,
                                                                           remoteRepositories);
+                ArtifactFilter filter = new ArtifactFilter() {
+
+                    public boolean include(Artifact artifact) {
+                        String groupId = artifact.getGroupId();
+                        String artifactId = artifact.getArtifactId();
+                        
+                        for(Exclusion exclusion : exclusions) {
+                            if(artifactId.equals(exclusion.getArtifactId()) && groupId.equals(exclusion.getGroupId())) {
+                                return false;
+                            }
+                        }
+                        return true;
+                    }
+                    
+                };
                 ArtifactResolutionResult result = resolver.resolveTransitively(resolutionGroup.getArtifacts(),
                                                                                artifact,
-                                                                               remoteRepositories,
+                                                                               Collections.emptyMap(),
                                                                                localRepository,
-                                                                               metadataSource);
+                                                                               remoteRepositories,
+                                                                               metadataSource,
+                                                                               filter);
                 artifacts.add(artifact);
                 artifacts.addAll(result.getArtifacts());
             } catch (ArtifactResolutionException e) {
