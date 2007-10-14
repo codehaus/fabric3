@@ -36,7 +36,11 @@ public class EmployeeServiceImplTestCase extends TestCase {
     public void testCreateEmployee() {
         
         Employee employee = employeeService.createEmployee(123l, "Barney Rubble");
+        employee = employeeService.findEmployee(123l);
+        
         assertNotNull(employee);
+        assertEquals("Barney Rubble", employee.getName());
+        
     }
 
 }

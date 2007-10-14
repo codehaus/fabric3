@@ -40,13 +40,20 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Employee createEmployee(Long id, String name) {
         
         EntityManager em = emf.createEntityManager();
-        
+            
         Employee employee = new Employee(id, name);
         em.persist(employee);
         em.flush();
-
+    
         return employee;
         
+    }
+
+    /**
+     * @see org.fabric3.jpa.service.EmployeeService#findEmployee(java.lang.Long)
+     */
+    public Employee findEmployee(Long id) {
+        return emf.createEntityManager().find(Employee.class, id);
     }
 
 }

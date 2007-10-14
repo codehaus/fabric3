@@ -24,5 +24,7 @@ import org.fabric3.jpa.model.Employee;
 public interface EmployeeService {
     
     Employee createEmployee(Long id, String name);
+    
+    Employee findEmployee(Long id);
 
 }
