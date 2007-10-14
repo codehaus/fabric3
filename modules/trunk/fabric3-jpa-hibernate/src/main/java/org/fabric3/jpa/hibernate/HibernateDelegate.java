@@ -16,62 +16,47 @@
  */
 package org.fabric3.jpa.hibernate;
 
-import java.lang.reflect.Field;
 import java.util.Collections;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.spi.PersistenceUnitInfo;
-import javax.transaction.TransactionManager;
+import javax.sql.DataSource;
 
 import org.fabric3.jpa.spi.delegate.EmfBuilderDelegate;
-import org.hibernate.cfg.SettingsFactory;
+import org.fabric3.spi.resource.DataSourceRegistry;
 import org.hibernate.ejb.Ejb3Configuration;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Revision$ $Date$
  */
 public class HibernateDelegate implements EmfBuilderDelegate {
-    
-    private TransactionManager transactionManager;
-    private SettingsFactory settingsFactory;
-    
-    /**
-     * Injects the transaction manager.
-     * 
-     * @param transactionManager Transaction manager.
-     */
-    @Reference
-    public void setTransactionManager(TransactionManager transactionManager) {
-        this.transactionManager = transactionManager;
-    }
+
+    private DataSourceRegistry dataSourceRegistry;
     
     /**
      * Creates the setting factor.
      */
-    @Init
-    public void start() {
-        settingsFactory = new F3SettingsFactory(transactionManager);
+    @Reference
+    public void setDataSourceRegistry(DataSourceRegistry dataSourceRegistry) {
+        this.dataSourceRegistry = dataSourceRegistry;
     }
 
     /**
      * @see org.fabric3.jpa.spi.delegate.EmfBuilderDelegate#build(javax.persistence.spi.PersistenceUnitInfo, 
      *                                                            java.lang.ClassLoader)
      */
-    public EntityManagerFactory build(PersistenceUnitInfo info, ClassLoader classLoader) {
-        
+    public EntityManagerFactory build(PersistenceUnitInfo info, ClassLoader classLoader, String dataSourceName) {
+
         Ejb3Configuration cfg = new Ejb3Configuration();
         
-        // TODO this is an evil hack, request feature addition to hibernate to have overridable settings factory
-        try {
-            Field field = Ejb3Configuration.class.getDeclaredField("settingsFactory");
-            field.setAccessible(true);
-            field.set(cfg, settingsFactory);
-        } catch (NoSuchFieldException e) {
-            throw new AssertionError(e);
-        } catch (IllegalAccessException e) {
-            throw new AssertionError(e);
+        if(dataSourceName != null) {
+            DataSource dataSource = dataSourceRegistry.getDataSource(dataSourceName);
+            // TODO handle error condition properly
+            if(dataSource == null) {
+                throw new AssertionError("Datasource not configured: " + dataSourceName);
+            }
+            cfg.setDataSource(dataSource);
         }
         cfg.configure(info, Collections.emptyMap());
         

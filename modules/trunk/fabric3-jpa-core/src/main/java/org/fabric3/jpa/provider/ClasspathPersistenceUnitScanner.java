@@ -68,7 +68,7 @@ public class ClasspathPersistenceUnitScanner implements PersistenceUnitScanner {
                     String rootJarUrl = persistenceUnitUrl.toString();
                     rootJarUrl = rootJarUrl.substring(0, rootJarUrl.lastIndexOf("META-INF"));
 
-                    PersistenceUnitInfo info = new PersistenceUnitInfoImpl(persistenceDom, classLoader, rootJarUrl);
+                    PersistenceUnitInfoImpl info = new PersistenceUnitInfoImpl(persistenceDom, classLoader, rootJarUrl);
                     if (unitName.equals(info.getPersistenceUnitName())) {
                         persistenceUnitInfos.put(unitName, info);
                         return info;

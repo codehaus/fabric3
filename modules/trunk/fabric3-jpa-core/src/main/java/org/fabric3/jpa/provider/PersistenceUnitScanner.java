@@ -20,6 +20,7 @@ package org.fabric3.jpa.provider;
 
 import javax.persistence.spi.PersistenceUnitInfo;
 
+
 /**
  *
  * @version $Revision$ $Date$

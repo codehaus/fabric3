@@ -14,26 +14,35 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.jpa.spi.delegate;
+package org.fabric3.resource.ds;
 
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.spi.PersistenceUnitInfo;
+import java.util.Map;
+
+import javax.sql.DataSource;
+
+import org.fabric3.spi.resource.DataSourceRegistry;
+import org.osoa.sca.annotations.Reference;
 
 /**
- * Delegate interface for creating entity manager factories for adding 
- * provider specific hook-ins.
- * 
  * @version $Revision$ $Date$
  */
-public interface EmfBuilderDelegate {
+public class DataSourceRegistryImpl implements DataSourceRegistry {
+    
+    private Map<String, DataSource> dataSources;
     
     /**
-     * Builds the entity managed factory.
-     * 
-     * @param info Persistence unit info.
-     * @param classLoader Classloader to use.
-     * @return Entity manager factory.
+     * @param dataSources Injected daatsources.
      */
-    EntityManagerFactory build(PersistenceUnitInfo info, ClassLoader classLoader, String dataSourceName);
+    @Reference
+    public void setDataSources(Map<String, DataSource> dataSources) {
+        this.dataSources = dataSources;
+    }
+
+    /**
+     * @see org.fabric3.spi.resource.DataSourceRegistry#getDataSource(java.lang.String)
+     */
+    public DataSource getDataSource(String name) {
+        return dataSources.get(name);
+    }
 
 }

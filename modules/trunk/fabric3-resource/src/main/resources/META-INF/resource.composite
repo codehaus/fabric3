@@ -49,4 +49,9 @@
         <system:implementation.system class="org.fabric3.resource.wire.SystemSourcedResourceWireAttacher"/>
     </component>
     
+    <!-- Datasource registry -->
+    <component name="org.fabric3.resource.ds.DataSourceRegistryImpl">
+        <system:implementation.system class="org.fabric3.resource.ds.DataSourceRegistryImpl"/>
+    </component>
+    
 </composite>

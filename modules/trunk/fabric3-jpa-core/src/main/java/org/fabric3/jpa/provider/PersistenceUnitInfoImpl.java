@@ -73,9 +73,6 @@ class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
 
     /** XPath API */
     private XPath xpath = XPathFactory.newInstance().newXPath();
-    
-    /** Datasource */
-    private DataSource dataSource;
 
     /**
      * Initializes the properties.
@@ -135,7 +132,7 @@ class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
      * @see javax.persistence.spi.PersistenceUnitInfo#getJtaDataSource()
      */
     public DataSource getJtaDataSource() {
-        return dataSource;
+        return null;
     }
 
     /**
@@ -163,7 +160,7 @@ class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
      * @see javax.persistence.spi.PersistenceUnitInfo#getNonJtaDataSource()
      */
     public DataSource getNonJtaDataSource() {
-        return dataSource;
+        return null;
     }
 
     /**
@@ -208,15 +205,6 @@ class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
         String transactionType = getSingleValue(persistenceDom, TRANSACTION_TYPE);
         return "JTA".equals(transactionType) ? PersistenceUnitTransactionType.JTA : PersistenceUnitTransactionType.RESOURCE_LOCAL;
 
-    }
-    
-    /**
-     * Set the datasource.
-     * 
-     * @param dataSource Injects the datasource.
-     */
-    public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
     }
     
     /**

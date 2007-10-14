@@ -24,7 +24,6 @@ import java.util.Map;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.spi.PersistenceProvider;
-import javax.persistence.spi.PersistenceUnitInfo;
 
 import org.fabric3.jpa.Fabric3JpaException;
 import org.fabric3.jpa.spi.delegate.EmfBuilderDelegate;
@@ -95,12 +94,13 @@ public class CachingEmfBuilder implements EmfBuilder {
      */
     private EntityManagerFactory createEntityManagerFactory(String unitName, ClassLoader classLoader) {
         
-        PersistenceUnitInfo info = scanner.getPersistenceUnitInfo(unitName, classLoader);
+        PersistenceUnitInfoImpl info = (PersistenceUnitInfoImpl) scanner.getPersistenceUnitInfo(unitName, classLoader);
         String providerClass = info.getPersistenceProviderClassName();
+        String dataSourceName = info.getDataSourceName();
         
         EmfBuilderDelegate delegate = delegates.get(providerClass);
         if(delegate != null) {
-            return delegate.build(info, classLoader);
+            return delegate.build(info, classLoader, dataSourceName);
         }
 
         // No configured delegates, try standard JPA
