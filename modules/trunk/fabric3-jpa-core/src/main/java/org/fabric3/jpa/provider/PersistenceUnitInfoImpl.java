@@ -18,31 +18,38 @@
  */
 package org.fabric3.jpa.provider;
 
+import static org.fabric3.jpa.provider.JpaConstants.CLASS;
+import static org.fabric3.jpa.provider.JpaConstants.EXCLUDE_UNLISTED_CLASSES;
+import static org.fabric3.jpa.provider.JpaConstants.JAR_FILE;
+import static org.fabric3.jpa.provider.JpaConstants.JTA_DATA_SOURCE;
+import static org.fabric3.jpa.provider.JpaConstants.MAPPING_FILE;
+import static org.fabric3.jpa.provider.JpaConstants.NAME;
+import static org.fabric3.jpa.provider.JpaConstants.NON_JTA_DATA_SOURCE;
+import static org.fabric3.jpa.provider.JpaConstants.PROPERTY;
+import static org.fabric3.jpa.provider.JpaConstants.PROPERTY_NAME;
+import static org.fabric3.jpa.provider.JpaConstants.PROPERTY_VALUE;
+import static org.fabric3.jpa.provider.JpaConstants.PROVIDER;
+import static org.fabric3.jpa.provider.JpaConstants.TRANSACTION_TYPE;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.persistence.spi.ClassTransformer;
 import javax.persistence.spi.PersistenceUnitInfo;
 import javax.persistence.spi.PersistenceUnitTransactionType;
 import javax.sql.DataSource;
-
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.fabric3.jpa.Fabric3JpaException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
-import org.fabric3.jpa.Fabric3JpaException;
-import static org.fabric3.jpa.provider.JpaConstants.*;
 
 /**
  * Encpasulates the information in the persistence.xml file.

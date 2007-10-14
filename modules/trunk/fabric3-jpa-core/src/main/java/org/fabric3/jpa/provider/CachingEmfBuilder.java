@@ -57,7 +57,7 @@ public class CachingEmfBuilder implements EmfBuilder {
      * 
      * @param delegates Provider specific delegates.
      */
-    @Reference(required = true)
+    @Reference(required = false)
     public void setDelegates(Map<String, EmfBuilderDelegate> delegates) {
         this.delegates = delegates;
     }
@@ -105,7 +105,7 @@ public class CachingEmfBuilder implements EmfBuilder {
 
         // No configured delegates, try standard JPA
         try {
-            PersistenceProvider provider = (PersistenceProvider) Class.forName(providerClass).newInstance();
+            PersistenceProvider provider = (PersistenceProvider) classLoader.loadClass(providerClass).newInstance();
             return provider.createContainerEntityManagerFactory(info, Collections.emptyMap());
         } catch (InstantiationException ex) {
             throw new Fabric3JpaException(ex);
