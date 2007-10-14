@@ -71,9 +71,7 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
         providerDefinition.setDestroyMethod(type.getDestroyMethod());
         providerDefinition.setImplementationClass(implementation.getImplementationClass());
         helper.processConstructorArguments(type.getConstructorDefinition(), providerDefinition);
-        helper.processConstructorSites(type, providerDefinition);
-        helper.processReferenceSites(component, providerDefinition);
-        helper.processPropertySites(component, providerDefinition);
+        helper.processInjectionSites(component, providerDefinition);
 
         // create the physical component definition
         URI componentId = component.getUri();

@@ -78,10 +78,8 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
             physical.setInitLevel(level);
         }
         providerDefinition.setImplementationClass(implementation.getImplementationClass());
-        processConstructorArguments(type.getConstructorDefinition(), providerDefinition);
-        processConstructorSites(type, providerDefinition);
-        processReferenceSites(type, providerDefinition);
-        helper.processPropertySites(component, providerDefinition);
+        helper.processConstructorArguments(type.getConstructorDefinition(), providerDefinition);
+        helper.processInjectionSites(component, providerDefinition);
         physical.setInstanceFactoryProviderDefinition(providerDefinition);
         helper.processPropertyValues(component, physical);
         return physical;

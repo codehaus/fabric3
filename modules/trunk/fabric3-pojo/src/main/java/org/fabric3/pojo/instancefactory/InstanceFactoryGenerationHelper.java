@@ -33,6 +33,8 @@ public interface InstanceFactoryGenerationHelper {
 
     Signature getSignature(Method method);
 
+    void processInjectionSites(LogicalComponent<? extends Implementation<PojoComponentType>> component, InstanceFactoryDefinition providerDefinition);
+
     /**
      * Creates InjectionSources for constructor parameters for the component implementation
      *

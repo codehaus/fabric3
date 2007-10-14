@@ -61,6 +61,17 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
         return method == null ? null : new Signature(method);
     }
 
+    public void processInjectionSites(LogicalComponent<? extends Implementation<PojoComponentType>> component,
+                                      InstanceFactoryDefinition providerDefinition) {
+
+        Implementation<PojoComponentType> implementation = component.getDefinition().getImplementation();
+        PojoComponentType type = implementation.getComponentType();
+        processConstructorSites(type, providerDefinition);
+        processPropertySites(component, providerDefinition);
+        processReferenceSites(component, providerDefinition);
+        processResourceSites(component, providerDefinition);
+    }
+
     public void processConstructorSites(PojoComponentType type,
                                         InstanceFactoryDefinition providerDefinition) {
         Map<String, JavaMappedReference> references = type.getReferences();
