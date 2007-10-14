@@ -43,6 +43,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         
         Employee employee = new Employee(id, name);
         em.persist(employee);
+        em.flush();
 
         return employee;
         

@@ -195,6 +195,7 @@ public class DefaultPolicyResolver implements PolicyResolver {
         // Aggregate all the intents from the ancestors
         Set<QName> intentNames = new HashSet<QName>();
         intentNames.addAll(logicalComponent.getDefinition().getImplementation().getIntents());
+        intentNames.addAll(logicalComponent.getDefinition().getIntents());
         intentNames.addAll(aggregateIntents(logicalComponent));
 
         // Expand all the profile intents
