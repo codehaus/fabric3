@@ -28,12 +28,19 @@ import java.util.List;
 import java.util.Map;
 import java.io.InputStream;
 import java.io.IOException;
+import java.lang.*;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPathFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathVariableResolver;
+import javax.xml.xpath.XPathExpressionException;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import static org.osoa.sca.Constants.SCA_NS;
@@ -92,10 +99,15 @@ import org.fabric3.spi.util.UriHelper;
 public abstract class AbstractAssembly implements Assembly {
 
     public static final QName COMPOSITE = new QName(SCA_NS, "composite");
+
     private static final DocumentBuilderFactory DOCUMENT_FACTORY;
+    private static final XPathFactory XPATH_FACTORY;
+
     static {
         DOCUMENT_FACTORY = DocumentBuilderFactory.newInstance();
         DOCUMENT_FACTORY.setNamespaceAware(true);
+
+        XPATH_FACTORY = XPathFactory.newInstance();
     }
 
     protected final URI domainUri;
@@ -178,6 +190,16 @@ public abstract class AbstractAssembly implements Assembly {
     @SuppressWarnings("unchecked")
     public void include(LogicalComponent<CompositeImplementation> parent, Composite composite)
             throws ActivateException {
+
+        // merge the property values into the parent
+        for (Property<?> property : composite.getProperties().values()) {
+            String name = property.getName();
+            if (parent.getPropertyValues().containsKey(name)) {
+                throw new ActivateException("Duplicate property", name);
+            }
+            Document value = property.getDefaultValue();
+            parent.setPropertyValue(name, value);
+        }
 
         // instantiate all the components in the composite and add them to the parent
         String base = parent.getUri().toString();
@@ -417,8 +439,11 @@ public abstract class AbstractAssembly implements Assembly {
                     value = loadValueFromFile(property.getName(), propertyValue.getFile());
                 } else if (propertyValue.getSource() != null) {
                     // get the value by evaluating an XPath against the composite properties
-                    // TODO implement this
-                    throw new UnsupportedOperationException();
+                    try {
+                        value = deriveValueFromXPath(propertyValue.getSource(), component.getParent());
+                    } catch (XPathExpressionException e) {
+                        throw new InstantiationException(e.getMessage(), name, e);
+                    }
                 } else {
                     // use inline XML file
                     value = propertyValue.getValue();
@@ -463,6 +488,44 @@ public abstract class AbstractAssembly implements Assembly {
             } catch (IOException e) {
                 // ignore
             }
+        }
+    }
+
+    protected Document deriveValueFromXPath(String source, final LogicalComponent<?> parent)
+            throws XPathExpressionException {
+        XPathVariableResolver variableResolver = new XPathVariableResolver() {
+            public Object resolveVariable(QName qName) {
+                String name = qName.getLocalPart();
+                Document value = parent.getPropertyValue(name);
+                if (value == null) {
+                    return null;
+                }
+                return value.getDocumentElement();
+            }
+        };
+        XPath xpath = XPATH_FACTORY.newXPath();
+        xpath.setXPathVariableResolver(variableResolver);
+
+        DocumentBuilder builder;
+        try {
+            builder = DOCUMENT_FACTORY.newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            throw new AssertionError();
+        }
+
+        try {
+            Document value = builder.newDocument();
+            Node result = (Node) xpath.evaluate(source, value, XPathConstants.NODE);
+            value.adoptNode(result);
+            value.appendChild(result);
+            return value;
+        } catch (XPathExpressionException e) {
+            // FIXME rethrow this for now, fix if people find it confusing
+            // the Apache and Sun implementations of XPath throw a nested NullPointerException
+            // if the xpath contains an unresolvable variable. It might be better to throw
+            // a more descriptive cause, but that also might be confusing for people who
+            // are used to this behaviour
+            throw e;
         }
     }
 

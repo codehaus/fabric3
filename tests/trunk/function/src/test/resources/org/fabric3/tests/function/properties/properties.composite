@@ -54,4 +54,20 @@
         <property name="string" file="string.xml"/>
         <reference name="javaComponent" target="PropertyFromFileImpl"/>
     </component>
+
+    <property name="simple">Hello World</property>
+
+    <property name="complex">
+        <wrapper>
+            <a>Hello World</a>
+        </wrapper>
+    </property>
+
+    <component name="PropertyXPathTest">
+        <f3:junit class="org.fabric3.tests.function.properties.PropertyXPathTest"/>
+        <property name="simple" source="$simple"/>
+<!--
+        <property name="complex" source="$complex/a"/>
+-->
+    </component>
 </composite>
