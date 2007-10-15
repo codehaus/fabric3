@@ -28,6 +28,7 @@ import org.fabric3.jpa.provider.EmfBuilder;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.WireAttacher;
 import org.fabric3.spi.builder.component.WireAttacherRegistry;
+import org.fabric3.spi.deployer.CompositeClassLoader;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
@@ -47,8 +48,7 @@ import org.osoa.sca.annotations.Reference;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class PersistenceUnitWireAttacher implements
-        WireAttacher<PhysicalWireSourceDefinition, PersistenceUnitWireTargetDefinition> {
+public class PersistenceUnitWireAttacher implements WireAttacher<PhysicalWireSourceDefinition, PersistenceUnitWireTargetDefinition> {
 
     private EmfBuilder emfBuilder;
     private ClassLoaderRegistry classLoaderRegistry;
@@ -61,10 +61,9 @@ public class PersistenceUnitWireAttacher implements
      * @param classLoaderRegistry Classloader registry.
      * @param emfBuilder Entity manager factory builder.
      */
-    public PersistenceUnitWireAttacher(@Reference
-    WireAttacherRegistry wireAttacherRegistry, @Reference
-    ClassLoaderRegistry classLoaderRegistry, @Reference
-    EmfBuilder emfBuilder) {
+    public PersistenceUnitWireAttacher(@Reference WireAttacherRegistry wireAttacherRegistry, 
+                                       @Reference ClassLoaderRegistry classLoaderRegistry, 
+                                       @Reference EmfBuilder emfBuilder) {
         this.wireAttacherRegistry = wireAttacherRegistry;
         this.emfBuilder = emfBuilder;
         this.classLoaderRegistry = classLoaderRegistry;
@@ -98,20 +97,34 @@ public class PersistenceUnitWireAttacher implements
         String unitName = target.getUnitName();
         URI classLoaderUri = target.getClassLoaderUri();
 
-        ClassLoader classLoader = classLoaderRegistry.getClassLoader(classLoaderUri);
+        ClassLoader appCl = classLoaderRegistry.getClassLoader(classLoaderUri);
+        ClassLoader systemCl = getClass().getClassLoader();
+        ClassLoader hostCl = systemCl.getParent();
+        
+        CompositeClassLoader tccl = new CompositeClassLoader(URI.create("JPA"), hostCl);
+        tccl.addParent(appCl);
+        tccl.addParent(hostCl);
+        
+        ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+        
+        try {
 
-        Thread.currentThread().setContextClassLoader(classLoader);
-
-        final EntityManagerFactory entityManagerFactory = emfBuilder.build(unitName, classLoader);
-
-        for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
-
-            final PhysicalOperationDefinition op = entry.getKey();
-            final String opName = op.getName();
-            InvocationChain chain = entry.getValue();
-
-            chain.addInterceptor(new EmfInterceptor(opName, entityManagerFactory));
-
+            Thread.currentThread().setContextClassLoader(tccl);
+    
+            final EntityManagerFactory entityManagerFactory = emfBuilder.build(unitName, tccl);
+    
+            for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
+    
+                final PhysicalOperationDefinition op = entry.getKey();
+                final String opName = op.getName();
+                InvocationChain chain = entry.getValue();
+    
+                chain.addInterceptor(new EmfInterceptor(opName, entityManagerFactory));
+    
+            }
+            
+        } finally {
+            Thread.currentThread().setContextClassLoader(oldCl);
         }
 
     }
