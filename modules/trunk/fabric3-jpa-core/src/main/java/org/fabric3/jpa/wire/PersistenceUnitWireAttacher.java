@@ -103,7 +103,7 @@ public class PersistenceUnitWireAttacher implements WireAttacher<PhysicalWireSou
         
         CompositeClassLoader tccl = new CompositeClassLoader(URI.create("JPA"), hostCl);
         tccl.addParent(appCl);
-        tccl.addParent(hostCl);
+        tccl.addParent(systemCl);
         
         ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
         
