@@ -33,7 +33,7 @@ public class DataSourceRegistryImpl implements DataSourceRegistry {
     /**
      * @param dataSources Injected daatsources.
      */
-    @Reference
+    @Reference(required = false)
     public void setDataSources(Map<String, DataSource> dataSources) {
         this.dataSources = dataSources;
     }
