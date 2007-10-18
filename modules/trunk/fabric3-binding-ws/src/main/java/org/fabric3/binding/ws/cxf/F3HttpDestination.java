@@ -14,17 +14,29 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.binding.ws.wire;
+package org.fabric3.binding.ws.cxf;
 
-import org.fabric3.spi.builder.WiringException;
+import java.io.IOException;
+import java.util.logging.Logger;
+
+import org.apache.cxf.Bus;
+import org.apache.cxf.service.model.EndpointInfo;
+import org.apache.cxf.transport.ConduitInitiator;
+import org.apache.cxf.transport.http.AbstractHTTPDestination;
 
 /**
+ * A simple HTTP-based Destination.
+ *
  * @version $Rev$ $Date$
  */
-public class ClassLoaderNotFoundException extends WiringException {
-    private static final long serialVersionUID = -1214253981735887867L;
+public class F3HttpDestination extends AbstractHTTPDestination {
 
-    protected ClassLoaderNotFoundException(String message, String identifier) {
-        super(message, identifier);
+    public F3HttpDestination(Bus bus, ConduitInitiator initiator, EndpointInfo ei, boolean defaultPort)
+            throws IOException {
+        super(bus, initiator, ei, defaultPort);
+    }
+
+    protected Logger getLogger() {
+        return null;
     }
 }

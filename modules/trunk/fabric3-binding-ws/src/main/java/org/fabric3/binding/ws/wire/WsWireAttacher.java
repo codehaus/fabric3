@@ -21,29 +21,23 @@ package org.fabric3.binding.ws.wire;
 
 import java.lang.reflect.Method;
 import java.net.URI;
-import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.cxf.frontend.ClientProxyFactoryBean;
-import org.apache.cxf.frontend.ServerFactoryBean;
-import org.apache.cxf.transport.servlet.CXFServlet;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.binding.ws.cxf.CXFService;
 import org.fabric3.binding.ws.model.physical.WsWireSourceDefinition;
 import org.fabric3.binding.ws.model.physical.WsWireTargetDefinition;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.WireAttacher;
 import org.fabric3.spi.builder.component.WireAttacherRegistry;
-import org.fabric3.spi.host.ServletHost;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
-import org.fabric3.host.monitor.MonitorFactory;
 
 /**
  * Wire attacher for web services.
@@ -72,38 +66,26 @@ public class WsWireAttacher implements WireAttacher<WsWireSourceDefinition, WsWi
         }
     }
 
-    /**
-     * CXF Servlet that serves the request.
-     */
-    private CXFServlet cxfServlet = new CXFServlet();
     private ClassLoaderRegistry classLoaderRegistry;
-    private WsWireAttacherMonitor monitor;
+    private CXFService cxfService;
 
     /**
      * Injects the wire attacher registry and servlet host.
      *
      * @param wireAttacherRegistry Wire attacher registry.
-     * @param servletHost          Servlet host for running CXF.
-     * @param contextPath          Context path from which the web services are provisioned.
      * @param classLoaderRegistry  the classloader registry
+     * @param cxfService           the CXF service
      */
     public WsWireAttacher(@Reference WireAttacherRegistry wireAttacherRegistry,
-                          @Reference ServletHost servletHost,
                           @Reference ClassLoaderRegistry classLoaderRegistry,
-                          @Reference MonitorFactory monitorFactory,
-                          @Property(name = "contextPath")String contextPath) {
+                          @Reference CXFService cxfService) {
         this.classLoaderRegistry = classLoaderRegistry;
-        this.monitor = monitorFactory.getMonitor(WsWireAttacherMonitor.class);
+        this.cxfService = cxfService;
         wireAttacherRegistry.register(WsWireSourceDefinition.class, this);
         wireAttacherRegistry.register(WsWireTargetDefinition.class, this);
-        servletHost.registerMapping(contextPath, cxfServlet);
-
     }
 
-    /**
-     * @see org.fabric3.spi.builder.component.WireAttacher#attachToSource(org.fabric3.spi.model.physical.PhysicalWireSourceDefinition,
-     *org.fabric3.spi.model.physical.PhysicalWireTargetDefinition,org.fabric3.spi.wire.Wire)
-     */
+
     public void attachToSource(WsWireSourceDefinition sourceDefinition,
                                PhysicalWireTargetDefinition targetDefinition,
                                Wire wire) throws WiringException {
@@ -111,33 +93,16 @@ public class WsWireAttacher implements WireAttacher<WsWireSourceDefinition, WsWi
         Thread currentThread = Thread.currentThread();
         ClassLoader oldCl = currentThread.getContextClassLoader();
         currentThread.setContextClassLoader(getClass().getClassLoader());
-
         try {
-
-            Map<String, InvocationChain> headInterceptors = new HashMap<String, InvocationChain>();
-
-            for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
-                headInterceptors.put(entry.getKey().getName(), entry.getValue());
-            }
-
             URI classLoaderUri = sourceDefinition.getClassloaderURI();
             ClassLoader loader = classLoaderRegistry.getClassLoader(classLoaderUri);
             if (loader == null) {
                 throw new ClassLoaderNotFoundException("Classloader not defined", classLoaderUri.toString());
             }
             Class<?> service = loader.loadClass(sourceDefinition.getServiceInterface());
-            Object implementor = ServiceProxyHandler.newInstance(service, headInterceptors, wire);
-
-            ServerFactoryBean serverFactoryBean = new ServerFactoryBean();
             URI uri = sourceDefinition.getUri();
-            serverFactoryBean.setAddress(uri.toASCIIString());
-            serverFactoryBean.setServiceClass(service);
-            serverFactoryBean.setServiceBean(implementor);
-
-            serverFactoryBean.setBus(cxfServlet.getBus());
-            serverFactoryBean.create();
-            monitor.provisionedEndpoint(uri);
-
+            // provision the bound service as a Web Service endpoint
+            cxfService.provisionEndpoint(uri, service, wire);
         } catch (ClassNotFoundException e) {
             throw new WiringException(e);
         } finally {
@@ -146,10 +111,6 @@ public class WsWireAttacher implements WireAttacher<WsWireSourceDefinition, WsWi
 
     }
 
-    /**
-     * @see org.fabric3.spi.builder.component.WireAttacher#attachToTarget(org.fabric3.spi.model.physical.PhysicalWireSourceDefinition,
-     *org.fabric3.spi.model.physical.PhysicalWireTargetDefinition,org.fabric3.spi.wire.Wire)
-     */
     public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition,
                                WsWireTargetDefinition targetDefinition,
                                Wire wire) throws WiringException {
@@ -167,21 +128,22 @@ public class WsWireAttacher implements WireAttacher<WsWireSourceDefinition, WsWi
 
             Class<?> referenceClass = loader.loadClass(targetDefinition.getReferenceInterface());
 
-            ClientProxyFactoryBean factory = new ClientProxyFactoryBean();
-            factory.setServiceClass(referenceClass);
-            factory.setAddress(targetDefinition.getUri().toString());
-
-            Object proxy = factory.create();
-
-            for (Method method : referenceClass.getDeclaredMethods()) {
-                for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
-                    PhysicalOperationDefinition op = entry.getKey();
-                    InvocationChain chain = entry.getValue();
-                    if (method.getName().equals(op.getName())) {
-                        chain.addInterceptor(new WsTargetInterceptor(method, proxy));
-                    }
-                }
-            }
+//            ClientProxyFactoryBean factory = new ClientProxyFactoryBean();
+//            factory.setServiceClass(referenceClass);
+//            factory.setAddress(targetDefinition.getUri().toString());
+//
+//
+//            Object proxy = factory.create();
+            cxfService.bindToTarget(targetDefinition.getUri(), referenceClass, wire);
+//            for (Method method : referenceClass.getDeclaredMethods()) {
+//                for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
+//                    PhysicalOperationDefinition op = entry.getKey();
+//                    InvocationChain chain = entry.getValue();
+//                    if (method.getName().equals(op.getName())) {
+//                        chain.addInterceptor(new WsTargetInterceptor(method, proxy));
+//                    }
+//                }
+//            }
 
         } catch (ClassNotFoundException e) {
             throw new WiringException(e);

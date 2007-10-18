@@ -14,17 +14,34 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.binding.ws.wire;
+package org.fabric3.binding.ws.cxf;
 
-import org.fabric3.spi.builder.WiringException;
+import org.fabric3.api.annotation.LogLevel;
 
 /**
+ * Callbacks for the web services extension
  * @version $Rev$ $Date$
  */
-public class ClassLoaderNotFoundException extends WiringException {
-    private static final long serialVersionUID = -1214253981735887867L;
+public interface CXFMonitor {
 
-    protected ClassLoaderNotFoundException(String message, String identifier) {
-        super(message, identifier);
-    }
+    /**
+     * Callback when a service has been provisioned as a Web Service endpoint
+     *
+     * @param address the endpoint address
+     */
+    @LogLevel("INFO")
+    void endpointProvisioned(String address);
+
+    /**
+     * Callback indicating the CXF extension has been initialized.
+     */
+    @LogLevel("INFO")
+    void extensionStarted();
+
+    /**
+     * Callback indicating the CXF extension has been stopped.
+     */
+    @LogLevel("INFO")
+    void extensionStopped();
+
 }

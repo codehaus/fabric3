@@ -17,7 +17,7 @@
  * under the License.    
  */
 
-package org.fabric3.binding.ws.wire;
+package org.fabric3.binding.ws.cxf;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -33,58 +33,51 @@ import org.fabric3.spi.wire.Wire;
 
 /**
  * Proxy handler for the invocation.
- * 
+ *
  * @version $Revision$ $Date$
  */
-class ServiceProxyHandler implements InvocationHandler {  
+public class ServiceProxyHandler implements InvocationHandler {
 
     /**
      * Wire attached to the servlet.
      */
     private Wire wire;
-    
+
     /**
      * Map of op names to head interceptors.
      */
     private Map<String, InvocationChain> invocationChains;
-    
+
     /*
-     * Creates a new proxy handler.
-     */
+    * Creates a new proxy handler.
+    */
     private ServiceProxyHandler(Wire wire, Map<String, InvocationChain> invocationChains) {
         this.wire = wire;
         this.invocationChains = invocationChains;
     }
 
-    /**
-     * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object, java.lang.reflect.Method, java.lang.Object[])
-     */
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        
         String methodName = method.getName();
-        
         Interceptor head = invocationChains.get(methodName).getHeadInterceptor();
-        
         Message input = new MessageImpl(args, false, new SimpleWorkContext(), wire);
         Message output = head.invoke(input);
-        return output.getBody(); 
-        
+        return output.getBody();
     }
-    
+
     /**
      * Creates a new proxy instance.
-     * 
-     * @param <T>
-     * @param intf Service interface.
-     * @param headInterceptors Map of op names to head interceptors. 
-     * @param wire  Wire that connects the transport to the component.
+     *
+     * @param <T>              the interface type
+     * @param intf             Service interface.
+     * @param invocationChains Map of op names to head interceptors.
+     * @param wire             Wire that connects the transport to the component.
      * @return Proxied service.
      */
     @SuppressWarnings("unchecked")
-    public static <T> T  newInstance(Class<T> intf, Map<String, InvocationChain> invocationChains, Wire wire) {
+    public static <T> T newInstance(Class<T> intf, Map<String, InvocationChain> invocationChains, Wire wire) {
         ClassLoader cl = intf.getClassLoader();
         InvocationHandler handler = new ServiceProxyHandler(wire, invocationChains);
-        return (T) Proxy.newProxyInstance(cl, new Class<?>[] {intf}, handler);
+        return (T) Proxy.newProxyInstance(cl, new Class<?>[]{intf}, handler);
     }
 
 }

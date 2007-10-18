@@ -15,6 +15,10 @@
     <orderEntry type="library" name="cxf-rt-core-2.0.1-incubator" level="application" />
     <orderEntry type="library" name="cxf-rt-frontend-simple-2.0.1-incubator" level="application" />
     <orderEntry type="library" name="cxf-rt-transports-http-2.0.1-incubator" level="application" />
+    <orderEntry type="library" name="cxf-api-2.0.1-incubator" level="application" />
+    <orderEntry type="library" name="servlet-api-2.4" level="application" />
+    <orderEntry type="library" name="cxf-common-utilities-2.0.1-incubator" level="application" />
+    <orderEntry type="library" name="cxf-rt-bindings-soap-2.0.1-incubator" level="application" />
     <orderEntryProperties />
   </component>
 </module>

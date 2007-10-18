@@ -14,21 +14,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.binding.ws.wire;
+package org.fabric3.binding.ws.cxf;
 
-import java.net.URI;
+import java.io.IOException;
 
-import org.fabric3.api.annotation.LogLevel;
+import org.apache.cxf.service.model.EndpointInfo;
+import org.apache.cxf.transport.Destination;
+import org.apache.cxf.transport.http.AbstractHTTPTransportFactory;
 
 /**
+ * Implements a simple HTTP-based conduit.
+ * <p/>
+ * TODO this should be integrated with the F3 JettyService to provision receivers for callbacks
+ *
  * @version $Rev$ $Date$
  */
-public interface WsWireAttacherMonitor {
+public class F3ConduitInitiator extends AbstractHTTPTransportFactory {
 
-    @LogLevel("INFO")
-    void provisionedEndpoint(URI address);
-
-    @LogLevel("INFO")
-    void removedEndpoint(URI address);
-
+    public Destination getDestination(EndpointInfo endpointInfo) throws IOException {
+        return new F3HttpDestination(getBus(), this, endpointInfo, true);
+    }
 }

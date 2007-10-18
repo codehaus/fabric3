@@ -57,15 +57,16 @@
             </snapshots>
         </repository>
         <repository>
-	        <id>maven2-repository.dev.java.net</id>
-	        <name>Java.net Repository for Maven</name>
-	        <url>http://download.java.net/maven/1/</url>
-	        <layout>legacy</layout>
-	    </repository>
+            <id>maven2-repository.dev.java.net</id>
+            <name>Java.net Repository for Maven</name>
+            <url>http://download.java.net/maven/1/</url>
+            <layout>legacy</layout>
+        </repository>
     </repositories>
 
     <dependencies>
-    
+        <!--Note do not include cxf-rt-transports-http-jetty as the ServletHost will be used -->
+
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-extension</artifactId>
@@ -84,6 +85,20 @@
             <artifactId>cxf-rt-core</artifactId>
             <version>${cxfVersion}</version>
             <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-beans</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-context</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -91,13 +106,12 @@
             <artifactId>cxf-rt-transports-http</artifactId>
             <version>${cxfVersion}</version>
             <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-transports-http-jetty</artifactId>
-            <version>${cxfVersion}</version>
-            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-web</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -112,6 +126,11 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.4</version>
+        </dependency>
 
     </dependencies>
     <build>
@@ -121,7 +140,7 @@
                 <artifactId>fabric3-contribution-plugin</artifactId>
                 <version>RELEASE</version>
                 <extensions>true</extensions>
-                <configuration />
+                <configuration/>
             </plugin>
         </plugins>
     </build>

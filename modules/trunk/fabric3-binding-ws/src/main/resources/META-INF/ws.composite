@@ -27,6 +27,11 @@
     -->
     <component name="WsWireAttacher">
         <system:implementation.system class="org.fabric3.binding.ws.wire.WsWireAttacher"/>
+        <!--<property name="contextPath">/services/*</property>-->
+    </component>
+
+    <component name="CXFService">
+        <system:implementation.system class="org.fabric3.binding.ws.cxf.CXFServiceImpl"/>
         <property name="contextPath">/services/*</property>
     </component>
 
