@@ -25,8 +25,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 import junit.framework.TestCase;
-import org.fabric3.runtime.webapp.ServletRequestInjector;
-import static org.fabric3.runtime.webapp.Constants.RUNTIME_ATTRIBUTE;
 import org.easymock.EasyMock;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.createNiceMock;
@@ -34,6 +32,8 @@ import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
+
+import static org.fabric3.runtime.webapp.Constants.RUNTIME_ATTRIBUTE;
 
 /**
  * Verifies {@link Fabric3Servlet} properly services a request
@@ -47,6 +47,7 @@ public class Fabric3ServletTestCase extends TestCase {
         ServletResponse resp = createNiceMock(ServletResponse.class);
         ServletRequestInjector injector = createMock(ServletRequestInjector.class);
         injector.service(eq(req), eq(resp));
+        injector.init(EasyMock.isA(ServletConfig.class));
         EasyMock.replay(injector);
         WebappRuntime runtime = createMock(WebappRuntime.class);
         expect(runtime.getRequestInjector()).andReturn(injector);

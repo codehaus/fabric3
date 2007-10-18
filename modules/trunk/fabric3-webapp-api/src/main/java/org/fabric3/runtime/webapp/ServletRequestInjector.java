@@ -19,6 +19,7 @@
 package org.fabric3.runtime.webapp;
 
 import java.io.IOException;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -27,6 +28,14 @@ import javax.servlet.ServletResponse;
  * Interface to a system component that dispatches servlet requests to the Fabric3 runtime
  */
 public interface ServletRequestInjector {
+
+    /**
+     * Initializes the request injector.
+     *
+     * @param config the ServletConfig corresponding to the {@link Fabric3Servlet}
+     * @throws ServletException if an error is encountered during initialization
+     */
+    void init(ServletConfig config) throws ServletException;
 
     /**
      * Dispatch servlet requests to the Fabric3 runtime
