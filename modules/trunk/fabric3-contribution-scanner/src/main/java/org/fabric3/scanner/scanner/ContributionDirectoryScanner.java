@@ -295,7 +295,7 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
                     }
                 }
                 processed.put(name, addedUri);
-                monitor.add(location.toString());
+                monitor.add(file.getName());
             } catch (ContributionException e) {
                 errorCache.put(name, cached);
                 monitor.error(e);
