@@ -91,7 +91,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
     /**
      * Do not run if this is set to true. This usage is consistent with the surefire plugin.
      *
-     * @parameter expression="${maven.test.skip}" 
+     * @parameter expression="${maven.test.skip}"
      */
     public boolean skip;
 
@@ -170,7 +170,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
      * @readonly
      */
     public List<String> testClassPath;
-    
+
     /**
      * @parameter
      */
@@ -336,9 +336,9 @@ public class Fabric3ITestMojo extends AbstractMojo {
 
         Set<Artifact> artifacts = new HashSet<Artifact>();
         for (Dependency extension : extensions) {
-            
+
             final Set<Exclusion> exclusions = extension.getExclusions();
-            
+
             Artifact artifact = extension.getArtifact(artifactFactory);
             try {
                 resolver.resolve(artifact, remoteRepositories, localRepository);
@@ -350,15 +350,15 @@ public class Fabric3ITestMojo extends AbstractMojo {
                     public boolean include(Artifact artifact) {
                         String groupId = artifact.getGroupId();
                         String artifactId = artifact.getArtifactId();
-                        
-                        for(Exclusion exclusion : exclusions) {
-                            if(artifactId.equals(exclusion.getArtifactId()) && groupId.equals(exclusion.getGroupId())) {
+
+                        for (Exclusion exclusion : exclusions) {
+                            if (artifactId.equals(exclusion.getArtifactId()) && groupId.equals(exclusion.getGroupId())) {
                                 return false;
                             }
                         }
                         return true;
                     }
-                    
+
                 };
                 ArtifactResolutionResult result = resolver.resolveTransitively(resolutionGroup.getArtifacts(),
                                                                                artifact,
@@ -445,7 +445,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
                                                                                                  remoteRepositories);
         Properties hostProperties = properties != null ? properties : System.getProperties();
         MavenHostInfoImpl hostInfo = new MavenHostInfoImpl(URI.create(testDomain), artifactRepository, hostProperties);
-        MavenMonitorFactory monitorFactory = new MavenMonitorFactory(getLog());
+        MavenMonitorFactory monitorFactory = new MavenMonitorFactory(getLog(), "f3");
 
         MavenEmbeddedRuntime runtime = new MavenEmbeddedRuntime();
         runtime.setMonitorFactory(monitorFactory);

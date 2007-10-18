@@ -38,9 +38,10 @@ import org.fabric3.fabric.monitor.ProxyMonitorFactory;
 public class MavenMonitorFactory extends ProxyMonitorFactory {
     private final Log log;
 
-    public MavenMonitorFactory(Log log) {
+    public MavenMonitorFactory(Log log, String bundleName) {
         this.log = log;
         Map<String, Object> configProperties = new HashMap<String, Object>();
+        configProperties.put("bundleName", bundleName);
         configProperties.put("defaultLevel", Level.FINEST);
         initInternal(configProperties);
     }
