@@ -18,6 +18,8 @@
  */
 package org.fabric3.jetty;
 
+import org.fabric3.api.annotation.LogLevel;
+
 /**
  * The monitoring interfaces used by the Jetty system service
  *
@@ -28,15 +30,37 @@ public interface TransportMonitor {
     /**
      * Called after the service is initialized
      */
-    void started();
+    @LogLevel("INFO")
+    void extensionStarted();
 
     /**
      * Called after the service is stopped
      */
-    void shutdown();
+    @LogLevel("INFO")
+    void extensionStopped();
 
-    void warn(String msg, Object...args);
+    @LogLevel("INFO")
+    void startHttpListener(int port);
 
-    void debug(String msg, Object...args);
+    @LogLevel("INFO")
+    void startHttpsListener(int port);
+
+    /**
+     * Captures Jetty warnings
+     *
+     * @param msg  the warning message
+     * @param args arguments
+     */
+    @LogLevel("WARNING")
+    void warn(String msg, Object... args);
+
+    /**
+     * Captures Jetty debug events
+     *
+     * @param msg  the debug message
+     * @param args arguments
+     */
+    @LogLevel("FINE")
+    void debug(String msg, Object... args);
 
 }

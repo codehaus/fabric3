@@ -228,7 +228,11 @@ public class JettyServiceImpl implements JettyService {
 
             server.setStopAtShutdown(true);
             server.setSendServerVersion(sendServerVersion);
-            monitor.started();
+            monitor.extensionStarted();
+            monitor.startHttpListener(httpPort);
+            if (isHttps) {
+                monitor.startHttpsListener(httpsPort);
+            }
             server.start();
             state = STARTED;
         } catch (Exception e) {
@@ -245,7 +249,7 @@ public class JettyServiceImpl implements JettyService {
         }
         server.stop();
         state = STOPPED;
-        monitor.shutdown();
+        monitor.extensionStopped();
     }
 
     public void registerMapping(String path, Servlet servlet) {
