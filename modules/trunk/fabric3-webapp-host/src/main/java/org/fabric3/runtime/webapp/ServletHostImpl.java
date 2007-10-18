@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.Servlet;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -39,7 +40,7 @@ import org.fabric3.spi.host.ServletHost;
  *
  * @version $Rev$ $Date$
  */
-@Service(ServletHost.class)
+@Service(interfaces = {ServletHost.class, ServletRequestInjector.class})
 @EagerInit
 public class ServletHostImpl implements ServletHost, ServletRequestInjector {
     protected Map<String, Servlet> servlets;
@@ -54,12 +55,31 @@ public class ServletHostImpl implements ServletHost, ServletRequestInjector {
         this.registry = registry;
     }
 
+    public void init(ServletConfig config) throws ServletException {
+        for (Servlet servlet : servlets.values()) {
+            servlet.init(config);
+        }
+    }
+
     public void service(ServletRequest req, ServletResponse resp) throws ServletException, IOException {
-        assert req instanceof HttpServletRequest : "implementation only supports HttpServletRequest";
+        assert req instanceof HttpServletRequest;
         String path = ((HttpServletRequest) req).getPathInfo();
         Servlet servlet = servlets.get(path);
         if (servlet == null) {
-            throw new IllegalStateException("No servlet registered for path: " + path);
+            int i;
+            servlet = servlets.get(path + "/*");
+            if (servlet == null) {
+                while ((i = path.lastIndexOf("/")) >= 0) {
+                    servlet = servlets.get(path.substring(0, i) + "/*");
+                    if (servlet != null) {
+                        break;
+                    }
+                    path = path.substring(0,i);
+                }
+            }
+            if (servlet == null) {
+                throw new IllegalStateException("No servlet registered for path: " + path);
+            }
         }
         servlet.service(req, resp);
     }

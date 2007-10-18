@@ -27,6 +27,7 @@ import javax.servlet.http.HttpSessionEvent;
 import org.fabric3.fabric.runtime.AbstractRuntime;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.LOADER_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_NAME;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.runtime.webapp.implementation.webapp.WebappComponent;
@@ -98,53 +99,28 @@ public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implement
     }
 
     public ServletRequestInjector getRequestInjector() {
+        if (requestInjector == null) {
+            URI uri = URI.create(RUNTIME_NAME + "/servletHost");
+            requestInjector = getSystemComponent(ServletRequestInjector.class, uri);
+        }
         return requestInjector;
     }
 
     public void sessionCreated(HttpSessionEvent event) {
-/*
-        HttpSessionStart startSession = new HttpSessionStart(this, event.getSession().getId());
-        application.publish(startSession);
-        ((EventPublisher) requestInjector).publish(startSession);
-*/
     }
 
     public void sessionDestroyed(HttpSessionEvent event) {
-/*
-        HttpSessionEnd endSession = new HttpSessionEnd(this, event.getSession().getId());
-        application.publish(endSession);
-        ((EventPublisher) requestInjector).publish(endSession);
-*/
     }
 
     public void httpRequestStarted(HttpServletRequest request) {
-/*
-        HttpSession session = request.getSession(false);
-        Object sessionId = session == null ? new LazyHTTPSessionId(request) : session.getId();
-        HttpRequestStart httpRequestStart = new HttpRequestStart(this, sessionId);
-        application.publish(httpRequestStart);
-        ((EventPublisher) requestInjector).publish(httpRequestStart);
-*/
     }
 
     public void httpRequestEnded(Object sessionid) {
-/*
-        HttpRequestEnded httpRequestEnded = new HttpRequestEnded(this, sessionid);
-        application.publish(httpRequestEnded);
-        ((EventPublisher) requestInjector).publish(httpRequestEnded);
-*/
     }
 
-
     public void startRequest() {
-/*
-        application.publish(new RequestStart(this));
-*/
     }
 
     public void stopRequest() {
-/*
-        application.publish(new RequestEnd(this));
-*/
     }
 }
