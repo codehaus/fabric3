@@ -71,7 +71,7 @@ public class CXFServiceImpl implements CXFService {
      * @param contextPath    context path from which the web services are provisioned.
      */
     public CXFServiceImpl(@Reference(name = "host")ServletHost host,
-                          @Reference MonitorFactory monitorFactory,
+                          @Reference(name = "monitorFactory")MonitorFactory monitorFactory,
                           @Property(name = "contextPath")String contextPath) {
         this.host = host;
         this.contextPath = contextPath;
