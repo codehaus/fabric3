@@ -14,9 +14,9 @@ import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.LOADER_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_NAME;
-import org.fabric3.pojo.processor.JavaIntrospectionHelper;
 import org.fabric3.host.runtime.StartException;
 import org.fabric3.loader.common.LoaderContextImpl;
+import org.fabric3.pojo.processor.JavaIntrospectionHelper;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.ObjectCreationException;
@@ -58,7 +58,7 @@ public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo>
 
     public DevelopmentRuntimeImpl() {
         super(DevelopmentHostInfo.class);
-        JavaLoggingMonitorFactory monitorFactory = new JavaLoggingMonitorFactory();
+        JavaLoggingMonitorFactory monitorFactory = new JavaLoggingMonitorFactory(null, null, "f3");
         setMonitorFactory(monitorFactory);
         monitor = monitorFactory.getMonitor(DevelopmentMonitor.class);
     }
@@ -104,7 +104,7 @@ public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo>
             URI systemGroupId = URI.create(ComponentNames.RUNTIME_NAME + "/");
             workContext.setScopeIdentifier(Scope.COMPOSITE, systemGroupId);
             scopeContainer.stopContext(workContext);
-            
+
             scopeContainer = null;
             wireCache = null;
             applicationAssembly = null;
