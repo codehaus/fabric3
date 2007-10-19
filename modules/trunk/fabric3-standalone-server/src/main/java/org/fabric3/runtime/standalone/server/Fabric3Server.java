@@ -154,7 +154,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
             future = coordinator.start();
             future.get();
             bootedRuntimes.put(profileName, coordinator);
-            System.err.println("Started " + profileName);
+            monitor.started(profileName);
         } catch (Exception ex) {
             monitor.runError(ex);
             throw new Fabric3ServerException(ex);
@@ -182,6 +182,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
                 coordinator.shutdown();
                 bootedRuntimes.remove(bootPath);
             }
+            monitor.stopped(bootPath);
         } catch (ShutdownException ex) {
             monitor.runError(ex);
             throw new Fabric3ServerException(ex);
@@ -211,6 +212,13 @@ public class Fabric3Server implements Fabric3ServerMBean {
     public interface ServerMonitor {
         @LogLevel("SEVERE")
         void runError(Exception e);
+
+        @LogLevel("INFO")
+        void started(String profile);
+
+        @LogLevel("INFO")
+        void stopped(String profile);
+
     }
 
 
