@@ -58,8 +58,9 @@
     </dependencies>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/fabric3-webapp-api</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/fabric3-webapp-api</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/fabric3-webapp-api</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/runtime/webapp/fabric3-webapp-api</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/runtime/webapp/fabric3-webapp-api</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/runtime/webapp/fabric3-webapp-api</url>
     </scm>
+
 </project>
