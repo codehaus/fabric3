@@ -397,7 +397,8 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         LoaderRegistry loaderRegistry = new LoaderRegistryImpl(monitorFactory, xmlFactory);
 
         // register element loaders
-        PropertyValueLoader propertyValueLoader = new PropertyValueLoader(new PropertyHelperImpl());
+        PropertyHelperImpl propertyHelper = new PropertyHelperImpl();
+        PropertyValueLoader propertyValueLoader = new PropertyValueLoader(propertyHelper);
         PolicyHelper policyHelper = new DefaultPolicyHelper();
 
         ComponentReferenceLoader componentReferenceLoader = new ComponentReferenceLoader(loaderRegistry,
@@ -426,7 +427,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
                 new SystemImplementationLoader(loaderRegistry, typeLoader);
         systemImplementationLoader.start();
 
-        FeatureLoader featureLoader = new FeatureLoader(loaderRegistry, introspector);
+        FeatureLoader featureLoader = new FeatureLoader(loaderRegistry, introspector, propertyHelper);
         featureLoader.start();
 
         return loaderRegistry;
