@@ -19,41 +19,32 @@ package org.fabric3.loader.composite;
 import java.net.URI;
 import java.net.URISyntaxException;
 import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import static org.osoa.sca.Constants.SCA_NS;
+import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import org.fabric3.loader.common.InvalidNameException;
+import org.fabric3.loader.common.PropertyHelper;
+import org.fabric3.scdl.DataType;
+import org.fabric3.scdl.PropertyValue;
 import org.fabric3.spi.loader.InvalidValueException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.loader.LoaderUtil;
-import org.fabric3.scdl.DataType;
-import org.fabric3.scdl.PropertyValue;
+import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.model.type.XSDSimpleType;
-import org.fabric3.transform.xml.Stream2Element2;
 
 /**
  * @version $Rev$ $Date$
  */
 public class PropertyValueLoader implements StAXElementLoader<PropertyValue> {
-    private static final QName PROPERTY = new QName(SCA_NS, "property");
+    private final PropertyHelper helper;
 
-    private final Stream2Element2 stream2Element;
-    private final DocumentBuilderFactory documentBuilderFactory;
-
-    public PropertyValueLoader() {
-        // TODO get the transformers by injection
-        stream2Element = new Stream2Element2(PROPERTY);
-        documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        documentBuilderFactory.setNamespaceAware(true);
+    public PropertyValueLoader(@Reference PropertyHelper helper) {
+        this.helper = helper;
     }
 
     public PropertyValue load(XMLStreamReader reader, LoaderContext context)
@@ -102,16 +93,7 @@ public class PropertyValueLoader implements StAXElementLoader<PropertyValue> {
             dataType = new XSDSimpleType(Element.class, XSDSimpleType.STRING);
         }
 
-        DocumentBuilder docBuilder;
-        try {
-            docBuilder = documentBuilderFactory.newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
-            throw new AssertionError();
-        }
-        Document value = docBuilder.newDocument();
-        Element valueElement = value.createElement("value");
-        value.appendChild(valueElement);
-        stream2Element.transform(reader, valueElement, null);
+        Document value = helper.loadValue(reader);
         return new PropertyValue(name, dataType, value);
     }
 }

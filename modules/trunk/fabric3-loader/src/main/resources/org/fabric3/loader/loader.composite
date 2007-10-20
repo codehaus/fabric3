@@ -34,6 +34,11 @@
         <system:implementation.system class="org.fabric3.fabric.loader.LoaderRegistryImpl"/>
     </component>
 
+    <!-- Property Helper -->
+    <component name="loader.PropertyHelper">
+        <system:implementation.system class="org.fabric3.loader.common.PropertyHelperImpl"/>
+    </component>
+
     <!-- Common SCDL loader implementations -->
     <component name="loader.ComponentReference">
         <system:implementation.system class="org.fabric3.loader.common.ComponentReferenceLoader"/>

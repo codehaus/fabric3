@@ -30,14 +30,12 @@ public interface PropertyHelper {
      *
      * The reader must be positioned at an element whose body contains a property value.
      * This will typically be an SCA &lt;property&gt; element (either in a &lt;composite&gt; or in a &lt;component&gt;).
-     * The attributes @type and @element will be used to determine the structure.
-     * If no type is present, xs:string is assumed.
-     *
+     * The resulting document comprises a &lt;value&gt; element whose body content will be that of the original
+     * &lt;property&gt; element.
      * 
      * @param reader a stream containing a property value
-     * @param many whether the stream is single or multi-valued
      * @return a standalone document containing the value
      * @throws XMLStreamException if there was a problem reading the stream
      */
-    Document loadValue(XMLStreamReader reader, boolean many) throws XMLStreamException;
+    Document loadValue(XMLStreamReader reader) throws XMLStreamException;
 }

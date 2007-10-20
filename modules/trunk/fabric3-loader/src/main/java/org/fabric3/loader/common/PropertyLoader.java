@@ -19,21 +19,16 @@
 package org.fabric3.loader.common;
 
 import javax.xml.XMLConstants;
-import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 
 import org.fabric3.scdl.Property;
-import org.fabric3.spi.loader.InvalidValueException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.StAXElementLoader;
 
 /**
@@ -49,47 +44,22 @@ public class PropertyLoader implements StAXElementLoader<Property<?>> {
     private static final String MUST_SUPPLY = "mustSupply";
     private static final QName XS_STRING = new QName(XMLConstants.W3C_XML_SCHEMA_NS_URI, "string");
 
-    private final DocumentBuilder documentBuilder;
+    private final PropertyHelper helper;
 
-    public PropertyLoader() {
-        try {
-            documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
-            // we should be able to construct the default DocumentBuilder
-            throw new AssertionError(e);
-        }
+    public PropertyLoader(@Reference PropertyHelper helper) {
+        this.helper = helper;
     }
 
-    public Property<?> load(XMLStreamReader reader, LoaderContext ctx)
-            throws XMLStreamException, LoaderException {
+    public Property<?> load(XMLStreamReader reader, LoaderContext ctx) throws XMLStreamException, LoaderException {
         String name = reader.getAttributeValue(null, NAME);
-        String typeName = reader.getAttributeValue(null, TYPE);
-        String elementName = reader.getAttributeValue(null, ELEMENT);
         boolean many = Boolean.parseBoolean(reader.getAttributeValue(null, MANY));
         boolean mustSupply = Boolean.parseBoolean(reader.getAttributeValue(null, MUST_SUPPLY));
-
-        NamespaceContext namespaceContext = reader.getNamespaceContext();
-        QName xmlType;
-        Document value;
-        if (elementName != null) {
-            if (typeName != null) {
-                throw new InvalidValueException("Cannot specify both type and element", name);
-            }
-            QName element = LoaderUtil.getQName(elementName, null, namespaceContext);
-            throw new UnsupportedOperationException();
-        } else {
-            if (typeName == null) {
-                xmlType = LoaderUtil.getQName(elementName, null, namespaceContext);
-            } else {
-                xmlType = XS_STRING;
-            }
-            value = PropertyUtils.createPropertyValue(reader, xmlType, documentBuilder);
-        }
+        Document value = helper.loadValue(reader);
 
         Property<?> property = new Property();
         property.setRequired(mustSupply);
         property.setName(name);
-        property.setXmlType(xmlType);
+        property.setXmlType(XS_STRING);
         property.setMany(many);
         property.setDefaultValue(value);
         return property;

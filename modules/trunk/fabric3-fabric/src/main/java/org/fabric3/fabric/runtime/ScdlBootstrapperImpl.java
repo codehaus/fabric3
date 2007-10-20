@@ -16,21 +16,11 @@
  */
 package org.fabric3.fabric.runtime;
 
-import static org.fabric3.fabric.runtime.ComponentNames.APPLICATION_CLASSLOADER_ID;
-import static org.fabric3.fabric.runtime.ComponentNames.BOOT_CLASSLOADER_ID;
-import static org.fabric3.fabric.runtime.ComponentNames.CLASSLOADER_REGISTRY_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.EXTENSION_METADATA_STORE_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_ASSEMBLY_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_NAME;
-import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.xml.stream.XMLInputFactory;
 
 import org.fabric3.fabric.assembly.InstantiationException;
@@ -89,6 +79,14 @@ import org.fabric3.fabric.implementation.system.SystemComponentTypeLoaderImpl;
 import org.fabric3.fabric.implementation.system.SystemImplementationLoader;
 import org.fabric3.fabric.implementation.system.SystemWireAttacher;
 import org.fabric3.fabric.loader.LoaderRegistryImpl;
+import static org.fabric3.fabric.runtime.ComponentNames.APPLICATION_CLASSLOADER_ID;
+import static org.fabric3.fabric.runtime.ComponentNames.BOOT_CLASSLOADER_ID;
+import static org.fabric3.fabric.runtime.ComponentNames.CLASSLOADER_REGISTRY_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.EXTENSION_METADATA_STORE_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_ASSEMBLY_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_NAME;
+import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
 import org.fabric3.fabric.services.advertsiement.FeatureLoader;
 import org.fabric3.fabric.services.archive.JarService;
 import org.fabric3.fabric.services.archive.JarServiceImpl;
@@ -115,6 +113,8 @@ import org.fabric3.loader.common.ComponentReferenceLoader;
 import org.fabric3.loader.common.ComponentServiceLoader;
 import org.fabric3.loader.common.DefaultPolicyHelper;
 import org.fabric3.loader.common.LoaderContextImpl;
+import org.fabric3.loader.common.PropertyHelper;
+import org.fabric3.loader.common.PropertyHelperImpl;
 import org.fabric3.loader.composite.ComponentLoader;
 import org.fabric3.loader.composite.CompositeLoader;
 import org.fabric3.loader.composite.IncludeLoader;
@@ -397,7 +397,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         LoaderRegistry loaderRegistry = new LoaderRegistryImpl(monitorFactory, xmlFactory);
 
         // register element loaders
-        PropertyValueLoader propertyValueLoader = new PropertyValueLoader();
+        PropertyValueLoader propertyValueLoader = new PropertyValueLoader(new PropertyHelperImpl());
         PolicyHelper policyHelper = new DefaultPolicyHelper();
 
         ComponentReferenceLoader componentReferenceLoader = new ComponentReferenceLoader(loaderRegistry,

@@ -19,27 +19,21 @@
 package org.fabric3.loader.common;
 
 import java.io.StringReader;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import junit.framework.TestCase;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-
-import junit.framework.TestCase;
-
-import org.fabric3.loader.common.PropertyUtils;
 
 /**
  * @version $Rev$ $Date$
  */
 public class PropertyParsingTestCase extends TestCase {
+    private PropertyHelperImpl helper;
     private XMLInputFactory xmlFactory;
-    private DocumentBuilder docBuilder;
-    private Element root;
 
     public void testComplexProperty() throws XMLStreamException {
         String xml = "<property xmlns:foo='http://foo.com'>"
@@ -48,8 +42,10 @@ public class PropertyParsingTestCase extends TestCase {
             + "</property>";
 
         XMLStreamReader reader = getReader(xml);
-        PropertyUtils.loadPropertyValue(reader, root);
-        NodeList childNodes = root.getChildNodes();
+        Document value = helper.loadValue(reader);
+        reader.close();
+
+        NodeList childNodes = value.getDocumentElement().getChildNodes();
         assertEquals(2, childNodes.getLength());
 
         Element e = (Element) childNodes.item(0);
@@ -70,10 +66,7 @@ public class PropertyParsingTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
+        helper = new PropertyHelperImpl();
         xmlFactory = XMLInputFactory.newInstance();
-        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-        docBuilder = docFactory.newDocumentBuilder();
-        Document doc = docBuilder.newDocument();
-        root = doc.createElement("value");
     }
 }
