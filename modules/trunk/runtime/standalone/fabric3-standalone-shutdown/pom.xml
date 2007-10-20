@@ -47,8 +47,9 @@
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/fabric3-standalone-shutdown</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/fabric3-standalone-shutdown</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/fabric3-standalone-shutdown</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/runtime/standalone/fabric3-standalone-shutdown</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/runtime/standalone/fabric3-standalone-shutdown</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/runtime/standalone/fabric3-standalone-shutdown</url>
     </scm>
+
 </project>
