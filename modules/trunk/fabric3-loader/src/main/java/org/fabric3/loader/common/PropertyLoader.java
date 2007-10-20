@@ -18,6 +18,8 @@
  */
 package org.fabric3.loader.common;
 
+import javax.xml.XMLConstants;
+import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -28,8 +30,10 @@ import javax.xml.stream.XMLStreamReader;
 import org.w3c.dom.Document;
 
 import org.fabric3.scdl.Property;
+import org.fabric3.spi.loader.InvalidValueException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
+import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.StAXElementLoader;
 
 /**
@@ -40,8 +44,10 @@ import org.fabric3.spi.loader.StAXElementLoader;
 public class PropertyLoader implements StAXElementLoader<Property<?>> {
     private static final String NAME = "name";
     private static final String TYPE = "type";
+    private static final String ELEMENT = "element";
     private static final String MANY = "many";
     private static final String MUST_SUPPLY = "mustSupply";
+    private static final QName XS_STRING = new QName(XMLConstants.W3C_XML_SCHEMA_NS_URI, "string");
 
     private final DocumentBuilder documentBuilder;
 
@@ -58,19 +64,27 @@ public class PropertyLoader implements StAXElementLoader<Property<?>> {
             throws XMLStreamException, LoaderException {
         String name = reader.getAttributeValue(null, NAME);
         String typeName = reader.getAttributeValue(null, TYPE);
-        QName xmlType = null;
-        if (typeName != null) {
-            int index = typeName.indexOf(':');
-            if (index != -1) {
-                String prefix = typeName.substring(0, index);
-                String localName = typeName.substring(index + 1);
-                String ns = reader.getNamespaceURI(prefix);
-                xmlType = new QName(ns, localName, prefix);
-            }
-        }
+        String elementName = reader.getAttributeValue(null, ELEMENT);
         boolean many = Boolean.parseBoolean(reader.getAttributeValue(null, MANY));
         boolean mustSupply = Boolean.parseBoolean(reader.getAttributeValue(null, MUST_SUPPLY));
-        Document value = PropertyUtils.createPropertyValue(reader, xmlType, documentBuilder);
+
+        NamespaceContext namespaceContext = reader.getNamespaceContext();
+        QName xmlType;
+        Document value;
+        if (elementName != null) {
+            if (typeName != null) {
+                throw new InvalidValueException("Cannot specify both type and element", name);
+            }
+            QName element = LoaderUtil.getQName(elementName, null, namespaceContext);
+            throw new UnsupportedOperationException();
+        } else {
+            if (typeName == null) {
+                xmlType = LoaderUtil.getQName(elementName, null, namespaceContext);
+            } else {
+                xmlType = XS_STRING;
+            }
+            value = PropertyUtils.createPropertyValue(reader, xmlType, documentBuilder);
+        }
 
         Property<?> property = new Property();
         property.setRequired(mustSupply);
