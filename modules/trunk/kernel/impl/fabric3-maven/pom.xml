@@ -23,27 +23,46 @@
         <version>4</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
-    <artifactId>binding-test-harness</artifactId>
-    <version>0.1-SNAPSHOT</version>
-    <name>Fabric3 Binding Test Harness</name>
-    <description>Fabric3 Test Harness for Binding Extensions.</description>
+    <artifactId>fabric3-maven</artifactId>
+    <version>0.3-SNAPSHOT</version>
+    <name>Fabric3 Maven</name>
+    <description>Fabric3 Maven Artifact Resolver.</description>
 
     <dependencies>
         <dependency>
-            <groupId>org.codehaus.fabric3.spec</groupId>
-            <artifactId>sca-api-r1.0</artifactId>
-            <version>0.2.1</version>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-extension</artifactId>
+            <version>0.2</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-embedder</artifactId>
+            <version>2.0.4</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <scope>provided</scope>
         </dependency>
+		  
+		  <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+        </dependency>
+
     </dependencies>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/binding-test-harness</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/binding-test-harness</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/binding-test-harness</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/kernel/impl/fabric3-maven</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/kernel/impl/fabric3-maven</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/kernel/impl/fabric3-maven</url>
     </scm>
+
 </project>
