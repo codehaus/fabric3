@@ -26,40 +26,38 @@
         <version>4</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
-    <artifactId>fabric3-jxta</artifactId>
+    <artifactId>fabric3-discovery-jxta</artifactId>
     <version>0.3-SNAPSHOT</version>
-    <name>Fabric3 JXTA Service</name>
-    <description>Fabric3 JXTA ServiceA.</description>
+    <name>Fabric3 JXTA Discovery</name>
+    <description>Fabric3 federation discovery based on JXTA.</description>
     <packaging>sca-contribution-jar</packaging>
 
     <dependencies>
 
         <dependency>
-            <groupId>org.codehaus.fabric3.spec</groupId>
-            <artifactId>sca-api-r1.0</artifactId>
-            <version>0.2.1</version>
-            <scope>provided</scope>
+            <groupId>com.thoughtworks.xstream</groupId>
+            <artifactId>xstream</artifactId>
+            <version>1.2</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-host-api</artifactId>
+            <artifactId>fabric3-extension</artifactId>
             <version>0.2</version>
             <scope>provided</scope>
         </dependency>
+
+       <dependency>
+           <groupId>org.codehaus.fabric3</groupId>
+           <artifactId>fabric3-jxta</artifactId>
+           <version>0.2</version>
+           <scope>provided</scope>
+       </dependency>
 
         <dependency>
             <groupId>bouncycastle</groupId>
             <artifactId>bcprov-jdk14</artifactId>
             <version>124</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-install-jxta</artifactId>
-            <version>0.1</version>
-            <type>pom</type>
             <scope>provided</scope>
         </dependency>
 
@@ -67,14 +65,14 @@
             <groupId>org.jxta.platform</groupId>
             <artifactId>jxta</artifactId>
             <version>2.4.1</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.13</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -87,11 +85,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.easymock</groupId>
-            <artifactId>easymockclassextension</artifactId>
         </dependency>
 
     </dependencies>
@@ -108,8 +101,8 @@
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/fabric3-jxta</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/fabric3-jxta</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/fabric3-jxta</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/federated/fabric3-discovery-jxta</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/federated/fabric3-discovery-jxta</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/federated/fabric3-discovery-jxta</url>
     </scm>
 </project>
