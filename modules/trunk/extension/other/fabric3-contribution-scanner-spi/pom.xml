@@ -23,37 +23,19 @@
         <version>4</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
-    <artifactId>fabric3-tx</artifactId>
-    <version>0.2-SNAPSHOT</version>
-    <name>Fabric3 Transaction Definitions</name>
-    <description>Fabric3 Transaction Definitions.</description>
+    <artifactId>fabric3-contribution-scanner-spi</artifactId>
+    <version>0.3-SNAPSHOT</version>
+    <name>Fabric3 Contribution Scanner SPI</name>
+    <description>Fabric3 Contribution Scanner SPI.</description>
     <packaging>sca-contribution-jar</packaging>
 
     <dependencies>
-
+    
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-extension</artifactId>
+            <artifactId>fabric3-spi</artifactId>
             <version>0.2</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-tx-loader</artifactId>
-            <version>0.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>geronimo-spec</groupId>
-            <artifactId>geronimo-spec-jta</artifactId>
-            <version>1.0.1B-rc4</version>
-        </dependency>
-
-        <dependency>
-            <groupId>stax</groupId>
-            <artifactId>stax-api</artifactId>
-            <!-- use version 1.0 as it is the version bundled in JDK 6 -->
-            <version>1.0.</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -62,7 +44,6 @@
         </dependency>
 
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -70,15 +51,14 @@
                 <artifactId>fabric3-contribution-plugin</artifactId>
                 <version>RELEASE</version>
                 <extensions>true</extensions>
-                <configuration />
             </plugin>
         </plugins>
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/fabric3-tx</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/fabric3-tx</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/fabric3-tx</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-contribution-scanner-spi</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-contribution-scanner-spi</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/extension/other/fabric3-contribution-scanner-spi</url>
     </scm>
 
 </project>

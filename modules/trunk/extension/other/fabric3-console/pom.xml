@@ -16,58 +16,32 @@
  under the License.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    
     <modelVersion>4.0.0</modelVersion>
-    
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric</artifactId>
         <version>4</version>
     </parent>
-    
     <groupId>org.codehaus.fabric3</groupId>
-    <artifactId>fabric3-jpa-core</artifactId>
-    <version>0.1-SNAPSHOT</version>
-    <name>Fabric3 JPA Integration (Core)</name>
-    <description>Fabric3 JPA Integration (Core).</description>
-    
+    <artifactId>fabric3-console</artifactId>
+    <version>0.3-SNAPSHOT</version>
     <packaging>sca-contribution-jar</packaging>
 
-    <repositories>
-        <repository>
-	        <id>java.net</id>
-	        <url>https://maven-repository.dev.java.net/nonav/repository</url>
-	        <layout>legacy</layout>
-	        <snapshots><enabled>false</enabled></snapshots>
-        </repository>
-    </repositories>
+    <name>Fabric3 Console</name>
+    <description>Fabric3 Console applications.</description>
 
     <dependencies>
-    
-        <dependency>
-            <groupId>javax.persistence</groupId>
-            <artifactId>persistence-api</artifactId>
-            <version>1.0</version>
-        </dependency>
-
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-extension</artifactId>
+            <artifactId>fabric3-spi</artifactId>
             <version>0.3-SNAPSHOT</version>
         </dependency>
 
         <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-pojo</artifactId>
-            <version>0.3-SNAPSHOT</version>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.4</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-jpa-spi</artifactId>
-            <version>0.1-SNAPSHOT</version>
-        </dependency>
-
         <dependency>
             <groupId>stax</groupId>
             <artifactId>stax-api</artifactId>
@@ -79,14 +53,6 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
-        
-        <dependency>
-            <groupId>org.apache.openjpa</groupId>
-            <artifactId>openjpa-persistence-jdbc</artifactId>
-            <version>1.0.0</version>
-            <scope>test</scope>
-        </dependency>
-
     </dependencies>
 
     <build>
@@ -94,17 +60,17 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-contribution-plugin</artifactId>
-                <version>0.2-SNAPSHOT</version>
+                <version>RELEASE</version>
                 <extensions>true</extensions>
-                <configuration/>
+                <configuration />
             </plugin>
         </plugins>
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/fabric3-jpa-core</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/fabric3-jpa-core</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/fabric3-jpa-core</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-console</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-console</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/extension/other/fabric3-console</url>
     </scm>
-    
+
 </project>
