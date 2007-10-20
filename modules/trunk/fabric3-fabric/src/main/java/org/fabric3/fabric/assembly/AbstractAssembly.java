@@ -18,32 +18,32 @@
  */
 package org.fabric3.fabric.assembly;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.io.InputStream;
-import java.io.IOException;
-import java.lang.*;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPathFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathVariableResolver;
 import javax.xml.xpath.XPathExpressionException;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.xml.sax.SAXException;
+import javax.xml.xpath.XPathFactory;
+import javax.xml.xpath.XPathVariableResolver;
 
 import static org.osoa.sca.Constants.SCA_NS;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import org.fabric3.fabric.assembly.allocator.AllocationException;
 import org.fabric3.fabric.assembly.allocator.Allocator;
@@ -64,11 +64,11 @@ import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.CompositeReference;
 import org.fabric3.scdl.CompositeService;
 import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.Property;
+import org.fabric3.scdl.PropertyValue;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ResourceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
-import org.fabric3.scdl.Property;
-import org.fabric3.scdl.PropertyValue;
 import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.assembly.Assembly;
 import org.fabric3.spi.assembly.AssemblyException;
@@ -513,12 +513,17 @@ public abstract class AbstractAssembly implements Assembly {
             throw new AssertionError();
         }
 
+        Document value = builder.newDocument();
+        Element root = value.createElement("value");
+        // TODO do we need to copy namespace declarations to this root
+        value.appendChild(root);
         try {
-            Document value = builder.newDocument();
-            Node result = (Node) xpath.evaluate(source, value, XPathConstants.NODE);
-            value.adoptNode(result);
-            value.appendChild(result);
-            return value;
+            NodeList result = (NodeList) xpath.evaluate(source, root, XPathConstants.NODESET);
+            for (int i = 0 ; i < result.getLength(); i++) {
+                Node node = result.item(i);
+                value.adoptNode(node);
+                root.appendChild(node);
+            }
         } catch (XPathExpressionException e) {
             // FIXME rethrow this for now, fix if people find it confusing
             // the Apache and Sun implementations of XPath throw a nested NullPointerException
@@ -527,6 +532,7 @@ public abstract class AbstractAssembly implements Assembly {
             // are used to this behaviour
             throw e;
         }
+        return value;
     }
 
     /**

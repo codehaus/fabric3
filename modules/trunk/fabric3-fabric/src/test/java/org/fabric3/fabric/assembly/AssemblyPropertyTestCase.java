@@ -17,18 +17,17 @@
 package org.fabric3.fabric.assembly;
 
 import java.net.URI;
-
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPathExpressionException;
 
 import junit.framework.TestCase;
-
-import org.fabric3.scdl.CompositeImplementation;
-import org.fabric3.spi.model.instance.LogicalComponent;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import org.fabric3.scdl.CompositeImplementation;
+import org.fabric3.spi.model.instance.LogicalComponent;
 
 /**
  * @version $Rev$ $Date$
@@ -38,6 +37,7 @@ public class AssemblyPropertyTestCase extends TestCase {
     private AbstractAssembly assembly;
     private LogicalComponent<CompositeImplementation> domain;
     private Element root;
+    private Document property;
 
     public void testSimpleProperty() throws Exception {
         root.setTextContent("Hello World");
@@ -47,22 +47,7 @@ public class AssemblyPropertyTestCase extends TestCase {
         assertEquals("Hello World", child.getTextContent());
     }
 
-    public void testComplexPropertyEvaluatingToElement() throws Exception {
-        Document property = root.getOwnerDocument();
-        Element http = property.createElement("http");
-        root.appendChild(http);
-        Element port = property.createElement("port");
-        http.appendChild(port);
-        port.setTextContent("8080");
-        Document value = assembly.deriveValueFromXPath("$domain/http", domain);
-        Node child = value.getDocumentElement().getFirstChild();
-        assertEquals(Node.ELEMENT_NODE, child.getNodeType());
-        assertEquals("port", child.getNodeName());
-        assertEquals("8080", child.getTextContent());
-    }
-
-    public void testComplexPropertyEvaluatingToText() throws Exception {
-        Document property = root.getOwnerDocument();
+    public void testComplexProperty() throws Exception {
         Element http = property.createElement("http");
         root.appendChild(http);
         Element port = property.createElement("port");
@@ -70,8 +55,26 @@ public class AssemblyPropertyTestCase extends TestCase {
         port.setTextContent("8080");
         Document value = assembly.deriveValueFromXPath("$domain/http/port", domain);
         Node child = value.getDocumentElement().getFirstChild();
-        assertEquals(Node.TEXT_NODE, child.getNodeType());
+        assertEquals(Node.ELEMENT_NODE, child.getNodeType());
+        assertEquals("port", child.getNodeName());
         assertEquals("8080", child.getTextContent());
+    }
+
+    public void testComplexPropertyWithMultipleValues() throws Exception {
+        Element http1 = property.createElement("http");
+        root.appendChild(http1);
+        http1.setAttribute("index", "1");
+        Element http2 = property.createElement("http");
+        root.appendChild(http2);
+        http2.setAttribute("index", "2");
+        Document value = assembly.deriveValueFromXPath("$domain/http", domain);
+        Node child = value.getDocumentElement();
+        NodeList list = child.getChildNodes();
+        assertEquals(2, list.getLength());
+        assertEquals("http", list.item(0).getNodeName());
+        assertEquals("1", ((Element)list.item(0)).getAttribute("index"));
+        assertEquals("http", list.item(1).getNodeName());
+        assertEquals("2", ((Element)list.item(1)).getAttribute("index"));
     }
 
     public void testUnknownVariable() {
@@ -88,10 +91,10 @@ public class AssemblyPropertyTestCase extends TestCase {
         assembly = new MockAssembly();
         domain = new LogicalComponent<CompositeImplementation>(assembly.domainUri, assembly.domainUri, null, null);
 
-        Document value = FACTORY.newDocumentBuilder().newDocument();
-        root = value.createElement("value");
-        value.appendChild(root);
-        domain.setPropertyValue("domain", value);
+        property = FACTORY.newDocumentBuilder().newDocument();
+        root = property.createElement("value");
+        property.appendChild(root);
+        domain.setPropertyValue("domain", property);
     }
 
     private static class MockAssembly extends AbstractAssembly {
