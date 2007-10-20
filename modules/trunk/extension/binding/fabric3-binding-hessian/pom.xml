@@ -15,27 +15,51 @@
  specific language governing permissions and limitations
  under the License.
 -->
-<project>
-
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric</artifactId>
-        <version>2</version>
+        <version>4</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
-    <artifactId>fabric3-binding-test</artifactId>
-    <version>0.1-SNAPSHOT</version>
-    <name>Fabric3 Test Binding Implementation</name>
+    <artifactId>fabric3-binding-hessian</artifactId>
+    <version>0.3-SNAPSHOT</version>
+    <name>Fabric3 Hessian Binding</name>
+    <description>Fabric3 Hessian Binding Implementation.</description>
     <packaging>sca-contribution-jar</packaging>
-    <description>Provides a test binding</description>
+    <repositories>
+        <repository>
+            <id>objectstyle.org</id>
+            <name>Object Style</name>
+            <url>http://objectstyle.org/maven2/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.caucho</groupId>
+            <artifactId>hessian</artifactId>
+            <version>3.0.20</version>
+        </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-extension</artifactId>
             <version>0.3-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.4</version>
         </dependency>
 
         <dependency>
@@ -64,10 +88,9 @@
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/fabric3-binding-test</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/fabric3-binding-test</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/fabric3-binding-test</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/binding/fabric3-binding-hessian</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/binding/fabric3-binding-hessian</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/extension/binding/fabric3-binding-hessian</url>
     </scm>
-
 
 </project>
