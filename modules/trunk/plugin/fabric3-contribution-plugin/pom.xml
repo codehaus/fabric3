@@ -73,8 +73,8 @@
 	</build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/fabric3-contribution-plugin</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/fabric3-contribution-plugin</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/fabric3-contribution-plugin</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/plugin/fabric3-contribution-plugin</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/plugin/fabric3-contribution-plugin</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/plugin/fabric3-contribution-plugin</url>
     </scm>
 </project>
