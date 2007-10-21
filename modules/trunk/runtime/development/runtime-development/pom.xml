@@ -123,8 +123,8 @@
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/runtime/trunk/runtime-development</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/assembly/trunk/runtime-development</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/assembly/trunk/runtime-development</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/runtime/development/runtime-development</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/runtime/development/runtime-development</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/runtime/development/runtime-development</url>
     </scm>
 </project>
