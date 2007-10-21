@@ -12,15 +12,105 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="junit-3.8.1" level="application" />
-    <orderEntry type="library" name="easymock-2.2" level="application" />
-    <orderEntry type="library" exported="" name="stax-api-1.0.1" level="application" />
-    <orderEntry type="library" name="log4j-1.2.13" level="application" />
-    <orderEntry type="library" name="bcprov-jdk14-124" level="application" />
-    <orderEntry type="library" name="wstx-asl-3.2.0" level="application" />
-    <orderEntry type="library" exported="" name="jxta-2.4.1" level="application" />
-    <orderEntry type="module" module-name="fabric3-host-api" exported="" />
-    <orderEntry type="module" module-name="sca-spec" exported="" />
+    <orderEntry type="module-library" exported="">
+      <library name="bouncycastle:bcprov-jdk14:124">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/bouncycastle/bcprov-jdk14/124/bcprov-jdk14-124.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="cglib:cglib-nodep:2.1_3">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/cglib/cglib-nodep/2.1_3/cglib-nodep-2.1_3.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="junit:junit:3.8.2">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/junit/junit/3.8.2/junit-3.8.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="log4j:log4j:1.2.13">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/log4j/log4j/1.2.13/log4j-1.2.13.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.codehaus.fabric3.spec:sca-api-r1.0:0.2.1">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api-r1.0/0.2.1/sca-api-r1.0-0.2.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.codehaus.fabric3:fabric3-host-api:0.2">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-host-api/0.2/fabric3-host-api-0.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.codehaus.woodstox:wstx-asl:3.2.0">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/codehaus/woodstox/wstx-asl/3.2.0/wstx-asl-3.2.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.easymock:easymock:2.2">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/easymock/easymock/2.2/easymock-2.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.easymock:easymockclassextension:2.2">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/easymock/easymockclassextension/2.2/easymockclassextension-2.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.jxta.platform:jxta:2.4.1">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/jxta/platform/jxta/2.4.1/jxta-2.4.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="stax:stax-api:1.0.1">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/stax/stax-api/1.0.1/stax-api-1.0.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
     <orderEntryProperties />
   </component>
 </module>
