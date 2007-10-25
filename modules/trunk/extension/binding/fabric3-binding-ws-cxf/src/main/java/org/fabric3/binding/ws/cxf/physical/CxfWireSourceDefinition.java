@@ -16,23 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.binding.ws.model.physical;
+package org.fabric3.binding.ws.cxf.physical;
 
 import java.net.URI;
 
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 
 /**
- * Physical wire target definition for Hessian binding.
+ * Physical wire source definition for Hessian binding.
  *
- * @version $Revision$ $Date$
+ * @version $Revision: 1589 $ $Date: 2007-10-25 23:13:37 +0100 (Thu, 25 Oct 2007) $
  */
-public class WsWireTargetDefinition extends PhysicalWireTargetDefinition {
+public class CxfWireSourceDefinition extends PhysicalWireSourceDefinition {
 
     /**
-     * Interface for the reference.
+     * Interface for the service.
      */
-    private String referenceInterface;
+    private String serviceInterface;
 
     /**
      * The classloader for the service
@@ -40,17 +40,17 @@ public class WsWireTargetDefinition extends PhysicalWireTargetDefinition {
     private URI classloaderURI;
 
     /**
-     * @return Reference interface.
+     * @return Service interface.
      */
-    public String getReferenceInterface() {
-        return referenceInterface;
+    public String getServiceInterface() {
+        return serviceInterface;
     }
 
     /**
-     * @param referenceInterface Reference interface.
+     * @param serviceInterface Service interface.
      */
-    public void setReferenceInterface(String referenceInterface) {
-        this.referenceInterface = referenceInterface;
+    public void setServiceInterface(String serviceInterface) {
+        this.serviceInterface = serviceInterface;
     }
 
     public URI getClassloaderURI() {
@@ -60,5 +60,4 @@ public class WsWireTargetDefinition extends PhysicalWireTargetDefinition {
     public void setClassloaderURI(URI classloaderURI) {
         this.classloaderURI = classloaderURI;
     }
-
 }

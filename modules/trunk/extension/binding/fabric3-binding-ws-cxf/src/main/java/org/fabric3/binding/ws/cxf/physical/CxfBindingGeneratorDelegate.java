@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.binding.ws.model.physical;
+package org.fabric3.binding.ws.cxf.physical;
 
 import java.net.URI;
 import java.util.Set;
@@ -41,18 +41,18 @@ import org.osoa.sca.annotations.Reference;
  * @version $Revision: 1560 $ $Date: 2007-10-20 10:02:18 +0100 (Sat, 20 Oct 2007) $
  */
 @EagerInit
-public class CxfBindingGenerator implements BindingGeneratorDelegate<WsBindingDefinition> {
+public class CxfBindingGeneratorDelegate implements BindingGeneratorDelegate<WsBindingDefinition> {
     private ClassLoaderGenerator classLoaderGenerator;
 
-    public CxfBindingGenerator(@Reference ClassLoaderGenerator classLoaderGenerator) {
+    public CxfBindingGeneratorDelegate(@Reference ClassLoaderGenerator classLoaderGenerator) {
         this.classLoaderGenerator = classLoaderGenerator;
     }
 
-    public WsWireSourceDefinition generateWireSource(LogicalBinding<WsBindingDefinition> logicalBinding,
+    public CxfWireSourceDefinition generateWireSource(LogicalBinding<WsBindingDefinition> logicalBinding,
                                                      Set<Intent> intentsToBeProvided,
                                                      GeneratorContext generatorContext,
                                                      ServiceDefinition serviceDefinition) throws GenerationException {
-        WsWireSourceDefinition hwsd = new WsWireSourceDefinition();
+        CxfWireSourceDefinition hwsd = new CxfWireSourceDefinition();
         hwsd.setUri(logicalBinding.getBinding().getTargetUri());
         ServiceContract<?> contract = serviceDefinition.getServiceContract();
         if (!(JavaServiceContract.class.isInstance(contract))) {
@@ -65,13 +65,13 @@ public class CxfBindingGenerator implements BindingGeneratorDelegate<WsBindingDe
 
     }
 
-    public WsWireTargetDefinition generateWireTarget(LogicalBinding<WsBindingDefinition> logicalBinding,
+    public CxfWireTargetDefinition generateWireTarget(LogicalBinding<WsBindingDefinition> logicalBinding,
                                                      Set<Intent> intentsToBeProvided,
                                                      GeneratorContext generatorContext,
                                                      ReferenceDefinition referenceDefinition)
             throws GenerationException {
 
-        WsWireTargetDefinition hwtd = new WsWireTargetDefinition();
+        CxfWireTargetDefinition hwtd = new CxfWireTargetDefinition();
         hwtd.setUri(logicalBinding.getBinding().getTargetUri());
         ServiceContract<?> contract = referenceDefinition.getServiceContract();
         if (!(JavaServiceContract.class.isInstance(contract))) {

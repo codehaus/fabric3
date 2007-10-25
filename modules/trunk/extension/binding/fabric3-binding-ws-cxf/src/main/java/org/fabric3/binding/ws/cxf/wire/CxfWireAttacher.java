@@ -17,35 +17,30 @@
  * under the License.
  */
 
-package org.fabric3.binding.ws.wire;
+package org.fabric3.binding.ws.cxf.wire;
 
-import java.lang.reflect.Method;
 import java.net.URI;
-import java.util.Map;
-
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.ws.cxf.CXFService;
-import org.fabric3.binding.ws.model.physical.WsWireSourceDefinition;
-import org.fabric3.binding.ws.model.physical.WsWireTargetDefinition;
+import org.fabric3.binding.ws.cxf.physical.CxfWireSourceDefinition;
+import org.fabric3.binding.ws.cxf.physical.CxfWireTargetDefinition;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.WireAttacher;
 import org.fabric3.spi.builder.component.WireAttacherRegistry;
-import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
-import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Wire attacher for web services.
  *
- * @version $Revision$ $Date$
+ * @version $Revision: 1589 $ $Date: 2007-10-25 23:13:37 +0100 (Thu, 25 Oct 2007) $
  */
 @EagerInit
-public class WsWireAttacher implements WireAttacher<WsWireSourceDefinition, WsWireTargetDefinition> {
+public class CxfWireAttacher implements WireAttacher<CxfWireSourceDefinition, CxfWireTargetDefinition> {
 
     /*
          Force initialization of CXF's StAXUtil class using our classloader (which should also be the TCCL).
@@ -54,7 +49,7 @@ public class WsWireAttacher implements WireAttacher<WsWireSourceDefinition, WsWi
     static {
 
         ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-        ClassLoader cl = WsWireAttacher.class.getClassLoader();
+        ClassLoader cl = CxfWireAttacher.class.getClassLoader();
         try {
             Thread.currentThread().setContextClassLoader(cl);
             Class.forName("org.apache.cxf.tools.util.StAXUtil", true, cl);
@@ -76,17 +71,17 @@ public class WsWireAttacher implements WireAttacher<WsWireSourceDefinition, WsWi
      * @param classLoaderRegistry  the classloader registry
      * @param cxfService           the CXF service
      */
-    public WsWireAttacher(@Reference WireAttacherRegistry wireAttacherRegistry,
+    public CxfWireAttacher(@Reference WireAttacherRegistry wireAttacherRegistry,
                           @Reference ClassLoaderRegistry classLoaderRegistry,
                           @Reference CXFService cxfService) {
         this.classLoaderRegistry = classLoaderRegistry;
         this.cxfService = cxfService;
-        wireAttacherRegistry.register(WsWireSourceDefinition.class, this);
-        wireAttacherRegistry.register(WsWireTargetDefinition.class, this);
+        wireAttacherRegistry.register(CxfWireSourceDefinition.class, this);
+        wireAttacherRegistry.register(CxfWireTargetDefinition.class, this);
     }
 
 
-    public void attachToSource(WsWireSourceDefinition sourceDefinition,
+    public void attachToSource(CxfWireSourceDefinition sourceDefinition,
                                PhysicalWireTargetDefinition targetDefinition,
                                Wire wire) throws WiringException {
 
@@ -112,7 +107,7 @@ public class WsWireAttacher implements WireAttacher<WsWireSourceDefinition, WsWi
     }
 
     public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition,
-                               WsWireTargetDefinition targetDefinition,
+                               CxfWireTargetDefinition targetDefinition,
                                Wire wire) throws WiringException {
 
         Thread currentThread = Thread.currentThread();

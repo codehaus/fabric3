@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.binding.ws.wire;
+package org.fabric3.binding.ws.cxf.wire;
 
 import java.lang.reflect.Method;
 
@@ -26,9 +26,9 @@ import org.fabric3.spi.wire.MessageImpl;
 import org.osoa.sca.ServiceUnavailableException;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Revision: 1589 $ $Date: 2007-10-25 23:13:37 +0100 (Thu, 25 Oct 2007) $
  */
-public class WsTargetInterceptor implements Interceptor {
+public class CxfTargetInterceptor implements Interceptor {
 
     /**
      * Next interceptor in the chain.
@@ -51,7 +51,7 @@ public class WsTargetInterceptor implements Interceptor {
      * @param method Target method.
      * @param proxy Proxy to the target.
      */
-    public WsTargetInterceptor(Method method, Object proxy) {
+    public CxfTargetInterceptor(Method method, Object proxy) {
         this.method = method;
         this.proxy = proxy;
     }

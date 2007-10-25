@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.binding.ws.wire;
+package org.fabric3.binding.ws.cxf.wire;
 
 import org.fabric3.spi.builder.WiringException;
 

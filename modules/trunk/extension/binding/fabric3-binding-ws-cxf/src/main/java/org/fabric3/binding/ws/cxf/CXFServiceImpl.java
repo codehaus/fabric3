@@ -43,7 +43,7 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.binding.ws.wire.WsTargetInterceptor;
+import org.fabric3.binding.ws.cxf.wire.CxfTargetInterceptor;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.spi.host.ServletHost;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
@@ -129,7 +129,7 @@ public class CXFServiceImpl implements CXFService {
                 PhysicalOperationDefinition op = entry.getKey();
                 InvocationChain chain = entry.getValue();
                 if (method.getName().equals(op.getName())) {
-                    chain.addInterceptor(new WsTargetInterceptor(method, proxy));
+                    chain.addInterceptor(new CxfTargetInterceptor(method, proxy));
                 }
             }
         }

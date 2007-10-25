@@ -25,6 +25,7 @@ import org.fabric3.spi.builder.WiringException;
  *
  * @version $Rev$ $Date$
  */
+@SuppressWarnings("serial")
 public class TargetBindException extends WiringException {
     public TargetBindException(Throwable cause) {
         super(cause);

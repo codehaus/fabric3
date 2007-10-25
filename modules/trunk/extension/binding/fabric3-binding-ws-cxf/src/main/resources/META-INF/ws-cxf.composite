@@ -25,8 +25,8 @@
         This must come first as it is responsible for initializing CXF's StAXUtil class
         which caches the XMLInputFactory implementation from the TCCL.
     -->
-    <component name="WsWireAttacher">
-        <system:implementation.system class="org.fabric3.binding.ws.wire.WsWireAttacher"/>
+    <component name="CxfWireAttacher">
+        <system:implementation.system class="org.fabric3.binding.ws.cxf.wire.CxfWireAttacher"/>
         <!--<property name="contextPath">/services/*</property>-->
     </component>
 
@@ -37,7 +37,7 @@
 
     <!-- Ws Binding Generator -->
     <component name="CxfDelegate" f3:key="cxf">
-        <system:implementation.system class="org.fabric3.binding.ws.model.physical.CxfBindingGenerator"/>
+        <system:implementation.system class="org.fabric3.binding.ws.cxf.physical.CxfBindingGeneratorDelegate"/>
     </component>
 
     <!-- Feature -->
