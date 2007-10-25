@@ -30,8 +30,15 @@ import org.fabric3.scdl.BindingDefinition;
  */
 public class WsBindingDefinition extends BindingDefinition {
     
-    public WsBindingDefinition(URI targetUri) {
+    private final String implementation;
+    
+    public WsBindingDefinition(URI targetUri, String implementation) {
         super(targetUri, WsBindingLoader.BINDING_QNAME);
+        this.implementation = implementation;
+    }
+    
+    public String getImplementation() {
+        return implementation;
     }
 
 }

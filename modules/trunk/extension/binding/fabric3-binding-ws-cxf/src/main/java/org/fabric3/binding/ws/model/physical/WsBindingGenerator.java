@@ -18,69 +18,70 @@
  */
 package org.fabric3.binding.ws.model.physical;
 
-import java.util.Map;
+import java.net.URI;
 import java.util.Set;
 
 import org.fabric3.binding.ws.model.logical.WsBindingDefinition;
-import org.fabric3.extension.generator.BindingGeneratorExtension;
 import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.spi.generator.BindingGeneratorDelegate;
+import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
+import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.spi.model.instance.LogicalBinding;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 /**
- * Implementation of the WS binding generator.
+ * Implementation of the hessian binding generator.
  *
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class WsBindingGenerator extends BindingGeneratorExtension<PhysicalWireSourceDefinition, PhysicalWireTargetDefinition, WsBindingDefinition> {
-    
-    private Map<String, BindingGeneratorDelegate<WsBindingDefinition>> delegates;
-    
-    @Reference
-    public void setDelegates(Map<String, BindingGeneratorDelegate<WsBindingDefinition>> delegates) {
-        this.delegates = delegates;
+public class WsBindingGenerator implements BindingGeneratorDelegate<WsBindingDefinition> {
+    private ClassLoaderGenerator classLoaderGenerator;
+
+    public WsBindingGenerator(@Reference ClassLoaderGenerator classLoaderGenerator) {
+        this.classLoaderGenerator = classLoaderGenerator;
     }
-    
-    public PhysicalWireSourceDefinition generateWireSource(LogicalBinding<WsBindingDefinition> logicalBinding,
+
+    public WsWireSourceDefinition generateWireSource(LogicalBinding<WsBindingDefinition> logicalBinding,
                                                      Set<Intent> intentsToBeProvided,
                                                      GeneratorContext generatorContext,
                                                      ServiceDefinition serviceDefinition) throws GenerationException {
-        
-        String implementation = logicalBinding.getBinding().getImplementation();
-        BindingGeneratorDelegate<WsBindingDefinition> delegate = delegates.get(implementation);
-        
-        return delegate.generateWireSource(logicalBinding, intentsToBeProvided, generatorContext, serviceDefinition);
-    
+        WsWireSourceDefinition hwsd = new WsWireSourceDefinition();
+        hwsd.setUri(logicalBinding.getBinding().getTargetUri());
+        ServiceContract<?> contract = serviceDefinition.getServiceContract();
+        if (!(JavaServiceContract.class.isInstance(contract))) {
+            throw new UnsupportedOperationException("Temporarily unsupported: interfaces must be Java types");
+        }
+        hwsd.setServiceInterface((JavaServiceContract.class.cast(contract).getInterfaceClass()));
+        URI classloader = classLoaderGenerator.generate(logicalBinding, generatorContext);
+        hwsd.setClassloaderURI(classloader);
+        return hwsd;
+
     }
 
-    public PhysicalWireTargetDefinition generateWireTarget(LogicalBinding<WsBindingDefinition> logicalBinding,
+    public WsWireTargetDefinition generateWireTarget(LogicalBinding<WsBindingDefinition> logicalBinding,
                                                      Set<Intent> intentsToBeProvided,
                                                      GeneratorContext generatorContext,
                                                      ReferenceDefinition referenceDefinition)
             throws GenerationException {
-        
-        String implementation = logicalBinding.getBinding().getImplementation();
-        BindingGeneratorDelegate<WsBindingDefinition> delegate = delegates.get(implementation);
-        
-        return delegate.generateWireTarget(logicalBinding, intentsToBeProvided, generatorContext, referenceDefinition);
-    
-    }
 
-    /**
-     * @see org.fabric3.extension.generator.BindingGeneratorExtension#getBindingDefinitionClass()
-     */
-    @Override
-    protected Class<WsBindingDefinition> getBindingDefinitionClass() {
-        return WsBindingDefinition.class;
+        WsWireTargetDefinition hwtd = new WsWireTargetDefinition();
+        hwtd.setUri(logicalBinding.getBinding().getTargetUri());
+        ServiceContract<?> contract = referenceDefinition.getServiceContract();
+        if (!(JavaServiceContract.class.isInstance(contract))) {
+            throw new UnsupportedOperationException("Temporarily unsupported: interfaces must be Java types");
+        }
+        hwtd.setReferenceInterface((JavaServiceContract.class.cast(contract).getInterfaceClass()));
+        URI classloader = classLoaderGenerator.generate(logicalBinding, generatorContext);
+        hwtd.setClassloaderURI(classloader);
+        return hwtd;
+
     }
 
 }

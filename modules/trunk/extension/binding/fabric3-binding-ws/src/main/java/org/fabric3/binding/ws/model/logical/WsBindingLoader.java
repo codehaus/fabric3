@@ -74,10 +74,12 @@ public class WsBindingLoader extends LoaderExtension<WsBindingDefinition> {
         try {
 
             String uri = reader.getAttributeValue(null, "uri");
+            String implementation = reader.getAttributeValue(org.fabric3.spi.Constants.FABRIC3_NS, "impl");
+            
             if(uri == null) {
                 throw new LoaderException("The uri attribute is not specified");
             }
-            bd = new WsBindingDefinition(new URI(uri));
+            bd = new WsBindingDefinition(new URI(uri), implementation);
             
             policyHelper.loadPolicySetsAndIntents(bd, reader);
 

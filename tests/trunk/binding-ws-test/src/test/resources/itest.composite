@@ -21,12 +21,12 @@
 
     <service name="HelloWsService" promote="HelloService">
         <interface.java interface="org.fabric3.sample.hello.HelloService"/>
-        <binding.ws uri="/hello" />
+        <binding.ws uri="/hello" f3:impl="cxf"/>
     </service>
 
     <reference name="HelloWsReference" promote="HelloClient/helloService">
         <interface.java interface="org.fabric3.sample.hello.HelloService"/>
-        <binding.ws uri="http://localhost:8900/services/hello"/>
+        <binding.ws uri="http://localhost:8900/services/hello" f3:impl="cxf"/>
     </reference>
     
     <component name="HelloTest">
