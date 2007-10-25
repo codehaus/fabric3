@@ -6,15 +6,15 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License.    
+ * under the License.
  */
 package org.fabric3.fabric.loader;
 
@@ -34,6 +34,7 @@ import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.loader.UnrecognizedElementException;
 import org.fabric3.scdl.ModelObject;
+import org.fabric3.fabric.services.xstream.ClassLoaderStaxDriver;
 
 /**
  * Verifies the default loader registry
@@ -118,7 +119,8 @@ public class StAXLoaderRegistryImplTestCase extends TestCase {
         ClassLoader cl = getClass().getClassLoader();
         loaderContext = new LoaderContextImpl(cl, null);
         mockMonitor = EasyMock.createMock(LoaderRegistryImpl.Monitor.class);
-        XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance("javax.xml.stream.XMLInputFactory", cl);
+        ClassLoaderStaxDriver staxDriver = new ClassLoaderStaxDriver(cl);
+        XMLInputFactory xmlInputFactory = staxDriver.getInputFactory();
         registry = new LoaderRegistryImpl(mockMonitor, xmlInputFactory);
         Map<QName, StAXElementLoader<?>> map = Collections.emptyMap();
         registry.setLoaders(map);

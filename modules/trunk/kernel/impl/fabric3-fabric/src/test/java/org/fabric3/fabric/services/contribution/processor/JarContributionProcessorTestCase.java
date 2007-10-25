@@ -21,6 +21,7 @@ import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
+import org.fabric3.fabric.services.xstream.ClassLoaderStaxDriver;
 
 /**
  * XCV TODO refactor this testcase as it does not test anything anymore
@@ -58,7 +59,8 @@ public class JarContributionProcessorTestCase extends TestCase {
         classLoaderRegistry = EasyMock.createMock(ClassLoaderRegistry.class);
         EasyMock.expect(classLoaderRegistry.getClassLoader(EasyMock.isA(URI.class))).andReturn(cl);
         EasyMock.replay(classLoaderRegistry);
-        XMLInputFactory xmlFactory = XMLInputFactory.newInstance("javax.xml.stream.XMLInputFactory", cl);
+        ClassLoaderStaxDriver staxDriver = new ClassLoaderStaxDriver(cl);
+        XMLInputFactory xmlFactory = staxDriver.getInputFactory();
         List<URL> urls = new ArrayList<URL>();
         urls.add(location);
         ClasspathProcessorRegistry registry = EasyMock.createMock(ClasspathProcessorRegistry.class);

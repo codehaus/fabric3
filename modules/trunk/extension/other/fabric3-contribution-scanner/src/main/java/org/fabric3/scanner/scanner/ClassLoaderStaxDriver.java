@@ -42,7 +42,13 @@ public class ClassLoaderStaxDriver extends StaxDriver {
 
     public XMLInputFactory getInputFactory() {
         if (inputFactory == null) {
-            inputFactory = XMLInputFactory.newInstance("javax.xml.stream.XMLInputFactory", classLoader);
+            ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+            try {
+                Thread.currentThread().setContextClassLoader(classLoader);
+                inputFactory = XMLInputFactory.newInstance();
+            } finally {
+                Thread.currentThread().setContextClassLoader(oldCl);
+            }            
         }
         return inputFactory;
     }
