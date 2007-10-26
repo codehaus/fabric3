@@ -20,12 +20,13 @@ package org.fabric3.binding.ejb.wire;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.HashMap;
 import java.net.URI;
 
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Remotable;
 
 import org.fabric3.binding.ejb.model.physical.EjbWireSourceDefinition;
 import org.fabric3.binding.ejb.model.physical.EjbWireTargetDefinition;
@@ -33,6 +34,7 @@ import org.fabric3.binding.ejb.transport.Ejb3StatelessTargetInterceptor;
 import org.fabric3.binding.ejb.transport.EjbHomeServiceHandler;
 import org.fabric3.binding.ejb.transport.EjbServiceHandler;
 import org.fabric3.binding.ejb.spi.EjbRegistry;
+import org.fabric3.binding.rmi.wire.WireProxyGenerator;
 import org.fabric3.pojo.instancefactory.Signature;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.WireAttachException;
@@ -45,6 +47,7 @@ import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 import org.fabric3.spi.deployer.CompositeClassLoader;
+
 
 /**
  * Wire attacher for EJB binding.
@@ -83,47 +86,99 @@ public class EjbWireAttacher implements WireAttacher<EjbWireSourceDefinition, Ej
                                Wire wire) throws WiringException {
         
         
-        Class interfaceClass = loadClass(sourceDefinition.getInterfaceName(), sourceDefinition.getClassLoaderURI());
 
-        Map<Method, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops =
-                new HashMap<Method, Map.Entry<PhysicalOperationDefinition, InvocationChain>>();
+
+        Map<Signature, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops =
+                new HashMap<Signature, Map.Entry<PhysicalOperationDefinition, InvocationChain>>();
 
         for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
             Signature signature = new Signature(entry.getKey().getName(), entry.getKey().getParameters());
-            try {
-                ops.put(signature.getMethod(interfaceClass), entry);
-            } catch (ClassNotFoundException cnfe) {
-                throw new WireAttachException("Error attaching EJB binding source",
-                                          sourceDefinition.getUri(), targetDefinition.getUri(), cnfe);
-            } catch (NoSuchMethodException nsme) {
-                throw new WireAttachException("Error attaching EJB binding source",
-                                          sourceDefinition.getUri(), targetDefinition.getUri(), nsme);
-            }
+            ops.put(signature, entry);
         }
 
-        EjbServiceHandler handler = new EjbServiceHandler(wire, ops);
-
-        //TODO: We need to piggy back off of the binding.rmi logic when it's written.  In the meantime, this
-        // will only work for local objects
-        Object proxy = Proxy.newProxyInstance(interfaceClass.getClassLoader(),
-                                              new Class[] {interfaceClass}, handler);
-
-        String homeInterface = sourceDefinition.getBindingDefinition().getHomeInterface();
-        if(homeInterface != null) {
-            EjbHomeServiceHandler homeHandler = new EjbHomeServiceHandler(proxy);
-            Class homeInterfaceClass = loadClass(homeInterface, sourceDefinition.getClassLoaderURI());
-            proxy = Proxy.newProxyInstance(homeInterfaceClass.getClassLoader(),
-                                           new Class[] {homeInterfaceClass}, homeHandler);
+        Object ejbFacade = null;
+        if(sourceDefinition.getBindingDefinition().isEjb3()) {
+            ejbFacade = generateEjb3Facade(sourceDefinition, wire, ops);
+        } else {
+            ejbFacade = generateEjb2Facade(sourceDefinition, wire, ops);
         }
 
         URI uri = sourceDefinition.getBindingDefinition().getTargetUri();
         if (uri != null) {
-            ejbRegistry.registerEjb(uri, proxy);
+            ejbRegistry.registerEjb(uri, ejbFacade);
         }
 
         String ejbLinkName = sourceDefinition.getBindingDefinition().getEjbLink();
         if(ejbLinkName != null) {
-            ejbRegistry.registerEjbLink(ejbLinkName, proxy);
+            ejbRegistry.registerEjbLink(ejbLinkName, ejbFacade);
+        }
+
+    }
+
+    private Object generateEjb3Facade(EjbWireSourceDefinition sourceDefinition, Wire wire, 
+                                      Map<Signature, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops)
+            throws WiringException {
+
+        Class interfaceClass = loadClass(sourceDefinition.getInterfaceName(), sourceDefinition.getClassLoaderURI());
+
+        EjbServiceHandler handler = new EjbServiceHandler(wire, ops);
+
+        Object proxy = Proxy.newProxyInstance(interfaceClass.getClassLoader(),
+                                              new Class[] {interfaceClass}, handler);
+
+        if(interfaceClass.isAnnotationPresent(Remotable.class)) proxy = generateRemoteWrapper(interfaceClass, proxy);
+
+        return proxy;
+    }
+
+    private Object generateEjb2Facade(EjbWireSourceDefinition sourceDefinition, Wire wire,
+                                      Map<Signature, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops)
+            throws WiringException {
+
+        String homeInterface = sourceDefinition.getBindingDefinition().getHomeInterface();
+        if(homeInterface == null) {
+           throw new WiringException("Ejb 2.x bindings on services must specify a home interface name");
+        }
+
+        Class homeInterfaceClass = loadClass(homeInterface, sourceDefinition.getClassLoaderURI());
+
+        // For 2.x beans, the EJBObject interface is not necessarily an interface implemented by the POJO
+        // Rather than using the service interface from the implementation, use the EJBObject interface
+        Class interfaceClass = null;
+        for(Method m : homeInterfaceClass.getMethods()) {
+            if(m.getName().startsWith("create")) {
+                interfaceClass = m.getReturnType();
+                break;
+            }
+        }
+
+        //TODO: we really need an EJB2ServiceHandler to deal with calls to EJBObject
+        EjbServiceHandler handler = new EjbServiceHandler(wire, ops);
+
+        Object proxy = Proxy.newProxyInstance(interfaceClass.getClassLoader(),
+                                              new Class[] {interfaceClass}, handler);
+
+        boolean isRemote = javax.ejb.EJBHome.class.isAssignableFrom(homeInterfaceClass);
+
+        if(isRemote) proxy = generateRemoteWrapper(interfaceClass, proxy);
+
+        EjbHomeServiceHandler homeHandler = new EjbHomeServiceHandler(proxy);
+
+        proxy = Proxy.newProxyInstance(homeInterfaceClass.getClassLoader(),
+                                       new Class[] {homeInterfaceClass}, homeHandler);
+        if(isRemote) proxy = generateRemoteWrapper(homeInterfaceClass, proxy);
+
+        return proxy;
+    }
+
+    private Object generateRemoteWrapper(Class interfaceClass, Object delegate)
+            throws WiringException {
+
+        WireProxyGenerator wpg = WireProxyGenerator.getInstance();
+        try {
+            return wpg.generateRemoteWrapper(interfaceClass, delegate);
+        } catch(Exception e) {
+            throw new WiringException(e);
         }
 
     }

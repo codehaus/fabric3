@@ -28,7 +28,7 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
-/* package */ final class WireProxyGenerator implements Opcodes {
+public final class WireProxyGenerator implements Opcodes {
 
     private static final String PROXY_SUFFIX = "_Fabric3SCAProxy";
 

@@ -53,7 +53,10 @@ public class DefaultEjbRegistry implements EjbRegistry {
 
         try {
 
-            String name = uri.getPath() + '/' + uri.getFragment();
+            String name = uri.getPath();
+            if(uri.getFragment() != null) {
+                name = name + '/' + uri.getFragment();
+            }
 
             InitialContext ic = new InitialContext();
             return ic.lookup(name);
@@ -68,7 +71,11 @@ public class DefaultEjbRegistry implements EjbRegistry {
 
         try {
 
-            String name = uri.getPath() + '/' + uri.getFragment();
+            String name = uri.getPath();
+
+            if(uri.getFragment() != null) {
+                name = name + '/' + uri.getFragment();
+            }
 
             InitialContext ic = new InitialContext();
             ic.bind(name, ejb);

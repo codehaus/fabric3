@@ -30,6 +30,7 @@ import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.spi.wire.MessageImpl;
 import org.fabric3.spi.wire.Wire;
+import org.fabric3.pojo.instancefactory.Signature;
 
 /**
  * @version $Revision: 1 $ $Date: 2007-05-14 10:40:37 -0700 (Mon, 14 May 2007) $
@@ -43,10 +44,10 @@ public class EjbServiceHandler implements InvocationHandler {
     /**
      * Map of op names to operation definitions.
      */
-    private final Map<Method, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops;
+    private final Map<Signature, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops;
 
 
-    public EjbServiceHandler(Wire wire, Map<Method, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops) {
+    public EjbServiceHandler(Wire wire, Map<Signature, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops) {
         this.wire = wire;
         this.ops = ops;
     }
@@ -64,7 +65,8 @@ public class EjbServiceHandler implements InvocationHandler {
           return this.equals(h);
         }
 
-        Interceptor head = ops.get(method).getValue().getHeadInterceptor();
+        Signature signature = new Signature(method);
+        Interceptor head = ops.get(signature).getValue().getHeadInterceptor();
 
         Message input = new MessageImpl(args, false, new SimpleWorkContext(), wire);
 

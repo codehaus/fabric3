@@ -36,7 +36,7 @@ public class EjbHomeServiceHandler implements InvocationHandler {
 
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
-        if(method.getName().equals("create") && args.length == 0)
+        if(method.getName().equals("create") && (args == null || args.length == 0))
             return serviceImpl;
 
         throw new EJBException("The SCA EJB Binding prohibits calls to home interface methods other than create()");
