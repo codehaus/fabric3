@@ -75,4 +75,20 @@ public class DataSourceProxy extends AbstractProxy<DataSource> implements DataSo
         getDelegate().setLoginTimeout(timeout);
     }
 
+    /**
+     * @see javax.sql.DataSource#isWrapperFor(Class<?>)
+     */
+	public boolean isWrapperFor(Class<?> iface) throws SQLException {
+		//return getDelegate().isWrapperFor(iface);
+		throw new UnsupportedOperationException("isWrapperFor not supported");
+	}
+
+	/**
+     * @see javax.sql.DataSource#unwrap(Class<?>
+     */
+	public <T> T unwrap(Class<T> iface) throws SQLException {
+		//return unwrap(iface);
+		throw new UnsupportedOperationException("unwrap not supported");
+	}
+
 }
