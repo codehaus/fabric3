@@ -71,7 +71,7 @@
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-groovy</artifactId>
-                            <version>RELEASE</version>
+                            <version>0.3-SNAPSHOT</version>
                         </dependency>
                     </extensions>
                 </configuration>
