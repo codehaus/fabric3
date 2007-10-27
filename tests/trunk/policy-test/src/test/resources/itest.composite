@@ -16,6 +16,7 @@
  under the License.
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            name="PolicyTestComposite">
     
@@ -27,7 +28,7 @@
 
     <!-- Transactional Service Impl -->
     <component name="TransactionalService">
-        <implementation.java class="org.fabric3.fabric.policy.TransactionalServiceImpl" requires="f3:managedTransaction"/>
+        <implementation.java class="org.fabric3.fabric.policy.TransactionalServiceImpl" requires="sca:managedTransaction"/>
     </component>
     
 </composite>

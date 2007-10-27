@@ -16,6 +16,7 @@
  under the License.
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            name="JpaTestComposite">
     
@@ -26,7 +27,7 @@
     </component>
 
     <!-- Employee Service -->
-    <component name="org.fabric3.jpa.service.EmployeeServiceImpl" requires="f3:managedTransaction">
+    <component name="org.fabric3.jpa.service.EmployeeServiceImpl" requires="sca:managedTransaction">
         <implementation.java class="org.fabric3.jpa.service.EmployeeServiceImpl"/>
     </component>
     

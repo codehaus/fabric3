@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="ASCII"?>
 <definitions 
     xmlns="http://www.osoa.org/xmlns/sca/1.0" 
-    targetNamespace="http://fabric3.org/xmlns/sca/2.0-alpha" 
-    xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha">
+    targetNamespace="http://www.osoa.org/xmlns/sca/1.0">
 
     <!-- Realized by the managedTransactionPolicy -->
     <intent name="managedTransaction" constrains="implementation">
@@ -46,20 +45,5 @@
             Qualifies transactedOneWay to use local transactions.
         </description>
     </intent>
-    
-    <!-- Begins a transaction if one not already in progress and commits it -->
-    <policySet name="managedTransactionPolicy" provides="f3:managedTransaction">
-        <f3:transaction action="BEGIN"/>
-    </policySet> 
-    
-    <!-- Suspends the transaction if one already in progress and resumes it -->
-    <policySet name="suspendsTransactionPolicy" provides="f3:suspendsTransaction">
-        <f3:transaction action="SUSPEND"/>
-    </policySet>
-    
-    <!-- No op -->
-    <policySet name="propagatesTransactionPolicy" provides="f3:propagatesTransaction">
-        <f3:transaction action="PROPOGATE"/>
-    </policySet>
 
 </definitions>

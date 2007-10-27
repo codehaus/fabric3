@@ -29,11 +29,11 @@ import org.fabric3.extension.generator.BindingGeneratorExtension;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.definitions.Intent;
-import org.fabric3.spi.Constants;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.model.instance.LogicalBinding;
+import org.osoa.sca.Constants;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
@@ -48,9 +48,9 @@ import org.osoa.sca.annotations.Reference;
 public class JmsBindingGenerator extends BindingGeneratorExtension<JmsWireSourceDefinition, JmsWireTargetDefinition, JmsBindingDefinition> {
 
     // Transacted one way intent
-    private static final QName TRANSACTED_ONEWAY = new QName(Constants.FABRIC3_NS, "transactedOneWay");
-    private static final QName TRANSACTED_ONEWAY_LOCAL = new QName(Constants.FABRIC3_NS, "transactedOneWay.local");
-    private static final QName TRANSACTED_ONEWAY_GLOBAL = new QName(Constants.FABRIC3_NS, "transactedOneWay.global");
+    private static final QName TRANSACTED_ONEWAY = new QName(Constants.SCA_NS, "transactedOneWay");
+    private static final QName TRANSACTED_ONEWAY_LOCAL = new QName(Constants.SCA_NS, "transactedOneWay.local");
+    private static final QName TRANSACTED_ONEWAY_GLOBAL = new QName(Constants.SCA_NS, "transactedOneWay.global");
     
     /**
      * Classloader generator.

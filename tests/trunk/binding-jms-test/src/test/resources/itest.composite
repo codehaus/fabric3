@@ -16,12 +16,13 @@
  under the License.
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            name="BurlapTestComposite">
 
     <service name="WeatherJmsService" promote="WeatherService">
         <interface.java interface="org.fabric3.binding.jms.test.WeatherService"/>
-        <binding.jms correlationScheme="RequestMsgIDToCorrelID" requires="f3:transactedOneWay.global">
+        <binding.jms correlationScheme="RequestMsgIDToCorrelID" requires="sca:transactedOneWay.global">
             <destination name="serviceQueue" type="queue" create="always"/>
             <connectionFactory name="org.apache.activemq.ActiveMQXAConnectionFactory" create="always">
                 <property name="brokerURL">vm://broker</property>
