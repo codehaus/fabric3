@@ -53,10 +53,8 @@
                 <module>binding-ws-test</module>
                 <module>binding-jms-test</module>
 
-<!--
                 <module>test-db-extension</module>
                 <module>jpa-hibernate-test</module>
--->
             </modules>
         </profile>
     </profiles>
