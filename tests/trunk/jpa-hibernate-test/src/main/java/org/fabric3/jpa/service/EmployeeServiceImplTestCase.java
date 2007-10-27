@@ -40,6 +40,8 @@ public class EmployeeServiceImplTestCase extends TestCase {
         
         assertNotNull(employee);
         assertEquals("Barney Rubble", employee.getName());
+
+        employeeService.removeEmployee(employee.getId());
         
     }
 

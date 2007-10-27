@@ -56,4 +56,18 @@ public class EmployeeServiceImpl implements EmployeeService {
         return emf.createEntityManager().find(Employee.class, id);
     }
 
+    /**
+     * @see org.fabric3.jpa.service.EmployeeService#removedEmployee(java.lang.Long)
+     */
+    public void removeEmployee(Long id)  {
+
+        EntityManager em = emf.createEntityManager();
+
+        Employee employee = em.find(Employee.class, id);
+        em.remove(employee);
+
+        em.flush();
+
+    }
+
 }
