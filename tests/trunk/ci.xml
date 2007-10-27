@@ -42,7 +42,8 @@
                 <module>groovy</module>
                 <module>policy-test</module>
 
-                <module>runtime-development</module>
+                <!--Comment out runtime-development as we can't find javac on the CI server-->
+                <!--<module>runtime-development</module>-->
                 <module>runtime-webapp</module>
                 <module>runtime-tomcat</module>
 
