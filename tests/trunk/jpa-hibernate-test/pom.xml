@@ -49,13 +49,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.codehaus.fabric3.spec</groupId>
-            <artifactId>sca-api-r1.0</artifactId>
-            <version>0.2.1</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>compile</scope>
@@ -78,7 +71,6 @@
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-itest-plugin</artifactId>
                 <configuration>
-                    <systemScdl>file:${basedir}/target/classes/META-INF/testSystem.composite</systemScdl>
                     <contributions>
                         <!-- JPA Core Components -->
                         <dependency>

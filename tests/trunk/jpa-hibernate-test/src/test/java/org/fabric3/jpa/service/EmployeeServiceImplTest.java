@@ -24,7 +24,7 @@ import junit.framework.TestCase;
 /**
  * @version $Revision$ $Date$
  */
-public class EmployeeServiceImplTestCase extends TestCase {
+public class EmployeeServiceImplTest extends TestCase {
     
     private EmployeeService employeeService;
     

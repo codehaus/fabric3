@@ -21,8 +21,8 @@
            name="JpaTestComposite">
     
     <!-- Unit test -->
-    <component name="org.fabric3.jpa.service.EmployeeServiceImplTestCase">
-        <f3:junit class="org.fabric3.jpa.service.EmployeeServiceImplTestCase"/>
+    <component name="org.fabric3.jpa.service.EmployeeServiceImplTest">
+        <f3:junit class="org.fabric3.jpa.service.EmployeeServiceImplTest"/>
         <reference name="employeeService" target="org.fabric3.jpa.service.EmployeeServiceImpl"/>
     </component>
 
