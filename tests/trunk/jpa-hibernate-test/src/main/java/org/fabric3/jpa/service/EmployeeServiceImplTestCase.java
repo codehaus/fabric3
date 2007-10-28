@@ -34,14 +34,17 @@ public class EmployeeServiceImplTestCase extends TestCase {
     }
 
     public void testCreateEmployee() {
+    	
+    	Employee employee = employeeService.findEmployee(123L);
+    	if (employee != null) {
+    		employeeService.removeEmployee(123L);
+    	}
         
-        Employee employee = employeeService.createEmployee(123l, "Barney Rubble");
-        employee = employeeService.findEmployee(123l);
+        employee = employeeService.createEmployee(123l, "Barney Rubble");
+        employee = employeeService.findEmployee(123L);
         
         assertNotNull(employee);
         assertEquals("Barney Rubble", employee.getName());
-
-        employeeService.removeEmployee(employee.getId());
         
     }
 
