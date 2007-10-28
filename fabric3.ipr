@@ -369,6 +369,7 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/plugin/fabric3-webapp-plugin/fabric3-webapp-plugin.iml" filepath="$PROJECT_DIR$/modules/trunk/plugin/fabric3-webapp-plugin/fabric3-webapp-plugin.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/function/function-tests.iml" filepath="$PROJECT_DIR$/tests/trunk/function/function-tests.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/hello-common/hello-common.iml" filepath="$PROJECT_DIR$/tests/trunk/hello-common/hello-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tests/trunk/jpa-hibernate-test/jpa-hibernate-test.iml" filepath="$PROJECT_DIR$/tests/trunk/jpa-hibernate-test/jpa-hibernate-test.iml" />
       <module fileurl="file://$PROJECT_DIR$/parent-pom/trunk/parent-pom.iml" filepath="$PROJECT_DIR$/parent-pom/trunk/parent-pom.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/policy-test/policy-test.iml" filepath="$PROJECT_DIR$/tests/trunk/policy-test/policy-test.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/development/runtime-development/runtime-development.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/development/runtime-development/runtime-development.iml" />
