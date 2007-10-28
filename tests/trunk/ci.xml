@@ -38,23 +38,23 @@
             </activation>
 
             <modules>
-                <module>function</module>
-                <module>groovy</module>
-                <module>policy-test</module>
+                <module>test-function</module>
+                <module>test-groovy</module>
+                <module>test-policy</module>
 
                 <!--Comment out runtime-development as we can't find javac on the CI server-->
-                <!--<module>runtime-development</module>-->
-                <module>runtime-webapp</module>
-                <module>runtime-tomcat</module>
+                <!--<module>test-runtime-development</module>-->
+                <module>test-runtime-jetty</module>
+                <module>test-runtime-tomcat</module>
 
-                <module>hello-common</module>
-                <module>binding-burlap-test</module>
-                <module>binding-hessian-test</module>
-                <module>binding-ws-test</module>
-                <module>binding-jms-test</module>
+                <module>test-hello-common</module>
+                <module>test-binding-burlap</module>
+                <module>test-binding-hessian</module>
+                <module>test-binding-ws</module>
+                <module>test-binding-jms</module>
 
                 <module>test-db-extension</module>
-                <module>jpa-hibernate-test</module>
+                <module>test-jpa-hibernate</module>
             </modules>
         </profile>
     </profiles>
