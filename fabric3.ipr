@@ -377,6 +377,7 @@
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/runtime-tomcat/runtime-tomcat.iml" filepath="$PROJECT_DIR$/tests/trunk/runtime-tomcat/runtime-tomcat.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/runtime-webapp/runtime-webapp.iml" filepath="$PROJECT_DIR$/tests/trunk/runtime-webapp/runtime-webapp.iml" />
       <module fileurl="file://$PROJECT_DIR$/spec/trunk/sca-spec.iml" filepath="$PROJECT_DIR$/spec/trunk/sca-spec.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-db-extension/test-db-extension.iml" filepath="$PROJECT_DIR$/tests/trunk/test-db-extension/test-db-extension.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/groovy/test-groovy.iml" filepath="$PROJECT_DIR$/tests/trunk/groovy/test-groovy.iml" />
     </modules>
   </component>
