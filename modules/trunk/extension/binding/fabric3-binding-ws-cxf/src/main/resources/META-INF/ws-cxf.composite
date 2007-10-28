@@ -41,6 +41,6 @@
     </component>
 
     <!-- Feature -->
-    <system:feature name="WsBindingFeature">{http://fabric3.org/xmlns/binding}ws-cxf</system:feature>
+    <system:feature name="WsCxfBindingFeature">{http://fabric3.org/xmlns/binding}ws-cxf</system:feature>
 
 </composite>

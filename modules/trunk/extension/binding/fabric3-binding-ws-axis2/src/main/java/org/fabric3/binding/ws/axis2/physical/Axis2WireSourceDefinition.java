@@ -16,11 +16,44 @@
  */
 package org.fabric3.binding.ws.axis2.physical;
 
+import java.net.URI;
+
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 
 /**
  * @version $Revision$ $Date$
  */
 public class Axis2WireSourceDefinition extends PhysicalWireSourceDefinition {
+
+    private String serviceInterface;
+    private URI classloaderURI;
+
+    /**
+     * @return Service interface for the wire source.
+     */
+    public String getServiceInterface() {
+        return serviceInterface;
+    }
+
+    /**
+     * @param serviceInterface Service interface for the wire source.
+     */
+    public void setServiceInterface(String serviceInterface) {
+        this.serviceInterface = serviceInterface;
+    }
+
+    /**
+     * @return Classloader URI.
+     */
+    public URI getClassloaderURI() {
+        return classloaderURI;
+    }
+
+    /**
+     * @param classloaderURI Classloader URI.
+     */
+    public void setClassloaderURI(URI classloaderURI) {
+        this.classloaderURI = classloaderURI;
+    }
 
 }

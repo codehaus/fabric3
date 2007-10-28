@@ -16,11 +16,44 @@
  */
 package org.fabric3.binding.ws.axis2.physical;
 
+import java.net.URI;
+
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 
 /**
  * @version $Revision$ $Date$
  */
 public class Axis2WireTargetDefinition extends PhysicalWireTargetDefinition {
+
+    private String referenceInterface;
+    private URI classloaderURI;
+
+    /**
+     * @return Reference interface for the wire target.
+     */
+    public String getReferenceInterface() {
+        return referenceInterface;
+    }
+
+    /**
+     * @param referenceInterface Reference interface for the wire target.
+     */
+    public void setReferenceInterface(String referenceInterface) {
+        this.referenceInterface = referenceInterface;
+    }
+
+    /**
+     * @return Classloader URI.
+     */
+    public URI getClassloaderURI() {
+        return classloaderURI;
+    }
+
+    /**
+     * @param classloaderURI Classloader URI.
+     */
+    public void setClassloaderURI(URI classloaderURI) {
+        this.classloaderURI = classloaderURI;
+    }
 
 }

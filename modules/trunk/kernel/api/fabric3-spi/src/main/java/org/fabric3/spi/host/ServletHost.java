@@ -19,6 +19,7 @@
 package org.fabric3.spi.host;
 
 import javax.servlet.Servlet;
+import javax.servlet.ServletContext;
 
 /**
  * Interface implemented by host environments that allow Servlets to be registered.
@@ -53,6 +54,13 @@ public interface ServletHost {
      * @return true if mapping is registered, false otherwise
      */
     boolean isMappingRegistered(String mapping);
+    
+    /**
+     * Gets the default context used by the servlet host.
+     * 
+     * @return The default context used by the servlet host.
+     */
+    ServletContext getDefaultContext();
         
 
 }

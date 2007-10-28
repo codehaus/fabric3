@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import javax.resource.spi.work.Work;
 import javax.servlet.Servlet;
+import javax.servlet.ServletContext;
 
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;
@@ -251,7 +252,17 @@ public class JettyServiceImpl implements JettyService {
         state = STOPPED;
         monitor.extensionStopped();
     }
+    
+    /**
+     * @see org.fabric3.spi.host.ServletHost#getDefaultContext()
+     */
+    public ServletContext getDefaultContext() {
+        return servletHandler.getServletContext();
+    }
 
+    /**
+     * @see org.fabric3.spi.host.ServletHost#registerMapping(java.lang.String, javax.servlet.Servlet)
+     */
     public void registerMapping(String path, Servlet servlet) {
         ServletHolder holder = new ServletHolder(servlet);
         servletHandler.addServlet(holder);

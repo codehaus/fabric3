@@ -16,29 +16,65 @@
  */
 package org.fabric3.binding.ws.axis2.wire;
 
+import java.net.URI;
+
+import javax.servlet.ServletContext;
+
+import org.apache.axis2.Constants;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
+import org.apache.axis2.deployment.util.Utils;
 import org.apache.axis2.description.AxisService;
+import org.apache.axis2.description.Parameter;
 import org.apache.axis2.transport.http.AxisServlet;
 import org.fabric3.binding.ws.axis2.physical.Axis2WireSourceDefinition;
 import org.fabric3.binding.ws.axis2.physical.Axis2WireTargetDefinition;
+import org.fabric3.binding.ws.axis2.servlet.F3Axis2ServletConfig;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.WireAttacher;
+import org.fabric3.spi.builder.component.WireAttacherRegistry;
 import org.fabric3.spi.host.ServletHost;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.wire.Wire;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Revision$ $Date$
+ * 
+ * TODO Add support for WSDL contract
  */
+@EagerInit
 public class Axis2WireAttacher implements WireAttacher<Axis2WireSourceDefinition, Axis2WireTargetDefinition> {
     
     private ServletHost servletHost;
+    private ClassLoaderRegistry classLoaderRegistry;
+    private WireAttacherRegistry wireAttacherRegistry;
     
-    public Axis2WireAttacher(@Reference ServletHost servletHost) {
+    /**
+     * Injects servlet host and classloader registry.
+     * 
+     * @param servletHost Servlet host.
+     * @param classLoaderRegistry Classloader registry.
+     */
+    public Axis2WireAttacher(@Reference ServletHost servletHost, 
+                             @Reference ClassLoaderRegistry classLoaderRegistry,
+                             @Reference WireAttacherRegistry wireAttacherRegistry) {
         this.servletHost = servletHost;
+        this.classLoaderRegistry = classLoaderRegistry;
+        this.wireAttacherRegistry = wireAttacherRegistry;
+    }
+    
+    /**
+     * Registers with the wire attacher registry.
+     */
+    @Init
+    public void start() {
+        wireAttacherRegistry.register(Axis2WireSourceDefinition.class, this);
+        wireAttacherRegistry.register(Axis2WireTargetDefinition.class, this);
     }
 
     /**
@@ -52,24 +88,43 @@ public class Axis2WireAttacher implements WireAttacher<Axis2WireSourceDefinition
         try {
             
             String uri = source.getUri().getPath();
+            URI classLoaderUri = source.getClassloaderURI();
+            String serviceClass = source.getServiceInterface();
+            
+            ClassLoader classLoader = classLoaderRegistry.getClassLoader(classLoaderUri);
             
             AxisService axisService = new AxisService();
+            
             axisService.setName(uri);
+            axisService.setDocumentation("Fabric3 enabled axis service");
+            axisService.setClientSide(false);
+            axisService.setClassLoader(classLoader);
+            
+            Parameter interfaceParameter = new Parameter(Constants.SERVICE_CLASS, serviceClass);
+            axisService.addParameter(interfaceParameter);
             
             ConfigurationContext context = ConfigurationContextFactory.createDefaultConfigurationContext();
+            
+            Utils.fillAxisService(axisService, context.getAxisConfiguration(), null, null);
+            
             context.getAxisConfiguration().addService(axisService);
             
             AxisServlet axisServlet = new AxisServlet();
-            axisServlet.init();
+            
+            final ServletContext servletContext = servletHost.getDefaultContext();
+            servletContext.setAttribute("CONFIGURATION_CONTEXT", context);
             
             context.setContextRoot(uri);
+            axisServlet.init(new F3Axis2ServletConfig(servletContext));
+            
             servletHost.registerMapping(uri, axisServlet);
+            
+            //while(true) {
+            //}
             
         } catch (Exception e) {
             throw new WiringException(e);
         }
-        
-        // TODO Auto-generated method stub
         
     }
 
@@ -81,7 +136,6 @@ public class Axis2WireAttacher implements WireAttacher<Axis2WireSourceDefinition
     public void attachToTarget(PhysicalWireSourceDefinition source, Axis2WireTargetDefinition target, Wire wire)
             throws WiringException {
         // TODO Auto-generated method stub
-        
     }
 
 }

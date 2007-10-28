@@ -16,21 +16,34 @@
  */
 package org.fabric3.binding.ws.axis2.physical;
 
+import java.net.URI;
 import java.util.Set;
 
 import org.fabric3.binding.ws.model.logical.WsBindingDefinition;
 import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.spi.generator.BindingGeneratorDelegate;
+import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
+import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.spi.model.instance.LogicalBinding;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Revision$ $Date$
+ * 
+ * TODO Add support for WSDL Contract
  */
 public class Axis2BindingGeneratorDelegate implements BindingGeneratorDelegate<WsBindingDefinition> {
+    
+    private ClassLoaderGenerator classLoaderGenerator;
+
+    public Axis2BindingGeneratorDelegate(@Reference ClassLoaderGenerator classLoaderGenerator) {
+        this.classLoaderGenerator = classLoaderGenerator;
+    }
 
     /**
      * @see org.fabric3.spi.generator.BindingGeneratorDelegate#generateWireSource(org.fabric3.spi.model.instance.LogicalBinding, 
@@ -42,8 +55,21 @@ public class Axis2BindingGeneratorDelegate implements BindingGeneratorDelegate<W
                                                            Set<Intent> intentsToBeProvided, 
                                                            GeneratorContext context, 
                                                            ServiceDefinition serviceDefinition) throws GenerationException {
-        // TODO Auto-generated method stub
-        return null;
+        
+        Axis2WireSourceDefinition hwsd = new Axis2WireSourceDefinition();
+        hwsd.setUri(binding.getBinding().getTargetUri());
+        
+        ServiceContract<?> contract = serviceDefinition.getServiceContract();
+        if (!(JavaServiceContract.class.isInstance(contract))) {
+            throw new UnsupportedOperationException("Temporarily unsupported: interfaces must be Java types");
+        }
+        hwsd.setServiceInterface((JavaServiceContract.class.cast(contract).getInterfaceClass()));
+        
+        URI classloader = classLoaderGenerator.generate(binding, context);
+        hwsd.setClassloaderURI(classloader);
+        
+        return hwsd;
+        
     }
 
     /**
@@ -56,8 +82,21 @@ public class Axis2BindingGeneratorDelegate implements BindingGeneratorDelegate<W
                                                         Set<Intent> intentsToBeProvided, 
                                                         GeneratorContext context, 
                                                         ReferenceDefinition referenceDefinition) throws GenerationException {
-        // TODO Auto-generated method stub
-        return null;
+
+        Axis2WireTargetDefinition hwtd = new Axis2WireTargetDefinition();
+        hwtd.setUri(binding.getBinding().getTargetUri());
+        
+        ServiceContract<?> contract = referenceDefinition.getServiceContract();
+        if (!(JavaServiceContract.class.isInstance(contract))) {
+            throw new UnsupportedOperationException("Temporarily unsupported: interfaces must be Java types");
+        }
+        hwtd.setReferenceInterface((JavaServiceContract.class.cast(contract).getInterfaceClass()));
+        
+        URI classloader = classLoaderGenerator.generate(binding, context);
+        hwtd.setClassloaderURI(classloader);
+        
+        return hwtd;
+
     }
 
 }
