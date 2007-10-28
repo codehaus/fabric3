@@ -22,8 +22,8 @@
         <artifactId>fabric</artifactId>
         <version>2</version>
     </parent>
-    <groupId>org.codehaus.fabric3</groupId>
-    <artifactId>binding-hessian-test</artifactId>
+    <groupId>org.codehaus.fabric3.tests</groupId>
+    <artifactId>test-binding-hessian</artifactId>
     <version>0.1-SNAPSHOT</version>
     <name>Fabric3 Hessian Binding Test</name>
     <packaging>jar</packaging>
@@ -43,8 +43,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>sample-hello-common</artifactId>
+            <groupId>org.codehaus.fabric3.tests</groupId>
+            <artifactId>test-hello-common</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
 

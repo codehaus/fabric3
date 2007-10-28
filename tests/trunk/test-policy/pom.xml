@@ -25,8 +25,8 @@
         <version>2</version>
     </parent>
 
-    <groupId>org.codehaus.fabric3</groupId>
-    <artifactId>policy-test</artifactId>
+    <groupId>org.codehaus.fabric3.tests</groupId>
+    <artifactId>test-policy</artifactId>
     <version>0.1-SNAPSHOT</version>
     <name>Fabric3 Policy Test</name>
     <packaging>jar</packaging>
@@ -45,13 +45,6 @@
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
             <version>0.2</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.codehaus.fabric3.spec</groupId>
-            <artifactId>sca-api-r1.0</artifactId>
-            <version>0.2.1</version>
             <scope>compile</scope>
         </dependency>
 

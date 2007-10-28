@@ -314,11 +314,7 @@
   <component name="ProjectFileVersion" converted="true" />
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/tests/trunk/binding-burlap-test/binding-burlap-test.iml" filepath="$PROJECT_DIR$/tests/trunk/binding-burlap-test/binding-burlap-test.iml" />
-      <module fileurl="file://$PROJECT_DIR$/tests/trunk/binding-hessian-test/binding-hessian-test.iml" filepath="$PROJECT_DIR$/tests/trunk/binding-hessian-test/binding-hessian-test.iml" />
-      <module fileurl="file://$PROJECT_DIR$/tests/trunk/binding-jms-test/binding-jms-test.iml" filepath="$PROJECT_DIR$/tests/trunk/binding-jms-test/binding-jms-test.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/binding-test-harness/binding-test-harness.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/binding-test-harness/binding-test-harness.iml" />
-      <module fileurl="file://$PROJECT_DIR$/tests/trunk/binding-ws-test/binding-ws-test.iml" filepath="$PROJECT_DIR$/tests/trunk/binding-ws-test/binding-ws-test.iml" />
       <module fileurl="file://$PROJECT_DIR$/fabric-pom/trunk/fabric-pom.iml" filepath="$PROJECT_DIR$/fabric-pom/trunk/fabric-pom.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-api/fabric3-api.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-api/fabric3-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-burlap/fabric3-binding-burlap.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-burlap/fabric3-binding-burlap.iml" />
@@ -367,18 +363,23 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/webapp/fabric3-webapp-api/fabric3-webapp-api.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/webapp/fabric3-webapp-api/fabric3-webapp-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/webapp/fabric3-webapp-host/fabric3-webapp-host.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/webapp/fabric3-webapp-host/fabric3-webapp-host.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/plugin/fabric3-webapp-plugin/fabric3-webapp-plugin.iml" filepath="$PROJECT_DIR$/modules/trunk/plugin/fabric3-webapp-plugin/fabric3-webapp-plugin.iml" />
-      <module fileurl="file://$PROJECT_DIR$/tests/trunk/function/function-tests.iml" filepath="$PROJECT_DIR$/tests/trunk/function/function-tests.iml" />
-      <module fileurl="file://$PROJECT_DIR$/tests/trunk/hello-common/hello-common.iml" filepath="$PROJECT_DIR$/tests/trunk/hello-common/hello-common.iml" />
-      <module fileurl="file://$PROJECT_DIR$/tests/trunk/jpa-hibernate-test/jpa-hibernate-test.iml" filepath="$PROJECT_DIR$/tests/trunk/jpa-hibernate-test/jpa-hibernate-test.iml" />
       <module fileurl="file://$PROJECT_DIR$/parent-pom/trunk/parent-pom.iml" filepath="$PROJECT_DIR$/parent-pom/trunk/parent-pom.iml" />
-      <module fileurl="file://$PROJECT_DIR$/tests/trunk/policy-test/policy-test.iml" filepath="$PROJECT_DIR$/tests/trunk/policy-test/policy-test.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/development/runtime-development/runtime-development.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/development/runtime-development/runtime-development.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/standalone/runtime-standalone/runtime-standalone.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/standalone/runtime-standalone/runtime-standalone.iml" />
-      <module fileurl="file://$PROJECT_DIR$/tests/trunk/runtime-tomcat/runtime-tomcat.iml" filepath="$PROJECT_DIR$/tests/trunk/runtime-tomcat/runtime-tomcat.iml" />
-      <module fileurl="file://$PROJECT_DIR$/tests/trunk/runtime-webapp/runtime-webapp.iml" filepath="$PROJECT_DIR$/tests/trunk/runtime-webapp/runtime-webapp.iml" />
       <module fileurl="file://$PROJECT_DIR$/spec/trunk/sca-spec.iml" filepath="$PROJECT_DIR$/spec/trunk/sca-spec.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-burlap/test-binding-burlap.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-burlap/test-binding-burlap.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-hessian/test-binding-hessian.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-hessian/test-binding-hessian.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-jms/test-binding-jms.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-jms/test-binding-jms.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-ws/test-binding-ws.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-ws/test-binding-ws.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-db-extension/test-db-extension.iml" filepath="$PROJECT_DIR$/tests/trunk/test-db-extension/test-db-extension.iml" />
-      <module fileurl="file://$PROJECT_DIR$/tests/trunk/groovy/test-groovy.iml" filepath="$PROJECT_DIR$/tests/trunk/groovy/test-groovy.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-function/test-function.iml" filepath="$PROJECT_DIR$/tests/trunk/test-function/test-function.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-groovy/test-groovy.iml" filepath="$PROJECT_DIR$/tests/trunk/test-groovy/test-groovy.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-hello-common/test-hello-common.iml" filepath="$PROJECT_DIR$/tests/trunk/test-hello-common/test-hello-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-jpa-hibernate/test-jpa-hibernate.iml" filepath="$PROJECT_DIR$/tests/trunk/test-jpa-hibernate/test-jpa-hibernate.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-policy/test-policy.iml" filepath="$PROJECT_DIR$/tests/trunk/test-policy/test-policy.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-runtime-development/test-runtime-development.iml" filepath="$PROJECT_DIR$/tests/trunk/test-runtime-development/test-runtime-development.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-runtime-jetty/test-runtime-jetty.iml" filepath="$PROJECT_DIR$/tests/trunk/test-runtime-jetty/test-runtime-jetty.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-runtime-tomcat/test-runtime-tomcat.iml" filepath="$PROJECT_DIR$/tests/trunk/test-runtime-tomcat/test-runtime-tomcat.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.5" project-jdk-type="JavaSDK" />

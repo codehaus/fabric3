@@ -23,7 +23,7 @@
         <version>4</version>
     </parent>
     <groupId>org.codehaus.fabric3.tests</groupId>
-    <artifactId>tests-runtime-development</artifactId>
+    <artifactId>test-runtime-development</artifactId>
     <version>0.2-SNAPSHOT</version>
     <packaging>pom</packaging>
     

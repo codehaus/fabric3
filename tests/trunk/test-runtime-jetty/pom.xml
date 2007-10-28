@@ -23,7 +23,7 @@
         <version>3</version>
     </parent>
     <groupId>org.codehaus.fabric3.tests</groupId>
-    <artifactId>runtime-webapp</artifactId>
+    <artifactId>test-runtime-jetty</artifactId>
     <version>0.1-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>Fabric3 Webapp Runtime Smoketest</name>
