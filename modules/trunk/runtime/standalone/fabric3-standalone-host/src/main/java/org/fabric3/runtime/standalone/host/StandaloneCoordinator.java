@@ -28,10 +28,10 @@ import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
 import org.fabric3.extension.component.SimpleWorkContext;
-import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.DEFINITIONS_DEPLOYER;
 import static org.fabric3.fabric.runtime.ComponentNames.DISCOVERY_SERVICE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
@@ -49,10 +49,13 @@ import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.host.runtime.StartException;
 import org.fabric3.runtime.standalone.StandaloneRuntime;
 import org.fabric3.scdl.Scope;
+import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.services.definitions.DefinitionActivationException;
+import org.fabric3.spi.services.definitions.DefinitionsDeployer;
 import org.fabric3.spi.services.discovery.DiscoveryException;
 import org.fabric3.spi.services.discovery.DiscoveryService;
 import org.fabric3.spi.services.work.WorkScheduler;
@@ -64,6 +67,7 @@ import org.fabric3.spi.services.work.WorkScheduler;
  */
 public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<StandaloneRuntime, Bootstrapper> {
     private static final String EXTENSIONS = "extensions";
+    private static final String INTENTS_FILE = "intents.xml";
 
     private enum State {
         UNINITIALIZED,
@@ -133,6 +137,7 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
                 state = State.ERROR;
                 throw new InitializationException("WorkScheduler not found", WORK_SCHEDULER_URI.toString());
             }
+            activateIntents();
             includeExtensions();
             state = State.INITIALIZED;
         } catch (InitializationException e) {
@@ -247,6 +252,36 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
         FutureTask<Void> task = new FutureTask<Void>(callable);
         scheduler.scheduleWork(task);
         return task;
+    }
+
+    /**
+     * Contributes and activates baseline intents as defined by the intents.xml in the active profile directory. If an
+     * intents.xml file is not found, the method returns.
+     *
+     * @throws InitializationException if an error occurs activating the intents
+     */
+    private void activateIntents() throws InitializationException {
+        File dir = runtime.getHostInfo().getProfileDirectory();
+        try {
+            File file = new File(dir, INTENTS_FILE);
+            if (!file.exists()) {
+                return;
+            }
+            ContributionService contributionService = runtime.getSystemComponent(ContributionService.class,
+                                                                                 CONTRIBUTION_SERVICE_URI);
+            ContributionSource source = new FileContributionSource(file.toURI().toURL(), -1, new byte[0]);
+            URI uri = contributionService.contribute("DefaultStore", source);
+            DefinitionsDeployer deployer = runtime.getSystemComponent(DefinitionsDeployer.class, DEFINITIONS_DEPLOYER);
+            List<URI> intents = new ArrayList<URI>();
+            intents.add(uri);
+            deployer.activateDefinitions(intents);
+        } catch (MalformedURLException e) {
+            throw new InitializationException(e);
+        } catch (ContributionException e) {
+            throw new InitializationException(e);
+        } catch (DefinitionActivationException e) {
+            throw new InitializationException(e);
+        }
     }
 
     /**
