@@ -16,12 +16,27 @@
  */
 package org.fabric3.binding.ws.axis2.servlet;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.axis2.AxisFault;
+import org.apache.axis2.Constants;
 import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.context.MessageContext;
+import org.apache.axis2.engine.Handler.InvocationResponse;
+import org.apache.axis2.transport.RequestResponseTransport;
+import org.apache.axis2.transport.TransportUtils;
 import org.apache.axis2.transport.http.AxisServlet;
+import org.apache.axis2.transport.http.HTTPConstants;
+import org.apache.axis2.transport.http.HTTPTransportUtils;
 
 /**
  * @version $Revision$ $Date$
@@ -52,5 +67,77 @@ public class F3AxisServlet extends AxisServlet {
         super.init(config);
         
     }
+    
+
+
+    /**
+     * Implementaion of POST interface
+     *
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
+    /*protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        //set the initial buffer for a larger value
+        response.setBufferSize(1024 * 8);
+
+        initContextRoot(request);
+
+        MessageContext msgContext;
+        OutputStream out = response.getOutputStream();
+        String contentType = request.getContentType();
+        if (!HTTPTransportUtils.isRESTRequest(contentType)) {
+            msgContext = createMessageContext(request, response);
+            msgContext.setProperty(Constants.Configuration.CONTENT_TYPE, contentType);
+            try {
+                // adding ServletContext into msgContext;
+                InvocationResponse pi = HTTPTransportUtils.
+                        processHTTPPostRequest(msgContext,
+                                new BufferedInputStream(request.getInputStream()),
+                                new BufferedOutputStream(out),
+                                contentType,
+                                request.getHeader(HTTPConstants.HEADER_SOAP_ACTION),
+                                request.getRequestURL().toString());
+
+                Boolean holdResponse =
+                        (Boolean) msgContext.getProperty(RequestResponseTransport.HOLD_RESPONSE);
+
+                if (pi.equals(InvocationResponse.SUSPEND) ||
+                        (holdResponse != null && Boolean.TRUE.equals(holdResponse))) {
+                    ((RequestResponseTransport) msgContext
+                            .getProperty(RequestResponseTransport.TRANSPORT_CONTROL))
+                            .awaitResponse();
+                }
+                response.setContentType("text/xml; charset="
+                        + msgContext
+                        .getProperty(Constants.Configuration.CHARACTER_SET_ENCODING));
+                // if data has not been sent back and this is not a signal response
+                if (!TransportUtils.isResponseWritten(msgContext)  
+                        && (((RequestResponseTransport) 
+                                msgContext.getProperty(
+                                        RequestResponseTransport.TRANSPORT_CONTROL)).
+                                        getStatus() != RequestResponseTransport.
+                                        RequestResponseTransportStatus.SIGNALLED)) {
+                    response.setStatus(HttpServletResponse.SC_ACCEPTED);
+                }
+
+            } catch (AxisFault e) {
+                e.printStackTrace();
+            } catch (Throwable t) {
+                t.printStackTrace();
+            } finally {
+                TransportUtils.deleteAttachments(msgContext);
+            }
+        } else {
+            if (!disableREST) {
+                new RestRequestProcessor(Constants.Configuration.HTTP_METHOD_POST, request, response)
+                        .processXMLRequest();
+            } else {
+                showRestDisabledErrorMessage(response);
+            }
+        }
+    }*/
 
 }

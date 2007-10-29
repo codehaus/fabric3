@@ -19,6 +19,7 @@
 
 package org.fabric3.binding.ws.axis2;
 
+import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.receivers.AbstractInOutMessageReceiver;
@@ -64,14 +65,15 @@ public class ServiceProxyHandler extends AbstractInOutMessageReceiver {
     public void invokeBusinessLogic(MessageContext inMessage, MessageContext outMessage) throws AxisFault {
         
         String methodName = inMessage.getOperationContext().getOperationName();
-        System.err.println(methodName + " called");
         
         Interceptor head = invocationChain.getHeadInterceptor();
-        MessageContext[] params = new MessageContext[] {inMessage, outMessage};
-        Message input = new MessageImpl(params, false, new SimpleWorkContext(), wire);
+        OMElement omElement = inMessage.getEnvelope().getFirstElement();
+        Message input = new MessageImpl(new Object[] {omElement}, false, new SimpleWorkContext(), wire);
         
-        // TODO Curerntly Axis services are expected to have operations that accept in and out contexts
-        head.invoke(input);
+        Message ret = head.invoke(input);
+        OMElement output = (OMElement) input.getBody();
+        
+        // TODO Add the output to the out context
         
     }
 
