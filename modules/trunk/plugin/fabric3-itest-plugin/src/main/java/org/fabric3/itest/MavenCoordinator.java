@@ -53,6 +53,7 @@ import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.services.archive.ArchiveStore;
 import org.fabric3.spi.services.archive.ArchiveStoreException;
+import org.fabric3.spi.services.contribution.ContributionConstants;
 import org.fabric3.spi.services.definitions.DefinitionActivationException;
 import org.fabric3.spi.services.definitions.DefinitionsDeployer;
 
@@ -81,6 +82,7 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
     private MavenEmbeddedRuntime runtime;
     private Bootstrapper bootstrapper;
     private String definitionsFile;
+    private URL intentsLocation;
     private ClassLoader cl;
 
     public MavenCoordinator() {
@@ -88,11 +90,13 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
 
     /**
      * @param dependencies    Runtime extensions to run in the test.
+     * @param intentsLocation the default intents file location or null
      * @param definitionsFile Definitions file.
      * @param cl              the classloader to use for loading extensions
      */
-    public MavenCoordinator(Dependency[] dependencies, String definitionsFile, ClassLoader cl) {
+    public MavenCoordinator(Dependency[] dependencies, URL intentsLocation, String definitionsFile, ClassLoader cl) {
         this.dependencies = dependencies;
+        this.intentsLocation = intentsLocation;
         this.definitionsFile = definitionsFile;
         this.cl = cl;
     }
@@ -142,6 +146,7 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
                 runtime.getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
 
         try {
+            activateIntents();
             includeExtensions(contributionService);
         } catch (DefinitionActivationException e) {
             throw new InitializationException(e);
@@ -202,6 +207,26 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
         runtime.destroy();
         state = State.SHUTDOWN;
         return new SyncFuture();
+    }
+
+    private void activateIntents() throws InitializationException {
+        try {
+            if (intentsLocation == null) {
+                return;
+            }
+            ContributionService contributionService = runtime.getSystemComponent(ContributionService.class,
+                                                                                 CONTRIBUTION_SERVICE_URI);
+            ContributionSource source = new FileContributionSource(intentsLocation, -1, new byte[0]);
+            URI uri = contributionService.contribute(ContributionConstants.DEFAULT_STORE, source);
+            DefinitionsDeployer deployer = runtime.getSystemComponent(DefinitionsDeployer.class, DEFINITIONS_DEPLOYER);
+            List<URI> intents = new ArrayList<URI>();
+            intents.add(uri);
+            deployer.activateDefinitions(intents);
+        } catch (ContributionException e) {
+            throw new InitializationException(e);
+        } catch (DefinitionActivationException e) {
+            throw new InitializationException(e);
+        }
     }
 
     private void includeExtensions(ContributionService contributionService)

@@ -151,6 +151,13 @@ public class Fabric3ITestMojo extends AbstractMojo {
     public URL systemScdl;
 
     /**
+     * The location of the default intents file for the Fabric3 runtime.
+     *
+     * @parameter
+     */
+    public URL intentsLocation;
+
+    /**
      * Set of extension artifacts that should be deployed to the runtime.
      *
      * @parameter
@@ -245,6 +252,9 @@ public class Fabric3ITestMojo extends AbstractMojo {
         if (systemScdl == null) {
             systemScdl = cl.getResource("META-INF/fabric3/embeddedMaven.composite");
         }
+        if (intentsLocation == null) {
+            intentsLocation = cl.getResource("META-INF/fabric3/intents.xml");
+        }
 
         log.info("Starting Embedded Fabric3 Runtime ...");
         MavenEmbeddedRuntime runtime = createRuntime(cl);
@@ -255,7 +265,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
         try {
             ScdlBootstrapper bootstrapper = new ScdlBootstrapperImpl();
             bootstrapper.setScdlLocation(systemScdl);
-            coordinator = new MavenCoordinator(contributions, definitionsFile, testClassLoader);
+            coordinator = new MavenCoordinator(contributions, intentsLocation, definitionsFile, testClassLoader);
             coordinator.bootPrimordial(runtime, bootstrapper, cl, testClassLoader);
             coordinator.initialize();
             Future<Void> future = coordinator.joinDomain(-1);
