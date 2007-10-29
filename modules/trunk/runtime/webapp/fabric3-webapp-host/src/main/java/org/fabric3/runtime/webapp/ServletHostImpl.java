@@ -101,8 +101,4 @@ public class ServletHostImpl implements ServletHost, ServletRequestInjector {
         return servlets.remove(path);
     }
 
-    public ServletContext getDefaultContext() {
-        return null;
-    }
-
 }

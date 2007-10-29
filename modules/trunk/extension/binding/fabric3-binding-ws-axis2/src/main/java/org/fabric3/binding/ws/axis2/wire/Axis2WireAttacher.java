@@ -30,6 +30,7 @@ import org.apache.axis2.transport.http.AxisServlet;
 import org.fabric3.binding.ws.axis2.physical.Axis2WireSourceDefinition;
 import org.fabric3.binding.ws.axis2.physical.Axis2WireTargetDefinition;
 import org.fabric3.binding.ws.axis2.servlet.F3Axis2ServletConfig;
+import org.fabric3.binding.ws.axis2.servlet.F3AxisServlet;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.WireAttacher;
 import org.fabric3.spi.builder.component.WireAttacherRegistry;
@@ -99,28 +100,22 @@ public class Axis2WireAttacher implements WireAttacher<Axis2WireSourceDefinition
             axisService.setDocumentation("Fabric3 enabled axis service");
             axisService.setClientSide(false);
             axisService.setClassLoader(classLoader);
+            axisService.setEndpointURL(uri);
             
             Parameter interfaceParameter = new Parameter(Constants.SERVICE_CLASS, serviceClass);
             axisService.addParameter(interfaceParameter);
             
-            ConfigurationContext context = ConfigurationContextFactory.createDefaultConfigurationContext();
+            ConfigurationContext configurationContext = ConfigurationContextFactory.createDefaultConfigurationContext();
             
-            Utils.fillAxisService(axisService, context.getAxisConfiguration(), null, null);
+            Utils.fillAxisService(axisService, configurationContext.getAxisConfiguration(), null, null);
             
-            context.getAxisConfiguration().addService(axisService);
+            configurationContext.getAxisConfiguration().addService(axisService);
             
-            AxisServlet axisServlet = new AxisServlet();
+            AxisServlet axisServlet = new F3AxisServlet(configurationContext);
             
-            final ServletContext servletContext = servletHost.getDefaultContext();
-            servletContext.setAttribute("CONFIGURATION_CONTEXT", context);
-            
-            context.setContextRoot(uri);
-            axisServlet.init(new F3Axis2ServletConfig(servletContext));
+            configurationContext.setContextRoot("/");
             
             servletHost.registerMapping(uri, axisServlet);
-            
-            //while(true) {
-            //}
             
         } catch (Exception e) {
             throw new WiringException(e);
