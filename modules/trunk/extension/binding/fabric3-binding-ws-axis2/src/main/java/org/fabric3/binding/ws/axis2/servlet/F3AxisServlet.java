@@ -16,13 +16,9 @@
  */
 package org.fabric3.binding.ws.axis2.servlet;
 
-import java.io.IOException;
-
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.transport.http.AxisServlet;
@@ -32,15 +28,6 @@ import org.apache.axis2.transport.http.AxisServlet;
  */
 @SuppressWarnings("serial")
 public class F3AxisServlet extends AxisServlet {
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-            IOException {
-        // TODO Auto-generated method stub
-        super.doPost(request, response);
-    }
-
-    private final ConfigurationContext configurationContext;
     
     /**
      * Initializes the Axis configuration context.
@@ -48,7 +35,7 @@ public class F3AxisServlet extends AxisServlet {
      * @param configurationContext Axis configuration context.
      */
     public F3AxisServlet(final ConfigurationContext configurationContext) {
-        this.configurationContext = configurationContext;
+        this.configContext = configurationContext;
     }
     
     /**
@@ -60,7 +47,7 @@ public class F3AxisServlet extends AxisServlet {
     public void init(ServletConfig config) throws ServletException {
         
         ServletContext servletContext = config.getServletContext();
-        servletContext.setAttribute(AxisServlet.CONFIGURATION_CONTEXT, configurationContext);
+        servletContext.setAttribute(AxisServlet.CONFIGURATION_CONTEXT, configContext);
 
         super.init(config);
         

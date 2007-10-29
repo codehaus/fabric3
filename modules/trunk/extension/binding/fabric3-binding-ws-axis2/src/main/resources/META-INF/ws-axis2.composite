@@ -21,12 +21,18 @@
            targetNamespace="org.codehaus.fabric3"
            name="Axis2WebServicesBindingExtension">
 
+    <!-- Axis wire attacher -->
     <component name="Axis2WireAttacher">
         <system:implementation.system class="org.fabric3.binding.ws.axis2.wire.Axis2WireAttacher"/>
         <!--<property name="contextPath">/services/*</property>-->
     </component>
+    
+    <!-- Axis service provisioner -->
+    <component name="Axis2ServiceProvisioner">
+        <system:implementation.system class="org.fabric3.binding.ws.axis2.Axis2ServiceProvisionerImpl"/>
+    </component>
 
-    <!-- Ws Binding Generator -->
+    <!-- Axis Binding Generator -->
     <component name="Axis2Delegate" f3:key="axis2">
         <system:implementation.system class="org.fabric3.binding.ws.axis2.physical.Axis2BindingGeneratorDelegate"/>
     </component>
