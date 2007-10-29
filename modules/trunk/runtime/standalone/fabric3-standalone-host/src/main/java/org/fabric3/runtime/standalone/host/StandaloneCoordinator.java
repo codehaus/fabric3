@@ -54,6 +54,7 @@ import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.services.contribution.ContributionConstants;
 import org.fabric3.spi.services.definitions.DefinitionActivationException;
 import org.fabric3.spi.services.definitions.DefinitionsDeployer;
 import org.fabric3.spi.services.discovery.DiscoveryException;
@@ -270,7 +271,7 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
             ContributionService contributionService = runtime.getSystemComponent(ContributionService.class,
                                                                                  CONTRIBUTION_SERVICE_URI);
             ContributionSource source = new FileContributionSource(file.toURI().toURL(), -1, new byte[0]);
-            URI uri = contributionService.contribute("DefaultStore", source);
+            URI uri = contributionService.contribute(ContributionConstants.DEFAULT_STORE, source);
             DefinitionsDeployer deployer = runtime.getSystemComponent(DefinitionsDeployer.class, DEFINITIONS_DEPLOYER);
             List<URI> intents = new ArrayList<URI>();
             intents.add(uri);
