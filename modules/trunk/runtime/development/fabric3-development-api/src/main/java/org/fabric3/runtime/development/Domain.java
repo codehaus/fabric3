@@ -1,3 +1,19 @@
+/*
+ * See the NOTICE file distributed with this work for information
+ * regarding copyright ownership.  This file is licensed
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.fabric3.runtime.development;
 
 import java.io.File;
@@ -60,14 +76,20 @@ import org.fabric3.runtime.development.host.DevelopmentRuntime;
 public class Domain {
     public static final String FABRIC3_DEV_HOME = "fabric3.dev.home";
     public static final String SYSTEM_SCDL = "/system/system.composite";
+    public static final String DEFAULT_INTENTS = "/system/intents.xml";
     public static final URI DOMAIN_URI = URI.create("fabric3://./domain");
 
     private DevelopmentRuntime runtime;
     private RuntimeLifecycleCoordinator<DevelopmentRuntime, Bootstrapper> coordinator;
     private String extensionsDirectory;
+    private URL intentsLocation;
 
     public void setExtensionsDirectory(String extensionsDirectory) {
         this.extensionsDirectory = extensionsDirectory;
+    }
+
+    public void setIntentsLocation(URL url) {
+        this.intentsLocation = url;
     }
 
     public void activate(URL compositeFile) {
@@ -150,7 +172,13 @@ public class Domain {
             } else {
                 dir = new File(extensionsDirectory);
             }
-            runtime.setHostInfo(new DevelopmentHostInfoImpl(DOMAIN_URI, baseDirUrl, dir));
+            if (intentsLocation == null) {
+                File intents = new File(baseDir, DEFAULT_INTENTS);
+                if (intents.exists()) {
+                    intentsLocation = intents.toURI().toURL();
+                }
+            }
+            runtime.setHostInfo(new DevelopmentHostInfoImpl(DOMAIN_URI, baseDirUrl, dir, intentsLocation));
             runtime.setHostClassLoader(cl);
             Class<?> coordinatorClass =
                     cl.loadClass("org.fabric3.runtime.development.host.DevelopmentCoordinator");

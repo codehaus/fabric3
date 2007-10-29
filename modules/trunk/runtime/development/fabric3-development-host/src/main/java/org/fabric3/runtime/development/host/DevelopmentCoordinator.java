@@ -21,6 +21,7 @@ import java.io.FileFilter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -29,10 +30,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import org.fabric3.extension.component.SimpleWorkContext;
-import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.DEFINITIONS_DEPLOYER;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
 import org.fabric3.fabric.runtime.ExtensionInitializationException;
@@ -46,10 +47,14 @@ import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.host.runtime.StartException;
 import org.fabric3.scdl.Scope;
+import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.services.contribution.ContributionConstants;
+import org.fabric3.spi.services.definitions.DefinitionActivationException;
+import org.fabric3.spi.services.definitions.DefinitionsDeployer;
 
 /**
  * Implementation of a coordinator for the development runtime.
@@ -113,6 +118,7 @@ public class DevelopmentCoordinator implements RuntimeLifecycleCoordinator<Devel
             throw new IllegalStateException("Not in PRIMORDIAL state");
         }
         bootstrapper.bootSystem(runtime);
+        activateIntents();
         includeExtensions();
         state = State.INITIALIZED;
     }
@@ -168,6 +174,27 @@ public class DevelopmentCoordinator implements RuntimeLifecycleCoordinator<Devel
         runtime.destroy();
         state = State.SHUTDOWN;
         return new SyncFuture();
+    }
+
+    private void activateIntents() throws InitializationException {
+        try {
+            URL intentsUrl = runtime.getHostInfo().getIntentsLocation();
+            if (intentsUrl == null) {
+                return;
+            }
+            ContributionService contributionService = runtime.getSystemComponent(ContributionService.class,
+                                                                                 CONTRIBUTION_SERVICE_URI);
+            ContributionSource source = new FileContributionSource(intentsUrl, -1, new byte[0]);
+            URI uri = contributionService.contribute(ContributionConstants.DEFAULT_STORE, source);
+            DefinitionsDeployer deployer = runtime.getSystemComponent(DefinitionsDeployer.class, DEFINITIONS_DEPLOYER);
+            List<URI> intents = new ArrayList<URI>();
+            intents.add(uri);
+            deployer.activateDefinitions(intents);
+        } catch (ContributionException e) {
+            throw new InitializationException(e);
+        } catch (DefinitionActivationException e) {
+            throw new InitializationException(e);
+        }
     }
 
     /**
