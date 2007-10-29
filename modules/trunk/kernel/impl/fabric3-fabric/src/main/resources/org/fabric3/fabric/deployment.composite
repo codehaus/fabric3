@@ -65,6 +65,14 @@
         <reference name="metaDataStore" target="MetadataStore"/>
     </component>
 
+    <component name="XmlContributionProcessor">
+        <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.XmlContributionProcessor"/>
+    </component>
+
+    <component name="DefinitionsProcessor">
+        <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.DefinitionsProcessor"/>
+        <reference name="loader" target="loader.definitions"/>
+    </component>
 
     <component name="ContributionElementLoader">
         <system:implementation.system
@@ -91,5 +99,5 @@
                 class="org.fabric3.fabric.services.contribution.manifest.JavaImportLoader"/>
     </component>
 
- 
+
 </composite>
