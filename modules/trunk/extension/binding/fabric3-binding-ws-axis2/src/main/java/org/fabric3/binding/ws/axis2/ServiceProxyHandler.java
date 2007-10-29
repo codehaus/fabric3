@@ -67,10 +67,11 @@ public class ServiceProxyHandler extends AbstractInOutMessageReceiver {
         System.err.println(methodName + " called");
         
         Interceptor head = invocationChain.getHeadInterceptor();
-        Message input = new MessageImpl(inMessage, false, new SimpleWorkContext(), wire);
-        head.invoke(input);
+        MessageContext[] params = new MessageContext[] {inMessage, outMessage};
+        Message input = new MessageImpl(params, false, new SimpleWorkContext(), wire);
         
-        // TODO Handle return
+        // TODO Curerntly Axis services are expected to have operations that accept in and out contexts
+        head.invoke(input);
         
     }
 
