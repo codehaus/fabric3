@@ -16,7 +16,7 @@ import org.fabric3.spi.builder.WiringException;
  * Created by IntelliJ IDEA. User: mshinn Date: Jul 5, 2007 Time: 3:11:40 PM To change this template use File | Settings
  * | File Templates.
  */
-public class EjbReferenceFactory {
+public class EjbResolver {
 
     //TODO improve error messages.  eg. jndiName might not be set.
     
@@ -30,21 +30,30 @@ public class EjbReferenceFactory {
     private Object cachedReference = null;
 
 
-    public EjbReferenceFactory(EjbWireTargetDefinition wireTarget, EjbRegistry ejbRegistry) {
+    public EjbResolver(EjbWireTargetDefinition wireTarget, EjbRegistry ejbRegistry)
+            throws WiringException {
+
         EjbBindingDefinition bindingDefinition = wireTarget.getBindingDefinition();
         uri = bindingDefinition.getTargetUri();
         ejbLink = bindingDefinition.getEjbLink();
         homeInterfaceName = bindingDefinition.getHomeInterface();
         interfaceName = wireTarget.getInterfaceName();
         this.ejbRegistry = ejbRegistry;
+
+        if(uri == null && ejbLink == null) {
+            throw new WiringException("Ejb bindings must specify either an ejbLink or a JNDI name");
+        }
+
     }
 
-    public Object getEjbReference() {
+    public Object resolveStatelessEjb() {
         if(cachedReference != null) return cachedReference;
 
         Object ejb = resolveEjb();
-        
-        if(homeInterfaceName != null) {
+
+        if(javax.ejb.EJBHome.class.isAssignableFrom(ejb.getClass()) ||
+                javax.ejb.EJBLocalHome.class.isAssignableFrom(ejb.getClass())) {
+
             try {
                 Method method = ejb.getClass().getMethod("create", null);
                 ejb = method.invoke(ejb, null);
@@ -62,17 +71,31 @@ public class EjbReferenceFactory {
         return ejb;
     }
 
-    private Object resolveEjb() {
+    public Object resolveStatefulEjb() {
+        if(cachedReference != null) return cachedReference;
 
-        if(uri == null && ejbLink == null) {
-            //TODO: This should be a deployment time check
-            throw new ServiceRuntimeException("Ejb bindings must specify either an ejbLink or a JNDI name");
+        Object ejb = resolveEjb();
+
+        if(javax.ejb.EJBHome.class.isAssignableFrom(ejb.getClass()) ||
+                javax.ejb.EJBLocalHome.class.isAssignableFrom(ejb.getClass())) {
+            // it's safe to cache SFSB home objects
+            cachedReference = ejb;
         }
+
+        return ejb;
+    }
+
+    private Object resolveEjb() {
 
         try {
             if(uri != null) {
                 return ejbRegistry.resolveEjb(uri);
             } else {
+                //TODO: we need a new strategy here because the homeInterface need not be specified for
+                //references.  Also, it wouldn't work because the interface declared by the reference
+                //doesn't need to be the same interface implemented by the EJB.  Rather than expecting
+                //the interface names to match, we need to simply ensure the EJB interface contains a
+                //superset of methods on the reference interface.
                 String ifaceName = homeInterfaceName != null ? homeInterfaceName : interfaceName;
                 return ejbRegistry.resolveEjbLink(ejbLink, ifaceName);
             }

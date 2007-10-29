@@ -37,7 +37,6 @@ import org.fabric3.binding.ejb.spi.EjbRegistry;
 import org.fabric3.binding.rmi.wire.WireProxyGenerator;
 import org.fabric3.pojo.instancefactory.Signature;
 import org.fabric3.spi.builder.WiringException;
-import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.builder.component.WireAttacher;
 import org.fabric3.spi.builder.component.WireAttacherRegistry;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
@@ -191,11 +190,12 @@ public class EjbWireAttacher implements WireAttacher<EjbWireSourceDefinition, Ej
     public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition,
                                EjbWireTargetDefinition targetDefinition,
                                Wire wire) throws WiringException {
-        EjbReferenceFactory referenceFactory = new EjbReferenceFactory(targetDefinition, ejbRegistry);
+        EjbResolver resolver = new EjbResolver(targetDefinition, ejbRegistry);
         for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
             PhysicalOperationDefinition op = entry.getKey();
+            Signature signature = new Signature(op.getName(), op.getParameters());
             Ejb3StatelessTargetInterceptor eti =
-                    new Ejb3StatelessTargetInterceptor(op.getName(), referenceFactory);
+                    new Ejb3StatelessTargetInterceptor(signature, resolver);
             InvocationChain chain = entry.getValue();
             chain.addInterceptor(eti);
         }

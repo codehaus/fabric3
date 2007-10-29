@@ -20,7 +20,8 @@ package org.fabric3.binding.ejb.transport;
 
 import java.lang.reflect.Method;
 
-import org.fabric3.binding.ejb.wire.EjbReferenceFactory;
+import org.fabric3.binding.ejb.wire.EjbResolver;
+import org.fabric3.pojo.instancefactory.Signature;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.Message;
 
@@ -29,8 +30,8 @@ import org.fabric3.spi.wire.Message;
  */
 public abstract class BaseEjbTargetInterceptor implements Interceptor {
 
-    protected final EjbReferenceFactory referenceFactory;
-    protected final String methodName;
+    protected final EjbResolver resolver;
+    protected final Signature signature;
     protected Method method = null;
 
     /**
@@ -39,9 +40,9 @@ public abstract class BaseEjbTargetInterceptor implements Interceptor {
     private Interceptor next;
 
     
-    public BaseEjbTargetInterceptor(String methodName, EjbReferenceFactory referenceFactory) {
-        this.methodName = methodName;
-        this.referenceFactory = referenceFactory;
+    public BaseEjbTargetInterceptor(Signature signature, EjbResolver resolver) {
+        this.signature = signature;
+        this.resolver = resolver;
     }
 
     /**

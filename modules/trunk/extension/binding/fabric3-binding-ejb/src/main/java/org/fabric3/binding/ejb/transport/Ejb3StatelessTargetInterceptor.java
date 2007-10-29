@@ -22,7 +22,8 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.osoa.sca.ServiceRuntimeException;
 
-import org.fabric3.binding.ejb.wire.EjbReferenceFactory;
+import org.fabric3.binding.ejb.wire.EjbResolver;
+import org.fabric3.pojo.instancefactory.Signature;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.spi.wire.MessageImpl;
 
@@ -36,30 +37,27 @@ public class Ejb3StatelessTargetInterceptor extends BaseEjbTargetInterceptor {
     /**
      * Initializes the reference URL.
      */
-    public Ejb3StatelessTargetInterceptor(String methodName, EjbReferenceFactory referenceFactory) {
-        super(methodName, referenceFactory);
+    public Ejb3StatelessTargetInterceptor(Signature signature, EjbResolver resolver) {
+        super(signature, resolver);
     }
 
     /**
      * @see org.fabric3.spi.wire.Interceptor#invoke(org.fabric3.spi.wire.Message)
      */
     public Message invoke(Message message) {
-        Object slsb = referenceFactory.getEjbReference();
+        Object slsb = resolver.resolveStatelessEjb();
 
         Object[] parameters = (Object[]) message.getBody();
 
         if(method == null) {
-            Class iface = slsb.getClass();
-            Class[] parameterTypes = new Class[parameters.length];
-            for(int i=0; i<parameters.length; i++) {
-                parameterTypes[i] = parameters[i].getClass();
-            }
 
             try {
-                method = iface.getMethod(methodName, parameterTypes);
+                method = signature.getMethod(slsb.getClass());
+            } catch(ClassNotFoundException cnfe) {
+                throw new ServiceRuntimeException(cnfe);
             } catch(NoSuchMethodException nsme) {
-                //TODO Give them a better error message 
-                throw new ServiceRuntimeException("The method "+methodName+
+                //TODO Give better error message
+                throw new ServiceRuntimeException("The method "+signature+
                         " did not match any methods on the interface of the Target");
             }
 
