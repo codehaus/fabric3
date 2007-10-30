@@ -35,7 +35,7 @@ import org.fabric3.spi.wire.Wire;
  *
  * @version $Revision: 1589 $ $Date: 2007-10-25 23:13:37 +0100 (Thu, 25 Oct 2007) $
  */
-public class ServiceProxyHandler extends AbstractInOutMessageReceiver {
+public class InOutServiceProxyHandler extends AbstractInOutMessageReceiver {
 
     /**
      * Wire attached to the servlet.
@@ -50,7 +50,7 @@ public class ServiceProxyHandler extends AbstractInOutMessageReceiver {
     /**
      * @param wire Wire which is proxied.
      */
-    public ServiceProxyHandler(Wire wire, InvocationChain invocationChain) {
+    public InOutServiceProxyHandler(Wire wire, InvocationChain invocationChain) {
         
         this.wire = wire;
         this.invocationChain = invocationChain;
@@ -64,14 +64,13 @@ public class ServiceProxyHandler extends AbstractInOutMessageReceiver {
     @Override
     public void invokeBusinessLogic(MessageContext inMessage, MessageContext outMessage) throws AxisFault {
         
-        String methodName = inMessage.getOperationContext().getOperationName();
-        
         Interceptor head = invocationChain.getHeadInterceptor();
-        OMElement omElement = inMessage.getEnvelope().getFirstElement();
+        OMElement omElement = inMessage.getEnvelope();
         Message input = new MessageImpl(new Object[] {omElement}, false, new SimpleWorkContext(), wire);
         
         Message ret = head.invoke(input);
         OMElement output = (OMElement) input.getBody();
+        
         
         // TODO Add the output to the out context
         

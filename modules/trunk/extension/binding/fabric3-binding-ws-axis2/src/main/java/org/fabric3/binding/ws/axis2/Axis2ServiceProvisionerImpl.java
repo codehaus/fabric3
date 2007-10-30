@@ -143,7 +143,7 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
         for (Iterator<?> i = axisService.getOperations(); i.hasNext();) {
             AxisOperation axisOp = (AxisOperation) i.next();
             InvocationChain invocationChain = interceptors.get(axisOp.getName().getLocalPart());
-            axisOp.setMessageReceiver(new ServiceProxyHandler(wire, invocationChain));
+            axisOp.setMessageReceiver(new InOutServiceProxyHandler(wire, invocationChain));
         }
         
     }
