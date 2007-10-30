@@ -80,7 +80,7 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
     
     /**
      * Initializes the servlet mapping.
-     * @throws Exception 
+     * @throws Exception If unable to create configuration context.
      */
     @Init
     public void start() throws Exception {
