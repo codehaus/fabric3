@@ -20,9 +20,16 @@
 package org.fabric3.binding.ws.axis2;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMNamespace;
+import org.apache.axiom.soap.SOAPEnvelope;
+import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.MessageContext;
+import org.apache.axis2.description.AxisMessage;
+import org.apache.axis2.description.AxisOperation;
+import org.apache.axis2.description.AxisService;
 import org.apache.axis2.receivers.AbstractInOutMessageReceiver;
+import org.apache.axis2.wsdl.WSDLConstants;
 import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
@@ -64,15 +71,37 @@ public class InOutServiceProxyHandler extends AbstractInOutMessageReceiver {
     @Override
     public void invokeBusinessLogic(MessageContext inMessage, MessageContext outMessage) throws AxisFault {
         
+        AxisOperation op = inMessage.getOperationContext().getAxisOperation();
+        AxisService service = inMessage.getAxisService();
+        
         Interceptor head = invocationChain.getHeadInterceptor();
         OMElement omElement = inMessage.getEnvelope();
         Message input = new MessageImpl(new Object[] {omElement}, false, new SimpleWorkContext(), wire);
         
         Message ret = head.invoke(input);
-        OMElement output = (OMElement) input.getBody();
+        OMElement resObject = (OMElement) ret.getBody();
         
+        SOAPFactory fac = getSOAPFactory(inMessage);
         
-        // TODO Add the output to the out context
+        // Handling the response
+        AxisMessage outaxisMessage = op.getMessage(WSDLConstants.MESSAGE_LABEL_OUT_VALUE);
+        String messageNameSpace = null;
+        if (outaxisMessage != null && outaxisMessage.getElementQName() !=null) {
+            messageNameSpace = outaxisMessage.getElementQName().getNamespaceURI();
+        } else {
+            messageNameSpace = service.getTargetNamespace();
+        }
+        
+        String partName = outMessage.getAxisMessage().getPartName();
+
+        OMNamespace ns = fac.createOMNamespace(messageNameSpace, service.getSchemaTargetNamespacePrefix());
+        SOAPEnvelope envelope = fac.getDefaultEnvelope();
+        OMElement bodyContent = fac.createOMElement(partName, ns);
+        
+        bodyContent.addChild(resObject);
+        envelope.getBody().addChild(bodyContent);
+        
+        outMessage.setEnvelope(envelope);
         
     }
 
