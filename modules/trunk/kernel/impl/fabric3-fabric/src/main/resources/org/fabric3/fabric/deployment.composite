@@ -52,7 +52,7 @@
         <reference name="metaDataStore" target="MetadataStore"/>
     </component>
 
-    <component name="XmlContributionProcessor">
+    <component name="XmlResourceProcessor">
         <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.XmlResourceProcessor"/>
     </component>
 
