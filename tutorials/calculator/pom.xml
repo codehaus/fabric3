@@ -50,8 +50,8 @@
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3.development</groupId>
-            <artifactId>development-api</artifactId>
-            <version>0.1</version>
+            <artifactId>fabric3-development-api</artifactId>
+            <version>0.3-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -101,7 +101,7 @@
                                 <dependency>
                                     <groupId>org.codehaus.fabric3</groupId>
                                     <artifactId>fabric3-binding-hessian</artifactId>
-                                    <version>0.2</version>
+                                    <version>0.3-SNAPSHOT</version>
                                 </dependency>
                             </contributions>
                         </configuration>

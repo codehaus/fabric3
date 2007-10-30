@@ -39,7 +39,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3.webapp</groupId>
             <artifactId>fabric3-webapp-api</artifactId>
-            <version>0.2</version>
+            <version>0.3-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -58,24 +58,6 @@
             <artifactId>activation</artifactId>
             <version>1.1</version>
         </dependency>
-        <!--
-        Dependencies for JMS using ActiveMQ
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-binding-jms</artifactId>
-            <version>0.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.activemq</groupId>
-            <artifactId>activemq-core</artifactId>
-            <version>4.1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.derby</groupId>
-            <artifactId>derby</artifactId>
-            <version>10.2.2.0</version>
-        </dependency> -->
-
     </dependencies>
 
     <build>

@@ -58,7 +58,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3.webapp</groupId>
             <artifactId>fabric3-webapp-api</artifactId>
-            <version>0.2</version>
+            <version>0.3-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -99,16 +99,16 @@
                     <runTimeVersion>0.3-SNAPSHOT</runTimeVersion>
                     <extensions>
                         <!--  Hessian extension  -->
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-binding-hessian</artifactId>
-                            <version>0.3-SNAPSHOT</version>
-                        </dependency>
+                        <!--<dependency>-->
+                            <!--<groupId>org.codehaus.fabric3</groupId>-->
+                            <!--<artifactId>fabric3-binding-hessian</artifactId>-->
+                            <!--<version>0.3-SNAPSHOT</version>-->
+                        <!--</dependency>-->
                         <!--  Web services extension
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-binding-ws</artifactId>
-                            <version>0.2</version>
+                            <version>0.3-SNAPSHOT</version>
                         </dependency>   -->
 
                     </extensions>
