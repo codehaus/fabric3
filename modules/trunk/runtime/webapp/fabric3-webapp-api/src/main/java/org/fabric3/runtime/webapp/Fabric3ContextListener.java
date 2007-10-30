@@ -66,7 +66,7 @@ public class Fabric3ContextListener implements ServletContextListener {
         ClassLoader webappClassLoader = Thread.currentThread().getContextClassLoader();
         ServletContext servletContext = event.getServletContext();
         WebappUtil utils = getUtils(servletContext);
-        WebappRuntime runtime = null;
+        WebappRuntime runtime;
         try {
             // FIXME work this out from the servlet context
             URI domain = new URI(utils.getInitParameter(DOMAIN_PARAM, "fabric3://./domain"));
@@ -80,11 +80,14 @@ public class Fabric3ContextListener implements ServletContextListener {
             }
 
             boolean online = Boolean.valueOf(utils.getInitParameter(ONLINE_PARAM, "true"));
+            ClassLoader bootClassLoader = utils.getBootClassLoader(webappClassLoader);
+            URL intentsLocation = utils.getIntentsLocation(bootClassLoader);
+            URL baseDir = servletContext.getResource("/WEB-INF/fabric3/");
             WebappHostInfo info = new WebappHostInfoImpl(servletContext,
                                                          domain,
-                                                         servletContext.getResource("/WEB-INF/fabric3/"),
+                                                         baseDir,
+                                                         intentsLocation,
                                                          online);
-            ClassLoader bootClassLoader = utils.getBootClassLoader(webappClassLoader);
             URL systemScdl = utils.getSystemScdl(bootClassLoader);
 
             runtime = utils.getRuntime(bootClassLoader);

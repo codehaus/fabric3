@@ -50,9 +50,11 @@ public interface WebappUtil {
 
     URL getSystemScdl(ClassLoader bootClassLoader) throws InvalidResourcePath;
 
+    URL getIntentsLocation(ClassLoader bootClassLoader) throws InvalidResourcePath;
+
     URL getApplicationScdl(ClassLoader bootClassLoader) throws InvalidResourcePath;
 
-    URL getScdlURL(String path, ClassLoader classLoader) throws MalformedURLException;
+    URL convertToURL(String path, ClassLoader classLoader) throws MalformedURLException;
 
     /**
      * Return a init parameter from the servlet context or provide a default.

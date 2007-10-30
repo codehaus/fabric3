@@ -39,6 +39,8 @@ import static org.fabric3.runtime.webapp.Constants.RUNTIME_DEFAULT;
 import static org.fabric3.runtime.webapp.Constants.RUNTIME_PARAM;
 import static org.fabric3.runtime.webapp.Constants.SYSTEM_SCDL_PATH_DEFAULT;
 import static org.fabric3.runtime.webapp.Constants.SYSTEM_SCDL_PATH_PARAM;
+import static org.fabric3.runtime.webapp.Constants.INTENTS_PATH_PARAM;
+import static org.fabric3.runtime.webapp.Constants.INTENTS_PATH_DEFAULT;
 
 /**
  * @version $Rev$ $Date$
@@ -113,7 +115,16 @@ public class WebappUtilImpl implements WebappUtil {
     public URL getSystemScdl(ClassLoader bootClassLoader) throws InvalidResourcePath {
         String path = getInitParameter(SYSTEM_SCDL_PATH_PARAM, SYSTEM_SCDL_PATH_DEFAULT);
         try {
-            return getScdlURL(path, bootClassLoader);
+            return convertToURL(path, bootClassLoader);
+        } catch (MalformedURLException e) {
+            throw new InvalidResourcePath(SYSTEM_SCDL_PATH_PARAM, path, e);
+        }
+    }
+
+    public URL getIntentsLocation(ClassLoader bootClassLoader) throws InvalidResourcePath {
+        String path = getInitParameter(INTENTS_PATH_PARAM, INTENTS_PATH_DEFAULT);
+        try {
+            return convertToURL(path, bootClassLoader);
         } catch (MalformedURLException e) {
             throw new InvalidResourcePath(SYSTEM_SCDL_PATH_PARAM, path, e);
         }
@@ -130,13 +141,13 @@ public class WebappUtilImpl implements WebappUtil {
     public URL getApplicationScdl(ClassLoader bootClassLoader) throws InvalidResourcePath {
         String path = getInitParameter(APPLICATION_SCDL_PATH_PARAM, APPLICATION_SCDL_PATH_DEFAULT);
         try {
-            return getScdlURL(path, bootClassLoader);
+            return convertToURL(path, bootClassLoader);
         } catch (MalformedURLException e) {
             throw new InvalidResourcePath(APPLICATION_SCDL_PATH_PARAM, path, e);
         }
     }
 
-    public URL getScdlURL(String path, ClassLoader classLoader) throws MalformedURLException {
+    public URL convertToURL(String path, ClassLoader classLoader) throws MalformedURLException {
         URL ret = null;
         if (path.charAt(0) == '/') {
             // user supplied an absolute path - look up as a webapp resource

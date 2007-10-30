@@ -21,8 +21,6 @@ package org.fabric3.runtime.webapp;
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
-import java.util.Properties;
-
 import javax.servlet.ServletContext;
 
 /**
@@ -32,17 +30,27 @@ public class WebappHostInfoImpl implements WebappHostInfo {
     private final ServletContext servletContext;
     private final URI domain;
     private final URL baseURL;
+    private final URL intentsLocation;
     private final boolean online;
 
-    public WebappHostInfoImpl(ServletContext servletContext, URI domain, URL baseURL, boolean online) {
+    public WebappHostInfoImpl(ServletContext servletContext,
+                              URI domain,
+                              URL baseURL,
+                              URL intentsLocation,
+                              boolean online) {
         this.servletContext = servletContext;
         this.domain = domain;
         this.baseURL = baseURL;
+        this.intentsLocation = intentsLocation;
         this.online = online;
     }
 
     public ServletContext getServletContext() {
         return servletContext;
+    }
+
+    public URL getIntentsLocation() {
+        return intentsLocation;
     }
 
     public URL getBaseURL() {

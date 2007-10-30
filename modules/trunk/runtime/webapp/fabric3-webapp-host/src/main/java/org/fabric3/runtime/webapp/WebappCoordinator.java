@@ -29,7 +29,6 @@ import java.util.concurrent.FutureTask;
 import javax.servlet.ServletContext;
 
 import org.fabric3.extension.component.SimpleWorkContext;
-import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
@@ -50,6 +49,7 @@ import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.host.runtime.StartException;
 import org.fabric3.scdl.Scope;
+import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
@@ -59,6 +59,7 @@ import org.fabric3.spi.services.definitions.DefinitionsDeployer;
 import org.fabric3.spi.services.discovery.DiscoveryException;
 import org.fabric3.spi.services.discovery.DiscoveryService;
 import org.fabric3.spi.services.work.WorkScheduler;
+import org.fabric3.spi.services.contribution.ContributionConstants;
 
 /**
  * Implementation of a coordinator for the webapp runtime.
@@ -136,11 +137,12 @@ public class WebappCoordinator implements RuntimeLifecycleCoordinator<WebappRunt
         }
 
         try {
+            activateIntents();
             includeExtensions();
         } catch (DefinitionActivationException e) {
             throw new InitializationException(e);
         }
-        
+
         state = State.INITIALIZED;
 
     }
@@ -248,6 +250,27 @@ public class WebappCoordinator implements RuntimeLifecycleCoordinator<WebappRunt
         return task;
     }
 
+    private void activateIntents() throws InitializationException {
+        try {
+            URL intentsLocation = runtime.getHostInfo().getIntentsLocation();
+            if (intentsLocation == null) {
+                return;
+            }
+            ContributionService contributionService = runtime.getSystemComponent(ContributionService.class,
+                                                                                 CONTRIBUTION_SERVICE_URI);
+            ContributionSource source = new FileContributionSource(intentsLocation, -1, new byte[0]);
+            URI uri = contributionService.contribute(ContributionConstants.DEFAULT_STORE, source);
+            DefinitionsDeployer deployer = runtime.getSystemComponent(DefinitionsDeployer.class, DEFINITIONS_DEPLOYER);
+            List<URI> intents = new ArrayList<URI>();
+            intents.add(uri);
+            deployer.activateDefinitions(intents);
+        } catch (ContributionException e) {
+            throw new InitializationException(e);
+        } catch (DefinitionActivationException e) {
+            throw new InitializationException(e);
+        }
+    }
+
     /**
      * Processes extensions and includes them in the runtime domain
      *
@@ -288,7 +311,7 @@ public class WebappCoordinator implements RuntimeLifecycleCoordinator<WebappRunt
             }
             runtime.includeExtensionContributions(contributionUris);
             DefinitionsDeployer definitionsDeployer =
-                runtime.getSystemComponent(DefinitionsDeployer.class, DEFINITIONS_DEPLOYER);
+                    runtime.getSystemComponent(DefinitionsDeployer.class, DEFINITIONS_DEPLOYER);
             definitionsDeployer.activateDefinitions(contributionUris);
         }
     }

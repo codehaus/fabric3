@@ -117,6 +117,16 @@ public final class Constants {
     static final String SYSTEM_SCDL_PATH_DEFAULT = "META-INF/fabric3/webapp.composite";
 
     /**
+     * Servlet context-param name for user-specified intents file path.
+     */
+    static final String INTENTS_PATH_PARAM = "fabric3.intentsPath";
+
+    /**
+     * Default webapp system intents file path.
+     */
+    static final String INTENTS_PATH_DEFAULT = "META-INF/fabric3/intents.xml";
+
+    /**
      * Context attribute to which the Fabric3 runtime for this servlet context is stored.
      */
     static final String RUNTIME_ATTRIBUTE = "fabric3.runtime";

@@ -30,7 +30,7 @@ import static org.easymock.classextension.EasyMock.*;
  */
 public class WebappUtilTestCase extends TestCase {
     private ServletContext context;
-    private WebappUtilImpl listener;
+    private WebappUtilImpl util;
     private ClassLoader cl;
     private URL systemUrl;
 
@@ -41,7 +41,7 @@ public class WebappUtilTestCase extends TestCase {
         expect(context.getInitParameter(name)).andReturn(value);
         replay(context);
 
-        assertEquals(value, listener.getInitParameter(name, "default"));
+        assertEquals(value, util.getInitParameter(name, "default"));
         verify(context);
     }
 
@@ -51,7 +51,7 @@ public class WebappUtilTestCase extends TestCase {
         expect(context.getInitParameter(name)).andReturn(null);
         replay(context);
 
-        assertEquals(value, listener.getInitParameter(name, value));
+        assertEquals(value, util.getInitParameter(name, value));
         verify(context);
     }
 
@@ -61,7 +61,7 @@ public class WebappUtilTestCase extends TestCase {
         expect(context.getInitParameter(name)).andReturn("");
         replay(context);
 
-        assertEquals(value, listener.getInitParameter(name, value));
+        assertEquals(value, util.getInitParameter(name, value));
         verify(context);
     }
 
@@ -70,7 +70,7 @@ public class WebappUtilTestCase extends TestCase {
         expect(context.getResource(path)).andReturn(systemUrl);
         replay(context);
         replay(cl);
-        assertSame(systemUrl, listener.getScdlURL(path, cl));
+        assertSame(systemUrl, util.convertToURL(path, cl));
         verify(context);
         verify(cl);
     }
@@ -81,7 +81,7 @@ public class WebappUtilTestCase extends TestCase {
         replay(context);
         expect(cl.getResource(path)).andReturn(null);
         replay(cl);
-        assertNull(listener.getScdlURL(path, cl));
+        assertNull(util.convertToURL(path, cl));
         verify(context);
         verify(cl);
     }
@@ -92,7 +92,7 @@ public class WebappUtilTestCase extends TestCase {
         replay(context);
         replay(cl);
         try {
-            listener.getScdlURL(path, cl);
+            util.convertToURL(path, cl);
             fail();
         } catch (MalformedURLException e) {
             // OK
@@ -106,7 +106,7 @@ public class WebappUtilTestCase extends TestCase {
         replay(context);
         expect(cl.getResource(path)).andReturn(systemUrl);
         replay(cl);
-        assertSame(systemUrl, listener.getScdlURL(path, cl));
+        assertSame(systemUrl, util.convertToURL(path, cl));
         verify(context);
         verify(cl);
     }
@@ -116,7 +116,7 @@ public class WebappUtilTestCase extends TestCase {
         replay(context);
         expect(cl.getResource(path)).andReturn(null);
         replay(cl);
-        assertNull(listener.getScdlURL(path, cl));
+        assertNull(util.convertToURL(path, cl));
         verify(context);
         verify(cl);
     }
@@ -124,7 +124,7 @@ public class WebappUtilTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         context = createMock(ServletContext.class);
-        listener = new WebappUtilImpl(context);
+        util = new WebappUtilImpl(context);
         cl = createMock(ClassLoader.class);
         systemUrl = new URL("file:/system.scdl");
     }

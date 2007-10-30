@@ -88,6 +88,7 @@ public class Fabric3ContextListenerTestCase extends TestCase {
         expect(utils.getBootstrapper(bootClassLoader)).andReturn(bootstrapper);
         expect(utils.getCoordinator(bootClassLoader)).andReturn(coordinator);
         expect(utils.getSystemScdl(bootClassLoader)).andReturn(systemUrl);
+        expect(utils.getIntentsLocation(bootClassLoader)).andReturn(null);
         replay(utils);
 
         expect(context.getResource("/WEB-INF/fabric3/")).andReturn(null);
