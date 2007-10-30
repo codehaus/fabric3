@@ -151,6 +151,10 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
                     type.add(reference);
                 } else if (COMPONENT.equals(qname)) {
                     ComponentDefinition<?> componentDefinition = componentLoader.load(reader, loaderContext);
+                    String key = componentDefinition.getName();
+                    if (type.getComponents().containsKey(key)) {
+                       throw new DuplicateComponentNameException("Component with name already defined", key);
+                    }
                     type.add(componentDefinition);
                 } else if (WIRE.equals(qname)) {
                     WireDefinition wire = wireLoader.load(reader, loaderContext);
