@@ -55,8 +55,7 @@ public class WsBindingGenerator extends BindingGeneratorExtension<PhysicalWireSo
                                                      GeneratorContext generatorContext,
                                                      ServiceDefinition serviceDefinition) throws GenerationException {
         
-        String implementation = logicalBinding.getBinding().getImplementation();
-        BindingGeneratorDelegate<WsBindingDefinition> delegate = delegates.get(implementation);
+        BindingGeneratorDelegate<WsBindingDefinition> delegate = getDelegate(logicalBinding);
         
         return delegate.generateWireSource(logicalBinding, intentsToBeProvided, generatorContext, serviceDefinition);
     
@@ -68,8 +67,7 @@ public class WsBindingGenerator extends BindingGeneratorExtension<PhysicalWireSo
                                                      ReferenceDefinition referenceDefinition)
             throws GenerationException {
         
-        String implementation = logicalBinding.getBinding().getImplementation();
-        BindingGeneratorDelegate<WsBindingDefinition> delegate = delegates.get(implementation);
+        BindingGeneratorDelegate<WsBindingDefinition> delegate = getDelegate(logicalBinding);
         
         return delegate.generateWireTarget(logicalBinding, intentsToBeProvided, generatorContext, referenceDefinition);
     
@@ -81,6 +79,23 @@ public class WsBindingGenerator extends BindingGeneratorExtension<PhysicalWireSo
     @Override
     protected Class<WsBindingDefinition> getBindingDefinitionClass() {
         return WsBindingDefinition.class;
+    }
+
+    /*
+     * Gets the delegate for the requested WS stack.
+     */
+    private BindingGeneratorDelegate<WsBindingDefinition> getDelegate(LogicalBinding<WsBindingDefinition> logicalBinding) 
+    throws WsBindingGenerationException {
+        
+        String implementation = logicalBinding.getBinding().getImplementation();
+        
+        BindingGeneratorDelegate<WsBindingDefinition> delegate = delegates.get(implementation);
+        if (delegate == null) {
+            throw new WsBindingGenerationException("Unknown WS stack requested " + implementation);
+        }
+        
+        return delegate;
+        
     }
 
 }
