@@ -72,7 +72,6 @@ public class InOutServiceProxyHandler extends AbstractInOutMessageReceiver {
     public void invokeBusinessLogic(MessageContext inMessage, MessageContext outMessage) throws AxisFault {
         
         AxisOperation op = inMessage.getOperationContext().getAxisOperation();
-        AxisService service = inMessage.getAxisService();
         
         Interceptor head = invocationChain.getHeadInterceptor();
         OMElement omElement = inMessage.getEnvelope();
@@ -83,20 +82,10 @@ public class InOutServiceProxyHandler extends AbstractInOutMessageReceiver {
         
         SOAPFactory fac = getSOAPFactory(inMessage);
         
-        // Handling the response
-        AxisMessage outaxisMessage = op.getMessage(WSDLConstants.MESSAGE_LABEL_OUT_VALUE);
-        String messageNameSpace = null;
-        if (outaxisMessage != null && outaxisMessage.getElementQName() !=null) {
-            messageNameSpace = outaxisMessage.getElementQName().getNamespaceURI();
-        } else {
-            messageNameSpace = service.getTargetNamespace();
-        }
-        
-        String partName = outMessage.getAxisMessage().getPartName();
+        String partName = op.getName() + "Response";
 
-        OMNamespace ns = fac.createOMNamespace(messageNameSpace, service.getSchemaTargetNamespacePrefix());
         SOAPEnvelope envelope = fac.getDefaultEnvelope();
-        OMElement bodyContent = fac.createOMElement(partName, ns);
+        OMElement bodyContent = fac.createOMElement(partName, null);
         
         bodyContent.addChild(resObject);
         envelope.getBody().addChild(bodyContent);

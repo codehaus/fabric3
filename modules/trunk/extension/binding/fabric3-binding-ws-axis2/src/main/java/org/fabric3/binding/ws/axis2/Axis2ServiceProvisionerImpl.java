@@ -28,6 +28,7 @@ import org.apache.axis2.deployment.util.Utils;
 import org.apache.axis2.description.AxisOperation;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.description.Parameter;
+import org.apache.axis2.engine.MessageReceiver;
 import org.apache.axis2.transport.http.AxisServlet;
 import org.fabric3.binding.ws.axis2.physical.Axis2WireSourceDefinition;
 import org.fabric3.binding.ws.axis2.servlet.F3AxisServlet;
@@ -143,7 +144,9 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
         for (Iterator<?> i = axisService.getOperations(); i.hasNext();) {
             AxisOperation axisOp = (AxisOperation) i.next();
             InvocationChain invocationChain = interceptors.get(axisOp.getName().getLocalPart());
-            axisOp.setMessageReceiver(new InOutServiceProxyHandler(wire, invocationChain));
+            // TODO Select message receiver based on MEP
+            MessageReceiver messageReceiver = new InOutServiceProxyHandler(wire, invocationChain);
+            axisOp.setMessageReceiver(messageReceiver);
         }
         
     }

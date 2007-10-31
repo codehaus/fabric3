@@ -16,14 +16,19 @@
  */
 package org.fabric3.binding.ws.axis2.wire;
 
+import java.util.Map;
+
 import org.fabric3.binding.ws.axis2.Axis2ServiceProvisioner;
 import org.fabric3.binding.ws.axis2.physical.Axis2WireSourceDefinition;
 import org.fabric3.binding.ws.axis2.physical.Axis2WireTargetDefinition;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.WireAttacher;
 import org.fabric3.spi.builder.component.WireAttacherRegistry;
+import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.wire.Interceptor;
+import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
@@ -76,7 +81,12 @@ public class Axis2WireAttacher implements WireAttacher<Axis2WireSourceDefinition
      */
     public void attachToTarget(PhysicalWireSourceDefinition source, Axis2WireTargetDefinition target, Wire wire)
             throws WiringException {
-        throw new UnsupportedOperationException("Axis2 Binding Not Implemented for References");
+        
+        for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
+            Interceptor interceptor = new Axis2TargetInterceptor(target, entry.getKey().getName());
+            entry.getValue().addInterceptor(interceptor);
+        }
+        
     }
 
 }
