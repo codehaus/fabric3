@@ -17,6 +17,7 @@
 package org.fabric3.tests.function.conversation;
 
 import org.osoa.sca.annotations.Scope;
+import org.osoa.sca.annotations.EndsConversation;
 
 /**
  * @version $Rev$ $Date$
@@ -30,6 +31,11 @@ public class ConversationalServiceImpl implements ConversationalService {
     }
 
     public String getValue() {
+        return value;
+    }
+
+    @EndsConversation
+    public String end() {
         return value;
     }
 }

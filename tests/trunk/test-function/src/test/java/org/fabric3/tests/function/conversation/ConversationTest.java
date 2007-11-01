@@ -32,4 +32,10 @@ public class ConversationTest extends TestCase {
         assertEquals("Hello", service.getValue());
         assertEquals("Hello", service.getValue());
     }
+
+    public void testEndConversation() {
+        service.setValue("Hello");
+        assertEquals("Hello", service.end());
+        assertNull(service.getValue());
+    }
 }
