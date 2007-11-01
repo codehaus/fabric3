@@ -19,11 +19,15 @@
 package org.fabric3.binding.ejb.transport;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
+
+import org.osoa.sca.ServiceRuntimeException;
 
 import org.fabric3.binding.ejb.wire.EjbResolver;
 import org.fabric3.pojo.instancefactory.Signature;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.Message;
+import org.fabric3.spi.wire.MessageImpl;
 
 /**
  * @version $Revision: 1 $ $Date: 2007-05-14 10:40:37 -0700 (Mon, 14 May 2007) $
@@ -32,7 +36,7 @@ public abstract class BaseEjbTargetInterceptor implements Interceptor {
 
     protected final EjbResolver resolver;
     protected final Signature signature;
-    protected Method method = null;
+    private Method method = null;
 
     /**
      * Next interceptor in the chain.
@@ -60,5 +64,35 @@ public abstract class BaseEjbTargetInterceptor implements Interceptor {
     }
 
     public abstract Message invoke(Message message);
+
+    protected Message invoke(Message message, Object ejb) {
+        Object[] parameters = (Object[]) message.getBody();
+
+        if(method == null) {
+
+            try {
+                method = signature.getMethod(ejb.getClass());
+            } catch(ClassNotFoundException cnfe) {
+                throw new ServiceRuntimeException(cnfe);
+            } catch(NoSuchMethodException nsme) {
+                //TODO Give better error message
+                throw new ServiceRuntimeException("The method "+signature+
+                        " did not match any methods on the interface of the Target");
+            }
+
+        }
+
+
+        Message result = new MessageImpl();
+        try {
+            result.setBody(method.invoke(ejb, parameters));
+        } catch(InvocationTargetException ite) {
+           result.setBodyWithFault(ite.getCause());
+        } catch(Exception e) {
+            throw new ServiceRuntimeException(e);
+        }
+
+        return result;
+    }
     
 }

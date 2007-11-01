@@ -70,14 +70,14 @@ public class EjbBindingLoader extends LoaderExtension<EjbBindingDefinition> {
 
         bd.setEjbLink(reader.getAttributeValue(null, "ejb-link-name"));
 
-        if("stateful".equals(reader.getAttributeValue(null, "session-type"))) {
+        if("stateful".equalsIgnoreCase(reader.getAttributeValue(null, "session-type"))) {
             bd.setStateless(false);
         }
 
         boolean isEjb3 = true;
         String ejbVersion = reader.getAttributeValue(null, "ejb-version");
         if(ejbVersion != null) {
-            isEjb3 = "EJB3".equals(ejbVersion);
+            isEjb3 = "EJB3".equalsIgnoreCase(ejbVersion);
         } else {
             isEjb3 = (homeInterface == null);
         }

@@ -22,23 +22,22 @@ public class EjbResolver {
     
     private final URI uri;
     private final String ejbLink;
-    private final String homeInterfaceName;
-    private final String interfaceName;
+    private final Class interfaceClass;
 
     private final EjbRegistry ejbRegistry;
 
     private Object cachedReference = null;
 
 
-    public EjbResolver(EjbWireTargetDefinition wireTarget, EjbRegistry ejbRegistry)
+    public EjbResolver(EjbWireTargetDefinition wireTarget, EjbRegistry ejbRegistry, Class interfaceClass)
             throws WiringException {
+
+        this.ejbRegistry = ejbRegistry;
+        this.interfaceClass = interfaceClass;
 
         EjbBindingDefinition bindingDefinition = wireTarget.getBindingDefinition();
         uri = bindingDefinition.getTargetUri();
         ejbLink = bindingDefinition.getEjbLink();
-        homeInterfaceName = bindingDefinition.getHomeInterface();
-        interfaceName = wireTarget.getInterfaceName();
-        this.ejbRegistry = ejbRegistry;
 
         if(uri == null && ejbLink == null) {
             throw new WiringException("Ejb bindings must specify either an ejbLink or a JNDI name");
@@ -73,7 +72,6 @@ public class EjbResolver {
 
     public Object resolveStatefulEjb() {
         if(cachedReference != null) return cachedReference;
-
         Object ejb = resolveEjb();
 
         if(javax.ejb.EJBHome.class.isAssignableFrom(ejb.getClass()) ||
@@ -91,16 +89,10 @@ public class EjbResolver {
             if(uri != null) {
                 return ejbRegistry.resolveEjb(uri);
             } else {
-                //TODO: we need a new strategy here because the homeInterface need not be specified for
-                //references.  Also, it wouldn't work because the interface declared by the reference
-                //doesn't need to be the same interface implemented by the EJB.  Rather than expecting
-                //the interface names to match, we need to simply ensure the EJB interface contains a
-                //superset of methods on the reference interface.
-                String ifaceName = homeInterfaceName != null ? homeInterfaceName : interfaceName;
-                return ejbRegistry.resolveEjbLink(ejbLink, ifaceName);
+                return ejbRegistry.resolveEjbLink(ejbLink, interfaceClass);
             }
-        } catch(WiringException we) {
-            throw new ServiceRuntimeException(we);
+        } catch(Exception e) {
+            throw new ServiceRuntimeException(e);
         }
     }
 

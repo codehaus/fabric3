@@ -18,26 +18,22 @@
  */
 package org.fabric3.binding.ejb.transport;
 
-import java.lang.reflect.InvocationTargetException;
-
-import org.osoa.sca.ServiceRuntimeException;
-
 import org.fabric3.binding.ejb.wire.EjbResolver;
 import org.fabric3.pojo.instancefactory.Signature;
 import org.fabric3.spi.wire.Message;
-import org.fabric3.spi.wire.MessageImpl;
+
 
 
 /**
  * @version $Revision: 1 $ $Date: 2007-05-14 10:40:37 -0700 (Mon, 14 May 2007) $
  */
-public class Ejb3StatelessTargetInterceptor extends BaseEjbTargetInterceptor {
+public class EjbStatelessTargetInterceptor extends BaseEjbTargetInterceptor {
 
 
     /**
      * Initializes the reference URL.
      */
-    public Ejb3StatelessTargetInterceptor(Signature signature, EjbResolver resolver) {
+    public EjbStatelessTargetInterceptor(Signature signature, EjbResolver resolver) {
         super(signature, resolver);
     }
 
@@ -47,31 +43,7 @@ public class Ejb3StatelessTargetInterceptor extends BaseEjbTargetInterceptor {
     public Message invoke(Message message) {
         Object slsb = resolver.resolveStatelessEjb();
 
-        Object[] parameters = (Object[]) message.getBody();
-
-        if(method == null) {
-
-            try {
-                method = signature.getMethod(slsb.getClass());
-            } catch(ClassNotFoundException cnfe) {
-                throw new ServiceRuntimeException(cnfe);
-            } catch(NoSuchMethodException nsme) {
-                //TODO Give better error message
-                throw new ServiceRuntimeException("The method "+signature+
-                        " did not match any methods on the interface of the Target");
-            }
-
-        }
-
-
-        Message result = new MessageImpl();
-        try {
-            result.setBody(method.invoke(slsb, parameters));
-        } catch(InvocationTargetException ite) {
-           result.setBodyWithFault(ite.getCause());
-        } catch(Exception e) {
-            throw new ServiceRuntimeException(e);
-        }
+        Message result = invoke(message, slsb);
 
         return result;
     }

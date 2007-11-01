@@ -30,7 +30,7 @@ import org.fabric3.spi.builder.WiringException;
  */
 public interface EjbRegistry {
 
-    public Object resolveEjbLink(String ejbLink, String interfaceName) throws WiringException;
+    public Object resolveEjbLink(String ejbLink, Class interfaceClass) throws WiringException;
     public void registerEjbLink(String ejbLink, Object ejb) throws WiringException;
 
     public Object resolveEjb(URI uri) throws WiringException;

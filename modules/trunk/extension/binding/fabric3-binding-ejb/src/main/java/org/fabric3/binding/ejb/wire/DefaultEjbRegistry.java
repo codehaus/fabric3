@@ -36,7 +36,7 @@ public class DefaultEjbRegistry implements EjbRegistry {
 
     private final Map registeredLinks = new HashMap();
 
-    public Object resolveEjbLink(String ejbLink, String interfaceName) throws WiringException {
+    public Object resolveEjbLink(String ejbLink, Class interfaceClass) throws WiringException {
         Object ejb = registeredLinks.get(ejbLink);
         if(ejb == null) {
             throw new WiringException("Unable to resolve ejb-link-name "+ejbLink);
