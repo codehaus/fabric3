@@ -33,7 +33,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3.webapp</groupId>
             <artifactId>fabric3-webapp-api</artifactId>
-            <version>RELEASE</version>
+            <version>0.3-SNAPSHOT</version>
         </dependency>
 
         <dependency>
