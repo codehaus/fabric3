@@ -56,16 +56,10 @@ public class CxfTargetInterceptor implements Interceptor {
         this.proxy = proxy;
     }
 
-    /**
-     * @see org.fabric3.spi.wire.Interceptor#getNext()
-     */
     public Interceptor getNext() {
         return next;
     }
 
-    /**
-     * @see org.fabric3.spi.wire.Interceptor#invoke(org.fabric3.spi.wire.Message)
-     */
     public Message invoke(Message message) {
 
         try {
@@ -82,9 +76,6 @@ public class CxfTargetInterceptor implements Interceptor {
 
     }
 
-    /**
-     * @see org.fabric3.spi.wire.Interceptor#setNext(org.fabric3.spi.wire.Interceptor)
-     */
     public void setNext(Interceptor next) {
         this.next = next;
     }
