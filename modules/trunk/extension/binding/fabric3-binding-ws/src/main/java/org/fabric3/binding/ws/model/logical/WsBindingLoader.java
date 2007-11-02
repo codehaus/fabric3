@@ -55,9 +55,6 @@ public class WsBindingLoader extends LoaderExtension<WsBindingDefinition> {
         this.policyHelper = policyHelper;
     }
 
-    /**
-     * @see org.fabric3.extension.loader.LoaderExtension#getXMLType()
-     */
     @Override
     public QName getXMLType() {
         return BINDING_QNAME;
