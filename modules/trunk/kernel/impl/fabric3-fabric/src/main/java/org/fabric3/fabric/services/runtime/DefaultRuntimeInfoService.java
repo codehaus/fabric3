@@ -50,9 +50,6 @@ public class DefaultRuntimeInfoService implements RuntimeInfoService {
     // Message destination service
     private MessageDestinationService messageDestinationService;
 
-    /**
-     * @see org.fabric3.spi.services.runtime.RuntimeInfoService#getRuntimeInfo()
-     */
     public RuntimeInfo getRuntimeInfo() {
 
         assert componentManager != null;

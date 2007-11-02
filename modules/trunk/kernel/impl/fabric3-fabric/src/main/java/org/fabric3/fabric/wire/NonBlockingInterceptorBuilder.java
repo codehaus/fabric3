@@ -18,10 +18,11 @@
  */
 package org.fabric3.fabric.wire;
 
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.extension.interceptor.InterceptorBuilderExtension;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.services.work.WorkScheduler;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Creates a non-blocking interceptor
@@ -29,28 +30,22 @@ import org.osoa.sca.annotations.Reference;
  * @version $Rev$ $Date$
  */
 public class NonBlockingInterceptorBuilder extends InterceptorBuilderExtension<NonBlockingInterceptorDefinition, NonBlockingInterceptor> {
-    
+
     private WorkScheduler scheduler;
 
     /**
      * Injects the work scheduler.
-     * 
+     *
      * @param scheduler Work scheduler.
      */
     public NonBlockingInterceptorBuilder(@Reference(required = true)WorkScheduler scheduler) {
         this.scheduler = scheduler;
     }
 
-    /**
-     * @see org.fabric3.spi.builder.interceptor.InterceptorBuilder#build(org.fabric3.spi.model.physical.PhysicalInterceptorDefinition)
-     */
     public NonBlockingInterceptor build(NonBlockingInterceptorDefinition definition) throws BuilderException {
         return new NonBlockingInterceptor(scheduler);
     }
 
-    /**
-     * @see org.fabric3.extension.interceptor.InterceptorBuilderExtension#getInterceptorDefinitionClass()
-     */
     @Override
     protected Class<NonBlockingInterceptorDefinition> getInterceptorDefinitionClass() {
         return NonBlockingInterceptorDefinition.class;

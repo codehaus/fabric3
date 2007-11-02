@@ -446,7 +446,6 @@ public class FileHelper {
      * @param srcFile  an existing file to copy, must not be <code>null</code>
      * @param destFile the new file, must not be <code>null</code>
      * @throws IOException if an IO error occurs during copying
-     * @see #copyFileToDirectory(File,File)
      */
     public static void copyFile(File srcFile, File destFile) throws IOException {
         copyFile(srcFile, destFile, true);
@@ -463,7 +462,6 @@ public class FileHelper {
      * @param destFile         the new file, must not be <code>null</code>
      * @param preserveFileDate true if the file date of the copy should be the same as the original
      * @throws IOException if an IO error occurs during copying
-     * @see #copyFileToDirectory(File,File,boolean)
      */
     public static void copyFile(File srcFile, File destFile, boolean preserveFileDate) throws IOException {
         if (srcFile == null) {
@@ -502,7 +500,6 @@ public class FileHelper {
      * @param srcFile an existing file to copy, must not be <code>null</code>
      * @param destDir the directory to place the copy in, must not be <code>null</code>
      * @throws IOException if an IO error occurs during copying
-     * @see #copyFile(File,File,boolean)
      */
     public static void copyFileToDirectory(File srcFile, File destDir) throws IOException {
         copyFileToDirectory(srcFile, destDir, true);
@@ -519,7 +516,6 @@ public class FileHelper {
      * @param destDir          the directory to place the copy in, must not be <code>null</code>
      * @param preserveFileDate true if the file date of the copy should be the same as the original
      * @throws IOException if an IO error occurs during copying
-     * @see #copyFile(File,File,boolean)
      * @since Commons IO 1.3
      */
     public static void copyFileToDirectory(File srcFile, File destDir, boolean preserveFileDate) throws IOException {

@@ -55,9 +55,6 @@ public class DefaultDefinitionsRegistry implements DefinitionsRegistry {
         
     }
 
-    /**
-     * @see org.fabric3.spi.services.definitions.DefinitionsRegistry#getAllDefinitions(java.lang.Class)
-     */
     @SuppressWarnings("unchecked")
     public <D extends AbstractDefinition> Set<D> getAllDefinitions(Class<D> definitionClass) {
         
@@ -70,9 +67,6 @@ public class DefaultDefinitionsRegistry implements DefinitionsRegistry {
         
     }
 
-    /**
-     * @see org.fabric3.spi.services.definitions.DefinitionsRegistry#getDefinition(javax.xml.namespace.QName, java.lang.Class)
-     */
     @SuppressWarnings("unchecked")
     public <D extends AbstractDefinition> D getDefinition(QName name, Class<D> definitionClass) {
         
@@ -81,9 +75,6 @@ public class DefaultDefinitionsRegistry implements DefinitionsRegistry {
         
     }
 
-    /**
-     * @see org.fabric3.spi.services.definitions.DefinitionsRegistry#registerDefinition(org.fabric3.scdl.definitions.AbstractDefinition, java.lang.Class)
-     */
     @SuppressWarnings("unchecked")
     public <D extends AbstractDefinition> void registerDefinition(D definition, Class<D> definitionClass) {
         

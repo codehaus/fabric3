@@ -49,9 +49,6 @@ public class ExtensionMapContentTypeResolver implements ContentTypeResolver {
         this.extensionMap = extensionMap;
     }
 
-    /**
-     * @see org.fabric3.spi.services.contenttype.ContentTypeResolver#getContentType(java.net.URL)
-     */
     public String getContentType(URL contentUrl) throws ContentTypeResolutionException {
 
         if(contentUrl == null) {

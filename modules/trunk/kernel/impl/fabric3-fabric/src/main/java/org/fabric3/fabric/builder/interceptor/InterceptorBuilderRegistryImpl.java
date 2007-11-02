@@ -37,23 +37,14 @@ public class InterceptorBuilderRegistryImpl implements InterceptorBuilderRegistr
     private Map<Class<? extends PhysicalInterceptorDefinition>, InterceptorBuilder<?, ?>> builders = 
         new ConcurrentHashMap<Class<? extends PhysicalInterceptorDefinition>, InterceptorBuilder<?, ?>>();
 
-    /**
-     * @see org.fabric3.spi.builder.interceptor.InterceptorBuilderRegistry#register(java.lang.Class, org.fabric3.spi.builder.interceptor.InterceptorBuilder)
-     */
     public <PID extends PhysicalInterceptorDefinition> void register(Class<PID> clazz, InterceptorBuilder<PID, ?> builder) {
         builders.put(clazz, builder);
     }
 
-    /**
-     * @see org.fabric3.spi.builder.interceptor.InterceptorBuilderRegistry#unregister(java.lang.Class)
-     */
     public <PID extends PhysicalInterceptorDefinition> void unregister(Class<PID> clazz) {
         builders.remove(clazz);
     }
 
-    /**
-     * @see org.fabric3.spi.builder.interceptor.InterceptorBuilderRegistry#build(org.fabric3.spi.model.physical.PhysicalInterceptorDefinition)
-     */
     public <PID extends PhysicalInterceptorDefinition> Interceptor build(PID definition) throws BuilderException {
         
         @SuppressWarnings("unchecked")

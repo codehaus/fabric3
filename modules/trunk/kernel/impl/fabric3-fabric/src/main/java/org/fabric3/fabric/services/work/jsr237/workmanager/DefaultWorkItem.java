@@ -23,12 +23,10 @@ import commonj.work.WorkException;
 import commonj.work.WorkItem;
 
 /**
- * An identity based immutable implementation of the <code>WorkItem</code>
- * interface.
- *
+ * An identity based immutable implementation of the <code>WorkItem</code> interface.
  */
 class DefaultWorkItem implements WorkItem {
-    
+
     // Id scoped for the VM
     private String id;
 
@@ -37,7 +35,7 @@ class DefaultWorkItem implements WorkItem {
 
     // Result
     private Work result;
-    
+
     // Original work
     private Work originalWork;
 
@@ -48,6 +46,7 @@ class DefaultWorkItem implements WorkItem {
      * Instantiates an id for this item.
      *
      * @param id of this work event.
+     * @param orginalWork the work item to wrapper
      */
     protected DefaultWorkItem(final String id, final Work orginalWork) {
         this.id = id;
@@ -110,8 +109,7 @@ class DefaultWorkItem implements WorkItem {
     }
 
     /**
-     * Returns the work type based on whether the work was accepted, started,
-     * rejected or completed.
+     * Returns the work type based on whether the work was accepted, started, rejected or completed.
      *
      * @return Work status.
      */
@@ -128,9 +126,6 @@ class DefaultWorkItem implements WorkItem {
         this.status = status;
     }
 
-    /**
-     * @see Object#hashCode() 
-     */
     public int hashCode() {
         return id.hashCode();
     }
@@ -139,21 +134,19 @@ class DefaultWorkItem implements WorkItem {
      * Indicates whether some other object is "equal to" this one.
      *
      * @param obj Object to be compared.
-     * @return true if this object is the same as the obj argument; false
-     *         otherwise..
+     * @return true if this object is the same as the obj argument; false otherwise..
      */
     public boolean equals(final Object obj) {
         return (obj != null) && (obj.getClass() == DefaultWorkItem.class) && ((DefaultWorkItem) obj).id.equals(id);
     }
 
     /**
-     * Compares this object with the specified object for order. Returns a
-     * negative integer, zero, or a positive integer as this object is less
-     * than, equal to, or greater than the specified object.
+     * Compares this object with the specified object for order. Returns a negative integer, zero, or a positive integer
+     * as this object is less than, equal to, or greater than the specified object.
      *
      * @param o Object to be compared.
-     * @return A negative integer, zero, or a positive integer as this object
-     *         is less than, equal to, or greater than the specified object.
+     * @return A negative integer, zero, or a positive integer as this object is less than, equal to, or greater than
+     *         the specified object.
      * @throws ClassCastException needs better documentation.
      */
     public int compareTo(final Object o) {

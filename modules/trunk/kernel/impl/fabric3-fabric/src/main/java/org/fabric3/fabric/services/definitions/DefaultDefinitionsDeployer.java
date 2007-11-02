@@ -65,16 +65,10 @@ public class DefaultDefinitionsDeployer implements DefinitionsDeployer {
         this.definitionsRegistry = definitionsRegistry;
     }
 
-    /**
-     * @see org.fabric3.spi.services.definitions.DefinitionsDeployer#activateDefinition(javax.xml.namespace.QName)
-     */
     public void activateDefinition(QName definitionName) throws DefinitionActivationException {
         throw new UnsupportedOperationException("Not supported");
     }
 
-    /**
-     * @see org.fabric3.spi.services.definitions.DefinitionsDeployer#activateDefinitions(java.util.List)
-     */
     public void activateDefinitions(List<URI> contributionUris) throws DefinitionActivationException {
 
         for (URI uri : contributionUris) {

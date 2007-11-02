@@ -30,7 +30,6 @@ import org.fabric3.spi.services.advertisement.AdvertisementService;
 /**
  * Default implementation of the advertisment service.
  *
- * @see org.fabric3.spi.services.advertisement.AdvertisementService
  * @version $Revsion$ $Date$
  */
 public class DefaultAdvertismentService implements AdvertisementService {
@@ -41,16 +40,10 @@ public class DefaultAdvertismentService implements AdvertisementService {
     // Features
     private Set<QName> features = new CopyOnWriteArraySet<QName>();
 
-    /**
-     * @see org.fabric3.spi.services.advertisement.AdvertisementService#getFeatures()
-     */
     public Set<QName> getFeatures() {
         return Collections.unmodifiableSet(features);
     }
 
-    /**
-     * @see org.fabric3.spi.services.advertisement.AdvertisementService#addFeature(javax.xml.namespace.QName)
-     */
     public void addFeature(QName feature) {
         features.add(feature);
         for(AdvertisementListener listener : listeners) {
@@ -58,9 +51,6 @@ public class DefaultAdvertismentService implements AdvertisementService {
         }
     }
 
-    /**
-     * @see org.fabric3.spi.services.advertisement.AdvertisementService#removeFeature(javax.xml.namespace.QName)
-     */
     public void removeFeature(QName feature) {
         features.remove(feature);
         for(AdvertisementListener listener : listeners) {
@@ -68,16 +58,10 @@ public class DefaultAdvertismentService implements AdvertisementService {
         }
     }
 
-    /**
-     * @see org.fabric3.spi.services.advertisement.AdvertisementService#addListener(org.fabric3.spi.services.advertisement.AdvertisementListener)
-     */
     public void addListener(AdvertisementListener listener) {
         listeners.add(listener);
     }
 
-    /**
-     * @see org.fabric3.spi.services.advertisement.AdvertisementService#removeListener(org.fabric3.spi.services.advertisement.AdvertisementListener)
-     */
     public void removeListener(AdvertisementListener listener) {
         listeners.remove(listener);
     }

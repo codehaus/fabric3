@@ -101,17 +101,10 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
 
     }
     
-    /**
-     * @see org.fabric3.spi.generator.GeneratorRegistry#register(java.lang.Class, org.fabric3.spi.generator.ResourceWireGenerator)
-     */
     public <T extends ResourceDefinition> void register(Class<T> clazz, ResourceWireGenerator<?, T> generator) {
         resourceWireGenerators.put(clazz, generator);
     }
 
-    /**
-     * @see org.fabric3.spi.generator.GeneratorRegistry#generateResourceWires(org.fabric3.scdl.ResourceDefinition, 
-     *                                                                        org.fabric3.spi.generator.GeneratorContext)
-     */
     @SuppressWarnings("unchecked")
     public <C extends LogicalComponent<?>> void generateResourceWire(C source, 
                                                                      LogicalResource<?> resource, 
@@ -144,23 +137,14 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
 
     }
 
-    /**
-     * @see org.fabric3.spi.generator.GeneratorRegistry#register(java.lang.Class,org.fabric3.spi.generator.BindingGenerator)
-     */
     public <T extends BindingDefinition> void register(Class<T> clazz, BindingGenerator<?, ?, T> generator) {
         bindingGenerators.put(clazz, generator);
     }
 
-    /**
-     * @see org.fabric3.spi.generator.GeneratorRegistry#register(org.fabric3.spi.generator.CommandGenerator)
-     */
     public void register(CommandGenerator generator) {
         commandGenerators.add(generator);
     }
 
-    /**
-     * @see org.fabric3.spi.generator.GeneratorRegistry#register(java.lang.Class,org.fabric3.spi.generator.ComponentGenerator)
-     */
     public <T extends Implementation<?>> void register(Class<T> clazz, ComponentGenerator<LogicalComponent<T>> generator) {
         componentGenerators.put(clazz, generator);
     }
