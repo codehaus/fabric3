@@ -18,6 +18,10 @@
  */
 package org.fabric3.resource.wire;
 
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.resource.model.SystemSourcedWireTargetDefinition;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.WireAttacher;
@@ -25,19 +29,15 @@ import org.fabric3.spi.builder.component.WireAttacherRegistry;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.wire.Wire;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
 
 /**
- *
  * @version $Revision$ $Date$
  */
 @EagerInit
 public class SystemSourcedResourceWireAttacher implements WireAttacher<PhysicalWireSourceDefinition, SystemSourcedWireTargetDefinition> {
-    
+
     private WireAttacherRegistry registry;
-    
+
     /**
      * Registers the wire attacher with the registry.
      */
@@ -45,7 +45,7 @@ public class SystemSourcedResourceWireAttacher implements WireAttacher<PhysicalW
     public void start() {
         registry.register(SystemSourcedWireTargetDefinition.class, this);
     }
-    
+
     /**
      * @param registry Injected wire attacher registry.
      */
@@ -54,20 +54,12 @@ public class SystemSourcedResourceWireAttacher implements WireAttacher<PhysicalW
         this.registry = registry;
     }
 
-    /**
-     * @see org.fabric3.spi.builder.component.WireAttacher#attachToSource(org.fabric3.spi.model.physical.PhysicalWireSourceDefinition, 
-     *                                                                    org.fabric3.spi.model.physical.PhysicalWireTargetDefinition, 
-     *                                                                    org.fabric3.spi.wire.Wire)
-     */
-    public void attachToSource(PhysicalWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
+    public void attachToSource(PhysicalWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire)
+            throws WiringException {
     }
 
-    /**
-     * @see org.fabric3.spi.builder.component.WireAttacher#attachToTarget(org.fabric3.spi.model.physical.PhysicalWireSourceDefinition, 
-     *                                                                    org.fabric3.spi.model.physical.PhysicalWireTargetDefinition, 
-     *                                                                    org.fabric3.spi.wire.Wire)
-     */
-    public void attachToTarget(PhysicalWireSourceDefinition source, SystemSourcedWireTargetDefinition target, Wire wire) throws WiringException {
+    public void attachToTarget(PhysicalWireSourceDefinition source, SystemSourcedWireTargetDefinition target, Wire wire)
+            throws WiringException {
     }
 
 }

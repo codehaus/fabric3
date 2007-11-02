@@ -38,9 +38,6 @@ public class DataSourceRegistryImpl implements DataSourceRegistry {
         this.dataSources = dataSources;
     }
 
-    /**
-     * @see org.fabric3.spi.resource.DataSourceRegistry#getDataSource(java.lang.String)
-     */
     public DataSource getDataSource(String name) {
         return dataSources.get(name);
     }

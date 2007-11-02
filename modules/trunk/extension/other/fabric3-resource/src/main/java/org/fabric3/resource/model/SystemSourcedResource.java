@@ -28,17 +28,9 @@ import org.fabric3.spi.idl.java.JavaServiceContract;
  * @version $Revision$ $Date$
  */
 public class SystemSourcedResource<T> extends JavaMappedResource<T> {
-    
     private String mappedName;
 
-    /**
-     * @param name
-     * @param type
-     * @param member
-     * @param optional
-     * @param mappedName
-     */
-    public SystemSourcedResource(String name, Class<T> type, 
+    public SystemSourcedResource(String name, Class<T> type,
                                  Member member, 
                                  boolean optional, 
                                  String mappedName, 
@@ -47,9 +39,6 @@ public class SystemSourcedResource<T> extends JavaMappedResource<T> {
         this.mappedName = mappedName;
     }
     
-    /**
-     * @return
-     */
     public String getMappedName() {
         return this.mappedName;
     }

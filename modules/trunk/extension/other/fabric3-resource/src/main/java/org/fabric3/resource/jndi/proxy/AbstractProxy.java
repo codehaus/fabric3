@@ -52,10 +52,6 @@ public class AbstractProxy<D> {
         return delegate;
     }
     
-    /**
-     * @throws NamingException 
-     * 
-     */
     @Init
     @SuppressWarnings("unchecked")
     public void init() throws NamingException {

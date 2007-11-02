@@ -36,65 +36,38 @@ import org.fabric3.resource.jndi.proxy.AbstractProxy;
  */
 public class TransactionManagerProxy extends AbstractProxy<TransactionManager> implements TransactionManager {
 
-    /**
-     * @see javax.transaction.TransactionManager#begin()
-     */
     public void begin() throws NotSupportedException, SystemException {
         getDelegate().begin();
     }
 
-    /**
-     * @see javax.transaction.TransactionManager#commit()
-     */
     public void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException, RollbackException, SecurityException, SystemException {
         getDelegate().commit();
     }
 
-    /**
-     * @see javax.transaction.TransactionManager#getStatus()
-     */
     public int getStatus() throws SystemException {
         return getDelegate().getStatus();
     }
 
-    /**
-     * @see javax.transaction.TransactionManager#getTransaction()
-     */
     public Transaction getTransaction() throws SystemException {
         return getDelegate().getTransaction();
     }
 
-    /**
-     * @see javax.transaction.TransactionManager#resume(javax.transaction.Transaction)
-     */
     public void resume(Transaction transaction) throws IllegalStateException, InvalidTransactionException, SystemException {
         getDelegate().resume(transaction);
     }
 
-    /**
-     * @see javax.transaction.TransactionManager#rollback()
-     */
     public void rollback() throws IllegalStateException, SecurityException, SystemException {
         getDelegate().rollback();
     }
 
-    /**
-     * @see javax.transaction.TransactionManager#setRollbackOnly()
-     */
     public void setRollbackOnly() throws IllegalStateException, SystemException {
         getDelegate().setRollbackOnly();
     }
 
-    /**
-     * @see javax.transaction.TransactionManager#setTransactionTimeout(int)
-     */
     public void setTransactionTimeout(int timeout) throws SystemException {
         getDelegate().setTransactionTimeout(timeout);
     }
 
-    /**
-     * @see javax.transaction.TransactionManager#suspend()
-     */
     public Transaction suspend() throws SystemException {
         return getDelegate().suspend();
     }

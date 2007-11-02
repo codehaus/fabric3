@@ -33,59 +33,35 @@ import org.fabric3.resource.jndi.proxy.AbstractProxy;
  */
 public class DataSourceProxy extends AbstractProxy<DataSource> implements DataSource {
 
-    /**
-     * @see javax.sql.DataSource#getConnection()
-     */
     public Connection getConnection() throws SQLException {
         return getDelegate().getConnection();
     }
 
-    /**
-     * @see javax.sql.DataSource#getConnection(java.lang.String, java.lang.String)
-     */
     public Connection getConnection(String userName, String password) throws SQLException {
         return getDelegate().getConnection(userName, password);
     }
 
-    /**
-     * @see javax.sql.DataSource#getLogWriter()
-     */
     public PrintWriter getLogWriter() throws SQLException {
         return getDelegate().getLogWriter();
     }
 
-    /**
-     * @see javax.sql.DataSource#getLoginTimeout()
-     */
     public int getLoginTimeout() throws SQLException {
         return getDelegate().getLoginTimeout();
     }
 
-    /**
-     * @see javax.sql.DataSource#setLogWriter(java.io.PrintWriter)
-     */
     public void setLogWriter(PrintWriter writer) throws SQLException {
         getDelegate().setLogWriter(writer);
     }
 
-    /**
-     * @see javax.sql.DataSource#setLoginTimeout(int)
-     */
     public void setLoginTimeout(int timeout) throws SQLException {
         getDelegate().setLoginTimeout(timeout);
     }
 
-    /**
-     * @see javax.sql.DataSource#isWrapperFor(Class<?>)
-     */
 	public boolean isWrapperFor(Class<?> iface) throws SQLException {
 		//return getDelegate().isWrapperFor(iface);
 		throw new UnsupportedOperationException("isWrapperFor not supported");
 	}
 
-	/**
-     * @see javax.sql.DataSource#unwrap(Class<?>
-     */
 	public <T> T unwrap(Class<T> iface) throws SQLException {
 		//return unwrap(iface);
 		throw new UnsupportedOperationException("unwrap not supported");
