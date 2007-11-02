@@ -23,7 +23,9 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.hessian.model.physical.HessianWireSourceDefinition;
@@ -76,10 +78,16 @@ public class HessianWireAttacher implements WireAttacher<HessianWireSourceDefini
         this.monitor = monitorFactory.getMonitor(HessianWireAttacherMonitor.class);
     }
 
-    /**
-     * @see org.fabric3.spi.builder.component.WireAttacher#attachToSource(org.fabric3.spi.model.physical.PhysicalWireSourceDefinition,
-     *org.fabric3.spi.model.physical.PhysicalWireTargetDefinition,org.fabric3.spi.wire.Wire)
-     */
+    @Init
+    public void start() {
+        monitor.extensionStarted();
+    }
+
+    @Destroy
+    public void stop() {
+        this.monitor.extensionStopped();
+    }
+
     public void attachToSource(HessianWireSourceDefinition sourceDefinition,
                                PhysicalWireTargetDefinition targetDefinition,
                                Wire wire) throws WiringException {
@@ -103,10 +111,6 @@ public class HessianWireAttacher implements WireAttacher<HessianWireSourceDefini
 
     }
 
-    /**
-     * @see org.fabric3.spi.builder.component.WireAttacher#attachToTarget(org.fabric3.spi.model.physical.PhysicalWireSourceDefinition,
-     *org.fabric3.spi.model.physical.PhysicalWireTargetDefinition,org.fabric3.spi.wire.Wire)
-     */
     public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition,
                                HessianWireTargetDefinition targetDefinition,
                                Wire wire) throws WiringException {

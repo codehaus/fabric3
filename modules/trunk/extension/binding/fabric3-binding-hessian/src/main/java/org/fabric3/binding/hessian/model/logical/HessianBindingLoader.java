@@ -55,17 +55,11 @@ public class HessianBindingLoader extends LoaderExtension<HessianBindingDefiniti
         this.policyHelper = policyHelper;
     }
 
-    /**
-     * @see org.fabric3.extension.loader.LoaderExtension#getXMLType()
-     */
     @Override
     public QName getXMLType() {
         return BINDING_QNAME;
     }
 
-    /** 
-     * @see org.fabric3.spi.loader.StAXElementLoader#load(javax.xml.stream.XMLStreamReader,org.fabric3.spi.loader.LoaderContext)
-     */
     public HessianBindingDefinition load(XMLStreamReader reader, LoaderContext loaderContext)
         throws XMLStreamException, LoaderException {
         
