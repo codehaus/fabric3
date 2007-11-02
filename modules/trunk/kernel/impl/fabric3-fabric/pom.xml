@@ -47,13 +47,13 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
-            <version>0.3-SNAPSHOT</version>
+            <version>0.3</version>
         </dependency>
         
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-policy-spi</artifactId>
-            <version>0.3-SNAPSHOT</version>
+            <version>0.2</version>
         </dependency>
         
         <dependency>
@@ -85,12 +85,6 @@
             <artifactId>fabric3-tx-loader</artifactId>
             <version>0.2-SNAPSHOT</version>
         </dependency>
-        
-        <!-- dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-resource</artifactId>
-            <version>0.1-SNAPSHOT</version>
-        </dependency-->
         
         <dependency>
             <groupId>commons-codec</groupId>
@@ -134,7 +128,7 @@
         <dependency>
             <groupId>org.codehaus.woodstox</groupId>
             <artifactId>wstx-asl</artifactId>
-            <version>3.2.0</version>
+            <version>3.2.2</version>
             <scope>provided</scope>
         </dependency>
 
