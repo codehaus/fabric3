@@ -22,6 +22,9 @@
     <include name="CommonComposite" scdlResource="org/fabric3/tests/function/common/common.composite"/>
 
     <include name="SmokeTestComposite" scdlLocation="org/fabric3/tests/function/smoketest.composite"/>
+<!--
+    <include name="OuterComposite" scdlLocation="org/fabric3/tests/function/composite/outer.composite"/>
+-->
     <include name="ConversationComposite" scdlLocation="org/fabric3/tests/function/conversation/conversation.composite"/>
     <include name="PropertiesComposite" scdlLocation="org/fabric3/tests/function/properties/properties.composite"/>
     <include name="ReferencesComposite" scdlLocation="org/fabric3/tests/function/references/references.composite"/>
