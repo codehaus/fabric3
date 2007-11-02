@@ -16,15 +16,11 @@
  */
 package org.fabric3.binding.ws.model.physical;
 
-import org.fabric3.spi.generator.GenerationException;
-
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
-@SuppressWarnings("serial")
-public class WsBindingGenerationException extends GenerationException {
-
-    public WsBindingGenerationException(String message, String identifier) {
-        super(message, identifier);
+public class MissingWebServiceExtensionException extends WsBindingGenerationException {
+    public MissingWebServiceExtensionException() {
+        super("A web services stack extension must be instaled", null);
     }
 }
