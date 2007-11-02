@@ -34,9 +34,6 @@ public class SetMultiplicityObjectFactory implements MultiplicityObjectFactory<S
     // Object factories
     private Set<ObjectFactory<?>> factories = new HashSet<ObjectFactory<?>>();
 
-    /**
-     * @see org.fabric3.spi.ObjectFactory#getInstance()
-     */
     public Set<Object> getInstance() throws ObjectCreationException {
         Set<Object> set = new HashSet<Object>();
         for (ObjectFactory<?> factory : factories) {
@@ -45,9 +42,6 @@ public class SetMultiplicityObjectFactory implements MultiplicityObjectFactory<S
         return set;
     }
 
-    /**
-     * @see org.fabric3.pojo.injection.MultiplicityObjectFactory#addObjectFactory(org.fabric3.spi.ObjectFactory, org.fabric3.spi.component.AtomicComponent)
-     */
     public void addObjectFactory(ObjectFactory<?> objectFactory, Object key) {
         factories.add(objectFactory);
     }

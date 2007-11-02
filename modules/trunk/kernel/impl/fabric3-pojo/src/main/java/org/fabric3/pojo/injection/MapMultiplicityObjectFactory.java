@@ -34,9 +34,6 @@ public class MapMultiplicityObjectFactory implements MultiplicityObjectFactory<M
     // Object factories
     private Map<Object, ObjectFactory<?>> factories = new HashMap<Object, ObjectFactory<?>>();
 
-    /**
-     * @see org.fabric3.spi.ObjectFactory#getInstance()
-     */
     public Map<Object, Object> getInstance() throws ObjectCreationException {
         Map<Object, Object> map = new HashMap<Object, Object>();
         for (Map.Entry<Object, ObjectFactory<?>> entry : factories.entrySet()) {
@@ -45,9 +42,6 @@ public class MapMultiplicityObjectFactory implements MultiplicityObjectFactory<M
         return map;
     }
 
-    /**
-     * @see org.fabric3.pojo.injection.MultiplicityObjectFactory#addObjectFactory(org.fabric3.spi.ObjectFactory, org.fabric3.spi.component.AtomicComponent)
-     */
     public void addObjectFactory(ObjectFactory<?> objectFactory, Object key) {
         if (key != null) {
             factories.put(key, objectFactory);

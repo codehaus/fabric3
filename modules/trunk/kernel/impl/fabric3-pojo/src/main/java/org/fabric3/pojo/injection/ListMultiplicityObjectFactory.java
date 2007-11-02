@@ -35,9 +35,6 @@ public class ListMultiplicityObjectFactory implements MultiplicityObjectFactory<
     // Object factories
     private List<ObjectFactory<?>> factories = new LinkedList<ObjectFactory<?>>();
 
-    /**
-     * @see org.fabric3.spi.ObjectFactory#getInstance()
-     */
     public List<Object> getInstance() throws ObjectCreationException {
         List<Object> list = new LinkedList<Object>();
         for (ObjectFactory<?> factory : factories) {
@@ -46,9 +43,6 @@ public class ListMultiplicityObjectFactory implements MultiplicityObjectFactory<
         return list;
     }
 
-    /**
-     * @see org.fabric3.pojo.injection.MultiplicityObjectFactory#addObjectFactory(org.fabric3.spi.ObjectFactory, org.fabric3.spi.component.AtomicComponent)
-     */
     public void addObjectFactory(ObjectFactory<?> objectFactory, Object key) {
         factories.add(objectFactory);
     }
