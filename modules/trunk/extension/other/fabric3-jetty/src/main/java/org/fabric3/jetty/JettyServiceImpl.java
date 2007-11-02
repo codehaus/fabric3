@@ -20,14 +20,9 @@ package org.fabric3.jetty;
 
 import java.io.File;
 import java.io.IOException;
-
 import javax.resource.spi.work.Work;
 import javax.servlet.Servlet;
 
-import org.fabric3.host.monitor.MonitorFactory;
-import org.fabric3.host.runtime.HostInfo;
-import org.fabric3.spi.host.ServletHost;
-import org.fabric3.spi.services.work.WorkScheduler;
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.handler.ContextHandler;
@@ -48,6 +43,11 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
+
+import org.fabric3.host.monitor.MonitorFactory;
+import org.fabric3.host.runtime.HostInfo;
+import org.fabric3.spi.host.ServletHost;
+import org.fabric3.spi.services.work.WorkScheduler;
 
 /**
  * Implements an HTTP transport service using Jetty.
@@ -255,9 +255,6 @@ public class JettyServiceImpl implements JettyService {
         monitor.extensionStopped();
     }
 
-    /**
-     * @see org.fabric3.spi.host.ServletHost#registerMapping(java.lang.String, javax.servlet.Servlet)
-     */
     public void registerMapping(String path, Servlet servlet) {
         ServletHolder holder = new ServletHolder(servlet);
         servletHandler.addServlet(holder);
