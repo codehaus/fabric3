@@ -63,16 +63,10 @@ public class HessianTargetInterceptor implements Interceptor {
         this.methodName = methodName;
     }
 
-    /**
-     * @see org.fabric3.spi.wire.Interceptor#getNext()
-     */
     public Interceptor getNext() {
         return next;
     }
 
-    /**
-     * @see org.fabric3.spi.wire.Interceptor#invoke(org.fabric3.spi.wire.Message)
-     */
     public Message invoke(Message message) {
 
         // TODO Cleanup resources in finally
@@ -97,9 +91,6 @@ public class HessianTargetInterceptor implements Interceptor {
 
     }
 
-    /**
-     * @see org.fabric3.spi.wire.Interceptor#setNext(org.fabric3.spi.wire.Interceptor)
-     */
     public void setNext(Interceptor next) {
         this.next = next;
     }

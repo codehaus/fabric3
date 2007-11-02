@@ -78,10 +78,6 @@ public class HessianServiceHandler extends HttpServlet {
         this.classLoader = classLoader;
     }
 
-    /**
-     * @see javax.servlet.http.HttpServlet#service(javax.servlet.http.HttpServletRequest,
-     *javax.servlet.http.HttpServletResponse)
-     */
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -90,9 +86,6 @@ public class HessianServiceHandler extends HttpServlet {
 
     /**
      * Handles the hessian requests.
-     *
-     * @see javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest,
-     *javax.servlet.http.HttpServletResponse)
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
