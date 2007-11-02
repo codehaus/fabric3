@@ -58,24 +58,18 @@ public class BurlapTargetInterceptor implements Interceptor {
      * Initializes the reference URL.
      *
      * @param referenceUrl The reference URL.
+     * @param methodName   the method name for the operation
      */
     public BurlapTargetInterceptor(URL referenceUrl, String methodName) {
         this.referenceUrl = referenceUrl;
         this.methodName = methodName;
     }
 
-    /**
-     * @see org.fabric3.spi.wire.Interceptor#getNext()
-     */
     public Interceptor getNext() {
         return next;
     }
 
-    /**
-     * @see org.fabric3.spi.wire.Interceptor#invoke(org.fabric3.spi.wire.Message)
-     */
     public Message invoke(Message message) {
-
         // TODO Cleanup resources in finally
 
         try {
@@ -98,9 +92,6 @@ public class BurlapTargetInterceptor implements Interceptor {
 
     }
 
-    /**
-     * @see org.fabric3.spi.wire.Interceptor#setNext(org.fabric3.spi.wire.Interceptor)
-     */
     public void setNext(Interceptor next) {
         this.next = next;
     }
@@ -119,6 +110,10 @@ public class BurlapTargetInterceptor implements Interceptor {
 
     /**
      * Creates the URL connection.
+     *
+     * @param url the connection url
+     * @return the url connection
+     * @throws java.io.IOException if an error opening the connection occurs
      */
     private URLConnection openConnection(URL url) throws IOException {
         URLConnection conn = url.openConnection();

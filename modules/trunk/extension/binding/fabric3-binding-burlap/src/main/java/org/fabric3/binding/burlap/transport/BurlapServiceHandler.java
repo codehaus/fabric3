@@ -67,11 +67,12 @@ public class BurlapServiceHandler extends HttpServlet {
     /**
      * Initializes the wire associated with the service.
      *
-     * @param wire Wire that connects the transport to the component.
-     * @param ops  Map of op names to operation definitions.
+     * @param wire        Wire that connects the transport to the component.
+     * @param ops         Map of op names to operation definitions.
+     * @param classLoader the classloader to load service interfaces with
      */
-    public BurlapServiceHandler(Wire wire, Map<String,
-            Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops,
+    public BurlapServiceHandler(Wire wire,
+                                Map<String, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops,
                                 ClassLoader classLoader) {
         this.wire = wire;
         this.ops = ops;

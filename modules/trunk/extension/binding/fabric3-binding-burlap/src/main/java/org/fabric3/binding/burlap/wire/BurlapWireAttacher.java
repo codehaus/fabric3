@@ -23,13 +23,16 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.burlap.model.physical.BurlapWireSourceDefinition;
 import org.fabric3.binding.burlap.model.physical.BurlapWireTargetDefinition;
 import org.fabric3.binding.burlap.transport.BurlapServiceHandler;
 import org.fabric3.binding.burlap.transport.BurlapTargetInterceptor;
+import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.builder.component.WireAttacher;
@@ -51,10 +54,8 @@ import org.fabric3.spi.wire.Wire;
 public class BurlapWireAttacher implements WireAttacher<BurlapWireSourceDefinition, BurlapWireTargetDefinition> {
     private ClassLoaderRegistry classLoaderRegistry;
 
-    /**
-     * Servlet host.
-     */
     private ServletHost servletHost;
+    private BurlapWireAttacherMonitor monitor;
 
     /**
      * Injects the wire attacher registry and servlet host.
@@ -62,20 +63,29 @@ public class BurlapWireAttacher implements WireAttacher<BurlapWireSourceDefiniti
      * @param wireAttacherRegistry Wire attacher registry.
      * @param servletHost          Servlet host.
      * @param classLoaderRegistry  the classloader registry to resolve the target classloader from
+     * @param monitorFactory       the system monitor factory
      */
     public BurlapWireAttacher(@Reference WireAttacherRegistry wireAttacherRegistry,
                               @Reference ServletHost servletHost,
-                              @Reference ClassLoaderRegistry classLoaderRegistry) {
+                              @Reference ClassLoaderRegistry classLoaderRegistry,
+                              @Reference MonitorFactory monitorFactory) {
         wireAttacherRegistry.register(BurlapWireSourceDefinition.class, this);
         wireAttacherRegistry.register(BurlapWireTargetDefinition.class, this);
         this.servletHost = servletHost;
         this.classLoaderRegistry = classLoaderRegistry;
+        this.monitor = monitorFactory.getMonitor(BurlapWireAttacherMonitor.class);
     }
 
-    /**
-     * @see org.fabric3.spi.builder.component.WireAttacher#attachToSource(org.fabric3.spi.model.physical.PhysicalWireSourceDefinition,
-     *org.fabric3.spi.model.physical.PhysicalWireTargetDefinition,org.fabric3.spi.wire.Wire)
-     */
+    @Init
+    public void start() {
+        monitor.extensionStarted();
+    }
+
+    @Destroy
+    public void stop() {
+        this.monitor.extensionStopped();
+    }
+
     public void attachToSource(BurlapWireSourceDefinition sourceDefinition,
                                PhysicalWireTargetDefinition targetDefinition,
                                Wire wire) throws WiringException {
@@ -92,14 +102,12 @@ public class BurlapWireAttacher implements WireAttacher<BurlapWireSourceDefiniti
             throw new WiringException("Classloader not found", id.toString());
         }
         BurlapServiceHandler handler = new BurlapServiceHandler(wire, ops, loader);
-        String servicePath = sourceDefinition.getUri().getPath();
+        URI uri = sourceDefinition.getUri();
+        String servicePath = uri.getPath();
         servletHost.registerMapping(servicePath, handler);
+        monitor.provisionedEndpoint(uri);
     }
 
-    /**
-     * @see org.fabric3.spi.builder.component.WireAttacher#attachToTarget(org.fabric3.spi.model.physical.PhysicalWireSourceDefinition,
-     *org.fabric3.spi.model.physical.PhysicalWireTargetDefinition,org.fabric3.spi.wire.Wire)
-     */
     public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition,
                                BurlapWireTargetDefinition targetDefinition,
                                Wire wire) throws WiringException {

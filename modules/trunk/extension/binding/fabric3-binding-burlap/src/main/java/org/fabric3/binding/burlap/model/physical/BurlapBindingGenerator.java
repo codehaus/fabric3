@@ -23,6 +23,8 @@ import java.util.Set;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Destroy;
 
 import org.fabric3.binding.burlap.model.logical.BurlapBindingDefinition;
 import org.fabric3.extension.generator.BindingGeneratorExtension;
@@ -52,7 +54,6 @@ public class BurlapBindingGenerator extends BindingGeneratorExtension<BurlapWire
                                                          GeneratorContext context,
                                                          ServiceDefinition serviceDefinition)
             throws GenerationException {
-
         // TODO Pass the contract information to physical
         URI id = classLoaderGenerator.generate(logicalBinding, context);
         BurlapWireSourceDefinition hwsd = new BurlapWireSourceDefinition(id);
@@ -67,17 +68,12 @@ public class BurlapBindingGenerator extends BindingGeneratorExtension<BurlapWire
             throws GenerationException {
 
         // TODO Pass the contract information to the physical
-
         BurlapWireTargetDefinition hwtd = new BurlapWireTargetDefinition();
         hwtd.setUri(logicalBinding.getBinding().getTargetUri());
-
         return hwtd;
 
     }
 
-    /**
-     * @see org.fabric3.extension.generator.BindingGeneratorExtension#getBindingDefinitionClass()
-     */
     @Override
     protected Class<BurlapBindingDefinition> getBindingDefinitionClass() {
         return BurlapBindingDefinition.class;

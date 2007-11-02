@@ -20,10 +20,12 @@ package org.fabric3.binding.burlap.model.logical;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.spi.loader.LoaderContext;
@@ -31,8 +33,6 @@ import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.PolicyHelper;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Revision$ $Date$
@@ -40,15 +40,19 @@ import org.osoa.sca.annotations.Reference;
 @EagerInit
 public class BurlapBindingLoader extends LoaderExtension<BurlapBindingDefinition> {
 
-    /** Qualified name for the binding element. */
-    public static final QName BINDING_QNAME = 
-        new QName("http://www.fabric3.org/binding/burlap/0.3", "binding.burlap");
-    
+    /**
+     * Qualified name for the binding element.
+     */
+    public static final QName BINDING_QNAME =
+            new QName("http://www.fabric3.org/binding/burlap/0.3", "binding.burlap");
+
     private final PolicyHelper policyHelper;
-    
+
     /**
      * Injects the registry.
-     * @param registry Loader registry.
+     *
+     * @param registry     Loader registry.
+     * @param policyHelper the policy helper
      */
     public BurlapBindingLoader(@Reference LoaderRegistry registry, @Reference PolicyHelper policyHelper) {
         super(registry);
@@ -61,27 +65,27 @@ public class BurlapBindingLoader extends LoaderExtension<BurlapBindingDefinition
     }
 
     public BurlapBindingDefinition load(XMLStreamReader reader, LoaderContext loaderContext)
-        throws XMLStreamException, LoaderException {
-        
-        BurlapBindingDefinition bd = null;
-        
+            throws XMLStreamException, LoaderException {
+
+        BurlapBindingDefinition bd;
+
         try {
 
             String uri = reader.getAttributeValue(null, "uri");
-            if(uri == null) {
+            if (uri == null) {
                 throw new LoaderException("The uri attribute is not specified");
             }
             bd = new BurlapBindingDefinition(new URI(uri));
-            
+
             policyHelper.loadPolicySetsAndIntents(bd, reader);
-            
-        } catch(URISyntaxException ex) {
+
+        } catch (URISyntaxException ex) {
             throw new LoaderException(ex);
         }
-        
+
         LoaderUtil.skipToEndElement(reader);
         return bd;
-        
+
     }
 
 }
