@@ -63,9 +63,6 @@ public class WsBindingLoader extends LoaderExtension<WsBindingDefinition> {
         return BINDING_QNAME;
     }
 
-    /**
-     * @see org.fabric3.spi.loader.StAXElementLoader#load(java.lang.Object, javax.xml.stream.XMLStreamReader, org.fabric3.spi.loader.LoaderContext)
-     */
     public WsBindingDefinition load(XMLStreamReader reader, LoaderContext loaderContext)
         throws XMLStreamException, LoaderException {
 
