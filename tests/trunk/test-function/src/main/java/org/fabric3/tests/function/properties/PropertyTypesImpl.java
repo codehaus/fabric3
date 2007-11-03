@@ -18,6 +18,8 @@ package org.fabric3.tests.function.properties;
 
 import java.net.URI;
 import java.net.URL;
+import java.util.Calendar;
+import java.util.Date;
 
 import org.osoa.sca.annotations.Property;
 
@@ -45,6 +47,8 @@ public class PropertyTypesImpl implements PropertyTypes {
     @Property public String string;
     @Property public URI uriValue;
     @Property public URL urlValue;
+    @Property public Date dateValue;
+    @Property public Calendar calendarValue;
 
     public boolean getBooleanPrimitive() {
         return booleanPrimitive;
@@ -116,5 +120,13 @@ public class PropertyTypesImpl implements PropertyTypes {
 
     public URL getUrlValue() {
         return urlValue;
+    }
+
+    public Date getDateValue() {
+        return dateValue;
+    }
+
+    public Calendar getCalendarValue() {
+        return calendarValue;
     }
 }

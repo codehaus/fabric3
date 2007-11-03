@@ -18,6 +18,8 @@ package org.fabric3.tests.function.properties;
 
 import java.net.URI;
 import java.net.URL;
+import java.util.Date;
+import java.util.Calendar;
 
 /**
  * Test service for returning Properties with different types.
@@ -60,4 +62,8 @@ public interface PropertyTypes {
     URI getUriValue();
 
     URL getUrlValue();
+
+    Date getDateValue();
+
+    Calendar getCalendarValue();
 }

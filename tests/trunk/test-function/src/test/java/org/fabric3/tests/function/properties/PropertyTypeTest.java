@@ -16,9 +16,12 @@
  */
 package org.fabric3.tests.function.properties;
 
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.net.MalformedURLException;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import junit.framework.TestCase;
 import org.osoa.sca.annotations.Reference;
@@ -100,5 +103,22 @@ public class PropertyTypeTest extends TestCase {
 
     public void testURL() throws MalformedURLException {
         assertEquals(new URL("file://./root"), service.getUrlValue());
+    }
+
+    public void testDate() {
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.clear();
+        calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
+        calendar.set(2007, Calendar.OCTOBER, 31, 0, 0, 0);
+        assertEquals(calendar.getTime(), service.getDateValue());
+    }
+
+    public void testCalendar() {
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.clear();
+        calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
+        calendar.set(2007, Calendar.OCTOBER, 31, 1, 0, 0);
+        
+        assertEquals(calendar.getTime(), service.getCalendarValue().getTime());
     }
 }
