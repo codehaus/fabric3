@@ -44,7 +44,7 @@ public class BurlapBindingLoader extends LoaderExtension<BurlapBindingDefinition
      * Qualified name for the binding element.
      */
     public static final QName BINDING_QNAME =
-            new QName("http://www.fabric3.org/binding/burlap/0.3", "binding.burlap");
+            new QName("http://www.fabric3.org/binding/burlap/0.2", "binding.burlap");
 
     private final PolicyHelper policyHelper;
 
