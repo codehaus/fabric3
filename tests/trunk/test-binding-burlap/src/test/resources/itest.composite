@@ -20,30 +20,21 @@
            xmlns:burlap="http://www.fabric3.org/binding/burlap/0.2"
            name="BurlapTestComposite">
 
-    <service name="HelloBurlapService" promote="HelloService">
-        <interface.java interface="org.fabric3.sample.hello.HelloService"/>
-        <burlap:binding.burlap uri="/helloService" />
+    <service name="BoundService" promote="EchoService">
+        <interface.java interface="org.fabric3.tests.binding.harness.EchoService"/>
+        <burlap:binding.burlap uri="/echoService"/>
     </service>
 
-    <reference name="HelloBurlapReference" promote="HelloClient/helloService">
-        <interface.java interface="org.fabric3.sample.hello.HelloService"/>
-        <burlap:binding.burlap uri="http://localhost:8900/helloService"/>
+    <reference name="BoundReference" promote="EchoTest/service">
+        <interface.java interface="org.fabric3.tests.binding.harness.EchoService"/>
+        <burlap:binding.burlap uri="http://localhost:8900/echoService"/>
     </reference>
-    
-    <component name="HelloTest">
-        <f3:junit class="org.fabric3.sample.hello.HelloTest"/>
-        <reference name="helloClient" target="HelloClient"/>
+
+    <component name="EchoTest">
+        <f3:junit class="org.fabric3.tests.binding.harness.EchoTest"/>
     </component>
 
-    <!-- Hello Client -->
-    <component name="HelloClient">
-        <implementation.java class="org.fabric3.sample.hello.HelloClientImpl"/>
-		  <reference name="helloService" target="HelloService"/>
+    <component name="EchoService">
+        <implementation.java class="org.fabric3.tests.binding.harness.EchoServiceImpl"/>
     </component>
-
-    <!-- Hello Service -->
-    <component name="HelloService">
-        <implementation.java class="org.fabric3.sample.hello.HelloServiceImpl"/>
-    </component>
-    
 </composite>

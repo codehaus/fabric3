@@ -44,8 +44,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.codehaus.fabric3.tests</groupId>
-            <artifactId>test-hello-common</artifactId>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>binding-test-harness</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
