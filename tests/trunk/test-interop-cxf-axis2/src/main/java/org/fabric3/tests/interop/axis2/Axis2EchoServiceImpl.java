@@ -14,15 +14,25 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.ws.interop.hello.server;
+package org.fabric3.tests.interop.axis2;
 
 import org.apache.axiom.om.OMElement;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
-public interface HelloService {
-    
-    OMElement sayHello(OMElement omElement);
+public class Axis2EchoServiceImpl implements Axis2EchoService {
+    public OMElement echoString(OMElement envelope) {
+        OMElement soapBody = envelope.getFirstElement();
+        OMElement operation = soapBody.getFirstElement();
+        OMElement parameter = operation.getFirstElement();
+        return parameter;
+    }
 
+    public OMElement echoInt(OMElement envelope) {
+        OMElement soapBody = envelope.getFirstElement();
+        OMElement operation = soapBody.getFirstElement();
+        OMElement parameter = operation.getFirstElement();
+        return parameter;
+    }
 }

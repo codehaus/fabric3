@@ -14,26 +14,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.ws.interop.hello.client;
+package org.fabric3.tests.interop.axis2;
 
-import org.osoa.sca.annotations.Reference;
-
-import junit.framework.TestCase;
+import org.apache.axiom.om.OMElement;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
-public class HelloTest extends TestCase {
-    
-    private HelloClient helloClient;
-    
-    @Reference
-    public void setHelloClient(HelloClient helloClient) {
-        this.helloClient = helloClient;
-    }
-    
-    public void testInterop() {
-        assertEquals("Hello, Fred", helloClient.sayHello("Fred"));
-    }
-
+public interface Axis2EchoService {
+    OMElement echoString(OMElement message);
+    OMElement echoInt(OMElement message);
 }

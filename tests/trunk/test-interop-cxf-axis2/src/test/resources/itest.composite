@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with this work for information
+ regarding copyright ownership.  This file is licensed
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           name="WsTestComposite">
+
+    <reference name="CXFBoundReference" promote="CXFToAxisTest/service">
+        <interface.java interface="org.fabric3.tests.binding.harness.EchoService"/>
+        <binding.ws uri="http://localhost:8900/axis2/echoService" f3:impl="cxf"/>
+    </reference>
+    <component name="CXFToAxisTest">
+        <f3:junit class="org.fabric3.tests.binding.harness.EchoTest"/>
+    </component>
+
+    <reference name="AxisBoundReference" promote="AxisToCXFTest/service">
+        <interface.java interface="org.fabric3.tests.interop.axis2.Axis2EchoService"/>
+        <binding.ws uri="http://localhost:8900/services/echoService" f3:impl="axis2"/>
+    </reference>
+    <component name="AxisToCXFTest">
+        <f3:junit class="org.fabric3.tests.interop.AxisToCXFTest"/>
+    </component>
+
+    <service name="CXFBoundService" promote="CXFService">
+        <interface.java interface="org.fabric3.tests.binding.harness.EchoService"/>
+        <binding.ws uri="/echoService" f3:impl="cxf"/>
+    </service>
+    <component name="CXFService">
+        <implementation.java class="org.fabric3.tests.binding.harness.EchoServiceImpl"/>
+    </component>
+
+    <service name="AxisBoundService" promote="AxisService">
+        <interface.java interface="org.fabric3.tests.interop.axis2.Axis2EchoService"/>
+        <binding.ws uri="echoService" f3:impl="axis2"/>
+    </service>
+    <component name="AxisService">
+        <implementation.java class="org.fabric3.tests.interop.axis2.Axis2EchoServiceImpl"/>
+    </component>
+</composite>

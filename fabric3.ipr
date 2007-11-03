@@ -386,10 +386,10 @@
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-ws/test-binding-cxf.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-ws/test-binding-cxf.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-hessian/test-binding-hessian.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-hessian/test-binding-hessian.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-jms/test-binding-jms.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-jms/test-binding-jms.iml" />
-      <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-ws-cxf-axis2/test-binding-ws-cxf-axis2.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-ws-cxf-axis2/test-binding-ws-cxf-axis2.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-db-extension/test-db-extension.iml" filepath="$PROJECT_DIR$/tests/trunk/test-db-extension/test-db-extension.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-function/test-function.iml" filepath="$PROJECT_DIR$/tests/trunk/test-function/test-function.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-groovy/test-groovy.iml" filepath="$PROJECT_DIR$/tests/trunk/test-groovy/test-groovy.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-ws-cxf-axis2/test-interop-cxf-axis2.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-ws-cxf-axis2/test-interop-cxf-axis2.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-jpa-hibernate/test-jpa-hibernate.iml" filepath="$PROJECT_DIR$/tests/trunk/test-jpa-hibernate/test-jpa-hibernate.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-policy/test-policy.iml" filepath="$PROJECT_DIR$/tests/trunk/test-policy/test-policy.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-runtime-development/test-runtime-development.iml" filepath="$PROJECT_DIR$/tests/trunk/test-runtime-development/test-runtime-development.iml" />
