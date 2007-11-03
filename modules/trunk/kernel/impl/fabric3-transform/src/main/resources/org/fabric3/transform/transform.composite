@@ -78,6 +78,11 @@
         <reference name="registry" target="pullTransformerRegistry"/>
     </component>
 
+    <component name="String2Calendar">
+        <system:implementation.system class="org.fabric3.transform.dom2java.String2Calendar"/>
+        <reference name="registry" target="pullTransformerRegistry"/>
+    </component>
+
     <component name="String2String">
         <system:implementation.system class="org.fabric3.transform.dom2java.String2String"/>
         <reference name="registry" target="pullTransformerRegistry"/>
