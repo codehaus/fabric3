@@ -111,6 +111,16 @@
               <file url="file://$PROJECT_DIR$/tests/trunk/runtime-tomcat/src/main/webapp/WEB-INF/web.xml" />
             </files>
           </module>
+          <module name="test-runtime-tomcat">
+            <files>
+              <file url="file://$PROJECT_DIR$/tests/trunk/test-runtime-tomcat/src/main/webapp/WEB-INF/web.xml" />
+            </files>
+          </module>
+          <module name="test-runtime-jetty">
+            <files>
+              <file url="file://$PROJECT_DIR$/tests/trunk/test-runtime-jetty/src/main/webapp/WEB-INF/web.xml" />
+            </files>
+          </module>
         </modules>
       </facet-type>
     </autodetection-disabled>
@@ -375,6 +385,8 @@
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-hessian/test-binding-hessian.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-hessian/test-binding-hessian.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-jms/test-binding-jms.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-jms/test-binding-jms.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-ws/test-binding-ws.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-ws/test-binding-ws.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-ws-cxf-axis2/test-binding-ws-cxf-axis2.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-ws-cxf-axis2/test-binding-ws-cxf-axis2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-ws-mtom/test-binding-ws-mtom.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-ws-mtom/test-binding-ws-mtom.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-db-extension/test-db-extension.iml" filepath="$PROJECT_DIR$/tests/trunk/test-db-extension/test-db-extension.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-function/test-function.iml" filepath="$PROJECT_DIR$/tests/trunk/test-function/test-function.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-groovy/test-groovy.iml" filepath="$PROJECT_DIR$/tests/trunk/test-groovy/test-groovy.iml" />
