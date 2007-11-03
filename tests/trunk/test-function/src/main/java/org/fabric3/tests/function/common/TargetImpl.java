@@ -14,25 +14,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.tests.function.composite;
-
-import junit.framework.TestCase;
-import org.osoa.sca.annotations.Reference;
-
-import org.fabric3.tests.function.common.IdentityService;
+package org.fabric3.tests.function.common;
 
 /**
  * @version $Rev$ $Date$
  */
-public class InnerCompositeTest extends TestCase {
-    @Reference
-    protected IdentityService inner;
-
-    @Reference
-    protected IdentityService innerSpecified;
-
-    public void testInnerComposite() {
-        assertEquals("one", inner.getIdentity());
-        assertEquals("two", innerSpecified.getIdentity());
+public class TargetImpl implements Target {
+    public String invoke(String msg) {
+        return msg;
     }
 }

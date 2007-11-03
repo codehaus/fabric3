@@ -17,26 +17,20 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           name="OuterComposite">
+           name="InnerComposite2">
 
-    <component name="Inner">
-        <implementation.composite name="inner" scdlLocation="inner.composite"/>
+    <service name="two" promote="two#IdentityService"/>
+    <!--<service name="three" promote="source"/>-->
+
+    <component name="two">
+        <implementation.java class="org.fabric3.tests.function.common.IdentityServiceImpl"/>
+        <property name="id">two</property>
     </component>
 
-    <component name="Inner2">
-        <implementation.composite name="inner2" scdlLocation="inner2.composite"/>
-        <reference name="promoted" target="target"/>
-    </component>
-
-    <component name="InnerCompositeTest">
-        <f3:junit class="org.fabric3.tests.function.composite.InnerCompositeTest"/>
-        <reference name="inner" target="Inner"/>
-        <reference name="innerSpecified" target="Inner2#two"/>
-    </component>
-    
-    <!--<component name="target">-->
-            <!--<implementation.java name="target" class="org.fabric3.tests.function.common.TargetImpl"/>-->
+    <!--<component name="source">-->
+        <!--<implementation.java class="org.fabric3.tests.function.common.SourceImpl"/>-->
     <!--</component>-->
 
+    <!--<reference name="promoted" promote="source/target"/>-->
 
 </composite>
