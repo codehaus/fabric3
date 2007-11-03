@@ -16,9 +16,14 @@
  */
 package org.fabric3.ws.mtom.server;
 
+import java.io.InputStream;
+
+import javax.activation.DataHandler;
+
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
+import org.apache.axiom.om.OMText;
 import org.fabric3.ws.mtom.DataExchangeService;
 
 /**
@@ -26,21 +31,36 @@ import org.fabric3.ws.mtom.DataExchangeService;
  */
 public class DataExchangeServer implements DataExchangeService {
 
-    public OMElement exchange(OMElement omElement) {
+    public OMElement exchange(OMElement omElement) throws Exception {
         
-        System.err.println(omElement);
-        
-        OMElement body = omElement.getFirstElement();
-        OMElement operation = body.getFirstElement();
-        String data = operation.getFirstElement().getText();
-        
-        OMFactory fac = OMAbstractFactory.getOMFactory();
-
-        OMElement resp = fac.createOMElement("achnowledgement", null);
-
-        resp.setText(data + " acknowledged");
-
-        return resp;
+        try {
+            
+            OMElement soapBody = omElement.getFirstElement();
+            OMElement operation = soapBody.getFirstElement();
+            OMElement parameter = operation.getFirstElement();
+            
+            OMText binaryNode = (OMText) parameter.getFirstOMChild();
+            binaryNode.setOptimize(true);
+            DataHandler dataHandler = (DataHandler) binaryNode.getDataHandler();
+            
+            InputStream in = dataHandler.getDataSource().getInputStream();
+            byte[] buffer = new byte[1024];
+            int read = in.read(buffer);
+            
+            String data = new String(buffer, 0, read);
+            
+            OMFactory fac = OMAbstractFactory.getOMFactory();
+    
+            OMElement resp = fac.createOMElement("achnowledgement", null);
+    
+            resp.setText(data + " acknowledged");
+    
+            return resp;
+            
+        } catch(Exception ex) {
+            ex.printStackTrace();
+            throw ex;
+        }
         
     }
 

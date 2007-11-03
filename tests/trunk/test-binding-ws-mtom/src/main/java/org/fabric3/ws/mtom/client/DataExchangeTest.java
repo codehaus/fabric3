@@ -16,13 +16,22 @@
  */
 package org.fabric3.ws.mtom.client;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+
+import junit.framework.TestCase;
+
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
+import org.apache.axiom.om.OMText;
 import org.fabric3.ws.mtom.DataExchangeService;
 import org.osoa.sca.annotations.Reference;
-
-import junit.framework.TestCase;
 
 /**
  * @version $Revision$ $Date$
@@ -36,19 +45,34 @@ public class DataExchangeTest extends TestCase {
         this.dataExchangeService = dataExchangeService;
     }
     
-    public void testExchange() {
+    public void testExchange() throws Exception {
+        
+        DataHandler dataHandler = new DataHandler(new DataSource() {
+            public String getContentType() {
+                return "text/dat";
+            }
+            public InputStream getInputStream() throws IOException {
+                return new ByteArrayInputStream("some dump data".getBytes());
+            }
+            public String getName() {
+                return null;
+            }
+            public OutputStream getOutputStream() throws IOException {
+                return null;
+            }            
+        });
         
         OMFactory fac = OMAbstractFactory.getOMFactory();
 
-        OMElement request = fac.createOMElement("data", null);
-        request.setText("Some dump data");
+        OMElement parameter = fac.createOMElement("data", null);
         
-        OMElement response = dataExchangeService.exchange(request);
-        String result = response.getFirstElement().getText();
+        OMText binaryData = fac.createOMText(dataHandler, true);
+        binaryData.setOptimize(true);
+        parameter.addChild(binaryData);
         
-        System.err.println(response);
-        
-        assertEquals("Some dump data acknowledged", result);
+        OMElement response = dataExchangeService.exchange(parameter);
+        String responseText = response.getFirstElement().getText();
+        assertEquals("some dump data acknowledged", responseText);
         
     }
 

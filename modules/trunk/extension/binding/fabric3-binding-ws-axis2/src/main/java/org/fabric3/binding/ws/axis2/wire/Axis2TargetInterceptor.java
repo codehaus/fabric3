@@ -73,6 +73,7 @@ public class Axis2TargetInterceptor implements Interceptor {
         Options options = new Options();
         options.setTo(epr);
         options.setTransportInProtocol(Constants.TRANSPORT_HTTP);
+        options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
         
         try {
             

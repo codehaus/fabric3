@@ -23,6 +23,6 @@ import org.apache.axiom.om.OMElement;
  */
 public interface DataExchangeService {
     
-    OMElement exchange(OMElement uploadData);
+    OMElement exchange(OMElement uploadData) throws Exception;
 
 }

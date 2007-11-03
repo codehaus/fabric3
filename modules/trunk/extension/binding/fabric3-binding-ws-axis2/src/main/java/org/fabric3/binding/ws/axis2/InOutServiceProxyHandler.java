@@ -20,16 +20,12 @@
 package org.fabric3.binding.ws.axis2;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.MessageContext;
-import org.apache.axis2.description.AxisMessage;
 import org.apache.axis2.description.AxisOperation;
-import org.apache.axis2.description.AxisService;
 import org.apache.axis2.receivers.AbstractInOutMessageReceiver;
-import org.apache.axis2.wsdl.WSDLConstants;
 import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
