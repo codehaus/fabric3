@@ -47,7 +47,6 @@
                 <module>test-runtime-jetty</module>
                 <module>test-runtime-tomcat</module>
 
-                <module>test-hello-common</module>
                 <module>test-binding-burlap</module>
                 <module>test-binding-hessian</module>
                 <module>test-binding-jms</module>
