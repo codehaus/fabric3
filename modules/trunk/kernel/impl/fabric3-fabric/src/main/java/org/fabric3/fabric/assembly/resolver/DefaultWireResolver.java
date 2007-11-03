@@ -54,6 +54,50 @@ public class DefaultWireResolver implements WireResolver {
                 resolve(child);
             }
         }
+        resolveServicePromotions(component);
+    }
+
+    /**
+     * Resolves service promotions for the services of the given component. Specifically, resolves promoted URIs and
+     * calaculates default services if necessary.
+     *
+     * @param component the component to resolve service promotions.
+     * @throws ResolutionException if an error occurs resolving a promotion
+     */
+    private void resolveServicePromotions(LogicalComponent<?> component)
+            throws ResolutionException {
+        for (LogicalService service : component.getServices()) {
+            URI promotedUri = service.getPromote();
+            if (promotedUri != null) {
+                if (promotedUri.getFragment() == null) {
+                    LogicalComponent<?> target = component.getComponent(promotedUri);
+                    if (target == null) {
+                        throw new TargetNotFoundException("Promotion target not found", service.getUri(), promotedUri);
+                    }
+                    if (target.getServices().size() != 1) {
+                        throw new UnspecifiedServiceException(
+                                "Promoted service must be specified since target implements more than one service",
+                                service.getUri(),
+                                promotedUri);
+                    }
+                    LogicalService logicalService = target.getServices().iterator().next();
+                    String name = logicalService.getUri().getFragment();
+                    service.setPromote(URI.create(promotedUri.toString() + "#" + name));
+                } else {
+                    URI targetUri = UriHelper.getDefragmentedName(promotedUri);
+                    LogicalComponent<?> target = component.getComponent(targetUri);
+                    if (target == null) {
+                        throw new TargetNotFoundException("Promotion target not found", service.getUri(), promotedUri);
+                    }
+                    if (target.getService(promotedUri.getFragment()) == null) {
+                        throw new ServiceNotFoundException("Promotion target service not found",
+                                                           service.getUri(),
+                                                           promotedUri);
+                    }
+
+                }
+            }
+        }
     }
 
     /**

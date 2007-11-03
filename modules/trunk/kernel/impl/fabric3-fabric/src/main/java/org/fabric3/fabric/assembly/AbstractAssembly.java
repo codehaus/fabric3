@@ -416,13 +416,14 @@ public abstract class AbstractAssembly implements Assembly {
 
     /**
      * Set the initial actual property values of a component.
-     * @param component the component to initialize
+     *
+     * @param component  the component to initialize
      * @param definition the definition of the component
      * @throws InstantiationException if there was a problem initializing a property value
      */
     protected <I extends Implementation<?>> void initializeProperties(LogicalComponent<I> component,
                                                                       ComponentDefinition<I> definition)
-        throws InstantiationException {
+            throws InstantiationException {
         Map<String, PropertyValue> propertyValues = definition.getPropertyValues();
         AbstractComponentType<?, ?, ?, ?> componentType = definition.getComponentType();
         for (Property<?> property : componentType.getProperties().values()) {
@@ -519,7 +520,7 @@ public abstract class AbstractAssembly implements Assembly {
         value.appendChild(root);
         try {
             NodeList result = (NodeList) xpath.evaluate(source, root, XPathConstants.NODESET);
-            for (int i = 0 ; i < result.getLength(); i++) {
+            for (int i = 0; i < result.getLength(); i++) {
                 Node node = result.item(i);
                 value.adoptNode(node);
                 root.appendChild(node);
@@ -646,9 +647,16 @@ public abstract class AbstractAssembly implements Assembly {
                 for (URI uri : entry.getTargetUris()) {
                     LogicalComponent<?> target = findComponent(uri);
                     String serviceName = uri.getFragment();
-                    LogicalReference reference = component.getReference(entry.getUri().getFragment());
                     LogicalService targetService = target.getService(serviceName);
                     assert targetService != null;
+                    while (CompositeImplementation.class.isInstance(target.getDefinition().getImplementation())) {
+                        URI promoteUri = targetService.getPromote();
+                        URI promotedComponent = UriHelper.getDefragmentedName(promoteUri);
+                        target = target.getComponent(promotedComponent);
+                        targetService = target.getService(promoteUri.getFragment());
+                    }
+                    LogicalReference reference = component.getReference(entry.getUri().getFragment());
+
                     generatorRegistry.generateUnboundWire(component,
                                                           reference,
                                                           targetService,
@@ -675,7 +683,7 @@ public abstract class AbstractAssembly implements Assembly {
                 generatorRegistry.generateBoundServiceWire(service, binding, component, context);
             }
         }
-        
+
         // generate wire definitions for resources
         for (LogicalResource<?> resource : component.getResources()) {
             generatorRegistry.generateResourceWire(component, resource, context);
@@ -772,7 +780,7 @@ public abstract class AbstractAssembly implements Assembly {
         }
         return currentComponent;
     }
-    
+
     /*
      * Creates a logical resource.
      */

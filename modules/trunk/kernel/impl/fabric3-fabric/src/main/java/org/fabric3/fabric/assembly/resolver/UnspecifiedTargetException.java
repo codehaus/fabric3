@@ -28,6 +28,7 @@ import org.fabric3.fabric.assembly.ResolutionException;
  * @version $Rev$ $Date$
  */
 public class UnspecifiedTargetException extends ResolutionException {
+    private static final long serialVersionUID = 504390381876565643L;
 
     public UnspecifiedTargetException(String message, URI source) {
         super(message, source, null);

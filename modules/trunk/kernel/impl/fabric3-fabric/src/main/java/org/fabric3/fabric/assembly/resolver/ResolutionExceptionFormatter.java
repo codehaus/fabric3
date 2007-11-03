@@ -39,7 +39,7 @@ public class ResolutionExceptionFormatter implements ExceptionFormatter<Resoluti
     public void write(PrintWriter writer, ResolutionException e) {
         writer.append(e.getMessage());
         if (e.getSource() != null) {
-            writer.append("\nReference: ").append(String.valueOf(e.getSource()));
+            writer.append("\nSource: ").append(String.valueOf(e.getSource()));
         }
         if (e.getTarget() != null) {
             writer.append("\nTarget: ").append(e.getTarget().toString());

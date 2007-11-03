@@ -29,6 +29,7 @@ import org.fabric3.fabric.assembly.ResolutionException;
  */
 public class AmbiguousAutowireTargetException extends ResolutionException {
     private List<URI> targets;
+    private static final long serialVersionUID = -8902348708584039561L;
 
     public AmbiguousAutowireTargetException(String message, URI source, List<URI> targets) {
         super(message, (String) null, source, null);

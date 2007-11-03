@@ -24,6 +24,8 @@ import org.fabric3.fabric.assembly.ResolutionException;
  * @version $Rev$ $Date$
  */
 public class IllegalTargetException extends ResolutionException {
+    private static final long serialVersionUID = 4974542746054966384L;
+
     public IllegalTargetException(String message, URI source, URI target) {
         super(message, null, source, target);
     }

@@ -26,6 +26,8 @@ import org.fabric3.fabric.assembly.ResolutionException;
  * @version $Rev$ $Date$
  */
 public class AutowireTargetNotFoundException extends ResolutionException {
+    private static final long serialVersionUID = 9043195948539065595L;
+
     public AutowireTargetNotFoundException(String message, URI source) {
         super(message, (String) null, source, null);
     }

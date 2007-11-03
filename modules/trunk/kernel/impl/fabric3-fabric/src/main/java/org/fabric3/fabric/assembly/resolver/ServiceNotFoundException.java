@@ -26,6 +26,7 @@ import org.fabric3.fabric.assembly.ResolutionException;
  * @version $Rev$ $Date$
  */
 public class ServiceNotFoundException extends ResolutionException {
+    private static final long serialVersionUID = -7793686903215382332L;
 
     public ServiceNotFoundException(String message, URI source, URI target) {
         super(message, source, target);

@@ -28,6 +28,7 @@ import org.fabric3.spi.assembly.AssemblyException;
  * @version $Rev$ $Date$
  */
 public abstract class ResolutionException extends AssemblyException {
+    private static final long serialVersionUID = 2275834464327877714L;
     private URI source;
     private URI target;
 

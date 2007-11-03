@@ -21,27 +21,12 @@ import java.net.URI;
 import org.fabric3.fabric.assembly.ResolutionException;
 
 /**
- * Thrown when a target service on a component has not been specified and it is required, e.g. when the target component
- * implements more than one service.
- *
  * @version $Rev$ $Date$
  */
-public class UnspecifiedTargetServiceException extends ResolutionException {
-    private static final long serialVersionUID = -8334126598054159339L;
-    private URI source;
+public class UnspecifiedServiceException extends ResolutionException {
+    private static final long serialVersionUID = -6145756979694711485L;
 
-    public UnspecifiedTargetServiceException(String message, URI source) {
-        super(message, source, null);
-        this.source = source;
+    public UnspecifiedServiceException(String message, URI source, URI target) {
+        super(message, source, target);
     }
-
-    /**
-     * Returns the wire source uri.
-     *
-     * @return wire source uri.
-     */
-    public URI getSource() {
-        return source;
-    }
-
 }
