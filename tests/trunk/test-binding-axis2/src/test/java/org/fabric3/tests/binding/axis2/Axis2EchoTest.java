@@ -16,6 +16,15 @@
  */
 package org.fabric3.tests.binding.axis2;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.StringWriter;
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+
 import junit.framework.TestCase;
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
@@ -31,7 +40,7 @@ public class Axis2EchoTest extends TestCase {
     protected Axis2EchoService service;
     private OMFactory factory;
 
-    public void testEcho() {
+    public void testEchoText() {
 
         OMElement message = factory.createOMElement("data", null);
         OMText text = factory.createOMText(message, "Hello World");
@@ -40,6 +49,43 @@ public class Axis2EchoTest extends TestCase {
         OMElement response = service.echo(message);
         String responseText = response.getFirstElement().getText();
         assertEquals("Hello World", responseText);
+    }
+
+    public void testEchoDataWithMTOM() throws IOException {
+        DataHandler dataHandler = new DataHandler(new DataSource() {
+            public String getContentType() {
+                return "text/dat";
+            }
+            public InputStream getInputStream() throws IOException {
+                return new ByteArrayInputStream("Hello World".getBytes());
+            }
+            public String getName() {
+                return null;
+            }
+            public OutputStream getOutputStream() throws IOException {
+                return null;
+            }
+        });
+
+        OMElement message = factory.createOMElement("data", null);
+        OMText text = factory.createOMText(dataHandler, true);
+        text.setOptimize(true);
+        message.addChild(text);
+
+        OMElement response = service.echo(message);
+        OMText responseText = (OMText) response.getFirstElement().getFirstOMChild();
+        responseText.setOptimize(true);
+        DataHandler responseData = (DataHandler) responseText.getDataHandler();
+        InputStream is = responseData.getInputStream();
+        InputStreamReader reader = new InputStreamReader(is);
+        char buffer[] = new char[1024];
+        StringWriter writer = new StringWriter();
+        for (int count; (count = reader.read(buffer, 0, buffer.length)) > 0;) {
+            writer.write(buffer, 0, count);
+
+        }
+        assertEquals("Hello World", writer.toString());
+
     }
 
     protected void setUp() throws Exception {

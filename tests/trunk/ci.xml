@@ -52,7 +52,6 @@
                 <module>test-binding-jms</module>
                 <module>test-binding-axis2</module>
                 <module>test-binding-cxf</module>
-                <module>test-binding-ws-mtom</module>
                 <module>test-binding-ws-cxf-axis2</module>
 
                 <module>test-db-extension</module>
