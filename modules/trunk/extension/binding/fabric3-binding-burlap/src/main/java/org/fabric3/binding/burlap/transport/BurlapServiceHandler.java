@@ -89,48 +89,55 @@ public class BurlapServiceHandler extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        InputStream in = request.getInputStream();
-
-        BurlapInput burlapInput = new BurlapInput(in);
-        burlapInput.setSerializerFactory(new SerializerFactory());
-        burlapInput.startCall();
-
-        String methodName = burlapInput.getMethod();
-
-        PhysicalOperationDefinition op = ops.get(methodName).getKey();
-        Interceptor head = ops.get(methodName).getValue().getHeadInterceptor();
-
-        Object[] args = new Object[op.getParameters().size()];
-        ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
         try {
-            // Hessian uses the TCCL to deserialize parameters
-            Thread.currentThread().setContextClassLoader(classLoader);
-            for (int i = 0; i < args.length; i++) {
-                args[i] = burlapInput.readObject();
+            InputStream in = request.getInputStream();
+
+            BurlapInput burlapInput = new BurlapInput(in);
+            burlapInput.setSerializerFactory(new SerializerFactory());
+            burlapInput.startCall();
+
+            String methodName = burlapInput.getMethod();
+
+            PhysicalOperationDefinition op = ops.get(methodName).getKey();
+            Interceptor head = ops.get(methodName).getValue().getHeadInterceptor();
+
+            Object[] args = new Object[op.getParameters().size()];
+            ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+            try {
+                // Hessian uses the TCCL to deserialize parameters
+                Thread.currentThread().setContextClassLoader(classLoader);
+                for (int i = 0; i < args.length; i++) {
+                    args[i] = burlapInput.readObject();
+                }
+            } finally {
+                Thread.currentThread().setContextClassLoader(oldCl);
             }
-        } finally {
-            Thread.currentThread().setContextClassLoader(oldCl);
+
+
+            burlapInput.completeCall();
+
+            Message input = new MessageImpl(args, false, new SimpleWorkContext(), wire);
+
+            Message output = head.invoke(input);
+            Object ret = output.getBody();
+
+            OutputStream out = response.getOutputStream();
+            BurlapOutput burlapOutput = new BurlapOutput(out);
+
+            burlapOutput.startReply();
+            burlapOutput.writeObject(ret);
+            burlapOutput.completeReply();
+
+            out.close();
+        } catch (RuntimeException e) {
+            // TODO Add error handling and method overloading
+            e.printStackTrace();
+            throw e;
+        } catch (IOException e) {
+            // TODO Add error handling and method overloading
+            e.printStackTrace();
+            throw e;
         }
-
-
-        burlapInput.completeCall();
-
-        Message input = new MessageImpl(args, false, new SimpleWorkContext(), wire);
-
-        Message output = head.invoke(input);
-        Object ret = output.getBody();
-
-        OutputStream out = response.getOutputStream();
-        BurlapOutput burlapOutput = new BurlapOutput(out);
-
-        burlapOutput.startReply();
-        burlapOutput.writeObject(ret);
-        burlapOutput.completeReply();
-
-        out.close();
-
-        // TODO Add error handling and method overloading
-
     }
 
 }
