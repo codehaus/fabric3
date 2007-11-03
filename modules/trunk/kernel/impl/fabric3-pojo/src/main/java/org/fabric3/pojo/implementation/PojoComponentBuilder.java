@@ -122,6 +122,9 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
             throws BuilderException {
         JavaClass<I> targetType = new JavaClass<I>(type);
         PullTransformer<Node, I> transformer = getTransformer(SOURCE_TYPE, targetType);
+        if (transformer == null) {
+            throw new PropertyTransformException("No transformer for property of type " + type.getCanonicalName(), name, null);
+        }
         try {
             I instance = type.cast(transformer.transform(value, context));
             return new SingletonObjectFactory<I>(instance);
