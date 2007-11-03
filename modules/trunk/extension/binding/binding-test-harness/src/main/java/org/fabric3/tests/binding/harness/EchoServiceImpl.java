@@ -20,11 +20,11 @@ package org.fabric3.tests.binding.harness;
  * @version $Rev$ $Date$
  */
 public class EchoServiceImpl implements EchoService {
-    public String echo(String message) {
+    public String echoString(String message) {
         return message;
     }
 
-    public int echo(int value) {
+    public int echoInt(int value) {
         return value;
     }
 }

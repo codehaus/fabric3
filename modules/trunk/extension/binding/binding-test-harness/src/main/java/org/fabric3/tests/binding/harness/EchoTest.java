@@ -32,10 +32,10 @@ public class EchoTest extends TestCase {
     }
 
     public void testString() {
-        assertEquals("Hello", service.echo("Hello"));
+        assertEquals("Hello", service.echoString("Hello"));
     }
 
     public void testInt() {
-        assertEquals(123, service.echo(123));
+        assertEquals(123, service.echoInt(123));
     }
 }

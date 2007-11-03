@@ -28,11 +28,11 @@ public class EchoDelegator implements EchoService {
         this.delegate = delegate;
     }
 
-    public String echo(String message) {
-        return delegate.echo(message);
+    public String echoString(String message) {
+        return delegate.echoString(message);
     }
 
-    public int echo(int value) {
-        return delegate.echo(value);
+    public int echoInt(int value) {
+        return delegate.echoInt(value);
     }
 }

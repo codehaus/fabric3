@@ -22,7 +22,7 @@ package org.fabric3.tests.binding.harness;
  * @version $Rev$ $Date$
  */
 public interface EchoService {
-    String echo(String message);
+    String echoString(String message);
 
-    int echo(int value);
+    int echoInt(int value);
 }
