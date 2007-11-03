@@ -18,8 +18,6 @@
  */
 package org.fabric3.runtime.standalone;
 
-import java.net.URL;
-
 import org.fabric3.host.runtime.Fabric3Runtime;
 
 /**

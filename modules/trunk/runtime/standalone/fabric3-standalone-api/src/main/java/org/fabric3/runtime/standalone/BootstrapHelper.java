@@ -61,7 +61,7 @@ public final class BootstrapHelper {
      * @throws IllegalArgumentException if the property is set but its value is not an existing directory
      * @throws IllegalStateException    if the location could not be determined from the location of the class file
      */
-    public static File getInstallDirectory(Class clazz) throws IllegalStateException, IllegalArgumentException {
+    public static File getInstallDirectory(Class<?> clazz) throws IllegalStateException, IllegalArgumentException {
 
         String installDirectoryPath = System.getProperty(INSTALL_DIRECTORY_PROPERTY);
 
@@ -158,15 +158,15 @@ public final class BootstrapHelper {
      * @return the boot directory
      * @throws FileNotFoundException if the boot directory does not exist
      */
-    public static File getBootDirectory(File installDir, File profileDir, String bootPath)
+    public static File getDirectory(File installDir, File profileDir, String path, String defaultPath)
             throws FileNotFoundException {
         File bootDir;
-        if (bootPath != null) {
-            bootDir = new File(profileDir, bootPath);
+        if (path != null) {
+            bootDir = new File(profileDir, path);
         } else {
-            bootDir = new File(profileDir, "boot");
+            bootDir = new File(profileDir, defaultPath);
             if (!bootDir.isDirectory()) {
-                bootDir = new File(installDir, "boot");
+                bootDir = new File(installDir, defaultPath);
             }
         }
         if (!bootDir.isDirectory()) {
@@ -255,6 +255,7 @@ public final class BootstrapHelper {
     }
 
     public static StandaloneHostInfo createHostInfo(File installDir, String profile) throws IOException {
+        
         File profileDir = getProfileDirectory(installDir, profile);
 
         // load properties for this runtime
@@ -266,8 +267,13 @@ public final class BootstrapHelper {
 
         // create the classloader for booting the runtime
         String bootPath = props.getProperty("fabric3.bootDir", null);
-        File bootDir = getBootDirectory(installDir, profileDir, bootPath);
-        ClassLoader hostClassLoader = ClassLoader.getSystemClassLoader();
+        File bootDir = getDirectory(installDir, profileDir, bootPath, "boot");
+        
+        String hostPath = props.getProperty("fabric3.hostDir", null);
+        File hostDir = getDirectory(installDir, profileDir, hostPath, "host");
+        
+        ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
+        ClassLoader hostClassLoader = createClassLoader(systemClassLoader, hostDir);
         ClassLoader bootClassLoader = createClassLoader(hostClassLoader, bootDir);
 
         try {
