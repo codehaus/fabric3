@@ -82,6 +82,16 @@
         <system:implementation.system class="org.fabric3.transform.dom2java.String2String"/>
         <reference name="registry" target="pullTransformerRegistry"/>
     </component>
+    
+    <component name="String2URI">
+        <system:implementation.system class="org.fabric3.transform.dom2java.String2URI"/>
+        <reference name="registry" target="pullTransformerRegistry"/>
+    </component>
+    
+    <component name="String2URL">
+        <system:implementation.system class="org.fabric3.transform.dom2java.String2URL"/>
+        <reference name="registry" target="pullTransformerRegistry"/>
+    </component>
 
     <component name="Dom2Map">
         <system:implementation.system class="org.fabric3.transform.dom2java.String2Map"/>
