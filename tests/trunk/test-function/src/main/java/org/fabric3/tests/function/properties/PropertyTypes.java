@@ -16,25 +16,48 @@
  */
 package org.fabric3.tests.function.properties;
 
+import java.net.URI;
+import java.net.URL;
+
 /**
  * Test service for returning Properties with different types.
  *
  * @version $Rev$ $Date$
  */
 public interface PropertyTypes {
-    <T> T getPropertyValue(Class<T> type);
+    boolean getBooleanPrimitive();
 
-    boolean getBoolean();
+    byte getBytePrimitive();
 
-    byte getByte();
+    short getShortPrimitive();
 
-    short getShort();
+    int getIntPrimitive();
 
-    int getInt();
+    long getLongPrimitive();
 
-    long getLong();
+    float getFloatPrimitive();
 
-    float getFloat();
+    double getDoublePrimitive();
 
-    double getDouble();
+    Boolean getBooleanValue();
+
+    Byte getByteValue();
+
+    Short getShortValue();
+
+    Integer getIntegerValue();
+
+    Long getLongValue();
+
+    Float getFloatValue();
+
+    Double getDoubleValue();
+
+    Class<?> getClassValue();
+
+    String getString();
+
+    URI getUriValue();
+
+    URL getUrlValue();
 }

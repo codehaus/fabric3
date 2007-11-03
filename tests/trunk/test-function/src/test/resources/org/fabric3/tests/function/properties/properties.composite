@@ -37,6 +37,8 @@
         <property name="floatValue">1.2345</property>
         <property name="doubleValue">1.2345e10</property>
         <property name="classValue">org.fabric3.tests.function.properties.PropertyTypes</property>
+        <property name="uriValue">urn:fabric3:test</property>
+        <property name="urlValue">file://./root</property>
     </component>
 
     <component name="PropertyTypesTest">

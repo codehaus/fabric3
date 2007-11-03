@@ -16,8 +16,12 @@
  */
 package org.fabric3.tests.function.properties;
 
-import org.osoa.sca.annotations.Reference;
+import java.net.URI;
+import java.net.URL;
+import java.net.MalformedURLException;
+
 import junit.framework.TestCase;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Rev$ $Date$
@@ -27,66 +31,74 @@ public class PropertyTypeTest extends TestCase {
     public PropertyTypes service;
 
     public void testBoolean() {
-        assertEquals(true, service.getBoolean());
+        assertEquals(true, service.getBooleanPrimitive());
     }
 
     public void testByte() {
-        assertEquals((byte)12, service.getByte());
+        assertEquals((byte)12, service.getBytePrimitive());
     }
 
     public void testShort() {
-        assertEquals((short)1234, service.getShort());
+        assertEquals((short)1234, service.getShortPrimitive());
     }
 
     public void testInteger() {
-        assertEquals(12345678, service.getInt());
+        assertEquals(12345678, service.getIntPrimitive());
     }
 
     public void testLong() {
-        assertEquals(123451234512345l, service.getLong());
+        assertEquals(123451234512345l, service.getLongPrimitive());
     }
 
     public void testFloat() {
-        assertEquals(1.2345f, service.getFloat());
+        assertEquals(1.2345f, service.getFloatPrimitive());
     }
 
     public void testDouble() {
-        assertEquals(1.2345e10, service.getDouble());
+        assertEquals(1.2345e10, service.getDoublePrimitive());
     }
 
     public void testString() {
-        assertEquals("Hello World", service.getPropertyValue(String.class));
+        assertEquals("Hello World", service.getString());
     }
 
     public void testBooleanValue() {
-        assertEquals(Boolean.TRUE, service.getPropertyValue(Boolean.class));
+        assertEquals(Boolean.TRUE, service.getBooleanValue());
     }
 
     public void testByteValue() {
-        assertEquals(Byte.valueOf((byte)12), service.getPropertyValue(Byte.class));
+        assertEquals(Byte.valueOf((byte)12), service.getByteValue());
     }
 
     public void testShortValue() {
-        assertEquals(Short.valueOf((short)1234), service.getPropertyValue(Short.class));
+        assertEquals(Short.valueOf((short)1234), service.getShortValue());
     }
 
     public void testIntegerValue() {
-        assertEquals(Integer.valueOf(12345678), service.getPropertyValue(Integer.class));
+        assertEquals(Integer.valueOf(12345678), service.getIntegerValue());
     }
 
     public void testLongValue() {
-        assertEquals(Long.valueOf(123451234512345l), service.getPropertyValue(Long.class));
+        assertEquals(Long.valueOf(123451234512345l), service.getLongValue());
     }
 
     public void testFloatValue() {
-        assertEquals(1.2345f, service.getPropertyValue(Float.class));
+        assertEquals(1.2345f, service.getFloatValue());
     }
 
     public void testDoubleValue() {
-        assertEquals(1.2345e10, service.getPropertyValue(Double.class));
+        assertEquals(1.2345e10, service.getDoubleValue());
     }
 
     public void testClassValue() {
-        assertEquals(PropertyTypes.class, service.getPropertyValue(Class.class));
+        assertEquals(PropertyTypes.class, service.getClassValue());
+    }
+
+    public void testURI() {
+        assertEquals(URI.create("urn:fabric3:test"), service.getUriValue());
+    }
+
+    public void testURL() throws MalformedURLException {
+        assertEquals(new URL("file://./root"), service.getUrlValue());
     }
 }

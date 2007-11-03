@@ -16,6 +16,9 @@
  */
 package org.fabric3.tests.function.properties;
 
+import java.net.URI;
+import java.net.URL;
+
 import org.osoa.sca.annotations.Property;
 
 /**
@@ -30,7 +33,6 @@ public class PropertyTypesImpl implements PropertyTypes {
     @Property public float floatPrimitive;
     @Property public double doublePrimitive;
 
-    @Property public String string;
     @Property public Boolean booleanValue;
     @Property public Byte byteValue;
     @Property public Short shortValue;
@@ -40,54 +42,79 @@ public class PropertyTypesImpl implements PropertyTypes {
     @Property public Double doubleValue;
     @Property public Class<?> classValue;
 
-    public boolean getBoolean() {
+    @Property public String string;
+    @Property public URI uriValue;
+    @Property public URL urlValue;
+
+    public boolean getBooleanPrimitive() {
         return booleanPrimitive;
     }
 
-    public byte getByte() {
+    public byte getBytePrimitive() {
         return bytePrimitive;
     }
 
-    public short getShort() {
+    public short getShortPrimitive() {
         return shortPrimitive;
     }
 
-    public int getInt() {
+    public int getIntPrimitive() {
         return intPrimitive;
     }
 
-    public long getLong() {
+    public long getLongPrimitive() {
         return longPrimitive;
     }
 
-    public float getFloat() {
+    public float getFloatPrimitive() {
         return floatPrimitive;
     }
 
-    public double getDouble() {
+    public double getDoublePrimitive() {
         return doublePrimitive;
     }
 
-    public <T> T getPropertyValue(Class<T> type) {
-        if (String.class.equals(type)) {
-            return type.cast(string);
-        } else if (Boolean.class.equals(type)) {
-            return type.cast(booleanValue);
-        } else if (Byte.class.equals(type)) {
-            return type.cast(byteValue);
-        } else if (Short.class.equals(type)) {
-            return type.cast(shortValue);
-        } else if (Integer.class.equals(type)) {
-            return type.cast(integerValue);
-        } else if (Long.class.equals(type)) {
-            return type.cast(longValue);
-        } else if (Float.class.equals(type)) {
-            return type.cast(floatValue);
-        } else if (Double.class.equals(type)) {
-            return type.cast(doubleValue);
-        } else if (Class.class.equals(type)) {
-            return type.cast(classValue);
-        }
-        throw new AssertionError();
+    public Boolean getBooleanValue() {
+        return booleanValue;
+    }
+
+    public Byte getByteValue() {
+        return byteValue;
+    }
+
+    public Short getShortValue() {
+        return shortValue;
+    }
+
+    public Integer getIntegerValue() {
+        return integerValue;
+    }
+
+    public Long getLongValue() {
+        return longValue;
+    }
+
+    public Float getFloatValue() {
+        return floatValue;
+    }
+
+    public Double getDoubleValue() {
+        return doubleValue;
+    }
+
+    public Class<?> getClassValue() {
+        return classValue;
+    }
+
+    public String getString() {
+        return string;
+    }
+
+    public URI getUriValue() {
+        return uriValue;
+    }
+
+    public URL getUrlValue() {
+        return urlValue;
     }
 }
