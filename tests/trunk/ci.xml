@@ -50,8 +50,10 @@
                 <module>test-hello-common</module>
                 <module>test-binding-burlap</module>
                 <module>test-binding-hessian</module>
-                <module>test-binding-ws</module>
                 <module>test-binding-jms</module>
+                <module>test-binding-ws</module>
+                <module>test-binding-ws-mtom</module>
+                <module>test-binding-ws-cxf-axis2</module>
 
                 <module>test-db-extension</module>
                 <module>test-jpa-hibernate</module>
