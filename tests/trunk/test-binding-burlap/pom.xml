@@ -31,13 +31,6 @@
     <description>Fabric3 Burlap Binding Test.</description>
 
     <dependencies>
-
-        <dependency>
-            <groupId>org.codehaus.fabric3.spec</groupId>
-            <artifactId>sca-api-r1.0</artifactId>
-            <version>0.2.1</version>
-        </dependency>
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
