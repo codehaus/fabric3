@@ -320,99 +320,148 @@ public abstract class AbstractAssembly implements Assembly {
      */
     protected <I extends Implementation<?>> LogicalComponent<I> instantiate(
             LogicalComponent<CompositeImplementation> parent,
-            ComponentDefinition<I> definition)
-            throws InstantiationException {
-
-        // create the LogicalComponent
+            ComponentDefinition<I> definition) throws InstantiationException {
         URI uri = URI.create(parent.getUri() + "/" + definition.getName());
+        I impl = definition.getImplementation();
+        if (CompositeImplementation.IMPLEMENTATION_COMPOSITE.equals(impl.getType())) {
+            return instantiateComposite(parent, definition, uri);
+        } else {
+            return instantiateAtomicComponent(parent, definition, uri);
+        }
+    }
+
+    private <I extends Implementation<?>> LogicalComponent<I> instantiateAtomicComponent(
+            LogicalComponent<CompositeImplementation> parent,
+            ComponentDefinition<I> definition,
+            URI uri) throws InstantiationException {
+        URI runtimeId = definition.getRuntimeId();
+        LogicalComponent<I> component = new LogicalComponent<I>(uri, runtimeId, definition, parent);
+        initializeProperties(component, definition);
+        // this is an atomic component so create and bind its services, references and resources
+        I impl = definition.getImplementation();
+        AbstractComponentType<?, ?, ?, ?> componentType = impl.getComponentType();
+
+        for (ServiceDefinition service : componentType.getServices().values()) {
+            String name = service.getName();
+            URI serviceUri = uri.resolve('#' + name);
+            LogicalService logicalService = new LogicalService(serviceUri, service, component);
+            ComponentService componentService = definition.getServices().get(name);
+            if (componentService != null) {
+                // service is configured in the component definition
+                for (BindingDefinition binding : componentService.getBindings()) {
+                    logicalService.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalService));
+                }
+            }
+            component.addService(logicalService);
+        }
+
+        for (ReferenceDefinition reference : componentType.getReferences().values()) {
+            String name = reference.getName();
+            URI referenceUri = uri.resolve('#' + name);
+            LogicalReference logicalReference = new LogicalReference(referenceUri, reference, component);
+            ComponentReference componentReference = definition.getReferences().get(name);
+            if (componentReference != null) {
+                // reference is configured
+                for (BindingDefinition binding : componentReference.getBindings()) {
+                    logicalReference.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalReference));
+                }
+            }
+            component.addReference(logicalReference);
+        }
+
+        for (ResourceDefinition resource : componentType.getResources().values()) {
+            URI resourceUri = uri.resolve('#' + resource.getName());
+            LogicalResource<?> logicalResource = createLogicalResource(resource, resourceUri, component);
+            component.addResource(logicalResource);
+        }
+        return component;
+
+    }
+
+    private <I extends Implementation<?>> LogicalComponent<I> instantiateComposite(
+            LogicalComponent<CompositeImplementation> parent,
+            ComponentDefinition<I> definition,
+            URI uri) throws InstantiationException {
+        // this component is implemented by a composite so we need to create its children
+        // and promote services and references
         URI runtimeId = definition.getRuntimeId();
         LogicalComponent<I> component = new LogicalComponent<I>(uri, runtimeId, definition, parent);
         initializeProperties(component, definition);
 
-        I impl = definition.getImplementation();
-        if (CompositeImplementation.IMPLEMENTATION_COMPOSITE.equals(impl.getType())) {
-            // this component is implemented by a composite so we need to create its children
-            // and promote services and references
-            @SuppressWarnings({"unchecked"})
-            LogicalComponent<CompositeImplementation> compositeComponent =
-                    (LogicalComponent<CompositeImplementation>) component;
-            Composite composite = compositeComponent.getDefinition().getImplementation().getComponentType();
+        @SuppressWarnings({"unchecked"})
+        LogicalComponent<CompositeImplementation> compositeComponent =
+                (LogicalComponent<CompositeImplementation>) component;
+        Composite composite = compositeComponent.getDefinition().getImplementation().getComponentType();
 
-            // create the child components
-            for (ComponentDefinition<? extends Implementation<?>> child : composite.getComponents().values()) {
-                component.addComponent(instantiate(compositeComponent, child));
-            }
-
-            // promote services
-            for (CompositeService service : composite.getServices().values()) {
-                URI serviceUri = uri.resolve('#' + service.getName());
-                LogicalService logicalService = new LogicalService(serviceUri, service, component);
-                if (service.getPromote() != null) {
-                    logicalService.setPromote(URI.create(uri.toString() + "/" + service.getPromote()));
-                }
-                for (BindingDefinition binding : service.getBindings()) {
-                    logicalService.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalService));
-                }
-                component.addService(logicalService);
-            }
-
-            // promote references
-            for (CompositeReference reference : composite.getReferences().values()) {
-                URI referenceUri = uri.resolve('#' + reference.getName());
-                LogicalReference logicalReference = new LogicalReference(referenceUri, reference, component);
-                for (BindingDefinition binding : reference.getBindings()) {
-                    logicalReference.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalReference));
-                }
-                for (URI promotedUri : reference.getPromoted()) {
-                    URI resolvedUri = URI.create(uri.toString() + "/" + promotedUri.toString());
-                    logicalReference.addPromotedUri(resolvedUri);
-                }
-                component.addReference(logicalReference);
-            }
-
-        } else {
-
-            // this is an atomic component so create and bind its services, references and resources
-            AbstractComponentType<?, ?, ?, ?> componentType = impl.getComponentType();
-
-            for (ServiceDefinition service : componentType.getServices().values()) {
-                String name = service.getName();
-                URI serviceUri = uri.resolve('#' + name);
-                LogicalService logicalService = new LogicalService(serviceUri, service, component);
-                ComponentService componentService = definition.getServices().get(name);
-                if (componentService != null) {
-                    // service is configured in the component definition
-                    for (BindingDefinition binding : componentService.getBindings()) {
-                        logicalService.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalService));
-                    }
-                }
-                component.addService(logicalService);
-            }
-
-            for (ReferenceDefinition reference : componentType.getReferences().values()) {
-                String name = reference.getName();
-                URI referenceUri = uri.resolve('#' + name);
-                LogicalReference logicalReference = new LogicalReference(referenceUri, reference, component);
-                ComponentReference componentReference = definition.getReferences().get(name);
-                if (componentReference != null) {
-                    // reference is configured
-                    for (BindingDefinition binding : componentReference.getBindings()) {
-                        logicalReference.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalReference));
-                    }
-                }
-                component.addReference(logicalReference);
-            }
-
-            for (ResourceDefinition resource : componentType.getResources().values()) {
-                URI resourceUri = uri.resolve('#' + resource.getName());
-                LogicalResource<?> logicalResource = createLogicalResource(resource, resourceUri, component);
-                component.addResource(logicalResource);
-            }
-
+        // create the child components
+        for (ComponentDefinition<? extends Implementation<?>> child : composite.getComponents().values()) {
+            component.addComponent(instantiate(compositeComponent, child));
         }
+        instantiateCompositeServices(uri, component, composite);
+        instantiateCompositeReferences(parent, definition, uri, component, composite);
+
 
         return component;
+    }
 
+    private <I extends Implementation<?>> void instantiateCompositeServices(URI uri,
+                                                                            LogicalComponent<I> component,
+                                                                            Composite composite) {
+        // promote services
+        for (CompositeService service : composite.getServices().values()) {
+            URI serviceUri = uri.resolve('#' + service.getName());
+            LogicalService logicalService = new LogicalService(serviceUri, service, component);
+            if (service.getPromote() != null) {
+                logicalService.setPromote(URI.create(uri.toString() + "/" + service.getPromote()));
+            }
+            for (BindingDefinition binding : service.getBindings()) {
+                logicalService.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalService));
+            }
+            component.addService(logicalService);
+        }
+    }
+
+    private <I extends Implementation<?>> void instantiateCompositeReferences(
+            LogicalComponent<CompositeImplementation> parent,
+            ComponentDefinition<I> definition,
+            URI uri, LogicalComponent<I> component,
+            Composite composite) {
+        // create logical references based on promoted references in the composite definition
+        for (CompositeReference reference : composite.getReferences().values()) {
+            String name = reference.getName();
+            URI referenceUri = uri.resolve('#' + name);
+            LogicalReference logicalReference = new LogicalReference(referenceUri, reference, component);
+            for (BindingDefinition binding : reference.getBindings()) {
+                logicalReference.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalReference));
+            }
+            for (URI promotedUri : reference.getPromoted()) {
+                URI resolvedUri = URI.create(uri.toString() + "/" + promotedUri.toString());
+                logicalReference.addPromotedUri(resolvedUri);
+            }
+            ComponentReference componentReference = definition.getReferences().get(name);
+            if (componentReference != null) {
+                // Merge/override logical reference configuration created above with reference configuration on the
+                // composite use. For example, when the component is used as an implementation, it may contain
+                // reference configuration. This information must be merged with or used to override any
+                // configuration that was created by reference promotions within the composite
+                if (!componentReference.getBindings().isEmpty()) {
+                    List<LogicalBinding<?>> bindings = new ArrayList<LogicalBinding<?>>();
+                    for (BindingDefinition binding : componentReference.getBindings()) {
+                        bindings.add(new LogicalBinding<BindingDefinition>(binding, logicalReference));
+                    }
+                    logicalReference.overrideBindings(bindings);
+                }
+                if (!componentReference.getTargets().isEmpty()) {
+                    List<URI> targets = new ArrayList<URI>();
+                    for (URI targetUri : componentReference.getTargets()) {
+                        // the target is relative to the component's parent, not the component
+                        targets.add(URI.create(parent.getUri().toString() + "/" + targetUri));
+                    }
+                    logicalReference.overrideTargets(targets);
+                }
+            }
+            component.addReference(logicalReference);
+        }
     }
 
     /**

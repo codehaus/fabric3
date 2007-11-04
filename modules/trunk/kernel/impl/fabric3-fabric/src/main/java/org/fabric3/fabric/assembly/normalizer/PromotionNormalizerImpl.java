@@ -93,7 +93,7 @@ public class PromotionNormalizerImpl implements PromotionNormalizer {
             }
             if (!bindings.isEmpty()) {
                 reference.overrideBindings(bindings);
-            } else if (reference.getBindings().size() == 0) {
+            } else if (reference.getBindings().isEmpty() && targets.isEmpty()) {
                 // no bindings were configured so use the SCA Binding
                 SCABindingDefinition definition = SCABindingDefinition.INSTANCE;
                 LogicalBinding<SCABindingDefinition> binding = new LogicalBinding<SCABindingDefinition>(definition, reference);
