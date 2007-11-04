@@ -414,7 +414,7 @@ public abstract class AbstractAssembly implements Assembly {
             component.addComponent(instantiate(compositeComponent, child));
         }
         instantiateCompositeServices(uri, component, composite);
-        instantiateCompositeReferences(parent, definition, uri, component, composite);
+        instantiateCompositeReferences(parent, uri, component, composite);
 
 
         return component;
@@ -454,9 +454,10 @@ public abstract class AbstractAssembly implements Assembly {
 
     private <I extends Implementation<?>> void instantiateCompositeReferences(
             LogicalComponent<CompositeImplementation> parent,
-            ComponentDefinition<I> definition,
-            URI uri, LogicalComponent<I> component,
+            URI uri,
+            LogicalComponent<I> component,
             Composite composite) {
+        ComponentDefinition<I> definition =  component.getDefinition();
         // create logical references based on promoted references in the composite definition
         for (CompositeReference reference : composite.getReferences().values()) {
             String name = reference.getName();
