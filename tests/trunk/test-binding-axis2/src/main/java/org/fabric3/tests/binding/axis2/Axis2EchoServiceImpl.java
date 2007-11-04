@@ -22,10 +22,10 @@ import org.apache.axiom.om.OMElement;
  * @version $Rev$ $Date$
  */
 public class Axis2EchoServiceImpl implements Axis2EchoService {
-    public OMElement echo(OMElement envelope) {
-        OMElement soapBody = envelope.getFirstElement();
-        OMElement operation = soapBody.getFirstElement();
+
+    public OMElement echo(OMElement operation) {
         OMElement parameter = operation.getFirstElement();
         return parameter;
     }
+
 }

@@ -19,6 +19,8 @@
 
 package org.fabric3.binding.ws.axis2;
 
+import java.util.Iterator;
+
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
@@ -70,8 +72,9 @@ public class InOutServiceProxyHandler extends AbstractInOutMessageReceiver {
         AxisOperation op = inMessage.getOperationContext().getAxisOperation();
         
         Interceptor head = invocationChain.getHeadInterceptor();
-        OMElement omElement = inMessage.getEnvelope();
-        Message input = new MessageImpl(new Object[] {omElement}, false, new SimpleWorkContext(), wire);
+        OMElement bodyContent = getInBodyContent(inMessage);
+        
+        Message input = new MessageImpl(new Object[] {bodyContent}, false, new SimpleWorkContext(), wire);
         
         Message ret = head.invoke(input);
         OMElement resObject = (OMElement) ret.getBody();
@@ -81,12 +84,32 @@ public class InOutServiceProxyHandler extends AbstractInOutMessageReceiver {
         String partName = op.getName() + "Response";
 
         SOAPEnvelope envelope = fac.getDefaultEnvelope();
-        OMElement bodyContent = fac.createOMElement(partName, null);
+        bodyContent = fac.createOMElement(partName, null);
         
         bodyContent.addChild(resObject);
         envelope.getBody().addChild(bodyContent);
         
         outMessage.setEnvelope(envelope);
+        
+    }
+
+    /*
+     * Gets the body content of the incoming message.
+     */
+    private OMElement getInBodyContent(MessageContext inMessage) {
+        
+        SOAPEnvelope envelope = inMessage.getEnvelope();
+        
+        OMElement child = null;
+        Iterator<?> children = envelope.getChildElements();
+        while(children.hasNext()) {
+            child = (OMElement) children.next();
+            if("Body".equals(child.getLocalName())) {
+                break;
+            }
+        }
+        OMElement bodyContent = child.getFirstElement();
+        return bodyContent;
         
     }
 
