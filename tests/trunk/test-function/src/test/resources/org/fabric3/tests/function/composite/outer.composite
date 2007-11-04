@@ -28,6 +28,9 @@
 
     <component name="Inner2">
         <implementation.composite name="inner2" scdlLocation="inner2.composite"/>
+        <service name="SourceService">
+            <f3:binding.test uri="SourceService"/>
+        </service>
         <reference name="promoted" target="target"/>
     </component>
 
@@ -35,6 +38,9 @@
         <f3:junit class="org.fabric3.tests.function.composite.InnerCompositeTest"/>
         <reference name="inner" target="Inner"/>
         <reference name="innerSpecified" target="Inner2/two"/>
+        <reference name="boundSource">
+            <f3:binding.test uri="SourceService"/>
+        </reference>
     </component>
     
     <component name="target">

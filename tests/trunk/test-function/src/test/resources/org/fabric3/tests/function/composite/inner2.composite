@@ -20,7 +20,7 @@
            name="InnerComposite2">
 
     <service name="two" promote="two#IdentityService"/>
-    <service name="three" promote="source"/>
+    <service name="SourceService" promote="source"/>
 
     <component name="two">
         <implementation.java class="org.fabric3.tests.function.common.IdentityServiceImpl"/>

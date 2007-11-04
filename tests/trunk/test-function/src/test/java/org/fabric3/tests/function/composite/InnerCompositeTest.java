@@ -20,6 +20,7 @@ import junit.framework.TestCase;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.tests.function.common.IdentityService;
+import org.fabric3.tests.function.common.Source;
 
 /**
  * @version $Rev$ $Date$
@@ -31,8 +32,12 @@ public class InnerCompositeTest extends TestCase {
     @Reference
     protected IdentityService innerSpecified;
 
+    @Reference
+    protected Source boundSource;
+
     public void testInnerComposite() {
         assertEquals("innerOne", inner.getIdentity());
         assertEquals("two", innerSpecified.getIdentity());
+        assertEquals("test", boundSource.invoke("test"));
     }
 }
