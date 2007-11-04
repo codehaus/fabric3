@@ -236,8 +236,12 @@ public abstract class AbstractAssembly implements Assembly {
             LogicalReference logicalReference = new LogicalReference(referenceURi, compositeReference, parent);
             for (URI promotedUri : compositeReference.getPromoted()) {
                 URI componentId = URI.create(base + "/" + promotedUri.getPath());
-                if (parent.getComponent(componentId) == null) {
+                LogicalComponent<?> promotedComponent = parent.getComponent(componentId);
+                if (promotedComponent == null) {
                     throw new MissingPromotedComponentException("No component for reference to promote: " + referenceURi, referenceURi.toString());
+                }
+                if (promotedComponent.getReference(promotedUri.getFragment()) == null) {
+                    throw new MissingPromotedReferenceException("No reference on promoted component for: " + referenceURi, referenceURi.toString());
                 }
                 URI resolvedUri = URI.create(base + "/" + promotedUri.toString());
                 logicalReference.addPromotedUri(resolvedUri);
