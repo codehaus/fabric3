@@ -423,15 +423,30 @@ public abstract class AbstractAssembly implements Assembly {
     private <I extends Implementation<?>> void instantiateCompositeServices(URI uri,
                                                                             LogicalComponent<I> component,
                                                                             Composite composite) {
-        // promote services
+        ComponentDefinition<I> definition = component.getDefinition();
         for (CompositeService service : composite.getServices().values()) {
-            URI serviceUri = uri.resolve('#' + service.getName());
+            String name = service.getName();
+            URI serviceUri = uri.resolve('#' + name);
             LogicalService logicalService = new LogicalService(serviceUri, service, component);
             if (service.getPromote() != null) {
                 logicalService.setPromote(URI.create(uri.toString() + "/" + service.getPromote()));
             }
             for (BindingDefinition binding : service.getBindings()) {
                 logicalService.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalService));
+            }
+            ComponentService componentReference = definition.getServices().get(name);
+            if (componentReference != null) {
+                // Merge/override logical reference configuration created above with service configuration on the
+                // composite use. For example, when the component is used as an implementation, it may contain
+                // service configuration. This information must be merged with or used to override any
+                // configuration that was created by service promotions within the composite
+                if (!componentReference.getBindings().isEmpty()) {
+                    List<LogicalBinding<?>> bindings = new ArrayList<LogicalBinding<?>>();
+                    for (BindingDefinition binding : componentReference.getBindings()) {
+                        bindings.add(new LogicalBinding<BindingDefinition>(binding, logicalService));
+                    }
+                    logicalService.overrideBindings(bindings);
+                }
             }
             component.addService(logicalService);
         }
