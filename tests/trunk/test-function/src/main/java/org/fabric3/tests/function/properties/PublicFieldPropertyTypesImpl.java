@@ -26,7 +26,7 @@ import org.osoa.sca.annotations.Property;
 /**
  * @version $Rev$ $Date$
  */
-public class PropertyTypesImpl implements PropertyTypes {
+public class PublicFieldPropertyTypesImpl implements PropertyTypes {
     @Property public boolean booleanPrimitive;
     @Property public byte bytePrimitive;
     @Property public short shortPrimitive;

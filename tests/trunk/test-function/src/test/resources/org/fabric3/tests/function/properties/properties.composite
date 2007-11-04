@@ -19,8 +19,13 @@
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            name="PropertyComposite">
 
-    <component name="PropertyTypesImpl">
-        <implementation.java class="org.fabric3.tests.function.properties.PropertyTypesImpl"/>
+    <component name="PublicFieldPropertyTypesTest">
+        <f3:junit class="org.fabric3.tests.function.properties.PropertyTypeTest"/>
+        <reference name="service" target="PublicFieldPropertyTypesImpl"/>
+    </component>
+
+    <component name="PublicFieldPropertyTypesImpl">
+        <implementation.java class="org.fabric3.tests.function.properties.PublicFieldPropertyTypesImpl"/>
         <property name="booleanPrimitive">true</property>
         <property name="bytePrimitive">12</property>
         <property name="shortPrimitive">1234</property>
@@ -43,9 +48,120 @@
         <property name="calendarValue">2007-10-31T01:00:00Z</property>
     </component>
 
-    <component name="PropertyTypesTest">
+    <component name="ProtectedFieldPropertyTypesTest">
         <f3:junit class="org.fabric3.tests.function.properties.PropertyTypeTest"/>
-        <reference name="service" target="PropertyTypesImpl"/>
+        <reference name="service" target="ProtectedFieldPropertyTypesImpl"/>
+    </component>
+
+    <component name="ProtectedFieldPropertyTypesImpl">
+        <implementation.java class="org.fabric3.tests.function.properties.ProtectedFieldPropertyTypesImpl"/>
+        <property name="booleanPrimitive">true</property>
+        <property name="bytePrimitive">12</property>
+        <property name="shortPrimitive">1234</property>
+        <property name="intPrimitive">12345678</property>
+        <property name="longPrimitive">123451234512345</property>
+        <property name="floatPrimitive">1.2345</property>
+        <property name="doublePrimitive">1.2345e10</property>
+        <property name="string">Hello World</property>
+        <property name="booleanValue">true</property>
+        <property name="byteValue">12</property>
+        <property name="shortValue">1234</property>
+        <property name="integerValue">12345678</property>
+        <property name="longValue">123451234512345</property>
+        <property name="floatValue">1.2345</property>
+        <property name="doubleValue">1.2345e10</property>
+        <property name="classValue">org.fabric3.tests.function.properties.PropertyTypes</property>
+        <property name="uriValue">urn:fabric3:test</property>
+        <property name="urlValue">file://./root</property>
+        <property name="dateValue">31/10/2007</property>
+        <property name="calendarValue">2007-10-31T01:00:00Z</property>
+    </component>
+
+    <component name="PublicSetterPropertyTypesTest">
+        <f3:junit class="org.fabric3.tests.function.properties.PropertyTypeTest"/>
+        <reference name="service" target="PublicSetterPropertyTypesImpl"/>
+    </component>
+
+    <component name="PublicSetterPropertyTypesImpl">
+        <implementation.java class="org.fabric3.tests.function.properties.PublicSetterPropertyTypesImpl"/>
+        <property name="booleanPrimitive">true</property>
+        <property name="bytePrimitive">12</property>
+        <property name="shortPrimitive">1234</property>
+        <property name="intPrimitive">12345678</property>
+        <property name="longPrimitive">123451234512345</property>
+        <property name="floatPrimitive">1.2345</property>
+        <property name="doublePrimitive">1.2345e10</property>
+        <property name="string">Hello World</property>
+        <property name="booleanValue">true</property>
+        <property name="byteValue">12</property>
+        <property name="shortValue">1234</property>
+        <property name="integerValue">12345678</property>
+        <property name="longValue">123451234512345</property>
+        <property name="floatValue">1.2345</property>
+        <property name="doubleValue">1.2345e10</property>
+        <property name="classValue">org.fabric3.tests.function.properties.PropertyTypes</property>
+        <property name="uriValue">urn:fabric3:test</property>
+        <property name="urlValue">file://./root</property>
+        <property name="dateValue">31/10/2007</property>
+        <property name="calendarValue">2007-10-31T01:00:00Z</property>
+    </component>
+
+    <component name="ProtectedSetterPropertyTypesTest">
+        <f3:junit class="org.fabric3.tests.function.properties.PropertyTypeTest"/>
+        <reference name="service" target="ProtectedSetterPropertyTypesImpl"/>
+    </component>
+
+    <component name="ProtectedSetterPropertyTypesImpl">
+        <implementation.java class="org.fabric3.tests.function.properties.ProtectedSetterPropertyTypesImpl"/>
+        <property name="booleanPrimitive">true</property>
+        <property name="bytePrimitive">12</property>
+        <property name="shortPrimitive">1234</property>
+        <property name="intPrimitive">12345678</property>
+        <property name="longPrimitive">123451234512345</property>
+        <property name="floatPrimitive">1.2345</property>
+        <property name="doublePrimitive">1.2345e10</property>
+        <property name="string">Hello World</property>
+        <property name="booleanValue">true</property>
+        <property name="byteValue">12</property>
+        <property name="shortValue">1234</property>
+        <property name="integerValue">12345678</property>
+        <property name="longValue">123451234512345</property>
+        <property name="floatValue">1.2345</property>
+        <property name="doubleValue">1.2345e10</property>
+        <property name="classValue">org.fabric3.tests.function.properties.PropertyTypes</property>
+        <property name="uriValue">urn:fabric3:test</property>
+        <property name="urlValue">file://./root</property>
+        <property name="dateValue">31/10/2007</property>
+        <property name="calendarValue">2007-10-31T01:00:00Z</property>
+    </component>
+
+    <component name="PublicConstructorPropertyTypesTest">
+        <f3:junit class="org.fabric3.tests.function.properties.PropertyTypeTest"/>
+        <reference name="service" target="PublicConstructorPropertyTypesImpl"/>
+    </component>
+
+    <component name="PublicConstructorPropertyTypesImpl">
+        <implementation.java class="org.fabric3.tests.function.properties.PublicConstructorPropertyTypesImpl"/>
+        <property name="booleanPrimitive">true</property>
+        <property name="bytePrimitive">12</property>
+        <property name="shortPrimitive">1234</property>
+        <property name="intPrimitive">12345678</property>
+        <property name="longPrimitive">123451234512345</property>
+        <property name="floatPrimitive">1.2345</property>
+        <property name="doublePrimitive">1.2345e10</property>
+        <property name="string">Hello World</property>
+        <property name="booleanValue">true</property>
+        <property name="byteValue">12</property>
+        <property name="shortValue">1234</property>
+        <property name="integerValue">12345678</property>
+        <property name="longValue">123451234512345</property>
+        <property name="floatValue">1.2345</property>
+        <property name="doubleValue">1.2345e10</property>
+        <property name="classValue">org.fabric3.tests.function.properties.PropertyTypes</property>
+        <property name="uriValue">urn:fabric3:test</property>
+        <property name="urlValue">file://./root</property>
+        <property name="dateValue">31/10/2007</property>
+        <property name="calendarValue">2007-10-31T01:00:00Z</property>
     </component>
 
     <component name="PropertyFromFileImpl">
