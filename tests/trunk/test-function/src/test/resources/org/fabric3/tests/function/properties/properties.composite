@@ -62,16 +62,14 @@
     <property name="simple">Hello World</property>
 
     <property name="complex">
-        <wrapper>
-            <a>Hello World</a>
-        </wrapper>
+        <a xmlns="">Hello World</a>
+        <a xmlns="urn:foo">Hello Foo</a>
     </property>
 
     <component name="PropertyXPathTest">
         <f3:junit class="org.fabric3.tests.function.properties.PropertyXPathTest"/>
         <property name="simple" source="$simple"/>
-<!--
         <property name="complex" source="$complex/a"/>
--->
+        <property name="complexWithNamespace" xmlns:foo="urn:foo" source="$complex/foo:a"/>
     </component>
 </composite>

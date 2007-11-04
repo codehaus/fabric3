@@ -27,14 +27,20 @@ public class PropertyXPathTest extends TestCase {
     public String simple;
     @Property
     public String complex;
+    @Property
+    public String complexWithNamespace;
 
     public void testSimpleXPath() {
         assertEquals("Hello World", simple);
     }
 
-/*
     public void testComplexXPathString() {
         assertEquals("Hello World", complex);
+    }
+
+/*
+    public void testComplexXPathWithNamespace() {
+        assertEquals("Hello Foo", complexWithNamespace);
     }
 */
 }
