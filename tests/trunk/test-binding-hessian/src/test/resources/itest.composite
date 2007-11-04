@@ -20,21 +20,17 @@
            xmlns:hessian="http://www.fabric3.org/binding/hessian/0.2"
            name="HessianTestComposite">
 
-    <service name="BoundService" promote="EchoService">
-        <interface.java interface="org.fabric3.tests.binding.harness.EchoService"/>
-        <hessian:binding.hessian uri="/echoService"/>
-    </service>
-
-    <reference name="BoundReference" promote="EchoTest/service">
-        <interface.java interface="org.fabric3.tests.binding.harness.EchoService"/>
-        <hessian:binding.hessian uri="http://localhost:8900/echoService"/>
-    </reference>
-
     <component name="EchoTest">
         <f3:junit class="org.fabric3.tests.binding.harness.EchoTest"/>
+        <reference name="service">
+            <hessian:binding.hessian uri="http://localhost:8900/echoService"/>
+        </reference>
     </component>
 
     <component name="EchoService">
         <implementation.java class="org.fabric3.tests.binding.harness.EchoServiceImpl"/>
+        <service name="EchoService">
+            <hessian:binding.hessian uri="/echoService"/>
+        </service>
     </component>
 </composite>

@@ -19,35 +19,31 @@
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            name="WsTestComposite">
 
-    <reference name="CXFBoundReference" promote="CXFToAxisTest/service">
-        <interface.java interface="org.fabric3.tests.binding.harness.EchoService"/>
-        <binding.ws uri="http://localhost:8900/axis2/echoService" f3:impl="cxf"/>
-    </reference>
+    <!-- CXF to Axis2 -->
     <component name="CXFToAxisTest">
         <f3:junit class="org.fabric3.tests.binding.harness.EchoTest"/>
+        <reference name="service">
+            <binding.ws uri="http://localhost:8900/axis2/echoService" f3:impl="cxf"/>
+        </reference>
     </component>
-
-    <reference name="AxisBoundReference" promote="AxisToCXFTest/service">
-        <interface.java interface="org.fabric3.tests.interop.axis2.Axis2EchoService"/>
-        <binding.ws uri="http://localhost:8900/services/echoService" f3:impl="axis2"/>
-    </reference>
-    <component name="AxisToCXFTest">
-        <f3:junit class="org.fabric3.tests.interop.AxisToCXFTest"/>
-    </component>
-
-    <service name="CXFBoundService" promote="CXFService">
-        <interface.java interface="org.fabric3.tests.binding.harness.EchoService"/>
-        <binding.ws uri="/echoService" f3:impl="cxf"/>
-    </service>
     <component name="CXFService">
         <implementation.java class="org.fabric3.tests.binding.harness.EchoServiceImpl"/>
+        <service name="EchoService">
+            <binding.ws uri="/echoService" f3:impl="cxf"/>
+        </service>
     </component>
 
-    <service name="AxisBoundService" promote="AxisService">
-        <interface.java interface="org.fabric3.tests.interop.axis2.Axis2EchoService"/>
-        <binding.ws uri="echoService" f3:impl="axis2"/>
-    </service>
+    <!-- Axis2 to CXF -->
+    <component name="AxisToCXFTest">
+        <f3:junit class="org.fabric3.tests.interop.AxisToCXFTest"/>
+        <reference name="service">
+            <binding.ws uri="http://localhost:8900/services/echoService" f3:impl="axis2"/>
+        </reference>
+    </component>
     <component name="AxisService">
         <implementation.java class="org.fabric3.tests.interop.axis2.Axis2EchoServiceImpl"/>
+        <service name="Axis2EchoService">
+            <binding.ws uri="echoService" f3:impl="axis2"/>
+        </service>
     </component>
 </composite>

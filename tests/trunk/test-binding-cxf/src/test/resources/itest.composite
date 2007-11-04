@@ -19,21 +19,17 @@
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            name="CXFTestComposite">
 
-    <service name="BoundService" promote="EchoService">
-        <interface.java interface="org.fabric3.tests.binding.harness.EchoService"/>
-        <binding.ws uri="/echoService" f3:impl="cxf"/>
-    </service>
-
-    <reference name="BoundReference" promote="EchoTest/service">
-        <interface.java interface="org.fabric3.tests.binding.harness.EchoService"/>
-        <binding.ws uri="http://localhost:8900/services/echoService" f3:impl="cxf"/>
-    </reference>
-
     <component name="EchoTest">
         <f3:junit class="org.fabric3.tests.binding.harness.EchoTest"/>
+        <reference name="service">
+            <binding.ws uri="http://localhost:8900/services/echoService" f3:impl="cxf"/>
+        </reference>
     </component>
 
     <component name="EchoService">
         <implementation.java class="org.fabric3.tests.binding.harness.EchoServiceImpl"/>
+        <service name="EchoService">
+            <binding.ws uri="/echoService" f3:impl="cxf"/>
+        </service>
     </component>
 </composite>

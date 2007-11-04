@@ -20,21 +20,17 @@
            xmlns:burlap="http://www.fabric3.org/binding/burlap/0.2"
            name="BurlapTestComposite">
 
-    <service name="BoundService" promote="EchoService">
-        <interface.java interface="org.fabric3.tests.binding.harness.EchoService"/>
-        <burlap:binding.burlap uri="/echoService"/>
-    </service>
-
-    <reference name="BoundReference" promote="EchoTest/service">
-        <interface.java interface="org.fabric3.tests.binding.harness.EchoService"/>
-        <burlap:binding.burlap uri="http://localhost:8900/echoService"/>
-    </reference>
-
     <component name="EchoTest">
         <f3:junit class="org.fabric3.tests.binding.harness.EchoTest"/>
+        <reference name="service">
+            <burlap:binding.burlap uri="http://localhost:8900/echoService"/>
+        </reference>
     </component>
 
     <component name="EchoService">
         <implementation.java class="org.fabric3.tests.binding.harness.EchoServiceImpl"/>
+        <service name="EchoService">
+            <burlap:binding.burlap uri="/echoService"/>
+        </service>
     </component>
 </composite>
