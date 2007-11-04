@@ -68,6 +68,7 @@ import org.fabric3.scdl.Property;
 import org.fabric3.scdl.PropertyValue;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ResourceDefinition;
+import org.fabric3.scdl.Scope;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.assembly.Assembly;
@@ -752,11 +753,16 @@ public abstract class AbstractAssembly implements Assembly {
 
     protected boolean isEagerInit(LogicalComponent<?> component) {
         ComponentDefinition<? extends Implementation<?>> definition = component.getDefinition();
-        Integer level = definition.getInitLevel();
-        if (level != null) {
-            return level > 0;
+        AbstractComponentType<?, ?, ?, ?> componentType = definition.getImplementation().getComponentType();
+        if (!componentType.getImplementationScope().equals(Scope.COMPOSITE)) {
+            return false;
         }
-        return definition.getImplementation().getComponentType().getInitLevel() > 0;
+
+        Integer level = definition.getInitLevel();
+        if (level == null) {
+            level = componentType.getInitLevel();
+        }
+        return level > 0;
     }
 
     /**

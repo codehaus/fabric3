@@ -60,7 +60,7 @@ public class Scope<T> {
             return false;
         }
         final Scope scope1 = (Scope) o;
-        return scope != scope1.scope;
+        return scope == scope1.scope;
     }
 
     public int hashCode() {

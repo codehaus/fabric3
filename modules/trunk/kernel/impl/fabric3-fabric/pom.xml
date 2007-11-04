@@ -46,10 +46,15 @@
     
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-scdl</artifactId>
+            <version>0.3.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
             <version>0.3</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-policy-spi</artifactId>
