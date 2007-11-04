@@ -34,12 +34,12 @@
     <component name="InnerCompositeTest">
         <f3:junit class="org.fabric3.tests.function.composite.InnerCompositeTest"/>
         <reference name="inner" target="Inner"/>
-        <reference name="innerSpecified" target="Inner2#two"/>
+        <reference name="innerSpecified" target="Inner2/two"/>
     </component>
     
-    <!--<component name="target">-->
-            <!--<implementation.java name="target" class="org.fabric3.tests.function.common.TargetImpl"/>-->
-    <!--</component>-->
+    <component name="target">
+            <implementation.java name="target" class="org.fabric3.tests.function.common.TargetImpl"/>
+    </component>
 
 
 </composite>
