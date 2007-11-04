@@ -87,9 +87,14 @@ public class Fabric3Server implements Fabric3ServerMBean {
         server.start();
 
         // Start any runtimes specified in the cli
-        for (String profile : args) {
-            server.startRuntime(profile);
+        if (args.length > 0) {
+            for (String profile : args) {
+                server.startRuntime(profile);
+            }
+        } else {
+            System.out.println("No profiles specified on command line.");
         }
+        System.out.println("Waiting for JMX Commands.");
 
         server.run();
 
