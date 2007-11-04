@@ -72,7 +72,7 @@
             <groupId>stax</groupId>
             <artifactId>stax-api</artifactId>
             <!-- use version 1.0 as it is the version bundled in JDK 6 -->
-            <version>1.0.</version>
+            <version>1.0</version>
             <scope>compile</scope>
         </dependency>
 
@@ -98,14 +98,14 @@
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-maven</artifactId>
-            <version>0.2</version>
+            <artifactId>fabric3-maven-host</artifactId>
+            <version>0.3-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.woodstox</groupId>
             <artifactId>wstx-asl</artifactId>
-            <version>3.2.0</version>
+            <version>3.2.2</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>

@@ -349,12 +349,8 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-extension/0.3/fabric3-extension-0.3.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-extension/0.3/fabric3-extension-0.3-javadoc.jar!/" />
-        </JAVADOC>
-        <SOURCES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-extension/0.3/fabric3-extension-0.3-sources.jar!/" />
-        </SOURCES>
+        <JAVADOC />
+        <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="fabric3-fabric" exported="" />
@@ -369,15 +365,7 @@
     </orderEntry>
     <orderEntry type="module" module-name="fabric3-java" exported="" />
     <orderEntry type="module" module-name="fabric3-loader" exported="" />
-    <orderEntry type="module-library" exported="">
-      <library name="org.codehaus.fabric3:fabric3-maven:0.2">
-        <CLASSES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-maven/0.2/fabric3-maven-0.2.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
+    <orderEntry type="module" module-name="fabric3-maven-host" exported="" />
     <orderEntry type="module" module-name="fabric3-pojo" exported="" />
     <orderEntry type="module" module-name="fabric3-policy" exported="" />
     <orderEntry type="module-library" exported="">
@@ -395,12 +383,8 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-scdl/0.3/fabric3-scdl-0.3.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-scdl/0.3/fabric3-scdl-0.3-javadoc.jar!/" />
-        </JAVADOC>
-        <SOURCES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-scdl/0.3/fabric3-scdl-0.3-sources.jar!/" />
-        </SOURCES>
+        <JAVADOC />
+        <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -408,12 +392,8 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-spi/0.3/fabric3-spi-0.3.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-spi/0.3/fabric3-spi-0.3-javadoc.jar!/" />
-        </JAVADOC>
-        <SOURCES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-spi/0.3/fabric3-spi-0.3-sources.jar!/" />
-        </SOURCES>
+        <JAVADOC />
+        <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="fabric3-transform" exported="" />
@@ -446,9 +426,9 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="org.codehaus.woodstox:wstx-asl:3.2.0">
+      <library name="org.codehaus.woodstox:wstx-asl:3.2.2">
         <CLASSES>
-          <root url="jar://$M2_REPO$/org/codehaus/woodstox/wstx-asl/3.2.0/wstx-asl-3.2.0.jar!/" />
+          <root url="jar://$M2_REPO$/org/codehaus/woodstox/wstx-asl/3.2.2/wstx-asl-3.2.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
