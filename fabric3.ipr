@@ -351,7 +351,7 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/plugin/fabric3-itest-plugin/fabric3-itest-plugin.iml" filepath="$PROJECT_DIR$/modules/trunk/plugin/fabric3-itest-plugin/fabric3-itest-plugin.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-java/fabric3-java.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-java/fabric3-java.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jetty/fabric3-jetty.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jetty/fabric3-jetty.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-jmx/fabric3-jmx.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-jmx/fabric3-jmx.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-jmx/fabric3-jmx.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-jmx/fabric3-jmx.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-core/fabric3-jpa-core.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-core/fabric3-jpa-core.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-hibernate/fabric3-jpa-hibernate.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-hibernate/fabric3-jpa-hibernate.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-spi/fabric3-jpa-spi.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-spi/fabric3-jpa-spi.iml" />
