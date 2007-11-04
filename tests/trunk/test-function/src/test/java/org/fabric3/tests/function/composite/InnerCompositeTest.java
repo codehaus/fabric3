@@ -32,7 +32,7 @@ public class InnerCompositeTest extends TestCase {
     protected IdentityService innerSpecified;
 
     public void testInnerComposite() {
-        assertEquals("one", inner.getIdentity());
+        assertEquals("innerOne", inner.getIdentity());
         assertEquals("two", innerSpecified.getIdentity());
     }
 }

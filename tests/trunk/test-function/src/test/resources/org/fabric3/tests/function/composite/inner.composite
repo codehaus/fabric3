@@ -19,11 +19,13 @@
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            name="InnerComposite">
 
+    <property name="ids"/>
+
     <service name="one" promote="one"/>
 
     <component name="one">
         <implementation.java class="org.fabric3.tests.function.common.IdentityServiceImpl"/>
-        <property name="id">one</property>
+        <property name="id" source="$ids/one"/>
     </component>
 
 </composite>
