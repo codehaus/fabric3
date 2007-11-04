@@ -220,10 +220,18 @@ public abstract class AbstractAssembly implements Assembly {
         // merge the composite service declarations into the parent
         for (CompositeService compositeService : composite.getServices().values()) {
             URI serviceURI = URI.create(base + '#' + compositeService.getName());
-            LogicalService logicalService = new LogicalService(serviceURI, compositeService, parent);
-            if (compositeService.getPromote() != null) {
-                logicalService.setPromote(URI.create(base + "/" + compositeService.getPromote()));
+            URI promotedURI = compositeService.getPromote();
+            URI componentId = URI.create(base + "/" + promotedURI.getPath());
+            LogicalComponent<?> promotedComponent = parent.getComponent(componentId);
+            if (promotedComponent == null) {
+                throw new MissingPromotedComponentException("No component for service to promote: " + serviceURI, serviceURI.toString());
             }
+            if (promotedComponent.getService(promotedURI.getFragment()) == null) {
+                throw new MissingPromotedServiceException("No service on promoted component for: " + serviceURI, serviceURI.toString());
+            }
+
+            LogicalService logicalService = new LogicalService(serviceURI, compositeService, parent);
+            logicalService.setPromote(URI.create(base + "/" + promotedURI));
             for (BindingDefinition binding : compositeService.getBindings()) {
                 logicalService.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalService));
             }
