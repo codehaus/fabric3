@@ -39,6 +39,7 @@ public class PropertyXPathTest extends TestCase {
     }
 
 /*
+    // testcase for FABRICTHREE-79
     public void testComplexXPathWithNamespace() {
         assertEquals("Hello Foo", complexWithNamespace);
     }
