@@ -47,13 +47,14 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-itest-plugin</artifactId>
+                <!-- generally this should point to the latest plugin and kernel version -->
                 <version>0.4-SNAPSHOT</version>
                  <configuration>
                     <contributions>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-binding-test</artifactId>
-                            <version>0.2-SNAPSHOT</version>
+                            <version>0.1</version>
                         </dependency>
                     </contributions>
                     <properties>
