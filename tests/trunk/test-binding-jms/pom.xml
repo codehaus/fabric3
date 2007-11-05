@@ -21,7 +21,7 @@ under the License.
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric</artifactId>
-        <version>2</version>
+        <version>4</version>
     </parent>
     <groupId>org.codehaus.fabric3.tests</groupId>
     <artifactId>test-binding-jms</artifactId>
@@ -50,33 +50,9 @@ under the License.
         <defaultGoal>verify</defaultGoal>
         <plugins>
             <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>RELEASE</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>compile</goal>
-                             <goal>testCompile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>RELEASE</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>resources</goal>
-                            <goal>testResources</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-itest-plugin</artifactId>
-                <version>0.3-SNAPSHOT</version>
+                <version>RELEASE</version>
                 <configuration>
                     <contributions>
                         <dependency>
