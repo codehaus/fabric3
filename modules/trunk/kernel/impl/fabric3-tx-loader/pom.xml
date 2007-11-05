@@ -25,7 +25,7 @@
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-tx-loader</artifactId>
     <version>0.2-SNAPSHOT</version>
-    <name>Fabric3 Transaction</name>
+    <name>Fabric3 Transaction Loader</name>
     <description>Fabric3 Transaction Loader.</description>
     <packaging>jar</packaging>
 
