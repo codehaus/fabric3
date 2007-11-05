@@ -53,6 +53,7 @@ public class DefaultWireResolver implements WireResolver {
             for (LogicalComponent<?> child : component.getComponents()) {
                 resolve(child);
             }
+            resolveReferences(component);
         }
         resolveServicePromotions(component);
     }
@@ -139,12 +140,14 @@ public class DefaultWireResolver implements WireResolver {
                 List<URI> uris = target.getTargets();
                 if (!uris.isEmpty()) {
                     URI parentUri = composite.getUri();
+                    List<URI> resolvedUris = new ArrayList<URI>();
                     for (URI uri : uris) {
                         // fully resolve URIs
                         URI resolved = parentUri.resolve(component.getUri()).resolve(uri);
                         URI targetURI = resolveByUri(logicalReference, resolved, composite);
-                        logicalReference.addTargetUri(targetURI);
+                        resolvedUris.add(targetURI);
                     }
+                    logicalReference.overrideTargets(resolvedUris);
                     continue;
                 } else if (isPromoted(composite, component, referenceName)) {
                     // no URIs were specified, check to see if the reference was promoted, and if so continue
