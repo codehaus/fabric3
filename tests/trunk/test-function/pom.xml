@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric</artifactId>
-        <version>2</version>
+        <version>4</version>
     </parent>
     <groupId>org.codehaus.fabric3.tests</groupId>
     <artifactId>test-function</artifactId>
@@ -47,13 +47,13 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-itest-plugin</artifactId>
-                <version>0.3-SNAPSHOT</version>
+                <version>0.4-SNAPSHOT</version>
                  <configuration>
                     <contributions>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-binding-test</artifactId>
-                            <version>0.1-SNAPSHOT</version>
+                            <version>0.2-SNAPSHOT</version>
                         </dependency>
                     </contributions>
                     <properties>
