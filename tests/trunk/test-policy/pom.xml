@@ -42,13 +42,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-spi</artifactId>
-            <version>0.2</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>compile</scope>
@@ -76,8 +69,8 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-itest-plugin</artifactId>
+                <version>RELEASE</version>
                 <configuration>
-                    <systemScdl>file:${basedir}/target/classes/META-INF/testSystem.composite</systemScdl>
                     <contributions>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
