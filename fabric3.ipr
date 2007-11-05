@@ -358,7 +358,7 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-spi/fabric3-jpa-spi.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-spi/fabric3-jpa-spi.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/federated/fabric3-jxta/fabric3-jxta.iml" filepath="$PROJECT_DIR$/modules/trunk/federated/fabric3-jxta/fabric3-jxta.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-loader/fabric3-loader.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-loader/fabric3-loader.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/maven/fabric-maven-host/fabric3-maven-host.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/maven/fabric-maven-host/fabric3-maven-host.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/maven/fabric3-maven-host/fabric3-maven-host.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/maven/fabric3-maven-host/fabric3-maven-host.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/federated/fabric3-messaging-jms/fabric3-messaging-jms.iml" filepath="$PROJECT_DIR$/modules/trunk/federated/fabric3-messaging-jms/fabric3-messaging-jms.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/federated/fabric3-messaging-jxta/fabric3-messaging-jxta.iml" filepath="$PROJECT_DIR$/modules/trunk/federated/fabric3-messaging-jxta/fabric3-messaging-jxta.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-pojo/fabric3-pojo.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-pojo/fabric3-pojo.iml" />
