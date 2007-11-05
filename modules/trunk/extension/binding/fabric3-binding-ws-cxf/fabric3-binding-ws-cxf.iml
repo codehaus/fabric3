@@ -241,9 +241,9 @@
     </orderEntry>
     <orderEntry type="module" module-name="fabric3-binding-ws" exported="" />
     <orderEntry type="module-library" exported="">
-      <library name="org.codehaus.fabric3:fabric3-extension:0.3">
+      <library name="org.codehaus.fabric3:fabric3-extension:0.3.1">
         <CLASSES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-extension/0.3/fabric3-extension-0.3.jar!/" />
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-extension/0.3.1/fabric3-extension-0.3.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -259,18 +259,18 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="org.codehaus.fabric3:fabric3-scdl:0.3">
+      <library name="org.codehaus.fabric3:fabric3-scdl:0.3.1">
         <CLASSES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-scdl/0.3/fabric3-scdl-0.3.jar!/" />
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-scdl/0.3.1/fabric3-scdl-0.3.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="org.codehaus.fabric3:fabric3-spi:0.3">
+      <library name="org.codehaus.fabric3:fabric3-spi:0.3.1">
         <CLASSES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-spi/0.3/fabric3-spi-0.3.jar!/" />
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-spi/0.3.1/fabric3-spi-0.3.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

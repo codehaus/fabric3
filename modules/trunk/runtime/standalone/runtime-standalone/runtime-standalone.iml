@@ -140,7 +140,15 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="fabric3-fabric" exported="" />
+    <orderEntry type="module-library" exported="">
+      <library name="org.codehaus.fabric3:fabric3-fabric:0.3-SNAPSHOT">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-fabric/0.3-SNAPSHOT/fabric3-fabric-0.3-SNAPSHOT.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
     <orderEntry type="module-library" exported="">
       <library name="org.codehaus.fabric3:fabric3-host-api:0.2">
         <CLASSES>
@@ -150,7 +158,15 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="fabric3-java" exported="" />
+    <orderEntry type="module-library" exported="">
+      <library name="org.codehaus.fabric3:fabric3-java:0.1">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-java/0.1/fabric3-java-0.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
     <orderEntry type="module" module-name="fabric3-jetty" exported="" />
     <orderEntry type="module-library" exported="">
       <library name="org.codehaus.fabric3:fabric3-jmx:0.2">
@@ -161,12 +177,28 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="fabric3-loader" exported="" />
-    <orderEntry type="module" module-name="fabric3-pojo" exported="" />
     <orderEntry type="module-library" exported="">
-      <library name="org.codehaus.fabric3:fabric3-policy:0.2">
+      <library name="org.codehaus.fabric3:fabric3-loader:0.3">
         <CLASSES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-policy/0.2/fabric3-policy-0.2.jar!/" />
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-loader/0.3/fabric3-loader-0.3.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.codehaus.fabric3:fabric3-pojo:0.3">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-pojo/0.3/fabric3-pojo-0.3.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.codehaus.fabric3:fabric3-policy:0.3">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-policy/0.3/fabric3-policy-0.3.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -183,24 +215,32 @@
     </orderEntry>
     <orderEntry type="module" module-name="fabric3-resource" exported="" />
     <orderEntry type="module-library" exported="">
-      <library name="org.codehaus.fabric3:fabric3-scdl:0.3">
+      <library name="org.codehaus.fabric3:fabric3-scdl:0.3.1">
         <CLASSES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-scdl/0.3/fabric3-scdl-0.3.jar!/" />
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-scdl/0.3.1/fabric3-scdl-0.3.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="org.codehaus.fabric3:fabric3-spi:0.3">
+      <library name="org.codehaus.fabric3:fabric3-spi:0.3.1">
         <CLASSES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-spi/0.3/fabric3-spi-0.3.jar!/" />
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-spi/0.3.1/fabric3-spi-0.3.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="fabric3-transform" exported="" />
+    <orderEntry type="module-library" exported="">
+      <library name="org.codehaus.fabric3:fabric3-transform:0.3">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-transform/0.3/fabric3-transform-0.3.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
     <orderEntry type="module" module-name="fabric3-tx-loader" exported="" />
     <orderEntry type="module-library" exported="">
       <library name="org.codehaus.woodstox:wstx-asl:3.2.1">
