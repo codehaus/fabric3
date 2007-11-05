@@ -77,6 +77,10 @@ public class PolicySetLoader implements StAXElementLoader<PolicySet> {
 
         PolicySetExtension extension = null;
         
+        // TODO For 0.4 we need to change this the XML for the policy set extension is loaded directly
+        // and the qname is mapped to either interceptor definition generator or passed opaquely to
+        // the component or wire source/target generators
+        
         while (true) {
             switch (reader.next()) {
             case START_ELEMENT:
