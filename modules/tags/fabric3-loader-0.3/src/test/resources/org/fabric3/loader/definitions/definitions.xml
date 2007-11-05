@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ASCII"?>
+<definitions 
+    xmlns="http://www.osoa.org/xmlns/sca/1.0" 
+    targetNamespace="http://fabric3.org/xmlns/sca/2.0-alpha" 
+    xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha">
+    
+    <intent name="transactional" constrains="binding">
+        <description>Transactional intent</description>
+    </intent>
+    
+    <policySet name="transactionalPolicy" appliesTo="sca:binding.ws" provides="f3:transactional"/>
+    
+</definitions>
