@@ -88,11 +88,6 @@
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-resource</artifactId>
-            <version>0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-policy</artifactId>
             <version>0.3</version>
         </dependency>
