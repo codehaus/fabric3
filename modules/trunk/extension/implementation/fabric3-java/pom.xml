@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-java</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.1</version>
     <name>Fabric3 Java</name>
     <description>Fabric3 Java Component Implementation.</description>
 
@@ -58,9 +58,9 @@
     </dependencies>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/implementation/fabric3-java</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/implementation/fabric3-java</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/extension/implementation/fabric3-java</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/fabric3-java-0.1</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/fabric3-java-0.1</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/fabric3-java-0.1</url>
     </scm>
 
 </project>
