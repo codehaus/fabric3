@@ -48,7 +48,7 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-itest-plugin</artifactId>
-                <version>0.3-SNAPSHOT</version>
+                <version>RELEASE</version>
                 <configuration>
                     <contributions>
                         <dependency>
