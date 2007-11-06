@@ -67,6 +67,14 @@
             <outputDirectory>lib</outputDirectory>
         </dependencySet>
 
+        <!-- copy shared classes to the profile host directory -->
+        <dependencySet>
+            <includes>
+                <include>org.apache.geronimo.specs:geronimo-annotation_1.0_spec</include>
+            </includes>
+            <outputDirectory>profiles/standalone/host</outputDirectory>
+        </dependencySet>
+
         <!-- copy boot dependencies to standalone profile -->
         <dependencySet>
             <includes>
