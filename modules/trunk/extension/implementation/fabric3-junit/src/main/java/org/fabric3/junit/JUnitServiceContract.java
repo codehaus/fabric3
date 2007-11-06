@@ -16,14 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.itest.implementation.junit;
+package org.fabric3.junit;
 
-import java.util.List;
 import java.lang.reflect.Type;
-import java.lang.reflect.Method;
+import java.util.List;
 
-import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.Operation;
+import org.fabric3.scdl.ServiceContract;
 
 /**
  * @version $Rev$ $Date$

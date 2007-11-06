@@ -1,12 +1,12 @@
-package org.fabric3.itest.implementation.junit;
+package org.fabric3.junit;
 
 import java.net.URI;
 import java.util.Set;
 
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.java.JavaComponentDefinition;
 import org.fabric3.java.JavaWireSourceDefinition;
@@ -29,8 +29,11 @@ import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 
 /**
- * @version $Rev$ $Date$ TODO JFM this class shares commonalities
- *          with system, launched, and java impl types. Refactor.
+ * TODO JFM this class shares commonalities with system, launched, and java impl types. Refactor.
+ * TODO Should this be using the definitions from the Java implementation type?
+ *
+ * @version $Rev$ $Date$
+ *
  */
 @EagerInit
 public class JUnitComponentGenerator implements ComponentGenerator<LogicalComponent<ImplementationJUnit>> {
@@ -56,10 +59,10 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
     }
 
     public PhysicalComponentDefinition generate(LogicalComponent<ImplementationJUnit> component,
-                                                Set<Intent> intentsToBeProvided, 
+                                                Set<Intent> intentsToBeProvided,
                                                 GeneratorContext context)
-        throws GenerationException {
-        
+            throws GenerationException {
+
         ComponentDefinition<ImplementationJUnit> definition = component.getDefinition();
         ImplementationJUnit implementation = definition.getImplementation();
         PojoComponentType type = implementation.getComponentType();
@@ -86,7 +89,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<ImplementationJUnit> source,
                                                            LogicalReference reference,
-                                                           boolean optimizable, 
+                                                           boolean optimizable,
                                                            GeneratorContext context) throws GenerationException {
         JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
         wireDefinition.setUri(reference.getUri());
@@ -96,8 +99,8 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         return wireDefinition;
     }
 
-    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, 
-                                                           LogicalComponent<ImplementationJUnit> target, 
+    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
+                                                           LogicalComponent<ImplementationJUnit> target,
                                                            GeneratorContext context) throws GenerationException {
         JavaWireTargetDefinition wireDefinition = new JavaWireTargetDefinition();
         wireDefinition.setUri(service.getUri());
@@ -105,8 +108,9 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
     }
 
     public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<ImplementationJUnit> source,
-                                                                   LogicalResource<?> resource, 
-                                                                   GeneratorContext context) throws GenerationException {
+                                                                   LogicalResource<?> resource,
+                                                                   GeneratorContext context)
+            throws GenerationException {
         JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
         wireDefinition.setUri(resource.getUri());
         return wireDefinition;

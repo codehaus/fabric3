@@ -87,13 +87,6 @@
             </includes>
             <outputDirectory>boot</outputDirectory>
         </dependencySet>
-        <!-- copy extension modules to the extensions directory-->
-        <dependencySet>
-            <includes>
-                <include>org.codehaus.fabric3:fabric3-resource</include>
-            </includes>
-            <outputDirectory>extensions</outputDirectory>
-        </dependencySet>
 
     </dependencySets>
 </assembly>

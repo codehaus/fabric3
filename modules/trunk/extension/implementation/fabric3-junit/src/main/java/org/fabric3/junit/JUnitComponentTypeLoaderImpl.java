@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.itest.implementation.junit;
+package org.fabric3.junit;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -31,9 +31,9 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.pojo.instancefactory.Signature;
 import org.fabric3.pojo.processor.IntrospectionRegistry;
 import org.fabric3.pojo.processor.Introspector;
+import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.Scope;

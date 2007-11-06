@@ -356,6 +356,7 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-core/fabric3-jpa-core.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-core/fabric3-jpa-core.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-hibernate/fabric3-jpa-hibernate.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-hibernate/fabric3-jpa-hibernate.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-spi/fabric3-jpa-spi.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-spi/fabric3-jpa-spi.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-junit/fabric3-junit.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-junit/fabric3-junit.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/federated/fabric3-jxta/fabric3-jxta.iml" filepath="$PROJECT_DIR$/modules/trunk/federated/fabric3-jxta/fabric3-jxta.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-loader/fabric3-loader.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-loader/fabric3-loader.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/maven/fabric3-maven-host/fabric3-maven-host.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/maven/fabric3-maven-host/fabric3-maven-host.iml" />
@@ -384,11 +385,13 @@
       <module fileurl="file://$PROJECT_DIR$/spec/trunk/sca-spec.iml" filepath="$PROJECT_DIR$/spec/trunk/sca-spec.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-axis2/test-binding-axis2.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-axis2/test-binding-axis2.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-burlap/test-binding-burlap.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-burlap/test-binding-burlap.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-cxf/test-binding-cxf.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-cxf/test-binding-cxf.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-hessian/test-binding-hessian.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-hessian/test-binding-hessian.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-jms/test-binding-jms.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-jms/test-binding-jms.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-db-extension/test-db-extension.iml" filepath="$PROJECT_DIR$/tests/trunk/test-db-extension/test-db-extension.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-function/test-function.iml" filepath="$PROJECT_DIR$/tests/trunk/test-function/test-function.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-groovy/test-groovy.iml" filepath="$PROJECT_DIR$/tests/trunk/test-groovy/test-groovy.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-interop-cxf-axis2/test-interop-cxf-axis2.iml" filepath="$PROJECT_DIR$/tests/trunk/test-interop-cxf-axis2/test-interop-cxf-axis2.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-jpa-hibernate/test-jpa-hibernate.iml" filepath="$PROJECT_DIR$/tests/trunk/test-jpa-hibernate/test-jpa-hibernate.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-policy/test-policy.iml" filepath="$PROJECT_DIR$/tests/trunk/test-policy/test-policy.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-runtime-development/test-runtime-development.iml" filepath="$PROJECT_DIR$/tests/trunk/test-runtime-development/test-runtime-development.iml" />

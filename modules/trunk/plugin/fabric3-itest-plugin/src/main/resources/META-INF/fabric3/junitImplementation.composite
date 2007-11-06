@@ -20,16 +20,16 @@
            name="org.fabric3.itest.JunitImplementation"
            autowire="true">
 
-    <component name="org.fabric3.itest.implementation.junit.ImplementationJUnitLoader">
-        <system:implementation.system class="org.fabric3.itest.implementation.junit.ImplementationJUnitLoader"/>
+    <component name="org.fabric3.junit.ImplementationJUnitLoader">
+        <system:implementation.system class="org.fabric3.junit.ImplementationJUnitLoader"/>
     </component>
 
-    <component name="org.fabric3.itest.implementation.junit.JUnitComponentTypeLoaderImpl">
-        <system:implementation.system class="org.fabric3.itest.implementation.junit.JUnitComponentTypeLoaderImpl"/>
+    <component name="org.fabric3.junit.JUnitComponentTypeLoaderImpl">
+        <system:implementation.system class="org.fabric3.junit.JUnitComponentTypeLoaderImpl"/>
     </component>
 
-    <component name="org.fabric3.itest.implementation.junit.JUnitComponentGenerator">
-        <system:implementation.system class="org.fabric3.itest.implementation.junit.JUnitComponentGenerator"/>
+    <component name="org.fabric3.junit.JUnitComponentGenerator">
+        <system:implementation.system class="org.fabric3.junit.JUnitComponentGenerator"/>
     </component>
 
 </composite>

@@ -141,9 +141,9 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="org.codehaus.fabric3:fabric3-fabric:0.3-SNAPSHOT">
+      <library name="org.codehaus.fabric3:fabric3-fabric:0.3">
         <CLASSES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-fabric/0.3-SNAPSHOT/fabric3-fabric-0.3-SNAPSHOT.jar!/" />
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-fabric/0.3/fabric3-fabric-0.3.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -167,7 +167,15 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="fabric3-jetty" exported="" />
+    <orderEntry type="module-library" exported="">
+      <library name="org.codehaus.fabric3:fabric3-jetty:0.3-SNAPSHOT">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-jetty/0.3-SNAPSHOT/fabric3-jetty-0.3-SNAPSHOT.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
     <orderEntry type="module-library" exported="">
       <library name="org.codehaus.fabric3:fabric3-jmx:0.2">
         <CLASSES>
@@ -241,7 +249,15 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="fabric3-tx-loader" exported="" />
+    <orderEntry type="module-library" exported="">
+      <library name="org.codehaus.fabric3:fabric3-tx-loader:0.1">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-tx-loader/0.1/fabric3-tx-loader-0.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
     <orderEntry type="module-library" exported="">
       <library name="org.codehaus.woodstox:wstx-asl:3.2.1">
         <CLASSES>

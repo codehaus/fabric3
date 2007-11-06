@@ -16,35 +16,45 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.itest.implementation.junit;
+package org.fabric3.junit;
 
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
+import org.fabric3.spi.loader.StAXElementLoader;
 
 /**
  * @version $Rev$ $Date$
  */
-public class ImplementationJUnitLoader extends LoaderExtension<ImplementationJUnit> {
+@EagerInit
+public class ImplementationJUnitLoader implements StAXElementLoader<ImplementationJUnit> {
 
+    private final LoaderRegistry registry;
     private final JUnitComponentTypeLoader componentTypeLoader;
 
     public ImplementationJUnitLoader(@Reference LoaderRegistry registry,
                                      @Reference JUnitComponentTypeLoader componentTypeLoader) {
-        super(registry);
+        this.registry = registry;
         this.componentTypeLoader = componentTypeLoader;
     }
 
-    public QName getXMLType() {
-        return ImplementationJUnit.IMPLEMENTATION_JUNIT;
+    @Init
+    public void init() {
+        registry.registerLoader(ImplementationJUnit.IMPLEMENTATION_JUNIT, this);
+    }
+
+    @Destroy
+    public void destroy() {
+        registry.unregisterLoader(ImplementationJUnit.IMPLEMENTATION_JUNIT);
     }
 
     public ImplementationJUnit load(XMLStreamReader reader, LoaderContext loaderContext)
@@ -56,4 +66,5 @@ public class ImplementationJUnitLoader extends LoaderExtension<ImplementationJUn
         componentTypeLoader.load(impl, loaderContext);
         return impl;
     }
+
 }

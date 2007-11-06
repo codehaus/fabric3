@@ -67,7 +67,7 @@ import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.host.runtime.StartException;
-import org.fabric3.itest.implementation.junit.ImplementationJUnit;
+import org.fabric3.junit.ImplementationJUnit;
 import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.PojoComponentType;

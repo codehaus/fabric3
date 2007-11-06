@@ -29,10 +29,6 @@
             <attribute name="method" value="1" />
             <attribute name="URI" value="/WEB-INF/lib/fabric3-api-0.2.jar" />
           </containerElement>
-          <containerElement type="module" name="fabric3-webapp-api">
-            <attribute name="method" value="1" />
-            <attribute name="URI" value="/WEB-INF/classes" />
-          </containerElement>
           <containerElement type="library" name="org.codehaus.fabric3.spec:sca-api-r1.0:0.2.1" level="module">
             <attribute name="method" value="1" />
             <attribute name="URI" value="/WEB-INF/lib/sca-api-r1.0-0.2.1.jar" />
@@ -40,6 +36,10 @@
           <containerElement type="library" name="org.codehaus.fabric3:fabric3-host-api:0.2" level="module">
             <attribute name="method" value="1" />
             <attribute name="URI" value="/WEB-INF/lib/fabric3-host-api-0.2.jar" />
+          </containerElement>
+          <containerElement type="library" name="org.codehaus.fabric3.webapp:fabric3-webapp-api:0.3" level="module">
+            <attribute name="method" value="1" />
+            <attribute name="URI" value="/WEB-INF/lib/fabric3-webapp-api-0.3.jar" />
           </containerElement>
         </packaging>
       </configuration>
@@ -87,7 +87,19 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="fabric3-webapp-api" exported="" />
+    <orderEntry type="module-library" exported="">
+      <library name="org.codehaus.fabric3.webapp:fabric3-webapp-api:0.3">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/webapp/fabric3-webapp-api/0.3/fabric3-webapp-api-0.3.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/webapp/fabric3-webapp-api/0.3/fabric3-webapp-api-0.3-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/webapp/fabric3-webapp-api/0.3/fabric3-webapp-api-0.3-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
     <orderEntry type="module-library" exported="">
       <library name="org.codehaus.fabric3:fabric3-api:0.2">
         <CLASSES>
