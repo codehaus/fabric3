@@ -30,10 +30,11 @@
     <description>Fabric3 Webapp Tomcat Smoketest.</description>
 
     <dependencies>
+        <!-- use the released version of the API -->
         <dependency>
             <groupId>org.codehaus.fabric3.webapp</groupId>
             <artifactId>fabric3-webapp-api</artifactId>
-            <version>0.3-SNAPSHOT</version>
+            <version>0.3</version>
         </dependency>
 
         <dependency>
@@ -79,7 +80,8 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <runTimeVersion>0.3-SNAPSHOT</runTimeVersion>
+                    <!-- use the latest version of the runtime -->
+                    <runTimeVersion>0.4-SNAPSHOT</runTimeVersion>
                     <!-- include the Groovy extension to verify extensions are handled correctly -->
                     <extensions>
                         <dependency>
