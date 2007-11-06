@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3.webapp</groupId>
     <artifactId>fabric3-webapp-api</artifactId>
-    <version>0.3-SNAPSHOT</version>
+    <version>0.3</version>
     <name>Fabric3 Webapp Runtime API</name>
     <description>Fabric3 Webapp Runtime API.</description>
 
@@ -58,9 +58,9 @@
     </dependencies>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/runtime/webapp/fabric3-webapp-api</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/runtime/webapp/fabric3-webapp-api</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/runtime/webapp/fabric3-webapp-api</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/fabric3-webapp-api-0.3</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/fabric3-webapp-api-0.3</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/fabric3-webapp-api-0.3</url>
     </scm>
 
 </project>
