@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-contribution-scanner-spi</artifactId>
-    <version>0.3</version>
+    <version>0.4-SNAPSHOT</version>
     <name>Fabric3 Contribution Scanner SPI</name>
     <description>Fabric3 Contribution Scanner SPI.</description>
     <packaging>sca-contribution-jar</packaging>
@@ -56,9 +56,9 @@
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/fabric3-contribution-scanner-spi-0.3</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/fabric3-contribution-scanner-spi-0.3</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/fabric3-contribution-scanner-spi-0.3</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-contribution-scanner-spi</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-contribution-scanner-spi</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/extension/other/fabric3-contribution-scanner-spi</url>
     </scm>
 
 </project>
