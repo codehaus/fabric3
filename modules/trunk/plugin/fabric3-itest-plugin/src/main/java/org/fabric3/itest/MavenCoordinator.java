@@ -81,24 +81,15 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
     private State state = State.UNINITIALIZED;
     private MavenEmbeddedRuntime runtime;
     private Bootstrapper bootstrapper;
-    private String definitionsFile;
     private URL intentsLocation;
-    private ClassLoader cl;
-
-    public MavenCoordinator() {
-    }
 
     /**
      * @param dependencies    Runtime extensions to run in the test.
      * @param intentsLocation the default intents file location or null
-     * @param definitionsFile Definitions file.
-     * @param cl              the classloader to use for loading extensions
      */
-    public MavenCoordinator(Dependency[] dependencies, URL intentsLocation, String definitionsFile, ClassLoader cl) {
+    public MavenCoordinator(Dependency[] dependencies, URL intentsLocation) {
         this.dependencies = dependencies;
         this.intentsLocation = intentsLocation;
-        this.definitionsFile = definitionsFile;
-        this.cl = cl;
     }
 
     public void bootPrimordial(MavenEmbeddedRuntime runtime,

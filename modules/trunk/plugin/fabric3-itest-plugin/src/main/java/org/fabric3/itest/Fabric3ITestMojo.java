@@ -265,7 +265,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
         try {
             ScdlBootstrapper bootstrapper = new ScdlBootstrapperImpl();
             bootstrapper.setScdlLocation(systemScdl);
-            coordinator = new MavenCoordinator(contributions, intentsLocation, definitionsFile, testClassLoader);
+            coordinator = new MavenCoordinator(contributions, intentsLocation);
             coordinator.bootPrimordial(runtime, bootstrapper, cl, testClassLoader);
             coordinator.initialize();
             Future<Void> future = coordinator.joinDomain(-1);
