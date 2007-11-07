@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3.tutorials</groupId>
     <artifactId>fabric3-tutorial-loanapp</artifactId>
-    <version>0.3-SNAPSHOT</version>
+    <version>0.3</version>
     <name>Fabric3 Loan App Sample</name>
     <description>Fabric3 Loan Application Sample.</description>
     <packaging>sca-contribution-jar</packaging>
@@ -59,12 +59,12 @@
         <dependency>
             <groupId>org.codehaus.fabric3.tutorials</groupId>
             <artifactId>fabric3-tutorial-loanapp-common</artifactId>
-            <version>0.3-SNAPSHOT</version>
+            <version>0.3</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3.development</groupId>
             <artifactId>fabric3-development-api</artifactId>
-            <version>0.3-SNAPSHOT</version>
+            <version>0.3</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3.tutorials</groupId>
     <artifactId>fabric3-tutorial-calculator-webclient</artifactId>
-    <version>0.3-SNAPSHOT</version>
+    <version>0.3</version>
     <packaging>war</packaging>
     <name>Fabric3 Tutorial Web Client</name>
     <description>Fabric3 Web Client demonstrating distributed domains.</description>
@@ -66,7 +66,7 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-webapp-plugin</artifactId>
-                <version>0.3-SNAPSHOT</version>
+                <version>RELEASE</version>
                 <executions>
                     <execution>
                         <id>fabric3-war</id>
@@ -76,14 +76,14 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <runTimeVersion>0.3-SNAPSHOT</runTimeVersion>
+                    <runTimeVersion>0.3</runTimeVersion>
                     <extensions>
                         <!--  Uncomment to enable the Hessian binding extension  -->
                         <!--
                             <dependency>
                                 <groupId>org.codehaus.fabric3</groupId>
                                 <artifactId>fabric3-binding-hessian</artifactId>
-                                <version>0.3-SNAPSHOT</version>
+                                <version>0.3</version>
                             </dependency>
                         -->
 
@@ -92,7 +92,7 @@
                             <dependency>
                                 <groupId>org.codehaus.fabric3</groupId>
                                 <artifactId>fabric3-binding-ws</artifactId>
-                                <version>0.3-SNAPSHOT</version>
+                                <version>0.3</version>
                             </dependency>
                         -->
 
@@ -101,7 +101,7 @@
                             <dependency>
                                 <groupId>org.codehaus.fabric3</groupId>
                                 <artifactId>fabric3-binding-rmi</artifactId>
-                                <version>0.1-SNAPSHOT</version>
+                                <version>0.1</version>
                             </dependency>
                         -->
                     </extensions>

@@ -35,7 +35,7 @@
         <hessian:binding.hessian uri="http://localhost:8181/calculator"/>
 
         Hessian namespace:
-        xmlns:hessian="http://www.fabric3.org/binding/hessian/0.3"
+        xmlns:hessian="http://www.fabric3.org/binding/hessian/0.2"
 
         Web Services Binding:
         <binding.ws uri="http://localhost:8181/services/calculator"/>

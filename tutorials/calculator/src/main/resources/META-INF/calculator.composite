@@ -29,7 +29,7 @@
         <hessian:binding.hessian uri="/calculator" />
 
         Hessian namespace:
-        xmlns:hessian="http://www.fabric3.org/binding/hessian/0.3"
+        xmlns:hessian="http://www.fabric3.org/binding/hessian/0.2"
 
         Web Services:
         <binding.ws uri="/calculator" />
