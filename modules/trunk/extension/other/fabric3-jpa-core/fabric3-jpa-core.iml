@@ -30,7 +30,9 @@
           <root url="jar://$M2_REPO$/ant/ant/1.6.5/ant-1.6.5.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$M2_REPO$/ant/ant/1.6.5/ant-1.6.5-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -39,7 +41,9 @@
           <root url="jar://$M2_REPO$/commons-collections/commons-collections/3.2/commons-collections-3.2.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$M2_REPO$/commons-collections/commons-collections/3.2/commons-collections-3.2-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -47,8 +51,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/commons-lang/commons-lang/2.1/commons-lang-2.1.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/commons-lang/commons-lang/2.1/commons-lang-2.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/commons-lang/commons-lang/2.1/commons-lang-2.1-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -56,8 +64,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -75,7 +87,9 @@
           <root url="jar://$M2_REPO$/hsqldb/hsqldb/1.8.0.1/hsqldb-1.8.0.1.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$M2_REPO$/hsqldb/hsqldb/1.8.0.1/hsqldb-1.8.0.1-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -84,7 +98,9 @@
           <root url="jar://$M2_REPO$/javax/activation/activation/1.1/activation-1.1.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$M2_REPO$/javax/activation/activation/1.1/activation-1.1-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -93,7 +109,9 @@
           <root url="jar://$M2_REPO$/javax/persistence/persistence-api/1.0/persistence-api-1.0.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$M2_REPO$/javax/persistence/persistence-api/1.0/persistence-api-1.0-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -119,8 +137,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/junit/junit/3.8.2/junit-3.8.2.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/junit/junit/3.8.2/junit-3.8.2-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/junit/junit/3.8.2/junit-3.8.2-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -129,7 +151,9 @@
           <root url="jar://$M2_REPO$/log4j/log4j/1.2.13/log4j-1.2.13.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$M2_REPO$/log4j/log4j/1.2.13/log4j-1.2.13-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -155,8 +179,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-jpa_3.0_spec/1.0/geronimo-jpa_3.0_spec-1.0.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-jpa_3.0_spec/1.0/geronimo-jpa_3.0_spec-1.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-jpa_3.0_spec/1.0/geronimo-jpa_3.0_spec-1.0-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -164,8 +192,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-jta_1.1_spec/1.1/geronimo-jta_1.1_spec-1.1.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-jta_1.1_spec/1.1/geronimo-jta_1.1_spec-1.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-jta_1.1_spec/1.1/geronimo-jta_1.1_spec-1.1-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -236,8 +268,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api-r1.0/0.2.1/sca-api-r1.0-0.2.1.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api-r1.0/0.2.1/sca-api-r1.0-0.2.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api-r1.0/0.2.1/sca-api-r1.0-0.2.1-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -245,8 +281,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.2/fabric3-api-0.2.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.2/fabric3-api-0.2-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.2/fabric3-api-0.2-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -254,8 +294,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-extension/0.3.1/fabric3-extension-0.3.1.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-extension/0.3.1/fabric3-extension-0.3.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-extension/0.3.1/fabric3-extension-0.3.1-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -263,8 +307,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-host-api/0.2/fabric3-host-api-0.2.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-host-api/0.2/fabric3-host-api-0.2-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-host-api/0.2/fabric3-host-api-0.2-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="fabric3-jpa-spi" exported="" />
@@ -273,8 +321,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-pojo/0.3/fabric3-pojo-0.3.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-pojo/0.3/fabric3-pojo-0.3-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-pojo/0.3/fabric3-pojo-0.3-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -282,8 +334,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-scdl/0.3.1/fabric3-scdl-0.3.1.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-scdl/0.3.1/fabric3-scdl-0.3.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-scdl/0.3.1/fabric3-scdl-0.3.1-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -291,8 +347,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-spi/0.3.1/fabric3-spi-0.3.1.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-spi/0.3.1/fabric3-spi-0.3.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-spi/0.3.1/fabric3-spi-0.3.1-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">

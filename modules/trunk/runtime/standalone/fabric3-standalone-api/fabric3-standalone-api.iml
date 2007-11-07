@@ -16,8 +16,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-host-api/0.2/fabric3-host-api-0.2.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-host-api/0.2/fabric3-host-api-0.2-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-host-api/0.2/fabric3-host-api-0.2-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntryProperties />

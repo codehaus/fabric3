@@ -29,7 +29,9 @@
           <root url="jar://$M2_REPO$/backport-util-concurrent/backport-util-concurrent/2.1/backport-util-concurrent-2.1.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$M2_REPO$/backport-util-concurrent/backport-util-concurrent/2.1/backport-util-concurrent-2.1-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -38,7 +40,9 @@
           <root url="jar://$M2_REPO$/commons-logging/commons-logging/1.1/commons-logging-1.1.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$M2_REPO$/commons-logging/commons-logging/1.1/commons-logging-1.1-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -47,7 +51,9 @@
           <root url="jar://$M2_REPO$/javax/servlet/servlet-api/2.3/servlet-api-2.3.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$M2_REPO$/javax/servlet/servlet-api/2.3/servlet-api-2.3-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -55,8 +61,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/junit/junit/3.8.2/junit-3.8.2.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/junit/junit/3.8.2/junit-3.8.2-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/junit/junit/3.8.2/junit-3.8.2-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -74,7 +84,9 @@
           <root url="jar://$M2_REPO$/logkit/logkit/1.0.1/logkit-1.0.1.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$M2_REPO$/logkit/logkit/1.0.1/logkit-1.0.1-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -92,7 +104,9 @@
           <root url="jar://$M2_REPO$/org/apache/activemq/activemq-core/4.1.1/activemq-core-4.1.1.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/apache/activemq/activemq-core/4.1.1/activemq-core-4.1.1-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">

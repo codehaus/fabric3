@@ -16,8 +16,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/maven/maven-artifact/2.0/maven-artifact-2.0.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/apache/maven/maven-artifact/2.0/maven-artifact-2.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/apache/maven/maven-artifact/2.0/maven-artifact-2.0-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -25,8 +29,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/maven/maven-plugin-api/2.0/maven-plugin-api-2.0.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/apache/maven/maven-plugin-api/2.0/maven-plugin-api-2.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/apache/maven/maven-plugin-api/2.0/maven-plugin-api-2.0-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -34,8 +42,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/plexus/plexus-utils/1.4.1/plexus-utils-1.4.1.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/codehaus/plexus/plexus-utils/1.4.1/plexus-utils-1.4.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/codehaus/plexus/plexus-utils/1.4.1/plexus-utils-1.4.1-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntryProperties />

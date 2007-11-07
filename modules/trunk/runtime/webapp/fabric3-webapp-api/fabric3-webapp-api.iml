@@ -8,7 +8,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
-      <excludeFolder url="file://$MODULE_DIR$/target/checkout" />
       <excludeFolder url="file://$MODULE_DIR$/target/classes" />
       <excludeFolder url="file://$MODULE_DIR$/target/surefire-reports" />
       <excludeFolder url="file://$MODULE_DIR$/target/test-classes" />
@@ -21,7 +20,9 @@
           <root url="jar://$M2_REPO$/cglib/cglib-nodep/2.1_3/cglib-nodep-2.1_3.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$M2_REPO$/cglib/cglib-nodep/2.1_3/cglib-nodep-2.1_3-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -30,7 +31,9 @@
           <root url="jar://$M2_REPO$/javax/servlet/servlet-api/2.4/servlet-api-2.4.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$M2_REPO$/javax/servlet/servlet-api/2.4/servlet-api-2.4-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -38,8 +41,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/junit/junit/3.8.2/junit-3.8.2.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/junit/junit/3.8.2/junit-3.8.2-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/junit/junit/3.8.2/junit-3.8.2-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -47,8 +54,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api-r1.0/0.2.1/sca-api-r1.0-0.2.1.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api-r1.0/0.2.1/sca-api-r1.0-0.2.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api-r1.0/0.2.1/sca-api-r1.0-0.2.1-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -56,8 +67,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.2/fabric3-api-0.2.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.2/fabric3-api-0.2-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.2/fabric3-api-0.2-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -65,8 +80,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-host-api/0.2/fabric3-host-api-0.2.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-host-api/0.2/fabric3-host-api-0.2-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-host-api/0.2/fabric3-host-api-0.2-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -75,7 +94,9 @@
           <root url="jar://$M2_REPO$/org/easymock/easymock/2.2/easymock-2.2.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/easymock/easymock/2.2/easymock-2.2-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -83,8 +104,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/easymock/easymockclassextension/2.2/easymockclassextension-2.2.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/easymock/easymockclassextension/2.2/easymockclassextension-2.2-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/easymock/easymockclassextension/2.2/easymockclassextension-2.2-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntryProperties />

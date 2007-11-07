@@ -38,7 +38,9 @@
           <root url="jar://$M2_REPO$/backport-util-concurrent/backport-util-concurrent/2.2/backport-util-concurrent-2.2.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$M2_REPO$/backport-util-concurrent/backport-util-concurrent/2.2/backport-util-concurrent-2.2-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -46,7 +48,9 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/commons-codec/commons-codec/1.2/commons-codec-1.2.jar!/" />
         </CLASSES>
-        <JAVADOC />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/commons-codec/commons-codec/1.2/commons-codec-1.2-javadoc.jar!/" />
+        </JAVADOC>
         <SOURCES />
       </library>
     </orderEntry>
@@ -65,7 +69,9 @@
           <root url="jar://$M2_REPO$/commons-httpclient/commons-httpclient/3.0.1/commons-httpclient-3.0.1.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$M2_REPO$/commons-httpclient/commons-httpclient/3.0.1/commons-httpclient-3.0.1-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -73,8 +79,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/commons-io/commons-io/1.2/commons-io-1.2.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/commons-io/commons-io/1.2/commons-io-1.2-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/commons-io/commons-io/1.2/commons-io-1.2-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -83,7 +93,9 @@
           <root url="jar://$M2_REPO$/commons-logging/commons-logging/1.1/commons-logging-1.1.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$M2_REPO$/commons-logging/commons-logging/1.1/commons-logging-1.1-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -92,7 +104,9 @@
           <root url="jar://$M2_REPO$/javax/activation/activation/1.1/activation-1.1.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$M2_REPO$/javax/activation/activation/1.1/activation-1.1-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -101,7 +115,9 @@
           <root url="jar://$M2_REPO$/javax/mail/mail/1.4/mail-1.4.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$M2_REPO$/javax/mail/mail/1.4/mail-1.4-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -110,7 +126,9 @@
           <root url="jar://$M2_REPO$/javax/servlet/servlet-api/2.4/servlet-api-2.4.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$M2_REPO$/javax/servlet/servlet-api/2.4/servlet-api-2.4-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -119,7 +137,9 @@
           <root url="jar://$M2_REPO$/jaxen/jaxen/1.1-beta-9/jaxen-1.1-beta-9.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$M2_REPO$/jaxen/jaxen/1.1-beta-9/jaxen-1.1-beta-9-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -127,8 +147,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/junit/junit/3.8.2/junit-3.8.2.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/junit/junit/3.8.2/junit-3.8.2-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/junit/junit/3.8.2/junit-3.8.2-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -146,7 +170,9 @@
           <root url="jar://$M2_REPO$/logkit/logkit/1.0.1/logkit-1.0.1.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$M2_REPO$/logkit/logkit/1.0.1/logkit-1.0.1-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -163,8 +189,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-jms_1.1_spec/1.1/geronimo-jms_1.1_spec-1.1.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-jms_1.1_spec/1.1/geronimo-jms_1.1_spec-1.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-jms_1.1_spec/1.1/geronimo-jms_1.1_spec-1.1-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -218,7 +248,9 @@
           <root url="jar://$M2_REPO$/org/apache/ws/commons/axiom/axiom-api/1.2.5/axiom-api-1.2.5.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/apache/ws/commons/axiom/axiom-api/1.2.5/axiom-api-1.2.5-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -227,7 +259,9 @@
           <root url="jar://$M2_REPO$/org/apache/ws/commons/axiom/axiom-dom/1.2.5/axiom-dom-1.2.5.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/apache/ws/commons/axiom/axiom-dom/1.2.5/axiom-dom-1.2.5-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -236,7 +270,9 @@
           <root url="jar://$M2_REPO$/org/apache/ws/commons/axiom/axiom-impl/1.2.5/axiom-impl-1.2.5.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/apache/ws/commons/axiom/axiom-impl/1.2.5/axiom-impl-1.2.5-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -245,7 +281,9 @@
           <root url="jar://$M2_REPO$/org/apache/ws/commons/schema/XmlSchema/1.3.2/XmlSchema-1.3.2.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/apache/ws/commons/schema/XmlSchema/1.3.2/XmlSchema-1.3.2-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -253,8 +291,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api-r1.0/0.2.1/sca-api-r1.0-0.2.1.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api-r1.0/0.2.1/sca-api-r1.0-0.2.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api-r1.0/0.2.1/sca-api-r1.0-0.2.1-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -262,8 +304,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.2/fabric3-api-0.2.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.2/fabric3-api-0.2-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.2/fabric3-api-0.2-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="fabric3-binding-ws" exported="" />
@@ -272,8 +318,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-extension/0.3.1/fabric3-extension-0.3.1.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-extension/0.3.1/fabric3-extension-0.3.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-extension/0.3.1/fabric3-extension-0.3.1-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -281,8 +331,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-host-api/0.2/fabric3-host-api-0.2.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-host-api/0.2/fabric3-host-api-0.2-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-host-api/0.2/fabric3-host-api-0.2-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -290,8 +344,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-scdl/0.3.1/fabric3-scdl-0.3.1.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-scdl/0.3.1/fabric3-scdl-0.3.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-scdl/0.3.1/fabric3-scdl-0.3.1-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -299,8 +357,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-spi/0.3.1/fabric3-spi-0.3.1.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-spi/0.3.1/fabric3-spi-0.3.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-spi/0.3.1/fabric3-spi-0.3.1-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -309,7 +371,9 @@
           <root url="jar://$M2_REPO$/org/codehaus/woodstox/wstx-asl/3.2.1/wstx-asl-3.2.1.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/codehaus/woodstox/wstx-asl/3.2.1/wstx-asl-3.2.1-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -336,7 +400,9 @@
           <root url="jar://$M2_REPO$/xalan/xalan/2.7.0/xalan-2.7.0.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$M2_REPO$/xalan/xalan/2.7.0/xalan-2.7.0-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -345,7 +411,9 @@
           <root url="jar://$M2_REPO$/xerces/xercesImpl/2.8.1/xercesImpl-2.8.1.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$M2_REPO$/xerces/xercesImpl/2.8.1/xercesImpl-2.8.1-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -354,7 +422,9 @@
           <root url="jar://$M2_REPO$/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$M2_REPO$/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntryProperties />
