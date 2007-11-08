@@ -27,8 +27,16 @@
         <f3:binding.test uri="PromotedHelloService"/>
     </reference>
 
+    <!-- test using an explicit service -->
     <service name="HelloService" promote="HelloComponent/HelloService">
         <f3:binding.test uri="PromotedHelloService"/>
+        <interface.java interface="org.fabric3.tests.function.common.Helloservice2"/>
+    </service>
+
+    <!-- test using the default service -->
+    <service name="HelloServiceNotSepecified" promote="HelloComponent">
+        <f3:binding.test uri="PromotedHelloServiceNotSpecified"/>
+        <interface.java interface="org.fabric3.tests.function.common.Helloservice2"/>
     </service>
 
     <component name="HelloComponent">
