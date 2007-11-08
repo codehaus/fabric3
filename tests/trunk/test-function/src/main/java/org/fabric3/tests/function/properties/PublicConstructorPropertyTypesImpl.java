@@ -50,26 +50,29 @@ public class PublicConstructorPropertyTypesImpl implements PropertyTypes {
     private final Date dateValue;
     private final Calendar calendarValue;
 
-    public PublicConstructorPropertyTypesImpl(@Property(name="booleanPrimitive") boolean booleanPrimitive,
-                                              @Property(name="bytePrimitive") byte bytePrimitive,
-                                              @Property(name="shortPrimitive") short shortPrimitive,
-                                              @Property(name="intPrimitive") int intPrimitive,
-                                              @Property(name="longPrimitive") long longPrimitive,
-                                              @Property(name="floatPrimitive") float floatPrimitive,
-                                              @Property(name="doublePrimitive") double doublePrimitive,
-                                              @Property(name="booleanValue") Boolean booleanValue,
-                                              @Property(name="byteValue") Byte byteValue,
-                                              @Property(name="shortValue") Short shortValue,
-                                              @Property(name="integerValue") Integer integerValue,
-                                              @Property(name="longValue") Long longValue,
-                                              @Property(name="floatValue") Float floatValue,
-                                              @Property(name="doubleValue") Double doubleValue,
-                                              @Property(name="classValue") Class<?> classValue,
-                                              @Property(name="string") String string,
-                                              @Property(name="uriValue") URI uriValue,
-                                              @Property(name="urlValue") URL urlValue,
-                                              @Property(name="dateValue") Date dateValue,
-                                              @Property(name="calendarValue") Calendar calendarValue) {
+    private final int[] intArray;
+
+    public PublicConstructorPropertyTypesImpl(@Property(name = "booleanPrimitive")boolean booleanPrimitive,
+                                              @Property(name = "bytePrimitive")byte bytePrimitive,
+                                              @Property(name = "shortPrimitive")short shortPrimitive,
+                                              @Property(name = "intPrimitive")int intPrimitive,
+                                              @Property(name = "longPrimitive")long longPrimitive,
+                                              @Property(name = "floatPrimitive")float floatPrimitive,
+                                              @Property(name = "doublePrimitive")double doublePrimitive,
+                                              @Property(name = "booleanValue")Boolean booleanValue,
+                                              @Property(name = "byteValue")Byte byteValue,
+                                              @Property(name = "shortValue")Short shortValue,
+                                              @Property(name = "integerValue")Integer integerValue,
+                                              @Property(name = "longValue")Long longValue,
+                                              @Property(name = "floatValue")Float floatValue,
+                                              @Property(name = "doubleValue")Double doubleValue,
+                                              @Property(name = "classValue")Class<?> classValue,
+                                              @Property(name = "string")String string,
+                                              @Property(name = "uriValue")URI uriValue,
+                                              @Property(name = "urlValue")URL urlValue,
+                                              @Property(name = "dateValue")Date dateValue,
+                                              @Property(name = "calendarValue")Calendar calendarValue,
+                                              @Property(name = "intArray") int[] intArray) {
         this.booleanPrimitive = booleanPrimitive;
         this.bytePrimitive = bytePrimitive;
         this.shortPrimitive = shortPrimitive;
@@ -90,6 +93,7 @@ public class PublicConstructorPropertyTypesImpl implements PropertyTypes {
         this.urlValue = urlValue;
         this.dateValue = dateValue;
         this.calendarValue = calendarValue;
+        this.intArray = intArray;
     }
 
     public boolean getBooleanPrimitive() {
@@ -170,5 +174,9 @@ public class PublicConstructorPropertyTypesImpl implements PropertyTypes {
 
     public Calendar getCalendarValue() {
         return calendarValue;
+    }
+
+    public int[] getIntArray() {
+        return intArray;
     }
 }

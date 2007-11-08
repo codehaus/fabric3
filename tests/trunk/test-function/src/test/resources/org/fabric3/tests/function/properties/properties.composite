@@ -46,6 +46,13 @@
         <property name="urlValue">file://./root</property>
         <property name="dateValue">31/10/2007</property>
         <property name="calendarValue">2007-10-31T01:00:00Z</property>
+<!--
+        <property name="intArray">
+            <int>1</int>
+            <int>2</int>
+            <int>3</int>
+        </property>
+-->
     </component>
 
     <component name="ProtectedFieldPropertyTypesTest">

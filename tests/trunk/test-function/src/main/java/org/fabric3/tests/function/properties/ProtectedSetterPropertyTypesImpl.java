@@ -50,6 +50,8 @@ public class ProtectedSetterPropertyTypesImpl implements PropertyTypes {
     private Date dateValue;
     private Calendar calendarValue;
 
+    private int[] intArray;
+
     public boolean getBooleanPrimitive() {
         return booleanPrimitive;
     }
@@ -228,5 +230,14 @@ public class ProtectedSetterPropertyTypesImpl implements PropertyTypes {
     @Property
     protected void setCalendarValue(Calendar calendarValue) {
         this.calendarValue = calendarValue;
+    }
+
+    public int[] getIntArray() {
+        return intArray;
+    }
+
+    @Property
+    protected void setIntArray(int[] intArray) {
+        this.intArray = intArray;
     }
 }

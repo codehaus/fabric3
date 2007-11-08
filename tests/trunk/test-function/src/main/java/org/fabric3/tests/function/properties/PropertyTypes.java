@@ -66,4 +66,6 @@ public interface PropertyTypes {
     Date getDateValue();
 
     Calendar getCalendarValue();
+
+    int[] getIntArray();
 }

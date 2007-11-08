@@ -50,6 +50,8 @@ public class PublicFieldPropertyTypesImpl implements PropertyTypes {
     @Property public Date dateValue;
     @Property public Calendar calendarValue;
 
+    @Property public int[] intArray;
+
     public boolean getBooleanPrimitive() {
         return booleanPrimitive;
     }
@@ -128,5 +130,9 @@ public class PublicFieldPropertyTypesImpl implements PropertyTypes {
 
     public Calendar getCalendarValue() {
         return calendarValue;
+    }
+
+    public int[] getIntArray() {
+        return intArray;
     }
 }

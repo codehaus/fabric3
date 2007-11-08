@@ -50,6 +50,8 @@ public class ProtectedFieldPropertyTypesImpl implements PropertyTypes {
     @Property protected Date dateValue;
     @Property protected Calendar calendarValue;
 
+    @Property protected int[] intArray;
+
     public boolean getBooleanPrimitive() {
         return booleanPrimitive;
     }
@@ -128,5 +130,9 @@ public class ProtectedFieldPropertyTypesImpl implements PropertyTypes {
 
     public Calendar getCalendarValue() {
         return calendarValue;
+    }
+
+    public int[] getIntArray() {
+        return intArray;
     }
 }

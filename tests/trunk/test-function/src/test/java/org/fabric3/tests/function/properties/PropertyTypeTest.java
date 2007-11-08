@@ -19,6 +19,7 @@ package org.fabric3.tests.function.properties;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
@@ -121,4 +122,10 @@ public class PropertyTypeTest extends TestCase {
         
         assertEquals(calendar.getTime(), service.getCalendarValue().getTime());
     }
+
+/*
+    public void testIntArray() {
+        assertTrue(Arrays.equals(new int[]{1,2,3}, service.getIntArray()));
+    }
+*/
 }
