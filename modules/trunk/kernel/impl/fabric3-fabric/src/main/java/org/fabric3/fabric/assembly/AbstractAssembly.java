@@ -224,10 +224,19 @@ public abstract class AbstractAssembly implements Assembly {
             URI componentId = URI.create(base + "/" + promotedURI.getPath());
             LogicalComponent<?> promotedComponent = parent.getComponent(componentId);
             if (promotedComponent == null) {
-                throw new MissingPromotedComponentException("No component for service to promote: " + serviceURI, serviceURI.toString());
+                throw new MissingPromotedComponentException("No component for service to promote: " + serviceURI,
+                                                            serviceURI.toString());
             }
-            if (promotedComponent.getService(promotedURI.getFragment()) == null) {
-                throw new MissingPromotedServiceException("No service on promoted component for: " + serviceURI, serviceURI.toString());
+            String serviceName = promotedURI.getFragment();
+            if (serviceName == null && promotedComponent.getServices().size() != 1) {
+                throw new MissingPromotedServiceException("No service on promoted component for: " + serviceURI,
+                                                          serviceURI.toString());
+            } else if (serviceName == null) {
+                LogicalService service = promotedComponent.getServices().iterator().next();
+                promotedURI = URI.create(promotedURI.toString() + "#" + service.getDefinition().getName());
+            } else if (promotedComponent.getService(serviceName) == null) {
+                throw new MissingPromotedServiceException("No service on promoted component for: " + serviceURI,
+                                                          serviceURI.toString());
             }
 
             LogicalService logicalService = new LogicalService(serviceURI, compositeService, parent);
@@ -246,10 +255,12 @@ public abstract class AbstractAssembly implements Assembly {
                 URI componentId = URI.create(base + "/" + promotedUri.getPath());
                 LogicalComponent<?> promotedComponent = parent.getComponent(componentId);
                 if (promotedComponent == null) {
-                    throw new MissingPromotedComponentException("No component for reference to promote: " + referenceURi, referenceURi.toString());
+                    throw new MissingPromotedComponentException("No component for reference to promote: " + referenceURi,
+                                                                referenceURi.toString());
                 }
                 if (promotedComponent.getReference(promotedUri.getFragment()) == null) {
-                    throw new MissingPromotedReferenceException("No reference on promoted component for: " + referenceURi, referenceURi.toString());
+                    throw new MissingPromotedReferenceException("No reference on promoted component for: " + referenceURi,
+                                                                referenceURi.toString());
                 }
                 URI resolvedUri = URI.create(base + "/" + promotedUri.toString());
                 logicalReference.addPromotedUri(resolvedUri);
@@ -457,7 +468,7 @@ public abstract class AbstractAssembly implements Assembly {
             URI uri,
             LogicalComponent<I> component,
             Composite composite) {
-        ComponentDefinition<I> definition =  component.getDefinition();
+        ComponentDefinition<I> definition = component.getDefinition();
         // create logical references based on promoted references in the composite definition
         for (CompositeReference reference : composite.getReferences().values()) {
             String name = reference.getName();
@@ -871,7 +882,9 @@ public abstract class AbstractAssembly implements Assembly {
     /*
      * Creates a logical resource.
      */
-    <RD extends ResourceDefinition> LogicalResource<RD> createLogicalResource(RD resourceDefinition, URI resourceUri, LogicalComponent<?> component) {
+    <RD extends ResourceDefinition> LogicalResource<RD> createLogicalResource(RD resourceDefinition,
+                                                                              URI resourceUri,
+                                                                              LogicalComponent<?> component) {
         return new LogicalResource<RD>(resourceUri, resourceDefinition, component);
     }
 
