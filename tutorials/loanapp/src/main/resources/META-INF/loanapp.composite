@@ -21,14 +21,14 @@
            xmlns:burlap="http://www.fabric3.org/binding/burlap/0.2"
            targetNamespace="http://fabric3.org/xmlns/sca/tutorials/0.3"
            name="LoanAppComposite">
-    <service name="LoanApplicationService" promote="LoanApplicationComponent">
+    <service name="LoanApplicationService" promote="LoanApplicationComponent/LoanApplicationService">
         <!--<binding.ws uri="/loanService"/>-->
         <!--<binding.rmi serviceName="loanService"/>-->
         <!--<hessian:binding.hessian uri="/loanServiceHessian"/>-->
         <!--<burlap:binding.burlap uri="/loanServiceBurlap"/>-->
     </service>
 
-    <service name="RateService" promote="RateServiceComponent">
+    <service name="RateService" promote="RateServiceComponent/RateService">
         <binding.ws uri="/rateService"/>
     </service>
 

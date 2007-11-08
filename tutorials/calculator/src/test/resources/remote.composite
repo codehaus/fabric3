@@ -24,7 +24,7 @@
 
     <include name="CalculatorComposite" scdlResource="META-INF/calculator.composite"/>
 
-    <service name="calculatorTestService" promote="calculator">
+    <service name="calculatorTestService" promote="calculator/CalculatorService">
         <hessian:binding.hessian uri="/calculator" />
     </service>
 
