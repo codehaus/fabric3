@@ -135,7 +135,6 @@
     <!-- Definitions deployer -->
     <component name="definitionsDeployer">
         <system:implementation.system class="org.fabric3.fabric.services.definitions.DefaultDefinitionsDeployer"/>
-        <reference name="store" target="MetadataStore"/>
     </component>
 
     <component name="ClasspathProcessorRegistry">
