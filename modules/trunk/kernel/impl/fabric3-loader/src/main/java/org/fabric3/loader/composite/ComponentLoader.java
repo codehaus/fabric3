@@ -118,6 +118,10 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
                 QName qname = reader.getName();
                 if (PROPERTY.equals(qname)) {
                     PropertyValue value = propertyValueLoader.load(reader, context);
+                    if (impl.getComponentType().getProperties().get(value.getName()) == null) {
+                        // ensure the property exists
+                        throw new PropertyNotFoundException(value.getName());
+                    }
                     componentDefinition.add(value);
                 } else if (REFERENCE.equals(qname)) {
                     ComponentReference reference = referenceLoader.load(reader, context);
