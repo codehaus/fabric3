@@ -57,10 +57,11 @@ public class DefaultDefinitionsDeployer implements DefinitionsDeployer {
     /**
      * Injects the metadata store and definitions registry.
      * 
-     * @param metaDataStore Injected metadata store.
+     * @param storeRegistry the contribution store registry.
      * @param definitionsRegistry Injected definitions registry.
      */
-    public DefaultDefinitionsDeployer(@Reference ContributionStoreRegistry storeRegistry, @Reference DefinitionsRegistry definitionsRegistry) {
+    public DefaultDefinitionsDeployer(@Reference ContributionStoreRegistry storeRegistry,
+                                      @Reference DefinitionsRegistry definitionsRegistry) {
         this.storeRegistry = storeRegistry;
         this.definitionsRegistry = definitionsRegistry;
     }
