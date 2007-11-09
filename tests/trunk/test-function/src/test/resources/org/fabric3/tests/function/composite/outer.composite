@@ -47,9 +47,7 @@
             <implementation.java name="target" class="org.fabric3.tests.function.common.TargetImpl"/>
     </component>
 
-<!--
     <component name="InnerIncluder">
         <implementation.composite name="InnerIncluderComposite" scdlLocation="include/innerIncluder.composite"/>
     </component>
--->
 </composite>
