@@ -125,6 +125,10 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
                     componentDefinition.add(value);
                 } else if (REFERENCE.equals(qname)) {
                     ComponentReference reference = referenceLoader.load(reader, context);
+                    if (impl.getComponentType().getReferences().get(reference.getName()) == null) {
+                        // ensure the reference exists
+                        throw new ReferenceNotFoundException(reference.getName());
+                    }
                     componentDefinition.add(reference);
                 } else if (SERVICE.equals(qname)) {
                     ComponentService service = serviceLoader.load(reader, context);
