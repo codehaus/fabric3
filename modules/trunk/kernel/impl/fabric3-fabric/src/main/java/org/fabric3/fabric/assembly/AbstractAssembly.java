@@ -208,8 +208,13 @@ public abstract class AbstractAssembly implements Assembly {
         List<LogicalComponent<?>> components = new ArrayList<LogicalComponent<?>>(definitions.size());
         for (ComponentDefinition<? extends Implementation<?>> definition : definitions) {
             LogicalComponent<?> logicalComponent = instantiate(parent, definition);
-            // use autowire settings on the original composite as an override if they are specified
-            Autowire autowire = composite.getAutowire();
+            // use autowire settings on the original composite as an override if they are not specified on the component
+            Autowire autowire;
+            if (definition.getAutowire() == Autowire.INHERITED) {
+                autowire = composite.getAutowire();
+            } else {
+                autowire = definition.getAutowire();
+            }
             if (autowire == Autowire.ON || autowire == Autowire.OFF) {
                 logicalComponent.setAutowireOverride(autowire);
             }
