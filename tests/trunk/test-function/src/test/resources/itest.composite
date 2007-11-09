@@ -28,4 +28,5 @@
     <include name="ReferencesComposite" scdlLocation="org/fabric3/tests/function/references/references.composite"/>
     <include name="BindingComposite" scdlLocation="org/fabric3/tests/function/binding/binding.composite"/>
     <include name="WiringComposite" scdlLocation="org/fabric3/tests/function/wiring/wiring.composite"/>
+    <include name="AutoWireComposite" scdlLocation="org/fabric3/tests/function/autowire/autowire.composite"/>
 </composite>
