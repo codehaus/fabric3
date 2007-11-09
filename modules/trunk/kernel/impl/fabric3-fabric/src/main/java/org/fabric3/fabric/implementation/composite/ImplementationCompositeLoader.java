@@ -30,6 +30,7 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.loader.common.InvalidNameException;
+import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.loader.Loader;
@@ -96,8 +97,8 @@ public class ImplementationCompositeLoader implements StAXElementLoader<Composit
                 throw new MissingResourceException(scdlResource, name.toString());
             }
         }
-
-        Composite composite = loader.load(url, Composite.class, loaderContext);
+        LoaderContext childContext = new LoaderContextImpl(cl, url);
+        Composite composite = loader.load(url, Composite.class, childContext);
         CompositeImplementation impl = new CompositeImplementation();
         impl.setName(composite.getName());
         impl.setComponentType(composite);
