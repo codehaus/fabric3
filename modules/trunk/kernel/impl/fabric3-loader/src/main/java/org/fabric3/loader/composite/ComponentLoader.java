@@ -142,6 +142,9 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
                         // ensure the reference exists
                         throw new ServiceNotFoundException(service.getName());
                     }
+                    if (componentDefinition.getServices().containsKey(service.getName())) {
+                        throw new DuplicateConfiguredServiceException(service.getName());
+                    }
                     componentDefinition.add(service);
                 } else {
                     // Unknown extension element - ignore
