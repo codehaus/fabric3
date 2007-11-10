@@ -42,7 +42,6 @@
 
 -->
 
-<!-- Uncomment this for FABRICTHREE-111
     <component name="Autowire">
         <implementation.composite name="autowired" scdlLocation="autowired.composite"/>
         <reference name="promoted" target="target"/>
@@ -51,5 +50,5 @@
     <component name="target">
         <implementation.java name="target" class="org.fabric3.tests.function.common.TargetImpl"/>
     </component>
--->
+    
 </composite>

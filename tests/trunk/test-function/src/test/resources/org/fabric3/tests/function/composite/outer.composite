@@ -48,7 +48,7 @@
             <f3:binding.test uri="SourceService"/>
         </reference>
     </component>
-    
+
     <component name="target">
             <implementation.java name="target" class="org.fabric3.tests.function.common.TargetImpl"/>
     </component>
