@@ -142,6 +142,9 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
                     type.add(include);
                 } else if (PROPERTY.equals(qname)) {
                     Property<?> property = propertyLoader.load(reader, loaderContext);
+                    if (type.getProperties().containsKey(property.getName())) {
+                        throw new DuplicatePropertyException(property.getName());
+                    }
                     type.add(property);
                 } else if (SERVICE.equals(qname)) {
                     CompositeService service = serviceLoader.load(reader, loaderContext);
@@ -153,7 +156,7 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
                     ComponentDefinition<?> componentDefinition = componentLoader.load(reader, loaderContext);
                     String key = componentDefinition.getName();
                     if (type.getComponents().containsKey(key)) {
-                       throw new DuplicateComponentNameException("Component with name already defined", key);
+                        throw new DuplicateComponentNameException("Component with name already defined", key);
                     }
                     type.add(componentDefinition);
                 } else if (WIRE.equals(qname)) {
