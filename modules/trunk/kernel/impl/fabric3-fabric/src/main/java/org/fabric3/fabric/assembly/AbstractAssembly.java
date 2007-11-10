@@ -277,6 +277,11 @@ public abstract class AbstractAssembly implements Assembly {
             parent.addReference(logicalReference);
         }
 
+        // normalize bindings for each new component
+        for (LogicalComponent<?> component : components) {
+            normalize(component);
+        }
+        
         // resolve wires for each new component
         try {
             for (LogicalComponent<?> component : components) {
@@ -284,11 +289,6 @@ public abstract class AbstractAssembly implements Assembly {
             }
         } catch (ResolutionException e) {
             throw new ActivateException(e);
-        }
-
-        // normalize bindings for each new component
-        for (LogicalComponent<?> component : components) {
-            normalize(component);
         }
 
         // Allocate the components to runtime nodes
@@ -704,7 +704,7 @@ public abstract class AbstractAssembly implements Assembly {
                 }
                 // generate changesets recursively for children
                 generateChangeSets(child, contexts);
-                generatePhysicalWires(child, contexts);
+               // generatePhysicalWires(child, contexts);
             }
         } else {
             // leaf component, generate a physical component and update the change sets
