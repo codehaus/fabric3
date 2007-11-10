@@ -24,10 +24,22 @@
     <component name="Autowire">
         <implementation.composite name="autowired" scdlLocation="autowired.composite"/>
     </component>
--->
 
     <component name="target">
         <implementation.java name="target" class="org.fabric3.tests.function.common.TargetImpl"/>
     </component>
+
+-->
+
+<!-- Uncomment this for FABRICTHREE-110
+    <component name="Autowire" autowire="true">
+        <implementation.composite name="autowired" scdlLocation="autowired.composite"/>
+    </component>
+
+    <component name="target">
+        <implementation.java name="target" class="org.fabric3.tests.function.common.TargetImpl"/>
+    </component>
+
+-->
 
 </composite>
