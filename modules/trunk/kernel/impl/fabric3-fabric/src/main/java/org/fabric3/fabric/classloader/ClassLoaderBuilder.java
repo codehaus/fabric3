@@ -35,6 +35,7 @@ import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ArtifactResolverRegistry;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.spi.services.contribution.ResolutionException;
+import org.fabric3.spi.util.UriHelper;
 
 /**
  * ResourceContainerBuilder implementation that creates multi-parent classloaders from {@link
@@ -92,7 +93,9 @@ public class ClassLoaderBuilder implements ResourceContainerBuilder<PhysicalClas
         for (URI uri : definition.getParentClassLoaders()) {
             ClassLoader parent = classLoaderRegistry.getClassLoader(uri);
             if (parent == null) {
-                throw new ClassLoaderNotFoundException("Parent classloader not found", uri.toString());
+                // TODO this should be fixed. We currently do not track classloaders on the controller. When we
+                // do, we will not need to create this hierarchy
+                parent = createClassLoaderHierarchy(uri);
             }
             loader.addParent(parent);
         }
@@ -163,5 +166,28 @@ public class ClassLoaderBuilder implements ResourceContainerBuilder<PhysicalClas
             }
         }
         return classpath.toArray(new URL[classpath.size()]);
+    }
+
+    /**
+     * Creates a classloader and parent classloaders if they are not present for a given uri TODO this shoud be
+     * removed.
+     *
+     * @param uri the uri
+     * @return the classloader
+     */
+    private ClassLoader createClassLoaderHierarchy(URI uri) {
+        ClassLoader loader = classLoaderRegistry.getClassLoader(uri);
+        if (loader != null) {
+            return loader;
+        }
+        URI parentUri = URI.create(UriHelper.getParentName(uri));
+        ClassLoader parent = classLoaderRegistry.getClassLoader(parentUri);
+        if (parent == null) {
+            parent = createClassLoaderHierarchy(parentUri);
+        }
+
+        loader = new CompositeClassLoader(uri, new URL[0], parent);
+        classLoaderRegistry.register(uri, loader);
+        return loader;
     }
 }
