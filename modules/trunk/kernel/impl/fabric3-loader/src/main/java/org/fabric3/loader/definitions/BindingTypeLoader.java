@@ -50,9 +50,6 @@ public class BindingTypeLoader implements StAXElementLoader<BindingType> {
         registry.registerLoader(DefinitionsLoader.BINDING_TYPE, this);
     }
 
-    /**
-     * @see org.fabric3.spi.loader.StAXElementLoader#load(javax.xml.stream.XMLStreamReader, org.fabric3.spi.loader.LoaderContext)
-     */
     public BindingType load(XMLStreamReader reader, LoaderContext context) throws XMLStreamException, LoaderException {
         
 

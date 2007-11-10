@@ -42,6 +42,8 @@ import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.StAXElementLoader;
 
 /**
+ * Loads a generic component type.
+ *
  * @version $Rev$ $Date$
  */
 @EagerInit
@@ -81,7 +83,8 @@ public class ComponentTypeLoader implements StAXElementLoader<ComponentType> {
         return COMPONENT_TYPE;
     }
 
-    public ComponentType load(XMLStreamReader reader, LoaderContext loaderContext) throws XMLStreamException, LoaderException {
+    public ComponentType load(XMLStreamReader reader, LoaderContext loaderContext)
+            throws XMLStreamException, LoaderException {
         QName constrainingType = LoaderUtil.getQName(reader.getAttributeValue(null, "constrainingType"),
                                                      loaderContext.getTargetNamespace(),
                                                      reader.getNamespaceContext());

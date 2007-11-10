@@ -59,9 +59,6 @@ public class PolicySetLoader implements StAXElementLoader<PolicySet> {
         this.registry = registry;
     }
 
-    /**
-     * @see org.fabric3.spi.loader.StAXElementLoader#load(javax.xml.stream.XMLStreamReader, org.fabric3.spi.loader.LoaderContext)
-     */
     public PolicySet load(XMLStreamReader reader, LoaderContext context) throws XMLStreamException, LoaderException {
         
         String name = reader.getAttributeValue(null, "name");

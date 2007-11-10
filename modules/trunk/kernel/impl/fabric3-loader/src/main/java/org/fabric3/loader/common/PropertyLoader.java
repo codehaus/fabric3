@@ -38,8 +38,6 @@ import org.fabric3.spi.loader.StAXElementLoader;
  */
 public class PropertyLoader implements StAXElementLoader<Property<?>> {
     private static final String NAME = "name";
-    private static final String TYPE = "type";
-    private static final String ELEMENT = "element";
     private static final String MANY = "many";
     private static final String MUST_SUPPLY = "mustSupply";
     private static final QName XS_STRING = new QName(XMLConstants.W3C_XML_SCHEMA_NS_URI, "string");

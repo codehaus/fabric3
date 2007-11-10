@@ -56,9 +56,6 @@ public class LoaderContextImpl extends TransformContext implements LoaderContext
         this.targetNamespace = targetNamespace;
     }
 
-    /**
-     * @see org.fabric3.spi.loader.LoaderContext#getTargetNamespace()
-     */
     public String getTargetNamespace() {
         return targetNamespace;
     }

@@ -65,9 +65,6 @@ public class DefinitionsLoader implements StAXElementLoader<Resource> {
         loaderRegistry.registerLoader(DEFINITIONS, this);
     }
 
-    /**
-     * @see org.fabric3.spi.loader.StAXElementLoader#load(javax.xml.stream.XMLStreamReader, org.fabric3.spi.loader.LoaderContext)
-     */
     public Resource load(XMLStreamReader reader, LoaderContext parentContext) throws XMLStreamException, LoaderException {
 
         Resource resource = new Resource();

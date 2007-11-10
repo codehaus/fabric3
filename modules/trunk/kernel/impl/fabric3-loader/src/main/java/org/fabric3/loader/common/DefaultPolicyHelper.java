@@ -32,9 +32,6 @@ import org.fabric3.spi.util.stax.StaxUtil;
  */
 public class DefaultPolicyHelper implements PolicyHelper {
 
-    /**
-     * @see org.fabric3.spi.loader.PolicyHelper#loadPolicySetsAndIntents(org.fabric3.scdl.PolicyAware, javax.xml.stream.XMLStreamReader)
-     */
     public void loadPolicySetsAndIntents(PolicyAware policyAware, XMLStreamReader reader) throws LoaderException {
         
         policyAware.setIntents(StaxUtil.parseListOfQNames(reader, "requires"));

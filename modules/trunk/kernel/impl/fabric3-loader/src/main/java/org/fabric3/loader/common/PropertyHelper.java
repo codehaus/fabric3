@@ -16,23 +16,24 @@
  */
 package org.fabric3.loader.common;
 
-import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
 import org.w3c.dom.Document;
 
 /**
+ * Service for handling policy-reated configuration.
+ *
  * @version $Rev$ $Date$
  */
 public interface PropertyHelper {
     /**
      * Load an XML property value from a Stax stream.
+     * <p/>
+     * The reader must be positioned at an element whose body contains a property value. This will typically be an SCA
+     * &lt;property&gt; element (either in a &lt;composite&gt; or in a &lt;component&gt;). The resulting document
+     * comprises a &lt;value&gt; element whose body content will be that of the original &lt;property&gt; element.
      *
-     * The reader must be positioned at an element whose body contains a property value.
-     * This will typically be an SCA &lt;property&gt; element (either in a &lt;composite&gt; or in a &lt;component&gt;).
-     * The resulting document comprises a &lt;value&gt; element whose body content will be that of the original
-     * &lt;property&gt; element.
-     * 
      * @param reader a stream containing a property value
      * @return a standalone document containing the value
      * @throws XMLStreamException if there was a problem reading the stream

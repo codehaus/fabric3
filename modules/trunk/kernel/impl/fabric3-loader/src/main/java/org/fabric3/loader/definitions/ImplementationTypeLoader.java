@@ -19,10 +19,12 @@
 package org.fabric3.loader.definitions;
 
 import java.util.Set;
-
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.scdl.definitions.ImplementationType;
 import org.fabric3.spi.loader.LoaderContext;
@@ -31,12 +33,10 @@ import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.util.stax.StaxUtil;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Loader for definitions.
- * 
+ *
  * @version $Revision$ $Date$
  */
 @EagerInit
@@ -44,27 +44,26 @@ public class ImplementationTypeLoader implements StAXElementLoader<Implementatio
 
     /**
      * Registers the loader with the registry.
+     *
      * @param registry Injected registry
      */
     public ImplementationTypeLoader(@Reference LoaderRegistry registry) {
         registry.registerLoader(DefinitionsLoader.IMPLEMENTATION_TYPE, this);
     }
 
-    /**
-     * @see org.fabric3.spi.loader.StAXElementLoader#load(javax.xml.stream.XMLStreamReader, org.fabric3.spi.loader.LoaderContext)
-     */
-    public ImplementationType load(XMLStreamReader reader, LoaderContext context) throws XMLStreamException, LoaderException {
-        
+    public ImplementationType load(XMLStreamReader reader, LoaderContext context)
+            throws XMLStreamException, LoaderException {
+
         String name = reader.getAttributeValue(null, "name");
         QName qName = new QName(context.getTargetNamespace(), name);
-        
+
         Set<QName> alwaysProvides = StaxUtil.parseListOfQNames(reader, "alwaysProvides");
         Set<QName> mayProvide = StaxUtil.parseListOfQNames(reader, "mayProvide");
-        
+
         LoaderUtil.skipToEndElement(reader);
-        
+
         return new ImplementationType(qName, alwaysProvides, mayProvide);
-        
+
     }
 
 }

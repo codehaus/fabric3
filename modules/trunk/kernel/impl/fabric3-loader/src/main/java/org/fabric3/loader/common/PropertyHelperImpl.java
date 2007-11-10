@@ -16,11 +16,11 @@
  */
 package org.fabric3.loader.common;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -28,6 +28,8 @@ import org.w3c.dom.Element;
 import org.fabric3.transform.xml.Stream2Element2;
 
 /**
+ * Default implementation of PolicyHelper.
+ *
  * @version $Rev$ $Date$
  */
 public class PropertyHelperImpl implements PropertyHelper {
