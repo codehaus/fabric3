@@ -704,7 +704,6 @@ public abstract class AbstractAssembly implements Assembly {
                 }
                 // generate changesets recursively for children
                 generateChangeSets(child, contexts);
-               // generatePhysicalWires(child, contexts);
             }
         } else {
             // leaf component, generate a physical component and update the change sets
