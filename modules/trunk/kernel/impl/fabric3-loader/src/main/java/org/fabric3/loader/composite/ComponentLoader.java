@@ -122,6 +122,9 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
                         // ensure the property exists
                         throw new PropertyNotFoundException(value.getName());
                     }
+                    if (componentDefinition.getPropertyValues().containsKey(value.getName())) {
+                        throw new DuplicateConfiguredPropertyException(value.getName());
+                    }
                     componentDefinition.add(value);
                 } else if (REFERENCE.equals(qname)) {
                     ComponentReference reference = referenceLoader.load(reader, context);
