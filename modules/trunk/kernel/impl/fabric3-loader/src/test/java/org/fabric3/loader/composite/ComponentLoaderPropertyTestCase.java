@@ -52,6 +52,7 @@ public class ComponentLoaderPropertyTestCase extends TestCase {
         EasyMock.replay(ctx);
         try {
             loader.load(reader, ctx);
+            fail();
         } catch (PropertyNotFoundException e) {
             assertEquals(PROP_NAME, e.getIdentifier());
         }
