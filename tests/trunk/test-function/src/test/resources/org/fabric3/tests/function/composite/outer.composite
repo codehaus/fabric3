@@ -34,6 +34,12 @@
         <reference name="promoted" target="target"/>
     </component>
 
+<!--
+    <component name="InnerInner">
+        <implementation.composite name="ImplementInnerComposite" scdlLocation="implement/inner.composite"/>
+    </component>
+-->
+
     <component name="InnerCompositeTest">
         <f3:junit class="org.fabric3.tests.function.composite.InnerCompositeTest"/>
         <reference name="inner" target="Inner"/>
