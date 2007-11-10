@@ -232,8 +232,16 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
     protected void createBootstrapComponents(Fabric3Runtime runtime) throws InitializationException {
         interfaceProcessorRegistry = new JavaInterfaceProcessorRegistryImpl();
-        ClassLoader cl = getClass().getClassLoader();
-        xmlFactory = XMLInputFactory.newInstance("javax.xml.stream.XMLInputFactory", cl);
+
+        ClassLoader cl = runtime.getHostClassLoader();
+        ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(cl);
+            xmlFactory = XMLInputFactory.newInstance();
+        } finally {
+            Thread.currentThread().setContextClassLoader(oldCl);
+        }            
+        
         monitorFactory = runtime.getMonitorFactory();
         monitorFactory.register(new GroupInitializationExceptionFormatter(monitorFactory));
         // create the ClassLoaderRegistry
