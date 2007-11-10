@@ -56,4 +56,8 @@
     <component name="InnerIncluder">
         <implementation.composite name="InnerIncluderComposite" scdlLocation="include/innerIncluder.composite"/>
     </component>
+
+    <component name="Autowire">
+        <implementation.composite name="Autowire" scdlLocation="autowire.composite"/>
+    </component>
 </composite>
