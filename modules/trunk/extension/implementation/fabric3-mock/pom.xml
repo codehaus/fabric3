@@ -39,9 +39,13 @@
             <version>0.3</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
     </dependencies>
 
-    <build>
+    <!--build>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
@@ -51,7 +55,7 @@
                 <configuration />
             </plugin>
         </plugins>
-    </build>
+    </buildi-->
 
     <scm>
         <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/implementation/fabric3-mock</connection>
