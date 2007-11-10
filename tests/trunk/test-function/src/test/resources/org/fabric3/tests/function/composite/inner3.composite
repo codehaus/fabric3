@@ -17,25 +17,15 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           name="InnerComposite2">
+           name="InnerComposite3">
 
-    <service name="two" promote="two#IdentityService"/>
-    <service name="SourceService" promote="source"/>
-
-    <component name="two">
+    <component name="inner3">
         <implementation.java class="org.fabric3.tests.function.common.IdentityServiceImpl"/>
-        <property name="id">two</property>
+        <property name="id">inner3</property>
     </component>
 
-    <component name="source">
-        <implementation.java class="org.fabric3.tests.function.common.SourceImpl"/>
+    <component name="InnerFour">
+        <implementation.composite name="inner4" scdlLocation="inner4.composite"/>
     </component>
-
-    <component name="InnerThree">
-        <implementation.composite name="inner3" scdlLocation="inner3.composite"/>
-    </component>
-
-
-    <reference name="promoted" promote="source/target"/>
 
 </composite>
