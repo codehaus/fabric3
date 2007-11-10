@@ -33,16 +33,25 @@
     <description>Fabric3 extension for mocking references.</description>
 
     <dependencies>
+    
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-pojo</artifactId>
             <version>0.3</version>
             <scope>provided</scope>
         </dependency>
+        
+        <dependency>
+            <groupId>stax</groupId>
+            <artifactId>stax-api</artifactId>
+            <version>1.0</version>
+        </dependency>
+        
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
+        
     </dependencies>
 
     <!--build>
