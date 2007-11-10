@@ -148,6 +148,9 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
                     type.add(property);
                 } else if (SERVICE.equals(qname)) {
                     CompositeService service = serviceLoader.load(reader, loaderContext);
+                    if (type.getServices().containsKey(service.getName())) {
+                        throw new DuplicateServiceException(service.getName());
+                    }
                     type.add(service);
                 } else if (REFERENCE.equals(qname)) {
                     CompositeReference reference = referenceLoader.load(reader, loaderContext);
