@@ -52,6 +52,7 @@ public class ComponentLoaderReferenceTestCase extends TestCase {
         EasyMock.replay(ctx);
         try {
             loader.load(reader, ctx);
+            fail();
         } catch (ReferenceNotFoundException e) {
             assertEquals(REF_NAME, e.getIdentifier());
         }
