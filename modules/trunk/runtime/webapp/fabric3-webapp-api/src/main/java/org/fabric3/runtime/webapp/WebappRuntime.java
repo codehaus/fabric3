@@ -21,7 +21,7 @@ package org.fabric3.runtime.webapp;
 import java.net.URI;
 import java.net.URL;
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.ServletRequestListener;
 import javax.servlet.http.HttpSessionListener;
 
 import org.fabric3.host.runtime.Fabric3Runtime;
@@ -36,7 +36,7 @@ import org.fabric3.host.runtime.InitializationException;
  * @see Fabric3Filter
  * @see Fabric3SessionListener
  */
-public interface WebappRuntime extends HttpSessionListener, Fabric3Runtime<WebappHostInfo> {
+public interface WebappRuntime extends HttpSessionListener, ServletRequestListener, Fabric3Runtime<WebappHostInfo> {
     /**
      * Returns the ServletContext associated with this runtime.
      *
@@ -56,28 +56,6 @@ public interface WebappRuntime extends HttpSessionListener, Fabric3Runtime<Webap
      * @return the runtime's request injector
      */
     ServletRequestInjector getRequestInjector();
-
-    /**
-     * Notification that the web application has begun servicing a request
-     */
-    void startRequest();
-
-    /**
-     * Notification that the web application has stopped servicing a request
-     */
-    void stopRequest();
-
-    /**
-     * Request has been started for the given request.
-     * @param request the servlet request
-     */
-    void httpRequestStarted(HttpServletRequest request);
-
-    /**
-     * Request has been ended with the given session id.
-     * @param id the session id
-     */
-    void httpRequestEnded(Object id);
 
     /**
      * Temporary method for deploying SCDL supplied with an application to the runtime.

@@ -28,6 +28,9 @@
     <listener>
         <listener-class>org.fabric3.runtime.webapp.Fabric3ContextListener</listener-class>
     </listener>
+    <listener>
+        <listener-class>org.fabric3.runtime.webapp.Fabric3RequestListener</listener-class>
+    </listener>
 
     <context-param>
         <param-name>fabric3.component</param-name>

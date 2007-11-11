@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import org.osoa.sca.Conversation;
 import org.osoa.sca.ServiceReference;
+import org.osoa.sca.ServiceUnavailableException;
 
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.fabric.wire.NoMethodForOperationException;
@@ -133,7 +134,16 @@ public final class JDKInvocationHandler<B> implements InvocationHandler, Service
         msg.setWire(wire);
         try {
             // dispatch the wire down the chain and get the response
-            Message resp = headInterceptor.invoke(msg);
+            Message resp;
+            try {
+                resp = headInterceptor.invoke(msg);
+            } catch (RuntimeException e) {
+                // rethrow RuntimeExceptions raised by the implementation or application
+                throw e;
+            } catch (Exception e) {
+                // wrap checked exceptions raised by the runtime
+                throw new ServiceUnavailableException(e);
+            }
             Object body = resp.getBody();
             if (resp.isFault()) {
                 throw (Throwable) body;

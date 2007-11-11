@@ -34,7 +34,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3.webapp</groupId>
             <artifactId>fabric3-webapp-api</artifactId>
-            <version>0.3</version>
+            <version>0.3.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>

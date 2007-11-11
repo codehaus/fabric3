@@ -22,14 +22,19 @@ import java.net.URI;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletRequestEvent;
+import javax.servlet.ServletRequestListener;
 
 import org.osoa.sca.CallableReference;
 import org.osoa.sca.ComponentContext;
 import org.osoa.sca.ServiceReference;
 
+import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.fabric.component.ServiceReferenceImpl;
+import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.runtime.webapp.Constants;
 import org.fabric3.scdl.PropertyValue;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.AbstractLifecycle;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
@@ -42,7 +47,7 @@ import org.fabric3.spi.wire.Wire;
 /**
  * @version $Rev$ $Date$
  */
-public class WebappComponent<T> extends AbstractLifecycle implements AtomicComponent<T> {
+public class WebappComponent<T> extends AbstractLifecycle implements AtomicComponent<T>, ServletRequestListener {
     private final URI uri;
     private ProxyService proxyService;
     private URI groupId;
@@ -76,6 +81,16 @@ public class WebappComponent<T> extends AbstractLifecycle implements AtomicCompo
     }
 
     public void stop() {
+    }
+
+    public void requestInitialized(ServletRequestEvent sre) {
+        WorkContext workContext = new SimpleWorkContext();
+        workContext.setScopeIdentifier(Scope.COMPOSITE, groupId);
+        PojoWorkContextTunnel.setThreadWorkContext(workContext);
+    }
+
+    public void requestDestroyed(ServletRequestEvent sre) {
+        PojoWorkContextTunnel.setThreadWorkContext(null);
     }
 
     public Map<String, PropertyValue> getDefaultPropertyValues() {

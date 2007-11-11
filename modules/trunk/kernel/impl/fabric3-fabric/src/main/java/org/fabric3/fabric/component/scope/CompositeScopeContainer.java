@@ -92,14 +92,26 @@ public class CompositeScopeContainer extends AbstractScopeContainer<URI> {
         assert instanceWrappers.containsKey(component);
         @SuppressWarnings("unchecked")
         InstanceWrapper<T> wrapper = (InstanceWrapper<T>) instanceWrappers.get(component);
-        if (wrapper == EMPTY) {
-            // FIXME is there a potential race condition here that may result in two instances being created
-            wrapper = createInstance(component, workContext);
-            instanceWrappers.put(component, wrapper);
-            wrapper.start();
-            URI contextId = workContext.getScopeIdentifier(getScope());
-            destroyQueues.get(contextId).add(wrapper);
+        if (wrapper != EMPTY) {
+            return wrapper;
         }
+
+        if (workContext == null) {
+            String id = component.getUri().toString();
+            throw new NoWorkContextException("No work context bound when loading component: " + id, id);
+        }
+
+        URI contextId = workContext.getScopeIdentifier(getScope());
+        if (contextId == null) {
+            String id = component.getUri().toString();
+            throw new NoCompositeException("No composite specified in work context for component: " + id, id);
+        }
+
+        // FIXME is there a potential race condition here that may result in two instances being created
+        wrapper = createInstance(component, workContext);
+        instanceWrappers.put(component, wrapper);
+        wrapper.start();
+        destroyQueues.get(contextId).add(wrapper);
         return wrapper;
     }
 

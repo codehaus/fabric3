@@ -34,43 +34,21 @@ import static org.fabric3.runtime.webapp.Constants.RUNTIME_ATTRIBUTE;
  * @version $Rev$ $Date$
  */
 public class Fabric3RequestListener implements ServletRequestListener {
-    private WebappRuntime runtime;
+    public void requestInitialized(ServletRequestEvent servletRequestEvent) {
+        ServletContext context = servletRequestEvent.getServletContext();
+        WebappRuntime runtime = (WebappRuntime) context.getAttribute(RUNTIME_ATTRIBUTE);
+        if (runtime != null) {
+            runtime.requestInitialized(servletRequestEvent);
+        } else {
+            context.log("requestInitialized", new ServletException("Fabric3 runtime not configured"));
+        }
+    }
 
     public void requestDestroyed(ServletRequestEvent servletRequestEvent) {
-
-        final ServletContext context = servletRequestEvent.getServletContext();
-        getRuntime(context);
-        ServletRequest servletRequest = servletRequestEvent.getServletRequest();
-        if (servletRequest instanceof HttpServletRequest) {
-            HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
-            HttpSession session = httpServletRequest.getSession(false);
-            runtime.httpRequestEnded(session == null ? null : session.getId());
-
+        ServletContext context = servletRequestEvent.getServletContext();
+        WebappRuntime runtime = (WebappRuntime) context.getAttribute(RUNTIME_ATTRIBUTE);
+        if (runtime != null) {
+            runtime.requestDestroyed(servletRequestEvent);
         }
-
-    }
-
-    public void requestInitialized(ServletRequestEvent servletRequestEvent) {
-
-        final ServletContext context = servletRequestEvent.getServletContext();
-        getRuntime(context);
-        ServletRequest servletRequest = servletRequestEvent.getServletRequest();
-        if (servletRequest instanceof HttpServletRequest) {
-            runtime.httpRequestStarted((HttpServletRequest) servletRequest);
-
-        }
-
-    }
-
-    protected WebappRuntime getRuntime(final ServletContext context) {
-        if (runtime == null) {
-
-            runtime = (WebappRuntime) context.getAttribute(RUNTIME_ATTRIBUTE);
-            if (runtime == null) {
-                context.log("requestInitialized", new ServletException("Fabric3 runtime not configured"));
-                return null;
-            }
-        }
-        return runtime;
     }
 }

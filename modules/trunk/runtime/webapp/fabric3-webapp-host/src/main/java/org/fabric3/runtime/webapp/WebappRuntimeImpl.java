@@ -21,7 +21,7 @@ package org.fabric3.runtime.webapp;
 import java.net.URI;
 import java.net.URL;
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.ServletRequestEvent;
 import javax.servlet.http.HttpSessionEvent;
 
 import org.fabric3.fabric.runtime.AbstractRuntime;
@@ -54,8 +54,8 @@ import org.fabric3.spi.loader.LoaderException;
 
 public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implements WebappRuntime {
     private ServletContext servletContext;
-
     private ServletRequestInjector requestInjector;
+    private WebappComponent webapp;
 
     public WebappRuntimeImpl() {
         super(WebappHostInfo.class);
@@ -78,12 +78,16 @@ public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implement
             LoaderContext loaderContext = new LoaderContextImpl(getHostClassLoader(), applicationScdl);
             Composite composite = loader.load(applicationScdl, Composite.class, loaderContext);
 
+            // locate the servlet request injector
+            URI uri = URI.create(RUNTIME_NAME + "/servletHost");
+            requestInjector = getSystemComponent(ServletRequestInjector.class, uri);
+
             // deploy the components
             Assembly assembly = getSystemComponent(Assembly.class, DISTRIBUTED_ASSEMBLY_URI);
             assembly.includeInDomain(composite);
 
             URI reslvedUri = URI.create(getHostInfo().getDomain().toString() + "/" + componentId);
-            WebappComponent webapp = (WebappComponent) getComponentManager().getComponent(reslvedUri);
+            webapp = (WebappComponent) getComponentManager().getComponent(reslvedUri);
             if (webapp == null) {
                 throw new Fabric3InitException("No component found with id " + componentId, componentId.toString());
             }
@@ -99,10 +103,6 @@ public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implement
     }
 
     public ServletRequestInjector getRequestInjector() {
-        if (requestInjector == null) {
-            URI uri = URI.create(RUNTIME_NAME + "/servletHost");
-            requestInjector = getSystemComponent(ServletRequestInjector.class, uri);
-        }
         return requestInjector;
     }
 
@@ -112,15 +112,11 @@ public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implement
     public void sessionDestroyed(HttpSessionEvent event) {
     }
 
-    public void httpRequestStarted(HttpServletRequest request) {
+    public void requestInitialized(ServletRequestEvent sre) {
+        webapp.requestInitialized(sre);
     }
 
-    public void httpRequestEnded(Object sessionid) {
-    }
-
-    public void startRequest() {
-    }
-
-    public void stopRequest() {
+    public void requestDestroyed(ServletRequestEvent sre) {
+        webapp.requestDestroyed(sre);
     }
 }
