@@ -24,35 +24,44 @@ import java.util.List;
 import java.util.Map;
 
 import org.easymock.EasyMock;
-import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 
 /**
  * @version $Revision$ $Date$
  */
 public class MockObjectFactory<T> implements ObjectFactory<T> {
-    
-    private final Class<?>[] interfaces;
-    private final ClassLoader classLoader;
+
     private final Map<Class<?>, Object> mocks = new HashMap<Class<?>, Object>();
+    private final T proxy;
     
+    /**
+     * Eager initiates the proxy.
+     * 
+     * @param interfaces Interfaces that need to be proxied.
+     * @param classLoader Classloader for creating the dynamic proxies.
+     */
     public MockObjectFactory(List<Class<?>> interfaces, ClassLoader classLoader) {
-        
-        this.interfaces = new Class<?>[interfaces.size()];
-        interfaces.toArray(this.interfaces);
         
         for(Class<?> interfaze : interfaces) {
             mocks.put(interfaze, EasyMock.createMock(interfaze));
         }
-
-        this.classLoader = classLoader;
+        
+        this.proxy = createProxy(interfaces, classLoader);
         
     }
 
     @SuppressWarnings("unchecked")
-    public T getInstance() throws ObjectCreationException {
+    public T getInstance() {
+        return proxy;
+    }
+
+    @SuppressWarnings("unchecked")
+    private T createProxy(List<Class<?>> interfaces, ClassLoader classLoader) {
+
+        Class<?>[] mockInterfaces = new Class[interfaces.size()];
+        interfaces.toArray(mockInterfaces);
         
-        return (T) Proxy.newProxyInstance(classLoader, interfaces, new InvocationHandler() {
+        return (T) Proxy.newProxyInstance(classLoader, mockInterfaces, new InvocationHandler() {
             
             public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
                 
