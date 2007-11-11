@@ -32,6 +32,10 @@
         <implementation.java class="org.fabric3.runtime.webapp.smoketest.ContextTest"/>
     </component>
 
+    <component name="CompositeTest">
+        <implementation.java class="org.fabric3.runtime.webapp.smoketest.CompositeTest"/>
+    </component>
+
     <component name="StatelessTest">
         <implementation.java class="org.fabric3.runtime.webapp.smoketest.StatelessTest"/>
     </component>

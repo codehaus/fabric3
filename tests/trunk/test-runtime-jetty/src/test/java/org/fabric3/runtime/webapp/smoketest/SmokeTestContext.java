@@ -40,6 +40,10 @@ public class SmokeTestContext extends TestCase {
         assertEquals("OK", runTest(new URL(base, "smoketest?test=stateless")));
     }
 
+    public void testCompositeComponent() throws IOException {
+        assertEquals("OK", runTest(new URL(base, "smoketest?test=composite")));
+    }
+
     private String runTest(URL url) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         Reader reader = new InputStreamReader(connection.getInputStream());

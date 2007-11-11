@@ -22,4 +22,7 @@
     <reference name="stateless">
         <interface.java interface="org.fabric3.runtime.webapp.smoketest.TestService"/>
     </reference>
+    <reference name="composite">
+        <interface.java interface="org.fabric3.runtime.webapp.smoketest.TestService"/>
+    </reference>
 </componentType>
