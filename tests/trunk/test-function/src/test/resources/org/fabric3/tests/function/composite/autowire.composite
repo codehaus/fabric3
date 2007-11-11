@@ -17,19 +17,8 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           name="AutowireComposite"
-        >
+           name="AutowireComposite">
 
-<!-- Uncomment this for FABRICTHREE-109
-    <component name="Autowire">
-        <implementation.composite name="autowired" scdlLocation="autowired.composite"/>
-    </component>
-
-    <component name="target">
-        <implementation.java name="target" class="org.fabric3.tests.function.common.TargetImpl"/>
-    </component>
-
--->
 
     <component name="Autowire2" autowire="true">
         <implementation.composite name="autowired" scdlLocation="autowired.composite"/>
