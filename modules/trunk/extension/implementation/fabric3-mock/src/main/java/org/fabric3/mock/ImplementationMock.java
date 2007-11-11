@@ -30,7 +30,7 @@ import org.fabric3.spi.Constants;
  */
 public class ImplementationMock extends Implementation<MockComponentType> {
     
-    static final QName IMPLEMENTATION_MOCK = new QName(Constants.FABRIC3_NS, "mock");
+    static final QName IMPLEMENTATION_MOCK = new QName(Constants.FABRIC3_NS, "implementation.mock");
     
     private final List<String> mockedInterfaces;
     

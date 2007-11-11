@@ -23,9 +23,6 @@ import java.util.StringTokenizer;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.pojo.scdl.JavaMappedService;
-import org.fabric3.scdl.ServiceContract;
-import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
@@ -39,9 +36,9 @@ import org.osoa.sca.annotations.Reference;
  * Loads implementation.mock from the scdl. The XML fragment is expeced to look like,
  * 
  * <implementation.mock>
- *         com.acme.IFoo,
- *         com.acme.IBar,
- *         com.acme.IBaz
+ *         org.fabric3.mock.Foo
+ *         org.fabric3.mock.Bar
+ *         org.fabric3.mock.Baz
  * </implementation.mock>
  * 
  * The implementation.mock element is expected to have a delimitted list of fully qualified named of the interfaces
@@ -96,7 +93,9 @@ public class ImplementationMockLoader implements StAXElementLoader<Implementatio
     public ImplementationMock load(XMLStreamReader reader, LoaderContext context) throws XMLStreamException,
             LoaderException {
         
-        String textualContent = reader.getText().trim();        
+        assert reader.getName().equals(ImplementationMock.IMPLEMENTATION_MOCK);
+        
+        String textualContent = reader.getElementText().trim();        
         LoaderUtil.skipToEndElement(reader);
         
         List<String> mockedInterfaces = new ArrayList<String>();
@@ -107,6 +106,9 @@ public class ImplementationMockLoader implements StAXElementLoader<Implementatio
         }
         
         MockComponentType componentType = componentTypeLoader.load(mockedInterfaces, context);
+        
+        assert reader.getName().equals(ImplementationMock.IMPLEMENTATION_MOCK);
+        
         return new ImplementationMock(mockedInterfaces, componentType);
         
     }

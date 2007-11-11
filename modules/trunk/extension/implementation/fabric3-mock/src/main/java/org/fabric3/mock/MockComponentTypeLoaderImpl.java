@@ -46,7 +46,7 @@ public class MockComponentTypeLoaderImpl implements MockComponentTypeLoader {
             for(String mockedInterface : mockedInterfaces) {
                 Class<?> interfaceClass = classLoader.loadClass(mockedInterface);
                 JavaServiceContract serviceContract = new JavaServiceContract(interfaceClass);
-                componentType.add(new JavaMappedService("service" + ++count, serviceContract));
+                componentType.add(new JavaMappedService("service" + count++, serviceContract, mockedInterface));
             }
             
             return componentType;
