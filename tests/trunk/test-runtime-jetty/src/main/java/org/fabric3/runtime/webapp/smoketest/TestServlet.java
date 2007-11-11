@@ -19,34 +19,40 @@
 package org.fabric3.runtime.webapp.smoketest;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
-
-import org.osoa.sca.ComponentContext;
-
-import org.fabric3.runtime.webapp.Constants;
 
 /**
  * @version $Rev$ $Date$
  */
 public class TestServlet extends HttpServlet {
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
 
-        PrintWriter out = response.getWriter();
-        String test = request.getParameter("test");
-        if ("context".equals(test)) {
-            ComponentContext context = (ComponentContext) getServletContext().getAttribute(Constants.CONTEXT_ATTRIBUTE);
-            if (context == null) {
-                response.sendError(500, "Context was not bound");
-                return;
-            }
-            out.print("component URI is " + context.getURI());
-        } else {
+    private ServletContext servletContext;
+
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        servletContext = config.getServletContext();
+    }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String testName = request.getParameter("test");
+        if (testName == null || testName.length() == 0) {
             response.sendError(500, "No test specified");
+            return;
         }
+
+        TestService test = (TestService) servletContext.getAttribute(testName);
+        if (test == null) {
+            response.sendError(500, "Unknown test: " + testName);
+            return;
+        }
+
+        test.service(request, response, servletContext);
     }
 }

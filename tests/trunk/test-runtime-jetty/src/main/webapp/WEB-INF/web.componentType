@@ -16,7 +16,10 @@
  under the License.
 -->
 <componentType xmlns="http://www.osoa.org/xmlns/sca/1.0">
-    <reference name="hello">
-        <interface.java interface="org.fabric3.runtime.webapp.smoketest.HelloService"/>
+    <reference name="context">
+        <interface.java interface="org.fabric3.runtime.webapp.smoketest.TestService"/>
+    </reference>
+    <reference name="stateless">
+        <interface.java interface="org.fabric3.runtime.webapp.smoketest.TestService"/>
     </reference>
 </componentType>

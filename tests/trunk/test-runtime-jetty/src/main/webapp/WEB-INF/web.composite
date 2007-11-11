@@ -24,10 +24,21 @@
 
     <component name="smoketest">
         <fabric3:web/>
+        <reference name="context" target="ContextTest"/>
+        <reference name="stateless" target="StatelessTest"/>
     </component>
 
+    <component name="ContextTest">
+        <implementation.java class="org.fabric3.runtime.webapp.smoketest.ContextTest"/>
+    </component>
+
+    <component name="StatelessTest">
+        <implementation.java class="org.fabric3.runtime.webapp.smoketest.StatelessTest"/>
+    </component>
+<!--
     <component name="HelloComponent">
         <implementation.java class="org.fabric3.runtime.webapp.smoketest.HelloServiceImpl"/>
         <property name="greeting">Hello World</property> 
     </component>
+-->
 </composite>

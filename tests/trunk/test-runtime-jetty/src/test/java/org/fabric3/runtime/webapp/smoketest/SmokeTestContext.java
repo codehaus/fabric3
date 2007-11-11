@@ -33,12 +33,14 @@ public class SmokeTestContext extends TestCase {
     private URL base;
 
     public void testContext() throws IOException {
-        URL url = new URL(base, "smoketest?test=context");
-        String result = getContent(url);
-        assertEquals("component URI is fabric3://./domain/smoketest", result);
+        assertEquals("OK", runTest(new URL(base, "smoketest?test=context")));
     }
 
-    private String getContent(URL url) throws IOException {
+    public void testStatelessComponent() throws IOException {
+        assertEquals("OK", runTest(new URL(base, "smoketest?test=stateless")));
+    }
+
+    private String runTest(URL url) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         Reader reader = new InputStreamReader(connection.getInputStream());
         StringBuilder result = new StringBuilder();
