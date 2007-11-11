@@ -19,6 +19,7 @@ package org.fabric3.mock;
 import java.util.List;
 
 import org.fabric3.pojo.scdl.JavaMappedService;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
@@ -48,6 +49,8 @@ public class MockComponentTypeLoaderImpl implements MockComponentTypeLoader {
                 JavaServiceContract serviceContract = new JavaServiceContract(interfaceClass);
                 componentType.add(new JavaMappedService("service" + count++, serviceContract, mockedInterface));
             }
+            
+            componentType.setImplementationScope(Scope.STATELESS);
             
             return componentType;
             

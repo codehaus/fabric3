@@ -56,7 +56,8 @@
         
         <dependency>
             <groupId>org.easymock</groupId>
-            <artifactId>easymockclassextension</artifactId>
+            <artifactId>easymock</artifactId>
+            <scope>compile</scope>
         </dependency>
         
         <dependency>

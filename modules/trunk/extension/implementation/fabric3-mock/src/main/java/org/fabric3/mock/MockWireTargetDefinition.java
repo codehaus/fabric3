@@ -16,31 +16,11 @@
  */
 package org.fabric3.mock;
 
-import java.util.List;
-
-import org.fabric3.scdl.ModelObject;
+import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 
 /**
- * Instance factory definition for mocked components.
- * 
  * @version $Revision$ $Date$
  */
-public class MockInstanceFactoryDefinition extends ModelObject {
-    
-    private List<String> mockedInterfaces;
-
-    /**
-     * @return Gets all the interfaces to be mocked.
-     */
-    public List<String> getMockedInterfaces() {
-        return mockedInterfaces;
-    }
-
-    /**
-     * @param mockedInterfaces Sets all the interfaces to be mocked.
-     */
-    public void setMockedInterfaces(List<String> mockedInterfaces) {
-        this.mockedInterfaces = mockedInterfaces;
-    }
+public class MockWireTargetDefinition extends PhysicalWireTargetDefinition {
 
 }

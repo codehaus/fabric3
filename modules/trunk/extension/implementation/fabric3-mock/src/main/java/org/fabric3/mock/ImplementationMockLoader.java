@@ -29,6 +29,7 @@ import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
@@ -46,6 +47,7 @@ import org.osoa.sca.annotations.Reference;
  * 
  * @version $Revision$ $Date$
  */
+@EagerInit
 public class ImplementationMockLoader implements StAXElementLoader<ImplementationMock> {
 
     @SuppressWarnings("deprecation")
@@ -95,8 +97,7 @@ public class ImplementationMockLoader implements StAXElementLoader<Implementatio
         
         assert reader.getName().equals(ImplementationMock.IMPLEMENTATION_MOCK);
         
-        String textualContent = reader.getElementText().trim();        
-        LoaderUtil.skipToEndElement(reader);
+        String textualContent = reader.getElementText().trim();
         
         List<String> mockedInterfaces = new ArrayList<String>();
         

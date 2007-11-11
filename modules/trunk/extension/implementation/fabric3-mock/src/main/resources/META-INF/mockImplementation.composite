@@ -40,7 +40,18 @@
     </component>
     
     <!-- Generator -->
+    <component name="org.fabric3.mock.MockComponentGenerator">
+        <system:implementation.system class="org.fabric3.mock.MockComponentGenerator"/>
+    </component>
     
-    <!-- Instance factory provider builder -->
+    <!-- Builder -->
+    <component name="org.fabric3.mock.MockComponentBuilder">
+        <system:implementation.system class="org.fabric3.mock.MockComponentBuilder"/>
+    </component>
+    
+    <!-- Wire attacher -->
+    <component name="org.fabric3.mock.MockWireAttacher">
+        <system:implementation.system class="org.fabric3.mock.MockWireAttacher"/>
+    </component>
     
 </composite>
