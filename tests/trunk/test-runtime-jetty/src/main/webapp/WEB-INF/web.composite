@@ -20,11 +20,12 @@
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:fabric3="http://fabric3.org/xmlns/sca/2.0-alpha"
            name="WebappSmoketestComposite"
-           autowire="true">
+           autowire="false">
 
     <component name="smoketest">
         <fabric3:web/>
         <reference name="context" target="ContextTest"/>
+        <reference name="composite" target="CompositeTest"/>
         <reference name="stateless" target="StatelessTest"/>
     </component>
 
@@ -39,10 +40,4 @@
     <component name="StatelessTest">
         <implementation.java class="org.fabric3.runtime.webapp.smoketest.StatelessTest"/>
     </component>
-<!--
-    <component name="HelloComponent">
-        <implementation.java class="org.fabric3.runtime.webapp.smoketest.HelloServiceImpl"/>
-        <property name="greeting">Hello World</property> 
-    </component>
--->
 </composite>
