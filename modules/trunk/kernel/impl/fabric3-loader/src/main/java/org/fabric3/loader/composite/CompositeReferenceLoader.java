@@ -18,10 +18,11 @@ package org.fabric3.loader.composite;
 
 import java.net.URI;
 import java.util.StringTokenizer;
-
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.loader.common.InvalidNameException;
 import org.fabric3.scdl.BindingDefinition;
@@ -39,7 +40,6 @@ import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.PolicyHelper;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.loader.UnrecognizedElementException;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Loads a reference from an XML-based assembly file
@@ -56,7 +56,7 @@ public class CompositeReferenceLoader implements StAXElementLoader<CompositeRefe
     }
 
     public CompositeReference load(XMLStreamReader reader, LoaderContext context)
-        throws XMLStreamException, LoaderException {
+            throws XMLStreamException, LoaderException {
 
         String name = reader.getAttributeValue(null, "name");
 
@@ -68,24 +68,29 @@ public class CompositeReferenceLoader implements StAXElementLoader<CompositeRefe
         try {
             Multiplicity multiplicity = Multiplicity.fromString(reader.getAttributeValue(null, "multiplicity"));
             referenceDefinition.setMultiplicity(multiplicity);
+            if (multiplicity == null
+                    || Multiplicity.ONE_ONE.equals(multiplicity)
+                    || Multiplicity.ONE_N.equals(multiplicity)) {
+                referenceDefinition.setRequired(true);
+            }
         } catch (IllegalArgumentException e) {
             throw new InvalidValueException(reader.getAttributeValue(null, "multiplicity"), "multiplicity");
         }
 
         while (true) {
             switch (reader.next()) {
-                case XMLStreamConstants.START_ELEMENT:
-                    ModelObject type = loader.load(reader, ModelObject.class, context);
-                    if (type instanceof ServiceContract) {
-                        referenceDefinition.setServiceContract((ServiceContract<?>)type);
-                    } else if (type instanceof BindingDefinition) {
-                        referenceDefinition.addBinding((BindingDefinition)type);
-                    } else {
-                        throw new UnrecognizedElementException(reader.getName());
-                    }
-                    break;
-                case XMLStreamConstants.END_ELEMENT:
-                    return referenceDefinition;
+            case XMLStreamConstants.START_ELEMENT:
+                ModelObject type = loader.load(reader, ModelObject.class, context);
+                if (type instanceof ServiceContract) {
+                    referenceDefinition.setServiceContract((ServiceContract<?>) type);
+                } else if (type instanceof BindingDefinition) {
+                    referenceDefinition.addBinding((BindingDefinition) type);
+                } else {
+                    throw new UnrecognizedElementException(reader.getName());
+                }
+                break;
+            case XMLStreamConstants.END_ELEMENT:
+                return referenceDefinition;
             }
         }
 
@@ -95,7 +100,7 @@ public class CompositeReferenceLoader implements StAXElementLoader<CompositeRefe
      * Processes the promotes attribute.
      */
     private void setPromoted(XMLStreamReader reader, ReferenceDefinition referenceDefinition, String name)
-        throws InvalidReferenceException, InvalidNameException {
+            throws InvalidReferenceException, InvalidNameException {
 
         String promoted = reader.getAttributeValue(null, "promote");
         if (promoted == null || promoted.trim().length() < 1) {
