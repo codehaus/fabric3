@@ -18,6 +18,7 @@ import org.fabric3.host.runtime.StartException;
 import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.pojo.processor.JavaIntrospectionHelper;
 import org.fabric3.scdl.Composite;
+import org.fabric3.scdl.CompositeReference;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.assembly.BindException;
@@ -82,6 +83,14 @@ public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo>
             Loader loader = getSystemComponent(Loader.class, LOADER_URI);
             LoaderContext loaderContext = new LoaderContextImpl(getHostClassLoader(), compositeFile);
             Composite composite = loader.load(compositeFile, Composite.class, loaderContext);
+            for (String name : mockCache.getMockDefinitions().keySet()) {
+                CompositeReference reference = composite.getReferences().get(name);
+                if (reference == null) {
+                    throw new ReferenceNotFoundException("Reference not found for mock", name);
+                }
+                // TODO we should clear all bindings, but for now just add one
+                reference.addBinding(new MockBindingDefinition());
+            }
             applicationAssembly.includeInDomain(composite);
             WorkContext workContext = new SimpleWorkContext();
             workContext.setScopeIdentifier(Scope.COMPOSITE, DOMAIN_URI);

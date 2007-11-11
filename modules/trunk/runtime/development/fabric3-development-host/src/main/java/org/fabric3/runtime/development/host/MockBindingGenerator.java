@@ -30,7 +30,6 @@ import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalBinding;
-import org.fabric3.spi.model.type.SCABindingDefinition;
 
 /**
  * Implementation of the mock binding generator.
@@ -39,7 +38,7 @@ import org.fabric3.spi.model.type.SCABindingDefinition;
  */
 @EagerInit
 public class MockBindingGenerator implements
-        BindingGenerator<ClientWireSourceDefinition, MockWireTargetDefinition, SCABindingDefinition> {
+        BindingGenerator<ClientWireSourceDefinition, MockWireTargetDefinition, MockBindingDefinition> {
     private GeneratorRegistry registry;
 
     public MockBindingGenerator(@Reference GeneratorRegistry registry) {
@@ -48,10 +47,10 @@ public class MockBindingGenerator implements
 
     @Init
     public void init() {
-        registry.register(SCABindingDefinition.class, this);
+        registry.register(MockBindingDefinition.class, this);
     }
 
-    public ClientWireSourceDefinition generateWireSource(LogicalBinding<SCABindingDefinition> logicalBinding,
+    public ClientWireSourceDefinition generateWireSource(LogicalBinding<MockBindingDefinition> logicalBinding,
                                                          Set<Intent> intentsToBeProvided,
                                                          GeneratorContext context,
                                                          ServiceDefinition serviceDefinition)
@@ -59,7 +58,7 @@ public class MockBindingGenerator implements
         throw new UnsupportedOperationException();
     }
 
-    public MockWireTargetDefinition generateWireTarget(LogicalBinding<SCABindingDefinition> logicalBinding,
+    public MockWireTargetDefinition generateWireTarget(LogicalBinding<MockBindingDefinition> logicalBinding,
                                                        Set<Intent> intentsToBeProvided,
                                                        GeneratorContext context,
                                                        ReferenceDefinition referenceDefinition)

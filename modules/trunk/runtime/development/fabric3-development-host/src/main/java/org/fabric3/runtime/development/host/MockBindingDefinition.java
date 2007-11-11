@@ -16,27 +16,17 @@
  */
 package org.fabric3.runtime.development.host;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import javax.xml.namespace.QName;
+
+import org.fabric3.scdl.BindingDefinition;
 
 /**
- * Default implementation of the MockObjectCache
- *
  * @version $Rev$ $Date$
  */
-public class MockObjectCacheImpl implements MockObjectCache {
-    private Map<String, MockDefinition<?>> mocks = new HashMap<String, MockDefinition<?>>();
+public class MockBindingDefinition extends BindingDefinition {
+    public static final QName BINDING_QNAME = new QName("http://www.fabric3.org/binding/mock/0.1", "binding.mock");
 
-    public void putMockDefinition(String name, MockDefinition<?> mock) {
-        mocks.put(name, mock);
-    }
-
-    public MockDefinition<?> getMockDefinition(String name) {
-        return mocks.get(name);
-    }
-
-    public Map<String, MockDefinition<?>> getMockDefinitions() {
-        return Collections.unmodifiableMap(mocks);
+    protected MockBindingDefinition() {
+        super(BINDING_QNAME);
     }
 }

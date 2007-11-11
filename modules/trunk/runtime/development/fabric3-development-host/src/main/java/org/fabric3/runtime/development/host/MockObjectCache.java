@@ -16,6 +16,8 @@
  */
 package org.fabric3.runtime.development.host;
 
+import java.util.Map;
+
 /**
  * Implementations cache mock definitions registered with the domain.
  *
@@ -38,5 +40,12 @@ public interface MockObjectCache {
      * @return the mock definition
      */
     MockDefinition getMockDefinition(String name);
+
+    /**
+     * Returns the mock registered definitions.
+     *
+     * @return the mock registered definitions.
+     */
+    Map<String, MockDefinition<?>> getMockDefinitions();
 
 }

@@ -16,27 +16,15 @@
  */
 package org.fabric3.runtime.development.host;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import org.fabric3.host.Fabric3RuntimeException;
 
 /**
- * Default implementation of the MockObjectCache
- *
  * @version $Rev$ $Date$
  */
-public class MockObjectCacheImpl implements MockObjectCache {
-    private Map<String, MockDefinition<?>> mocks = new HashMap<String, MockDefinition<?>>();
+public class ReferenceNotFoundException extends Fabric3RuntimeException {
+    private static final long serialVersionUID = 594817664533414616L;
 
-    public void putMockDefinition(String name, MockDefinition<?> mock) {
-        mocks.put(name, mock);
-    }
-
-    public MockDefinition<?> getMockDefinition(String name) {
-        return mocks.get(name);
-    }
-
-    public Map<String, MockDefinition<?>> getMockDefinitions() {
-        return Collections.unmodifiableMap(mocks);
+    public ReferenceNotFoundException(String msg, String name) {
+        super(msg, name);
     }
 }
