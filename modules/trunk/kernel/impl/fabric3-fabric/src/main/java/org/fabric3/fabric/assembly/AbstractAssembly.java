@@ -277,11 +277,6 @@ public abstract class AbstractAssembly implements Assembly {
             parent.addReference(logicalReference);
         }
 
-        // normalize bindings for each new component
-        for (LogicalComponent<?> component : components) {
-            normalize(component);
-        }
-        
         // resolve wires for each new component
         try {
             for (LogicalComponent<?> component : components) {
@@ -291,6 +286,11 @@ public abstract class AbstractAssembly implements Assembly {
             throw new ActivateException(e);
         }
 
+        // normalize bindings for each new component
+        for (LogicalComponent<?> component : components) {
+            normalize(component);
+        }
+        
         // Allocate the components to runtime nodes
         try {
             for (LogicalComponent<?> component : components) {

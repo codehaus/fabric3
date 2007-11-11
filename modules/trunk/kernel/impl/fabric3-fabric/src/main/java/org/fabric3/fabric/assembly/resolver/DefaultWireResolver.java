@@ -122,7 +122,8 @@ public class DefaultWireResolver implements WireResolver {
                 if (isPromoted(composite, component, referenceName)) {
                     continue;
                 }
-                ServiceContract<?> requiredContract = reference.getServiceContract();
+                ServiceContract<?> requiredContract = determineContract(logicalReference);
+
                 boolean required = reference.isRequired();
                 Autowire autowire = calculateAutowire(composite, component);
                 if (autowire == Autowire.ON) {
@@ -358,4 +359,38 @@ public class DefaultWireResolver implements WireResolver {
         return false;
 
     }
+
+    /**
+     * Determines the service contract for the logical composite reference, recursing down the promotion hierarchy if
+     * necessary.
+     *
+     * @param reference the logical reference
+     * @return the service contract
+     */
+    private ServiceContract<?> determineContract(LogicalReference reference) {
+        ServiceContract<?> contract = reference.getDefinition().getServiceContract();
+        if (contract != null) {
+            return contract;
+        }
+        // it is an error if a composite reference does not promote a component reference and this should
+        // be determined before wire resolution
+        assert !reference.getPromotedUris().isEmpty();
+        // choose the first path to recurse into since composite references that promote more than component reference
+        // must have the same service contract
+        URI promotes = reference.getPromotedUris().get(0);
+        URI defragmented = UriHelper.getDefragmentedName(promotes);
+        String promotedReferenceName = promotes.getFragment();
+        LogicalComponent<?> parent = reference.getParent();
+        LogicalComponent<?> promotedComponent = parent.getComponent(defragmented);
+        LogicalReference promotedReference;
+        if (promotedReferenceName == null) {
+            assert promotedComponent.getReferences().size() == 1;
+            promotedReference = promotedComponent.getReferences().iterator().next();
+        } else {
+            promotedReference = promotedComponent.getReference(promotedReferenceName);
+        }
+        return determineContract(promotedReference);
+    }
+
+
 }
