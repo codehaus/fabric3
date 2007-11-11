@@ -22,11 +22,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.fabric3.spi.component.AtomicComponent;
-import org.fabric3.spi.component.ComponentException;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
+import org.fabric3.spi.component.TargetDestructionException;
+import org.fabric3.spi.component.TargetResolutionException;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.wire.Interceptor;
+import org.fabric3.spi.wire.InvocationRuntimeException;
 import org.fabric3.spi.wire.Message;
 
 /**
@@ -49,8 +51,8 @@ public class InvokerInterceptor<T, CONTEXT> implements Interceptor {
      * @param scopeContainer the ScopeContainer that manages implementation instances for the target component
      */
     public InvokerInterceptor(Method operation,
-                                  AtomicComponent<T> component,
-                                  ScopeContainer<CONTEXT> scopeContainer
+                              AtomicComponent<T> component,
+                              ScopeContainer<CONTEXT> scopeContainer
     ) {
         this.operation = operation;
         this.component = component;
@@ -70,31 +72,30 @@ public class InvokerInterceptor<T, CONTEXT> implements Interceptor {
     }
 
     public Message invoke(Message msg) {
+        Object body = msg.getBody();
+        WorkContext workContext = msg.getWorkContext();
+        InstanceWrapper<T> wrapper;
         try {
-            Object body = msg.getBody();
-            WorkContext workContext = msg.getWorkContext();
-            Object resp = invokeTarget(body, workContext);
-            msg.setBody(resp);
-        } catch (InvocationTargetException e) {
-            msg.setBodyWithFault(e.getCause());
+            wrapper = scopeContainer.getWrapper(component, workContext);
+        } catch (TargetResolutionException e) {
+            throw new InvocationRuntimeException(e);
         }
-        return msg;
-    }
-
-    private Object invokeTarget(final Object payload, final WorkContext workContext)
-        throws InvocationTargetException {
         try {
-            InstanceWrapper<T> wrapper = scopeContainer.getWrapper(component, workContext);
             Object instance = wrapper.getInstance();
             try {
-                return operation.invoke(instance, (Object[]) payload);
-            } finally {
-                scopeContainer.returnWrapper(component, workContext, wrapper);
+                msg.setBody(operation.invoke(instance, (Object[]) body));
+            } catch (InvocationTargetException e) {
+                msg.setBodyWithFault(e.getCause());
+            } catch (IllegalAccessException e) {
+                throw new InvocationRuntimeException(e);
             }
-        } catch (IllegalAccessException e) {
-            throw new InvocationTargetException(e);
-        } catch (ComponentException e) {
-            throw new InvocationTargetException(e);
+            return msg;
+        } finally {
+            try {
+                scopeContainer.returnWrapper(component, workContext, wrapper);
+            } catch (TargetDestructionException e) {
+                throw new InvocationRuntimeException(e);
+            }
         }
     }
 }

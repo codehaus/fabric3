@@ -10,13 +10,14 @@ import org.osoa.sca.Conversation;
 import org.osoa.sca.ServiceReference;
 import org.osoa.sca.ServiceUnavailableException;
 
-import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.fabric.wire.NoMethodForOperationException;
+import org.fabric3.host.Fabric3RuntimeException;
+import org.fabric3.pojo.PojoWorkContextTunnel;
+import org.fabric3.scdl.Operation;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.TargetInvocationException;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.scdl.Operation;
-import org.fabric3.scdl.Scope;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
@@ -137,11 +138,8 @@ public final class JDKInvocationHandler<B> implements InvocationHandler, Service
             Message resp;
             try {
                 resp = headInterceptor.invoke(msg);
-            } catch (RuntimeException e) {
-                // rethrow RuntimeExceptions raised by the implementation or application
-                throw e;
             } catch (Exception e) {
-                // wrap checked exceptions raised by the runtime
+                // wrap exceptions raised by the runtime
                 throw new ServiceUnavailableException(e);
             }
             Object body = resp.getBody();
