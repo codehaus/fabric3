@@ -4,12 +4,11 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
-import org.fabric3.scdl.CompositeImplementation;
-import org.fabric3.spi.model.type.SCABindingDefinition;
 import org.fabric3.spi.util.UriHelper;
 
 /**
@@ -37,7 +36,7 @@ public class PromotionNormalizerImpl implements PromotionNormalizer {
     }
 
     private List<LogicalBinding<?>> recurseServicePromotionPath(LogicalComponent<CompositeImplementation> parent,
-                                                             URI serviceUri) {
+                                                                URI serviceUri) {
         List<LogicalBinding<?>> bindings = new ArrayList<LogicalBinding<?>>();
         for (LogicalService service : parent.getServices()) {
             URI targetUri = service.getPromote();
@@ -45,7 +44,8 @@ public class PromotionNormalizerImpl implements PromotionNormalizer {
                 // no service specified
                 if (targetUri.equals(UriHelper.getDefragmentedName(serviceUri))) {
                     if (parent.getParent() != null) {
-                        List<LogicalBinding<?>> list = recurseServicePromotionPath(parent.getParent(), service.getUri());
+                        List<LogicalBinding<?>> list =
+                                recurseServicePromotionPath(parent.getParent(), service.getUri());
                         if (list.isEmpty()) {
                             // no bindings were overridden
                             bindings.addAll(service.getBindings());
@@ -60,7 +60,8 @@ public class PromotionNormalizerImpl implements PromotionNormalizer {
             } else {
                 if (targetUri.equals(serviceUri)) {
                     if (parent.getParent() != null) {
-                        List<LogicalBinding<?>> list = recurseServicePromotionPath(parent.getParent(), service.getUri());
+                        List<LogicalBinding<?>> list =
+                                recurseServicePromotionPath(parent.getParent(), service.getUri());
                         if (list.isEmpty()) {
                             // no bindings were overridden
                             bindings.addAll(service.getBindings());
@@ -93,11 +94,6 @@ public class PromotionNormalizerImpl implements PromotionNormalizer {
             }
             if (!bindings.isEmpty()) {
                 reference.overrideBindings(bindings);
-            } else if (reference.getBindings().isEmpty() && targets.isEmpty()) {
-                // no bindings were configured so use the SCA Binding
-                SCABindingDefinition definition = SCABindingDefinition.INSTANCE;
-                LogicalBinding<SCABindingDefinition> binding = new LogicalBinding<SCABindingDefinition>(definition, reference);
-                reference.addBinding(binding);
             }
             if (!targets.isEmpty()) {
                 reference.overrideTargets(targets);
