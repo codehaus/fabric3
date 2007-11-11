@@ -21,7 +21,7 @@
            autowire="true">
 
     <component name="TestComponent">
-        <f3:junit class="org.fabric3.tests.mock.ComponentTest"/>
+        <f3:junit class="org.fabric3.tests.mock.MockTest"/>
     </component>
 
     <component name="MockComponent">

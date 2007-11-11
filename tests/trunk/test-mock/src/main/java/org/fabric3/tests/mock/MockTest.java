@@ -23,7 +23,7 @@ import junit.framework.TestCase;
 /**
  * @version $Revision$ $Date$
  */
-public class ComponentTest extends TestCase {
+public class MockTest extends TestCase {
     
     private MockService1 mockService1;
     private MockService2 mockService2;
