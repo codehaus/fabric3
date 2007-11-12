@@ -41,8 +41,8 @@ public class MockComponent<T> extends AbstractLifecycle implements AtomicCompone
         this.objectFactory = objectFactory;
     }
 
-    public InstanceWrapper<T> createInstanceWrapper(WorkContext workContext) throws ObjectCreationException {
-        return null;
+    public URI getUri() {
+        return componentId;
     }
 
     @SuppressWarnings("unchecked")
@@ -50,8 +50,11 @@ public class MockComponent<T> extends AbstractLifecycle implements AtomicCompone
         return objectFactory;
     }
 
+    public InstanceWrapper<T> createInstanceWrapper(WorkContext workContext) throws ObjectCreationException {
+        return null;
+    }
+
     public URI getGroupId() {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -77,10 +80,6 @@ public class MockComponent<T> extends AbstractLifecycle implements AtomicCompone
 
     public Map<String, PropertyValue> getDefaultPropertyValues() {
         return null;
-    }
-
-    public URI getUri() {
-        return componentId;
     }
 
     public void setDefaultPropertyValues(Map<String, PropertyValue> propertyValues) {
