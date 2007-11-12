@@ -16,11 +16,12 @@
  */
 package org.fabric3.tests.mock;
 
+
 /**
  * @version $Revision$ $Date$
  */
 public interface MockService1 {
     
-    void doMock1();
+    void doMock1(String arg);
 
 }

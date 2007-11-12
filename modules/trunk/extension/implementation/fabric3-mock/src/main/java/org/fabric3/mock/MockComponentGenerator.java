@@ -18,10 +18,12 @@ package org.fabric3.mock;
 
 import java.util.Set;
 
+import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
+import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
@@ -95,6 +97,11 @@ public class MockComponentGenerator implements ComponentGenerator<LogicalCompone
         
         MockWireTargetDefinition definition = new MockWireTargetDefinition();
         definition.setUri(service.getUri());
+        
+        ServiceContract<?> serviceContract = service.getDefinition().getServiceContract();
+        
+        JavaServiceContract javaServiceContract = JavaServiceContract.class.cast(serviceContract);
+        definition.setMockedInterface(javaServiceContract.getInterfaceClass());
         
         return definition;
         

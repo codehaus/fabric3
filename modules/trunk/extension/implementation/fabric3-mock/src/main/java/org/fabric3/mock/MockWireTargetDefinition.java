@@ -22,5 +22,15 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
  * @version $Revision$ $Date$
  */
 public class MockWireTargetDefinition extends PhysicalWireTargetDefinition {
+    
+    private String mockedInterface;
+
+    public String getMockedInterface() {
+        return mockedInterface;
+    }
+
+    public void setMockedInterface(String mockedInterface) {
+        this.mockedInterface = mockedInterface;
+    }
 
 }

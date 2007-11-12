@@ -16,10 +16,23 @@
  */
 package org.fabric3.mock;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.URI;
+import java.util.Map;
+
+import org.easymock.EasyMock;
+import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.builder.component.WireAttacher;
 import org.fabric3.spi.builder.component.WireAttacherRegistry;
+import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.wire.Interceptor;
+import org.fabric3.spi.wire.InvocationChain;
+import org.fabric3.spi.wire.Message;
+import org.fabric3.spi.wire.MessageImpl;
 import org.fabric3.spi.wire.Wire;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
@@ -31,10 +44,15 @@ import org.osoa.sca.annotations.Reference;
 @EagerInit
 public class MockWireAttacher implements WireAttacher<PhysicalWireSourceDefinition, MockWireTargetDefinition> {
     
-    private final WireAttacherRegistry wireAttacherRegistry;
+    private static final URI CLASS_LOADER_ID = URI.create("sca://./applicationClassLoader");
     
-    public MockWireAttacher(@Reference WireAttacherRegistry wireAttacherRegistry) {
+    private final WireAttacherRegistry wireAttacherRegistry;
+    private final ClassLoaderRegistry classLoaderRegistry;
+    
+    public MockWireAttacher(@Reference WireAttacherRegistry wireAttacherRegistry,
+                            @Reference ClassLoaderRegistry classLoaderRegistry) {
         this.wireAttacherRegistry = wireAttacherRegistry;
+        this.classLoaderRegistry = classLoaderRegistry;
     }
     
     @Init
@@ -50,7 +68,79 @@ public class MockWireAttacher implements WireAttacher<PhysicalWireSourceDefiniti
 
     public void attachToTarget(PhysicalWireSourceDefinition wireSourceDefinition, 
                                MockWireTargetDefinition wireTargetDefinition, 
-                               Wire wire) {
+                               Wire wire) throws WireAttachException {
+        
+        if(wireSourceDefinition.isOptimizable()) {
+            return;
+        }
+        
+        ClassLoader classLoader = classLoaderRegistry.getClassLoader(CLASS_LOADER_ID);
+        
+        String interfaceClass = wireTargetDefinition.getMockedInterface();
+        
+        try {
+            
+            Class<?> mockedInterface = classLoader.loadClass(interfaceClass);
+            Object mock = EasyMock.createMock(mockedInterface);
+            
+            for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
+                PhysicalOperationDefinition op = entry.getKey();
+                InvocationChain chain = entry.getValue();
+                
+                for(Method method : mockedInterface.getDeclaredMethods()) {
+                    System.err.println(method.getName() + ":" + op.getName());
+                    if(op.getName().equals(method.getName())) {
+                        chain.addInterceptor(new MockTargetInterceptor(mock, method));
+                    }
+                }
+            }
+            
+        } catch (ClassNotFoundException e) {
+            URI sourceUri = wireSourceDefinition.getUri();
+            URI targetUri = wireTargetDefinition.getUri();
+            throw new WireAttachException("Unable to load interface " + interfaceClass, sourceUri, targetUri, e);
+        }
+        
+    }
+    
+    private class MockTargetInterceptor implements Interceptor {
+        
+        private Interceptor next;
+        private Object mock;
+        private Method method;
+        
+        private MockTargetInterceptor(Object mock, Method method) {
+            this.mock = mock;
+            this.method = method;
+        }
+
+        public Interceptor getNext() {
+            return next;
+        }
+
+        public Message invoke(Message message) {
+            
+            try {
+                
+                Object[] args = (Object[]) message.getBody();
+                Object ret = method.invoke(mock, args);
+                Message out = new MessageImpl();
+                out.setBody(ret);
+                
+                return out;
+                
+            } catch (IllegalAccessException e) {
+                throw new AssertionError(e);
+            } catch (InvocationTargetException e) {
+                throw new AssertionError(e);
+            }
+            
+        }
+
+        public void setNext(Interceptor next) {
+            this.next = next;
+        }
+        
     }
 
 }

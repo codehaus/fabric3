@@ -39,10 +39,13 @@ public class MockTest extends TestCase {
     }
     
     public void testMock() {
+        
         assertNotNull(mockService1);
         assertNotNull(mockService2);
         
-        mockService1.doMock1();
+        mockService1.doMock1("test");
+        mockService2.doMock2(1);
+        
     }
 
 }
