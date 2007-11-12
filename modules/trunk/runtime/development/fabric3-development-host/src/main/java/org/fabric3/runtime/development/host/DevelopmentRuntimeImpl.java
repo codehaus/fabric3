@@ -22,11 +22,14 @@ import org.fabric3.scdl.CompositeReference;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.assembly.BindException;
+import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.loader.Loader;
 import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.wire.ProxyService;
 import org.fabric3.spi.wire.Wire;
 
@@ -96,8 +99,15 @@ public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo>
             workContext.setScopeIdentifier(Scope.COMPOSITE, DOMAIN_URI);
             scopeContainer.startContext(workContext, DOMAIN_URI);
             started = true;
-        } catch (Exception e) {
+        } catch (LoaderException e) {
             monitor.runError(e);
+            throw new CompositeActivationException(e);
+        } catch (ActivateException e) {
+            monitor.runError(e);
+            throw new CompositeActivationException(e);
+        } catch (GroupInitializationException e) {
+            monitor.runError(e);
+            throw new CompositeActivationException(e);
         }
     }
 
