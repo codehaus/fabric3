@@ -110,7 +110,22 @@ public class DefaultWireResolver implements WireResolver {
                                                             logicalReference.getUri(),
                                                             componentId);
             }
-            if (promotedComponent.getReference(promotedUri.getFragment()) == null) {
+            String promotedReferenceName = promotedUri.getFragment();
+            if (promotedReferenceName == null) {
+                if (promotedComponent.getReferences().size() == 0) {
+                    throw new MissingPromotedReferenceException("No reference on promoted component",
+                                                                logicalReference.getUri(),
+                                                                promotedUri);
+                } else if (promotedComponent.getReferences().size() == 1) {
+                    throw new UnsupportedOperationException();
+                    // FABRICTHREE-119: we need the ability to resolve promotions on LogicalReferences.
+                    // Delaying until next SPI rev
+                } else {
+                    throw new UnspecifiedReferenceException("Reference on promoted component must be specified",
+                                                            logicalReference.getUri(),
+                                                            promotedUri);
+                }
+            } else if (promotedComponent.getReference(promotedUri.getFragment()) == null) {
                 throw new MissingPromotedReferenceException("No reference on promoted component",
                                                             logicalReference.getUri(),
                                                             promotedUri);
