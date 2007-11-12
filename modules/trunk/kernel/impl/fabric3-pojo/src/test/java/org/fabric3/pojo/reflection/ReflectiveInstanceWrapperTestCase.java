@@ -33,9 +33,10 @@ public class ReflectiveInstanceWrapperTestCase extends TestCase {
     private Object instance;
     private EventInvoker<Object> initInvoker;
     private EventInvoker<Object> destroyInvoker;
+    private ClassLoader cl;
 
     public void testWithNoCallbacks() {
-        wrapper = new ReflectiveInstanceWrapper<Object>(instance, null, null);
+        wrapper = new ReflectiveInstanceWrapper<Object>(instance, cl, null, null);
         try {
             wrapper.start();
         } catch (TargetInitializationException e) {
@@ -51,7 +52,7 @@ public class ReflectiveInstanceWrapperTestCase extends TestCase {
     public void testWithStartCallback() throws ObjectCallbackException {
         initInvoker.invokeEvent(instance);
         EasyMock.replay(initInvoker);
-        wrapper = new ReflectiveInstanceWrapper<Object>(instance, initInvoker, null);
+        wrapper = new ReflectiveInstanceWrapper<Object>(instance, cl, initInvoker, null);
         try {
             wrapper.start();
         } catch (TargetInitializationException e) {
@@ -63,7 +64,7 @@ public class ReflectiveInstanceWrapperTestCase extends TestCase {
     public void testWithStopCallback() throws ObjectCallbackException {
         destroyInvoker.invokeEvent(instance);
         EasyMock.replay(destroyInvoker);
-        wrapper = new ReflectiveInstanceWrapper<Object>(instance, null, destroyInvoker);
+        wrapper = new ReflectiveInstanceWrapper<Object>(instance, cl, null, destroyInvoker);
         try {
             wrapper.start();
             wrapper.stop();
@@ -78,6 +79,7 @@ public class ReflectiveInstanceWrapperTestCase extends TestCase {
     @SuppressWarnings("unchecked")
     protected void setUp() throws Exception {
         super.setUp();
+        cl = getClass().getClassLoader();
         instance = new Object();
         initInvoker = createMock(EventInvoker.class);
         destroyInvoker = createMock(EventInvoker.class);

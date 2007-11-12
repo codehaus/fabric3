@@ -27,12 +27,17 @@ import org.fabric3.spi.component.TargetInitializationException;
  */
 public class ReflectiveInstanceWrapper<T> implements InstanceWrapper<T> {
     private final T instance;
+    private final ClassLoader cl;
     private final EventInvoker<T> initInvoker;
     private final EventInvoker<T> destroyInvoker;
     private boolean started;
 
-    public ReflectiveInstanceWrapper(T instance, EventInvoker<T> initInvoker, EventInvoker<T> destroyInvoker) {
+    public ReflectiveInstanceWrapper(T instance,
+                                     ClassLoader cl,
+                                     EventInvoker<T> initInvoker,
+                                     EventInvoker<T> destroyInvoker) {
         this.instance = instance;
+        this.cl = cl;
         this.initInvoker = initInvoker;
         this.destroyInvoker = destroyInvoker;
         this.started = false;
@@ -50,10 +55,14 @@ public class ReflectiveInstanceWrapper<T> implements InstanceWrapper<T> {
     public void start() throws TargetInitializationException {
         assert !started;
         if (initInvoker != null) {
+            ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
             try {
+                Thread.currentThread().setContextClassLoader(cl);
                 initInvoker.invokeEvent(instance);
             } catch (ObjectCallbackException e) {
                 throw new TargetInitializationException(e.getMessage(), e);
+            } finally {
+                Thread.currentThread().setContextClassLoader(oldCl);
             }
         }
         started = true;
@@ -64,7 +73,13 @@ public class ReflectiveInstanceWrapper<T> implements InstanceWrapper<T> {
         assert started;
         try {
             if (destroyInvoker != null) {
-                destroyInvoker.invokeEvent(instance);
+                ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+                try {
+                    Thread.currentThread().setContextClassLoader(cl);
+                    destroyInvoker.invokeEvent(instance);
+                } finally {
+                    Thread.currentThread().setContextClassLoader(oldCl);
+                }
             }
         } catch (ObjectCallbackException e) {
             throw new TargetDestructionException(e.getMessage(), e);

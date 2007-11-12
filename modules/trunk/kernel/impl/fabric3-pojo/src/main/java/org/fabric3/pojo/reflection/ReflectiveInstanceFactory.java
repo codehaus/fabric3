@@ -76,7 +76,7 @@ public class ReflectiveInstanceFactory<T> implements InstanceFactory<T> {
                     injector.inject(instance);
                 }
             }
-            return new ReflectiveInstanceWrapper<T>(instance, initInvoker, destroyInvoker);
+            return new ReflectiveInstanceWrapper<T>(instance, cl, initInvoker, destroyInvoker);
         } catch (InstantiationException e) {
             String name = ctr.getDeclaringClass().getName();
             throw new AssertionError("Class is not instantiable [" + name + "]");
