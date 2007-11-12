@@ -20,8 +20,6 @@ import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 
-import org.fabric3.fabric.assembly.ResolutionException;
-
 /**
  * Thrown when an autowire cannot be resolved to a specific target, i.e. when more than one potential target exists.
  *

@@ -18,8 +18,6 @@ package org.fabric3.fabric.assembly.resolver;
 
 import java.net.URI;
 
-import org.fabric3.fabric.assembly.ResolutionException;
-
 /**
  * Thrown when a specified service is not found on a target component.
  *

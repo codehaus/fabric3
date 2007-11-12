@@ -19,6 +19,7 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.Referenceable;
+import org.fabric3.fabric.assembly.resolver.ResolutionException;
 
 /**
  * @version $Rev$ $Date$

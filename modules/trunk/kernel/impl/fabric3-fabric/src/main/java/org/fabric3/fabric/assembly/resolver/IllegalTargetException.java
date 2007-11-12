@@ -18,8 +18,6 @@ package org.fabric3.fabric.assembly.resolver;
 
 import java.net.URI;
 
-import org.fabric3.fabric.assembly.ResolutionException;
-
 /**
  * @version $Rev$ $Date$
  */

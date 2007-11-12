@@ -18,10 +18,10 @@
  */
 package org.fabric3.fabric.assembly.resolver;
 
-import org.fabric3.fabric.assembly.ResolutionException;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
+import org.fabric3.spi.model.instance.LogicalService;
 
 /**
  * Implementations are responsible for resolving wire targets and URIs in an SCA Domain, including autowires.
@@ -38,6 +38,14 @@ public interface WireResolver {
      * @throws ResolutionException if an error occurs during resolution
      */
     void resolve(LogicalComponent<?> component) throws ResolutionException;
+
+    /**
+     * Resolves promotion URIs for a logical service
+     *
+     * @param service the logical service to resolve
+     * @throws ResolutionException if an error occurs during resolution
+     */
+    public void resolve(LogicalService service) throws ResolutionException;
 
     /**
      * Resolves reference targets against the given composite

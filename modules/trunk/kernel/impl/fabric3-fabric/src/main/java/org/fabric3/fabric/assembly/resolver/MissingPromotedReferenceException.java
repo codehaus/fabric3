@@ -14,15 +14,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.assembly;
+package org.fabric3.fabric.assembly.resolver;
 
-import org.fabric3.spi.assembly.ActivateException;
+import java.net.URI;
 
 /**
  * @version $Rev$ $Date$
  */
-public class MissingPromotedComponentException extends ActivateException {
-    public MissingPromotedComponentException(String message, String identifier) {
-        super(message, identifier);
+public class MissingPromotedReferenceException extends ResolutionException {
+    private static final long serialVersionUID = -7845693733059139666L;
+
+    public MissingPromotedReferenceException(String message, URI source, URI target) {
+        super(message, source, target);
     }
 }

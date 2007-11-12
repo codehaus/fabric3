@@ -18,8 +18,6 @@ package org.fabric3.fabric.assembly.resolver;
 
 import java.net.URI;
 
-import org.fabric3.fabric.assembly.ResolutionException;
-
 /**
  * Thrown when a target service on a component has not been specified and it is required, e.g. when the target component
  * implements more than one service.

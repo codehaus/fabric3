@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.fabric3.fabric.assembly.ResolutionException;
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
@@ -56,67 +55,43 @@ public class DefaultWireResolver implements WireResolver {
             }
             resolveReferences(component);
         }
-        resolveServicePromotions(component);
+        resolveServices(component);
     }
 
-    /**
-     * Resolves service promotions for the services of the given component. Specifically, resolves promoted URIs and
-     * calaculates default services if necessary.
-     *
-     * @param component the component to resolve service promotions.
-     * @throws ResolutionException if an error occurs resolving a promotion
-     */
-    private void resolveServicePromotions(LogicalComponent<?> component)
-            throws ResolutionException {
-        for (LogicalService service : component.getServices()) {
-            URI promotedUri = service.getPromote();
-            if (promotedUri != null) {
-                if (promotedUri.getFragment() == null) {
-                    LogicalComponent<?> target = component.getComponent(promotedUri);
-                    if (target == null) {
-                        throw new TargetNotFoundException("Promotion target not found", service.getUri(), promotedUri);
-                    }
-                    if (target.getServices().size() != 1) {
-                        throw new UnspecifiedServiceException(
-                                "Promoted service must be specified since target implements more than one service",
-                                service.getUri(),
-                                promotedUri);
-                    }
-                    LogicalService logicalService = target.getServices().iterator().next();
-                    String name = logicalService.getUri().getFragment();
-                    service.setPromote(URI.create(promotedUri.toString() + "#" + name));
-                } else {
-                    URI targetUri = UriHelper.getDefragmentedName(promotedUri);
-                    LogicalComponent<?> target = component.getComponent(targetUri);
-                    if (target == null) {
-                        throw new TargetNotFoundException("Promotion target not found", service.getUri(), promotedUri);
-                    }
-                    if (target.getService(promotedUri.getFragment()) == null) {
-                        throw new ServiceNotFoundException("Promotion target service not found",
-                                                           service.getUri(),
-                                                           promotedUri);
-                    }
-
-                }
+    public void resolve(LogicalService service) throws ResolutionException {
+        URI promotedUri = service.getPromote();
+        if (promotedUri == null) {
+            return;
+        }
+        LogicalComponent<?> component = service.getParent();
+        if (promotedUri.getFragment() == null) {
+            LogicalComponent<?> target = component.getComponent(promotedUri);
+            if (target == null) {
+                throw new TargetNotFoundException("Promotion target not found", service.getUri(), promotedUri);
             }
-        }
-    }
+            if (target.getServices().size() != 1) {
+                throw new UnspecifiedServiceException(
+                        "Promoted service must be specified since target implements more than one service",
+                        service.getUri(),
+                        promotedUri);
+            }
+            LogicalService logicalService = target.getServices().iterator().next();
+            String name = logicalService.getUri().getFragment();
+            service.setPromote(URI.create(promotedUri.toString() + "#" + name));
+        } else {
+            URI targetUri = UriHelper.getDefragmentedName(promotedUri);
+            LogicalComponent<?> target = component.getComponent(targetUri);
+            if (target == null) {
+                throw new TargetNotFoundException("Promotion target not found", service.getUri(), promotedUri);
+            }
+            if (target.getService(promotedUri.getFragment()) == null) {
+                throw new ServiceNotFoundException("Promotion target service not found",
+                                                   service.getUri(),
+                                                   promotedUri);
+            }
 
-    /**
-     * Resolves component references
-     *
-     * @param component the component containing the references to resolve
-     * @throws ResolutionException if an error occurs during resolution
-     */
-    private void resolveReferences(LogicalComponent<?> component) throws ResolutionException {
-        LogicalComponent<CompositeImplementation> composite = component.getParent();
-        ComponentDefinition<? extends Implementation<?>> definition = component.getDefinition();
-        AbstractComponentType<?, ?, ?, ?> componentType = definition.getImplementation().getComponentType();
-        for (ReferenceDefinition reference : componentType.getReferences().values()) {
-            String referenceName = reference.getName();
-            LogicalReference logicalReference = component.getReference(referenceName);
-            resolveReference(logicalReference, composite);
         }
+
     }
 
     public void resolveReference(LogicalReference logicalReference, LogicalComponent<CompositeImplementation> composite)
@@ -125,6 +100,23 @@ public class DefaultWireResolver implements WireResolver {
         LogicalComponent<?> component = logicalReference.getParent();
         ComponentDefinition<? extends Implementation<?>> definition = component.getDefinition();
         Map<String, ComponentReference> targets = definition.getReferences();
+        List<URI> promotedUris = logicalReference.getPromotedUris();
+        for (URI promotedUri : promotedUris) {
+            URI componentId = UriHelper.getDefragmentedName(promotedUri);
+            LogicalComponent parent = logicalReference.getParent();
+            LogicalComponent<?> promotedComponent = parent.getComponent(componentId);
+            if (promotedComponent == null) {
+                throw new MissingPromotedComponentException("No component for reference to promote",
+                                                            logicalReference.getUri(),
+                                                            componentId);
+            }
+            if (promotedComponent.getReference(promotedUri.getFragment()) == null) {
+                throw new MissingPromotedReferenceException("No reference on promoted component",
+                                                            logicalReference.getUri(),
+                                                            promotedUri);
+            }
+
+        }
 
         String referenceName = reference.getName();
         ComponentReference target = targets.get(referenceName);
@@ -187,6 +179,37 @@ public class DefaultWireResolver implements WireResolver {
             }
         }
 
+    }
+
+    /**
+     * Resolves service promotions for the services of the given component. Specifically, resolves promoted URIs and
+     * calaculates default services if necessary.
+     *
+     * @param component the component to resolve service promotions.
+     * @throws ResolutionException if an error occurs resolving a promotion
+     */
+    private void resolveServices(LogicalComponent<?> component)
+            throws ResolutionException {
+        for (LogicalService service : component.getServices()) {
+            resolve(service);
+        }
+    }
+
+    /**
+     * Resolves component references
+     *
+     * @param component the component containing the references to resolve
+     * @throws ResolutionException if an error occurs during resolution
+     */
+    private void resolveReferences(LogicalComponent<?> component) throws ResolutionException {
+        LogicalComponent<CompositeImplementation> composite = component.getParent();
+        ComponentDefinition<? extends Implementation<?>> definition = component.getDefinition();
+        AbstractComponentType<?, ?, ?, ?> componentType = definition.getImplementation().getComponentType();
+        for (ReferenceDefinition reference : componentType.getReferences().values()) {
+            String referenceName = reference.getName();
+            LogicalReference logicalReference = component.getReference(referenceName);
+            resolveReference(logicalReference, composite);
+        }
     }
 
     /**

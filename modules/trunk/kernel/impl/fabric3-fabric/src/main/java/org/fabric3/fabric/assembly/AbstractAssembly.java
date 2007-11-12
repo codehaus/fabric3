@@ -49,6 +49,7 @@ import org.fabric3.fabric.assembly.allocator.AllocationException;
 import org.fabric3.fabric.assembly.allocator.Allocator;
 import org.fabric3.fabric.assembly.normalizer.PromotionNormalizer;
 import org.fabric3.fabric.assembly.resolver.WireResolver;
+import org.fabric3.fabric.assembly.resolver.ResolutionException;
 import org.fabric3.fabric.command.InitializeComponentCommand;
 import org.fabric3.fabric.generator.DefaultGeneratorContext;
 import org.fabric3.fabric.services.routing.RoutingException;
@@ -223,33 +224,17 @@ public abstract class AbstractAssembly implements Assembly {
             parent.addComponent(logicalComponent);
         }
 
+        List<LogicalService> services = new ArrayList<LogicalService>();
         // merge the composite service declarations into the parent
         for (CompositeService compositeService : composite.getServices().values()) {
             URI serviceURI = URI.create(base + '#' + compositeService.getName());
             URI promotedURI = compositeService.getPromote();
-            URI componentId = URI.create(base + "/" + promotedURI.getPath());
-            LogicalComponent<?> promotedComponent = parent.getComponent(componentId);
-            if (promotedComponent == null) {
-                throw new MissingPromotedComponentException("No component for service to promote: " + serviceURI,
-                                                            serviceURI.toString());
-            }
-            String serviceName = promotedURI.getFragment();
-            if (serviceName == null && promotedComponent.getServices().size() != 1) {
-                throw new MissingPromotedServiceException("No service on promoted component for: " + serviceURI,
-                                                          serviceURI.toString());
-            } else if (serviceName == null) {
-                LogicalService service = promotedComponent.getServices().iterator().next();
-                promotedURI = URI.create(promotedURI.toString() + "#" + service.getDefinition().getName());
-            } else if (promotedComponent.getService(serviceName) == null) {
-                throw new MissingPromotedServiceException("No service on promoted component for: " + serviceURI,
-                                                          serviceURI.toString());
-            }
-
             LogicalService logicalService = new LogicalService(serviceURI, compositeService, parent);
             logicalService.setPromote(URI.create(base + "/" + promotedURI));
             for (BindingDefinition binding : compositeService.getBindings()) {
                 logicalService.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalService));
             }
+            services.add(logicalService);
             parent.addService(logicalService);
         }
 
@@ -259,20 +244,9 @@ public abstract class AbstractAssembly implements Assembly {
             URI referenceURi = URI.create(base + '#' + compositeReference.getName());
             LogicalReference logicalReference = new LogicalReference(referenceURi, compositeReference, parent);
             for (URI promotedUri : compositeReference.getPromoted()) {
-                URI componentId = URI.create(base + "/" + promotedUri.getPath());
-                LogicalComponent<?> promotedComponent = parent.getComponent(componentId);
-                if (promotedComponent == null) {
-                    throw new MissingPromotedComponentException("No component for reference to promote: " + referenceURi,
-                                                                referenceURi.toString());
-                }
-                if (promotedComponent.getReference(promotedUri.getFragment()) == null) {
-                    throw new MissingPromotedReferenceException("No reference on promoted component for: " + referenceURi,
-                                                                referenceURi.toString());
-                }
                 URI resolvedUri = URI.create(base + "/" + promotedUri.toString());
                 logicalReference.addPromotedUri(resolvedUri);
             }
-
             for (BindingDefinition binding : compositeReference.getBindings()) {
                 logicalReference.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalReference));
             }
@@ -280,10 +254,10 @@ public abstract class AbstractAssembly implements Assembly {
             parent.addReference(logicalReference);
         }
 
-        // resolve wires for each new component
+        // resolve wires for composite services merged into the domain
         try {
-            for (LogicalComponent<?> component : components) {
-                wireResolver.resolve(component);
+            for (LogicalService service : services) {
+                wireResolver.resolve(service);
             }
         } catch (ResolutionException e) {
             throw new ActivateException(e);
@@ -297,7 +271,16 @@ public abstract class AbstractAssembly implements Assembly {
                 throw new ActivateException(e);
             }
         }
-
+        
+        // resolve wires for each new component
+        try {
+            for (LogicalComponent<?> component : components) {
+                wireResolver.resolve(component);
+            }
+        } catch (ResolutionException e) {
+            throw new ActivateException(e);
+        }
+        
         // normalize bindings for each new component
         for (LogicalComponent<?> component : components) {
             normalize(component);
@@ -736,7 +719,7 @@ public abstract class AbstractAssembly implements Assembly {
      * @param component the component to generate wires for
      * @param contexts  the GeneratorContexts to update with physical wire definitions
      * @throws GenerationException if an error occurs generating phyasical wire definitions
-     * @throws ResolutionException if an error occurs resolving a wire target
+     * @throws org.fabric3.fabric.assembly.resolver.ResolutionException if an error occurs resolving a wire target
      */
     protected void generatePhysicalWires(LogicalComponent<?> component, Map<URI, GeneratorContext> contexts)
             throws GenerationException, ResolutionException {
