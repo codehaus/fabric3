@@ -48,8 +48,8 @@ import org.xml.sax.SAXException;
 import org.fabric3.fabric.assembly.allocator.AllocationException;
 import org.fabric3.fabric.assembly.allocator.Allocator;
 import org.fabric3.fabric.assembly.normalizer.PromotionNormalizer;
-import org.fabric3.fabric.assembly.resolver.WireResolver;
 import org.fabric3.fabric.assembly.resolver.ResolutionException;
+import org.fabric3.fabric.assembly.resolver.WireResolver;
 import org.fabric3.fabric.command.InitializeComponentCommand;
 import org.fabric3.fabric.generator.DefaultGeneratorContext;
 import org.fabric3.fabric.services.routing.RoutingException;
@@ -157,7 +157,7 @@ public abstract class AbstractAssembly implements Assembly {
         }
 
         // generate and provision components on nodes that have gone down
-        Map<URI, GeneratorContext> contexts = generate(domain, components);
+        Map<URI, GeneratorContext> contexts = generate(components);
         provision(contexts);
         // TODO end temporary recovery code
     }
@@ -271,7 +271,7 @@ public abstract class AbstractAssembly implements Assembly {
                 throw new ActivateException(e);
             }
         }
-        
+
         // resolve wires for each new component
         try {
             for (LogicalComponent<?> component : components) {
@@ -280,7 +280,7 @@ public abstract class AbstractAssembly implements Assembly {
         } catch (ResolutionException e) {
             throw new ActivateException(e);
         }
-        
+
         // normalize bindings for each new component
         for (LogicalComponent<?> component : components) {
             normalize(component);
@@ -296,7 +296,7 @@ public abstract class AbstractAssembly implements Assembly {
         }
 
         // generate and provision the new components
-        Map<URI, GeneratorContext> contexts = generate(parent, components);
+        Map<URI, GeneratorContext> contexts = generate(components);
         provision(contexts);
 
     }
@@ -648,13 +648,11 @@ public abstract class AbstractAssembly implements Assembly {
     /**
      * Generate and provision physical change sets for a set of new components.
      *
-     * @param parent     the composite containing the new components
      * @param components the components to generate
      * @return a Map of Generation contexts keyed by runtimeId
      * @throws ActivateException if there was a problem
      */
-    protected Map<URI, GeneratorContext> generate(LogicalComponent<CompositeImplementation> parent,
-                                                  Collection<LogicalComponent<?>> components) throws ActivateException {
+    protected Map<URI, GeneratorContext> generate(Collection<LogicalComponent<?>> components) throws ActivateException {
         Map<URI, GeneratorContext> contexts = new HashMap<URI, GeneratorContext>();
         try {
             for (LogicalComponent<?> component : components) {
@@ -719,7 +717,8 @@ public abstract class AbstractAssembly implements Assembly {
      * @param component the component to generate wires for
      * @param contexts  the GeneratorContexts to update with physical wire definitions
      * @throws GenerationException if an error occurs generating phyasical wire definitions
-     * @throws org.fabric3.fabric.assembly.resolver.ResolutionException if an error occurs resolving a wire target
+     * @throws org.fabric3.fabric.assembly.resolver.ResolutionException
+     *                             if an error occurs resolving a wire target
      */
     protected void generatePhysicalWires(LogicalComponent<?> component, Map<URI, GeneratorContext> contexts)
             throws GenerationException, ResolutionException {
