@@ -206,6 +206,7 @@ public abstract class AbstractAssembly implements Assembly {
         String base = parent.getUri().toString();
         Collection<ComponentDefinition<? extends Implementation<?>>> definitions = composite.getComponents().values();
         List<LogicalComponent<?>> components = new ArrayList<LogicalComponent<?>>(definitions.size());
+
         for (ComponentDefinition<? extends Implementation<?>> definition : definitions) {
             LogicalComponent<?> logicalComponent = instantiate(parent, definition);
             // use autowire settings on the original composite as an override if they are not specified on the component
@@ -253,6 +254,7 @@ public abstract class AbstractAssembly implements Assembly {
         }
 
         // merge the composite reference definitions into the parent
+        List<LogicalReference> references = new ArrayList<LogicalReference>(composite.getReferences().size());
         for (CompositeReference compositeReference : composite.getReferences().values()) {
             URI referenceURi = URI.create(base + '#' + compositeReference.getName());
             LogicalReference logicalReference = new LogicalReference(referenceURi, compositeReference, parent);
@@ -274,6 +276,7 @@ public abstract class AbstractAssembly implements Assembly {
             for (BindingDefinition binding : compositeReference.getBindings()) {
                 logicalReference.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalReference));
             }
+            references.add(logicalReference);
             parent.addReference(logicalReference);
         }
 
@@ -286,11 +289,20 @@ public abstract class AbstractAssembly implements Assembly {
             throw new ActivateException(e);
         }
 
+        // resove composite references merged into the domain
+        for (LogicalReference reference : references) {
+            try {
+                wireResolver.resolveReference(reference, domain);
+            } catch (ResolutionException e) {
+                throw new ActivateException(e);
+            }
+        }
+
         // normalize bindings for each new component
         for (LogicalComponent<?> component : components) {
             normalize(component);
         }
-        
+
         // Allocate the components to runtime nodes
         try {
             for (LogicalComponent<?> component : components) {

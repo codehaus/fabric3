@@ -19,7 +19,9 @@
 package org.fabric3.fabric.assembly.resolver;
 
 import org.fabric3.fabric.assembly.ResolutionException;
+import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalReference;
 
 /**
  * Implementations are responsible for resolving wire targets and URIs in an SCA Domain, including autowires.
@@ -32,9 +34,19 @@ public interface WireResolver {
      * Resolves wires for a component definition and its decendents. If component is a composite and the operation is an
      * include, the child references will be resolved against the target composite and the component.
      *
-     * @param component       the logical component to resolve for
+     * @param component the logical component to resolve for
      * @throws ResolutionException if an error occurs during resolution
      */
     void resolve(LogicalComponent<?> component) throws ResolutionException;
+
+    /**
+     * Resolves reference targets against the given composite
+     *
+     * @param logicalReference the reference to resolve
+     * @param composite        the composite to resolve against
+     * @throws ResolutionException if an error occuurs during resolution
+     */
+    public void resolveReference(LogicalReference logicalReference, LogicalComponent<CompositeImplementation> composite)
+            throws ResolutionException;
 
 }

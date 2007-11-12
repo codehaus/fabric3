@@ -30,6 +30,7 @@ import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.ComponentReference;
 import org.fabric3.scdl.Composite;
+import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceContract;
@@ -108,72 +109,81 @@ public class DefaultWireResolver implements WireResolver {
      * @throws ResolutionException if an error occurs during resolution
      */
     private void resolveReferences(LogicalComponent<?> component) throws ResolutionException {
-        LogicalComponent<?> composite = component.getParent();
+        LogicalComponent<CompositeImplementation> composite = component.getParent();
         ComponentDefinition<? extends Implementation<?>> definition = component.getDefinition();
         AbstractComponentType<?, ?, ?, ?> componentType = definition.getImplementation().getComponentType();
-        Map<String, ComponentReference> targets = definition.getReferences();
         for (ReferenceDefinition reference : componentType.getReferences().values()) {
             String referenceName = reference.getName();
             LogicalReference logicalReference = component.getReference(referenceName);
-            assert logicalReference != null;
-            ComponentReference target = targets.get(referenceName);
-            if (target == null) {
-                // case where a reference is specified but not configured, e.g. promoted or autowirable
-                if (isPromoted(composite, component, referenceName)) {
-                    continue;
-                }
-                ServiceContract<?> requiredContract = determineContract(logicalReference);
+            resolveReference(logicalReference, composite);
+        }
+    }
 
-                boolean required = reference.isRequired();
-                Autowire autowire = calculateAutowire(composite, component);
-                if (autowire == Autowire.ON) {
-                    List<URI> targetUris = resolveByType(composite, component, referenceName, requiredContract);
-                    if (targetUris.isEmpty() && required) {
-                        URI source = logicalReference.getUri();
-                        throw new AutowireTargetNotFoundException("No suitable target found for " + source, source);
-                    }
-                } else if (reference.isRequired()) {
-                    // check to see if the reference was a promotion
-                    throw new UnspecifiedTargetException("Reference target not specified", logicalReference.getUri());
-                }
-            } else {
-                // reference element is specified
-                List<URI> uris = target.getTargets();
-                if (!uris.isEmpty()) {
-                    URI parentUri = composite.getUri();
-                    List<URI> resolvedUris = new ArrayList<URI>();
-                    for (URI uri : uris) {
-                        // fully resolve URIs
-                        URI resolved = parentUri.resolve(component.getUri()).resolve(uri);
-                        URI targetURI = resolveByUri(logicalReference, resolved, composite);
-                        resolvedUris.add(targetURI);
-                    }
-                    logicalReference.overrideTargets(resolvedUris);
-                    continue;
-                } else if (isPromoted(composite, component, referenceName)) {
-                    // no URIs were specified, check to see if the reference was promoted, and if so continue
-                    continue;
-                }
-                if (target.isAutowire()) {
-                    // a reference is specified with autowire and no target is specified on it or via promition
-                    ServiceContract<?> requiredContract = reference.getServiceContract();
-                    String fragment = target.getName();
-                    boolean required = reference.isRequired();
-                    List<URI> targetUris =
-                            resolveByType(component.getParent(), component, referenceName, requiredContract);
-                    if (targetUris.isEmpty()) {
-                        // search the target compoisite
-                        targetUris = resolveByType(composite, component, fragment, requiredContract);
-                    }
-                    if (targetUris.isEmpty() && required) {
-                        URI source = logicalReference.getUri();
-                        throw new AutowireTargetNotFoundException("No suitable target found for", source);
-                    }
-                } else if (reference.isRequired() && reference.getBindings().size() > 0) {
-                    // an unbound and un-targeted reference that is required
+    public void resolveReference(LogicalReference logicalReference, LogicalComponent<CompositeImplementation> composite)
+            throws ResolutionException {
+        ReferenceDefinition reference = logicalReference.getDefinition();
+        LogicalComponent<?> component = logicalReference.getParent();
+        ComponentDefinition<? extends Implementation<?>> definition = component.getDefinition();
+        Map<String, ComponentReference> targets = definition.getReferences();
+
+        String referenceName = reference.getName();
+        ComponentReference target = targets.get(referenceName);
+        if (target == null) {
+            // case where a reference is specified but not configured, e.g. promoted or autowirable
+            if (!logicalReference.getBindings().isEmpty() || isPromoted(composite, component, referenceName)) {
+                return;
+            }
+            ServiceContract<?> requiredContract = determineContract(logicalReference);
+
+            boolean required = reference.isRequired();
+            Autowire autowire = calculateAutowire(composite, component);
+            if (autowire == Autowire.ON) {
+                List<URI> targetUris = resolveByType(composite, component, referenceName, requiredContract);
+                if (targetUris.isEmpty() && required) {
                     URI source = logicalReference.getUri();
-                    throw new UnspecifiedTargetException("Reference target not specified", source);
+                    throw new AutowireTargetNotFoundException("No suitable target found for " + source, source);
                 }
+            } else if (reference.isRequired()) {
+                // check to see if the reference was a promotion
+                throw new UnspecifiedTargetException("Reference target not specified", logicalReference.getUri());
+            }
+        } else {
+            // reference element is specified
+            List<URI> uris = target.getTargets();
+            if (!uris.isEmpty()) {
+                URI parentUri = composite.getUri();
+                List<URI> resolvedUris = new ArrayList<URI>();
+                for (URI uri : uris) {
+                    // fully resolve URIs
+                    URI resolved = parentUri.resolve(component.getUri()).resolve(uri);
+                    URI targetURI = resolveByUri(logicalReference, resolved, composite);
+                    resolvedUris.add(targetURI);
+                }
+                logicalReference.overrideTargets(resolvedUris);
+                return;
+            } else if (isPromoted(composite, component, referenceName)) {
+                // no URIs were specified, check to see if the reference was promoted, and if so continue
+                return;
+            }
+            if (target.isAutowire()) {
+                // a reference is specified with autowire and no target is specified on it or via promition
+                ServiceContract<?> requiredContract = reference.getServiceContract();
+                String fragment = target.getName();
+                boolean required = reference.isRequired();
+                List<URI> targetUris =
+                        resolveByType(component.getParent(), component, referenceName, requiredContract);
+                if (targetUris.isEmpty()) {
+                    // search the target compoisite
+                    targetUris = resolveByType(composite, component, fragment, requiredContract);
+                }
+                if (targetUris.isEmpty() && required) {
+                    URI source = logicalReference.getUri();
+                    throw new AutowireTargetNotFoundException("No suitable target found for", source);
+                }
+            } else if (reference.isRequired() && reference.getBindings().size() > 0) {
+                // an unbound and un-targeted reference that is required
+                URI source = logicalReference.getUri();
+                throw new UnspecifiedTargetException("Reference target not specified", source);
             }
         }
 
