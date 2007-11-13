@@ -25,6 +25,7 @@ import javax.xml.stream.XMLStreamReader;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.extension.loader.LoaderExtension;
+import org.fabric3.spi.loader.InvalidValueException;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
@@ -49,6 +50,11 @@ public class SystemImplementationLoader extends LoaderExtension<SystemImplementa
             throws XMLStreamException, LoaderException {
         assert SystemImplementation.IMPLEMENTATION_SYSTEM.equals(reader.getName());
         String implClass = reader.getAttributeValue(null, "class");
+        if (implClass == null) {
+            InvalidValueException e = new InvalidValueException("Missing implementation class");
+            e.setResourceURI(loaderContext.getSourceBase().toString());
+            throw e;
+        }
         LoaderUtil.skipToEndElement(reader);
 
         SystemImplementation implementation = new SystemImplementation();
