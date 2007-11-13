@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.easymock.EasyMock;
+import org.easymock.IMocksControl;
 import org.fabric3.spi.ObjectFactory;
 
 /**
@@ -33,6 +34,7 @@ public class MockObjectFactory<T> implements ObjectFactory<T> {
 
     private final Map<Class<?>, Object> mocks = new HashMap<Class<?>, Object>();
     private final T proxy;
+    private final IMocksControl control;
     
     /**
      * Eager initiates the proxy.
@@ -42,8 +44,12 @@ public class MockObjectFactory<T> implements ObjectFactory<T> {
      */
     public MockObjectFactory(List<Class<?>> interfaces, ClassLoader classLoader) {
         
+        control = EasyMock.createControl();
+        
         for(Class<?> interfaze : interfaces) {
-            mocks.put(interfaze, EasyMock.createMock(interfaze));
+            if(!interfaze.getName().equals(IMocksControl.class.getName())) {
+                mocks.put(interfaze, control.createMock(interfaze));
+            }
         }
         
         this.proxy = createProxy(interfaces, classLoader);
@@ -58,17 +64,21 @@ public class MockObjectFactory<T> implements ObjectFactory<T> {
     @SuppressWarnings("unchecked")
     private T createProxy(List<Class<?>> interfaces, ClassLoader classLoader) {
 
-        Class<?>[] mockInterfaces = new Class[interfaces.size()];
+        Class<?>[] mockInterfaces = new Class[interfaces.size() + 1];
         interfaces.toArray(mockInterfaces);
+        mockInterfaces[mockInterfaces.length - 1] = IMocksControl.class;
         
         return (T) Proxy.newProxyInstance(classLoader, mockInterfaces, new InvocationHandler() {
             
             public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
                 
                 Class<?> interfaze = method.getDeclaringClass();
-                Object mock = mocks.get(interfaze);
-                
-                return method.invoke(mock, args);
+                if(interfaze.getName().equals(IMocksControl.class.getName())) {
+                    return method.invoke(control, args);
+                } else {
+                    Object mock = mocks.get(interfaze);
+                    return method.invoke(mock, args);
+                }
             }
             
         });
