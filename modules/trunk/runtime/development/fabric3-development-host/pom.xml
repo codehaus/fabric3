@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3.development</groupId>
     <artifactId>fabric3-development-host</artifactId>
-    <version>0.3-SNAPSHOT</version>
+    <version>0.2.1-SNAPSHOT</version>
     <name>Fabric3 Development Runtime Host</name>
     <description>Fabric3 Development Runtime Host.</description>
 
@@ -43,7 +43,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-fabric</artifactId>
-            <version>0.3.2-SNAPSHOT</version>
+            <version>0.3.2</version>
         </dependency>
 
         <dependency>
