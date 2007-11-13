@@ -118,8 +118,6 @@ public class Fabric3ContextListener implements ServletContextListener {
             }
             throw e;
         } catch (Throwable e) {
-//            servletContext.log(e.getMessage(), e);
-//            e.printStackTrace();
             if (monitor != null) {
                 monitor.runError(e);
             }
