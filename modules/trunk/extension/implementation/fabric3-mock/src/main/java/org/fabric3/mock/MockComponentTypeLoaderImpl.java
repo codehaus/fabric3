@@ -33,7 +33,7 @@ public class MockComponentTypeLoaderImpl implements MockComponentTypeLoader {
     /**
      * Loads the mock component type.
      * 
-     * @param interfaces Interfaces that need to be mocked.
+     * @param mockedInterfaces Interfaces that need to be mocked.
      * @param loaderContext Loader context.
      * @return Mock component type.
      */
@@ -44,14 +44,18 @@ public class MockComponentTypeLoaderImpl implements MockComponentTypeLoader {
             MockComponentType componentType = new MockComponentType();
             
             ClassLoader classLoader = loaderContext.getTargetClassLoader();
-            int count = 0;
             for(String mockedInterface : mockedInterfaces) {
                 Class<?> interfaceClass = classLoader.loadClass(mockedInterface);
                 JavaServiceContract serviceContract = new JavaServiceContract(interfaceClass);
-                componentType.add(new JavaMappedService("service" + count++, serviceContract, mockedInterface));
+                String name = interfaceClass.getName();
+                int index = name.lastIndexOf('.');
+                if (index != -1) {
+                    name = name.substring(index+1);
+                }
+                componentType.add(new JavaMappedService(name, serviceContract, mockedInterface));
             }
             JavaServiceContract mockControlContract = new JavaServiceContract(IMocksControl.class);
-            componentType.add(new JavaMappedService("service" + count++, mockControlContract, IMocksControl.class.getName()));
+            componentType.add(new JavaMappedService("mockControl", mockControlContract, IMocksControl.class.getName()));
             componentType.setImplementationScope(Scope.STATELESS);
             
             return componentType;
