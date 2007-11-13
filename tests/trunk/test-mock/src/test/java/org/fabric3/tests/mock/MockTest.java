@@ -28,6 +28,7 @@ public class MockTest extends TestCase {
     
     private MockService1 mockService1;
     private MockService2 mockService2;
+    private UserComponent userComponent;
     private IMocksControl control;
     
     @Reference
@@ -45,6 +46,11 @@ public class MockTest extends TestCase {
         this.mockService2 = mockService2;
     }
     
+    @Reference
+    public void setUserComponent(UserComponent userComponent) {
+        this.userComponent = userComponent;
+    }
+    
     public void testMock() {
         
         control.reset();
@@ -57,8 +63,7 @@ public class MockTest extends TestCase {
         
         control.replay();
         
-        mockService1.doMock1("test");
-        mockService2.doMock2(1);
+        userComponent.userMethod();
         
         control.verify();
         

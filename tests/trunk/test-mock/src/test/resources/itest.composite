@@ -24,6 +24,10 @@
         <f3:junit class="org.fabric3.tests.mock.MockTest"/>
     </component>
 
+    <component name="UserComponent">
+        <f3:junit class="org.fabric3.tests.mock.UserComponentImpl"/>
+    </component>
+
     <component name="MockComponent">
         <f3:implementation.mock>
             org.fabric3.tests.mock.MockService1
