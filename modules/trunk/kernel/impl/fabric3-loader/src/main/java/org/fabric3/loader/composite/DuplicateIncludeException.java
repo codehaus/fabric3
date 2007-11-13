@@ -1,5 +1,7 @@
 package org.fabric3.loader.composite;
 
+import java.net.URL;
+
 import org.fabric3.spi.loader.LoaderException;
 
 /**
@@ -12,7 +14,11 @@ public class DuplicateIncludeException extends LoaderException {
      */
     private static final long serialVersionUID = -3671246953971435103L;
 
-    public DuplicateIncludeException(String message, String identifier) {
+    public DuplicateIncludeException(String message, String identifier, URL resourceLocation) {
         super(message, identifier);
+        if (resourceLocation != null) {
+            // FIXME create typed ctor param for LoaderException in next SPI rev
+            setResourceURI(resourceLocation.toString());
+        }
     }
 }

@@ -30,13 +30,13 @@ import org.fabric3.scdl.CompositeService;
 import org.fabric3.scdl.ModelObject;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.loader.InvalidValueException;
+import org.fabric3.spi.loader.Loader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.PolicyHelper;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.loader.UnrecognizedElementException;
-import org.fabric3.spi.loader.Loader;
 
 /**
  * Loads a service definition from an XML-based assembly file
@@ -57,12 +57,14 @@ public class CompositeServiceLoader implements StAXElementLoader<CompositeServic
         String name = reader.getAttributeValue(null, "name");
         String promote = reader.getAttributeValue(null, "promote");
         if (promote == null) {
-            throw new InvalidValueException("promote not specified", name);
+            InvalidValueException e = new InvalidValueException("Promote not specified", name);
+            e.setResourceURI(context.getSourceBase().toString());
+            throw e;
         }
 
         CompositeService def = new CompositeService(name, null);
         def.setPromote(LoaderUtil.getURI(promote));
-        
+
         policyHelper.loadPolicySetsAndIntents(def, reader);
         while (true) {
             int i = reader.next();
@@ -74,7 +76,9 @@ public class CompositeServiceLoader implements StAXElementLoader<CompositeServic
                 } else if (type instanceof BindingDefinition) {
                     def.addBinding((BindingDefinition) type);
                 } else {
-                    throw new UnrecognizedElementException(reader.getName());
+                    UnrecognizedElementException e = new UnrecognizedElementException(reader.getName());
+                    e.setResourceURI(context.getSourceBase().toString());
+                    throw e;
                 }
                 break;
             case END_ELEMENT:

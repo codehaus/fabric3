@@ -54,7 +54,7 @@ public class IncludeLoader implements StAXElementLoader<Include> {
 
         String nameAttr = reader.getAttributeValue(null, "name");
         if (nameAttr == null || nameAttr.length() == 0) {
-            throw new InvalidNameException(nameAttr);
+            throw new InvalidNameException(nameAttr, loaderContext.getSourceBase());
         }
         QName name = LoaderUtil.getQName(nameAttr, loaderContext.getTargetNamespace(), reader.getNamespaceContext());
         String scdlLocation = reader.getAttributeValue(null, "scdlLocation");
@@ -75,7 +75,9 @@ public class IncludeLoader implements StAXElementLoader<Include> {
                 throw new MissingResourceException(scdlResource, name.toString());
             }
         } else {
-            throw new MissingIncludeException("No SCDL location or resource specified", name.toString());
+            throw new MissingIncludeException("No SCDL location or resource specified",
+                                              name.toString(),
+                                              loaderContext.getSourceBase());
         }
 
         LoaderContext childContext =

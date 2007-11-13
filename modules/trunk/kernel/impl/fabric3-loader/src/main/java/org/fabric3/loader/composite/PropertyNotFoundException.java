@@ -16,6 +16,8 @@
  */
 package org.fabric3.loader.composite;
 
+import java.net.URL;
+
 import org.fabric3.spi.loader.LoaderException;
 
 /**
@@ -24,7 +26,11 @@ import org.fabric3.spi.loader.LoaderException;
 public class PropertyNotFoundException extends LoaderException {
     private static final long serialVersionUID = 7239252189075739906L;
 
-    public PropertyNotFoundException(String property) {
+    public PropertyNotFoundException(String property, URL resourceLocation) {
         super("Property not found", property);
+        if (resourceLocation != null) {
+            // FIXME create typed ctor param for LoaderException in next SPI rev
+            setResourceURI(resourceLocation.toString());
+        }
     }
 }

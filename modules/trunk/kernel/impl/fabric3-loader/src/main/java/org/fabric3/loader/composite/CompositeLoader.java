@@ -131,38 +131,43 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
                     QName includeName = include.getName();
                     if (type.getIncludes().containsKey(includeName)) {
                         throw new DuplicateIncludeException("Include already defined with name",
-                                                            includeName.toString());
+                                                            includeName.toString(),
+                                                            loaderContext.getSourceBase());
                     }
                     for (ComponentDefinition definition : include.getIncluded().getComponents().values()) {
                         String key = definition.getName();
                         if (type.getComponents().containsKey(key)) {
-                            throw new DuplicateComponentNameException("Component with name already defined", key);
+                            throw new DuplicateComponentNameException("Component with name already defined",
+                                                                      key,
+                                                                      loaderContext.getSourceBase());
                         }
                     }
                     type.add(include);
                 } else if (PROPERTY.equals(qname)) {
                     Property<?> property = propertyLoader.load(reader, loaderContext);
                     if (type.getProperties().containsKey(property.getName())) {
-                        throw new DuplicatePropertyException(property.getName());
+                        throw new DuplicatePropertyException(property.getName(), loaderContext.getSourceBase());
                     }
                     type.add(property);
                 } else if (SERVICE.equals(qname)) {
                     CompositeService service = serviceLoader.load(reader, loaderContext);
                     if (type.getServices().containsKey(service.getName())) {
-                        throw new DuplicateServiceException(service.getName());
+                        throw new DuplicateServiceException(service.getName(), loaderContext.getSourceBase());
                     }
                     type.add(service);
                 } else if (REFERENCE.equals(qname)) {
                     CompositeReference reference = referenceLoader.load(reader, loaderContext);
                     if (type.getReferences().containsKey(reference.getName())) {
-                        throw new DuplicateReferenceException(reference.getName());
+                        throw new DuplicateReferenceException(reference.getName(), loaderContext.getSourceBase());
                     }
                     type.add(reference);
                 } else if (COMPONENT.equals(qname)) {
                     ComponentDefinition<?> componentDefinition = componentLoader.load(reader, loaderContext);
                     String key = componentDefinition.getName();
                     if (type.getComponents().containsKey(key)) {
-                        throw new DuplicateComponentNameException("Component with name already defined", key);
+                        throw new DuplicateComponentNameException("Component with name already defined",
+                                                                  key,
+                                                                  loaderContext.getSourceBase());
                     }
                     type.add(componentDefinition);
                 } else if (WIRE.equals(qname)) {
@@ -186,17 +191,21 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
                 break;
             case END_ELEMENT:
                 assert COMPOSITE.equals(reader.getName());
-                verifyCompositeCompleteness(type);
+                verifyCompositeCompleteness(type, loaderContext);
                 return type;
             }
         }
     }
 
-    protected void verifyCompositeCompleteness(Composite composite) throws InvalidServiceException {
+    protected void verifyCompositeCompleteness(Composite composite, LoaderContext loaderContext)
+            throws InvalidServiceException {
         // check if all of the composite services have been wired
         for (CompositeService svcDefn : composite.getDeclaredServices().values()) {
             if (svcDefn.getPromote() == null) {
-                throw new InvalidServiceException("Composite service not wired to a target", svcDefn.getName());
+                InvalidServiceException e =
+                        new InvalidServiceException("Composite service not wired to a target", svcDefn.getName());
+                e.setResourceURI(loaderContext.getSourceBase().toString());
+                throw e;
             }
         }
     }

@@ -18,6 +18,8 @@
  */
 package org.fabric3.loader.composite;
 
+import java.net.URL;
+
 import org.fabric3.spi.loader.LoaderException;
 
 /**
@@ -28,7 +30,11 @@ import org.fabric3.spi.loader.LoaderException;
 public class MissingIncludeException extends LoaderException {
     private static final long serialVersionUID = -2917278473974880124L;
 
-    public MissingIncludeException(String message, String identifier) {
+    public MissingIncludeException(String message, String identifier, URL resourceLocation) {
         super(message, identifier);
+        if (resourceLocation != null) {
+            // FIXME create typed ctor param for LoaderException in next SPI rev
+            setResourceURI(resourceLocation.toString());
+        }
     }
 }

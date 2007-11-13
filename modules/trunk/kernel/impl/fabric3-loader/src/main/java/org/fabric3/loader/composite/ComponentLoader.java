@@ -97,8 +97,8 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
 
         String name = reader.getAttributeValue(null, "name");
         Autowire autowire = Autowire.fromString(reader.getAttributeValue(null, "autowire"));
-        URI runtimeId = loadRuntimeId(reader);
-        Integer initLevel = loadInitLevel(reader);
+        URI runtimeId = loadRuntimeId(reader, context);
+        Integer initLevel = loadInitLevel(reader, context);
         Document key = loadKey(reader);
 
         ComponentDefinition<Implementation<?>> componentDefinition = new ComponentDefinition<Implementation<?>>(name);
@@ -120,30 +120,30 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
                     PropertyValue value = propertyValueLoader.load(reader, context);
                     if (impl.getComponentType().getProperties().get(value.getName()) == null) {
                         // ensure the property exists
-                        throw new PropertyNotFoundException(value.getName());
+                        throw new PropertyNotFoundException(value.getName(), context.getSourceBase());
                     }
                     if (componentDefinition.getPropertyValues().containsKey(value.getName())) {
-                        throw new DuplicateConfiguredPropertyException(value.getName());
+                        throw new DuplicateConfiguredPropertyException(value.getName(), context.getSourceBase());
                     }
                     componentDefinition.add(value);
                 } else if (REFERENCE.equals(qname)) {
                     ComponentReference reference = referenceLoader.load(reader, context);
                     if (impl.getComponentType().getReferences().get(reference.getName()) == null) {
                         // ensure the reference exists
-                        throw new ReferenceNotFoundException(reference.getName());
+                        throw new ReferenceNotFoundException(reference.getName(), context.getSourceBase());
                     }
                     if (componentDefinition.getReferences().containsKey(reference.getName())) {
-                        throw new DuplicateConfiguredReferenceException(reference.getName());
+                        throw new DuplicateConfiguredReferenceException(reference.getName(), context.getSourceBase());
                     }
                     componentDefinition.add(reference);
                 } else if (SERVICE.equals(qname)) {
                     ComponentService service = serviceLoader.load(reader, context);
                     if (impl.getComponentType().getServices().get(service.getName()) == null) {
                         // ensure the reference exists
-                        throw new ServiceNotFoundException(service.getName());
+                        throw new ServiceNotFoundException(service.getName(), context.getSourceBase());
                     }
                     if (componentDefinition.getServices().containsKey(service.getName())) {
-                        throw new DuplicateConfiguredServiceException(service.getName());
+                        throw new DuplicateConfiguredServiceException(service.getName(), context.getSourceBase());
                     }
                     componentDefinition.add(service);
                 } else {
@@ -194,7 +194,7 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
     /*
      * Loads the init level.
      */
-    private Integer loadInitLevel(XMLStreamReader reader) throws InvalidValueException {
+    private Integer loadInitLevel(XMLStreamReader reader, LoaderContext context) throws InvalidValueException {
         String initLevel = reader.getAttributeValue(null, "initLevel");
         if (initLevel == null || initLevel.length() == 0) {
             return null;
@@ -202,7 +202,9 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
             try {
                 return Integer.valueOf(initLevel);
             } catch (NumberFormatException e) {
-                throw new InvalidValueException(initLevel, "initValue", e);
+                InvalidValueException e2 = new InvalidValueException(initLevel, "initValue", e);
+                e2.setResourceURI(context.getSourceBase().toString());
+                throw e2;
             }
         }
     }
@@ -210,7 +212,7 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
     /*
      * Loads the runtime id.
      */
-    private URI loadRuntimeId(XMLStreamReader reader) throws InvalidValueException {
+    private URI loadRuntimeId(XMLStreamReader reader, LoaderContext context) throws InvalidValueException {
         String runtimeAttr = reader.getAttributeValue(null, "runtimeId");
         if (runtimeAttr == null) {
             return null;
@@ -218,7 +220,9 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
             try {
                 return new URI(runtimeAttr);
             } catch (URISyntaxException e) {
-                throw new InvalidValueException(runtimeAttr, "runtimeId", e);
+                InvalidValueException e2 = new InvalidValueException(runtimeAttr, "runtimeId", e);
+                e2.setResourceURI(context.getSourceBase().toString());
+                throw e2;
             }
         }
     }
@@ -233,3 +237,4 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
     }
 
 }
+

@@ -16,6 +16,8 @@
  */
 package org.fabric3.loader.composite;
 
+import java.net.URL;
+
 import org.fabric3.spi.loader.LoaderException;
 
 /**
@@ -24,7 +26,11 @@ import org.fabric3.spi.loader.LoaderException;
 public class DuplicatePropertyException extends LoaderException {
     private static final long serialVersionUID = 7204784279912209282L;
 
-    public DuplicatePropertyException(String identifier) {
+    public DuplicatePropertyException(String identifier, URL resourceLocation) {
         super("Property defined more than once", identifier);
+        if (resourceLocation != null) {
+            // FIXME create typed ctor param for LoaderException in next SPI rev
+            setResourceURI(resourceLocation.toString());
+        }
     }
 }

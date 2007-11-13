@@ -16,6 +16,8 @@
  */
 package org.fabric3.loader.composite;
 
+import java.net.URL;
+
 import org.fabric3.spi.loader.LoaderException;
 
 /**
@@ -24,7 +26,14 @@ import org.fabric3.spi.loader.LoaderException;
 public class ReferenceNotFoundException extends LoaderException {
     private static final long serialVersionUID = -2354851043445865514L;
 
-    public ReferenceNotFoundException(String property) {
+    public ReferenceNotFoundException(String property, URL resourceLocation) {
         super("Reference not found", property);
+        if (resourceLocation != null) {
+            // FIXME create typed ctor param for LoaderException in next SPI rev
+            if (resourceLocation != null) {
+                // FIXME create typed ctor param for LoaderException in next SPI rev
+                setResourceURI(resourceLocation.toString());
+            }
+        }
     }
 }

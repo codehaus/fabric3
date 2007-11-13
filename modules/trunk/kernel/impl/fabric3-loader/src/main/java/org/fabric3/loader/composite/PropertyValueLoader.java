@@ -51,7 +51,7 @@ public class PropertyValueLoader implements StAXElementLoader<PropertyValue> {
             throws XMLStreamException, LoaderException {
         String name = reader.getAttributeValue(null, "name");
         if (name == null || name.length() == 0) {
-            throw new InvalidNameException(name);
+            throw new InvalidNameException(name, context.getSourceBase());
         }
 
         String source = reader.getAttributeValue(null, "source");
@@ -68,21 +68,27 @@ public class PropertyValueLoader implements StAXElementLoader<PropertyValue> {
                 LoaderUtil.skipToEndElement(reader);
                 return new PropertyValue(name, uri);
             } catch (URISyntaxException e) {
-                throw new InvalidValueException(file, name, e);
+                InvalidValueException e2 = new InvalidValueException(file, name, e);
+                e2.setResourceURI(context.getSourceBase().toString());
+                throw e2;
+
             }
         } else {
-            return loadInlinePropertyValue(name, reader);
+            return loadInlinePropertyValue(name, reader, context);
         }
     }
 
-    protected PropertyValue loadInlinePropertyValue(String name, XMLStreamReader reader)
+    protected PropertyValue loadInlinePropertyValue(String name, XMLStreamReader reader, LoaderContext context)
             throws InvalidValueException, XMLStreamException {
         DataType<QName> dataType;
         String type = reader.getAttributeValue(null, "type");
         String element = reader.getAttributeValue(null, "element");
         if (type != null) {
             if (element != null) {
-                throw new InvalidValueException("Cannot supply both type and element for property ", name);
+                InvalidValueException e =
+                        new InvalidValueException("Cannot supply both type and element for property ", name);
+                e.setResourceURI(context.getSourceBase().toString());
+                throw e;
             }
             // TODO support type attribute
             throw new UnsupportedOperationException();

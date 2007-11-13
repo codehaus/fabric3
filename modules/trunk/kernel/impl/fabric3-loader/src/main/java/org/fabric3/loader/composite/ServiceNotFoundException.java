@@ -16,6 +16,8 @@
  */
 package org.fabric3.loader.composite;
 
+import java.net.URL;
+
 import org.fabric3.spi.loader.LoaderException;
 
 /**
@@ -24,7 +26,11 @@ import org.fabric3.spi.loader.LoaderException;
 public class ServiceNotFoundException extends LoaderException {
     private static final long serialVersionUID = -7651247438850248926L;
 
-    public ServiceNotFoundException(String name) {
+    public ServiceNotFoundException(String name, URL resourceLocation) {
         super("Service not found", name);
+        if (resourceLocation != null) {
+            // FIXME create typed ctor param for LoaderException in next SPI rev
+            setResourceURI(resourceLocation.toString());
+        }
     }
 }

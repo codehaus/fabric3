@@ -63,7 +63,7 @@ public class CompositeReferenceLoader implements StAXElementLoader<CompositeRefe
         CompositeReference referenceDefinition = new CompositeReference(name, null);
         policyHelper.loadPolicySetsAndIntents(referenceDefinition, reader);
 
-        setPromoted(reader, referenceDefinition, name);
+        setPromoted(reader, referenceDefinition, name, context);
 
         try {
             Multiplicity multiplicity = Multiplicity.fromString(reader.getAttributeValue(null, "multiplicity"));
@@ -74,7 +74,10 @@ public class CompositeReferenceLoader implements StAXElementLoader<CompositeRefe
                 referenceDefinition.setRequired(true);
             }
         } catch (IllegalArgumentException e) {
-            throw new InvalidValueException(reader.getAttributeValue(null, "multiplicity"), "multiplicity");
+            InvalidValueException e2 =
+                    new InvalidValueException(reader.getAttributeValue(null, "multiplicity"), "multiplicity");
+            e2.setResourceURI(context.getSourceBase().toString());
+            throw e2;
         }
 
         while (true) {
@@ -86,7 +89,9 @@ public class CompositeReferenceLoader implements StAXElementLoader<CompositeRefe
                 } else if (type instanceof BindingDefinition) {
                     referenceDefinition.addBinding((BindingDefinition) type);
                 } else {
-                    throw new UnrecognizedElementException(reader.getName());
+                    UnrecognizedElementException e = new UnrecognizedElementException(reader.getName());
+                    e.setResourceURI(context.getSourceBase().toString());
+                    throw e;
                 }
                 break;
             case XMLStreamConstants.END_ELEMENT:
@@ -99,12 +104,17 @@ public class CompositeReferenceLoader implements StAXElementLoader<CompositeRefe
     /*
      * Processes the promotes attribute.
      */
-    private void setPromoted(XMLStreamReader reader, ReferenceDefinition referenceDefinition, String name)
+    private void setPromoted(XMLStreamReader reader,
+                             ReferenceDefinition referenceDefinition,
+                             String name,
+                             LoaderContext context)
             throws InvalidReferenceException, InvalidNameException {
 
         String promoted = reader.getAttributeValue(null, "promote");
         if (promoted == null || promoted.trim().length() < 1) {
-            throw new InvalidReferenceException("No promoted reference specified", name);
+            InvalidReferenceException e = new InvalidReferenceException("No promoted reference specified", name);
+            e.setResourceURI(context.getSourceBase().toString());
+            throw e;
         }
         StringTokenizer tokenizer = new StringTokenizer(promoted, " ");
         while (tokenizer.hasMoreTokens()) {

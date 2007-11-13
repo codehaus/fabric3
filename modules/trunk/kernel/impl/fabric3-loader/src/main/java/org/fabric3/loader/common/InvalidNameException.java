@@ -18,6 +18,8 @@
  */
 package org.fabric3.loader.common;
 
+import java.net.URL;
+
 import org.fabric3.spi.loader.LoaderException;
 
 /**
@@ -26,26 +28,14 @@ import org.fabric3.spi.loader.LoaderException;
  * @version $Rev$ $Date$
  */
 public class InvalidNameException extends LoaderException {
-
-    /**
-     * Serial version UID.
-     */
     private static final long serialVersionUID = 1L;
 
-    public InvalidNameException() {
-        super();
-    }
-
-    public InvalidNameException(String message) {
-        super(message);
-    }
-
-    public InvalidNameException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public InvalidNameException(Throwable cause) {
-        super(cause);
+    public InvalidNameException(String identifier, URL locationUrl) {
+        super("Invaid name", identifier);
+        if (locationUrl != null) {
+            // FIXME create typed ctor param for LoaderException in next SPI rev
+            setResourceURI(locationUrl.toString());
+        }
     }
 
 }
