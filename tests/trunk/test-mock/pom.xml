@@ -41,6 +41,12 @@
         </dependency>
         
         <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        
+        <dependency>
             <groupId>org.codehaus.fabric3.spec</groupId>
             <artifactId>sca-api-r1.0</artifactId>
             <version>0.2.1</version>
@@ -63,6 +69,13 @@
                             <version>0.1-SNAPSHOT</version>
                         </dependency>
                     </contributions>
+                    <extensions>
+                        <dependency>
+                            <groupId>org.easymock</groupId>
+                            <artifactId>easymock</artifactId>
+                            <version>2.2</version>
+                        </dependency>
+                    </extensions>
                 </configuration>
                 <executions>
                     <execution>

@@ -16,12 +16,11 @@
  */
 package org.fabric3.tests.mock;
 
-import org.osoa.sca.annotations.Conversational;
 
 /**
  * @version $Revision$ $Date$
  */
-@Conversational
+//@Conversational
 public interface MockService2 {
     
     void doMock2(int arg);

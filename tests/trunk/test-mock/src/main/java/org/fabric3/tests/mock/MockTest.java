@@ -16,6 +16,7 @@
  */
 package org.fabric3.tests.mock;
 
+import org.easymock.IMocksControl;
 import org.osoa.sca.annotations.Reference;
 
 import junit.framework.TestCase;
@@ -27,6 +28,12 @@ public class MockTest extends TestCase {
     
     private MockService1 mockService1;
     private MockService2 mockService2;
+    private IMocksControl control;
+    
+    @Reference
+    public void setControl(IMocksControl control) {
+        this.control = control;
+    }
     
     @Reference
     public void setMockService1(MockService1 mockService1) {
@@ -45,6 +52,13 @@ public class MockTest extends TestCase {
         
         mockService1.doMock1("test");
         mockService2.doMock2(1);
+        
+        control.replay();
+        
+        mockService1.doMock1("test");
+        mockService2.doMock2(1);
+        
+        control.verify();
         
     }
 
