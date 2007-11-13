@@ -47,13 +47,12 @@ public class IMocksControlProxy implements IMocksControl {
     public <T> T createMock(Class<T> toMock) {
         
         Object mock = mocks.get(toMock);
-        if (mock != null) {
-           return (T) mock; 
-        } else {
+        if (mock == null) {
             mock = delegate.createMock(toMock);
             mocks.put(toMock, mock);
-            return (T) mock;
         }
+        return (T) mock;
+        
     }
 
     public void replay() {
