@@ -44,7 +44,7 @@ public class LoaderExceptionFormatter<T extends LoaderException> implements Exce
     }
 
     public boolean canFormat(Class<?> type) {
-        return LoaderException.class.isAssignableFrom(type);
+        return LoaderException.class.equals(type);
     }
 
     @Destroy
@@ -54,6 +54,9 @@ public class LoaderExceptionFormatter<T extends LoaderException> implements Exce
 
     public void write(PrintWriter writer, T e) {
         e.appendBaseMessage(writer);
+        if (e.getResourceURI() != null) {
+            writer.write("\nSCDL: " + e.getResourceURI());
+        }
         if (e.getLine() != LoaderException.UNDEFINED) {
             writer.write("\nLine: " + e.getLine() + "\n");
             writer.write("Column: " + e.getColumn() + "\n");

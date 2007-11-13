@@ -56,7 +56,9 @@ public class JavaInterfaceLoader implements StAXElementLoader<JavaServiceContrac
             name = reader.getAttributeValue(null, "class");
         }
         if (name == null) {
-            throw new InvalidValueException("interface name not supplied");
+            InvalidValueException e = new InvalidValueException("interface name not supplied");
+            e.setResourceURI(loaderContext.getSourceBase().toString());
+            throw e;
         }
         Class<?> interfaceClass = LoaderUtil.loadClass(name, loaderContext.getTargetClassLoader());
 
@@ -71,7 +73,9 @@ public class JavaInterfaceLoader implements StAXElementLoader<JavaServiceContrac
             serviceContract.setConversational(conversational);
             return serviceContract;
         } catch (InvalidServiceContractException e) {
-            throw new LoaderException(interfaceClass.getName(), e);
+            LoaderException e2 = new LoaderException(interfaceClass.getName(), e);
+            e2.setResourceURI(loaderContext.getSourceBase().toString());
+            throw e2;
         }
     }
 }
