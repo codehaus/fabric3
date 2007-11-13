@@ -165,8 +165,9 @@ public abstract class ProxyMonitorFactory implements MonitorFactory, FormatterRe
         formatters.remove(formatter);
     }
 
+    @SuppressWarnings({"unchecked"})
     public <T extends Throwable> PrintWriter formatException(PrintWriter pw, T e) {
-        ExceptionFormatter<? super T> formatter = getFormatter(e);
+        ExceptionFormatter<? super T> formatter = getFormatter((Class<T>) e.getClass());
         formatter.write(pw, e);
         return pw;
     }
@@ -174,13 +175,18 @@ public abstract class ProxyMonitorFactory implements MonitorFactory, FormatterRe
     protected abstract <T> InvocationHandler createInvocationHandler(Class<T> monitorInterface,
                                                                      Map<String, Level> levels);
 
-    private <T extends Throwable> ExceptionFormatter<? super T> getFormatter(T e) {
+    @SuppressWarnings({"unchecked"})
+    private <T extends Throwable> ExceptionFormatter<? super T> getFormatter(Class<T> clazz) {
+        if (clazz == null || Throwable.class.equals(clazz)) {
+            return defaultFormatter;
+        }
         for (ExceptionFormatter<?> candidate : formatters) {
-            if (candidate.canFormat(e.getClass())) {
+            if (candidate.canFormat(clazz)) {
                 return (ExceptionFormatter<? super T>) candidate;
             }
         }
-        return defaultFormatter;
+        return getFormatter((Class) clazz.getSuperclass());
     }
+
 
 }
