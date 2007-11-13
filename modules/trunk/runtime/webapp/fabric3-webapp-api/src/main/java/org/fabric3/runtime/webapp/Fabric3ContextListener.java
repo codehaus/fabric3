@@ -26,6 +26,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import org.fabric3.api.annotation.LogLevel;
 import org.fabric3.host.Fabric3RuntimeException;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.InitializationException;
@@ -67,6 +68,7 @@ public class Fabric3ContextListener implements ServletContextListener {
         ServletContext servletContext = event.getServletContext();
         WebappUtil utils = getUtils(servletContext);
         WebappRuntime runtime;
+        WebAppMonitor monitor = null;
         try {
             // FIXME work this out from the servlet context
             URI domain = new URI(utils.getInitParameter(DOMAIN_PARAM, "fabric3://./domain"));
@@ -94,6 +96,7 @@ public class Fabric3ContextListener implements ServletContextListener {
             runtime.setServletContext(servletContext);
             runtime.setHostInfo(info);
             runtime.setHostClassLoader(webappClassLoader);
+            monitor = runtime.getMonitorFactory().getMonitor(WebAppMonitor.class);
             // initiate the runtime bootstrap sequence
             ScdlBootstrapper bootstrapper = utils.getBootstrapper(bootClassLoader);
             bootstrapper.setScdlLocation(systemScdl);
@@ -110,12 +113,16 @@ public class Fabric3ContextListener implements ServletContextListener {
             // deploy the application composite
             runtime.deploy(compositeId, scdl, componentId);
         } catch (Fabric3RuntimeException e) {
-            servletContext.log(e.getMessage(), e);
-            e.printStackTrace();
+            if (monitor != null) {
+                monitor.runError(e);
+            }
             throw e;
         } catch (Throwable e) {
-            servletContext.log(e.getMessage(), e);
-            e.printStackTrace();
+//            servletContext.log(e.getMessage(), e);
+//            e.printStackTrace();
+            if (monitor != null) {
+                monitor.runError(e);
+            }
             throw new Fabric3InitException(e);
         }
     }
@@ -140,6 +147,11 @@ public class Fabric3ContextListener implements ServletContextListener {
         } catch (InterruptedException e) {
             servletContext.log("Error shutting runtume down", e);
         }
+    }
+
+    public interface WebAppMonitor {
+        @LogLevel("SEVERE")
+        void runError(Throwable e);
     }
 
 }

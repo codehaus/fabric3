@@ -34,6 +34,7 @@ import static org.easymock.classextension.EasyMock.isA;
 import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
 
+import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ScdlBootstrapper;
@@ -102,6 +103,9 @@ public class Fabric3ContextListenerTestCase extends TestCase {
         runtime.setServletContext(context);
         runtime.setHostInfo(isA(WebappHostInfo.class));
         runtime.setHostClassLoader(cl);
+        MonitorFactory factory = EasyMock.createNiceMock(MonitorFactory.class);
+        replay(factory);
+        expect(runtime.getMonitorFactory()).andReturn(factory);
         bootstrapper.bootPrimordial(runtime, bootClassLoader, cl);
         bootstrapper.bootSystem(runtime);
         runtime.deploy(URI.create(compositeId), scdl, URI.create(contextName));
