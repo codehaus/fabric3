@@ -72,7 +72,9 @@ public class ImplementationCompositeLoader implements StAXElementLoader<Composit
         assert CompositeImplementation.IMPLEMENTATION_COMPOSITE.equals(reader.getName());
         String nameAttr = reader.getAttributeValue(null, "name");
         if (nameAttr == null || nameAttr.length() == 0) {
-            throw new InvalidNameException(nameAttr);
+            InvalidNameException e = new InvalidNameException(nameAttr, loaderContext.getSourceBase());
+            e.setResourceURI(loaderContext.getSourceBase().toString());
+            throw e;
         }
         QName name = LoaderUtil.getQName(nameAttr, loaderContext.getTargetNamespace(), reader.getNamespaceContext());
         String scdlLocation = reader.getAttributeValue(null, "scdlLocation");
@@ -85,7 +87,9 @@ public class ImplementationCompositeLoader implements StAXElementLoader<Composit
             try {
                 url = new URL(loaderContext.getSourceBase(), scdlLocation);
             } catch (MalformedURLException e) {
-                throw new MissingResourceException(scdlLocation, name.toString(), e);
+                MissingResourceException e2 = new MissingResourceException(scdlLocation, name.toString(), e);
+                e2.setResourceURI(loaderContext.getSourceBase().toString());
+                throw e2;
             }
         } else {
             if (scdlResource == null) {
@@ -94,7 +98,9 @@ public class ImplementationCompositeLoader implements StAXElementLoader<Composit
             }
             url = cl.getResource(scdlResource);
             if (url == null) {
-                throw new MissingResourceException(scdlResource, name.toString());
+                MissingResourceException e = new MissingResourceException(scdlResource, name.toString());
+                e.setResourceURI(loaderContext.getSourceBase().toString());
+                throw e;
             }
         }
         LoaderContext childContext = new LoaderContextImpl(cl, url);
