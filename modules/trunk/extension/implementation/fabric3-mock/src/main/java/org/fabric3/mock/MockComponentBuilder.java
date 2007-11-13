@@ -20,6 +20,7 @@ import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.easymock.IMocksControl;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilder;
@@ -37,13 +38,16 @@ public class MockComponentBuilder<T> implements ComponentBuilder<MockComponentDe
     
     private static final URI CLASS_LOADER_ID = URI.create("sca://./applicationClassLoader");
     
-    private ComponentBuilderRegistry builderRegistry;
-    private ClassLoaderRegistry classLoaderRegistry;
+    private final ComponentBuilderRegistry builderRegistry;
+    private final ClassLoaderRegistry classLoaderRegistry;
+    private final IMocksControl control;
     
     public MockComponentBuilder(@Reference ComponentBuilderRegistry builderRegistry,
-                                @Reference ClassLoaderRegistry classLoaderRegistry) {
+                                @Reference ClassLoaderRegistry classLoaderRegistry,
+                                @Reference IMocksControl control) {
         this.builderRegistry = builderRegistry;
         this.classLoaderRegistry = classLoaderRegistry;
+        this.control = control;
     }
     
     @Init
@@ -65,7 +69,7 @@ public class MockComponentBuilder<T> implements ComponentBuilder<MockComponentDe
             }
         }
 
-        ObjectFactory<T> objectFactory = new MockObjectFactory<T>(mockedInterfaces, classLoader);
+        ObjectFactory<T> objectFactory = new MockObjectFactory<T>(mockedInterfaces, classLoader, control);
         
         return new MockComponent<T>(componentDefinition.getComponentId(), objectFactory);
         

@@ -54,4 +54,9 @@
         <system:implementation.system class="org.fabric3.mock.MockWireAttacher"/>
     </component>
     
+    <!-- IMock control -->
+    <component name="org.fabric3.mock.IMocksControlProxy">
+        <system:implementation.system class="org.fabric3.mock.IMocksControlProxy"/>
+    </component>
+    
 </composite>

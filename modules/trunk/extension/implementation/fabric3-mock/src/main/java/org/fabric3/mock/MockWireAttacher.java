@@ -21,7 +21,7 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.Map;
 
-import org.easymock.EasyMock;
+import org.easymock.IMocksControl;
 import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.builder.component.WireAttacher;
 import org.fabric3.spi.builder.component.WireAttacherRegistry;
@@ -48,11 +48,14 @@ public class MockWireAttacher implements WireAttacher<PhysicalWireSourceDefiniti
     
     private final WireAttacherRegistry wireAttacherRegistry;
     private final ClassLoaderRegistry classLoaderRegistry;
+    private final IMocksControl control;
     
     public MockWireAttacher(@Reference WireAttacherRegistry wireAttacherRegistry,
-                            @Reference ClassLoaderRegistry classLoaderRegistry) {
+                            @Reference ClassLoaderRegistry classLoaderRegistry,
+                            @Reference IMocksControl control) {
         this.wireAttacherRegistry = wireAttacherRegistry;
         this.classLoaderRegistry = classLoaderRegistry;
+        this.control = control;
     }
     
     @Init
@@ -81,14 +84,13 @@ public class MockWireAttacher implements WireAttacher<PhysicalWireSourceDefiniti
         try {
             
             Class<?> mockedInterface = classLoader.loadClass(interfaceClass);
-            Object mock = EasyMock.createMock(mockedInterface);
+            Object mock = control.createMock(mockedInterface);
             
             for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
                 PhysicalOperationDefinition op = entry.getKey();
                 InvocationChain chain = entry.getValue();
                 
                 for(Method method : mockedInterface.getDeclaredMethods()) {
-                    System.err.println(method.getName() + ":" + op.getName());
                     if(op.getName().equals(method.getName())) {
                         chain.addInterceptor(new MockTargetInterceptor(mock, method));
                     }

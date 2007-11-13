@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
 import org.fabric3.spi.ObjectFactory;
 
@@ -42,9 +41,9 @@ public class MockObjectFactory<T> implements ObjectFactory<T> {
      * @param interfaces Interfaces that need to be proxied.
      * @param classLoader Classloader for creating the dynamic proxies.
      */
-    public MockObjectFactory(List<Class<?>> interfaces, ClassLoader classLoader) {
+    public MockObjectFactory(List<Class<?>> interfaces, ClassLoader classLoader, IMocksControl control) {
         
-        control = EasyMock.createControl();
+        this.control = control;
         
         for(Class<?> interfaze : interfaces) {
             if(!interfaze.getName().equals(IMocksControl.class.getName())) {
