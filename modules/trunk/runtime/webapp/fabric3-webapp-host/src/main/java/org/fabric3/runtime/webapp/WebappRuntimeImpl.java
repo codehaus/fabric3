@@ -62,7 +62,6 @@ public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implement
 
     public WebappRuntimeImpl() {
         super(WebappHostInfo.class);
-        setMonitorFactory(new JavaLoggingMonitorFactory(new Properties(), Level.FINEST, "f3"));
     }
 
     public ServletContext getServletContext() {

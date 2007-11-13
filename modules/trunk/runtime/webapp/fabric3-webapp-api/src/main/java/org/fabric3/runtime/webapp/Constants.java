@@ -148,9 +148,34 @@ public final class Constants {
 
     /**
      * Servlet context-param name for system monitoring level. Supported values are the names of statics defined in
-     * java.util.logging.Level. If absent, no monitoring will take place.
+     * java.util.logging.Level.
      */
     static final String SYSTEM_MONITORING_PARAM = "fabric3.monitoringLevel";
+
+    /**
+     * Default log level
+     */
+    static final String SYSTEM_MONITORING_DEFAULT = "FINEST";
+
+    /**
+     * Name of the parameter that defines the class to load to launch the runtime.
+     */
+    static final String MONITOR_FACTORY_PARAM = "fabric3.monitorFactory";
+
+    /**
+     * Name of the default webapp runtime implementation.
+     */
+    static final String MONITOR_FACTORY_DEFAULT = "org.fabric3.fabric.monitor.JavaLoggingMonitorFactory";
+
+    /**
+     * Name of bundle files used for monitoring messages
+     */
+    static final String MONITORING_BUNDLE_PARAM = "fabric3.monitoringBundle";
+
+    /**
+     * Default name of bundle files for monitoring messages
+     */
+    static final String MONITORING_BUNDLE_DEFAULT = "f3";
 
     private Constants() {
     }
