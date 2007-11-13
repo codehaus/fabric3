@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-itest-plugin</artifactId>
-    <version>0.4-SNAPSHOT</version>
+    <version>0.3.1-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
     <name>Fabric3 Integration Test Maven Plugin</name>
     <description>Fabric3 Integration Test Maven Plugin.</description>
@@ -79,7 +79,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-fabric</artifactId>
-            <version>0.3.2-SNAPSHOT</version>
+            <version>0.3.2</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
@@ -89,7 +89,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-junit</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <version>0.1</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
