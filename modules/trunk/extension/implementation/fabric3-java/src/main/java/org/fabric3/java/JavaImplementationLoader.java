@@ -28,6 +28,7 @@ import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.PolicyHelper;
 import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.spi.loader.InvalidValueException;
 
 public class JavaImplementationLoader implements StAXElementLoader<JavaImplementation> {
 
@@ -49,7 +50,11 @@ public class JavaImplementationLoader implements StAXElementLoader<JavaImplement
 
         JavaImplementation implementation = new JavaImplementation();
         String implClass = reader.getAttributeValue(null, "class");
-
+        if (implClass == null) {
+            InvalidValueException e = new InvalidValueException("Missing implementation class");
+            e.setResourceURI(loaderContext.getSourceBase().toString());
+            throw e;
+        }
         policyHelper.loadPolicySetsAndIntents(implementation, reader);
         LoaderUtil.skipToEndElement(reader);
 
