@@ -47,6 +47,8 @@ public class MockTest extends TestCase {
     
     public void testMock() {
         
+        control.reset();
+        
         assertNotNull(mockService1);
         assertNotNull(mockService2);
         
@@ -59,6 +61,26 @@ public class MockTest extends TestCase {
         mockService2.doMock2(1);
         
         control.verify();
+        
+    }
+    
+    public void testNoMock() {
+        
+        control.reset();
+        
+        assertNotNull(mockService1);
+        assertNotNull(mockService2);
+        
+        mockService1.doMock1("test");
+        mockService2.doMock2(1);
+        
+        control.replay();
+        
+        try {
+            control.verify();
+            fail("Expected error");
+        } catch(Throwable ex) {
+        }
         
     }
 
