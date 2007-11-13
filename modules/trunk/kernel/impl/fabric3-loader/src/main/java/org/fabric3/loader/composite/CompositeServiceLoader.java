@@ -55,6 +55,11 @@ public class CompositeServiceLoader implements StAXElementLoader<CompositeServic
     public CompositeService load(XMLStreamReader reader, LoaderContext context)
             throws XMLStreamException, LoaderException {
         String name = reader.getAttributeValue(null, "name");
+        if (name == null) {
+            InvalidValueException e = new InvalidValueException("Service name not specified", name);
+            e.setResourceURI(context.getSourceBase().toString());
+            throw e;
+        }
         String promote = reader.getAttributeValue(null, "promote");
         if (promote == null) {
             InvalidValueException e = new InvalidValueException("Promote not specified", name);

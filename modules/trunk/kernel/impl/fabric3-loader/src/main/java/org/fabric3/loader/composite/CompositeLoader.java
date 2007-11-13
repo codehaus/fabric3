@@ -79,8 +79,7 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
                            @Reference(name = "reference")StAXElementLoader<CompositeReference> referenceLoader,
                            @Reference(name = "component")StAXElementLoader<ComponentDefinition<?>> componentLoader,
                            @Reference(name = "wire")StAXElementLoader<WireDefinition> wireLoader,
-                           @Reference(name = "policyHelper")PolicyHelper policyHelper
-    ) {
+                           @Reference(name = "policyHelper")PolicyHelper policyHelper) {
         this.registry = registry;
         this.includeLoader = includeLoader;
         this.propertyLoader = propertyLoader;

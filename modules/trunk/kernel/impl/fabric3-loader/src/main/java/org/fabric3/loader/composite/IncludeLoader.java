@@ -67,7 +67,9 @@ public class IncludeLoader implements StAXElementLoader<Include> {
             try {
                 url = new URL(loaderContext.getSourceBase(), scdlLocation);
             } catch (MalformedURLException e) {
-                throw new MissingResourceException(scdlLocation, name.toString(), e);
+                MissingResourceException e2 = new MissingResourceException(scdlLocation, name.toString(), e);
+                e2.setResourceURI(loaderContext.getSourceBase().toString());
+                throw e2;
             }
         } else if (scdlResource != null) {
             url = cl.getResource(scdlResource);

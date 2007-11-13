@@ -59,6 +59,11 @@ public class CompositeReferenceLoader implements StAXElementLoader<CompositeRefe
             throws XMLStreamException, LoaderException {
 
         String name = reader.getAttributeValue(null, "name");
+        if (name == null) {
+            InvalidValueException e = new InvalidValueException("Reference name not specified", name);
+            e.setResourceURI(context.getSourceBase().toString());
+            throw e;
+        }
 
         CompositeReference referenceDefinition = new CompositeReference(name, null);
         policyHelper.loadPolicySetsAndIntents(referenceDefinition, reader);
