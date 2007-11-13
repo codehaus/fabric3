@@ -16,6 +16,9 @@
  */
 package org.fabric3.mock;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.easymock.IExpectationSetters;
@@ -30,6 +33,7 @@ import org.osoa.sca.annotations.Init;
 public class IMocksControlProxy implements IMocksControl {
     
     private IMocksControl delegate;
+    private Map<Class<?>, Object> mocks = new HashMap<Class<?>, Object>();
     
     @Init
     public void init() {
@@ -41,7 +45,15 @@ public class IMocksControlProxy implements IMocksControl {
     }
 
     public <T> T createMock(Class<T> toMock) {
-        return delegate.createMock(toMock);
+        
+        Object mock = mocks.get(toMock);
+        if (mock != null) {
+           return (T) mock; 
+        } else {
+            mock = delegate.createMock(toMock);
+            mocks.put(toMock, mock);
+            return (T) mock;
+        }
     }
 
     public void replay() {
@@ -50,6 +62,7 @@ public class IMocksControlProxy implements IMocksControl {
 
     public void reset() {
         delegate.reset();
+        mocks.clear();
     }
 
     public void verify() {
