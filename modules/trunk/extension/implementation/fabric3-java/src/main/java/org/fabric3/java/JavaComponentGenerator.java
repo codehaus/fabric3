@@ -60,11 +60,6 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
         this.helper = helper;
     }
 
-    /**
-     * @see org.fabric3.spi.generator.ComponentGenerator#generate(org.fabric3.spi.model.instance.LogicalComponent, 
-     *                                                            java.util.Set, 
-     *                                                            org.fabric3.spi.generator.GeneratorContext)
-     */
     public PhysicalComponentDefinition generate(LogicalComponent<JavaImplementation> component,
                                                 Set<Intent> intentsToBeProvided,
                                                 GeneratorContext context)
@@ -98,11 +93,6 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
 
     }
 
-    /**
-     * @see org.fabric3.spi.generator.ComponentGenerator#generateWireSource(org.fabric3.spi.model.instance.LogicalComponent, 
-     *                                                                      org.fabric3.spi.model.instance.LogicalReference, 
-     *                                                                      boolean)
-     */
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<JavaImplementation> source,
                                                            LogicalReference reference,
                                                            boolean optimizable, 
@@ -118,10 +108,6 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
         return wireDefinition;
     }
 
-    /**
-     * @see org.fabric3.spi.generator.ComponentGenerator#generateWireTarget(org.fabric3.spi.model.instance.LogicalService, 
-     *                                                                      org.fabric3.spi.model.instance.LogicalComponent)
-     */
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
                                                            LogicalComponent<JavaImplementation> target, 
                                                            GeneratorContext context) throws GenerationException {
@@ -137,11 +123,7 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
         return wireDefinition;
     }
     
-    /**
-     * @see org.fabric3.spi.generator.ComponentGenerator#generateResourceWireSource(org.fabric3.spi.model.instance.LogicalComponent, 
-     *                                                                              org.fabric3.spi.model.instance.LogicalResource)
-     */
-    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<JavaImplementation> source, 
+    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<JavaImplementation> source,
                                                                    LogicalResource<?> resource, 
                                                                    GeneratorContext context) throws GenerationException {
         JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();

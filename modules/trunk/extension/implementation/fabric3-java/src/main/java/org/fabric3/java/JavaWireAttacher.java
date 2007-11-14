@@ -79,10 +79,6 @@ public class JavaWireAttacher extends PojoWireAttacher<JavaWireSourceDefinition,
         wireAttacherRegistry.register(JavaWireTargetDefinition.class, this);
     }
 
-    /**
-     * @see org.fabric3.spi.builder.component.WireAttacher#attachToSource(org.fabric3.spi.model.physical.PhysicalWireSourceDefinition,
-     *org.fabric3.spi.model.physical.PhysicalWireTargetDefinition,org.fabric3.spi.wire.Wire)
-     */
     public void attachToSource(JavaWireSourceDefinition sourceDefinition,
                                PhysicalWireTargetDefinition targetDefinition,
                                Wire wire) {
@@ -130,10 +126,6 @@ public class JavaWireAttacher extends PojoWireAttacher<JavaWireSourceDefinition,
 
     }
 
-    /**
-     * @see org.fabric3.spi.builder.component.WireAttacher#attachToTarget(org.fabric3.spi.model.physical.PhysicalWireSourceDefinition,
-     *org.fabric3.spi.model.physical.PhysicalWireTargetDefinition,org.fabric3.spi.wire.Wire)
-     */
     public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition,
                                JavaWireTargetDefinition targetDefinition,
                                Wire wire) throws WireAttachException {
