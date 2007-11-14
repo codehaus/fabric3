@@ -16,14 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.wire;
+package org.fabric3.fabric.async;
 
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 
 /**
+ * Physical definition for non-blocking operations.
+ *
  * @version $Revision$ $Date$
  */
-public class NonBlockingInterceptorDefinition extends
-        PhysicalInterceptorDefinition {
+public class NonBlockingInterceptorDefinition extends PhysicalInterceptorDefinition {
 
 }

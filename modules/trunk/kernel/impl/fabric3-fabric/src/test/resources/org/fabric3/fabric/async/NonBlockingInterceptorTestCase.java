@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.wire;
+package org.fabric3.fabric.async;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
@@ -28,8 +28,8 @@ import org.easymock.IAnswer;
 import org.osoa.sca.Conversation;
 
 import org.fabric3.extension.component.SimpleWorkContext;
-import org.fabric3.spi.component.WorkContext;
 import org.fabric3.scdl.Scope;
+import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.services.work.WorkScheduler;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.Message;

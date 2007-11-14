@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.wire;
+package org.fabric3.fabric.async;
 
 import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.spi.component.WorkContext;

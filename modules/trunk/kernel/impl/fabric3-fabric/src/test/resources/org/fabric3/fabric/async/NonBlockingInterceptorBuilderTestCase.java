@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.wire;
+package org.fabric3.fabric.async;
 
 import junit.framework.TestCase;
 
@@ -28,6 +28,6 @@ public class NonBlockingInterceptorBuilderTestCase extends TestCase {
     public void testBuild() throws Exception {
         NonBlockingInterceptorBuilder builder = new NonBlockingInterceptorBuilder(null);
         NonBlockingInterceptorDefinition definition = new NonBlockingInterceptorDefinition();
-        assertTrue(builder.build(definition) instanceof NonBlockingInterceptor);
+        assertNotNull(builder.build(definition));
     }
 }

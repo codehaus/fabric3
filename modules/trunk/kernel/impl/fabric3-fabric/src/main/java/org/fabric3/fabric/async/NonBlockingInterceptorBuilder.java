@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.wire;
+package org.fabric3.fabric.async;
 
 import org.osoa.sca.annotations.Reference;
 
@@ -29,7 +29,8 @@ import org.fabric3.spi.services.work.WorkScheduler;
  *
  * @version $Rev$ $Date$
  */
-public class NonBlockingInterceptorBuilder extends InterceptorBuilderExtension<NonBlockingInterceptorDefinition, NonBlockingInterceptor> {
+public class NonBlockingInterceptorBuilder
+        extends InterceptorBuilderExtension<NonBlockingInterceptorDefinition, NonBlockingInterceptor> {
 
     private WorkScheduler scheduler;
 
