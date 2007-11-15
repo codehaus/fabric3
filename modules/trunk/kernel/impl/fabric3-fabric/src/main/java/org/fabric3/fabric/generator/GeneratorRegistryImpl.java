@@ -174,6 +174,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
             throw new GeneratorNotFoundException(type);
         }
 
+        // Gather the implementation intents to be natively provided by the component implementation
         Set<Intent> intentsToBeProvided;
         try {
             intentsToBeProvided = policyResolver.getImplementationIntentsToBeProvided(component);
@@ -203,6 +204,8 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         } else {
             contract = promotedContract;
         }
+        
+        // Resolve the policies that map to interaction and implementation intents
         Set<PolicySetExtension> policies;
         try {
             policies = policyResolver.resolveInteractionIntents(binding);
@@ -234,6 +237,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
             throw new GeneratorNotFoundException(type);
         }
 
+        // Resolve interaction intents to be provided by the binding
         Set<Intent> intentsToBeProvided;
         try {
             intentsToBeProvided = policyResolver.getInteractionIntentsToBeProvided(binding);
@@ -258,6 +262,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
 
         ServiceContract<?> contract = reference.getDefinition().getServiceContract();
 
+        // Resolve policies that map to interaction intents
         Set<PolicySetExtension> policies;
         try {
             policies = policyResolver.resolveInteractionIntents(binding);
@@ -272,7 +277,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
             throw new GeneratorNotFoundException(bindingType);
         }
 
-
+        // Resolve interaction intents to be provided by the binding
         Set<Intent> intentsToBeProvided;
         try {
             intentsToBeProvided = policyResolver.getInteractionIntentsToBeProvided(binding);
@@ -309,6 +314,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
 
         Set<PolicySetExtension> policies = new HashSet<PolicySetExtension>();
 
+        // Resolve policies on both ends of the wire that map to interaction and implementation intents
         try {
             policies.addAll(policyResolver.resolveInteractionIntents((new LogicalBinding<SCABindingDefinition>(
                     SCABindingDefinition.INSTANCE,
