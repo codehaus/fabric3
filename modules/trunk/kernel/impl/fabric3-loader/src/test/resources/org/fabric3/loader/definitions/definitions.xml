@@ -8,6 +8,8 @@
         <description>Transactional intent</description>
     </intent>
     
-    <policySet name="transactionalPolicy" appliesTo="sca:binding.ws" provides="f3:transactional"/>
+    <policySet name="transactionalPolicy" appliesTo="sca:binding.ws" provides="f3:transactional">
+        <f3:interceptor class="FooInterceptor"/>
+    </policySet>
     
 </definitions>

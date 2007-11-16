@@ -18,26 +18,27 @@
  */
 package org.fabric3.loader.definitions;
 
-import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
-import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
 import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.scdl.definitions.PolicySet;
-import org.fabric3.scdl.definitions.PolicySetExtension;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
+import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.util.stax.StaxUtil;
+import org.fabric3.transform.xml.Stream2Document;
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Element;
 
 /**
  * Loader for definitions.
@@ -47,16 +48,22 @@ import org.osoa.sca.annotations.Reference;
 @EagerInit
 public class PolicySetLoader implements StAXElementLoader<PolicySet> {
     
-    // Loader registry
     private LoaderRegistry registry;
+    private Stream2Document transformer;
 
     /**
      * Registers the loader with the registry.
      * @param registry Injected registry
      */
-    public PolicySetLoader(@Reference LoaderRegistry registry) {
-        registry.registerLoader(DefinitionsLoader.POLICY_SET, this);
+    public PolicySetLoader(@Reference LoaderRegistry registry, @Reference Stream2Document transformer) {
         this.registry = registry;
+        this.transformer = transformer;
+    }
+    
+    @SuppressWarnings("deprecation")
+    @Init
+    public void init() {
+        registry.registerLoader(DefinitionsLoader.POLICY_SET, this);
     }
 
     public PolicySet load(XMLStreamReader reader, LoaderContext context) throws XMLStreamException, LoaderException {
@@ -72,23 +79,29 @@ public class PolicySetLoader implements StAXElementLoader<PolicySet> {
         
         String appliesTo = reader.getAttributeValue(null, "appliesTo");
 
-        PolicySetExtension extension = null;
+        Element extension = loadExtension(reader);
         
-        // TODO For 0.4 we need to change this the XML for the policy set extension is loaded directly
-        // and the qname is mapped to either interceptor definition generator or passed opaquely to
-        // the component or wire source/target generators
+        LoaderUtil.skipToEndElement(reader);
         
-        while (true) {
-            switch (reader.next()) {
-            case START_ELEMENT:
-                // Only support we have is for extension elements
-                extension = registry.load(reader, PolicySetExtension.class, context);
-                break;
-            case END_ELEMENT:
-                assert DefinitionsLoader.POLICY_SET.equals(reader.getName());
-                return new PolicySet(qName, provides, appliesTo, extension);
+        return new PolicySet(qName, provides, appliesTo, extension);
+        
+    }
+
+    private Element loadExtension(XMLStreamReader reader) throws XMLStreamException, LoaderException {
+        
+        while(reader.hasNext()) {
+            int event = reader.next();
+            switch (event) {
+            case XMLStreamConstants.START_ELEMENT:
+                try {
+                    return transformer.transform(reader, null).getDocumentElement();
+                } catch (Exception e) {
+                    throw new LoaderException(e);
+                }
             }
         }
+
+        return null;
         
     }
 

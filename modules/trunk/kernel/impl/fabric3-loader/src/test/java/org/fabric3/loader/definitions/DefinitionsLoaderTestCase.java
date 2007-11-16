@@ -42,12 +42,14 @@ import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
+import org.fabric3.transform.xml.Stream2Document;
 
 /**
  * @version $Revision$ $Date$
  */
 public class DefinitionsLoaderTestCase extends TestCase {
 
+    @SuppressWarnings({ "unchecked", "deprecation" })
     public void testLoad() throws Exception {
         
         ClassLoader cl = null;
@@ -59,7 +61,9 @@ public class DefinitionsLoaderTestCase extends TestCase {
         
         DefinitionsLoader loader = new DefinitionsLoader(loaderRegistry);
         IntentLoader intentLoader = new IntentLoader();
-        PolicySetLoader policySetLoader = new PolicySetLoader(loaderRegistry);
+        
+        PolicySetLoader policySetLoader = new PolicySetLoader(loaderRegistry, new Stream2Document());
+        policySetLoader.init();
         
         loaderRegistry.registerLoader(DefinitionsLoader.INTENT, intentLoader);
         
@@ -73,7 +77,8 @@ public class DefinitionsLoaderTestCase extends TestCase {
         List<ResourceElement<?, ?>> resourceElements = resource.getResourceElements();
         assertEquals(2, resourceElements.size());
         
-        ResourceElement<QNameSymbol, Intent> intentResourceElement = (ResourceElement<QNameSymbol, Intent>) resourceElements.get(0);
+        ResourceElement<QNameSymbol, Intent> intentResourceElement = 
+            (ResourceElement<QNameSymbol, Intent>) resourceElements.get(0);
         assertNotNull(intentResourceElement);
         
         QNameSymbol symbol = intentResourceElement.getSymbol();
@@ -87,7 +92,8 @@ public class DefinitionsLoaderTestCase extends TestCase {
         assertNull(intent.getQualifiable());
         assertEquals(0, intent.getRequires().size());
         
-        ResourceElement<QNameSymbol, PolicySet> policySetResourceElement = (ResourceElement<QNameSymbol, PolicySet>) resourceElements.get(1);
+        ResourceElement<QNameSymbol, PolicySet> policySetResourceElement = 
+            (ResourceElement<QNameSymbol, PolicySet>) resourceElements.get(1);
         assertNotNull(policySetResourceElement);
         
         symbol = policySetResourceElement.getSymbol();
@@ -96,8 +102,14 @@ public class DefinitionsLoaderTestCase extends TestCase {
         PolicySet policySet = (PolicySet) policySetResourceElement.getValue();
         assertEquals(new QName("http://fabric3.org/xmlns/sca/2.0-alpha", "transactionalPolicy"), policySet.getName());
         assertTrue(policySet.doesProvide(new QName("http://fabric3.org/xmlns/sca/2.0-alpha", "transactional")));
+        
+        QName extensionName = policySet.getExtensionName();
+        assertEquals("interceptor", extensionName.getLocalPart());
+        assertEquals("http://fabric3.org/xmlns/sca/2.0-alpha", extensionName.getNamespaceURI());
+        
     }
     
+    @SuppressWarnings("deprecation")
     private static class LoaderRegistryImpl implements LoaderRegistry {
         
         private Map<QName, StAXElementLoader<?>> loaders = new HashMap<QName, StAXElementLoader<?>>();
@@ -110,6 +122,7 @@ public class DefinitionsLoaderTestCase extends TestCase {
         public void unregisterLoader(QName element) {
         }
 
+        @SuppressWarnings("unchecked")
         public <OUTPUT> OUTPUT load(XMLStreamReader reader, Class<OUTPUT> type,
                 LoaderContext context) throws XMLStreamException,
                 LoaderException {

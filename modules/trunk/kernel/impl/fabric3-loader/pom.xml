@@ -29,16 +29,19 @@
     <description>Fabric3 loader for SCDL XML files.</description>
 
     <dependencies>
+    
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
-            <version>0.3.1</version>
+            <version>0.4-SNAPSHOT</version>
         </dependency>
+        
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-transform</artifactId>
-            <version>0.3</version>
+            <version>0.4-SNAPSHOT</version>
         </dependency>
+        
         <dependency>
             <groupId>stax</groupId>
             <artifactId>stax-api</artifactId>
@@ -53,14 +56,17 @@
             <version>3.2.2</version>
             <scope>test</scope>
         </dependency>
+        
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
         </dependency>
+        
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
+        
     </dependencies>
 
     <scm>

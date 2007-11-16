@@ -60,12 +60,27 @@ public class Stream2Element2 extends AbstractPushTransformer<XMLStreamReader, El
             int next = reader.next();
             switch (next) {
             case START_ELEMENT:
+                
                 Element child = document.createElementNS(reader.getNamespaceURI(), reader.getLocalName());
+                
                 for (int i = 0; i < reader.getAttributeCount(); i++) {
-                    child.setAttributeNS(reader.getNamespaceURI(i),
+                    child.setAttributeNS(reader.getAttributeNamespace(i),
                                          reader.getAttributeLocalName(i),
                                          reader.getAttributeValue(i));
                 }
+                
+                // Handle namespaces
+                for (int i = 0; i < reader.getNamespaceCount(); i++) {
+                    
+                    String prefix = reader.getNamespacePrefix(i);
+                    String uri = reader.getNamespaceURI(i);
+                    
+                    prefix = prefix == null ? "xmlns" : "xmlns:" + prefix; 
+                    
+                    child.setAttribute(prefix, uri);
+                    
+                }
+
                 element.appendChild(child);
                 element = child;
                 depth++;

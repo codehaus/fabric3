@@ -22,6 +22,8 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
+import org.w3c.dom.Element;
+
 /**
  * Model object that represents a policy set.
  *
@@ -33,7 +35,7 @@ public final class PolicySet extends AbstractDefinition {
     private final Set<QName> provides;
     
     /** Policy set extension */
-    private final PolicySetExtension extension;
+    private final Element extension;
     
     /** XPath expression for the apples to attribute. */
     private final String appliesTo;
@@ -46,7 +48,7 @@ public final class PolicySet extends AbstractDefinition {
      * @param appliesTo XPath expression for the apples to attribute.
      * @param extension Extension for the policy set.
      */
-    public PolicySet(QName name, Set<QName> provides, String appliesTo, PolicySetExtension extendion) {
+    public PolicySet(QName name, Set<QName> provides, String appliesTo, Element extendion) {
         
         super(name);
 
@@ -88,8 +90,25 @@ public final class PolicySet extends AbstractDefinition {
     /**
      * @return Extension for the policy set.
      */
-    public PolicySetExtension getExtension() {
+    public Element getExtension() {
         return extension;
+    }
+    
+    /**
+     * @return Qualified name of the extension element.
+     */
+    public QName getExtensionName() {
+        return new QName(extension.getNamespaceURI(), extension.getLocalName());
+    }
+    
+    /**
+     * Interim implementation, matches the name of the target service, reference or component.
+     * 
+     * @param name Name of the service, reference or component.
+     * @return True is appliesTo is null or the name matches the applies to value.
+     */
+    public boolean doesApplyTo(String name) {
+        return appliesTo == null || appliesTo.equals(name);
     }
 
 }
