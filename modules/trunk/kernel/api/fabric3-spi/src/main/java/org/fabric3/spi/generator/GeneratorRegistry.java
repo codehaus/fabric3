@@ -20,6 +20,8 @@ package org.fabric3.spi.generator;
 
 import java.util.Set;
 
+import javax.xml.namespace.QName;
+
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.ResourceDefinition;
@@ -67,12 +69,10 @@ public interface GeneratorRegistry {
 
     /**
      * Registers an interceptor generator by type.
-     *
-     * @param <T>       Policy extension type.
-     * @param clazz     the type
-     * @param generator Interceptor generator.
+     * @param extensionName     Fully qualified name of the extension.
+     * @param generator         Interceptor generator.
      */
-    <T extends PolicySetExtension> void register(Class<T> clazz, InterceptorDefinitionGenerator<T, ?> generator);
+    <T extends PolicySetExtension> void register(QName extensionName, InterceptorDefinitionGenerator generator);
 
     /**
      * Registers a command generator

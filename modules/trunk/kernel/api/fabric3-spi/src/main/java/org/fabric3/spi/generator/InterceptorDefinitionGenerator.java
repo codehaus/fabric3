@@ -18,7 +18,7 @@
  */
 package org.fabric3.spi.generator;
 
-import org.fabric3.scdl.definitions.PolicySetExtension;
+import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 
 /**
@@ -26,7 +26,7 @@ import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
  * 
  * @version $Revision$ $Date$
  */
-public interface InterceptorDefinitionGenerator<PE extends PolicySetExtension, PID extends PhysicalInterceptorDefinition> {
+public interface InterceptorDefinitionGenerator {
     
     /**
      * Generates an interceptor definition from the policy set extension.
@@ -35,6 +35,6 @@ public interface InterceptorDefinitionGenerator<PE extends PolicySetExtension, P
      * @param generatorContext Generator context.
      * @return Physical interceptor definition.
      */
-    PID generate(PE policySetExtension, GeneratorContext generatorContext);
+    PhysicalInterceptorDefinition generate(PolicySet policySet, GeneratorContext generatorContext);
 
 }
