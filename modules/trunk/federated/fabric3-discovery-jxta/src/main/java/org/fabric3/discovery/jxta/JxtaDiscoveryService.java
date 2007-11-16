@@ -97,9 +97,6 @@ public class JxtaDiscoveryService implements DiscoveryService {
     private Map<String, TwosTuple<RuntimeInfo, Long>> participatingRuntimes =
             new ConcurrentHashMap<String, TwosTuple<RuntimeInfo, Long>>();
 
-    /**
-     * @see org.fabric3.spi.services.discovery.DiscoveryService#getParticipatingRuntimes()
-     */
     public Set<RuntimeInfo> getParticipatingRuntimes() {
         Set<RuntimeInfo> ret = new HashSet<RuntimeInfo>();
         for (TwosTuple<RuntimeInfo, Long> tuple : participatingRuntimes.values()) {
@@ -108,9 +105,6 @@ public class JxtaDiscoveryService implements DiscoveryService {
         return ret;
     }
 
-    /**
-     * @see org.fabric3.spi.services.discovery.DiscoveryService#getRuntimeInfo(java.lang.String)
-     */
     public RuntimeInfo getRuntimeInfo(String runtimeId) {
         return participatingRuntimes.get(runtimeId).getFirst();
     }
