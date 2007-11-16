@@ -90,7 +90,7 @@ public class MockWireAttacher implements WireAttacher<PhysicalWireSourceDefiniti
                 PhysicalOperationDefinition op = entry.getKey();
                 InvocationChain chain = entry.getValue();
                 
-                for(Method method : mockedInterface.getDeclaredMethods()) {
+                for(Method method : mockedInterface.getMethods()) {
                     if(op.getName().equals(method.getName())) {
                         chain.addInterceptor(new MockTargetInterceptor(mock, method));
                     }
