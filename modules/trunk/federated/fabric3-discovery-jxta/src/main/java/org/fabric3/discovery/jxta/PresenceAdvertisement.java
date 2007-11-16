@@ -90,23 +90,14 @@ public class PresenceAdvertisement extends Advertisement {
      */
     public static final class Instantiator implements AdvertisementFactory.Instantiator {
 
-        /**
-         * @see net.jxta.document.AdvertisementFactory$Instantiator#getAdvertisementType()
-         */
         public String getAdvertisementType() {
             return PresenceAdvertisement.getAdvertisementType();
         }
 
-        /**
-         * @see net.jxta.document.AdvertisementFactory$Instantiator#newInstance()
-         */
         public Advertisement newInstance() {
             return new PresenceAdvertisement();
         }
 
-        /**
-         * @see net.jxta.document.AdvertisementFactory$Instantiator#newInstance(net.jxta.document.Element)
-         */
         public Advertisement newInstance(Element element) {
 
             PresenceAdvertisement adv = new PresenceAdvertisement();
@@ -197,9 +188,6 @@ public class PresenceAdvertisement extends Advertisement {
         return getAdvertisementType();
     }
 
-    /**
-     * @see net.jxta.document.Advertisement#getDocument(net.jxta.document.MimeMediaType)
-     */
     public Document getDocument(MimeMediaType mimeMediaType) {
 
         StructuredDocument doc = StructuredDocumentFactory.newStructuredDocument(mimeMediaType, getAdvertisementType());
@@ -228,9 +216,6 @@ public class PresenceAdvertisement extends Advertisement {
         return doc;
     }
 
-    /**
-     * @see net.jxta.document.Advertisement#getID()
-     */
     @SuppressWarnings("deprecation")
     public ID getID() {
         try {
@@ -240,9 +225,6 @@ public class PresenceAdvertisement extends Advertisement {
         }
     }
 
-    /**
-     * @see net.jxta.document.Advertisement#getIndexFields()
-     */
     public String[] getIndexFields() {
         return indexFields;
     }
@@ -261,9 +243,6 @@ public class PresenceAdvertisement extends Advertisement {
         this.peerId = peerId;
     }
 
-    /**
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     public boolean equals(Object target) {
         if (target instanceof PresenceAdvertisement) {
             return ((PresenceAdvertisement) target).getID().equals(getID());
@@ -272,17 +251,11 @@ public class PresenceAdvertisement extends Advertisement {
         }
     }
 
-    /**
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
         return getID().hashCode();
     }
 
-    /**
-     * @see net.jxta.document.Advertisement#clone()
-     */
     public Object clone() {
         try {
             return super.clone();
