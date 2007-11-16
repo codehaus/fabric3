@@ -55,11 +55,9 @@ public class MockTest extends TestCase {
         
         control.reset();
         
-        assertNotNull(mockService1);
-        assertNotNull(mockService2);
-        
         mockService1.doMock1("test");
         mockService2.doMock2(1);
+        mockService2.doMock0(1);
         
         control.replay();
         
@@ -72,9 +70,6 @@ public class MockTest extends TestCase {
     public void testNoMock() {
         
         control.reset();
-        
-        assertNotNull(mockService1);
-        assertNotNull(mockService2);
         
         mockService1.doMock1("test");
         mockService2.doMock2(1);

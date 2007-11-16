@@ -42,6 +42,7 @@ public class UserComponentImpl implements UserComponent {
     public void userMethod() {
         mockService1.doMock1("test");
         mockService2.doMock2(1);
+        mockService2.doMock0(1);
     }
 
 }
