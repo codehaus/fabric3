@@ -25,7 +25,7 @@ import javax.xml.namespace.QName;
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.ResourceDefinition;
-import org.fabric3.scdl.definitions.PolicySetExtension;
+import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
@@ -72,7 +72,7 @@ public interface GeneratorRegistry {
      * @param extensionName     Fully qualified name of the extension.
      * @param generator         Interceptor generator.
      */
-    <T extends PolicySetExtension> void register(QName extensionName, InterceptorDefinitionGenerator generator);
+    void register(QName extensionName, InterceptorDefinitionGenerator generator);
 
     /**
      * Registers a command generator
@@ -170,6 +170,6 @@ public interface GeneratorRegistry {
      * @param policies Policies for which interceptors need to be resolved.
      * @return Resolved physical interceptor definitions.
      */
-    Set<PhysicalInterceptorDefinition> generateInterceptorDefinitions(Set<PolicySetExtension> policies);
+    Set<PhysicalInterceptorDefinition> generateInterceptorDefinitions(Set<PolicySet> policies);
 
 }

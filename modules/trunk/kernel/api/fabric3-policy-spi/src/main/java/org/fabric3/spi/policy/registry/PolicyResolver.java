@@ -21,7 +21,7 @@ package org.fabric3.spi.policy.registry;
 import java.util.Set;
 
 import org.fabric3.scdl.definitions.Intent;
-import org.fabric3.scdl.definitions.PolicySetExtension;
+import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 
@@ -61,7 +61,7 @@ public interface PolicyResolver {
      * @return Set of resolved policies.
      * @throws PolicyResolutionException If all intents cannot be resolved.
      */
-    Set<PolicySetExtension> resolveInteractionIntents(LogicalBinding<?> binding) throws PolicyResolutionException;
+    Set<PolicySet> resolveInteractionIntents(LogicalBinding<?> binding) throws PolicyResolutionException;
     
     /**
      * Returns the set of policies that will address the intents that are not provided by the implementation type.
@@ -70,6 +70,6 @@ public interface PolicyResolver {
      * @return Set of resolved policies.
      * @throws PolicyResolutionException If all intents cannot be resolved.
      */
-    Set<PolicySetExtension> resolveImplementationIntents(LogicalComponent<?> logicalComponent) throws PolicyResolutionException;
+    Set<PolicySet> resolveImplementationIntents(LogicalComponent<?> logicalComponent) throws PolicyResolutionException;
 
 }

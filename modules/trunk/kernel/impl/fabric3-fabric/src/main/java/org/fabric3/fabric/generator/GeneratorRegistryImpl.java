@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.osoa.sca.annotations.Reference;
+import javax.xml.namespace.QName;
 
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.ComponentDefinition;
@@ -42,7 +42,7 @@ import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ResourceDefinition;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.definitions.Intent;
-import org.fabric3.scdl.definitions.PolicySetExtension;
+import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
@@ -66,6 +66,7 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.model.type.SCABindingDefinition;
 import org.fabric3.spi.policy.registry.PolicyResolutionException;
 import org.fabric3.spi.policy.registry.PolicyResolver;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Rev$ $Date$
@@ -77,7 +78,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
     private Map<Class<? extends BindingDefinition>, BindingGenerator<?, ?, ? extends BindingDefinition>> bindingGenerators;
     private List<CommandGenerator> commandGenerators = new ArrayList<CommandGenerator>();
     private PolicyResolver policyResolver;
-    private Map<Class<? extends PolicySetExtension>, InterceptorDefinitionGenerator<? extends PolicySetExtension, ?>> interceptorDefinitionGenerators;
+    private Map<QName, InterceptorDefinitionGenerator> interceptorDefinitionGenerators;
     private Map<Class<? extends ResourceDefinition>, ResourceWireGenerator<?, ? extends ResourceDefinition>> resourceWireGenerators;
 
     /**
@@ -93,9 +94,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
                 new ConcurrentHashMap<Class<? extends BindingDefinition>,
                         BindingGenerator<?, ?, ? extends BindingDefinition>>();
 
-        interceptorDefinitionGenerators =
-                new ConcurrentHashMap<Class<? extends PolicySetExtension>,
-                        InterceptorDefinitionGenerator<? extends PolicySetExtension, ?>>();
+        interceptorDefinitionGenerators = new ConcurrentHashMap<QName, InterceptorDefinitionGenerator>();
 
         resourceWireGenerators =
                 new ConcurrentHashMap<Class<? extends ResourceDefinition>,
@@ -206,7 +205,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         }
         
         // Resolve the policies that map to interaction and implementation intents
-        Set<PolicySetExtension> policies;
+        Set<PolicySet> policies;
         try {
             policies = policyResolver.resolveInteractionIntents(binding);
             policies.addAll(policyResolver.resolveImplementationIntents(component));
@@ -263,7 +262,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         ServiceContract<?> contract = reference.getDefinition().getServiceContract();
 
         // Resolve policies that map to interaction intents
-        Set<PolicySetExtension> policies;
+        Set<PolicySet> policies;
         try {
             policies = policyResolver.resolveInteractionIntents(binding);
         } catch (PolicyResolutionException e) {
@@ -312,7 +311,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         ReferenceDefinition referenceDefinition = reference.getDefinition();
         ServiceContract<?> contract = referenceDefinition.getServiceContract();
 
-        Set<PolicySetExtension> policies = new HashSet<PolicySetExtension>();
+        Set<PolicySet> policies = new HashSet<PolicySet>();
 
         // Resolve policies on both ends of the wire that map to interaction and implementation intents
         try {
@@ -371,25 +370,23 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
     }
 
     @SuppressWarnings("unchecked")
-    public Set<PhysicalInterceptorDefinition> generateInterceptorDefinitions(Set<PolicySetExtension> policies) {
+    public Set<PhysicalInterceptorDefinition> generateInterceptorDefinitions(Set<PolicySet> policies) {
 
         if (policies == null) {
             return Collections.EMPTY_SET;
         }
 
         Set<PhysicalInterceptorDefinition> interceptors = new HashSet<PhysicalInterceptorDefinition>();
-        for (PolicySetExtension policy : policies) {
-            InterceptorDefinitionGenerator interceptorDefinitionGenerator =
-                    interceptorDefinitionGenerators.get(policy.getClass());
+        for (PolicySet policy : policies) {
+            InterceptorDefinitionGenerator interceptorDefinitionGenerator = interceptorDefinitionGenerators.get(policy.getExtensionName());
             interceptors.add(interceptorDefinitionGenerator.generate(policy, null));
         }
         return interceptors;
 
     }
 
-    public <T extends PolicySetExtension> void register(Class<T> clazz,
-                                                        InterceptorDefinitionGenerator<T, ?> interceptorDefinitionGenerator) {
-        interceptorDefinitionGenerators.put(clazz, interceptorDefinitionGenerator);
+    public void register(QName extensionName, InterceptorDefinitionGenerator interceptorDefinitionGenerator) {
+        interceptorDefinitionGenerators.put(extensionName, interceptorDefinitionGenerator);
     }
 
     @SuppressWarnings({"unchecked"})
@@ -441,7 +438,7 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
     }
 
     @SuppressWarnings({"unchecked"})
-    private PhysicalWireDefinition createWireDefinition(ServiceContract<?> contract, Set<PolicySetExtension> policies)
+    private PhysicalWireDefinition createWireDefinition(ServiceContract<?> contract, Set<PolicySet> policies)
             throws GenerationException {
 
         PhysicalWireDefinition wireDefinition = new PhysicalWireDefinition();
