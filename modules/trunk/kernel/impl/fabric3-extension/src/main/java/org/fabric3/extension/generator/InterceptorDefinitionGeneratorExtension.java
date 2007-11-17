@@ -18,10 +18,10 @@
  */
 package org.fabric3.extension.generator;
 
-import org.fabric3.scdl.definitions.PolicySetExtension;
+import javax.xml.namespace.QName;
+
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
-import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
@@ -32,8 +32,7 @@ import org.osoa.sca.annotations.Reference;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public abstract class InterceptorDefinitionGeneratorExtension<PSE extends PolicySetExtension, PID extends PhysicalInterceptorDefinition>
-        implements InterceptorDefinitionGenerator<PSE, PID> {
+public abstract class InterceptorDefinitionGeneratorExtension implements InterceptorDefinitionGenerator {
     
     // Generator registry
     private GeneratorRegistry generatorRegistry;
@@ -53,7 +52,7 @@ public abstract class InterceptorDefinitionGeneratorExtension<PSE extends Policy
      */
     @Init
     public void start() {
-        generatorRegistry.register(getPolicyExtensionClass(), this);
+        generatorRegistry.register(getExtensionName(), this);
     }
     
     /**
@@ -61,6 +60,6 @@ public abstract class InterceptorDefinitionGeneratorExtension<PSE extends Policy
      * 
      * @return Binding definition class.
      */
-    protected abstract Class<PSE> getPolicyExtensionClass();
+    protected abstract QName getExtensionName();
 
 }

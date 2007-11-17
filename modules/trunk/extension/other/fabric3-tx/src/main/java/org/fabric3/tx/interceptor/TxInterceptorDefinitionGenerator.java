@@ -18,30 +18,34 @@
  */
 package org.fabric3.tx.interceptor;
 
+import javax.xml.namespace.QName;
+
 import org.fabric3.extension.generator.InterceptorDefinitionGeneratorExtension;
+import org.fabric3.scdl.definitions.PolicySet;
+import org.fabric3.spi.Constants;
 import org.fabric3.spi.generator.GeneratorContext;
-import org.fabric3.tx.policy.TxPolicyExtension;
+import org.w3c.dom.Element;
 
 /**
  * Interceptor definition generator for suspend transaction policy extensions.
  * 
  * @version $Revision$ $Date$
  */
-public class TxInterceptorDefinitionGenerator extends InterceptorDefinitionGeneratorExtension<TxPolicyExtension, TxInterceptorDefinition> {
+public class TxInterceptorDefinitionGenerator extends InterceptorDefinitionGeneratorExtension {
 
-    /**
-     * @see org.fabric3.extension.generator.InterceptorDefinitionGeneratorExtension#getPolicyExtensionClass()
-     */
+    private static final QName EXTENSION_NAME = new QName(Constants.FABRIC3_NS, "transaction");
+    
     @Override
-    protected Class<TxPolicyExtension> getPolicyExtensionClass() {
-        return TxPolicyExtension.class;
+    protected QName getExtensionName() {
+        return EXTENSION_NAME;
     }
 
-    /**
-     * @see org.fabric3.spi.generator.InterceptorDefinitionGenerator#generate(org.fabric3.scdl.definitions.PolicySetExtension, org.fabric3.spi.generator.GeneratorContext)
-     */
-    public TxInterceptorDefinition generate(TxPolicyExtension policySetExtension, GeneratorContext context) {
-        return new TxInterceptorDefinition(policySetExtension.getAction());
+    public TxInterceptorDefinition generate(PolicySet policy, GeneratorContext context) {
+        
+        Element extension = policy.getExtension();
+        String action = extension.getAttribute("action");
+        
+        return new TxInterceptorDefinition(TxAction.valueOf(action));
     }
 
 }

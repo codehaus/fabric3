@@ -42,7 +42,6 @@ import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
-import org.fabric3.transform.xml.Stream2Document;
 
 /**
  * @version $Revision$ $Date$
@@ -62,7 +61,7 @@ public class DefinitionsLoaderTestCase extends TestCase {
         DefinitionsLoader loader = new DefinitionsLoader(loaderRegistry);
         IntentLoader intentLoader = new IntentLoader();
         
-        PolicySetLoader policySetLoader = new PolicySetLoader(loaderRegistry, new Stream2Document());
+        PolicySetLoader policySetLoader = new PolicySetLoader(loaderRegistry);
         policySetLoader.init();
         
         loaderRegistry.registerLoader(DefinitionsLoader.INTENT, intentLoader);

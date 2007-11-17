@@ -59,7 +59,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-extension</artifactId>
-            <version>0.3.1</version>
+            <version>0.4-SNAPSHOT</version>
         </dependency>
         
         <dependency>
@@ -71,19 +71,13 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-transform</artifactId>
-            <version>0.3</version>
+            <version>0.4-SNAPSHOT</version>
         </dependency>
         
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-loader</artifactId>
-            <version>0.3.1</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-tx-loader</artifactId>
-            <version>0.1</version>
+            <version>0.4-SNAPSHOT</version>
         </dependency>
         
         <dependency>

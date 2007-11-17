@@ -19,7 +19,6 @@
 package org.fabric3.tx.interceptor;
 
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
-import org.fabric3.tx.TxAction;
 
 /**
  * @version $Revision$ $Date$

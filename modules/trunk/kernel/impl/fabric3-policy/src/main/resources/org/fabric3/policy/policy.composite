@@ -28,23 +28,18 @@
            autowire="true">
 
     <!-- Policy resolver -->
-    <component name="policyResolver">
+    <component name="org.fabric3.fabric.policy.registry.DefaultPolicyResolver">
         <system:implementation.system class="org.fabric3.fabric.policy.registry.DefaultPolicyResolver"/>
     </component>
     
     <!-- Simple interceptor builder -->
-    <component name="simple.interceptor.builder">
+    <component name="org.fabric3.fabric.policy.interceptor.simple.SimpleInterceptorBuilder">
         <system:implementation.system class="org.fabric3.fabric.policy.interceptor.simple.SimpleInterceptorBuilder"/>
     </component>
     
     <!-- Simple interceptor generator -->
-    <component name="simple.interceptor.generator">
+    <component name="org.fabric3.fabric.policy.interceptor.simple.SimpleInterceptorDefinitionGenerator">
         <system:implementation.system class="org.fabric3.fabric.policy.interceptor.simple.SimpleInterceptorDefinitionGenerator"/>
-    </component>
-    
-    <!-- Simple policy set loader -->
-    <component name="simple.policySet.loader">
-        <system:implementation.system class="org.fabric3.fabric.policy.interceptor.simple.SimplePolicySetExtensionLoader"/>
     </component>
 
 </composite>

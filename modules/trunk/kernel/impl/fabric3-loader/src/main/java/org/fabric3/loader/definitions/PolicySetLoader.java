@@ -49,15 +49,14 @@ import org.w3c.dom.Element;
 public class PolicySetLoader implements StAXElementLoader<PolicySet> {
     
     private LoaderRegistry registry;
-    private Stream2Document transformer;
+    private Stream2Document transformer = new Stream2Document();
 
     /**
      * Registers the loader with the registry.
      * @param registry Injected registry
      */
-    public PolicySetLoader(@Reference LoaderRegistry registry, @Reference Stream2Document transformer) {
+    public PolicySetLoader(@Reference LoaderRegistry registry) {
         this.registry = registry;
-        this.transformer = transformer;
     }
     
     @SuppressWarnings("deprecation")

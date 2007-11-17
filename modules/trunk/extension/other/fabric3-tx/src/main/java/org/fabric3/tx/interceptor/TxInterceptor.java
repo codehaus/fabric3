@@ -23,7 +23,6 @@ import javax.transaction.TransactionManager;
 
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.Message;
-import org.fabric3.tx.TxAction;
 import org.fabric3.tx.TxException;
 
 /**
