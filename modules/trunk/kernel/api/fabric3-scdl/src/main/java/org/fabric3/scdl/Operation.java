@@ -30,7 +30,7 @@ import java.util.Map;
  *
  * @version $Rev$ $Date$
  */
-public class Operation<T> extends ModelObject {
+public class Operation<T> extends AbstractPolicyAware {
     public static final int NO_CONVERSATION = -1;
     public static final int CONVERSATION_CONTINUE = 1;
     public static final int CONVERSATION_END = 2;

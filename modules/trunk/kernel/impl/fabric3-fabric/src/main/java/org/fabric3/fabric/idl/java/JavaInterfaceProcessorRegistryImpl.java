@@ -151,6 +151,9 @@ public class JavaInterfaceProcessorRegistryImpl implements JavaInterfaceProcesso
                                                             callback,
                                                             UNKNOWN_DATABINDING,
                                                             conversationSequence);
+            for (JavaInterfaceProcessor processor : this.processors) {
+                processor.visitOperation(method, operation);
+            }
             operations.add(operation);
         }
         return operations;

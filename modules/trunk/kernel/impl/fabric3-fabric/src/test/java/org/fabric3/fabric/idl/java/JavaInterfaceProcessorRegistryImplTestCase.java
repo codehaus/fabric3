@@ -31,11 +31,11 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
 import org.fabric3.pojo.processor.JavaIntrospectionHelper;
+import org.fabric3.scdl.DataType;
+import org.fabric3.scdl.Operation;
 import org.fabric3.spi.idl.InvalidServiceContractException;
 import org.fabric3.spi.idl.java.JavaInterfaceProcessor;
 import org.fabric3.spi.idl.java.JavaServiceContract;
-import org.fabric3.scdl.DataType;
-import org.fabric3.scdl.Operation;
 
 /**
  * @version $Rev$ $Date$
@@ -74,6 +74,7 @@ public class JavaInterfaceProcessorRegistryImplTestCase extends TestCase {
     public void testUnregister() throws Exception {
         JavaInterfaceProcessor processor = createMock(JavaInterfaceProcessor.class);
         processor.visitInterface(eq(Base.class), EasyMock.same((Class) null), isA(JavaServiceContract.class));
+        processor.visitOperation(eq(Base.class.getMethod("baseInt", Integer.TYPE)), isA(Operation.class));
         expectLastCall().once();
         replay(processor);
         impl.registerProcessor(processor);

@@ -18,17 +18,22 @@
  */
 package org.fabric3.spi.idl.java;
 
+import java.lang.reflect.Method;
+
+import org.fabric3.scdl.Operation;
 import org.fabric3.spi.idl.InvalidServiceContractException;
 
 /**
- * Implementations introspect metadata on a Java interface, populating the
- * corresponding {@link JavaServiceContract}
- * 
+ * Implementations introspect metadata on a Java interface, populating the corresponding {@link JavaServiceContract}
+ *
  * @version $Rev$ $Date$
  */
 public interface JavaInterfaceProcessor {
 
     void visitInterface(Class<?> clazz, Class<?> callbackClass, JavaServiceContract contract)
-        throws InvalidServiceContractException;
+            throws InvalidServiceContractException;
+
+    void visitOperation(Method mmethod, Operation operation)
+            throws InvalidServiceContractException;
 
 }

@@ -19,7 +19,7 @@
 package org.fabric3.scdl;
 
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import javax.xml.namespace.QName;
 
@@ -30,8 +30,8 @@ import javax.xml.namespace.QName;
  */
 public abstract class AbstractPolicyAware extends ModelObject implements PolicyAware {
 
-    private Set<QName> intents = new HashSet<QName>();
-    private Set<QName> policySets = new HashSet<QName>();
+    private Set<QName> intents = new LinkedHashSet<QName>();
+    private Set<QName> policySets = new LinkedHashSet<QName>();
 
     public Set<QName> getIntents() {
         return Collections.unmodifiableSet(intents);
@@ -43,6 +43,10 @@ public abstract class AbstractPolicyAware extends ModelObject implements PolicyA
 
     public void setIntents(Set<QName> intents) {
         this.intents = intents;
+    }
+
+    public void addIntent(QName intent) {
+        intents.add(intent);
     }
 
     public void setPolicySets(Set<QName> policySets) {
