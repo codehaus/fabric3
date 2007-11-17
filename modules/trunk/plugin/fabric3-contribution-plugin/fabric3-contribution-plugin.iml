@@ -39,9 +39,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/commons-cli/commons-cli/1.0/commons-cli-1.0.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/commons-cli/commons-cli/1.0/commons-cli-1.0-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/commons-cli/commons-cli/1.0/commons-cli-1.0-sources.jar!/" />
         </SOURCES>
@@ -61,9 +59,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/junit/junit/3.8.2/junit-3.8.2.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/junit/junit/3.8.2/junit-3.8.2-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/junit/junit/3.8.2/junit-3.8.2-sources.jar!/" />
         </SOURCES>
@@ -74,9 +70,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/maven/reporting/maven-reporting-api/2.0/maven-reporting-api-2.0.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/maven/reporting/maven-reporting-api/2.0/maven-reporting-api-2.0-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/apache/maven/reporting/maven-reporting-api/2.0/maven-reporting-api-2.0-sources.jar!/" />
         </SOURCES>
@@ -87,9 +81,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/maven/shared/maven-plugin-testing-harness/1.1/maven-plugin-testing-harness-1.1.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/maven/shared/maven-plugin-testing-harness/1.1/maven-plugin-testing-harness-1.1-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/apache/maven/shared/maven-plugin-testing-harness/1.1/maven-plugin-testing-harness-1.1-sources.jar!/" />
         </SOURCES>
@@ -122,9 +114,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/maven/wagon/wagon-provider-api/1.0-beta-2/wagon-provider-api-1.0-beta-2.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/maven/wagon/wagon-provider-api/1.0-beta-2/wagon-provider-api-1.0-beta-2-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/apache/maven/wagon/wagon-provider-api/1.0-beta-2/wagon-provider-api-1.0-beta-2-sources.jar!/" />
         </SOURCES>
@@ -146,9 +136,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/maven/maven-archiver/2.2/maven-archiver-2.2.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/maven/maven-archiver/2.2/maven-archiver-2.2-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/apache/maven/maven-archiver/2.2/maven-archiver-2.2-sources.jar!/" />
         </SOURCES>
@@ -159,9 +147,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/maven/maven-artifact/2.0.7/maven-artifact-2.0.7.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/maven/maven-artifact/2.0.7/maven-artifact-2.0.7-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/apache/maven/maven-artifact/2.0.7/maven-artifact-2.0.7-sources.jar!/" />
         </SOURCES>
@@ -172,9 +158,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/maven/maven-artifact-manager/2.0.7/maven-artifact-manager-2.0.7.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/maven/maven-artifact-manager/2.0.7/maven-artifact-manager-2.0.7-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/apache/maven/maven-artifact-manager/2.0.7/maven-artifact-manager-2.0.7-sources.jar!/" />
         </SOURCES>
@@ -185,9 +169,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/maven/maven-core/2.0/maven-core-2.0.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/maven/maven-core/2.0/maven-core-2.0-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/apache/maven/maven-core/2.0/maven-core-2.0-sources.jar!/" />
         </SOURCES>
@@ -198,9 +180,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/maven/maven-error-diagnostics/2.0/maven-error-diagnostics-2.0.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/maven/maven-error-diagnostics/2.0/maven-error-diagnostics-2.0-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/apache/maven/maven-error-diagnostics/2.0/maven-error-diagnostics-2.0-sources.jar!/" />
         </SOURCES>
@@ -211,9 +191,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/maven/maven-model/2.0.7/maven-model-2.0.7.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/maven/maven-model/2.0.7/maven-model-2.0.7-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/apache/maven/maven-model/2.0.7/maven-model-2.0.7-sources.jar!/" />
         </SOURCES>
@@ -224,9 +202,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/maven/maven-monitor/2.0/maven-monitor-2.0.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/maven/maven-monitor/2.0/maven-monitor-2.0-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/apache/maven/maven-monitor/2.0/maven-monitor-2.0-sources.jar!/" />
         </SOURCES>
@@ -237,9 +213,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/maven/maven-plugin-api/2.0.7/maven-plugin-api-2.0.7.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/maven/maven-plugin-api/2.0.7/maven-plugin-api-2.0.7-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/apache/maven/maven-plugin-api/2.0.7/maven-plugin-api-2.0.7-sources.jar!/" />
         </SOURCES>
@@ -250,9 +224,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/maven/maven-plugin-descriptor/2.0/maven-plugin-descriptor-2.0.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/maven/maven-plugin-descriptor/2.0/maven-plugin-descriptor-2.0-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/apache/maven/maven-plugin-descriptor/2.0/maven-plugin-descriptor-2.0-sources.jar!/" />
         </SOURCES>
@@ -263,9 +235,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/maven/maven-plugin-parameter-documenter/2.0/maven-plugin-parameter-documenter-2.0.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/maven/maven-plugin-parameter-documenter/2.0/maven-plugin-parameter-documenter-2.0-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/apache/maven/maven-plugin-parameter-documenter/2.0/maven-plugin-parameter-documenter-2.0-sources.jar!/" />
         </SOURCES>
@@ -276,9 +246,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/maven/maven-plugin-registry/2.0.7/maven-plugin-registry-2.0.7.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/maven/maven-plugin-registry/2.0.7/maven-plugin-registry-2.0.7-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/apache/maven/maven-plugin-registry/2.0.7/maven-plugin-registry-2.0.7-sources.jar!/" />
         </SOURCES>
@@ -289,9 +257,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/maven/maven-profile/2.0.7/maven-profile-2.0.7.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/maven/maven-profile/2.0.7/maven-profile-2.0.7-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/apache/maven/maven-profile/2.0.7/maven-profile-2.0.7-sources.jar!/" />
         </SOURCES>
@@ -302,9 +268,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/maven/maven-project/2.0.7/maven-project-2.0.7.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/maven/maven-project/2.0.7/maven-project-2.0.7-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/apache/maven/maven-project/2.0.7/maven-project-2.0.7-sources.jar!/" />
         </SOURCES>
@@ -315,9 +279,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/maven/maven-repository-metadata/2.0.7/maven-repository-metadata-2.0.7.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/maven/maven-repository-metadata/2.0.7/maven-repository-metadata-2.0.7-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/apache/maven/maven-repository-metadata/2.0.7/maven-repository-metadata-2.0.7-sources.jar!/" />
         </SOURCES>
@@ -328,9 +290,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/maven/maven-settings/2.0.7/maven-settings-2.0.7.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/maven/maven-settings/2.0.7/maven-settings-2.0.7-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/apache/maven/maven-settings/2.0.7/maven-settings-2.0.7-sources.jar!/" />
         </SOURCES>
@@ -341,9 +301,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/plexus/plexus-archiver/1.0-alpha-7/plexus-archiver-1.0-alpha-7.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/plexus/plexus-archiver/1.0-alpha-7/plexus-archiver-1.0-alpha-7-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/codehaus/plexus/plexus-archiver/1.0-alpha-7/plexus-archiver-1.0-alpha-7-sources.jar!/" />
         </SOURCES>
@@ -354,9 +312,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/plexus/plexus-container-default/1.0-alpha-9-stable-1/plexus-container-default-1.0-alpha-9-stable-1.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/plexus/plexus-container-default/1.0-alpha-9-stable-1/plexus-container-default-1.0-alpha-9-stable-1-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/codehaus/plexus/plexus-container-default/1.0-alpha-9-stable-1/plexus-container-default-1.0-alpha-9-stable-1-sources.jar!/" />
         </SOURCES>
@@ -378,9 +334,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/plexus/plexus-utils/1.4.1/plexus-utils-1.4.1.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/plexus/plexus-utils/1.4.1/plexus-utils-1.4.1-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/codehaus/plexus/plexus-utils/1.4.1/plexus-utils-1.4.1-sources.jar!/" />
         </SOURCES>
