@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ASCII"?>
+<definitions
+        xmlns="http://www.osoa.org/xmlns/sca/1.0"
+        xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
+        xmlns:oneWay="http://fabric3.org/xmlns/sca/2.0-alpha/oneWay"
+        targetNamespace="http://fabric3.org/xmlns/sca/2.0-alpha">
+    <intent name="oneWay" constrains="implementation">
+        <description>
+            Used to specify a non-blocking operation.
+        </description>
+    </intent>
+
+    <policySet name="oneWayPolicy" provides="sca:oneWay">
+        <oneWay:oneWay/>
+    </policySet>
+
+</definitions>
