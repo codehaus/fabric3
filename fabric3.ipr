@@ -328,6 +328,8 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/binding-test-harness/binding-test-harness.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/binding-test-harness/binding-test-harness.iml" />
       <module fileurl="file://$PROJECT_DIR$/fabric-pom/trunk/fabric-pom.iml" filepath="$PROJECT_DIR$/fabric-pom/trunk/fabric-pom.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-api/fabric3-api.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-api/fabric3-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-async-loader/fabric3-async-loader.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-async-loader/fabric3-async-loader.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-async-runtime/fabric3-async-runtime.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-async-runtime/fabric3-async-runtime.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-burlap/fabric3-binding-burlap.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-burlap/fabric3-binding-burlap.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ejb/fabric3-binding-ejb.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ejb/fabric3-binding-ejb.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-hessian/fabric3-binding-hessian.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-hessian/fabric3-binding-hessian.iml" />
