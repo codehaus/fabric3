@@ -42,13 +42,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-spi</artifactId>
-            <version>0.2</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>compile</scope>
@@ -70,37 +63,38 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-itest-plugin</artifactId>
+                <version>0.4-SNAPSHOT</version>
                 <configuration>
                     <contributions>
                         <!-- JPA Core Components -->
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-jpa-core</artifactId>
-                            <version>0.1-SNAPSHOT</version>
+                            <version>0.2-SNAPSHOT</version>
                         </dependency>
                         <!-- Transaction Manager Using JOTM -->
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-tx-jotm</artifactId>
-                            <version>0.1-SNAPSHOT</version>
+                            <version>0.2-SNAPSHOT</version>
                         </dependency>
                         <!-- Declarative Transaction Policies -->
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-tx</artifactId>
-                            <version>0.2-SNAPSHOT</version>
+                            <version>0.3-SNAPSHOT</version>
                         </dependency>
                         <!-- JPA Hibernate Extensions -->
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-jpa-hibernate</artifactId>
-                            <version>0.1-SNAPSHOT</version>
+                            <version>0.2-SNAPSHOT</version>
                         </dependency>
                         <!-- JSR 250 Resource Support and Datasource Management -->
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-resource</artifactId>
-                            <version>0.1-SNAPSHOT</version>
+                            <version>0.2-SNAPSHOT</version>
                         </dependency>
                         <!-- Test Extension to Install the Datasource -->
                         <dependency>
