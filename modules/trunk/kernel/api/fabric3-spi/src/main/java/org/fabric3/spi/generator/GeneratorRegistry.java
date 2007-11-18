@@ -69,6 +69,7 @@ public interface GeneratorRegistry {
 
     /**
      * Registers an interceptor generator by type.
+     * 
      * @param extensionName     Fully qualified name of the extension.
      * @param generator         Interceptor generator.
      */
@@ -88,6 +89,7 @@ public interface GeneratorRegistry {
      * @param resourceDefinition Resource definition.
      * @param context Generator context.
      */
+    @Deprecated
     <C extends LogicalComponent<?>> void generateResourceWire(C source, 
                                                               LogicalResource<?> resource, 
                                                               GeneratorContext context) throws GenerationException;
@@ -100,6 +102,7 @@ public interface GeneratorRegistry {
      * @param context the generator context containing the current physical changes sets
      * @throws GenerationException if an error ocurrs during generation
      */
+    @Deprecated
     <C extends LogicalComponent<?>> PhysicalComponentDefinition generatePhysicalComponent(C logical, GeneratorContext context)
             throws GenerationException;
 
@@ -114,6 +117,7 @@ public interface GeneratorRegistry {
      * @param context the generator context
      * @throws GenerationException if an error ocurrs during generation
      */
+    @Deprecated
     <C extends LogicalComponent<?>> void generateBoundServiceWire(LogicalService service,
                                                                   LogicalBinding<?> binding,
                                                                   C target,
@@ -130,6 +134,7 @@ public interface GeneratorRegistry {
      * @param context   the generator context
      * @throws GenerationException if an error ocurrs during generation
      */
+    @Deprecated
     <C extends LogicalComponent<?>> void generateBoundReferenceWire(C source,
                                                                     LogicalReference reference,
                                                                     LogicalBinding<?> binding,
@@ -148,6 +153,7 @@ public interface GeneratorRegistry {
      * @param context   the generator context
      * @throws GenerationException if an error ocurrs during generation
      */
+    @Deprecated
     <S extends LogicalComponent<?>, T extends LogicalComponent<?>> void generateUnboundWire(S source,
                                                                                             LogicalReference reference,
                                                                                             LogicalService service,
@@ -162,6 +168,7 @@ public interface GeneratorRegistry {
      * @param context   the generator context
      * @throws GenerationException if an error ocurrs during generation
      */
+    @Deprecated
     void generateCommandSet(LogicalComponent<?> component, GeneratorContext context) throws GenerationException;
 
     /**
@@ -170,6 +177,7 @@ public interface GeneratorRegistry {
      * @param policies Policies for which interceptors need to be resolved.
      * @return Resolved physical interceptor definitions.
      */
+    @Deprecated
     Set<PhysicalInterceptorDefinition> generateInterceptorDefinitions(Set<PolicySet> policies);
 
 }
