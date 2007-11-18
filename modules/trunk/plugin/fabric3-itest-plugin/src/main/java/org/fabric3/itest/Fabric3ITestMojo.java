@@ -244,11 +244,11 @@ public class Fabric3ITestMojo extends AbstractMojo {
         }
 
         log.info("Starting Embedded Fabric3 Runtime ...");
-        MavenEmbeddedRuntime runtime = createRuntime(cl);
+        MavenEmbeddedRuntimeImpl runtime = createRuntime(cl);
         MojoMonitor monitor = runtime.getMonitorFactory().getMonitor(MojoMonitor.class);
         // FIXME this should probably be an isolated classloader
         ClassLoader testClassLoader = createTestClassLoader(cl);
-        RuntimeLifecycleCoordinator<MavenEmbeddedRuntime, Bootstrapper> coordinator;
+        RuntimeLifecycleCoordinator<MavenEmbeddedRuntimeImpl, Bootstrapper> coordinator;
         try {
             ScdlBootstrapper bootstrapper = new ScdlBootstrapperImpl();
             bootstrapper.setScdlLocation(systemScdl);
@@ -434,7 +434,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
         return reporterManager.getNumErrors() == 0 && reporterManager.getNumFailures() == 0;
     }
 
-    protected MavenEmbeddedRuntime createRuntime(ClassLoader hostClassLoader) throws MojoExecutionException {
+    protected MavenEmbeddedRuntimeImpl createRuntime(ClassLoader hostClassLoader) throws MojoExecutionException {
         MavenEmbeddedArtifactRepository artifactRepository = new MavenEmbeddedArtifactRepository(artifactFactory,
                                                                                                  resolver,
                                                                                                  metadataSource,
@@ -444,7 +444,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
         MavenHostInfoImpl hostInfo = new MavenHostInfoImpl(URI.create(testDomain), artifactRepository, hostProperties);
         MavenMonitorFactory monitorFactory = new MavenMonitorFactory(getLog(), "f3");
 
-        MavenEmbeddedRuntime runtime = new MavenEmbeddedRuntime();
+        MavenEmbeddedRuntimeImpl runtime = new MavenEmbeddedRuntimeImpl();
         runtime.setMonitorFactory(monitorFactory);
         runtime.setHostInfo(hostInfo);
         runtime.setHostClassLoader(hostClassLoader);

@@ -78,7 +78,7 @@
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-fabric</artifactId>
+            <artifactId>fabric3-spi</artifactId>
             <version>0.4-SNAPSHOT</version>
         </dependency>
         <dependency>
@@ -98,8 +98,15 @@
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-maven-api</artifactId>
+            <version>0.4-SNAPSHOT</version>
+        </dependency>
+
+        <!-- TODO remove this dependency by creating the runtime dynamically -->
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-maven-host</artifactId>
-            <version>0.3</version>
+            <version>0.4-SNAPSHOT</version>
         </dependency>
 
         <dependency>
