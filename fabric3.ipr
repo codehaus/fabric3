@@ -377,7 +377,6 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-transform/fabric3-transform.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-transform/fabric3-transform.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-tx/fabric3-tx.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-tx/fabric3-tx.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-tx-jotm/fabric3-tx-jotm.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-tx-jotm/fabric3-tx-jotm.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-tx-loader/fabric3-tx-loader.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-tx-loader/fabric3-tx-loader.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/webapp/fabric3-webapp-api/fabric3-webapp-api.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/webapp/fabric3-webapp-api/fabric3-webapp-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/webapp/fabric3-webapp-host/fabric3-webapp-host.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/webapp/fabric3-webapp-host/fabric3-webapp-host.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/plugin/fabric3-webapp-plugin/fabric3-webapp-plugin.iml" filepath="$PROJECT_DIR$/modules/trunk/plugin/fabric3-webapp-plugin/fabric3-webapp-plugin.iml" />
