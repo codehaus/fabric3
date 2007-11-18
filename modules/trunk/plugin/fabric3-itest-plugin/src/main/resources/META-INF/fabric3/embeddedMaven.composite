@@ -78,10 +78,6 @@
     <!-- include JUnit implementation type -->
     <include name="org.fabric3.itest.JunitImplementation" scdlLocation="junitImplementation.composite"/>
 
-    <component name="org.fabric3.itest.ArtifactRepository">
-        <system:implementation.system class="org.fabric3.itest.MavenDelegateArtifactRepository"/>
-    </component>
-
     <!-- no recovery for the iTest runtime   -->
     <component name="assemblyRecoveryService">
         <system:implementation.system class="org.fabric3.fabric.assembly.store.NonPersistentAssemblyStore"/>

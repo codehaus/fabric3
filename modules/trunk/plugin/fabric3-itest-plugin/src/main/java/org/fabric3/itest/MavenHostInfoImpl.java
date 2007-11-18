@@ -22,25 +22,19 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Properties;
 
-import org.fabric3.spi.services.artifact.ArtifactRepository;
+import org.fabric3.maven.runtime.MavenHostInfo;
 
 /**
  * @version $Rev$ $Date$
  */
 public class MavenHostInfoImpl implements MavenHostInfo {
     private final URI domain;
-    private final ArtifactRepository artifactRepository;
     private final Properties hostProperties;
 
 
-    public MavenHostInfoImpl(URI domain, ArtifactRepository artifactRepository, Properties hostProperties) {
+    public MavenHostInfoImpl(URI domain, Properties hostProperties) {
         this.domain = domain;
-        this.artifactRepository = artifactRepository;
         this.hostProperties = hostProperties;
-    }
-
-    public ArtifactRepository getArtifactRepository() {
-        return artifactRepository;
     }
 
     public URL getBaseURL() {

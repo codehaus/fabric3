@@ -78,6 +78,7 @@ import org.fabric3.scdl.Operation;
 import org.fabric3.spi.deployer.CompositeClassLoader;
 import org.fabric3.spi.loader.Loader;
 import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
 
 /**
  * Integration-tests an SCA composite by running it in local copy of Fabric3 and calling JUnit-based test components to
@@ -435,13 +436,8 @@ public class Fabric3ITestMojo extends AbstractMojo {
     }
 
     protected MavenEmbeddedRuntimeImpl createRuntime(ClassLoader hostClassLoader) throws MojoExecutionException {
-        MavenEmbeddedArtifactRepository artifactRepository = new MavenEmbeddedArtifactRepository(artifactFactory,
-                                                                                                 resolver,
-                                                                                                 metadataSource,
-                                                                                                 localRepository,
-                                                                                                 remoteRepositories);
         Properties hostProperties = properties != null ? properties : System.getProperties();
-        MavenHostInfoImpl hostInfo = new MavenHostInfoImpl(URI.create(testDomain), artifactRepository, hostProperties);
+        MavenHostInfoImpl hostInfo = new MavenHostInfoImpl(URI.create(testDomain), hostProperties);
         MavenMonitorFactory monitorFactory = new MavenMonitorFactory(getLog(), "f3");
 
         MavenEmbeddedRuntimeImpl runtime = new MavenEmbeddedRuntimeImpl();

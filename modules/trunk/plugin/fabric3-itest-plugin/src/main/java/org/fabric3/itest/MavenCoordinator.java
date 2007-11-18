@@ -56,6 +56,7 @@ import org.fabric3.spi.services.archive.ArchiveStoreException;
 import org.fabric3.spi.services.contribution.ContributionConstants;
 import org.fabric3.spi.services.definitions.DefinitionActivationException;
 import org.fabric3.spi.services.definitions.DefinitionsDeployer;
+import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
 
 /**
  * Implementation of a coordinator for the iTest runtime.

@@ -29,6 +29,7 @@ import org.apache.maven.surefire.report.StackTraceWriter;
 import org.apache.maven.surefire.report.PojoStackTraceWriter;
 
 import org.fabric3.scdl.Operation;
+import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
 
 /**
  * @version $Rev$ $Date$
