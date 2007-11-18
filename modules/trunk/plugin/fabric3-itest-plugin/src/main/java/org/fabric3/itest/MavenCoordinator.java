@@ -62,7 +62,7 @@ import org.fabric3.spi.services.definitions.DefinitionsDeployer;
  *
  * @version $Rev$ $Date$
  */
-public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbeddedRuntimeImpl, Bootstrapper> {
+public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbeddedRuntime, Bootstrapper> {
     private static final String EXTENSIONS = "extensions";
 
     private enum State {
@@ -79,7 +79,7 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
 
     private Dependency[] dependencies;
     private State state = State.UNINITIALIZED;
-    private MavenEmbeddedRuntimeImpl runtime;
+    private MavenEmbeddedRuntime runtime;
     private Bootstrapper bootstrapper;
     private URL intentsLocation;
 
@@ -92,7 +92,7 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
         this.intentsLocation = intentsLocation;
     }
 
-    public void bootPrimordial(MavenEmbeddedRuntimeImpl runtime,
+    public void bootPrimordial(MavenEmbeddedRuntime runtime,
                                Bootstrapper bootstrapper,
                                ClassLoader bootClassLoader,
                                ClassLoader appClassLoader) throws InitializationException {

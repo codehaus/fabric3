@@ -20,20 +20,19 @@ import java.net.URI;
 
 import org.apache.maven.surefire.testset.TestSetFailedException;
 
+import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Operation;
-import org.fabric3.spi.component.GroupInitializationException;
 
 /**
  * @version $Rev$ $Date$
  */
-public interface MavenEmbeddedRuntime {
+public interface MavenEmbeddedRuntime extends Fabric3Runtime<MavenHostInfo> {
     void deploy(Composite composite) throws Exception;
 
-    void startContext(URI compositeId) throws GroupInitializationException;
+    void startContext(URI compositeId) throws Exception;
 
     void destroy();
 
-    @SuppressWarnings({"unchecked"})
     void executeTest(URI contextId, String componentName, Operation<?> operation) throws TestSetFailedException;
 }
