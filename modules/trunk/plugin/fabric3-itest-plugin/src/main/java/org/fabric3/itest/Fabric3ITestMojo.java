@@ -126,14 +126,6 @@ public class Fabric3ITestMojo extends AbstractMojo {
     public String testDomain;
 
     /**
-     * The name of the component that will be implemented by the test harness composite.
-     *
-     * @parameter expression="testHarness"
-     * @required
-     */
-    public String testComponentName;
-
-    /**
      * The location if the SCDL that defines the test harness composite. The source for this would normally be placed in
      * the test/resources directory and be copied by the resource plugin; this allows property substitution if
      * required.
@@ -172,16 +164,18 @@ public class Fabric3ITestMojo extends AbstractMojo {
     public Dependency[] extensions;
 
     /**
+     * Properties passed to the runtime throught the HostInfo interface.
+     *
+     * @parameter
+     */
+    public Properties properties;
+
+    /**
      * @parameter expression="${project.testClasspathElements}"
      * @required
      * @readonly
      */
     public List<String> testClassPath;
-
-    /**
-     * @parameter
-     */
-    public String definitionsFile;
 
     /**
      * Used to look up Artifacts in the remote repository.
@@ -227,13 +221,6 @@ public class Fabric3ITestMojo extends AbstractMojo {
      * @readonly
      */
     public ArtifactFactory artifactFactory;
-
-    /**
-     * Properties passed to the runtime throught the HostInfo interface.
-     *
-     * @parameter
-     */
-    public Properties properties;
 
     @SuppressWarnings({"ThrowFromFinallyBlock"})
     public void execute() throws MojoExecutionException, MojoFailureException {
