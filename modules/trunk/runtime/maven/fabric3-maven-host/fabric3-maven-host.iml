@@ -125,6 +125,19 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
+      <library name="org.apache.maven.surefire:surefire-api:2.0">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/apache/maven/surefire/surefire-api/2.0/surefire-api-2.0.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/apache/maven/surefire/surefire-api/2.0/surefire-api-2.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/apache/maven/surefire/surefire-api/2.0/surefire-api-2.0-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
       <library name="org.apache.maven.wagon:wagon-file:1.0-alpha-7">
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/maven/wagon/wagon-file/1.0-alpha-7/wagon-file-1.0-alpha-7.jar!/" />
