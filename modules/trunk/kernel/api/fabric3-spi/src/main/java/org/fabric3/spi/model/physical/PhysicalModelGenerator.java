@@ -16,6 +16,14 @@
  */
 package org.fabric3.spi.model.physical;
 
+import java.net.URI;
+import java.util.Collection;
+import java.util.Map;
+
+import org.fabric3.spi.assembly.ActivateException;
+import org.fabric3.spi.generator.GeneratorContext;
+import org.fabric3.spi.model.instance.LogicalComponent;
+
 /**
  * Interface that abstracts the concerns of generating physical model 
  * from logical components. This is used from the assembly for 
@@ -28,5 +36,21 @@ package org.fabric3.spi.model.physical;
  * @version $Revision$ $Date$
  */
 public interface PhysicalModelGenerator {
+    
+    /**
+     * Generates physical component definitions for the logical components.
+     * 
+     * @param components Set of logical components for which physical components 
+     * need to be generated.
+     * @return Map of generator contexts. Each context in the map contains a physical 
+     * change set and command set mapped to the runtime id to which the component is 
+     * provisioned.
+     */
+    Map<URI, GeneratorContext> generate(Collection<LogicalComponent<?>> components) throws ActivateException;
+    
+    /**
+     * Initializes the physical model generator.
+     */
+    void initialize();
 
 }

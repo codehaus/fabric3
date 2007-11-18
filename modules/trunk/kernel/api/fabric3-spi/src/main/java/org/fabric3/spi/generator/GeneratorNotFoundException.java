@@ -16,16 +16,37 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.generator;
+package org.fabric3.spi.generator;
 
-import org.fabric3.spi.generator.GenerationException;
+import javax.xml.namespace.QName;
+
 
 /**
  * @version $Rev$ $Date$
  */
 public class GeneratorNotFoundException extends GenerationException {
+    
+    /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = -4738988978020234242L;
+
+    /**
+     * Initializes the message.
+     * 
+     * @param type Type for which generator was not found.
+     */
     public GeneratorNotFoundException(Class<?> type) {
         super("Generator not registered for type", type.getName());
+    }
+
+    /**
+     * Initializes the message.
+     * 
+     * @param type Type for which generator was not found.
+     */
+    public GeneratorNotFoundException(QName type) {
+        super("Generator not registered for type", type.toString());
     }
 
 }
