@@ -57,6 +57,14 @@ public interface ProcessorRegistry {
      */
     void unregisterResourceProcessor(String contentType);
 
+    /**
+     * Process a contribution from the input stream.
+     *
+     * @param contribution The contribution that will be used to hold the results from the processing
+     * @throws ContributionException if there was a problem with the contribution
+     */
+    void processManifest(Contribution contribution) throws ContributionException;
+
 
     /**
      * Process a contribution from the input stream.
@@ -66,6 +74,7 @@ public interface ProcessorRegistry {
      * @param source       The URI for the contribution/artifact
      * @throws ContributionException if there was a problem with the contribution
      */
+    // xcv remove need to pass content type
     void processContribution(Contribution contribution, String contentType, URI source) throws ContributionException;
 
     /**

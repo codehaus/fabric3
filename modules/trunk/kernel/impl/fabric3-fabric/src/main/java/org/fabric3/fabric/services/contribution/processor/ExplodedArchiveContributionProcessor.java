@@ -47,7 +47,7 @@ import org.fabric3.spi.services.contenttype.ContentTypeResolver;
 import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
-import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.services.contribution.ContributionStoreRegistry;
 import org.fabric3.spi.services.contribution.Resource;
 
 /**
@@ -61,17 +61,17 @@ public class ExplodedArchiveContributionProcessor extends ArchiveContributionPro
     public ExplodedArchiveContributionProcessor(@Reference LoaderRegistry loaderRegistry,
                                                 @Reference ClassLoaderRegistry classLoaderRegistry,
                                                 @Reference XMLInputFactory xmlFactory,
-                                                @Reference(name = "metaDataStore")MetaDataStore metaDataStore,
+                                                @Reference ContributionStoreRegistry contributionStoreRegistry,
                                                 @Reference ContentTypeResolver contentTypeResolver,
                                                 @Reference ArtifactLocationEncoder encoder) {
-        super(metaDataStore, classLoaderRegistry, encoder);
+        super(contributionStoreRegistry, classLoaderRegistry, encoder);
         this.loaderRegistry = loaderRegistry;
         this.contentTypeResolver = contentTypeResolver;
         this.xmlFactory = xmlFactory;
     }
 
     public String[] getContentTypes() {
-        return new String[] {Constants.FOLDER_CONTENT_TYPE};
+        return new String[]{Constants.FOLDER_CONTENT_TYPE};
     }
 
     protected List<URL> createClasspath(Contribution contribution) throws ContributionException {
@@ -96,7 +96,7 @@ public class ExplodedArchiveContributionProcessor extends ArchiveContributionPro
         return libraries;
     }
 
-    protected void processManifest(Contribution contribution) throws ContributionException {
+    public void processManifest(Contribution contribution) throws ContributionException {
         URL sourceUrl = contribution.getLocation();
         File file = new File(sourceUrl.getFile() + "META-INF" + File.separatorChar + "sca-contribution.xml");
         if (!file.exists()) {

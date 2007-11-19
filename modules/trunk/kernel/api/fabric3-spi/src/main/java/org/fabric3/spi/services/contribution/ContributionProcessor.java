@@ -36,6 +36,14 @@ public interface ContributionProcessor {
     public abstract String[] getContentTypes();
 
     /**
+     * Processses manifest information for the contribution, including imports and exports.
+     *
+     * @param contribution The contribution that will be used to hold the results from the processing
+     * @throws ContributionException if there was a problem with the contribution
+     */
+    void processManifest(Contribution contribution) throws ContributionException;
+
+    /**
      * Process a contribution or an artifact in the contribution from the input stream. The processor might add
      * artifacts or model objects to the contribution object.
      *

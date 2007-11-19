@@ -33,6 +33,10 @@ public class JavaContributionProcessor extends ContributionProcessorExtension im
         return new String[] {Constants.JAVA_CONTENT_TYPE};
     }
 
+    public void processManifest(Contribution contribution) throws ContributionException {
+
+    }
+
     public void processContent(Contribution contribution, URI artifactURI) throws ContributionException {
         throw new UnsupportedOperationException();
     }

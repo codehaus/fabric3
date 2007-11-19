@@ -38,6 +38,7 @@ public class Contribution implements Serializable {
     private URL location;
     private byte[] checksum;
     private long timestamp;
+    private String contentType;
     private ContributionManifest manifest;
     private List<Resource> resources = new ArrayList<Resource>();
     private List<URI> resolvedImports = new ArrayList<URI>();
@@ -49,16 +50,18 @@ public class Contribution implements Serializable {
     /**
      * Instantiates a new Contribution instance
      *
-     * @param uri       the contribution URI
-     * @param location  a dereferenceble URL for the contribution archive
-     * @param checksum  the checksum for the contribution artifact
-     * @param timestamp the time stamp of the contribution artifact
+     * @param uri         the contribution URI
+     * @param location    a dereferenceble URL for the contribution archive
+     * @param checksum    the checksum for the contribution artifact
+     * @param timestamp   the time stamp of the contribution artifact
+     * @param contentType
      */
-    public Contribution(URI uri, URL location, byte[] checksum, long timestamp) {
+    public Contribution(URI uri, URL location, byte[] checksum, long timestamp, String contentType) {
         this.uri = uri;
         this.location = location;
         this.checksum = checksum;
         this.timestamp = timestamp;
+        this.contentType = contentType;
     }
 
     /**
@@ -77,6 +80,15 @@ public class Contribution implements Serializable {
      */
     public URL getLocation() {
         return location;
+    }
+
+    /**
+     * Returns the MIME type for the contribution.
+     *
+     * @return the MIME type for the contribution
+     */
+    public String getContentType() {
+        return contentType;
     }
 
     /**

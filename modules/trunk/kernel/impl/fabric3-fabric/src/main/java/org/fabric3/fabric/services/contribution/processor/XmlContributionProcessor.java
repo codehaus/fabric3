@@ -60,6 +60,10 @@ public class XmlContributionProcessor implements ContributionProcessor, XmlProce
         return new String[] {"application/xml"};
     }
 
+    public void processManifest(Contribution contribution) throws ContributionException {
+        // TODO support XSD import?
+    }
+
     public void register(XmlProcessor processor) {
         processors.put(processor.getType(), processor);
     }

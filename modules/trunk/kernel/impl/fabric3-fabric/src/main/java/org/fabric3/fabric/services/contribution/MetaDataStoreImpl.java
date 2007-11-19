@@ -34,6 +34,7 @@ import javax.xml.namespace.QName;
 
 import com.thoughtworks.xstream.XStream;
 import org.osoa.sca.Constants;
+import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
@@ -56,6 +57,7 @@ import org.fabric3.spi.services.contribution.Symbol;
  *
  * @version $Rev$ $Date$
  */
+@EagerInit
 public class MetaDataStoreImpl implements MetaDataStore {
     public static final QName COMPOSITE = new QName(Constants.SCA_NS, "composite");
     private final ContributionStoreRegistry registry;
@@ -204,7 +206,7 @@ public class MetaDataStoreImpl implements MetaDataStore {
             Contribution imported = resolve(imprt);
             if (imported == null) {
                 String identifier = contribution.getUri().toString();
-                throw new UnresolvableImportException("Unable to resolve import in contribution", identifier);
+                throw new UnresolvableImportException("Unable to resolve import in contribution", identifier, imprt);
             }
             if (!dependencies.contains(imported)) {
                 dependencies.add(imported);

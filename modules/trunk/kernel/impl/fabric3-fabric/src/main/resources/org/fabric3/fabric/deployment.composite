@@ -43,13 +43,25 @@
         <system:implementation.system class="org.fabric3.fabric.services.contribution.ContributionServiceImpl"/>
     </component>
 
+    <component name="DependencyService">
+        <system:implementation.system class="org.fabric3.fabric.services.contribution.DependencyServiceImpl"/>
+    </component>
+
+    <component name="UnresolvableImportExceptionFormatter">
+        <system:implementation.system class="org.fabric3.fabric.services.contribution.UnresolvableImportExceptionFormatter"/>
+    </component>
+
+    <component name="CyclicDependencyExceptionFormatter">
+        <system:implementation.system class="org.fabric3.fabric.services.contribution.CyclicDependencyExceptionFormatter"/>
+    </component>
+
     <component name="ContributionProcessorRegistry">
         <system:implementation.system class="org.fabric3.fabric.services.contribution.ProcessorRegistryImpl"/>
     </component>
 
     <component name="ZipContributionProcessor">
         <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.ZipContributionProcessor"/>
-        <reference name="metaDataStore" target="MetadataStore"/>
+        <!--<reference name="metaDataStore" target="MetadataStore"/>-->
     </component>
 
     <component name="XmlResourceProcessor">
@@ -62,7 +74,7 @@
 
     <component name="FolderContributionProcessor">
         <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.ExplodedArchiveContributionProcessor"/>
-        <reference name="metaDataStore" target="MetadataStore"/>
+        <!--<reference name="metaDataStore" target="MetadataStore"/>-->
     </component>
 
     <component name="XmlContributionProcessor">

@@ -39,6 +39,7 @@ import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
+import org.fabric3.spi.services.contribution.ContributionStoreRegistry;
 import org.fabric3.spi.services.contribution.Import;
 import org.fabric3.spi.services.contribution.MatchingExportNotFoundException;
 import org.fabric3.spi.services.contribution.MetaDataStore;
@@ -55,25 +56,28 @@ public abstract class ArchiveContributionProcessor extends ContributionProcessor
     private static final URI HOST_CLASSLOADER = URI.create("sca://./hostClassLoader");
     protected ArtifactLocationEncoder encoder;
     private ClassLoaderRegistry classLoaderRegistry;
-    private MetaDataStore metaDataStore;
+    private ContributionStoreRegistry storeRegistry;
+    private String uriPrefix = "file://contribution/";
 
-    protected ArchiveContributionProcessor(@Reference MetaDataStore metaDataStore,
+    protected ArchiveContributionProcessor(@Reference ContributionStoreRegistry storeRegistry,
                                            @Reference ClassLoaderRegistry classLoaderRegistry,
                                            @Reference ArtifactLocationEncoder encoder) {
-        this.metaDataStore = metaDataStore;
+        this.storeRegistry = storeRegistry;
         this.classLoaderRegistry = classLoaderRegistry;
         this.encoder = encoder;
     }
 
     public void processContent(Contribution contribution, URI source) throws ContributionException {
         // process the contribution manifest
-        processManifest(contribution);
+        //processManifest(contribution);
         // Build a classloader to perform the contribution introspection. The classpath will contain the contribution
         // jar and resolved imports
         ClassLoader oldClassloader = Thread.currentThread().getContextClassLoader();
         ClassLoader cl = classLoaderRegistry.getClassLoader(HOST_CLASSLOADER);
         CompositeClassLoader loader = new CompositeClassLoader(contribution.getUri(), cl);
         loader.addParent(oldClassloader);
+        MetaDataStore store = storeRegistry.getMetadataStore(parseStoreId(contribution.getUri()));
+        assert store != null;
         try {
             List<URL> classpath = createClasspath(contribution);
             for (URL library : classpath) {
@@ -81,7 +85,7 @@ public abstract class ArchiveContributionProcessor extends ContributionProcessor
             }
             ContributionManifest manifest = contribution.getManifest();
             for (Import imprt : manifest.getImports()) {
-                Contribution imported = metaDataStore.resolve(imprt);
+                Contribution imported = store.resolve(imprt);
                 if (imported == null) {
                     throw new MatchingExportNotFoundException(imprt.toString());
                 }
@@ -98,8 +102,6 @@ public abstract class ArchiveContributionProcessor extends ContributionProcessor
             Thread.currentThread().setContextClassLoader(oldClassloader);
         }
     }
-
-    protected abstract void processManifest(Contribution contribution) throws ContributionException;
 
     protected abstract void processResources(Contribution contribution) throws ContributionException;
 
@@ -119,8 +121,10 @@ public abstract class ArchiveContributionProcessor extends ContributionProcessor
         URL encodedLocation = encoder.encode(contribution.getLocation());
         description.addArtifactUrl(encodedLocation);
         // Obtain local URLs for imported contributions and encode them for remote dereferencing
+        MetaDataStore store = storeRegistry.getMetadataStore(parseStoreId(contribution.getUri()));
+        assert store != null;
         for (URI uri : contribution.getResolvedImportUris()) {
-            Contribution imported = metaDataStore.find(uri);
+            Contribution imported = store.find(uri);
             if (imported == null) {
                 throw new ContributionNotFoundException("Imported contribution not found", uri.toString());
             }
@@ -167,6 +171,22 @@ public abstract class ArchiveContributionProcessor extends ContributionProcessor
                 }
             }
         }
+    }
+
+    /**
+     * FIXME remove this method when the runtime is converted to a single store
+     */
+    private String parseStoreId(URI uri) {
+        String s = uri.toString();
+        assert s.length() > uriPrefix.length();
+        s = s.substring(uriPrefix.length());
+        int index = s.indexOf("/");
+        if (index > 0) {
+            return s.substring(0, index);
+        } else {
+            return s;
+        }
+
     }
 
 }

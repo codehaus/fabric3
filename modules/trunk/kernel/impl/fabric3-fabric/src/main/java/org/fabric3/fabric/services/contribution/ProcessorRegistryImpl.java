@@ -50,7 +50,7 @@ public class ProcessorRegistryImpl implements ProcessorRegistry {
     }
 
     public void register(ContributionProcessor processor) {
-        for(String contentType : processor.getContentTypes()) {
+        for (String contentType : processor.getContentTypes()) {
             contributionProcessorCache.put(contentType, processor);
         }
     }
@@ -67,6 +67,17 @@ public class ProcessorRegistryImpl implements ProcessorRegistry {
         resourceProcessorCache.remove(contentType);
     }
 
+    public void processManifest(Contribution contribution) throws ContributionException {
+        String contentType = contribution.getContentType();
+        ContributionProcessor processor = contributionProcessorCache.get(contentType);
+        if (processor == null) {
+            String source = contribution.getUri().toString();
+            throw new UnsupportedContentTypeException(contentType, source);
+        }
+        processor.processManifest(contribution);
+
+    }
+
     public void processContribution(Contribution contribution, String contentType, URI source)
             throws ContributionException {
         ContributionProcessor processor = contributionProcessorCache.get(contentType);
@@ -74,7 +85,6 @@ public class ProcessorRegistryImpl implements ProcessorRegistry {
             throw new UnsupportedContentTypeException(contentType, source.toString());
         }
         processor.processContent(contribution, source);
-
     }
 
     public Resource processResource(String contentType, InputStream inputStream) throws ContributionException {

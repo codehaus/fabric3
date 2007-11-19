@@ -19,13 +19,20 @@
 package org.fabric3.fabric.services.contribution;
 
 import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.spi.services.contribution.Import;
 
 /**
  * @version $Rev$ $Date$
  */
 public class UnresolvableImportException extends ContributionException {
-
-    public UnresolvableImportException(String message, String identifier) {
+    private static final long serialVersionUID = 6415010890788555421L;
+    private final Import imprt;
+    public UnresolvableImportException(String message, String identifier, Import imprt) {
         super(message, identifier);
+        this.imprt = imprt;
+    }
+
+    public Import getImport() {
+        return imprt;
     }
 }

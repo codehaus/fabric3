@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URI;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -50,6 +51,7 @@ import org.fabric3.spi.services.contribution.ContributionProcessor;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.Resource;
+import org.fabric3.spi.services.contribution.ContributionStoreRegistry;
 
 /**
  * Introspects a Zip-based contribution, delegating to ResourceProcessors for handling leaf-level children.
@@ -64,12 +66,12 @@ public class ZipContributionProcessor extends ArchiveContributionProcessor imple
                                     @Reference LoaderRegistry loaderRegistry,
                                     @Reference ClassLoaderRegistry classLoaderRegistry,
                                     @Reference XMLInputFactory xmlFactory,
-                                    @Reference(name = "metaDataStore")MetaDataStore metaDataStore,
+                                    @Reference ContributionStoreRegistry storeRegistry,
                                     @Reference ClasspathProcessorRegistry classpathProcessorRegistry,
                                     @Reference ArtifactLocationEncoder encoder,
                                     @Reference ContentTypeResolver contentTypeResolver) {
 
-        super(metaDataStore, classLoaderRegistry, encoder);
+        super(storeRegistry, classLoaderRegistry, encoder);
         this.registry = processorRegistry;
         this.loaderRegistry = loaderRegistry;
         this.xmlFactory = xmlFactory;
@@ -79,6 +81,10 @@ public class ZipContributionProcessor extends ArchiveContributionProcessor imple
 
     public String[] getContentTypes() {
         return new String[] {Constants.ZIP_CONTENT_TYPE, "application/octet-stream"};
+    }
+
+    public void processManifest(Contribution contribution, URI source) throws ContributionException {
+
     }
 
     protected void processResources(Contribution contribution) throws ContributionException {
@@ -123,7 +129,7 @@ public class ZipContributionProcessor extends ArchiveContributionProcessor imple
         }
     }
 
-    protected void processManifest(Contribution contribution) throws ContributionException {
+    public void processManifest(Contribution contribution) throws ContributionException {
         XMLStreamReader reader = null;
         try {
             URL sourceUrl = contribution.getLocation();

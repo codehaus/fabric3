@@ -46,7 +46,7 @@ public class XmlContributionProcessorTestCase extends TestCase {
 
     public void testDispatch() throws Exception {
         URL url = new URL("test", null, 0, "", new MockHandler());
-        Contribution contribution = new Contribution(URI.create("test"), url, new byte[0], -1);
+        Contribution contribution = new Contribution(URI.create("test"), url, new byte[0], -1, null);
         processor.processContent(contribution, URI.create("test2"));
         // verify the contribution processor registered
         EasyMock.verify(processorRegistry);

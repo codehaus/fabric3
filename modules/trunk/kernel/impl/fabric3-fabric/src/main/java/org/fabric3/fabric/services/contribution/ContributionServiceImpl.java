@@ -38,6 +38,7 @@ import org.fabric3.host.contribution.ContributionNotFoundException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.Deployable;
+import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.spi.services.archive.ArchiveStore;
 import org.fabric3.spi.services.archive.ArchiveStoreException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
@@ -60,15 +61,21 @@ public class ContributionServiceImpl implements ContributionService {
     private ProcessorRegistry processorRegistry;
     private ContributionStoreRegistry contributionStoreRegistry;
     private ContentTypeResolver contentTypeResolver;
+    private DependencyService dependencyService;
     private String uriPrefix = "file://contribution/";
+    private ContributionServiceMonitor monitor;
 
     public ContributionServiceImpl(@Reference ProcessorRegistry processorRegistry,
                                    @Reference ContributionStoreRegistry contributionStoreRegistry,
-                                   @Reference ContentTypeResolver contentTypeResolver)
+                                   @Reference ContentTypeResolver contentTypeResolver,
+                                   @Reference DependencyService dependencyService,
+                                   @Reference MonitorFactory monitorFactory)
             throws IOException, ClassNotFoundException {
         this.processorRegistry = processorRegistry;
         this.contributionStoreRegistry = contributionStoreRegistry;
         this.contentTypeResolver = contentTypeResolver;
+        this.dependencyService = dependencyService;
+        this.monitor = monitorFactory.getMonitor(ContributionServiceMonitor.class);
     }
 
     @Property(required = false)
@@ -76,52 +83,35 @@ public class ContributionServiceImpl implements ContributionService {
         this.uriPrefix = uriPrefix;
     }
 
+    public List<URI> contribute(String id, List<ContributionSource> sources) throws ContributionException {
+        List<Contribution> contributions = new ArrayList<Contribution>(sources.size());
+        for (ContributionSource source : sources) {
+            // store the contributions
+            // xcv FIXME need to add id to contributionsource
+            contributions.add(store(id, source));
+        }
+        for (Contribution contribution : contributions) {
+            // process any SCA manifest information, including imports and exports
+            processorRegistry.processManifest(contribution);
+        }
+        // order the contributions based on their dependencies
+        contributions = dependencyService.order(contributions);
+        for (Contribution contribution : contributions) {
+            // continue processing the contributions. As they are ordered, dependencies will resolve correctly
+            processContents(id, contribution);
+        }
+        List<URI> uris = new ArrayList<URI>(contributions.size());
+        for (Contribution contribution : contributions) {
+            uris.add(contribution.getUri());
+        }
+        return uris;
+    }
+
     public URI contribute(String id, ContributionSource source) throws ContributionException {
-        URL locationUrl;
-        URI contributionUri = URI.create(uriPrefix + id + "/" + UUID.randomUUID());
-        if (source.isLocal()) {
-            locationUrl = source.getLocation();
-        } else {
-            ArchiveStore archiveStore = contributionStoreRegistry.getArchiveStore(id);
-            if (archiveStore == null) {
-                throw new StoreNotFoundException("Archive store not found", id);
-            }
-            InputStream stream = null;
-            try {
-                stream = source.getSource();
-                locationUrl = archiveStore.store(contributionUri, stream);
-            } catch (IOException e) {
-                throw new ContributionException(e);
-            } catch (ArchiveStoreException e) {
-                throw new ContributionException(e);
-            } finally {
-                try {
-                    if (stream != null) {
-                        stream.close();
-                    }
-                } catch (IOException e) {
-                    // TODO log exception
-                    e.printStackTrace();
-                }
-            }
-
-        }
-        try {
-            String type = contentTypeResolver.getContentType(source.getLocation());
-            byte[] checksum = source.getChecksum();
-            long timestamp = source.getTimestamp();
-
-            Contribution contribution = new Contribution(contributionUri, locationUrl, checksum, timestamp);
-            //process the contribution
-            processMetaData(id, contribution, type);
-            return contributionUri;
-        } catch (IOException e) {
-            throw new ContributionException("Contribution error", e);
-        } catch (MetaDataStoreException e) {
-            throw new ContributionException("Contribution error", e);
-        } catch (ContentTypeResolutionException e) {
-            throw new ContributionException("Contribution error", e);
-        }
+        Contribution contribution = store(id, source);
+        processorRegistry.processManifest(contribution);
+        processContents(id, contribution);
+        return contribution.getUri();
     }
 
     public boolean exists(URI uri) {
@@ -137,7 +127,7 @@ public class ContributionServiceImpl implements ContributionService {
         InputStream is = null;
         try {
             is = source.getSource();
-            update(uri, checksum, timestamp, is);
+            update(uri, checksum, timestamp);
         } catch (IOException e) {
             throw new ContributionException("Contribution error", e);
         } finally {
@@ -146,8 +136,7 @@ public class ContributionServiceImpl implements ContributionService {
                     is.close();
                 }
             } catch (IOException e) {
-                // TODO log exception
-                e.printStackTrace();
+                monitor.error("Error closing stream", e);
             }
         }
     }
@@ -196,8 +185,7 @@ public class ContributionServiceImpl implements ContributionService {
         throw new UnsupportedOperationException();
     }
 
-    private void update(URI uri, byte[] checksum, long timestamp, InputStream stream)
-            throws ContributionException, IOException {
+    private void update(URI uri, byte[] checksum, long timestamp) throws ContributionException, IOException {
         String id = parseStoreId(uri);
         MetaDataStore metaDataStore = contributionStoreRegistry.getMetadataStore(id);
         if (metaDataStore == null) {
@@ -215,20 +203,78 @@ public class ContributionServiceImpl implements ContributionService {
         }
     }
 
-    private void processMetaData(String id, Contribution contribution, String contentType)
-            throws ContributionException, IOException, MetaDataStoreException {
+    /**
+     * Stores the contents of a contribution in the archive store if it is not local
+     *
+     * @param id     the store id
+     * @param source the contribution source
+     * @return the contribution
+     * @throws ContributionException if an error occurs during the store operation
+     */
+    private Contribution store(String id, ContributionSource source) throws ContributionException {
+        URI contributionUri = URI.create(uriPrefix + id + "/" + UUID.randomUUID());
+        URL locationUrl;
+        if (source.isLocal()) {
+            locationUrl = source.getLocation();
+        } else {
+            ArchiveStore archiveStore = contributionStoreRegistry.getArchiveStore(id);
+            if (archiveStore == null) {
+                throw new StoreNotFoundException("Archive store not found", id);
+            }
+            InputStream stream = null;
+            try {
+                stream = source.getSource();
+                locationUrl = archiveStore.store(contributionUri, stream);
+            } catch (IOException e) {
+                throw new ContributionException(e);
+            } catch (ArchiveStoreException e) {
+                throw new ContributionException(e);
+            } finally {
+                try {
+                    if (stream != null) {
+                        stream.close();
+                    }
+                } catch (IOException e) {
+                    monitor.error("Error closing contribution stream", e);
+                }
+            }
+
+        }
+        try {
+            String type = contentTypeResolver.getContentType(source.getLocation());
+            byte[] checksum = source.getChecksum();
+            long timestamp = source.getTimestamp();
+            return new Contribution(contributionUri, locationUrl, checksum, timestamp, type);
+        } catch (ContentTypeResolutionException e) {
+            throw new ContributionException(e);
+        }
+    }
+
+    /**
+     * Processes contribution contents. This assumes all dependencies are installed and can be resolved
+     *
+     * @param id           the metadata store id
+     * @param contribution the contribution to process
+     * @throws ContributionException if an error occurs during processing
+     */
+    private void processContents(String id, Contribution contribution) throws ContributionException {
         // store the contribution
-        processorRegistry.processContribution(contribution, contentType, contribution.getUri());
+        processorRegistry.processContribution(contribution, contribution.getContentType(), contribution.getUri());
         // TODO rollback storage if an error processing contribution
-        // store the contribution index 
+        // store the contribution index
         MetaDataStore metaDataStore = contributionStoreRegistry.getMetadataStore(id);
         if (metaDataStore == null) {
             throw new StoreNotFoundException("MetaData store not found", id);
         }
 
         //store the contribution in the memory cache
-        metaDataStore.store(contribution);
+        try {
+            metaDataStore.store(contribution);
+        } catch (MetaDataStoreException e) {
+            throw new ContributionException(e);
+        }
     }
+
 
     /**
      * Parses the store id from a contribution URI of the form <code>sca://contribution/<store id>/</code>
