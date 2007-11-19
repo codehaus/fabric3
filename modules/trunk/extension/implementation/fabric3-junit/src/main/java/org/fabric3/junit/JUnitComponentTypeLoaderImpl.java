@@ -62,16 +62,15 @@ public class JUnitComponentTypeLoaderImpl implements JUnitComponentTypeLoader {
         } catch (ClassNotFoundException e) {
             throw new MissingResourceException(className, e);
         }
-        PojoComponentType componentType = loadByIntrospection(implementation, context, implClass);
+        PojoComponentType componentType = loadByIntrospection(context, implClass);
         if (componentType.getImplementationScope() == null) {
-            componentType.setImplementationScope(Scope.COMPOSITE);
+            componentType.setImplementationScope(Scope.STATELESS);
         }
         implementation.setComponentType(componentType);
     }
 
-    protected PojoComponentType loadByIntrospection(ImplementationJUnit implementation,
-                                                    LoaderContext loaderContext,
-                                                    Class<?> implClass) throws ProcessingException {
+    protected PojoComponentType loadByIntrospection(LoaderContext loaderContext, Class<?> implClass)
+            throws ProcessingException {
         PojoComponentType componentType = new PojoComponentType(implClass.getName());
         introspector.introspect(implClass, componentType, loaderContext);
 
