@@ -88,6 +88,7 @@ import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalChangeSet;
+import org.fabric3.spi.model.physical.PhysicalModelGenerator;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.ResourceElement;
@@ -114,6 +115,7 @@ public abstract class AbstractAssembly implements Assembly {
 
     protected final URI domainUri;
     protected final GeneratorRegistry generatorRegistry;
+    private final PhysicalModelGenerator physicalModelGenerator;
     protected final WireResolver wireResolver;
     protected final Allocator allocator;
     protected final RoutingService routingService;
@@ -129,7 +131,8 @@ public abstract class AbstractAssembly implements Assembly {
                             Allocator allocator,
                             RoutingService routingService,
                             AssemblyStore assemblyStore,
-                            MetaDataStore metadataStore) {
+                            MetaDataStore metadataStore,
+                            PhysicalModelGenerator physicalModelGenerator) {
         this.domainUri = domainUri;
         this.generatorRegistry = generatorRegistry;
         this.wireResolver = wireResolver;
@@ -138,6 +141,7 @@ public abstract class AbstractAssembly implements Assembly {
         this.routingService = routingService;
         this.assemblyStore = assemblyStore;
         this.metadataStore = metadataStore;
+        this.physicalModelGenerator = physicalModelGenerator;
     }
 
     public void initialize() throws AssemblyException {
@@ -326,7 +330,7 @@ public abstract class AbstractAssembly implements Assembly {
         CommandSet commandSet = new CommandSet();
         GeneratorContext context = new DefaultGeneratorContext(changeSet, commandSet);
         try {
-            generatorRegistry.generateBoundServiceWire(service, binding, currentComponent, context);
+            physicalModelGenerator.generateBoundServiceWire(service, binding, currentComponent, context);
             routingService.route(currentComponent.getRuntimeId(), changeSet);
             service.addBinding(binding);
             // TODO record to recovery service
@@ -748,7 +752,7 @@ public abstract class AbstractAssembly implements Assembly {
                     }
                     LogicalReference reference = component.getReference(entry.getUri().getFragment());
 
-                    generatorRegistry.generateUnboundWire(component,
+                    physicalModelGenerator.generateUnboundWire(component,
                                                           reference,
                                                           targetService,
                                                           target,
@@ -758,7 +762,7 @@ public abstract class AbstractAssembly implements Assembly {
             } else {
                 // TODO this should be extensible and moved out
                 LogicalBinding<?> logicalBinding = entry.getBindings().get(0);
-                generatorRegistry.generateBoundReferenceWire(component, entry, logicalBinding, context);
+                physicalModelGenerator.generateBoundReferenceWire(component, entry, logicalBinding, context);
             }
 
         }
@@ -771,13 +775,13 @@ public abstract class AbstractAssembly implements Assembly {
                 continue;
             }
             for (LogicalBinding<?> binding : service.getBindings()) {
-                generatorRegistry.generateBoundServiceWire(service, binding, component, context);
+                physicalModelGenerator.generateBoundServiceWire(service, binding, component, context);
             }
         }
 
         // generate wire definitions for resources
         for (LogicalResource<?> resource : component.getResources()) {
-            generatorRegistry.generateResourceWire(component, resource, context);
+            physicalModelGenerator.generateResourceWire(component, resource, context);
         }
 
     }
@@ -787,7 +791,7 @@ public abstract class AbstractAssembly implements Assembly {
 
         GeneratorContext context = contexts.get(component.getRuntimeId());
         if (context != null) {
-            generatorRegistry.generateCommandSet(component, context);
+            physicalModelGenerator.generateCommandSet(component, context);
             if (isEagerInit(component)) {
                 // if the component is eager init, add it to the list of components to initialize on the node it
                 // will be provisioned to
@@ -837,7 +841,7 @@ public abstract class AbstractAssembly implements Assembly {
             context = new DefaultGeneratorContext(changeSet, commandSet);
             contexts.put(id, context);
         }
-        context.getPhysicalChangeSet().addComponentDefinition(generatorRegistry.generatePhysicalComponent(component,
+        context.getPhysicalChangeSet().addComponentDefinition(physicalModelGenerator.generatePhysicalComponent(component,
                                                                                                           context));
     }
 

@@ -99,7 +99,7 @@ public class AssemblyPropertyTestCase extends TestCase {
 
     private static class MockAssembly extends AbstractAssembly {
         public MockAssembly() {
-            super(URI.create("sca://./domain"), null, null, null, null, null, null, null);
+            super(URI.create("sca://./domain"), null, null, null, null, null, null, null, null);
 
         }
     }

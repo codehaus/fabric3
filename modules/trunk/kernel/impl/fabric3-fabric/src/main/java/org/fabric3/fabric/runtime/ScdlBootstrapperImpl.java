@@ -79,6 +79,8 @@ import org.fabric3.fabric.implementation.system.SystemComponentTypeLoaderImpl;
 import org.fabric3.fabric.implementation.system.SystemImplementationLoader;
 import org.fabric3.fabric.implementation.system.SystemWireAttacher;
 import org.fabric3.fabric.loader.LoaderRegistryImpl;
+import org.fabric3.fabric.model.physical.PhysicalModelGeneratorImpl;
+
 import static org.fabric3.fabric.runtime.ComponentNames.APPLICATION_CLASSLOADER_ID;
 import static org.fabric3.fabric.runtime.ComponentNames.BOOT_CLASSLOADER_ID;
 import static org.fabric3.fabric.runtime.ComponentNames.CLASSLOADER_REGISTRY_URI;
@@ -148,6 +150,7 @@ import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.PolicyHelper;
+import org.fabric3.spi.model.physical.PhysicalModelGenerator;
 import org.fabric3.spi.policy.registry.NullPolicyResolver;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ArtifactResolverRegistry;
@@ -276,6 +279,8 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
         // enable autowire for the runtime domain
         AssemblyStore store = new NonPersistentAssemblyStore(ComponentNames.RUNTIME_URI, Autowire.ON);
+        
+        PhysicalModelGenerator physicalModelGenerator = createPhysicalModelGenerator(generatorRegistry);
 
         runtimeAssembly = new RuntimeAssemblyImpl(generatorRegistry,
                                                   resolver,
@@ -283,7 +288,8 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
                                                   allocator,
                                                   routingService,
                                                   store,
-                                                  metaDataStore);
+                                                  metaDataStore,
+                                                  physicalModelGenerator);
         try {
             runtimeAssembly.initialize();
         } catch (AssemblyException e) {
@@ -443,7 +449,6 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
     protected GeneratorRegistry createGeneratorRegistry() {
         GeneratorRegistryImpl registry = new GeneratorRegistryImpl();
-        registry.setPolicyResolver(new NullPolicyResolver());
         new SystemComponentGenerator(registry, new ClassLoaderGeneratorImpl(), new GenerationHelperImpl());
         new SingletonGenerator(registry);
         StartCompositeContextGenerator contextGenerator = new StartCompositeContextGenerator(registry);
@@ -505,6 +510,10 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
                                                               classpathProcessorRegistry);
         clBuilder.init();
         return resourceRegistry;
+    }
+    
+    private PhysicalModelGenerator createPhysicalModelGenerator(GeneratorRegistry generatorRegistry) {
+        return new PhysicalModelGeneratorImpl(generatorRegistry, new NullPolicyResolver());
     }
 
 }

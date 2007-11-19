@@ -27,6 +27,7 @@ import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.spi.assembly.AssemblyStore;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.physical.PhysicalModelGenerator;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.osoa.sca.annotations.Reference;
 
@@ -42,7 +43,8 @@ public class RuntimeAssemblyImpl extends AbstractAssembly implements RuntimeAsse
                                @Reference Allocator allocator,
                                @Reference RoutingService routingService,
                                @Reference AssemblyStore store,
-                               @Reference MetaDataStore metaDataStore ) {
+                               @Reference MetaDataStore metaDataStore,
+                               @Reference PhysicalModelGenerator physicalModelGenerator) {
         super(ComponentNames.RUNTIME_URI,
               generatorRegistry,
               wireResolver,
@@ -50,7 +52,8 @@ public class RuntimeAssemblyImpl extends AbstractAssembly implements RuntimeAsse
               allocator,
               routingService,
               store,
-              metaDataStore);
+              metaDataStore,
+              physicalModelGenerator);
     }
 
     public void instantiateHostComponentDefinition(ComponentDefinition<?> definition) throws InstantiationException {
