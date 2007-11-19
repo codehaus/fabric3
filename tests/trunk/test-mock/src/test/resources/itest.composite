@@ -25,7 +25,7 @@
     </component>
 
     <component name="UserComponent">
-        <f3:junit class="org.fabric3.tests.mock.UserComponentImpl"/>
+        <implementation.java class="org.fabric3.tests.mock.UserComponentImpl"/>
     </component>
 
     <component name="MockComponent">
