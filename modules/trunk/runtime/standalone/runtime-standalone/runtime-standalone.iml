@@ -14,9 +14,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/com/thoughtworks/xstream/xstream/1.2/xstream-1.2.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/com/thoughtworks/xstream/xstream/1.2/xstream-1.2-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/com/thoughtworks/xstream/xstream/1.2/xstream-1.2-sources.jar!/" />
         </SOURCES>
@@ -27,9 +25,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/commons-codec/commons-codec/1.3/commons-codec-1.3.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/commons-codec/commons-codec/1.3/commons-codec-1.3-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/commons-codec/commons-codec/1.3/commons-codec-1.3-sources.jar!/" />
         </SOURCES>
@@ -71,9 +67,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-annotation_1.0_spec/1.1/geronimo-annotation_1.0_spec-1.1.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-annotation_1.0_spec/1.1/geronimo-annotation_1.0_spec-1.1-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-annotation_1.0_spec/1.1/geronimo-annotation_1.0_spec-1.1-sources.jar!/" />
         </SOURCES>
@@ -111,9 +105,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api-r1.0/0.2.1/sca-api-r1.0-0.2.1.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api-r1.0/0.2.1/sca-api-r1.0-0.2.1-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api-r1.0/0.2.1/sca-api-r1.0-0.2.1-sources.jar!/" />
         </SOURCES>
@@ -124,9 +116,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/standalone/fabric3-standalone-api/0.3/fabric3-standalone-api-0.3.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/standalone/fabric3-standalone-api/0.3/fabric3-standalone-api-0.3-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/standalone/fabric3-standalone-api/0.3/fabric3-standalone-api-0.3-sources.jar!/" />
         </SOURCES>
@@ -137,12 +127,8 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/standalone/fabric3-standalone-host/0.3.1/fabric3-standalone-host-0.3.1.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/standalone/fabric3-standalone-host/0.3.1/fabric3-standalone-host-0.3.1-javadoc.jar!/" />
-        </JAVADOC>
-        <SOURCES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/standalone/fabric3-standalone-host/0.3.1/fabric3-standalone-host-0.3.1-sources.jar!/" />
-        </SOURCES>
+        <JAVADOC />
+        <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -150,9 +136,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/standalone/fabric3-standalone-server/0.3/fabric3-standalone-server-0.3.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/standalone/fabric3-standalone-server/0.3/fabric3-standalone-server-0.3-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/standalone/fabric3-standalone-server/0.3/fabric3-standalone-server-0.3-sources.jar!/" />
         </SOURCES>
@@ -163,9 +147,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/standalone/fabric3-standalone-shutdown/0.2/fabric3-standalone-shutdown-0.2.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/standalone/fabric3-standalone-shutdown/0.2/fabric3-standalone-shutdown-0.2-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/standalone/fabric3-standalone-shutdown/0.2/fabric3-standalone-shutdown-0.2-sources.jar!/" />
         </SOURCES>
@@ -176,9 +158,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.2/fabric3-api-0.2.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.2/fabric3-api-0.2-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.2/fabric3-api-0.2-sources.jar!/" />
         </SOURCES>
@@ -189,9 +169,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-console/0.2/fabric3-console-0.2.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-console/0.2/fabric3-console-0.2-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-console/0.2/fabric3-console-0.2-sources.jar!/" />
         </SOURCES>
@@ -202,9 +180,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-contribution-scanner/0.3/fabric3-contribution-scanner-0.3.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-contribution-scanner/0.3/fabric3-contribution-scanner-0.3-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-contribution-scanner/0.3/fabric3-contribution-scanner-0.3-sources.jar!/" />
         </SOURCES>
@@ -215,9 +191,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-contribution-scanner-spi/0.3/fabric3-contribution-scanner-spi-0.3.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-contribution-scanner-spi/0.3/fabric3-contribution-scanner-spi-0.3-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-contribution-scanner-spi/0.3/fabric3-contribution-scanner-spi-0.3-sources.jar!/" />
         </SOURCES>
@@ -228,9 +202,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-extension/0.2/fabric3-extension-0.2.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-extension/0.2/fabric3-extension-0.2-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-extension/0.2/fabric3-extension-0.2-sources.jar!/" />
         </SOURCES>
@@ -241,12 +213,8 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-fabric/0.3.2/fabric3-fabric-0.3.2.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-fabric/0.3.2/fabric3-fabric-0.3.2-javadoc.jar!/" />
-        </JAVADOC>
-        <SOURCES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-fabric/0.3.2/fabric3-fabric-0.3.2-sources.jar!/" />
-        </SOURCES>
+        <JAVADOC />
+        <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -254,9 +222,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-host-api/0.2/fabric3-host-api-0.2.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-host-api/0.2/fabric3-host-api-0.2-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-host-api/0.2/fabric3-host-api-0.2-sources.jar!/" />
         </SOURCES>
@@ -267,9 +233,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-java/0.1/fabric3-java-0.1.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-java/0.1/fabric3-java-0.1-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-java/0.1/fabric3-java-0.1-sources.jar!/" />
         </SOURCES>
@@ -280,9 +244,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-jetty/0.3/fabric3-jetty-0.3.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-jetty/0.3/fabric3-jetty-0.3-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-jetty/0.3/fabric3-jetty-0.3-sources.jar!/" />
         </SOURCES>
@@ -293,9 +255,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-jmx/0.2/fabric3-jmx-0.2.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-jmx/0.2/fabric3-jmx-0.2-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-jmx/0.2/fabric3-jmx-0.2-sources.jar!/" />
         </SOURCES>
@@ -306,12 +266,8 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-loader/0.3.1/fabric3-loader-0.3.1.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-loader/0.3.1/fabric3-loader-0.3.1-javadoc.jar!/" />
-        </JAVADOC>
-        <SOURCES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-loader/0.3.1/fabric3-loader-0.3.1-sources.jar!/" />
-        </SOURCES>
+        <JAVADOC />
+        <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -319,9 +275,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-pojo/0.3/fabric3-pojo-0.3.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-pojo/0.3/fabric3-pojo-0.3-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-pojo/0.3/fabric3-pojo-0.3-sources.jar!/" />
         </SOURCES>
@@ -332,9 +286,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-policy/0.3/fabric3-policy-0.3.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-policy/0.3/fabric3-policy-0.3-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-policy/0.3/fabric3-policy-0.3-sources.jar!/" />
         </SOURCES>
@@ -345,9 +297,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-policy-spi/0.2/fabric3-policy-spi-0.2.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-policy-spi/0.2/fabric3-policy-spi-0.2-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-policy-spi/0.2/fabric3-policy-spi-0.2-sources.jar!/" />
         </SOURCES>
@@ -358,9 +308,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-resource/0.1/fabric3-resource-0.1.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-resource/0.1/fabric3-resource-0.1-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-resource/0.1/fabric3-resource-0.1-sources.jar!/" />
         </SOURCES>
@@ -371,9 +319,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-scdl/0.3.1/fabric3-scdl-0.3.1.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-scdl/0.3.1/fabric3-scdl-0.3.1-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-scdl/0.3.1/fabric3-scdl-0.3.1-sources.jar!/" />
         </SOURCES>
@@ -384,9 +330,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-spi/0.3.1/fabric3-spi-0.3.1.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-spi/0.3.1/fabric3-spi-0.3.1-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-spi/0.3.1/fabric3-spi-0.3.1-sources.jar!/" />
         </SOURCES>
@@ -397,9 +341,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-transform/0.3/fabric3-transform-0.3.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-transform/0.3/fabric3-transform-0.3-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-transform/0.3/fabric3-transform-0.3-sources.jar!/" />
         </SOURCES>
@@ -410,9 +352,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-tx-loader/0.1/fabric3-tx-loader-0.1.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-tx-loader/0.1/fabric3-tx-loader-0.1-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-tx-loader/0.1/fabric3-tx-loader-0.1-sources.jar!/" />
         </SOURCES>

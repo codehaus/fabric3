@@ -90,9 +90,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/junit/junit/3.8.2/junit-3.8.2.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/junit/junit/3.8.2/junit-3.8.2-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/junit/junit/3.8.2/junit-3.8.2-sources.jar!/" />
         </SOURCES>
@@ -103,9 +101,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/cxf/cxf-api/2.0-incubator/cxf-api-2.0-incubator.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/cxf/cxf-api/2.0-incubator/cxf-api-2.0-incubator-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/apache/cxf/cxf-api/2.0-incubator/cxf-api-2.0-incubator-sources.jar!/" />
         </SOURCES>
@@ -127,9 +123,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/cxf/cxf-common-utilities/2.0-incubator/cxf-common-utilities-2.0-incubator.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/cxf/cxf-common-utilities/2.0-incubator/cxf-common-utilities-2.0-incubator-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/apache/cxf/cxf-common-utilities/2.0-incubator/cxf-common-utilities-2.0-incubator-sources.jar!/" />
         </SOURCES>
@@ -140,9 +134,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/cxf/cxf-rt-bindings-soap/2.0-incubator/cxf-rt-bindings-soap-2.0-incubator.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/cxf/cxf-rt-bindings-soap/2.0-incubator/cxf-rt-bindings-soap-2.0-incubator-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/apache/cxf/cxf-rt-bindings-soap/2.0-incubator/cxf-rt-bindings-soap-2.0-incubator-sources.jar!/" />
         </SOURCES>
@@ -153,9 +145,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/cxf/cxf-rt-core/2.0-incubator/cxf-rt-core-2.0-incubator.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/cxf/cxf-rt-core/2.0-incubator/cxf-rt-core-2.0-incubator-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/apache/cxf/cxf-rt-core/2.0-incubator/cxf-rt-core-2.0-incubator-sources.jar!/" />
         </SOURCES>
@@ -166,9 +156,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/cxf/cxf-rt-databinding-jaxb/2.0-incubator/cxf-rt-databinding-jaxb-2.0-incubator.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/cxf/cxf-rt-databinding-jaxb/2.0-incubator/cxf-rt-databinding-jaxb-2.0-incubator-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/apache/cxf/cxf-rt-databinding-jaxb/2.0-incubator/cxf-rt-databinding-jaxb-2.0-incubator-sources.jar!/" />
         </SOURCES>
@@ -179,9 +167,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/cxf/cxf-rt-frontend-simple/2.0-incubator/cxf-rt-frontend-simple-2.0-incubator.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/cxf/cxf-rt-frontend-simple/2.0-incubator/cxf-rt-frontend-simple-2.0-incubator-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/apache/cxf/cxf-rt-frontend-simple/2.0-incubator/cxf-rt-frontend-simple-2.0-incubator-sources.jar!/" />
         </SOURCES>
@@ -192,9 +178,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/cxf/cxf-rt-transports-http/2.0-incubator/cxf-rt-transports-http-2.0-incubator.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/cxf/cxf-rt-transports-http/2.0-incubator/cxf-rt-transports-http-2.0-incubator-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/apache/cxf/cxf-rt-transports-http/2.0-incubator/cxf-rt-transports-http-2.0-incubator-sources.jar!/" />
         </SOURCES>
@@ -205,9 +189,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/cxf/cxf-tools-common/2.0-incubator/cxf-tools-common-2.0-incubator.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/cxf/cxf-tools-common/2.0-incubator/cxf-tools-common-2.0-incubator-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/apache/cxf/cxf-tools-common/2.0-incubator/cxf-tools-common-2.0-incubator-sources.jar!/" />
         </SOURCES>
@@ -218,9 +200,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-activation_1.1_spec/1.0-M1/geronimo-activation_1.1_spec-1.0-M1.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-activation_1.1_spec/1.0-M1/geronimo-activation_1.1_spec-1.0-M1-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-activation_1.1_spec/1.0-M1/geronimo-activation_1.1_spec-1.0-M1-sources.jar!/" />
         </SOURCES>
@@ -231,9 +211,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-annotation_1.0_spec/1.1/geronimo-annotation_1.0_spec-1.1.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-annotation_1.0_spec/1.1/geronimo-annotation_1.0_spec-1.1-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-annotation_1.0_spec/1.1/geronimo-annotation_1.0_spec-1.1-sources.jar!/" />
         </SOURCES>
@@ -244,9 +222,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-javamail_1.4_spec/1.0-M1/geronimo-javamail_1.4_spec-1.0-M1.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-javamail_1.4_spec/1.0-M1/geronimo-javamail_1.4_spec-1.0-M1-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-javamail_1.4_spec/1.0-M1/geronimo-javamail_1.4_spec-1.0-M1-sources.jar!/" />
         </SOURCES>
@@ -257,9 +233,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-ws-metadata_2.0_spec/1.1.1/geronimo-ws-metadata_2.0_spec-1.1.1.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-ws-metadata_2.0_spec/1.1.1/geronimo-ws-metadata_2.0_spec-1.1.1-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-ws-metadata_2.0_spec/1.1.1/geronimo-ws-metadata_2.0_spec-1.1.1-sources.jar!/" />
         </SOURCES>
@@ -270,9 +244,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/ws/commons/neethi/neethi/2.0/neethi-2.0.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/ws/commons/neethi/neethi/2.0/neethi-2.0-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/apache/ws/commons/neethi/neethi/2.0/neethi-2.0-sources.jar!/" />
         </SOURCES>
@@ -283,9 +255,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/ws/commons/schema/XmlSchema/1.2/XmlSchema-1.2.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/ws/commons/schema/XmlSchema/1.2/XmlSchema-1.2-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/apache/ws/commons/schema/XmlSchema/1.2/XmlSchema-1.2-sources.jar!/" />
         </SOURCES>
@@ -296,9 +266,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api-r1.0/0.2.1/sca-api-r1.0-0.2.1.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api-r1.0/0.2.1/sca-api-r1.0-0.2.1-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api-r1.0/0.2.1/sca-api-r1.0-0.2.1-sources.jar!/" />
         </SOURCES>
@@ -309,9 +277,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.2/fabric3-api-0.2.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.2/fabric3-api-0.2-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.2/fabric3-api-0.2-sources.jar!/" />
         </SOURCES>
@@ -322,9 +288,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-binding-ws/0.3/fabric3-binding-ws-0.3.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-binding-ws/0.3/fabric3-binding-ws-0.3-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-binding-ws/0.3/fabric3-binding-ws-0.3-sources.jar!/" />
         </SOURCES>
@@ -335,9 +299,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-extension/0.3.1/fabric3-extension-0.3.1.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-extension/0.3.1/fabric3-extension-0.3.1-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-extension/0.3.1/fabric3-extension-0.3.1-sources.jar!/" />
         </SOURCES>
@@ -348,9 +310,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-host-api/0.2/fabric3-host-api-0.2.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-host-api/0.2/fabric3-host-api-0.2-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-host-api/0.2/fabric3-host-api-0.2-sources.jar!/" />
         </SOURCES>
@@ -361,9 +321,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-scdl/0.3.1/fabric3-scdl-0.3.1.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-scdl/0.3.1/fabric3-scdl-0.3.1-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-scdl/0.3.1/fabric3-scdl-0.3.1-sources.jar!/" />
         </SOURCES>
@@ -374,9 +332,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-spi/0.3.1/fabric3-spi-0.3.1.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-spi/0.3.1/fabric3-spi-0.3.1-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-spi/0.3.1/fabric3-spi-0.3.1-sources.jar!/" />
         </SOURCES>
@@ -429,9 +385,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/wsdl4j/wsdl4j/1.6.1/wsdl4j-1.6.1.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/wsdl4j/wsdl4j/1.6.1/wsdl4j-1.6.1-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/wsdl4j/wsdl4j/1.6.1/wsdl4j-1.6.1-sources.jar!/" />
         </SOURCES>
