@@ -29,11 +29,11 @@ import java.net.URL;
 public interface ContributionSource {
 
     /**
-     * Returns true if the source is local.
+     * Returns true if the source shoud be persisted.
      *
-     * @return true if the source is local
+     * @return true if the source shoud be persisted
      */
-    boolean isLocal();
+    boolean persist();
 
     /**
      * Returns the identifier for this contribution or null if one has not been assigned (i.e. it is a new contribution

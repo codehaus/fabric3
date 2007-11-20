@@ -27,8 +27,8 @@ public class FileContributionSource implements ContributionSource {
         this.checksum = checksum;
     }
 
-    public boolean isLocal() {
-        return true;
+    public boolean persist() {
+        return false;
     }
 
     public URI getUri() {

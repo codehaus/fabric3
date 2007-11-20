@@ -214,7 +214,7 @@ public class ContributionServiceImpl implements ContributionService {
     private Contribution store(String id, ContributionSource source) throws ContributionException {
         URI contributionUri = URI.create(uriPrefix + id + "/" + UUID.randomUUID());
         URL locationUrl;
-        if (source.isLocal()) {
+        if (!source.persist()) {
             locationUrl = source.getLocation();
         } else {
             ArchiveStore archiveStore = contributionStoreRegistry.getArchiveStore(id);
