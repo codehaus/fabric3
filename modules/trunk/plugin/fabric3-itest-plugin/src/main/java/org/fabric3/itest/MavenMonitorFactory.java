@@ -30,7 +30,7 @@ import java.util.logging.Level;
 
 import org.apache.maven.plugin.logging.Log;
 
-import org.fabric3.fabric.monitor.ProxyMonitorFactory;
+import org.fabric3.monitor.ProxyMonitorFactory;
 
 /**
  * @version $Rev$ $Date$

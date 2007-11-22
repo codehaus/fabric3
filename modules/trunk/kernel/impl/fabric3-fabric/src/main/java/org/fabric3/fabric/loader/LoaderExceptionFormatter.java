@@ -24,7 +24,7 @@ import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.extension.monitor.FormatterHelper;
+import org.fabric3.monitor.FormatterHelper;
 import org.fabric3.host.monitor.ExceptionFormatter;
 import org.fabric3.host.monitor.FormatterRegistry;
 import org.fabric3.spi.loader.LoaderException;

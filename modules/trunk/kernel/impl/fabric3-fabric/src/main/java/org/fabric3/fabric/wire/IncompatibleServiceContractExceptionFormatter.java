@@ -28,7 +28,7 @@ import org.fabric3.host.monitor.ExceptionFormatter;
 import org.fabric3.host.monitor.FormatterRegistry;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.extension.monitor.FormatterHelper;
+import org.fabric3.monitor.FormatterHelper;
 
 /**
  * Formats {@link IncompatibleServiceContractException} for JDK logging

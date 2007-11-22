@@ -19,6 +19,7 @@
 package org.fabric3.fabric.implementation.system;
 
 import junit.framework.TestCase;
+import org.easymock.EasyMock;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
@@ -31,14 +32,13 @@ import org.fabric3.fabric.implementation.processor.InitProcessor;
 import org.fabric3.fabric.implementation.processor.PropertyProcessor;
 import org.fabric3.fabric.implementation.processor.ReferenceProcessor;
 import org.fabric3.fabric.implementation.processor.ServiceProcessor;
-import org.fabric3.fabric.monitor.NullMonitorFactory;
+import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Property;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.idl.java.JavaServiceContract;
-import org.fabric3.loader.common.LoaderContextImpl;
 
 /**
  * @version $Rev$ $Date$
@@ -67,7 +67,7 @@ public class SystemComponentTypeLoaderTestCase extends TestCase {
         ImplementationProcessorService service =
                 new ImplementationProcessorServiceImpl(interfaceProcessorRegistry);
         IntrospectionRegistryImpl registry = new IntrospectionRegistryImpl();
-        registry.setMonitor(new NullMonitorFactory().getMonitor(IntrospectionRegistryImpl.Monitor.class));
+        registry.setMonitor(EasyMock.createMock(IntrospectionRegistryImpl.Monitor.class));
         registry.registerProcessor(new ConstructorProcessor(service));
         registry.registerProcessor(new DestroyProcessor());
         registry.registerProcessor(new InitProcessor());

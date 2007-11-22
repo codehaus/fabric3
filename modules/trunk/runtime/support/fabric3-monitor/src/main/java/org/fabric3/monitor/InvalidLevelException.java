@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.monitor;
+package org.fabric3.monitor;
 
 /**
  * Exception indicating an invalid log level has been passed.

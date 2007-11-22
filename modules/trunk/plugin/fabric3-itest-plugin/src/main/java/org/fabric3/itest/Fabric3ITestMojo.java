@@ -440,7 +440,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
         MavenHostInfoImpl hostInfo = new MavenHostInfoImpl(URI.create(testDomain), hostProperties);
         MavenMonitorFactory monitorFactory = new MavenMonitorFactory(getLog(), "f3");
 
-        MavenEmbeddedRuntimeImpl runtime = new MavenEmbeddedRuntimeImpl();
+        MavenEmbeddedRuntimeImpl runtime = new MavenEmbeddedRuntimeImpl(monitorFactory);
         runtime.setMonitorFactory(monitorFactory);
         runtime.setHostInfo(hostInfo);
         runtime.setHostClassLoader(hostClassLoader);

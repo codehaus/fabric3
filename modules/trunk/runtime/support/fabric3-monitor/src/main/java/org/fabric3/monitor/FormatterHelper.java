@@ -1,4 +1,4 @@
-package org.fabric3.extension.monitor;
+package org.fabric3.monitor;
 
 import java.io.PrintWriter;
 

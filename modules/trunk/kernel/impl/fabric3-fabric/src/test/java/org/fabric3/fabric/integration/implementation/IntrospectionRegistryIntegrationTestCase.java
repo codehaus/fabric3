@@ -26,7 +26,6 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Scope;
 
-import org.fabric3.api.annotation.Resource;
 import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
 import org.fabric3.fabric.implementation.IntrospectionRegistryImpl;
 import org.fabric3.fabric.implementation.processor.DestroyProcessor;
@@ -35,13 +34,10 @@ import org.fabric3.fabric.implementation.processor.InitProcessor;
 import org.fabric3.fabric.implementation.processor.PropertyProcessor;
 import org.fabric3.fabric.implementation.processor.ReferenceProcessor;
 import org.fabric3.fabric.implementation.processor.ScopeProcessor;
-import org.fabric3.fabric.monitor.NullMonitorFactory;
 import org.fabric3.pojo.instancefactory.Signature;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import static org.fabric3.scdl.Scope.COMPOSITE;
-
-//import org.fabric3.resource.processor.ResourceProcessor;
 import org.fabric3.spi.component.ScopeRegistry;
 
 /**
@@ -72,7 +68,7 @@ public class IntrospectionRegistryIntegrationTestCase extends TestCase {
         EasyMock.replay(scopeRegistry);
 
         registry = new IntrospectionRegistryImpl();
-        registry.setMonitor(new NullMonitorFactory().getMonitor(IntrospectionRegistryImpl.Monitor.class));
+        registry.setMonitor(EasyMock.createMock(IntrospectionRegistryImpl.Monitor.class));
         registry.registerProcessor(new DestroyProcessor());
         registry.registerProcessor(new InitProcessor());
         registry.registerProcessor(new ScopeProcessor(scopeRegistry));

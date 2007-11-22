@@ -16,21 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.monitor;
+package org.fabric3.monitor;
 
+import java.io.PrintWriter;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Map;
-import java.io.PrintWriter;
 
 import org.osoa.sca.annotations.EagerInit;
 
-import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.host.monitor.ExceptionFormatter;
+import org.fabric3.host.monitor.MonitorFactory;
 
 /**
- * Implementation of a {@link org.fabric3.host.monitor.MonitorFactory} that produces implementations that simply return.
+ * Implementation of a {@link org.fabric3.host.monitor.MonitorFactory} that produces implementations that simply
+ * return.
  *
  * @version $Rev$ $Date$
  */
@@ -56,7 +57,9 @@ public class NullMonitorFactory implements MonitorFactory {
          * might be improved by code generating an implementation with empty methods.
          */
         return monitorInterface.cast(
-            Proxy.newProxyInstance(monitorInterface.getClassLoader(), new Class<?>[]{monitorInterface}, NULL_MONITOR));
+                Proxy.newProxyInstance(monitorInterface.getClassLoader(),
+                                       new Class<?>[]{monitorInterface},
+                                       NULL_MONITOR));
     }
 
     public void register(ExceptionFormatter formatter) {

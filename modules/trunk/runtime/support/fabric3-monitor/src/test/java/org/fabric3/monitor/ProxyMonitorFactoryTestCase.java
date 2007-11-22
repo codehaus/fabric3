@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.monitor;
+package org.fabric3.monitor;
 
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationHandler;
@@ -63,7 +63,7 @@ public class ProxyMonitorFactoryTestCase extends TestCase {
         EasyMock.expect(specificFormater.canFormat(EasyMock.eq(GeneralException.class))).andReturn(false);
         EasyMock.replay(specificFormater);
         factory.register(specificFormater);
-        
+
         ExceptionFormatter<GeneralException> genericFormater = EasyMock.createMock(ExceptionFormatter.class);
         EasyMock.expect(genericFormater.canFormat(EasyMock.eq(GeneralException.class))).andReturn(true);
         genericFormater.write(EasyMock.isA(PrintWriter.class), EasyMock.isA(GeneralException.class));

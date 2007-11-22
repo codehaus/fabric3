@@ -16,13 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.monitor;
+package org.fabric3.monitor;
 
 import java.io.PrintWriter;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.extension.monitor.FormatterHelper;
 import org.fabric3.host.Fabric3Exception;
 import org.fabric3.host.Fabric3RuntimeException;
 import org.fabric3.host.monitor.ExceptionFormatter;

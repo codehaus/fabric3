@@ -22,15 +22,13 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import org.fabric3.spi.loader.LoaderContext;
+import junit.framework.TestCase;
+import org.easymock.EasyMock;
+
+import org.fabric3.fabric.implementation.IntrospectionRegistryImpl.Monitor;
 import org.fabric3.pojo.processor.ImplementationProcessor;
 import org.fabric3.pojo.scdl.PojoComponentType;
-
-import junit.framework.TestCase;
-import org.fabric3.fabric.implementation.IntrospectionRegistryImpl.Monitor;
-import org.fabric3.fabric.monitor.NullMonitorFactory;
-
-import org.easymock.EasyMock;
+import org.fabric3.spi.loader.LoaderContext;
 
 /**
  * @version $Rev$ $Date$
@@ -99,7 +97,7 @@ public class IntrospectionRegistryTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        monitor = new NullMonitorFactory().getMonitor(Monitor.class);
+        monitor = EasyMock.createMock(Monitor.class);
     }
 
     private class Baz {
