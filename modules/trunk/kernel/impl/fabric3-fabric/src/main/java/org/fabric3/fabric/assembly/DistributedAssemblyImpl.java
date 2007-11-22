@@ -19,10 +19,10 @@
 package org.fabric3.fabric.assembly;
 
 import org.fabric3.fabric.assembly.allocator.Allocator;
+import org.fabric3.fabric.domain.DomainService;
+import org.fabric3.fabric.model.logical.LogicalModelGenerator;
+import org.fabric3.fabric.model.physical.PhysicalModelGenerator;
 import org.fabric3.fabric.services.routing.RoutingService;
-import org.fabric3.spi.domain.DomainService;
-import org.fabric3.spi.model.logical.LogicalModelGenerator;
-import org.fabric3.spi.model.physical.PhysicalModelGenerator;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;

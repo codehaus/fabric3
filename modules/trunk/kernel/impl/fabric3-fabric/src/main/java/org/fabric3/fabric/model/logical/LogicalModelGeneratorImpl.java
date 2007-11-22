@@ -63,7 +63,6 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
-import org.fabric3.spi.model.logical.LogicalModelGenerator;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

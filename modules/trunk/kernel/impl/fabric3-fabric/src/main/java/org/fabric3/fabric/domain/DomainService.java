@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.domain;
+package org.fabric3.fabric.domain;
 
 import java.net.URI;
 import java.util.Collection;

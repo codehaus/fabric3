@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.model.physical;
+package org.fabric3.fabric.model.physical;
 
 import java.net.URI;
 import java.util.Collection;
@@ -30,6 +30,8 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
+import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
+import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 
 /**
  * Interface that abstracts the concerns of generating physical model 

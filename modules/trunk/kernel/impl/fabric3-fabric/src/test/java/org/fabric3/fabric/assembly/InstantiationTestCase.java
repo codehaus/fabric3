@@ -6,6 +6,7 @@ import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 
+import org.fabric3.fabric.model.logical.LogicalModelGenerator;
 import org.fabric3.fabric.model.logical.LogicalModelGeneratorImpl;
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.ComponentDefinition;
@@ -18,7 +19,6 @@ import org.fabric3.scdl.Implementation;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
-import org.fabric3.spi.model.logical.LogicalModelGenerator;
 
 /**
  * @version $Rev$ $Date$

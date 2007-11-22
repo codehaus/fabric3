@@ -24,7 +24,6 @@ import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.spi.assembly.AssemblyStore;
 import org.fabric3.spi.assembly.RecordException;
-import org.fabric3.spi.domain.DomainService;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.util.UriHelper;
 import org.osoa.sca.annotations.EagerInit;
