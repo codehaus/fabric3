@@ -51,6 +51,7 @@ import org.fabric3.fabric.component.scope.CompositeScopeContainer;
 import org.fabric3.fabric.component.scope.ScopeRegistryImpl;
 import org.fabric3.fabric.deployer.Deployer;
 import org.fabric3.fabric.deployer.DeployerImpl;
+import org.fabric3.fabric.domain.DomainServiceImpl;
 import org.fabric3.fabric.generator.GeneratorRegistryImpl;
 import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
 import org.fabric3.fabric.implementation.IntrospectionRegistryImpl;
@@ -79,6 +80,7 @@ import org.fabric3.fabric.implementation.system.SystemComponentTypeLoaderImpl;
 import org.fabric3.fabric.implementation.system.SystemImplementationLoader;
 import org.fabric3.fabric.implementation.system.SystemWireAttacher;
 import org.fabric3.fabric.loader.LoaderRegistryImpl;
+import org.fabric3.fabric.model.logical.LogicalModelGeneratorImpl;
 import org.fabric3.fabric.model.physical.PhysicalModelGeneratorImpl;
 
 import static org.fabric3.fabric.runtime.ComponentNames.APPLICATION_CLASSLOADER_ID;
@@ -103,6 +105,7 @@ import org.fabric3.fabric.services.instancefactory.BuildHelperImpl;
 import org.fabric3.fabric.services.instancefactory.DefaultInstanceFactoryBuilderRegistry;
 import org.fabric3.fabric.services.instancefactory.GenerationHelperImpl;
 import org.fabric3.fabric.services.instancefactory.ReflectiveInstanceFactoryBuilder;
+import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.fabric.services.routing.RuntimeRoutingService;
 import org.fabric3.fabric.services.xstream.XStreamFactoryImpl;
 import org.fabric3.host.monitor.FormatterRegistry;
@@ -142,6 +145,7 @@ import org.fabric3.spi.component.ComponentManager;
 import org.fabric3.spi.component.RegistrationException;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.deployer.CompositeClassLoader;
+import org.fabric3.spi.domain.DomainService;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.idl.InvalidServiceContractException;
 import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
@@ -150,6 +154,7 @@ import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.PolicyHelper;
+import org.fabric3.spi.model.logical.LogicalModelGenerator;
 import org.fabric3.spi.model.physical.PhysicalModelGenerator;
 import org.fabric3.spi.policy.registry.NullPolicyResolver;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
@@ -280,16 +285,17 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         // enable autowire for the runtime domain
         AssemblyStore store = new NonPersistentAssemblyStore(ComponentNames.RUNTIME_URI, Autowire.ON);
         
-        PhysicalModelGenerator physicalModelGenerator = createPhysicalModelGenerator(generatorRegistry);
+        DomainService domainService = new DomainServiceImpl(store);
+        PhysicalModelGenerator physicalModelGenerator = createPhysicalModelGenerator(generatorRegistry, routingService, domainService);
+        
+        LogicalModelGenerator logicalModelGenerator = new LogicalModelGeneratorImpl(resolver, normalizer);
 
-        runtimeAssembly = new RuntimeAssemblyImpl(generatorRegistry,
-                                                  resolver,
-                                                  normalizer,
-                                                  allocator,
+        runtimeAssembly = new RuntimeAssemblyImpl(allocator,
                                                   routingService,
-                                                  store,
                                                   metaDataStore,
-                                                  physicalModelGenerator);
+                                                  physicalModelGenerator,
+                                                  logicalModelGenerator,
+                                                  domainService);
         try {
             runtimeAssembly.initialize();
         } catch (AssemblyException e) {
@@ -341,6 +347,8 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         } catch (RegistrationException e) {
             throw new InitializationException(e);
         } catch (InstantiationException e) {
+            throw new InitializationException(e);
+        } catch (ActivateException e) {
             throw new InitializationException(e);
         }
     }
@@ -512,8 +520,8 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         return resourceRegistry;
     }
     
-    private PhysicalModelGenerator createPhysicalModelGenerator(GeneratorRegistry generatorRegistry) {
-        return new PhysicalModelGeneratorImpl(generatorRegistry, new NullPolicyResolver());
+    private PhysicalModelGenerator createPhysicalModelGenerator(GeneratorRegistry generatorRegistry, RoutingService routingService, DomainService domainService) {
+        return new PhysicalModelGeneratorImpl(generatorRegistry, new NullPolicyResolver(), routingService, domainService);
     }
 
 }

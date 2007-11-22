@@ -19,14 +19,13 @@
 package org.fabric3.fabric.assembly;
 
 import org.fabric3.fabric.assembly.allocator.Allocator;
-import org.fabric3.fabric.assembly.normalizer.PromotionNormalizer;
-import org.fabric3.fabric.assembly.resolver.WireResolver;
-import org.fabric3.fabric.runtime.ComponentNames;
 import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.spi.assembly.AssemblyStore;
-import org.fabric3.spi.generator.GeneratorRegistry;
+import org.fabric3.scdl.CompositeImplementation;
+import org.fabric3.spi.assembly.ActivateException;
+import org.fabric3.spi.domain.DomainService;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.logical.LogicalModelGenerator;
 import org.fabric3.spi.model.physical.PhysicalModelGenerator;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.osoa.sca.annotations.Reference;
@@ -37,27 +36,24 @@ import org.osoa.sca.annotations.Reference;
  * @version $Rev$ $Date$
  */
 public class RuntimeAssemblyImpl extends AbstractAssembly implements RuntimeAssembly {
-    public RuntimeAssemblyImpl(@Reference GeneratorRegistry generatorRegistry,
-                               @Reference WireResolver wireResolver,
-                               @Reference PromotionNormalizer normalizer,
-                               @Reference Allocator allocator,
+    
+    private final DomainService domainService;
+    
+    public RuntimeAssemblyImpl(@Reference Allocator allocator,
                                @Reference RoutingService routingService,
-                               @Reference AssemblyStore store,
-                               @Reference MetaDataStore metaDataStore,
-                               @Reference PhysicalModelGenerator physicalModelGenerator) {
-        super(ComponentNames.RUNTIME_URI,
-              generatorRegistry,
-              wireResolver,
-              normalizer,
-              allocator,
-              routingService,
-              store,
-              metaDataStore,
-              physicalModelGenerator);
+                               @Reference MetaDataStore metadataStore,
+                               @Reference PhysicalModelGenerator physicalModelGenerator,
+                               @Reference LogicalModelGenerator logicalModelGenerator,
+                               @Reference DomainService domainService) {
+        super(allocator, routingService, metadataStore, physicalModelGenerator, logicalModelGenerator, domainService);
+        this.domainService = domainService;
     }
 
-    public void instantiateHostComponentDefinition(ComponentDefinition<?> definition) throws InstantiationException {
+    public void instantiateHostComponentDefinition(ComponentDefinition<?> definition) throws ActivateException {
+        
+        LogicalComponent<CompositeImplementation> domain = domainService.getDomain();
         LogicalComponent<?> component = instantiate(domain, definition);
         domain.addComponent(component);
     }
+    
 }

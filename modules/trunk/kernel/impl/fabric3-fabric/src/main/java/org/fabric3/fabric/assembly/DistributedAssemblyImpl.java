@@ -19,12 +19,9 @@
 package org.fabric3.fabric.assembly;
 
 import org.fabric3.fabric.assembly.allocator.Allocator;
-import org.fabric3.fabric.assembly.normalizer.PromotionNormalizer;
-import org.fabric3.fabric.assembly.resolver.WireResolver;
 import org.fabric3.fabric.services.routing.RoutingService;
-import org.fabric3.host.runtime.HostInfo;
-import org.fabric3.spi.assembly.AssemblyStore;
-import org.fabric3.spi.generator.GeneratorRegistry;
+import org.fabric3.spi.domain.DomainService;
+import org.fabric3.spi.model.logical.LogicalModelGenerator;
 import org.fabric3.spi.model.physical.PhysicalModelGenerator;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.osoa.sca.annotations.Reference;
@@ -37,24 +34,14 @@ import org.osoa.sca.annotations.Service;
  */
 @Service(DistributedAssembly.class)
 public class DistributedAssemblyImpl extends AbstractAssembly implements DistributedAssembly {
-
-    public DistributedAssemblyImpl(@Reference GeneratorRegistry generatorRegistry,
-                                   @Reference WireResolver wireResolver,
-                                   @Reference PromotionNormalizer normalizer,
-                                   @Reference Allocator allocator,
+    
+    public DistributedAssemblyImpl(@Reference Allocator allocator,
                                    @Reference RoutingService routingService,
-                                   @Reference AssemblyStore store,
-                                   @Reference(name = "store")MetaDataStore metaDataStore,
-                                   @Reference HostInfo hostInfo,
-                                   @Reference PhysicalModelGenerator physicalModelGenerator) {
-        super(hostInfo.getDomain(),
-              generatorRegistry,
-              wireResolver,
-              normalizer,
-              allocator,
-              routingService,
-              store,
-              metaDataStore,
-              physicalModelGenerator);
+                                   @Reference(name = "store") MetaDataStore metaDataStore,
+                                   @Reference PhysicalModelGenerator physicalModelGenerator,
+                                   @Reference LogicalModelGenerator logicalModelGenerator,
+                                   @Reference DomainService domainService) {
+        super(allocator, routingService, metaDataStore, physicalModelGenerator, logicalModelGenerator, domainService);
     }
+
 }

@@ -19,6 +19,7 @@
 package org.fabric3.fabric.assembly;
 
 import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.assembly.Assembly;
 
 /**
@@ -34,5 +35,5 @@ public interface RuntimeAssembly extends Assembly {
      * @param definition the host component definition
      * @throws InstantiationException is an error occurs instantiating the logical component
      */
-    void instantiateHostComponentDefinition(ComponentDefinition<?> definition) throws InstantiationException;
+    void instantiateHostComponentDefinition(ComponentDefinition<?> definition) throws ActivateException;
 }

@@ -25,6 +25,14 @@
            name="org.fabric3.fabric.Common"
            autowire="true">
     
+    <component name="domainService">
+        <system:implementation.system class="org.fabric3.fabric.domain.DomainServiceImpl"/>
+    </component>
+    
+    <component name="logicalModelGenerator">
+        <system:implementation.system class="org.fabric3.fabric.model.logical.LogicalModelGeneratorImpl"/>
+    </component>
+    
     <component name="physicalModelGenerator">
         <system:implementation.system class="org.fabric3.fabric.model.physical.PhysicalModelGeneratorImpl"/>
     </component>

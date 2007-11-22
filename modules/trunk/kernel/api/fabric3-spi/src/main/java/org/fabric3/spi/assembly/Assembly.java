@@ -19,13 +19,11 @@
 package org.fabric3.spi.assembly;
 
 import java.net.URI;
+
 import javax.xml.namespace.QName;
 
 import org.fabric3.scdl.BindingDefinition;
-import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
-import org.fabric3.scdl.CompositeImplementation;
-import org.fabric3.spi.model.instance.LogicalComponent;
 
 /**
  * Manages a service network
@@ -40,13 +38,6 @@ public interface Assembly {
      * @throws AssemblyException if an error occurs initializing the assembly
      */
     void initialize() throws AssemblyException;
-
-    /**
-     * Returns the domain.
-     *
-     * @return the domain
-     */
-    LogicalComponent<CompositeImplementation> getDomain();
 
     /**
      * Include a deployable Composite in the domain.

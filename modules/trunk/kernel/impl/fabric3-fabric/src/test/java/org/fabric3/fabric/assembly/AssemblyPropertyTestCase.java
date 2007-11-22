@@ -17,31 +17,33 @@
 package org.fabric3.fabric.assembly;
 
 import java.net.URI;
+
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPathExpressionException;
 
 import junit.framework.TestCase;
+
+import org.fabric3.fabric.model.logical.LogicalModelGeneratorImpl;
+import org.fabric3.scdl.CompositeImplementation;
+import org.fabric3.spi.model.instance.LogicalComponent;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
-import org.fabric3.scdl.CompositeImplementation;
-import org.fabric3.spi.model.instance.LogicalComponent;
 
 /**
  * @version $Rev$ $Date$
  */
 public class AssemblyPropertyTestCase extends TestCase {
     private static final DocumentBuilderFactory FACTORY = DocumentBuilderFactory.newInstance();
-    private AbstractAssembly assembly;
+    private LogicalModelGeneratorImpl logicalModelGenerator;
     private LogicalComponent<CompositeImplementation> domain;
     private Element root;
     private Document property;
 
     public void testSimpleProperty() throws Exception {
         root.setTextContent("Hello World");
-        Document value = assembly.deriveValueFromXPath("$domain", domain);
+        Document value = logicalModelGenerator.deriveValueFromXPath("$domain", domain);
         Node child = value.getDocumentElement().getFirstChild();
         assertEquals(Node.TEXT_NODE, child.getNodeType());
         assertEquals("Hello World", child.getTextContent());
@@ -53,7 +55,7 @@ public class AssemblyPropertyTestCase extends TestCase {
         Element port = property.createElement("port");
         http.appendChild(port);
         port.setTextContent("8080");
-        Document value = assembly.deriveValueFromXPath("$domain/http/port", domain);
+        Document value = logicalModelGenerator.deriveValueFromXPath("$domain/http/port", domain);
         Node child = value.getDocumentElement().getFirstChild();
         assertEquals(Node.ELEMENT_NODE, child.getNodeType());
         assertEquals("port", child.getNodeName());
@@ -67,7 +69,7 @@ public class AssemblyPropertyTestCase extends TestCase {
         Element http2 = property.createElement("http");
         root.appendChild(http2);
         http2.setAttribute("index", "2");
-        Document value = assembly.deriveValueFromXPath("$domain/http", domain);
+        Document value = logicalModelGenerator.deriveValueFromXPath("$domain/http", domain);
         Node child = value.getDocumentElement();
         NodeList list = child.getChildNodes();
         assertEquals(2, list.getLength());
@@ -79,7 +81,7 @@ public class AssemblyPropertyTestCase extends TestCase {
 
     public void testUnknownVariable() {
         try {
-            assembly.deriveValueFromXPath("$foo", domain);
+            logicalModelGenerator.deriveValueFromXPath("$foo", domain);
             fail();
         } catch (XPathExpressionException e) {
             // this is ok?
@@ -88,8 +90,8 @@ public class AssemblyPropertyTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        assembly = new MockAssembly();
-        domain = new LogicalComponent<CompositeImplementation>(assembly.domainUri, assembly.domainUri, null, null);
+        logicalModelGenerator = new LogicalModelGeneratorImpl(null, null);
+        domain = new LogicalComponent<CompositeImplementation>(URI.create("sca://./domain"), URI.create("sca://./domain"), null, null);
 
         property = FACTORY.newDocumentBuilder().newDocument();
         root = property.createElement("value");
@@ -97,10 +99,4 @@ public class AssemblyPropertyTestCase extends TestCase {
         domain.setPropertyValue("domain", property);
     }
 
-    private static class MockAssembly extends AbstractAssembly {
-        public MockAssembly() {
-            super(URI.create("sca://./domain"), null, null, null, null, null, null, null, null);
-
-        }
-    }
 }

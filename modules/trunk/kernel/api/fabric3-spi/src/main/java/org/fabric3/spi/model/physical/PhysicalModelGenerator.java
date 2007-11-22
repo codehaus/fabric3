@@ -16,9 +16,13 @@
  */
 package org.fabric3.spi.model.physical;
 
+import java.net.URI;
+import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 
 import org.fabric3.scdl.definitions.PolicySet;
+import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.model.instance.LogicalBinding;
@@ -131,5 +135,9 @@ public interface PhysicalModelGenerator {
      * @return Resolved physical interceptor definitions.
      */
     Set<PhysicalInterceptorDefinition> generateInterceptorDefinitions(Set<PolicySet> policies) throws GenerationException;
+
+    Map<URI, GeneratorContext> generate(Collection<LogicalComponent<?>> components) throws ActivateException;
+
+    void provision(Map<URI, GeneratorContext> contexts) throws ActivateException;
 
 }

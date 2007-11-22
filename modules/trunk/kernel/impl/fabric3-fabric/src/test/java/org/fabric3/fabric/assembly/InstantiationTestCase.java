@@ -1,12 +1,12 @@
 package org.fabric3.fabric.assembly;
 
 import java.net.URI;
-import java.util.List;
 
 import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 
+import org.fabric3.fabric.model.logical.LogicalModelGeneratorImpl;
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.ComponentType;
@@ -18,8 +18,7 @@ import org.fabric3.scdl.Implementation;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
-import org.fabric3.spi.model.instance.Referenceable;
-import org.fabric3.fabric.assembly.resolver.ResolutionException;
+import org.fabric3.spi.model.logical.LogicalModelGenerator;
 
 /**
  * @version $Rev$ $Date$
@@ -32,12 +31,12 @@ public class InstantiationTestCase extends TestCase {
     public static final String SERVICE_URI = COMPONENT_URI + "#service";
     public static final String REFERENCE_URI = COMPONENT_URI + "#reference";
 
-    private AbstractAssembly assembly;
+    private LogicalModelGenerator logicalModelGenerator;
     private LogicalComponent<CompositeImplementation> parent;
 
     public void testInstantiateChildren() throws Exception {
         ComponentDefinition<?> definition = createParentWithChild();
-        LogicalComponent<?> logicalComponent = assembly.instantiate(parent, definition);
+        LogicalComponent<?> logicalComponent = logicalModelGenerator.instantiate(parent, definition);
         assertEquals(COMPONENT_URI, logicalComponent.getUri().toString());
         LogicalComponent<?> logicalChild = logicalComponent.getComponent(URI.create(CHILD_URI));
         assertEquals(CHILD_URI, logicalChild.getUri().toString());
@@ -45,7 +44,7 @@ public class InstantiationTestCase extends TestCase {
 
     public void testInstantiateServiceReference() throws Exception {
         ComponentDefinition<?> definition = createParentWithServiceAndReference();
-        LogicalComponent<?> logicalComponent = assembly.instantiate(parent, definition);
+        LogicalComponent<?> logicalComponent = logicalModelGenerator.instantiate(parent, definition);
         LogicalService logicalService = logicalComponent.getService("service");
         assertEquals(SERVICE_URI, logicalService.getUri().toString());
         LogicalReference logicalReference = logicalComponent.getReference("reference");
@@ -55,7 +54,7 @@ public class InstantiationTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        assembly = new MockAssembly();
+        logicalModelGenerator = new LogicalModelGeneratorImpl(null, null);
         parent = new LogicalComponent<CompositeImplementation>(PARENT_URI, null, null, null);
     }
 
@@ -91,19 +90,6 @@ public class InstantiationTestCase extends TestCase {
         definition.setImplementation(implementation);
         return definition;
 
-    }
-
-    private class MockAssembly extends AbstractAssembly {
-
-        public MockAssembly() {
-            super(URI.create("sca://./domain"), null, null, null, null, null, null, null, null);
-
-        }
-
-        protected Referenceable resolveTarget(URI uri, List<LogicalComponent<CompositeImplementation>> components)
-                throws ResolutionException {
-            return null;
-        }
     }
 
     private class MockImplementation extends Implementation<AbstractComponentType<?, ?, ?, ?>> {

@@ -16,6 +16,15 @@
  */
 package org.fabric3.spi.model.logical;
 
+import java.util.List;
+
+import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.Composite;
+import org.fabric3.scdl.CompositeImplementation;
+import org.fabric3.scdl.Implementation;
+import org.fabric3.spi.assembly.ActivateException;
+import org.fabric3.spi.model.instance.LogicalComponent;
+
 /**
  * Interface that abstracts the concerns of instantiating and maintaining 
  * logical components within the assembly.
@@ -25,5 +34,10 @@ package org.fabric3.spi.model.logical;
  * @version $Revision$ $Date$
  */
 public interface LogicalModelGenerator {
+
+    List<LogicalComponent<?>> include(LogicalComponent<CompositeImplementation> domain, Composite composite) throws ActivateException;
+    
+    <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalComponent<CompositeImplementation> parent,
+            ComponentDefinition<I> definition) throws ActivateException;
 
 }
