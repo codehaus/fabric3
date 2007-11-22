@@ -147,174 +147,6 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
         }
     }
 
-    private void generateChangeSets(LogicalComponent<?> component, Map<URI, GeneratorContext> contexts)
-            throws GenerationException, ResolutionException {
-        ComponentDefinition<? extends Implementation<?>> definition = component.getDefinition();
-        Implementation<?> implementation = definition.getImplementation();
-        if (CompositeImplementation.IMPLEMENTATION_COMPOSITE.equals(implementation.getType())) {
-            for (LogicalComponent<?> child : component.getComponents()) {
-                // if the component is already running on a node (e.g. during recovery), skip provisioning
-                if (child.isActive()) {
-                    continue;
-                }
-                // generate changesets recursively for children
-                generateChangeSets(child, contexts);
-            }
-        } else {
-            // leaf component, generate a physical component and update the change sets
-            // if component is already running on a node (e.g. during recovery), skip provisioning
-            if (component.isActive()) {
-                return;
-            }
-            generatePhysicalComponent(component, contexts);
-            generatePhysicalWires(component, contexts);
-        }
-    }
-
-    /**
-     * Generates physical wire definitions for a logical component, updating the GeneratorContext. Wire targets will be
-     * resolved against the given parent.
-     * <p/>
-     *
-     * @param component the component to generate wires for
-     * @param contexts  the GeneratorContexts to update with physical wire definitions
-     * @throws GenerationException if an error occurs generating phyasical wire definitions
-     * @throws org.fabric3.fabric.assembly.resolver.ResolutionException
-     *                             if an error occurs resolving a wire target
-     */
-    private void generatePhysicalWires(LogicalComponent<?> component, Map<URI, GeneratorContext> contexts)
-            throws GenerationException, ResolutionException {
-
-        URI runtimeId = component.getRuntimeId();
-        GeneratorContext context = contexts.get(runtimeId);
-
-        if (context == null) {
-            PhysicalChangeSet changeSet = new PhysicalChangeSet();
-            CommandSet commandSet = new CommandSet();
-            context = new DefaultGeneratorContext(changeSet, commandSet);
-            contexts.put(runtimeId, context);
-        }
-
-        for (LogicalReference entry : component.getReferences()) {
-            if (entry.getBindings().isEmpty()) {
-                for (URI uri : entry.getTargetUris()) {
-                    LogicalComponent<?> target = domainService.findComponent(uri);
-                    String serviceName = uri.getFragment();
-                    if(target == null) {
-                        System.err.println(uri);
-                    }
-                    LogicalService targetService = target.getService(serviceName);
-                    assert targetService != null;
-                    while (CompositeImplementation.class.isInstance(target.getDefinition().getImplementation())) {
-                        URI promoteUri = targetService.getPromote();
-                        URI promotedComponent = UriHelper.getDefragmentedName(promoteUri);
-                        target = target.getComponent(promotedComponent);
-                        targetService = target.getService(promoteUri.getFragment());
-                    }
-                    LogicalReference reference = component.getReference(entry.getUri().getFragment());
-
-                    generateUnboundWire(component, reference, targetService, target, context);
-
-                }
-            } else {
-                // TODO this should be extensible and moved out
-                LogicalBinding<?> logicalBinding = entry.getBindings().get(0);
-                generateBoundReferenceWire(component, entry, logicalBinding, context);
-            }
-
-        }
-
-        // generate changesets for bound service wires
-        for (LogicalService service : component.getServices()) {
-            List<LogicalBinding<?>> bindings = service.getBindings();
-            if (bindings.isEmpty()) {
-                // service is not bound, skip
-                continue;
-            }
-            for (LogicalBinding<?> binding : service.getBindings()) {
-                generateBoundServiceWire(service, binding, component, context);
-            }
-        }
-
-        // generate wire definitions for resources
-        for (LogicalResource<?> resource : component.getResources()) {
-            generateResourceWire(component, resource, context);
-        }
-
-    }
-
-    private void generateCommandSets(LogicalComponent<?> component,
-                                       Map<URI, GeneratorContext> contexts) throws GenerationException {
-
-        GeneratorContext context = contexts.get(component.getRuntimeId());
-        if (context != null) {
-            generateCommandSet(component, context);
-            if (isEagerInit(component)) {
-                // if the component is eager init, add it to the list of components to initialize on the node it
-                // will be provisioned to
-                CommandSet commandSet = context.getCommandSet();
-                List<Command> set = commandSet.getCommands(CommandSet.Phase.LAST);
-                boolean found = false;
-                for (Command command : set) {
-                    // check if the command exists, and if so update it
-                    if (command instanceof InitializeComponentCommand) {
-                        ((InitializeComponentCommand) command).addUri(component.getUri());
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
-                    // a previous command was not found so create one
-                    // @FIXME a trailing slash is needed since group ids are set on ComponentDefinitions using URI#resolve(",")
-                    URI groupId = URI.create(component.getParent().getUri().toString() + "/");
-                    InitializeComponentCommand initCommand = new InitializeComponentCommand(groupId);
-                    initCommand.addUri(component.getUri());
-                    commandSet.add(CommandSet.Phase.LAST, initCommand);
-                }
-            }
-        }
-        for (LogicalComponent<?> child : component.getComponents()) {
-            generateCommandSets(child, contexts);
-        }
-    }
-
-    /**
-     * Generates a physical component from the given logical component, updating the appropriate GeneratorContext or
-     * creating a new one if necessary. A GeneratorContext is created for each service node a physical compnent is
-     * provisioned to.
-     * <p/>
-     *
-     * @param component the logical component to generate from
-     * @param contexts  the collection of generator contexts
-     * @throws GenerationException if an exception occurs during generation
-     */
-    private void generatePhysicalComponent(LogicalComponent<?> component, Map<URI, GeneratorContext> contexts)
-            throws GenerationException {
-        URI id = component.getRuntimeId();
-        GeneratorContext context = contexts.get(id);
-        if (context == null) {
-            PhysicalChangeSet changeSet = new PhysicalChangeSet();
-            CommandSet commandSet = new CommandSet();
-            context = new DefaultGeneratorContext(changeSet, commandSet);
-            contexts.put(id, context);
-        }
-        context.getPhysicalChangeSet().addComponentDefinition(generatePhysicalComponent(component, context));
-    }
-
-    private boolean isEagerInit(LogicalComponent<?> component) {
-        ComponentDefinition<? extends Implementation<?>> definition = component.getDefinition();
-        AbstractComponentType<?, ?, ?, ?> componentType = definition.getImplementation().getComponentType();
-        if (!componentType.getImplementationScope().equals(Scope.COMPOSITE)) {
-            return false;
-        }
-
-        Integer level = definition.getInitLevel();
-        if (level == null) {
-            level = componentType.getInitLevel();
-        }
-        return level > 0;
-    }
-
     @SuppressWarnings("unchecked")
     public <C extends LogicalComponent<?>> void generateResourceWire(C source,
                                                                      LogicalResource<?> resource,
@@ -618,6 +450,174 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
 
         return wireDefinition;
 
+    }
+
+    private void generateChangeSets(LogicalComponent<?> component, Map<URI, GeneratorContext> contexts)
+            throws GenerationException, ResolutionException {
+        ComponentDefinition<? extends Implementation<?>> definition = component.getDefinition();
+        Implementation<?> implementation = definition.getImplementation();
+        if (CompositeImplementation.IMPLEMENTATION_COMPOSITE.equals(implementation.getType())) {
+            for (LogicalComponent<?> child : component.getComponents()) {
+                // if the component is already running on a node (e.g. during recovery), skip provisioning
+                if (child.isActive()) {
+                    continue;
+                }
+                // generate changesets recursively for children
+                generateChangeSets(child, contexts);
+            }
+        } else {
+            // leaf component, generate a physical component and update the change sets
+            // if component is already running on a node (e.g. during recovery), skip provisioning
+            if (component.isActive()) {
+                return;
+            }
+            generatePhysicalComponent(component, contexts);
+            generatePhysicalWires(component, contexts);
+        }
+    }
+
+    /**
+     * Generates physical wire definitions for a logical component, updating the GeneratorContext. Wire targets will be
+     * resolved against the given parent.
+     * <p/>
+     *
+     * @param component the component to generate wires for
+     * @param contexts  the GeneratorContexts to update with physical wire definitions
+     * @throws GenerationException if an error occurs generating phyasical wire definitions
+     * @throws org.fabric3.fabric.assembly.resolver.ResolutionException
+     *                             if an error occurs resolving a wire target
+     */
+    private void generatePhysicalWires(LogicalComponent<?> component, Map<URI, GeneratorContext> contexts)
+            throws GenerationException, ResolutionException {
+
+        URI runtimeId = component.getRuntimeId();
+        GeneratorContext context = contexts.get(runtimeId);
+
+        if (context == null) {
+            PhysicalChangeSet changeSet = new PhysicalChangeSet();
+            CommandSet commandSet = new CommandSet();
+            context = new DefaultGeneratorContext(changeSet, commandSet);
+            contexts.put(runtimeId, context);
+        }
+
+        for (LogicalReference entry : component.getReferences()) {
+            if (entry.getBindings().isEmpty()) {
+                for (URI uri : entry.getTargetUris()) {
+                    LogicalComponent<?> target = domainService.findComponent(uri);
+                    String serviceName = uri.getFragment();
+                    if(target == null) {
+                        System.err.println(uri);
+                    }
+                    LogicalService targetService = target.getService(serviceName);
+                    assert targetService != null;
+                    while (CompositeImplementation.class.isInstance(target.getDefinition().getImplementation())) {
+                        URI promoteUri = targetService.getPromote();
+                        URI promotedComponent = UriHelper.getDefragmentedName(promoteUri);
+                        target = target.getComponent(promotedComponent);
+                        targetService = target.getService(promoteUri.getFragment());
+                    }
+                    LogicalReference reference = component.getReference(entry.getUri().getFragment());
+
+                    generateUnboundWire(component, reference, targetService, target, context);
+
+                }
+            } else {
+                // TODO this should be extensible and moved out
+                LogicalBinding<?> logicalBinding = entry.getBindings().get(0);
+                generateBoundReferenceWire(component, entry, logicalBinding, context);
+            }
+
+        }
+
+        // generate changesets for bound service wires
+        for (LogicalService service : component.getServices()) {
+            List<LogicalBinding<?>> bindings = service.getBindings();
+            if (bindings.isEmpty()) {
+                // service is not bound, skip
+                continue;
+            }
+            for (LogicalBinding<?> binding : service.getBindings()) {
+                generateBoundServiceWire(service, binding, component, context);
+            }
+        }
+
+        // generate wire definitions for resources
+        for (LogicalResource<?> resource : component.getResources()) {
+            generateResourceWire(component, resource, context);
+        }
+
+    }
+
+    private void generateCommandSets(LogicalComponent<?> component,
+                                       Map<URI, GeneratorContext> contexts) throws GenerationException {
+
+        GeneratorContext context = contexts.get(component.getRuntimeId());
+        if (context != null) {
+            generateCommandSet(component, context);
+            if (isEagerInit(component)) {
+                // if the component is eager init, add it to the list of components to initialize on the node it
+                // will be provisioned to
+                CommandSet commandSet = context.getCommandSet();
+                List<Command> set = commandSet.getCommands(CommandSet.Phase.LAST);
+                boolean found = false;
+                for (Command command : set) {
+                    // check if the command exists, and if so update it
+                    if (command instanceof InitializeComponentCommand) {
+                        ((InitializeComponentCommand) command).addUri(component.getUri());
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    // a previous command was not found so create one
+                    // @FIXME a trailing slash is needed since group ids are set on ComponentDefinitions using URI#resolve(",")
+                    URI groupId = URI.create(component.getParent().getUri().toString() + "/");
+                    InitializeComponentCommand initCommand = new InitializeComponentCommand(groupId);
+                    initCommand.addUri(component.getUri());
+                    commandSet.add(CommandSet.Phase.LAST, initCommand);
+                }
+            }
+        }
+        for (LogicalComponent<?> child : component.getComponents()) {
+            generateCommandSets(child, contexts);
+        }
+    }
+
+    /**
+     * Generates a physical component from the given logical component, updating the appropriate GeneratorContext or
+     * creating a new one if necessary. A GeneratorContext is created for each service node a physical compnent is
+     * provisioned to.
+     * <p/>
+     *
+     * @param component the logical component to generate from
+     * @param contexts  the collection of generator contexts
+     * @throws GenerationException if an exception occurs during generation
+     */
+    private void generatePhysicalComponent(LogicalComponent<?> component, Map<URI, GeneratorContext> contexts)
+            throws GenerationException {
+        URI id = component.getRuntimeId();
+        GeneratorContext context = contexts.get(id);
+        if (context == null) {
+            PhysicalChangeSet changeSet = new PhysicalChangeSet();
+            CommandSet commandSet = new CommandSet();
+            context = new DefaultGeneratorContext(changeSet, commandSet);
+            contexts.put(id, context);
+        }
+        context.getPhysicalChangeSet().addComponentDefinition(generatePhysicalComponent(component, context));
+    }
+
+    private boolean isEagerInit(LogicalComponent<?> component) {
+        ComponentDefinition<? extends Implementation<?>> definition = component.getDefinition();
+        AbstractComponentType<?, ?, ?, ?> componentType = definition.getImplementation().getComponentType();
+        if (!componentType.getImplementationScope().equals(Scope.COMPOSITE)) {
+            return false;
+        }
+
+        Integer level = definition.getInitLevel();
+        if (level == null) {
+            level = componentType.getInitLevel();
+        }
+        return level > 0;
     }
 
 }

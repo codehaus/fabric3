@@ -85,7 +85,6 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
     static {
         DOCUMENT_FACTORY = DocumentBuilderFactory.newInstance();
         DOCUMENT_FACTORY.setNamespaceAware(true);
-
         XPATH_FACTORY = XPathFactory.newInstance();
     }
     

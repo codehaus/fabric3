@@ -35,8 +35,27 @@ import org.fabric3.spi.model.instance.LogicalComponent;
  */
 public interface LogicalModelGenerator {
 
+    /**
+     * Include the composite into the domain.
+     * 
+     * @param domain Domain in which the composite is to be included.
+     * @param composite Composite to be included in the domain.
+     * @return Components within the composite.
+     * @throws ActivateException If unable to include the composite.
+     */
     List<LogicalComponent<?>> include(LogicalComponent<CompositeImplementation> domain, Composite composite) throws ActivateException;
     
+    /**
+     * Instantiate a component.
+     * 
+     * TODO This may need to be removed.
+     * 
+     * @param <I>
+     * @param parent
+     * @param definition
+     * @return
+     * @throws ActivateException
+     */
     <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalComponent<CompositeImplementation> parent,
             ComponentDefinition<I> definition) throws ActivateException;
 

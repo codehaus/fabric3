@@ -138,8 +138,21 @@ public interface PhysicalModelGenerator {
      */
     Set<PhysicalInterceptorDefinition> generateInterceptorDefinitions(Set<PolicySet> policies) throws GenerationException;
 
+    /**
+     * Generate the physical changeset for the set of logical components.
+     * 
+     * @param components Logical component set.
+     * @return Physical changeset for each allocated runtime.
+     * @throws ActivateException If unable to generate changeset.
+     */
     Map<URI, GeneratorContext> generate(Collection<LogicalComponent<?>> components) throws ActivateException;
 
+    /**
+     * Provision the physical changeset to the participant nodes.
+     * 
+     * @param contexts Physical changesets to be provisioned.
+     * @throws ActivateException If unable to provision changesets.
+     */
     void provision(Map<URI, GeneratorContext> contexts) throws ActivateException;
 
 }

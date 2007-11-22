@@ -19,7 +19,6 @@ package org.fabric3.fabric.domain;
 import java.net.URI;
 import java.util.Collection;
 
-import org.fabric3.fabric.runtime.ComponentNames;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.spi.assembly.AssemblyStore;
@@ -27,7 +26,6 @@ import org.fabric3.spi.assembly.RecordException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.util.UriHelper;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 /**
