@@ -47,6 +47,15 @@ public interface ContributionService {
     URI contribute(ContributionSource source) throws ContributionException;
 
     /**
+     * Contribute a collection of artifacts to a domain. Artifacts will be ordered by import dependencies.
+     *
+     * @param sources the artifacts to contribute
+     * @return a list of contributed URIs.
+     * @throws ContributionException if an error is encountered contributing the artifacts
+     */
+    List<URI> contribute(List<ContributionSource> sources) throws ContributionException;
+
+    /**
      * Updates a previously contributed artifact if its timestamp and checksum have changed
      *
      * @param source the contribution source
