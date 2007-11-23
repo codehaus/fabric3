@@ -81,6 +81,8 @@ import org.fabric3.fabric.implementation.system.SystemComponentTypeLoaderImpl;
 import org.fabric3.fabric.implementation.system.SystemImplementationLoader;
 import org.fabric3.fabric.implementation.system.SystemWireAttacher;
 import org.fabric3.fabric.loader.LoaderRegistryImpl;
+import org.fabric3.fabric.model.logical.AtomicComponentInstantiator;
+import org.fabric3.fabric.model.logical.CompositeComponentInstantiator;
 import org.fabric3.fabric.model.logical.LogicalModelGenerator;
 import org.fabric3.fabric.model.logical.LogicalModelGeneratorImpl;
 import org.fabric3.fabric.model.physical.PhysicalModelGenerator;
@@ -288,7 +290,14 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         DomainService domainService = new DomainServiceImpl(store);
         PhysicalModelGenerator physicalModelGenerator = createPhysicalModelGenerator(generatorRegistry, routingService, domainService);
         
-        LogicalModelGenerator logicalModelGenerator = new LogicalModelGeneratorImpl(resolver, normalizer, domainService);
+        AtomicComponentInstantiator atomicComponentInstantiator = new AtomicComponentInstantiator();
+        CompositeComponentInstantiator compositeComponentInstantiator = new CompositeComponentInstantiator(atomicComponentInstantiator);
+        
+        LogicalModelGenerator logicalModelGenerator = new LogicalModelGeneratorImpl(resolver, 
+                                                                                    normalizer, 
+                                                                                    domainService,
+                                                                                    atomicComponentInstantiator,
+                                                                                    compositeComponentInstantiator);
 
         runtimeAssembly = new RuntimeAssemblyImpl(allocator,
                                                   routingService,

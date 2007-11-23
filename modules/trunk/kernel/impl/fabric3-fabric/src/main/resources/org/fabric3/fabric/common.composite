@@ -25,12 +25,22 @@
            name="org.fabric3.fabric.Common"
            autowire="true">
     
+    <component name="atomicComponentInstantiator">
+        <system:implementation.system class="org.fabric3.fabric.model.logical.AtomicComponentInstantiator"/>
+    </component>
+    
+    <component name="compositeComponentInitiator">
+        <system:implementation.system class="org.fabric3.fabric.model.logical.CompositeComponentInstantiator"/>
+        <reference name="atomicComponentInstantiator" target="atomicComponentInstantiator"/>
+    </component>
+    
     <component name="domainService">
         <system:implementation.system class="org.fabric3.fabric.domain.DomainServiceImpl"/>
     </component>
     
     <component name="logicalModelGenerator">
         <system:implementation.system class="org.fabric3.fabric.model.logical.LogicalModelGeneratorImpl"/>
+        <reference name="atomicComponentInstantiator" target="atomicComponentInstantiator"/>
     </component>
     
     <component name="physicalModelGenerator">

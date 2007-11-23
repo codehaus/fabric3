@@ -6,6 +6,8 @@ import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 
+import org.fabric3.fabric.model.logical.AtomicComponentInstantiator;
+import org.fabric3.fabric.model.logical.CompositeComponentInstantiator;
 import org.fabric3.fabric.model.logical.LogicalModelGenerator;
 import org.fabric3.fabric.model.logical.LogicalModelGeneratorImpl;
 import org.fabric3.scdl.AbstractComponentType;
@@ -54,7 +56,11 @@ public class InstantiationTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        logicalModelGenerator = new LogicalModelGeneratorImpl(null, null, null);
+        
+        AtomicComponentInstantiator atomicComponentInstantiator = new AtomicComponentInstantiator();
+        CompositeComponentInstantiator compositeComponentInstantiator = new CompositeComponentInstantiator(atomicComponentInstantiator);
+        
+        logicalModelGenerator = new LogicalModelGeneratorImpl(null, null, null, atomicComponentInstantiator, compositeComponentInstantiator);
         parent = new LogicalComponent<CompositeImplementation>(PARENT_URI, null, null, null);
     }
 
