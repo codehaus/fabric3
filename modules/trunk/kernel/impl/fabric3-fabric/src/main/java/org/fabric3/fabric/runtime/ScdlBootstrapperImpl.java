@@ -123,7 +123,6 @@ import org.fabric3.loader.common.ComponentReferenceLoader;
 import org.fabric3.loader.common.ComponentServiceLoader;
 import org.fabric3.loader.common.DefaultPolicyHelper;
 import org.fabric3.loader.common.LoaderContextImpl;
-import org.fabric3.loader.common.PropertyHelper;
 import org.fabric3.loader.common.PropertyHelperImpl;
 import org.fabric3.loader.composite.ComponentLoader;
 import org.fabric3.loader.composite.CompositeLoader;
@@ -253,7 +252,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         }            
         
         monitorFactory = runtime.getMonitorFactory();
-        monitorFactory.register(new GroupInitializationExceptionFormatter(monitorFactory));
+        monitorFactory.register(new GroupInitializationExceptionFormatter((FormatterRegistry) monitorFactory));
         // create the ClassLoaderRegistry
         classLoaderRegistry = new ClassLoaderRegistryImpl();
         componentManager = ((AbstractRuntime<?>) runtime).getComponentManager();

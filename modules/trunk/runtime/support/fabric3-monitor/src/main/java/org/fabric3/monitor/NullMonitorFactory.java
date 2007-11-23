@@ -27,6 +27,7 @@ import java.util.Map;
 import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.host.monitor.ExceptionFormatter;
+import org.fabric3.host.monitor.FormatterRegistry;
 import org.fabric3.host.monitor.MonitorFactory;
 
 /**
@@ -36,7 +37,7 @@ import org.fabric3.host.monitor.MonitorFactory;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class NullMonitorFactory implements MonitorFactory {
+public class NullMonitorFactory implements MonitorFactory, FormatterRegistry {
 
     /**
      * Singleton hander that does nothing.
