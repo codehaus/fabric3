@@ -43,7 +43,6 @@ import org.fabric3.fabric.services.xstream.XStreamFactory;
 import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.services.contribution.Contribution;
-import org.fabric3.spi.services.contribution.ContributionStoreRegistry;
 import org.fabric3.spi.services.contribution.Export;
 import org.fabric3.spi.services.contribution.Import;
 import org.fabric3.spi.services.contribution.MetaDataStore;
@@ -60,22 +59,17 @@ import org.fabric3.spi.services.contribution.Symbol;
 @EagerInit
 public class MetaDataStoreImpl implements MetaDataStore {
     public static final QName COMPOSITE = new QName(Constants.SCA_NS, "composite");
-    private final ContributionStoreRegistry registry;
     private final XStream xstream;
     private File root;
     private String repository;
     private Map<URI, Contribution> cache = new ConcurrentHashMap<URI, Contribution>();
     private Map<QName, Map<Export, Contribution>> exportsToContributionCache =
             new ConcurrentHashMap<QName, Map<Export, Contribution>>();
-    private String storeId = DEFAULT_STORE;
+    private String storeId = "DefaultStore";
     private boolean persistent = true;
     private File baseDir;
 
-    public MetaDataStoreImpl(@Reference HostInfo hostInfo,
-                             @Reference ContributionStoreRegistry registry,
-                             @Reference XStreamFactory xstreamFactory) {
-
-        this.registry = registry;
+    public MetaDataStoreImpl(@Reference HostInfo hostInfo, @Reference XStreamFactory xstreamFactory) {
         this.xstream = xstreamFactory.createInstance();
         URL url = hostInfo.getBaseURL();
         if (url != null) {
@@ -114,7 +108,6 @@ public class MetaDataStoreImpl implements MetaDataStore {
             }
             recover();
         }
-        registry.register(this);
     }
 
     public String getId() {

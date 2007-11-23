@@ -44,11 +44,9 @@ import org.fabric3.spi.services.archive.ArchiveStoreException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolver;
 import org.fabric3.spi.services.contribution.Contribution;
-import org.fabric3.spi.services.contribution.ContributionStoreRegistry;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.MetaDataStoreException;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
-import org.fabric3.spi.services.contribution.StoreNotFoundException;
 
 /**
  * Default ContributionService implementation
@@ -59,20 +57,23 @@ import org.fabric3.spi.services.contribution.StoreNotFoundException;
 @EagerInit
 public class ContributionServiceImpl implements ContributionService {
     private ProcessorRegistry processorRegistry;
-    private ContributionStoreRegistry contributionStoreRegistry;
+    private ArchiveStore archiveStore;
+    private MetaDataStore metaDataStore;
     private ContentTypeResolver contentTypeResolver;
     private DependencyService dependencyService;
     private String uriPrefix = "file://contribution/";
     private ContributionServiceMonitor monitor;
 
     public ContributionServiceImpl(@Reference ProcessorRegistry processorRegistry,
-                                   @Reference ContributionStoreRegistry contributionStoreRegistry,
+                                   @Reference ArchiveStore archiveStore,
+                                   @Reference MetaDataStore metaDataStore,
                                    @Reference ContentTypeResolver contentTypeResolver,
                                    @Reference DependencyService dependencyService,
                                    @Reference MonitorFactory monitorFactory)
             throws IOException, ClassNotFoundException {
         this.processorRegistry = processorRegistry;
-        this.contributionStoreRegistry = contributionStoreRegistry;
+        this.archiveStore = archiveStore;
+        this.metaDataStore = metaDataStore;
         this.contentTypeResolver = contentTypeResolver;
         this.dependencyService = dependencyService;
         this.monitor = monitorFactory.getMonitor(ContributionServiceMonitor.class);
@@ -83,12 +84,11 @@ public class ContributionServiceImpl implements ContributionService {
         this.uriPrefix = uriPrefix;
     }
 
-    public List<URI> contribute(String id, List<ContributionSource> sources) throws ContributionException {
+    public List<URI> contribute(List<ContributionSource> sources) throws ContributionException {
         List<Contribution> contributions = new ArrayList<Contribution>(sources.size());
         for (ContributionSource source : sources) {
             // store the contributions
-            // xcv FIXME need to add id to contributionsource
-            contributions.add(store(id, source));
+            contributions.add(store(source));
         }
         for (Contribution contribution : contributions) {
             // process any SCA manifest information, including imports and exports
@@ -98,7 +98,7 @@ public class ContributionServiceImpl implements ContributionService {
         contributions = dependencyService.order(contributions);
         for (Contribution contribution : contributions) {
             // continue processing the contributions. As they are ordered, dependencies will resolve correctly
-            processContents(id, contribution);
+            processContents(contribution);
         }
         List<URI> uris = new ArrayList<URI>(contributions.size());
         for (Contribution contribution : contributions) {
@@ -107,17 +107,20 @@ public class ContributionServiceImpl implements ContributionService {
         return uris;
     }
 
-    public URI contribute(String id, ContributionSource source) throws ContributionException {
-        Contribution contribution = store(id, source);
+    @Deprecated
+    public URI contribute(String storeId, ContributionSource source) throws ContributionException {
+        return contribute(source);
+    }
+
+    public URI contribute(ContributionSource source) throws ContributionException {
+        Contribution contribution = store(source);
         processorRegistry.processManifest(contribution);
-        processContents(id, contribution);
+        processContents(contribution);
         return contribution.getUri();
     }
 
     public boolean exists(URI uri) {
-        String id = parseStoreId(uri);
-        MetaDataStore metaDataStore = contributionStoreRegistry.getMetadataStore(id);
-        return metaDataStore != null && metaDataStore.find(uri) != null;
+        return metaDataStore.find(uri) != null;
     }
 
     public void update(ContributionSource source) throws ContributionException {
@@ -142,11 +145,6 @@ public class ContributionServiceImpl implements ContributionService {
     }
 
     public long getContributionTimestamp(URI uri) {
-        String id = parseStoreId(uri);
-        MetaDataStore metaDataStore = contributionStoreRegistry.getMetadataStore(id);
-        if (metaDataStore == null) {
-            return -1;
-        }
         Contribution contribution = metaDataStore.find(uri);
         if (contribution == null) {
             return -1;
@@ -155,11 +153,6 @@ public class ContributionServiceImpl implements ContributionService {
     }
 
     public List<Deployable> getDeployables(URI contributionUri) throws ContributionException {
-        String id = parseStoreId(contributionUri);
-        MetaDataStore metaDataStore = contributionStoreRegistry.getMetadataStore(id);
-        if (metaDataStore == null) {
-            throw new StoreNotFoundException("MetaData store not found", id);
-        }
         Contribution contribution = metaDataStore.find(contributionUri);
         if (contribution == null) {
             throw new ContributionNotFoundException("No contribution found for URI", contributionUri.toString());
@@ -186,11 +179,6 @@ public class ContributionServiceImpl implements ContributionService {
     }
 
     private void update(URI uri, byte[] checksum, long timestamp) throws ContributionException, IOException {
-        String id = parseStoreId(uri);
-        MetaDataStore metaDataStore = contributionStoreRegistry.getMetadataStore(id);
-        if (metaDataStore == null) {
-            throw new StoreNotFoundException("MetaData store not found", id);
-        }
         Contribution contribution = metaDataStore.find(uri);
         if (contribution == null) {
             throw new ContributionNotFoundException("Contribution not found for ", uri.toString());
@@ -206,21 +194,16 @@ public class ContributionServiceImpl implements ContributionService {
     /**
      * Stores the contents of a contribution in the archive store if it is not local
      *
-     * @param id     the store id
      * @param source the contribution source
      * @return the contribution
      * @throws ContributionException if an error occurs during the store operation
      */
-    private Contribution store(String id, ContributionSource source) throws ContributionException {
-        URI contributionUri = URI.create(uriPrefix + id + "/" + UUID.randomUUID());
+    private Contribution store(ContributionSource source) throws ContributionException {
+        URI contributionUri = URI.create(uriPrefix + "/" + UUID.randomUUID());
         URL locationUrl;
         if (!source.persist()) {
             locationUrl = source.getLocation();
         } else {
-            ArchiveStore archiveStore = contributionStoreRegistry.getArchiveStore(id);
-            if (archiveStore == null) {
-                throw new StoreNotFoundException("Archive store not found", id);
-            }
             InputStream stream = null;
             try {
                 stream = source.getSource();
@@ -253,20 +236,14 @@ public class ContributionServiceImpl implements ContributionService {
     /**
      * Processes contribution contents. This assumes all dependencies are installed and can be resolved
      *
-     * @param id           the metadata store id
      * @param contribution the contribution to process
      * @throws ContributionException if an error occurs during processing
      */
-    private void processContents(String id, Contribution contribution) throws ContributionException {
+    private void processContents(Contribution contribution) throws ContributionException {
         // store the contribution
-        processorRegistry.processContribution(contribution, contribution.getContentType(), contribution.getUri());
+        processorRegistry.processContribution(contribution, contribution.getUri());
         // TODO rollback storage if an error processing contribution
         // store the contribution index
-        MetaDataStore metaDataStore = contributionStoreRegistry.getMetadataStore(id);
-        if (metaDataStore == null) {
-            throw new StoreNotFoundException("MetaData store not found", id);
-        }
-
         //store the contribution in the memory cache
         try {
             metaDataStore.store(contribution);
@@ -275,23 +252,4 @@ public class ContributionServiceImpl implements ContributionService {
         }
     }
 
-
-    /**
-     * Parses the store id from a contribution URI of the form <code>sca://contribution/<store id>/</code>
-     *
-     * @param uri the URI to parse
-     * @return the store id
-     */
-    private String parseStoreId(URI uri) {
-        String s = uri.toString();
-        assert s.length() > uriPrefix.length();
-        s = s.substring(uriPrefix.length());
-        int index = s.indexOf("/");
-        if (index > 0) {
-            return s.substring(0, index);
-        } else {
-            return s;
-        }
-
-    }
 }

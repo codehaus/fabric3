@@ -49,7 +49,6 @@
 
     <component name="distributedAssembly">
         <system:implementation.system class="org.fabric3.fabric.assembly.DistributedAssemblyImpl"/>
-        <reference name="store" target="MetadataStore"/>
     </component>
 
     <component name="wireResolver">

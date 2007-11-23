@@ -78,8 +78,8 @@ public class ProcessorRegistryImpl implements ProcessorRegistry {
 
     }
 
-    public void processContribution(Contribution contribution, String contentType, URI source)
-            throws ContributionException {
+    public void processContribution(Contribution contribution, URI source) throws ContributionException {
+        String contentType = contribution.getContentType();
         ContributionProcessor processor = contributionProcessorCache.get(contentType);
         if (processor == null) {
             throw new UnsupportedContentTypeException(contentType, source.toString());

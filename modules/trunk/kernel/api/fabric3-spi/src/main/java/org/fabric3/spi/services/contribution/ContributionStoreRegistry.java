@@ -23,6 +23,7 @@ import org.fabric3.spi.services.archive.ArchiveStore;
  *
  * @version $Rev$ $Date$
  */
+@Deprecated
 public interface ContributionStoreRegistry {
 
     /**

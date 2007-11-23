@@ -28,19 +28,9 @@
            name="org.fabric3.fabric.PersistentStore"
            autowire="true">
     <component name="ContributionStore">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.ContributionStoreImpl"/>
+        <system:implementation.system class="org.fabric3.fabric.services.archive.ArchiveStoreImpl"/>
         <property name="persistent">false</property>
     </component>
 
-    <component name="MetadataStore">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.MetaDataStoreImpl"/>
-        <property name="persistent">false</property>
-    </component>
-
-    <component name="DefinitionsContributionStore">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.ContributionStoreImpl"/>
-        <property name="storeId">definitions</property>
-        <property name="persistent">false</property>
-    </component>
 
 </composite>

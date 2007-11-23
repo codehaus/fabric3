@@ -28,13 +28,11 @@ import java.net.URL;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
-import org.fabric3.fabric.services.contribution.ContributionStoreImpl;
 import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.host.runtime.HostInfo;
-import org.fabric3.spi.services.contribution.ContributionStoreRegistry;
 
 public class ArchiveStoreImplTestCase extends TestCase {
-    private ContributionStoreImpl repository;
+    private ArchiveStoreImpl repository;
 
     public void testStoreAndFind() throws Exception {
         URI uri = URI.create("test-resource");
@@ -63,9 +61,7 @@ public class ArchiveStoreImplTestCase extends TestCase {
         HostInfo info = EasyMock.createMock(HostInfo.class);
         EasyMock.expect(info.getBaseURL()).andReturn(null).atLeastOnce();
         EasyMock.replay(info);
-        ContributionStoreRegistry registry = EasyMock.createNiceMock(ContributionStoreRegistry.class);
-        EasyMock.replay(registry);
-        this.repository = new ContributionStoreImpl(info, registry);
+        this.repository = new ArchiveStoreImpl(info);
         repository.setRepository("target/repository/");
         repository.init();
     }

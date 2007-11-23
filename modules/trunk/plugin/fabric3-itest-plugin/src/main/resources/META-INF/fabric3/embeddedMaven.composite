@@ -70,8 +70,6 @@
 
     <include name="org.fabric3.fabric.FileSystemResolver" scdlResource="org/fabric3/fabric/fileSystemResolver.composite"/>
     
-    <include name="org.fabric3.fabric.Stores" scdlResource="org/fabric3/fabric/nonPersistentStore.composite"/>
-
     <!-- include transform configuration -->
     <include name="org.fabric3.transform.Transform" scdlResource="org/fabric3/transform/transform.composite"/>
 
@@ -95,7 +93,7 @@
         <system:implementation.system class="org.fabric3.fabric.services.messaging.NullMessageDestinationService"/>
     </component>
 
-    <component name="ExtensionContributionStore">
+    <component name="ContributionStore">
         <system:implementation.system class="org.fabric3.maven.MavenArchiveStore"/>
     </component>
 

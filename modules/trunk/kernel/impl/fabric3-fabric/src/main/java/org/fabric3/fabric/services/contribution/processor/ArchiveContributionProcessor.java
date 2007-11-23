@@ -39,13 +39,11 @@ import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
-import org.fabric3.spi.services.contribution.ContributionStoreRegistry;
 import org.fabric3.spi.services.contribution.Import;
 import org.fabric3.spi.services.contribution.MatchingExportNotFoundException;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
-import org.fabric3.spi.services.contribution.StoreNotFoundException;
 
 /**
  * Handles common processing for archives
@@ -55,14 +53,13 @@ import org.fabric3.spi.services.contribution.StoreNotFoundException;
 public abstract class ArchiveContributionProcessor extends ContributionProcessorExtension {
     private static final URI HOST_CLASSLOADER = URI.create("sca://./hostClassLoader");
     protected ArtifactLocationEncoder encoder;
+    private MetaDataStore store;
     private ClassLoaderRegistry classLoaderRegistry;
-    private ContributionStoreRegistry storeRegistry;
-    private String uriPrefix = "file://contribution/";
 
-    protected ArchiveContributionProcessor(@Reference ContributionStoreRegistry storeRegistry,
+    protected ArchiveContributionProcessor(@Reference MetaDataStore store,
                                            @Reference ClassLoaderRegistry classLoaderRegistry,
                                            @Reference ArtifactLocationEncoder encoder) {
-        this.storeRegistry = storeRegistry;
+        this.store = store;
         this.classLoaderRegistry = classLoaderRegistry;
         this.encoder = encoder;
     }
@@ -76,8 +73,6 @@ public abstract class ArchiveContributionProcessor extends ContributionProcessor
         ClassLoader cl = classLoaderRegistry.getClassLoader(HOST_CLASSLOADER);
         CompositeClassLoader loader = new CompositeClassLoader(contribution.getUri(), cl);
         loader.addParent(oldClassloader);
-        MetaDataStore store = storeRegistry.getMetadataStore(parseStoreId(contribution.getUri()));
-        assert store != null;
         try {
             List<URL> classpath = createClasspath(contribution);
             for (URL library : classpath) {
@@ -111,18 +106,14 @@ public abstract class ArchiveContributionProcessor extends ContributionProcessor
      * Recursively adds a resource description pointing to the contribution artifact on contained components.
      *
      * @param contribution the contribution the resource description requires
-     * @throws StoreNotFoundException        if no store can be found for a contribution import
      * @throws ContributionNotFoundException if a required imported contribution is not found
      */
-    private void addContributionDescription(Contribution contribution)
-            throws StoreNotFoundException, ContributionNotFoundException {
+    private void addContributionDescription(Contribution contribution) throws ContributionNotFoundException {
         ContributionResourceDescription description = new ContributionResourceDescription(contribution.getUri());
         // encode the contribution URL so it can be dereferenced remotely
         URL encodedLocation = encoder.encode(contribution.getLocation());
         description.addArtifactUrl(encodedLocation);
         // Obtain local URLs for imported contributions and encode them for remote dereferencing
-        MetaDataStore store = storeRegistry.getMetadataStore(parseStoreId(contribution.getUri()));
-        assert store != null;
         for (URI uri : contribution.getResolvedImportUris()) {
             Contribution imported = store.find(uri);
             if (imported == null) {
@@ -171,22 +162,6 @@ public abstract class ArchiveContributionProcessor extends ContributionProcessor
                 }
             }
         }
-    }
-
-    /**
-     * FIXME remove this method when the runtime is converted to a single store
-     */
-    private String parseStoreId(URI uri) {
-        String s = uri.toString();
-        assert s.length() > uriPrefix.length();
-        s = s.substring(uriPrefix.length());
-        int index = s.indexOf("/");
-        if (index > 0) {
-            return s.substring(0, index);
-        } else {
-            return s;
-        }
-
     }
 
 }

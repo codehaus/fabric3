@@ -26,7 +26,6 @@ import java.net.URI;
  * @version $Rev$ $Date$
  */
 public interface MetaDataStore {
-    String DEFAULT_STORE = "DefaultStore";
 
     /**
      * Returns the store id.

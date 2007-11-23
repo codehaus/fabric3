@@ -27,7 +27,7 @@ import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.fabric.assembly.RuntimeAssembly;
 import org.fabric3.fabric.component.ComponentManagerImpl;
 import static org.fabric3.fabric.runtime.ComponentNames.EVENT_SERVICE_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.EXTENSION_METADATA_STORE_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.METADATA_STORE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_ASSEMBLY_URI;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.management.ManagementService;
@@ -196,9 +196,9 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
      */
     @SuppressWarnings({"unchecked"})
     private Composite createExensionComposite(List<URI> contributionUris) throws InitializationException {
-        MetaDataStore metaDataStore = getSystemComponent(MetaDataStore.class, EXTENSION_METADATA_STORE_URI);
+        MetaDataStore metaDataStore = getSystemComponent(MetaDataStore.class, METADATA_STORE_URI);
         if (metaDataStore == null) {
-            String id = EXTENSION_METADATA_STORE_URI.toString();
+            String id = METADATA_STORE_URI.toString();
             throw new InitializationException("Extensions metadata store not configured", id);
         }
         QName qName = new QName(org.fabric3.spi.Constants.FABRIC3_SYSTEM_NS, "extension");

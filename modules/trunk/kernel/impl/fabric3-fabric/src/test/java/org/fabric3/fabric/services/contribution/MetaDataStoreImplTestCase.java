@@ -13,7 +13,6 @@ import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
-import org.fabric3.spi.services.contribution.ContributionStoreRegistry;
 import org.fabric3.spi.services.contribution.QNameExport;
 import org.fabric3.spi.services.contribution.QNameImport;
 
@@ -28,10 +27,9 @@ public class MetaDataStoreImplTestCase extends TestCase {
     private static final QName IMPORT_EXPORT_QNAME2 = new QName("test2", "test2");
     private MetaDataStoreImpl store;
     private HostInfo info;
-    private ContributionStoreRegistry registry;
 
     public void testRecoverAndResolve() throws Exception {
-        MetaDataStoreImpl store2 = new MetaDataStoreImpl(info, registry, new XStreamFactoryImpl());
+        MetaDataStoreImpl store2 = new MetaDataStoreImpl(info, new XStreamFactoryImpl());
         store2.setRepository(REPOSITORY);
         store2.init();
         QNameImport imprt = new QNameImport(IMPORT_EXPORT_QNAME);
@@ -62,10 +60,8 @@ public class MetaDataStoreImplTestCase extends TestCase {
         EasyMock.expect(info.getRuntimeId()).andReturn("runtime").anyTimes();
         EasyMock.expect(info.getBaseURL()).andReturn(null).atLeastOnce();
         EasyMock.replay(info);
-        registry = EasyMock.createNiceMock(ContributionStoreRegistry.class);
-        EasyMock.replay(registry);
 
-        store = new MetaDataStoreImpl(info, registry, new XStreamFactoryImpl());
+        store = new MetaDataStoreImpl(info, new XStreamFactoryImpl());
         store.setRepository(REPOSITORY);
         store.init();
         Contribution contribution = new Contribution(RESOURCE_URI);

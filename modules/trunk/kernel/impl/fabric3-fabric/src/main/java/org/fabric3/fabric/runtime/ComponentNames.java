@@ -67,9 +67,9 @@ public final class ComponentNames {
 
     public static final URI DEFINITIONS_DEPLOYER = URI.create(RUNTIME_NAME + "/definitionsDeployer");
 
-    public static final URI EXTENSION_CONTRIBUTION_STORE = URI.create(RUNTIME_NAME + "/ExtensionContributionStore");
+    public static final URI CONTRIBUTION_STORE_URI = URI.create(RUNTIME_NAME + "/ContributionStore");
 
-    public static final URI EXTENSION_METADATA_STORE_URI = URI.create(RUNTIME_NAME + "/ExtensionMetaDataStore");
+    public static final URI METADATA_STORE_URI = URI.create(RUNTIME_NAME + "/MetaDataStore");
 
 
     private ComponentNames() {

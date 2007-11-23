@@ -16,7 +16,6 @@
  */
 package org.fabric3.fabric.services.contribution;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +36,6 @@ import org.fabric3.fabric.util.graph.VertexImpl;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
-import org.fabric3.spi.services.contribution.ContributionStoreRegistry;
 import org.fabric3.spi.services.contribution.Export;
 import org.fabric3.spi.services.contribution.Import;
 import org.fabric3.spi.services.contribution.MetaDataStore;
@@ -48,14 +46,13 @@ import org.fabric3.spi.services.contribution.MetaDataStore;
  * @version $Rev$ $Date$
  */
 public class DependencyServiceImpl implements DependencyService {
-    private ContributionStoreRegistry storeRegistry;
     private CycleDetector<Contribution> detector;
     private TopologicalSorter<Contribution> sorter;
-    private String uriPrefix = "file://contribution/";
+    private MetaDataStore store;
 
 
-    public DependencyServiceImpl(@Reference ContributionStoreRegistry storeRegistry) {
-        this.storeRegistry = storeRegistry;
+    public DependencyServiceImpl(@Reference MetaDataStore store) {
+        this.store = store;
         detector = new CycleDetectorImpl<Contribution>();
         sorter = new TopologicalSorterImpl<Contribution>();
     }
@@ -72,8 +69,6 @@ public class DependencyServiceImpl implements DependencyService {
             Contribution contribution = source.getEntity();
             ContributionManifest manifest = contribution.getManifest();
             assert manifest != null;
-            MetaDataStore store = storeRegistry.getMetadataStore(parseStoreId(contribution.getUri()));
-            assert store != null;
             for (Import imprt : manifest.getImports()) {
                 // xcv FIXME move import resolution to here
                 // first, see if the import is already installed
@@ -128,22 +123,6 @@ public class DependencyServiceImpl implements DependencyService {
             }
         }
         return null;
-    }
-
-    /**
-     * FIXME remove this method when the runtime is converted to a single store
-     */
-    private String parseStoreId(URI uri) {
-        String s = uri.toString();
-        assert s.length() > uriPrefix.length();
-        s = s.substring(uriPrefix.length());
-        int index = s.indexOf("/");
-        if (index > 0) {
-            return s.substring(0, index);
-        } else {
-            return s;
-        }
-
     }
 
 }

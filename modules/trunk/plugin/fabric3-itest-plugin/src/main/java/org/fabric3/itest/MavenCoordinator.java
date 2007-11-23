@@ -33,7 +33,7 @@ import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DEFINITIONS_DEPLOYER;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.EXTENSION_CONTRIBUTION_STORE;
+import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_STORE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
 import org.fabric3.fabric.runtime.ExtensionInitializationException;
 import org.fabric3.host.contribution.ContributionException;
@@ -224,9 +224,9 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
     private void includeExtensions(ContributionService contributionService)
             throws InitializationException, DefinitionActivationException {
         if (dependencies != null) {
-            ArchiveStore archiveStore = runtime.getSystemComponent(ArchiveStore.class, EXTENSION_CONTRIBUTION_STORE);
+            ArchiveStore archiveStore = runtime.getSystemComponent(ArchiveStore.class, CONTRIBUTION_STORE_URI);
             if (archiveStore == null) {
-                String id = EXTENSION_CONTRIBUTION_STORE.toString();
+                String id = CONTRIBUTION_STORE_URI.toString();
                 throw new InitializationException("Extensions archive store not configured", id);
             }
             // contribute and activate extensions if they exist in the runtime domain

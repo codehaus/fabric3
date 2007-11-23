@@ -87,11 +87,10 @@ import org.fabric3.fabric.model.logical.LogicalModelGenerator;
 import org.fabric3.fabric.model.logical.LogicalModelGeneratorImpl;
 import org.fabric3.fabric.model.physical.PhysicalModelGenerator;
 import org.fabric3.fabric.model.physical.PhysicalModelGeneratorImpl;
-
 import static org.fabric3.fabric.runtime.ComponentNames.APPLICATION_CLASSLOADER_ID;
 import static org.fabric3.fabric.runtime.ComponentNames.BOOT_CLASSLOADER_ID;
 import static org.fabric3.fabric.runtime.ComponentNames.CLASSLOADER_REGISTRY_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.EXTENSION_METADATA_STORE_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.METADATA_STORE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_NAME;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_URI;
@@ -102,7 +101,6 @@ import org.fabric3.fabric.services.archive.JarServiceImpl;
 import org.fabric3.fabric.services.classloading.ClassLoaderRegistryImpl;
 import org.fabric3.fabric.services.contribution.ArtifactResolverRegistryImpl;
 import org.fabric3.fabric.services.contribution.ClasspathProcessorRegistryImpl;
-import org.fabric3.fabric.services.contribution.ContributionStoreRegistryImpl;
 import org.fabric3.fabric.services.contribution.FileSystemResolver;
 import org.fabric3.fabric.services.contribution.MetaDataStoreImpl;
 import org.fabric3.fabric.services.contribution.processor.JarClasspathProcessor;
@@ -161,7 +159,6 @@ import org.fabric3.spi.policy.registry.NullPolicyResolver;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ArtifactResolverRegistry;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
-import org.fabric3.spi.services.contribution.ContributionStoreRegistry;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
@@ -182,7 +179,6 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     private static final URI XML_INPUT_FACTORY_URI = URI.create(RUNTIME_NAME + "/XMLInputFactory");
     private static final URI MONITOR_URI = URI.create(RUNTIME_NAME + "/MonitorFactory");
     private static final URI RUNTIME_INFO_URI = URI.create(RUNTIME_NAME + "/HostInfo");
-    private static final URI STORE_REGISTRY_URI = URI.create(RUNTIME_NAME + "/StoreRegistrt");
     private static final URI HOST_CLASSLOADER_ID = URI.create("sca://./hostClassLoader");
 
     private JavaInterfaceProcessorRegistry interfaceProcessorRegistry;
@@ -196,7 +192,6 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     private XMLInputFactory xmlFactory;
     private LoaderRegistry loader;
     private ClassLoaderRegistry classLoaderRegistry;
-    private ContributionStoreRegistry contributionStoreRegistry;
     private MetaDataStoreImpl metaDataStore;
 
     public ScdlBootstrapperImpl() {
@@ -249,8 +244,8 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
             xmlFactory = XMLInputFactory.newInstance();
         } finally {
             Thread.currentThread().setContextClassLoader(oldCl);
-        }            
-        
+        }
+
         monitorFactory = runtime.getMonitorFactory();
         monitorFactory.register(new GroupInitializationExceptionFormatter((FormatterRegistry) monitorFactory));
         // create the ClassLoaderRegistry
@@ -270,9 +265,8 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         Deployer deployer = createDeployer(info);
         CommandExecutorRegistry commandRegistry = createCommandExecutorRegistry(scopeRegistry);
 
-        contributionStoreRegistry = new ContributionStoreRegistryImpl();
-        metaDataStore = new MetaDataStoreImpl(info, contributionStoreRegistry, new XStreamFactoryImpl());
-        metaDataStore.setStoreId("extensions");
+        // TODO this should be configurable
+        metaDataStore = new MetaDataStoreImpl(info, new XStreamFactoryImpl());
         metaDataStore.setPersistent("false");
         try {
             metaDataStore.init();
@@ -285,7 +279,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
         // enable autowire for the runtime domain
         AssemblyStore store = new NonPersistentAssemblyStore(ComponentNames.RUNTIME_URI, Autowire.ON);
-        
+
         DomainService domainService = new DomainServiceImpl(store);
         PhysicalModelGenerator physicalModelGenerator = createPhysicalModelGenerator(generatorRegistry, routingService, domainService);
         
@@ -318,8 +312,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         registerSystemComponent(RUNTIME_INFO_URI, runtime.getHostInfoType(), runtime.getHostInfo());
         registerSystemComponent(RUNTIME_ASSEMBLY_URI, RuntimeAssembly.class, runtimeAssembly);
         registerSystemComponent(XML_INPUT_FACTORY_URI, XMLInputFactory.class, xmlFactory);
-        registerSystemComponent(STORE_REGISTRY_URI, ContributionStoreRegistry.class, contributionStoreRegistry);
-        registerSystemComponent(EXTENSION_METADATA_STORE_URI, MetaDataStore.class, metaDataStore);
+        registerSystemComponent(METADATA_STORE_URI, MetaDataStore.class, metaDataStore);
 
         // register the MonitorFactory provided by the host
         List<Class<?>> monitorServices = new ArrayList<Class<?>>();
@@ -500,7 +493,10 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         SingletonWireAttacher<?, ?> singletonWireAttacher = new SingletonWireAttacher();
         wireAttacherRegistry.register(SingletonWireTargetDefinition.class, singletonWireAttacher);
         SystemWireAttacher wireAttacher =
-                new SystemWireAttacher(componentManager, wireAttacherRegistry, transformerRegistry, classLoaderRegistry);
+                new SystemWireAttacher(componentManager,
+                                       wireAttacherRegistry,
+                                       transformerRegistry,
+                                       classLoaderRegistry);
         wireAttacher.init();
 
         deployer.setBuilderRegistry(registry);
@@ -527,7 +523,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         clBuilder.init();
         return resourceRegistry;
     }
-    
+
     private PhysicalModelGenerator createPhysicalModelGenerator(GeneratorRegistry generatorRegistry, RoutingService routingService, DomainService domainService) {
         return new PhysicalModelGeneratorImpl(generatorRegistry, new NullPolicyResolver(), routingService, domainService);
     }

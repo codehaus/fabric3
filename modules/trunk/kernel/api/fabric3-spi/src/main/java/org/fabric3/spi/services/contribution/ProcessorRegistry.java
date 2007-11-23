@@ -70,12 +70,11 @@ public interface ProcessorRegistry {
      * Process a contribution from the input stream.
      *
      * @param contribution The contribution that will be used to hold the results from the processing
-     * @param contentType  The type of content to process
      * @param source       The URI for the contribution/artifact
      * @throws ContributionException if there was a problem with the contribution
      */
     // xcv remove need to pass content type
-    void processContribution(Contribution contribution, String contentType, URI source) throws ContributionException;
+    void processContribution(Contribution contribution, URI source) throws ContributionException;
 
     /**
      * Process a resource from the input stream.
