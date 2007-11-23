@@ -209,7 +209,7 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
             ContributionService contributionService = runtime.getSystemComponent(ContributionService.class,
                                                                                  CONTRIBUTION_SERVICE_URI);
             ContributionSource source = new FileContributionSource(intentsLocation, -1, new byte[0]);
-            URI uri = contributionService.contribute(ContributionConstants.DEFAULT_STORE, source);
+            URI uri = contributionService.contribute(source);
             DefinitionsDeployer deployer = runtime.getSystemComponent(DefinitionsDeployer.class, DEFINITIONS_DEPLOYER);
             List<URI> intents = new ArrayList<URI>();
             intents.add(uri);
