@@ -69,7 +69,7 @@ public abstract class AbstractAssembly implements Assembly {
     private final LogicalModelGenerator logicalModelGenerator;
     private final Allocator allocator;
     private final RoutingService routingService;
-    protected final MetaDataStore metadataStore;
+    private final MetaDataStore metadataStore;
     private final DomainService domainService;
 
     public AbstractAssembly(Allocator allocator,
