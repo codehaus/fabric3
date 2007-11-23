@@ -19,6 +19,7 @@
 
 package org.fabric3.fabric.util;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -49,6 +50,13 @@ public final class IOHelper {
             count += n;
         }
         return count;
+    }
+    
+    public static final void closeQueitly(Closeable closeable) {
+        try {
+            closeable.close();
+        } catch (IOException ignore) {
+        }
     }
 
 }

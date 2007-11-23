@@ -41,6 +41,7 @@ import org.fabric3.fabric.assembly.InvalidPropertyFileException;
 import org.fabric3.fabric.assembly.normalizer.PromotionNormalizer;
 import org.fabric3.fabric.assembly.resolver.ResolutionException;
 import org.fabric3.fabric.assembly.resolver.WireResolver;
+import org.fabric3.fabric.domain.DomainService;
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.BindingDefinition;
@@ -80,7 +81,7 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
     
     private final WireResolver wireResolver;
     private final PromotionNormalizer promotionNormalizer;
-    protected LogicalComponent<CompositeImplementation> domain;
+    private final DomainService domainService;
 
     static {
         DOCUMENT_FACTORY = DocumentBuilderFactory.newInstance();
@@ -89,9 +90,11 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
     }
     
     public LogicalModelGeneratorImpl(@Reference WireResolver wireResolver,
-                                     @Reference PromotionNormalizer promotionNormalizer) {
+                                     @Reference PromotionNormalizer promotionNormalizer,
+                                     @Reference DomainService domainService) {
         this.wireResolver = wireResolver;
         this.promotionNormalizer = promotionNormalizer;
+        this.domainService = domainService;
     }
 
     @SuppressWarnings("unchecked")
@@ -171,7 +174,7 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
         // resove composite references merged into the domain
         for (LogicalReference reference : references) {
             try {
-                wireResolver.resolveReference(reference, domain);
+                wireResolver.resolveReference(reference, domainService.getDomain());
             } catch (ResolutionException e) {
                 throw new ActivateException(e);
             }

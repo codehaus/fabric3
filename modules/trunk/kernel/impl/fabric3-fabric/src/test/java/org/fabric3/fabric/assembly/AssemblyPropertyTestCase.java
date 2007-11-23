@@ -90,7 +90,7 @@ public class AssemblyPropertyTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        logicalModelGenerator = new LogicalModelGeneratorImpl(null, null);
+        logicalModelGenerator = new LogicalModelGeneratorImpl(null, null, null);
         domain = new LogicalComponent<CompositeImplementation>(URI.create("sca://./domain"), URI.create("sca://./domain"), null, null);
 
         property = FACTORY.newDocumentBuilder().newDocument();

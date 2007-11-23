@@ -54,7 +54,7 @@ public class InstantiationTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        logicalModelGenerator = new LogicalModelGeneratorImpl(null, null);
+        logicalModelGenerator = new LogicalModelGeneratorImpl(null, null, null);
         parent = new LogicalComponent<CompositeImplementation>(PARENT_URI, null, null, null);
     }
 

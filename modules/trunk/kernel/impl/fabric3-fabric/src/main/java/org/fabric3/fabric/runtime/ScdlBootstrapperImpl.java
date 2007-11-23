@@ -288,7 +288,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         DomainService domainService = new DomainServiceImpl(store);
         PhysicalModelGenerator physicalModelGenerator = createPhysicalModelGenerator(generatorRegistry, routingService, domainService);
         
-        LogicalModelGenerator logicalModelGenerator = new LogicalModelGeneratorImpl(resolver, normalizer);
+        LogicalModelGenerator logicalModelGenerator = new LogicalModelGeneratorImpl(resolver, normalizer, domainService);
 
         runtimeAssembly = new RuntimeAssemblyImpl(allocator,
                                                   routingService,
