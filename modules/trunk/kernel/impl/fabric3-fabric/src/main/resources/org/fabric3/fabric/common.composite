@@ -29,7 +29,7 @@
         <system:implementation.system class="org.fabric3.fabric.model.logical.AtomicComponentInstantiator"/>
     </component>
     
-    <component name="compositeComponentInitiator">
+    <component name="compositeComponentInstantiator">
         <system:implementation.system class="org.fabric3.fabric.model.logical.CompositeComponentInstantiator"/>
         <reference name="atomicComponentInstantiator" target="atomicComponentInstantiator"/>
     </component>
@@ -41,6 +41,7 @@
     <component name="logicalModelGenerator">
         <system:implementation.system class="org.fabric3.fabric.model.logical.LogicalModelGeneratorImpl"/>
         <reference name="atomicComponentInstantiator" target="atomicComponentInstantiator"/>
+        <reference name="compositeComponentInstantiator" target="compositeComponentInstantiator"/>
     </component>
     
     <component name="physicalModelGenerator">
