@@ -31,9 +31,9 @@ import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_STORE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DEFINITIONS_DEPLOYER;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_STORE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
 import org.fabric3.fabric.runtime.ExtensionInitializationException;
 import org.fabric3.host.contribution.ContributionException;
@@ -45,6 +45,7 @@ import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.host.runtime.StartException;
+import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.spi.component.GroupInitializationException;
@@ -53,10 +54,8 @@ import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.services.archive.ArchiveStore;
 import org.fabric3.spi.services.archive.ArchiveStoreException;
-import org.fabric3.spi.services.contribution.ContributionConstants;
 import org.fabric3.spi.services.definitions.DefinitionActivationException;
 import org.fabric3.spi.services.definitions.DefinitionsDeployer;
-import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
 
 /**
  * Implementation of a coordinator for the iTest runtime.
@@ -64,7 +63,6 @@ import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
  * @version $Rev$ $Date$
  */
 public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbeddedRuntime, Bootstrapper> {
-    private static final String EXTENSIONS = "extensions";
 
     private enum State {
         UNINITIALIZED,
@@ -225,12 +223,9 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
             throws InitializationException, DefinitionActivationException {
         if (dependencies != null) {
             ArchiveStore archiveStore = runtime.getSystemComponent(ArchiveStore.class, CONTRIBUTION_STORE_URI);
-            if (archiveStore == null) {
-                String id = CONTRIBUTION_STORE_URI.toString();
-                throw new InitializationException("Extensions archive store not configured", id);
-            }
             // contribute and activate extensions if they exist in the runtime domain
-            List<URI> contributionUris = new ArrayList<URI>();
+            List<URI> contributionUris;
+            List<ContributionSource> sources = new ArrayList<ContributionSource>();
             for (Dependency dependency : dependencies) {
                 // create a uri from the dependency
                 String contribution;
@@ -249,12 +244,15 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
                                                                    contribution);
                     }
                     ContributionSource source = new FileContributionSource(url, -1, new byte[0]);
-                    contributionUris.add(contributionService.contribute(EXTENSIONS, source));
+                    sources.add(source);
                 } catch (ArchiveStoreException e) {
                     throw new ExtensionInitializationException("Error contributing extension", contribution, e);
-                } catch (ContributionException e) {
-                    throw new ExtensionInitializationException("Error contributing extension", contribution, e);
                 }
+            }
+            try {
+                contributionUris = contributionService.contribute(sources);
+            } catch (ContributionException e) {
+                throw new ExtensionInitializationException("Error contributing extensions", e);
             }
             runtime.includeExtensionContributions(contributionUris);
             DefinitionsDeployer definitionsDeployer =
