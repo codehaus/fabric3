@@ -19,6 +19,7 @@ package org.fabric3.fabric.services.contribution;
 import java.io.PrintWriter;
 import java.util.List;
 
+import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
@@ -40,13 +41,18 @@ public class CyclicDependencyExceptionFormatter implements ExceptionFormatter<Cy
         this.registry = registry;
     }
 
-    @Init
-    public void init() {
-        registry.register(this);
+    public Class<CyclicDependencyException> getType() {
+        return CyclicDependencyException.class;
     }
 
-    public boolean canFormat(Class<?> type) {
-        return CyclicDependencyException.class.equals(type);
+    @Init
+    public void init() {
+        registry.register(CyclicDependencyException.class, this);
+    }
+
+    @Destroy
+    public void destroy() {
+        registry.unregister(CyclicDependencyException.class);
     }
 
     public void write(PrintWriter writer, CyclicDependencyException e) {

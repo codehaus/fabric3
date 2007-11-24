@@ -46,7 +46,6 @@ import org.fabric3.fabric.command.InitializeComponentExecutor;
 import org.fabric3.fabric.command.StartCompositeContextCommand;
 import org.fabric3.fabric.command.StartCompositeContextExecutor;
 import org.fabric3.fabric.command.StartCompositeContextGenerator;
-import org.fabric3.fabric.component.GroupInitializationExceptionFormatter;
 import org.fabric3.fabric.component.scope.CompositeScopeContainer;
 import org.fabric3.fabric.component.scope.ScopeRegistryImpl;
 import org.fabric3.fabric.deployer.Deployer;
@@ -168,6 +167,7 @@ import org.fabric3.transform.dom2java.String2Integer;
 import org.fabric3.transform.dom2java.String2Map;
 import org.fabric3.transform.dom2java.String2QName;
 import org.fabric3.transform.dom2java.String2String;
+import org.fabric3.monitor.DefaultFormatterRegistry;
 
 /**
  * Bootstrapper that initializes a runtime by reading a system SCDL file.
@@ -178,6 +178,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     private static final URI COMPONENT_MGR_URI = URI.create(RUNTIME_NAME + "/ComponentManager");
     private static final URI XML_INPUT_FACTORY_URI = URI.create(RUNTIME_NAME + "/XMLInputFactory");
     private static final URI MONITOR_URI = URI.create(RUNTIME_NAME + "/MonitorFactory");
+    private static final URI FORMATTER_REGISTRY_URI = URI.create(RUNTIME_NAME + "/FormatterRegistry");
     private static final URI RUNTIME_INFO_URI = URI.create(RUNTIME_NAME + "/HostInfo");
     private static final URI HOST_CLASSLOADER_ID = URI.create("sca://./hostClassLoader");
 
@@ -247,7 +248,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         }
 
         monitorFactory = runtime.getMonitorFactory();
-        monitorFactory.register(new GroupInitializationExceptionFormatter((FormatterRegistry) monitorFactory));
+
         // create the ClassLoaderRegistry
         classLoaderRegistry = new ClassLoaderRegistryImpl();
         componentManager = ((AbstractRuntime<?>) runtime).getComponentManager();
@@ -313,12 +314,8 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         registerSystemComponent(RUNTIME_ASSEMBLY_URI, RuntimeAssembly.class, runtimeAssembly);
         registerSystemComponent(XML_INPUT_FACTORY_URI, XMLInputFactory.class, xmlFactory);
         registerSystemComponent(METADATA_STORE_URI, MetaDataStore.class, metaDataStore);
-
-        // register the MonitorFactory provided by the host
-        List<Class<?>> monitorServices = new ArrayList<Class<?>>();
-        monitorServices.add(MonitorFactory.class);
-        monitorServices.add(FormatterRegistry.class);
-        registerSystemComponent(MONITOR_URI, monitorServices, monitorFactory);
+        registerSystemComponent(MONITOR_URI, MonitorFactory.class, monitorFactory);
+        registerSystemComponent(FORMATTER_REGISTRY_URI, FormatterRegistry.class, new DefaultFormatterRegistry());
 
         classLoaderRegistry.register(HOST_CLASSLOADER_ID, runtime.getHostClassLoader());
         registerSystemComponent(CLASSLOADER_REGISTRY_URI, ClassLoaderRegistry.class, classLoaderRegistry);

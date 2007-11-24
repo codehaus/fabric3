@@ -26,9 +26,19 @@ import java.io.PrintWriter;
  * @version $Rev$ $Date$
  */
 public interface ExceptionFormatter<T extends Throwable> {
+    /**
+     * Returns the type of exception this formatter can handle.
+     *
+     * @return the type of exception this formatter can handle
+     */
+    Class<T> getType();
 
-    boolean canFormat(Class<?> type);
-
+    /**
+     * Write the formatted exception to a Writer.
+     *
+     * @param writer the writer to write to
+     * @param exception the exception to write
+     */
     void write(PrintWriter writer, T exception);
 
 }

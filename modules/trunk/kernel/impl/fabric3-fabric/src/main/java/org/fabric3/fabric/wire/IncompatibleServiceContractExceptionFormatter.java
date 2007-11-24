@@ -22,13 +22,14 @@ import java.io.PrintWriter;
 
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.monitor.ExceptionFormatter;
 import org.fabric3.host.monitor.FormatterRegistry;
+import org.fabric3.monitor.FormatterHelper;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.monitor.FormatterHelper;
 
 /**
  * Formats {@link IncompatibleServiceContractException} for JDK logging
@@ -41,16 +42,20 @@ public class IncompatibleServiceContractExceptionFormatter implements ExceptionF
 
     public IncompatibleServiceContractExceptionFormatter(@Reference FormatterRegistry factory) {
         this.registry = factory;
-        factory.register(this);
     }
 
-    public boolean canFormat(Class<?> type) {
-        return IncompatibleServiceContractException.class.isAssignableFrom(type);
+    public Class<IncompatibleServiceContractException> getType() {
+        return IncompatibleServiceContractException.class;
+    }
+
+    @Init
+    public void init() {
+        registry.register(IncompatibleServiceContractException.class, this);
     }
 
     @Destroy
     public void destroy() {
-        registry.unregister(this);
+        registry.unregister(IncompatibleServiceContractException.class);
     }
 
     public void write(PrintWriter writer, IncompatibleServiceContractException e) {
@@ -91,12 +96,17 @@ public class IncompatibleServiceContractExceptionFormatter implements ExceptionF
         if (cause != null) {
             FormatterHelper.writeStackTrace(writer, e, cause);
             writer.println("Caused by:");
-            registry.formatException(writer, cause);
+            ExceptionFormatter<? super Throwable> formatter = getFormatter(cause.getClass());
+            formatter.write(writer, cause);
         } else {
             StackTraceElement[] trace = e.getStackTrace();
             for (StackTraceElement aTrace : trace) {
                 writer.println("\tat " + aTrace);
             }
         }
+    }
+
+    private <T extends Throwable> ExceptionFormatter<? super T> getFormatter(Class<? extends T> type) {
+        return registry.getFormatter(type);
     }
 }

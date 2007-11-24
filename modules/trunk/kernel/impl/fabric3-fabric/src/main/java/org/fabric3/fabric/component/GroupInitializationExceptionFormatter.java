@@ -41,8 +41,8 @@ public class GroupInitializationExceptionFormatter implements ExceptionFormatter
         this.registry = registry;
     }
 
-    public boolean canFormat(Class<?> type) {
-        return GroupInitializationException.class.isAssignableFrom(type);
+    public Class<GroupInitializationException> getType() {
+        return GroupInitializationException.class;
     }
 
     public void write(PrintWriter writer, GroupInitializationException exception) {
@@ -65,9 +65,14 @@ public class GroupInitializationExceptionFormatter implements ExceptionFormatter
             } else {
                 writer.println("Caused by:");
             }
-            registry.formatException(writer, cause);
+            ExceptionFormatter<? super Exception> formatter = getFormatter(cause.getClass());
+            formatter.write(writer, cause);
             writer.println("-----------------------------------------------------------------------------------------");
         }
     }
 
+
+    private <T extends Throwable> ExceptionFormatter<? super T> getFormatter(Class<? extends T> type) {
+        return registry.getFormatter(type);
+    }
 }

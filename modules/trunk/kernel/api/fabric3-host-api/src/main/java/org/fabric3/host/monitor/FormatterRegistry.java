@@ -18,29 +18,32 @@
  */
 package org.fabric3.host.monitor;
 
-import java.io.PrintWriter;
-
 /**
  * A registry for exception formatters
  *
  * @version $Rev$ $Date$
  */
 public interface FormatterRegistry {
-
     /**
-     * Registers the given formatter
+     * Registers a formatter for a type of exception.
      *
+     * @param type the type of exception the formatter can handle
      * @param formatter the formatter to register
      */
-    void register(ExceptionFormatter formatter);
+    <T extends Throwable> void register(Class<T> type, ExceptionFormatter<? super T> formatter);
 
     /**
-     * De-registers the given formatter
+     * Unregisters the given formatter
      *
-     * @param formatter the formatter to de-register
+     * @param type the type of formatter to unregister
      */
-    void unregister(ExceptionFormatter formatter);
+    void unregister(Class<?> type);
 
-    public <T extends Throwable> PrintWriter formatException(PrintWriter writer, T e);
-
+    /**
+     * Return the formatter for a type of exception.
+     *
+     * @param type the type of exception
+     * @return a formatter that can handle that type
+     */
+    <T extends Throwable> ExceptionFormatter<? super T> getFormatter(Class<? extends T> type);
 }

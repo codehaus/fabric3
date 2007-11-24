@@ -22,11 +22,12 @@ import java.io.PrintWriter;
 
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.monitor.FormatterHelper;
 import org.fabric3.host.monitor.ExceptionFormatter;
 import org.fabric3.host.monitor.FormatterRegistry;
+import org.fabric3.monitor.FormatterHelper;
 import org.fabric3.spi.builder.WiringException;
 
 /**
@@ -38,18 +39,22 @@ import org.fabric3.spi.builder.WiringException;
 public class WiringExceptionFormatter implements ExceptionFormatter<WiringException> {
     private FormatterRegistry registry;
 
-    public WiringExceptionFormatter(@Reference FormatterRegistry factory) {
-        this.registry = factory;
-        factory.register(this);
+    public WiringExceptionFormatter(@Reference FormatterRegistry registry) {
+        this.registry = registry;
     }
 
-    public boolean canFormat(Class<?> type) {
-        return WiringException.class.isAssignableFrom(type);
+    public Class<WiringException> getType() {
+        return WiringException.class;
+    }
+
+    @Init
+    public void init() {
+        registry.register(WiringException.class, this);
     }
 
     @Destroy
     public void destroy() {
-        registry.unregister(this);
+        registry.unregister(WiringException.class);
     }
 
     public void write(PrintWriter writer, WiringException e) {
@@ -65,12 +70,17 @@ public class WiringExceptionFormatter implements ExceptionFormatter<WiringExcept
         if (cause != null) {
             FormatterHelper.writeStackTrace(writer, e, cause);
             writer.println("Caused by:");
-            registry.formatException(writer, cause);
+            ExceptionFormatter<? super Throwable> formatter = getFormatter(cause.getClass());
+            formatter.write(writer, cause);
         } else {
             StackTraceElement[] trace = e.getStackTrace();
             for (StackTraceElement aTrace : trace) {
                 writer.println("\tat " + aTrace);
             }
         }
+    }
+
+    private <T extends Throwable> ExceptionFormatter<? super T> getFormatter(Class<? extends T> type) {
+        return registry.getFormatter(type);
     }
 }

@@ -18,21 +18,22 @@
  */
 package org.fabric3.monitor;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.util.HashMap;
+import java.lang.reflect.Proxy;
+import java.util.Locale;
 import java.util.Map;
+import java.util.MissingResourceException;
 import java.util.Properties;
 import java.util.ResourceBundle;
+import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
-import org.osoa.sca.annotations.Service;
-
-import org.fabric3.host.monitor.FormatterRegistry;
+import org.fabric3.api.annotation.LogLevel;
 import org.fabric3.host.monitor.MonitorFactory;
 
 /**
@@ -41,8 +42,11 @@ import org.fabric3.host.monitor.MonitorFactory;
  * @version $Rev$ $Date$
  * @see java.util.logging
  */
-@Service(interfaces = {MonitorFactory.class, FormatterRegistry.class})
-public class JavaLoggingMonitorFactory extends ProxyMonitorFactory {
+public class JavaLoggingMonitorFactory implements MonitorFactory {
+    private final Properties levels;
+    private final Level defaultLevel;
+    private final String bundleName;
+    private final Map<Class<?>, WeakReference<?>> proxies = new WeakHashMap<Class<?>, WeakReference<?>>();
 
     /**
      * Construct a MonitorFactory that will monitor the specified methods at the specified levels and generate messages
@@ -58,67 +62,147 @@ public class JavaLoggingMonitorFactory extends ProxyMonitorFactory {
      * @see java.util.logging.Logger
      */
     public JavaLoggingMonitorFactory(Properties levels, Level defaultLevel, String bundleName) {
-        Map<String, Object> configProperties = new HashMap<String, Object>();
-        configProperties.put("levels", levels);
-        configProperties.put("defaultLevel", defaultLevel);
-        configProperties.put("bundleName", bundleName);
-        initInternal(configProperties);
+        this.levels = levels;
+        this.defaultLevel = defaultLevel;
+        this.bundleName = bundleName;
     }
 
-    /**
-     * Constructs a MonitorFactory that needs to be subsequently configured via a call to {@link #initialize}.
-     */
-    public JavaLoggingMonitorFactory() {
+    public synchronized <T> T getMonitor(Class<T> monitorInterface) {
+        T monitor = getCachedMonitor(monitorInterface);
+        if (monitor == null) {
+            monitor = createMonitor(monitorInterface);
+            proxies.put(monitorInterface, new WeakReference<T>(monitor));
+        }
+        return monitor;
     }
 
-    protected <T> InvocationHandler createInvocationHandler(Class<T> monitorInterface,
-                                                            Map<String, Level> levels) {
+    protected <T> T getCachedMonitor(Class<T> monitorInterface) {
+        WeakReference<?> ref = proxies.get(monitorInterface);
+        return (ref != null) ? monitorInterface.cast(ref.get()) : null;
+    }
+
+    protected <T> T createMonitor(Class<T> monitorInterface) {
+        String className = monitorInterface.getName();
+        Logger logger = Logger.getLogger(className);
         ResourceBundle bundle = locateBundle(monitorInterface, bundleName);
-        Logger logger = Logger.getLogger(monitorInterface.getName());
-        return new LoggingHandler(logger, levels, bundle);
+
+        Method[] methods = monitorInterface.getMethods();
+        Map<Method, MethodInfo> methodInfo = new ConcurrentHashMap<Method, MethodInfo>(methods.length);
+        for (Method method : methods) {
+            String methodName = method.getName();
+            String key = className + '#' + methodName;
+            String levelName = levels.getProperty(key);
+            if (levelName == null) {
+                LogLevel annotation = method.getAnnotation(LogLevel.class);
+                if (annotation != null) {
+                    levelName = annotation.value();
+                }
+            }
+
+            Level methodLevel;
+            if (levelName == null) {
+                methodLevel = defaultLevel;
+            } else {
+                try {
+                    methodLevel = Level.parse(levelName);
+                } catch (IllegalArgumentException e) {
+                    methodLevel = defaultLevel;
+                }
+            }
+
+            int throwable = -1;
+            for (int i = 0; i < method.getParameterTypes().length; i++) {
+                Class<?> paramType = method.getParameterTypes()[i];
+                if (Throwable.class.isAssignableFrom(paramType)) {
+                    throwable = i;
+                    break;
+                }
+            }
+            MethodInfo info = new MethodInfo(logger, methodLevel, methodName, bundle, throwable);
+            methodInfo.put(method, info);
+        }
+
+        InvocationHandler handler = new LoggingHandler(methodInfo);
+        Object proxy = Proxy.newProxyInstance(monitorInterface.getClassLoader(),
+                                              new Class<?>[]{monitorInterface},
+                                              handler);
+        return monitorInterface.cast(proxy);
     }
 
-    private class LoggingHandler implements InvocationHandler {
-        private final Logger logger;
-        private final Map<String, Level> methodLevels;
-        private final ResourceBundle bundle;
+    protected <T> ResourceBundle locateBundle(Class<T> monitorInterface, String bundleName) {
+        Locale locale = Locale.getDefault();
+        ClassLoader cl = monitorInterface.getClassLoader();
+        String packageName = monitorInterface.getPackage().getName();
+        while (true) {
+            try {
+                return ResourceBundle.getBundle(packageName + '.' + bundleName, locale, cl);
+            } catch (MissingResourceException e) {
+                //ok
+            }
+            int index = packageName.lastIndexOf('.');
+            if (index == -1) {
+                break;
+            }
+            packageName = packageName.substring(0, index);
+        }
+        try {
+            return ResourceBundle.getBundle(bundleName, locale, cl);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
-        public LoggingHandler(Logger logger,
-                              Map<String, Level> methodLevels,
-                              ResourceBundle bundle) {
+    private static class MethodInfo {
+        private final Logger logger;
+        private final Level level;
+        private final String methodName;
+        private final ResourceBundle bundle;
+        private final int throwable;
+
+        private MethodInfo(Logger logger, Level level, String methodName, ResourceBundle bundle, int throwable) {
             this.logger = logger;
-            this.methodLevels = methodLevels;
+            this.level = level;
+            this.methodName = methodName;
             this.bundle = bundle;
+            this.throwable = throwable;
+        }
+
+        private void invoke(Object[] args) {
+            if (level == null || !logger.isLoggable(level)) {
+                return;
+            }
+
+            // construct the key for the resource bundle
+            String className = logger.getName();
+            String key = className + '#' + methodName;
+
+            LogRecord logRecord = new LogRecord(level, key);
+            logRecord.setLoggerName(className);
+            logRecord.setSourceClassName(className);
+            logRecord.setSourceMethodName(methodName);
+            logRecord.setParameters(args);
+            if (args != null && throwable >= 0) {
+                logRecord.setThrown((Throwable) args[throwable]);
+            }
+            logRecord.setResourceBundle(bundle);
+            logger.log(logRecord);
+        }
+    }
+
+    private static class LoggingHandler implements InvocationHandler {
+        private final Map<Method, MethodInfo> info;
+
+        public LoggingHandler(Map<Method, MethodInfo> methodInfo) {
+            this.info = methodInfo;
         }
 
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            String sourceMethod = method.getName();
-            Level level = methodLevels.get(sourceMethod);
-            if (level != null && logger.isLoggable(level)) {
-                // construct the key for the resource bundle
-                String className = logger.getName();
-                String key = className + '#' + sourceMethod;
-
-                LogRecord logRecord = new LogRecord(level, key);
-                logRecord.setLoggerName(className);
-                logRecord.setSourceClassName(className);
-                logRecord.setSourceMethodName(sourceMethod);
-                logRecord.setParameters(args);
-                if (args != null) {
-                    for (Object o : args) {
-                        if (o instanceof Throwable) {
-                            StringWriter sw = new StringWriter();
-                            PrintWriter pw = new PrintWriter(sw);
-                            formatException(pw, (Throwable) o);
-                            logRecord.setMessage(sw.toString());
-                            break;
-                        }
-                    }
-                }
-                logRecord.setResourceBundle(bundle);
-                logger.log(logRecord);
+            MethodInfo methodInfo = info.get(method);
+            if (methodInfo != null) {
+                methodInfo.invoke(args);
             }
             return null;
         }
     }
+
 }

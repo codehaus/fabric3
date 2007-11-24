@@ -18,132 +18,346 @@
  */
 package org.fabric3.itest;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.text.MessageFormat;
-import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 import org.apache.maven.plugin.logging.Log;
 
-import org.fabric3.monitor.ProxyMonitorFactory;
+import org.fabric3.api.annotation.LogLevel;
+import org.fabric3.host.monitor.MonitorFactory;
 
 /**
  * @version $Rev$ $Date$
  */
-public class MavenMonitorFactory extends ProxyMonitorFactory {
+public class MavenMonitorFactory implements MonitorFactory {
     private final Log log;
+    private final String bundleName;
+    private final Level defaultLevel;
+    private final Map<Class<?>, WeakReference<?>> proxies = new WeakHashMap<Class<?>, WeakReference<?>>();
 
     public MavenMonitorFactory(Log log, String bundleName) {
         this.log = log;
-        Map<String, Object> configProperties = new HashMap<String, Object>();
-        configProperties.put("bundleName", bundleName);
-        configProperties.put("defaultLevel", Level.FINEST);
-        initInternal(configProperties);
+        this.bundleName = bundleName;
+        this.defaultLevel = Level.FINEST;
     }
 
-    protected <T> InvocationHandler createInvocationHandler(Class<T> monitorInterface, Map<String, Level> levels) {
+    public synchronized <T> T getMonitor(Class<T> monitorInterface) {
+        T proxy = getCachedMonitor(monitorInterface);
+        if (proxy == null) {
+            proxy = createMonitor(monitorInterface);
+            proxies.put(monitorInterface, new WeakReference<T>(proxy));
+        }
+        return proxy;
+    }
+
+    protected <T> ResourceBundle locateBundle(Class<T> monitorInterface, String bundleName) {
+        Locale locale = Locale.getDefault();
+        ClassLoader cl = monitorInterface.getClassLoader();
+        String packageName = monitorInterface.getPackage().getName();
+        while (true) {
+            try {
+                return ResourceBundle.getBundle(packageName + '.' + bundleName, locale, cl);
+            } catch (MissingResourceException e) {
+                //ok
+            }
+            int index = packageName.lastIndexOf('.');
+            if (index == -1) {
+                break;
+            }
+            packageName = packageName.substring(0, index);
+        }
+        try {
+            return ResourceBundle.getBundle(bundleName, locale, cl);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    protected <T> T getCachedMonitor(Class<T> monitorInterface) {
+        WeakReference<?> ref = proxies.get(monitorInterface);
+        return (ref != null) ? monitorInterface.cast(ref.get()) : null;
+    }
+
+    protected <T> T createMonitor(Class<T> monitorInterface) {
+        Method[] methods = monitorInterface.getMethods();
+        Map<Method, MethodHandler> handlers = new ConcurrentHashMap<Method, MethodHandler>(methods.length);
+        for (Method method : methods) {
+            String levelName = null;
+            LogLevel annotation = method.getAnnotation(LogLevel.class);
+            if (annotation != null) {
+                levelName = annotation.value();
+            }
+
+            Level methodLevel;
+            if (levelName == null) {
+                methodLevel = defaultLevel;
+            } else {
+                try {
+                    methodLevel = Level.parse(levelName);
+                } catch (IllegalArgumentException e) {
+                    methodLevel = defaultLevel;
+                }
+            }
+
+            int value = methodLevel.intValue();
+            int throwable = -1;
+            for (int i = 0; i < method.getParameterTypes().length; i++) {
+                Class<?> paramType = method.getParameterTypes()[i];
+                if (Throwable.class.isAssignableFrom(paramType)) {
+                    throwable = i;
+                    break;
+                }
+            }
+
+            String message = getMessage(monitorInterface, method);
+
+            MethodHandler handler = null;
+            if (throwable == -1) {
+                if (value >= Level.SEVERE.intValue()) {
+                    handler = new ErrorMessageHandler(log, message);
+                } else if (value >= Level.WARNING.intValue()) {
+                    handler = new WarnMessageHandler(log, message);
+                } else if (value >= Level.INFO.intValue()) {
+                    handler = new InfoMessageHandler(log, message);
+                } else if (value >= Level.FINEST.intValue()) {
+                    handler = new DebugMessageHandler(log, message);
+                }
+            } else {
+                if (value >= Level.SEVERE.intValue()) {
+                    handler = new ErrorExceptionHandler(log, message, throwable);
+                } else if (value >= Level.WARNING.intValue()) {
+                    handler = new WarnExceptionHandler(log, message, throwable);
+                } else if (value >= Level.INFO.intValue()) {
+                    handler = new InfoExceptionHandler(log, message, throwable);
+                } else if (value >= Level.FINEST.intValue()) {
+                    handler = new DebugExceptionHandler(log, message, throwable);
+                }
+            }
+            handlers.put(method, handler);
+        }
+
+        InvocationHandler handler = new Handler(handlers);
+        Object proxy = Proxy.newProxyInstance(monitorInterface.getClassLoader(),
+                                              new Class<?>[]{monitorInterface},
+                                              handler);
+        return monitorInterface.cast(proxy);
+    }
+
+    protected String getMessage(Class<?> monitorInterface, Method method) {
         ResourceBundle bundle = locateBundle(monitorInterface, bundleName);
-        return new MonitorHandler(monitorInterface.getName(), levels, bundle);
+        String key = monitorInterface.getName() + '#' + method.getName();
+        String message = null;
+        if (bundle != null) {
+            try {
+                message = bundle.getString(key);
+            } catch (MissingResourceException e) {
+                // drop through
+            }
+        }
+        if (message == null) {
+            StringBuilder builder = new StringBuilder();
+            builder.append(key);
+            int argCount = method.getParameterTypes().length;
+            if (argCount > 0) {
+                builder.append(": {0}");
+                for (int i = 1; i < argCount; i++) {
+                    builder.append(' ');
+                    builder.append('{');
+                    builder.append(Integer.toString(i));
+                    builder.append('}');
+                }
+            }
+            message = builder.toString();
+        }
+        return message;
     }
 
-    private class MonitorHandler implements InvocationHandler {
-        private final String monitorName;
-        private final Map<String, Level> methodLevels;
-        private final ResourceBundle bundle;
+    private static class Handler implements InvocationHandler {
+        private final Map<Method, MethodHandler> handlers;
 
-        public MonitorHandler(String monitorName, Map<String, Level> methodLevels, ResourceBundle bundle) {
-            this.monitorName = monitorName;
-            this.methodLevels = methodLevels;
-            this.bundle = bundle;
+        private Handler(Map<Method, MethodHandler> handlers) {
+            this.handlers = handlers;
         }
 
-        public Object invoke(Object object, Method method, Object[] objects) throws Throwable {
-            String sourceMethod = method.getName();
-            Level level = methodLevels.get(sourceMethod);
-            if (level == Level.OFF) {
-                return null;
-            }
-
-            int value = level.intValue();
-            if (isLogEnabled(value)) {
-                String key = monitorName + '#' + sourceMethod;
-                String message;
-                if (bundle != null) {
-                    message = bundle.getString(key);
-                } else {
-                    message = null;
-                }
-                if (message != null) {
-                    message = MessageFormat.format(message, objects);
-                } else {
-                    StringBuilder builder = new StringBuilder();
-                    builder.append(key);
-                    if (objects != null) {
-                        builder.append(":");
-                        for (Object o : objects) {
-                            builder.append(' ');
-                            if (o instanceof Exception) {
-                                StringWriter sw = new StringWriter();
-                                PrintWriter pw = new PrintWriter(sw);
-                                formatException(pw, (Exception) o);
-                                builder.append(sw.toString());
-                                pw.close();
-                            } else {
-                                builder.append(String.valueOf(o));
-                            }
-                        }
-                    }
-                    message = builder.toString();
-                }
-                Throwable cause = getFirstException(objects);
-                if (cause != null) {
-                    if (value >= Level.SEVERE.intValue()) {
-                        log.error(message, cause);
-                    } else if (value >= Level.WARNING.intValue()) {
-                        log.warn(message, cause);
-                    } else if (value >= Level.INFO.intValue()) {
-                        log.info(message, cause);
-                    } else if (value >= Level.FINEST.intValue()) {
-                        log.debug(message, cause);
-                    }
-                } else {
-                    if (value >= Level.SEVERE.intValue()) {
-                        log.error(message);
-                    } else if (value >= Level.WARNING.intValue()) {
-                        log.warn(message);
-                    } else if (value >= Level.INFO.intValue()) {
-                        log.info(message);
-                    } else if (value >= Level.FINEST.intValue()) {
-                        log.debug(message);
-                    }
-                }
-            }
-
-            return null;
-        }
-
-        private boolean isLogEnabled(int value) {
-            return log.isDebugEnabled() && value >= Level.FINEST.intValue()
-                    || log.isInfoEnabled() && value >= Level.INFO.intValue()
-                    || log.isWarnEnabled() && value >= Level.WARNING.intValue()
-                    || log.isErrorEnabled() && value >= Level.SEVERE.intValue();
-        }
-
-        private Throwable getFirstException(Object[] objects) {
-            if (objects == null) {
-                return null;
-            }
-            for (Object object : objects) {
-                if (object instanceof Throwable) {
-                    return (Throwable) object;
-                }
+        public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
+            MethodHandler handler = handlers.get(method);
+            if (handler != null) {
+                handler.invoke(objects);
             }
             return null;
         }
     }
+
+    private abstract static class MethodHandler {
+        protected final Log log;
+        protected final String message;
+
+        protected MethodHandler(Log log, String message) {
+            this.log = log;
+            this.message = message;
+        }
+
+        protected String getMessage(Object[] objects) {
+            return MessageFormat.format(message, objects);
+        }
+
+        protected abstract void invoke(Object[] objects);
+
+        protected abstract boolean isEnabled();
+    }
+
+    private abstract static class MessageHandler extends MethodHandler {
+        protected MessageHandler(Log log, String message) {
+            super(log, message);
+        }
+
+        protected void invoke(Object[] objects) {
+            if (isEnabled()) {
+                log(getMessage(objects));
+            }
+        }
+
+        protected abstract void log(String message);
+    }
+
+    private abstract static class ExceptionHandler extends MethodHandler {
+        private final int throwable;
+
+        protected ExceptionHandler(Log log, String message, int throwable) {
+            super(log, message);
+            this.throwable = throwable;
+        }
+
+        protected void invoke(Object[] objects) {
+            if (isEnabled()) {
+                Throwable cause = (Throwable) objects[throwable];
+                log(getMessage(objects), cause);
+            }
+        }
+
+        protected abstract void log(String message, Throwable cause);
+    }
+
+    private static class ErrorMessageHandler extends MessageHandler {
+        private ErrorMessageHandler(Log log, String message) {
+            super(log, message);
+        }
+
+        protected boolean isEnabled() {
+            return log.isErrorEnabled();
+        }
+
+        protected void log(String message) {
+            log.error(message);
+        }
+    }
+
+    private static class WarnMessageHandler extends MessageHandler {
+        private WarnMessageHandler(Log log, String message) {
+            super(log, message);
+        }
+
+        protected boolean isEnabled() {
+            return log.isWarnEnabled();
+        }
+
+        protected void log(String message) {
+            log.warn(message);
+        }
+    }
+
+    private static class InfoMessageHandler extends MessageHandler {
+        private InfoMessageHandler(Log log, String message) {
+            super(log, message);
+        }
+
+        protected boolean isEnabled() {
+            return log.isInfoEnabled();
+        }
+
+        protected void log(String message) {
+            log.info(message);
+        }
+    }
+
+    private static class DebugMessageHandler extends MessageHandler {
+        private DebugMessageHandler(Log log, String message) {
+            super(log, message);
+        }
+
+        protected boolean isEnabled() {
+            return log.isDebugEnabled();
+        }
+
+        protected void log(String message) {
+            log.debug(message);
+        }
+    }
+
+    private static class ErrorExceptionHandler extends ExceptionHandler {
+        private ErrorExceptionHandler(Log log, String message, int throwable) {
+            super(log, message, throwable);
+        }
+
+        protected void log(String message, Throwable cause) {
+            log.error(message, cause);
+        }
+
+        protected boolean isEnabled() {
+            return log.isErrorEnabled();
+        }
+    }
+
+    private static class WarnExceptionHandler extends ExceptionHandler {
+        private WarnExceptionHandler(Log log, String message, int throwable) {
+            super(log, message, throwable);
+        }
+
+        protected void log(String message, Throwable cause) {
+            log.warn(message, cause);
+        }
+
+        protected boolean isEnabled() {
+            return log.isWarnEnabled();
+        }
+    }
+
+    private static class InfoExceptionHandler extends ExceptionHandler {
+        private InfoExceptionHandler(Log log, String message, int throwable) {
+            super(log, message, throwable);
+        }
+
+        protected void log(String message, Throwable cause) {
+            log.info(message, cause);
+        }
+
+        protected boolean isEnabled() {
+            return log.isInfoEnabled();
+        }
+    }
+
+    private static class DebugExceptionHandler extends ExceptionHandler {
+        private DebugExceptionHandler(Log log, String message, int throwable) {
+            super(log, message, throwable);
+        }
+
+        protected void log(String message, Throwable cause) {
+            log.debug(message, cause);
+        }
+
+        protected boolean isEnabled() {
+            return log.isDebugEnabled();
+        }
+    }
+
 }

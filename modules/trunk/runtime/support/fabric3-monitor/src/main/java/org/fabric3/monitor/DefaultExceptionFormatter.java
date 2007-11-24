@@ -20,52 +20,23 @@ package org.fabric3.monitor;
 
 import java.io.PrintWriter;
 
-import org.osoa.sca.annotations.Reference;
-
-import org.fabric3.host.Fabric3Exception;
-import org.fabric3.host.Fabric3RuntimeException;
 import org.fabric3.host.monitor.ExceptionFormatter;
-import org.fabric3.host.monitor.FormatterRegistry;
 
 /**
- * Performs basics formatting of exceptions for JDK logging
+ * Default formatter for all exceptions that simply calls printStackTrace.
  *
  * @version $Rev$ $Date$
  */
 public class DefaultExceptionFormatter implements ExceptionFormatter<Throwable> {
-    private FormatterRegistry registry;
-
-    public DefaultExceptionFormatter(@Reference FormatterRegistry registry) {
-        this.registry = registry;
+    public DefaultExceptionFormatter() {
     }
 
-    public boolean canFormat(Class<?> type) {
-        return Throwable.class.isAssignableFrom(type);
+    public Class<Throwable> getType() {
+        return Throwable.class;
     }
 
     public void write(PrintWriter writer, Throwable exception) {
-        writer.append(exception.getClass().getName()).append(": ");
-        if (exception instanceof Fabric3Exception) {
-            Fabric3Exception e = (Fabric3Exception) exception;
-            e.appendBaseMessage(writer);
-        } else if (exception instanceof Fabric3RuntimeException) {
-            Fabric3RuntimeException e = (Fabric3RuntimeException) exception;
-            e.appendBaseMessage(writer);
-        } else if (exception.getMessage() != null) {
-            writer.write(exception.getMessage());
-        }
-        writer.append("\n");
-        Throwable cause = exception.getCause();
-        if (cause != null) {
-            FormatterHelper.writeStackTrace(writer, exception, cause);
-            writer.println("Caused by:");
-            registry.formatException(writer, cause);
-        } else {
-            StackTraceElement[] trace = exception.getStackTrace();
-            for (StackTraceElement aTrace : trace) {
-                writer.println("\tat " + aTrace);
-            }
-        }
+        exception.printStackTrace(writer);
     }
 
 }

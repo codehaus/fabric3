@@ -19,42 +19,36 @@
 package org.fabric3.monitor;
 
 import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.lang.reflect.Method;
 
 import junit.framework.TestCase;
-
-import org.fabric3.host.Fabric3Exception;
-import org.fabric3.host.Fabric3RuntimeException;
+import org.easymock.classextension.EasyMock;
 
 /**
  * @version $Rev$ $Date$
  */
 public class DefaultExceptionFormatterTestCase extends TestCase {
-    private DefaultExceptionFormatter formatter = new DefaultExceptionFormatter(null);
+    private DefaultExceptionFormatter formatter;
+    private PrintWriter writer;
+    private Exception cause;
 
-    public void testFabric3ExceptionFormat() throws Exception {
-        StringWriter writer = new StringWriter();
-        PrintWriter pw = new PrintWriter(writer);
-        Fabric3Exception e = new Fabric3Exception("somemessage") {
-        };
-        formatter.write(pw, e);
-        assertTrue(writer.toString().indexOf("somemessage") >= 0);
+    public void testType() {
+        assertEquals(Throwable.class, formatter.getType());
     }
 
-    public void testFabric3RuntimeExceptionFormat() throws Exception {
-        StringWriter writer = new StringWriter();
-        PrintWriter pw = new PrintWriter(writer);
-        Fabric3RuntimeException e = new Fabric3RuntimeException("somemessage") {
-        };
-        formatter.write(pw, e);
-        assertTrue(writer.toString().indexOf("somemessage") >= 0);
+    public void testFormat() {
+        cause.printStackTrace(writer);
+        EasyMock.replay(writer);
+        EasyMock.replay(cause);
+        formatter.write(writer, cause);
+        EasyMock.verify(writer);
+        EasyMock.verify(cause);
     }
 
-    public void testNormalExceptionFormat() throws Exception {
-        StringWriter writer = new StringWriter();
-        PrintWriter pw = new PrintWriter(writer);
-        Exception e = new Exception();
-        formatter.write(pw, e); // just verify there are no errors since no formatting needs to be doen
+    protected void setUp() throws Exception {
+        super.setUp();
+        formatter = new DefaultExceptionFormatter();
+        writer = EasyMock.createMock(PrintWriter.class);
+        cause = EasyMock.createMock(Exception.class, new Method[]{Exception.class.getMethod("printStackTrace", PrintWriter.class)});
     }
-
 }

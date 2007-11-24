@@ -35,24 +35,27 @@ import org.fabric3.spi.loader.LoaderException;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class LoaderExceptionFormatter<T extends LoaderException> implements ExceptionFormatter<T> {
+public class LoaderExceptionFormatter implements ExceptionFormatter<LoaderException> {
     private FormatterRegistry registry;
 
     public LoaderExceptionFormatter(@Reference FormatterRegistry factory) {
         this.registry = factory;
-        factory.register(this);
     }
 
-    public boolean canFormat(Class<?> type) {
-        return LoaderException.class.equals(type);
+    public Class<LoaderException> getType() {
+        return LoaderException.class;
+    }
+
+    public void init() {
+        registry.register(LoaderException.class, this);
     }
 
     @Destroy
     public void destroy() {
-        registry.unregister(this);
+        registry.unregister(LoaderException.class);
     }
 
-    public void write(PrintWriter writer, T e) {
+    public void write(PrintWriter writer, LoaderException e) {
         e.appendBaseMessage(writer);
         if (e.getResourceURI() != null) {
             writer.write("\nSCDL: " + e.getResourceURI());
@@ -68,12 +71,17 @@ public class LoaderExceptionFormatter<T extends LoaderException> implements Exce
         if (cause != null) {
             FormatterHelper.writeStackTrace(writer, e, cause);
             writer.println("Caused by:");
-            registry.formatException(writer, cause);
+            ExceptionFormatter<? super Throwable> formatter = getFormatter(cause.getClass());
+            formatter.write(writer, cause);
         } else {
             StackTraceElement[] trace = e.getStackTrace();
             for (StackTraceElement aTrace : trace) {
                 writer.println("\tat " + aTrace);
             }
         }
+    }
+
+    private <T extends Throwable> ExceptionFormatter<? super T> getFormatter(Class<? extends T> type) {
+        return registry.getFormatter(type);
     }
 }

@@ -18,8 +18,6 @@
  */
 package org.fabric3.host.monitor;
 
-import java.util.Map;
-
 /**
  * A MonitorFactory creates implementations of components' monitor interfaces that interface with a its monitoring
  * scheme. For example, a implementation may create versions that emit appropriate logging events or which send
@@ -29,22 +27,10 @@ import java.util.Map;
  */
 public interface MonitorFactory {
     /**
-     * Initializes MonitorFactory instances with implementation-specific configuration properties.
-     *
-     * @param configProperties a map of named configuration properties.  May be null.
-     * @throws IllegalArgumentException if the instance can't be configured using the supplied properties
-     */
-    @Deprecated
-    void initialize(Map<String, Object> configProperties);
-
-    /**
      * Return a monitor for a component's monitor interface.
      *
      * @param monitorInterface the component's monitoring interface
      * @return an implementation of the monitoring interface; will not be null
      */
     <T> T getMonitor(Class<T> monitorInterface);
-
-    @Deprecated
-    void register(ExceptionFormatter formatter);
 }

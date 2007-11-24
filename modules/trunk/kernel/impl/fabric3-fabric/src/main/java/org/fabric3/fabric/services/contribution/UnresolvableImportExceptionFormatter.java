@@ -18,13 +18,14 @@ package org.fabric3.fabric.services.contribution;
 
 import java.io.PrintWriter;
 
+import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.monitor.FormatterHelper;
 import org.fabric3.host.monitor.ExceptionFormatter;
 import org.fabric3.host.monitor.FormatterRegistry;
+import org.fabric3.monitor.FormatterHelper;
 import org.fabric3.spi.services.contribution.Import;
 
 /**
@@ -38,13 +39,18 @@ public class UnresolvableImportExceptionFormatter implements ExceptionFormatter<
         this.registry = registry;
     }
 
-    @Init
-    public void init() {
-        registry.register(this);
+    public Class<UnresolvableImportException> getType() {
+        return UnresolvableImportException.class;
     }
 
-    public boolean canFormat(Class<?> type) {
-        return UnresolvableImportException.class.equals(type);
+    @Init
+    public void init() {
+        registry.register(UnresolvableImportException.class, this);
+    }
+
+    @Destroy
+    public void destroy() {
+        registry.unregister(UnresolvableImportException.class);
     }
 
     public void write(PrintWriter writer, UnresolvableImportException e) {
@@ -61,7 +67,8 @@ public class UnresolvableImportExceptionFormatter implements ExceptionFormatter<
         if (cause != null) {
             FormatterHelper.writeStackTrace(writer, e, cause);
             writer.println("Caused by:");
-            registry.formatException(writer, cause);
+            ExceptionFormatter<? super Throwable> formatter = getFormatter(cause.getClass());
+            formatter.write(writer, cause);
         } else {
             StackTraceElement[] trace = e.getStackTrace();
             for (StackTraceElement aTrace : trace) {
@@ -69,5 +76,9 @@ public class UnresolvableImportExceptionFormatter implements ExceptionFormatter<
             }
         }
 
+    }
+
+    private <T extends Throwable> ExceptionFormatter<? super T> getFormatter(Class<? extends T> type) {
+        return registry.getFormatter(type);
     }
 }
