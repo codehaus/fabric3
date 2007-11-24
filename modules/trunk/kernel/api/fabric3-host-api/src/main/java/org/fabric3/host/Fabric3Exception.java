@@ -121,4 +121,10 @@ public abstract class Fabric3Exception extends Exception {
         return writer;
     }
 
+    protected void printStackTraceElements(PrintWriter writer) {
+        for (StackTraceElement element : getStackTrace()) {
+            writer.print("\tat ");
+            writer.println(element);
+        }
+    }
 }

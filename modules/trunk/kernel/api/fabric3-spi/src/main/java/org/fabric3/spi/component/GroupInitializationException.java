@@ -19,11 +19,13 @@
 package org.fabric3.spi.component;
 
 import java.util.List;
+import java.io.PrintWriter;
+import java.io.PrintStream;
 
 /**
  * @version $Rev$ $Date$
  */
-public class GroupInitializationException extends TargetResolutionException {
+public class GroupInitializationException extends ComponentException {
     private final List<Exception> causes;
 
     /**
@@ -33,7 +35,7 @@ public class GroupInitializationException extends TargetResolutionException {
      * @param causes    the individual exceptions that occurred
      */
     public GroupInitializationException(String contextId, List<Exception> causes) {
-        super("Error initializing components in group", contextId);
+        super("Error initializing components in group " + contextId, contextId);
         this.causes = causes;
     }
 
@@ -44,5 +46,34 @@ public class GroupInitializationException extends TargetResolutionException {
      */
     public List<Exception> getCauses() {
         return causes;
+    }
+
+    /**
+     * Override stacktrace output to include all causes.
+     *
+     * @param printStream the stream to write to
+     */
+    @Override
+    public void printStackTrace(PrintStream printStream) {
+        PrintWriter writer = new PrintWriter(printStream);
+        printStackTrace(writer);
+    }
+
+    /**
+     * Override stacktrace output to include all causes.
+     *
+     * @param writer the writer to use
+     */
+    @Override
+    public void printStackTrace(PrintWriter writer) {
+        writer.println(toString());
+        printStackTraceElements(writer);
+        writer.println("-------------------------------------------------------------------------------");
+        for (Exception cause : causes) {
+            writer.print("Caused by: ");
+            cause.printStackTrace(writer);
+            writer.println("-------------------------------------------------------------------------------");
+        }
+        writer.flush();
     }
 }
