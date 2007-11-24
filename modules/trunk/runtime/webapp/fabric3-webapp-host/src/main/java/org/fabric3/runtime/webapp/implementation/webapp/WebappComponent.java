@@ -24,6 +24,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletRequestListener;
+import javax.naming.Context;
+import javax.naming.NamingException;
 
 import org.osoa.sca.CallableReference;
 import org.osoa.sca.ComponentContext;
@@ -123,6 +125,21 @@ public class WebappComponent<T> extends AbstractLifecycle implements AtomicCompo
             servletContext.setAttribute(name, factory.getInstance());
         }
     }
+
+    public void bind(Context ctx) throws NamingException, ObjectCreationException {
+        ctx.bind(Constants.CONTEXT_ATTRIBUTE, getComponentContext());
+        for (Map.Entry<String, ObjectFactory<?>> entry : propertyFactories.entrySet()) {
+            ctx.bind(entry.getKey(), entry.getValue().getInstance());
+        }
+        for (Map.Entry<String, Wire> entry : referenceFactories.entrySet()) {
+            String name = entry.getKey();
+            Wire wire = entry.getValue();
+            Class<?> type = referenceTypes.get(name);
+            ObjectFactory<?> factory = createWireFactory(type, wire);
+            ctx.bind(name, factory.getInstance());
+        }
+    }
+
 
     public URI getGroupId() {
         return groupId;
