@@ -8,7 +8,6 @@ import org.osoa.sca.ServiceUnavailableException;
 import org.fabric3.api.annotation.LogLevel;
 import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.fabric.assembly.DistributedAssembly;
-import org.fabric3.fabric.monitor.JavaLoggingMonitorFactory;
 import org.fabric3.fabric.runtime.AbstractRuntime;
 import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
@@ -16,17 +15,18 @@ import static org.fabric3.fabric.runtime.ComponentNames.LOADER_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_NAME;
 import org.fabric3.host.runtime.StartException;
 import org.fabric3.loader.common.LoaderContextImpl;
+import org.fabric3.monitor.JavaLoggingMonitorFactory;
 import org.fabric3.pojo.processor.JavaIntrospectionHelper;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeReference;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.ObjectCreationException;
-import org.fabric3.spi.assembly.BindException;
 import org.fabric3.spi.assembly.ActivateException;
+import org.fabric3.spi.assembly.BindException;
+import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.loader.Loader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
@@ -61,10 +61,8 @@ public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo>
     private MockObjectCache mockCache;
 
     public DevelopmentRuntimeImpl() {
-        super(DevelopmentHostInfo.class);
-        JavaLoggingMonitorFactory monitorFactory = new JavaLoggingMonitorFactory(null, null, "f3");
-        setMonitorFactory(monitorFactory);
-        monitor = monitorFactory.getMonitor(DevelopmentMonitor.class);
+        super(DevelopmentHostInfo.class, new JavaLoggingMonitorFactory(null, null, "f3"));
+        monitor = getMonitorFactory().getMonitor(DevelopmentMonitor.class);
     }
 
 

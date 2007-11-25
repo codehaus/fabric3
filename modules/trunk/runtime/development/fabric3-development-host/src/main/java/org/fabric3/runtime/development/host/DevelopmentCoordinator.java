@@ -52,7 +52,6 @@ import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.spi.services.contribution.ContributionConstants;
 import org.fabric3.spi.services.definitions.DefinitionActivationException;
 import org.fabric3.spi.services.definitions.DefinitionsDeployer;
 
@@ -62,7 +61,6 @@ import org.fabric3.spi.services.definitions.DefinitionsDeployer;
  * @version $Rev$ $Date$
  */
 public class DevelopmentCoordinator implements RuntimeLifecycleCoordinator<DevelopmentRuntime, Bootstrapper> {
-    private static final String EXTENSIONS = "extensions";
 
     private enum State {
         UNINITIALIZED,
@@ -185,7 +183,7 @@ public class DevelopmentCoordinator implements RuntimeLifecycleCoordinator<Devel
             ContributionService contributionService = runtime.getSystemComponent(ContributionService.class,
                                                                                  CONTRIBUTION_SERVICE_URI);
             ContributionSource source = new FileContributionSource(intentsUrl, -1, new byte[0]);
-            URI uri = contributionService.contribute(ContributionConstants.DEFAULT_STORE, source);
+            URI uri = contributionService.contribute(source);
             DefinitionsDeployer deployer = runtime.getSystemComponent(DefinitionsDeployer.class, DEFINITIONS_DEPLOYER);
             List<URI> intents = new ArrayList<URI>();
             intents.add(uri);
@@ -208,7 +206,8 @@ public class DevelopmentCoordinator implements RuntimeLifecycleCoordinator<Devel
             // contribute and activate extensions if they exist in the runtime domain
             ContributionService contributionService = runtime.getSystemComponent(ContributionService.class,
                                                                                  CONTRIBUTION_SERVICE_URI);
-            List<URI> contributionUris = new ArrayList<URI>();
+            List<URI> contributionUris;
+            List<ContributionSource> sources = new ArrayList<ContributionSource>();
             File[] files = extensionsDirectory.listFiles(new FileFilter() {
                 public boolean accept(File pathname) {
                     String name = pathname.getName();
@@ -218,15 +217,18 @@ public class DevelopmentCoordinator implements RuntimeLifecycleCoordinator<Devel
             for (File file : files) {
                 try {
                     ContributionSource source = new FileContributionSource(file.toURI().toURL(), -1, new byte[0]);
-                    contributionUris.add(contributionService.contribute(EXTENSIONS, source));
+                    sources.add(source);
                 } catch (MalformedURLException e) {
                     throw new ExtensionInitializationException("Error loading extension", file.getName(), e);
                 } catch (IOException e) {
                     throw new ExtensionInitializationException("Error loading extension", file.getName(), e);
-                } catch (ContributionException e) {
-                    throw new ExtensionInitializationException("Error loading extension", file.getName(), e);
                 }
 
+            }
+            try {
+                contributionUris = contributionService.contribute(sources);
+            } catch (ContributionException e) {
+                throw new ExtensionInitializationException("Error loading extension", e);
             }
             runtime.includeExtensionContributions(contributionUris);
         }
