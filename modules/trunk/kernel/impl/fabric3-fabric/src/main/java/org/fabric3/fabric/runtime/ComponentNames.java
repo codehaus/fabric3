@@ -34,16 +34,9 @@ public final class ComponentNames {
 
     public static final URI RUNTIME_URI = URI.create(RUNTIME_NAME);
 
-    /**
-     * The name of the component that contains the deployer.
-     */
-    public static final URI DEPLOYER_URI = URI.create(RUNTIME_NAME + "/deployer");
-
     public static final URI SCOPE_REGISTRY_URI = URI.create(RUNTIME_NAME + "/ScopeRegistry");
 
     public static final URI LOADER_URI = URI.create(RUNTIME_NAME + "/loader");
-
-    public static final URI COMPOSITE_LOADER_URI = URI.create(RUNTIME_NAME + "/composite.componentTypeLoader");
 
     public static final URI DISTRIBUTED_ASSEMBLY_URI = URI.create(RUNTIME_NAME + "/distributedAssembly");
 
@@ -54,8 +47,6 @@ public final class ComponentNames {
     public static final URI EVENT_SERVICE_URI = URI.create(RUNTIME_NAME + "/eventService");
 
     public static final URI WORK_SCHEDULER_URI = URI.create(RUNTIME_NAME + "/workScheduler");
-
-    public static final URI MESSAGING_SERVICE_URI = URI.create(RUNTIME_NAME + "/MessagingService");
 
     public static final URI DISCOVERY_SERVICE_URI = URI.create(RUNTIME_NAME + "/DiscoveryService");
 
