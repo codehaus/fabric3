@@ -54,7 +54,7 @@ public class Contribution implements Serializable {
      * @param location    a dereferenceble URL for the contribution archive
      * @param checksum    the checksum for the contribution artifact
      * @param timestamp   the time stamp of the contribution artifact
-     * @param contentType
+     * @param contentType the MIME type of the contribution
      */
     public Contribution(URI uri, URL location, byte[] checksum, long timestamp, String contentType) {
         this.uri = uri;
