@@ -31,7 +31,6 @@
     <!-- JXTA Service -->
     <component name="JxtaService">
         <system:implementation.system class="org.fabric3.jxta.impl.JxtaServiceImpl"/>
-        <property name="tcpPort">2000</property>
     </component>
 
 </composite>
