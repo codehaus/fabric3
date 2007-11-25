@@ -65,15 +65,18 @@ public interface ProcessorRegistry {
      */
     void processManifest(Contribution contribution) throws ContributionException;
 
-
     /**
      * Process a contribution from the input stream.
      *
      * @param contribution The contribution that will be used to hold the results from the processing
-     * @param source       The URI for the contribution/artifact
      * @throws ContributionException if there was a problem with the contribution
      */
-    // xcv remove need to pass content type
+    void processContribution(Contribution contribution) throws ContributionException;
+
+    /**
+     * This method is deprecated. Use {@link #processContribution(Contribution)} instead.
+     */
+    @Deprecated
     void processContribution(Contribution contribution, URI source) throws ContributionException;
 
     /**

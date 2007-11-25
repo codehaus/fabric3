@@ -43,7 +43,7 @@ public class CompositeContributionProcessor extends ContributionProcessorExtensi
     }
 
     public String[] getContentTypes() {
-        return new String[] {Constants.COMPOSITE_CONTENT_TYPE};
+        return new String[]{Constants.COMPOSITE_CONTENT_TYPE};
     }
 
     public void processManifest(Contribution contribution) throws ContributionException {
@@ -51,6 +51,10 @@ public class CompositeContributionProcessor extends ContributionProcessorExtensi
     }
 
     public void processContent(Contribution contribution, URI artifactURI) throws ContributionException {
+        throw new UnsupportedOperationException();
+    }
+
+    public void processContent(Contribution contribution) throws ContributionException {
         throw new UnsupportedOperationException();
     }
 

@@ -41,4 +41,7 @@ public class JavaContributionProcessor extends ContributionProcessorExtension im
         throw new UnsupportedOperationException();
     }
 
+    public void processContent(Contribution contribution) throws ContributionException {
+        throw new UnsupportedOperationException();
+    }
 }

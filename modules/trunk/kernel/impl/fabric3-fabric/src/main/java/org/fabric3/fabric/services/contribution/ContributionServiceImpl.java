@@ -241,7 +241,7 @@ public class ContributionServiceImpl implements ContributionService {
      */
     private void processContents(Contribution contribution) throws ContributionException {
         // store the contribution
-        processorRegistry.processContribution(contribution, contribution.getUri());
+        processorRegistry.processContribution(contribution);
         // TODO rollback storage if an error processing contribution
         // store the contribution index
         //store the contribution in the memory cache

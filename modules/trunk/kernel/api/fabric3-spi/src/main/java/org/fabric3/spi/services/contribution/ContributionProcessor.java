@@ -48,9 +48,14 @@ public interface ContributionProcessor {
      * artifacts or model objects to the contribution object.
      *
      * @param contribution The contribution that will be used to hold the results from the processing
-     * @param source       The URI for the contribution/artifact
      * @throws ContributionException if there was a problem with the contribution
      */
+    public void processContent(Contribution contribution) throws ContributionException;
+
+    /**
+     * This method is deprecated. Use {@link #processContent(Contribution)} instead.
+     */
+    @Deprecated
     void processContent(Contribution contribution, URI source) throws ContributionException;
 
 }

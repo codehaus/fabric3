@@ -27,9 +27,9 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
-import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.spi.services.contribution.Contribution;
@@ -57,7 +57,7 @@ public class XmlContributionProcessor implements ContributionProcessor, XmlProce
     }
 
     public String[] getContentTypes() {
-        return new String[] {"application/xml"};
+        return new String[]{"application/xml"};
     }
 
     public void processManifest(Contribution contribution) throws ContributionException {
@@ -73,6 +73,10 @@ public class XmlContributionProcessor implements ContributionProcessor, XmlProce
     }
 
     public void processContent(Contribution contribution, URI source) throws ContributionException {
+        processContent(contribution);
+    }
+
+    public void processContent(Contribution contribution) throws ContributionException {
         URL locationURL = contribution.getLocation();
         InputStream stream = null;
         XMLStreamReader reader = null;

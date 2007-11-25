@@ -65,8 +65,11 @@ public abstract class ArchiveContributionProcessor extends ContributionProcessor
     }
 
     public void processContent(Contribution contribution, URI source) throws ContributionException {
+        processContent(contribution);
+    }
+
+    public void processContent(Contribution contribution) throws ContributionException {
         // process the contribution manifest
-        //processManifest(contribution);
         // Build a classloader to perform the contribution introspection. The classpath will contain the contribution
         // jar and resolved imports
         ClassLoader oldClassloader = Thread.currentThread().getContextClassLoader();
