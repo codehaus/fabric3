@@ -36,7 +36,6 @@
 
     <component name="FileSystemResourceFactoryRegistry">
         <system:implementation.system class="org.fabric3.scanner.scanner.FileSystemResourceFactoryRegistryImpl"/>
-        <property name="path">target/deployables</property>
     </component>
 
     <component name="JarResourceFactory">
