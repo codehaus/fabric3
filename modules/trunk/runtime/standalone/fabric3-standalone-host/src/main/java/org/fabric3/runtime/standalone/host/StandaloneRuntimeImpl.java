@@ -19,8 +19,8 @@
 package org.fabric3.runtime.standalone.host;
 
 import org.fabric3.api.annotation.LogLevel;
-import org.fabric3.fabric.monitor.JavaLoggingMonitorFactory;
 import org.fabric3.fabric.runtime.AbstractRuntime;
+import org.fabric3.monitor.JavaLoggingMonitorFactory;
 import org.fabric3.runtime.standalone.StandaloneHostInfo;
 import org.fabric3.runtime.standalone.StandaloneRuntime;
 
@@ -28,14 +28,12 @@ import org.fabric3.runtime.standalone.StandaloneRuntime;
  * @version $Rev$ $Date$
  */
 public class StandaloneRuntimeImpl extends AbstractRuntime<StandaloneHostInfo> implements StandaloneRuntime {
-    JavaLoggingMonitorFactory monitorFactory;
     StandaloneMonitor monitor;
 
     public StandaloneRuntimeImpl() {
-        super(StandaloneHostInfo.class);
-        monitorFactory = new JavaLoggingMonitorFactory(null, null, "f3");  
-        setMonitorFactory(monitorFactory);
-        monitor = monitorFactory.getMonitor(StandaloneMonitor.class);
+        // FIXME
+        super(StandaloneHostInfo.class, new JavaLoggingMonitorFactory(null, null, "f3"));
+        monitor = getMonitorFactory().getMonitor(StandaloneMonitor.class);
     }
 
 
