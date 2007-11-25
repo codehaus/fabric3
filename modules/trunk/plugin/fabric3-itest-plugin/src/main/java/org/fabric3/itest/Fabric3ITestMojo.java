@@ -30,8 +30,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.ExecutionException;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
@@ -60,15 +60,13 @@ import org.apache.maven.surefire.testset.TestSetFailedException;
 import org.fabric3.api.annotation.LogLevel;
 import static org.fabric3.fabric.runtime.ComponentNames.LOADER_URI;
 import org.fabric3.fabric.runtime.ScdlBootstrapperImpl;
-import org.fabric3.host.Fabric3RuntimeException;
-import org.fabric3.host.runtime.Bootstrapper;
+import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.host.runtime.InitializationException;
-import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.host.runtime.ShutdownException;
-import org.fabric3.host.runtime.StartException;
 import org.fabric3.junit.ImplementationJUnit;
 import org.fabric3.loader.common.LoaderContextImpl;
+import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
 import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
@@ -78,7 +76,6 @@ import org.fabric3.scdl.Operation;
 import org.fabric3.spi.deployer.CompositeClassLoader;
 import org.fabric3.spi.loader.Loader;
 import org.fabric3.spi.loader.LoaderContext;
-import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
 
 /**
  * Integration-tests an SCA composite by running it in local copy of Fabric3 and calling JUnit-based test components to
@@ -226,52 +223,45 @@ public class Fabric3ITestMojo extends AbstractMojo {
     @SuppressWarnings({"ThrowFromFinallyBlock"})
     public void execute() throws MojoExecutionException, MojoFailureException {
         Log log = getLog();
-        if (skip) {
-            log.info("Skipping integration tests by user request.");
-            return;
-        }
         if (!testScdl.exists()) {
             log.info("No itest SCDL found, skipping integration tests");
             return;
         }
+        if (skip) {
+            log.info("Skipping integration tests by user request.");
+            return;
+        }
+        MonitorFactory monitorFactory = new MavenMonitorFactory(log, "f3");
+        MojoMonitor monitor = monitorFactory.getMonitor(MojoMonitor.class);
 
-        ClassLoader cl = createHostClassLoader(getClass().getClassLoader(), extensions);
-        Thread.currentThread().setContextClassLoader(cl);
+        URL testScdlURL;
+        try {
+            testScdlURL = testScdl.toURI().toURL();
+        } catch (MalformedURLException e) {
+            throw new AssertionError();
+        }
+
+        ClassLoader hostClassLoader = createHostClassLoader(getClass().getClassLoader(), extensions);
+        Thread.currentThread().setContextClassLoader(hostClassLoader);
         if (systemScdl == null) {
-            systemScdl = cl.getResource("META-INF/fabric3/embeddedMaven.composite");
+            systemScdl = hostClassLoader.getResource("META-INF/fabric3/embeddedMaven.composite");
         }
         if (intentsLocation == null) {
-            intentsLocation = cl.getResource("META-INF/fabric3/intents.xml");
+            intentsLocation = hostClassLoader.getResource("META-INF/fabric3/intents.xml");
         }
 
+
         log.info("Starting Embedded Fabric3 Runtime ...");
-        MavenEmbeddedRuntime runtime = createRuntime(cl);
-        MojoMonitor monitor = runtime.getMonitorFactory().getMonitor(MojoMonitor.class);
         // FIXME this should probably be an isolated classloader
-        ClassLoader testClassLoader = createTestClassLoader(cl);
-        RuntimeLifecycleCoordinator<MavenEmbeddedRuntime, Bootstrapper> coordinator;
+        ClassLoader testClassLoader = createTestClassLoader(hostClassLoader);
+        MavenEmbeddedRuntime runtime = createRuntime(hostClassLoader, monitorFactory);
+        MavenCoordinator coordinator = new MavenCoordinator(contributions, intentsLocation);
         try {
-            ScdlBootstrapper bootstrapper = new ScdlBootstrapperImpl();
-            bootstrapper.setScdlLocation(systemScdl);
-            coordinator = new MavenCoordinator(contributions, intentsLocation);
-            coordinator.bootPrimordial(runtime, bootstrapper, cl, testClassLoader);
-            coordinator.initialize();
-            Future<Void> future = coordinator.joinDomain(-1);
-            future.get();
-            future = coordinator.recover();
-            future.get();
-            future = coordinator.start();
-            future.get();
+            bootRuntime(coordinator, runtime, hostClassLoader, testClassLoader);
         } catch (InitializationException e) {
             monitor.runError(e);
             throw new MojoExecutionException("Error initializing Fabric3 Runtime", e);
-        } catch (StartException e) {
-            monitor.runError(e);
-            throw new MojoExecutionException("Error starting Fabric3 Runtime", e);
-        } catch (ExecutionException e) {
-            monitor.runError(e);
-            throw new MojoExecutionException("Error starting Fabric3 Runtime", e);
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             monitor.runError(e);
             throw new MojoExecutionException("Error starting Fabric3 Runtime", e);
         }
@@ -280,19 +270,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
             SurefireTestSuite testSuite;
             log.info("Deploying test SCDL from " + testScdl);
             try {
-                // XML loading is externalized for the Mojo...this should be cleaned up to use the DSL when
-                // it becomes available
-                URI domain = URI.create(testDomain);
-
-                Loader loader = runtime.getSystemComponent(Loader.class, LOADER_URI);
-
-                URL scdlLocation = testScdl.toURI().toURL();
-                LoaderContext loaderContext = new LoaderContextImpl(testClassLoader, scdlLocation);
-                Composite composite = loader.load(scdlLocation, Composite.class, loaderContext);
-
-                runtime.deploy(composite);
-                testSuite = createTestSuite(runtime, composite, domain);
-                runtime.startContext(domain);
+                testSuite = createTestSuite(runtime, testScdlURL, testClassLoader);
             } catch (Exception e) {
                 monitor.runError(e);
                 throw new MojoExecutionException("Error deploying test component " + testScdl, e);
@@ -307,22 +285,34 @@ public class Fabric3ITestMojo extends AbstractMojo {
         } finally {
             log.info("Stopping Fabric3 Runtime ...");
             try {
-                Future<Void> future = coordinator.shutdown();
-                future.get();
-            } catch (Fabric3RuntimeException e) {
+                shutdownRuntime(coordinator);
+            } catch (Exception e) {
                 monitor.runError(e);
-                throw new MojoExecutionException("Error shutting down Fabric3 Runtime", e);
-            } catch (ExecutionException e) {
-                monitor.runError(e);
-                throw new MojoExecutionException("Error shutting down Fabric3 Runtime", e);
-            } catch (InterruptedException e) {
-                monitor.runError(e);
-                throw new MojoExecutionException("Error shutting down Fabric3 Runtime", e);
-            } catch (ShutdownException e) {
-                monitor.runError(e);
-                throw new MojoExecutionException("Error shutting down Fabric3 Runtime", e);
             }
         }
+    }
+
+    private void shutdownRuntime(MavenCoordinator coordinator)
+            throws ShutdownException, InterruptedException, ExecutionException {
+        Future<Void> future = coordinator.shutdown();
+        future.get();
+    }
+
+    private void bootRuntime(MavenCoordinator coordinator,
+                             MavenEmbeddedRuntime runtime,
+                             ClassLoader hostClassLoader,
+                             ClassLoader testClassLoader)
+            throws InitializationException, InterruptedException, ExecutionException {
+        ScdlBootstrapper bootstrapper = new ScdlBootstrapperImpl();
+        bootstrapper.setScdlLocation(systemScdl);
+        coordinator.bootPrimordial(runtime, bootstrapper, hostClassLoader, testClassLoader);
+        coordinator.initialize();
+        Future<Void> future = coordinator.joinDomain(-1);
+        future.get();
+        future = coordinator.recover();
+        future.get();
+        future = coordinator.start();
+        future.get();
     }
 
     @SuppressWarnings({"unchecked"})
@@ -435,10 +425,9 @@ public class Fabric3ITestMojo extends AbstractMojo {
         return reporterManager.getNumErrors() == 0 && reporterManager.getNumFailures() == 0;
     }
 
-    protected MavenEmbeddedRuntimeImpl createRuntime(ClassLoader hostClassLoader) throws MojoExecutionException {
+    protected MavenEmbeddedRuntimeImpl createRuntime(ClassLoader hostClassLoader, MonitorFactory monitorFactory) throws MojoExecutionException {
         Properties hostProperties = properties != null ? properties : System.getProperties();
         MavenHostInfoImpl hostInfo = new MavenHostInfoImpl(URI.create(testDomain), hostProperties);
-        MavenMonitorFactory monitorFactory = new MavenMonitorFactory(getLog(), "f3");
 
         MavenEmbeddedRuntimeImpl runtime = new MavenEmbeddedRuntimeImpl(monitorFactory);
         runtime.setMonitorFactory(monitorFactory);
@@ -463,6 +452,24 @@ public class Fabric3ITestMojo extends AbstractMojo {
 
         }
         return new URLClassLoader(urls, parent);
+    }
+
+    protected SurefireTestSuite createTestSuite(MavenEmbeddedRuntime runtime,
+                                              URL testScdlURL,
+                                              ClassLoader testClassLoader) throws Exception {
+        // XML loading is externalized for the Mojo...this should be cleaned up to use the DSL when
+        // it becomes available
+        URI domain = URI.create(testDomain);
+
+        Loader loader = runtime.getSystemComponent(Loader.class, LOADER_URI);
+
+        LoaderContext loaderContext = new LoaderContextImpl(testClassLoader, testScdlURL);
+        Composite composite = loader.load(testScdlURL, Composite.class, loaderContext);
+
+        runtime.deploy(composite);
+        SurefireTestSuite testSuite = createTestSuite(runtime, composite, domain);
+        runtime.startContext(domain);
+        return testSuite;
     }
 
     protected SurefireTestSuite createTestSuite(MavenEmbeddedRuntime runtime,
