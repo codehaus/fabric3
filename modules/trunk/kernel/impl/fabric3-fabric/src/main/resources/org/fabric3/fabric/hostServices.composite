@@ -38,4 +38,12 @@
         <system:implementation.system class="org.fabric3.fabric.services.work.jsr237.Jsr237WorkScheduler"/>
     </component>
 
+    <component name="allocator">
+        <system:implementation.system class="org.fabric3.fabric.assembly.allocator.DefaultAllocator"/>
+    </component>
+
+    <component name="runtimeRoutingService">
+        <system:implementation.system class="org.fabric3.fabric.services.routing.FederatedRoutingService"/>
+    </component>
+
 </composite>

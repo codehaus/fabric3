@@ -60,14 +60,6 @@
         <system:implementation.system class="org.fabric3.fabric.assembly.normalizer.PromotionNormalizerImpl"/>
     </component>
 
-    <component name="allocator">
-        <system:implementation.system class="org.fabric3.fabric.assembly.allocator.DefaultAllocator"/>
-    </component>
-
-    <component name="runtimeRoutingService">
-        <system:implementation.system class="org.fabric3.fabric.services.routing.FederatedRoutingService"/>
-    </component>
-
     <component name="generatorRegistry">
         <system:implementation.system class="org.fabric3.fabric.generator.GeneratorRegistryImpl"/>
     </component>
