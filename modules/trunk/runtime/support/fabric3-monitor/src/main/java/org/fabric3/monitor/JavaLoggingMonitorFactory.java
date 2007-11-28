@@ -91,7 +91,10 @@ public class JavaLoggingMonitorFactory implements MonitorFactory {
         for (Method method : methods) {
             String methodName = method.getName();
             String key = className + '#' + methodName;
-            String levelName = levels.getProperty(key);
+            String levelName = null;
+            if (levels != null) {
+                levelName = levels.getProperty(key);
+            }
             if (levelName == null) {
                 LogLevel annotation = method.getAnnotation(LogLevel.class);
                 if (annotation != null) {
