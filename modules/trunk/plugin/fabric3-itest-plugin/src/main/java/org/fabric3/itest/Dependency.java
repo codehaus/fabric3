@@ -18,6 +18,7 @@
  */
 package org.fabric3.itest;
 
+import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,11 +32,10 @@ import org.apache.maven.artifact.factory.ArtifactFactory;
  */
 public class Dependency {
 
-    private static final String TYPE_JAR = "jar";
-
     private String groupId;
     private String artifactId;
-    private String version;
+    private String version = "RELEASE";
+    private String type = "jar";
     private Set<Exclusion> exclusions = new HashSet<Exclusion>();
     
     
@@ -68,7 +68,7 @@ public class Dependency {
      * @return Artifact identified by the dependency.
      */
     public Artifact getArtifact(ArtifactFactory artifactFactory) {
-        return artifactFactory.createArtifact(groupId, artifactId, version, Artifact.SCOPE_RUNTIME, TYPE_JAR);
+        return artifactFactory.createArtifact(groupId, artifactId, version, Artifact.SCOPE_RUNTIME, type);
     }
 
     public String getGroupId() {
@@ -86,5 +86,15 @@ public class Dependency {
     public Set<Exclusion> getExclusions() {
         return exclusions;
     }
-    
+
+
+    public URI getURI() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(groupId);
+        builder.append(':');
+        builder.append(artifactId);
+        builder.append(':');
+        builder.append(version);
+        return URI.create(builder.toString());
+    }
 }

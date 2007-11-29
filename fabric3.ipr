@@ -112,11 +112,7 @@
               <file url="file://$PROJECT_DIR$/tests/trunk/runtime-tomcat/src/main/webapp/WEB-INF/web.xml" />
             </files>
           </module>
-          <module name="test-runtime-tomcat">
-            <files>
-              <file url="file://$PROJECT_DIR$/tests/trunk/test-runtime-tomcat/src/main/webapp/WEB-INF/web.xml" />
-            </files>
-          </module>
+          <module name="test-runtime-tomcat" />
           <module name="test-runtime-jetty">
             <files>
               <file url="file://$PROJECT_DIR$/tests/trunk/test-runtime-jetty/src/main/webapp/WEB-INF/web.xml" />

@@ -30,8 +30,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.concurrent.Future;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
@@ -58,14 +58,14 @@ import org.apache.maven.surefire.suite.SurefireTestSuite;
 import org.apache.maven.surefire.testset.TestSetFailedException;
 
 import org.fabric3.api.annotation.LogLevel;
-import static org.fabric3.fabric.runtime.ComponentNames.LOADER_URI;
-import org.fabric3.fabric.runtime.ScdlBootstrapperImpl;
 import org.fabric3.host.monitor.MonitorFactory;
+import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.InitializationException;
+import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.junit.ImplementationJUnit;
-import org.fabric3.loader.common.LoaderContextImpl;
+import org.fabric3.maven.runtime.MavenCoordinator;
 import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
 import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.PojoComponentType;
@@ -74,8 +74,6 @@ import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Operation;
 import org.fabric3.spi.deployer.CompositeClassLoader;
-import org.fabric3.spi.loader.Loader;
-import org.fabric3.spi.loader.LoaderContext;
 
 /**
  * Integration-tests an SCA composite by running it in local copy of Fabric3 and calling JUnit-based test components to
@@ -141,11 +139,35 @@ public class Fabric3ITestMojo extends AbstractMojo {
     public URL systemScdl;
 
     /**
+     * Class name for the implementation of the runtime to use.
+     * @parameter expression="org.fabric3.maven.runtime.impl.MavenEmbeddedRuntimeImpl"
+     */
+    public String runtimeImpl;
+
+    /**
+     * Class name for the implementation of the bootstrapper to use.
+     * @parameter expression="org.fabric3.fabric.runtime.ScdlBootstrapperImpl"
+     */
+    public String bootstrapperImpl;
+
+    /**
+     * Class name for the implementation of the coordinator to use.
+     * @parameter expression="org.fabric3.maven.runtime.impl.MavenCoordinatorImpl"
+     */
+    public String coordinatorImpl;
+
+    /**
      * The location of the default intents file for the Fabric3 runtime.
      *
      * @parameter
      */
     public URL intentsLocation;
+
+    /**
+     * The version of the runtime to use.
+     * @parameter expression="0.4-SNAPSHOT"
+     */
+    public String runtimeVersion;
 
     /**
      * Set of extension artifacts that should be deployed to the runtime.
@@ -241,7 +263,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
             throw new AssertionError();
         }
 
-        ClassLoader hostClassLoader = createHostClassLoader(getClass().getClassLoader(), extensions);
+        ClassLoader hostClassLoader = createHostClassLoader(getClass().getClassLoader(), runtimeVersion, extensions);
         Thread.currentThread().setContextClassLoader(hostClassLoader);
         if (systemScdl == null) {
             systemScdl = hostClassLoader.getResource("META-INF/fabric3/embeddedMaven.composite");
@@ -250,13 +272,23 @@ public class Fabric3ITestMojo extends AbstractMojo {
             intentsLocation = hostClassLoader.getResource("META-INF/fabric3/intents.xml");
         }
 
+        List<URI> contributionURIs = resolveDependencies(contributions);
+
 
         log.info("Starting Embedded Fabric3 Runtime ...");
         // FIXME this should probably be an isolated classloader
         ClassLoader testClassLoader = createTestClassLoader(hostClassLoader);
-        MavenEmbeddedRuntime runtime = createRuntime(hostClassLoader, monitorFactory);
-        MavenCoordinator coordinator = new MavenCoordinator(contributions, intentsLocation);
+        MavenEmbeddedRuntime runtime;
+        MavenCoordinator coordinator;
         try {
+            runtime = createRuntime(hostClassLoader, monitorFactory);
+            coordinator = createHostComponent(MavenCoordinator.class, coordinatorImpl, hostClassLoader);
+        } catch (Exception e) {
+            throw new MojoExecutionException("Error creating fabric3 runtime", e);
+        }
+        try {
+            coordinator.setExtensions(contributionURIs);
+            coordinator.setIntentsLocation(intentsLocation);
             bootRuntime(coordinator, runtime, hostClassLoader, testClassLoader);
         } catch (InitializationException e) {
             monitor.runError(e);
@@ -292,18 +324,29 @@ public class Fabric3ITestMojo extends AbstractMojo {
         }
     }
 
-    private void shutdownRuntime(MavenCoordinator coordinator)
+    private List<URI> resolveDependencies(Dependency[] dependencies) {
+        if (dependencies == null) {
+            return Collections.emptyList();
+        }
+        List<URI> uris = new ArrayList<URI>(dependencies.length);
+        for (Dependency dependency : dependencies) {
+            uris.add(dependency.getURI());
+        }
+        return uris;
+    }
+
+    private void shutdownRuntime(RuntimeLifecycleCoordinator<MavenEmbeddedRuntime, Bootstrapper> coordinator)
             throws ShutdownException, InterruptedException, ExecutionException {
         Future<Void> future = coordinator.shutdown();
         future.get();
     }
 
-    private void bootRuntime(MavenCoordinator coordinator,
+    private void bootRuntime(RuntimeLifecycleCoordinator<MavenEmbeddedRuntime, Bootstrapper> coordinator,
                              MavenEmbeddedRuntime runtime,
                              ClassLoader hostClassLoader,
                              ClassLoader testClassLoader)
-            throws InitializationException, InterruptedException, ExecutionException {
-        ScdlBootstrapper bootstrapper = new ScdlBootstrapperImpl();
+            throws Exception {
+        ScdlBootstrapper bootstrapper = createHostComponent(ScdlBootstrapper.class, bootstrapperImpl, hostClassLoader);
         bootstrapper.setScdlLocation(systemScdl);
         coordinator.bootPrimordial(runtime, bootstrapper, hostClassLoader, testClassLoader);
         coordinator.initialize();
@@ -315,56 +358,20 @@ public class Fabric3ITestMojo extends AbstractMojo {
         future.get();
     }
 
-    @SuppressWarnings({"unchecked"})
-    protected ClassLoader createHostClassLoader(ClassLoader parent, Dependency[] extensions)
+    protected ClassLoader createHostClassLoader(ClassLoader parent, String runtimeVersion, Dependency[] extensions)
             throws MojoExecutionException {
-        if (extensions == null || extensions.length == 0) {
-            return parent;
-        }
-
         Set<Artifact> artifacts = new HashSet<Artifact>();
-        for (Dependency extension : extensions) {
+        // add in the runtime
+        Set<Exclusion> exclusions = Collections.emptySet();
+        addArtifacts(artifacts, new Dependency("org.codehaus.fabric3", "fabric3-maven-host", runtimeVersion, exclusions));
 
-            final Set<Exclusion> exclusions = extension.getExclusions();
-
-            Artifact artifact = extension.getArtifact(artifactFactory);
-            try {
-                resolver.resolve(artifact, remoteRepositories, localRepository);
-                ResolutionGroup resolutionGroup = metadataSource.retrieve(artifact,
-                                                                          localRepository,
-                                                                          remoteRepositories);
-                ArtifactFilter filter = new ArtifactFilter() {
-
-                    public boolean include(Artifact artifact) {
-                        String groupId = artifact.getGroupId();
-                        String artifactId = artifact.getArtifactId();
-
-                        for (Exclusion exclusion : exclusions) {
-                            if (artifactId.equals(exclusion.getArtifactId()) && groupId.equals(exclusion.getGroupId())) {
-                                return false;
-                            }
-                        }
-                        return true;
-                    }
-
-                };
-                ArtifactResolutionResult result = resolver.resolveTransitively(resolutionGroup.getArtifacts(),
-                                                                               artifact,
-                                                                               Collections.emptyMap(),
-                                                                               localRepository,
-                                                                               remoteRepositories,
-                                                                               metadataSource,
-                                                                               filter);
-                artifacts.add(artifact);
-                artifacts.addAll(result.getArtifacts());
-            } catch (ArtifactResolutionException e) {
-                throw new MojoExecutionException(e.getMessage(), e);
-            } catch (ArtifactNotFoundException e) {
-                throw new MojoExecutionException(e.getMessage(), e);
-            } catch (ArtifactMetadataRetrievalException e) {
-                throw new MojoExecutionException(e.getMessage(), e);
+        // add in the common extensions
+        if (extensions != null) {
+            for (Dependency extension : extensions) {
+                addArtifacts(artifacts, extension);
             }
         }
+        
         URL[] urls = new URL[artifacts.size()];
         int i = 0;
         for (Artifact artifact : artifacts) {
@@ -387,6 +394,50 @@ public class Fabric3ITestMojo extends AbstractMojo {
         }
 
         return new CompositeClassLoader(URI.create("itestHost"), urls, parent);
+    }
+
+    private void addArtifacts(Set<Artifact> artifacts, Dependency extension) throws MojoExecutionException {
+        final Set<Exclusion> exclusions = extension.getExclusions();
+
+        Artifact artifact = extension.getArtifact(artifactFactory);
+        try {
+            resolver.resolve(artifact, remoteRepositories, localRepository);
+            ResolutionGroup resolutionGroup = metadataSource.retrieve(artifact,
+                                                                      localRepository,
+                                                                      remoteRepositories);
+            ArtifactFilter filter = new ArtifactFilter() {
+
+                public boolean include(Artifact artifact) {
+                    String groupId = artifact.getGroupId();
+                    String artifactId = artifact.getArtifactId();
+
+                    for (Exclusion exclusion : exclusions) {
+                        if (artifactId.equals(exclusion.getArtifactId()) && groupId.equals(exclusion.getGroupId())) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+
+            };
+            ArtifactResolutionResult result = resolver.resolveTransitively(resolutionGroup.getArtifacts(),
+                                                                           artifact,
+                                                                           Collections.emptyMap(),
+                                                                           localRepository,
+                                                                           remoteRepositories,
+                                                                           metadataSource,
+                                                                           filter);
+            @SuppressWarnings("unchecked")
+            Set<Artifact> resolvedArtifacts = result.getArtifacts();
+            artifacts.add(artifact);
+            artifacts.addAll(resolvedArtifacts);
+        } catch (ArtifactResolutionException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
+        } catch (ArtifactNotFoundException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
+        } catch (ArtifactMetadataRetrievalException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
+        }
     }
 
     public boolean runSurefire(SurefireTestSuite testSuite) throws MojoExecutionException {
@@ -425,15 +476,21 @@ public class Fabric3ITestMojo extends AbstractMojo {
         return reporterManager.getNumErrors() == 0 && reporterManager.getNumFailures() == 0;
     }
 
-    protected MavenEmbeddedRuntimeImpl createRuntime(ClassLoader hostClassLoader, MonitorFactory monitorFactory) throws MojoExecutionException {
+    protected MavenEmbeddedRuntime createRuntime(ClassLoader hostClassLoader, MonitorFactory monitorFactory) throws Exception {
         Properties hostProperties = properties != null ? properties : System.getProperties();
         MavenHostInfoImpl hostInfo = new MavenHostInfoImpl(URI.create(testDomain), hostProperties);
 
-        MavenEmbeddedRuntimeImpl runtime = new MavenEmbeddedRuntimeImpl(monitorFactory);
+        MavenEmbeddedRuntime runtime = createHostComponent(MavenEmbeddedRuntime.class, runtimeImpl, hostClassLoader);
         runtime.setMonitorFactory(monitorFactory);
         runtime.setHostInfo(hostInfo);
         runtime.setHostClassLoader(hostClassLoader);
         return runtime;
+    }
+
+    protected <T> T createHostComponent(Class<T> type, String impl, ClassLoader cl) throws Exception {
+        Class<?> implClass = cl.loadClass(impl);
+        return type.cast(implClass.newInstance());
+
     }
 
     public ClassLoader createTestClassLoader(ClassLoader parent) {
@@ -461,15 +518,10 @@ public class Fabric3ITestMojo extends AbstractMojo {
         // it becomes available
         URI domain = URI.create(testDomain);
 
-        Loader loader = runtime.getSystemComponent(Loader.class, LOADER_URI);
-
-        LoaderContext loaderContext = new LoaderContextImpl(testClassLoader, testScdlURL);
-        Composite composite = loader.load(testScdlURL, Composite.class, loaderContext);
-
+        Composite composite = runtime.load(testClassLoader, testScdlURL);
         runtime.deploy(composite);
-        SurefireTestSuite testSuite = createTestSuite(runtime, composite, domain);
         runtime.startContext(domain);
-        return testSuite;
+        return createTestSuite(runtime, composite, domain);
     }
 
     protected SurefireTestSuite createTestSuite(MavenEmbeddedRuntime runtime,

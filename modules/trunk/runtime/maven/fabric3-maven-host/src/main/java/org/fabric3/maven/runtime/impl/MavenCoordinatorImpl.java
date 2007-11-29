@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.itest;
+package org.fabric3.maven.runtime.impl;
 
 import java.net.URI;
 import java.net.URL;
@@ -24,8 +24,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
-import org.apache.maven.artifact.Artifact;
 
 import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.fabric.assembly.DistributedAssembly;
@@ -42,9 +40,9 @@ import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.FileContributionSource;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.InitializationException;
-import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.host.runtime.StartException;
+import org.fabric3.maven.runtime.MavenCoordinator;
 import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.assembly.AssemblyException;
@@ -62,7 +60,7 @@ import org.fabric3.spi.services.definitions.DefinitionsDeployer;
  *
  * @version $Rev$ $Date$
  */
-public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbeddedRuntime, Bootstrapper> {
+public class MavenCoordinatorImpl implements MavenCoordinator {
 
     private enum State {
         UNINITIALIZED,
@@ -76,18 +74,24 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
         ERROR
     }
 
-    private Dependency[] dependencies;
     private State state = State.UNINITIALIZED;
     private MavenEmbeddedRuntime runtime;
     private Bootstrapper bootstrapper;
     private URL intentsLocation;
+    private List<URI> extensions;
 
     /**
-     * @param dependencies    Runtime extensions to run in the test.
-     * @param intentsLocation the default intents file location or null
+     * Default constructor expected by the plugin.
+     *
      */
-    public MavenCoordinator(Dependency[] dependencies, URL intentsLocation) {
-        this.dependencies = dependencies;
+    public MavenCoordinatorImpl() {
+    }
+
+    public void setExtensions(List<URI> extensions) {
+        this.extensions = extensions;
+    }
+
+    public void setIntentsLocation(URL intentsLocation) {
         this.intentsLocation = intentsLocation;
     }
 
@@ -221,44 +225,32 @@ public class MavenCoordinator implements RuntimeLifecycleCoordinator<MavenEmbedd
 
     private void includeExtensions(ContributionService contributionService)
             throws InitializationException, DefinitionActivationException {
-        if (dependencies != null) {
-            ArchiveStore archiveStore = runtime.getSystemComponent(ArchiveStore.class, CONTRIBUTION_STORE_URI);
-            // contribute and activate extensions if they exist in the runtime domain
-            List<URI> contributionUris;
-            List<ContributionSource> sources = new ArrayList<ContributionSource>();
-            for (Dependency dependency : dependencies) {
-                // create a uri from the dependency
-                String contribution;
-                if (dependency.getVersion() == null) {
-                    contribution =
-                            dependency.getGroupId() + ":" + dependency.getArtifactId() + ":" + Artifact.RELEASE_VERSION;
-
-                } else {
-                    contribution =
-                            dependency.getGroupId() + ":" + dependency.getArtifactId() + ":" + dependency.getVersion();
-                }
-                try {
-                    URL url = archiveStore.find(URI.create(contribution));
-                    if (url == null) {
-                        throw new ExtensionInitializationException("Extension not found in Maven Repository",
-                                                                   contribution);
-                    }
-                    ContributionSource source = new FileContributionSource(url, -1, new byte[0]);
-                    sources.add(source);
-                } catch (ArchiveStoreException e) {
-                    throw new ExtensionInitializationException("Error contributing extension", contribution, e);
-                }
-            }
+        ArchiveStore archiveStore = runtime.getSystemComponent(ArchiveStore.class, CONTRIBUTION_STORE_URI);
+        List<ContributionSource> sources = new ArrayList<ContributionSource>(extensions.size());
+        for (URI extension : extensions) {
+            URL extensionURL;
             try {
-                contributionUris = contributionService.contribute(sources);
-            } catch (ContributionException e) {
-                throw new ExtensionInitializationException("Error contributing extensions", e);
+                extensionURL = archiveStore.find(extension);
+            } catch (ArchiveStoreException e) {
+                throw new ExtensionInitializationException("Error contributing extension", extension.toString(), e);
             }
-            runtime.includeExtensionContributions(contributionUris);
-            DefinitionsDeployer definitionsDeployer =
-                    runtime.getSystemComponent(DefinitionsDeployer.class, DEFINITIONS_DEPLOYER);
-            definitionsDeployer.activateDefinitions(contributionUris);
+            if (extensionURL == null) {
+                throw new ExtensionInitializationException("Extension not found in Maven Repository", extension.toString());
+
+            }
+            ContributionSource source = new FileContributionSource(extensionURL, -1, new byte[0]);
+            sources.add(source);
         }
+
+        List<URI> contributionUris;
+        try {
+            contributionUris = contributionService.contribute(sources);
+        } catch (ContributionException e) {
+            throw new ExtensionInitializationException("Error contributing extensions", e);
+        }
+        runtime.includeExtensionContributions(contributionUris);
+        DefinitionsDeployer definitionsDeployer = runtime.getSystemComponent(DefinitionsDeployer.class, DEFINITIONS_DEPLOYER);
+        definitionsDeployer.activateDefinitions(contributionUris);
     }
 
     private static class SyncFuture implements Future<Void> {

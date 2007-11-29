@@ -37,9 +37,9 @@
             <attribute name="method" value="1" />
             <attribute name="URI" value="/WEB-INF/lib/fabric3-host-api-0.2.jar" />
           </containerElement>
-          <containerElement type="library" name="org.codehaus.fabric3.webapp:fabric3-webapp-api:0.3.1-SNAPSHOT" level="module">
+          <containerElement type="module" name="fabric3-webapp-api">
             <attribute name="method" value="1" />
-            <attribute name="URI" value="/WEB-INF/lib/fabric3-webapp-api-0.3.1-SNAPSHOT.jar" />
+            <attribute name="URI" value="/WEB-INF/classes" />
           </containerElement>
         </packaging>
       </configuration>
@@ -97,15 +97,7 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module-library" exported="">
-      <library name="org.codehaus.fabric3.webapp:fabric3-webapp-api:0.3.1-SNAPSHOT">
-        <CLASSES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/webapp/fabric3-webapp-api/0.3.1-SNAPSHOT/fabric3-webapp-api-0.3.1-SNAPSHOT.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
+    <orderEntry type="module" module-name="fabric3-webapp-api" exported="" />
     <orderEntry type="module-library" exported="">
       <library name="org.codehaus.fabric3:fabric3-api:0.2">
         <CLASSES>

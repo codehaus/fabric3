@@ -16,10 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.itest;
+package org.fabric3.maven.runtime.impl;
 
 import java.lang.reflect.Method;
 import java.net.URI;
+import java.net.URL;
 
 import org.apache.maven.surefire.testset.TestSetFailedException;
 
@@ -28,8 +29,9 @@ import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.runtime.AbstractRuntime;
 import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
-import org.fabric3.host.monitor.MonitorFactory;
+import static org.fabric3.fabric.runtime.ComponentNames.LOADER_URI;
 import org.fabric3.java.JavaComponent;
+import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
 import org.fabric3.maven.runtime.MavenHostInfo;
 import org.fabric3.pojo.PojoWorkContextTunnel;
@@ -42,6 +44,8 @@ import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.loader.Loader;
+import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.spi.wire.MessageImpl;
 
@@ -49,8 +53,14 @@ import org.fabric3.spi.wire.MessageImpl;
  * @version $Rev: 1382 $ $Date: 2007-09-23 21:08:40 +0100 (Sun, 23 Sep 2007) $
  */
 public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> implements MavenEmbeddedRuntime {
-    public MavenEmbeddedRuntimeImpl(MonitorFactory monitorFactory) {
-        super(MavenHostInfo.class, monitorFactory);
+    public MavenEmbeddedRuntimeImpl() {
+        super(MavenHostInfo.class, null);
+    }
+
+    public Composite load(ClassLoader cl, URL scdlLocation) throws Exception{
+        Loader loader = getSystemComponent(Loader.class, LOADER_URI);
+        LoaderContext loaderContext = new LoaderContextImpl(cl, scdlLocation);
+        return loader.load(scdlLocation, Composite.class, loaderContext);
     }
 
     public void deploy(Composite composite) throws Exception {

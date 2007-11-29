@@ -18,24 +18,16 @@ package org.fabric3.maven.runtime;
 
 import java.net.URI;
 import java.net.URL;
+import java.util.List;
 
-import org.apache.maven.surefire.testset.TestSetFailedException;
-
-import org.fabric3.host.runtime.Fabric3Runtime;
-import org.fabric3.scdl.Composite;
-import org.fabric3.scdl.Operation;
+import org.fabric3.host.runtime.Bootstrapper;
+import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 
 /**
  * @version $Rev$ $Date$
  */
-public interface MavenEmbeddedRuntime extends Fabric3Runtime<MavenHostInfo> {
-    Composite load(ClassLoader cl, URL scdlLocation) throws Exception;
+public interface MavenCoordinator extends RuntimeLifecycleCoordinator<MavenEmbeddedRuntime, Bootstrapper> {
+    void setExtensions(List<URI> extensions);
 
-    void deploy(Composite composite) throws Exception;
-
-    void startContext(URI compositeId) throws Exception;
-
-    void destroy();
-
-    void executeTest(URI contextId, String componentName, Operation<?> operation) throws TestSetFailedException;
+    void setIntentsLocation(URL intentsLocation);
 }
