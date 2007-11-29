@@ -116,7 +116,7 @@ public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {
                 ContributionResourceDescription contribDescription = (ContributionResourceDescription) description;
                 // add the contribution and imported urls to the classpath
                 for (URL url : contribDescription.getArtifactUrls()) {
-                    if (!definition.getResourceUrls().contains(url)) {
+                    if (url != null && !definition.getResourceUrls().contains(url)) {
                         definition.addResourceUrl(url);
                     }
                 }

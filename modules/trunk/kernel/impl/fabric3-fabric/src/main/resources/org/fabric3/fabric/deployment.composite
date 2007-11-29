@@ -43,6 +43,10 @@
         <system:implementation.system class="org.fabric3.fabric.services.contribution.ContributionServiceImpl"/>
     </component>
 
+    <component name="ContributionLoader">
+        <system:implementation.system class="org.fabric3.fabric.services.contribution.ContributionLoaderImpl"/>
+    </component>
+
     <component name="DependencyService">
         <system:implementation.system class="org.fabric3.fabric.services.contribution.DependencyServiceImpl"/>
     </component>
@@ -99,6 +103,16 @@
     <component name="QNameImportLoader">
         <system:implementation.system
                 class="org.fabric3.fabric.services.contribution.manifest.QNameImportLoader"/>
+    </component>
+
+    <component name="MavenImportLoader">
+        <system:implementation.system
+                class="org.fabric3.fabric.services.contribution.manifest.MavenImportLoader"/>
+    </component>
+
+    <component name="MavenExportLoader">
+        <system:implementation.system
+                class="org.fabric3.fabric.services.contribution.manifest.MavenExportLoader"/>
     </component>
 
     <component name="JavaExportLoader">

@@ -16,9 +16,9 @@
  */
 package org.fabric3.fabric.services.contribution.processor;
 
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
-import java.util.List;
 
 import org.osoa.sca.annotations.Reference;
 
@@ -33,35 +33,31 @@ import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ResourceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
-import org.fabric3.spi.deployer.CompositeClassLoader;
 import org.fabric3.spi.model.type.ContributionResourceDescription;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
 import org.fabric3.spi.services.contribution.Contribution;
-import org.fabric3.spi.services.contribution.ContributionManifest;
-import org.fabric3.spi.services.contribution.Import;
-import org.fabric3.spi.services.contribution.MatchingExportNotFoundException;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
 
 /**
- * Handles common processing for archives
+ * Handles common processing for contribution archives
  *
  * @version $Rev$ $Date$
  */
 public abstract class ArchiveContributionProcessor extends ContributionProcessorExtension {
-    private static final URI HOST_CLASSLOADER = URI.create("sca://./hostClassLoader");
     protected ArtifactLocationEncoder encoder;
-    private MetaDataStore store;
     private ClassLoaderRegistry classLoaderRegistry;
+    private MetaDataStore store;
 
     protected ArchiveContributionProcessor(@Reference MetaDataStore store,
-                                           @Reference ClassLoaderRegistry classLoaderRegistry,
-                                           @Reference ArtifactLocationEncoder encoder) {
+                                           @Reference ArtifactLocationEncoder encoder,
+                                           /* classloader registry is temporary*/
+                                           @Reference ClassLoaderRegistry classLoaderRegistry) {
         this.store = store;
-        this.classLoaderRegistry = classLoaderRegistry;
         this.encoder = encoder;
+        this.classLoaderRegistry = classLoaderRegistry;
     }
 
     public void processContent(Contribution contribution, URI source) throws ContributionException {
@@ -73,37 +69,27 @@ public abstract class ArchiveContributionProcessor extends ContributionProcessor
         // Build a classloader to perform the contribution introspection. The classpath will contain the contribution
         // jar and resolved imports
         ClassLoader oldClassloader = Thread.currentThread().getContextClassLoader();
-        ClassLoader cl = classLoaderRegistry.getClassLoader(HOST_CLASSLOADER);
-        CompositeClassLoader loader = new CompositeClassLoader(contribution.getUri(), cl);
-        loader.addParent(oldClassloader);
         try {
-            List<URL> classpath = createClasspath(contribution);
-            for (URL library : classpath) {
-                loader.addURL(library);
-            }
-            ContributionManifest manifest = contribution.getManifest();
-            for (Import imprt : manifest.getImports()) {
-                Contribution imported = store.resolve(imprt);
-                if (imported == null) {
-                    throw new MatchingExportNotFoundException(imprt.toString());
-                }
-                // add the resolved URI to the contribution
-                contribution.addResolvedImportUri(imported.getUri());
-                // add the jar to the classpath
-                loader.addURL(imported.getLocation());
-            }
-            // set the classloader on the current context so artifacts in the contribution can be introspected
+            // temporary until classloader is passed in
+            ClassLoader loader = classLoaderRegistry.getClassLoader(contribution.getUri());
             Thread.currentThread().setContextClassLoader(loader);
-            processResources(contribution);
+            iterateArtifacts(contribution, new Action() {
+                public void process(Contribution contribution, String contentType, InputStream stream)
+                        throws ContributionException {
+                    Resource resource = registry.processResource(contentType, stream);
+                    if (resource != null) {
+                        contribution.addResource(resource);
+                    }
+                }
+            });
             addContributionDescription(contribution);
         } finally {
             Thread.currentThread().setContextClassLoader(oldClassloader);
         }
     }
 
-    protected abstract void processResources(Contribution contribution) throws ContributionException;
-
-    protected abstract List<URL> createClasspath(Contribution contribution) throws ContributionException;
+    protected abstract void iterateArtifacts(Contribution contribution, Action action)
+            throws ContributionException;
 
     /**
      * Recursively adds a resource description pointing to the contribution artifact on contained components.

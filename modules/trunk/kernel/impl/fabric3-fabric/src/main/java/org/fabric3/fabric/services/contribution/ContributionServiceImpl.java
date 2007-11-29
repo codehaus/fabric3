@@ -59,6 +59,7 @@ public class ContributionServiceImpl implements ContributionService {
     private ProcessorRegistry processorRegistry;
     private ArchiveStore archiveStore;
     private MetaDataStore metaDataStore;
+    private ContributionLoader contributionLoader;
     private ContentTypeResolver contentTypeResolver;
     private DependencyService dependencyService;
     private String uriPrefix = "file://contribution/";
@@ -67,6 +68,7 @@ public class ContributionServiceImpl implements ContributionService {
     public ContributionServiceImpl(@Reference ProcessorRegistry processorRegistry,
                                    @Reference ArchiveStore archiveStore,
                                    @Reference MetaDataStore metaDataStore,
+                                   @Reference ContributionLoader contributionLoader,
                                    @Reference ContentTypeResolver contentTypeResolver,
                                    @Reference DependencyService dependencyService,
                                    @Reference MonitorFactory monitorFactory)
@@ -74,6 +76,7 @@ public class ContributionServiceImpl implements ContributionService {
         this.processorRegistry = processorRegistry;
         this.archiveStore = archiveStore;
         this.metaDataStore = metaDataStore;
+        this.contributionLoader = contributionLoader;
         this.contentTypeResolver = contentTypeResolver;
         this.dependencyService = dependencyService;
         this.monitor = monitorFactory.getMonitor(ContributionServiceMonitor.class);
@@ -97,6 +100,7 @@ public class ContributionServiceImpl implements ContributionService {
         // order the contributions based on their dependencies
         contributions = dependencyService.order(contributions);
         for (Contribution contribution : contributions) {
+            ClassLoader loader = contributionLoader.loadContribution(contribution);
             // continue processing the contributions. As they are ordered, dependencies will resolve correctly
             processContents(contribution);
         }

@@ -21,13 +21,10 @@ package org.fabric3.fabric.services.contribution.processor;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -59,12 +56,13 @@ public class ExplodedArchiveContributionProcessor extends ArchiveContributionPro
     private final ContentTypeResolver contentTypeResolver;
 
     public ExplodedArchiveContributionProcessor(@Reference LoaderRegistry loaderRegistry,
-                                                @Reference ClassLoaderRegistry classLoaderRegistry,
                                                 @Reference XMLInputFactory xmlFactory,
                                                 @Reference MetaDataStore store,
                                                 @Reference ContentTypeResolver contentTypeResolver,
-                                                @Reference ArtifactLocationEncoder encoder) {
-        super(store, classLoaderRegistry, encoder);
+                                                @Reference ArtifactLocationEncoder encoder,
+                                                /* classloader registry is temporary*/
+                                                @Reference ClassLoaderRegistry classLoaderRegistry) {
+        super(store, encoder, classLoaderRegistry);
         this.loaderRegistry = loaderRegistry;
         this.contentTypeResolver = contentTypeResolver;
         this.xmlFactory = xmlFactory;
@@ -72,28 +70,6 @@ public class ExplodedArchiveContributionProcessor extends ArchiveContributionPro
 
     public String[] getContentTypes() {
         return new String[]{Constants.FOLDER_CONTENT_TYPE};
-    }
-
-    protected List<URL> createClasspath(Contribution contribution) throws ContributionException {
-        List<URL> libraries = new ArrayList<URL>();
-        String locationDir = FileHelper.toFileString(contribution.getLocation());
-        File libDir = new File(locationDir + "META-INF" + File.separatorChar + "lib");
-        if (!libDir.exists()) {
-            return libraries;
-        }
-        File[] files = libDir.listFiles(new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-                return name.endsWith(".jar");
-            }
-        });
-        try {
-            for (File file : files) {
-                libraries.add(file.toURL());
-            }
-        } catch (MalformedURLException e) {
-            throw new ContributionException(e);
-        }
-        return libraries;
     }
 
     public void processManifest(Contribution contribution) throws ContributionException {
@@ -143,6 +119,51 @@ public class ExplodedArchiveContributionProcessor extends ArchiveContributionPro
         File root = FileHelper.toFile(contribution.getLocation());
         assert root.isDirectory();
         processDirectory(contribution, root);
+    }
+
+    protected void iterateArtifacts(Contribution contribution, Action action)
+            throws ContributionException {
+        File root = FileHelper.toFile(contribution.getLocation());
+        assert root.isDirectory();
+        iterateArtifactsResursive(contribution, action, root);
+    }
+
+    protected void iterateArtifactsResursive(Contribution contribution, Action action, File dir)
+            throws ContributionException {
+        File[] files = dir.listFiles();
+        for (File file : files) {
+            if (file.isDirectory()) {
+                iterateArtifactsResursive(contribution, action, dir);
+            } else {
+                InputStream stream = null;
+                try {
+                    URL entryUrl = file.toURI().toURL();
+                    String contentType = contentTypeResolver.getContentType(entryUrl);
+                    stream = entryUrl.openStream();
+                    action.process(contribution, contentType, stream);
+//                    Resource resource = registry.processResource(contentType, stream);
+//                    if (resource != null) {
+//                        contribution.addResource(resource);
+//                    }
+                } catch (MalformedURLException e) {
+                    throw new ContributionException(e);
+                } catch (IOException e) {
+                    throw new ContributionException(e);
+                } catch (ContentTypeResolutionException e) {
+                    throw new ContributionException(e);
+                } finally {
+                    try {
+                        if (stream != null) {
+                            stream.close();
+                        }
+                    } catch (IOException e) {
+                        // TODO log exception
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
     }
 
     /**

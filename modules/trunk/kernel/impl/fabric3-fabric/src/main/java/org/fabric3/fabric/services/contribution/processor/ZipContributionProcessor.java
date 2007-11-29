@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import javax.xml.stream.XMLInputFactory;
@@ -43,13 +42,11 @@ import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolver;
 import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
-import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.ContributionProcessor;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
-import org.fabric3.spi.services.contribution.Resource;
 
 /**
  * Introspects a Zip-based contribution, delegating to ResourceProcessors for handling leaf-level children.
@@ -57,70 +54,26 @@ import org.fabric3.spi.services.contribution.Resource;
 public class ZipContributionProcessor extends ArchiveContributionProcessor implements ContributionProcessor {
     private final LoaderRegistry loaderRegistry;
     private final XMLInputFactory xmlFactory;
-    private final ClasspathProcessorRegistry classpathProcessorRegistry;
     private final ContentTypeResolver contentTypeResolver;
 
     public ZipContributionProcessor(@Reference ProcessorRegistry processorRegistry,
                                     @Reference LoaderRegistry loaderRegistry,
-                                    @Reference ClassLoaderRegistry classLoaderRegistry,
                                     @Reference XMLInputFactory xmlFactory,
                                     @Reference MetaDataStore store,
-                                    @Reference ClasspathProcessorRegistry classpathProcessorRegistry,
                                     @Reference ArtifactLocationEncoder encoder,
-                                    @Reference ContentTypeResolver contentTypeResolver) {
+                                    @Reference ContentTypeResolver contentTypeResolver,
+                                    /* classloader registry is temporary*/
+                                    @Reference ClassLoaderRegistry classLoaderRegistry) {
 
-        super(store, classLoaderRegistry, encoder);
+        super(store, encoder, classLoaderRegistry);
         this.registry = processorRegistry;
         this.loaderRegistry = loaderRegistry;
         this.xmlFactory = xmlFactory;
-        this.classpathProcessorRegistry = classpathProcessorRegistry;
         this.contentTypeResolver = contentTypeResolver;
     }
 
     public String[] getContentTypes() {
         return new String[]{Constants.ZIP_CONTENT_TYPE, "application/octet-stream"};
-    }
-
-    protected void processResources(Contribution contribution) throws ContributionException {
-        URL location = contribution.getLocation();
-        ZipInputStream zipStream = null;
-        try {
-            zipStream = new ZipInputStream(location.openStream());
-            while (true) {
-                ZipEntry entry = zipStream.getNextEntry();
-                if (entry == null) {
-                    // EOF
-                    break;
-                }
-                if (entry.isDirectory()) {
-                    continue;
-                }
-                URL entryUrl = new URL(location, entry.getName());
-                String contentType = contentTypeResolver.getContentType(entryUrl);
-                // skip entry if we don't recognize the content type
-                if (contentType == null) {
-                    continue;
-                }
-                Resource resource = registry.processResource(contentType, zipStream);
-                if (resource != null) {
-                    contribution.addResource(resource);
-                }
-            }
-        } catch (ContentTypeResolutionException e) {
-            throw new ContributionException(e);
-        } catch (MalformedURLException e) {
-            throw new ContributionException(e);
-        } catch (IOException e) {
-            throw new ContributionException(e);
-        } finally {
-            try {
-                if (zipStream != null) {
-                    zipStream.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     public void processManifest(Contribution contribution) throws ContributionException {
@@ -159,13 +112,44 @@ public class ZipContributionProcessor extends ArchiveContributionProcessor imple
         }
     }
 
-    protected List<URL> createClasspath(Contribution contribution) throws ContributionException {
+    protected void iterateArtifacts(Contribution contribution, Action action)
+            throws ContributionException {
+        URL location = contribution.getLocation();
+        ZipInputStream zipStream = null;
         try {
-            return classpathProcessorRegistry.process(contribution.getLocation());
+            zipStream = new ZipInputStream(location.openStream());
+            while (true) {
+                ZipEntry entry = zipStream.getNextEntry();
+                if (entry == null) {
+                    // EOF
+                    break;
+                }
+                if (entry.isDirectory()) {
+                    continue;
+                }
+                URL entryUrl = new URL(location, entry.getName());
+                String contentType = contentTypeResolver.getContentType(entryUrl);
+                // skip entry if we don't recognize the content type
+                if (contentType == null) {
+                    continue;
+                }
+                action.process(contribution, contentType, zipStream);
+            }
+        } catch (ContentTypeResolutionException e) {
+            throw new ContributionException(e);
+        } catch (MalformedURLException e) {
+            throw new ContributionException(e);
         } catch (IOException e) {
             throw new ContributionException(e);
+        } finally {
+            try {
+                if (zipStream != null) {
+                    zipStream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
     }
-
 }
