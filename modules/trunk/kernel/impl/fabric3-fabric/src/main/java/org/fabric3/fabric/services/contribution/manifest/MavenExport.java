@@ -166,7 +166,7 @@ public class MavenExport extends Export {
     }
 
     public String toString() {
-        return new StringBuilder().append("Maven import [").append(groupId).append(":").append(artifactId).
+        return new StringBuilder().append("Maven export [").append(groupId).append(":").append(artifactId).
                 append(":").append(version).append(":").append(classifier).append("]").toString();
     }
 }
