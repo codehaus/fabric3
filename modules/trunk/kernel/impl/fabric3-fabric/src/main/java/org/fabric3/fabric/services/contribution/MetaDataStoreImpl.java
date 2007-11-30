@@ -171,20 +171,13 @@ public class MetaDataStoreImpl implements MetaDataStore {
         if (map == null) {
             return null;
         }
-        Contribution candidate = null;
-        int matchLevel = Export.NO_MATCH;
         for (Map.Entry<Export, Contribution> entry : map.entrySet()) {
             int level = entry.getKey().match(imprt);
             if (level == Export.EXACT_MATCH) {
                 return entry.getValue();
-            } else {
-                if (candidate == null || matchLevel > level) {
-                    candidate = entry.getValue();
-                    matchLevel = level;
-                }
             }
         }
-        return candidate;
+        return null;
     }
 
     public List<Contribution> resolveTransitiveImports(Contribution contribution) throws UnresolvableImportException {
