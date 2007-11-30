@@ -27,11 +27,6 @@
            name="org.fabric3.runtime.webapp.System"
            autowire="true">
            
-    <!-- Transaction manager -->
-    <component name="transactionManager">
-        <system:implementation.system class="org.fabric3.fabric.services.transaction.TransactionManagerProxy"/>
-    </component>
-           
     <!-- Include transaction loader -->
     <include name="org.fabric3.tx.txLoader" scdlResource="META-INF/tx-loader.composite"/>
 
