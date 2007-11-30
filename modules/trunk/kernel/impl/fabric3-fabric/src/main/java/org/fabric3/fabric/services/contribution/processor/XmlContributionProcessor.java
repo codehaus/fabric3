@@ -37,6 +37,7 @@ import org.fabric3.spi.services.contribution.ContributionProcessor;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.XmlProcessor;
 import org.fabric3.spi.services.contribution.XmlProcessorRegistry;
+import org.fabric3.spi.services.factories.xml.XMLFactory;
 
 /**
  * Processes an XML-based contribution. The implementaton dispatches to a specific XmlProcessor based on the QName of
@@ -51,8 +52,8 @@ public class XmlContributionProcessor implements ContributionProcessor, XmlProce
     private Map<QName, XmlProcessor> processors = new HashMap<QName, XmlProcessor>();
 
     public XmlContributionProcessor(@Reference ProcessorRegistry processorRegistry,
-                                    @Reference XMLInputFactory xmlFactory) {
-        this.xmlFactory = xmlFactory;
+                                    @Reference XMLFactory xmlFactory) {
+        this.xmlFactory = xmlFactory.newInputFactoryInstance();
         processorRegistry.register(this);
     }
 

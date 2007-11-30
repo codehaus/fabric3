@@ -30,6 +30,7 @@ import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.ManifestProcessor;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.XmlManifestProcessorRegistry;
+import org.fabric3.spi.services.factories.xml.XMLFactory;
 
 /**
  * Processes XML artifacts in a contribution that contain manifest information. Dispatches to {@link
@@ -46,10 +47,10 @@ public class XmlManifestProcessor implements ManifestProcessor {
 
     public XmlManifestProcessor(@Reference ProcessorRegistry registry,
                                 @Reference XmlManifestProcessorRegistry manifestProcessorRegistry,
-                                @Reference XMLInputFactory xmlFactory) {
+                                @Reference XMLFactory xmlFactory) {
         this.processorRegistry = registry;
         this.manifestProcessorRegistry = manifestProcessorRegistry;
-        this.xmlFactory = xmlFactory;
+        this.xmlFactory = xmlFactory.newInputFactoryInstance();
     }
 
     @Init

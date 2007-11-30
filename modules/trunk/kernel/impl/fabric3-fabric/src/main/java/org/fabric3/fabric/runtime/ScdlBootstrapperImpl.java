@@ -21,7 +21,6 @@ import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.stream.XMLInputFactory;
 
 import org.fabric3.fabric.assembly.InstantiationException;
 import org.fabric3.fabric.assembly.RuntimeAssembly;
@@ -103,6 +102,7 @@ import org.fabric3.fabric.services.contribution.ClasspathProcessorRegistryImpl;
 import org.fabric3.fabric.services.contribution.FileSystemResolver;
 import org.fabric3.fabric.services.contribution.MetaDataStoreImpl;
 import org.fabric3.fabric.services.contribution.processor.JarClasspathProcessor;
+import org.fabric3.fabric.services.factories.xml.XMLFactoryImpl;
 import org.fabric3.fabric.services.instancefactory.BuildHelperImpl;
 import org.fabric3.fabric.services.instancefactory.DefaultInstanceFactoryBuilderRegistry;
 import org.fabric3.fabric.services.instancefactory.GenerationHelperImpl;
@@ -125,6 +125,7 @@ import org.fabric3.loader.composite.ComponentLoader;
 import org.fabric3.loader.composite.CompositeLoader;
 import org.fabric3.loader.composite.IncludeLoader;
 import org.fabric3.loader.composite.PropertyValueLoader;
+import org.fabric3.monitor.DefaultFormatterRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
@@ -159,6 +160,7 @@ import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ArtifactResolverRegistry;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.services.factories.xml.XMLFactory;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.transform.DefaultTransformerRegistry;
@@ -167,7 +169,6 @@ import org.fabric3.transform.dom2java.String2Integer;
 import org.fabric3.transform.dom2java.String2Map;
 import org.fabric3.transform.dom2java.String2QName;
 import org.fabric3.transform.dom2java.String2String;
-import org.fabric3.monitor.DefaultFormatterRegistry;
 
 /**
  * Bootstrapper that initializes a runtime by reading a system SCDL file.
@@ -176,11 +177,11 @@ import org.fabric3.monitor.DefaultFormatterRegistry;
  */
 public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     private static final URI COMPONENT_MGR_URI = URI.create(RUNTIME_NAME + "/ComponentManager");
-    private static final URI XML_INPUT_FACTORY_URI = URI.create(RUNTIME_NAME + "/XMLInputFactory");
     private static final URI MONITOR_URI = URI.create(RUNTIME_NAME + "/MonitorFactory");
     private static final URI FORMATTER_REGISTRY_URI = URI.create(RUNTIME_NAME + "/FormatterRegistry");
     private static final URI RUNTIME_INFO_URI = URI.create(RUNTIME_NAME + "/HostInfo");
     private static final URI HOST_CLASSLOADER_ID = URI.create("sca://./hostClassLoader");
+    private static final URI XML_FACTORY_URI = URI.create(RUNTIME_NAME + "/XMLFactory");
 
     private JavaInterfaceProcessorRegistry interfaceProcessorRegistry;
 
@@ -190,10 +191,10 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
     private URL scdlLocation;
     private RuntimeAssembly runtimeAssembly;
-    private XMLInputFactory xmlFactory;
     private LoaderRegistry loader;
     private ClassLoaderRegistry classLoaderRegistry;
     private MetaDataStoreImpl metaDataStore;
+    private XMLFactory xmlFactory;
 
     public ScdlBootstrapperImpl() {
     }
@@ -236,17 +237,8 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     }
 
     protected void createBootstrapComponents(Fabric3Runtime runtime) throws InitializationException {
+        xmlFactory = new XMLFactoryImpl();
         interfaceProcessorRegistry = new JavaInterfaceProcessorRegistryImpl();
-
-        ClassLoader cl = getClass().getClassLoader();
-        ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-        try {
-            Thread.currentThread().setContextClassLoader(cl);
-            xmlFactory = XMLInputFactory.newInstance();
-        } finally {
-            Thread.currentThread().setContextClassLoader(oldCl);
-        }
-
         monitorFactory = runtime.getMonitorFactory();
 
         // create the ClassLoaderRegistry
@@ -282,13 +274,15 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         AssemblyStore store = new NonPersistentAssemblyStore(ComponentNames.RUNTIME_URI, Autowire.ON);
 
         DomainService domainService = new DomainServiceImpl(store);
-        PhysicalModelGenerator physicalModelGenerator = createPhysicalModelGenerator(generatorRegistry, routingService, domainService);
-        
+        PhysicalModelGenerator physicalModelGenerator =
+                createPhysicalModelGenerator(generatorRegistry, routingService, domainService);
+
         AtomicComponentInstantiator atomicComponentInstantiator = new AtomicComponentInstantiator();
-        CompositeComponentInstantiator compositeComponentInstantiator = new CompositeComponentInstantiator(atomicComponentInstantiator);
-        
-        LogicalModelGenerator logicalModelGenerator = new LogicalModelGeneratorImpl(resolver, 
-                                                                                    normalizer, 
+        CompositeComponentInstantiator compositeComponentInstantiator =
+                new CompositeComponentInstantiator(atomicComponentInstantiator);
+
+        LogicalModelGenerator logicalModelGenerator = new LogicalModelGeneratorImpl(resolver,
+                                                                                    normalizer,
                                                                                     domainService,
                                                                                     atomicComponentInstantiator,
                                                                                     compositeComponentInstantiator);
@@ -312,10 +306,10 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         registerSystemComponent(SCOPE_REGISTRY_URI, ScopeRegistry.class, scopeRegistry);
         registerSystemComponent(RUNTIME_INFO_URI, runtime.getHostInfoType(), runtime.getHostInfo());
         registerSystemComponent(RUNTIME_ASSEMBLY_URI, RuntimeAssembly.class, runtimeAssembly);
-        registerSystemComponent(XML_INPUT_FACTORY_URI, XMLInputFactory.class, xmlFactory);
         registerSystemComponent(METADATA_STORE_URI, MetaDataStore.class, metaDataStore);
         registerSystemComponent(MONITOR_URI, MonitorFactory.class, monitorFactory);
         registerSystemComponent(FORMATTER_REGISTRY_URI, FormatterRegistry.class, new DefaultFormatterRegistry());
+        registerSystemComponent(XML_FACTORY_URI, XMLFactory.class, xmlFactory);
 
         classLoaderRegistry.register(HOST_CLASSLOADER_ID, runtime.getHostClassLoader());
         registerSystemComponent(CLASSLOADER_REGISTRY_URI, ClassLoaderRegistry.class, classLoaderRegistry);
@@ -521,8 +515,13 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         return resourceRegistry;
     }
 
-    private PhysicalModelGenerator createPhysicalModelGenerator(GeneratorRegistry generatorRegistry, RoutingService routingService, DomainService domainService) {
-        return new PhysicalModelGeneratorImpl(generatorRegistry, new NullPolicyResolver(), routingService, domainService);
+    private PhysicalModelGenerator createPhysicalModelGenerator(GeneratorRegistry generatorRegistry,
+                                                                RoutingService routingService,
+                                                                DomainService domainService) {
+        return new PhysicalModelGeneratorImpl(generatorRegistry,
+                                              new NullPolicyResolver(),
+                                              routingService,
+                                              domainService);
     }
 
 }

@@ -24,16 +24,17 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import javax.xml.namespace.QName;
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 
+import org.fabric3.fabric.services.factories.xml.XMLFactoryImpl;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.XmlProcessor;
+import org.fabric3.spi.services.factories.xml.XMLFactory;
 
 /**
  * @version $Rev$ $Date$
@@ -60,7 +61,7 @@ public class XmlContributionProcessorTestCase extends TestCase {
         processorRegistry.register(EasyMock.isA(XmlContributionProcessor.class));
         EasyMock.replay(processorRegistry);
 
-        XMLInputFactory factory = XMLInputFactory.newInstance();
+        XMLFactory factory = new XMLFactoryImpl();
 
         processor = new XmlContributionProcessor(processorRegistry, factory);
 

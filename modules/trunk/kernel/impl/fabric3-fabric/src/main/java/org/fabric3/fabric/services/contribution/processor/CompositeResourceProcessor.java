@@ -37,6 +37,7 @@ import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.contribution.ResourceProcessor;
+import org.fabric3.spi.services.factories.xml.XMLFactory;
 
 /**
  * Introspects a composite SCDL file in a contribution and produces a Composite type. This implementation assumes the
@@ -47,14 +48,14 @@ import org.fabric3.spi.services.contribution.ResourceProcessor;
 @EagerInit
 public class CompositeResourceProcessor implements ResourceProcessor {
     private LoaderRegistry loaderRegistry;
-    private XMLInputFactory xmlFactory;
+    private final XMLInputFactory xmlFactory;
 
     public CompositeResourceProcessor(@Reference ProcessorRegistry processorRegistry,
                                       @Reference LoaderRegistry loaderRegistry,
-                                      @Reference XMLInputFactory xmlFactory) {
+                                      @Reference XMLFactory xmlFactory) {
         processorRegistry.register(this);
         this.loaderRegistry = loaderRegistry;
-        this.xmlFactory = xmlFactory;
+        this.xmlFactory = xmlFactory.newInputFactoryInstance();
     }
 
     public String getContentType() {

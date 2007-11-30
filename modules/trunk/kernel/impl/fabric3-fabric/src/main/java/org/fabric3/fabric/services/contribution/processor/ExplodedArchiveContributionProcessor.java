@@ -45,6 +45,7 @@ import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.Resource;
+import org.fabric3.spi.services.factories.xml.XMLFactory;
 
 /**
  * Handles exploded archives on a filesystem.
@@ -55,14 +56,14 @@ public class ExplodedArchiveContributionProcessor extends ArchiveContributionPro
     private final ContentTypeResolver contentTypeResolver;
 
     public ExplodedArchiveContributionProcessor(@Reference LoaderRegistry loaderRegistry,
-                                                @Reference XMLInputFactory xmlFactory,
+                                                @Reference XMLFactory xmlFactory,
                                                 @Reference MetaDataStore store,
                                                 @Reference ContentTypeResolver contentTypeResolver,
                                                 @Reference ArtifactLocationEncoder encoder) {
         super(store, encoder);
         this.loaderRegistry = loaderRegistry;
         this.contentTypeResolver = contentTypeResolver;
-        this.xmlFactory = xmlFactory;
+        this.xmlFactory = xmlFactory.newInputFactoryInstance();
     }
 
     public String[] getContentTypes() {

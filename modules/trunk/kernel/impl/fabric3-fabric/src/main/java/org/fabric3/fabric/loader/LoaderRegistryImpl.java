@@ -19,7 +19,6 @@
 package org.fabric3.fabric.loader;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,6 +39,7 @@ import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.loader.UnrecognizedElementException;
+import org.fabric3.spi.services.factories.xml.XMLFactory;
 
 /**
  * The default implementation of a loader registry
@@ -54,20 +54,18 @@ public class LoaderRegistryImpl implements LoaderRegistry {
     private final Map<QName, StAXElementLoader<?>> loaders = new HashMap<QName, StAXElementLoader<?>>();
 
     @Constructor
-    public LoaderRegistryImpl(@Reference MonitorFactory monitorFactory,
-                              @Reference XMLInputFactory factory) {
+    public LoaderRegistryImpl(@Reference MonitorFactory monitorFactory, @Reference XMLFactory factory) {
         // JFM FIXME use @Monitor when resources are fixed
         this.monitor = monitorFactory.getMonitor(Monitor.class);
-        this.xmlFactory = factory;
+        this.xmlFactory = factory.newInputFactoryInstance();
     }
 
-    public LoaderRegistryImpl(Monitor monitor,
-                              XMLInputFactory factory) {
+    public LoaderRegistryImpl(Monitor monitor, XMLInputFactory factory) {
         this.monitor = monitor;
         this.xmlFactory = factory;
     }
 
-    @Reference(required=false)
+    @Reference(required = false)
     public void setLoaders(Map<QName, StAXElementLoader<?>> mappedLoaders) {
         this.mappedLoaders = mappedLoaders;
     }
@@ -99,42 +97,30 @@ public class LoaderRegistryImpl implements LoaderRegistry {
         return type.cast(loader.load(reader, loaderContext));
     }
 
-    public <O> O load(URL url, Class<O> type, LoaderContext ctx)
-            throws LoaderException {
+    public <O> O load(URL url, Class<O> type, LoaderContext ctx) throws LoaderException {
+        XMLStreamReader reader = null;
         try {
-            XMLStreamReader reader;
-            InputStream is;
-            is = url.openStream();
-            try {
-                reader = xmlFactory.createXMLStreamReader(is);
-                try {
-                    reader.nextTag();
-                    return load(reader, type, ctx);
-                } catch (LoaderException e) {
-                    Location location = reader.getLocation();
-                    e.setLine(location.getLineNumber());
-                    e.setColumn(location.getColumnNumber());
-                    throw e;
-                } finally {
-                    try {
-                        reader.close();
-                    } catch (XMLStreamException e) {
-                        // ignore
-                    }
-                }
-            } finally {
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
+            reader = xmlFactory.createXMLStreamReader(url.openStream());
+            reader.nextTag();
+            return load(reader, type, ctx);
         } catch (IOException e) {
             LoaderException sfe = new LoaderException(e);
             sfe.setResourceURI(url.toString());
             throw sfe;
         } catch (XMLStreamException e) {
             throw new InvalidConfigurationException("Invalid or missing resource", url.toString(), e);
+        } catch (LoaderException e) {
+            Location location = reader.getLocation();
+            e.setLine(location.getLineNumber());
+            e.setColumn(location.getColumnNumber());
+            throw e;
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (Exception e) {
+                }
+            }
         }
     }
 

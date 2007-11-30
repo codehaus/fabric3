@@ -17,18 +17,19 @@
 package org.fabric3.fabric.services.contribution.processor;
 
 import java.io.ByteArrayInputStream;
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 
+import org.fabric3.fabric.services.factories.xml.XMLFactoryImpl;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceProcessor;
+import org.fabric3.spi.services.factories.xml.XMLFactory;
 
 /**
  * @version $Rev$ $Date$
@@ -38,9 +39,9 @@ public class XmlResourceProcessorTestCase extends TestCase {
     private XmlResourceProcessor processor;
     private ProcessorRegistry processorRegistry;
     private LoaderRegistry loaderRegistry;
-    
+
     public void testDummy() {
-        
+
     }
 
     public void _testDispatch() throws Exception {
@@ -69,7 +70,7 @@ public class XmlResourceProcessorTestCase extends TestCase {
         }
         );
         EasyMock.replay(loaderRegistry);
-        XMLInputFactory factory = XMLInputFactory.newInstance();
+        XMLFactory factory = new XMLFactoryImpl();
         processor = new XmlResourceProcessor(processorRegistry, loaderRegistry, factory);
     }
 }

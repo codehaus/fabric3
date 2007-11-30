@@ -32,6 +32,7 @@ import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceProcessor;
+import org.fabric3.spi.services.factories.xml.XMLFactory;
 
 /**
  * Processes an XML-based resource in a contribution, delegating to a Loader based on the root element QName
@@ -45,9 +46,9 @@ public class XmlResourceProcessor implements ResourceProcessor {
 
     public XmlResourceProcessor(@Reference ProcessorRegistry processorRegistry,
                                     @Reference LoaderRegistry loaderRegistry,
-                                    @Reference XMLInputFactory xmlFactory) {
+                                    @Reference XMLFactory xmlFactory) {
         this.loaderRegistry = loaderRegistry;
-        this.xmlFactory = xmlFactory;
+        this.xmlFactory = xmlFactory.newInputFactoryInstance();
         processorRegistry.register(this);
     }
 

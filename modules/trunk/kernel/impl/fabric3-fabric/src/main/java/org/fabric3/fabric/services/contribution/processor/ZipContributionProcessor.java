@@ -46,6 +46,7 @@ import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.ContributionProcessor;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
+import org.fabric3.spi.services.factories.xml.XMLFactory;
 
 /**
  * Introspects a Zip-based contribution, delegating to ResourceProcessors for handling leaf-level children.
@@ -57,7 +58,7 @@ public class ZipContributionProcessor extends ArchiveContributionProcessor imple
 
     public ZipContributionProcessor(@Reference ProcessorRegistry processorRegistry,
                                     @Reference LoaderRegistry loaderRegistry,
-                                    @Reference XMLInputFactory xmlFactory,
+                                    @Reference XMLFactory xmlFactory,
                                     @Reference MetaDataStore store,
                                     @Reference ArtifactLocationEncoder encoder,
                                     @Reference ContentTypeResolver contentTypeResolver) {
@@ -65,7 +66,7 @@ public class ZipContributionProcessor extends ArchiveContributionProcessor imple
         super(store, encoder);
         this.registry = processorRegistry;
         this.loaderRegistry = loaderRegistry;
-        this.xmlFactory = xmlFactory;
+        this.xmlFactory = xmlFactory.newInputFactoryInstance();
         this.contentTypeResolver = contentTypeResolver;
     }
 
