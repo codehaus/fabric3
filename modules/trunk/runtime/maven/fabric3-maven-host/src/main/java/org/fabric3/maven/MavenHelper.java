@@ -25,6 +25,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +45,9 @@ import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
 import org.apache.maven.artifact.resolver.ArtifactResolver;
 import org.apache.maven.settings.MavenSettingsBuilder;
+import org.apache.maven.settings.Mirror;
+import org.apache.maven.settings.Profile;
+import org.apache.maven.settings.Repository;
 import org.apache.maven.settings.Settings;
 import org.codehaus.classworlds.ClassWorld;
 import org.codehaus.classworlds.DefaultClassRealm;
@@ -49,7 +55,6 @@ import org.codehaus.classworlds.DuplicateRealmException;
 import org.codehaus.plexus.PlexusContainerException;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.embed.Embedder;
-
 import org.fabric3.spi.services.artifact.Artifact;
 
 /**
@@ -86,6 +91,13 @@ public class MavenHelper {
      * Remote artifact repositories
      */
     private List<ArtifactRepository> remoteRepositories = new LinkedList<ArtifactRepository>();
+    
+    /**
+     * TODO Make use of mirrors in Artifact resolution (when remote repositories are unavailable
+     * Remote artifact mirrors
+     */
+    private List<ArtifactRepository> remoteMirrors = new LinkedList<ArtifactRepository>();
+    
 
     /**
      * Artifact resolver
@@ -244,6 +256,7 @@ public class MavenHelper {
                     new ArtifactRepositoryPolicy(true, updatePolicy, ArtifactRepositoryPolicy.CHECKSUM_POLICY_WARN);
 
             MavenSettingsBuilder settingsBuilder = (MavenSettingsBuilder) embedder.lookup(MavenSettingsBuilder.ROLE);
+            
             Settings settings = settingsBuilder.buildSettings();
             String localRepo = settings.getLocalRepository();
 
@@ -253,27 +266,168 @@ public class MavenHelper {
                                                                                  snapshotsPolicy,
                                                                                  releasesPolicy);
 
-            if (!online) {
-                return;
+            if (online) {
+                setupRemoteRepositories(settings, artifactRepositoryFactory, layout, snapshotsPolicy, releasesPolicy);
+                setupMirrors(settings, artifactRepositoryFactory, layout, snapshotsPolicy, releasesPolicy);
             }
-
-            for (String remoteRepositoryUrl : remoteRepositoryUrls) {
-                String repoid = remoteRepositoryUrl.replace(':', '_');
-                repoid = repoid.replace('/', '_');
-                repoid = repoid.replace('\\', '_');
-                remoteRepositories.add(artifactRepositoryFactory.createArtifactRepository(repoid,
-                                                                                          remoteRepositoryUrl,
-                                                                                          layout,
-                                                                                          snapshotsPolicy,
-                                                                                          releasesPolicy));
-            }
-
+            
         } catch (Exception ex) {
             throw new Fabric3DependencyException(ex);
         }
 
     }
+    
+    /**
+     * Read remote repository URLs from settings and create artifact
+     * repositories
+     * @param settings
+     * @param artifactRepositoryFactory
+     * @param layout
+     * @param snapshotsPolicy
+     * @param releasesPolicy
+     */
+    private void setupRemoteRepositories(
+            Settings settings,
+            ArtifactRepositoryFactory artifactRepositoryFactory,
+            ArtifactRepositoryLayout layout,
+            ArtifactRepositoryPolicy snapshotsPolicy,
+            ArtifactRepositoryPolicy releasesPolicy) {
+        
+        // Read repository urls from settings file
+        List<String> repositoryUrls = resolveActiveProfileRepositories(settings);
+        repositoryUrls.addAll(Arrays.asList(remoteRepositoryUrls));
+        
+        for (String remoteRepositoryUrl : repositoryUrls) {
+            remoteRepositories.add(
+                createArtifactRepository(
+                    remoteRepositoryUrl, 
+                    artifactRepositoryFactory,
+                    layout,
+                    snapshotsPolicy,
+                    releasesPolicy
+                )
+            );
+        }
+    }
+    
+    /**
+     * Read mirror URLs from settings and create artifact repositories
+     * @param settings
+     * @param artifactRepositoryFactory
+     * @param layout
+     * @param snapshotsPolicy
+     * @param releasesPolicy
+     */
+    private void setupMirrors(
+            Settings settings,
+            ArtifactRepositoryFactory artifactRepositoryFactory,
+            ArtifactRepositoryLayout layout,
+            ArtifactRepositoryPolicy snapshotsPolicy,
+            ArtifactRepositoryPolicy releasesPolicy) {
+        
+        List<String> mirrorUrls = resolveMirrorUrls(settings);
+        
+        for (String mirrorUrl : mirrorUrls) {
+            remoteMirrors.add(
+                createArtifactRepository(
+                        mirrorUrl, 
+                        artifactRepositoryFactory,
+                        layout,
+                        snapshotsPolicy,
+                        releasesPolicy
+                    )
+                );
+        }            
+        
+    }
+    
+    
+    /**
+     * Creates an ArtifactFactory
+     * @param repositoryUrl
+     * @return
+     */
+    private static ArtifactRepository createArtifactRepository(
+            String repositoryUrl,
+            ArtifactRepositoryFactory artifactRepositoryFactory,
+            ArtifactRepositoryLayout layout,
+            ArtifactRepositoryPolicy snapshotsPolicy,
+            ArtifactRepositoryPolicy releasesPolicy) {
+        
+        String repositoryId = convertUrlToRepositoryId(repositoryUrl);
+        
+        return
+            artifactRepositoryFactory.createArtifactRepository(
+                    repositoryId,
+                    repositoryUrl,
+                    layout,
+                    snapshotsPolicy,
+                    releasesPolicy);        
+    }
 
+    /**
+     * Converts a repository URL into a repository id
+     * @param remoteRepositoryUrl a repository URL
+     * @return repository id
+     */
+    private static String convertUrlToRepositoryId(String remoteRepositoryUrl) {
+        assert remoteRepositoryUrl != null : "remoteRepositoryUrl cannot be null";
+        String repoid = remoteRepositoryUrl.replace(':', '_');
+        repoid = repoid.replace('/', '_');
+        repoid = repoid.replace('\\', '_');
+        return repoid;
+    }
+    
+
+    /**
+     * Construct a list of repositories from any active profiles
+     * @param settings The Maven settings to be used
+     * @return List<Repository> of remote repositories in order of precedence
+     */
+    // Suppress Warnings for conversion from raw types 
+    @SuppressWarnings("unchecked")
+    private List<String> resolveActiveProfileRepositories(Settings settings) {
+        
+        List<String> repositories = new ArrayList<String>();
+
+        Map<String, Profile> profilesMap = (Map<String, Profile>)settings.getProfilesAsMap();
+        
+        for (Object nextProfileId : settings.getActiveProfiles()) {
+            
+            Profile nextProfile = profilesMap.get((String)nextProfileId);
+            
+            if (nextProfile.getRepositories() != null) {
+                
+                for (Object repository : nextProfile.getRepositories()) {
+                    String url = ((Repository)repository).getUrl();
+                    repositories.add(url);
+                }
+            }
+        }
+        return repositories;
+    }
+    
+    
+    /**
+     * Construct a list of mirror urls from the maven settings
+     * @param settings The Maven settings to be used
+     * @return List<String> of mirror urls
+     */
+    // Suppress Warnings for conversion from raw types 
+    @SuppressWarnings("unchecked")
+    private List<String> resolveMirrorUrls(Settings settings) {
+        
+        List<String> mirrorUrls = new ArrayList<String>();
+
+        List<Mirror> mirrors = (List<Mirror>)settings.getMirrors();
+        
+        for (Mirror mirror : mirrors) {
+            mirrorUrls.add(mirror.getUrl());
+        }
+        
+        return mirrorUrls;
+    }    
+        
     /*
      * Resolves transitive dependencies.
      */
