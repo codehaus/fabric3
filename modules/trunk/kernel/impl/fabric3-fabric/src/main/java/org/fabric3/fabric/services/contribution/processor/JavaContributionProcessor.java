@@ -19,8 +19,6 @@
 
 package org.fabric3.fabric.services.contribution.processor;
 
-import java.net.URI;
-
 import org.fabric3.extension.contribution.ContributionProcessorExtension;
 import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
@@ -35,10 +33,6 @@ public class JavaContributionProcessor extends ContributionProcessorExtension im
 
     public void processManifest(Contribution contribution) throws ContributionException {
 
-    }
-
-    public void processContent(Contribution contribution, URI artifactURI) throws ContributionException {
-        throw new UnsupportedOperationException();
     }
 
     public void processContent(Contribution contribution, ClassLoader loader) throws ContributionException {

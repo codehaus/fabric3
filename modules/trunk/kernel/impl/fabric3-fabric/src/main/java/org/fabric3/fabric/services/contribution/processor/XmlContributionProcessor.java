@@ -18,7 +18,6 @@ package org.fabric3.fabric.services.contribution.processor;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -72,10 +71,6 @@ public class XmlContributionProcessor implements ContributionProcessor, XmlProce
 
     public void unregisterContributionProcessor(QName name) {
         processors.remove(name);
-    }
-
-    public void processContent(Contribution contribution, URI source) throws ContributionException {
-        throw new UnsupportedOperationException();
     }
 
     public void processContent(Contribution contribution, ClassLoader loader) throws ContributionException {

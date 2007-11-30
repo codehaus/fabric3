@@ -55,10 +55,6 @@ public abstract class ArchiveContributionProcessor extends ContributionProcessor
         this.encoder = encoder;
     }
 
-    public void processContent(Contribution contribution, URI source) throws ContributionException {
-        throw new UnsupportedOperationException();
-    }
-
     public void processContent(Contribution contribution, ClassLoader loader) throws ContributionException {
         // process the contribution manifest
         // Build a classloader to perform the contribution introspection. The classpath will contain the contribution

@@ -19,7 +19,6 @@
 
 package org.fabric3.fabric.services.contribution.processor;
 
-import java.net.URI;
 import javax.xml.stream.XMLInputFactory;
 
 import org.osoa.sca.annotations.Reference;
@@ -48,10 +47,6 @@ public class CompositeContributionProcessor extends ContributionProcessorExtensi
 
     public void processManifest(Contribution contribution) throws ContributionException {
 
-    }
-
-    public void processContent(Contribution contribution, URI artifactURI) throws ContributionException {
-        throw new UnsupportedOperationException();
     }
 
     public void processContent(Contribution contribution, ClassLoader loader) throws ContributionException {

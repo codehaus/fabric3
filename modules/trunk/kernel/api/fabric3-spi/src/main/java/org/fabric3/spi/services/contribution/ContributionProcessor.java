@@ -18,8 +18,6 @@
  */
 package org.fabric3.spi.services.contribution;
 
-import java.net.URI;
-
 import org.fabric3.host.contribution.ContributionException;
 
 /**
@@ -52,11 +50,5 @@ public interface ContributionProcessor {
      * @throws ContributionException if there was a problem with the contribution
      */
     public void processContent(Contribution contribution, ClassLoader loader) throws ContributionException;
-
-    /**
-     * This method is deprecated. Use {@link #processContent(Contribution, ClassLoader)} )} instead.
-     */
-    @Deprecated
-    void processContent(Contribution contribution, URI source) throws ContributionException;
 
 }
