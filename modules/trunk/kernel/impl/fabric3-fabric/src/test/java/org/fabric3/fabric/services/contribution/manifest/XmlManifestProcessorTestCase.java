@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.services.contribution.processor;
+package org.fabric3.fabric.services.contribution.manifest;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -25,46 +25,44 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
 import org.fabric3.fabric.services.factories.xml.XMLFactoryImpl;
-import org.fabric3.spi.loader.LoaderContext;
-import org.fabric3.spi.loader.LoaderRegistry;
+import org.fabric3.spi.services.contribution.ContributionManifest;
+import org.fabric3.spi.services.contribution.XmlManifestProcessorRegistry;
 import org.fabric3.spi.services.factories.xml.XMLFactory;
 
 /**
  * @version $Rev$ $Date$
  */
-public class XmlResourceProcessorTestCase extends TestCase {
+public class XmlManifestProcessorTestCase extends TestCase {
     public static final QName QNAME = new QName("foo", "bar");
-    public static final byte[] XML =
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?><definitions xmlns=\"foo\"/>".getBytes();
+    public static final byte[] XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><bar xmlns=\"foo\"/>".getBytes();
     public static final byte[] XML_DTD = ("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-            "<!DOCTYPE definitions>" +
-            "<definitions xmlns=\"foo\"/>").getBytes();
+            "<!DOCTYPE bar>" +
+            "<bar xmlns=\"foo\"/>").getBytes();
 
-    private XmlResourceProcessor processor;
-    private LoaderRegistry registry;
+    private XmlManifestProcessor processor;
+    private XmlManifestProcessorRegistry registry;
 
     public void testDispatch() throws Exception {
         InputStream stream = new ByteArrayInputStream(XML);
-        processor.process(stream);
+        processor.process(new ContributionManifest(), stream);
         EasyMock.verify(registry);
     }
 
     public void testDTDDispatch() throws Exception {
         InputStream stream = new ByteArrayInputStream(XML_DTD);
-        processor.process(stream);
+        processor.process(new ContributionManifest(), stream);
         EasyMock.verify(registry);
     }
 
-    @SuppressWarnings({"unchecked"})
     protected void setUp() throws Exception {
         super.setUp();
         XMLFactory factory = new XMLFactoryImpl();
-        registry = EasyMock.createMock(LoaderRegistry.class);
-        EasyMock.expect(registry.load(EasyMock.isA(XMLStreamReader.class),
-                                      EasyMock.isA(Class.class),
-                                      EasyMock.isA(LoaderContext.class))).andReturn(null);
+        registry = EasyMock.createMock(XmlManifestProcessorRegistry.class);
+        registry.process(EasyMock.eq(QNAME),
+                         EasyMock.isA(ContributionManifest.class),
+                         EasyMock.isA(XMLStreamReader.class));
         EasyMock.replay(registry);
-        processor = new XmlResourceProcessor(null, registry, factory);
+        processor = new XmlManifestProcessor(null, registry, factory);
 
 
     }

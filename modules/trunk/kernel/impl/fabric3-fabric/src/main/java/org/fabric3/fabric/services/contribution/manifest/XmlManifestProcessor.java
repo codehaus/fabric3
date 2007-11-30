@@ -18,6 +18,7 @@ package org.fabric3.fabric.services.contribution.manifest;
 
 import java.io.InputStream;
 import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
@@ -62,12 +63,16 @@ public class XmlManifestProcessor implements ManifestProcessor {
         return "application/xml";
     }
 
-    public void process(ContributionManifest manifest, InputStream stream)
-            throws ContributionException {
+    public void process(ContributionManifest manifest, InputStream stream) throws ContributionException {
         XMLStreamReader reader = null;
         try {
             reader = xmlFactory.createXMLStreamReader(stream);
-            reader.nextTag();
+            while (reader.hasNext() && XMLStreamConstants.START_ELEMENT != reader.getEventType()) {
+                reader.next();
+            }
+            if (XMLStreamConstants.END_DOCUMENT == reader.getEventType()) {
+                return;
+            }
             manifestProcessorRegistry.process(reader.getName(), manifest, reader);
         } catch (XMLStreamException e) {
             throw new ContributionException(e);

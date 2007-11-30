@@ -18,10 +18,12 @@ package org.fabric3.fabric.services.contribution.processor;
 
 import java.io.InputStream;
 import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.ContributionException;
@@ -41,14 +43,20 @@ import org.fabric3.spi.services.factories.xml.XMLFactory;
  */
 @EagerInit
 public class XmlResourceProcessor implements ResourceProcessor {
+    private ProcessorRegistry processorRegistry;
     private LoaderRegistry loaderRegistry;
     private XMLInputFactory xmlFactory;
 
     public XmlResourceProcessor(@Reference ProcessorRegistry processorRegistry,
-                                    @Reference LoaderRegistry loaderRegistry,
-                                    @Reference XMLFactory xmlFactory) {
+                                @Reference LoaderRegistry loaderRegistry,
+                                @Reference XMLFactory xmlFactory) {
+        this.processorRegistry = processorRegistry;
         this.loaderRegistry = loaderRegistry;
         this.xmlFactory = xmlFactory.newInputFactoryInstance();
+    }
+
+    @Init
+    public void init() {
         processorRegistry.register(this);
     }
 
@@ -60,10 +68,15 @@ public class XmlResourceProcessor implements ResourceProcessor {
         XMLStreamReader reader = null;
         try {
             reader = xmlFactory.createXMLStreamReader(stream);
-            reader.nextTag();
-            
+            while (reader.hasNext() && XMLStreamConstants.START_ELEMENT != reader.getEventType()) {
+                reader.next();
+            }
+            if (XMLStreamConstants.END_DOCUMENT == reader.getEventType()) {
+                return null;
+            }
+
             // TODO : This is an evil hack
-            if(!"definitions".equals(reader.getName().getLocalPart())) {
+            if (!"definitions".equals(reader.getName().getLocalPart())) {
                 return new Resource();
             }
             LoaderContext context = new LoaderContextImpl((ClassLoader) null, null);
