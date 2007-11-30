@@ -85,6 +85,14 @@
         <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.XmlContributionProcessor"/>
     </component>
 
+    <component name="XmlManifestProcessorRegistry">
+        <system:implementation.system class="org.fabric3.fabric.services.contribution.manifest.XmlManifestProcessorRegistryImpl"/>
+    </component>
+
+    <component name="XmlManifestProcessor">
+        <system:implementation.system class="org.fabric3.fabric.services.contribution.manifest.XmlManifestProcessor"/>
+    </component>
+
     <component name="DefinitionsProcessor">
         <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.DefinitionsProcessor"/>
         <reference name="loader" target="loader.definitions"/>
@@ -115,6 +123,11 @@
                 class="org.fabric3.fabric.services.contribution.manifest.MavenExportLoader"/>
     </component>
 
+    <component name="MavenPOMLoader">
+        <system:implementation.system
+                class="org.fabric3.fabric.services.contribution.manifest.MavenPOMProcessor"/>
+    </component>
+    
     <component name="JavaExportLoader">
         <system:implementation.system
                 class="org.fabric3.fabric.services.contribution.manifest.JavaExportLoader"/>

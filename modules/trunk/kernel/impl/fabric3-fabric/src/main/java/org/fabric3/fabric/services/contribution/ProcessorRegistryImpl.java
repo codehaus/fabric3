@@ -29,7 +29,9 @@ import org.osoa.sca.annotations.Service;
 
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.spi.services.contribution.Contribution;
+import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.ContributionProcessor;
+import org.fabric3.spi.services.contribution.ManifestProcessor;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceProcessor;
@@ -45,6 +47,7 @@ public class ProcessorRegistryImpl implements ProcessorRegistry {
     private Map<String, ContributionProcessor> contributionProcessorCache =
             new HashMap<String, ContributionProcessor>();
     private Map<String, ResourceProcessor> resourceProcessorCache = new HashMap<String, ResourceProcessor>();
+    private Map<String, ManifestProcessor> manifestProcessorCache = new HashMap<String, ManifestProcessor>();
 
     public ProcessorRegistryImpl() {
     }
@@ -65,6 +68,14 @@ public class ProcessorRegistryImpl implements ProcessorRegistry {
 
     public void unregisterResourceProcessor(String contentType) {
         resourceProcessorCache.remove(contentType);
+    }
+
+    public void register(ManifestProcessor processor) {
+        manifestProcessorCache.put(processor.getContentType(), processor);
+    }
+
+    public void unregisterManifestProcessor(String contentType) {
+        manifestProcessorCache.remove(contentType);
     }
 
     public void processManifest(Contribution contribution) throws ContributionException {
@@ -100,6 +111,15 @@ public class ProcessorRegistryImpl implements ProcessorRegistry {
             //throw new UnsupportedContentTypeException(contentType);
         }
         return processor.process(inputStream);
+    }
+
+    public void processManifestArtifact(ContributionManifest manifest,
+                                     String contentType,
+                                     InputStream inputStream) throws ContributionException {
+        ManifestProcessor processor = manifestProcessorCache.get(contentType);
+        if (processor != null) {
+            processor.process(manifest, inputStream);
+        }
     }
 
 }

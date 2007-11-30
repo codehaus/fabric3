@@ -89,6 +89,12 @@ public class ExplodedArchiveContributionProcessor extends ArchiveContributionPro
             LoaderContext context = new LoaderContextImpl(getClass().getClassLoader(), null);
             ContributionManifest manifest = loaderRegistry.load(reader, ContributionManifest.class, context);
             contribution.setManifest(manifest);
+            iterateArtifacts(contribution, new Action() {
+                public void process(Contribution contribution, String contentType, InputStream stream)
+                        throws ContributionException {
+                    registry.processManifestArtifact(contribution.getManifest(), contentType, stream);
+                }
+            });
         } catch (XMLStreamException e) {
             throw new ContributionException(e);
         } catch (LoaderException e) {
@@ -141,10 +147,6 @@ public class ExplodedArchiveContributionProcessor extends ArchiveContributionPro
                     String contentType = contentTypeResolver.getContentType(entryUrl);
                     stream = entryUrl.openStream();
                     action.process(contribution, contentType, stream);
-//                    Resource resource = registry.processResource(contentType, stream);
-//                    if (resource != null) {
-//                        contribution.addResource(resource);
-//                    }
                 } catch (MalformedURLException e) {
                     throw new ContributionException(e);
                 } catch (IOException e) {

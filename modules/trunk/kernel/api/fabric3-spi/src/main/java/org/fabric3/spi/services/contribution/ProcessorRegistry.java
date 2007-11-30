@@ -58,7 +58,21 @@ public interface ProcessorRegistry {
     void unregisterResourceProcessor(String contentType);
 
     /**
-     * Process a contribution from the input stream.
+     * Register a ManifestProcessor using the content type as the key
+     *
+     * @param processor the processor to registrer
+     */
+    void register(ManifestProcessor processor);
+
+    /**
+     * Unregister a ManifestProcessor for a content type
+     *
+     * @param contentType the content
+     */
+    void unregisterManifestProcessor(String contentType);
+
+    /**
+     * Process manifest information in a contribution.
      *
      * @param contribution The contribution that will be used to hold the results from the processing
      * @throws ContributionException if there was a problem with the contribution
@@ -66,7 +80,7 @@ public interface ProcessorRegistry {
     void processManifest(Contribution contribution) throws ContributionException;
 
     /**
-     * Process a contribution from the input stream.
+     * Processes artifacts in a contribution.
      *
      * @param contribution The contribution that will be used to hold the results from the processing
      * @throws ContributionException if there was a problem with the contribution
@@ -78,6 +92,18 @@ public interface ProcessorRegistry {
      */
     @Deprecated
     void processContribution(Contribution contribution, URI source) throws ContributionException;
+
+    /**
+     * Processes a manifest artifact contained in a contribution and updates the given manifest.
+     *
+     * @param manifest    the manifest to update
+     * @param contentType the artifact MIME type
+     * @param inputStream the input stream for the artifact
+     * @throws ContributionException if there was a problem processing the artifact
+     */
+    void processManifestArtifact(ContributionManifest manifest,
+                                 String contentType,
+                                 InputStream inputStream) throws ContributionException;
 
     /**
      * Process a resource from the input stream.

@@ -94,6 +94,12 @@ public class ZipContributionProcessor extends ArchiveContributionProcessor imple
             LoaderContext context = new LoaderContextImpl(getClass().getClassLoader(), null);
             ContributionManifest manifest = loaderRegistry.load(reader, ContributionManifest.class, context);
             contribution.setManifest(manifest);
+            iterateArtifacts(contribution, new Action() {
+                public void process(Contribution contribution, String contentType, InputStream stream)
+                        throws ContributionException {
+                    registry.processManifestArtifact(contribution.getManifest(), contentType, stream);
+                }
+            });
         } catch (XMLStreamException e) {
             throw new ContributionException(e);
         } catch (LoaderException e) {
