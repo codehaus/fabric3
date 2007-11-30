@@ -38,7 +38,6 @@ import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolver;
 import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
@@ -59,10 +58,8 @@ public class ExplodedArchiveContributionProcessor extends ArchiveContributionPro
                                                 @Reference XMLInputFactory xmlFactory,
                                                 @Reference MetaDataStore store,
                                                 @Reference ContentTypeResolver contentTypeResolver,
-                                                @Reference ArtifactLocationEncoder encoder,
-                                                /* classloader registry is temporary*/
-                                                @Reference ClassLoaderRegistry classLoaderRegistry) {
-        super(store, encoder, classLoaderRegistry);
+                                                @Reference ArtifactLocationEncoder encoder) {
+        super(store, encoder);
         this.loaderRegistry = loaderRegistry;
         this.contentTypeResolver = contentTypeResolver;
         this.xmlFactory = xmlFactory;

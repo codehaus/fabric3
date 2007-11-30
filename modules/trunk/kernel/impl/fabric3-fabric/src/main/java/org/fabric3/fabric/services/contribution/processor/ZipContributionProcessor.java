@@ -38,7 +38,6 @@ import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolver;
 import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
@@ -61,11 +60,9 @@ public class ZipContributionProcessor extends ArchiveContributionProcessor imple
                                     @Reference XMLInputFactory xmlFactory,
                                     @Reference MetaDataStore store,
                                     @Reference ArtifactLocationEncoder encoder,
-                                    @Reference ContentTypeResolver contentTypeResolver,
-                                    /* classloader registry is temporary*/
-                                    @Reference ClassLoaderRegistry classLoaderRegistry) {
+                                    @Reference ContentTypeResolver contentTypeResolver) {
 
-        super(store, encoder, classLoaderRegistry);
+        super(store, encoder);
         this.registry = processorRegistry;
         this.loaderRegistry = loaderRegistry;
         this.xmlFactory = xmlFactory;

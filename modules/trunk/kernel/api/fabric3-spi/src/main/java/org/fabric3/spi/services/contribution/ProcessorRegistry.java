@@ -83,12 +83,13 @@ public interface ProcessorRegistry {
      * Processes artifacts in a contribution.
      *
      * @param contribution The contribution that will be used to hold the results from the processing
+     * @param loader       the classloader conribution resources must be laoded in
      * @throws ContributionException if there was a problem with the contribution
      */
-    void processContribution(Contribution contribution) throws ContributionException;
+    void processContribution(Contribution contribution, ClassLoader loader) throws ContributionException;
 
     /**
-     * This method is deprecated. Use {@link #processContribution(Contribution)} instead.
+     * This method is deprecated. Use {@link #processContribution(Contribution, ClassLoader)} instead.
      */
     @Deprecated
     void processContribution(Contribution contribution, URI source) throws ContributionException;

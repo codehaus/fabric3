@@ -48,12 +48,13 @@ public interface ContributionProcessor {
      * artifacts or model objects to the contribution object.
      *
      * @param contribution The contribution that will be used to hold the results from the processing
+     * @param loader       the classloader contribution resources must be loaded in
      * @throws ContributionException if there was a problem with the contribution
      */
-    public void processContent(Contribution contribution) throws ContributionException;
+    public void processContent(Contribution contribution, ClassLoader loader) throws ContributionException;
 
     /**
-     * This method is deprecated. Use {@link #processContent(Contribution)} instead.
+     * This method is deprecated. Use {@link #processContent(Contribution, ClassLoader)} )} instead.
      */
     @Deprecated
     void processContent(Contribution contribution, URI source) throws ContributionException;

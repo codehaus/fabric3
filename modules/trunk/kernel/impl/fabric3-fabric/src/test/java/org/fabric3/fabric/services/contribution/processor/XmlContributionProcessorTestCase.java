@@ -47,7 +47,7 @@ public class XmlContributionProcessorTestCase extends TestCase {
     public void testDispatch() throws Exception {
         URL url = new URL("test", null, 0, "", new MockHandler());
         Contribution contribution = new Contribution(URI.create("test"), url, new byte[0], -1, null);
-        processor.processContent(contribution);
+        processor.processContent(contribution, getClass().getClassLoader());
         // verify the contribution processor registered
         EasyMock.verify(processorRegistry);
         // verify the XmlStreamReader was set to the first element, <start>

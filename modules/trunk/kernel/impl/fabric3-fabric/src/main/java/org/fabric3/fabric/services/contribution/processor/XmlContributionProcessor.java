@@ -33,6 +33,7 @@ import org.osoa.sca.annotations.Service;
 
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.spi.services.contribution.Contribution;
+import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.ContributionProcessor;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.XmlProcessor;
@@ -61,7 +62,8 @@ public class XmlContributionProcessor implements ContributionProcessor, XmlProce
     }
 
     public void processManifest(Contribution contribution) throws ContributionException {
-        // TODO support XSD import?
+        ContributionManifest manifest = new ContributionManifest();
+        contribution.setManifest(manifest);
     }
 
     public void register(XmlProcessor processor) {
@@ -73,10 +75,10 @@ public class XmlContributionProcessor implements ContributionProcessor, XmlProce
     }
 
     public void processContent(Contribution contribution, URI source) throws ContributionException {
-        processContent(contribution);
+        throw new UnsupportedOperationException();
     }
 
-    public void processContent(Contribution contribution) throws ContributionException {
+    public void processContent(Contribution contribution, ClassLoader loader) throws ContributionException {
         URL locationURL = contribution.getLocation();
         InputStream stream = null;
         XMLStreamReader reader = null;

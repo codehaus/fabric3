@@ -30,7 +30,7 @@ import org.fabric3.spi.services.contribution.ContributionProcessor;
 public class JavaContributionProcessor extends ContributionProcessorExtension implements ContributionProcessor {
 
     public String[] getContentTypes() {
-        return new String[] {Constants.JAVA_CONTENT_TYPE};
+        return new String[]{Constants.JAVA_CONTENT_TYPE};
     }
 
     public void processManifest(Contribution contribution) throws ContributionException {
@@ -41,7 +41,7 @@ public class JavaContributionProcessor extends ContributionProcessorExtension im
         throw new UnsupportedOperationException();
     }
 
-    public void processContent(Contribution contribution) throws ContributionException {
+    public void processContent(Contribution contribution, ClassLoader loader) throws ContributionException {
         throw new UnsupportedOperationException();
     }
 }

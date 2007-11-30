@@ -90,17 +90,17 @@ public class ProcessorRegistryImpl implements ProcessorRegistry {
     }
 
     public void processContribution(Contribution contribution, URI source) throws ContributionException {
-        processContribution(contribution);
+        throw new UnsupportedOperationException();
     }
 
-    public void processContribution(Contribution contribution) throws ContributionException {
+    public void processContribution(Contribution contribution, ClassLoader loader) throws ContributionException {
         String contentType = contribution.getContentType();
         ContributionProcessor processor = contributionProcessorCache.get(contentType);
         if (processor == null) {
             URI source = contribution.getUri();
             throw new UnsupportedContentTypeException(contentType, source.toString());
         }
-        processor.processContent(contribution);
+        processor.processContent(contribution, loader);
     }
 
     public Resource processResource(String contentType, InputStream inputStream) throws ContributionException {

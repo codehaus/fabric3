@@ -34,7 +34,6 @@ import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ResourceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.model.type.ContributionResourceDescription;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.MetaDataStore;
@@ -48,30 +47,24 @@ import org.fabric3.spi.services.contribution.ResourceElement;
  */
 public abstract class ArchiveContributionProcessor extends ContributionProcessorExtension {
     protected ArtifactLocationEncoder encoder;
-    private ClassLoaderRegistry classLoaderRegistry;
     private MetaDataStore store;
 
     protected ArchiveContributionProcessor(@Reference MetaDataStore store,
-                                           @Reference ArtifactLocationEncoder encoder,
-                                           /* classloader registry is temporary*/
-                                           @Reference ClassLoaderRegistry classLoaderRegistry) {
+                                           @Reference ArtifactLocationEncoder encoder) {
         this.store = store;
         this.encoder = encoder;
-        this.classLoaderRegistry = classLoaderRegistry;
     }
 
     public void processContent(Contribution contribution, URI source) throws ContributionException {
-        processContent(contribution);
+        throw new UnsupportedOperationException();
     }
 
-    public void processContent(Contribution contribution) throws ContributionException {
+    public void processContent(Contribution contribution, ClassLoader loader) throws ContributionException {
         // process the contribution manifest
         // Build a classloader to perform the contribution introspection. The classpath will contain the contribution
         // jar and resolved imports
         ClassLoader oldClassloader = Thread.currentThread().getContextClassLoader();
         try {
-            // temporary until classloader is passed in
-            ClassLoader loader = classLoaderRegistry.getClassLoader(contribution.getUri());
             Thread.currentThread().setContextClassLoader(loader);
             iterateArtifacts(contribution, new Action() {
                 public void process(Contribution contribution, String contentType, InputStream stream)

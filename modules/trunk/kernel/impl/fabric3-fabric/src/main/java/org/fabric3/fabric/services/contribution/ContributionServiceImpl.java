@@ -102,7 +102,7 @@ public class ContributionServiceImpl implements ContributionService {
         for (Contribution contribution : contributions) {
             ClassLoader loader = contributionLoader.loadContribution(contribution);
             // continue processing the contributions. As they are ordered, dependencies will resolve correctly
-            processContents(contribution);
+            processContents(contribution, loader);
         }
         List<URI> uris = new ArrayList<URI>(contributions.size());
         for (Contribution contribution : contributions) {
@@ -119,7 +119,8 @@ public class ContributionServiceImpl implements ContributionService {
     public URI contribute(ContributionSource source) throws ContributionException {
         Contribution contribution = store(source);
         processorRegistry.processManifest(contribution);
-        processContents(contribution);
+        ClassLoader loader = contributionLoader.loadContribution(contribution);
+        processContents(contribution, loader);
         return contribution.getUri();
     }
 
@@ -241,11 +242,12 @@ public class ContributionServiceImpl implements ContributionService {
      * Processes contribution contents. This assumes all dependencies are installed and can be resolved
      *
      * @param contribution the contribution to process
+     * @param loader       the classloader to load resources in
      * @throws ContributionException if an error occurs during processing
      */
-    private void processContents(Contribution contribution) throws ContributionException {
+    private void processContents(Contribution contribution, ClassLoader loader) throws ContributionException {
         // store the contribution
-        processorRegistry.processContribution(contribution);
+        processorRegistry.processContribution(contribution, loader);
         // TODO rollback storage if an error processing contribution
         // store the contribution index
         //store the contribution in the memory cache
