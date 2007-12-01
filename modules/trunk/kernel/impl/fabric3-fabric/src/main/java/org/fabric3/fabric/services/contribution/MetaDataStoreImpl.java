@@ -160,6 +160,22 @@ public class MetaDataStoreImpl implements MetaDataStore {
         return null;
     }
 
+    public <S extends Symbol, V> ResourceElement<S, V> resolve(Contribution contribution, Class<V> type, S symbol) {
+        ResourceElement<S, V> element = resolveInternal(contribution, type, symbol);
+        if (element != null){
+            return element;
+        }
+        for (URI uri : contribution.getResolvedImportUris()) {
+            Contribution resolved = cache.get(uri);
+            assert resolved != null;
+            element = resolveInternal(resolved, type, symbol);
+            if (element != null){
+                return element;
+            }
+        }
+        return null;
+    }
+
     /**
      * Resolves an import to a Contribution that exports it
      *
@@ -199,6 +215,21 @@ public class MetaDataStoreImpl implements MetaDataStore {
             }
             resolveTransitiveImports(imported, dependencies);
         }
+    }
+
+    @SuppressWarnings({"unchecked"})
+    private <S extends Symbol, V> ResourceElement<S, V> resolveInternal(Contribution contribution, Class<V> type, S symbol) {
+        for (Resource resource : contribution.getResources()) {
+                for (ResourceElement<?, ?> element : resource.getResourceElements()) {
+                    if (element.getSymbol().equals(symbol)) {
+                        if (!type.isInstance(element.getValue())) {
+                            throw new IllegalArgumentException("Invalid type for symbol [" + type + "]");
+                        }
+                        return (ResourceElement<S, V>) element;
+                    }
+                }
+            }
+        return null;
     }
 
     /**

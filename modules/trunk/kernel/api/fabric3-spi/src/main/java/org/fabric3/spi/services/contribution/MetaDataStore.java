@@ -51,12 +51,22 @@ public interface MetaDataStore {
     Contribution find(URI contributionUri);
 
     /**
-     * Resolves a resource element by its symbol.
+     * Resolves a resource element by its symbol against the entire domain symbol space.
      *
      * @param symbol the symbol used to represent the resource element.
      * @return the resource element
      */
     <S extends Symbol> ResourceElement<S, ?> resolve(S symbol);
+
+    /**
+     * Resolves a resource element by its symbol against the given contribution.
+     *
+     * @param contribution the contribution to resolve against
+     * @param type         the class representing the resource
+     * @param symbol       the symbol used to represent the resource element.
+     * @return the resource element
+     */
+    <S extends Symbol, V> ResourceElement<S, V> resolve(Contribution contribution, Class<V> type, S symbol);
 
     /**
      * Resolves an import to a matching export
