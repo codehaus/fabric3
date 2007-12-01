@@ -85,6 +85,9 @@ import org.fabric3.fabric.model.logical.LogicalModelGenerator;
 import org.fabric3.fabric.model.logical.LogicalModelGeneratorImpl;
 import org.fabric3.fabric.model.physical.PhysicalModelGenerator;
 import org.fabric3.fabric.model.physical.PhysicalModelGeneratorImpl;
+import org.fabric3.fabric.model.physical.PhysicalWireGenerator;
+import org.fabric3.fabric.model.physical.PhysicalWireGeneratorImpl;
+
 import static org.fabric3.fabric.runtime.ComponentNames.APPLICATION_CLASSLOADER_ID;
 import static org.fabric3.fabric.runtime.ComponentNames.BOOT_CLASSLOADER_ID;
 import static org.fabric3.fabric.runtime.ComponentNames.CLASSLOADER_REGISTRY_URI;
@@ -156,6 +159,7 @@ import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.PolicyHelper;
 import org.fabric3.spi.policy.registry.NullPolicyResolver;
+import org.fabric3.spi.policy.registry.PolicyResolver;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ArtifactResolverRegistry;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
@@ -273,9 +277,10 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         // enable autowire for the runtime domain
         AssemblyStore store = new NonPersistentAssemblyStore(ComponentNames.RUNTIME_URI, Autowire.ON);
 
+        PhysicalWireGenerator wireGenerator = new PhysicalWireGeneratorImpl(generatorRegistry, new NullPolicyResolver());
         DomainService domainService = new DomainServiceImpl(store);
         PhysicalModelGenerator physicalModelGenerator =
-                createPhysicalModelGenerator(generatorRegistry, routingService, domainService);
+                createPhysicalModelGenerator(generatorRegistry, routingService, domainService, wireGenerator);
 
         AtomicComponentInstantiator atomicComponentInstantiator = new AtomicComponentInstantiator();
         CompositeComponentInstantiator compositeComponentInstantiator =
@@ -292,7 +297,8 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
                                                   metaDataStore,
                                                   physicalModelGenerator,
                                                   logicalModelGenerator,
-                                                  domainService);
+                                                  domainService,
+                                                  wireGenerator);
         try {
             runtimeAssembly.initialize();
         } catch (AssemblyException e) {
@@ -517,11 +523,13 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
     private PhysicalModelGenerator createPhysicalModelGenerator(GeneratorRegistry generatorRegistry,
                                                                 RoutingService routingService,
-                                                                DomainService domainService) {
+                                                                DomainService domainService,
+                                                                PhysicalWireGenerator wireGenerator) {
         return new PhysicalModelGeneratorImpl(generatorRegistry,
                                               new NullPolicyResolver(),
                                               routingService,
-                                              domainService);
+                                              domainService,
+                                              wireGenerator);
     }
 
 }

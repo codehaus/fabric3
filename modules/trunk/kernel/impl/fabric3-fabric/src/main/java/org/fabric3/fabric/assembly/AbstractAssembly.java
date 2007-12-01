@@ -33,6 +33,7 @@ import org.fabric3.fabric.domain.DomainService;
 import org.fabric3.fabric.generator.DefaultGeneratorContext;
 import org.fabric3.fabric.model.logical.LogicalModelGenerator;
 import org.fabric3.fabric.model.physical.PhysicalModelGenerator;
+import org.fabric3.fabric.model.physical.PhysicalWireGenerator;
 import org.fabric3.fabric.services.routing.RoutingException;
 import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.scdl.BindingDefinition;
@@ -71,19 +72,22 @@ public abstract class AbstractAssembly implements Assembly {
     private final RoutingService routingService;
     private final MetaDataStore metadataStore;
     private final DomainService domainService;
+    private final PhysicalWireGenerator wireGenerator;
 
     public AbstractAssembly(Allocator allocator,
                             RoutingService routingService,
                             MetaDataStore metadataStore,
                             PhysicalModelGenerator physicalModelGenerator,
                             LogicalModelGenerator logicalModelGenerator,
-                            DomainService domainService) {
+                            DomainService domainService,
+                            PhysicalWireGenerator wireGenerator) {
         this.allocator = allocator;
         this.routingService = routingService; 
         this.metadataStore = metadataStore;
         this.physicalModelGenerator = physicalModelGenerator;
         this.logicalModelGenerator = logicalModelGenerator;
         this.domainService = domainService;
+        this.wireGenerator = wireGenerator;
     }
 
     public void initialize() throws AssemblyException {
@@ -180,7 +184,7 @@ public abstract class AbstractAssembly implements Assembly {
         GeneratorContext context = new DefaultGeneratorContext(changeSet, commandSet);
         
         try {
-            physicalModelGenerator.generateBoundServiceWire(service, binding, currentComponent, context);
+            wireGenerator.generateBoundServiceWire(service, binding, currentComponent, context);
             routingService.route(currentComponent.getRuntimeId(), changeSet);
             service.addBinding(binding);
             // TODO record to recovery service

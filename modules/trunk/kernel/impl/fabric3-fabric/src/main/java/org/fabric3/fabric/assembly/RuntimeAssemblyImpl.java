@@ -22,6 +22,7 @@ import org.fabric3.fabric.assembly.allocator.Allocator;
 import org.fabric3.fabric.domain.DomainService;
 import org.fabric3.fabric.model.logical.LogicalModelGenerator;
 import org.fabric3.fabric.model.physical.PhysicalModelGenerator;
+import org.fabric3.fabric.model.physical.PhysicalWireGenerator;
 import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.CompositeImplementation;
@@ -44,8 +45,9 @@ public class RuntimeAssemblyImpl extends AbstractAssembly implements RuntimeAsse
                                @Reference MetaDataStore metadataStore,
                                @Reference PhysicalModelGenerator physicalModelGenerator,
                                @Reference LogicalModelGenerator logicalModelGenerator,
-                               @Reference DomainService domainService) {
-        super(allocator, routingService, metadataStore, physicalModelGenerator, logicalModelGenerator, domainService);
+                               @Reference DomainService domainService,
+                               @Reference PhysicalWireGenerator wireGenerator) {
+        super(allocator, routingService, metadataStore, physicalModelGenerator, logicalModelGenerator, domainService, wireGenerator);
         this.domainService = domainService;
     }
 

@@ -21,6 +21,7 @@ package org.fabric3.spi.policy.registry;
 import java.util.Collections;
 import java.util.Set;
 
+import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.model.instance.LogicalBinding;
@@ -55,7 +56,7 @@ public class NullPolicyResolver implements PolicyResolver {
     /**
      * @see org.fabric3.spi.policy.registry.PolicyResolver#resolveInteractionIntents(org.fabric3.spi.model.instance.LogicalBinding)
      */
-    public Set<PolicySet> resolveInteractionIntents(LogicalBinding<?> binding) throws PolicyResolutionException {
+    public Set<PolicySet> resolveInteractionIntents(LogicalBinding<?> binding, Operation<?> operation) throws PolicyResolutionException {
         return Collections.emptySet();
     }
 

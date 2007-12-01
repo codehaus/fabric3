@@ -31,6 +31,7 @@ import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.Scope;
 import org.osoa.sca.Constants;
 import org.w3c.dom.Document;
 
@@ -277,6 +278,27 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
      */
     public AbstractComponentType<?, ?, ?, ?> getComponentType() {
         return getDefinition().getComponentType();
+    }
+    
+    /**
+     * Checks whether this component needs to be eager inited.
+     * 
+     * @return True if the component needs to be eager inited.
+     */
+    public boolean isEagerInit() {
+        
+        ComponentDefinition<? extends Implementation<?>> definition = getDefinition();
+        AbstractComponentType<?, ?, ?, ?> componentType = definition.getImplementation().getComponentType();
+        if (!componentType.getImplementationScope().equals(Scope.COMPOSITE)) {
+            return false;
+        }
+
+        Integer level = definition.getInitLevel();
+        if (level == null) {
+            level = componentType.getInitLevel();
+        }
+        return level > 0;
+        
     }
 
 }

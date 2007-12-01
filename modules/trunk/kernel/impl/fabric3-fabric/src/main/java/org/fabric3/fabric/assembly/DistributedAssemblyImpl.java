@@ -22,6 +22,7 @@ import org.fabric3.fabric.assembly.allocator.Allocator;
 import org.fabric3.fabric.domain.DomainService;
 import org.fabric3.fabric.model.logical.LogicalModelGenerator;
 import org.fabric3.fabric.model.physical.PhysicalModelGenerator;
+import org.fabric3.fabric.model.physical.PhysicalWireGenerator;
 import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.osoa.sca.annotations.Reference;
@@ -40,8 +41,9 @@ public class DistributedAssemblyImpl extends AbstractAssembly implements Distrib
                                    @Reference(name = "store") MetaDataStore metaDataStore,
                                    @Reference PhysicalModelGenerator physicalModelGenerator,
                                    @Reference LogicalModelGenerator logicalModelGenerator,
-                                   @Reference DomainService domainService) {
-        super(allocator, routingService, metaDataStore, physicalModelGenerator, logicalModelGenerator, domainService);
+                                   @Reference DomainService domainService,
+                                   @Reference PhysicalWireGenerator wireGenerator) {
+        super(allocator, routingService, metaDataStore, physicalModelGenerator, logicalModelGenerator, domainService, wireGenerator);
     }
 
 }

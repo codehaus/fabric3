@@ -26,6 +26,7 @@ import javax.xml.namespace.QName;
 
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.definitions.BindingType;
 import org.fabric3.scdl.definitions.ImplementationType;
 import org.fabric3.scdl.definitions.Intent;
@@ -133,7 +134,7 @@ public class DefaultPolicyResolver implements PolicyResolver {
     /**
      * @see org.fabric3.spi.policy.registry.PolicyResolver#resolveInteractionIntents(org.fabric3.spi.model.instance.LogicalBinding)
      */
-    public Set<PolicySet> resolveInteractionIntents(LogicalBinding<?> logicalBinding) throws PolicyResolutionException {
+    public Set<PolicySet> resolveInteractionIntents(LogicalBinding<?> logicalBinding, Operation<?> operation) throws PolicyResolutionException {
         
         QName type = logicalBinding.getType();
         BindingType bindingType = definitionsRegistry.getDefinition(type, BindingType.class);
@@ -149,6 +150,7 @@ public class DefaultPolicyResolver implements PolicyResolver {
 
         // Aggregate all the intents from the ancestors
         Set<QName> intentNames = aggregateIntents(logicalBinding);
+        intentNames.addAll(operation.getIntents());
         
         // Expand all the profile intents
         Set<Intent> requiredIntents = resolveProfileIntents(intentNames);

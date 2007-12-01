@@ -47,6 +47,10 @@
     <component name="physicalModelGenerator">
         <system:implementation.system class="org.fabric3.fabric.model.physical.PhysicalModelGeneratorImpl"/>
     </component>
+    
+    <component name="physicalWireGenerator">
+        <system:implementation.system class="org.fabric3.fabric.model.physical.PhysicalWireGeneratorImpl"/>
+    </component>
 
     <component name="distributedAssembly">
         <system:implementation.system class="org.fabric3.fabric.assembly.DistributedAssemblyImpl"/>
