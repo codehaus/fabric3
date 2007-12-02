@@ -254,7 +254,6 @@ public class Fabric3ITestMojo extends AbstractMojo {
             return;
         }
         MonitorFactory monitorFactory = new MavenMonitorFactory(log, "f3");
-        MojoMonitor monitor = monitorFactory.getMonitor(MojoMonitor.class);
 
         URL testScdlURL;
         try {
@@ -291,10 +290,8 @@ public class Fabric3ITestMojo extends AbstractMojo {
             coordinator.setIntentsLocation(intentsLocation);
             bootRuntime(coordinator, runtime, hostClassLoader, testClassLoader);
         } catch (InitializationException e) {
-            monitor.runError(e);
             throw new MojoExecutionException("Error initializing Fabric3 Runtime", e);
         } catch (Exception e) {
-            monitor.runError(e);
             throw new MojoExecutionException("Error starting Fabric3 Runtime", e);
         }
 
@@ -304,7 +301,6 @@ public class Fabric3ITestMojo extends AbstractMojo {
             try {
                 testSuite = createTestSuite(runtime, testScdlURL, testClassLoader);
             } catch (Exception e) {
-                monitor.runError(e);
                 throw new MojoExecutionException("Error deploying test component " + testScdl, e);
             }
             log.info("Executing tests...");
@@ -319,7 +315,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
             try {
                 shutdownRuntime(coordinator);
             } catch (Exception e) {
-                monitor.runError(e);
+                // ignore
             }
         }
     }
