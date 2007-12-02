@@ -36,8 +36,4 @@
                 class="org.fabric3.fabric.wire.IncompatibleServiceContractExceptionFormatter"/>
     </component>
 
-    <component name="ResolutionExceptionFormatter">
-        <system:implementation.system class="org.fabric3.fabric.assembly.resolver.ResolutionExceptionFormatter"/>
-    </component>
-
 </composite>
