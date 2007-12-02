@@ -113,7 +113,12 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
 
         policyHelper.loadPolicySetsAndIntents(componentDefinition, reader);
 
-        Implementation<?> impl = loadImplementation(reader, context);
+        Implementation<?> impl;
+        try {
+            impl = loadImplementation(reader, context);
+        } catch (LoaderException e) {
+            throw new InvalidImplementationException(name, e);
+        }
         componentDefinition.setImplementation(impl);
 
         while (true) {

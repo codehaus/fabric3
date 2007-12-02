@@ -20,23 +20,26 @@ package org.fabric3.loader.composite;
 
 import javax.xml.namespace.QName;
 
+import org.fabric3.spi.loader.LoaderException;
+
 /**
- * Exception that indicates that the composite named in an include could not be located.
+ * Exception that indicates that the implementation of a component was not valid.
  *
  * @version $Rev$ $Date$
  */
-public class IncludeNotFoundException extends CompositeLoaderException {
-    private final QName includedCompositeName;
+public class InvalidImplementationException extends CompositeLoaderException {
+    private final String componentName;
 
-    public IncludeNotFoundException(QName includedCompositeName) {
-        this.includedCompositeName = includedCompositeName;
+    public InvalidImplementationException(String componentName, LoaderException cause) {
+        super(cause);
+        this.componentName = componentName;
     }
 
-    public QName getIncludedCompositeName() {
-        return includedCompositeName;
+    public String getComponentName() {
+        return componentName;
     }
 
     public String getMessage() {
-        return "Unable to include composite with name " + includedCompositeName + " (currently scdlResource or scdlLocation must be specified).";
+        return "Invalid implementation for component " + componentName;
     }
 }
