@@ -20,10 +20,10 @@ package org.fabric3.fabric.assembly.resolver;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Collection;
 
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.Autowire;
@@ -73,7 +73,7 @@ public class DefaultWireResolver implements WireResolver {
         if (promotedComponent == null) {
             throw new PromotedComponentNotFoundException(serviceUri, promotedComponentUri);
         }
-        
+
         if (promotedServiceName == null) {
             if (promotedComponent.getServices().size() == 0) {
                 throw new PromotedServiceNotFoundException(serviceUri, promotedComponentUri);
@@ -326,7 +326,7 @@ public class DefaultWireResolver implements WireResolver {
 
     /**
      * Fully resolves a component reference to a target component service based on a URI.
-     *
+     * <p/>
      * If the reference does not contain a service name, then the target component must provide a single service.
      *
      * @param reference the reference
@@ -350,15 +350,16 @@ public class DefaultWireResolver implements WireResolver {
                 throw new ComponentReferenceTargetNotFoundException(sourceUri, targetUri);
             }
             return targetUri;
-        } else if (targetComponent.getServices().size() == 1) {
+        } else {
+            if (targetComponent.getServices().size() != 1) {
+                if (targetComponent.getServices().size() > 1) {
+                    throw new AmbiguousComponentReferenceTargetException(sourceUri, targetComponentUri);
+                } else {
+                    throw new ComponentReferenceTargetHasNoServicesException(sourceUri, targetUri);
+                }
+            }
             LogicalService targetService = targetComponent.getServices().iterator().next();
             return targetService.getUri();
-        } else {
-            if (targetComponent.getServices().size() > 1) {
-                throw new AmbiguousComponentReferenceTargetException(sourceUri, targetComponentUri);
-            } else {
-                throw new IllegalTargetException("Target has no services", sourceUri, targetUri);
-            }
         }
     }
 

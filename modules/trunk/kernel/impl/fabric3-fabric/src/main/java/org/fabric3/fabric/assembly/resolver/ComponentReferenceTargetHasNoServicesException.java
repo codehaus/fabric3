@@ -21,10 +21,13 @@ import java.net.URI;
 /**
  * @version $Rev$ $Date$
  */
-public class IllegalTargetException extends ResolutionException {
-    private static final long serialVersionUID = 4974542746054966384L;
+public class ComponentReferenceTargetHasNoServicesException extends ResolutionException {
 
-    public IllegalTargetException(String message, URI source, URI target) {
-        super(message, null, source, target);
+    public ComponentReferenceTargetHasNoServicesException(URI source, URI target) {
+        super(source, target);
+    }
+
+    public String getMessage() {
+        return "The reference " + getSource().getFragment() + " specifies a target component " + getTarget() + " which does not have any services";
     }
 }
