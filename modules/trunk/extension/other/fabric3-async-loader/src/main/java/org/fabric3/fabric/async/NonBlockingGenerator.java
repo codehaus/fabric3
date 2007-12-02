@@ -36,7 +36,9 @@ import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
  */
 @EagerInit
 public class NonBlockingGenerator implements InterceptorDefinitionGenerator {
-    private static final QName QNAME = new QName(Constants.FABRIC3_NS, "oneWay");
+    
+    private static final QName QNAME = new QName(Constants.FABRIC3_NS, "oneWayPolicy");
+    
     private GeneratorRegistry registry;
 
     public NonBlockingGenerator(@Reference GeneratorRegistry registry) {

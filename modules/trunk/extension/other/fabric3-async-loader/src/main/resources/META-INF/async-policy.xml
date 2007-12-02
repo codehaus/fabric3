@@ -2,16 +2,11 @@
 <definitions
         xmlns="http://www.osoa.org/xmlns/sca/1.0"
         xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
-        xmlns:oneWay="http://fabric3.org/xmlns/sca/2.0-alpha/oneWay"
+        xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
         targetNamespace="http://fabric3.org/xmlns/sca/2.0-alpha">
-    <intent name="oneWay" constrains="implementation">
-        <description>
-            Used to specify a non-blocking operation.
-        </description>
-    </intent>
 
     <policySet name="oneWayPolicy" provides="sca:oneWay">
-        <oneWay:oneWay/>
+        <f3:oneWayPolicy/>
     </policySet>
 
 </definitions>
