@@ -64,13 +64,12 @@ public class IncludeLoaderTestCase extends TestCase {
 
         expect(context.getTargetNamespace()).andReturn(namespace);
         expect(context.getTargetClassLoader()).andReturn(cl);
-        expect(context.getSourceBase()).andReturn(null);
         replay(registry, reader, namespaceContext, context);
 
         try {
             loader.load(reader, context);
             fail();
-        } catch (MissingIncludeException e) {
+        } catch (IncludeNotFoundException e) {
             // OK expected
         }
         verify(registry, reader, namespaceContext, context);

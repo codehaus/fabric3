@@ -18,23 +18,25 @@
  */
 package org.fabric3.loader.composite;
 
-import java.net.URL;
-
-import org.fabric3.spi.loader.LoaderException;
+import javax.xml.namespace.QName;
 
 /**
- * Exception that indicates that an include was not provided.
+ * Exception that indicates that the composite named in an include could not be located.
  *
  * @version $Rev$ $Date$
  */
-public class MissingIncludeException extends LoaderException {
-    private static final long serialVersionUID = -2917278473974880124L;
+public class IncludeNotFoundException extends CompositeLoaderException {
+    private final QName compositeName;
 
-    public MissingIncludeException(String message, String identifier, URL resourceLocation) {
-        super(message, identifier);
-        if (resourceLocation != null) {
-            // FIXME create typed ctor param for LoaderException in next SPI rev
-            setResourceURI(resourceLocation.toString());
-        }
+    public IncludeNotFoundException(QName compositeName) {
+        this.compositeName = compositeName;
+    }
+
+    public QName getCompositeName() {
+        return compositeName;
+    }
+
+    public String getMessage() {
+        return "Unable to locate composite with name " + compositeName + " (currently scdlResource or scdlLocation must be specified).";
     }
 }

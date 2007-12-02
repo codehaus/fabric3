@@ -77,15 +77,17 @@ public class IncludeLoader implements StAXElementLoader<Include> {
                 throw new MissingResourceException(scdlResource, name.toString());
             }
         } else {
-            throw new MissingIncludeException("No SCDL location or resource specified",
-                                              name.toString(),
-                                              loaderContext.getSourceBase());
+            // todo: when we support this, update the message in the exception
+            throw new IncludeNotFoundException(name);
         }
 
-        LoaderContext childContext =
-                new LoaderContextImpl(cl, url);
+        LoaderContext childContext = new LoaderContextImpl(cl, url);
         Composite composite;
-        composite = loadFromSidefile(url, childContext);
+        try {
+            composite = loadFromSidefile(url, childContext);
+        } catch (LoaderException e) {
+            throw new InvalidIncludeException(name, e);
+        }
 
         Include include = new Include();
         include.setName(name);
