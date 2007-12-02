@@ -21,10 +21,14 @@ import java.net.URI;
 /**
  * @version $Rev$ $Date$
  */
-public class MissingPromotedComponentException extends ResolutionException {
-    private static final long serialVersionUID = 2303515371429492705L;
+public class AmbiguousPromotedReferenceException extends ResolutionException {
 
-    public MissingPromotedComponentException(String message, URI source, URI target) {
-        super(message, source, target);
+    public AmbiguousPromotedReferenceException(URI source, URI target) {
+        super(source, target);
+    }
+
+    public String getMessage() {
+        return "The composite reference " + getSource() + " promotes a component " + getTarget() + " that has more than one service. " +
+                "The service name must be specified.";
     }
 }

@@ -29,6 +29,6 @@ public class PromotedServiceNotFoundException extends ResolutionException {
     }
 
     public String getMessage() {
-        return "The composite service or reference " + getSource() + " promotes a component " + getTarget() + " that could not be found.";
+        return "The composite service " + getSource() + " promotes a component service " + getTarget() + " that could not be found.";
     }
 }

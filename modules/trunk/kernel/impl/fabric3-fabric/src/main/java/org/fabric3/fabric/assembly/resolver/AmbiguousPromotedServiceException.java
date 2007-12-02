@@ -22,15 +22,13 @@ import java.net.URI;
  * @version $Rev$ $Date$
  */
 public class AmbiguousPromotedServiceException extends ResolutionException {
-    private static final long serialVersionUID = 2303515371429492705L;
 
     public AmbiguousPromotedServiceException(URI source, URI target) {
         super(source, target);
     }
 
     public String getMessage() {
-        return "The composite service or reference " + getSource() +
-                " promotes a component " + getTarget() + " that has more than one service. " +
+        return "The composite service " + getSource() + " promotes a component " + getTarget() + " that has more than one service. " +
                 "The service name must be specified.";
     }
 }

@@ -92,42 +92,35 @@ public class DefaultWireResolver implements WireResolver {
 
     public void resolveReference(LogicalReference logicalReference, LogicalComponent<CompositeImplementation> composite)
             throws ResolutionException {
-        ReferenceDefinition reference = logicalReference.getDefinition();
-        LogicalComponent<?> component = logicalReference.getParent();
-        ComponentDefinition<? extends Implementation<?>> definition = component.getDefinition();
-        Map<String, ComponentReference> targets = definition.getReferences();
-        List<URI> promotedUris = logicalReference.getPromotedUris();
-        for (URI promotedUri : promotedUris) {
+        for (URI promotedUri : logicalReference.getPromotedUris()) {
             URI componentId = UriHelper.getDefragmentedName(promotedUri);
             LogicalComponent parent = logicalReference.getParent();
             LogicalComponent<?> promotedComponent = parent.getComponent(componentId);
             if (promotedComponent == null) {
-                throw new MissingPromotedComponentException("No component for reference to promote",
-                                                            logicalReference.getUri(),
-                                                            componentId);
+                throw new PromotedComponentNotFoundException(logicalReference.getUri(), componentId);
             }
+
             String promotedReferenceName = promotedUri.getFragment();
             if (promotedReferenceName == null) {
                 if (promotedComponent.getReferences().size() == 0) {
-                    throw new MissingPromotedReferenceException("No reference on promoted component",
-                                                                logicalReference.getUri(),
-                                                                promotedUri);
+                    throw new PromotedReferenceNotFoundException(logicalReference.getUri(), promotedUri);
                 } else if (promotedComponent.getReferences().size() == 1) {
                     throw new UnsupportedOperationException();
                     // FABRICTHREE-119: we need the ability to resolve promotions on LogicalReferences.
                     // Delaying until next SPI rev
                 } else {
-                    throw new UnspecifiedReferenceException("Reference on promoted component must be specified",
-                                                            logicalReference.getUri(),
-                                                            promotedUri);
+                    throw new AmbiguousPromotedReferenceException(logicalReference.getUri(), promotedUri);
                 }
             } else if (promotedComponent.getReference(promotedUri.getFragment()) == null) {
-                throw new MissingPromotedReferenceException("No reference on promoted component",
-                                                            logicalReference.getUri(),
-                                                            promotedUri);
+                throw new PromotedReferenceNotFoundException(logicalReference.getUri(), promotedUri);
             }
 
         }
+
+        LogicalComponent<?> component = logicalReference.getParent();
+        ReferenceDefinition reference = logicalReference.getDefinition();
+        ComponentDefinition<? extends Implementation<?>> definition = component.getDefinition();
+        Map<String, ComponentReference> targets = definition.getReferences();
 
         String referenceName = reference.getName();
         ComponentReference target = targets.get(referenceName);
