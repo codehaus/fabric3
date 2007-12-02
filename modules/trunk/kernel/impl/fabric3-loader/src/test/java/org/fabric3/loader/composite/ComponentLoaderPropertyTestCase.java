@@ -53,8 +53,8 @@ public class ComponentLoaderPropertyTestCase extends TestCase {
         try {
             loader.load(reader, ctx);
             fail();
-        } catch (PropertyNotFoundException e) {
-            assertEquals(PROP_NAME, e.getIdentifier());
+        } catch (ComponentPropertyNotFoundException e) {
+            assertEquals(PROP_NAME, e.getName());
         }
     }
 

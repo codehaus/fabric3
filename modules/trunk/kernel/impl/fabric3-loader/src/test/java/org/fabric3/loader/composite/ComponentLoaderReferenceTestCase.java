@@ -53,8 +53,8 @@ public class ComponentLoaderReferenceTestCase extends TestCase {
         try {
             loader.load(reader, ctx);
             fail();
-        } catch (ReferenceNotFoundException e) {
-            assertEquals(REF_NAME, e.getIdentifier());
+        } catch (ComponentReferenceNotFoundException e) {
+            assertEquals(REF_NAME, e.getName());
         }
     }
 

@@ -16,24 +16,27 @@
  */
 package org.fabric3.loader.composite;
 
-import java.net.URL;
-
-import org.fabric3.spi.loader.LoaderException;
-
 /**
  * @version $Rev$ $Date$
  */
-public class ReferenceNotFoundException extends LoaderException {
-    private static final long serialVersionUID = -2354851043445865514L;
+public class ComponentReferenceNotFoundException extends CompositeLoaderException {
+    private final String componentName;
+    private final String name;
 
-    public ReferenceNotFoundException(String property, URL resourceLocation) {
-        super("Reference not found", property);
-        if (resourceLocation != null) {
-            // FIXME create typed ctor param for LoaderException in next SPI rev
-            if (resourceLocation != null) {
-                // FIXME create typed ctor param for LoaderException in next SPI rev
-                setResourceURI(resourceLocation.toString());
-            }
-        }
+    public ComponentReferenceNotFoundException(String componentName, String name) {
+        this.componentName = componentName;
+        this.name = name;
+    }
+
+    public String getComponentName() {
+        return componentName;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getMessage() {
+        return "The component type for component " + componentName + " does not have a reference " + name;
     }
 }

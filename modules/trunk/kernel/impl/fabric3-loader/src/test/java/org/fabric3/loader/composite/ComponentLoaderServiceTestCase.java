@@ -52,8 +52,8 @@ public class ComponentLoaderServiceTestCase extends TestCase {
         EasyMock.replay(ctx);
         try {
             loader.load(reader, ctx);
-        } catch (ServiceNotFoundException e) {
-            assertEquals(SERVICE_NAME, e.getIdentifier());
+        } catch (ComponentServiceNotFoundException e) {
+            assertEquals(SERVICE_NAME, e.getName());
         }
     }
 

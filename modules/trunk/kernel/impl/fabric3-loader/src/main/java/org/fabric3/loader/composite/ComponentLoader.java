@@ -41,6 +41,7 @@ import org.fabric3.scdl.ComponentReference;
 import org.fabric3.scdl.ComponentService;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.PropertyValue;
+import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.spi.Constants;
 import org.fabric3.spi.loader.InvalidValueException;
 import org.fabric3.spi.loader.Loader;
@@ -120,6 +121,7 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
             throw new InvalidImplementationException(name, e);
         }
         componentDefinition.setImplementation(impl);
+        AbstractComponentType<?,?,?,?> componentType = impl.getComponentType();
 
         while (true) {
             switch (reader.next()) {
@@ -127,9 +129,9 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
                 QName qname = reader.getName();
                 if (PROPERTY.equals(qname)) {
                     PropertyValue value = propertyValueLoader.load(reader, context);
-                    if (impl.getComponentType().getProperties().get(value.getName()) == null) {
+                    if (!componentType.hasProperty(value.getName())) {
                         // ensure the property exists
-                        throw new PropertyNotFoundException(value.getName(), context.getSourceBase());
+                        throw new ComponentPropertyNotFoundException(name, value.getName());
                     }
                     if (componentDefinition.getPropertyValues().containsKey(value.getName())) {
                         throw new DuplicateConfiguredPropertyException(value.getName(), context.getSourceBase());
@@ -137,9 +139,9 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
                     componentDefinition.add(value);
                 } else if (REFERENCE.equals(qname)) {
                     ComponentReference reference = referenceLoader.load(reader, context);
-                    if (impl.getComponentType().getReferences().get(reference.getName()) == null) {
+                    if (!componentType.hasReference(reference.getName())) {
                         // ensure the reference exists
-                        throw new ReferenceNotFoundException(reference.getName(), context.getSourceBase());
+                        throw new ComponentReferenceNotFoundException(name, reference.getName());
                     }
                     if (componentDefinition.getReferences().containsKey(reference.getName())) {
                         throw new DuplicateConfiguredReferenceException(reference.getName(), context.getSourceBase());
@@ -147,9 +149,9 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
                     componentDefinition.add(reference);
                 } else if (SERVICE.equals(qname)) {
                     ComponentService service = serviceLoader.load(reader, context);
-                    if (impl.getComponentType().getServices().get(service.getName()) == null) {
-                        // ensure the reference exists
-                        throw new ServiceNotFoundException(service.getName(), context.getSourceBase());
+                    if (!componentType.hasService(service.getName())) {
+                        // ensure the service exists
+                        throw new ComponentServiceNotFoundException(name, service.getName());
                     }
                     if (componentDefinition.getServices().containsKey(service.getName())) {
                         throw new DuplicateConfiguredServiceException(service.getName(), context.getSourceBase());

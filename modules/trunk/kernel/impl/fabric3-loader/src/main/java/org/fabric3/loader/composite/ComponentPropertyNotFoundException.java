@@ -16,21 +16,27 @@
  */
 package org.fabric3.loader.composite;
 
-import java.net.URL;
-
-import org.fabric3.spi.loader.LoaderException;
-
 /**
  * @version $Rev$ $Date$
  */
-public class ServiceNotFoundException extends LoaderException {
-    private static final long serialVersionUID = -7651247438850248926L;
+public class ComponentPropertyNotFoundException extends CompositeLoaderException {
+    private final String componentName;
+    private final String name;
 
-    public ServiceNotFoundException(String name, URL resourceLocation) {
-        super("Service not found", name);
-        if (resourceLocation != null) {
-            // FIXME create typed ctor param for LoaderException in next SPI rev
-            setResourceURI(resourceLocation.toString());
-        }
+    public ComponentPropertyNotFoundException(String componentName, String name) {
+        this.componentName = componentName;
+        this.name = name;
+    }
+
+    public String getComponentName() {
+        return componentName;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getMessage() {
+        return "The component type for component " + componentName + " does not have a property " + name;
     }
 }

@@ -22,23 +22,28 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * <p>The definition of the configurable aspects of an implementation in terms of the services it exposes, the services
- * it references, and properties that can be used to configure it.</p> <p>A service represents an addressable interface
- * provided by the implementation. Such a service may be the target of a wire from another component.</p> <p>A reference
- * represents a requirement that an implementation has on a service provided by another component or by a resource
- * outside the SCA system. Such a reference may be the source of a wire to another component.</p> <p>A property allows
- * the behaviour of the implementation to be configured through externally set values.</p> <p>A component type may also
- * declare that it wishes to be initialized upon activation of the scope that contains it and may specify an order
- * relative to other eagerly initializing components. For example, an implementation that pre-loads some form of cache
- * could declare that it should be eagerly initialized at the start of the scope so that the cache load occured on
- * startup rather than first use.</p>
+ * The definition of the configurable aspects of an implementation in terms of the services it exposes, the services it
+ * references, and properties that can be used to configure it.
+ * <p/>
+ * A service represents an addressable interface provided by the implementation. Such a service may be the target of a
+ * wire from another component.
+ * <p/>
+ * A reference represents a requirement that an implementation has on a service provided by another component or by a
+ * resource outside the SCA system. Such a reference may be the source of a wire to another component.
+ * <p/>
+ * A property allows the behaviour of the implementation to be configured through externally set values.
+ * <p/>
+ * A component type may also declare that it wishes to be initialized upon activation of the scope that contains it and
+ * may specify an order relative to other eagerly initializing components. For example, an implementation that pre-loads
+ * some form of cache could declare that it should be eagerly initialized at the start of the scope so that the cache
+ * load occured on startup rather than first use.
  *
  * @version $Rev$ $Date$
  */
-public abstract class AbstractComponentType<S extends ServiceDefinition, 
-                                            R extends ReferenceDefinition, 
-                                            P extends Property<?>,
-                                            RD extends ResourceDefinition>
+public abstract class AbstractComponentType<S extends ServiceDefinition,
+        R extends ReferenceDefinition,
+        P extends Property<?>,
+        RD extends ResourceDefinition>
         extends ModelObject {
     private Scope<?> implementationScope;
     private int initLevel;
@@ -109,7 +114,10 @@ public abstract class AbstractComponentType<S extends ServiceDefinition,
     }
 
     /**
-     * Sets the idle time allowed between operations in milliseconds if the implementation is conversational
+     * Sets the idle time allowed between operations in milliseconds if the implementation is conversational.
+     *
+     * @param maxIdleTime the idle time allowed between operations in milliseconds if the implementation is
+     *                    conversational
      */
     public void setMaxIdleTime(long maxIdleTime) {
         this.maxIdleTime = maxIdleTime;
@@ -125,7 +133,10 @@ public abstract class AbstractComponentType<S extends ServiceDefinition,
     }
 
     /**
-     * Sets the maximum age a conversation may remain active in milliseconds if the implementation is conversational
+     * Sets the maximum age a conversation may remain active in milliseconds if the implementation is conversational.
+     *
+     * @param maxAge the maximum age a conversation may remain active in milliseconds if the implementation is
+     *               conversational
      */
     public void setMaxAge(long maxAge) {
         this.maxAge = maxAge;
@@ -150,6 +161,16 @@ public abstract class AbstractComponentType<S extends ServiceDefinition,
     }
 
     /**
+     * Checks if this component type has a service with a certain name.
+     *
+     * @param name the name of the service to check
+     * @return true if there is a service defined with that name
+     */
+    public boolean hasService(String name) {
+        return services.containsKey(name);
+    }
+
+    /**
      * Returns a live Map of references to services consumed by the implementation.
      *
      * @return a live Map of references to services consumed by the implementation
@@ -166,6 +187,16 @@ public abstract class AbstractComponentType<S extends ServiceDefinition,
      */
     public void add(R reference) {
         references.put(reference.getName(), reference);
+    }
+
+    /**
+     * Checks if this component type has a reference with a certain name.
+     *
+     * @param name the name of the reference to check
+     * @return true if there is a reference defined with that name
+     */
+    public boolean hasReference(String name) {
+        return references.containsKey(name);
     }
 
     /**
@@ -188,6 +219,16 @@ public abstract class AbstractComponentType<S extends ServiceDefinition,
     }
 
     /**
+     * Checks if this component type has a property with a certain name.
+     *
+     * @param name the name of the property to check
+     * @return true if there is a property defined with that name
+     */
+    public boolean hasProperty(String name) {
+        return properties.containsKey(name);
+    }
+
+    /**
      * Returns a live Map of resoures that can be used to configure the implementation.
      *
      * @return a live Map of resources that can be used to configure the implementation
@@ -205,4 +246,15 @@ public abstract class AbstractComponentType<S extends ServiceDefinition,
     public void add(RD resource) {
         resources.put(resource.getName(), resource);
     }
+
+    /**
+     * Checks if this component type has a resource with a certain name.
+     *
+     * @param name the name of the resource to check
+     * @return true if there is a resource defined with that name
+     */
+    public boolean hasResource(String name) {
+        return resources.containsKey(name);
+    }
+
 }
