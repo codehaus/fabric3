@@ -89,4 +89,17 @@ public class LoaderException extends Fabric3Exception {
     public void setColumn(int column) {
         this.column = column;
     }
+
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(getClass().getName());
+        builder.append(" in ");
+        builder.append(resourceURI == null ? "unknown" : resourceURI);
+        if (line != -1) {
+            builder.append(" at ").append(line).append(',').append(column);
+        }
+        builder.append(": ");
+        builder.append(getLocalizedMessage());
+        return builder.toString();
+    }
 }

@@ -100,7 +100,7 @@ public class LoaderRegistryImpl implements LoaderRegistry {
     public <O> O load(URL url, Class<O> type, LoaderContext ctx) throws LoaderException {
         XMLStreamReader reader = null;
         try {
-            reader = xmlFactory.createXMLStreamReader(url.openStream());
+            reader = xmlFactory.createXMLStreamReader(url.toString(), url.openStream());
             reader.nextTag();
             return load(reader, type, ctx);
         } catch (IOException e) {
@@ -111,6 +111,7 @@ public class LoaderRegistryImpl implements LoaderRegistry {
             throw new InvalidConfigurationException("Invalid or missing resource", url.toString(), e);
         } catch (LoaderException e) {
             Location location = reader.getLocation();
+            e.setResourceURI(location.getSystemId());
             e.setLine(location.getLineNumber());
             e.setColumn(location.getColumnNumber());
             throw e;

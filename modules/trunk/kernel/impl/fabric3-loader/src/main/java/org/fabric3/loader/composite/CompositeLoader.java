@@ -121,78 +121,83 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
         type.setConstrainingType(constrainingType);
         policyHelper.loadPolicySetsAndIntents(type, reader);
 
-        while (true) {
-            switch (reader.next()) {
-            case START_ELEMENT:
-                QName qname = reader.getName();
-                if (INCLUDE.equals(qname)) {
-                    Include include = includeLoader.load(reader, loaderContext);
-                    QName includeName = include.getName();
-                    if (type.getIncludes().containsKey(includeName)) {
-                        throw new DuplicateIncludeException("Include already defined with name",
-                                                            includeName.toString(),
-                                                            loaderContext.getSourceBase());
-                    }
-                    for (ComponentDefinition definition : include.getIncluded().getComponents().values()) {
-                        String key = definition.getName();
+        try {
+            while (true) {
+                switch (reader.next()) {
+                case START_ELEMENT:
+                    QName qname = reader.getName();
+                    if (INCLUDE.equals(qname)) {
+                        Include include = includeLoader.load(reader, loaderContext);
+                        QName includeName = include.getName();
+                        if (type.getIncludes().containsKey(includeName)) {
+                            throw new DuplicateIncludeException("Include already defined with name",
+                                                                includeName.toString(),
+                                                                loaderContext.getSourceBase());
+                        }
+                        for (ComponentDefinition definition : include.getIncluded().getComponents().values()) {
+                            String key = definition.getName();
+                            if (type.getComponents().containsKey(key)) {
+                                throw new DuplicateComponentNameException("Component with name already defined",
+                                                                          key,
+                                                                          loaderContext.getSourceBase());
+                            }
+                        }
+                        type.add(include);
+                    } else if (PROPERTY.equals(qname)) {
+                        Property<?> property = propertyLoader.load(reader, loaderContext);
+                        if (type.getProperties().containsKey(property.getName())) {
+                            throw new DuplicatePropertyException(property.getName(), loaderContext.getSourceBase());
+                        }
+                        type.add(property);
+                    } else if (SERVICE.equals(qname)) {
+                        CompositeService service = serviceLoader.load(reader, loaderContext);
+                        if (type.getServices().containsKey(service.getName())) {
+                            throw new DuplicateServiceException(service.getName(), loaderContext.getSourceBase());
+                        }
+                        type.add(service);
+                    } else if (REFERENCE.equals(qname)) {
+                        CompositeReference reference = referenceLoader.load(reader, loaderContext);
+                        if (type.getReferences().containsKey(reference.getName())) {
+                            throw new DuplicateReferenceException(reference.getName(), loaderContext.getSourceBase());
+                        }
+                        type.add(reference);
+                    } else if (COMPONENT.equals(qname)) {
+                        ComponentDefinition<?> componentDefinition = componentLoader.load(reader, loaderContext);
+                        String key = componentDefinition.getName();
                         if (type.getComponents().containsKey(key)) {
                             throw new DuplicateComponentNameException("Component with name already defined",
                                                                       key,
                                                                       loaderContext.getSourceBase());
                         }
-                    }
-                    type.add(include);
-                } else if (PROPERTY.equals(qname)) {
-                    Property<?> property = propertyLoader.load(reader, loaderContext);
-                    if (type.getProperties().containsKey(property.getName())) {
-                        throw new DuplicatePropertyException(property.getName(), loaderContext.getSourceBase());
-                    }
-                    type.add(property);
-                } else if (SERVICE.equals(qname)) {
-                    CompositeService service = serviceLoader.load(reader, loaderContext);
-                    if (type.getServices().containsKey(service.getName())) {
-                        throw new DuplicateServiceException(service.getName(), loaderContext.getSourceBase());
-                    }
-                    type.add(service);
-                } else if (REFERENCE.equals(qname)) {
-                    CompositeReference reference = referenceLoader.load(reader, loaderContext);
-                    if (type.getReferences().containsKey(reference.getName())) {
-                        throw new DuplicateReferenceException(reference.getName(), loaderContext.getSourceBase());
-                    }
-                    type.add(reference);
-                } else if (COMPONENT.equals(qname)) {
-                    ComponentDefinition<?> componentDefinition = componentLoader.load(reader, loaderContext);
-                    String key = componentDefinition.getName();
-                    if (type.getComponents().containsKey(key)) {
-                        throw new DuplicateComponentNameException("Component with name already defined",
-                                                                  key,
-                                                                  loaderContext.getSourceBase());
-                    }
-                    type.add(componentDefinition);
-                } else if (WIRE.equals(qname)) {
-                    WireDefinition wire = wireLoader.load(reader, loaderContext);
-                    type.add(wire);
-                } else {
-                    // Extension element - for now try to load and see if we can handle it
-                    ModelObject modelObject = registry.load(reader, ModelObject.class, loaderContext);
-                    if (modelObject instanceof Property) {
-                        type.add((Property<?>) modelObject);
-                    } else if (modelObject instanceof CompositeService) {
-                        type.add((CompositeService) modelObject);
-                    } else if (modelObject instanceof CompositeReference) {
-                        type.add((CompositeReference) modelObject);
-                    } else if (modelObject instanceof ComponentDefinition) {
-                        type.add((ComponentDefinition<?>) modelObject);
+                        type.add(componentDefinition);
+                    } else if (WIRE.equals(qname)) {
+                        WireDefinition wire = wireLoader.load(reader, loaderContext);
+                        type.add(wire);
                     } else {
-                        // Unknown extension element, ignore
+                        // Extension element - for now try to load and see if we can handle it
+                        ModelObject modelObject = registry.load(reader, ModelObject.class, loaderContext);
+                        if (modelObject instanceof Property) {
+                            type.add((Property<?>) modelObject);
+                        } else if (modelObject instanceof CompositeService) {
+                            type.add((CompositeService) modelObject);
+                        } else if (modelObject instanceof CompositeReference) {
+                            type.add((CompositeReference) modelObject);
+                        } else if (modelObject instanceof ComponentDefinition) {
+                            type.add((ComponentDefinition<?>) modelObject);
+                        } else {
+                            // Unknown extension element, ignore
+                        }
                     }
+                    break;
+                case END_ELEMENT:
+                    assert COMPOSITE.equals(reader.getName());
+                    verifyCompositeCompleteness(type, loaderContext);
+                    return type;
                 }
-                break;
-            case END_ELEMENT:
-                assert COMPOSITE.equals(reader.getName());
-                verifyCompositeCompleteness(type, loaderContext);
-                return type;
             }
+        } catch (CompositeLoaderException e) {
+            e.setCompositeName(compositeName);
+            throw e;
         }
     }
 

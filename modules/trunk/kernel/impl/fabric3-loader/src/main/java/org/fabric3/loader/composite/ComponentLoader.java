@@ -97,9 +97,7 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
 
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {
-            InvalidValueException e = new InvalidValueException("Component name not specified", name);
-            e.setResourceURI(context.getSourceBase().toString());
-            throw e;
+            throw new ComponentNameNotSpecifiedException();
         }
 
         Autowire autowire = Autowire.fromString(reader.getAttributeValue(null, "autowire"));
