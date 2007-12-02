@@ -16,37 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.assembly;
+package org.fabric3.fabric.assembly.resolver;
 
-import org.fabric3.host.Fabric3Exception;
+import java.net.URI;
 
 /**
- * Base exception for the assembly package
+ * Exception indicating that the target specified in a component reference was ambiguous.
  *
  * @version $Rev$ $Date$
  */
-public class AssemblyException extends Fabric3Exception {
+public class AmbiguousComponentReferenceTargetException extends ResolutionException {
 
-    public AssemblyException(String message) {
-        super(message);
+    public AmbiguousComponentReferenceTargetException(URI source, URI target) {
+        super(source, target);
     }
 
-    public AssemblyException(String message, String identifier) {
-        super(message, identifier);
-    }
-
-    public AssemblyException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public AssemblyException(String message, String identifier, Throwable cause) {
-        super(message, identifier, cause);
-    }
-
-    public AssemblyException() {
-    }
-
-    public AssemblyException(Throwable cause) {
-        super(cause);
+    public String getMessage() {
+        return "The component reference " + getSource() + " specifies a target component " + getTarget() + " which has more than one service.";
     }
 }

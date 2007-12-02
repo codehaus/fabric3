@@ -56,6 +56,11 @@ public abstract class ResolutionException extends AssemblyException {
         this.source = source;
     }
 
+    public ResolutionException(URI source, URI target) {
+        this.target = target;
+        this.source = source;
+    }
+
     public ResolutionException(URI source, URI target, Throwable cause) {
         super(cause);
         this.target = target;
