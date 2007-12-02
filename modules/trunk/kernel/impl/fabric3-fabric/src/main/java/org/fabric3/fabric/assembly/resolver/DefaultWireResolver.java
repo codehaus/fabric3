@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Collection;
 
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.Autowire;
@@ -47,51 +48,46 @@ import org.fabric3.spi.util.UriHelper;
 public class DefaultWireResolver implements WireResolver {
 
     public void resolve(LogicalComponent<?> component) throws ResolutionException {
-        if (component.getComponents().isEmpty()) {
-            resolveReferences(component);
-        } else {
+        Collection<LogicalComponent<?>> components = component.getComponents();
+        if (!components.isEmpty()) {
             for (LogicalComponent<?> child : component.getComponents()) {
                 resolve(child);
             }
-            resolveReferences(component);
         }
+        resolveReferences(component);
         resolveServices(component);
     }
 
     public void resolve(LogicalService service) throws ResolutionException {
+        URI serviceUri = service.getUri();
         URI promotedUri = service.getPromote();
         if (promotedUri == null) {
+            // this service does not promote another, nothing to do
             return;
         }
-        LogicalComponent<?> component = service.getParent();
-        if (promotedUri.getFragment() == null) {
-            LogicalComponent<?> target = component.getComponent(promotedUri);
-            if (target == null) {
-                throw new TargetNotFoundException("Promotion target not found", service.getUri(), promotedUri);
-            }
-            if (target.getServices().size() != 1) {
-                throw new UnspecifiedServiceException(
-                        "Promoted service must be specified since target implements more than one service",
-                        service.getUri(),
-                        promotedUri);
-            }
-            LogicalService logicalService = target.getServices().iterator().next();
-            String name = logicalService.getUri().getFragment();
-            service.setPromote(URI.create(promotedUri.toString() + "#" + name));
-        } else {
-            URI targetUri = UriHelper.getDefragmentedName(promotedUri);
-            LogicalComponent<?> target = component.getComponent(targetUri);
-            if (target == null) {
-                throw new TargetNotFoundException("Promotion target not found", service.getUri(), promotedUri);
-            }
-            if (target.getService(promotedUri.getFragment()) == null) {
-                throw new ServiceNotFoundException("Promotion target service not found",
-                                                   service.getUri(),
-                                                   promotedUri);
-            }
 
+        URI promotedComponentUri = UriHelper.getDefragmentedName(promotedUri);
+        String promotedServiceName = promotedUri.getFragment();
+        LogicalComponent<?> composite = service.getParent();
+        LogicalComponent<?> promotedComponent = composite.getComponent(promotedComponentUri);
+        if (promotedComponent == null) {
+            throw new PromotedComponentNotFoundException(serviceUri, promotedComponentUri);
         }
-
+        
+        if (promotedServiceName == null) {
+            if (promotedComponent.getServices().size() == 0) {
+                throw new PromotedServiceNotFoundException(serviceUri, promotedComponentUri);
+            } else if (promotedComponent.getServices().size() != 1) {
+                throw new AmbiguousPromotedServiceException(serviceUri, promotedComponentUri);
+            }
+            LogicalService logicalService = promotedComponent.getServices().iterator().next();
+            promotedUri = logicalService.getUri();
+            service.setPromote(promotedUri);
+        } else {
+            if (promotedComponent.getService(promotedUri.getFragment()) == null) {
+                throw new PromotedServiceNotFoundException(serviceUri, promotedUri);
+            }
+        }
     }
 
     public void resolveReference(LogicalReference logicalReference, LogicalComponent<CompositeImplementation> composite)

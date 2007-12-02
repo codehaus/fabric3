@@ -1,8 +1,6 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
+ * See the NOTICE file distributed with this work for information
+ * regarding copyright ownership.  This file is licensed
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
@@ -21,14 +19,16 @@ package org.fabric3.fabric.assembly.resolver;
 import java.net.URI;
 
 /**
- * Denotes an error resolving a target
- *
  * @version $Rev$ $Date$
  */
-public class TargetNotFoundException extends ResolutionException {
-    private static final long serialVersionUID = -2871133114945555350L;
+public class PromotedComponentNotFoundException extends ResolutionException {
+    private static final long serialVersionUID = 2303515371429492705L;
 
-    public TargetNotFoundException(String message, URI source, URI target) {
-        super(message, source, target);
+    public PromotedComponentNotFoundException(URI source, URI target) {
+        super(source, target);
+    }
+
+    public String getMessage() {
+        return "The composite service or reference " + getSource() + " promotes a component " + getTarget() + " that could not be found.";
     }
 }
