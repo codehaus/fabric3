@@ -180,6 +180,7 @@ public abstract class AbstractScopeContainer<KEY> extends AbstractLifecycle impl
             try {
                 getWrapper(component, workContext);
             } catch (Exception e) {
+                monitor.eagerInitializationError(component.getUri(), e);
                 if (causes == null) {
                     causes = new ArrayList<Exception>();
                 }
