@@ -21,10 +21,8 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.fabric3.spi.assembly.ActivateException;
-import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 
 /**
  * Interface that abstracts the concerns of generating physical model 
@@ -38,26 +36,6 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
  * @version $Revision$ $Date$
  */
 public interface PhysicalModelGenerator {
-
-    /**
-     * Generates a PhysicalComponentDefinition from the logical component. A physical change set for the runtime the
-     * component will be provisioned to is updated with the physical component definition.
-     *
-     * @param logical the
-     * @param context the generator context containing the current physical changes sets
-     * @throws GenerationException if an error ocurrs during generation
-     */
-    <C extends LogicalComponent<?>> PhysicalComponentDefinition generatePhysicalComponent(C logical, GeneratorContext context)
-            throws GenerationException;
-
-    /**
-     * Generates a CommandSet for provisioning the logical component
-     *
-     * @param component the logical component to generate the command set from
-     * @param context   the generator context
-     * @throws GenerationException if an error ocurrs during generation
-     */
-    void generateCommandSet(LogicalComponent<?> component, GeneratorContext context) throws GenerationException;
 
     /**
      * Generate the physical changeset for the set of logical components.

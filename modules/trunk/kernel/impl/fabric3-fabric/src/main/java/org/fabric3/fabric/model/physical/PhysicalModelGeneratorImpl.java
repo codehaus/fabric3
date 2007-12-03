@@ -134,7 +134,7 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
     }
 
     @SuppressWarnings({"unchecked"})
-    public <C extends LogicalComponent<?>> PhysicalComponentDefinition generatePhysicalComponent(C component,
+    private <C extends LogicalComponent<?>> PhysicalComponentDefinition generatePhysicalComponent(C component,
                                                                                                  GeneratorContext context)
             throws GenerationException {
         
@@ -152,7 +152,7 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
 
     }
 
-    public void generateCommandSet(LogicalComponent<?> component, GeneratorContext context)
+    private void generateCommandSet(LogicalComponent<?> component, GeneratorContext context)
             throws GenerationException {
         
         for (CommandGenerator generator : generatorRegistry.getCommandGenerators()) {
