@@ -33,4 +33,8 @@ public class ExtensionInitializationException extends InitializationException {
     public ExtensionInitializationException(String message, Throwable cause) {
         super(message, cause);
     }
+
+    public String getMessage() {
+        return super.getMessage() + ": " + getIdentifier();
+    }
 }
