@@ -23,7 +23,11 @@ package org.fabric3.spi.services.contribution;
  */
 public class ResourceElement<SYMBOL extends Symbol, VALUE> {
     private SYMBOL symbol;
-    private Object value;
+    private VALUE value;
+
+    public ResourceElement(SYMBOL symbol) {
+        this.symbol = symbol;
+    }
 
     public ResourceElement(SYMBOL symbol, VALUE value) {
         this.symbol = symbol;
@@ -34,7 +38,11 @@ public class ResourceElement<SYMBOL extends Symbol, VALUE> {
         return symbol;
     }
 
-    public Object getValue() {
+    public VALUE getValue() {
         return value;
+    }
+
+    public void setValue(VALUE value) {
+        this.value = value;
     }
 }
