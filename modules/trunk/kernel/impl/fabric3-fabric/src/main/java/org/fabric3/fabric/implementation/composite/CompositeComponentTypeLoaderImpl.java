@@ -49,10 +49,7 @@ public class CompositeComponentTypeLoaderImpl implements CompositeComponentTypeL
         if (scdlLocation == null) {
             throw new LoaderException("SCDL location not found");
         }
-        // JFM leave URI null for now as we will be removing the classloader usage
-        ClassLoader cl = new CompositeClassLoader(URI.create("test"), context.getTargetClassLoader());
-        LoaderContext childContext =
-                new LoaderContextImpl(cl, scdlLocation);
+        LoaderContext childContext = new LoaderContextImpl(context.getTargetClassLoader(), scdlLocation);
         Composite componentType = loadFromSidefile(scdlLocation, childContext);
         implementation.setComponentType(componentType);
     }
