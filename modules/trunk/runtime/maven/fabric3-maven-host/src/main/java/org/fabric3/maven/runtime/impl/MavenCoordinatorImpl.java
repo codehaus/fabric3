@@ -220,7 +220,11 @@ public class MavenCoordinatorImpl implements MavenCoordinator {
             }
             ContributionService contributionService = runtime.getSystemComponent(ContributionService.class,
                                                                                  CONTRIBUTION_SERVICE_URI);
-            ContributionSource source = new FileContributionSource(intentsLocation, -1, new byte[0]);
+
+            ContributionSource source = new FileContributionSource(intentsLocation.toURI(),
+                                                                   intentsLocation,
+                                                                   -1,
+                                                                   new byte[0]);
             URI uri = contributionService.contribute(source);
             DefinitionsDeployer deployer = runtime.getSystemComponent(DefinitionsDeployer.class, DEFINITIONS_DEPLOYER);
             List<URI> intents = new ArrayList<URI>();
@@ -229,6 +233,8 @@ public class MavenCoordinatorImpl implements MavenCoordinator {
         } catch (ContributionException e) {
             throw new InitializationException(e);
         } catch (DefinitionActivationException e) {
+            throw new InitializationException(e);
+        } catch (URISyntaxException e) {
             throw new InitializationException(e);
         }
     }
