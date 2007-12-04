@@ -14,25 +14,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.services.contribution;
+package org.fabric3.fabric.services.contribution;
 
-import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.spi.services.contribution.MetaDataStoreException;
 
 /**
  * @version $Rev$ $Date$
  */
-public class MetaDataStoreException extends ContributionException {
-    private static final long serialVersionUID = 5509464593295262830L;
+public class ContributionResolutionException extends MetaDataStoreException {
+    private static final long serialVersionUID = 3325874555450166967L;
 
-    public MetaDataStoreException(String message, Throwable cause) {
+    public ContributionResolutionException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public MetaDataStoreException(String message, String identifier) {
+    public ContributionResolutionException(String message, String identifier) {
         super(message, identifier);
-    }
-
-    public MetaDataStoreException(String message, String identifier, Throwable cause) {
-        super(message, identifier, cause);
     }
 }

@@ -178,11 +178,16 @@ public class MetaDataStoreImpl implements MetaDataStore {
         return null;
     }
 
-    public <S extends Symbol, V> ResourceElement<S, V> resolve(Contribution contribution, Class<V> type, S symbol)
+    public <S extends Symbol, V> ResourceElement<S, V> resolve(URI contributionUri, Class<V> type, S symbol)
             throws MetaDataStoreException {
-        if (contribution == null) {
+        if (contributionUri == null) {
             // FIXME hack until we pass the contribution uri 
             return (ResourceElement<S, V>) resolve(symbol);
+        }
+        Contribution contribution = find(contributionUri);
+        if (contribution == null) {
+            String identifier = contributionUri.toString();
+            throw new ContributionResolutionException("Contribution not found", identifier);
         }
         ResourceElement<S, V> element = resolveInternal(contribution, type, symbol);
         if (element != null) {
@@ -190,7 +195,10 @@ public class MetaDataStoreImpl implements MetaDataStore {
         }
         for (URI uri : contribution.getResolvedImportUris()) {
             Contribution resolved = cache.get(uri);
-            assert resolved != null;
+            if (resolved == null) {
+                String identifier = contributionUri.toString();
+                throw new ContributionResolutionException("Dependent contibution not found", identifier);
+            }
             element = resolveInternal(resolved, type, symbol);
             if (element != null) {
                 return element;

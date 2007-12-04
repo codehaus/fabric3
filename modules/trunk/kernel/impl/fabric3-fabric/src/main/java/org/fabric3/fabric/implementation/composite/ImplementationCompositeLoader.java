@@ -19,6 +19,7 @@
 package org.fabric3.fabric.implementation.composite;
 
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
@@ -40,7 +41,6 @@ import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.MissingResourceException;
 import org.fabric3.spi.loader.StAXElementLoader;
-import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.MetaDataStoreException;
 import org.fabric3.spi.services.contribution.QNameSymbol;
@@ -90,9 +90,10 @@ public class ImplementationCompositeLoader implements StAXElementLoader<Composit
             NamespaceContext namespaceContext = reader.getNamespaceContext();
             QName name = LoaderUtil.getQName(nameAttr, targetNamespace, namespaceContext);
             QNameSymbol symbol = new QNameSymbol(name);
-            Contribution contribution = null;
+            URI contributionURI = null;
             try {
-                ResourceElement<QNameSymbol, Composite> element = store.resolve(contribution, Composite.class, symbol);
+                ResourceElement<QNameSymbol, Composite> element =
+                        store.resolve(contributionURI, Composite.class, symbol);
                 impl.setComponentType(element.getValue());
             } catch (MetaDataStoreException e) {
                 throw new LoaderException(e);
