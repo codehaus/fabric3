@@ -20,14 +20,14 @@
            name="OuterComposite">
 
     <component name="Inner">
-        <implementation.composite name="inner" scdlLocation="inner.composite"/>
+        <implementation.composite scdlLocation="inner.composite"/>
         <property name="ids">
             <one xmlns="">innerOne</one>
         </property>
     </component>
 
     <component name="Inner2">
-        <implementation.composite name="inner2" scdlLocation="inner2.composite"/>
+        <implementation.composite scdlLocation="inner2.composite"/>
         <service name="SourceService">
             <f3:binding.test uri="SourceService"/>
         </service>
@@ -36,7 +36,7 @@
 
 <!--
     <component name="InnerInner">
-        <implementation.composite name="ImplementInnerComposite" scdlLocation="implement/inner.composite"/>
+        <implementation.composite scdlLocation="implement/inner.composite"/>
     </component>
 -->
 
@@ -54,10 +54,10 @@
     </component>
 
     <component name="InnerIncluder">
-        <implementation.composite name="InnerIncluderComposite" scdlLocation="include/innerIncluder.composite"/>
+        <implementation.composite scdlLocation="include/innerIncluder.composite"/>
     </component>
 
     <component name="Autowire">
-        <implementation.composite name="Autowire" scdlLocation="autowire.composite"/>
+        <implementation.composite scdlLocation="autowire.composite"/>
     </component>
 </composite>

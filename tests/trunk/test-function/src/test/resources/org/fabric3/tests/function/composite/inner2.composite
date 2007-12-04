@@ -32,7 +32,7 @@
     </component>
 
     <component name="InnerThree">
-        <implementation.composite name="inner3" scdlLocation="inner3.composite"/>
+        <implementation.composite scdlLocation="inner3.composite"/>
     </component>
 
 

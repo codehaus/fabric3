@@ -21,12 +21,12 @@
 
 
     <component name="Autowire2" autowire="true">
-        <implementation.composite name="autowired" scdlLocation="autowired.composite"/>
+        <implementation.composite scdlLocation="autowired.composite"/>
     </component>
 
 
     <component name="Autowire">
-        <implementation.composite name="autowired" scdlLocation="autowired.composite"/>
+        <implementation.composite scdlLocation="autowired.composite"/>
         <reference name="promoted" target="target"/>
     </component>
 

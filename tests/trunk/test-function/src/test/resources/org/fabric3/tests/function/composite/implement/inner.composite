@@ -22,7 +22,7 @@
     <service name="inner" promote="one"/>
 
     <component name="one">
-        <implementation.composite name="ImplementInnerInnerComposite" scdlLocation="innerinner.composite"/>
+        <implementation.composite scdlLocation="innerinner.composite"/>
     </component>
 
 </composite>
