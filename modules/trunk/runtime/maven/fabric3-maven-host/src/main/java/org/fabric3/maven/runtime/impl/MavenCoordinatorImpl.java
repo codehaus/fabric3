@@ -18,6 +18,7 @@ package org.fabric3.maven.runtime.impl;
 
 import java.io.InputStream;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -263,28 +264,29 @@ public class MavenCoordinatorImpl implements MavenCoordinator {
             URL extensionURL;
             try {
                 extensionURL = archiveStore.find(extension);
+                if (extensionURL == null) {
+                    throw new ExtensionInitializationException("Extension not found in Maven Repository",
+                                                               extension.toString());
+                }
+                URI uri = extensionURL.toURI();
+                ContributionSource source = new FileContributionSource(uri, extensionURL, -1, new byte[0]);
+                sources.add(source);
             } catch (ArchiveStoreException e) {
                 throw new ExtensionInitializationException("Error contributing extension", extension.toString(), e);
+            } catch (URISyntaxException e) {
+                throw new ExtensionInitializationException("Invalid extension URI", e);
             }
-            if (extensionURL == null) {
-                throw new ExtensionInitializationException("Extension not found in Maven Repository",
-                                                           extension.toString());
-
-            }
-            ContributionSource source = new FileContributionSource(extensionURL, -1, new byte[0]);
-            sources.add(source);
         }
 
-        List<URI> contributionUris;
         try {
-            contributionUris = contributionService.contribute(sources);
+            List<URI> contributionUris = contributionService.contribute(sources);
+            runtime.includeExtensionContributions(contributionUris);
+            DefinitionsDeployer definitionsDeployer =
+                    runtime.getSystemComponent(DefinitionsDeployer.class, DEFINITIONS_DEPLOYER);
+            definitionsDeployer.activateDefinitions(contributionUris);
         } catch (ContributionException e) {
             throw new ExtensionInitializationException("Error contributing extensions", e);
         }
-        runtime.includeExtensionContributions(contributionUris);
-        DefinitionsDeployer definitionsDeployer =
-                runtime.getSystemComponent(DefinitionsDeployer.class, DEFINITIONS_DEPLOYER);
-        definitionsDeployer.activateDefinitions(contributionUris);
     }
 
     private static class SyncFuture implements Future<Void> {
