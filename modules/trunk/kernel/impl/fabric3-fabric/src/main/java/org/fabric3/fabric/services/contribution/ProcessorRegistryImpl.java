@@ -16,11 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-
 package org.fabric3.fabric.services.contribution;
 
 import java.io.InputStream;
 import java.net.URI;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -89,8 +89,34 @@ public class ProcessorRegistryImpl implements ProcessorRegistry {
 
     }
 
-    public void processContribution(Contribution contribution, URI source) throws ContributionException {
-        throw new UnsupportedOperationException();
+    public void processManifestArtifact(ContributionManifest manifest,
+                                        String contentType,
+                                        InputStream inputStream) throws ContributionException {
+        ManifestProcessor processor = manifestProcessorCache.get(contentType);
+        if (processor != null) {
+            processor.process(manifest, inputStream);
+        }
+    }
+
+    public void indexContribution(Contribution contribution) throws ContributionException {
+        String contentType = contribution.getContentType();
+        ContributionProcessor processor = contributionProcessorCache.get(contentType);
+        if (processor == null) {
+            URI source = contribution.getUri();
+            throw new UnsupportedContentTypeException(contentType, source.toString());
+        }
+        processor.index(contribution);
+    }
+
+    public void indexResource(Contribution contribution, String contentType, URL url) throws ContributionException {
+        ResourceProcessor processor = resourceProcessorCache.get(contentType);
+
+        if (processor == null) {
+            // FIXME for now, return null
+            return;
+            //throw new UnsupportedContentTypeException(contentType);
+        }
+        processor.index(contribution, url);
     }
 
     public void processContribution(Contribution contribution, ClassLoader loader) throws ContributionException {
@@ -103,23 +129,19 @@ public class ProcessorRegistryImpl implements ProcessorRegistry {
         processor.processContent(contribution, loader);
     }
 
-    public Resource processResource(String contentType, InputStream inputStream) throws ContributionException {
-        ResourceProcessor processor = resourceProcessorCache.get(contentType);
+    public void processResource(Resource resource) throws ContributionException {
+        ResourceProcessor processor = resourceProcessorCache.get(resource.getContentType());
         if (processor == null) {
             // FIXME for now, return null
-            return null;
+            return;
             //throw new UnsupportedContentTypeException(contentType);
         }
-        return processor.process(inputStream);
+        processor.process(resource);
     }
 
-    public void processManifestArtifact(ContributionManifest manifest,
-                                     String contentType,
-                                     InputStream inputStream) throws ContributionException {
-        ManifestProcessor processor = manifestProcessorCache.get(contentType);
-        if (processor != null) {
-            processor.process(manifest, inputStream);
-        }
+    public void processContribution(Contribution contribution, URI source) throws ContributionException {
+        throw new UnsupportedOperationException();
     }
+
 
 }

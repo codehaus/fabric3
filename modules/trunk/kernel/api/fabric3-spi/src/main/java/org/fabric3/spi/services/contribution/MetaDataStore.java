@@ -65,8 +65,10 @@ public interface MetaDataStore {
      * @param type         the class representing the resource
      * @param symbol       the symbol used to represent the resource element.
      * @return the resource element
+     * @throws MetaDataStoreException if an error occurs during resolution
      */
-    <S extends Symbol, V> ResourceElement<S, V> resolve(Contribution contribution, Class<V> type, S symbol);
+    <S extends Symbol, V> ResourceElement<S, V> resolve(Contribution contribution, Class<V> type, S symbol)
+            throws MetaDataStoreException;
 
     /**
      * Resolves an import to a matching export

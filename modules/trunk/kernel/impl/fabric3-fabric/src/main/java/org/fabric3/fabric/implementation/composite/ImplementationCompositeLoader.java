@@ -20,6 +20,7 @@ package org.fabric3.fabric.implementation.composite;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -29,7 +30,6 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.loader.common.InvalidNameException;
 import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
@@ -40,6 +40,11 @@ import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.MissingResourceException;
 import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.spi.services.contribution.Contribution;
+import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.services.contribution.MetaDataStoreException;
+import org.fabric3.spi.services.contribution.QNameSymbol;
+import org.fabric3.spi.services.contribution.ResourceElement;
 
 /**
  * Loader that handles an &lt;implementation.composite&gt; element.
@@ -50,10 +55,12 @@ import org.fabric3.spi.loader.StAXElementLoader;
 public class ImplementationCompositeLoader implements StAXElementLoader<CompositeImplementation> {
     private final Loader loader;
     private final LoaderRegistry registry;
+    private final MetaDataStore store;
 
-    public ImplementationCompositeLoader(@Reference LoaderRegistry loader) {
+    public ImplementationCompositeLoader(@Reference LoaderRegistry loader, @Reference MetaDataStore store) {
         this.loader = loader;
         this.registry = loader;
+        this.store = store;
     }
 
     @Init
@@ -71,41 +78,46 @@ public class ImplementationCompositeLoader implements StAXElementLoader<Composit
 
         assert CompositeImplementation.IMPLEMENTATION_COMPOSITE.equals(reader.getName());
         String nameAttr = reader.getAttributeValue(null, "name");
-        if (nameAttr == null || nameAttr.length() == 0) {
-            InvalidNameException e = new InvalidNameException(nameAttr, loaderContext.getSourceBase());
-            e.setResourceURI(loaderContext.getSourceBase().toString());
-            throw e;
-        }
-        QName name = LoaderUtil.getQName(nameAttr, loaderContext.getTargetNamespace(), reader.getNamespaceContext());
         String scdlLocation = reader.getAttributeValue(null, "scdlLocation");
         String scdlResource = reader.getAttributeValue(null, "scdlResource");
         LoaderUtil.skipToEndElement(reader);
 
         ClassLoader cl = loaderContext.getTargetClassLoader();
-        URL url;
-        if (scdlLocation != null) {
+        CompositeImplementation impl = new CompositeImplementation();
+        URL url = null;
+        if (nameAttr != null) {
+            String targetNamespace = loaderContext.getTargetNamespace();
+            NamespaceContext namespaceContext = reader.getNamespaceContext();
+            QName name = LoaderUtil.getQName(nameAttr, targetNamespace, namespaceContext);
+            QNameSymbol symbol = new QNameSymbol(name);
+            Contribution contribution = null;
+            try {
+                ResourceElement<QNameSymbol, Composite> element = store.resolve(contribution, Composite.class, symbol);
+                impl.setComponentType(element.getValue());
+            } catch (MetaDataStoreException e) {
+                throw new LoaderException(e);
+            }
+
+            return impl;
+
+        } else if (scdlLocation != null) {
             try {
                 url = new URL(loaderContext.getSourceBase(), scdlLocation);
             } catch (MalformedURLException e) {
-                MissingResourceException e2 = new MissingResourceException(scdlLocation, name.toString(), e);
+                MissingResourceException e2 = new MissingResourceException(scdlLocation, scdlLocation, e);
                 e2.setResourceURI(loaderContext.getSourceBase().toString());
                 throw e2;
             }
-        } else {
-            if (scdlResource == null) {
-                // for now assume the local part is the name
-                scdlResource = name.getLocalPart() + ".composite";
-            }
+        } else if (scdlResource != null) {
             url = cl.getResource(scdlResource);
             if (url == null) {
-                MissingResourceException e = new MissingResourceException(scdlResource, name.toString());
+                MissingResourceException e = new MissingResourceException(scdlResource, scdlResource);
                 e.setResourceURI(loaderContext.getSourceBase().toString());
                 throw e;
             }
         }
         LoaderContext childContext = new LoaderContextImpl(cl, url);
         Composite composite = loader.load(url, Composite.class, childContext);
-        CompositeImplementation impl = new CompositeImplementation();
         impl.setName(composite.getName());
         impl.setComponentType(composite);
         return impl;

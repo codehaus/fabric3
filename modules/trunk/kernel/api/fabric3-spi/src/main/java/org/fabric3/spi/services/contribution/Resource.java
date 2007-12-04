@@ -16,7 +16,9 @@
  */
 package org.fabric3.spi.services.contribution;
 
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -27,6 +29,31 @@ import java.util.List;
  */
 public class Resource {
     private List<ResourceElement<?, ?>> elements = new ArrayList<ResourceElement<?, ?>>();
+    private URL url;
+    private String contentType;
+
+    public Resource(URL url, String contentType) {
+        this.url = url;
+        this.contentType = contentType;
+    }
+
+    /**
+     * Returns the resource content type
+     *
+     * @return the resource content type
+     */
+    public String getContentType() {
+        return contentType;
+    }
+
+    /**
+     * Returns a derefereceable URL to the resource.
+     *
+     * @return a derefereceable URL to the resource
+     */
+    public URL getUrl() {
+        return url;
+    }
 
     /**
      * Adds a resource element.
@@ -37,6 +64,10 @@ public class Resource {
         elements.add(element);
     }
 
+    public void addResourceElements(Collection<ResourceElement<?, ?>> elements) {
+        elements.addAll(elements);
+    }
+
     /**
      * Returns a map of resource elements keyed by their symbol.
      *
@@ -45,4 +76,5 @@ public class Resource {
     public List<ResourceElement<?, ?>> getResourceElements() {
         return Collections.unmodifiableList(elements);
     }
+
 }

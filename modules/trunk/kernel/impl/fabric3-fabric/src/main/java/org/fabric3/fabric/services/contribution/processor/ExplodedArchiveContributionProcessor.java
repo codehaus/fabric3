@@ -44,7 +44,6 @@ import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.MetaDataStore;
-import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.factories.xml.XMLFactory;
 
 /**
@@ -72,7 +71,7 @@ public class ExplodedArchiveContributionProcessor extends ArchiveContributionPro
 
     public void processManifest(Contribution contribution) throws ContributionException {
         URL sourceUrl = contribution.getLocation();
-        File file = new File(sourceUrl.getFile() + "META-INF" + File.separatorChar + "sca-contribution.xml");
+        final File file = new File(sourceUrl.getFile() + "META-INF" + File.separatorChar + "sca-contribution.xml");
         if (!file.exists()) {
             ContributionManifest manifest = new ContributionManifest();
             contribution.setManifest(manifest);
@@ -88,9 +87,23 @@ public class ExplodedArchiveContributionProcessor extends ArchiveContributionPro
             ContributionManifest manifest = loaderRegistry.load(reader, ContributionManifest.class, context);
             contribution.setManifest(manifest);
             iterateArtifacts(contribution, new Action() {
-                public void process(Contribution contribution, String contentType, InputStream stream)
+                public void process(Contribution contribution, String contentType, URL url)
                         throws ContributionException {
-                    registry.processManifestArtifact(contribution.getManifest(), contentType, stream);
+                    InputStream stream = null;
+                    try {
+                        stream = url.openStream();
+                        registry.processManifestArtifact(contribution.getManifest(), contentType, stream);
+                    } catch (IOException e) {
+                        throw new ContributionException(e);
+                    } finally {
+                        try {
+                            if (stream != null) {
+                                stream.close();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             });
         } catch (XMLStreamException e) {
@@ -119,12 +132,6 @@ public class ExplodedArchiveContributionProcessor extends ArchiveContributionPro
         }
     }
 
-    protected void processResources(Contribution contribution) throws ContributionException {
-        File root = FileHelper.toFile(contribution.getLocation());
-        assert root.isDirectory();
-        processDirectory(contribution, root);
-    }
-
     protected void iterateArtifacts(Contribution contribution, Action action)
             throws ContributionException {
         File root = FileHelper.toFile(contribution.getLocation());
@@ -139,70 +146,16 @@ public class ExplodedArchiveContributionProcessor extends ArchiveContributionPro
             if (file.isDirectory()) {
                 iterateArtifactsResursive(contribution, action, dir);
             } else {
-                InputStream stream = null;
                 try {
                     URL entryUrl = file.toURI().toURL();
                     String contentType = contentTypeResolver.getContentType(entryUrl);
-                    stream = entryUrl.openStream();
-                    action.process(contribution, contentType, stream);
+                    action.process(contribution, contentType, entryUrl);
                 } catch (MalformedURLException e) {
                     throw new ContributionException(e);
                 } catch (IOException e) {
                     throw new ContributionException(e);
                 } catch (ContentTypeResolutionException e) {
                     throw new ContributionException(e);
-                } finally {
-                    try {
-                        if (stream != null) {
-                            stream.close();
-                        }
-                    } catch (IOException e) {
-                        // TODO log exception
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-
-    }
-
-    /**
-     * Processes resources in a directory hierarchy, adding them to the contribution
-     *
-     * @param contribution the contribution
-     * @param dir          the root of the directory hierarchy
-     * @throws ContributionException if an error occurs processing the resource
-     */
-    private void processDirectory(Contribution contribution, File dir) throws ContributionException {
-        File[] files = dir.listFiles();
-        for (File file : files) {
-            if (file.isDirectory()) {
-                processDirectory(contribution, dir);
-            } else {
-                InputStream stream = null;
-                try {
-                    URL entryUrl = file.toURI().toURL();
-                    String contentType = contentTypeResolver.getContentType(entryUrl);
-                    stream = entryUrl.openStream();
-                    Resource resource = registry.processResource(contentType, stream);
-                    if (resource != null) {
-                        contribution.addResource(resource);
-                    }
-                } catch (MalformedURLException e) {
-                    throw new ContributionException(e);
-                } catch (IOException e) {
-                    throw new ContributionException(e);
-                } catch (ContentTypeResolutionException e) {
-                    throw new ContributionException(e);
-                } finally {
-                    try {
-                        if (stream != null) {
-                            stream.close();
-                        }
-                    } catch (IOException e) {
-                        // TODO log exception
-                        e.printStackTrace();
-                    }
                 }
             }
         }

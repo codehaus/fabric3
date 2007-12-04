@@ -20,6 +20,7 @@ package org.fabric3.spi.services.contribution;
 
 import java.io.InputStream;
 import java.net.URI;
+import java.net.URL;
 
 import org.fabric3.host.contribution.ContributionException;
 
@@ -44,20 +45,6 @@ public interface ProcessorRegistry {
     void unregisterContributionProcessor(String contentType);
 
     /**
-     * Register a ResourceProcessor using the content type as the key
-     *
-     * @param processor the processor to registrer
-     */
-    void register(ResourceProcessor processor);
-
-    /**
-     * Unregister a ResourceProcessor for a content type
-     *
-     * @param contentType the content
-     */
-    void unregisterResourceProcessor(String contentType);
-
-    /**
      * Register a ManifestProcessor using the content type as the key
      *
      * @param processor the processor to registrer
@@ -72,30 +59,29 @@ public interface ProcessorRegistry {
     void unregisterManifestProcessor(String contentType);
 
     /**
-     * Process manifest information in a contribution.
+     * Register a ResourceProcessor using the content type as the key
      *
-     * @param contribution The contribution that will be used to hold the results from the processing
-     * @throws ContributionException if there was a problem with the contribution
+     * @param processor the processor to registrer
+     */
+    void register(ResourceProcessor processor);
+
+    /**
+     * Unregister a ResourceProcessor for a content type
+     *
+     * @param contentType the content
+     */
+    void unregisterResourceProcessor(String contentType);
+
+    /**
+     * Dispatches to a {@link ContributionProcessor} to process manifest information in a contribution.
+     *
+     * @param contribution The contribution
+     * @throws ContributionException if there was a problem processing the manifest
      */
     void processManifest(Contribution contribution) throws ContributionException;
 
     /**
-     * Processes artifacts in a contribution.
-     *
-     * @param contribution The contribution that will be used to hold the results from the processing
-     * @param loader       the classloader conribution resources must be laoded in
-     * @throws ContributionException if there was a problem with the contribution
-     */
-    void processContribution(Contribution contribution, ClassLoader loader) throws ContributionException;
-
-    /**
-     * This method is deprecated. Use {@link #processContribution(Contribution, ClassLoader)} instead.
-     */
-    @Deprecated
-    void processContribution(Contribution contribution, URI source) throws ContributionException;
-
-    /**
-     * Processes a manifest artifact contained in a contribution and updates the given manifest.
+     * Dispatches to a {@link ManifestProcessor} to process a manifest artifact contaned in a contribution.
      *
      * @param manifest    the manifest to update
      * @param contentType the artifact MIME type
@@ -107,14 +93,45 @@ public interface ProcessorRegistry {
                                  InputStream inputStream) throws ContributionException;
 
     /**
-     * Process a resource from the input stream.
+     * Dispatches to a {@link ContributionProcessor} to index a contribution.
      *
-     * @param inputStream The input stream for the resource. The stream will not be closed but the read position after
-     *                    the call is undefined
-     * @param contentType The type of content to process
-     * @return the resource
-     * @throws ContributionException if there was a problem processing the resoure
+     * @param contribution the contribution to index
+     * @throws ContributionException if there was a problem indexing the contribution
      */
-    Resource processResource(String contentType, InputStream inputStream) throws ContributionException;
+    void indexContribution(Contribution contribution) throws ContributionException;
+
+    /**
+     * Dispatches to a {@link ResourceProcessor} to index a resource contained in a contribution.
+     *
+     * @param contribution the cntaining contribution
+     * @param contentType  the content type of the resource to process
+     * @param url          a dereferenceable URL for the resource
+     * @throws ContributionException if there was a problem indexing the contribution
+     */
+    void indexResource(Contribution contribution, String contentType, URL url) throws ContributionException;
+
+    /**
+     * Loads all indexed resources in a contribution.
+     *
+     * @param contribution The contribution
+     * @param loader       the classloader conribution resources must be laoded in
+     * @throws ContributionException if there was a problem loading resources in the contribution
+     */
+    void processContribution(Contribution contribution, ClassLoader loader) throws ContributionException;
+
+    /**
+     * Loads a contained resource in a contribution.
+     *
+     * @param resource the resource to load
+     * @throws ContributionException if there was a problem loading the resoure
+     */
+    void processResource(Resource resource) throws ContributionException;
+
+    /**
+     * This method is deprecated. Use {@link #processContribution(Contribution, ClassLoader)} instead.
+     */
+    @Deprecated
+    void processContribution(Contribution contribution, URI source) throws ContributionException;
+
 
 }

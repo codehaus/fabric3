@@ -16,6 +16,7 @@
  */
 package org.fabric3.fabric.services.contribution.processor;
 
+import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -31,6 +32,7 @@ import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.Resource;
+import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.contribution.XmlProcessor;
 import org.fabric3.spi.services.contribution.XmlProcessorRegistry;
 
@@ -42,10 +44,11 @@ import org.fabric3.spi.services.contribution.XmlProcessorRegistry;
 @EagerInit
 public class DefinitionsProcessor implements XmlProcessor {
     private static final QName DEFINITIONS = new QName(SCA_NS, "definitions");
-    private StAXElementLoader<Resource> loader;
+    private StAXElementLoader<List<ResourceElement<?, ?>>> loader;
 
     public DefinitionsProcessor(@Reference(name = "processorRegistry")XmlProcessorRegistry processorRegistry,
-                                @Reference(name = "loader")StAXElementLoader<Resource> loader) {
+                                @Reference(name = "loader")
+                                StAXElementLoader<List<ResourceElement<?, ?>>> loader) {
         this.loader = loader;
         processorRegistry.register(this);
     }
@@ -57,7 +60,9 @@ public class DefinitionsProcessor implements XmlProcessor {
     public void processContent(Contribution contribution, XMLStreamReader reader) throws ContributionException {
         try {
             LoaderContext context = new LoaderContextImpl(getClass().getClassLoader(), null);
-            Resource resource = loader.load(reader, context);
+            List<ResourceElement<?, ?>> elements = loader.load(reader, context);
+            Resource resource = new Resource(null, "application/xml");
+            resource.addResourceElements(elements);
             contribution.addResource(resource);
         } catch (XMLStreamException e) {
             throw new ContributionException(e);

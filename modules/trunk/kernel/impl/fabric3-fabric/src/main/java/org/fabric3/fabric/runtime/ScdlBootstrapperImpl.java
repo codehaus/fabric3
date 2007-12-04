@@ -87,7 +87,6 @@ import org.fabric3.fabric.model.physical.PhysicalModelGenerator;
 import org.fabric3.fabric.model.physical.PhysicalModelGeneratorImpl;
 import org.fabric3.fabric.model.physical.PhysicalWireGenerator;
 import org.fabric3.fabric.model.physical.PhysicalWireGeneratorImpl;
-
 import static org.fabric3.fabric.runtime.ComponentNames.APPLICATION_CLASSLOADER_ID;
 import static org.fabric3.fabric.runtime.ComponentNames.BOOT_CLASSLOADER_ID;
 import static org.fabric3.fabric.runtime.ComponentNames.CLASSLOADER_REGISTRY_URI;
@@ -96,6 +95,7 @@ import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_NAME;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.PROCESSOR_REGISTY_URI;
 import org.fabric3.fabric.services.advertsiement.FeatureLoader;
 import org.fabric3.fabric.services.archive.JarService;
 import org.fabric3.fabric.services.archive.JarServiceImpl;
@@ -104,6 +104,7 @@ import org.fabric3.fabric.services.contribution.ArtifactResolverRegistryImpl;
 import org.fabric3.fabric.services.contribution.ClasspathProcessorRegistryImpl;
 import org.fabric3.fabric.services.contribution.FileSystemResolver;
 import org.fabric3.fabric.services.contribution.MetaDataStoreImpl;
+import org.fabric3.fabric.services.contribution.ProcessorRegistryImpl;
 import org.fabric3.fabric.services.contribution.processor.JarClasspathProcessor;
 import org.fabric3.fabric.services.factories.xml.XMLFactoryImpl;
 import org.fabric3.fabric.services.instancefactory.BuildHelperImpl;
@@ -159,11 +160,11 @@ import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.PolicyHelper;
 import org.fabric3.spi.policy.registry.NullPolicyResolver;
-import org.fabric3.spi.policy.registry.PolicyResolver;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ArtifactResolverRegistry;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.factories.xml.XMLFactory;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
@@ -198,6 +199,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     private LoaderRegistry loader;
     private ClassLoaderRegistry classLoaderRegistry;
     private MetaDataStoreImpl metaDataStore;
+    private ProcessorRegistry processorRegistry;
     private XMLFactory xmlFactory;
 
     public ScdlBootstrapperImpl() {
@@ -262,8 +264,9 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         Deployer deployer = createDeployer(info);
         CommandExecutorRegistry commandRegistry = createCommandExecutorRegistry(scopeRegistry);
 
+        processorRegistry = new ProcessorRegistryImpl();
         // TODO this should be configurable
-        metaDataStore = new MetaDataStoreImpl(info, new XStreamFactoryImpl());
+        metaDataStore = new MetaDataStoreImpl(info, processorRegistry, new XStreamFactoryImpl());
         metaDataStore.setPersistent("false");
         try {
             metaDataStore.init();
@@ -313,6 +316,8 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         registerSystemComponent(RUNTIME_INFO_URI, runtime.getHostInfoType(), runtime.getHostInfo());
         registerSystemComponent(RUNTIME_ASSEMBLY_URI, RuntimeAssembly.class, runtimeAssembly);
         registerSystemComponent(METADATA_STORE_URI, MetaDataStore.class, metaDataStore);
+        registerSystemComponent(PROCESSOR_REGISTY_URI, ProcessorRegistry.class, processorRegistry);
+
         registerSystemComponent(MONITOR_URI, MonitorFactory.class, monitorFactory);
         registerSystemComponent(FORMATTER_REGISTRY_URI, FormatterRegistry.class, new DefaultFormatterRegistry());
         registerSystemComponent(XML_FACTORY_URI, XMLFactory.class, xmlFactory);

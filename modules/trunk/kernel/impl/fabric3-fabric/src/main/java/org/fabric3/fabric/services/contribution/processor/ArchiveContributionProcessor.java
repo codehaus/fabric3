@@ -16,7 +16,6 @@
  */
 package org.fabric3.fabric.services.contribution.processor;
 
-import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 
@@ -55,22 +54,23 @@ public abstract class ArchiveContributionProcessor extends ContributionProcessor
         this.encoder = encoder;
     }
 
+    public void index(Contribution contribution) throws ContributionException {
+        iterateArtifacts(contribution, new Action() {
+            public void process(Contribution contribution, String contentType, URL url)
+                    throws ContributionException {
+                registry.indexResource(contribution, contentType, url);
+            }
+        });
+
+    }
+
     public void processContent(Contribution contribution, ClassLoader loader) throws ContributionException {
-        // process the contribution manifest
-        // Build a classloader to perform the contribution introspection. The classpath will contain the contribution
-        // jar and resolved imports
         ClassLoader oldClassloader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader(loader);
-            iterateArtifacts(contribution, new Action() {
-                public void process(Contribution contribution, String contentType, InputStream stream)
-                        throws ContributionException {
-                    Resource resource = registry.processResource(contentType, stream);
-                    if (resource != null) {
-                        contribution.addResource(resource);
-                    }
-                }
-            });
+            for (Resource resource : contribution.getResources()) {
+                registry.processResource(resource);
+            }
             addContributionDescription(contribution);
         } finally {
             Thread.currentThread().setContextClassLoader(oldClassloader);

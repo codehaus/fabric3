@@ -14,26 +14,32 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.services.contribution.processor;
+package org.fabric3.spi.services.contribution;
 
-import java.net.URL;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.host.contribution.ContributionException;
-import org.fabric3.spi.services.contribution.Contribution;
 
 /**
- * Used to perform a callback operation when iterating contained artifacts in a contribution.
+ * Implementations index an XML resource corresponding to a given document element QName.
  *
  * @version $Rev$ $Date$
  */
-public interface Action {
+public interface XmlIndexer {
+
     /**
-     * Called when an artifact is reached during iteration.
+     * Returns the QName for the XML element type handled by this indexer
      *
-     * @param contribution the contribution being traversed
-     * @param contentType  the artifact MIME type to process
-     * @param url          the artifact url
-     * @throws ContributionException if an error occurs processing the artifact
+     * @return the QName
      */
-    void process(Contribution contribution, String contentType, URL url) throws ContributionException;
+    QName getType();
+
+    /**
+     * @param resource the resource being indexed
+     * @param reader   the reader positioned on the document element
+     * @throws ContributionException if an error occurs during indexing
+     */
+    void index(Resource resource, XMLStreamReader reader) throws ContributionException;
+
 }

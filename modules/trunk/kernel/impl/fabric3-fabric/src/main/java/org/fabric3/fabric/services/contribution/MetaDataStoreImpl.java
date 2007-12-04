@@ -41,12 +41,14 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.services.xstream.XStreamFactory;
 import org.fabric3.fabric.util.FileHelper;
+import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.Export;
 import org.fabric3.spi.services.contribution.Import;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.MetaDataStoreException;
+import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.contribution.Symbol;
@@ -68,8 +70,17 @@ public class MetaDataStoreImpl implements MetaDataStore {
     private String storeId = "DefaultStore";
     private boolean persistent = true;
     private File baseDir;
+    private ProcessorRegistry processorRegistry;
 
-    public MetaDataStoreImpl(@Reference HostInfo hostInfo, @Reference XStreamFactory xstreamFactory) {
+    public MetaDataStoreImpl(@Reference HostInfo hostInfo,
+                             @Reference XStreamFactory xstreamFactory) {
+        this(hostInfo, null, xstreamFactory);
+    }
+
+    public MetaDataStoreImpl(@Reference HostInfo hostInfo,
+                             @Reference ProcessorRegistry processorRegistry,
+                             @Reference XStreamFactory xstreamFactory) {
+        this.processorRegistry = processorRegistry;
         this.xstream = xstreamFactory.createInstance();
         URL url = hostInfo.getBaseURL();
         if (url != null) {
@@ -152,6 +163,13 @@ public class MetaDataStoreImpl implements MetaDataStore {
             for (Resource resource : contribution.getResources()) {
                 for (ResourceElement<?, ?> element : resource.getResourceElements()) {
                     if (element.getSymbol().equals(symbol)) {
+                        if (element.getValue() == null) {
+                            try {
+                                processorRegistry.processResource(resource);
+                            } catch (ContributionException e) {
+                                throw new AssertionError("Error resolving resurce");
+                            }
+                        }
                         return (ResourceElement<S, ?>) element;
                     }
                 }
@@ -160,16 +178,21 @@ public class MetaDataStoreImpl implements MetaDataStore {
         return null;
     }
 
-    public <S extends Symbol, V> ResourceElement<S, V> resolve(Contribution contribution, Class<V> type, S symbol) {
+    public <S extends Symbol, V> ResourceElement<S, V> resolve(Contribution contribution, Class<V> type, S symbol)
+            throws MetaDataStoreException {
+        if (contribution == null) {
+            // FIXME hack until we pass the contribution uri 
+            return (ResourceElement<S, V>) resolve(symbol);
+        }
         ResourceElement<S, V> element = resolveInternal(contribution, type, symbol);
-        if (element != null){
+        if (element != null) {
             return element;
         }
         for (URI uri : contribution.getResolvedImportUris()) {
             Contribution resolved = cache.get(uri);
             assert resolved != null;
             element = resolveInternal(resolved, type, symbol);
-            if (element != null){
+            if (element != null) {
                 return element;
             }
         }
@@ -218,17 +241,27 @@ public class MetaDataStoreImpl implements MetaDataStore {
     }
 
     @SuppressWarnings({"unchecked"})
-    private <S extends Symbol, V> ResourceElement<S, V> resolveInternal(Contribution contribution, Class<V> type, S symbol) {
+    private <S extends Symbol, V> ResourceElement<S, V> resolveInternal(Contribution contribution,
+                                                                        Class<V> type,
+                                                                        S symbol) throws MetaDataStoreException {
         for (Resource resource : contribution.getResources()) {
-                for (ResourceElement<?, ?> element : resource.getResourceElements()) {
-                    if (element.getSymbol().equals(symbol)) {
-                        if (!type.isInstance(element.getValue())) {
-                            throw new IllegalArgumentException("Invalid type for symbol [" + type + "]");
-                        }
-                        return (ResourceElement<S, V>) element;
+            for (ResourceElement<?, ?> element : resource.getResourceElements()) {
+                if (element.getSymbol().equals(symbol)) {
+                    if (!type.isInstance(element.getValue())) {
+                        throw new IllegalArgumentException("Invalid type for symbol [" + type + "]");
                     }
+                    if (element.getValue() == null) {
+                        try {
+                            processorRegistry.processResource(resource);
+                        } catch (ContributionException e) {
+                            String identifier = resource.getUrl().toString();
+                            throw new MetaDataStoreException("Error resolving resurce", identifier, e);
+                        }
+                    }
+                    return (ResourceElement<S, V>) element;
                 }
             }
+        }
         return null;
     }
 

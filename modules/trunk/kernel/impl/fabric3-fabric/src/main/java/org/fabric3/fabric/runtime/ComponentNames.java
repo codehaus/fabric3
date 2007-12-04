@@ -62,6 +62,8 @@ public final class ComponentNames {
 
     public static final URI METADATA_STORE_URI = URI.create(RUNTIME_NAME + "/MetaDataStore");
 
+    public static final URI PROCESSOR_REGISTY_URI = URI.create(RUNTIME_NAME + "/ContributionProcessorRegistry");
+
     public static final URI XML_MANIFEST_PROCESSOR = URI.create(RUNTIME_NAME + "/XmlManifestProcessor");
 
     private ComponentNames() {

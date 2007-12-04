@@ -246,13 +246,10 @@ public class ContributionServiceImpl implements ContributionService {
      * @throws ContributionException if an error occurs during processing
      */
     private void processContents(Contribution contribution, ClassLoader loader) throws ContributionException {
-        // store the contribution
-        processorRegistry.processContribution(contribution, loader);
-        // TODO rollback storage if an error processing contribution
-        // store the contribution index
-        //store the contribution in the memory cache
         try {
+            processorRegistry.indexContribution(contribution);
             metaDataStore.store(contribution);
+            processorRegistry.processContribution(contribution, loader);
         } catch (MetaDataStoreException e) {
             throw new ContributionException(e);
         }

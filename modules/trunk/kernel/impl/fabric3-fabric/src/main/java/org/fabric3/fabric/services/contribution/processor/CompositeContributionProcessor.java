@@ -49,6 +49,10 @@ public class CompositeContributionProcessor extends ContributionProcessorExtensi
 
     }
 
+    public void index(Contribution contribution) throws ContributionException {
+
+    }
+
     public void processContent(Contribution contribution, ClassLoader loader) throws ContributionException {
         throw new UnsupportedOperationException();
     }

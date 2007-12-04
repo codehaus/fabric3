@@ -16,24 +16,15 @@
  */
 package org.fabric3.fabric.services.contribution.processor;
 
-import java.net.URL;
-
 import org.fabric3.host.contribution.ContributionException;
-import org.fabric3.spi.services.contribution.Contribution;
 
 /**
- * Used to perform a callback operation when iterating contained artifacts in a contribution.
- *
  * @version $Rev$ $Date$
  */
-public interface Action {
-    /**
-     * Called when an artifact is reached during iteration.
-     *
-     * @param contribution the contribution being traversed
-     * @param contentType  the artifact MIME type to process
-     * @param url          the artifact url
-     * @throws ContributionException if an error occurs processing the artifact
-     */
-    void process(Contribution contribution, String contentType, URL url) throws ContributionException;
+public class ResourceElementNotFoundException extends ContributionException {
+    private static final long serialVersionUID = -5136038576712536339L;
+
+    public ResourceElementNotFoundException(String message, String identifier) {
+        super(message, identifier);
+    }
 }

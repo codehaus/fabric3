@@ -18,13 +18,17 @@
  */
 package org.fabric3.loader.definitions;
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.xml.namespace.QName;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
-import static org.osoa.sca.Constants.SCA_NS;
-
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+
+import static org.osoa.sca.Constants.SCA_NS;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.scdl.definitions.AbstractDefinition;
@@ -37,27 +41,24 @@ import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.services.contribution.QNameSymbol;
-import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Loader for definitions.
- * 
+ *
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class DefinitionsLoader implements StAXElementLoader<Resource> {
-    
+public class DefinitionsLoader implements StAXElementLoader<List<ResourceElement<QNameSymbol, AbstractDefinition>>> {
+
     static final QName INTENT = new QName(SCA_NS, "intent");
     static final QName DESCRIPTION = new QName(SCA_NS, "description");
     static final QName POLICY_SET = new QName(SCA_NS, "policySet");
     static final QName BINDING_TYPE = new QName(SCA_NS, "bindingType");
     static final QName IMPLEMENTATION_TYPE = new QName(SCA_NS, "implementationType");
-    
+
     private static final QName DEFINITIONS = new QName(SCA_NS, "definitions");
-    
+
     private LoaderRegistry loaderRegistry;
 
     public DefinitionsLoader(@Reference LoaderRegistry registry) {
@@ -65,14 +66,17 @@ public class DefinitionsLoader implements StAXElementLoader<Resource> {
         loaderRegistry.registerLoader(DEFINITIONS, this);
     }
 
-    public Resource load(XMLStreamReader reader, LoaderContext parentContext) throws XMLStreamException, LoaderException {
+    public List<ResourceElement<QNameSymbol, AbstractDefinition>> load(XMLStreamReader reader,
+                                                                       LoaderContext parentContext)
+            throws XMLStreamException, LoaderException {
 
-        Resource resource = new Resource();
-        
+        List<ResourceElement<QNameSymbol, AbstractDefinition>> resources =
+                new ArrayList<ResourceElement<QNameSymbol, AbstractDefinition>>();
+
         String targetNamespace = reader.getAttributeValue(null, "targetNamespace");
-        
+
         LoaderContext context = new LoaderContextImpl(parentContext, targetNamespace);
-        
+
         while (true) {
             switch (reader.next()) {
             case START_ELEMENT:
@@ -87,19 +91,19 @@ public class DefinitionsLoader implements StAXElementLoader<Resource> {
                 } else if (IMPLEMENTATION_TYPE.equals(qname)) {
                     definition = loaderRegistry.load(reader, ImplementationType.class, context);
                 }
-                if(definition != null) {
+                if (definition != null) {
                     QNameSymbol symbol = new QNameSymbol(definition.getName());
-                    ResourceElement<QNameSymbol, AbstractDefinition> element = 
-                        new ResourceElement<QNameSymbol, AbstractDefinition>(symbol, definition);
-                    resource.addResourceElement(element);
+                    ResourceElement<QNameSymbol, AbstractDefinition> element =
+                            new ResourceElement<QNameSymbol, AbstractDefinition>(symbol, definition);
+                    resources.add(element);
                 }
                 break;
             case END_ELEMENT:
                 assert DEFINITIONS.equals(reader.getName());
-                return resource;
+                return resources;
             }
         }
-        
+
     }
 
 }

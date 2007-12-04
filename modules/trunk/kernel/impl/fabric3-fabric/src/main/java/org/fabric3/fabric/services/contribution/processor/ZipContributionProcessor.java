@@ -93,9 +93,23 @@ public class ZipContributionProcessor extends ArchiveContributionProcessor imple
             ContributionManifest manifest = loaderRegistry.load(reader, ContributionManifest.class, context);
             contribution.setManifest(manifest);
             iterateArtifacts(contribution, new Action() {
-                public void process(Contribution contribution, String contentType, InputStream stream)
+                public void process(Contribution contribution, String contentType, URL url)
                         throws ContributionException {
-                    registry.processManifestArtifact(contribution.getManifest(), contentType, stream);
+                    InputStream stream = null;
+                    try {
+                        stream = url.openStream();
+                        registry.processManifestArtifact(contribution.getManifest(), contentType, stream);
+                    } catch (IOException e) {
+                        throw new ContributionException(e);
+                    } finally {
+                        try {
+                            if (stream != null) {
+                                stream.close();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             });
         } catch (XMLStreamException e) {
@@ -131,13 +145,17 @@ public class ZipContributionProcessor extends ArchiveContributionProcessor imple
                 if (entry.isDirectory()) {
                     continue;
                 }
-                URL entryUrl = new URL(location, entry.getName());
-                String contentType = contentTypeResolver.getContentType(entryUrl);
+
+                URL entryUrl = new URL("jar:" + location.toExternalForm() + "!/"+entry.getName());
+                // hack to return the correct content type
+                String contentType = contentTypeResolver.getContentType(new URL(location, entry.getName()));
+
+                // String contentType = contentTypeResolver.getContentType(entryUrl);
                 // skip entry if we don't recognize the content type
                 if (contentType == null) {
                     continue;
                 }
-                action.process(contribution, contentType, zipStream);
+                action.process(contribution, contentType, entryUrl);
             }
         } catch (ContentTypeResolutionException e) {
             throw new ContributionException(e);

@@ -66,6 +66,10 @@ public class XmlContributionProcessor implements ContributionProcessor, XmlProce
         contribution.setManifest(manifest);
     }
 
+    public void index(Contribution contribution) throws ContributionException {
+        // XML contributions do not need to be indexed before they are processed as they are single artifacts
+    }
+
     public void register(XmlProcessor processor) {
         processors.put(processor.getType(), processor);
     }
@@ -98,7 +102,6 @@ public class XmlContributionProcessor implements ContributionProcessor, XmlProce
                     reader.close();
                 }
             } catch (XMLStreamException e) {
-                // TODO log exception
                 e.printStackTrace();
             }
             try {
@@ -106,7 +109,6 @@ public class XmlContributionProcessor implements ContributionProcessor, XmlProce
                     stream.close();
                 }
             } catch (IOException e) {
-                // TODO log exception
                 e.printStackTrace();
             }
         }

@@ -21,7 +21,15 @@ package org.fabric3.spi.services.contribution;
 import org.fabric3.host.contribution.ContributionException;
 
 /**
- * Interface for services that process contributions.
+ * Interface for services that process contributions. Contribution processing occurs in several phases. Contribution
+ * metadata is first processed, after which contained resources are indexed. Indexed {@link Resource}s contain 0..n
+ * {@link ResourceElement}s, which are addressable parts. ResourceElements contain a key for a symbol space and a value.
+ * When a resource is indexed, only ResourceElement keys are available; their values have not yet been loaded.
+ * <p/>
+ * The final processing phase is when the contribution is loaded. At this point, all contribution artifacts, including
+ * those in depedent contributions, are made available through the provided classloader. Indexed Resources are iterated
+ * and all ResourceElement values are loaded via the loader framework. As ResourceElements may refer to other
+ * ResourceElements, loading may ocurr recursively.
  *
  * @version $Rev$ $Date$
  */
@@ -42,12 +50,19 @@ public interface ContributionProcessor {
     void processManifest(Contribution contribution) throws ContributionException;
 
     /**
-     * Process a contribution or an artifact in the contribution from the input stream. The processor might add
-     * artifacts or model objects to the contribution object.
+     * Indexes all contribution resources
      *
-     * @param contribution The contribution that will be used to hold the results from the processing
+     * @param contribution the contribution to index
+     * @throws ContributionException if there was a problem indexing
+     */
+    void index(Contribution contribution) throws ContributionException;
+
+    /**
+     * Iterates and loads all resources in the contribution.
+     *
+     * @param contribution The contribution
      * @param loader       the classloader contribution resources must be loaded in
-     * @throws ContributionException if there was a problem with the contribution
+     * @throws ContributionException if there was a problem loading the contribution resoruces
      */
     public void processContent(Contribution contribution, ClassLoader loader) throws ContributionException;
 

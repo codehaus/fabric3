@@ -59,10 +59,6 @@
         <system:implementation.system class="org.fabric3.fabric.services.contribution.CyclicDependencyExceptionFormatter"/>
     </component>
 
-    <component name="ContributionProcessorRegistry">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.ProcessorRegistryImpl"/>
-    </component>
-
     <component name="ZipContributionProcessor">
         <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.ZipContributionProcessor"/>
         <!--<reference name="metaDataStore" target="MetadataStore"/>-->
@@ -87,6 +83,10 @@
 
     <component name="XmlManifestProcessorRegistry">
         <system:implementation.system class="org.fabric3.fabric.services.contribution.manifest.XmlManifestProcessorRegistryImpl"/>
+    </component>
+
+    <component name="XmlIndexerRegistry">
+        <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.XmlIndexerRegistryImpl"/>
     </component>
 
     <component name="XmlManifestProcessor">

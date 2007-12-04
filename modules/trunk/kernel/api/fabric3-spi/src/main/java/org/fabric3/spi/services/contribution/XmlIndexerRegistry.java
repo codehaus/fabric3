@@ -16,39 +16,38 @@
  */
 package org.fabric3.spi.services.contribution;
 
-import java.net.URL;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.host.contribution.ContributionException;
 
 /**
- * Implmentations process a contribution resource for a MIME type.
+ * A registry of XmlIndexers
  *
  * @version $Rev$ $Date$
  */
-public interface ResourceProcessor {
-
+public interface XmlIndexerRegistry {
     /**
-     * Returns the content type the processor handles
+     * Register a XmlIndexer using the processor's QName type as the key
      *
-     * @return the content type the processor handles
+     * @param indexer the indexer to register
      */
-    String getContentType();
+    void register(XmlIndexer indexer);
 
     /**
-     * Indexes the resource
+     * Unregister an XmlIndexer for a QName
      *
-     * @param contribution the containing contribution
-     * @param url          a dereferenceable url to the resource
+     * @param name the QName
+     */
+    void unregister(QName name);
+
+    /**
+     * Dispatch to an XMLIndexer based on the element type of the resource document tag.
+     *
+     * @param resource the resource being indexed
+     * @param reader   the reader positioned on the start element of the first tag
      * @throws ContributionException if an error occurs during indexing
      */
-    void index(Contribution contribution, URL url) throws ContributionException;
-
-    /**
-     * Loads the the Resource
-     *
-     * @param resource the resource to process
-     * @throws ContributionException if an error occurs during introspection
-     */
-    void process(Resource resource) throws ContributionException;
+    void index(Resource resource, XMLStreamReader reader) throws ContributionException;
 
 }
