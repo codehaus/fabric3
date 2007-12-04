@@ -16,6 +16,7 @@
  */
 package org.fabric3.spi.services.contribution;
 
+import java.net.URI;
 import java.net.URL;
 
 import org.fabric3.host.contribution.ContributionException;
@@ -46,9 +47,11 @@ public interface ResourceProcessor {
     /**
      * Loads the the Resource
      *
-     * @param resource the resource to process
+     * @param contributionUri the URI of the active contribution
+     * @param resource        the resource to process
+     * @param loader          the classloader contribution the resource must be loaded in
      * @throws ContributionException if an error occurs during introspection
      */
-    void process(Resource resource) throws ContributionException;
+    void process(URI contributionUri, Resource resource, ClassLoader loader) throws ContributionException;
 
 }

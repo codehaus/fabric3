@@ -129,14 +129,14 @@ public class ProcessorRegistryImpl implements ProcessorRegistry {
         processor.processContent(contribution, loader);
     }
 
-    public void processResource(Resource resource) throws ContributionException {
+    public void processResource(URI contributionUri, Resource resource, ClassLoader loader) throws ContributionException {
         ResourceProcessor processor = resourceProcessorCache.get(resource.getContentType());
         if (processor == null) {
             // FIXME for now, return null
             return;
             //throw new UnsupportedContentTypeException(contentType);
         }
-        processor.process(resource);
+        processor.process(contributionUri, resource, loader);
     }
 
 }

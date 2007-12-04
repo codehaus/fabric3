@@ -110,7 +110,7 @@ public class XmlResourceProcessor implements ResourceProcessor {
         }
     }
 
-    public void process(Resource resource) throws ContributionException {
+    public void process(URI contributionUri, Resource resource, ClassLoader loader) throws ContributionException {
         InputStream stream = null;
         XMLStreamReader reader = null;
         try {
@@ -124,9 +124,6 @@ public class XmlResourceProcessor implements ResourceProcessor {
             if (!"definitions".equals(reader.getName().getLocalPart())) {
                 return;
             }
-            // JFM FIXME
-            URI contributionUri = null;
-            ClassLoader loader = null;
             LoaderContext context = new LoaderContextImpl(loader, contributionUri, null);
             List<ResourceElement<?, ?>> elements = loaderRegistry.load(reader, List.class, context);
             for (ResourceElement<?, ?> candidate : elements) {

@@ -19,6 +19,7 @@
 package org.fabric3.spi.services.contribution;
 
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 
 import org.fabric3.host.contribution.ContributionException;
@@ -121,9 +122,11 @@ public interface ProcessorRegistry {
     /**
      * Loads a contained resource in a contribution.
      *
-     * @param resource the resource to load
+     * @param contributionUri the URI of the active contribution
+     * @param resource        the resource to process
+     * @param loader          the classloader contribution the resource must be loaded in
      * @throws ContributionException if there was a problem loading the resoure
      */
-    void processResource(Resource resource) throws ContributionException;
+    void processResource(URI contributionUri, Resource resource, ClassLoader loader) throws ContributionException;
 
 }

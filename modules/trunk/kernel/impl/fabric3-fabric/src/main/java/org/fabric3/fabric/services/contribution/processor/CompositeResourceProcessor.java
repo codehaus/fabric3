@@ -104,14 +104,10 @@ public class CompositeResourceProcessor implements ResourceProcessor {
     }
 
     @SuppressWarnings({"unchecked"})
-    public void process(Resource resource) throws ContributionException {
+    public void process(URI contributionUri, Resource resource, ClassLoader loader) throws ContributionException {
         InputStream stream = null;
-        // JFM FIXME
-        ClassLoader loader = Thread.currentThread().getContextClassLoader();
         try {
             stream = resource.getUrl().openStream();
-            // JFM FIXME
-            URI contributionUri = null;
             Composite composite = processComponentType(stream, loader, contributionUri);
             boolean found = false;
             for (ResourceElement element : resource.getResourceElements()) {
@@ -147,7 +143,7 @@ public class CompositeResourceProcessor implements ResourceProcessor {
      *
      * @param stream          the stream to load from
      * @param loader          the classloader to load resources with
-     * @param contributionUri  the current contribution uri
+     * @param contributionUri the current contribution uri
      * @return the component type
      * @throws IOException        if an error occurs reading the URL stream
      * @throws XMLStreamException if an error occurs parsing the XML

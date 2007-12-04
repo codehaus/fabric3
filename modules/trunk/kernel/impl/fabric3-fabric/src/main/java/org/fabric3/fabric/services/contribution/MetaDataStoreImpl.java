@@ -43,6 +43,7 @@ import org.fabric3.fabric.services.xstream.XStreamFactory;
 import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.runtime.HostInfo;
+import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.Export;
 import org.fabric3.spi.services.contribution.Import;
@@ -71,15 +72,18 @@ public class MetaDataStoreImpl implements MetaDataStore {
     private boolean persistent = true;
     private File baseDir;
     private ProcessorRegistry processorRegistry;
+    private ClassLoaderRegistry classLoaderRegistry;
 
     public MetaDataStoreImpl(@Reference HostInfo hostInfo,
                              @Reference XStreamFactory xstreamFactory) {
-        this(hostInfo, null, xstreamFactory);
+        this(hostInfo, null, null, xstreamFactory);
     }
 
     public MetaDataStoreImpl(@Reference HostInfo hostInfo,
+                             @Reference ClassLoaderRegistry classLoaderRegistry,
                              @Reference ProcessorRegistry processorRegistry,
                              @Reference XStreamFactory xstreamFactory) {
+        this.classLoaderRegistry = classLoaderRegistry;
         this.processorRegistry = processorRegistry;
         this.xstream = xstreamFactory.createInstance();
         URL url = hostInfo.getBaseURL();
@@ -160,12 +164,15 @@ public class MetaDataStoreImpl implements MetaDataStore {
     @SuppressWarnings({"unchecked"})
     public <S extends Symbol> ResourceElement<S, ?> resolve(S symbol) {
         for (Contribution contribution : cache.values()) {
+            URI contributionUri = contribution.getUri();
+            ClassLoader loader = classLoaderRegistry.getClassLoader(contributionUri);
+            assert loader != null;
             for (Resource resource : contribution.getResources()) {
                 for (ResourceElement<?, ?> element : resource.getResourceElements()) {
                     if (element.getSymbol().equals(symbol)) {
                         if (element.getValue() == null) {
                             try {
-                                processorRegistry.processResource(resource);
+                                processorRegistry.processResource(contributionUri, resource, loader);
                             } catch (ContributionException e) {
                                 throw new AssertionError("Error resolving resurce");
                             }
@@ -252,6 +259,9 @@ public class MetaDataStoreImpl implements MetaDataStore {
     private <S extends Symbol, V> ResourceElement<S, V> resolveInternal(Contribution contribution,
                                                                         Class<V> type,
                                                                         S symbol) throws MetaDataStoreException {
+        URI contributionUri = contribution.getUri();
+        ClassLoader loader = classLoaderRegistry.getClassLoader(contributionUri);
+        assert loader != null;
         for (Resource resource : contribution.getResources()) {
             for (ResourceElement<?, ?> element : resource.getResourceElements()) {
                 if (element.getSymbol().equals(symbol)) {
@@ -260,7 +270,7 @@ public class MetaDataStoreImpl implements MetaDataStore {
                     }
                     if (element.getValue() == null) {
                         try {
-                            processorRegistry.processResource(resource);
+                            processorRegistry.processResource(contributionUri, resource, loader);
                         } catch (ContributionException e) {
                             String identifier = resource.getUrl().toString();
                             throw new MetaDataStoreException("Error resolving resurce", identifier, e);

@@ -266,7 +266,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
         processorRegistry = new ProcessorRegistryImpl();
         // TODO this should be configurable
-        metaDataStore = new MetaDataStoreImpl(info, processorRegistry, new XStreamFactoryImpl());
+        metaDataStore = new MetaDataStoreImpl(info, classLoaderRegistry, processorRegistry, new XStreamFactoryImpl());
         metaDataStore.setPersistent("false");
         try {
             metaDataStore.init();
