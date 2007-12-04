@@ -27,7 +27,7 @@ import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
  * @version $Rev$ $Date$
  */
 public interface MavenCoordinator extends RuntimeLifecycleCoordinator<MavenEmbeddedRuntime, Bootstrapper> {
-    void setExtensions(List<URI> extensions);
+    void setExtensions(List<URL> extensions);
 
     void setIntentsLocation(URL intentsLocation);
 }

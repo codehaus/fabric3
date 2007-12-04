@@ -271,7 +271,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
             intentsLocation = hostClassLoader.getResource("META-INF/fabric3/intents.xml");
         }
 
-        List<URI> contributionURIs = resolveDependencies(contributions);
+        List<URL> contributionURLs = resolveDependencies(contributions);
 
 
         log.info("Starting Embedded Fabric3 Runtime ...");
@@ -286,7 +286,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
             throw new MojoExecutionException("Error creating fabric3 runtime", e);
         }
         try {
-            coordinator.setExtensions(contributionURIs);
+            coordinator.setExtensions(contributionURLs);
             coordinator.setIntentsLocation(intentsLocation);
             bootRuntime(coordinator, runtime, hostClassLoader, testClassLoader);
         } catch (InitializationException e) {
@@ -320,15 +320,28 @@ public class Fabric3ITestMojo extends AbstractMojo {
         }
     }
 
-    private List<URI> resolveDependencies(Dependency[] dependencies) {
+    private List<URL> resolveDependencies(Dependency[] dependencies) throws MojoExecutionException {
         if (dependencies == null) {
             return Collections.emptyList();
         }
-        List<URI> uris = new ArrayList<URI>(dependencies.length);
+        List<URL> urls = new ArrayList<URL>(dependencies.length);
         for (Dependency dependency : dependencies) {
-            uris.add(dependency.getURI());
+            Artifact artifact = dependency.getArtifact(artifactFactory);
+            try {
+                resolver.resolve(artifact, remoteRepositories, localRepository);
+            } catch (ArtifactResolutionException e) {
+                throw new MojoExecutionException(e.getMessage(), e);
+            } catch (ArtifactNotFoundException e) {
+                throw new MojoExecutionException(e.getMessage(), e);
+            }
+            try {
+                urls.add(artifact.getFile().toURI().toURL());
+            } catch (MalformedURLException e) {
+                // should not happen as toURI should escape the filename
+                throw new AssertionError();
+            }
         }
-        return uris;
+        return urls;
     }
 
     private void shutdownRuntime(RuntimeLifecycleCoordinator<MavenEmbeddedRuntime, Bootstrapper> coordinator)

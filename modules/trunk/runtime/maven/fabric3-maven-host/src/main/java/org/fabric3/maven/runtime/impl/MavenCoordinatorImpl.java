@@ -31,7 +31,6 @@ import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_STORE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DEFINITIONS_DEPLOYER;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
@@ -53,8 +52,6 @@ import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.spi.services.archive.ArchiveStore;
-import org.fabric3.spi.services.archive.ArchiveStoreException;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.MetaDataStore;
@@ -86,7 +83,7 @@ public class MavenCoordinatorImpl implements MavenCoordinator {
     private MavenEmbeddedRuntime runtime;
     private Bootstrapper bootstrapper;
     private URL intentsLocation;
-    private List<URI> extensions;
+    private List<URL> extensions;
 
     /**
      * Default constructor expected by the plugin.
@@ -94,7 +91,7 @@ public class MavenCoordinatorImpl implements MavenCoordinator {
     public MavenCoordinatorImpl() {
     }
 
-    public void setExtensions(List<URI> extensions) {
+    public void setExtensions(List<URL> extensions) {
         this.extensions = extensions;
     }
 
@@ -264,23 +261,15 @@ public class MavenCoordinatorImpl implements MavenCoordinator {
 
     private void includeExtensions(ContributionService contributionService)
             throws InitializationException, DefinitionActivationException {
-        ArchiveStore archiveStore = runtime.getSystemComponent(ArchiveStore.class, CONTRIBUTION_STORE_URI);
         List<ContributionSource> sources = new ArrayList<ContributionSource>(extensions.size());
-        for (URI extension : extensions) {
-            URL extensionURL;
+        for (URL extensionURL : extensions) {
             try {
-                extensionURL = archiveStore.find(extension);
-                if (extensionURL == null) {
-                    throw new ExtensionInitializationException("Extension not found in Maven Repository",
-                                                               extension.toString());
-                }
                 URI uri = extensionURL.toURI();
                 ContributionSource source = new FileContributionSource(uri, extensionURL, -1, new byte[0]);
                 sources.add(source);
-            } catch (ArchiveStoreException e) {
-                throw new ExtensionInitializationException("Error contributing extension", extension.toString(), e);
             } catch (URISyntaxException e) {
-                throw new ExtensionInitializationException("Invalid extension URI", e);
+                // should not happen as the URL was created from a URI
+                throw new AssertionError();
             }
         }
 
