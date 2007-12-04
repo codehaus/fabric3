@@ -187,10 +187,6 @@ public class MetaDataStoreImpl implements MetaDataStore {
 
     public <S extends Symbol, V> ResourceElement<S, V> resolve(URI contributionUri, Class<V> type, S symbol)
             throws MetaDataStoreException {
-        if (contributionUri == null) {
-            // FIXME hack until we pass the contribution uri 
-            return (ResourceElement<S, V>) resolve(symbol);
-        }
         Contribution contribution = find(contributionUri);
         if (contribution == null) {
             String identifier = contributionUri.toString();
@@ -265,9 +261,6 @@ public class MetaDataStoreImpl implements MetaDataStore {
         for (Resource resource : contribution.getResources()) {
             for (ResourceElement<?, ?> element : resource.getResourceElements()) {
                 if (element.getSymbol().equals(symbol)) {
-                    if (!type.isInstance(element.getValue())) {
-                        throw new IllegalArgumentException("Invalid type for symbol [" + type + "]");
-                    }
                     if (element.getValue() == null) {
                         try {
                             processorRegistry.processResource(contributionUri, resource, loader);
@@ -275,6 +268,9 @@ public class MetaDataStoreImpl implements MetaDataStore {
                             String identifier = resource.getUrl().toString();
                             throw new MetaDataStoreException("Error resolving resurce", identifier, e);
                         }
+                    }
+                    if (!type.isInstance(element.getValue())) {
+                        throw new IllegalArgumentException("Invalid type for symbol [" + type + "]");
                     }
                     return (ResourceElement<S, V>) element;
                 }

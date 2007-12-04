@@ -120,6 +120,10 @@ public class ImplementationCompositeLoader implements StAXElementLoader<Composit
             try {
                 ResourceElement<QNameSymbol, Composite> element =
                         store.resolve(contributionUri, Composite.class, symbol);
+                if (element == null) {
+                    String identifier = name.toString();
+                    throw new MissingResourceException("Composite not found [" + identifier + "]", identifier);
+                }
                 impl.setComponentType(element.getValue());
             } catch (MetaDataStoreException e) {
                 throw new LoaderException(e);

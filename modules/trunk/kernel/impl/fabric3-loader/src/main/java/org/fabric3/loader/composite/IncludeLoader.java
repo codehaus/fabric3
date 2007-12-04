@@ -90,6 +90,10 @@ public class IncludeLoader implements StAXElementLoader<Include> {
             try {
                 QNameSymbol symbol = new QNameSymbol(name);
                 ResourceElement<QNameSymbol, Include> element = store.resolve(contributionUri, Include.class, symbol);
+                if (element == null) {
+                    String identifier = name.toString();
+                    throw new MissingResourceException("Composite not found [" + identifier + "]", identifier);
+                }
                 return element.getValue();
             } catch (MetaDataStoreException e) {
                 throw new LoaderException(e);
