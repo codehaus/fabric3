@@ -204,7 +204,10 @@ public class ContributionServiceImpl implements ContributionService {
      * @throws ContributionException if an error occurs during the store operation
      */
     private Contribution store(ContributionSource source) throws ContributionException {
-        URI contributionUri = URI.create(uriPrefix + "/" + UUID.randomUUID());
+        URI contributionUri = source.getUri();
+        if (contributionUri == null) {
+            contributionUri = URI.create(uriPrefix + "/" + UUID.randomUUID());
+        }
         URL locationUrl;
         if (!source.persist()) {
             locationUrl = source.getLocation();
