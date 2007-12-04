@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -277,7 +278,9 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
             }
             ContributionService contributionService = runtime.getSystemComponent(ContributionService.class,
                                                                                  CONTRIBUTION_SERVICE_URI);
-            ContributionSource source = new FileContributionSource(file.toURI().toURL(), -1, new byte[0]);
+            URI contribuUri = file.toURI();
+            URL location = contribuUri.toURL();
+            ContributionSource source = new FileContributionSource(contribuUri, location, -1, new byte[0]);
             URI uri = contributionService.contribute(source);
             DefinitionsDeployer deployer = runtime.getSystemComponent(DefinitionsDeployer.class, DEFINITIONS_DEPLOYER);
             List<URI> intents = new ArrayList<URI>();
@@ -312,7 +315,8 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
             });
             for (File file : files) {
                 try {
-                    ContributionSource source = new FileContributionSource(file.toURI().toURL(), -1, new byte[0]);
+                    URI uri = file.toURI();
+                    ContributionSource source = new FileContributionSource(uri, uri.toURL(), -1, new byte[0]);
                     sources.add(source);
                 } catch (MalformedURLException e) {
                     throw new ExtensionInitializationException("Error loading extension", file.getName(), e);
