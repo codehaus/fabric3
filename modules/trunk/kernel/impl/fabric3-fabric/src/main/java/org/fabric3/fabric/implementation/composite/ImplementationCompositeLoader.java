@@ -31,6 +31,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.fabric.services.contribution.manifest.MissingAttributeException;
 import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
@@ -84,8 +85,33 @@ public class ImplementationCompositeLoader implements StAXElementLoader<Composit
 
         ClassLoader cl = loaderContext.getTargetClassLoader();
         CompositeImplementation impl = new CompositeImplementation();
-        URL url = null;
-        if (nameAttr != null) {
+        URL url;
+        if (scdlLocation != null) {
+            try {
+                url = new URL(loaderContext.getSourceBase(), scdlLocation);
+            } catch (MalformedURLException e) {
+                MissingResourceException e2 = new MissingResourceException(scdlLocation, scdlLocation, e);
+                e2.setResourceURI(loaderContext.getSourceBase().toString());
+                throw e2;
+            }
+            LoaderContext childContext = new LoaderContextImpl(cl, url);
+            Composite composite = loader.load(url, Composite.class, childContext);
+            impl.setName(composite.getName());
+            impl.setComponentType(composite);
+            return impl;
+        } else if (scdlResource != null) {
+            url = cl.getResource(scdlResource);
+            if (url == null) {
+                MissingResourceException e = new MissingResourceException(scdlResource, scdlResource);
+                e.setResourceURI(loaderContext.getSourceBase().toString());
+                throw e;
+            }
+            LoaderContext childContext = new LoaderContextImpl(cl, url);
+            Composite composite = loader.load(url, Composite.class, childContext);
+            impl.setName(composite.getName());
+            impl.setComponentType(composite);
+            return impl;
+        } else if (nameAttr != null) {
             String targetNamespace = loaderContext.getTargetNamespace();
             NamespaceContext namespaceContext = reader.getNamespaceContext();
             QName name = LoaderUtil.getQName(nameAttr, targetNamespace, namespaceContext);
@@ -101,27 +127,10 @@ public class ImplementationCompositeLoader implements StAXElementLoader<Composit
 
             return impl;
 
-        } else if (scdlLocation != null) {
-            try {
-                url = new URL(loaderContext.getSourceBase(), scdlLocation);
-            } catch (MalformedURLException e) {
-                MissingResourceException e2 = new MissingResourceException(scdlLocation, scdlLocation, e);
-                e2.setResourceURI(loaderContext.getSourceBase().toString());
-                throw e2;
-            }
-        } else if (scdlResource != null) {
-            url = cl.getResource(scdlResource);
-            if (url == null) {
-                MissingResourceException e = new MissingResourceException(scdlResource, scdlResource);
-                e.setResourceURI(loaderContext.getSourceBase().toString());
-                throw e;
-            }
+        } else {
+            throw new MissingAttributeException(
+                    "Implementaiton.composite must have a name, scdlLocation, or scdlResource");
         }
-        LoaderContext childContext = new LoaderContextImpl(cl, url);
-        Composite composite = loader.load(url, Composite.class, childContext);
-        impl.setName(composite.getName());
-        impl.setComponentType(composite);
-        return impl;
 
     }
 }
