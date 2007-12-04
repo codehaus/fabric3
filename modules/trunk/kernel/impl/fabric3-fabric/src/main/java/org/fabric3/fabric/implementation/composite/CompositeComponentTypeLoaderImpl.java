@@ -18,19 +18,17 @@
  */
 package org.fabric3.fabric.implementation.composite;
 
-import java.net.URI;
 import java.net.URL;
 
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.loader.common.LoaderContextImpl;
-import org.fabric3.spi.deployer.CompositeClassLoader;
+import org.fabric3.scdl.Composite;
+import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.loader.Loader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.scdl.Composite;
-import org.fabric3.scdl.CompositeImplementation;
 
 /**
  * Loads a composite component type
@@ -50,11 +48,8 @@ public class CompositeComponentTypeLoaderImpl implements CompositeComponentTypeL
             throw new LoaderException("SCDL location not found");
         }
         LoaderContext childContext = new LoaderContextImpl(context.getTargetClassLoader(), scdlLocation);
-        Composite componentType = loadFromSidefile(scdlLocation, childContext);
+        Composite componentType = loader.load(scdlLocation, Composite.class, childContext);
         implementation.setComponentType(componentType);
     }
 
-    protected Composite loadFromSidefile(URL url, LoaderContext context) throws LoaderException {
-        return loader.load(url, Composite.class, context);
-    }
 }
