@@ -18,7 +18,7 @@
  * under the License.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    
+
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -34,12 +34,18 @@
     <description>Assembly distribution for Fabric3 Standalone Server.</description>
 
     <dependencies>
+        <!-- force fabric3-spi dependency as Maven calculates an earlier version in transitive dependency -->
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-spi</artifactId>
+            <version>0.4-SNAPSHOT</version>
+        </dependency>
 
         <!-- commands to be included in the bin directory -->
         <dependency>
             <groupId>org.codehaus.fabric3.standalone</groupId>
             <artifactId>fabric3-standalone-server</artifactId>
-            <version>0.3</version>
+            <version>0.4-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -52,7 +58,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3.standalone</groupId>
             <artifactId>fabric3-standalone-host</artifactId>
-            <version>0.3.1</version>
+            <version>0.4-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -69,12 +75,6 @@
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-loader</artifactId>
-            <version>0.3.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-jmx</artifactId>
             <version>0.2</version>
         </dependency>
@@ -82,13 +82,13 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-policy</artifactId>
-            <version>0.3</version>
+            <version>0.4-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-contribution-scanner-spi</artifactId>
-            <version>0.3</version>
+            <version>0.4-SNAPSHOT</version>
         </dependency>
 
         <!-- provided scope dependencies that need to be resolved -->
@@ -117,7 +117,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-contribution-scanner</artifactId>
-            <version>0.3</version>
+            <version>0.4-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -135,7 +135,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-resource</artifactId>
-            <version>0.1</version>
+            <version>0.2-SNAPSHOT</version>
         </dependency>
 
     </dependencies>
@@ -168,5 +168,5 @@
         <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/runtime/standalone/runtime-standalone</developerConnection>
         <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/runtime/standalone/runtime-standalone</url>
     </scm>
-    
+
 </project>

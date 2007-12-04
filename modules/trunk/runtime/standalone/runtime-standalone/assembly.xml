@@ -78,6 +78,7 @@
         <!-- copy boot dependencies to standalone profile -->
         <dependencySet>
             <includes>
+                <include>org.codehaus.fabric3:fabric3-monitor</include>
                 <include>org.codehaus.fabric3:fabric3-scdl</include>
                 <include>org.codehaus.fabric3:fabric3-spi</include>
                 <include>org.codehaus.fabric3:fabric3-jmx</include>
@@ -97,7 +98,6 @@
                 <include>com.thoughtworks.xstream:xstream</include>
                 <include>org.apache.tuscany:commonj-api_r1.1</include>
                 <include>javax.activation:activation</include>
-                <include>org.codehaus.fabric3:fabric3-contribution-scanner-spi</include>
             </includes>
             <outputDirectory>profiles/standalone/boot</outputDirectory>
         </dependencySet>
@@ -107,6 +107,7 @@
             <includes>
                 <include>org.codehaus.fabric3:fabric3-console</include>
                 <include>org.codehaus.fabric3:fabric3-jetty</include>
+                <include>org.codehaus.fabric3:fabric3-contribution-scanner-spi</include>
                 <include>org.codehaus.fabric3:fabric3-contribution-scanner</include>
                 <include>org.codehaus.fabric3:fabric3-resource</include>
             </includes>
