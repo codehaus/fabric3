@@ -21,6 +21,7 @@ import java.io.FileFilter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -182,7 +183,7 @@ public class DevelopmentCoordinator implements RuntimeLifecycleCoordinator<Devel
             }
             ContributionService contributionService = runtime.getSystemComponent(ContributionService.class,
                                                                                  CONTRIBUTION_SERVICE_URI);
-            ContributionSource source = new FileContributionSource(intentsUrl, -1, new byte[0]);
+            ContributionSource source = new FileContributionSource(intentsUrl.toURI(), intentsUrl, -1, new byte[0]);
             URI uri = contributionService.contribute(source);
             DefinitionsDeployer deployer = runtime.getSystemComponent(DefinitionsDeployer.class, DEFINITIONS_DEPLOYER);
             List<URI> intents = new ArrayList<URI>();
@@ -191,6 +192,8 @@ public class DevelopmentCoordinator implements RuntimeLifecycleCoordinator<Devel
         } catch (ContributionException e) {
             throw new InitializationException(e);
         } catch (DefinitionActivationException e) {
+            throw new InitializationException(e);
+        } catch (URISyntaxException e) {
             throw new InitializationException(e);
         }
     }
@@ -216,7 +219,8 @@ public class DevelopmentCoordinator implements RuntimeLifecycleCoordinator<Devel
             });
             for (File file : files) {
                 try {
-                    ContributionSource source = new FileContributionSource(file.toURI().toURL(), -1, new byte[0]);
+                    URI uri = file.toURI();
+                    ContributionSource source = new FileContributionSource(uri, uri.toURL(), -1, new byte[0]);
                     sources.add(source);
                 } catch (MalformedURLException e) {
                     throw new ExtensionInitializationException("Error loading extension", file.getName(), e);

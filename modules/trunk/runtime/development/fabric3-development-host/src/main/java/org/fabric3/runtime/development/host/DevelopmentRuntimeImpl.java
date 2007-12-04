@@ -82,7 +82,7 @@ public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo>
                 throw new IllegalArgumentException("Composite URL was null");
             }
             Loader loader = getSystemComponent(Loader.class, LOADER_URI);
-            LoaderContext loaderContext = new LoaderContextImpl(getHostClassLoader(), compositeFile);
+            LoaderContext loaderContext = new LoaderContextImpl(getHostClassLoader(), null, compositeFile);
             Composite composite = loader.load(compositeFile, Composite.class, loaderContext);
             for (String name : mockCache.getMockDefinitions().keySet()) {
                 CompositeReference reference = composite.getReferences().get(name);
