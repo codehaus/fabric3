@@ -50,7 +50,7 @@ import org.fabric3.spi.wire.Message;
 import org.fabric3.spi.wire.MessageImpl;
 
 /**
- * @version $Rev: 1382 $ $Date: 2007-09-23 21:08:40 +0100 (Sun, 23 Sep 2007) $
+ * @version $Rev$ $Date$
  */
 public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> implements MavenEmbeddedRuntime {
     public MavenEmbeddedRuntimeImpl() {
@@ -59,7 +59,7 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
 
     public Composite load(ClassLoader cl, URL scdlLocation) throws Exception{
         Loader loader = getSystemComponent(Loader.class, LOADER_URI);
-        LoaderContext loaderContext = new LoaderContextImpl(cl, scdlLocation);
+        LoaderContext loaderContext = new LoaderContextImpl(cl, null, scdlLocation);
         return loader.load(scdlLocation, Composite.class, loaderContext);
     }
 
