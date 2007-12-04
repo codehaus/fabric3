@@ -139,9 +139,4 @@ public class ProcessorRegistryImpl implements ProcessorRegistry {
         processor.process(resource);
     }
 
-    public void processContribution(Contribution contribution, URI source) throws ContributionException {
-        throw new UnsupportedOperationException();
-    }
-
-
 }

@@ -127,11 +127,4 @@ public interface ProcessorRegistry {
      */
     void processResource(Resource resource) throws ContributionException;
 
-    /**
-     * This method is deprecated. Use {@link #processContribution(Contribution, ClassLoader)} instead.
-     */
-    @Deprecated
-    void processContribution(Contribution contribution, URI source) throws ContributionException;
-
-
 }
