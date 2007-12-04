@@ -18,6 +18,7 @@ package org.fabric3.fabric.services.contribution.processor;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.util.List;
 import javax.xml.stream.XMLInputFactory;
@@ -39,8 +40,8 @@ import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.contribution.ResourceProcessor;
-import org.fabric3.spi.services.contribution.XmlIndexerRegistry;
 import org.fabric3.spi.services.contribution.Symbol;
+import org.fabric3.spi.services.contribution.XmlIndexerRegistry;
 import org.fabric3.spi.services.factories.xml.XMLFactory;
 
 /**
@@ -123,7 +124,10 @@ public class XmlResourceProcessor implements ResourceProcessor {
             if (!"definitions".equals(reader.getName().getLocalPart())) {
                 return;
             }
-            LoaderContext context = new LoaderContextImpl((ClassLoader) null, null);
+            // JFM FIXME
+            URI contributionUri = null;
+            ClassLoader loader = null;
+            LoaderContext context = new LoaderContextImpl(loader, contributionUri, null);
             List<ResourceElement<?, ?>> elements = loaderRegistry.load(reader, List.class, context);
             for (ResourceElement<?, ?> candidate : elements) {
                 boolean found = false;

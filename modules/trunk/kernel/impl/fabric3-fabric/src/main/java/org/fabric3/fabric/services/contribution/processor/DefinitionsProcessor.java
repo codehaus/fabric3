@@ -16,6 +16,7 @@
  */
 package org.fabric3.fabric.services.contribution.processor;
 
+import java.net.URI;
 import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
@@ -59,7 +60,9 @@ public class DefinitionsProcessor implements XmlProcessor {
 
     public void processContent(Contribution contribution, XMLStreamReader reader) throws ContributionException {
         try {
-            LoaderContext context = new LoaderContextImpl(getClass().getClassLoader(), null);
+            ClassLoader cl = getClass().getClassLoader();
+            URI uri = contribution.getUri();
+            LoaderContext context = new LoaderContextImpl(cl, uri, null);
             List<ResourceElement<?, ?>> elements = loader.load(reader, context);
             Resource resource = new Resource(null, "application/xml");
             resource.addResourceElements(elements);

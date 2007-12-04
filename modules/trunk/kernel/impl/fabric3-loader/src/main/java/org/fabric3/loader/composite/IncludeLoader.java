@@ -69,11 +69,12 @@ public class IncludeLoader implements StAXElementLoader<Include> {
         LoaderUtil.skipToEndElement(reader);
 
         ClassLoader cl = loaderContext.getTargetClassLoader();
+        URI contributionUri = loaderContext.getContributionUri();
         URL url;
         if (scdlLocation != null) {
             try {
                 url = new URL(loaderContext.getSourceBase(), scdlLocation);
-                return loadFromSideFile(name, cl, url);
+                return loadFromSideFile(name, cl,contributionUri, url);
             } catch (MalformedURLException e) {
                 MissingResourceException e2 = new MissingResourceException(scdlLocation, name.toString(), e);
                 e2.setResourceURI(loaderContext.getSourceBase().toString());
@@ -84,10 +85,9 @@ public class IncludeLoader implements StAXElementLoader<Include> {
             if (url == null) {
                 throw new MissingResourceException(scdlResource, name.toString());
             }
-            return loadFromSideFile(name, cl, url);
+            return loadFromSideFile(name, cl,contributionUri, url);
         } else {
             try {
-                URI contributionUri = null; // FIXME
                 QNameSymbol symbol = new QNameSymbol(name);
                 ResourceElement<QNameSymbol, Include> element = store.resolve(contributionUri, Include.class, symbol);
                 return element.getValue();
@@ -97,9 +97,9 @@ public class IncludeLoader implements StAXElementLoader<Include> {
         }
     }
 
-    private Include loadFromSideFile(QName name, ClassLoader cl, URL url) throws InvalidIncludeException {
+    private Include loadFromSideFile(QName name, ClassLoader cl, URI contributionUri, URL url) throws InvalidIncludeException {
         Include include = new Include();
-        LoaderContext childContext = new LoaderContextImpl(cl, url);
+        LoaderContext childContext = new LoaderContextImpl(cl, contributionUri, url);
         Composite composite;
         try {
             composite = loader.load(url, Composite.class, childContext);

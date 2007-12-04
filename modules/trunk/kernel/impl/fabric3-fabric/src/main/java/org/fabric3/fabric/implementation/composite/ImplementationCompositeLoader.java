@@ -85,6 +85,7 @@ public class ImplementationCompositeLoader implements StAXElementLoader<Composit
 
         ClassLoader cl = loaderContext.getTargetClassLoader();
         CompositeImplementation impl = new CompositeImplementation();
+        URI contributionUri = loaderContext.getContributionUri();
         URL url;
         if (scdlLocation != null) {
             try {
@@ -94,7 +95,7 @@ public class ImplementationCompositeLoader implements StAXElementLoader<Composit
                 e2.setResourceURI(loaderContext.getSourceBase().toString());
                 throw e2;
             }
-            LoaderContext childContext = new LoaderContextImpl(cl, url);
+            LoaderContext childContext = new LoaderContextImpl(cl, contributionUri, url);
             Composite composite = loader.load(url, Composite.class, childContext);
             impl.setName(composite.getName());
             impl.setComponentType(composite);
@@ -106,7 +107,7 @@ public class ImplementationCompositeLoader implements StAXElementLoader<Composit
                 e.setResourceURI(loaderContext.getSourceBase().toString());
                 throw e;
             }
-            LoaderContext childContext = new LoaderContextImpl(cl, url);
+            LoaderContext childContext = new LoaderContextImpl(cl, contributionUri, url);
             Composite composite = loader.load(url, Composite.class, childContext);
             impl.setName(composite.getName());
             impl.setComponentType(composite);
@@ -116,10 +117,9 @@ public class ImplementationCompositeLoader implements StAXElementLoader<Composit
             NamespaceContext namespaceContext = reader.getNamespaceContext();
             QName name = LoaderUtil.getQName(nameAttr, targetNamespace, namespaceContext);
             QNameSymbol symbol = new QNameSymbol(name);
-            URI contributionURI = null;
             try {
                 ResourceElement<QNameSymbol, Composite> element =
-                        store.resolve(contributionURI, Composite.class, symbol);
+                        store.resolve(contributionUri, Composite.class, symbol);
                 impl.setComponentType(element.getValue());
             } catch (MetaDataStoreException e) {
                 throw new LoaderException(e);

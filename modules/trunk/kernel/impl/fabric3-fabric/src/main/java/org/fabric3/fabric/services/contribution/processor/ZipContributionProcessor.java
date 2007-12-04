@@ -23,6 +23,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -89,7 +90,9 @@ public class ZipContributionProcessor extends ArchiveContributionProcessor imple
             }
             reader = xmlFactory.createXMLStreamReader(stream);
             reader.nextTag();
-            LoaderContext context = new LoaderContextImpl(getClass().getClassLoader(), null);
+            ClassLoader cl = getClass().getClassLoader();
+            URI uri = contribution.getUri();
+            LoaderContext context = new LoaderContextImpl(cl, uri, null);
             ContributionManifest manifest = loaderRegistry.load(reader, ContributionManifest.class, context);
             contribution.setManifest(manifest);
             iterateArtifacts(contribution, new Action() {

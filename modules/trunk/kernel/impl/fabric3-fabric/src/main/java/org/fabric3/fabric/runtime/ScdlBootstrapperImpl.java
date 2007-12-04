@@ -229,7 +229,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         try {
             // load the system composite
             ClassLoader bootCl = classLoaderRegistry.getClassLoader(BOOT_CLASSLOADER_ID);
-            LoaderContext loaderContext = new LoaderContextImpl(bootCl, scdlLocation);
+            LoaderContext loaderContext = new LoaderContextImpl(bootCl, BOOT_CLASSLOADER_ID, scdlLocation);
             Composite composite = loader.load(scdlLocation, Composite.class, loaderContext);
 
             // include in the runtime domain assembly

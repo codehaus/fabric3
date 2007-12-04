@@ -18,6 +18,7 @@ package org.fabric3.fabric.services.contribution.processor;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
@@ -81,10 +82,10 @@ public class CompositeResourceProcessor implements ResourceProcessor {
             resource.addResourceElement(element);
             contribution.addResource(resource);
         } catch (XMLStreamException e) {
-           throw new ContributionException(e);
+            throw new ContributionException(e);
         } catch (IOException e) {
             throw new ContributionException(e);
-        }  finally {
+        } finally {
             try {
                 if (stream != null) {
                     stream.close();
@@ -105,10 +106,13 @@ public class CompositeResourceProcessor implements ResourceProcessor {
     @SuppressWarnings({"unchecked"})
     public void process(Resource resource) throws ContributionException {
         InputStream stream = null;
+        // JFM FIXME
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         try {
             stream = resource.getUrl().openStream();
-            Composite composite = processComponentType(stream, loader);
+            // JFM FIXME
+            URI contributionUri = null;
+            Composite composite = processComponentType(stream, loader, contributionUri);
             boolean found = false;
             for (ResourceElement element : resource.getResourceElements()) {
                 if (element.getSymbol().getKey().equals(composite.getName())) {
@@ -141,22 +145,21 @@ public class CompositeResourceProcessor implements ResourceProcessor {
     /**
      * Loads a composite component type at the given URL
      *
-     * @param stream the stream to load from
-     * @param loader the classloader to load resources with
+     * @param stream          the stream to load from
+     * @param loader          the classloader to load resources with
+     * @param contributionUri  the current contribution uri
      * @return the component type
-     * @throws java.io.IOException if an error occurs reading the URL stream
-     * @throws javax.xml.stream.XMLStreamException
-     *                             if an error occurs parsing the XML
-     * @throws org.fabric3.spi.loader.LoaderException
-     *                             if an error occurs processing the component type
+     * @throws IOException        if an error occurs reading the URL stream
+     * @throws XMLStreamException if an error occurs parsing the XML
+     * @throws LoaderException    if an error occurs processing the component type
      */
-    private Composite processComponentType(InputStream stream, ClassLoader loader)
+    private Composite processComponentType(InputStream stream, ClassLoader loader, URI contributionUri)
             throws IOException, XMLStreamException, LoaderException {
         XMLStreamReader reader = null;
         try {
             reader = xmlFactory.createXMLStreamReader(stream);
             reader.nextTag();
-            LoaderContext context = new LoaderContextImpl(loader, null);
+            LoaderContext context = new LoaderContextImpl(loader, contributionUri, null);
             return loaderRegistry.load(reader, Composite.class, context);
 
         } finally {

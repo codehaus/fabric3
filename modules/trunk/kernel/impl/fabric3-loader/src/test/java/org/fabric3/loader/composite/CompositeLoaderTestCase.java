@@ -79,6 +79,7 @@ public class CompositeLoaderTestCase extends TestCase {
         loaderContext = EasyMock.createMock(LoaderContext.class);
         EasyMock.expect(loaderContext.getSourceBase()).andStubReturn(null);
         EasyMock.expect(loaderContext.getTargetClassLoader()).andStubReturn(null);
+        EasyMock.expect(loaderContext.getContributionUri()).andStubReturn(null);
 
         PolicyHelper policyHelper = EasyMock.createMock(PolicyHelper.class);
         policyHelper.loadPolicySetsAndIntents(EasyMock.isA(PolicyAware.class), EasyMock.isA(XMLStreamReader.class));

@@ -49,7 +49,7 @@ public class SystemComponentTypeLoaderTestCase extends TestCase {
     public void testIntrospectUnannotatedClass() throws Exception {
         SystemImplementation impl = new SystemImplementation(BasicInterfaceImpl.class.getName());
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        LoaderContextImpl context = new LoaderContextImpl(cl, null);
+        LoaderContextImpl context = new LoaderContextImpl(cl, null, null);
         PojoComponentType componentType = loader.loadByIntrospection(impl, context);
         ServiceDefinition service = componentType.getServices().get(BasicInterface.class.getSimpleName());
         JavaServiceContract contract = JavaServiceContract.class.cast(service.getServiceContract());

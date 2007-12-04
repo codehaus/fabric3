@@ -117,7 +117,7 @@ public class StAXLoaderRegistryImplTestCase extends TestCase {
         super.setUp();
         name = new QName("http://mock", "test");
         ClassLoader cl = getClass().getClassLoader();
-        loaderContext = new LoaderContextImpl(cl, null);
+        loaderContext = new LoaderContextImpl(cl, null, null);
         mockMonitor = EasyMock.createMock(LoaderRegistryImpl.Monitor.class);
         ClassLoaderStaxDriver staxDriver = new ClassLoaderStaxDriver(cl);
         XMLInputFactory xmlInputFactory = staxDriver.getInputFactory();

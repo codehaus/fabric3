@@ -18,6 +18,7 @@
  */
 package org.fabric3.spi.loader;
 
+import java.net.URI;
 import java.net.URL;
 
 /**
@@ -41,12 +42,19 @@ public interface LoaderContext {
      * @return the location of the SCDL definition being deployed
      */
     URL getSourceBase();
-    
+
     /**
      * Target namespace for this loader context.
-     * 
+     *
      * @return Target namespace.
      */
     String getTargetNamespace();
+
+    /**
+     * Returns the active contribution URI.
+     *
+     * @return the active contribution URI
+     */
+    URI getContributionUri();
 
 }

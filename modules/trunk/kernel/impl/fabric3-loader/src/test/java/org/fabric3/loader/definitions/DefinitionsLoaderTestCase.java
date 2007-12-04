@@ -51,7 +51,7 @@ public class DefinitionsLoaderTestCase extends TestCase {
     public void testLoad() throws Exception {
 
         ClassLoader cl = null;
-        LoaderContext context = new LoaderContextImpl(cl, null);
+        LoaderContext context = new LoaderContextImpl(cl, null, null);
 
         InputStream stream = getClass().getResourceAsStream("definitions.xml");
         XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(stream);
