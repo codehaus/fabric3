@@ -29,9 +29,6 @@
            autowire="true">
 
     <!-- Composite implementation type -->
-    <component name="composite.componentTypeLoader">
-        <system:implementation.system class="org.fabric3.fabric.implementation.composite.CompositeComponentTypeLoaderImpl"/>
-    </component>
     <component name="composite.implementationLoader">
         <system:implementation.system class="org.fabric3.fabric.implementation.composite.ImplementationCompositeLoader"/>
     </component>
