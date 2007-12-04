@@ -436,7 +436,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
                                                               componentServiceLoader,
                                                               policyHelper);
 
-        IncludeLoader includeLoader = new IncludeLoader(loaderRegistry);
+        IncludeLoader includeLoader = new IncludeLoader(loaderRegistry, metaDataStore);
         CompositeLoader compositeLoader = new CompositeLoader(loaderRegistry,
                                                               includeLoader,
                                                               null,

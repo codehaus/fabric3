@@ -18,6 +18,7 @@
  */
 package org.fabric3.loader.composite;
 
+import java.net.URI;
 import java.net.URL;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
@@ -26,6 +27,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import junit.framework.TestCase;
+import org.easymock.EasyMock;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
@@ -33,11 +35,14 @@ import static org.easymock.EasyMock.isA;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
+import org.fabric3.scdl.Composite;
+import org.fabric3.scdl.Include;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.scdl.Composite;
-import org.fabric3.scdl.Include;
+import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.services.contribution.QNameSymbol;
+import org.fabric3.spi.services.contribution.ResourceElement;
 
 /**
  * @version $Rev$ $Date$
@@ -54,8 +59,9 @@ public class IncludeLoaderTestCase extends TestCase {
     private ClassLoader cl;
     private String namespace;
     private QName name;
+    private MetaDataStore store;
 
-    public void testNoLocation() throws LoaderException, XMLStreamException {
+    public void testResolveQName() throws Exception {
         expect(reader.getAttributeValue(null, "name")).andReturn(name.getLocalPart());
         expect(reader.getNamespaceContext()).andReturn(namespaceContext);
         expect(reader.getAttributeValue(null, "scdlLocation")).andReturn(null);
@@ -64,15 +70,17 @@ public class IncludeLoaderTestCase extends TestCase {
 
         expect(context.getTargetNamespace()).andReturn(namespace);
         expect(context.getTargetClassLoader()).andReturn(cl);
-        replay(registry, reader, namespaceContext, context);
+        QNameSymbol symbol = new QNameSymbol(name);
+        Include include = new Include();
+        include.setName(name);
+        ResourceElement<QNameSymbol, Include> element = new ResourceElement<QNameSymbol, Include>(symbol);
+        element.setValue(include);
+        // FIXME null check
+        expect(store.resolve((URI) EasyMock.isNull(), eq(Include.class), isA(QNameSymbol.class))).andReturn(element);
+        replay(registry, reader, namespaceContext, context, store);
 
-        try {
-            loader.load(reader, context);
-            fail();
-        } catch (IncludeNotFoundException e) {
-            // OK expected
-        }
-        verify(registry, reader, namespaceContext, context);
+        loader.load(reader, context);
+        verify(registry, reader, namespaceContext, context, store);
     }
 
     public void testWithAbsoluteScdlLocation() throws LoaderException, XMLStreamException {
@@ -91,7 +99,7 @@ public class IncludeLoaderTestCase extends TestCase {
                 eq(Composite.class),
                 isA(LoaderContext.class)))
                 .andReturn(null);
-        replay(registry, reader, namespaceContext, context);
+        replay(registry, reader, namespaceContext, context, store);
 
         Include include = loader.load(reader, context);
         assertEquals(name, include.getName());
@@ -115,7 +123,7 @@ public class IncludeLoaderTestCase extends TestCase {
                 eq(Composite.class),
                 isA(LoaderContext.class)))
                 .andReturn(null);
-        replay(registry, reader, namespaceContext, context);
+        replay(registry, reader, namespaceContext, context, store);
 
         Include include = loader.load(reader, context);
         assertEquals(name, include.getName());
@@ -142,7 +150,7 @@ public class IncludeLoaderTestCase extends TestCase {
                 eq(Composite.class),
                 isA(LoaderContext.class)))
                 .andReturn(null);
-        replay(registry, reader, namespaceContext, context);
+        replay(registry, reader, namespaceContext, context, store);
 
         Include include = loader.load(reader, context);
         assertEquals(name, include.getName());
@@ -160,7 +168,8 @@ public class IncludeLoaderTestCase extends TestCase {
         cl = getClass().getClassLoader();
         base = new URL("http://example.com/test.scdl");
         includeURL = new URL("http://example.com/include.scdl");
-        loader = new IncludeLoader(registry);
+        store = createMock(MetaDataStore.class);
+        loader = new IncludeLoader(registry, store);
         name = new QName(namespace, "foo");
     }
 }

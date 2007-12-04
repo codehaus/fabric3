@@ -19,6 +19,7 @@
 package org.fabric3.loader.composite;
 
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
@@ -36,6 +37,10 @@ import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.MissingResourceException;
 import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.services.contribution.MetaDataStoreException;
+import org.fabric3.spi.services.contribution.QNameSymbol;
+import org.fabric3.spi.services.contribution.ResourceElement;
 
 /**
  * Loader that handles &lt;include&gt; elements.
@@ -44,9 +49,11 @@ import org.fabric3.spi.loader.StAXElementLoader;
  */
 public class IncludeLoader implements StAXElementLoader<Include> {
     private final Loader loader;
+    private MetaDataStore store;
 
-    public IncludeLoader(@Reference Loader loader) {
+    public IncludeLoader(@Reference Loader loader, @Reference MetaDataStore store) {
         this.loader = loader;
+        this.store = store;
     }
 
     public Include load(XMLStreamReader reader, LoaderContext loaderContext)
@@ -66,6 +73,7 @@ public class IncludeLoader implements StAXElementLoader<Include> {
         if (scdlLocation != null) {
             try {
                 url = new URL(loaderContext.getSourceBase(), scdlLocation);
+                return loadFromSideFile(name, cl, url);
             } catch (MalformedURLException e) {
                 MissingResourceException e2 = new MissingResourceException(scdlLocation, name.toString(), e);
                 e2.setResourceURI(loaderContext.getSourceBase().toString());
@@ -76,27 +84,33 @@ public class IncludeLoader implements StAXElementLoader<Include> {
             if (url == null) {
                 throw new MissingResourceException(scdlResource, name.toString());
             }
+            return loadFromSideFile(name, cl, url);
         } else {
-            // todo: when we support this, update the message in the exception
-            throw new IncludeNotFoundException(name);
+            try {
+                URI contributionUri = null; // FIXME
+                QNameSymbol symbol = new QNameSymbol(name);
+                ResourceElement<QNameSymbol, Include> element = store.resolve(contributionUri, Include.class, symbol);
+                return element.getValue();
+            } catch (MetaDataStoreException e) {
+                throw new LoaderException(e);
+            }
         }
+    }
 
+    private Include loadFromSideFile(QName name, ClassLoader cl, URL url) throws InvalidIncludeException {
+        Include include = new Include();
         LoaderContext childContext = new LoaderContextImpl(cl, url);
         Composite composite;
         try {
-            composite = loadFromSidefile(url, childContext);
+            composite = loader.load(url, Composite.class, childContext);
         } catch (LoaderException e) {
             throw new InvalidIncludeException(name, e);
         }
 
-        Include include = new Include();
         include.setName(name);
         include.setScdlLocation(url);
         include.setIncluded(composite);
         return include;
     }
 
-    protected Composite loadFromSidefile(URL url, LoaderContext context) throws LoaderException {
-        return loader.load(url, Composite.class, context);
-    }
 }
