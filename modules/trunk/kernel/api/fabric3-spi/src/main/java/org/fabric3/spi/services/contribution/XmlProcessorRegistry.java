@@ -17,6 +17,9 @@
 package org.fabric3.spi.services.contribution;
 
 import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamReader;
+
+import org.fabric3.host.contribution.ContributionException;
 
 /**
  * A registry of XmlProcessors
@@ -36,6 +39,15 @@ public interface XmlProcessorRegistry {
      *
      * @param name the QName
      */
-    void unregisterContributionProcessor(QName name);
+    void unregister(QName name);
+
+    /**
+     * Dispatches to an XmlProcessor
+     *
+     * @param contribution the contribution metadata to update
+     * @param reader       the reader positioned at the first element of the document
+     * @throws ContributionException if an error occurs processing
+     */
+    void process(Contribution contribution, XMLStreamReader reader) throws ContributionException;
 
 }

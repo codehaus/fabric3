@@ -19,16 +19,13 @@ package org.fabric3.fabric.services.contribution.processor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
-import org.osoa.sca.annotations.Service;
 
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.spi.services.contribution.Contribution;
@@ -37,7 +34,6 @@ import org.fabric3.spi.services.contribution.ContributionProcessor;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.XmlIndexerRegistry;
-import org.fabric3.spi.services.contribution.XmlProcessor;
 import org.fabric3.spi.services.contribution.XmlProcessorRegistry;
 import org.fabric3.spi.services.factories.xml.XMLFactory;
 
@@ -47,19 +43,25 @@ import org.fabric3.spi.services.factories.xml.XMLFactory;
  *
  * @version $Rev$ $Date$
  */
-@Service(XmlProcessorRegistry.class)
 @EagerInit
-// FIXME JFM separate XMLProcessorRegistry
-public class XmlContributionProcessor implements ContributionProcessor, XmlProcessorRegistry {
+public class XmlContributionProcessor implements ContributionProcessor {
     private XMLInputFactory xmlFactory;
-    private Map<QName, XmlProcessor> processors = new HashMap<QName, XmlProcessor>();
-    private XmlIndexerRegistry indexerRegistry;
+    private ProcessorRegistry processorRegistry;
+    private XmlProcessorRegistry xmlProcessorRegistry;
+    private XmlIndexerRegistry xmlIndexerRegistry;
 
     public XmlContributionProcessor(@Reference ProcessorRegistry processorRegistry,
-                                    @Reference XmlIndexerRegistry indexerRegistry,
+                                    @Reference XmlProcessorRegistry xmlProcessorRegistry,
+                                    @Reference XmlIndexerRegistry xmlIndexerRegistry,
                                     @Reference XMLFactory xmlFactory) {
-        this.indexerRegistry = indexerRegistry;
+        this.processorRegistry = processorRegistry;
+        this.xmlProcessorRegistry = xmlProcessorRegistry;
+        this.xmlIndexerRegistry = xmlIndexerRegistry;
         this.xmlFactory = xmlFactory.newInputFactoryInstance();
+    }
+
+    @Init
+    public void init() {
         processorRegistry.register(this);
     }
 
@@ -80,13 +82,8 @@ public class XmlContributionProcessor implements ContributionProcessor, XmlProce
             stream = locationURL.openStream();
             reader = xmlFactory.createXMLStreamReader(stream);
             reader.nextTag();
-            QName name = reader.getName();
-            XmlProcessor processor = processors.get(name);
-            if (processor == null) {
-                throw new XmlProcessorTypeNotFoundException("XML processor not found for", name.toString());
-            }
             Resource resource = new Resource(contribution.getLocation(), "application/xml");
-            indexerRegistry.index(resource,reader);
+            xmlIndexerRegistry.index(resource, reader);
             contribution.addResource(resource);
         } catch (IOException e) {
             throw new ContributionException(e);
@@ -110,14 +107,6 @@ public class XmlContributionProcessor implements ContributionProcessor, XmlProce
         }
     }
 
-    public void register(XmlProcessor processor) {
-        processors.put(processor.getType(), processor);
-    }
-
-    public void unregisterContributionProcessor(QName name) {
-        processors.remove(name);
-    }
-
     public void processContent(Contribution contribution, ClassLoader loader) throws ContributionException {
         URL locationURL = contribution.getLocation();
         InputStream stream = null;
@@ -126,12 +115,7 @@ public class XmlContributionProcessor implements ContributionProcessor, XmlProce
             stream = locationURL.openStream();
             reader = xmlFactory.createXMLStreamReader(stream);
             reader.nextTag();
-            QName name = reader.getName();
-            XmlProcessor processor = processors.get(name);
-            if (processor == null) {
-                throw new XmlProcessorTypeNotFoundException("XML processor not found for", name.toString());
-            }
-            processor.processContent(contribution, reader);
+            xmlProcessorRegistry.process(contribution, reader);
         } catch (IOException e) {
             throw new ContributionException(e);
         } catch (XMLStreamException e) {
