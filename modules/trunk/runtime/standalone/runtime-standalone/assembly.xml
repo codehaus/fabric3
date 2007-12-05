@@ -106,6 +106,8 @@
         <dependencySet>
             <includes>
                 <!--<include>org.codehaus.fabric3:fabric3-console</include>-->
+                <include>org.codehaus.fabric3:fabric3-async-loader</include>
+                <include>org.codehaus.fabric3:fabric3-async-runtime</include>
                 <include>org.codehaus.fabric3:fabric3-jetty</include>
                 <include>org.codehaus.fabric3:fabric3-contribution-scanner-spi</include>
                 <include>org.codehaus.fabric3:fabric3-contribution-scanner</include>

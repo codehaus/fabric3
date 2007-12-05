@@ -116,6 +116,18 @@
         <!-- extensions -->
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-async-loader</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-async-runtime</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-contribution-scanner</artifactId>
             <version>0.4-SNAPSHOT</version>
         </dependency>
