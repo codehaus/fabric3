@@ -72,11 +72,6 @@
         <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.CompositeResourceProcessor"/>
     </component>
 
-    <component name="FolderContributionProcessor">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.ExplodedArchiveContributionProcessor"/>
-        <!--<reference name="metaDataStore" target="MetadataStore"/>-->
-    </component>
-
     <component name="XmlContributionProcessor">
         <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.XmlContributionProcessor"/>
     </component>
