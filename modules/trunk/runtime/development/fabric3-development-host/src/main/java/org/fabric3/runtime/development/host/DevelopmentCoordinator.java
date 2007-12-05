@@ -19,6 +19,7 @@ package org.fabric3.runtime.development.host;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -38,6 +39,7 @@ import static org.fabric3.fabric.runtime.ComponentNames.DEFINITIONS_DEPLOYER;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
 import org.fabric3.fabric.runtime.ExtensionInitializationException;
+import org.fabric3.fabric.services.contribution.manifest.XmlManifestProcessor;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
@@ -55,6 +57,10 @@ import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.services.definitions.DefinitionActivationException;
 import org.fabric3.spi.services.definitions.DefinitionsDeployer;
+import org.fabric3.spi.services.contribution.Contribution;
+import org.fabric3.spi.services.contribution.ContributionManifest;
+import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.services.contribution.MetaDataStoreException;
 
 /**
  * Implementation of a coordinator for the development runtime.
@@ -62,6 +68,7 @@ import org.fabric3.spi.services.definitions.DefinitionsDeployer;
  * @version $Rev$ $Date$
  */
 public class DevelopmentCoordinator implements RuntimeLifecycleCoordinator<DevelopmentRuntime, Bootstrapper> {
+    private ClassLoader bootClassLoader;
 
     private enum State {
         UNINITIALIZED,
@@ -86,6 +93,7 @@ public class DevelopmentCoordinator implements RuntimeLifecycleCoordinator<Devel
         if (state != State.UNINITIALIZED) {
             throw new IllegalStateException("Not in UNINITIALIZED state");
         }
+        this.bootClassLoader = bootClassLoader;
         this.runtime = runtime;
         this.bootstrapper = bootstrapper;
         try {
@@ -117,6 +125,7 @@ public class DevelopmentCoordinator implements RuntimeLifecycleCoordinator<Devel
             throw new IllegalStateException("Not in PRIMORDIAL state");
         }
         bootstrapper.bootSystem(runtime);
+        synthesizeSPIContribution();
         activateIntents();
         includeExtensions();
         state = State.INITIALIZED;
@@ -235,6 +244,30 @@ public class DevelopmentCoordinator implements RuntimeLifecycleCoordinator<Devel
                 throw new ExtensionInitializationException("Error loading extension", e);
             }
             runtime.includeExtensionContributions(contributionUris);
+        }
+
+
+    }
+    private void synthesizeSPIContribution() throws InitializationException {
+        Contribution contribution = new Contribution(ComponentNames.BOOT_CLASSLOADER_ID);
+        ContributionManifest manifest = new ContributionManifest();
+        InputStream stream =
+                bootClassLoader.getResourceAsStream("META-INF/maven/org.codehaus.fabric3/fabric3-spi/pom.xml");
+        if (stream == null) {
+            throw new InitializationException("fabric3-spi jar is missing pom.xml file");
+        }
+        XmlManifestProcessor processor =
+                runtime.getSystemComponent(XmlManifestProcessor.class, ComponentNames.XML_MANIFEST_PROCESSOR);
+
+        try {
+            processor.process(manifest, stream);
+            contribution.setManifest(manifest);
+            MetaDataStore store = runtime.getSystemComponent(MetaDataStore.class, ComponentNames.METADATA_STORE_URI);
+            store.store(contribution);
+        } catch (MetaDataStoreException e) {
+            throw new InitializationException(e);
+        } catch (ContributionException e) {
+            throw new InitializationException(e);
         }
     }
 

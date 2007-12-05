@@ -30,32 +30,49 @@
     <description>Fabric3 Development Distribution Assembly.</description>
 
     <dependencies>
-        <dependency>
+		  <!-- insert fabric3-spi dependency as Maven does not seem to be picking it up -->
+		  <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-spi</artifactId>
+            <version>0.4-SNAPSHOT</version>
+        </dependency>
+       
+		  <dependency>
             <groupId>org.codehaus.fabric3.development</groupId>
             <artifactId>fabric3-development-host</artifactId>
-            <version>0.2.1</version>
+            <version>0.3-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-java</artifactId>
             <version>0.1</version>
         </dependency>
-
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-policy</artifactId>
-            <version>0.3</version>
+            <version>0.4-SNAPSHOT</version>
         </dependency>
+
+		  <!-- extensions -->
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-contribution-scanner</artifactId>
-            <version>0.2</version>
+            <artifactId>fabric3-async-loader</artifactId>
+            <version>0.1-SNAPSHOT</version>
         </dependency>
+
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-contribution-scanner-spi</artifactId>
-            <version>0.2</version>
+            <artifactId>fabric3-async-runtime</artifactId>
+            <version>0.1-SNAPSHOT</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-resource</artifactId>
+            <version>0.2-SNAPSHOT</version>
+        </dependency>
+		  
+				
 
         <!-- provided scope dependencies that need to be resolved -->
         <dependency>

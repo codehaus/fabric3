@@ -65,6 +65,7 @@
         <!-- copy dependencies for the runtime itself to the boot directory -->
         <dependencySet>
             <includes>
+                <include>org.codehaus.fabric3:fabric3-monitor</include>
                 <include>org.codehaus.fabric3:fabric3-scdl</include>
                 <include>org.codehaus.fabric3:fabric3-spi</include>
                 <include>org.codehaus.fabric3:fabric3-extension</include>
@@ -82,10 +83,19 @@
                 <include>com.thoughtworks.xstream:xstream</include>
                 <include>org.apache.tuscany:commonj-api_r1.1</include>
                 <include>javax.activation:activation</include>
-                <include>org.codehaus.fabric3:fabric3-contribution-scanner-spi</include>
-                <include>org.codehaus.fabric3:fabric3-contribution-scanner</include>
+               <!-- <include>org.codehaus.fabric3:fabric3-contribution-scanner-spi</include>
+                <include>org.codehaus.fabric3:fabric3-contribution-scanner</include>-->
             </includes>
             <outputDirectory>boot</outputDirectory>
+        </dependencySet>
+        <!-- copy extension modules to the extensions directory-->
+        <dependencySet>
+            <includes>
+                <include>org.codehaus.fabric3:fabric3-async-loader</include>
+                <include>org.codehaus.fabric3:fabric3-async-runtime</include>
+                <include>org.codehaus.fabric3:fabric3-resource</include>
+            </includes>
+            <outputDirectory>extensions</outputDirectory>
         </dependencySet>
 
     </dependencySets>
