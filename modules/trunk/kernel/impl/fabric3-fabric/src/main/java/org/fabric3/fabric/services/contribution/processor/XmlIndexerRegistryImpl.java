@@ -19,7 +19,6 @@ package org.fabric3.fabric.services.contribution.processor;
 import java.util.HashMap;
 import java.util.Map;
 import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.host.contribution.ContributionException;
@@ -44,22 +43,11 @@ public class XmlIndexerRegistryImpl implements XmlIndexerRegistry {
     }
 
     public void index(Resource resource, XMLStreamReader reader) throws ContributionException {
-        try {
-            QName name = reader.getName();
-            XmlIndexer indexer = cache.get(name);
-            if (indexer == null) {
-                return;
-            }
-            indexer.index(resource, reader);
-        } finally {
-            try {
-                if (reader != null) {
-                    reader.close();
-                }
-            } catch (XMLStreamException e) {
-                e.printStackTrace();
-            }
+        QName name = reader.getName();
+        XmlIndexer indexer = cache.get(name);
+        if (indexer == null) {
+            return;
         }
-
+        indexer.index(resource, reader);
     }
 }
