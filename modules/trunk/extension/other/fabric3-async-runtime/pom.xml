@@ -34,12 +34,14 @@
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
             <version>0.4-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-extension</artifactId>
             <version>0.3</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Import async-loader as a dependent libarary since the physical classes must be shared.
@@ -55,6 +57,7 @@
             <artifactId>stax-api</artifactId>
             <!-- use version 1.0 as it is the version bundled in JDK 6 -->
             <version>1.0.</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
