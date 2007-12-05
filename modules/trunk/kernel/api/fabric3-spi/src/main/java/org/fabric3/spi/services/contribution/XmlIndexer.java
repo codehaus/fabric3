@@ -36,6 +36,8 @@ public interface XmlIndexer {
     QName getType();
 
     /**
+     * Performs the index operation
+     *
      * @param resource the resource being indexed
      * @param reader   the reader positioned on the document element
      * @throws ContributionException if an error occurs during indexing
