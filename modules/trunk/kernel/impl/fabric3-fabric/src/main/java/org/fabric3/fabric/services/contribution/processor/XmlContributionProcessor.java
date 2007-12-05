@@ -107,7 +107,7 @@ public class XmlContributionProcessor implements ContributionProcessor {
         }
     }
 
-    public void processContent(Contribution contribution, ClassLoader loader) throws ContributionException {
+    public void process(Contribution contribution, ClassLoader loader) throws ContributionException {
         URL locationURL = contribution.getLocation();
         InputStream stream = null;
         XMLStreamReader reader = null;

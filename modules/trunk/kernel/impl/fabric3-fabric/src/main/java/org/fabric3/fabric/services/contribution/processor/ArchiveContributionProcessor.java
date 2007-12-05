@@ -64,7 +64,7 @@ public abstract class ArchiveContributionProcessor extends ContributionProcessor
 
     }
 
-    public void processContent(Contribution contribution, ClassLoader loader) throws ContributionException {
+    public void process(Contribution contribution, ClassLoader loader) throws ContributionException {
         ClassLoader oldClassloader = Thread.currentThread().getContextClassLoader();
         URI contributionUri = contribution.getUri();
         try {

@@ -58,12 +58,12 @@ public interface ContributionProcessor {
     void index(Contribution contribution) throws ContributionException;
 
     /**
-     * Iterates and loads all resources in the contribution.
+     * Loads all resources in the contribution.
      *
      * @param contribution The contribution
      * @param loader       the classloader contribution resources must be loaded in
      * @throws ContributionException if there was a problem loading the contribution resoruces
      */
-    public void processContent(Contribution contribution, ClassLoader loader) throws ContributionException;
+    public void process(Contribution contribution, ClassLoader loader) throws ContributionException;
 
 }

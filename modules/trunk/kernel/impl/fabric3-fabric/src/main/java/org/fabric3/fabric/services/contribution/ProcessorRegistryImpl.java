@@ -126,7 +126,7 @@ public class ProcessorRegistryImpl implements ProcessorRegistry {
             URI source = contribution.getUri();
             throw new UnsupportedContentTypeException(contentType, source.toString());
         }
-        processor.processContent(contribution, loader);
+        processor.process(contribution, loader);
     }
 
     public void processResource(URI contributionUri, Resource resource, ClassLoader loader) throws ContributionException {

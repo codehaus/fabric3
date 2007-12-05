@@ -39,7 +39,7 @@ public class JavaContributionProcessor extends ContributionProcessorExtension im
 
     }
 
-    public void processContent(Contribution contribution, ClassLoader loader) throws ContributionException {
+    public void process(Contribution contribution, ClassLoader loader) throws ContributionException {
         throw new UnsupportedOperationException();
     }
 }
