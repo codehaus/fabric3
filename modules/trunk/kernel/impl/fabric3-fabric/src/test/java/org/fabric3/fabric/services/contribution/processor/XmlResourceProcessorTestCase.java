@@ -16,8 +16,6 @@
  */
 package org.fabric3.fabric.services.contribution.processor;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
 
@@ -64,7 +62,7 @@ public class XmlResourceProcessorTestCase extends TestCase {
                                       EasyMock.isA(Class.class),
                                       EasyMock.isA(LoaderContext.class))).andReturn(null);
         EasyMock.replay(registry);
-        processor = new XmlResourceProcessor(null, null, registry, factory);
+        processor = new XmlResourceProcessor(null, null, null, factory);
 
 
     }

@@ -17,7 +17,6 @@
 package org.fabric3.fabric.services.contribution.processor;
 
 import java.net.URI;
-import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -27,15 +26,11 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.ContributionException;
-import org.fabric3.loader.common.LoaderContextImpl;
-import org.fabric3.spi.loader.LoaderContext;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.Resource;
-import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.contribution.XmlProcessor;
 import org.fabric3.spi.services.contribution.XmlProcessorRegistry;
+import org.fabric3.spi.services.contribution.XmlResourceElementLoader;
 
 /**
  * Processes a contributed definitions file.
@@ -45,11 +40,10 @@ import org.fabric3.spi.services.contribution.XmlProcessorRegistry;
 @EagerInit
 public class DefinitionsProcessor implements XmlProcessor {
     private static final QName DEFINITIONS = new QName(SCA_NS, "definitions");
-    private StAXElementLoader<List<ResourceElement<?, ?>>> loader;
+    private XmlResourceElementLoader loader;
 
     public DefinitionsProcessor(@Reference(name = "processorRegistry")XmlProcessorRegistry processorRegistry,
-                                @Reference(name = "loader")
-                                StAXElementLoader<List<ResourceElement<?, ?>>> loader) {
+                                @Reference(name = "loader")XmlResourceElementLoader loader) {
         this.loader = loader;
         processorRegistry.register(this);
     }
@@ -62,14 +56,10 @@ public class DefinitionsProcessor implements XmlProcessor {
         try {
             ClassLoader cl = getClass().getClassLoader();
             URI uri = contribution.getUri();
-            LoaderContext context = new LoaderContextImpl(cl, uri, null);
-            List<ResourceElement<?, ?>> elements = loader.load(reader, context);
-            Resource resource = new Resource(null, "application/xml");
-            resource.addResourceElements(elements);
-            contribution.addResource(resource);
+            assert contribution.getResources().size() == 1;
+            Resource resource = contribution.getResources().get(0);
+            loader.load(reader, uri, resource, cl);
         } catch (XMLStreamException e) {
-            throw new ContributionException(e);
-        } catch (LoaderException e) {
             throw new ContributionException(e);
         }
     }

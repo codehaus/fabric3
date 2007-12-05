@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
-import java.util.List;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
@@ -31,17 +30,12 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.ContributionException;
-import org.fabric3.loader.common.LoaderContextImpl;
-import org.fabric3.spi.loader.LoaderContext;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.Resource;
-import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.contribution.ResourceProcessor;
-import org.fabric3.spi.services.contribution.Symbol;
 import org.fabric3.spi.services.contribution.XmlIndexerRegistry;
+import org.fabric3.spi.services.contribution.XmlResourceElementLoaderRegistry;
 import org.fabric3.spi.services.factories.xml.XMLFactory;
 
 /**
@@ -53,17 +47,17 @@ import org.fabric3.spi.services.factories.xml.XMLFactory;
 @EagerInit
 public class XmlResourceProcessor implements ResourceProcessor {
     private ProcessorRegistry processorRegistry;
+    private XmlResourceElementLoaderRegistry elementLoaderRegistry;
     private XmlIndexerRegistry indexerRegistry;
-    private LoaderRegistry loaderRegistry;
     private XMLInputFactory xmlFactory;
 
     public XmlResourceProcessor(@Reference ProcessorRegistry processorRegistry,
                                 @Reference XmlIndexerRegistry indexerRegistry,
-                                @Reference LoaderRegistry loaderRegistry,
+                                @Reference XmlResourceElementLoaderRegistry elementLoaderRegistry,
                                 @Reference XMLFactory xmlFactory) {
         this.processorRegistry = processorRegistry;
+        this.elementLoaderRegistry = elementLoaderRegistry;
         this.indexerRegistry = indexerRegistry;
-        this.loaderRegistry = loaderRegistry;
         this.xmlFactory = xmlFactory.newInputFactoryInstance();
     }
 
@@ -119,30 +113,8 @@ public class XmlResourceProcessor implements ResourceProcessor {
             if (skipToFirstTag(reader)) {
                 return;
             }
-
-            // TODO : This is an evil hack
-            if (!"definitions".equals(reader.getName().getLocalPart())) {
-                return;
-            }
-            LoaderContext context = new LoaderContextImpl(loader, contributionUri, null);
-            List<ResourceElement<?, ?>> elements = loaderRegistry.load(reader, List.class, context);
-            for (ResourceElement<?, ?> candidate : elements) {
-                boolean found = false;
-                for (ResourceElement element : resource.getResourceElements()) {
-                    Symbol candidateSymbol = candidate.getSymbol();
-                    if (element.getSymbol().equals(candidateSymbol)) {
-                        element.setValue(candidate.getValue());
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
-                    throw new ResourceElementNotFoundException("Resource element not found", candidate.toString());
-                }
-            }
+            elementLoaderRegistry.load(reader, contributionUri, resource, loader);
         } catch (XMLStreamException e) {
-            throw new ContributionException(e);
-        } catch (LoaderException e) {
             throw new ContributionException(e);
         } catch (IOException e) {
             throw new ContributionException(e);

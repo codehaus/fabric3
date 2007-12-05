@@ -18,6 +18,7 @@
  */
 package org.fabric3.loader.definitions;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.namespace.QName;
@@ -28,8 +29,10 @@ import javax.xml.stream.XMLStreamReader;
 
 import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.scdl.definitions.AbstractDefinition;
 import org.fabric3.scdl.definitions.BindingType;
@@ -39,9 +42,13 @@ import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.services.contribution.QNameSymbol;
+import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
+import org.fabric3.spi.services.contribution.ResourceElementNotFoundException;
+import org.fabric3.spi.services.contribution.Symbol;
+import org.fabric3.spi.services.contribution.XmlResourceElementLoader;
+import org.fabric3.spi.services.contribution.XmlResourceElementLoaderRegistry;
 
 /**
  * Loader for definitions.
@@ -49,7 +56,7 @@ import org.fabric3.spi.services.contribution.ResourceElement;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class DefinitionsLoader implements StAXElementLoader<List<ResourceElement<QNameSymbol, AbstractDefinition>>> {
+public class DefinitionsLoader implements XmlResourceElementLoader {
 
     static final QName INTENT = new QName(SCA_NS, "intent");
     static final QName DESCRIPTION = new QName(SCA_NS, "description");
@@ -59,23 +66,32 @@ public class DefinitionsLoader implements StAXElementLoader<List<ResourceElement
 
     private static final QName DEFINITIONS = new QName(SCA_NS, "definitions");
 
+    private XmlResourceElementLoaderRegistry elementLoaderRegistry;
     private LoaderRegistry loaderRegistry;
 
-    public DefinitionsLoader(@Reference LoaderRegistry registry) {
+    public DefinitionsLoader(@Reference XmlResourceElementLoaderRegistry elementLoaderRegistry,
+                             @Reference LoaderRegistry registry) {
+        this.elementLoaderRegistry = elementLoaderRegistry;
         this.loaderRegistry = registry;
-        loaderRegistry.registerLoader(DEFINITIONS, this);
     }
 
-    public List<ResourceElement<QNameSymbol, AbstractDefinition>> load(XMLStreamReader reader,
-                                                                       LoaderContext parentContext)
-            throws XMLStreamException, LoaderException {
+    @Init
+    public void init() {
+        elementLoaderRegistry.register(this);
+    }
 
-        List<ResourceElement<QNameSymbol, AbstractDefinition>> resources =
-                new ArrayList<ResourceElement<QNameSymbol, AbstractDefinition>>();
+    public QName getType() {
+        return DEFINITIONS;
+    }
+
+    public void load(XMLStreamReader reader, URI contributionUri, Resource resource, ClassLoader loader)
+            throws ContributionException, XMLStreamException {
+
+        List<AbstractDefinition> definitions = new ArrayList<AbstractDefinition>();
 
         String targetNamespace = reader.getAttributeValue(null, "targetNamespace");
 
-        LoaderContext context = new LoaderContextImpl(parentContext, targetNamespace);
+        LoaderContext context = new LoaderContextImpl(contributionUri, loader, targetNamespace);
 
         while (true) {
             switch (reader.next()) {
@@ -83,24 +99,52 @@ public class DefinitionsLoader implements StAXElementLoader<List<ResourceElement
                 QName qname = reader.getName();
                 AbstractDefinition definition = null;
                 if (INTENT.equals(qname)) {
-                    definition = loaderRegistry.load(reader, Intent.class, context);
+                    try {
+                        definition = loaderRegistry.load(reader, Intent.class, context);
+                    } catch (LoaderException e) {
+                        throw new ContributionException(e);
+                    }
                 } else if (POLICY_SET.equals(qname)) {
-                    definition = loaderRegistry.load(reader, PolicySet.class, context);
+                    try {
+                        definition = loaderRegistry.load(reader, PolicySet.class, context);
+                    } catch (LoaderException e) {
+                        throw new ContributionException(e);
+                    }
                 } else if (BINDING_TYPE.equals(qname)) {
-                    definition = loaderRegistry.load(reader, BindingType.class, context);
+                    try {
+                        definition = loaderRegistry.load(reader, BindingType.class, context);
+                    } catch (LoaderException e) {
+                        throw new ContributionException(e);
+                    }
                 } else if (IMPLEMENTATION_TYPE.equals(qname)) {
-                    definition = loaderRegistry.load(reader, ImplementationType.class, context);
+                    try {
+                        definition = loaderRegistry.load(reader, ImplementationType.class, context);
+                    } catch (LoaderException e) {
+                        throw new ContributionException(e);
+
+                    }
                 }
                 if (definition != null) {
-                    QNameSymbol symbol = new QNameSymbol(definition.getName());
-                    ResourceElement<QNameSymbol, AbstractDefinition> element =
-                            new ResourceElement<QNameSymbol, AbstractDefinition>(symbol, definition);
-                    resources.add(element);
+                    definitions.add(definition);
                 }
                 break;
             case END_ELEMENT:
                 assert DEFINITIONS.equals(reader.getName());
-                return resources;
+                // update indexed elements with the loaded definitions
+                for (AbstractDefinition candidate : definitions) {
+                    boolean found = false;
+                    for (ResourceElement element : resource.getResourceElements()) {
+                        Symbol candidateSymbol = new QNameSymbol(candidate.getName());
+                        if (element.getSymbol().equals(candidateSymbol)) {
+                            element.setValue(candidate);
+                            found = true;
+                        }
+                    }
+                    if (!found) {
+                        throw new ResourceElementNotFoundException("Definition not found", candidate.toString());
+                    }
+                }
+                return;
             }
         }
 

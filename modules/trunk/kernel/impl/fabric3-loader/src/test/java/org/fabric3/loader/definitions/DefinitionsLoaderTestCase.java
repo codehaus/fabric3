@@ -31,7 +31,6 @@ import javax.xml.stream.XMLStreamReader;
 
 import junit.framework.TestCase;
 
-import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.scdl.definitions.AbstractDefinition;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
@@ -40,63 +39,58 @@ import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.services.contribution.QNameSymbol;
+import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
 
 /**
  * @version $Revision$ $Date$
  */
 public class DefinitionsLoaderTestCase extends TestCase {
+    public static final QName TRANSACTIONAL_QNAME =
+            new QName("http://fabric3.org/xmlns/sca/2.0-alpha", "transactional");
+    public static final QName BINDING_QNAME = new QName("http://www.osoa.org/xmlns/sca/1.0", "binding");
+    public static final QName TRX_POLICY_QNAME =
+            new QName("http://fabric3.org/xmlns/sca/2.0-alpha", "transactionalPolicy");
+    private DefinitionsLoader loader;
+    private Resource resource;
+    private XMLStreamReader reader;
+
 
     @SuppressWarnings({"unchecked", "deprecation"})
     public void testLoad() throws Exception {
 
-        ClassLoader cl = null;
-        LoaderContext context = new LoaderContextImpl(cl, null, null);
+        loader.load(reader, null, resource, null);
 
-        InputStream stream = getClass().getResourceAsStream("definitions.xml");
-        XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(stream);
-        LoaderRegistry loaderRegistry = new LoaderRegistryImpl();
-
-        DefinitionsLoader loader = new DefinitionsLoader(loaderRegistry);
-        IntentLoader intentLoader = new IntentLoader();
-
-        PolicySetLoader policySetLoader = new PolicySetLoader(loaderRegistry);
-        policySetLoader.init();
-
-        loaderRegistry.registerLoader(DefinitionsLoader.INTENT, intentLoader);
-
-        while (reader.next() != XMLStreamConstants.START_ELEMENT) {
-        }
-
-        List<ResourceElement<QNameSymbol, AbstractDefinition>> resourceElements = loader.load(reader, context);
-
+        List<ResourceElement<?, ?>> resourceElements = resource.getResourceElements();
         assertNotNull(resourceElements);
-
         assertEquals(2, resourceElements.size());
 
-        ResourceElement<QNameSymbol, AbstractDefinition> intentResourceElement = resourceElements.get(0);
+        ResourceElement<QNameSymbol, AbstractDefinition> intentResourceElement =
+                (ResourceElement<QNameSymbol, AbstractDefinition>) resourceElements.get(0);
         assertNotNull(intentResourceElement);
 
         QNameSymbol symbol = intentResourceElement.getSymbol();
-        assertEquals(new QName("http://fabric3.org/xmlns/sca/2.0-alpha", "transactional"), symbol.getKey());
+        assertEquals(TRANSACTIONAL_QNAME, symbol.getKey());
 
         Intent intent = (Intent) intentResourceElement.getValue();
-        assertEquals(new QName("http://fabric3.org/xmlns/sca/2.0-alpha", "transactional"), intent.getName());
-        assertTrue(intent.doesConstrain(new QName("http://www.osoa.org/xmlns/sca/1.0", "binding")));
+        assertNotNull(intent);
+        assertEquals(TRANSACTIONAL_QNAME, intent.getName());
+        assertTrue(intent.doesConstrain(BINDING_QNAME));
         assertFalse(intent.isProfile());
         assertFalse(intent.isQualified());
         assertNull(intent.getQualifiable());
         assertEquals(0, intent.getRequires().size());
 
-        ResourceElement<QNameSymbol, AbstractDefinition> policySetResourceElement = resourceElements.get(1);
+        ResourceElement<QNameSymbol, AbstractDefinition> policySetResourceElement =
+                (ResourceElement<QNameSymbol, AbstractDefinition>) resourceElements.get(1);
         assertNotNull(policySetResourceElement);
 
         symbol = policySetResourceElement.getSymbol();
-        assertEquals(new QName("http://fabric3.org/xmlns/sca/2.0-alpha", "transactionalPolicy"), symbol.getKey());
+        assertEquals(TRX_POLICY_QNAME, symbol.getKey());
 
         PolicySet policySet = (PolicySet) policySetResourceElement.getValue();
-        assertEquals(new QName("http://fabric3.org/xmlns/sca/2.0-alpha", "transactionalPolicy"), policySet.getName());
-        assertTrue(policySet.doesProvide(new QName("http://fabric3.org/xmlns/sca/2.0-alpha", "transactional")));
+        assertEquals(TRX_POLICY_QNAME, policySet.getName());
+        assertTrue(policySet.doesProvide(TRANSACTIONAL_QNAME));
 
         QName extensionName = policySet.getExtensionName();
         assertEquals("interceptor", extensionName.getLocalPart());
@@ -104,8 +98,36 @@ public class DefinitionsLoaderTestCase extends TestCase {
 
     }
 
+    protected void setUp() throws Exception {
+        super.setUp();
+        // setup loader infrastructure
+        LoaderRegistry loaderRegistry = new MockLoaderRegistry();
+        loader = new DefinitionsLoader(null, loaderRegistry);
+        IntentLoader intentLoader = new IntentLoader();
+        PolicySetLoader policySetLoader = new PolicySetLoader(loaderRegistry);
+        policySetLoader.init();
+        loaderRegistry.registerLoader(DefinitionsLoader.INTENT, intentLoader);
+
+        // setup indexed resource
+        resource = new Resource(null, "application/xml");
+        // setup up indexed resource elements
+        ResourceElement<QNameSymbol, ?> element =
+                new ResourceElement<QNameSymbol, AbstractDefinition>(new QNameSymbol(TRANSACTIONAL_QNAME));
+        resource.addResourceElement(element);
+        element =
+                new ResourceElement<QNameSymbol, AbstractDefinition>(new QNameSymbol(TRX_POLICY_QNAME));
+        resource.addResourceElement(element);
+
+        // setup reader
+        InputStream stream = getClass().getResourceAsStream("definitions.xml");
+        reader = XMLInputFactory.newInstance().createXMLStreamReader(stream);
+        while (reader.next() != XMLStreamConstants.START_ELEMENT) {
+        }
+
+    }
+
     @SuppressWarnings("deprecation")
-    private static class LoaderRegistryImpl implements LoaderRegistry {
+    private static class MockLoaderRegistry implements LoaderRegistry {
 
         private Map<QName, StAXElementLoader<?>> loaders = new HashMap<QName, StAXElementLoader<?>>();
 

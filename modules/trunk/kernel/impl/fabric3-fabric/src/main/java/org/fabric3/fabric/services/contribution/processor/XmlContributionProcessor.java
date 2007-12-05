@@ -35,6 +35,8 @@ import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.ContributionProcessor;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
+import org.fabric3.spi.services.contribution.Resource;
+import org.fabric3.spi.services.contribution.XmlIndexerRegistry;
 import org.fabric3.spi.services.contribution.XmlProcessor;
 import org.fabric3.spi.services.contribution.XmlProcessorRegistry;
 import org.fabric3.spi.services.factories.xml.XMLFactory;
@@ -47,12 +49,16 @@ import org.fabric3.spi.services.factories.xml.XMLFactory;
  */
 @Service(XmlProcessorRegistry.class)
 @EagerInit
+// FIXME JFM separate XMLProcessorRegistry
 public class XmlContributionProcessor implements ContributionProcessor, XmlProcessorRegistry {
     private XMLInputFactory xmlFactory;
     private Map<QName, XmlProcessor> processors = new HashMap<QName, XmlProcessor>();
+    private XmlIndexerRegistry indexerRegistry;
 
     public XmlContributionProcessor(@Reference ProcessorRegistry processorRegistry,
+                                    @Reference XmlIndexerRegistry indexerRegistry,
                                     @Reference XMLFactory xmlFactory) {
+        this.indexerRegistry = indexerRegistry;
         this.xmlFactory = xmlFactory.newInputFactoryInstance();
         processorRegistry.register(this);
     }
@@ -67,7 +73,41 @@ public class XmlContributionProcessor implements ContributionProcessor, XmlProce
     }
 
     public void index(Contribution contribution) throws ContributionException {
-        // XML contributions do not need to be indexed before they are processed as they are single artifacts
+        InputStream stream = null;
+        XMLStreamReader reader = null;
+        try {
+            URL locationURL = contribution.getLocation();
+            stream = locationURL.openStream();
+            reader = xmlFactory.createXMLStreamReader(stream);
+            reader.nextTag();
+            QName name = reader.getName();
+            XmlProcessor processor = processors.get(name);
+            if (processor == null) {
+                throw new XmlProcessorTypeNotFoundException("XML processor not found for", name.toString());
+            }
+            Resource resource = new Resource(contribution.getLocation(), "application/xml");
+            indexerRegistry.index(resource,reader);
+            contribution.addResource(resource);
+        } catch (IOException e) {
+            throw new ContributionException(e);
+        } catch (XMLStreamException e) {
+            throw new ContributionException(e);
+        } finally {
+            try {
+                if (reader != null) {
+                    reader.close();
+                }
+            } catch (XMLStreamException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (stream != null) {
+                    stream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void register(XmlProcessor processor) {

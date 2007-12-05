@@ -34,13 +34,18 @@ public class LoaderContextImpl extends TransformContext implements LoaderContext
     private String targetNamespace;
     private URI contributionUri;
 
+    public LoaderContextImpl(URI contributionUri, ClassLoader classLoader, String targetNamespace) {
+        super(null, classLoader, null, null);
+        this.targetNamespace = targetNamespace;
+        this.contributionUri = contributionUri;
+    }
 
     /**
      * Constructor defining properties of this context.
      *
-     * @param classLoader  the classloader for loading application resources
+     * @param classLoader     the classloader for loading application resources
      * @param contributionUri the active contribution URI
-     * @param scdlLocation the location of the SCDL defining this composite
+     * @param scdlLocation    the location of the SCDL defining this composite
      */
     public LoaderContextImpl(ClassLoader classLoader, URI contributionUri, URL scdlLocation) {
         super(null, classLoader, scdlLocation, null);

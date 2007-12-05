@@ -63,7 +63,7 @@ public class XmlContributionProcessorTestCase extends TestCase {
 
         XMLFactory factory = new XMLFactoryImpl();
 
-        processor = new XmlContributionProcessor(processorRegistry, factory);
+        processor = new XmlContributionProcessor(processorRegistry, null, factory);
 
         testProcessor = EasyMock.createMock(XmlProcessor.class);
         EasyMock.expect(testProcessor.getType()).andReturn(new QName(null, "start"));

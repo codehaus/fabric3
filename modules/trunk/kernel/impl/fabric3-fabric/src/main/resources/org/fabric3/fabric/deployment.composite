@@ -89,6 +89,10 @@
         <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.XmlIndexerRegistryImpl"/>
     </component>
 
+    <component name="XmlResourceElementLoaderRegistry">
+        <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.XmlResourceElementLoaderRegistryImpl"/>
+    </component>
+
     <component name="XmlManifestProcessor">
         <system:implementation.system class="org.fabric3.fabric.services.contribution.manifest.XmlManifestProcessor"/>
     </component>
@@ -127,7 +131,7 @@
         <system:implementation.system
                 class="org.fabric3.fabric.services.contribution.manifest.MavenPOMProcessor"/>
     </component>
-    
+
     <component name="JavaExportLoader">
         <system:implementation.system
                 class="org.fabric3.fabric.services.contribution.manifest.JavaExportLoader"/>
