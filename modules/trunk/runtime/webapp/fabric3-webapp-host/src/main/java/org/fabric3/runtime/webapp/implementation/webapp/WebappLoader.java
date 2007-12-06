@@ -77,7 +77,7 @@ public class WebappLoader implements StAXElementLoader<WebappImplementation> {
         } catch (MalformedURLException e) {
             throw new LoaderException(e.getMessage(), e);
         }
-        LoaderContext childContext = new LoaderContextImpl(context.getTargetClassLoader(), url);
+        LoaderContext childContext = new LoaderContextImpl(context.getTargetClassLoader(), null, url);
         ComponentType componentType = registry.load(url, ComponentType.class, childContext);
         componentType.setImplementationScope(Scope.COMPOSITE);
         return componentType;

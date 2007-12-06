@@ -18,19 +18,6 @@
  */
 package org.fabric3.runtime.webapp;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-import javax.servlet.ServletContext;
-
-import org.fabric3.host.monitor.MonitorFactory;
-import org.fabric3.host.runtime.Bootstrapper;
-import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
-import org.fabric3.host.runtime.ScdlBootstrapper;
 import static org.fabric3.runtime.webapp.Constants.APPLICATION_SCDL_PATH_DEFAULT;
 import static org.fabric3.runtime.webapp.Constants.APPLICATION_SCDL_PATH_PARAM;
 import static org.fabric3.runtime.webapp.Constants.BOOTDIR_DEFAULT;
@@ -41,16 +28,26 @@ import static org.fabric3.runtime.webapp.Constants.COORDINATOR_DEFAULT;
 import static org.fabric3.runtime.webapp.Constants.COORDINATOR_PARAM;
 import static org.fabric3.runtime.webapp.Constants.INTENTS_PATH_DEFAULT;
 import static org.fabric3.runtime.webapp.Constants.INTENTS_PATH_PARAM;
-import static org.fabric3.runtime.webapp.Constants.MONITORING_BUNDLE_DEFAULT;
-import static org.fabric3.runtime.webapp.Constants.MONITORING_BUNDLE_PARAM;
-import static org.fabric3.runtime.webapp.Constants.MONITOR_FACTORY_DEFAULT;
-import static org.fabric3.runtime.webapp.Constants.MONITOR_FACTORY_PARAM;
 import static org.fabric3.runtime.webapp.Constants.RUNTIME_DEFAULT;
 import static org.fabric3.runtime.webapp.Constants.RUNTIME_PARAM;
 import static org.fabric3.runtime.webapp.Constants.SYSTEM_MONITORING_DEFAULT;
 import static org.fabric3.runtime.webapp.Constants.SYSTEM_MONITORING_PARAM;
 import static org.fabric3.runtime.webapp.Constants.SYSTEM_SCDL_PATH_DEFAULT;
 import static org.fabric3.runtime.webapp.Constants.SYSTEM_SCDL_PATH_PARAM;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Set;
+import java.util.logging.Level;
+
+import javax.servlet.ServletContext;
+
+import org.fabric3.host.monitor.MonitorFactory;
+import org.fabric3.host.runtime.Bootstrapper;
+import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
+import org.fabric3.host.runtime.ScdlBootstrapper;
+import org.fabric3.monitor.JavaLoggingMonitorFactory;
 
 /**
  * @version $Rev$ $Date$
@@ -65,14 +62,8 @@ public class WebappUtilImpl implements WebappUtil {
     public WebappRuntime getRuntime(ClassLoader bootClassLoader) throws Fabric3InitException {
         try {
             String className = getInitParameter(RUNTIME_PARAM, RUNTIME_DEFAULT);
-            String monitorFactoryClass = getInitParameter(MONITOR_FACTORY_PARAM, MONITOR_FACTORY_DEFAULT);
-            MonitorFactory factory = (MonitorFactory) bootClassLoader.loadClass(monitorFactoryClass).newInstance();
             String level = getInitParameter(SYSTEM_MONITORING_PARAM, SYSTEM_MONITORING_DEFAULT);
-            String bundle = getInitParameter(MONITORING_BUNDLE_PARAM, MONITORING_BUNDLE_DEFAULT);
-            Map<String, Object> params = new HashMap<String, Object>();
-            params.put("defaultLevel", Level.parse(level));
-            params.put("bundleName", bundle);
-            factory.initialize(params);
+            MonitorFactory factory = new JavaLoggingMonitorFactory(null, Level.parse(level), "f3");
             WebappRuntime runtime = (WebappRuntime) bootClassLoader.loadClass(className).newInstance();
             runtime.setMonitorFactory(factory);
             return runtime;
@@ -115,7 +106,7 @@ public class WebappUtilImpl implements WebappUtil {
 
     public ClassLoader getBootClassLoader(ClassLoader webappClassLoader) throws InvalidResourcePath {
         String bootDirName = getInitParameter(BOOTDIR_PARAM, BOOTDIR_DEFAULT);
-        Set bootPaths = servletContext.getResourcePaths(bootDirName);
+        Set<?> bootPaths = servletContext.getResourcePaths(bootDirName);
         if (bootPaths == null) {
             // nothing in boot directory, assume everything is in the webapp classloader
             return webappClassLoader;

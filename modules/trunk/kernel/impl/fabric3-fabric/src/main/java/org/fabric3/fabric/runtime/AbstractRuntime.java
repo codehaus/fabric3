@@ -81,10 +81,13 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
 
     private ClassLoader hostClassLoader;
 
-
     protected AbstractRuntime(Class<I> runtimeInfoType, MonitorFactory monitorFactory) {
         this.hostInfoType = runtimeInfoType;
         this.monitorFactory = monitorFactory;
+    }
+
+    protected AbstractRuntime(Class<I> runtimeInfoType) {
+        this.hostInfoType = runtimeInfoType;
     }
 
     public String getApplicationName() {
@@ -156,7 +159,7 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
     public <I> I getSystemComponent(Class<I> service, URI uri) {
         // JFM FIXME WorkContext should be moved down to host-api and should be created by the host
         URI parent = uri.resolve(".");
-        AtomicComponent component = (AtomicComponent) componentManager.getComponent(uri);
+        AtomicComponent<?> component = (AtomicComponent<?>) componentManager.getComponent(uri);
         WorkContext workContext = new SimpleWorkContext();
         workContext.setScopeIdentifier(Scope.COMPOSITE, parent);
         PojoWorkContextTunnel.setThreadWorkContext(workContext);

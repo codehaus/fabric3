@@ -26,7 +26,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.http.HttpSessionEvent;
 
-import org.fabric3.fabric.monitor.JavaLoggingMonitorFactory;
+import org.fabric3.monitor.JavaLoggingMonitorFactory;
 import org.fabric3.fabric.runtime.AbstractRuntime;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.LOADER_URI;
@@ -78,7 +78,7 @@ public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implement
             assert applicationScdl != null;
             // load the application scdl
             Loader loader = getSystemComponent(Loader.class, LOADER_URI);
-            LoaderContext loaderContext = new LoaderContextImpl(getHostClassLoader(), applicationScdl);
+            LoaderContext loaderContext = new LoaderContextImpl(getHostClassLoader(), null, applicationScdl);
             Composite composite = loader.load(applicationScdl, Composite.class, loaderContext);
 
             // locate the servlet request injector

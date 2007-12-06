@@ -29,7 +29,7 @@ import javax.servlet.ServletContext;
 
 import junit.framework.TestCase;
 
-import org.fabric3.fabric.monitor.NullMonitorFactory;
+import org.fabric3.monitor.NullMonitorFactory;
 
 /**
  * @version $Rev$ $Date$
