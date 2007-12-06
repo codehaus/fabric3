@@ -17,9 +17,11 @@
 package org.fabric3.maven.runtime.impl;
 
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -217,8 +219,8 @@ public class MavenCoordinatorImpl implements MavenCoordinator {
             }
             ContributionService contributionService = runtime.getSystemComponent(ContributionService.class,
                                                                                  CONTRIBUTION_SERVICE_URI);
-
-            ContributionSource source = new FileContributionSource(intentsLocation.toURI(),
+            
+            ContributionSource source = new FileContributionSource(new URI(URLEncoder.encode(intentsLocation.toString(),"UTF-8")),
                                                                    intentsLocation,
                                                                    -1,
                                                                    new byte[0]);
@@ -232,6 +234,8 @@ public class MavenCoordinatorImpl implements MavenCoordinator {
         } catch (DefinitionActivationException e) {
             throw new InitializationException(e);
         } catch (URISyntaxException e) {
+            throw new InitializationException(e);
+        } catch (UnsupportedEncodingException e) {
             throw new InitializationException(e);
         }
     }
