@@ -82,7 +82,7 @@ public class PolicySetLoader implements StAXElementLoader<PolicySet> {
         
         LoaderUtil.skipToEndElement(reader);
         
-        return new PolicySet(qName, provides, appliesTo, extension);
+        return new PolicySet(qName, provides, appliesTo, extension, true);
         
     }
 

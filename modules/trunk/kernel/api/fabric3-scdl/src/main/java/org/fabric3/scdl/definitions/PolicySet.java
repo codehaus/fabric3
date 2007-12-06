@@ -39,22 +39,27 @@ public final class PolicySet extends AbstractDefinition {
     
     /** XPath expression for the apples to attribute. */
     private final String appliesTo;
+    
+    /** A flag to indicate whether the policy is implemented as an F3 interceptor */
+    private final boolean intercepted;
 
     /**
      * Initializes the state for the policy set.
      * 
      * @param name Name of the policy set.
      * @param provides Intents provided by this policy set.
-     * @param appliesTo XPath expression for the apples to attribute.
+     * @param appliesTo XPath expression for the applies to attribute.
      * @param extension Extension for the policy set.
+     * @param intercepted Flag to indicate whether the policy is implemented as an interceptor.
      */
-    public PolicySet(QName name, Set<QName> provides, String appliesTo, Element extendion) {
+    public PolicySet(QName name, Set<QName> provides, String appliesTo, Element extendion, boolean intercepted) {
         
         super(name);
 
         this.provides = provides;
         this.appliesTo = appliesTo;
         this.extension = extendion;
+        this.intercepted = intercepted;
         
     }
     
@@ -109,6 +114,13 @@ public final class PolicySet extends AbstractDefinition {
      */
     public boolean doesApplyTo(String name) {
         return appliesTo == null || appliesTo.equals(name);
+    }
+    
+    /**
+     * @return True if the policy is implemented as an F3 interceptor.
+     */
+    public boolean isIntercepted() {
+        return intercepted;
     }
 
 }
