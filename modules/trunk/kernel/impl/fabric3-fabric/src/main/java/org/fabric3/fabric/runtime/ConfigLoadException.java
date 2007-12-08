@@ -14,29 +14,36 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.resource;
+package org.fabric3.fabric.runtime;
 
-import javax.sql.DataSource;
+import org.fabric3.host.Fabric3Exception;
 
 /**
  * @version $Revision$ $Date$
  */
-public interface DataSourceRegistry {
+public class ConfigLoadException extends Fabric3Exception {
+
+    /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = -1150946390801276363L;
+
+    /**
+     * Initializes the message, identifier and cause.
+     * 
+     * @param message Message for the exception.
+     * @param identifier Identifier for the exception.
+     * @param cause Root cause of the exception.
+     */
+    public ConfigLoadException(String message, String identifier, Throwable cause) {
+        super(message, identifier, cause);
+    }
     
     /**
-     * Gets a named datasource from the registry.
-     * 
-     * @param name Name of the datasource.
-     * @return Named datasource.
+     * Returns the message concatenated with the identifier.
      */
-    DataSource getDataSource(String name);
-    
-    /**
-     * Registers a datasource by name.
-     * 
-     * @param name Name of the datasource.
-     * @param dataSource Datasource to be registered.
-     */
-    void registerDataSource(String name, DataSource dataSource);
+    public String getMessage() {
+        return super.getMessage() + ":" + getIdentifier();
+    }
 
 }

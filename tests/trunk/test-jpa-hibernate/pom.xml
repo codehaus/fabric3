@@ -98,8 +98,8 @@
                         </dependency>
                         <!-- Test Extension to Install the Datasource -->
                         <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-test-db</artifactId>
+                            <groupId>org.codehaus.fabric3.tests</groupId>
+                            <artifactId>test-ds-extension</artifactId>
                             <version>0.1-SNAPSHOT</version>
                         </dependency>
                     </contributions>

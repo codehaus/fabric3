@@ -14,28 +14,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.resource.ds;
+package org.fabric3.fabric.runtime;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.net.URL;
 
-import javax.sql.DataSource;
-
-import org.fabric3.spi.resource.DataSourceRegistry;
+import org.w3c.dom.Document;
 
 /**
  * @version $Revision$ $Date$
  */
-public class DataSourceRegistryImpl implements DataSourceRegistry {
+public interface ConfigLoader {
     
-    private Map<String, DataSource> dataSources = new HashMap<String, DataSource>();
-
-    public DataSource getDataSource(String name) {
-        return dataSources.get(name);
-    }
-    
-    public void registerDataSource(String name, DataSource dataSource) {
-        dataSources.put(name, dataSource);
-    }
+    /**
+     * Loads the configuration from the specified location.
+     * 
+     * @param configLocation Configuration location URL.
+     * @return Configuration loaded as a DOM document instance.
+     * @throws ConfigLoadException If unable to load the configuration.
+     */
+    Document loadConfig(URL configLocation) throws ConfigLoadException;
 
 }

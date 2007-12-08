@@ -24,6 +24,8 @@ import javax.sql.DataSource;
 import javax.transaction.TransactionManager;
 
 import org.enhydra.jdbc.standard.StandardXADataSource;
+import org.fabric3.spi.resource.DataSourceRegistry;
+import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
@@ -31,15 +33,18 @@ import org.osoa.sca.annotations.Reference;
 /**
  * @version $Revision$ $Date$
  */
+@EagerInit
 public class XaPoolDataSource implements DataSource {
     
     private String user;
     private String password;
     private String url;
     private String driver;
+    private String dataSourceKey;
     
     private StandardXADataSource delegate;
     private TransactionManager transactionManager;
+    private DataSourceRegistry dataSourceRegistry;
 
     public Connection getConnection() throws SQLException {
         return delegate.getConnection();
@@ -59,6 +64,11 @@ public class XaPoolDataSource implements DataSource {
 
     public void setLogWriter(PrintWriter out) throws SQLException {
         delegate.setLogWriter(out);
+    }
+    
+    @Property
+    public void setDataSourceKey(String dataSourceKey) {
+        this.dataSourceKey = dataSourceKey;
     }
 
     @Property
@@ -90,6 +100,11 @@ public class XaPoolDataSource implements DataSource {
     public void setTransactionManager(TransactionManager transactionManager) {
         this.transactionManager = transactionManager;
     }
+
+    @Reference
+    public void setDataSourceRegistry(DataSourceRegistry dataSourceRegistry) {
+        this.dataSourceRegistry = dataSourceRegistry;
+    }
     
     @Init
     public void start() throws SQLException {
@@ -100,6 +115,8 @@ public class XaPoolDataSource implements DataSource {
         delegate.setDriverName(driver);
         delegate.setPassword(password);
         delegate.setUser(user);
+        
+        dataSourceRegistry.registerDataSource(dataSourceKey, this);
         
     }
 

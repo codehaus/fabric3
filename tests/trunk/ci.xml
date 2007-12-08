@@ -54,7 +54,7 @@
                 <module>test-binding-cxf</module>
                 <module>test-interop-cxf-axis2</module>
 
-                <module>test-db-extension</module>
+                <module>test-ds-extension</module>
                 <module>test-jpa-hibernate</module>
             </modules>
         </profile>

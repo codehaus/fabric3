@@ -19,14 +19,19 @@
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
            targetNamespace="org.codehaus.fabric3"
-           name="TestDbExtension"
+           name="XaPoolDataSource"
            autowire="true">
+           
+    <property name="dataSourceConfig" type="f3:dataSourceConfig"/>
+    <reference name="transactionManager" promote="xaPoolDataSource/transactionManager"/>
+    <reference name="dataSourceRegistry" promote="xaPoolDataSource/dataSourceRegistry"/>
 
     <!-- XAPool Datasource -->
-    <component name="org.fabric3.test.ds.XaPoolDataSource" f3:key="EmployeeDS">
+    <component name="xaPoolDataSource">
         <system:implementation.system class="org.fabric3.test.ds.XaPoolDataSource"/>
-        <property name="driver">org.apache.derby.jdbc.EmbeddedDriver</property>
-        <property name="url">jdbc:derby:testDB;create=true</property>
+        <property name="driver" source="$dataSourceConfig//driver/text()"/>
+        <property name="url" source="$dataSourceConfig//url/text()"/>
+        <property name="dataSourceKey" source="$dataSourceConfig//key/text()"/>
     </component>
     
 </composite>
