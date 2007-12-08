@@ -18,6 +18,13 @@
  */
 package org.fabric3.tx.interceptor;
 
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.InvalidTransactionException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.Status;
+import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
@@ -57,50 +64,121 @@ public class TxInterceptor implements Interceptor {
     }
 
     /**
-     * @see org.fabric3.spi.wire.Interceptor#invoke(org.fabric3.spi.wire.Message)
-     */
-    public Message invoke(Message message) {
-        
-        Transaction transaction = null;
-        try {
-
-            transaction = transactionManager.getTransaction();
-            
-            if(txAction == TxAction.BEGIN && transaction == null) {
-                transactionManager.begin();
-            } else if(txAction == TxAction.SUSPEND && transaction != null) {
-                transactionManager.suspend();
-            }
-
-            return next.invoke(message);
-            
-        } catch(Exception ex) {
-            throw new TxException(ex);
-        } finally {
-            
-            if(txAction == TxAction.BEGIN && transaction == null) {
-                try {
-                    transactionManager.commit();
-                } catch(Exception ex) {
-                    throw new TxException(ex);
-                }
-            } else if(txAction == TxAction.SUSPEND && transaction != null) {
-                try {
-                    transactionManager.resume(transaction);
-                } catch(Exception ex) {
-                    throw new TxException(ex);
-                }
-            }
-
-        }
-        
-    }
-
-    /**
      * @see org.fabric3.spi.wire.Interceptor#setNext(org.fabric3.spi.wire.Interceptor)
      */
     public void setNext(Interceptor next) {
         this.next = next;
+    }
+
+    /**
+     * @see org.fabric3.spi.wire.Interceptor#invoke(org.fabric3.spi.wire.Message)
+     */
+    public Message invoke(Message message) {
+        
+        Transaction transaction =  getTransaction();
+            
+        if (txAction == TxAction.BEGIN && transaction == null) {
+            begin();
+        } else if (txAction == TxAction.SUSPEND && transaction != null) {
+            suspend();
+        }
+
+        Message ret = null;
+        try {
+            ret = next.invoke(message);
+        } catch (RuntimeException e) {
+            if(txAction == TxAction.BEGIN && transaction == null) {
+                rollback();
+            } else if(txAction == TxAction.SUSPEND && transaction != null) {
+                setRollbackOnly();
+            }
+            throw e;
+        }
+            
+        if(txAction == TxAction.BEGIN && transaction == null) {
+            commit();
+        } else if(txAction == TxAction.SUSPEND && transaction != null) {
+            resume(transaction);
+        }
+            
+        return ret;
+        
+    }
+    
+    private void setRollbackOnly() {
+        try {
+            transactionManager.setRollbackOnly();
+        } catch (SystemException e) {
+            throw new TxException(e);
+        }
+    }
+    
+    private Transaction getTransaction() {
+        try {
+            return transactionManager.getTransaction();
+        } catch (SystemException e) {
+            throw new TxException(e);
+        }
+    }
+    
+    private void rollback() {
+        try {
+            transactionManager.rollback();
+        } catch (SystemException e) {
+            throw new TxException(e);
+        }
+    }
+    
+    private void begin() {
+        try {
+            transactionManager.begin();
+        } catch (NotSupportedException e) {
+            throw new TxException(e);
+        } catch (SystemException e) {
+            throw new TxException(e);
+        }
+    }
+    
+    private void suspend() {
+        try {
+            transactionManager.suspend();
+        } catch (SystemException e) {
+            throw new TxException(e);
+        }
+    }
+    
+    private void resume(Transaction transaction) {
+        try {
+            transactionManager.resume(transaction);
+        } catch (SystemException e) {
+            throw new TxException(e);
+        } catch (InvalidTransactionException e) {
+            throw new TxException(e);
+        } catch (IllegalStateException e) {
+            throw new TxException(e);
+        }
+    }
+    
+    private void commit() {
+        try {
+            if (transactionManager.getStatus() != Status.STATUS_MARKED_ROLLBACK) {
+                transactionManager.commit();
+            } else {
+                rollback();
+            }
+        } catch (SystemException e) {
+            throw new TxException(e);
+        } catch (IllegalStateException e) {
+            throw new TxException(e);
+        } catch (SecurityException e) {
+            throw new TxException(e);
+        } catch (HeuristicMixedException e) {
+            throw new TxException(e);
+        } catch (HeuristicRollbackException e) {
+            throw new TxException(e);
+        } catch (RollbackException e) {
+            throw new TxException(e);
+        }
     }
 
 }
