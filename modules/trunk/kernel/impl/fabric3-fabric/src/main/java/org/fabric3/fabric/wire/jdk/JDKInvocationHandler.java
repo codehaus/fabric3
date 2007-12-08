@@ -11,7 +11,6 @@ import org.osoa.sca.ServiceReference;
 import org.osoa.sca.ServiceUnavailableException;
 
 import org.fabric3.fabric.wire.NoMethodForOperationException;
-import org.fabric3.host.Fabric3RuntimeException;
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.Scope;
@@ -118,7 +117,9 @@ public final class JDKInvocationHandler<B> implements InvocationHandler, Service
         assert headInterceptor != null;
 
         WorkContext workContext = PojoWorkContextTunnel.getThreadWorkContext();
+        Conversation oldConversation;
         if (conversational) {
+            oldConversation = workContext.getScopeIdentifier(Scope.CONVERSATION);
             if (conversation == null) {
                 conversation = new ConversationImpl(createConversationID());
                 workContext.setScopeIdentifier(Scope.CONVERSATION, conversation);
@@ -126,6 +127,8 @@ public final class JDKInvocationHandler<B> implements InvocationHandler, Service
             } else {
                 workContext.setScopeIdentifier(Scope.CONVERSATION, conversation);
             }
+        } else {
+            oldConversation = null;
         }
 
         // send the invocation down the wire
@@ -155,7 +158,7 @@ public final class JDKInvocationHandler<B> implements InvocationHandler, Service
                     scopeContainer.stopContext(workContext);
                     conversation = null;
                 }
-                workContext.setScopeIdentifier(Scope.CONVERSATION, null);
+                workContext.setScopeIdentifier(Scope.CONVERSATION, oldConversation);
             }
         }
 
