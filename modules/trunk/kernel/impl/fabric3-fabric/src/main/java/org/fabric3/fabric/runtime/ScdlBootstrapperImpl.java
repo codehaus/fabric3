@@ -199,7 +199,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     private static final URI RUNTIME_INFO_URI = URI.create(RUNTIME_NAME + "/HostInfo");
     private static final URI HOST_CLASSLOADER_ID = URI.create("sca://./hostClassLoader");
     private static final URI XML_FACTORY_URI = URI.create(RUNTIME_NAME + "/XMLFactory");
-    private static final String USER_CONFIG = System.getProperty("user.home") + "/fabric3/config.xml";
+    private static final String USER_CONFIG = System.getProperty("user.home") + "/.fabric3/config.xml";
 
     private JavaInterfaceProcessorRegistry interfaceProcessorRegistry;
 
