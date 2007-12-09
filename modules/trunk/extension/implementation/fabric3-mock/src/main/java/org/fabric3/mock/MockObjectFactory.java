@@ -78,7 +78,7 @@ public class MockObjectFactory<T> implements ObjectFactory<T> {
                     Object mock = mocks.get(interfaze);
                     if (mock == null) {
                         for (Class<?> intf : mocks.keySet()) {
-                            if (intf.isAssignableFrom(interfaze)) {
+                            if (interfaze.isAssignableFrom(intf)) {
                                 mock = mocks.get(intf);
                                 break;
                             }
