@@ -89,6 +89,10 @@ import org.fabric3.fabric.model.logical.LogicalModelGenerator;
 import org.fabric3.fabric.model.logical.LogicalModelGeneratorImpl;
 import org.fabric3.fabric.model.physical.PhysicalModelGenerator;
 import org.fabric3.fabric.model.physical.PhysicalModelGeneratorImpl;
+import org.fabric3.fabric.model.physical.PhysicalOperationHelper;
+import org.fabric3.fabric.model.physical.PhysicalOperationHelperImpl;
+import org.fabric3.fabric.model.physical.PhysicalPolicyGenerator;
+import org.fabric3.fabric.model.physical.PhysicalPolicyGeneratorImpl;
 import org.fabric3.fabric.model.physical.PhysicalWireGenerator;
 import org.fabric3.fabric.model.physical.PhysicalWireGeneratorImpl;
 import static org.fabric3.fabric.runtime.ComponentNames.APPLICATION_CLASSLOADER_ID;
@@ -301,8 +305,15 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
         // enable autowire for the runtime domain
         AssemblyStore store = new NonPersistentAssemblyStore(ComponentNames.RUNTIME_URI, Autowire.ON);
+        
+        PhysicalOperationHelper physicalOperationHelper = new PhysicalOperationHelperImpl();
+        PhysicalPolicyGenerator policyGenerator = new PhysicalPolicyGeneratorImpl(new NullPolicyResolver(), 
+                                                                                  physicalOperationHelper,
+                                                                                  generatorRegistry);
 
-        PhysicalWireGenerator wireGenerator = new PhysicalWireGeneratorImpl(generatorRegistry, new NullPolicyResolver());
+        PhysicalWireGenerator wireGenerator = new PhysicalWireGeneratorImpl(generatorRegistry, 
+                                                                            policyGenerator,
+                                                                            physicalOperationHelper);
         DomainService domainService = new DomainServiceImpl(store);
         PhysicalModelGenerator physicalModelGenerator =
                 createPhysicalModelGenerator(generatorRegistry, routingService, domainService, wireGenerator);

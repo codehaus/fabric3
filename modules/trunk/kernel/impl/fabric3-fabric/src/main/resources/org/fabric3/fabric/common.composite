@@ -25,6 +25,14 @@
            name="org.fabric3.fabric.Common"
            autowire="true">
     
+    <component name="physicalPolicyGenerator">
+        <system:implementation.system class="org.fabric3.fabric.model.physical.PhysicalPolicyGeneratorImpl"/>
+    </component>
+    
+    <component name="physicalOperationHelper">
+        <system:implementation.system class="org.fabric3.fabric.model.physical.PhysicalOperationHelperImpl"/>
+    </component>
+    
     <component name="atomicComponentInstantiator">
         <system:implementation.system class="org.fabric3.fabric.model.logical.AtomicComponentInstantiator"/>
     </component>
