@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.test.ds;
+package org.fabric3.xapool;
 
 import java.io.PrintWriter;
 import java.sql.Connection;
