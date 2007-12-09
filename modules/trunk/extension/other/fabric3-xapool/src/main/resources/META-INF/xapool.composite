@@ -29,9 +29,9 @@
     <!-- XAPool Datasource -->
     <component name="xaPoolDataSource">
         <system:implementation.system class="org.fabric3.test.ds.XaPoolDataSource"/>
-        <property name="driver" source="$dataSourceConfig//driver/text()"/>
-        <property name="url" source="$dataSourceConfig//url/text()"/>
-        <property name="dataSourceKey" source="$dataSourceConfig//key/text()"/>
+        <property name="driver" source="$dataSourceConfig//driver"/>
+        <property name="url" source="$dataSourceConfig//url"/>
+        <property name="dataSourceKey" source="$dataSourceConfig//key"/>
     </component>
     
 </composite>
