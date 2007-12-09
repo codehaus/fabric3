@@ -21,19 +21,16 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.fabric3.fabric.assembly.resolver.ResolutionException;
 import org.fabric3.fabric.command.InitializeComponentCommand;
 import org.fabric3.fabric.domain.DomainService;
 import org.fabric3.fabric.generator.DefaultGeneratorContext;
-import org.fabric3.fabric.generator.PolicyException;
 import org.fabric3.fabric.services.routing.RoutingException;
 import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.command.CommandSet;
@@ -49,8 +46,6 @@ import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalChangeSet;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
-import org.fabric3.spi.policy.registry.PolicyResolutionException;
-import org.fabric3.spi.policy.registry.PolicyResolver;
 import org.fabric3.spi.util.UriHelper;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
@@ -64,7 +59,6 @@ import org.osoa.sca.annotations.Reference;
 public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
 
     private final GeneratorRegistry generatorRegistry;
-    private final PolicyResolver policyResolver;
     private final RoutingService routingService;
     private final DomainService domainService;
     private final PhysicalWireGenerator physicalWireGenerator;
@@ -76,12 +70,10 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
      * @param assemblyStore Assembly store.
      */
     public PhysicalModelGeneratorImpl(@Reference GeneratorRegistry generatorRegistry,
-                                      @Reference PolicyResolver policyResolver,
                                       @Reference RoutingService routingService,
                                       @Reference DomainService domainService,
                                       @Reference PhysicalWireGenerator physicalWireGenerator) {
         this.generatorRegistry = generatorRegistry;
-        this.policyResolver = policyResolver;
         this.routingService = routingService;
         this.domainService = domainService;
         this.physicalWireGenerator = physicalWireGenerator;
@@ -141,14 +133,7 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
         ComponentGenerator<C> generator = (ComponentGenerator<C>) 
             generatorRegistry.getComponentGenerator(component.getDefinition().getImplementation().getClass());
 
-        // Gather the implementation intents to be natively provided by the component implementation
-        Set<Intent> intentsToBeProvided;
-        try {
-            intentsToBeProvided = policyResolver.getImplementationIntentsToBeProvided(component);
-        } catch (PolicyResolutionException e) {
-            throw new PolicyException(e);
-        }
-        return generator.generate(component, intentsToBeProvided, context);
+        return generator.generate(component, context);
 
     }
 

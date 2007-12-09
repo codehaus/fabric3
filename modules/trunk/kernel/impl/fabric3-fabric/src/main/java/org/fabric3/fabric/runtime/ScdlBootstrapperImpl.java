@@ -586,7 +586,6 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
                                                                 PhysicalWireGenerator wireGenerator) {
         
         return new PhysicalModelGeneratorImpl(generatorRegistry,
-                                              new NullPolicyResolver(),
                                               routingService,
                                               domainService,
                                               wireGenerator);

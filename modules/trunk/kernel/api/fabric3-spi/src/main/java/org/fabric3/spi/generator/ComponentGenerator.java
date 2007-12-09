@@ -22,6 +22,7 @@ import java.util.Set;
 
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.definitions.Intent;
+import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
@@ -47,7 +48,8 @@ public interface ComponentGenerator<C extends LogicalComponent<? extends Impleme
      * @param intentsToBeProvided Intents that need to explicitly provided by the implementation.
      * @throws GenerationException if an error occurs during the generation process
      */
-    PhysicalComponentDefinition generate(C component, Set<Intent> intentsToBeProvided, GeneratorContext context) throws GenerationException;
+    PhysicalComponentDefinition generate(C component, 
+                                         GeneratorContext context) throws GenerationException;
 
     /**
      * Generates a {@link PhysicalWireSourceDefinition} used to attach a wire to a source component. Metadata contained
@@ -61,19 +63,12 @@ public interface ComponentGenerator<C extends LogicalComponent<? extends Impleme
      * @return the metadata used to attach the wire to its source on the service node
      * @throws GenerationException if an error occurs during the generation process
      */
-    PhysicalWireSourceDefinition generateWireSource(C source, LogicalReference reference, boolean optimizable, GeneratorContext context) throws GenerationException;
-
-    /**
-     * Generates a {@link PhysicalWireSourceDefinition} used to attach a resource to a source component. Metadata contained
-     * in the PhysicalWireSourceDefinition is specific to the component implementation type and used when the wire is
-     * attached to its source on a service node.
-     *
-     * @param source      the logical component for the resource
-     * @param resource    the source logical resource
-     * @return the metadata used to attach the wire to its source on the service node
-     * @throws GenerationException if an error occurs during the generation process
-     */
-    PhysicalWireSourceDefinition generateResourceWireSource(C source, LogicalResource<?> resource, GeneratorContext context) throws GenerationException;
+    PhysicalWireSourceDefinition generateWireSource(C source, 
+                                                    LogicalReference reference, 
+                                                    boolean optimizable, 
+                                                    Set<Intent> intentsToBeProvided,
+                                                    Set<PolicySet> policySetsToBeProvided,
+                                                    GeneratorContext context) throws GenerationException;
 
     /**
      * Generates a {@link PhysicalWireTargetDefinition} used to attach a wire to a target component. Metadata contained
@@ -85,6 +80,24 @@ public interface ComponentGenerator<C extends LogicalComponent<? extends Impleme
      * @return the metadata used to attach the wire to its target on the service node
      * @throws GenerationException if an error occurs during the generation process
      */
-    PhysicalWireTargetDefinition generateWireTarget(LogicalService service, C target, GeneratorContext context) throws GenerationException;
+    PhysicalWireTargetDefinition generateWireTarget(LogicalService service, 
+                                                    C target, 
+                                                    Set<Intent> intentsToBeProvided,
+                                                    Set<PolicySet> policySetsToBeProvided,
+                                                    GeneratorContext context) throws GenerationException;
+
+    /**
+     * Generates a {@link PhysicalWireSourceDefinition} used to attach a resource to a source component. Metadata contained
+     * in the PhysicalWireSourceDefinition is specific to the component implementation type and used when the wire is
+     * attached to its source on a service node.
+     *
+     * @param source      the logical component for the resource
+     * @param resource    the source logical resource
+     * @return the metadata used to attach the wire to its source on the service node
+     * @throws GenerationException if an error occurs during the generation process
+     */
+    PhysicalWireSourceDefinition generateResourceWireSource(C source, 
+                                                            LogicalResource<?> resource, 
+                                                            GeneratorContext context) throws GenerationException;
 
 }

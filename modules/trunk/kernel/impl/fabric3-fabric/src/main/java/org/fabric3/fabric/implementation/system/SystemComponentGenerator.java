@@ -26,6 +26,7 @@ import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.definitions.Intent;
+import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
@@ -58,7 +59,6 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
     }
 
     public PhysicalComponentDefinition generate(LogicalComponent<SystemImplementation> component, 
-                                                Set<Intent> intentsToBeProvided,
                                                 GeneratorContext context)
             throws GenerationException {
         ComponentDefinition<SystemImplementation> definition = component.getDefinition();
@@ -92,7 +92,9 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<SystemImplementation> source,
                                                            LogicalReference reference,
-                                                           boolean optimizable,
+                                                           boolean optimizable,  
+                                                           Set<Intent> intentsToBeProvided,
+                                                           Set<PolicySet> policySetsToBeProvided,
                                                            GeneratorContext context) throws GenerationException {
         
         SystemWireSourceDefinition wireDefinition = new SystemWireSourceDefinition();
@@ -106,7 +108,9 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
     }
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, 
-                                                           LogicalComponent<SystemImplementation> logical,
+                                                           LogicalComponent<SystemImplementation> logical,  
+                                                           Set<Intent> intentsToBeProvided,
+                                                           Set<PolicySet> policySetsToBeProvided,
                                                            GeneratorContext context) throws GenerationException {
         SystemWireTargetDefinition wireDefinition = new SystemWireTargetDefinition();
         wireDefinition.setUri(service.getUri());

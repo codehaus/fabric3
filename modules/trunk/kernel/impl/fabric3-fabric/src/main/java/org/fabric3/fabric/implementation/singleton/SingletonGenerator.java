@@ -22,6 +22,7 @@ import java.net.URI;
 import java.util.Set;
 
 import org.fabric3.scdl.definitions.Intent;
+import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
@@ -45,20 +46,23 @@ public class SingletonGenerator implements ComponentGenerator<LogicalComponent<S
     }
 
     public PhysicalComponentDefinition generate(LogicalComponent<SingletonImplementation> component, 
-                                                Set<Intent> intentsToBeProvided, 
                                                 GeneratorContext context) throws GenerationException {
         throw new UnsupportedOperationException();
     }
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<SingletonImplementation> source,
                                                            LogicalReference reference,
-                                                           boolean optimizable,
+                                                           boolean optimizable,  
+                                                           Set<Intent> intentsToBeProvided,
+                                                           Set<PolicySet> policySetsToBeProvided,
                                                            GeneratorContext context) throws GenerationException {
         throw new UnsupportedOperationException();
     }
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, 
-                                                           LogicalComponent<SingletonImplementation> logical,
+                                                           LogicalComponent<SingletonImplementation> logical,  
+                                                           Set<Intent> intentsToBeProvided,
+                                                           Set<PolicySet> policySetsToBeProvided,
                                                            GeneratorContext context) throws GenerationException {
         SingletonWireTargetDefinition wireDefinition = new SingletonWireTargetDefinition();
         URI uri = logical.getUri().resolve(service.getUri());

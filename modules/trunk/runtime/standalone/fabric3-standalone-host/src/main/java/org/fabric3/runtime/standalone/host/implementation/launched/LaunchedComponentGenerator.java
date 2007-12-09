@@ -39,6 +39,7 @@ import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Property;
 import org.fabric3.scdl.definitions.Intent;
+import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
@@ -63,8 +64,9 @@ public class LaunchedComponentGenerator implements ComponentGenerator<LogicalCom
     }
 
     @SuppressWarnings({"unchecked"})
-    public PhysicalComponentDefinition generate(LogicalComponent<Launched> component, Set<Intent> intentsToBeProvided, GeneratorContext context)
-            throws GenerationException {
+    public PhysicalComponentDefinition generate(LogicalComponent<Launched> component, 
+                                                GeneratorContext context) {
+        
         ComponentDefinition<Launched> definition = component.getDefinition();
         Launched implementation = definition.getImplementation();
         // TODO not a safe cast
@@ -99,24 +101,27 @@ public class LaunchedComponentGenerator implements ComponentGenerator<LogicalCom
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<Launched> source,
                                                            LogicalReference reference,
-                                                           boolean optimizable,
-                                                           GeneratorContext context)
-            throws GenerationException {
+                                                           boolean optimizable, 
+                                                           Set<Intent> intentsToBeProvided,
+                                                           Set<PolicySet> policySetsToBeProvided,
+                                                           GeneratorContext context) {
         JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
         wireDefinition.setUri(reference.getUri());
         wireDefinition.setOptimizable(true);
         return wireDefinition;
     }
 
-    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<Launched> source, LogicalResource<?> resource, GeneratorContext context)
-            throws GenerationException {
+    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<Launched> source, 
+                                                                   LogicalResource<?> resource,
+                                                                   GeneratorContext context) {
         throw new UnsupportedOperationException();
     }
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
-                                                           LogicalComponent<Launched> target,
-                                                           GeneratorContext context)
-            throws GenerationException {
+                                                           LogicalComponent<Launched> target,  
+                                                           Set<Intent> intentsToBeProvided,
+                                                           Set<PolicySet> policySetsToBeProvided,
+                                                           GeneratorContext context) {
         JavaWireTargetDefinition wireDefinition = new JavaWireTargetDefinition();
         wireDefinition.setUri(service.getUri());
         return wireDefinition;

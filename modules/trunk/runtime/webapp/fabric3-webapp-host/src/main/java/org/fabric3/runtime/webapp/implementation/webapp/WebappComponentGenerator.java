@@ -32,6 +32,7 @@ import org.fabric3.scdl.ResourceDefinition;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.definitions.Intent;
+import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
@@ -65,7 +66,6 @@ public class WebappComponentGenerator implements ComponentGenerator<LogicalCompo
      */
     @SuppressWarnings({"unchecked"})
     public PhysicalComponentDefinition generate(LogicalComponent<WebappImplementation> component, 
-                                                Set<Intent> intentsToBeProvided, 
                                                 GeneratorContext context) {
         ComponentDefinition<WebappImplementation> definition = component.getDefinition();
         AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property<?>, ResourceDefinition> componentType =
@@ -107,7 +107,9 @@ public class WebappComponentGenerator implements ComponentGenerator<LogicalCompo
      */
     public WebappWireSourceDefinition generateWireSource(LogicalComponent<WebappImplementation> source,
                                                                  LogicalReference reference,
-                                                                 boolean optimizable,
+                                                                 boolean optimizable,  
+                                                                 Set<Intent> intentsToBeProvided,
+                                                                 Set<PolicySet> policySetsToBeProvided,
                                                                  GeneratorContext context) throws GenerationException {
 
         WebappWireSourceDefinition sourceDefinition = new WebappWireSourceDefinition();
@@ -121,7 +123,9 @@ public class WebappComponentGenerator implements ComponentGenerator<LogicalCompo
      *     org.fabric3.spi.model.instance.LogicalComponent)
      */
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, 
-                                                           LogicalComponent<WebappImplementation> arg1,
+                                                           LogicalComponent<WebappImplementation> arg1,  
+                                                           Set<Intent> intentsToBeProvided,
+                                                           Set<PolicySet> policySetsToBeProvided,
                                                            GeneratorContext context) throws GenerationException {
         // TODO Auto-generated method stub
         return null;

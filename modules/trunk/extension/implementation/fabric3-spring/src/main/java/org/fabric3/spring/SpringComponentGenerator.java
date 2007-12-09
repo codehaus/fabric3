@@ -29,6 +29,7 @@ import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.definitions.Intent;
+import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
@@ -66,7 +67,6 @@ public class SpringComponentGenerator implements ComponentGenerator<LogicalCompo
      *                                                            org.fabric3.spi.generator.GeneratorContext)
      */
     public PhysicalComponentDefinition generate(LogicalComponent<SpringImplementation> component,
-                                                Set<Intent> intentsToBeProvided,
                                                 GeneratorContext context)
             throws GenerationException {
         ComponentDefinition<SpringImplementation> componentDefinition = component.getDefinition();
@@ -111,7 +111,9 @@ public class SpringComponentGenerator implements ComponentGenerator<LogicalCompo
      */
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<SpringImplementation> source,
                                                            LogicalReference reference,
-                                                           boolean optimizable, 
+                                                           boolean optimizable,   
+                                                           Set<Intent> intentsToBeProvided,
+                                                           Set<PolicySet> policySetsToBeProvided,
                                                            GeneratorContext context) throws GenerationException {
         SpringWireSourceDefinition wireDefinition = new SpringWireSourceDefinition();
         wireDefinition.setUri(reference.getUri());
@@ -134,7 +136,9 @@ public class SpringComponentGenerator implements ComponentGenerator<LogicalCompo
      *                                                                      org.fabric3.spi.model.instance.LogicalComponent)
      */
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
-                                                           LogicalComponent<SpringImplementation> target, 
+                                                           LogicalComponent<SpringImplementation> target,   
+                                                           Set<Intent> intentsToBeProvided,
+                                                           Set<PolicySet> policySetsToBeProvided,
                                                            GeneratorContext context) throws GenerationException {
         SpringWireTargetDefinition wireDefinition = new SpringWireTargetDefinition();
         URI uri;

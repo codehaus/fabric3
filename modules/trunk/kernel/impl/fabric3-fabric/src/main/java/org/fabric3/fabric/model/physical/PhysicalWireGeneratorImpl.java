@@ -143,7 +143,19 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         ComponentGenerator<T> targetGenerator = (ComponentGenerator<T>) 
             generatorRegistry.getComponentGenerator(target.getDefinition().getImplementation().getClass());
 
-        PhysicalWireTargetDefinition targetDefinition = targetGenerator.generateWireTarget(service, target, context);
+        Set<Intent> implementationIntentsToBeProvided;
+        try {
+            implementationIntentsToBeProvided = policyResolver.getImplementationIntentsToBeProvided(target);
+        } catch (PolicyResolutionException e) {
+            throw new PolicyException(e);
+        }
+        Set<PolicySet> implementationPolicySetsToBeProvided = null;
+        
+        PhysicalWireTargetDefinition targetDefinition = targetGenerator.generateWireTarget(service, 
+                                                                                           target, 
+                                                                                           implementationIntentsToBeProvided,
+                                                                                           implementationPolicySetsToBeProvided,
+                                                                                           context);
         wireDefinition.setTarget(targetDefinition);
 
         ComponentGenerator<S> sourceGenerator = (ComponentGenerator<S>) 
@@ -160,7 +172,17 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
             }
         }
 
-        PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(source, reference, optimizable, context);
+        try {
+            implementationIntentsToBeProvided = policyResolver.getImplementationIntentsToBeProvided(source);
+        } catch (PolicyResolutionException e) {
+            throw new PolicyException(e);
+        }
+        PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(source, 
+                                                                                           reference, 
+                                                                                           optimizable,
+                                                                                           implementationIntentsToBeProvided,
+                                                                                           implementationPolicySetsToBeProvided,
+                                                                                           context);
         sourceDefinition.setKey(target.getDefinition().getKey());
         wireDefinition.setSource(sourceDefinition);
 
@@ -217,7 +239,20 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
             // service is defined on a composite and wired to a component service
             targetService = component.getService(targetUri.getFragment());
         }
-        PhysicalWireTargetDefinition targetDefinition = targetGenerator.generateWireTarget(targetService, component, context);
+
+        Set<Intent> implementationIntentsToBeProvided;
+        try {
+            implementationIntentsToBeProvided = policyResolver.getImplementationIntentsToBeProvided(component);
+        } catch (PolicyResolutionException e) {
+            throw new PolicyException(e);
+        }
+        Set<PolicySet> implementationPolicySetsToBeProvided = null;
+        
+        PhysicalWireTargetDefinition targetDefinition = targetGenerator.generateWireTarget(targetService, 
+                                                                                           component, 
+                                                                                           implementationIntentsToBeProvided,
+                                                                                           implementationPolicySetsToBeProvided,
+                                                                                           context);
         wireDefinition.setTarget(targetDefinition);
         
         BindingGenerator sourceGenerator = generatorRegistry.getBindingGenerator(binding.getBinding().getClass());
@@ -279,8 +314,21 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
 
         ComponentGenerator<C> sourceGenerator = (ComponentGenerator<C>) 
             generatorRegistry.getComponentGenerator(component.getDefinition().getImplementation().getClass());
+
+        Set<Intent> implementationIntentsToBeProvided;
+        try {
+            implementationIntentsToBeProvided = policyResolver.getImplementationIntentsToBeProvided(component);
+        } catch (PolicyResolutionException e) {
+            throw new PolicyException(e);
+        }
+        Set<PolicySet> implementationPolicySetsToBeProvided = null;
         
-        PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(component, reference, false, context);
+        PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(component, 
+                                                                                           reference, 
+                                                                                           false, 
+                                                                                           implementationIntentsToBeProvided,
+                                                                                           implementationPolicySetsToBeProvided,
+                                                                                           context);
         wireDefinition.setSource(sourceDefinition);
 
         context.getPhysicalChangeSet().addWireDefinition(wireDefinition);

@@ -38,6 +38,7 @@ import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.definitions.Intent;
+import org.fabric3.scdl.definitions.PolicySet;
 
 /**
  * @version $Rev$ $Date$
@@ -55,8 +56,7 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
         this.helper = helper;
     }
 
-    public PhysicalComponentDefinition generate(LogicalComponent<GroovyImplementation> component, 
-                                          Set<Intent> intentsToBeProvided,
+    public PhysicalComponentDefinition generate(LogicalComponent<GroovyImplementation> component,
                                           GeneratorContext context)
             throws GenerationException {
 
@@ -92,6 +92,8 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<GroovyImplementation> source,
                                                            LogicalReference reference,
                                                            boolean optimizable, 
+                                                           Set<Intent> implementationIntentsToBeProvided,
+                                                           Set<PolicySet> implememenantionPolicySetsToBeProvided,
                                                            GeneratorContext context)
             throws GenerationException {
         GroovyWireSourceDefinition wireDefinition = new GroovyWireSourceDefinition();
@@ -103,6 +105,8 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
                                                            LogicalComponent<GroovyImplementation> target, 
+                                                           Set<Intent> implementationIntentsToBeProvided,
+                                                           Set<PolicySet> implememenantionPolicySetsToBeProvided,
                                                            GeneratorContext context)
             throws GenerationException {
         GroovyWireTargetDefinition wireDefinition = new GroovyWireTargetDefinition();
