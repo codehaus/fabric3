@@ -6,17 +6,17 @@
     xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha">
     
     <!-- Begins a transaction if one not already in progress and commits it -->
-    <policySet name="managedTransactionPolicy" provides="sca:managedTransaction">
+    <policySet name="managedTransactionPolicy" provides="sca:managedTransaction" f3:intercepted="true">
         <f3:transaction action="BEGIN"/>
     </policySet> 
     
     <!-- Suspends the transaction if one already in progress and resumes it -->
-    <policySet name="suspendsTransactionPolicy" provides="sca:suspendsTransaction">
+    <policySet name="suspendsTransactionPolicy" provides="sca:suspendsTransaction" f3:intercepted="true">
         <f3:transaction action="SUSPEND"/>
     </policySet>
     
     <!-- No op -->
-    <policySet name="propagatesTransactionPolicy" provides="sca:propagatesTransaction">
+    <policySet name="propagatesTransactionPolicy" provides="sca:propagatesTransaction" f3:intercepted="true">
         <f3:transaction action="PROPOGATE"/>
     </policySet>
 

@@ -29,6 +29,7 @@ import org.fabric3.extension.generator.BindingGeneratorExtension;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.definitions.Intent;
+import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
@@ -72,6 +73,7 @@ public class JmsBindingGenerator extends BindingGeneratorExtension<JmsWireSource
      */
     public JmsWireSourceDefinition generateWireSource(LogicalBinding<JmsBindingDefinition> logicalBinding,
                                                       Set<Intent> intentsToBeProvided,
+                                                      Set<PolicySet> policySetsToBeProvided,
                                                       GeneratorContext context,
                                                       ServiceDefinition serviceDefinition) throws GenerationException {
         
@@ -88,6 +90,7 @@ public class JmsBindingGenerator extends BindingGeneratorExtension<JmsWireSource
      */
     public JmsWireTargetDefinition generateWireTarget(LogicalBinding<JmsBindingDefinition> logicalBinding,
                                                       Set<Intent> intentsToBeProvided,
+                                                      Set<PolicySet> policySetsToBeProvided,
                                                       GeneratorContext context,
                                                       ReferenceDefinition referenceDefinition) throws GenerationException {
         

@@ -28,6 +28,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.scdl.definitions.PolicySet;
+import org.fabric3.spi.Constants;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
@@ -77,12 +78,13 @@ public class PolicySetLoader implements StAXElementLoader<PolicySet> {
         }
         
         String appliesTo = reader.getAttributeValue(null, "appliesTo");
+        boolean intercepted = Boolean.valueOf(reader.getAttributeValue(Constants.FABRIC3_NS, "intercepted"));
 
         Element extension = loadExtension(reader);
         
         LoaderUtil.skipToEndElement(reader);
         
-        return new PolicySet(qName, provides, appliesTo, extension, true);
+        return new PolicySet(qName, provides, appliesTo, extension, intercepted);
         
     }
 

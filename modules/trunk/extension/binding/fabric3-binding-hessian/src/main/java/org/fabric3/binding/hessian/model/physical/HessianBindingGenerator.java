@@ -29,6 +29,7 @@ import org.fabric3.extension.generator.BindingGeneratorExtension;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.definitions.Intent;
+import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
@@ -49,6 +50,7 @@ public class HessianBindingGenerator extends BindingGeneratorExtension<HessianWi
 
     public HessianWireSourceDefinition generateWireSource(LogicalBinding<HessianBindingDefinition> logicalBinding,
                                                           Set<Intent> intentsToBeProvided,
+                                                          Set<PolicySet> policySetsToBeProvided,
                                                           GeneratorContext generatorContext,
                                                           ServiceDefinition serviceDefinition)
             throws GenerationException {
@@ -63,6 +65,7 @@ public class HessianBindingGenerator extends BindingGeneratorExtension<HessianWi
 
     public HessianWireTargetDefinition generateWireTarget(LogicalBinding<HessianBindingDefinition> logicalBinding,
                                                           Set<Intent> intentsToBeProvided,
+                                                          Set<PolicySet> policySetsToBeProvided,
                                                           GeneratorContext generatorContext,
                                                           ReferenceDefinition referenceDefinition)
             throws GenerationException {

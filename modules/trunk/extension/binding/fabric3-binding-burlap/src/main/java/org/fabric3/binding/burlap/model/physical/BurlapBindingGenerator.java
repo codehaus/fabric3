@@ -31,6 +31,7 @@ import org.fabric3.extension.generator.BindingGeneratorExtension;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.definitions.Intent;
+import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
@@ -51,6 +52,7 @@ public class BurlapBindingGenerator extends BindingGeneratorExtension<BurlapWire
 
     public BurlapWireSourceDefinition generateWireSource(LogicalBinding<BurlapBindingDefinition> logicalBinding,
                                                          Set<Intent> intentsToBeProvided,
+                                                         Set<PolicySet> policySetsToBeProvided,
                                                          GeneratorContext context,
                                                          ServiceDefinition serviceDefinition)
             throws GenerationException {
@@ -63,6 +65,7 @@ public class BurlapBindingGenerator extends BindingGeneratorExtension<BurlapWire
 
     public BurlapWireTargetDefinition generateWireTarget(LogicalBinding<BurlapBindingDefinition> logicalBinding,
                                                          Set<Intent> intentsToBeProvided,
+                                                         Set<PolicySet> policySetsToBeProvided,
                                                          GeneratorContext context,
                                                          ReferenceDefinition referenceDefinition)
             throws GenerationException {

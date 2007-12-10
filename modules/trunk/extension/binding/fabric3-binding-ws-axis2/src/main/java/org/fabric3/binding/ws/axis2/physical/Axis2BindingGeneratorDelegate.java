@@ -24,6 +24,7 @@ import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.definitions.Intent;
+import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.generator.BindingGeneratorDelegate;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GenerationException;
@@ -52,7 +53,8 @@ public class Axis2BindingGeneratorDelegate implements BindingGeneratorDelegate<W
      *                                                                            org.fabric3.scdl.ServiceDefinition)
      */
     public Axis2WireSourceDefinition generateWireSource(LogicalBinding<WsBindingDefinition> binding,
-                                                           Set<Intent> intentsToBeProvided, 
+                                                           Set<Intent> intentsToBeProvided,
+                                                           Set<PolicySet> policySetsToBeProvided, 
                                                            GeneratorContext context, 
                                                            ServiceDefinition serviceDefinition) throws GenerationException {
         
@@ -80,6 +82,7 @@ public class Axis2BindingGeneratorDelegate implements BindingGeneratorDelegate<W
      */
     public Axis2WireTargetDefinition generateWireTarget(LogicalBinding<WsBindingDefinition> binding,
                                                         Set<Intent> intentsToBeProvided, 
+                                                        Set<PolicySet> policySetsToBeProvided,
                                                         GeneratorContext context, 
                                                         ReferenceDefinition referenceDefinition) throws GenerationException {
 

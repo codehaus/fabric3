@@ -24,6 +24,7 @@ import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.definitions.Intent;
+import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
@@ -46,6 +47,7 @@ public interface BindingGeneratorDelegate<BD extends BindingDefinition> {
      */
     PhysicalWireSourceDefinition generateWireSource(LogicalBinding<BD> binding, 
                             Set<Intent> intentsToBeProvided, 
+                            Set<PolicySet> policySetsToBeProvided,
                             GeneratorContext context,
                             ServiceDefinition serviceDefinition) throws GenerationException;
 
@@ -60,6 +62,7 @@ public interface BindingGeneratorDelegate<BD extends BindingDefinition> {
      */
     PhysicalWireTargetDefinition generateWireTarget(LogicalBinding<BD> binding, 
                             Set<Intent> intentsToBeProvided,  
+                            Set<PolicySet> policySetsToBeProvided,
                             GeneratorContext context,
                             ReferenceDefinition referenceDefinition) throws GenerationException;
 
