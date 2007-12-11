@@ -22,12 +22,15 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import sun.security.util.SecurityConstants;
 
 /**
  * ClassLoader associated with a composite. Each classloader has a name that can be used to reference it in the runtime.
@@ -104,6 +107,24 @@ public class CompositeClassLoader extends URLClassLoader {
      */
     public URI getName() {
         return name;
+    }
+
+    /**
+     * Returns the parent classLoaders. The "getClassLoader" RuntimePermission is required.
+     *
+     * @return the parent classLoaders
+     */
+    public List<ClassLoader> getParents() {
+        SecurityManager sm = System.getSecurityManager();
+        if (sm != null) {
+            sm.checkPermission(SecurityConstants.GET_CLASSLOADER_PERMISSION);
+        }
+        List<ClassLoader> list = new ArrayList<ClassLoader>();
+        if (parent != null) {
+            list.add(parent);
+        }
+        list.addAll(parents);
+        return list;
     }
 
     protected synchronized Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
