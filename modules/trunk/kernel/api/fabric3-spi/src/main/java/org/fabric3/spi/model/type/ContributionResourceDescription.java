@@ -31,6 +31,7 @@ import org.fabric3.scdl.ResourceDescription;
  */
 public class ContributionResourceDescription extends ResourceDescription<URI> {
     private List<URL> artifactUrls = new ArrayList<URL>();
+    private List<URI> importedUris = new ArrayList<URI>();
 
     public ContributionResourceDescription(URI identifier) {
         super(identifier);
@@ -47,4 +48,13 @@ public class ContributionResourceDescription extends ResourceDescription<URI> {
     public List<URL> getArtifactUrls() {
         return Collections.unmodifiableList(artifactUrls);
     }
+
+    public void addImportedUri(URI uri) {
+        importedUris.add(uri);
+    }
+
+    public List<URI> getImportedUris() {
+        return Collections.unmodifiableList(importedUris);
+    }
+
 }
