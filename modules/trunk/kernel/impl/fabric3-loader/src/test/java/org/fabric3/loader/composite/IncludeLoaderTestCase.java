@@ -72,12 +72,11 @@ public class IncludeLoaderTestCase extends TestCase {
         expect(context.getTargetClassLoader()).andReturn(cl);
         expect(context.getContributionUri()).andReturn(null);
         QNameSymbol symbol = new QNameSymbol(name);
-        Include include = new Include();
-        include.setName(name);
-        ResourceElement<QNameSymbol, Include> element = new ResourceElement<QNameSymbol, Include>(symbol);
+        Composite include = new Composite(name);
+        ResourceElement<QNameSymbol, Composite> element = new ResourceElement<QNameSymbol, Composite>(symbol);
         element.setValue(include);
         // FIXME null check
-        expect(store.resolve((URI) EasyMock.isNull(), eq(Include.class), isA(QNameSymbol.class))).andReturn(element);
+        expect(store.resolve((URI) EasyMock.isNull(), eq(Composite.class), isA(QNameSymbol.class))).andReturn(element);
         replay(registry, reader, namespaceContext, context, store);
 
         loader.load(reader, context);

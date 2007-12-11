@@ -89,12 +89,16 @@ public class IncludeLoader implements StAXElementLoader<Include> {
         } else {
             try {
                 QNameSymbol symbol = new QNameSymbol(name);
-                ResourceElement<QNameSymbol, Include> element = store.resolve(contributionUri, Include.class, symbol);
+                ResourceElement<QNameSymbol, Composite> element = store.resolve(contributionUri, Composite.class, symbol);
                 if (element == null) {
                     String identifier = name.toString();
                     throw new MissingResourceException("Composite not found [" + identifier + "]", identifier);
                 }
-                return element.getValue();
+                Composite composite = element.getValue();
+                Include include = new Include();
+                include.setName(name);
+                include.setIncluded(composite);
+                return include;
             } catch (MetaDataStoreException e) {
                 throw new LoaderException(e);
             }
