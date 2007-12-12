@@ -55,7 +55,7 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-itest-plugin</artifactId>
-                <version>RELEASE</version>
+                <version>0.4-SNAPSHOT</version>
                 <configuration>
                     <contributions>
                         <dependency>
@@ -81,6 +81,11 @@
                     </contributions>
                     <extensions>
                         <dependency>
+                            <groupId>commons-codec</groupId>
+                            <artifactId>commons-codec</artifactId>
+                            <version>1.3</version>
+                        </dependency>
+                        <dependency>
                             <groupId>org.apache.axis2</groupId>
                             <artifactId>axis2-kernel</artifactId>
                             <version>1.3</version>
@@ -90,7 +95,7 @@
                                     <artifactId>ant</artifactId>
                                 </exclusion>
                             </exclusions>
-                        </dependency> 
+                        </dependency>
                     </extensions>
                     <properties>
                         <property>
