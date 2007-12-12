@@ -18,20 +18,29 @@
  */
 package org.fabric3.maven.runtime.impl;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
 import org.apache.maven.surefire.testset.TestSetFailedException;
 
 import org.fabric3.extension.component.SimpleWorkContext;
-import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.runtime.AbstractRuntime;
 import org.fabric3.fabric.runtime.ComponentNames;
+import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.LOADER_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.XML_FACTORY_URI;
+import org.fabric3.fabric.util.FileHelper;
+import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.java.JavaComponent;
-import org.fabric3.loader.common.LoaderContextImpl;
+import org.fabric3.maven.contribution.ModuleContributionSource;
 import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
 import org.fabric3.maven.runtime.MavenHostInfo;
 import org.fabric3.pojo.PojoWorkContextTunnel;
@@ -40,16 +49,22 @@ import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.ObjectCreationException;
+import org.fabric3.spi.assembly.ActivateException;
+import org.fabric3.spi.assembly.Assembly;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.spi.loader.Loader;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.services.contribution.QNameSymbol;
+import org.fabric3.spi.services.contribution.ResourceElement;
+import org.fabric3.spi.services.factories.xml.XMLFactory;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.spi.wire.MessageImpl;
 
 /**
+ * Default Maven runtime implementation.
+ *
  * @version $Rev$ $Date$
  */
 public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> implements MavenEmbeddedRuntime {
@@ -57,22 +72,44 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
         super(MavenHostInfo.class, null);
     }
 
-    public Composite load(ClassLoader cl, URL scdlLocation) throws Exception{
-        Loader loader = getSystemComponent(Loader.class, LOADER_URI);
-        LoaderContext loaderContext = new LoaderContextImpl(cl, null, scdlLocation);
-        return loader.load(scdlLocation, Composite.class, loaderContext);
+    public Composite activate(URL url, QName qName) throws CompositeActivationException {
+        try {
+            // contribute the Maven project to the application domain
+            Assembly assembly = getSystemComponent(Assembly.class, DISTRIBUTED_ASSEMBLY_URI);
+            ContributionService contributionService =
+                    getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
+
+            URI contributionUri = URI.create(qName.getLocalPart());
+            ModuleContributionSource source =
+                    new ModuleContributionSource(contributionUri, FileHelper.toFile(url).toString());
+            contributionService.contribute(source);
+            // activate the deployable composite in the domain
+            assembly.includeInDomain(qName);
+            MetaDataStore store = getSystemComponent(MetaDataStore.class, ComponentNames.METADATA_STORE_URI);
+            ResourceElement<?, ?> element = store.resolve(new QNameSymbol(qName));
+            assert element != null;
+            return (Composite) element.getValue();
+        } catch (MalformedURLException e) {
+            String identifier = url.toString();
+            throw new CompositeActivationException("Invalid project directory [" + identifier + "]", identifier, e);
+        } catch (ContributionException e) {
+            throw new CompositeActivationException("Error processing project", e);
+        } catch (ActivateException e) {
+            String identifier = qName.toString();
+            throw new CompositeActivationException("Error activating composite [" + identifier + "]", identifier, e);
+        }
     }
 
-    public void deploy(Composite composite) throws Exception {
-        DistributedAssembly assembly = getSystemComponent(DistributedAssembly.class, DISTRIBUTED_ASSEMBLY_URI);
-        assembly.includeInDomain(composite);
+    public Composite activate(URL url, URL scdlLocation) throws Exception {
+        QName name = parseCompositeQName(scdlLocation);
+        return activate(url, name);
     }
 
     public void startContext(URI compositeId) throws GroupInitializationException {
         WorkContext workContext = new SimpleWorkContext();
         workContext.setScopeIdentifier(Scope.COMPOSITE, compositeId);
-        getScopeRegistry().getScopeContainer(Scope.COMPOSITE).startContext(workContext,
-                                                                           URI.create(compositeId.toString() + "/"));
+        URI groupId = URI.create(compositeId.toString() + "/");
+        getScopeRegistry().getScopeContainer(Scope.COMPOSITE).startContext(workContext, groupId);
     }
 
     public void destroy() {
@@ -116,4 +153,45 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
             PojoWorkContextTunnel.setThreadWorkContext(oldContext);
         }
     }
+
+    /**
+     * Determines a composite's QName.
+     * <p/>
+     * This method preserves backward compatibility for specifying SCDL location in an iTest plugin configuration.
+     *
+     * @param url the SCDL location
+     * @return the composite QName
+     * @throws IOException        if an error occurs opening the composite file
+     * @throws XMLStreamException if an error occurs processing the composite
+     */
+    private QName parseCompositeQName(URL url) throws IOException, XMLStreamException {
+        XMLStreamReader reader = null;
+        InputStream stream = null;
+        try {
+            stream = url.openStream();
+            XMLFactory xmlFactory = getSystemComponent(XMLFactory.class, XML_FACTORY_URI);
+            reader = xmlFactory.newInputFactoryInstance().createXMLStreamReader(stream);
+            reader.nextTag();
+            String name = reader.getAttributeValue(null, "name");
+            String targetNamespace = reader.getAttributeValue(null, "targetNamespace");
+            return new QName(targetNamespace, name);
+        } finally {
+            try {
+                if (stream != null) {
+                    stream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (reader != null) {
+                    reader.close();
+                }
+            } catch (XMLStreamException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
 }

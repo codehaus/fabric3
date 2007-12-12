@@ -18,6 +18,7 @@ package org.fabric3.maven.runtime;
 
 import java.net.URI;
 import java.net.URL;
+import javax.xml.namespace.QName;
 
 import org.apache.maven.surefire.testset.TestSetFailedException;
 
@@ -26,16 +27,48 @@ import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Operation;
 
 /**
+ * Contract for the Maven runtime.
+ *
  * @version $Rev$ $Date$
  */
 public interface MavenEmbeddedRuntime extends Fabric3Runtime<MavenHostInfo> {
-    Composite load(ClassLoader cl, URL scdlLocation) throws Exception;
 
-    void deploy(Composite composite) throws Exception;
+    /**
+     * Activates a composite by qualified name contained in the Maven module the runtime is currently executing for.
+     *
+     * @param base      the module output directory location
+     * @param composite the composite qname to activate
+     * @return the activated composite's component type
+     * @throws Exception if an error ocurrs
+     */
+    Composite activate(URL base, QName composite) throws Exception;
 
+    /**
+     * Activates a composite pointed to by the SCDL location.
+     * <p/>
+     * Note this method preserves backward compatibility through specifying the composite by location. When possible,
+     * use {@link #activate(java.net.URL, javax.xml.namespace.QName)} instead.
+     *
+     * @param base         the module output directory location
+     * @param scdlLocation the composite file location
+     * @return the activated composite's component type
+     * @throws Exception if an error ocurrs
+     */
+    Composite activate(URL base, URL scdlLocation) throws Exception;
+
+    /**
+     * Starts the component context
+     *
+     * @param compositeId the context id
+     * @throws Exception if an error ocurrs
+     */
     void startContext(URI compositeId) throws Exception;
 
-    void destroy();
-
+    /**
+     * @param contextId     the context id assocated with the test
+     * @param componentName the test component name
+     * @param operation     the operation to invoke on the test service contract
+     * @throws TestSetFailedException if a test case fails
+     */
     void executeTest(URI contextId, String componentName, Operation<?> operation) throws TestSetFailedException;
 }

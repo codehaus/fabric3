@@ -14,23 +14,34 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.maven.runtime;
+package org.fabric3.maven.contribution;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
-import java.util.Set;
-
-import org.fabric3.host.runtime.HostInfo;
+import java.net.URLConnection;
 
 /**
+ * Connection to a Maven module URL.
+ *
  * @version $Rev$ $Date$
  */
-public interface MavenHostInfo extends HostInfo {
+public class ModuleUrlConnection extends URLConnection {
+    public static final String CONTENT_TYPE = "application/vnd.fabric3.maven-project";
 
-    /**
-     * Returns dereferenceable URLs to dependencies of the current Maven module.
-     *
-     * @return the dependency URLs
-     */
-    Set<URL> getDependencyUrls();
+    protected ModuleUrlConnection(URL url) {
+        super(url);
+    }
 
+    public InputStream getInputStream() throws IOException {
+        throw new UnsupportedOperationException();
+    }
+
+    public String getContentType() {
+        return CONTENT_TYPE;
+    }
+
+    public void connect() throws IOException {
+
+    }
 }

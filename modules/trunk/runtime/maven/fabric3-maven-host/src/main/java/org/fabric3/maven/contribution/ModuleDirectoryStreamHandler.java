@@ -14,23 +14,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.maven.runtime;
+package org.fabric3.maven.contribution;
 
+import java.io.IOException;
 import java.net.URL;
-import java.util.Set;
-
-import org.fabric3.host.runtime.HostInfo;
+import java.net.URLConnection;
+import java.net.URLStreamHandler;
 
 /**
+ * Stream handler for Maven module URLs.
+ *
  * @version $Rev$ $Date$
  */
-public interface MavenHostInfo extends HostInfo {
-
-    /**
-     * Returns dereferenceable URLs to dependencies of the current Maven module.
-     *
-     * @return the dependency URLs
-     */
-    Set<URL> getDependencyUrls();
-
+public class ModuleDirectoryStreamHandler extends URLStreamHandler {
+    protected URLConnection openConnection(URL url) throws IOException {
+        return new ModuleUrlConnection(url);
+    }
 }

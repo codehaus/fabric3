@@ -14,23 +14,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.maven.runtime;
+package org.fabric3.maven.runtime.impl;
 
-import java.net.URL;
-import java.util.Set;
-
-import org.fabric3.host.runtime.HostInfo;
+import org.fabric3.host.Fabric3Exception;
 
 /**
  * @version $Rev$ $Date$
  */
-public interface MavenHostInfo extends HostInfo {
+public class CompositeActivationException extends Fabric3Exception {
+    private static final long serialVersionUID = 6028592281898097644L;
 
-    /**
-     * Returns dereferenceable URLs to dependencies of the current Maven module.
-     *
-     * @return the dependency URLs
-     */
-    Set<URL> getDependencyUrls();
+    public CompositeActivationException(String message, String identifier, Throwable cause) {
+        super(message, identifier, cause);
+    }
 
+    public CompositeActivationException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }
