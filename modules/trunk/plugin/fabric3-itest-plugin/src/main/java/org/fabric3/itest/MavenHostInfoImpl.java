@@ -21,6 +21,7 @@ package org.fabric3.itest;
 import java.net.URI;
 import java.net.URL;
 import java.util.Properties;
+import java.util.Set;
 
 import org.fabric3.maven.runtime.MavenHostInfo;
 
@@ -30,11 +31,12 @@ import org.fabric3.maven.runtime.MavenHostInfo;
 public class MavenHostInfoImpl implements MavenHostInfo {
     private final URI domain;
     private final Properties hostProperties;
+    private final Set<URL> dependencyUrls;
 
-
-    public MavenHostInfoImpl(URI domain, Properties hostProperties) {
+    public MavenHostInfoImpl(URI domain, Properties hostProperties, Set<URL> dependencyUrls) {
         this.domain = domain;
         this.hostProperties = hostProperties;
+        this.dependencyUrls = dependencyUrls;
     }
 
     public URL getBaseURL() {
@@ -55,5 +57,9 @@ public class MavenHostInfoImpl implements MavenHostInfo {
 
     public String getRuntimeId() {
         return "maven";
+    }
+
+    public Set<URL> getDependencyUrls() {
+        return dependencyUrls;
     }
 }

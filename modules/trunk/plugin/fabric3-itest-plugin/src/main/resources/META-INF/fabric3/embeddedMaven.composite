@@ -97,5 +97,12 @@
         <system:implementation.system class="org.fabric3.maven.MavenArchiveStore"/>
     </component>
 
+    <component name="ModuleContributionProcessor">
+        <system:implementation.system class="org.fabric3.maven.contribution.ModuleContributionProcessor"/>
+    </component>
+
+    <component name="ModuleClasspathProcessor">
+        <system:implementation.system class="org.fabric3.maven.contribution.ModuleClasspathProcessor"/>
+    </component>
 
 </composite>

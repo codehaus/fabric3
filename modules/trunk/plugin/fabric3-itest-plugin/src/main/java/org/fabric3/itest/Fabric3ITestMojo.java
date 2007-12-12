@@ -26,12 +26,14 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import javax.xml.namespace.QName;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
@@ -76,14 +78,52 @@ import org.fabric3.scdl.Operation;
 import org.fabric3.spi.deployer.CompositeClassLoader;
 
 /**
- * Integration-tests an SCA composite by running it in local copy of Fabric3 and calling JUnit-based test components to
- * exercise it.
+ * Integration-tests an SCA composite by running it in a local copy of Fabric3 and calling JUnit-based test components
+ * to exercise it.
  *
  * @version $Rev$ $Date$
  * @goal test
  * @phase integration-test
  */
 public class Fabric3ITestMojo extends AbstractMojo {
+
+    /**
+     * The optional target namespace of the composite to activate.
+     *
+     * @parameter
+     */
+    public String compositeNamespace;
+
+    /**
+     * The local name of the composite to activate, which may be null if testScdl is defined.
+     *
+     * @parameter
+     */
+    public String compositeName;
+
+    /**
+     * The location if the SCDL that defines the test harness composite. The source for this would normally be placed in
+     * the test/resources directory and be copied by the resource plugin; this allows property substitution if
+     * required.
+     *
+     * @parameter expression="${project.build.testOutputDirectory}/itest.composite"
+     */
+    public File testScdl;
+
+    /**
+     * The project artifacts
+     *
+     * @parameter expression="${project.artifacts}
+     */
+    public Set<Artifact> artifacts;
+
+    /**
+     * test composite .
+     *
+     * @parameter expression="${project.build.directory}"
+     */
+    public File buildDirectory;
+
     /**
      * Do not run if this is set to true. This usage is consistent with the surefire plugin.
      *
@@ -122,15 +162,6 @@ public class Fabric3ITestMojo extends AbstractMojo {
     public String testDomain;
 
     /**
-     * The location if the SCDL that defines the test harness composite. The source for this would normally be placed in
-     * the test/resources directory and be copied by the resource plugin; this allows property substitution if
-     * required.
-     *
-     * @parameter expression="${project.build.testOutputDirectory}/itest.composite"
-     */
-    public File testScdl;
-
-    /**
      * The location of the SCDL that configures the Fabric3 runtime. This allows the default runtime configuration
      * supplied in this plugin to be overridden.
      *
@@ -140,18 +171,21 @@ public class Fabric3ITestMojo extends AbstractMojo {
 
     /**
      * Class name for the implementation of the runtime to use.
+     *
      * @parameter expression="org.fabric3.maven.runtime.impl.MavenEmbeddedRuntimeImpl"
      */
     public String runtimeImpl;
 
     /**
      * Class name for the implementation of the bootstrapper to use.
+     *
      * @parameter expression="org.fabric3.fabric.runtime.ScdlBootstrapperImpl"
      */
     public String bootstrapperImpl;
 
     /**
      * Class name for the implementation of the coordinator to use.
+     *
      * @parameter expression="org.fabric3.maven.runtime.impl.MavenCoordinatorImpl"
      */
     public String coordinatorImpl;
@@ -165,6 +199,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
 
     /**
      * The version of the runtime to use.
+     *
      * @parameter expression="0.4-SNAPSHOT"
      */
     public String runtimeVersion;
@@ -262,13 +297,19 @@ public class Fabric3ITestMojo extends AbstractMojo {
             throw new AssertionError();
         }
 
-        ClassLoader hostClassLoader = createHostClassLoader(getClass().getClassLoader(), runtimeVersion, extensions);
-        Thread.currentThread().setContextClassLoader(hostClassLoader);
+        Set<Artifact> runtimeArtifacts = calculateRuntimeArtifacts(runtimeVersion);
+        Set<Artifact> hostArtifacts = calculateHostArtifacts(runtimeArtifacts);
+        Set<URL> moduleDependencies = calculateModuleDependencies(artifacts, hostArtifacts);
+        ClassLoader parentClassLoader = getClass().getClassLoader();
+        ClassLoader hostClassLoader = createHostClassLoader(parentClassLoader, hostArtifacts);
+        ClassLoader bootClassLoader = createBootClassLoader(hostClassLoader, runtimeArtifacts);
+
+        Thread.currentThread().setContextClassLoader(bootClassLoader);
         if (systemScdl == null) {
-            systemScdl = hostClassLoader.getResource("META-INF/fabric3/embeddedMaven.composite");
+            systemScdl = bootClassLoader.getResource("META-INF/fabric3/embeddedMaven.composite");
         }
         if (intentsLocation == null) {
-            intentsLocation = hostClassLoader.getResource("META-INF/fabric3/intents.xml");
+            intentsLocation = bootClassLoader.getResource("META-INF/fabric3/intents.xml");
         }
 
         List<URL> contributionURLs = resolveDependencies(contributions);
@@ -276,19 +317,18 @@ public class Fabric3ITestMojo extends AbstractMojo {
 
         log.info("Starting Embedded Fabric3 Runtime ...");
         // FIXME this should probably be an isolated classloader
-        ClassLoader testClassLoader = createTestClassLoader(hostClassLoader);
         MavenEmbeddedRuntime runtime;
         MavenCoordinator coordinator;
         try {
-            runtime = createRuntime(hostClassLoader, monitorFactory);
-            coordinator = createHostComponent(MavenCoordinator.class, coordinatorImpl, hostClassLoader);
+            runtime = createRuntime(bootClassLoader, hostClassLoader, moduleDependencies, monitorFactory);
+            coordinator = createHostComponent(MavenCoordinator.class, coordinatorImpl, bootClassLoader);
         } catch (Exception e) {
             throw new MojoExecutionException("Error creating fabric3 runtime", e);
         }
         try {
             coordinator.setExtensions(contributionURLs);
             coordinator.setIntentsLocation(intentsLocation);
-            bootRuntime(coordinator, runtime, hostClassLoader, testClassLoader);
+            bootRuntime(coordinator, runtime, bootClassLoader, hostClassLoader);
         } catch (InitializationException e) {
             throw new MojoExecutionException("Error initializing Fabric3 Runtime", e);
         } catch (Exception e) {
@@ -299,7 +339,11 @@ public class Fabric3ITestMojo extends AbstractMojo {
             SurefireTestSuite testSuite;
             log.info("Deploying test SCDL from " + testScdl);
             try {
-                testSuite = createTestSuite(runtime, testScdlURL, testClassLoader);
+                if (compositeName == null) {
+                    testSuite = createTestSuite(runtime, testScdlURL);
+                } else {
+                    testSuite = createTestSuite(runtime);
+                }
             } catch (Exception e) {
                 throw new MojoExecutionException("Error deploying test component " + testScdl, e);
             }
@@ -352,12 +396,12 @@ public class Fabric3ITestMojo extends AbstractMojo {
 
     private void bootRuntime(RuntimeLifecycleCoordinator<MavenEmbeddedRuntime, Bootstrapper> coordinator,
                              MavenEmbeddedRuntime runtime,
-                             ClassLoader hostClassLoader,
+                             ClassLoader bootClassLoader,
                              ClassLoader testClassLoader)
             throws Exception {
-        ScdlBootstrapper bootstrapper = createHostComponent(ScdlBootstrapper.class, bootstrapperImpl, hostClassLoader);
+        ScdlBootstrapper bootstrapper = createHostComponent(ScdlBootstrapper.class, bootstrapperImpl, bootClassLoader);
         bootstrapper.setScdlLocation(systemScdl);
-        coordinator.bootPrimordial(runtime, bootstrapper, hostClassLoader, testClassLoader);
+        coordinator.bootPrimordial(runtime, bootstrapper, bootClassLoader, testClassLoader);
         coordinator.initialize();
         Future<Void> future = coordinator.joinDomain(-1);
         future.get();
@@ -367,20 +411,8 @@ public class Fabric3ITestMojo extends AbstractMojo {
         future.get();
     }
 
-    protected ClassLoader createHostClassLoader(ClassLoader parent, String runtimeVersion, Dependency[] extensions)
+    private ClassLoader createBootClassLoader(ClassLoader parent, Set<Artifact> artifacts)
             throws MojoExecutionException {
-        Set<Artifact> artifacts = new HashSet<Artifact>();
-        // add in the runtime
-        Set<Exclusion> exclusions = Collections.emptySet();
-        addArtifacts(artifacts, new Dependency("org.codehaus.fabric3", "fabric3-maven-host", runtimeVersion, exclusions));
-
-        // add in the common extensions
-        if (extensions != null) {
-            for (Dependency extension : extensions) {
-                addArtifacts(artifacts, extension);
-            }
-        }
-        
         URL[] urls = new URL[artifacts.size()];
         int i = 0;
         for (Artifact artifact : artifacts) {
@@ -402,7 +434,17 @@ public class Fabric3ITestMojo extends AbstractMojo {
             }
         }
 
-        return new CompositeClassLoader(URI.create("itestHost"), urls, parent);
+        return new CompositeClassLoader(URI.create("itestBoot"), urls, parent);
+    }
+
+    private Set<Artifact> calculateRuntimeArtifacts(String runtimeVersion) throws MojoExecutionException {
+        Set<Artifact> artifacts = new HashSet<Artifact>();
+        // add in the runtime
+        Set<Exclusion> exclusions = Collections.emptySet();
+        Dependency dependency =
+                new Dependency("org.codehaus.fabric3", "fabric3-maven-host", runtimeVersion, exclusions);
+        addArtifacts(artifacts, dependency);
+        return artifacts;
     }
 
     private void addArtifacts(Set<Artifact> artifacts, Dependency extension) throws MojoExecutionException {
@@ -485,11 +527,15 @@ public class Fabric3ITestMojo extends AbstractMojo {
         return reporterManager.getNumErrors() == 0 && reporterManager.getNumFailures() == 0;
     }
 
-    protected MavenEmbeddedRuntime createRuntime(ClassLoader hostClassLoader, MonitorFactory monitorFactory) throws Exception {
+    protected MavenEmbeddedRuntime createRuntime(ClassLoader bootClassLoader,
+                                                 ClassLoader hostClassLoader,
+                                                 Set<URL> moduleDependencies,
+                                                 MonitorFactory monitorFactory)
+            throws Exception {
         Properties hostProperties = properties != null ? properties : System.getProperties();
-        MavenHostInfoImpl hostInfo = new MavenHostInfoImpl(URI.create(testDomain), hostProperties);
+        MavenHostInfoImpl hostInfo = new MavenHostInfoImpl(URI.create(testDomain), hostProperties, moduleDependencies);
 
-        MavenEmbeddedRuntime runtime = createHostComponent(MavenEmbeddedRuntime.class, runtimeImpl, hostClassLoader);
+        MavenEmbeddedRuntime runtime = createHostComponent(MavenEmbeddedRuntime.class, runtimeImpl, bootClassLoader);
         runtime.setMonitorFactory(monitorFactory);
         runtime.setHostInfo(hostInfo);
         runtime.setHostClassLoader(hostClassLoader);
@@ -502,33 +548,17 @@ public class Fabric3ITestMojo extends AbstractMojo {
 
     }
 
-    public ClassLoader createTestClassLoader(ClassLoader parent) {
-        URL[] urls = new URL[testClassPath.size()];
-        int idx = 0;
-        for (String s : testClassPath) {
-            File pathElement = new File(s);
-            try {
-                URL url = pathElement.toURI().toURL();
-                getLog().debug("Adding application URL: " + url);
-                urls[idx++] = url;
-            } catch (MalformedURLException e) {
-                // toURI should have encoded the URL
-                throw new AssertionError();
-            }
-
-        }
-        return new URLClassLoader(urls, parent);
+    protected SurefireTestSuite createTestSuite(MavenEmbeddedRuntime runtime, URL testScdlURL) throws Exception {
+        URI domain = URI.create(testDomain);
+        Composite composite = runtime.activate(buildDirectory.toURI().toURL(), testScdlURL);
+        runtime.startContext(domain);
+        return createTestSuite(runtime, composite, domain);
     }
 
-    protected SurefireTestSuite createTestSuite(MavenEmbeddedRuntime runtime,
-                                              URL testScdlURL,
-                                              ClassLoader testClassLoader) throws Exception {
-        // XML loading is externalized for the Mojo...this should be cleaned up to use the DSL when
-        // it becomes available
+    protected SurefireTestSuite createTestSuite(MavenEmbeddedRuntime runtime) throws Exception {
         URI domain = URI.create(testDomain);
-
-        Composite composite = runtime.load(testClassLoader, testScdlURL);
-        runtime.deploy(composite);
+        QName qName = new QName(compositeNamespace, compositeName);
+        Composite composite = runtime.activate(buildDirectory.toURI().toURL(), qName);
         runtime.startContext(domain);
         return createTestSuite(runtime, composite, domain);
     }
@@ -564,6 +594,103 @@ public class Fabric3ITestMojo extends AbstractMojo {
         }
         List<? extends Operation<?>> operations = testService.getServiceContract().getOperations();
         return new SCATestSet(runtime, name, contextId, operations);
+    }
+
+    /**
+     * Transitively calculates the set of artifacts to be included in the host classloader based on the artifacts
+     * associated with the Maven module.
+     *
+     * @param runtimeArtifacts the artifacts associated with the Maven module
+     * @return set of artifacts to be included in the host classloader
+     * @throws MojoExecutionException if an error occurs calculating the transitive dependencies
+     */
+    private Set<Artifact> calculateHostArtifacts(Set<Artifact> runtimeArtifacts)
+            throws MojoExecutionException {
+        Set<Artifact> hostArtifacts = new HashSet<Artifact>();
+        Set<Exclusion> exclusions = Collections.emptySet();
+        // find the version of fabric3-api being used by the runtime
+        String version = null;
+        for (Artifact artifact : runtimeArtifacts) {
+            if ("org.codehaus.fabric3".equals(artifact.getGroupId())
+                    && "fabric3-api".equals(artifact.getArtifactId())) {
+                version = artifact.getVersion();
+                break;
+            }
+        }
+        if (version == null) {
+            throw new MojoExecutionException("org.codehaus.fabric3:fabric3-api version not found");
+        }
+        // add transitive dependencies of fabric3-api to the list of artifacts in the host classloader
+        Dependency dependency = new Dependency("org.codehaus.fabric3", "fabric3-api", version, exclusions);
+        addArtifacts(hostArtifacts, dependency);
+
+        // add commons annotations dependency
+        Dependency jsr250API =
+                new Dependency("org.apache.geronimo.specs", "geronimo-annotation_1.0_spec", "1.1", exclusions);
+        addArtifacts(hostArtifacts, jsr250API);
+
+        // add shared artifacts to the host classpath
+        // FIXME we should rename "extensions" to somehting that better denotes shared artifacts
+        if (extensions != null) {
+            for (Dependency extension : extensions) {
+                addArtifacts(hostArtifacts, extension);
+            }
+        }
+        return hostArtifacts;
+    }
+
+    /**
+     * Creates the host classloader based on the given set of artifacts.
+     *
+     * @param parent        the parent classloader
+     * @param hostArtifacts the  artifacts
+     * @return the host classloader
+     */
+    private ClassLoader createHostClassLoader(ClassLoader parent, Set<Artifact> hostArtifacts) {
+        List<URL> urls = new ArrayList<URL>(hostArtifacts.size());
+        for (Artifact artifact : hostArtifacts) {
+            try {
+                File pathElement = artifact.getFile();
+                URL url = pathElement.toURI().toURL();
+                getLog().debug("Adding artifact URL: " + url);
+                urls.add(url);
+            } catch (MalformedURLException e) {
+                // toURI should have encoded the URL
+                throw new AssertionError();
+            }
+
+        }
+        return new URLClassLoader(urls.toArray(new URL[urls.size()]), parent);
+    }
+
+    /**
+     * Calculates module dependencies based on the set of project artifacts. Module dependencies must be visible to
+     * implementation code in a composite and encompass project artifacts minus artifacts provided by the host
+     * classloader and those that are "provided scope".
+     *
+     * @param projectArtifacts the artifact set to determine module dependencies from
+     * @param hostArtifacts    the set of host artifacts
+     * @return the set of URLs pointing to module depedencies.
+     */
+    private Set<URL> calculateModuleDependencies(Set<Artifact> projectArtifacts, Set<Artifact> hostArtifacts) {
+        Set<URL> urls = new LinkedHashSet<URL>();
+        for (Artifact artifact : projectArtifacts) {
+            try {
+                if (hostArtifacts.contains(artifact) || Artifact.SCOPE_PROVIDED.equals(artifact.getScope())) {
+                    continue;
+                }
+                File pathElement = artifact.getFile();
+                URL url = pathElement.toURI().toURL();
+                getLog().debug("Adding module dependency URL: " + url);
+                urls.add(url);
+
+            } catch (MalformedURLException e) {
+                // toURI should have encoded the URL
+                throw new AssertionError();
+            }
+
+        }
+        return urls;
     }
 
     public interface MojoMonitor {
