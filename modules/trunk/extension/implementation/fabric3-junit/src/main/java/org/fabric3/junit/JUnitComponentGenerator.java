@@ -3,7 +3,6 @@ package org.fabric3.junit;
 import java.net.URI;
 import java.util.Set;
 
-import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
@@ -17,6 +16,7 @@ import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
+import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
@@ -30,33 +30,26 @@ import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 
 /**
- * TODO JFM this class shares commonalities with system, launched, and java impl types. Refactor.
- * TODO Should this be using the definitions from the Java implementation type?
- *
  * @version $Rev$ $Date$
- *
  */
 @EagerInit
 public class JUnitComponentGenerator implements ComponentGenerator<LogicalComponent<ImplementationJUnit>> {
-    private static final URI classLoaderId = URI.create("sca://./applicationClassLoader");
 
     private final GeneratorRegistry registry;
+    private final ClassLoaderGenerator classLoaderGenerator;
     private final InstanceFactoryGenerationHelper helper;
 
     public JUnitComponentGenerator(@Reference GeneratorRegistry registry,
+                                   @Reference ClassLoaderGenerator classLoaderGenerator,
                                    @Reference InstanceFactoryGenerationHelper helper) {
         this.registry = registry;
+        this.classLoaderGenerator = classLoaderGenerator;
         this.helper = helper;
     }
 
     @Init
     public void init() {
         registry.register(ImplementationJUnit.class, this);
-    }
-
-    @Destroy
-    public void destroy() {
-        // TODO unregister with registry.unregister(ImplementationJUnit.class, this);
     }
 
     public PhysicalComponentDefinition generate(LogicalComponent<ImplementationJUnit> component,
@@ -79,7 +72,10 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         JavaComponentDefinition physical = new JavaComponentDefinition();
         physical.setGroupId(componentId.resolve("."));
         physical.setComponentId(componentId);
+
+        URI classLoaderId = classLoaderGenerator.generate(component, context);
         physical.setClassLoaderId(classLoaderId);
+
         physical.setScope(type.getImplementationScope());
         physical.setInitLevel(level);
         physical.setInstanceFactoryProviderDefinition(providerDefinition);
@@ -97,6 +93,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         wireDefinition.setUri(reference.getUri());
         wireDefinition.setOptimizable(optimizable);
         wireDefinition.setConversational(reference.getDefinition().getServiceContract().isConversational());
+        URI classLoaderId = classLoaderGenerator.generate(source, context);
         wireDefinition.setClassLoaderId(classLoaderId);
         return wireDefinition;
     }
