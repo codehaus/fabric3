@@ -21,7 +21,7 @@
 
     <component name="PromotionTestComponent">
         <f3:junit class="org.fabric3.tests.function.binding.PromotionDirectorWireTest"/>
-        <reference name="PromotedReference" target="HelloComponent"/>
+        <reference name="helloService" target="HelloComponent"/>
     </component>
 
     <service name="HelloService" promote="HelloComponent/HelloService">

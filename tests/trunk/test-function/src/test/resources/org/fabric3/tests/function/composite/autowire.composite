@@ -17,11 +17,11 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           name="AutowireComposite">
+           name="AutowireTestComposite">
 
 
     <component name="Autowire2" autowire="true">
-        <implementation.composite scdlLocation="autowired.composite"/>
+        <implementation.composite name="AutowiredComposite"/>
     </component>
 
 

@@ -20,8 +20,8 @@
            xmlns:hessian="http://www.fabric3.org/binding/hessian/0.2"
            name="BindingComposite">
 
-    <include name="ExplicitBindingComposite" scdlLocation="explicitbinding.composite"/>
-    <include name="PromotionComposite" scdlLocation="promotion.composite"/>
+    <include name="ExplicitBindingComposite"/>
+    <include name="PromotionComposite"/>
 
 
 </composite>
