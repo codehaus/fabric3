@@ -19,6 +19,7 @@
 package org.fabric3.spi.services.contribution;
 
 import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.spi.model.type.ContributionResourceDescription;
 
 /**
  * Interface for services that process contributions. Contribution processing occurs in several phases. Contribution
@@ -65,5 +66,16 @@ public interface ContributionProcessor {
      * @throws ContributionException if there was a problem loading the contribution resoruces
      */
     public void process(Contribution contribution, ClassLoader loader) throws ContributionException;
+
+    /**
+     * Updates the resource description for the contribution. Implementations may add required artifact URLs to the
+     * description.
+     *
+     * @param contribution the contribution to update
+     * @param description  the description
+     * @throws ContributionException if an error occurs updating the description
+     */
+    public void updateContributionDescription(Contribution contribution, ContributionResourceDescription description)
+            throws ContributionException;
 
 }

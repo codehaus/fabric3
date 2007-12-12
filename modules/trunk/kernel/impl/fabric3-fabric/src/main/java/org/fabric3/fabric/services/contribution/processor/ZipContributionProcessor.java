@@ -45,7 +45,6 @@ import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.ContributionProcessor;
-import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.factories.xml.XMLFactory;
 
@@ -60,11 +59,10 @@ public class ZipContributionProcessor extends ArchiveContributionProcessor imple
     public ZipContributionProcessor(@Reference ProcessorRegistry processorRegistry,
                                     @Reference LoaderRegistry loaderRegistry,
                                     @Reference XMLFactory xmlFactory,
-                                    @Reference MetaDataStore store,
                                     @Reference ArtifactLocationEncoder encoder,
                                     @Reference ContentTypeResolver contentTypeResolver) {
 
-        super(store, encoder);
+        super(encoder);
         this.registry = processorRegistry;
         this.loaderRegistry = loaderRegistry;
         this.xmlFactory = xmlFactory.newInputFactoryInstance();
@@ -149,7 +147,7 @@ public class ZipContributionProcessor extends ArchiveContributionProcessor imple
                     continue;
                 }
 
-                URL entryUrl = new URL("jar:" + location.toExternalForm() + "!/"+entry.getName());
+                URL entryUrl = new URL("jar:" + location.toExternalForm() + "!/" + entry.getName());
                 // hack to return the correct content type
                 String contentType = contentTypeResolver.getContentType(new URL(location, entry.getName()));
 

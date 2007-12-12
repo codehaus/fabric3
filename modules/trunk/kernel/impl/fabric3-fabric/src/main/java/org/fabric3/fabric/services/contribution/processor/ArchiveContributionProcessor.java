@@ -23,21 +23,10 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.extension.contribution.ContributionProcessorExtension;
 import org.fabric3.host.contribution.ContributionException;
-import org.fabric3.host.contribution.ContributionNotFoundException;
-import org.fabric3.scdl.AbstractComponentType;
-import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.Composite;
-import org.fabric3.scdl.CompositeImplementation;
-import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.ReferenceDefinition;
-import org.fabric3.scdl.ResourceDefinition;
-import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.model.type.ContributionResourceDescription;
 import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
 import org.fabric3.spi.services.contribution.Contribution;
-import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.Resource;
-import org.fabric3.spi.services.contribution.ResourceElement;
 
 /**
  * Handles common processing for contribution archives
@@ -46,11 +35,8 @@ import org.fabric3.spi.services.contribution.ResourceElement;
  */
 public abstract class ArchiveContributionProcessor extends ContributionProcessorExtension {
     protected ArtifactLocationEncoder encoder;
-    private MetaDataStore store;
 
-    protected ArchiveContributionProcessor(@Reference MetaDataStore store,
-                                           @Reference ArtifactLocationEncoder encoder) {
-        this.store = store;
+    protected ArchiveContributionProcessor(@Reference ArtifactLocationEncoder encoder) {
         this.encoder = encoder;
     }
 
@@ -72,71 +58,17 @@ public abstract class ArchiveContributionProcessor extends ContributionProcessor
             for (Resource resource : contribution.getResources()) {
                 registry.processResource(contributionUri, resource, loader);
             }
-            addContributionDescription(contribution);
         } finally {
             Thread.currentThread().setContextClassLoader(oldClassloader);
         }
     }
 
-    protected abstract void iterateArtifacts(Contribution contribution, Action action)
-            throws ContributionException;
-
-    /**
-     * Recursively adds a resource description pointing to the contribution artifact on contained components.
-     * <p/>
-     * FIXME Refactor this method out of processing
-     *
-     * @param contribution the contribution the resource description requires
-     * @throws ContributionNotFoundException if a required imported contribution is not found
-     */
-    private void addContributionDescription(Contribution contribution) throws ContributionNotFoundException {
-        ContributionResourceDescription description = new ContributionResourceDescription(contribution.getUri());
-        // encode the contribution URL so it can be dereferenced remotely
+    public void updateContributionDescription(Contribution contribution, ContributionResourceDescription description)
+            throws ContributionException {
         URL encodedLocation = encoder.encode(contribution.getLocation());
         description.addArtifactUrl(encodedLocation);
-        for (URI uri : contribution.getResolvedImportUris()) {
-            description.addImportedUri(uri);
-        }
-
-        for (Resource resource : contribution.getResources()) {
-            // XCV FIXME specific composite case
-            for (ResourceElement<?, ?> element : resource.getResourceElements()) {
-                Object value = element.getValue();
-                if (value instanceof Composite) {
-                    addContributionDescription(description, (Composite) value);
-                }
-            }
-        }
     }
 
-    /**
-     * Adds the given resource description pointing to the contribution artifact on contained components.
-     *
-     * @param description the resource description
-     * @param composite   the component type to introspect
-     */
-    private void addContributionDescription(ContributionResourceDescription description, Composite composite) {
-        for (ComponentDefinition<?> definition : composite.getComponents().values()) {
-            Implementation<?> implementation = definition.getImplementation();
-            if (CompositeImplementation.class.isInstance(implementation)) {
-                CompositeImplementation compositeImplementation = CompositeImplementation.class.cast(implementation);
-                Composite componentType = compositeImplementation.getComponentType();
-                addContributionDescription(description, componentType);
-            } else {
-                implementation.addResourceDescription(description);
-                // mark references and services as well;
-                AbstractComponentType<?, ?, ?, ?> type = implementation.getComponentType();
-                for (ServiceDefinition service : type.getServices().values()) {
-                    service.addResourceDescription(description);
-                }
-                for (ReferenceDefinition reference : type.getReferences().values()) {
-                    reference.addResourceDescription(description);
-                }
-                for (ResourceDefinition resource : type.getResources().values()) {
-                    resource.addResourceDescription(description);
-                }
-            }
-        }
-    }
-
+    protected abstract void iterateArtifacts(Contribution contribution, Action action)
+            throws ContributionException;
 }

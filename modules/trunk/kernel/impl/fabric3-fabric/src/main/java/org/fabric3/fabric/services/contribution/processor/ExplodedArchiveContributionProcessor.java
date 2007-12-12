@@ -44,7 +44,6 @@ import org.fabric3.spi.services.contenttype.ContentTypeResolver;
 import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
-import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.factories.xml.XMLFactory;
 
 /**
@@ -57,10 +56,9 @@ public class ExplodedArchiveContributionProcessor extends ArchiveContributionPro
 
     public ExplodedArchiveContributionProcessor(@Reference LoaderRegistry loaderRegistry,
                                                 @Reference XMLFactory xmlFactory,
-                                                @Reference MetaDataStore store,
                                                 @Reference ContentTypeResolver contentTypeResolver,
                                                 @Reference ArtifactLocationEncoder encoder) {
-        super(store, encoder);
+        super(encoder);
         this.loaderRegistry = loaderRegistry;
         this.contentTypeResolver = contentTypeResolver;
         this.xmlFactory = xmlFactory.newInputFactoryInstance();

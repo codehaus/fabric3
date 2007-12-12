@@ -19,27 +19,13 @@
 
 package org.fabric3.fabric.services.contribution.processor;
 
-import javax.xml.stream.XMLInputFactory;
-
-import org.osoa.sca.annotations.Reference;
-
 import org.fabric3.extension.contribution.ContributionProcessorExtension;
 import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
-import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionProcessor;
 
 public class CompositeContributionProcessor extends ContributionProcessorExtension implements ContributionProcessor {
-    private XMLInputFactory xmlFactory;
-    private final LoaderRegistry registry;
-
-
-    public CompositeContributionProcessor(@Reference LoaderRegistry registry) {
-        super();
-        this.registry = registry;
-        this.xmlFactory = XMLInputFactory.newInstance("javax.xml.stream.XMLInputFactory", getClass().getClassLoader());
-    }
 
     public String[] getContentTypes() {
         return new String[]{Constants.COMPOSITE_CONTENT_TYPE};

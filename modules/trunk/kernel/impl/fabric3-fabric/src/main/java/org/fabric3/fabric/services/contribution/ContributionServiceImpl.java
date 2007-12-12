@@ -47,6 +47,17 @@ import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.MetaDataStoreException;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
+import org.fabric3.spi.services.contribution.Resource;
+import org.fabric3.spi.services.contribution.ResourceElement;
+import org.fabric3.spi.model.type.ContributionResourceDescription;
+import org.fabric3.scdl.Composite;
+import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.CompositeImplementation;
+import org.fabric3.scdl.AbstractComponentType;
+import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.ResourceDefinition;
 
 /**
  * Default ContributionService implementation
@@ -253,9 +264,64 @@ public class ContributionServiceImpl implements ContributionService {
             processorRegistry.indexContribution(contribution);
             metaDataStore.store(contribution);
             processorRegistry.processContribution(contribution, loader);
+            addContributionDescription(contribution);
         } catch (MetaDataStoreException e) {
             throw new ContributionException(e);
         }
     }
+
+    /**
+     * Recursively adds a resource description pointing to the contribution artifact on contained components.
+     *
+     * @param contribution the contribution the resource description requires
+     * @throws ContributionNotFoundException if a required imported contribution is not found
+     */
+    private void addContributionDescription(Contribution contribution) throws ContributionException {
+        ContributionResourceDescription description = new ContributionResourceDescription(contribution.getUri());
+        processorRegistry.updateContributionDescription(contribution, description);
+        for (URI uri : contribution.getResolvedImportUris()) {
+            description.addImportedUri(uri);
+        }
+
+        for (Resource resource : contribution.getResources()) {
+            for (ResourceElement<?, ?> element : resource.getResourceElements()) {
+                Object value = element.getValue();
+                if (value instanceof Composite) {
+                    addContributionDescription(description, (Composite) value);
+                }
+            }
+        }
+    }
+
+    /**
+     * Adds the given resource description pointing to the contribution artifact on contained components.
+     *
+     * @param description the resource description
+     * @param composite   the component type to introspect
+     */
+    private void addContributionDescription(ContributionResourceDescription description, Composite composite) {
+        for (ComponentDefinition<?> definition : composite.getComponents().values()) {
+            Implementation<?> implementation = definition.getImplementation();
+            if (CompositeImplementation.class.isInstance(implementation)) {
+                CompositeImplementation compositeImplementation = CompositeImplementation.class.cast(implementation);
+                Composite componentType = compositeImplementation.getComponentType();
+                addContributionDescription(description, componentType);
+            } else {
+                implementation.addResourceDescription(description);
+                // mark references and services as well;
+                AbstractComponentType<?, ?, ?, ?> type = implementation.getComponentType();
+                for (ServiceDefinition service : type.getServices().values()) {
+                    service.addResourceDescription(description);
+                }
+                for (ReferenceDefinition reference : type.getReferences().values()) {
+                    reference.addResourceDescription(description);
+                }
+                for (ResourceDefinition resource : type.getResources().values()) {
+                    resource.addResourceDescription(description);
+                }
+            }
+        }
+    }
+
 
 }

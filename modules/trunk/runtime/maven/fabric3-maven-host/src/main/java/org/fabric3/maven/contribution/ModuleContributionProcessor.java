@@ -33,17 +33,8 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.fabric.services.contribution.processor.Action;
 import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.host.contribution.ContributionException;
-import org.fabric3.host.contribution.ContributionNotFoundException;
 import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.maven.runtime.MavenHostInfo;
-import org.fabric3.scdl.AbstractComponentType;
-import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.Composite;
-import org.fabric3.scdl.CompositeImplementation;
-import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.ReferenceDefinition;
-import org.fabric3.scdl.ResourceDefinition;
-import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
@@ -54,10 +45,8 @@ import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.ContributionProcessor;
-import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.Resource;
-import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.factories.xml.XMLFactory;
 
 /**
@@ -70,7 +59,6 @@ public class ModuleContributionProcessor implements ContributionProcessor {
     public static final String[] CONTENT_TYPES = new String[]{"application/vnd.fabric3.maven-project"};
 
     private ProcessorRegistry registry;
-    private MetaDataStore store;
     private ContentTypeResolver contentTypeResolver;
     private ArtifactLocationEncoder encoder;
     private MavenHostInfo hostInfo;
@@ -78,14 +66,12 @@ public class ModuleContributionProcessor implements ContributionProcessor {
     private LoaderRegistry loaderRegistry;
 
     public ModuleContributionProcessor(@Reference ProcessorRegistry registry,
-                                       @Reference MetaDataStore store,
                                        @Reference ContentTypeResolver contentTypeResolver,
                                        @Reference ArtifactLocationEncoder encoder,
                                        @Reference MavenHostInfo hostInfo,
                                        @Reference XMLFactory xmlFactory,
                                        @Reference LoaderRegistry loaderRegistry) {
         this.registry = registry;
-        this.store = store;
         this.contentTypeResolver = contentTypeResolver;
         this.encoder = encoder;
         this.hostInfo = hostInfo;
@@ -110,7 +96,6 @@ public class ModuleContributionProcessor implements ContributionProcessor {
             for (Resource resource : contribution.getResources()) {
                 registry.processResource(contributionUri, resource, loader);
             }
-            addContributionDescription(contribution);
         } finally {
             Thread.currentThread().setContextClassLoader(oldClassloader);
         }
@@ -183,6 +168,24 @@ public class ModuleContributionProcessor implements ContributionProcessor {
         });
     }
 
+    public void updateContributionDescription(Contribution contribution, ContributionResourceDescription description)
+            throws ContributionException {
+        String file = contribution.getLocation().getFile();
+        try {
+            URL classes = new File(file, "classes").toURI().toURL();
+            URL testClasses = new File(file, "test-classes").toURI().toURL();
+            URL encodedClasses = encoder.encode(classes);
+            description.addArtifactUrl(encodedClasses);
+            URL encodedTestClasses = encoder.encode(testClasses);
+            description.addArtifactUrl(encodedTestClasses);
+            for (URL url : hostInfo.getDependencyUrls()) {
+                description.addArtifactUrl(encoder.encode(url));
+            }
+        } catch (MalformedURLException e) {
+            throw new ContributionException(e);
+        }
+    }
+
     private void iterateArtifacts(Contribution contribution, Action action) throws ContributionException {
         File root = FileHelper.toFile(contribution.getLocation());
         assert root.isDirectory();
@@ -211,77 +214,5 @@ public class ModuleContributionProcessor implements ContributionProcessor {
         }
 
     }
-
-    /**
-     * Recursively adds a resource description pointing to the contribution artifact on contained components.
-     * FIXME Refactor this method out of processing
-     * @param contribution the contribution the resource description requires
-     * @throws ContributionNotFoundException if a required imported contribution is not found
-     */
-    private void addContributionDescription(Contribution contribution) throws ContributionException {
-        ContributionResourceDescription description = new ContributionResourceDescription(contribution.getUri());
-        // encode the contribution URL so it can be dereferenced remotely
-
-        String file = contribution.getLocation().getFile();
-
-        try {
-            URL classes = new File(file, "classes").toURI().toURL();
-            URL testClasses = new File(file, "test-classes").toURI().toURL();
-            URL encodedClasses = encoder.encode(classes);
-            description.addArtifactUrl(encodedClasses);
-            URL encodedTestClasses = encoder.encode(testClasses);
-            description.addArtifactUrl(encodedTestClasses);
-            for (URL url : hostInfo.getDependencyUrls()) {
-                description.addArtifactUrl(encoder.encode(url));
-            }
-        } catch (MalformedURLException e) {
-            throw new ContributionException(e);
-        }
-
-        for (URI uri : contribution.getResolvedImportUris()) {
-            description.addImportedUri(uri);
-        }
-
-        for (Resource resource : contribution.getResources()) {
-            // XCV FIXME specific composite case
-            for (ResourceElement<?, ?> element : resource.getResourceElements()) {
-                Object value = element.getValue();
-                if (value instanceof Composite) {
-                    addContributionDescription(description, (Composite) value);
-                }
-            }
-        }
-    }
-
-    /**
-     * Adds the given resource description pointing to the contribution artifact on contained components.
-     *
-     * @param description the resource description
-     * @param composite   the component type to introspect
-     */
-    private void addContributionDescription(ContributionResourceDescription description, Composite composite) {
-        for (ComponentDefinition<?> definition : composite.getComponents().values()) {
-            Implementation<?> implementation = definition.getImplementation();
-            if (CompositeImplementation.class.isInstance(implementation)) {
-                CompositeImplementation compositeImplementation = CompositeImplementation.class.cast(implementation);
-                Composite componentType = compositeImplementation.getComponentType();
-                addContributionDescription(description, componentType);
-            } else {
-                implementation.addResourceDescription(description);
-                // mark references and services as well;
-                AbstractComponentType<?, ?, ?, ?> type = implementation.getComponentType();
-                for (ServiceDefinition service : type.getServices().values()) {
-                    service.addResourceDescription(description);
-                }
-                for (ReferenceDefinition reference : type.getReferences().values()) {
-                    reference.addResourceDescription(description);
-                }
-                for (ResourceDefinition resource : type.getResources().values()) {
-                    resource.addResourceDescription(description);
-                }
-            }
-        }
-    }
-
 
 }
