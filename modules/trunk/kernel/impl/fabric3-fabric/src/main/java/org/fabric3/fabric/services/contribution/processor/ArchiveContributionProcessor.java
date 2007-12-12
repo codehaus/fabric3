@@ -83,6 +83,8 @@ public abstract class ArchiveContributionProcessor extends ContributionProcessor
 
     /**
      * Recursively adds a resource description pointing to the contribution artifact on contained components.
+     * <p/>
+     * FIXME Refactor this method out of processing
      *
      * @param contribution the contribution the resource description requires
      * @throws ContributionNotFoundException if a required imported contribution is not found
@@ -92,14 +94,8 @@ public abstract class ArchiveContributionProcessor extends ContributionProcessor
         // encode the contribution URL so it can be dereferenced remotely
         URL encodedLocation = encoder.encode(contribution.getLocation());
         description.addArtifactUrl(encodedLocation);
-        // Obtain local URLs for imported contributions and encode them for remote dereferencing
         for (URI uri : contribution.getResolvedImportUris()) {
-            Contribution imported = store.find(uri);
-            if (imported == null) {
-                throw new ContributionNotFoundException("Imported contribution not found", uri.toString());
-            }
-            URL importedUrl = encoder.encode(imported.getLocation());
-            description.addArtifactUrl(importedUrl);
+            description.addImportedUri(uri);
         }
 
         for (Resource resource : contribution.getResources()) {
