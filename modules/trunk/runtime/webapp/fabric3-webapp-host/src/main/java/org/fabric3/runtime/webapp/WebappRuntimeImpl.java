@@ -20,13 +20,10 @@ package org.fabric3.runtime.webapp;
 
 import java.net.URI;
 import java.net.URL;
-import java.util.Properties;
-import java.util.logging.Level;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.http.HttpSessionEvent;
 
-import org.fabric3.monitor.JavaLoggingMonitorFactory;
 import org.fabric3.fabric.runtime.AbstractRuntime;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.LOADER_URI;
