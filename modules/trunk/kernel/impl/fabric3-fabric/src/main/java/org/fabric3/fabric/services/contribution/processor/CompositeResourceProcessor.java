@@ -40,8 +40,8 @@ import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
-import org.fabric3.spi.services.contribution.ResourceProcessor;
 import org.fabric3.spi.services.contribution.ResourceElementNotFoundException;
+import org.fabric3.spi.services.contribution.ResourceProcessor;
 import org.fabric3.spi.services.factories.xml.XMLFactory;
 
 /**
@@ -106,10 +106,9 @@ public class CompositeResourceProcessor implements ResourceProcessor {
 
     @SuppressWarnings({"unchecked"})
     public void process(URI contributionUri, Resource resource, ClassLoader loader) throws ContributionException {
-        InputStream stream = null;
         try {
-            stream = resource.getUrl().openStream();
-            Composite composite = processComponentType(stream, loader, contributionUri);
+            URL url = resource.getUrl();
+            Composite composite = processComponentType(url, loader, contributionUri);
             boolean found = false;
             for (ResourceElement element : resource.getResourceElements()) {
                 if (element.getSymbol().getKey().equals(composite.getName())) {
@@ -124,25 +123,17 @@ public class CompositeResourceProcessor implements ResourceProcessor {
             }
         } catch (IOException e) {
             throw new ContributionException(e);
-        } catch (XMLStreamException e) {
-            throw new ContributionException(e);
         } catch (LoaderException e) {
             throw new ContributionException(e);
-        } finally {
-            try {
-                if (stream != null) {
-                    stream.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        } catch (XMLStreamException e) {
+            throw new ContributionException(e);
         }
     }
 
     /**
      * Loads a composite component type at the given URL
      *
-     * @param stream          the stream to load from
+     * @param url             the url for the component type artifact
      * @param loader          the classloader to load resources with
      * @param contributionUri the current contribution uri
      * @return the component type
@@ -150,13 +141,15 @@ public class CompositeResourceProcessor implements ResourceProcessor {
      * @throws XMLStreamException if an error occurs parsing the XML
      * @throws LoaderException    if an error occurs processing the component type
      */
-    private Composite processComponentType(InputStream stream, ClassLoader loader, URI contributionUri)
+    private Composite processComponentType(URL url, ClassLoader loader, URI contributionUri)
             throws IOException, XMLStreamException, LoaderException {
+        InputStream stream = null;
         XMLStreamReader reader = null;
         try {
+            stream = url.openStream();
             reader = xmlFactory.createXMLStreamReader(stream);
             reader.nextTag();
-            LoaderContext context = new LoaderContextImpl(loader, contributionUri, null);
+            LoaderContext context = new LoaderContextImpl(loader, contributionUri, url);
             return loaderRegistry.load(reader, Composite.class, context);
 
         } finally {
@@ -166,6 +159,13 @@ public class CompositeResourceProcessor implements ResourceProcessor {
                 } catch (XMLStreamException e) {
                     e.printStackTrace();
                 }
+            }
+            try {
+                if (stream != null) {
+                    stream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
