@@ -66,6 +66,8 @@ public final class ComponentNames {
 
     public static final URI XML_MANIFEST_PROCESSOR = URI.create(RUNTIME_NAME + "/XmlManifestProcessor");
 
+    public static final URI XML_FACTORY_URI = URI.create(RUNTIME_NAME + "/XMLFactory");
+
     private ComponentNames() {
     }
 
