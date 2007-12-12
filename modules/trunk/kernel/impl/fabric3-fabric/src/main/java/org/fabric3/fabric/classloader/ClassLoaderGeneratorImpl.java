@@ -50,18 +50,18 @@ public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {
         List<ResourceDescription> descriptions = impl.getResourceDescriptions();
         return generate(parent, descriptions, context);
     }
-    
+
     public URI generate(LogicalResource<?> resource, GeneratorContext context) throws GenerationException {
-        
+
         LogicalComponent<?> component = resource.getParent();
         LogicalComponent<CompositeImplementation> parent =
-            (LogicalComponent<CompositeImplementation>) component.getParent();
+                (LogicalComponent<CompositeImplementation>) component.getParent();
 
         List<ResourceDescription> descriptions = new ArrayList<ResourceDescription>();
         descriptions.addAll(resource.getResourceDefinition().getResourceDescriptions());
-        
+
         return generate(parent, descriptions, context);
-        
+
     }
 
     public URI generate(LogicalBinding<?> binding, GeneratorContext context) throws GenerationException {
@@ -114,10 +114,15 @@ public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {
         for (ResourceDescription description : resourceDescriptions) {
             if (description instanceof ContributionResourceDescription) {
                 ContributionResourceDescription contribDescription = (ContributionResourceDescription) description;
-                // add the contribution and imported urls to the classpath
+                // add the contribution artifact urls to the classpath
                 for (URL url : contribDescription.getArtifactUrls()) {
                     if (url != null && !definition.getResourceUrls().contains(url)) {
                         definition.addResourceUrl(url);
+                    }
+                }
+                for (URI uri : contribDescription.getImportedUris()) {
+                    if (uri != null && !definition.getParentClassLoaders().contains(uri)) {
+                        definition.addParentClassLoader(uri);
                     }
                 }
             } else if (description instanceof ExtensionResourceDescription) {
