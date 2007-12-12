@@ -33,11 +33,15 @@
             <attribute name="method" value="1" />
             <attribute name="URI" value="/WEB-INF/lib/sca-api-r1.0-0.2.1.jar" />
           </containerElement>
-          <containerElement type="library" name="org.codehaus.fabric3:fabric3-host-api:0.2" level="module">
+          <containerElement type="module" name="fabric3-host-api">
             <attribute name="method" value="1" />
-            <attribute name="URI" value="/WEB-INF/lib/fabric3-host-api-0.2.jar" />
+            <attribute name="URI" value="/WEB-INF/classes" />
           </containerElement>
           <containerElement type="module" name="fabric3-webapp-api">
+            <attribute name="method" value="1" />
+            <attribute name="URI" value="/WEB-INF/classes" />
+          </containerElement>
+          <containerElement type="module" name="fabric3-monitor">
             <attribute name="method" value="1" />
             <attribute name="URI" value="/WEB-INF/classes" />
           </containerElement>
@@ -56,7 +60,6 @@
       <excludeFolder url="file://$MODULE_DIR$/target/surefire-reports" />
       <excludeFolder url="file://$MODULE_DIR$/target/test-classes" />
       <excludeFolder url="file://$MODULE_DIR$/target/test-runtime-jetty" />
-      <excludeFolder url="file://$MODULE_DIR$/target/war" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -111,19 +114,8 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module-library" exported="">
-      <library name="org.codehaus.fabric3:fabric3-host-api:0.2">
-        <CLASSES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-host-api/0.2/fabric3-host-api-0.2.jar!/" />
-        </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-host-api/0.2/fabric3-host-api-0.2-javadoc.jar!/" />
-        </JAVADOC>
-        <SOURCES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-host-api/0.2/fabric3-host-api-0.2-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
+    <orderEntry type="module" module-name="fabric3-host-api" exported="" />
+    <orderEntry type="module" module-name="fabric3-monitor" exported="" />
     <orderEntryProperties />
   </component>
 </module>
