@@ -104,6 +104,7 @@ import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_NAME;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.PROCESSOR_REGISTY_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.XML_FACTORY_URI;
 import org.fabric3.fabric.services.advertsiement.FeatureLoader;
 import org.fabric3.fabric.services.archive.JarService;
 import org.fabric3.fabric.services.archive.JarServiceImpl;
@@ -198,7 +199,6 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     private static final URI FORMATTER_REGISTRY_URI = URI.create(RUNTIME_NAME + "/FormatterRegistry");
     private static final URI RUNTIME_INFO_URI = URI.create(RUNTIME_NAME + "/HostInfo");
     private static final URI HOST_CLASSLOADER_ID = URI.create("sca://./hostClassLoader");
-    private static final URI XML_FACTORY_URI = URI.create(RUNTIME_NAME + "/XMLFactory");
     private static final String USER_CONFIG = System.getProperty("user.home") + "/.fabric3/config.xml";
 
     private JavaInterfaceProcessorRegistry interfaceProcessorRegistry;
