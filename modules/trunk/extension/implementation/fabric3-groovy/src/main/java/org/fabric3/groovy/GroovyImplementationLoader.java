@@ -16,8 +16,8 @@
  */
 package org.fabric3.groovy;
 
-import java.net.URL;
 import java.io.IOException;
+import java.net.URL;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
@@ -28,16 +28,16 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.pojo.processor.Introspector;
+import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
+import org.fabric3.spi.loader.MissingResourceException;
 import org.fabric3.spi.loader.PolicyHelper;
 import org.fabric3.spi.loader.StAXElementLoader;
-import org.fabric3.spi.loader.MissingResourceException;
-import org.fabric3.pojo.processor.Introspector;
-import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.scdl.Scope;
 
 /**
  * @version $Rev$ $Date$
@@ -69,31 +69,39 @@ public class GroovyImplementationLoader implements StAXElementLoader<GroovyImple
 
     public GroovyImplementation load(XMLStreamReader reader, LoaderContext context)
             throws XMLStreamException, LoaderException {
-        
+
         String className = reader.getAttributeValue(null, "class");
         String scriptName = reader.getAttributeValue(null, "script");
 
         Class<?> implClass;
-        GroovyClassLoader gcl = new GroovyClassLoader(context.getTargetClassLoader());
-        if (className != null) {
-            try {
-                implClass = gcl.loadClass(className);
-            } catch (ClassNotFoundException e) {
-                throw new MissingResourceException(className, e);
-            }
-        } else if (scriptName != null) {
-            try {
-                URL scriptURL = gcl.getResource(scriptName);
-                if (scriptURL == null) {
-                    throw new MissingResourceException(scriptName);
+        ClassLoader old = Thread.currentThread().getContextClassLoader();
+        try {
+            // Set TCCL to the extension classloader as implementations may need access to Groovy classes. Also, Groovy
+            // dependencies such as Antlr use the TCCL.
+            Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+            GroovyClassLoader gcl = new GroovyClassLoader(context.getTargetClassLoader());
+            if (className != null) {
+                try {
+                    implClass = gcl.loadClass(className);
+                } catch (ClassNotFoundException e) {
+                    throw new MissingResourceException(className, e);
                 }
-                GroovyCodeSource codeSource = new GroovyCodeSource(scriptURL);
-                implClass = gcl.parseClass(codeSource);
-            } catch (IOException e) {
-                throw new MissingResourceException(scriptName, e);
+            } else if (scriptName != null) {
+                try {
+                    URL scriptURL = gcl.getResource(scriptName);
+                    if (scriptURL == null) {
+                        throw new MissingResourceException(scriptName);
+                    }
+                    GroovyCodeSource codeSource = new GroovyCodeSource(scriptURL);
+                    implClass = gcl.parseClass(codeSource);
+                } catch (IOException e) {
+                    throw new MissingResourceException(scriptName, e);
+                }
+            } else {
+                throw new MissingResourceException("No Groovy script or class name");
             }
-        } else {
-            throw new MissingResourceException("No Groovy script or class name");
+        } finally {
+            Thread.currentThread().setContextClassLoader(old);
         }
         PojoComponentType componentType = new PojoComponentType(implClass.getName());
         introspector.introspect(implClass, componentType, context);
@@ -101,11 +109,11 @@ public class GroovyImplementationLoader implements StAXElementLoader<GroovyImple
             componentType.setImplementationScope(Scope.STATELESS);
         }
         GroovyImplementation impl = new GroovyImplementation(scriptName, className, componentType);
-        
+
         policyHelper.loadPolicySetsAndIntents(impl, reader);
-        
+
         LoaderUtil.skipToEndElement(reader);
-        
+
         return impl;
     }
 }
