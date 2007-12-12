@@ -36,8 +36,6 @@ import org.osoa.sca.annotations.Reference;
 @EagerInit
 public class MockComponentBuilder<T> implements ComponentBuilder<MockComponentDefinition, MockComponent<T>> {
     
-    private static final URI CLASS_LOADER_ID = URI.create("sca://./applicationClassLoader");
-    
     private final ComponentBuilderRegistry builderRegistry;
     private final ClassLoaderRegistry classLoaderRegistry;
     private final IMocksControl control;
@@ -58,8 +56,8 @@ public class MockComponentBuilder<T> implements ComponentBuilder<MockComponentDe
     public MockComponent<T> build(MockComponentDefinition componentDefinition) throws BuilderException {
         
         List<String> interfaces = componentDefinition.getInterfaces();
-        ClassLoader classLoader = classLoaderRegistry.getClassLoader(CLASS_LOADER_ID);
-        
+        ClassLoader classLoader = classLoaderRegistry.getClassLoader(componentDefinition.getClassLoaderId());
+
         List<Class<?>> mockedInterfaces = new LinkedList<Class<?>>();
         for(String interfaze : interfaces) {
             try {

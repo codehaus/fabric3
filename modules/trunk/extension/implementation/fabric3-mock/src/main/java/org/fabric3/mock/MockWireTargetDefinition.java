@@ -16,15 +16,35 @@
  */
 package org.fabric3.mock;
 
+import java.net.URI;
+
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 
 /**
  * @version $Revision$ $Date$
  */
 public class MockWireTargetDefinition extends PhysicalWireTargetDefinition {
-    
+    private URI classLoaderId;
     private String mockedInterface;
 
+    /**
+     * Gets the classloader id.
+     *
+     * @return Classloader id.
+     */
+    public URI getClassLoaderId() {
+        return classLoaderId;
+    }
+
+    /**
+     * Set the classloader id.
+     *
+     * @param classLoaderId Classloader id.
+     */
+    public void setClassLoaderId(URI classLoaderId) {
+        this.classLoaderId = classLoaderId;
+    }
+    
     public String getMockedInterface() {
         return mockedInterface;
     }

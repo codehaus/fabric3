@@ -22,6 +22,10 @@ import java.net.URI;
 import java.util.Map;
 
 import org.easymock.IMocksControl;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.builder.component.WireAttacher;
 import org.fabric3.spi.builder.component.WireAttacherRegistry;
@@ -34,22 +38,17 @@ import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.spi.wire.MessageImpl;
 import org.fabric3.spi.wire.Wire;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Revision$ $Date$
  */
 @EagerInit
 public class MockWireAttacher implements WireAttacher<PhysicalWireSourceDefinition, MockWireTargetDefinition> {
-    
-    private static final URI CLASS_LOADER_ID = URI.create("sca://./applicationClassLoader");
-    
+
     private final WireAttacherRegistry wireAttacherRegistry;
     private final ClassLoaderRegistry classLoaderRegistry;
     private final IMocksControl control;
-    
+
     public MockWireAttacher(@Reference WireAttacherRegistry wireAttacherRegistry,
                             @Reference ClassLoaderRegistry classLoaderRegistry,
                             @Reference IMocksControl control) {
@@ -57,60 +56,60 @@ public class MockWireAttacher implements WireAttacher<PhysicalWireSourceDefiniti
         this.classLoaderRegistry = classLoaderRegistry;
         this.control = control;
     }
-    
+
     @Init
     public void init() {
         wireAttacherRegistry.register(MockWireTargetDefinition.class, this);
     }
 
-    public void attachToSource(PhysicalWireSourceDefinition wireSourceDefinition, 
-                               PhysicalWireTargetDefinition wireTargetDefinition, 
+    public void attachToSource(PhysicalWireSourceDefinition wireSourceDefinition,
+                               PhysicalWireTargetDefinition wireTargetDefinition,
                                Wire wire) {
         throw new UnsupportedOperationException("Mock components cant be sources for wires");
     }
 
-    public void attachToTarget(PhysicalWireSourceDefinition wireSourceDefinition, 
-                               MockWireTargetDefinition wireTargetDefinition, 
+    public void attachToTarget(PhysicalWireSourceDefinition wireSourceDefinition,
+                               MockWireTargetDefinition wireTargetDefinition,
                                Wire wire) throws WireAttachException {
-        
-        if(wireSourceDefinition.isOptimizable()) {
+
+        if (wireSourceDefinition.isOptimizable()) {
             return;
         }
-        
-        ClassLoader classLoader = classLoaderRegistry.getClassLoader(CLASS_LOADER_ID);
-        
+
+        ClassLoader classLoader = classLoaderRegistry.getClassLoader(wireTargetDefinition.getClassLoaderId());
+
         String interfaceClass = wireTargetDefinition.getMockedInterface();
-        
+
         try {
-            
+
             Class<?> mockedInterface = classLoader.loadClass(interfaceClass);
             Object mock = control.createMock(mockedInterface);
-            
+
             for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
                 PhysicalOperationDefinition op = entry.getKey();
                 InvocationChain chain = entry.getValue();
-                
-                for(Method method : mockedInterface.getMethods()) {
-                    if(op.getName().equals(method.getName())) {
+
+                for (Method method : mockedInterface.getMethods()) {
+                    if (op.getName().equals(method.getName())) {
                         chain.addInterceptor(new MockTargetInterceptor(mock, method));
                     }
                 }
             }
-            
+
         } catch (ClassNotFoundException e) {
             URI sourceUri = wireSourceDefinition.getUri();
             URI targetUri = wireTargetDefinition.getUri();
             throw new WireAttachException("Unable to load interface " + interfaceClass, sourceUri, targetUri, e);
         }
-        
+
     }
-    
+
     private class MockTargetInterceptor implements Interceptor {
-        
+
         private Interceptor next;
         private Object mock;
         private Method method;
-        
+
         private MockTargetInterceptor(Object mock, Method method) {
             this.mock = mock;
             this.method = method;
@@ -121,28 +120,28 @@ public class MockWireAttacher implements WireAttacher<PhysicalWireSourceDefiniti
         }
 
         public Message invoke(Message message) {
-            
+
             try {
-                
+
                 Object[] args = (Object[]) message.getBody();
                 Object ret = method.invoke(mock, args);
                 Message out = new MessageImpl();
                 out.setBody(ret);
-                
+
                 return out;
-                
+
             } catch (IllegalAccessException e) {
                 throw new AssertionError(e);
             } catch (InvocationTargetException e) {
                 throw new AssertionError(e);
             }
-            
+
         }
 
         public void setNext(Interceptor next) {
             this.next = next;
         }
-        
+
     }
 
 }
