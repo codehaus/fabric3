@@ -65,19 +65,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="fabric3-host-api" exported="" />
-    <orderEntry type="module-library" exported="">
-      <library name="org.codehaus.fabric3:fabric3-pojo:0.3">
-        <CLASSES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-pojo/0.3/fabric3-pojo-0.3.jar!/" />
-        </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-pojo/0.3/fabric3-pojo-0.3-javadoc.jar!/" />
-        </JAVADOC>
-        <SOURCES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-pojo/0.3/fabric3-pojo-0.3-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
+    <orderEntry type="module" module-name="fabric3-pojo" exported="" />
     <orderEntry type="module" module-name="fabric3-scdl" exported="" />
     <orderEntry type="module" module-name="fabric3-spi" exported="" />
     <orderEntry type="module-library" exported="">
@@ -96,9 +84,7 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/easymock/easymockclassextension/2.2/easymockclassextension-2.2.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/easymock/easymockclassextension/2.2/easymockclassextension-2.2-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$M2_REPO$/org/easymock/easymockclassextension/2.2/easymockclassextension-2.2-sources.jar!/" />
         </SOURCES>

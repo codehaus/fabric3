@@ -37,19 +37,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="fabric3-host-api" exported="" />
-    <orderEntry type="module-library" exported="">
-      <library name="org.codehaus.fabric3:fabric3-scdl:0.3.1">
-        <CLASSES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-scdl/0.3.1/fabric3-scdl-0.3.1.jar!/" />
-        </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-scdl/0.3.1/fabric3-scdl-0.3.1-javadoc.jar!/" />
-        </JAVADOC>
-        <SOURCES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-scdl/0.3.1/fabric3-scdl-0.3.1-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
+    <orderEntry type="module" module-name="fabric3-scdl" exported="" />
     <orderEntry type="module-library" exported="">
       <library name="org.codehaus.plexus:plexus-utils:1.1">
         <CLASSES>

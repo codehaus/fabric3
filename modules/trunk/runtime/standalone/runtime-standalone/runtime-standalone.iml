@@ -148,6 +148,8 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="fabric3-async-loader" exported="" />
+    <orderEntry type="module" module-name="fabric3-async-runtime" exported="" />
     <orderEntry type="module-library" exported="">
       <library name="org.codehaus.fabric3:fabric3-console:0.2">
         <CLASSES>
@@ -162,19 +164,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="fabric3-contribution-scanner" exported="" />
-    <orderEntry type="module-library" exported="">
-      <library name="org.codehaus.fabric3:fabric3-contribution-scanner-spi:0.3">
-        <CLASSES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-contribution-scanner-spi/0.3/fabric3-contribution-scanner-spi-0.3.jar!/" />
-        </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-contribution-scanner-spi/0.3/fabric3-contribution-scanner-spi-0.3-javadoc.jar!/" />
-        </JAVADOC>
-        <SOURCES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-contribution-scanner-spi/0.3/fabric3-contribution-scanner-spi-0.3-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
+    <orderEntry type="module" module-name="fabric3-contribution-scanner-spi" exported="" />
     <orderEntry type="module" module-name="fabric3-extension" exported="" />
     <orderEntry type="module" module-name="fabric3-fabric" exported="" />
     <orderEntry type="module" module-name="fabric3-host-api" exported="" />
@@ -217,19 +207,7 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module-library" exported="">
-      <library name="org.codehaus.fabric3:fabric3-loader:0.3.1">
-        <CLASSES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-loader/0.3.1/fabric3-loader-0.3.1.jar!/" />
-        </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-loader/0.3.1/fabric3-loader-0.3.1-javadoc.jar!/" />
-        </JAVADOC>
-        <SOURCES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-loader/0.3.1/fabric3-loader-0.3.1-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
+    <orderEntry type="module" module-name="fabric3-loader" exported="" />
     <orderEntry type="module" module-name="fabric3-monitor" exported="" />
     <orderEntry type="module-library" exported="">
       <library name="org.codehaus.fabric3:fabric3-pojo:0.3">
