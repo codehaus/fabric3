@@ -142,6 +142,12 @@ public class ClassLoaderBuilder implements ResourceContainerBuilder<PhysicalClas
         for (URL url : classpath) {
             loader.addURL(url);
         }
+        for (URI uri : definition.getParentClassLoaders()) {
+            ClassLoader parent = classLoaderRegistry.getClassLoader(uri);
+            if (!loader.getParents().contains(parent)) {
+                loader.addParent(parent);
+            }
+        }
     }
 
     /**
