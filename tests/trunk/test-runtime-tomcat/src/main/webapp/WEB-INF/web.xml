@@ -30,6 +30,11 @@
     </listener>
 
     <context-param>
+        <param-name>fabric3.composite</param-name>
+        <param-value>WebappSmoketestComposite</param-value>
+    </context-param>
+
+    <context-param>
         <param-name>fabric3.component</param-name>
         <param-value>smoketest</param-value>
     </context-param>

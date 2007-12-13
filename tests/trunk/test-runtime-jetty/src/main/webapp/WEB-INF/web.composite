@@ -19,6 +19,7 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:fabric3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:groovy="http://www.fabric3.org/xmlns/groovy/1.0"
            name="WebappSmoketestComposite"
            autowire="false">
 
@@ -40,4 +41,5 @@
     <component name="StatelessTest">
         <implementation.java class="org.fabric3.runtime.webapp.smoketest.StatelessTest"/>
     </component>
+
 </composite>
