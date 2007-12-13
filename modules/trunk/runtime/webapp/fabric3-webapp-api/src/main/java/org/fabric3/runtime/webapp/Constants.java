@@ -31,6 +31,11 @@ public final class Constants {
     public static final String DOMAIN_PARAM = "fabric3.domain";
 
     /**
+     * Name of the servlet context-param that should contain the component target namespace for the webapp.
+     */
+    public static final String COMPOSITE_NAMESPACE_PARAM = "fabric3.compositeNamespace";
+
+    /**
      * Name of the servlet context-param that should contain the component id for the webapp.
      */
     public static final String COMPOSITE_PARAM = "fabric3.composite";

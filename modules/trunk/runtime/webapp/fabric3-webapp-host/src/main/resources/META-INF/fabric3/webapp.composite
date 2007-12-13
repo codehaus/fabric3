@@ -108,4 +108,8 @@
         <system:implementation.system class="org.fabric3.fabric.services.messaging.NullMessageDestinationService"/>
     </component>
 
+    <component name="WarContributionProcessor">
+        <system:implementation.system class="org.fabric3.runtime.webapp.contribution.WarContributionProcessor"/>
+    </component>
+
 </composite>

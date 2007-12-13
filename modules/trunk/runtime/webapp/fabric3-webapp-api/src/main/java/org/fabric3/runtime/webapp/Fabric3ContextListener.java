@@ -25,6 +25,7 @@ import java.util.concurrent.Future;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import javax.xml.namespace.QName;
 
 import org.fabric3.api.annotation.LogLevel;
 import org.fabric3.host.Fabric3RuntimeException;
@@ -40,6 +41,7 @@ import static org.fabric3.runtime.webapp.Constants.COMPOSITE_PARAM;
 import static org.fabric3.runtime.webapp.Constants.DOMAIN_PARAM;
 import static org.fabric3.runtime.webapp.Constants.ONLINE_PARAM;
 import static org.fabric3.runtime.webapp.Constants.RUNTIME_ATTRIBUTE;
+import static org.fabric3.runtime.webapp.Constants.COMPOSITE_NAMESPACE_PARAM;
 
 /**
  * Launches a Fabric3 runtime in a web application, loading information from servlet context parameters. This listener
@@ -52,11 +54,7 @@ import static org.fabric3.runtime.webapp.Constants.RUNTIME_ATTRIBUTE;
  * <p/>
  * The <code>web.xml</code> of a web application embedding Fabric3 must have entries for this listener and {@link
  * Fabric3SessionListener}. The latter notifies the runtime of session creation and expiration events through a
- * "bridging" contract, {@link WebappRuntime}. The <code>web.xml</code> may also optionally be configured with entries
- * for {@link Fabric3Filter} and {@link Fabric3Servlet}. The former must be mapped to all urls that execute "unmanaged"
- * code which accesses the Fabric3 runtime though the SCA API, for example, JSPs and Servlets. The latter forwards
- * service requests into the runtime, by default requests sent to URLs relative to the context path beginning with
- * <code>/services</code>.
+ * "bridging" contract, {@link WebappRuntime}.
  *
  * @version $Rev$ $Date$
  */
@@ -72,8 +70,9 @@ public class Fabric3ContextListener implements ServletContextListener {
         try {
             // FIXME work this out from the servlet context
             URI domain = new URI(utils.getInitParameter(DOMAIN_PARAM, "fabric3://./domain"));
-            String defaultComposite = "webapp";
-            URI compositeId = new URI(utils.getInitParameter(COMPOSITE_PARAM, defaultComposite));
+            String defaultComposite = "WebappComposite";
+            String compositeNamespace = utils.getInitParameter(COMPOSITE_NAMESPACE_PARAM, null);
+            String compositeName = utils.getInitParameter(COMPOSITE_PARAM, defaultComposite);
             URI componentId = new URI(utils.getInitParameter(COMPONENT_PARAM, "webapp"));
             String scdlPath = utils.getInitParameter(APPLICATION_SCDL_PATH_PARAM, APPLICATION_SCDL_PATH_DEFAULT);
             URL scdl = servletContext.getResource(scdlPath);
@@ -111,7 +110,8 @@ public class Fabric3ContextListener implements ServletContextListener {
             startFuture.get();
             servletContext.setAttribute(RUNTIME_ATTRIBUTE, runtime);
             // deploy the application composite
-            runtime.deploy(compositeId, scdl, componentId);
+            QName qName = new QName(compositeNamespace, compositeName);
+            runtime.activate(qName, componentId);
         } catch (Fabric3RuntimeException e) {
             if (monitor != null) {
                 monitor.runError(e);

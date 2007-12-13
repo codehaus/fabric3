@@ -19,10 +19,10 @@
 package org.fabric3.runtime.webapp;
 
 import java.net.URI;
-import java.net.URL;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequestListener;
 import javax.servlet.http.HttpSessionListener;
+import javax.xml.namespace.QName;
 
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.InitializationException;
@@ -33,8 +33,6 @@ import org.fabric3.host.runtime.InitializationException;
  * container events.
  *
  * @version $Rev$ $Date$
- * @see Fabric3Filter
- * @see Fabric3SessionListener
  */
 public interface WebappRuntime extends HttpSessionListener, ServletRequestListener, Fabric3Runtime<WebappHostInfo> {
     /**
@@ -53,18 +51,18 @@ public interface WebappRuntime extends HttpSessionListener, ServletRequestListen
 
     /**
      * Returns the request injector for the runtime
+     *
      * @return the runtime's request injector
      */
     ServletRequestInjector getRequestInjector();
 
     /**
-     * Temporary method for deploying SCDL supplied with an application to the runtime.
+     * Activates a composite in the domain.
      *
-     * @param compositeId the id of the component that the supplied SCDL should implement
-     * @param applicationScdl the location of an application composite
+     * @param qName       the composite qualified name
      * @param componentId the id of the component that should be bound to the webapp
      * @throws InitializationException if there was a problem initializing the composite
      */
-    @Deprecated
-    void deploy(URI compositeId, URL applicationScdl, URI componentId) throws InitializationException;
+    void activate(QName qName, URI componentId) throws InitializationException;
+
 }

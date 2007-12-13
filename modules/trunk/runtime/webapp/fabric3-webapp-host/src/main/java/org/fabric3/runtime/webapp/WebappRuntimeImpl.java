@@ -18,26 +18,25 @@
  */
 package org.fabric3.runtime.webapp;
 
+import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URL;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.http.HttpSessionEvent;
+import javax.xml.namespace.QName;
 
 import org.fabric3.fabric.runtime.AbstractRuntime;
+import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.LOADER_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_NAME;
+import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.runtime.InitializationException;
-import org.fabric3.loader.common.LoaderContextImpl;
+import org.fabric3.runtime.webapp.contribution.WarContributionSource;
 import org.fabric3.runtime.webapp.implementation.webapp.WebappComponent;
-import org.fabric3.scdl.Composite;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.assembly.Assembly;
-import org.fabric3.spi.loader.Loader;
-import org.fabric3.spi.loader.LoaderContext;
-import org.fabric3.spi.loader.LoaderException;
 
 /**
  * Bootstrapper for the Fabric3 runtime in a web application host. This listener manages one runtime per servlet
@@ -69,34 +68,33 @@ public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implement
         this.servletContext = servletContext;
     }
 
-    @Deprecated
-    public void deploy(URI compositeId, URL applicationScdl, URI componentId) throws InitializationException {
+    public void activate(QName qName, URI componentId) throws InitializationException {
         try {
-            assert applicationScdl != null;
-            // load the application scdl
-            Loader loader = getSystemComponent(Loader.class, LOADER_URI);
-            LoaderContext loaderContext = new LoaderContextImpl(getHostClassLoader(), null, applicationScdl);
-            Composite composite = loader.load(applicationScdl, Composite.class, loaderContext);
+            // contribute the war to the application domain
+            Assembly assembly = getSystemComponent(Assembly.class, DISTRIBUTED_ASSEMBLY_URI);
+            ContributionService contributionService =
+                    getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
 
-            // locate the servlet request injector
+            URI contributionUri = URI.create(qName.getLocalPart());
+            WarContributionSource source = new WarContributionSource(contributionUri);
+            contributionService.contribute(source);
+            // activate the deployable composite in the domain
+            assembly.includeInDomain(qName);
             URI uri = URI.create(RUNTIME_NAME + "/servletHost");
             requestInjector = getSystemComponent(ServletRequestInjector.class, uri);
-
-            // deploy the components
-            Assembly assembly = getSystemComponent(Assembly.class, DISTRIBUTED_ASSEMBLY_URI);
-            assembly.includeInDomain(composite);
-
             URI reslvedUri = URI.create(getHostInfo().getDomain().toString() + "/" + componentId);
             webapp = (WebappComponent) getComponentManager().getComponent(reslvedUri);
             if (webapp == null) {
                 throw new Fabric3InitException("No component found with id " + componentId, componentId.toString());
             }
             webapp.bind(getServletContext());
-
-        } catch (LoaderException e) {
-            throw new InitializationException(e);
+        } catch (MalformedURLException e) {
+            throw new InitializationException("Invalid web archive", e);
+        } catch (ContributionException e) {
+            throw new InitializationException("Error processing project", e);
         } catch (ActivateException e) {
-            throw new InitializationException(e);
+            String identifier = qName.toString();
+            throw new InitializationException("Error activating composite [" + identifier + "]", identifier, e);
         } catch (ObjectCreationException e) {
             throw new InitializationException(e);
         }
