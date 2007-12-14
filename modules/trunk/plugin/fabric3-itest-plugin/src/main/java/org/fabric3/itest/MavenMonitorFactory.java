@@ -22,6 +22,7 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.net.URI;
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.Map;
@@ -49,6 +50,10 @@ public class MavenMonitorFactory implements MonitorFactory {
         this.log = log;
         this.bundleName = bundleName;
         this.defaultLevel = Level.FINEST;
+    }
+
+    public synchronized <T> T getMonitor(Class<T> monitorInterface, URI componentId) {
+        return getMonitor(monitorInterface);
     }
 
     public synchronized <T> T getMonitor(Class<T> monitorInterface) {

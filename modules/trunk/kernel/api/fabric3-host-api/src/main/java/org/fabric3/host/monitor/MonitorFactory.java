@@ -18,6 +18,8 @@
  */
 package org.fabric3.host.monitor;
 
+import java.net.URI;
+
 /**
  * A MonitorFactory creates implementations of components' monitor interfaces that interface with a its monitoring
  * scheme. For example, a implementation may create versions that emit appropriate logging events or which send
@@ -27,10 +29,19 @@ package org.fabric3.host.monitor;
  */
 public interface MonitorFactory {
     /**
-     * Return a monitor for a component's monitor interface.
+     * Return a monitor for a monitor interface.
      *
-     * @param monitorInterface the component's monitoring interface
+     * @param monitorInterface the monitoring interface
      * @return an implementation of the monitoring interface; will not be null
      */
     <T> T getMonitor(Class<T> monitorInterface);
+
+    /**
+     * Return a monitor for a component's monitor interface.
+     *
+     * @param monitorInterface the component's monitoring interface
+     * @param componentId      the specific component to monitor
+     * @return an implementation of the monitoring interface; will not be null
+     */
+    <T> T getMonitor(Class<T> monitorInterface, URI componentId);
 }

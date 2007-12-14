@@ -21,6 +21,7 @@ package org.fabric3.monitor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.net.URI;
 
 import org.fabric3.host.monitor.MonitorFactory;
 
@@ -51,5 +52,9 @@ public class NullMonitorFactory implements MonitorFactory {
                                               new Class<?>[]{monitorInterface},
                                               NULL_MONITOR);
         return monitorInterface.cast(proxy);
+    }
+
+    public <T> T getMonitor(Class<T> monitorInterface, URI componentId) {
+        return getMonitor(monitorInterface);
     }
 }

@@ -32,6 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+import java.net.URI;
 
 import org.fabric3.api.annotation.LogLevel;
 import org.fabric3.host.monitor.MonitorFactory;
@@ -65,6 +66,10 @@ public class JavaLoggingMonitorFactory implements MonitorFactory {
         this.levels = levels;
         this.defaultLevel = defaultLevel;
         this.bundleName = bundleName;
+    }
+
+    public <T> T getMonitor(Class<T> monitorInterface, URI componentId) {
+        return getMonitor(monitorInterface);
     }
 
     public synchronized <T> T getMonitor(Class<T> monitorInterface) {
