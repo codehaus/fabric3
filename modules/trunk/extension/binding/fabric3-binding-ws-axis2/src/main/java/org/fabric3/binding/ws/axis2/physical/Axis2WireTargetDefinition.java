@@ -17,15 +17,19 @@
 package org.fabric3.binding.ws.axis2.physical;
 
 import java.net.URI;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.w3c.dom.Element;
 
 /**
  * @version $Revision$ $Date$
  */
-public class Axis2WireTargetDefinition extends PhysicalWireTargetDefinition {
+public class Axis2WireTargetDefinition extends PhysicalWireTargetDefinition implements Axis2PolicyAware {
 
     private String referenceInterface;
+    private Set<Element> policyDefinitions = new HashSet<Element>();
     private URI classloaderURI;
 
     /**
@@ -54,6 +58,27 @@ public class Axis2WireTargetDefinition extends PhysicalWireTargetDefinition {
      */
     public void setClassloaderURI(URI classloaderURI) {
         this.classloaderURI = classloaderURI;
+    }
+
+    /**
+     * @return Policy definitions.
+     */
+    public Set<Element> getPolicyDefinitions() {
+        return policyDefinitions;
+    }
+
+    /**
+     * @param policyDefinitions Policy definitions.
+     */
+    public void setPolicyDefinitions(Set<Element> policyDefinitions) {
+        this.policyDefinitions = policyDefinitions;
+    }
+
+    /**
+     * @param policyDefinition Policy definition.
+     */
+    public void addPolicyDefinition(Element policyDefinition) {
+        policyDefinitions.add(policyDefinition);
     }
 
 }

@@ -14,31 +14,30 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.transform.xml;
+package org.fabric3.binding.ws.axis2.physical;
 
-import javax.xml.parsers.DocumentBuilderFactory;
+import java.util.Set;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import junit.framework.TestCase;
 
 /**
  * @version $Revision$ $Date$
  */
-public class NodeToStringTest extends TestCase {
+public interface Axis2PolicyAware {
 
-    public void testTransform() throws Exception {
-        
-        String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><policy xmlns=\"http://www.fabric3.org\">Test data</policy>";
-        
-        Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-        
-        Element el = doc.createElementNS("http://www.fabric3.org", "policy");
-        el.appendChild(doc.createTextNode("Test data"));
-        
-        String output = new NodeToString().transform(el, null);
-        assertEquals(expected, output);
-    }
+    /**
+     * @return Policy definitions.
+     */
+    public Set<Element> getPolicyDefinitions();
+
+    /**
+     * @param policyDefinitions Policy definitions.
+     */
+    public void setPolicyDefinitions(Set<Element> policyDefinitions);
+
+    /**
+     * @param policyDefinition Policy definition.
+     */
+    public void addPolicyDefinition(Element policyDefinition);
 
 }

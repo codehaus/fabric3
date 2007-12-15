@@ -16,6 +16,8 @@
  */
 package org.fabric3.binding.ws.axis2.wire;
 
+import java.util.Set;
+
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
@@ -24,6 +26,8 @@ import org.apache.axis2.Constants;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
+import org.apache.axis2.description.AxisService;
+import org.apache.neethi.Policy;
 import org.fabric3.binding.ws.axis2.physical.Axis2WireTargetDefinition;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.Message;
@@ -37,6 +41,7 @@ public class Axis2TargetInterceptor implements Interceptor {
     private Interceptor next;
     private EndpointReference epr;
     private String operation;
+    private Set<Policy> policies;
     
     /**
      * Initializes the end point reference.
@@ -44,10 +49,12 @@ public class Axis2TargetInterceptor implements Interceptor {
      * @param target Target wire source definition.
      * @param operation Operation name.
      */
-    public Axis2TargetInterceptor(Axis2WireTargetDefinition target, String operation) {
+    public Axis2TargetInterceptor(Axis2WireTargetDefinition target, String operation, Set<Policy> policies) {
         
         this.operation = operation;
         this.epr = new EndpointReference(target.getUri().toASCIIString());
+        this.policies = policies;
+        
     }
 
     /**
@@ -79,6 +86,12 @@ public class Axis2TargetInterceptor implements Interceptor {
             
             ServiceClient sender = new ServiceClient();
             sender.setOptions(options);
+            
+            // TODO Need to engage the modules globally
+            AxisService axisService = sender.getAxisService();
+            for (Policy policy : policies) {
+                axisService.applyPolicy(policy);
+            }
             
             OMElement result = sender.sendReceive(method);
             

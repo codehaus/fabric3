@@ -16,11 +16,15 @@
  */
 package org.fabric3.binding.ws.axis2.wire;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
+import org.apache.neethi.Policy;
 import org.fabric3.binding.ws.axis2.Axis2ServiceProvisioner;
 import org.fabric3.binding.ws.axis2.physical.Axis2WireSourceDefinition;
 import org.fabric3.binding.ws.axis2.physical.Axis2WireTargetDefinition;
+import org.fabric3.binding.ws.axis2.policy.Axis2PolicyBuilder;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.WireAttacher;
 import org.fabric3.spi.builder.component.WireAttacherRegistry;
@@ -33,6 +37,7 @@ import org.fabric3.spi.wire.Wire;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Element;
 
 /**
  * @version $Revision$ $Date$
@@ -44,13 +49,15 @@ public class Axis2WireAttacher implements WireAttacher<Axis2WireSourceDefinition
     
     private Axis2ServiceProvisioner serviceProvisioner;
     private WireAttacherRegistry wireAttacherRegistry;
+    private Axis2PolicyBuilder policyBuilder;
     
     /**
      * @param serviceProvisioner
      * @param wireAttacherRegistry
      */
     public Axis2WireAttacher(@Reference Axis2ServiceProvisioner serviceProvisioner, 
-                             @Reference WireAttacherRegistry wireAttacherRegistry) {
+                             @Reference WireAttacherRegistry wireAttacherRegistry,
+                             @Reference Axis2PolicyBuilder policyBuilder) {
         this.serviceProvisioner = serviceProvisioner;
         this.wireAttacherRegistry = wireAttacherRegistry;
     }
@@ -82,8 +89,13 @@ public class Axis2WireAttacher implements WireAttacher<Axis2WireSourceDefinition
     public void attachToTarget(PhysicalWireSourceDefinition source, Axis2WireTargetDefinition target, Wire wire)
             throws WiringException {
         
+        Set<Policy> policies = new HashSet<Policy>();
+        for(Element policyDefinition : target.getPolicyDefinitions()) {
+            policies.add(policyBuilder.buildPolicy(policyDefinition));
+        }
+        
         for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
-            Interceptor interceptor = new Axis2TargetInterceptor(target, entry.getKey().getName());
+            Interceptor interceptor = new Axis2TargetInterceptor(target, entry.getKey().getName(), policies);
             entry.getValue().addInterceptor(interceptor);
         }
         

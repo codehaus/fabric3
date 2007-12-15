@@ -35,6 +35,7 @@ import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalScaArtifact;
+import org.fabric3.spi.model.instance.Referenceable;
 import org.fabric3.spi.policy.registry.PolicyResolutionException;
 import org.fabric3.spi.policy.registry.PolicyResolver;
 import org.fabric3.spi.policy.registry.PolicyResult;
@@ -169,7 +170,7 @@ public class DefaultPolicyResolver implements PolicyResolver {
             }
         }
         
-        Set<PolicySet> policies = resolvePolicies(requiredIntents);        
+        Set<PolicySet> policies = resolvePolicies(requiredIntents, logicalBinding);        
         if(requiredIntents.size() > 0) {
             throw new PolicyResolutionException("Unable to resolve all intents", type);
         }
@@ -216,7 +217,7 @@ public class DefaultPolicyResolver implements PolicyResolver {
             }
         }
         
-        Set<PolicySet> policies = resolvePolicies(requiredIntents);        
+        Set<PolicySet> policies = resolvePolicies(requiredIntents, logicalComponent);        
         if(requiredIntents.size() > 0) {
             throw new PolicyResolutionException("Unable to resolve all intents", type);
         }
@@ -228,13 +229,13 @@ public class DefaultPolicyResolver implements PolicyResolver {
     /*
      * Resolve the policies.
      */
-    private Set<PolicySet> resolvePolicies(Set<Intent> requiredIntents) throws PolicyResolutionException {
+    private Set<PolicySet> resolvePolicies(Set<Intent> requiredIntents, Referenceable referenceable) throws PolicyResolutionException {
 
         Set<PolicySet> policies = new HashSet<PolicySet>();
         
         for (PolicySet policySet : definitionsRegistry.getAllDefinitions(PolicySet.class)) {
             for(Intent intent : requiredIntents) {
-                if(policySet.doesProvide(intent.getName())) {
+                if(policySet.doesProvide(intent.getName()) && policySet.doesApplyTo(referenceable.getUri().toASCIIString())) {
                     policies.add(policySet);
                     requiredIntents.remove(intent);
                 }

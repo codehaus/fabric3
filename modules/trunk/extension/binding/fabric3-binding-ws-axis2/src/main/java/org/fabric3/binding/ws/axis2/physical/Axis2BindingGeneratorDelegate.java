@@ -19,6 +19,8 @@ package org.fabric3.binding.ws.axis2.physical;
 import java.net.URI;
 import java.util.Set;
 
+import javax.xml.namespace.QName;
+
 import org.fabric3.binding.ws.model.logical.WsBindingDefinition;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceContract;
@@ -41,6 +43,7 @@ import org.w3c.dom.Element;
 public class Axis2BindingGeneratorDelegate implements BindingGeneratorDelegate<WsBindingDefinition> {
     
     private ClassLoaderGenerator classLoaderGenerator;
+    private static final QName POLICY_ELEMENT_NAME = new QName("", "policyConfig");
 
     public Axis2BindingGeneratorDelegate(@Reference ClassLoaderGenerator classLoaderGenerator) {
         this.classLoaderGenerator = classLoaderGenerator;
@@ -54,7 +57,7 @@ public class Axis2BindingGeneratorDelegate implements BindingGeneratorDelegate<W
      */
     public Axis2WireSourceDefinition generateWireSource(LogicalBinding<WsBindingDefinition> binding,
                                                            Set<Intent> intentsToBeProvided,
-                                                           Set<Element> policySetsToBeProvided, 
+                                                           Set<Element> policiesToBeProvided, 
                                                            GeneratorContext context, 
                                                            ServiceDefinition serviceDefinition) throws GenerationException {
         
@@ -70,6 +73,8 @@ public class Axis2BindingGeneratorDelegate implements BindingGeneratorDelegate<W
         URI classloader = classLoaderGenerator.generate(binding, context);
         hwsd.setClassloaderURI(classloader);
         
+        setPolicyConfigs(hwsd, policiesToBeProvided, intentsToBeProvided);
+        
         return hwsd;
         
     }
@@ -82,7 +87,7 @@ public class Axis2BindingGeneratorDelegate implements BindingGeneratorDelegate<W
      */
     public Axis2WireTargetDefinition generateWireTarget(LogicalBinding<WsBindingDefinition> binding,
                                                         Set<Intent> intentsToBeProvided, 
-                                                        Set<Element> policySetsToBeProvided,
+                                                        Set<Element> policiesToBeProvided,
                                                         GeneratorContext context, 
                                                         ReferenceDefinition referenceDefinition) throws GenerationException {
 
@@ -98,8 +103,26 @@ public class Axis2BindingGeneratorDelegate implements BindingGeneratorDelegate<W
         URI classloader = classLoaderGenerator.generate(binding, context);
         hwtd.setClassloaderURI(classloader);
         
+        setPolicyConfigs(hwtd, policiesToBeProvided, intentsToBeProvided);
+        
         return hwtd;
 
+    }
+    
+    private void setPolicyConfigs(Axis2PolicyAware policyAware, 
+                                  Set<Element> policiesToBeProvided, 
+                                  Set<Intent> intentsToBeProvided) throws Axis2GenerationException {
+        
+        for (Element policyDefinition : policiesToBeProvided) {
+            
+            QName policyElementName = new QName(policyDefinition.getNamespaceURI(), policyDefinition.getNodeName());
+            
+            if (POLICY_ELEMENT_NAME.equals(policyElementName)) {
+                throw new Axis2GenerationException("Unsupported policy element:" + policyElementName);
+            }
+            policyAware.addPolicyDefinition(policyDefinition);
+        }
+        
     }
 
 }

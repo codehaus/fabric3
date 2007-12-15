@@ -31,6 +31,7 @@ import org.apache.axis2.description.Parameter;
 import org.apache.axis2.engine.MessageReceiver;
 import org.apache.axis2.transport.http.AxisServlet;
 import org.fabric3.binding.ws.axis2.physical.Axis2WireSourceDefinition;
+import org.fabric3.binding.ws.axis2.policy.Axis2PolicyBuilder;
 import org.fabric3.binding.ws.axis2.servlet.F3AxisServlet;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.host.ServletHost;
@@ -42,6 +43,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Element;
 
 /**
  * @version $Revision$ $Date$
@@ -49,26 +51,19 @@ import org.osoa.sca.annotations.Reference;
 @EagerInit
 public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
     
-    private ServletHost servletHost;
-    private ClassLoaderRegistry classLoaderRegistry;
+    private final ServletHost servletHost;
+    private final ClassLoaderRegistry classLoaderRegistry;
+    private final Axis2PolicyBuilder policyBuilder;
     
     private ConfigurationContext configurationContext;
     private String servicePath = "axis2";
     
-    /**
-     * @param servletHost Servlet host for hosting the Axis servlet.
-     */
-    @Reference
-    public void setServletHost(ServletHost servletHost) {
+    public Axis2ServiceProvisionerImpl(@Reference ServletHost servletHost,
+                                   @Reference ClassLoaderRegistry classLoaderRegistry,
+                                   @Reference Axis2PolicyBuilder policyBuilder) {
         this.servletHost = servletHost;
-    }
-    
-    /**
-     * @param classLoaderRegistry Classloader registry.
-     */
-    @Reference
-    public void setClassLoaderRegistry(ClassLoaderRegistry classLoaderRegistry) {
         this.classLoaderRegistry = classLoaderRegistry;
+        this.policyBuilder = policyBuilder;
     }
     
     /**
@@ -118,6 +113,11 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
             
             Parameter interfaceParameter = new Parameter(Constants.SERVICE_CLASS, serviceClass);
             axisService.addParameter(interfaceParameter);
+            
+            // TODO Need to engage the modules globally
+            for (Element policyDefinition : pwsd.getPolicyDefinitions()) {
+                axisService.applyPolicy(policyBuilder.buildPolicy(policyDefinition));
+            }
             
             setMessageReceivers(wire, axisService);
             

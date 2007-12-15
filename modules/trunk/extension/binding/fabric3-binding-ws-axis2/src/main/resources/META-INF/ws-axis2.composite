@@ -36,6 +36,11 @@
     <component name="Axis2Delegate" f3:key="axis2">
         <system:implementation.system class="org.fabric3.binding.ws.axis2.physical.Axis2BindingGeneratorDelegate"/>
     </component>
+    
+    <!-- Neethi policy builder -->
+    <component name="Axis2NeethiPolicyBuilder">
+        <system:implementation.system class="org.fabric3.binding.ws.axis2.policy.DefaultAxis2PolicyBuilder"/>
+    </component>
 
     <!-- Feature -->
     <system:feature name="WsAxis2BindingFeature">{http://fabric3.org/xmlns/binding}ws-axis2</system:feature>

@@ -33,7 +33,7 @@ import org.w3c.dom.Node;
  * 
  * @version $Revision$ $Date$
  */
-public class NodeToString extends AbstractPullTransformer<Node, String>{
+public class Node2String extends AbstractPullTransformer<Node, String>{
 
     public String transform(Node source, TransformContext context) throws Exception {
         
