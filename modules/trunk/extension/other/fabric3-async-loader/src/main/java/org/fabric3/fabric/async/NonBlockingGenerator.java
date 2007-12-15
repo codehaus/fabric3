@@ -18,16 +18,15 @@ package org.fabric3.fabric.async;
 
 import javax.xml.namespace.QName;
 
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
-
-import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.Constants;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Element;
 
 /**
  * Creates {@link NonBlockingInterceptorDefinition}s for one-way operations.
@@ -50,7 +49,7 @@ public class NonBlockingGenerator implements InterceptorDefinitionGenerator {
         registry.register(QNAME, this);
     }
 
-    public PhysicalInterceptorDefinition generate(PolicySet policySet, GeneratorContext generatorContext) {
+    public PhysicalInterceptorDefinition generate(Element policySetDefinition, GeneratorContext generatorContext) {
         return new NonBlockingInterceptorDefinition();
     }
 }

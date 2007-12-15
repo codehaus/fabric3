@@ -22,9 +22,6 @@ import java.net.URI;
 import java.util.Map;
 import java.util.Set;
 
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
-
 import org.fabric3.java.JavaComponentDefinition;
 import org.fabric3.java.JavaWireSourceDefinition;
 import org.fabric3.java.JavaWireTargetDefinition;
@@ -39,9 +36,7 @@ import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Property;
 import org.fabric3.scdl.definitions.Intent;
-import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.generator.ComponentGenerator;
-import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -52,6 +47,9 @@ import org.fabric3.spi.model.instance.ValueSource;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Element;
 
 /**
  * @version $Rev$ $Date$
@@ -65,6 +63,8 @@ public class LaunchedComponentGenerator implements ComponentGenerator<LogicalCom
 
     @SuppressWarnings({"unchecked"})
     public PhysicalComponentDefinition generate(LogicalComponent<Launched> component, 
+                                                Set<Intent> intentsToBeProvided,
+                                                Set<Element> policySetsToBeProvided,
                                                 GeneratorContext context) {
         
         ComponentDefinition<Launched> definition = component.getDefinition();
@@ -103,7 +103,7 @@ public class LaunchedComponentGenerator implements ComponentGenerator<LogicalCom
                                                            LogicalReference reference,
                                                            boolean optimizable, 
                                                            Set<Intent> intentsToBeProvided,
-                                                           Set<PolicySet> policySetsToBeProvided,
+                                                           Set<Element> policySetsToBeProvided,
                                                            GeneratorContext context) {
         JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
         wireDefinition.setUri(reference.getUri());
@@ -120,7 +120,7 @@ public class LaunchedComponentGenerator implements ComponentGenerator<LogicalCom
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
                                                            LogicalComponent<Launched> target,  
                                                            Set<Intent> intentsToBeProvided,
-                                                           Set<PolicySet> policySetsToBeProvided,
+                                                           Set<Element> policySetsToBeProvided,
                                                            GeneratorContext context) {
         JavaWireTargetDefinition wireDefinition = new JavaWireTargetDefinition();
         wireDefinition.setUri(service.getUri());

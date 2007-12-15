@@ -40,8 +40,8 @@ public final class PolicySet extends AbstractDefinition {
     /** XPath expression for the apples to attribute. */
     private final String appliesTo;
     
-    /** A flag to indicate whether the policy is implemented as an F3 interceptor */
-    private final boolean intercepted;
+    /** The phase at which the policy is applied. */
+    private final PolicyPhase phase;
 
     /**
      * Initializes the state for the policy set.
@@ -50,16 +50,16 @@ public final class PolicySet extends AbstractDefinition {
      * @param provides Intents provided by this policy set.
      * @param appliesTo XPath expression for the applies to attribute.
      * @param extension Extension for the policy set.
-     * @param intercepted Flag to indicate whether the policy is implemented as an interceptor.
+     * @param phase The phase at which the policy is applied.
      */
-    public PolicySet(QName name, Set<QName> provides, String appliesTo, Element extendion, boolean intercepted) {
+    public PolicySet(QName name, Set<QName> provides, String appliesTo, Element extendion, PolicyPhase phase) {
         
         super(name);
 
         this.provides = provides;
         this.appliesTo = appliesTo;
         this.extension = extendion;
-        this.intercepted = intercepted;
+        this.phase = phase;
         
     }
     
@@ -117,10 +117,10 @@ public final class PolicySet extends AbstractDefinition {
     }
     
     /**
-     * @return True if the policy is implemented as an F3 interceptor.
+     * @return Gets the policy phase.
      */
-    public boolean isIntercepted() {
-        return intercepted;
+    public PolicyPhase getPhase() {
+        return phase;
     }
 
 }

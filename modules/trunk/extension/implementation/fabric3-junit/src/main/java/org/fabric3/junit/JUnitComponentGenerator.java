@@ -3,10 +3,6 @@ package org.fabric3.junit;
 import java.net.URI;
 import java.util.Set;
 
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
-
 import org.fabric3.java.JavaComponentDefinition;
 import org.fabric3.java.JavaWireSourceDefinition;
 import org.fabric3.java.JavaWireTargetDefinition;
@@ -15,7 +11,6 @@ import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.definitions.Intent;
-import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
@@ -28,6 +23,10 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Element;
 
 /**
  * @version $Rev$ $Date$
@@ -53,6 +52,8 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
     }
 
     public PhysicalComponentDefinition generate(LogicalComponent<ImplementationJUnit> component,
+                                                Set<Intent> intentsToBeProvided,
+                                                Set<Element> policySetsToBeProvided,
                                                 GeneratorContext context)
             throws GenerationException {
 
@@ -87,7 +88,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
                                                            LogicalReference reference,
                                                            boolean optimizable,
                                                            Set<Intent> implementationIntentsToBeProvided,
-                                                           Set<PolicySet> implememenantionPolicySetsToBeProvided,
+                                                           Set<Element> implememenantionPolicySetsToBeProvided,
                                                            GeneratorContext context) throws GenerationException {
         JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
         wireDefinition.setUri(reference.getUri());
@@ -101,7 +102,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
                                                            LogicalComponent<ImplementationJUnit> target,
                                                            Set<Intent> implementationIntentsToBeProvided,
-                                                           Set<PolicySet> implememenantionPolicySetsToBeProvided,
+                                                           Set<Element> implememenantionPolicySetsToBeProvided,
                                                            GeneratorContext context) throws GenerationException {
         JavaWireTargetDefinition wireDefinition = new JavaWireTargetDefinition();
         wireDefinition.setUri(service.getUri());

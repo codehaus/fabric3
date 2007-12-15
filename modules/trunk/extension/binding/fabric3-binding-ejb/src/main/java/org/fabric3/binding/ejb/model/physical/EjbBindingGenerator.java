@@ -19,23 +19,21 @@
 package org.fabric3.binding.ejb.model.physical;
 
 import java.util.Set;
-import javax.xml.namespace.QName;
-
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.ejb.model.logical.EjbBindingDefinition;
+import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
-import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.idl.java.JavaServiceContract;
-import org.fabric3.scdl.ReferenceDefinition;
-import org.fabric3.scdl.ServiceDefinition;
-import org.fabric3.scdl.definitions.Intent;
-import org.fabric3.scdl.definitions.PolicySet;
+import org.fabric3.spi.model.instance.LogicalBinding;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Element;
 
 /**
  * Implementation of the EJB binding generator.
@@ -68,7 +66,7 @@ public class EjbBindingGenerator implements
      */
     public EjbWireSourceDefinition generateWireSource(LogicalBinding<EjbBindingDefinition> logicalBinding,
                                                       Set<Intent> intentsToBeProvided,
-                                                      Set<PolicySet> policySetsToBeProvided,
+                                                      Set<Element> policySetsToBeProvided,
                                                       GeneratorContext generatorContext,
                                                       ServiceDefinition serviceDefinition)
         throws GenerationException {
@@ -94,7 +92,7 @@ public class EjbBindingGenerator implements
      */
     public EjbWireTargetDefinition generateWireTarget(LogicalBinding<EjbBindingDefinition> logicalBinding,
                                                       Set<Intent> intentsToBeProvided,
-                                                      Set<PolicySet> policySetsToBeProvided,
+                                                      Set<Element> policySetsToBeProvided,
                                                       GeneratorContext generatorContext,
                                                       ReferenceDefinition referenceDefinition)
         throws GenerationException {

@@ -60,5 +60,17 @@ public class CollectionUtils {
         return result;
         
     }
+    
+    public static <SOURCE, RESULT> Set<RESULT> transform(Set<SOURCE> source, Closure<SOURCE, RESULT> transformer) {
+        
+        HashSet<RESULT> result = new HashSet<RESULT>();
+        
+        for (SOURCE object : source) {
+            result.add(transformer.execute(object));
+        }
+        
+        return result;
+        
+    }
 
 }

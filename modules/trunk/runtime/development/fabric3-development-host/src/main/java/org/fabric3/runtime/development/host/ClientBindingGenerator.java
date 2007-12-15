@@ -2,20 +2,19 @@ package org.fabric3.runtime.development.host;
 
 import java.util.Set;
 
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
-
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.definitions.Intent;
-import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Element;
 
 /**
  * Implementation of the client binding generator.
@@ -38,7 +37,7 @@ public class ClientBindingGenerator implements
 
     public ClientWireSourceDefinition generateWireSource(LogicalBinding<ClientBindingDefinition> logicalBinding,
                                                          Set<Intent> intentsToBeProvided,
-                                                         Set<PolicySet> policySetsToBeProvided,
+                                                         Set<Element> policySetsToBeProvided,
                                                          GeneratorContext context,
                                                          ServiceDefinition serviceDefinition)
             throws GenerationException {
@@ -49,7 +48,7 @@ public class ClientBindingGenerator implements
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalBinding<ClientBindingDefinition> logicalBinding,
                                                            Set<Intent> intentsToBeProvided,
-                                                           Set<PolicySet> policySetsToBeProvided,
+                                                           Set<Element> policySetsToBeProvided,
                                                            GeneratorContext context,
                                                            ReferenceDefinition referenceDefinition)
             throws GenerationException {

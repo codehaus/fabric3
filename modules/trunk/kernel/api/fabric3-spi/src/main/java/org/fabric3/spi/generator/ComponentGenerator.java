@@ -22,7 +22,6 @@ import java.util.Set;
 
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.definitions.Intent;
-import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
@@ -30,6 +29,7 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.w3c.dom.Element;
 
 /**
  * Implementations are responsible for generating {@link org.fabric3.spi.model.physical.PhysicalChangeSet} metadata used
@@ -46,9 +46,12 @@ public interface ComponentGenerator<C extends LogicalComponent<? extends Impleme
      *
      * @param component the logical component to evaluate
      * @param intentsToBeProvided Intents that need to explicitly provided by the implementation.
+     * @param policySetsToBeProvided Policies set to be provided by the implementation.
      * @throws GenerationException if an error occurs during the generation process
      */
     PhysicalComponentDefinition generate(C component, 
+                                         Set<Intent> intentsToBeProvided,
+                                         Set<Element> policySetsToBeProvided,
                                          GeneratorContext context) throws GenerationException;
 
     /**
@@ -67,7 +70,7 @@ public interface ComponentGenerator<C extends LogicalComponent<? extends Impleme
                                                     LogicalReference reference, 
                                                     boolean optimizable, 
                                                     Set<Intent> intentsToBeProvided,
-                                                    Set<PolicySet> policySetsToBeProvided,
+                                                    Set<Element> policySetsToBeProvided,
                                                     GeneratorContext context) throws GenerationException;
 
     /**
@@ -83,7 +86,7 @@ public interface ComponentGenerator<C extends LogicalComponent<? extends Impleme
     PhysicalWireTargetDefinition generateWireTarget(LogicalService service, 
                                                     C target, 
                                                     Set<Intent> intentsToBeProvided,
-                                                    Set<PolicySet> policySetsToBeProvided,
+                                                    Set<Element> policySetsToBeProvided,
                                                     GeneratorContext context) throws GenerationException;
 
     /**

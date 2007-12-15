@@ -18,8 +18,8 @@
  */
 package org.fabric3.spi.generator;
 
-import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
+import org.w3c.dom.Element;
 
 /**
  * Interface for the interceptor definition generator.
@@ -31,10 +31,10 @@ public interface InterceptorDefinitionGenerator {
     /**
      * Generates an interceptor definition from the policy set extension.
      * 
-     * @param policySetExtension Policy set extension.
+     * @param policyDefinition Policy set definition.
      * @param generatorContext Generator context.
      * @return Physical interceptor definition.
      */
-    PhysicalInterceptorDefinition generate(PolicySet policySet, GeneratorContext generatorContext);
+    PhysicalInterceptorDefinition generate(Element policyDefinition, GeneratorContext generatorContext);
 
 }

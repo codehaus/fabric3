@@ -27,7 +27,7 @@ import org.fabric3.fabric.util.closure.CollectionUtils;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.definitions.Intent;
-import org.fabric3.scdl.definitions.PolicySet;
+import org.fabric3.scdl.definitions.PolicyPhase;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
@@ -38,6 +38,7 @@ import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 import org.fabric3.spi.policy.registry.PolicyResolutionException;
 import org.fabric3.spi.policy.registry.PolicyResolver;
+import org.fabric3.spi.policy.registry.PolicyResult;
 import org.osoa.sca.annotations.Reference;
 
 /**
@@ -46,16 +47,16 @@ import org.osoa.sca.annotations.Reference;
 public class PhysicalPolicyGeneratorImpl implements PhysicalPolicyGenerator {
     
     /** Closure for filtering intercepted policies. */
-    private static final Closure<PolicySet, Boolean> INTERCEPTED_POLICY_FILTER = new Closure<PolicySet, Boolean>() {
-        public Boolean execute(PolicySet policySet) {
-            return policySet.isIntercepted();
+    private static final Closure<PolicyResult, Boolean> INTERCEPTION = new Closure<PolicyResult, Boolean>() {
+        public Boolean execute(PolicyResult policyResult) {
+            return policyResult.getPolicyPhase() == PolicyPhase.INTERCEPTION;
         }
     };
     
     /** Closure for filtering provided policies by bindings or implementations. */
-    private static final Closure<PolicySet, Boolean> PROVIDED_POLICY_FILTER = new Closure<PolicySet, Boolean>() {
-        public Boolean execute(PolicySet policySet) {
-            return !policySet.isIntercepted();
+    private static final Closure<PolicyResult, Boolean> WIRE_GENERATION = new Closure<PolicyResult, Boolean>() {
+        public Boolean execute(PolicyResult policyResult) {
+            return policyResult.getPolicyPhase() == PolicyPhase.WIRE_GENERATION;
         }
     };
     
@@ -84,8 +85,8 @@ public class PhysicalPolicyGeneratorImpl implements PhysicalPolicyGenerator {
         Set<Intent> intentsProvidedBySource = new HashSet<Intent>();
         Set<Intent> intentsProvidedByTarget = new HashSet<Intent>();
         
-        Set<PolicySet> policySetsProvidedBySource = new HashSet<PolicySet>();
-        Set<PolicySet> policySetsProvidedByTarget = new HashSet<PolicySet>();
+        Set<PolicyResult> policySetsProvidedBySource = new HashSet<PolicyResult>();
+        Set<PolicyResult> policySetsProvidedByTarget = new HashSet<PolicyResult>();
         
         try {
             
@@ -103,29 +104,29 @@ public class PhysicalPolicyGeneratorImpl implements PhysicalPolicyGenerator {
             
             for (Operation operation : operations) {
                 
-                Set<PolicySet> interceptedPolicies = new HashSet<PolicySet>();
+                Set<PolicyResult> interceptedPolicies = new HashSet<PolicyResult>();
                 
-                Set<PolicySet> policies = null;
+                Set<PolicyResult> policies = null;
                 
                 if (source != null) {
                     policies = policyResolver.resolveImplementationIntents(source);
-                    policySetsProvidedBySource.addAll(CollectionUtils.filter(policies, PROVIDED_POLICY_FILTER));
-                    interceptedPolicies.addAll(CollectionUtils.filter(policies, INTERCEPTED_POLICY_FILTER));
+                    policySetsProvidedBySource.addAll(CollectionUtils.filter(policies, WIRE_GENERATION));
+                    interceptedPolicies.addAll(CollectionUtils.filter(policies, INTERCEPTION));
                 }
                 
                 if (target != null) {
                     policies = policyResolver.resolveImplementationIntents(target);
-                    policySetsProvidedByTarget.addAll(CollectionUtils.filter(policies, PROVIDED_POLICY_FILTER));
-                    interceptedPolicies.addAll(CollectionUtils.filter(policies, INTERCEPTED_POLICY_FILTER));
+                    policySetsProvidedByTarget.addAll(CollectionUtils.filter(policies, WIRE_GENERATION));
+                    interceptedPolicies.addAll(CollectionUtils.filter(policies, INTERCEPTION));
                 }
                 
                 policies = policyResolver.resolveInteractionIntents(sourceBinding, operation);
-                policySetsProvidedBySource.addAll(CollectionUtils.filter(policies, PROVIDED_POLICY_FILTER));
-                interceptedPolicies.addAll(CollectionUtils.filter(policies, INTERCEPTED_POLICY_FILTER));
+                policySetsProvidedBySource.addAll(CollectionUtils.filter(policies, WIRE_GENERATION));
+                interceptedPolicies.addAll(CollectionUtils.filter(policies, INTERCEPTION));
                 
                 policies = policyResolver.resolveInteractionIntents(targetBinding, operation);
-                policySetsProvidedByTarget.addAll(CollectionUtils.filter(policies, PROVIDED_POLICY_FILTER));
-                interceptedPolicies.addAll(CollectionUtils.filter(policies, INTERCEPTED_POLICY_FILTER));
+                policySetsProvidedByTarget.addAll(CollectionUtils.filter(policies, WIRE_GENERATION));
+                interceptedPolicies.addAll(CollectionUtils.filter(policies, INTERCEPTION));
                 
                 setOperationDefinition(operation, wireDefinition, interceptedPolicies);
                 
@@ -145,7 +146,7 @@ public class PhysicalPolicyGeneratorImpl implements PhysicalPolicyGenerator {
         
     }
 
-    private void setOperationDefinition(Operation<?> operation, PhysicalWireDefinition wireDefinition, Set<PolicySet> policies)
+    private void setOperationDefinition(Operation<?> operation, PhysicalWireDefinition wireDefinition, Set<PolicyResult> policies)
             throws GenerationException {
 
         PhysicalOperationDefinition physicalOperation = physicalOperationHelper.mapOperation(operation);
@@ -168,17 +169,17 @@ public class PhysicalPolicyGeneratorImpl implements PhysicalPolicyGenerator {
     }
 
     @SuppressWarnings("unchecked")
-    private Set<PhysicalInterceptorDefinition> generateInterceptorDefinitions(Set<PolicySet> policies) throws GenerationException {
+    private Set<PhysicalInterceptorDefinition> generateInterceptorDefinitions(Set<PolicyResult> policies) throws GenerationException {
 
         if (policies == null) {
             return Collections.EMPTY_SET;
         }
 
         Set<PhysicalInterceptorDefinition> interceptors = new HashSet<PhysicalInterceptorDefinition>();
-        for (PolicySet policy : policies) {
+        for (PolicyResult policy : policies) {
             InterceptorDefinitionGenerator interceptorDefinitionGenerator = 
-                generatorRegistry.getInterceptorDefinitionGenerator(policy.getExtensionName());
-            interceptors.add(interceptorDefinitionGenerator.generate(policy, null));
+                generatorRegistry.getInterceptorDefinitionGenerator(policy.getQualifiedName());
+            interceptors.add(interceptorDefinitionGenerator.generate(policy.getPolicyDefinition(), null));
         }
         return interceptors;
 

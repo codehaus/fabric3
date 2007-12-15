@@ -19,30 +19,39 @@ package org.fabric3.fabric.model.physical;
 import java.util.Collections;
 import java.util.Set;
 
+import org.fabric3.fabric.util.closure.Closure;
+import org.fabric3.fabric.util.closure.CollectionUtils;
 import org.fabric3.scdl.definitions.Intent;
-import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
+import org.fabric3.spi.policy.registry.PolicyResult;
+import org.w3c.dom.Element;
 
 /**
  * @version $Revision$ $Date$
  */
 public class PhysicalPolicyResult {
     
+    private static Closure<PolicyResult, Element> TRANSFORMER = new Closure<PolicyResult, Element>() {
+        public Element execute(PolicyResult object) {
+            return object.getPolicyDefinition();
+        }
+    };
+    
     private final Set<Intent> intentsProvidedBySource;
     private final Set<Intent> intentsProvidedByTarget;
-    private final Set<PolicySet> policySetsProvidedBySource;
-    private final Set<PolicySet> policySetsProvidedByTarget;
+    private final Set<PolicyResult> policiesProvidedBySource;
+    private final Set<PolicyResult> policiesProvidedByTarget;
     private final PhysicalWireDefinition physicalWireDefinition;
     
     public PhysicalPolicyResult(Set<Intent> intentsProvidedBySource, 
                                 Set<Intent> intentsProvidedByTarget,
-                                Set<PolicySet> policySetsProvidedBySource, 
-                                Set<PolicySet> policySetsProvidedByTarget,
+                                Set<PolicyResult> policiesProvidedBySource, 
+                                Set<PolicyResult> policiesProvidedByTarget,
                                 PhysicalWireDefinition physicalWireDefinition) {
         this.intentsProvidedBySource = intentsProvidedBySource;
         this.intentsProvidedByTarget = intentsProvidedByTarget;
-        this.policySetsProvidedBySource = policySetsProvidedBySource;
-        this.policySetsProvidedByTarget = policySetsProvidedByTarget;
+        this.policiesProvidedBySource = policiesProvidedBySource;
+        this.policiesProvidedByTarget = policiesProvidedByTarget;
         this.physicalWireDefinition = physicalWireDefinition;
     }
 
@@ -54,12 +63,20 @@ public class PhysicalPolicyResult {
         return Collections.unmodifiableSet(intentsProvidedByTarget);
     }
 
-    public Set<PolicySet> getPolicySetsProvidedBySource() {
-        return Collections.unmodifiableSet(policySetsProvidedBySource);
+    public Set<PolicyResult> getPoliciesProvidedBySource() {
+        return Collections.unmodifiableSet(policiesProvidedBySource);
     }
 
-    public Set<PolicySet> getPolicySetsProvidedByTarget() {
-        return Collections.unmodifiableSet(policySetsProvidedByTarget);
+    public Set<PolicyResult> getPoliciesProvidedByTarget() {
+        return Collections.unmodifiableSet(policiesProvidedByTarget);
+    }
+
+    public Set<Element> getPolicyDefsProvidedBySource() {
+        return CollectionUtils.transform(policiesProvidedBySource, TRANSFORMER);
+    }
+
+    public Set<Element> getPolicyDefsProvidedByTarget() {
+        return CollectionUtils.transform(policiesProvidedByTarget, TRANSFORMER);
     }
 
     public PhysicalWireDefinition getPhysicalWireDefinition() {

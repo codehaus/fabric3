@@ -20,14 +20,10 @@ package org.fabric3.binding.rmi.model.physical;
 
 import java.util.Set;
 
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
-
 import org.fabric3.binding.rmi.model.logical.RmiBindingDefinition;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.definitions.Intent;
-import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GenerationException;
@@ -35,6 +31,9 @@ import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.spi.model.instance.LogicalBinding;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Element;
 
 @EagerInit
 public class RmiBindingGenerator
@@ -56,7 +55,7 @@ public class RmiBindingGenerator
     public RmiWireSourceDefinition generateWireSource(
             LogicalBinding<RmiBindingDefinition> logicalBinding,
             Set<Intent> intentsToBeProvided,
-            Set<PolicySet> policySetsToBeProvided,
+            Set<Element> policySetsToBeProvided,
             GeneratorContext generatorContext,
             ServiceDefinition serviceDefinition)
             throws GenerationException {
@@ -76,7 +75,7 @@ public class RmiBindingGenerator
     public RmiWireTargetDefinition generateWireTarget(
             LogicalBinding<RmiBindingDefinition> logicalBinding,
             Set<Intent> intentsToBeProvided,
-            Set<PolicySet> policySetsToBeProvided,
+            Set<Element> policySetsToBeProvided,
             GeneratorContext generatorContext,
             ReferenceDefinition referenceDefinition)
             throws GenerationException {

@@ -23,6 +23,7 @@ import java.util.Set;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Element;
 
 import org.fabric3.binding.ws.model.logical.WsBindingDefinition;
 import org.fabric3.extension.generator.BindingGeneratorExtension;
@@ -54,7 +55,7 @@ public class WsBindingGenerator extends BindingGeneratorExtension<PhysicalWireSo
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalBinding<WsBindingDefinition> logicalBinding,
                                                            Set<Intent> intentsToBeProvided,
-                                                           Set<PolicySet> policySetsToBeProvided,
+                                                           Set<Element> policySetsToBeProvided,
                                                            GeneratorContext generatorContext,
                                                            ServiceDefinition serviceDefinition)
             throws GenerationException {
@@ -71,7 +72,7 @@ public class WsBindingGenerator extends BindingGeneratorExtension<PhysicalWireSo
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalBinding<WsBindingDefinition> logicalBinding,
                                                            Set<Intent> intentsToBeProvided,
-                                                           Set<PolicySet> policySetsToBeProvided,
+                                                           Set<Element> policySetsToBeProvided,
                                                            GeneratorContext generatorContext,
                                                            ReferenceDefinition referenceDefinition)
             throws GenerationException {

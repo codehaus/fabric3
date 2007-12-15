@@ -21,16 +21,22 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.fabric3.fabric.assembly.resolver.ResolutionException;
 import org.fabric3.fabric.command.InitializeComponentCommand;
 import org.fabric3.fabric.domain.DomainService;
 import org.fabric3.fabric.generator.DefaultGeneratorContext;
+import org.fabric3.fabric.generator.PolicyException;
 import org.fabric3.fabric.services.routing.RoutingException;
 import org.fabric3.fabric.services.routing.RoutingService;
+import org.fabric3.fabric.util.closure.Closure;
+import org.fabric3.fabric.util.closure.CollectionUtils;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.definitions.Intent;
+import org.fabric3.scdl.definitions.PolicyPhase;
 import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.command.CommandSet;
@@ -46,9 +52,13 @@ import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalChangeSet;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
+import org.fabric3.spi.policy.registry.PolicyResolutionException;
+import org.fabric3.spi.policy.registry.PolicyResolver;
+import org.fabric3.spi.policy.registry.PolicyResult;
 import org.fabric3.spi.util.UriHelper;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Element;
 
 /**
  * Default implementation of the physical model generator.
@@ -57,11 +67,26 @@ import org.osoa.sca.annotations.Reference;
  */
 @EagerInit
 public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
+    
+    /** Closure for filtering construction phase policies. */
+    private static final Closure<PolicyResult, Boolean> CONSTRUCTION = new Closure<PolicyResult, Boolean>() {
+        public Boolean execute(PolicyResult policyResult) {
+            return policyResult.getPolicyPhase() == PolicyPhase.CONSTRUCTION;
+        }
+    };
+    
+    /** Transforms policy results to policy definitions. */
+    private static Closure<PolicyResult, Element> TRANSFORMER = new Closure<PolicyResult, Element>() {
+        public Element execute(PolicyResult object) {
+            return object.getPolicyDefinition();
+        }
+    };
 
     private final GeneratorRegistry generatorRegistry;
     private final RoutingService routingService;
     private final DomainService domainService;
     private final PhysicalWireGenerator physicalWireGenerator;
+    private final PolicyResolver policyResolver;
     
     /**
      * Injects generator registry and assembly store.
@@ -72,11 +97,13 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
     public PhysicalModelGeneratorImpl(@Reference GeneratorRegistry generatorRegistry,
                                       @Reference RoutingService routingService,
                                       @Reference DomainService domainService,
-                                      @Reference PhysicalWireGenerator physicalWireGenerator) {
+                                      @Reference PhysicalWireGenerator physicalWireGenerator,
+                                      @Reference PolicyResolver policyResolver) {
         this.generatorRegistry = generatorRegistry;
         this.routingService = routingService;
         this.domainService = domainService;
         this.physicalWireGenerator = physicalWireGenerator;
+        this.policyResolver = policyResolver;
     }
 
     /**
@@ -133,7 +160,15 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
         ComponentGenerator<C> generator = (ComponentGenerator<C>) 
             generatorRegistry.getComponentGenerator(component.getDefinition().getImplementation().getClass());
 
-        return generator.generate(component, context);
+        try {
+            Set<Intent> providedImplementationIntents = policyResolver.getImplementationIntentsToBeProvided(component);
+            Set<PolicyResult> policies = policyResolver.resolveImplementationIntents(component);
+            policies = CollectionUtils.filter(policies, CONSTRUCTION);
+            Set<Element> providedPolicyDefs = CollectionUtils.transform(policies, TRANSFORMER);
+            return generator.generate(component, providedImplementationIntents, providedPolicyDefs, context);
+        } catch (PolicyResolutionException e) {
+            throw new PolicyException(e);
+        }
 
     }
 

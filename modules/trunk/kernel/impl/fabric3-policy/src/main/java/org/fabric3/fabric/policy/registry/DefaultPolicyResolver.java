@@ -30,14 +30,17 @@ import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.definitions.BindingType;
 import org.fabric3.scdl.definitions.ImplementationType;
 import org.fabric3.scdl.definitions.Intent;
+import org.fabric3.scdl.definitions.PolicyPhase;
 import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalScaArtifact;
 import org.fabric3.spi.policy.registry.PolicyResolutionException;
 import org.fabric3.spi.policy.registry.PolicyResolver;
+import org.fabric3.spi.policy.registry.PolicyResult;
 import org.fabric3.spi.services.definitions.DefinitionsRegistry;
 import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Element;
 
 /**
  * @version $Revision$ $Date$
@@ -134,7 +137,7 @@ public class DefaultPolicyResolver implements PolicyResolver {
     /**
      * @see org.fabric3.spi.policy.registry.PolicyResolver#resolveInteractionIntents(org.fabric3.spi.model.instance.LogicalBinding)
      */
-    public Set<PolicySet> resolveInteractionIntents(LogicalBinding<?> logicalBinding, Operation<?> operation) throws PolicyResolutionException {
+    public Set<PolicyResult> resolveInteractionIntents(LogicalBinding<?> logicalBinding, Operation<?> operation) throws PolicyResolutionException {
         
         QName type = logicalBinding.getType();
         BindingType bindingType = definitionsRegistry.getDefinition(type, BindingType.class);
@@ -171,14 +174,14 @@ public class DefaultPolicyResolver implements PolicyResolver {
             throw new PolicyResolutionException("Unable to resolve all intents", type);
         }
         
-        return policies;
+        return createResults(policies, PolicyPhase.WIRE_GENERATION);
         
     }
     
     /**
      * @see org.fabric3.spi.policy.registry.PolicyResolver#resolveImplementationIntents(org.fabric3.spi.model.instance.LogicalComponent)
      */
-    public Set<PolicySet> resolveImplementationIntents(LogicalComponent<?> logicalComponent) throws PolicyResolutionException {
+    public Set<PolicyResult> resolveImplementationIntents(LogicalComponent<?> logicalComponent) throws PolicyResolutionException {
         
         Implementation<?> implementation = logicalComponent.getDefinition().getImplementation();
         QName type = implementation.getType();
@@ -218,7 +221,7 @@ public class DefaultPolicyResolver implements PolicyResolver {
             throw new PolicyResolutionException("Unable to resolve all intents", type);
         }
         
-        return policies;
+        return createResults(policies, PolicyPhase.CONSTRUCTION);
         
     }
 
@@ -317,6 +320,25 @@ public class DefaultPolicyResolver implements PolicyResolver {
         }
         return requiredIntents;
 
+    }
+    
+    /*
+     * Create policy results from resolved policies.
+     */
+    private Set<PolicyResult> createResults(Set<PolicySet> policies, PolicyPhase defaultPhase) {
+        
+        Set<PolicyResult> results = new HashSet<PolicyResult>();
+        for (PolicySet policySet : policies) {
+            Element policyDefinition = policySet.getExtension();
+            PolicyPhase policyPhase = policySet.getPhase();
+            if (policyPhase == null) {
+                policyPhase = defaultPhase;
+            }
+            results.add(new PolicyResult(policyDefinition, policyPhase));
+        }
+        
+        return results;
+        
     }
 
 }

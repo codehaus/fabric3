@@ -21,7 +21,6 @@ package org.fabric3.fabric.policy.interceptor.simple;
 import javax.xml.namespace.QName;
 
 import org.fabric3.extension.generator.InterceptorDefinitionGeneratorExtension;
-import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.Constants;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.w3c.dom.Element;
@@ -41,10 +40,9 @@ public class SimpleInterceptorDefinitionGenerator extends InterceptorDefinitionG
         return EXTENSION_NAME;
     }
 
-    public SimpleInterceptorDefinition generate(PolicySet policySet, GeneratorContext context) {
+    public SimpleInterceptorDefinition generate(Element policySetDefinition, GeneratorContext context) {
         
-        Element extension = policySet.getExtension();
-        String interceptorClass = extension.getAttribute("class");
+        String interceptorClass = policySetDefinition.getAttribute("class");
         
         return new SimpleInterceptorDefinition(interceptorClass);
     }

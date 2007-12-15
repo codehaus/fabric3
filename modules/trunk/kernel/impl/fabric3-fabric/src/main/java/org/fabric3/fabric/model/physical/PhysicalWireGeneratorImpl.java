@@ -128,7 +128,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         PhysicalWireTargetDefinition targetDefinition = targetGenerator.generateWireTarget(service, 
                                                                                            target, 
                                                                                            policyResult.getIntentsProvidedByTarget(),
-                                                                                           policyResult.getPolicySetsProvidedByTarget(),
+                                                                                           policyResult.getPolicyDefsProvidedByTarget(),
                                                                                            context);
         wireDefinition.setTarget(targetDefinition);
 
@@ -150,7 +150,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
                                                                                            reference, 
                                                                                            optimizable,
                                                                                            policyResult.getIntentsProvidedBySource(),
-                                                                                           policyResult.getPolicySetsProvidedBySource(),
+                                                                                           policyResult.getPolicyDefsProvidedBySource(),
                                                                                            context);
         sourceDefinition.setKey(target.getDefinition().getKey());
         wireDefinition.setSource(sourceDefinition);
@@ -207,7 +207,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         PhysicalWireTargetDefinition targetDefinition = targetGenerator.generateWireTarget(targetService, 
                                                                                            component, 
                                                                                            policyResult.getIntentsProvidedByTarget(),
-                                                                                           policyResult.getPolicySetsProvidedByTarget(),
+                                                                                           policyResult.getPolicyDefsProvidedByTarget(),
                                                                                            context);
         wireDefinition.setTarget(targetDefinition);
         
@@ -215,7 +215,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
 
         PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(binding,
                                                                                            policyResult.getIntentsProvidedBySource(),
-                                                                                           policyResult.getPolicySetsProvidedBySource(),
+                                                                                           policyResult.getPolicyDefsProvidedBySource(),
                                                                                            context,
                                                                                            service.getDefinition());
         wireDefinition.setSource(sourceDefinition);
@@ -247,7 +247,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         
         PhysicalWireTargetDefinition targetDefinition = targetGenerator.generateWireTarget(binding, 
                                                                                            policyResult.getIntentsProvidedByTarget(), 
-                                                                                           policyResult.getPolicySetsProvidedByTarget(),
+                                                                                           policyResult.getPolicyDefsProvidedByTarget(),
                                                                                            context, 
                                                                                            reference.getDefinition());
         wireDefinition.setTarget(targetDefinition);
@@ -259,7 +259,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
                                                                                            reference, 
                                                                                            false, 
                                                                                            policyResult.getIntentsProvidedBySource(),
-                                                                                           policyResult.getPolicySetsProvidedBySource(),
+                                                                                           policyResult.getPolicyDefsProvidedBySource(),
                                                                                            context);
         wireDefinition.setSource(sourceDefinition);
 

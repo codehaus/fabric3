@@ -18,16 +18,15 @@ package org.fabric3.binding.test;
 
 import java.util.Set;
 
-import org.osoa.sca.annotations.EagerInit;
-
 import org.fabric3.extension.generator.BindingGeneratorExtension;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.definitions.Intent;
-import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.model.instance.LogicalBinding;
+import org.osoa.sca.annotations.EagerInit;
+import org.w3c.dom.Element;
 
 /**
  * Implementation of the test binding generator.
@@ -39,7 +38,7 @@ public class TestBindingGenerator extends BindingGeneratorExtension<TestBindingS
 
     public TestBindingSourceDefinition generateWireSource(LogicalBinding<TestBindingDefinition> logicalBinding,
                                                           Set<Intent> intents,
-                                                          Set<PolicySet> policySetsToBeProvided,
+                                                          Set<Element> policySetsToBeProvided,
                                                           GeneratorContext context,
                                                           ServiceDefinition serviceDefinition)
             throws GenerationException {
@@ -50,7 +49,7 @@ public class TestBindingGenerator extends BindingGeneratorExtension<TestBindingS
 
     public TestBindingTargetDefinition generateWireTarget(LogicalBinding<TestBindingDefinition> logicalBinding,
                                                           Set<Intent> intents,
-                                                          Set<PolicySet> policySetsToBeProvided,
+                                                          Set<Element> policySetsToBeProvided,
                                                           GeneratorContext context,
                                                           ReferenceDefinition referenceDefinition)
             throws GenerationException {
