@@ -16,12 +16,14 @@
  */
 package org.fabric3.binding.ws.axis2.policy;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamReader;
 
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.neethi.Policy;
 import org.apache.neethi.PolicyEngine;
-import org.fabric3.transform.xml.Node2String;
+import org.fabric3.transform.xml.Element2Stream;
 import org.w3c.dom.Element;
 
 /**
@@ -29,16 +31,17 @@ import org.w3c.dom.Element;
  */
 public class DefaultAxis2PolicyBuilder implements Axis2PolicyBuilder {
     
-    private final Node2String transformer = new Node2String();
+    private final Element2Stream transformer = new Element2Stream(XMLInputFactory.newInstance());
 
     public Policy buildPolicy(Element policyDefinition) {
         
         try {
             
-            String policy = transformer.transform(policyDefinition, null);
-            InputStream inputStream = new ByteArrayInputStream(policy.getBytes());
+            XMLStreamReader reader = transformer.transform(policyDefinition, null);
+            StAXOMBuilder builder = new StAXOMBuilder(reader);
+            OMElement policyElement = builder.getDocumentElement();
             
-            return PolicyEngine.getPolicy(inputStream);
+            return PolicyEngine.getPolicy(policyElement);
             
         } catch(Exception e) {
             // TODO Handle execption properly
