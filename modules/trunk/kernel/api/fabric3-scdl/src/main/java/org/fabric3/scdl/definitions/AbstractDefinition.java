@@ -67,5 +67,10 @@ public abstract class AbstractDefinition extends ModelObject {
     public int hashCode() {
         return name.hashCode();
     }
+    
+    @Override
+    public String toString() {
+        return name.toString();
+    }
 
 }

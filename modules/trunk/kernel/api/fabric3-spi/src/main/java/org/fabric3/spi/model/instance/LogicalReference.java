@@ -22,6 +22,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
@@ -95,6 +96,34 @@ public class LogicalReference extends Bindable {
      */
     public void addPromotedUri(URI uri) {
         promoted.add(uri);
+    }
+
+    /**
+     * @return Intents declared on the SCA artifact.
+     */
+    public Set<QName> getIntents() {
+        return definition.getIntents();
+    }
+    
+    /**
+     * @param intents Intents declared on the SCA artifact.
+     */
+    public void setIntents(Set<QName> intents) {
+        definition.setIntents(intents);
+    }
+
+    /**
+     * @return Policy sets declared on the SCA artifact.
+     */
+    public Set<QName> getPolicySets() {
+        return definition.getPolicySets();
+    }
+
+    /**
+     * @param policySets Policy sets declared on the SCA artifact.
+     */
+    public void setPolicySets(Set<QName> policySets) {
+        definition.setPolicySets(policySets);
     }
     
 }

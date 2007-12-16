@@ -18,6 +18,8 @@
  */
 package org.fabric3.spi.model.instance;
 
+import java.util.Set;
+
 import javax.xml.namespace.QName;
 
 import org.fabric3.scdl.BindingDefinition;
@@ -50,6 +52,34 @@ public class LogicalBinding<BD extends BindingDefinition> extends LogicalScaArti
      */
     public BD getBinding() {
         return binding;
+    }
+
+    /**
+     * @return Intents declared on the SCA artifact.
+     */
+    public Set<QName> getIntents() {
+        return binding.getIntents();
+    }
+    
+    /**
+     * @param intents Intents declared on the SCA artifact.
+     */
+    public void setIntents(Set<QName> intents) {
+        binding.setIntents(intents);
+    }
+
+    /**
+     * @return Policy sets declared on the SCA artifact.
+     */
+    public Set<QName> getPolicySets() {
+        return binding.getPolicySets();
+    }
+
+    /**
+     * @param policySets Policy sets declared on the SCA artifact.
+     */
+    public void setPolicySets(Set<QName> policySets) {
+        binding.setPolicySets(policySets);
     }
     
 }

@@ -19,6 +19,7 @@
 package org.fabric3.spi.model.instance;
 
 import java.net.URI;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
@@ -73,6 +74,34 @@ public class LogicalResource<RD extends ResourceDefinition> extends LogicalScaAr
      */
     public void setTarget(URI target) {
         this.target = target;
+    }
+
+    /**
+     * @return Intents declared on the SCA artifact.
+     */
+    public Set<QName> getIntents() {
+        throw new UnsupportedOperationException();
+    }
+    
+    /**
+     * @param intents Intents declared on the SCA artifact.
+     */
+    public void setIntents(Set<QName> intents) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * @return Policy sets declared on the SCA artifact.
+     */
+    public Set<QName> getPolicySets() {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * @param policySets Policy sets declared on the SCA artifact.
+     */
+    public void setPolicySets(Set<QName> policySets) {
+        throw new UnsupportedOperationException();
     }
 
 }

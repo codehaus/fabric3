@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
@@ -49,7 +50,7 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
     private final Map<URI, LogicalComponent<?>> components = new HashMap<URI, LogicalComponent<?>>();
     private final Map<String, LogicalService> services = new HashMap<String, LogicalService>();
     private final Map<String, LogicalReference> references = new HashMap<String, LogicalReference>();
-    private final Map<String, LogicalResource> resources = new HashMap<String, LogicalResource>();
+    private final Map<String, LogicalResource<?>> resources = new HashMap<String, LogicalResource<?>>();
     private URI runtimeId;
     private boolean active;
     private Autowire autowire;
@@ -183,7 +184,7 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
      *
      * @return the resources required by the current component
      */
-    public Collection<LogicalResource> getResources() {
+    public Collection<LogicalResource<?>> getResources() {
         return Collections.unmodifiableCollection(resources.values());
     }
 
@@ -193,7 +194,7 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
      * @param name the resource name
      * @return the resource.
      */
-    public LogicalResource getResource(String name) {
+    public LogicalResource<?> getResource(String name) {
         return resources.get(name);
     }
 
@@ -202,7 +203,7 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
      *
      * @param resource the resource to add
      */
-    public void addResource(LogicalResource resource) {
+    public void addResource(LogicalResource<?> resource) {
         resources.put(resource.getUri().getFragment(), resource);
     }
 
@@ -299,6 +300,34 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
         }
         return level > 0;
         
+    }
+
+    /**
+     * @return Intents declared on the SCA artifact.
+     */
+    public Set<QName> getIntents() {
+        return definition.getIntents();
+    }
+    
+    /**
+     * @param intents Intents declared on the SCA artifact.
+     */
+    public void setIntents(Set<QName> intents) {
+        definition.setIntents(intents);
+    }
+
+    /**
+     * @return Policy sets declared on the SCA artifact.
+     */
+    public Set<QName> getPolicySets() {
+        return definition.getPolicySets();
+    }
+
+    /**
+     * @param policySets Policy sets declared on the SCA artifact.
+     */
+    public void setPolicySets(Set<QName> policySets) {
+        definition.setPolicySets(policySets);
     }
 
 }

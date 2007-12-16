@@ -140,7 +140,7 @@ public class DefaultPolicyResolver implements PolicyResolver {
      */
     public Set<PolicyResult> resolveInteractionIntents(LogicalBinding<?> logicalBinding, Operation<?> operation) throws PolicyResolutionException {
         
-        QName type = logicalBinding.getType();
+        QName type = logicalBinding.getBinding().getType();
         BindingType bindingType = definitionsRegistry.getDefinition(type, BindingType.class);
         
         Set<QName> alwaysProvidedIntents = new HashSet<QName>();
@@ -170,9 +170,9 @@ public class DefaultPolicyResolver implements PolicyResolver {
             }
         }
         
-        Set<PolicySet> policies = resolvePolicies(requiredIntents, logicalBinding);        
+        Set<PolicySet> policies = resolvePolicies(requiredIntents, logicalBinding.getParent());        
         if(requiredIntents.size() > 0) {
-            throw new PolicyResolutionException("Unable to resolve all intents", type);
+            throw new PolicyResolutionException("Unable to resolve all intents", requiredIntents);
         }
         
         return createResults(policies, PolicyPhase.WIRE_GENERATION);
@@ -219,7 +219,7 @@ public class DefaultPolicyResolver implements PolicyResolver {
         
         Set<PolicySet> policies = resolvePolicies(requiredIntents, logicalComponent);        
         if(requiredIntents.size() > 0) {
-            throw new PolicyResolutionException("Unable to resolve all intents", type);
+            throw new PolicyResolutionException("Unable to resolve all intents", requiredIntents);
         }
         
         return createResults(policies, PolicyPhase.CONSTRUCTION);

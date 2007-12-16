@@ -41,5 +41,10 @@ public class PolicyResolutionException extends Fabric3Exception {
     public PolicyResolutionException(String message, Object identifier) {
         super(message, identifier.toString());
     }
+
+    @Override
+    public String getMessage() {
+        return super.getMessage() + ":" + getIdentifier();
+    }
     
 }

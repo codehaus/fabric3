@@ -30,7 +30,7 @@ import javax.xml.namespace.QName;
  *
  * @version $Rev: 59 $ $Date: 2007-05-19 08:21:09 +0100 (Sat, 19 May 2007) $
  */
-public class Bindable extends LogicalScaArtifact<LogicalComponent<?>> {
+public abstract class Bindable extends LogicalScaArtifact<LogicalComponent<?>> {
     
     private final List<LogicalBinding<?>> bindings;
 

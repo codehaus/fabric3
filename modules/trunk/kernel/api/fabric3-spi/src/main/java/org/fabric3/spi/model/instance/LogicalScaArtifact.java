@@ -19,7 +19,6 @@
 package org.fabric3.spi.model.instance;
 
 import java.net.URI;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
@@ -29,10 +28,8 @@ import javax.xml.namespace.QName;
  *
  * @version $Revision$ $Date$
  */
-public class LogicalScaArtifact<P extends LogicalScaArtifact<?>> extends Referenceable {
-    
-    private Set<QName> intents = new HashSet<QName>();
-    private Set<QName> policySets = new HashSet<QName>();
+public abstract class LogicalScaArtifact<P extends LogicalScaArtifact<?>> extends Referenceable {
+
     private final P parent;
     private final QName type;
 
@@ -64,29 +61,21 @@ public class LogicalScaArtifact<P extends LogicalScaArtifact<?>> extends Referen
     /**
      * @return Intents declared on the SCA artifact.
      */
-    public final Set<QName> getIntents() {
-        return intents;
-    }
-
+    public abstract Set<QName> getIntents();
+    
     /**
      * @param intents Intents declared on the SCA artifact.
      */
-    public final void setIntents(Set<QName> intents) {
-        this.intents = intents;
-    }
+    public abstract void setIntents(Set<QName> intents);
 
     /**
      * @return Policy sets declared on the SCA artifact.
      */
-    public final Set<QName> getPolicySets() {
-        return policySets;
-    }
+    public abstract Set<QName> getPolicySets() ;
 
     /**
      * @param policySets Policy sets declared on the SCA artifact.
      */
-    public final void setPolicySets(Set<QName> policySets) {
-        this.policySets = policySets;
-    }
+    public abstract void setPolicySets(Set<QName> policySets) ;
     
 }
