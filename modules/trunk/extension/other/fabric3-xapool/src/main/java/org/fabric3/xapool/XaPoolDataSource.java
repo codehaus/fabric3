@@ -35,13 +35,13 @@ import org.osoa.sca.annotations.Reference;
  */
 @EagerInit
 public class XaPoolDataSource implements DataSource {
-    
+
     private String user;
     private String password;
     private String url;
     private String driver;
     private String dataSourceKey;
-    
+
     private StandardXADataSource delegate;
     private TransactionManager transactionManager;
     private DataSourceRegistry dataSourceRegistry;
@@ -65,7 +65,7 @@ public class XaPoolDataSource implements DataSource {
     public void setLogWriter(PrintWriter out) throws SQLException {
         delegate.setLogWriter(out);
     }
-    
+
     @Property
     public void setDataSourceKey(String dataSourceKey) {
         this.dataSourceKey = dataSourceKey;
@@ -105,19 +105,30 @@ public class XaPoolDataSource implements DataSource {
     public void setDataSourceRegistry(DataSourceRegistry dataSourceRegistry) {
         this.dataSourceRegistry = dataSourceRegistry;
     }
-    
+
     @Init
     public void start() throws SQLException {
-        
+
         delegate = new StandardXADataSource();
         delegate.setTransactionManager(transactionManager);
         delegate.setUrl(url);
         delegate.setDriverName(driver);
         delegate.setPassword(password);
         delegate.setUser(user);
-        
+
         dataSourceRegistry.registerDataSource(dataSourceKey, this);
-        
+
     }
+
+	public boolean isWrapperFor(Class<?> iface) throws SQLException {
+		//return getDelegate().isWrapperFor(iface);
+		throw new UnsupportedOperationException("isWrapperFor not supported");
+	}
+
+	public <T> T unwrap(Class<T> iface) throws SQLException {
+		//return unwrap(iface);
+		throw new UnsupportedOperationException("unwrap not supported");
+	}
+
 
 }
