@@ -20,7 +20,6 @@
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            name="Axis2TestComposite">
 
-    <!-- fabric3://./domain/EchoTest#service -->
     <component name="EchoTest">
         <f3:junit class="org.fabric3.tests.binding.axis2.Axis2EchoTest"/>
         <reference name="service">

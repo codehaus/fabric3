@@ -63,6 +63,11 @@
                             <version>0.4-SNAPSHOT</version>
                         </dependency>
                         <dependency>
+                            <groupId>org.codehaus.fabric3.tests </groupId>
+                            <artifactId>test-security-policy</artifactId>
+                            <version>0.1-SNAPSHOT</version>
+                        </dependency>
+                        <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-binding-ws-axis2</artifactId>
                             <version>0.2-SNAPSHOT</version>

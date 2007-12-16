@@ -20,6 +20,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.xml.stream.XMLOutputFactory;
+
 import org.apache.neethi.Policy;
 import org.fabric3.binding.ws.axis2.Axis2ServiceProvisioner;
 import org.fabric3.binding.ws.axis2.physical.Axis2WireSourceDefinition;
@@ -60,6 +62,7 @@ public class Axis2WireAttacher implements WireAttacher<Axis2WireSourceDefinition
                              @Reference Axis2PolicyBuilder policyBuilder) {
         this.serviceProvisioner = serviceProvisioner;
         this.wireAttacherRegistry = wireAttacherRegistry;
+        this.policyBuilder = policyBuilder;
     }
     
     /**

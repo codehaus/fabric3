@@ -80,8 +80,6 @@ public class DefaultDefinitionsRegistry implements DefinitionsRegistry {
         
         Map<QName, D> subCache = (Map<QName, D>) cache.get(definitionClass);
         subCache.put(definition.getName(), definition);
-        
-        subCache.put(definition.getName(), definition);
 
     }
 

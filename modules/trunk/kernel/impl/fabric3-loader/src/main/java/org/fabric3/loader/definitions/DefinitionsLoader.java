@@ -141,7 +141,7 @@ public class DefinitionsLoader implements XmlResourceElementLoader {
                         }
                     }
                     if (!found) {
-                        throw new ResourceElementNotFoundException("Definition not found", candidate.toString());
+                        throw new ResourceElementNotFoundException("Definition not found " + candidate.toString(), candidate.toString());
                     }
                 }
                 return;

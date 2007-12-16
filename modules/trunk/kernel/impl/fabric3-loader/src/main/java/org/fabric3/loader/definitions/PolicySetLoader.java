@@ -18,6 +18,9 @@
  */
 package org.fabric3.loader.definitions;
 
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -85,12 +88,27 @@ public class PolicySetLoader implements StAXElementLoader<PolicySet> {
         if (sPhase != null) {
             phase = PolicyPhase.valueOf(sPhase);
         }
+        
+        Element extension = null;
 
-        Element extension = loadExtension(reader);
+        while (true) {
+            switch (reader.next()) {
+            case START_ELEMENT:
+                try {
+                    extension = transformer.transform(reader, null).getDocumentElement();
+                } catch (Exception e) {
+                    throw new LoaderException(e);
+                }
+                break;
+            case END_ELEMENT:
+                QName qname = reader.getName();
+                if (qname.equals(DefinitionsLoader.POLICY_SET)) {
+                    return new PolicySet(qName, provides, appliesTo, extension, phase);
+                }
+            }
+        }
         
-        LoaderUtil.skipToEndElement(reader);
         
-        return new PolicySet(qName, provides, appliesTo, extension, phase);
         
     }
 

@@ -43,7 +43,7 @@ public class DefinitionsIndexerTestCase extends TestCase {
 
         List<ResourceElement<?, ?>> resourceElements = resource.getResourceElements();
         assertNotNull(resourceElements);
-        assertEquals(2, resourceElements.size());
+        assertEquals(4, resourceElements.size());
 
         ResourceElement<?, ?> intentResourceElement = resourceElements.get(0);
         QNameSymbol symbol = (QNameSymbol) intentResourceElement.getSymbol();
