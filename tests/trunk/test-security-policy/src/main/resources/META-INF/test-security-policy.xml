@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ASCII"?>
+<definitions 
+    xmlns="http://www.osoa.org/xmlns/sca/1.0" 
+    xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
+    targetNamespace="http://fabric3.org/xmlns/sca/2.0-alpha" 
+    xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+    xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+    xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+    
+    <policySet name="testServerPolicy" provides="sca:authentication.message" appliesTo="fabric3://./domain/EchoService#Axis2EchoService">
+        <wsp:Policy>
+            <sp:UsernameToken>
+                <wsp:Policy>
+                    <sp:WssUsernameToken11/>
+                </wsp:Policy>
+            </sp:UsernameToken>
+        </wsp:Policy>
+    </policySet>
+    
+    <policySet name="testClientPolicy" provides="sca:authentication.message" appliesTo="fabric3://./domain/EchoTest#service">
+        <wsp:Policy>
+            <sp:UsernameToken>
+                <wsp:Policy>
+                    <sp:WssUsernameToken11/>
+                </wsp:Policy>
+            </sp:UsernameToken>
+        </wsp:Policy>
+    </policySet>
+
+</definitions>
