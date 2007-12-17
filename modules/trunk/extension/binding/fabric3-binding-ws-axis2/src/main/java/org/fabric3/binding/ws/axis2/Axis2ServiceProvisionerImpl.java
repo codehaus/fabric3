@@ -25,6 +25,7 @@ import org.apache.axis2.Constants;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.axis2.deployment.util.Utils;
+import org.apache.axis2.description.AxisModule;
 import org.apache.axis2.description.AxisOperation;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.description.Parameter;
@@ -114,14 +115,17 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
             Parameter interfaceParameter = new Parameter(Constants.SERVICE_CLASS, serviceClass);
             axisService.addParameter(interfaceParameter);
             
-            // TODO Need to engage the modules globally
-            for (Element policyDefinition : pwsd.getPolicyDefinitions()) {
-                axisService.applyPolicy(policyBuilder.buildPolicy(policyDefinition));
-            }
-            
             setMessageReceivers(wire, axisService);
             
             configurationContext.getAxisConfiguration().addService(axisService);
+            
+            // TODO Need to engage the modules globally
+            AxisModule rampart = new AxisModule("rampart");
+            axisService.engageModule(rampart);
+            
+            for (Element policyDefinition : pwsd.getPolicyDefinitions()) {
+                axisService.applyPolicy(policyBuilder.buildPolicy(policyDefinition));
+            }
             
         } catch (Exception e) {
             throw new WiringException(e);

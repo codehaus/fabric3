@@ -26,6 +26,7 @@ import org.apache.axis2.Constants;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
+import org.apache.axis2.description.AxisModule;
 import org.apache.axis2.description.AxisService;
 import org.apache.neethi.Policy;
 import org.fabric3.binding.ws.axis2.physical.Axis2WireTargetDefinition;
@@ -89,6 +90,10 @@ public class Axis2TargetInterceptor implements Interceptor {
             
             // TODO Need to engage the modules globally
             AxisService axisService = sender.getAxisService();
+            
+            AxisModule rampart = new AxisModule("rampart");
+            axisService.engageModule(rampart);
+            
             for (Policy policy : policies) {
                 axisService.applyPolicy(policy);
             }
