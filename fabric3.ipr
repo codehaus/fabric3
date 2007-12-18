@@ -379,6 +379,7 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/webapp/fabric3-webapp-api/fabric3-webapp-api.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/webapp/fabric3-webapp-api/fabric3-webapp-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/webapp/fabric3-webapp-host/fabric3-webapp-host.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/webapp/fabric3-webapp-host/fabric3-webapp-host.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/plugin/fabric3-webapp-plugin/fabric3-webapp-plugin.iml" filepath="$PROJECT_DIR$/modules/trunk/plugin/fabric3-webapp-plugin/fabric3-webapp-plugin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-xapool/fabric3-xapool.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-xapool/fabric3-xapool.iml" />
       <module fileurl="file://$PROJECT_DIR$/parent-pom/trunk/parent-pom.iml" filepath="$PROJECT_DIR$/parent-pom/trunk/parent-pom.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/development/runtime-development/runtime-development.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/development/runtime-development/runtime-development.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/standalone/runtime-standalone/runtime-standalone.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/standalone/runtime-standalone/runtime-standalone.iml" />
@@ -388,7 +389,6 @@
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-cxf/test-binding-cxf.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-cxf/test-binding-cxf.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-hessian/test-binding-hessian.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-hessian/test-binding-hessian.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-jms/test-binding-jms.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-jms/test-binding-jms.iml" />
-      <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-db-extension/test-db-extension.iml" filepath="$PROJECT_DIR$/tests/trunk/test-db-extension/test-db-extension.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-function/test-function.iml" filepath="$PROJECT_DIR$/tests/trunk/test-function/test-function.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-groovy/test-groovy.iml" filepath="$PROJECT_DIR$/tests/trunk/test-groovy/test-groovy.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-interop-cxf-axis2/test-interop-cxf-axis2.iml" filepath="$PROJECT_DIR$/tests/trunk/test-interop-cxf-axis2/test-interop-cxf-axis2.iml" />

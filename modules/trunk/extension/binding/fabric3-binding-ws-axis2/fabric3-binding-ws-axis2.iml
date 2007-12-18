@@ -44,6 +44,17 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
+      <library name="commons-codec:commons-codec:1.2">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/commons-codec/commons-codec/1.2/commons-codec-1.2.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/commons-codec/commons-codec/1.2/commons-codec-1.2-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
       <library name="commons-fileupload:commons-fileupload:1.1.1">
         <CLASSES>
           <root url="jar://$M2_REPO$/commons-fileupload/commons-fileupload/1.1.1/commons-fileupload-1.1.1.jar!/" />
@@ -306,6 +317,7 @@
     <orderEntry type="module" module-name="fabric3-host-api" exported="" />
     <orderEntry type="module" module-name="fabric3-scdl" exported="" />
     <orderEntry type="module" module-name="fabric3-spi" exported="" />
+    <orderEntry type="module" module-name="fabric3-transform" exported="" />
     <orderEntry type="module-library" exported="">
       <library name="org.codehaus.woodstox:wstx-asl:3.2.1">
         <CLASSES>
