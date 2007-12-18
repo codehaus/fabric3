@@ -18,37 +18,35 @@
  */
 package org.fabric3.fabric.implementation.processor;
 
-import org.osoa.sca.annotations.Reference;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 import org.fabric3.api.annotation.Monitor;
-import org.fabric3.pojo.processor.AbstractPropertyProcessor;
-import org.fabric3.host.monitor.MonitorFactory;
-import org.fabric3.pojo.processor.ImplementationProcessorService;
-import org.fabric3.pojo.scdl.JavaMappedProperty;
+import org.fabric3.pojo.processor.ImplementationProcessorExtension;
+import org.fabric3.pojo.processor.ProcessingException;
+import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.spi.loader.LoaderContext;
 
 /**
- * Processes an {@link @Monitor} annotation, updating the component type with corresponding {@link
- * org.fabric3.pojo.scdl.JavaMappedProperty}
+ * Processes an {@link @Monitor} annotation}
  *
  * @version $Rev$ $Date$
  */
-public class MonitorProcessor extends AbstractPropertyProcessor<Monitor> {
-    private MonitorFactory monitorFactory;
-
-    public MonitorProcessor(@Reference MonitorFactory factory, @Reference ImplementationProcessorService service) {
-        super(Monitor.class, service);
-        this.monitorFactory = factory;
+public class MonitorProcessor extends ImplementationProcessorExtension {
+    public MonitorProcessor() {
     }
 
-    protected String getName(Monitor annotation) {
-        return null;
+    public void visitMethod(Method method, PojoComponentType type, LoaderContext context) throws ProcessingException {
+        Monitor annotation = method.getAnnotation(Monitor.class);
+        if (annotation == null) {
+            return;
+        }
     }
 
-    protected <T> void initProperty(JavaMappedProperty<T> property,
-                                    Monitor annotation,
-                                    LoaderContext context) {
-        Class<T> javaType = property.getJavaType();
+    public void visitField(Field field, PojoComponentType type, LoaderContext context) throws ProcessingException {
+        Monitor annotation = field.getAnnotation(Monitor.class);
+        if (annotation == null) {
+            return;
+        }
     }
-
 }
