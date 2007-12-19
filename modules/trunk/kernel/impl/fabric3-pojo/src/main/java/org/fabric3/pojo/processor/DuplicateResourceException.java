@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */ 
-package org.fabric3.resource.processor;
-
-import org.fabric3.pojo.processor.ProcessingException;
+package org.fabric3.pojo.processor;
 
 /**
  * Thrown when an implementation has more than one resource injection site with the same name

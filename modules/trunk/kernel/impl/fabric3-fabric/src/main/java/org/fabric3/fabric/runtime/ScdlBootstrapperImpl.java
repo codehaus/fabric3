@@ -64,7 +64,7 @@ import org.fabric3.fabric.implementation.processor.EagerInitProcessor;
 import org.fabric3.fabric.implementation.processor.HeuristicPojoProcessor;
 import org.fabric3.fabric.implementation.processor.ImplementationProcessorServiceImpl;
 import org.fabric3.fabric.implementation.processor.InitProcessor;
-import org.fabric3.fabric.implementation.processor.MonitorProcessor;
+import org.fabric3.fabric.monitor.MonitorProcessor;
 import org.fabric3.fabric.implementation.processor.PostConstructProcessor;
 import org.fabric3.fabric.implementation.processor.PreDestroyProcessor;
 import org.fabric3.fabric.implementation.processor.PropertyProcessor;

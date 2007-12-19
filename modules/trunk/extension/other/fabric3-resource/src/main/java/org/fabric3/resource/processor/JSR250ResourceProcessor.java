@@ -24,6 +24,7 @@ import java.lang.reflect.Method;
 
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.processor.ProcessingException;
+import org.fabric3.pojo.processor.DuplicateResourceException;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.resource.model.SystemSourcedResource;
 import org.fabric3.spi.idl.InvalidServiceContractException;

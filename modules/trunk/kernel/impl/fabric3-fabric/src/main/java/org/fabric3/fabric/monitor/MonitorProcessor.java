@@ -16,13 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.implementation.processor;
+package org.fabric3.fabric.monitor;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 
 import org.fabric3.api.annotation.Monitor;
+import org.fabric3.pojo.processor.DuplicateResourceException;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
+import org.fabric3.pojo.processor.InvalidSetterException;
+import static org.fabric3.pojo.processor.JavaIntrospectionHelper.toPropertyName;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.spi.loader.LoaderContext;
@@ -41,6 +45,19 @@ public class MonitorProcessor extends ImplementationProcessorExtension {
         if (annotation == null) {
             return;
         }
+        if (method.getParameterTypes().length != 1) {
+            throw new InvalidSetterException(method);
+        }
+
+        Class<?> resourceType = method.getParameterTypes()[0];
+
+        String name = toPropertyName(method.getName());
+        if (type.getResources().get(name) != null) {
+            throw new DuplicateResourceException(name);
+        }
+
+        MonitorResource<?> resource = createResource(name, resourceType, method);
+        type.add(resource);
     }
 
     public void visitField(Field field, PojoComponentType type, LoaderContext context) throws ProcessingException {
@@ -48,5 +65,18 @@ public class MonitorProcessor extends ImplementationProcessorExtension {
         if (annotation == null) {
             return;
         }
+
+        Class<?> resourceType = field.getType();
+        String name = field.getName();
+        if (type.getResources().get(name) != null) {
+            throw new DuplicateResourceException(name);
+        }
+
+        MonitorResource<?> resource = createResource(name, resourceType, field);
+        type.add(resource);
+    }
+
+    private <T> MonitorResource<T> createResource(String name, Class<T> type, Member member) {
+        return new MonitorResource<T>(name, type, member, false, null);
     }
 }
