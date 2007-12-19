@@ -22,6 +22,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.pojo.processor.DuplicateResourceException;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
@@ -29,6 +31,9 @@ import org.fabric3.pojo.processor.InvalidSetterException;
 import static org.fabric3.pojo.processor.JavaIntrospectionHelper.toPropertyName;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
+import org.fabric3.spi.idl.java.JavaServiceContract;
+import org.fabric3.spi.idl.InvalidServiceContractException;
 import org.fabric3.spi.loader.LoaderContext;
 
 /**
@@ -37,7 +42,10 @@ import org.fabric3.spi.loader.LoaderContext;
  * @version $Rev$ $Date$
  */
 public class MonitorProcessor extends ImplementationProcessorExtension {
-    public MonitorProcessor() {
+    private final JavaInterfaceProcessorRegistry interfaceProcessorRegistry;
+
+    public MonitorProcessor(@Reference(name="regsitry") JavaInterfaceProcessorRegistry interfaceProcessorRegistry) {
+        this.interfaceProcessorRegistry = interfaceProcessorRegistry;
     }
 
     public void visitMethod(Method method, PojoComponentType type, LoaderContext context) throws ProcessingException {
@@ -76,7 +84,12 @@ public class MonitorProcessor extends ImplementationProcessorExtension {
         type.add(resource);
     }
 
-    private <T> MonitorResource<T> createResource(String name, Class<T> type, Member member) {
-        return new MonitorResource<T>(name, type, member, false, null);
+    private <T> MonitorResource<T> createResource(String name, Class<T> type, Member member) throws ProcessingException {
+        try {
+            JavaServiceContract serviceContract = interfaceProcessorRegistry.introspect(type);
+            return new MonitorResource<T>(name, type, member, false, serviceContract);
+        } catch (InvalidServiceContractException e) {
+            throw new ProcessingException(e);
+        }
     }
 }

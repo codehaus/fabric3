@@ -464,7 +464,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         introspectionRegistry.registerProcessor(new ReferenceProcessor(registry));
         introspectionRegistry.registerProcessor(new ServiceProcessor(service));
         introspectionRegistry.registerProcessor(new HeuristicPojoProcessor(service, interfaceProcessorRegistry));
-        introspectionRegistry.registerProcessor(new MonitorProcessor());
+        introspectionRegistry.registerProcessor(new MonitorProcessor(interfaceProcessorRegistry));
         
         return introspectionRegistry;
         
