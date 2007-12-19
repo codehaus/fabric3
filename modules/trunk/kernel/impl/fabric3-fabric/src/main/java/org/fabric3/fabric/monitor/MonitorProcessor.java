@@ -44,7 +44,7 @@ import org.fabric3.spi.loader.LoaderContext;
 public class MonitorProcessor extends ImplementationProcessorExtension {
     private final JavaInterfaceProcessorRegistry interfaceProcessorRegistry;
 
-    public MonitorProcessor(@Reference(name="regsitry") JavaInterfaceProcessorRegistry interfaceProcessorRegistry) {
+    public MonitorProcessor(@Reference(name="registry") JavaInterfaceProcessorRegistry interfaceProcessorRegistry) {
         this.interfaceProcessorRegistry = interfaceProcessorRegistry;
     }
 
