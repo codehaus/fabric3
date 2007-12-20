@@ -9,9 +9,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" isTestSource="true" />
-      <excludeFolder url="file://$MODULE_DIR$/target/classes" />
-      <excludeFolder url="file://$MODULE_DIR$/target/surefire-reports" />
-      <excludeFolder url="file://$MODULE_DIR$/target/test-classes" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -20,8 +17,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/bouncycastle/bcprov-jdk14/124/bcprov-jdk14-124.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/bouncycastle/bcprov-jdk14/124/bcprov-jdk14-124-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/bouncycastle/bcprov-jdk14/124/bcprov-jdk14-124-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -29,7 +30,9 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/cglib/cglib-nodep/2.1_3/cglib-nodep-2.1_3.jar!/" />
         </CLASSES>
-        <JAVADOC />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/cglib/cglib-nodep/2.1_3/cglib-nodep-2.1_3-javadoc.jar!/" />
+        </JAVADOC>
         <SOURCES>
           <root url="jar://$M2_REPO$/cglib/cglib-nodep/2.1_3/cglib-nodep-2.1_3-sources.jar!/" />
         </SOURCES>
@@ -53,7 +56,9 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/log4j/log4j/1.2.13/log4j-1.2.13.jar!/" />
         </CLASSES>
-        <JAVADOC />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/log4j/log4j/1.2.13/log4j-1.2.13-javadoc.jar!/" />
+        </JAVADOC>
         <SOURCES>
           <root url="jar://$M2_REPO$/log4j/log4j/1.2.13/log4j-1.2.13-sources.jar!/" />
         </SOURCES>
@@ -78,8 +83,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/woodstox/wstx-asl/3.2.0/wstx-asl-3.2.0.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/codehaus/woodstox/wstx-asl/3.2.0/wstx-asl-3.2.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/codehaus/woodstox/wstx-asl/3.2.0/wstx-asl-3.2.0-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -87,7 +96,9 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/easymock/easymock/2.2/easymock-2.2.jar!/" />
         </CLASSES>
-        <JAVADOC />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/easymock/easymock/2.2/easymock-2.2-javadoc.jar!/" />
+        </JAVADOC>
         <SOURCES>
           <root url="jar://$M2_REPO$/org/easymock/easymock/2.2/easymock-2.2-sources.jar!/" />
         </SOURCES>
@@ -111,8 +122,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/jxta/platform/jxta/2.4.1/jxta-2.4.1.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/jxta/platform/jxta/2.4.1/jxta-2.4.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/jxta/platform/jxta/2.4.1/jxta-2.4.1-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -120,8 +135,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/stax/stax-api/1.0.1/stax-api-1.0.1.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/stax/stax-api/1.0.1/stax-api-1.0.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/stax/stax-api/1.0.1/stax-api-1.0.1-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntryProperties />

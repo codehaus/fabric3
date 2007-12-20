@@ -9,9 +9,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" isTestSource="true" />
-      <excludeFolder url="file://$MODULE_DIR$/target/classes" />
-      <excludeFolder url="file://$MODULE_DIR$/target/surefire-reports" />
-      <excludeFolder url="file://$MODULE_DIR$/target/test-classes" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -20,8 +17,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/classworlds/classworlds/1.1/classworlds-1.1.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/classworlds/classworlds/1.1/classworlds-1.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/classworlds/classworlds/1.1/classworlds-1.1-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -29,8 +30,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/com/jcraft/jsch/0.1.24/jsch-0.1.24.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/com/jcraft/jsch/0.1.24/jsch-0.1.24-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/com/jcraft/jsch/0.1.24/jsch-0.1.24-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -177,19 +182,6 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="org.apache.maven.wagon:wagon-ssh:1.0-alpha-7">
-        <CLASSES>
-          <root url="jar://$M2_REPO$/org/apache/maven/wagon/wagon-ssh/1.0-alpha-7/wagon-ssh-1.0-alpha-7.jar!/" />
-        </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/maven/wagon/wagon-ssh/1.0-alpha-7/wagon-ssh-1.0-alpha-7-javadoc.jar!/" />
-        </JAVADOC>
-        <SOURCES>
-          <root url="jar://$M2_REPO$/org/apache/maven/wagon/wagon-ssh/1.0-alpha-7/wagon-ssh-1.0-alpha-7-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" exported="">
       <library name="org.apache.maven.wagon:wagon-ssh-external:1.0-alpha-6">
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/maven/wagon/wagon-ssh-external/1.0-alpha-6/wagon-ssh-external-1.0-alpha-6.jar!/" />
@@ -203,15 +195,15 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="org.apache.maven:maven-artifact:2.0.4">
+      <library name="org.apache.maven.wagon:wagon-ssh:1.0-alpha-7">
         <CLASSES>
-          <root url="jar://$M2_REPO$/org/apache/maven/maven-artifact/2.0.4/maven-artifact-2.0.4.jar!/" />
+          <root url="jar://$M2_REPO$/org/apache/maven/wagon/wagon-ssh/1.0-alpha-7/wagon-ssh-1.0-alpha-7.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar://$M2_REPO$/org/apache/maven/maven-artifact/2.0.4/maven-artifact-2.0.4-javadoc.jar!/" />
+          <root url="jar://$M2_REPO$/org/apache/maven/wagon/wagon-ssh/1.0-alpha-7/wagon-ssh-1.0-alpha-7-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar://$M2_REPO$/org/apache/maven/maven-artifact/2.0.4/maven-artifact-2.0.4-sources.jar!/" />
+          <root url="jar://$M2_REPO$/org/apache/maven/wagon/wagon-ssh/1.0-alpha-7/wagon-ssh-1.0-alpha-7-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
@@ -225,6 +217,19 @@
         </JAVADOC>
         <SOURCES>
           <root url="jar://$M2_REPO$/org/apache/maven/maven-artifact-manager/2.0.4/maven-artifact-manager-2.0.4-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.apache.maven:maven-artifact:2.0.4">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/apache/maven/maven-artifact/2.0.4/maven-artifact-2.0.4.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/apache/maven/maven-artifact/2.0.4/maven-artifact-2.0.4-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/apache/maven/maven-artifact/2.0.4/maven-artifact-2.0.4-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
@@ -431,8 +436,8 @@
     <orderEntry type="module" module-name="fabric3-maven-api" exported="" />
     <orderEntry type="module" module-name="fabric3-monitor" exported="" />
     <orderEntry type="module" module-name="fabric3-pojo" exported="" />
-    <orderEntry type="module" module-name="fabric3-policy" exported="" />
     <orderEntry type="module" module-name="fabric3-policy-spi" exported="" />
+    <orderEntry type="module" module-name="fabric3-policy" exported="" />
     <orderEntry type="module" module-name="fabric3-scdl" exported="" />
     <orderEntry type="module" module-name="fabric3-spi" exported="" />
     <orderEntry type="module" module-name="fabric3-transform" exported="" />
@@ -454,7 +459,9 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/plexus/plexus-interactivity-api/1.0-alpha-4/plexus-interactivity-api-1.0-alpha-4.jar!/" />
         </CLASSES>
-        <JAVADOC />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/codehaus/plexus/plexus-interactivity-api/1.0-alpha-4/plexus-interactivity-api-1.0-alpha-4-javadoc.jar!/" />
+        </JAVADOC>
         <SOURCES>
           <root url="jar://$M2_REPO$/org/codehaus/plexus/plexus-interactivity-api/1.0-alpha-4/plexus-interactivity-api-1.0-alpha-4-sources.jar!/" />
         </SOURCES>
@@ -478,7 +485,9 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/easymock/easymock/2.2/easymock-2.2.jar!/" />
         </CLASSES>
-        <JAVADOC />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/easymock/easymock/2.2/easymock-2.2-javadoc.jar!/" />
+        </JAVADOC>
         <SOURCES>
           <root url="jar://$M2_REPO$/org/easymock/easymock/2.2/easymock-2.2-sources.jar!/" />
         </SOURCES>
@@ -489,8 +498,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/stax/stax-api/1.0/stax-api-1.0.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/stax/stax-api/1.0/stax-api-1.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/stax/stax-api/1.0/stax-api-1.0-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -498,8 +511,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/xpp3/xpp3_min/1.1.3.4.O/xpp3_min-1.1.3.4.O.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/xpp3/xpp3_min/1.1.3.4.O/xpp3_min-1.1.3.4.O-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/xpp3/xpp3_min/1.1.3.4.O/xpp3_min-1.1.3.4.O-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntryProperties />

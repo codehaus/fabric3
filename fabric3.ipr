@@ -113,11 +113,7 @@
             </files>
           </module>
           <module name="test-runtime-tomcat" />
-          <module name="test-runtime-jetty">
-            <files>
-              <file url="file://$PROJECT_DIR$/tests/trunk/test-runtime-jetty/src/main/webapp/WEB-INF/web.xml" />
-            </files>
-          </module>
+          <module name="test-runtime-jetty" />
         </modules>
       </facet-type>
     </autodetection-disabled>
@@ -369,6 +365,7 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-resource/fabric3-resource.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-resource/fabric3-resource.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-scdl/fabric3-scdl.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-scdl/fabric3-scdl.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-spi/fabric3-spi.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-spi/fabric3-spi.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-spring/fabric3-spring.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-spring/fabric3-spring.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-api/fabric3-standalone-api.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-api/fabric3-standalone-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-host/fabric3-standalone-host.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-host/fabric3-standalone-host.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-server/fabric3-standalone-server.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-server/fabric3-standalone-server.iml" />

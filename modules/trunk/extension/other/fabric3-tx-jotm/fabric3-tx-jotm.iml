@@ -9,8 +9,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" isTestSource="true" />
-      <excludeFolder url="file://$MODULE_DIR$/target/classes" />
-      <excludeFolder url="file://$MODULE_DIR$/target/test-classes" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -22,7 +20,9 @@
         <JAVADOC>
           <root url="jar://$M2_REPO$/commons-logging/commons-logging/1.0.3/commons-logging-1.0.3-javadoc.jar!/" />
         </JAVADOC>
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$M2_REPO$/commons-logging/commons-logging/1.0.3/commons-logging-1.0.3-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -30,8 +30,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/geronimo-spec/geronimo-spec-j2ee-connector/1.5-rc4/geronimo-spec-j2ee-connector-1.5-rc4.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/geronimo-spec/geronimo-spec-j2ee-connector/1.5-rc4/geronimo-spec-j2ee-connector-1.5-rc4-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/geronimo-spec/geronimo-spec-j2ee-connector/1.5-rc4/geronimo-spec-j2ee-connector-1.5-rc4-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -39,8 +43,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/geronimo-spec/geronimo-spec-jta/1.0.1B-rc4/geronimo-spec-jta-1.0.1B-rc4.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/geronimo-spec/geronimo-spec-jta/1.0.1B-rc4/geronimo-spec-jta-1.0.1B-rc4-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/geronimo-spec/geronimo-spec-jta/1.0.1B-rc4/geronimo-spec-jta-1.0.1B-rc4-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -48,8 +56,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/howl/howl-logger/0.1.11/howl-logger-0.1.11.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/howl/howl-logger/0.1.11/howl-logger-0.1.11-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/howl/howl-logger/0.1.11/howl-logger-0.1.11-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -57,8 +69,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/jotm/jotm/2.0.10/jotm-2.0.10.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/jotm/jotm/2.0.10/jotm-2.0.10-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/jotm/jotm/2.0.10/jotm-2.0.10-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -66,8 +82,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/jotm/jotm_jrmp_stubs/2.0.10/jotm_jrmp_stubs-2.0.10.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/jotm/jotm_jrmp_stubs/2.0.10/jotm_jrmp_stubs-2.0.10-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/jotm/jotm_jrmp_stubs/2.0.10/jotm_jrmp_stubs-2.0.10-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -88,8 +108,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/log4j/log4j/1.2.6/log4j-1.2.6.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/log4j/log4j/1.2.6/log4j-1.2.6-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/log4j/log4j/1.2.6/log4j-1.2.6-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -175,8 +199,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/org/objectweb/carol/carol/2.0.5/carol-2.0.5.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/objectweb/carol/carol/2.0.5/carol-2.0.5-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/objectweb/carol/carol/2.0.5/carol-2.0.5-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
@@ -184,8 +212,12 @@
         <CLASSES>
           <root url="jar://$M2_REPO$/stax/stax-api/1.0/stax-api-1.0.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/stax/stax-api/1.0/stax-api-1.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/stax/stax-api/1.0/stax-api-1.0-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntryProperties />
