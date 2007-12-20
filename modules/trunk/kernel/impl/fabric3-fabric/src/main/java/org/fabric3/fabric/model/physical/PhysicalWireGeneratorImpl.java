@@ -79,7 +79,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         // Generates the target side of the wire
         ResourceWireGenerator targetGenerator = 
             generatorRegistry.getResourceWireGenerator(resource.getResourceDefinition().getClass());
-        PhysicalWireTargetDefinition pwtd = targetGenerator.genearteWireTargetDefinition(resource, context);
+        PhysicalWireTargetDefinition pwtd = targetGenerator.generateWireTargetDefinition(resource, context);
         pwsd.setOptimizable(pwtd.getUri() != null);
 
         // Create the wire from the component to the resource

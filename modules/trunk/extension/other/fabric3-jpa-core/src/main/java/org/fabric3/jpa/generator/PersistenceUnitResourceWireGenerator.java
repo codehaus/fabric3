@@ -69,7 +69,7 @@ public class PersistenceUnitResourceWireGenerator implements ResourceWireGenerat
     /**
      * @see org.fabric3.spi.generator.ResourceWireGenerator#genearteWireTargetDefinition(org.fabric3.spi.model.instance.LogicalResource)
      */
-    public PersistenceUnitWireTargetDefinition genearteWireTargetDefinition(LogicalResource<PersistenceUnitResource> logicalResource,
+    public PersistenceUnitWireTargetDefinition generateWireTargetDefinition(LogicalResource<PersistenceUnitResource> logicalResource,
                                                                             GeneratorContext context) throws GenerationException {
         
         URI classLoaderUri = classLoaderGenerator.generate(logicalResource, context);

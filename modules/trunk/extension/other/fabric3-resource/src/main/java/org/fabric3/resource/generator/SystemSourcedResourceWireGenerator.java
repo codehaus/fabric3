@@ -59,7 +59,7 @@ public class SystemSourcedResourceWireGenerator implements ResourceWireGenerator
         registry.register(SystemSourcedResource.class, this);
     }
 
-    public SystemSourcedWireTargetDefinition genearteWireTargetDefinition(LogicalResource<SystemSourcedResource> logicalResource,
+    public SystemSourcedWireTargetDefinition generateWireTargetDefinition(LogicalResource<SystemSourcedResource> logicalResource,
                                                                           GeneratorContext context)
             throws GenerationException {
 

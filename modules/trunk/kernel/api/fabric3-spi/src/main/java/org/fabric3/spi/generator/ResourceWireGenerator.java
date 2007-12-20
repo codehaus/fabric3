@@ -24,17 +24,19 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 
 /**
  * Wire generator for resources.
- * 
+ *
  * @version $Revision$ $Date$
  */
 public interface ResourceWireGenerator<PWTD extends PhysicalWireTargetDefinition, RD extends ResourceDefinition> {
-    
+
     /**
      * Generate the target wire definition for logical resource.
-     * 
-     * @param logicalResource Logical resource.
+     *
+     * @param logicalResource the resource being wired to
+     * @param context         the current generator context
      * @return Source wire definition.
+     * @throws GenerationException if there was a problem generating the wire
      */
-    PWTD genearteWireTargetDefinition(LogicalResource<RD> logicalResource, GeneratorContext context) throws GenerationException;
+    PWTD generateWireTargetDefinition(LogicalResource<RD> logicalResource, GeneratorContext context) throws GenerationException;
 
 }
