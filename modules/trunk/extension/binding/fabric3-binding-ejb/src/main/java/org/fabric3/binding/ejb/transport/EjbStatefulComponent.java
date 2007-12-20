@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.osoa.sca.ComponentContext;
 
-import org.fabric3.host.Fabric3RuntimeException;
 import org.fabric3.scdl.PropertyValue;
 import org.fabric3.spi.AbstractLifecycle;
 import org.fabric3.spi.ObjectCreationException;
@@ -55,6 +54,10 @@ public class EjbStatefulComponent extends AbstractLifecycle implements AtomicCom
                 return new EjbStatefulInstanceWrapper();
             }
         };
+    }
+
+    public ObjectFactory createObjectFactory(Class type, String serviceName) throws ObjectCreationException {
+        throw new UnsupportedOperationException();
     }
 
     public URI getUri() {

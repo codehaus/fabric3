@@ -53,7 +53,7 @@ public class SpringTargetInterceptor implements Interceptor {
     public Message invoke(Message message) {
         Object bean = null;
         try {
-            bean = springComponent.getObjectFactory().getInstance();
+            bean = springComponent.createObjectFactory().getInstance();
         } catch (ObjectCreationException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

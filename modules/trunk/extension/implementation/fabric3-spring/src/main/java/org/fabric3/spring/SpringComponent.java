@@ -62,8 +62,8 @@ public class SpringComponent<T> extends AbstractLifecycle implements AtomicCompo
         return objectFactory;
     }
 
-    public ObjectFactory<T> getObjectFactory() {
-        return objectFactory;
+    public <R> ObjectFactory<R> createObjectFactory(Class<R> type, String serviceName) throws ObjectCreationException {
+        throw new UnsupportedOperationException();
     }
 
     public InstanceWrapper<T> createInstanceWrapper(WorkContext workContext) throws ObjectCreationException {

@@ -117,6 +117,10 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
         return new ComponentObjectFactory(this, scopeContainer);
     }
 
+    public <R> ObjectFactory<R> createObjectFactory(Class<R> type, String serviceName) throws ObjectCreationException {
+        throw new UnsupportedOperationException();
+    }
+
     public ComponentContext getComponentContext() {
         return null;
     }
@@ -157,7 +161,7 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
      * 
      * @param referenceSource Reference source.
      * @param objectFactory Object factory.
-     * @param target Target component.
+     * @param key key value for a Map reference
      */
     public void attachReferenceToTarget(ValueSource referenceSource, ObjectFactory<?> objectFactory, Object key) {
         

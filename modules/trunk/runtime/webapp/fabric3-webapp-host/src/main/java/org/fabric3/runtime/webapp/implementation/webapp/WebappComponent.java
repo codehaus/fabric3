@@ -173,6 +173,10 @@ public class WebappComponent<T> extends AbstractLifecycle implements AtomicCompo
         throw new UnsupportedOperationException();
     }
 
+    public <R> ObjectFactory<R> createObjectFactory(Class<R> type, String serviceName) throws ObjectCreationException {
+        throw new UnsupportedOperationException();
+    }
+
     public ComponentContext getComponentContext() {
         return context;
     }

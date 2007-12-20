@@ -90,6 +90,10 @@ public class SingletonComponent<T> extends AbstractLifecycle implements AtomicCo
         return new SingletonObjectFactory<T>(instance);
     }
 
+    public <R> ObjectFactory<R> createObjectFactory(Class<R> type, String serviceName) throws ObjectCreationException {
+        throw new UnsupportedOperationException();
+    }
+
     public ComponentContext getComponentContext() {
         // singleton components do not give out a component context
         return null;
