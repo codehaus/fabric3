@@ -22,6 +22,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.maven.surefire.testset.TestSetFailedException;
 
+import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Operation;
@@ -42,6 +43,16 @@ public interface MavenEmbeddedRuntime extends Fabric3Runtime<MavenHostInfo> {
      * @throws Exception if an error ocurrs
      */
     Composite activate(URL base, QName composite) throws Exception;
+
+    /**
+     * Activates a composite by qualified name contained in the contribution source.
+     *
+     * @param source the source of the contribution
+     * @param composite the composite qname to activate
+     * @return the activated composite's component type
+     * @throws Exception if an error ocurrs
+     */
+    Composite activate(ContributionSource source, QName composite) throws Exception;
 
     /**
      * Activates a composite pointed to by the SCDL location.

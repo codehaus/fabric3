@@ -39,6 +39,7 @@ import static org.fabric3.fabric.runtime.ComponentNames.XML_FACTORY_URI;
 import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
+import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.java.JavaComponent;
 import org.fabric3.maven.contribution.ModuleContributionSource;
 import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
@@ -74,14 +75,22 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
 
     public Composite activate(URL url, QName qName) throws CompositeActivationException {
         try {
+            URI contributionUri = URI.create(qName.getLocalPart());
+            ModuleContributionSource source =
+                    new ModuleContributionSource(contributionUri, FileHelper.toFile(url).toString());
+            return activate(source, qName);
+        } catch (MalformedURLException e) {
+            String identifier = url.toString();
+            throw new CompositeActivationException("Invalid project directory [" + identifier + "]", identifier, e);
+        }
+    }
+
+    public Composite activate(ContributionSource source, QName qName) throws CompositeActivationException {
+        try {
             // contribute the Maven project to the application domain
             Assembly assembly = getSystemComponent(Assembly.class, DISTRIBUTED_ASSEMBLY_URI);
             ContributionService contributionService =
                     getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
-
-            URI contributionUri = URI.create(qName.getLocalPart());
-            ModuleContributionSource source =
-                    new ModuleContributionSource(contributionUri, FileHelper.toFile(url).toString());
             contributionService.contribute(source);
             // activate the deployable composite in the domain
             assembly.includeInDomain(qName);
@@ -89,9 +98,6 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
             ResourceElement<?, ?> element = store.resolve(new QNameSymbol(qName));
             assert element != null;
             return (Composite) element.getValue();
-        } catch (MalformedURLException e) {
-            String identifier = url.toString();
-            throw new CompositeActivationException("Invalid project directory [" + identifier + "]", identifier, e);
         } catch (ContributionException e) {
             throw new CompositeActivationException("Error processing project", e);
         } catch (ActivateException e) {
