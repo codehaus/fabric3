@@ -164,7 +164,7 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
         workContext.setScopeIdentifier(Scope.COMPOSITE, parent);
         PojoWorkContextTunnel.setThreadWorkContext(workContext);
 
-        // FIXME we should get the InstanceWrapper from the composite scope container and then get the instance from it
+        // FIXME FABRICTHREE-152 we should get the InstanceWrapper from the composite scope container and then get the instance from it
         try {
             return service.cast(component.createObjectFactory().getInstance());
         } catch (ObjectCreationException e) {
