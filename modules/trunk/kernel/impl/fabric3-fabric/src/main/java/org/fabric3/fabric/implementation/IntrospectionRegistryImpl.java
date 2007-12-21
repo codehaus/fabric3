@@ -53,7 +53,7 @@ public class IntrospectionRegistryImpl implements IntrospectionRegistry {
         this.monitor = monitor;
     }
 
-    @org.fabric3.api.annotation.Monitor
+//    @org.fabric3.api.annotation.Monitor
     public void setMonitor(Monitor monitor) {
         this.monitor = monitor;
     }
