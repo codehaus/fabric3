@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -110,7 +111,7 @@ public class PhysicalChangeSet extends ModelObject {
         Class<D> type = (Class<D>) definition.getClass();
         Map<URI, D> map = (Map<URI, D>) resourceDefinitions.get(type);
         if (map == null) {
-            map = new HashMap<URI, D>();
+            map = new LinkedHashMap<URI, D>();
             resourceDefinitions.put(type, map);
         }
         map.put(definition.getUri(), definition);
