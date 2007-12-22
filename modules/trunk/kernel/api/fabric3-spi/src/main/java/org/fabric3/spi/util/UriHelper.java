@@ -52,7 +52,7 @@ public final class UriHelper {
         if (pos > -1) {
             return s.substring(0, pos);
         } else {
-            return "";
+            return null;
         }
     }
 
