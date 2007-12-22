@@ -96,6 +96,7 @@ import org.fabric3.fabric.model.physical.PhysicalPolicyGenerator;
 import org.fabric3.fabric.model.physical.PhysicalPolicyGeneratorImpl;
 import org.fabric3.fabric.model.physical.PhysicalWireGenerator;
 import org.fabric3.fabric.model.physical.PhysicalWireGeneratorImpl;
+import org.fabric3.fabric.monitor.MonitorProcessor;
 import static org.fabric3.fabric.runtime.ComponentNames.APPLICATION_CLASSLOADER_ID;
 import static org.fabric3.fabric.runtime.ComponentNames.BOOT_CLASSLOADER_ID;
 import static org.fabric3.fabric.runtime.ComponentNames.CLASSLOADER_REGISTRY_URI;
@@ -116,7 +117,7 @@ import org.fabric3.fabric.services.contribution.FileSystemResolver;
 import org.fabric3.fabric.services.contribution.MetaDataStoreImpl;
 import org.fabric3.fabric.services.contribution.ProcessorRegistryImpl;
 import org.fabric3.fabric.services.contribution.processor.JarClasspathProcessor;
-import org.fabric3.fabric.services.discovery.NullDiscoveryService;
+import org.fabric3.fabric.services.discovery.SingleVMDiscoveryService;
 import org.fabric3.fabric.services.factories.xml.XMLFactoryImpl;
 import org.fabric3.fabric.services.instancefactory.BuildHelperImpl;
 import org.fabric3.fabric.services.instancefactory.DefaultInstanceFactoryBuilderRegistry;
@@ -515,7 +516,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     private GeneratorRegistry createGeneratorRegistry() {
         GeneratorRegistryImpl registry = new GeneratorRegistryImpl();
         RuntimeInfoService infoService = new BootstrapRuntimeInfoService(classLoaderRegistry);
-        DiscoveryService discoveryService = new NullDiscoveryService(infoService);
+        DiscoveryService discoveryService = new SingleVMDiscoveryService(infoService);
         GenerationHelperImpl helper = new GenerationHelperImpl();
         new SystemComponentGenerator(registry, new ClassLoaderGeneratorImpl(discoveryService), helper);
         new SingletonGenerator(registry);

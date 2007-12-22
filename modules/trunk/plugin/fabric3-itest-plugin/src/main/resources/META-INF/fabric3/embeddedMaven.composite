@@ -69,7 +69,7 @@
     <include name="org.fabric3.fabric.Deployment" scdlResource="org/fabric3/fabric/deployment.composite"/>
 
     <include name="org.fabric3.fabric.FileSystemResolver" scdlResource="org/fabric3/fabric/fileSystemResolver.composite"/>
-    
+
     <!-- include transform configuration -->
     <include name="org.fabric3.transform.Transform" scdlResource="org/fabric3/transform/transform.composite"/>
 
@@ -86,7 +86,7 @@
     </component>
 
     <component name="DiscoveryService">
-        <system:implementation.system class="org.fabric3.fabric.services.discovery.NullDiscoveryService"/>
+        <system:implementation.system class="org.fabric3.fabric.services.discovery.SingleVMDiscoveryService"/>
     </component>
 
     <component name="MessageDestinationService">

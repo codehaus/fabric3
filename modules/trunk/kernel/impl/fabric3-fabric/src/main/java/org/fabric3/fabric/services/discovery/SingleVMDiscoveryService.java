@@ -30,10 +30,10 @@ import org.fabric3.spi.services.runtime.RuntimeInfoService;
  *
  * @version $Rev$ $Date$
  */
-public class NullDiscoveryService implements DiscoveryService {
+public class SingleVMDiscoveryService implements DiscoveryService {
     private RuntimeInfoService service;
 
-    public NullDiscoveryService(@Reference RuntimeInfoService service) {
+    public SingleVMDiscoveryService(@Reference RuntimeInfoService service) {
         this.service = service;
     }
 
