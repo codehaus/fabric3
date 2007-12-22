@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.Set;
 import javax.xml.namespace.QName;
 
-import org.fabric3.spi.Constants;
 import org.fabric3.scdl.ResourceDescription;
+import org.fabric3.spi.Constants;
 
 /**
  * Tracks information regarding a runtime service node, including available capabilities and resources
@@ -39,7 +39,7 @@ public class RuntimeInfo {
     public static final QName QNAME = new QName(Constants.FABRIC3_NS, "runtimeInfo");
 
     public enum Status {
-        STARTED, STOPPED;
+        STARTED, STOPPED
     }
 
     private String id;
@@ -56,6 +56,7 @@ public class RuntimeInfo {
     }
 
     public RuntimeInfo(String id) {
+        this();
         this.id = id;
     }
 
@@ -128,6 +129,22 @@ public class RuntimeInfo {
         resources.add(resource);
     }
 
+    /**
+     * Returns a ResourceDescription matching the type and identifier or null if not found.
+     *
+     * @param type       the type of ResourceDescription
+     * @param identifier the identifier
+     * @return the matching ResourceDescription or null
+     */
+    @SuppressWarnings({"unchecked"})
+    public <I, T extends ResourceDescription<I>> T getResourceDescription(Class<T> type, I identifier) {
+        for (ResourceDescription<?> resource : resources) {
+            if (resource.getClass().equals(type) && resource.getIdentifier().equals(identifier)) {
+                return (T) resource;
+            }
+        }
+        return null;
+    }
 
     /**
      * Returns the list of active components hosted by the runtime.
@@ -147,17 +164,11 @@ public class RuntimeInfo {
         components.add(uri);
     }
 
-    /**
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object obj) {
-        return obj != null && obj.getClass() == RuntimeInfo.class && ((RuntimeInfo) obj).equals(id);
+        return obj != null && obj.getClass() == RuntimeInfo.class && obj.equals(id);
     }
 
-    /**
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
         return id.hashCode();
