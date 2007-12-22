@@ -74,7 +74,7 @@ public class JarClasspathProcessor implements ClasspathProcessor {
         File libDir = new File(expandedDir, "META-INF/lib");
         File[] libraries = libDir.listFiles(new FilenameFilter() {
             public boolean accept(File dir, String name) {
-                return (name.endsWith(".jar"));
+                return (name.endsWith(".jar") || name.endsWith(".mar"));
             }
         });
         if (libraries != null) {

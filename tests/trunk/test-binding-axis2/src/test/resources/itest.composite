@@ -23,14 +23,14 @@
     <component name="EchoTest">
         <f3:junit class="org.fabric3.tests.binding.axis2.Axis2EchoTest"/>
         <reference name="service">
-            <binding.ws uri="http://localhost:8900/axis2/echoService" f3:impl="axis2" requires="sca:authentication.message"/>
+            <binding.ws uri="http://localhost:9900/axis2/echoService" f3:impl="axis2"/>
         </reference>
     </component>
 
     <component name="EchoService">
         <implementation.java class="org.fabric3.tests.binding.axis2.Axis2EchoServiceImpl"/>
         <service name="Axis2EchoService">
-            <binding.ws uri="echoService" f3:impl="axis2" requires="sca:authentication.message"/>
+            <binding.ws uri="echoService" f3:impl="axis2"/>
         </service>
     </component>
 </composite>

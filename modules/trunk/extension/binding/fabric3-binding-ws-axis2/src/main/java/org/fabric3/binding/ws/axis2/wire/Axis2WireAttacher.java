@@ -20,10 +20,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.xml.stream.XMLOutputFactory;
-
 import org.apache.neethi.Policy;
 import org.fabric3.binding.ws.axis2.Axis2ServiceProvisioner;
+import org.fabric3.binding.ws.axis2.config.F3Configurator;
 import org.fabric3.binding.ws.axis2.physical.Axis2WireSourceDefinition;
 import org.fabric3.binding.ws.axis2.physical.Axis2WireTargetDefinition;
 import org.fabric3.binding.ws.axis2.policy.Axis2PolicyBuilder;
@@ -49,9 +48,10 @@ import org.w3c.dom.Element;
 @EagerInit
 public class Axis2WireAttacher implements WireAttacher<Axis2WireSourceDefinition, Axis2WireTargetDefinition> {
     
-    private Axis2ServiceProvisioner serviceProvisioner;
-    private WireAttacherRegistry wireAttacherRegistry;
-    private Axis2PolicyBuilder policyBuilder;
+    private final Axis2ServiceProvisioner serviceProvisioner;
+    private final WireAttacherRegistry wireAttacherRegistry;
+    private final Axis2PolicyBuilder policyBuilder;
+    private final F3Configurator f3Configurator;
     
     /**
      * @param serviceProvisioner
@@ -59,10 +59,12 @@ public class Axis2WireAttacher implements WireAttacher<Axis2WireSourceDefinition
      */
     public Axis2WireAttacher(@Reference Axis2ServiceProvisioner serviceProvisioner, 
                              @Reference WireAttacherRegistry wireAttacherRegistry,
-                             @Reference Axis2PolicyBuilder policyBuilder) {
+                             @Reference Axis2PolicyBuilder policyBuilder,
+                             @Reference F3Configurator f3Configurator) {
         this.serviceProvisioner = serviceProvisioner;
         this.wireAttacherRegistry = wireAttacherRegistry;
         this.policyBuilder = policyBuilder;
+        this.f3Configurator = f3Configurator;
     }
     
     /**
@@ -98,7 +100,7 @@ public class Axis2WireAttacher implements WireAttacher<Axis2WireSourceDefinition
         }
         
         for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
-            Interceptor interceptor = new Axis2TargetInterceptor(target, entry.getKey().getName(), policies);
+            Interceptor interceptor = new Axis2TargetInterceptor(target, entry.getKey().getName(), policies, f3Configurator);
             entry.getValue().addInterceptor(interceptor);
         }
         

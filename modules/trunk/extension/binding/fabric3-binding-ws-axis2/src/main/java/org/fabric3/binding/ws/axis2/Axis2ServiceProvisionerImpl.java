@@ -23,14 +23,13 @@ import java.util.Map;
 
 import org.apache.axis2.Constants;
 import org.apache.axis2.context.ConfigurationContext;
-import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.axis2.deployment.util.Utils;
-import org.apache.axis2.description.AxisModule;
 import org.apache.axis2.description.AxisOperation;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.description.Parameter;
 import org.apache.axis2.engine.MessageReceiver;
 import org.apache.axis2.transport.http.AxisServlet;
+import org.fabric3.binding.ws.axis2.config.F3Configurator;
 import org.fabric3.binding.ws.axis2.physical.Axis2WireSourceDefinition;
 import org.fabric3.binding.ws.axis2.policy.Axis2PolicyBuilder;
 import org.fabric3.binding.ws.axis2.servlet.F3AxisServlet;
@@ -55,16 +54,19 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
     private final ServletHost servletHost;
     private final ClassLoaderRegistry classLoaderRegistry;
     private final Axis2PolicyBuilder policyBuilder;
+    private final F3Configurator f3Configurator;
     
     private ConfigurationContext configurationContext;
     private String servicePath = "axis2";
     
     public Axis2ServiceProvisionerImpl(@Reference ServletHost servletHost,
-                                   @Reference ClassLoaderRegistry classLoaderRegistry,
-                                   @Reference Axis2PolicyBuilder policyBuilder) {
+                                       @Reference ClassLoaderRegistry classLoaderRegistry,
+                                       @Reference Axis2PolicyBuilder policyBuilder,
+                                       @Reference F3Configurator f3Configurator) {
         this.servletHost = servletHost;
         this.classLoaderRegistry = classLoaderRegistry;
         this.policyBuilder = policyBuilder;
+        this.f3Configurator = f3Configurator;
     }
     
     /**
@@ -82,8 +84,7 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
     @Init
     public void start() throws Exception {
         
-        configurationContext = ConfigurationContextFactory.createDefaultConfigurationContext();
-        configurationContext.setServicePath(servicePath);
+        configurationContext = f3Configurator.getConfigurationContext();
         
         AxisServlet axisServlet = new F3AxisServlet(configurationContext);
         servletHost.registerMapping("/" + servicePath + "/*", axisServlet);
@@ -118,10 +119,6 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
             setMessageReceivers(wire, axisService);
             
             configurationContext.getAxisConfiguration().addService(axisService);
-            
-            // TODO Need to engage the modules globally
-            AxisModule rampart = new AxisModule("rampart");
-            axisService.engageModule(rampart);
             
             for (Element policyDefinition : pwsd.getPolicyDefinitions()) {
                 axisService.applyPolicy(policyBuilder.buildPolicy(policyDefinition));

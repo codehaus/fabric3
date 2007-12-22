@@ -26,9 +26,9 @@ import org.apache.axis2.Constants;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
-import org.apache.axis2.description.AxisModule;
 import org.apache.axis2.description.AxisService;
 import org.apache.neethi.Policy;
+import org.fabric3.binding.ws.axis2.config.F3Configurator;
 import org.fabric3.binding.ws.axis2.physical.Axis2WireTargetDefinition;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.Message;
@@ -40,9 +40,10 @@ import org.fabric3.spi.wire.MessageImpl;
 public class Axis2TargetInterceptor implements Interceptor {
 
     private Interceptor next;
-    private EndpointReference epr;
-    private String operation;
-    private Set<Policy> policies;
+    private final EndpointReference epr;
+    private final String operation;
+    private final Set<Policy> policies;
+    private final F3Configurator f3Configurator;
     
     /**
      * Initializes the end point reference.
@@ -50,11 +51,12 @@ public class Axis2TargetInterceptor implements Interceptor {
      * @param target Target wire source definition.
      * @param operation Operation name.
      */
-    public Axis2TargetInterceptor(Axis2WireTargetDefinition target, String operation, Set<Policy> policies) {
+    public Axis2TargetInterceptor(Axis2WireTargetDefinition target, String operation, Set<Policy> policies, F3Configurator f3Configurator) {
         
         this.operation = operation;
         this.epr = new EndpointReference(target.getUri().toASCIIString());
         this.policies = policies;
+        this.f3Configurator = f3Configurator;
         
     }
 
@@ -85,14 +87,11 @@ public class Axis2TargetInterceptor implements Interceptor {
         
         try {
             
-            ServiceClient sender = new ServiceClient();
+            ServiceClient sender = new ServiceClient(f3Configurator.getConfigurationContext(), null);
             sender.setOptions(options);
             
             // TODO Need to engage the modules globally
             AxisService axisService = sender.getAxisService();
-            
-            AxisModule rampart = new AxisModule("rampart");
-            axisService.engageModule(rampart);
             
             for (Policy policy : policies) {
                 axisService.applyPolicy(policy);

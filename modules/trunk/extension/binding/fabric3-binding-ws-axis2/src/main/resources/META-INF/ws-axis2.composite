@@ -41,6 +41,11 @@
     <component name="Axis2NeethiPolicyBuilder">
         <system:implementation.system class="org.fabric3.binding.ws.axis2.policy.DefaultAxis2PolicyBuilder"/>
     </component>
+    
+    <!-- Configurator -->
+    <component name="Axis2F3Configurator">
+        <system:implementation.system class="org.fabric3.binding.ws.axis2.config.F3ConfiguratorImpl"/>
+    </component>
 
     <!-- Feature -->
     <system:feature name="WsAxis2BindingFeature">{http://fabric3.org/xmlns/binding}ws-axis2</system:feature>

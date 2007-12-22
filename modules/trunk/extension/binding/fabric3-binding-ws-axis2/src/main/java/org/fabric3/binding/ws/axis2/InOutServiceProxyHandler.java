@@ -41,6 +41,8 @@ import org.fabric3.spi.wire.Wire;
  * @version $Revision: 1589 $ $Date: 2007-10-25 23:13:37 +0100 (Thu, 25 Oct 2007) $
  */
 public class InOutServiceProxyHandler extends AbstractInOutMessageReceiver {
+    
+    // Test
 
     /**
      * Wire attached to the servlet.
