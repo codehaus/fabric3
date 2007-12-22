@@ -35,6 +35,7 @@ import org.fabric3.spi.model.physical.PhysicalResourceContainerDefinition;
 public class PhysicalClassLoaderDefinition extends PhysicalResourceContainerDefinition {
     private List<URI> parentClassLoaders = new ArrayList<URI>();
     private Set<URL> urls = new LinkedHashSet<URL>();
+    private boolean update;
 
     protected PhysicalClassLoaderDefinition(URI name) {
         super(name);
@@ -76,5 +77,13 @@ public class PhysicalClassLoaderDefinition extends PhysicalResourceContainerDefi
      */
     public void addParentClassLoader(URI uri) {
         parentClassLoaders.add(uri);
+    }
+
+    public boolean isUpdate() {
+        return update;
+    }
+
+    public void setUpdate(boolean update) {
+        this.update = update;
     }
 }
