@@ -19,7 +19,6 @@ package org.fabric3.fabric.classloader;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -35,12 +34,10 @@ import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ArtifactResolverRegistry;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.spi.services.contribution.ResolutionException;
-import org.fabric3.spi.util.UriHelper;
 
 /**
  * ResourceContainerBuilder implementation that creates multi-parent classloaders from {@link
  * PhysicalClassLoaderDefinition}s. If a classloader with the same id already exists, a new one will not be created.
- * Currently, this builder creates classloaders under the boot classloader hierarchy.
  *
  * @version $Rev$ $Date$
  */
@@ -68,34 +65,29 @@ public class ClassLoaderBuilder implements ResourceContainerBuilder<PhysicalClas
     }
 
     public void build(PhysicalClassLoaderDefinition definition) throws ClassLoaderBuilderException {
-        URI name = definition.getUri();
-        ClassLoader cl = classLoaderRegistry.getClassLoader(name);
-        if (cl != null) {
-            assert cl instanceof URLClassLoader;
-            updateClassLoader(cl, definition);
+        if (definition.isUpdate()) {
+            updateClassLoader(definition);
         } else {
-            createClassLoader(name, definition);
+            createClassLoader(definition);
         }
     }
 
     /**
      * Creates a new classloader from a PhysicalClassLoaderDefinition.
      *
-     * @param name       the classloader name
      * @param definition the PhysicalClassLoaderDefinition to create the classloader from
      * @throws ClassLoaderBuilderException if an error occurs creating the classloader
      */
-    private void createClassLoader(URI name, PhysicalClassLoaderDefinition definition)
-            throws ClassLoaderBuilderException {
+    private void createClassLoader(PhysicalClassLoaderDefinition definition) throws ClassLoaderBuilderException {
+        URI name = definition.getUri();
         URL[] classpath = resolveClasspath(definition.getResourceUrls());
         // build the classloader using the locally cached resources
         CompositeClassLoader loader = new CompositeClassLoader(name, classpath, null);
         for (URI uri : definition.getParentClassLoaders()) {
             ClassLoader parent = classLoaderRegistry.getClassLoader(uri);
             if (parent == null) {
-                // TODO this should be fixed. We currently do not track classloaders on the controller. When we
-                // do, we will not need to create this hierarchy
-                parent = createClassLoaderHierarchy(uri);
+                String identifier = uri.toString();
+                throw new ClassLoaderBuilderException("Parent classloader not found [" + identifier + "]", identifier);
             }
             loader.addParent(parent);
         }
@@ -107,15 +99,14 @@ public class ClassLoaderBuilder implements ResourceContainerBuilder<PhysicalClas
      * updates are typically performed during an include operation where the included component requires additional
      * libraries or classes not currently on the composite classpath.
      *
-     * @param cl         the classloader to update
      * @param definition the definition to update the classloader with
      * @throws ClassLoaderBuilderException if an error occurs updating the classloader
      */
-    private void updateClassLoader(ClassLoader cl, PhysicalClassLoaderDefinition definition)
-            throws ClassLoaderBuilderException {
+    private void updateClassLoader(PhysicalClassLoaderDefinition definition) throws ClassLoaderBuilderException {
+        ClassLoader cl = classLoaderRegistry.getClassLoader(definition.getUri());
         assert cl instanceof CompositeClassLoader;
-        List<URL> classpath = new ArrayList<URL>();
         CompositeClassLoader loader = (CompositeClassLoader) cl;
+        List<URL> classpath = new ArrayList<URL>();
         Set<URL> urls = definition.getResourceUrls();
         URL[] loaderUrls = loader.getURLs();
         for (URL url : urls) {
@@ -174,26 +165,4 @@ public class ClassLoaderBuilder implements ResourceContainerBuilder<PhysicalClas
         return classpath.toArray(new URL[classpath.size()]);
     }
 
-    /**
-     * Creates a classloader and parent classloaders if they are not present for a given uri TODO this shoud be
-     * removed.
-     *
-     * @param uri the uri
-     * @return the classloader
-     */
-    private ClassLoader createClassLoaderHierarchy(URI uri) {
-        ClassLoader loader = classLoaderRegistry.getClassLoader(uri);
-        if (loader != null) {
-            return loader;
-        }
-        URI parentUri = URI.create(UriHelper.getParentName(uri));
-        ClassLoader parent = classLoaderRegistry.getClassLoader(parentUri);
-        if (parent == null) {
-            parent = createClassLoaderHierarchy(parentUri);
-        }
-
-        loader = new CompositeClassLoader(uri, new URL[0], parent);
-        classLoaderRegistry.register(uri, loader);
-        return loader;
-    }
 }

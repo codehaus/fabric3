@@ -19,18 +19,20 @@
 package org.fabric3.fabric.services.classloading;
 
 import java.net.URI;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.Arrays;
-import java.lang.reflect.Array;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
+import org.fabric3.spi.deployer.CompositeClassLoader;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.classloading.DuplicateClassLoaderException;
 
 /**
  * Implementation of a registry for classloaders.
- * 
+ *
  * @version $Rev$ $Date$
  */
 public class ClassLoaderRegistryImpl implements ClassLoaderRegistry {
@@ -50,7 +52,8 @@ public class ClassLoaderRegistryImpl implements ClassLoaderRegistry {
 
     public synchronized void register(URI id, ClassLoader classLoader) throws DuplicateClassLoaderException {
         if (registry.containsKey(id)) {
-            throw new DuplicateClassLoaderException("Duplicate class loader", id.toString());
+            String identifier = id.toString();
+            throw new DuplicateClassLoaderException("Duplicate class loader [" + identifier + "]", identifier);
         }
         registry.put(id, classLoader);
     }
@@ -63,6 +66,11 @@ public class ClassLoaderRegistryImpl implements ClassLoaderRegistry {
         return registry.get(id);
     }
 
+    public Map<URI, ClassLoader> getClassLoaders() {
+        return Collections.unmodifiableMap(registry);
+    }
+
+
     public Class<?> loadClass(URI classLoaderId, String className) throws ClassNotFoundException {
         ClassLoader cl = getClassLoader(classLoaderId);
         return loadClass(cl, className);
@@ -74,5 +82,37 @@ public class ClassLoaderRegistryImpl implements ClassLoaderRegistry {
             clazz = Class.forName(className, true, cl);
         }
         return clazz;
+    }
+
+    public List<URI> resolveParentUris(ClassLoader cl) {
+        if (cl instanceof CompositeClassLoader) {
+            CompositeClassLoader loader = (CompositeClassLoader) cl;
+            List<ClassLoader> parents = loader.getParents();
+            List<URI> uris = new ArrayList<URI>(parents.size());
+            for (ClassLoader parent : parents) {
+                URI resolved = resolveUri(parent);
+                if (resolved != null) {
+                    uris.add(resolved);
+                }
+            }
+            return uris;
+        } else {
+            List<URI> uris = new ArrayList<URI>();
+            ClassLoader parent = cl.getParent();
+            URI resolved = resolveUri(parent);
+            if (resolved != null) {
+                uris.add(resolved);
+            }
+            return uris;
+        }
+    }
+
+    private URI resolveUri(ClassLoader cl) {
+        for (Map.Entry<URI, ClassLoader> entry : registry.entrySet()) {
+            if (entry.getValue().equals(cl)) {
+                return entry.getKey();
+            }
+        }
+        return null;
     }
 }

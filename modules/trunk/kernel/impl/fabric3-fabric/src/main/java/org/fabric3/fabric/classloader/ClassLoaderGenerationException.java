@@ -16,23 +16,15 @@
  */
 package org.fabric3.fabric.classloader;
 
-import org.fabric3.spi.builder.BuilderException;
+import org.fabric3.spi.generator.GenerationException;
 
 /**
  * @version $Rev$ $Date$
  */
-public class ClassLoaderBuilderException extends BuilderException {
-    private static final long serialVersionUID = 5397716085705723079L;
+public class ClassLoaderGenerationException extends GenerationException {
+    private static final long serialVersionUID = -4166302019763406629L;
 
-    public ClassLoaderBuilderException(String message, String identifier) {
+    public ClassLoaderGenerationException(String message, String identifier) {
         super(message, identifier);
-    }
-
-    public ClassLoaderBuilderException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public ClassLoaderBuilderException(String message, String identifier, Throwable cause) {
-        super(message, identifier, cause);
     }
 }

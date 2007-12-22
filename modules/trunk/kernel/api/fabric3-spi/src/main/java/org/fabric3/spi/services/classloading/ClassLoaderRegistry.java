@@ -19,6 +19,8 @@
 package org.fabric3.spi.services.classloading;
 
 import java.net.URI;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Registry for classloaders available to the local runtime.
@@ -29,7 +31,7 @@ public interface ClassLoaderRegistry {
     /**
      * Register a ClassLoader with the runtime.
      *
-     * @param id a unique id for the classloader
+     * @param id          a unique id for the classloader
      * @param classLoader the classloader to register
      * @throws DuplicateClassLoaderException if there is already a classloader registered with the same id
      */
@@ -52,10 +54,17 @@ public interface ClassLoaderRegistry {
     ClassLoader getClassLoader(URI id);
 
     /**
+     * Returns all registered classloaders.
+     *
+     * @return all registered classloaders
+     */
+    Map<URI, ClassLoader> getClassLoaders();
+
+    /**
      * Load and define a class from a specific classloader.
      *
      * @param classLoaderId the id of the ClassLoader to use
-     * @param className the name of the class
+     * @param className     the name of the class
      * @return the class
      * @throws ClassNotFoundException if the class could not be found by that classloader
      */
@@ -64,10 +73,13 @@ public interface ClassLoaderRegistry {
     /**
      * Load and define a class from a specific classloader.
      *
-     * @param cl the ClassLoader to use
+     * @param cl        the ClassLoader to use
      * @param className the name of the class
      * @return the class
      * @throws ClassNotFoundException if the class could not be found by that classloader
      */
     Class<?> loadClass(ClassLoader cl, String className) throws ClassNotFoundException;
+
+    List<URI> resolveParentUris(ClassLoader cl);
+
 }

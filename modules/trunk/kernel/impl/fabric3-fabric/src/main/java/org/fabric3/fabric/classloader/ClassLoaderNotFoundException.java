@@ -16,14 +16,13 @@
  */
 package org.fabric3.fabric.classloader;
 
-import org.fabric3.spi.builder.BuilderException;
-
 /**
  * Thrown when a parent classloader cannot be found
  *
  * @version $Rev$ $Date$
  */
 public class ClassLoaderNotFoundException extends ClassLoaderBuilderException {
+    private static final long serialVersionUID = 2497112487706288679L;
 
     public ClassLoaderNotFoundException(String message, String identifier) {
         super(message, identifier);

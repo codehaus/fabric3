@@ -23,8 +23,9 @@ import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.xml.namespace.QName;
+
+import org.w3c.dom.Document;
 
 import org.fabric3.fabric.assembly.InstantiationException;
 import org.fabric3.fabric.assembly.RuntimeAssembly;
@@ -99,11 +100,11 @@ import static org.fabric3.fabric.runtime.ComponentNames.APPLICATION_CLASSLOADER_
 import static org.fabric3.fabric.runtime.ComponentNames.BOOT_CLASSLOADER_ID;
 import static org.fabric3.fabric.runtime.ComponentNames.CLASSLOADER_REGISTRY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.METADATA_STORE_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.PROCESSOR_REGISTY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_NAME;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.PROCESSOR_REGISTY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.XML_FACTORY_URI;
 import org.fabric3.fabric.services.advertsiement.FeatureLoader;
 import org.fabric3.fabric.services.archive.JarService;
@@ -115,6 +116,7 @@ import org.fabric3.fabric.services.contribution.FileSystemResolver;
 import org.fabric3.fabric.services.contribution.MetaDataStoreImpl;
 import org.fabric3.fabric.services.contribution.ProcessorRegistryImpl;
 import org.fabric3.fabric.services.contribution.processor.JarClasspathProcessor;
+import org.fabric3.fabric.services.discovery.NullDiscoveryService;
 import org.fabric3.fabric.services.factories.xml.XMLFactoryImpl;
 import org.fabric3.fabric.services.instancefactory.BuildHelperImpl;
 import org.fabric3.fabric.services.instancefactory.DefaultInstanceFactoryBuilderRegistry;
@@ -122,6 +124,7 @@ import org.fabric3.fabric.services.instancefactory.GenerationHelperImpl;
 import org.fabric3.fabric.services.instancefactory.ReflectiveInstanceFactoryBuilder;
 import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.fabric.services.routing.RuntimeRoutingService;
+import org.fabric3.fabric.services.runtime.BootstrapRuntimeInfoService;
 import org.fabric3.fabric.services.xstream.XStreamFactoryImpl;
 import org.fabric3.host.monitor.FormatterRegistry;
 import org.fabric3.host.monitor.MonitorFactory;
@@ -176,7 +179,9 @@ import org.fabric3.spi.services.contribution.ArtifactResolverRegistry;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
+import org.fabric3.spi.services.discovery.DiscoveryService;
 import org.fabric3.spi.services.factories.xml.XMLFactory;
+import org.fabric3.spi.services.runtime.RuntimeInfoService;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.transform.DefaultTransformerRegistry;
@@ -185,7 +190,6 @@ import org.fabric3.transform.dom2java.String2Integer;
 import org.fabric3.transform.dom2java.String2Map;
 import org.fabric3.transform.dom2java.String2QName;
 import org.fabric3.transform.dom2java.String2String;
-import org.w3c.dom.Document;
 
 /**
  * Bootstrapper that initializes a runtime by reading a system SCDL file.
@@ -193,7 +197,7 @@ import org.w3c.dom.Document;
  * @version $Rev$ $Date$
  */
 public class ScdlBootstrapperImpl implements ScdlBootstrapper {
-    
+
     private static final URI COMPONENT_MGR_URI = URI.create(RUNTIME_NAME + "/ComponentManager");
     private static final URI MONITOR_URI = URI.create(RUNTIME_NAME + "/MonitorFactory");
     private static final URI FORMATTER_REGISTRY_URI = URI.create(RUNTIME_NAME + "/FormatterRegistry");
@@ -227,33 +231,33 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
     public void bootPrimordial(Fabric3Runtime<?> runtime, ClassLoader bootClassLoader, ClassLoader appClassLoader)
             throws InitializationException {
-        
+
         createBootstrapComponents(runtime);
         registerBootstrapComponents((AbstractRuntime<?>) runtime);
-        
+
         classLoaderRegistry.register(BOOT_CLASSLOADER_ID, bootClassLoader);
         classLoaderRegistry.register(RUNTIME_URI, new CompositeClassLoader(RUNTIME_URI, bootClassLoader));
 
         URI domainId = runtime.getHostInfo().getDomain();
         classLoaderRegistry.register(APPLICATION_CLASSLOADER_ID, appClassLoader);
         classLoaderRegistry.register(domainId, new CompositeClassLoader(domainId, appClassLoader));
-        
+
     }
 
     public void bootSystem(Fabric3Runtime<?> runtime) throws InitializationException {
-        
+
         try {
-            
+
             // load the system composite
             ClassLoader bootCl = classLoaderRegistry.getClassLoader(BOOT_CLASSLOADER_ID);
             LoaderContext loaderContext = new LoaderContextImpl(bootCl, BOOT_CLASSLOADER_ID, scdlLocation);
             Composite composite = loader.load(scdlLocation, Composite.class, loaderContext);
-            
+
             setUserConfigProperty(composite);
 
             // include in the runtime domain assembly
             runtimeAssembly.includeInDomain(composite);
-            
+
         } catch (LoaderException e) {
             throw new InitializationException(e);
         } catch (ActivateException e) {
@@ -265,12 +269,12 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     }
 
     private void createBootstrapComponents(Fabric3Runtime<?> runtime) throws InitializationException {
-        
+
         xmlFactory = new XMLFactoryImpl();
         interfaceProcessorRegistry = new JavaInterfaceProcessorRegistryImpl();
         monitorFactory = runtime.getMonitorFactory();
         configLoader = new DefaultConfigLoader();
-        
+
         getUserConfig();
 
         // create the ClassLoaderRegistry
@@ -287,7 +291,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         loader = createLoader(introspector);
         GeneratorRegistry generatorRegistry = createGeneratorRegistry();
         HostInfo info = runtime.getHostInfo();
-        Deployer deployer = createDeployer(info);
+        Deployer deployer = createDeployer();
         CommandExecutorRegistry commandRegistry = createCommandExecutorRegistry(scopeRegistry);
 
         processorRegistry = new ProcessorRegistryImpl();
@@ -305,13 +309,13 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
         // enable autowire for the runtime domain
         AssemblyStore store = new NonPersistentAssemblyStore(ComponentNames.RUNTIME_URI, Autowire.ON);
-        
+
         PhysicalOperationHelper physicalOperationHelper = new PhysicalOperationHelperImpl();
-        PhysicalPolicyGenerator policyGenerator = new PhysicalPolicyGeneratorImpl(new NullPolicyResolver(), 
+        PhysicalPolicyGenerator policyGenerator = new PhysicalPolicyGeneratorImpl(new NullPolicyResolver(),
                                                                                   physicalOperationHelper,
                                                                                   generatorRegistry);
 
-        PhysicalWireGenerator wireGenerator = new PhysicalWireGeneratorImpl(generatorRegistry, 
+        PhysicalWireGenerator wireGenerator = new PhysicalWireGeneratorImpl(generatorRegistry,
                                                                             policyGenerator,
                                                                             physicalOperationHelper);
         DomainService domainService = new DomainServiceImpl(store);
@@ -340,12 +344,12 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         } catch (AssemblyException e) {
             throw new InitializationException(e);
         }
-        
+
     }
 
     private <I extends HostInfo> void registerBootstrapComponents(AbstractRuntime<I> runtime)
             throws InitializationException {
-        
+
         registerSystemComponent(COMPONENT_MGR_URI, ComponentManager.class, componentManager);
         registerSystemComponent(SCOPE_REGISTRY_URI, ScopeRegistry.class, scopeRegistry);
         registerSystemComponent(RUNTIME_INFO_URI, runtime.getHostInfoType(), runtime.getHostInfo());
@@ -364,23 +368,20 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
     private <S, I extends S> void registerSystemComponent(URI uri, Class<S> type, I instance)
             throws InitializationException {
-        
+
         List<Class<?>> types = new ArrayList<Class<?>>(1);
         types.add(type);
         registerSystemComponent(uri, types, instance);
-        
+
     }
 
-    private <I> void registerSystemComponent(URI uri, List<Class<?>> types, I instance)
-            throws InitializationException {
-        
+    private <I> void registerSystemComponent(URI uri, List<Class<?>> types, I instance) throws InitializationException {
         try {
             String name = RUNTIME_URI.relativize(uri).toString();
             Class<?> implClass = instance.getClass();
             List<JavaServiceContract> contracts = createServiceContacts(types);
             ComponentDefinition<SingletonImplementation> definition = createDefinition(name, contracts, implClass);
             SingletonComponent<I> component = new SingletonComponent<I>(uri, contracts, instance, null);
-
             componentManager.register(component);
             runtimeAssembly.instantiateHostComponentDefinition(definition);
         } catch (InvalidServiceContractException e) {
@@ -392,26 +393,25 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         } catch (ActivateException e) {
             throw new InitializationException(e);
         }
-        
     }
 
     private List<JavaServiceContract> createServiceContacts(List<Class<?>> types)
             throws InvalidServiceContractException {
-        
+
         List<JavaServiceContract> contracts = new ArrayList<JavaServiceContract>(types.size());
-        
+
         for (Class<?> type : types) {
             JavaServiceContract contract = interfaceProcessorRegistry.introspect(type);
             contracts.add(contract);
         }
-        
+
         return contracts;
-        
+
     }
 
     private <I> ComponentDefinition<SingletonImplementation> createDefinition(String name,
-                                                                                List<JavaServiceContract> contracts,
-                                                                                Class<I> implClass)
+                                                                              List<JavaServiceContract> contracts,
+                                                                              Class<I> implClass)
             throws InvalidServiceContractException {
 
         PojoComponentType componentType = new PojoComponentType(implClass.getName());
@@ -420,17 +420,17 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
             JavaMappedService service = new JavaMappedService(serviceName, contract);
             componentType.add(service);
         }
-        
+
         SingletonImplementation impl = new SingletonImplementation(componentType, implClass.getName());
         ComponentDefinition<SingletonImplementation> def = new ComponentDefinition<SingletonImplementation>(name);
         def.setImplementation(impl);
-        
+
         return def;
-        
+
     }
 
     private CommandExecutorRegistry createCommandExecutorRegistry(ScopeRegistry scopeRegistry) {
-        
+
         CommandExecutorRegistryImpl commandRegistry = new CommandExecutorRegistryImpl();
         StartCompositeContextExecutor executor =
                 new StartCompositeContextExecutor(commandRegistry, scopeRegistry, monitorFactory);
@@ -443,13 +443,13 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
                                                 monitorFactory);
         commandRegistry.register(StartCompositeContextCommand.class, executor);
         commandRegistry.register(InitializeComponentCommand.class, initExecutor);
-        
+
         return commandRegistry;
-        
+
     }
 
     private IntrospectionRegistry createIntrospector(JavaInterfaceProcessorRegistry registry) {
-        
+
         ImplementationProcessorService service = new ImplementationProcessorServiceImpl(registry);
         IntrospectionRegistryImpl.Monitor monitor = monitorFactory.getMonitor(IntrospectionRegistryImpl.Monitor.class);
         IntrospectionRegistryImpl introspectionRegistry = new IntrospectionRegistryImpl(monitor);
@@ -465,13 +465,13 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         introspectionRegistry.registerProcessor(new ServiceProcessor(service));
         introspectionRegistry.registerProcessor(new HeuristicPojoProcessor(service, interfaceProcessorRegistry));
         introspectionRegistry.registerProcessor(new MonitorProcessor(interfaceProcessorRegistry));
-        
+
         return introspectionRegistry;
-        
+
     }
 
     private LoaderRegistry createLoader(IntrospectionRegistry introspector) {
-        
+
         LoaderRegistry loaderRegistry = new LoaderRegistryImpl(monitorFactory, xmlFactory);
 
         // register element loaders
@@ -509,23 +509,22 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         featureLoader.start();
 
         return loaderRegistry;
-        
+
     }
 
     private GeneratorRegistry createGeneratorRegistry() {
-        
         GeneratorRegistryImpl registry = new GeneratorRegistryImpl();
-        new SystemComponentGenerator(registry, new ClassLoaderGeneratorImpl(), new GenerationHelperImpl());
+        RuntimeInfoService infoService = new BootstrapRuntimeInfoService(classLoaderRegistry);
+        DiscoveryService discoveryService = new NullDiscoveryService(infoService);
+        GenerationHelperImpl helper = new GenerationHelperImpl();
+        new SystemComponentGenerator(registry, new ClassLoaderGeneratorImpl(discoveryService), helper);
         new SingletonGenerator(registry);
         StartCompositeContextGenerator contextGenerator = new StartCompositeContextGenerator(registry);
         contextGenerator.init();
-        
         return registry;
-        
     }
 
-    private DeployerImpl createDeployer(HostInfo info) {
-        
+    private DeployerImpl createDeployer() {
         DeployerImpl deployer = new DeployerImpl(monitorFactory);
         ComponentBuilderRegistry registry = new DefaultComponentBuilderRegistry();
 
@@ -563,21 +562,21 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         deployer.setComponentManager(componentManager);
         Connector connector = new ConnectorImpl(null, wireAttacherRegistry);
         deployer.setConnector(connector);
-        ResourceContainerBuilderRegistry resourceRegistry = createResourceBuilderRegistry(info);
+        ResourceContainerBuilderRegistry resourceRegistry = createResourceBuilderRegistry();
         deployer.setResourceBuilderRegistry(resourceRegistry);
-        
+
         return deployer;
-        
+
     }
 
-    private ResourceContainerBuilderRegistry createResourceBuilderRegistry(HostInfo info) {
-        
+    private ResourceContainerBuilderRegistry createResourceBuilderRegistry() {
+
         ResourceContainerBuilderRegistry resourceRegistry = new ResourceContainerBuilderRegistryImpl();
         ArtifactResolverRegistry artifactResolverRegistry = new ArtifactResolverRegistryImpl();
-        
+
         FileSystemResolver resolver = new FileSystemResolver(artifactResolverRegistry);
         resolver.init();
-        
+
         ClasspathProcessorRegistry classpathProcessorRegistry = new ClasspathProcessorRegistryImpl();
         JarService jarService = new JarServiceImpl();
         new JarClasspathProcessor(classpathProcessorRegistry, jarService);
@@ -586,26 +585,26 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
                                                               artifactResolverRegistry,
                                                               classpathProcessorRegistry);
         clBuilder.init();
-        
+
         return resourceRegistry;
-        
+
     }
 
     private PhysicalModelGenerator createPhysicalModelGenerator(GeneratorRegistry generatorRegistry,
                                                                 RoutingService routingService,
                                                                 DomainService domainService,
                                                                 PhysicalWireGenerator wireGenerator) {
-        
+
         return new PhysicalModelGeneratorImpl(generatorRegistry,
                                               routingService,
                                               domainService,
                                               wireGenerator,
                                               new NullPolicyResolver());
-        
+
     }
 
     private void getUserConfig() throws InitializationException {
-        
+
         // Get the user config location
         File configFile = new File(USER_CONFIG);
         if (configFile.exists()) {
@@ -615,25 +614,25 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
                 throw new InitializationException(e);
             }
         }
-        
+
     }
 
     private void setUserConfigProperty(Composite composite) throws ConfigLoadException {
-        
+
         if (userConfigLocation != null) {
-            
+
             Document userConfig = configLoader.loadConfig(userConfigLocation);
-            
+
             Property<Document> userConfigProperty = new Property<Document>();
             userConfigProperty.setName("userConfig");
             userConfigProperty.setJavaType(Document.class);
             userConfigProperty.setXmlType(new QName(Constants.FABRIC3_NS, "userConfig"));
             userConfigProperty.setDefaultValue(userConfig);
-            
+
             composite.add(userConfigProperty);
-            
+
         }
-        
+
     }
 
 }

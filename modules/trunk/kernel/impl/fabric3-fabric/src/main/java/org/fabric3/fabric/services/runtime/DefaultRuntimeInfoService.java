@@ -19,20 +19,27 @@
 package org.fabric3.fabric.services.runtime;
 
 import java.net.URI;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Arrays;
+import java.util.Map;
 
+import org.osoa.sca.annotations.Reference;
+
+import org.fabric3.spi.model.topology.ClassLoaderResourceDescription;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.component.ComponentManager;
 import org.fabric3.spi.model.topology.RuntimeInfo;
 import org.fabric3.spi.services.advertisement.AdvertisementService;
+import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.messaging.MessageDestinationService;
 import org.fabric3.spi.services.runtime.RuntimeInfoService;
-import org.osoa.sca.annotations.Reference;
 
 /**
- * Default implementation of the <code>RuntimeInfoService</code>. The implementation
- * relies on the <code>AdvertisementService</code> for getting the features, the
- * <code>ComponentManager</code> for getting the list of running components and the
- * <code>HostInfo</code> for getting the runtime id.
+ * Default implementation of the <code>RuntimeInfoService</code>. The implementation relies on the
+ * <code>AdvertisementService</code> for getting the features, the <code>ComponentManager</code> for getting the list of
+ * running components and the <code>HostInfo</code> for getting the runtime id, and <code>ClassLoaderRegistry</code> for
+ * classloader information.
  *
  * @version $Revsion$ $Date$
  */
@@ -50,16 +57,26 @@ public class DefaultRuntimeInfoService implements RuntimeInfoService {
     // Message destination service
     private MessageDestinationService messageDestinationService;
 
+    private ClassLoaderRegistry classLoaderRegistry;
+
     public RuntimeInfo getRuntimeInfo() {
-
-        assert componentManager != null;
-        assert advertisementService != null;
-        assert hostInfo != null;
-
         RuntimeInfo runtimeInfo = new RuntimeInfo(hostInfo.getRuntimeId());
+        // add features
         runtimeInfo.setFeatures(advertisementService.getFeatures());
-        for(URI componentUri : componentManager.getComponentsInHierarchy(hostInfo.getDomain())) {
+        // add component URIs
+        for (URI componentUri : componentManager.getComponentsInHierarchy(hostInfo.getDomain())) {
             runtimeInfo.addComponent(componentUri);
+        }
+        // add classloader info
+        for (Map.Entry<URI, ClassLoader> entry : classLoaderRegistry.getClassLoaders().entrySet()) {
+            ClassLoaderResourceDescription desc = new ClassLoaderResourceDescription(entry.getKey());
+            ClassLoader loader = entry.getValue();
+            desc.addParents(classLoaderRegistry.resolveParentUris(loader));
+            if (loader instanceof URLClassLoader) {
+                URL[] urls = ((URLClassLoader) loader).getURLs();
+                desc.addClassPathUrls(Arrays.asList(urls));
+            }
+            runtimeInfo.addResourceDescription(desc);
         }
 
         // TODO Fix this in the runtime info
@@ -100,6 +117,11 @@ public class DefaultRuntimeInfoService implements RuntimeInfoService {
     @Reference
     public void setMessageDestinationService(MessageDestinationService messageDestinationService) {
         this.messageDestinationService = messageDestinationService;
+    }
+
+    @Reference
+    public void setClassLoaderRegistry(ClassLoaderRegistry classLoaderRegistry) {
+        this.classLoaderRegistry = classLoaderRegistry;
     }
 
 }

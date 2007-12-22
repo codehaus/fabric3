@@ -19,21 +19,30 @@ package org.fabric3.fabric.services.discovery;
 import java.util.Collections;
 import java.util.Set;
 
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.spi.model.topology.RuntimeInfo;
 import org.fabric3.spi.services.discovery.DiscoveryService;
+import org.fabric3.spi.services.runtime.RuntimeInfoService;
 
 /**
- * A single-VM discovery service
+ * A single node discovery service
  *
  * @version $Rev$ $Date$
  */
 public class NullDiscoveryService implements DiscoveryService {
+    private RuntimeInfoService service;
+
+    public NullDiscoveryService(@Reference RuntimeInfoService service) {
+        this.service = service;
+    }
+
     public Set<RuntimeInfo> getParticipatingRuntimes() {
         return Collections.emptySet();
     }
 
     public RuntimeInfo getRuntimeInfo(String runtimeId) {
-        return null;
+        return service.getRuntimeInfo();
     }
 
     public void joinDomain(long timeout) {
