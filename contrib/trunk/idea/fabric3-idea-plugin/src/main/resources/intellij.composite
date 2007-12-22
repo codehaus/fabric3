@@ -89,7 +89,7 @@
     </component>
 
     <component name="DiscoveryService">
-        <system:implementation.system class="org.fabric3.fabric.services.discovery.NullDiscoveryService"/>
+        <system:implementation.system class="org.fabric3.fabric.services.discovery.SingleVMDiscoveryService"/>
     </component>
 
     <component name="MessageDestinationService">
