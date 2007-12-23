@@ -1,30 +1,73 @@
 <?xml version="1.0" encoding="ASCII"?>
-<definitions 
-    xmlns="http://www.osoa.org/xmlns/sca/1.0" 
-    xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
-    targetNamespace="http://fabric3.org/xmlns/sca/2.0-alpha" 
-    xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-    xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
-    xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
-    
-    <policySet name="testServerPolicy" provides="sca:authentication.message" appliesTo="fabric3://./domain/EchoService#Axis2EchoService">
-        <wsp:Policy>
-            <sp:UsernameToken>
-                <wsp:Policy>
-                    <sp:WssUsernameToken11/>
-                </wsp:Policy>
-            </sp:UsernameToken>
-        </wsp:Policy>
+<definitions xmlns="http://www.osoa.org/xmlns/sca/1.0"
+	xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
+	targetNamespace="http://fabric3.org/xmlns/sca/2.0-alpha"
+	xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha">
+
+	<!-- policySet name="testServerPolicy" provides="sca:authentication.message" appliesTo="fabric3://./domain/EchoService#Axis2EchoService">
+ 	    <wsp:Policy wsu:Id="UTOverTransport" 
+ 		    xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" 
+ 		    xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy">
+		    <wsp:ExactlyOne>
+		        <wsp:All>
+ 		 	        <sp:SignedSupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+				        <wsp:Policy>
+					        <sp:UsernameToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient" />
+				        </wsp:Policy>
+			        </sp:SignedSupportingTokens>
+			        <ramp:RampartConfig xmlns:ramp="http://ws.apache.org/rampart/policy"> 
+				        <ramp:user>Fred</ramp:user>
+				        <ramp:passwordType>PasswordText</ramp:passwordType>
+				        <ramp:passwordCallbackClass>FooPWCBHandler</ramp:passwordCallbackClass>
+			        </ramp:RampartConfig>
+			    </wsp:All>
+		    </wsp:ExactlyOne>
+	    </wsp:Policy>
+	</policySet>
+
+	<policySet name="testClientPolicy" provides="sca:authentication.message" appliesTo="fabric3://./domain/EchoTest#service">
+ 	    <wsp:Policy wsu:Id="UTOverTransport" 
+ 		    xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" 
+ 		    xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy">
+		    <wsp:ExactlyOne>
+		        <wsp:All>
+ 		 	        <sp:SignedSupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+				        <wsp:Policy>
+					        <sp:UsernameToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient" />
+				        </wsp:Policy>
+			        </sp:SignedSupportingTokens>
+			        <ramp:RampartConfig xmlns:ramp="http://ws.apache.org/rampart/policy"> 
+				        <ramp:user>Fred</ramp:user>
+				        <ramp:passwordType>PasswordText</ramp:passwordType>
+				        <ramp:passwordCallbackClass>FooPWCBHandler</ramp:passwordCallbackClass>
+			        </ramp:RampartConfig>
+			    </wsp:All>
+		    </wsp:ExactlyOne>
+	    </wsp:Policy>
+	</policySet-->
+
+	<policySet name="testServerPolicy" provides="sca:authentication.message" appliesTo="fabric3://./domain/EchoService#Axis2EchoService">
+		<f3:AxisConfig>
+		    <parameter name="InflowSecurity" xmlns="">
+		        <action>
+		            <items>UsernameToken</items>
+		            <passwordCallbackClass>org.fabric3.tests.security.PasswordHandler</passwordCallbackClass>
+		        </action>
+		    </parameter>
+		</f3:AxisConfig>
     </policySet>
-    
-    <policySet name="testClientPolicy" provides="sca:authentication.message" appliesTo="fabric3://./domain/EchoTest#service">
-        <wsp:Policy>
-            <sp:UsernameToken>
-                <wsp:Policy>
-                    <sp:WssUsernameToken11/>
-                </wsp:Policy>
-            </sp:UsernameToken>
-        </wsp:Policy>
-    </policySet>
+		
+	<policySet name="testClientPolicy" provides="sca:authentication.message" appliesTo="fabric3://./domain/EchoTest#service">
+		<f3:AxisConfig>
+			<parameter name="OutflowSecurity" xmlns="">
+				<action>
+					<items>UsernameToken</items>
+					<user>Fred</user>
+		            <passwordCallbackClass>org.fabric3.tests.security.PasswordHandler</passwordCallbackClass>
+					<passwordType>PasswordText</passwordType>
+				</action>
+			</parameter>
+		</f3:AxisConfig>
+	</policySet>
 
 </definitions>

@@ -45,7 +45,6 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -63,7 +62,7 @@
                             <version>0.4-SNAPSHOT</version>
                         </dependency>
                         <dependency>
-                            <groupId>org.codehaus.fabric3.tests </groupId>
+                            <groupId>org.codehaus.fabric3.tests</groupId>
                             <artifactId>test-security-policy</artifactId>
                             <version>0.1-SNAPSHOT</version>
                         </dependency>

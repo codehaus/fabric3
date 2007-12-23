@@ -20,16 +20,18 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Revision$ $Date$
  */
+@EagerInit
 public class PolicyApplierRegistryImpl implements PolicyApplierRegistry {
     
     private Map<QName, PolicyApplier> policyAppliers;
     
-    @Reference
+    @Reference(required = true)
     public void setPolicyAppliers(Map<QName, PolicyApplier> policyAppliers) {
         this.policyAppliers = policyAppliers;
     }

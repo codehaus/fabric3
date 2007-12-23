@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.xml.namespace.QName;
+
 import org.apache.axis2.Constants;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.deployment.util.Utils;
@@ -31,7 +33,8 @@ import org.apache.axis2.engine.MessageReceiver;
 import org.apache.axis2.transport.http.AxisServlet;
 import org.fabric3.binding.ws.axis2.config.F3Configurator;
 import org.fabric3.binding.ws.axis2.physical.Axis2WireSourceDefinition;
-import org.fabric3.binding.ws.axis2.policy.Axis2PolicyBuilder;
+import org.fabric3.binding.ws.axis2.policy.PolicyApplier;
+import org.fabric3.binding.ws.axis2.policy.PolicyApplierRegistry;
 import org.fabric3.binding.ws.axis2.servlet.F3AxisServlet;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.host.ServletHost;
@@ -53,7 +56,7 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
     
     private final ServletHost servletHost;
     private final ClassLoaderRegistry classLoaderRegistry;
-    private final Axis2PolicyBuilder policyBuilder;
+    private final PolicyApplierRegistry policyApplierRegistry;
     private final F3Configurator f3Configurator;
     
     private ConfigurationContext configurationContext;
@@ -61,11 +64,11 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
     
     public Axis2ServiceProvisionerImpl(@Reference ServletHost servletHost,
                                        @Reference ClassLoaderRegistry classLoaderRegistry,
-                                       @Reference Axis2PolicyBuilder policyBuilder,
+                                       @Reference PolicyApplierRegistry policyApplierRegistry,
                                        @Reference F3Configurator f3Configurator) {
         this.servletHost = servletHost;
         this.classLoaderRegistry = classLoaderRegistry;
-        this.policyBuilder = policyBuilder;
+        this.policyApplierRegistry = policyApplierRegistry;
         this.f3Configurator = f3Configurator;
     }
     
@@ -121,7 +124,12 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
             configurationContext.getAxisConfiguration().addService(axisService);
             
             for (Element policyDefinition : pwsd.getPolicyDefinitions()) {
-                axisService.applyPolicy(policyBuilder.buildPolicy(policyDefinition));
+                QName policyName = new QName(policyDefinition.getNamespaceURI(), policyDefinition.getNodeName());
+                PolicyApplier policyApplier = policyApplierRegistry.getPolicyApplier(policyName);
+                if (policyApplier == null) {
+                    throw new WiringException("Unknown policy " + policyName);
+                }
+                policyApplier.applyPolicy(axisService, policyDefinition);
             }
             
         } catch (Exception e) {

@@ -14,22 +14,27 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.binding.ws.axis2.policy;
+package org.fabric3.tests.security;
 
-import org.apache.neethi.Policy;
-import org.w3c.dom.Element;
+import java.io.IOException;
+
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.CallbackHandler;
+import javax.security.auth.callback.UnsupportedCallbackException;
+
+import org.apache.ws.security.WSPasswordCallback;
 
 /**
- * Abstraction for the neethi policy builder.
- * 
  * @version $Revision$ $Date$
  */
-public interface Axis2PolicyBuilder {
-    
-    /**
-     * @param policyDefinition XML fragment representing the policy definition.
-     * @return An instance of the policy assertion.
-     */
-    Policy buildPolicy(Element policyDefinition);
+public class PasswordHandler implements CallbackHandler {
+
+    public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
+        for (Callback callback : callbacks) {
+            if (callback instanceof WSPasswordCallback) {
+                ((WSPasswordCallback) callback).setPassword("foobar");
+            }
+        }
+    }
 
 }

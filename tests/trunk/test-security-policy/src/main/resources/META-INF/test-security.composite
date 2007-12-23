@@ -21,5 +21,10 @@
            targetNamespace="org.codehaus.fabric3"
            name="TestSecurityPolicy"
            autowire="true">
+           
+    <!-- Hack to get the password callback handler loaded -->
+    <component name="PasswordHandler">
+        <system:implementation.system class="org.fabric3.tests.security.PasswordHandler"/>
+    </component>
     
 </composite>

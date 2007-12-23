@@ -16,16 +16,14 @@
  */
 package org.fabric3.binding.ws.axis2.wire;
 
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.neethi.Policy;
 import org.fabric3.binding.ws.axis2.Axis2ServiceProvisioner;
 import org.fabric3.binding.ws.axis2.config.F3Configurator;
 import org.fabric3.binding.ws.axis2.physical.Axis2WireSourceDefinition;
 import org.fabric3.binding.ws.axis2.physical.Axis2WireTargetDefinition;
-import org.fabric3.binding.ws.axis2.policy.Axis2PolicyBuilder;
+import org.fabric3.binding.ws.axis2.policy.PolicyApplierRegistry;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.WireAttacher;
 import org.fabric3.spi.builder.component.WireAttacherRegistry;
@@ -50,7 +48,7 @@ public class Axis2WireAttacher implements WireAttacher<Axis2WireSourceDefinition
     
     private final Axis2ServiceProvisioner serviceProvisioner;
     private final WireAttacherRegistry wireAttacherRegistry;
-    private final Axis2PolicyBuilder policyBuilder;
+    private final PolicyApplierRegistry policyApplierRegistry;
     private final F3Configurator f3Configurator;
     
     /**
@@ -59,11 +57,11 @@ public class Axis2WireAttacher implements WireAttacher<Axis2WireSourceDefinition
      */
     public Axis2WireAttacher(@Reference Axis2ServiceProvisioner serviceProvisioner, 
                              @Reference WireAttacherRegistry wireAttacherRegistry,
-                             @Reference Axis2PolicyBuilder policyBuilder,
+                             @Reference PolicyApplierRegistry policyApplierRegistry,
                              @Reference F3Configurator f3Configurator) {
         this.serviceProvisioner = serviceProvisioner;
         this.wireAttacherRegistry = wireAttacherRegistry;
-        this.policyBuilder = policyBuilder;
+        this.policyApplierRegistry = policyApplierRegistry;
         this.f3Configurator = f3Configurator;
     }
     
@@ -94,13 +92,14 @@ public class Axis2WireAttacher implements WireAttacher<Axis2WireSourceDefinition
     public void attachToTarget(PhysicalWireSourceDefinition source, Axis2WireTargetDefinition target, Wire wire)
             throws WiringException {
         
-        Set<Policy> policies = new HashSet<Policy>();
-        for(Element policyDefinition : target.getPolicyDefinitions()) {
-            policies.add(policyBuilder.buildPolicy(policyDefinition));
-        }
+        Set<Element> policies = target.getPolicyDefinitions();
         
         for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
-            Interceptor interceptor = new Axis2TargetInterceptor(target, entry.getKey().getName(), policies, f3Configurator);
+            Interceptor interceptor = new Axis2TargetInterceptor(target, 
+                                                                 entry.getKey().getName(), 
+                                                                 policies, 
+                                                                 f3Configurator,
+                                                                 policyApplierRegistry);
             entry.getValue().addInterceptor(interceptor);
         }
         

@@ -18,8 +18,10 @@
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
            targetNamespace="org.codehaus.fabric3"
-           name="Axis2WebServicesBindingExtension">
+           name="Axis2WebServicesBindingExtension"
+           autowire="true">
 
     <!-- Axis wire attacher -->
     <component name="Axis2WireAttacher">
@@ -37,9 +39,21 @@
         <system:implementation.system class="org.fabric3.binding.ws.axis2.physical.Axis2BindingGeneratorDelegate"/>
     </component>
     
-    <!-- Neethi policy builder -->
-    <component name="Axis2NeethiPolicyBuilder">
-        <system:implementation.system class="org.fabric3.binding.ws.axis2.policy.DefaultAxis2PolicyBuilder"/>
+    <!-- Policy Applier Registry -->
+    <component name="Axis2PolicyApplierRegistry">
+        <system:implementation.system class="org.fabric3.binding.ws.axis2.policy.PolicyApplierRegistryImpl"/>
+        <reference name="policyAppliers" target="WsPolicyApplier Axs2ConfigPolicyApplier"/>
+    </component>
+    
+    <!-- WS Policy Applier -->
+    <component name="WsPolicyApplier" f3:key="wsp:Policy">
+        <system:implementation.system class="org.fabric3.binding.ws.axis2.policy.WsPolicyApplier"/>
+    </component>
+    
+    <!-- Axis Config Policy Applier -->
+    <component name="Axs2ConfigPolicyApplier" f3:key="f3:AxisConfig">
+        <system:implementation.system class="org.fabric3.binding.ws.axis2.policy.AxisConfigPolicyApplier"/>
+        
     </component>
     
     <!-- Configurator -->

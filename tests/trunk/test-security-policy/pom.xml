@@ -29,6 +29,14 @@
     <description>Fabric3 Security Policy Extension.</description>
     <packaging>sca-contribution-jar</packaging>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.ws.security</groupId>
+            <artifactId>wss4j</artifactId>
+            <version>1.5.3</version>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>

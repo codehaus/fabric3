@@ -24,6 +24,7 @@ import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axis2.description.AxisService;
 import org.apache.neethi.PolicyEngine;
 import org.fabric3.transform.xml.Element2Stream;
+import org.osoa.sca.annotations.EagerInit;
 import org.w3c.dom.Element;
 
 /**
@@ -31,6 +32,7 @@ import org.w3c.dom.Element;
  * 
  * @version $Revision$ $Date$
  */
+@EagerInit
 public class WsPolicyApplier implements PolicyApplier {
     
     private final Element2Stream transformer = new Element2Stream(XMLInputFactory.newInstance());

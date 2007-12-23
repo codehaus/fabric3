@@ -16,19 +16,24 @@
  */
 package org.fabric3.binding.ws.axis2.servlet;
 
+import java.io.IOException;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.transport.http.AxisServlet;
+import org.fabric3.spi.deployer.CompositeClassLoader;
 
 /**
  * @version $Revision$ $Date$
  */
 @SuppressWarnings("serial")
 public class F3AxisServlet extends AxisServlet {
-    
+
     /**
      * Initializes the Axis configuration context.
      * 
@@ -50,6 +55,25 @@ public class F3AxisServlet extends AxisServlet {
         servletContext.setAttribute(AxisServlet.CONFIGURATION_CONTEXT, configContext);
 
         super.init(config);
+        
+    }
+    
+    @Override
+    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
+        Thread currentThread = Thread.currentThread();
+        ClassLoader oldCl = currentThread.getContextClassLoader();
+        
+        try {
+            
+            // TODO May be we want to do an MPCL with app cl as well
+            CompositeClassLoader systemCl = (CompositeClassLoader) getClass().getClassLoader();
+            currentThread.setContextClassLoader(systemCl);
+            super.service(request, response);
+            
+        } finally {
+            currentThread.setContextClassLoader(oldCl);
+        }
         
     }
     
