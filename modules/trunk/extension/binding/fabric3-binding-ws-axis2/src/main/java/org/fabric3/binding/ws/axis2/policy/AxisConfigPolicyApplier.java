@@ -55,10 +55,13 @@ public class AxisConfigPolicyApplier implements PolicyApplier {
                 StAXOMBuilder builder = new StAXOMBuilder(reader);
                 OMElement parameterElement = builder.getDocumentElement();
                 
-                Parameter param = new Parameter();
-                param.setName(parameterName);
+                Element action = (Element) parameter.getElementsByTagName("action").item(0);
+                reader = transformer.transform(action, null);
+                builder = new StAXOMBuilder(reader);
+                OMElement actionElement = builder.getDocumentElement();
+                
+                Parameter param = new Parameter(parameterName, actionElement);
                 param.setParameterElement(parameterElement);
-                param.setParameterType(Parameter.OM_PARAMETER);
                 
                 axisService.addParameter(param);
                 

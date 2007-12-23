@@ -31,14 +31,28 @@ import org.fabric3.scdl.BindingDefinition;
 public class WsBindingDefinition extends BindingDefinition {
     
     private final String implementation;
-    
-    public WsBindingDefinition(URI targetUri, String implementation) {
+    private final String wsdlLocation;
+    private final String wsdlElement;
+
+    public WsBindingDefinition(URI targetUri, String implementation,
+                               String wsdlLocation, String wsdlElement) {
         super(targetUri, WsBindingLoader.BINDING_QNAME);
         this.implementation = implementation;
+        this.wsdlElement = wsdlElement;
+        this.wsdlLocation = wsdlLocation;
     }
     
     public String getImplementation() {
         return implementation;
+    }
+
+
+    public String getWsdlElement() {
+        return wsdlElement;
+    }
+
+    public String getWsdlLocation() {
+        return wsdlLocation;
     }
 
 }

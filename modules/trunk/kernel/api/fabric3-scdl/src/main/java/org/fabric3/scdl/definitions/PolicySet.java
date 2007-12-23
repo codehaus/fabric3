@@ -57,7 +57,7 @@ public final class PolicySet extends AbstractDefinition {
         super(name);
 
         this.provides = provides;
-        this.appliesTo = appliesTo;
+        this.appliesTo = "".equals(appliesTo) ? null : appliesTo;
         this.extension = extendion;
         this.phase = phase;
         

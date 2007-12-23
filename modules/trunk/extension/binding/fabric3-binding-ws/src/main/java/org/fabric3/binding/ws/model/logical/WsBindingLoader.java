@@ -69,11 +69,14 @@ public class WsBindingLoader extends LoaderExtension<WsBindingDefinition> {
 
             String uri = reader.getAttributeValue(null, "uri");
             String implementation = reader.getAttributeValue(org.fabric3.spi.Constants.FABRIC3_NS, "impl");
-            
+            String wsdlElement = reader.getAttributeValue(null, "wsdlElement");
+            String wsdlLocation = reader.getAttributeValue("http://www.w3.org/2004/08/wsdl-instance", "wsdlLocation");
+
             if(uri == null) {
                 throw new LoaderException("The uri attribute is not specified");
             }
-            bd = new WsBindingDefinition(new URI(uri), implementation);
+            bd = new WsBindingDefinition(new URI(uri), implementation,
+                wsdlLocation, wsdlElement);
             
             policyHelper.loadPolicySetsAndIntents(bd, reader);
 
