@@ -18,15 +18,11 @@
  */
 package org.fabric3.loader.definitions;
 
-import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
-import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
 import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
@@ -36,7 +32,6 @@ import org.fabric3.spi.Constants;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.util.stax.StaxUtil;
 import org.fabric3.transform.xml.Stream2Document;
@@ -44,6 +39,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
  * Loader for definitions.
@@ -72,61 +68,41 @@ public class PolicySetLoader implements StAXElementLoader<PolicySet> {
 
     public PolicySet load(XMLStreamReader reader, LoaderContext context) throws XMLStreamException, LoaderException {
         
-        String name = reader.getAttributeValue(null, "name");
-        QName qName = new QName(context.getTargetNamespace(), name);
+        try {
         
-        Set<QName> provides = new HashSet<QName>();
-        StringTokenizer tok = new StringTokenizer(reader.getAttributeValue(null, "provides"));
-        while(tok.hasMoreElements()) {
-            provides.add(StaxUtil.createQName(tok.nextToken(), reader));
-        }
-        
-        String appliesTo = reader.getAttributeValue(null, "appliesTo");
-        
-        String sPhase = reader.getAttributeValue(Constants.FABRIC3_NS, "phase");
-        PolicyPhase phase = null;
-        if (sPhase != null) {
-            phase = PolicyPhase.valueOf(sPhase);
-        }
-        
-        Element extension = null;
-
-        while (true) {
-            switch (reader.next()) {
-            case START_ELEMENT:
-                try {
-                    extension = transformer.transform(reader, null).getDocumentElement();
-                } catch (Exception e) {
-                    throw new LoaderException(e);
-                }
-                break;
-            case END_ELEMENT:
-                QName qname = reader.getName();
-                if (qname.equals(DefinitionsLoader.POLICY_SET)) {
-                    return new PolicySet(qName, provides, appliesTo, extension, phase);
+            Element policyElement = transformer.transform(reader, null).getDocumentElement();
+            
+            String name = policyElement.getAttribute("name");
+            QName qName = new QName(context.getTargetNamespace(), name);
+            
+            Set<QName> provides = new HashSet<QName>();
+            StringTokenizer tok = new StringTokenizer(policyElement.getAttribute("provides"));
+            while(tok.hasMoreElements()) {
+                provides.add(StaxUtil.createQName(tok.nextToken(), reader));
+            }
+            
+            String appliesTo = policyElement.getAttribute("appliesTo");
+            
+            String sPhase = policyElement.getAttributeNS(Constants.FABRIC3_NS, "phase");
+            PolicyPhase phase = null;
+            if (sPhase != null && !"".equals(sPhase.trim())) {
+                phase = PolicyPhase.valueOf(sPhase);
+            }
+            
+            Element extension = null;
+            NodeList children = policyElement.getChildNodes();
+            for (int i = 0;i < children.getLength();i++) {
+                if (children.item(i) instanceof Element) {
+                    extension = (Element) children.item(i);
+                    break;
                 }
             }
+            
+            return new PolicySet(qName, provides, appliesTo, extension, phase);
+            
+        } catch(Exception ex) {
+            throw new LoaderException(ex);
         }
-        
-        
-        
-    }
-
-    private Element loadExtension(XMLStreamReader reader) throws XMLStreamException, LoaderException {
-        
-        while(reader.hasNext()) {
-            int event = reader.next();
-            switch (event) {
-            case XMLStreamConstants.START_ELEMENT:
-                try {
-                    return transformer.transform(reader, null).getDocumentElement();
-                } catch (Exception e) {
-                    throw new LoaderException(e);
-                }
-            }
-        }
-
-        return null;
         
     }
 
