@@ -24,23 +24,28 @@ import org.fabric3.host.Fabric3RuntimeException;
  * Runtime exception thrown with unexpected JXTA errors.
  *
  * @version $Revsion$ $Date$
- *
  */
 public class Fabric3JxtaException extends Fabric3RuntimeException {
-
-    /**
-     * Serial version UID.
-     */
     private static final long serialVersionUID = -7355964913702467901L;
 
     /**
      * Initializes the exception message and cause.
      *
      * @param message Exception message.
-     * @param cause Exception cause.
+     * @param cause   Exception cause.
      */
     public Fabric3JxtaException(String message, Throwable cause) {
         super(message, cause);
+    }
+
+    /**
+     * Initializes the exception message and identifier.
+     *
+     * @param message    Exception message.
+     * @param identifier Exception identifier.
+     */
+    public Fabric3JxtaException(String message, String identifier) {
+        super(message, identifier);
     }
 
     /**
