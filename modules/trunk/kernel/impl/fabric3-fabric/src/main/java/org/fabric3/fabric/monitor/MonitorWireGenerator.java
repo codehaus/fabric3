@@ -51,6 +51,7 @@ public class MonitorWireGenerator implements ResourceWireGenerator<MonitorWireTa
     public MonitorWireTargetDefinition generateWireTargetDefinition(LogicalResource<MonitorResource> resource,
                                                                     GeneratorContext context)
             throws GenerationException {
-        return null;
+
+        return new MonitorWireTargetDefinition();
     }
 }
