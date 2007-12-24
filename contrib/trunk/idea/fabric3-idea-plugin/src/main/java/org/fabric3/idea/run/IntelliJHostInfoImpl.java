@@ -34,6 +34,7 @@ import org.fabric3.maven.runtime.MavenHostInfo;
  */
 @Service(interfaces = {IntelliJHostInfo.class, MavenHostInfo.class})
 public class IntelliJHostInfoImpl implements IntelliJHostInfo {
+    public static final URI LOCAL_URI = URI.create("localhost://intellij");
     private final URI domain;
     private final Properties hostProperties;
     private final Set<URL> dependencyUrls;
@@ -74,8 +75,8 @@ public class IntelliJHostInfoImpl implements IntelliJHostInfo {
         return domain;
     }
 
-    public String getRuntimeId() {
-        return "IntelliJ";
+    public URI getRuntimeId() {
+        return LOCAL_URI;
     }
 
     public Set<URL> getDependencyUrls() {
