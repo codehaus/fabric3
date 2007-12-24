@@ -47,7 +47,7 @@ public abstract class AbstractHostInfo implements HostInfo {
     /**
      * Runtime Id.
      */
-    private String runtimeId;
+    private URI runtimeId;
 
     private Properties properties;
 
@@ -62,7 +62,7 @@ public abstract class AbstractHostInfo implements HostInfo {
     public AbstractHostInfo(final URI domain,
                             final URL baseUrl,
                             final boolean online,
-                            final String runtimeId) {
+                            final URI runtimeId) {
         this(domain, baseUrl, online, runtimeId, new Properties());
     }
 
@@ -78,7 +78,7 @@ public abstract class AbstractHostInfo implements HostInfo {
     public AbstractHostInfo(final URI domain,
                             final URL baseUrl,
                             final boolean online,
-                            final String runtimeId,
+                            final URI runtimeId,
                             final Properties properties) {
         this.domain = domain;
         this.baseUrl = baseUrl;
@@ -102,7 +102,7 @@ public abstract class AbstractHostInfo implements HostInfo {
      *
      * @return the SCA domain associated with this runtime; may be null
      */
-    public String getRuntimeId() {
+    public URI getRuntimeId() {
         return runtimeId;
     }
 

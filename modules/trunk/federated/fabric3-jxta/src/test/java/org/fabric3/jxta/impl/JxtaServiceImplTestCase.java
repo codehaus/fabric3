@@ -23,8 +23,8 @@ import java.net.URI;
 import junit.framework.TestCase;
 import net.jxta.peergroup.PeerGroup;
 import net.jxta.platform.NetworkConfigurator;
-
 import org.easymock.classextension.EasyMock;
+
 import org.fabric3.host.runtime.HostInfo;
 
 /**
@@ -35,10 +35,10 @@ public class JxtaServiceImplTestCase extends TestCase {
     /**
      * Tests the creation of domain group.
      */
-    public void testGetDomainGroup() throws Exception{
+    public void testGetDomainGroup() throws Exception {
 
         HostInfo hostInfo = EasyMock.createMock(HostInfo.class);
-        EasyMock.expect(hostInfo.getRuntimeId()).andReturn("runtime1");
+        EasyMock.expect(hostInfo.getRuntimeId()).andReturn(URI.create("runtime1"));
         EasyMock.expect(hostInfo.getDomain()).andReturn(new URI("domain1"));
         EasyMock.replay(hostInfo);
 

@@ -29,6 +29,7 @@ import org.fabric3.maven.runtime.MavenHostInfo;
  * @version $Rev$ $Date$
  */
 public class MavenHostInfoImpl implements MavenHostInfo {
+    public static final URI ID = URI.create("localhost://maven");
     private final URI domain;
     private final Properties hostProperties;
     private final Set<URL> dependencyUrls;
@@ -55,8 +56,8 @@ public class MavenHostInfoImpl implements MavenHostInfo {
         return domain;
     }
 
-    public String getRuntimeId() {
-        return "maven";
+    public URI getRuntimeId() {
+        return ID;
     }
 
     public Set<URL> getDependencyUrls() {

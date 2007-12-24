@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.net.URI;
 
 import static net.jxta.discovery.DiscoveryService.ADV;
 import net.jxta.document.AdvertisementFactory;
@@ -97,8 +98,8 @@ public class JxtaDiscoveryService implements DiscoveryService {
     private Publisher publisher;
 
     // Participating runtimes
-    private Map<String, TwosTuple<RuntimeInfo, Long>> participatingRuntimes =
-            new ConcurrentHashMap<String, TwosTuple<RuntimeInfo, Long>>();
+    private Map<URI, TwosTuple<RuntimeInfo, Long>> participatingRuntimes =
+            new ConcurrentHashMap<URI, TwosTuple<RuntimeInfo, Long>>();
     private DiscoveryServiceRegistry registry;
 
     public Set<RuntimeInfo> getParticipatingRuntimes() {

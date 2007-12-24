@@ -2,6 +2,7 @@ package org.fabric3.jxta.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 
 import javax.security.cert.CertificateException;
 
@@ -97,10 +98,11 @@ public class JxtaServiceImpl implements JxtaService {
 
         try {
 
-            String runtimeId = hostInfo.getRuntimeId();
-
-            networkConfigurator.setName(runtimeId);
-            networkConfigurator.setHome(new File(runtimeId));
+            URI runtimeId = hostInfo.getRuntimeId();
+            // TODO temporary
+            String id = runtimeId.toString();
+            networkConfigurator.setName(id);
+            networkConfigurator.setHome(new File(id));
             networkConfigurator.setMode(NetworkConfigurator.EDGE_NODE);
 
             if (networkConfigurator.exists()) {

@@ -42,7 +42,7 @@ public class RuntimeInfo {
         STARTED, STOPPED
     }
 
-    private String id;
+    private URI id;
     private List<ResourceDescription<?>> resources;
     private Set<URI> components = new HashSet<URI>();
     private Set<QName> features;
@@ -55,7 +55,7 @@ public class RuntimeInfo {
         components = new HashSet<URI>();
     }
 
-    public RuntimeInfo(String id) {
+    public RuntimeInfo(URI id) {
         this();
         this.id = id;
     }
@@ -107,7 +107,7 @@ public class RuntimeInfo {
      *
      * @return the runtime id
      */
-    public String getId() {
+    public URI getId() {
         return id;
     }
 

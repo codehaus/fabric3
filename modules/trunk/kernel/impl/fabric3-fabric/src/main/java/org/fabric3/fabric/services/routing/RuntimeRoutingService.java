@@ -19,8 +19,6 @@
 package org.fabric3.fabric.services.routing;
 
 import java.net.URI;
-import java.util.Collections;
-import java.util.Set;
 
 import org.osoa.sca.annotations.Reference;
 
@@ -43,14 +41,12 @@ import org.fabric3.spi.model.physical.PhysicalChangeSet;
 public class RuntimeRoutingService implements RoutingService {
     private final Deployer deployer;
     private final CommandExecutorRegistry registry;
-    private final Set<String> runtimeIds;
 
     public RuntimeRoutingService(@Reference Deployer deployer,
                                  @Reference CommandExecutorRegistry registry,
                                  @Reference HostInfo hostInfo) {
         this.deployer = deployer;
         this.registry = registry;
-        runtimeIds = Collections.singleton(hostInfo.getRuntimeId());
     }
 
     public void route(URI runtimeId, PhysicalChangeSet set) throws RoutingException {
@@ -80,7 +76,4 @@ public class RuntimeRoutingService implements RoutingService {
         }
     }
 
-    public Set<String> getRuntimeIds() {
-        return runtimeIds;
-    }
 }

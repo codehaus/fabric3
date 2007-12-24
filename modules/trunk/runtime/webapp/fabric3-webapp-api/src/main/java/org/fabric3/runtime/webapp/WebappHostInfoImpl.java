@@ -32,6 +32,7 @@ public class WebappHostInfoImpl implements WebappHostInfo {
     private final URL baseURL;
     private final URL intentsLocation;
     private final boolean online;
+    private URI id;
 
     public WebappHostInfoImpl(ServletContext servletContext,
                               URI domain,
@@ -74,11 +75,14 @@ public class WebappHostInfoImpl implements WebappHostInfo {
         return domain;
     }
 
-    public String getRuntimeId() {
-        String runtimeId = servletContext.getInitParameter("fabric3.runtimeId");
-        if (runtimeId == null) {
-            runtimeId = "fabric3";
+    public URI getRuntimeId() {
+        if (id == null) {
+            String runtimeId = servletContext.getInitParameter("fabric3.runtimeId");
+            if (runtimeId == null) {
+                runtimeId = "localhost://fabric3";
+            }
+            id = URI.create(runtimeId);
         }
-        return runtimeId;
+        return id;
     }
 }

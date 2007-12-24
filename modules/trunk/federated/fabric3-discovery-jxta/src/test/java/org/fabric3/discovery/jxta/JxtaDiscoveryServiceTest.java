@@ -38,7 +38,7 @@ public class JxtaDiscoveryServiceTest extends TestCase {
 
     public void testGetParticipatingRuntimes() throws Exception {
 
-        String runtimeId = "runtime2";
+        URI runtimeId = URI.create("runtime2");
 
         JxtaDiscoveryService discoveryService = new JxtaDiscoveryService();
 
@@ -86,9 +86,9 @@ public class JxtaDiscoveryServiceTest extends TestCase {
     private class MyHostInfo implements HostInfo {
 
         private URI domain;
-        private String runtimeId;
+        private URI runtimeId;
 
-        public MyHostInfo(URI domain, String runtimeId) {
+        public MyHostInfo(URI domain, URI runtimeId) {
             this.domain = domain;
             this.runtimeId = runtimeId;
         }
@@ -101,7 +101,7 @@ public class JxtaDiscoveryServiceTest extends TestCase {
             return domain;
         }
 
-        public String getRuntimeId() {
+        public URI getRuntimeId() {
             return runtimeId;
         }
 
@@ -117,9 +117,9 @@ public class JxtaDiscoveryServiceTest extends TestCase {
 
     private class MyRuntimeInfoService implements RuntimeInfoService {
 
-        private String runtimeId;
+        private URI runtimeId;
 
-        public MyRuntimeInfoService(String runtimeId) {
+        public MyRuntimeInfoService(URI runtimeId) {
             this.runtimeId = runtimeId;
         }
 

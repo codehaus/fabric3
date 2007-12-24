@@ -43,7 +43,7 @@ public interface HostInfo {
      *
      * @return the SCA domain associated with this runtime; may be null
      */
-    String getRuntimeId();
+    URI getRuntimeId();
 
     /**
      * Gets the base URL for the runtime.

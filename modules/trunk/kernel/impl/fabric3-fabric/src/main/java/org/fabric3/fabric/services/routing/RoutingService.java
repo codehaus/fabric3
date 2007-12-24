@@ -49,10 +49,4 @@ public interface RoutingService {
      */
     void route(URI runtimeId, CommandSet set) throws RoutingException;
 
-    /**
-     * Returns the available runtimes in the current domain.
-     * @return List of available runtimes.
-     */
-    Set<String> getRuntimeIds();
-
 }

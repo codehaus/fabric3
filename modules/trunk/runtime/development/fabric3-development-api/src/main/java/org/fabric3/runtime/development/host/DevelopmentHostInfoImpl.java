@@ -30,7 +30,7 @@ public class DevelopmentHostInfoImpl extends AbstractHostInfo implements Develop
     private URL intentsLocation;
 
     public DevelopmentHostInfoImpl(final URI domain, final URL baseUrl, File extensionsDir, URL intentsLocation) {
-        super(domain, baseUrl, true, "DevelopmentRuntime");
+        super(domain, baseUrl, true, URI.create("localhost://DevelopmentRuntime"));
         this.extensionsDir = extensionsDir;
         this.intentsLocation = intentsLocation;
     }

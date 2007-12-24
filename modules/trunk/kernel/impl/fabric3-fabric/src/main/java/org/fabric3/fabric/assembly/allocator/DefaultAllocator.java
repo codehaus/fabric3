@@ -26,9 +26,9 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.runtime.HostInfo;
+import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.topology.RuntimeInfo;
-import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.services.discovery.DiscoveryService;
 
 /**
@@ -116,7 +116,7 @@ public class DefaultAllocator implements Allocator {
                 }
             }
             if (info != null) {
-                component.setRuntimeId(URI.create(info.getId()));
+                component.setRuntimeId(info.getId());
             } else {
                 component.setRuntimeId(null);
             }
@@ -134,11 +134,10 @@ public class DefaultAllocator implements Allocator {
      */
     private void synchronizeTopology(LogicalComponent<?> component) {
         // calculate the set of runtimes the component or its children (if it is a composite) have been pre-allocated to
-        Set<String> preAllocated = calculatePreallocatedRuntimes(component);
+        Set<URI> preAllocated = calculatePreallocatedRuntimes(component);
         // synchronize the set of runtimes with the domain topology, gathering the non-responding runtimes
-        Set<String> nonRespondingRuntimes = new HashSet<String>();
-        // Map<String, RuntimeInfo> runtimes = getRuntimes();
-        for (String runtime : preAllocated) {
+        Set<URI> nonRespondingRuntimes = new HashSet<URI>();
+        for (URI runtime : preAllocated) {
             int i = 0;
             while (!getRuntimes().containsKey(runtime) && i < syncTimes) {
                 try {
@@ -156,8 +155,8 @@ public class DefaultAllocator implements Allocator {
         markForReallocation(component, nonRespondingRuntimes);
     }
 
-    private Map<String, RuntimeInfo> getRuntimes() {
-        Map<String, RuntimeInfo> runtimes = new HashMap<String, RuntimeInfo>();
+    private Map<URI, RuntimeInfo> getRuntimes() {
+        Map<URI, RuntimeInfo> runtimes = new HashMap<URI, RuntimeInfo>();
         Set<RuntimeInfo> infos = discoveryService.getParticipatingRuntimes();
         for (RuntimeInfo info : infos) {
             runtimes.put(info.getId(), info);
@@ -171,23 +170,22 @@ public class DefaultAllocator implements Allocator {
      * @param component the component being allocated
      * @return the set of pre-allocated runtimes for a component and its children
      */
-    private HashSet<String> calculatePreallocatedRuntimes(LogicalComponent<?> component) {
-        HashSet<String> runtimes = new HashSet<String>();
+    private HashSet<URI> calculatePreallocatedRuntimes(LogicalComponent<?> component) {
+        HashSet<URI> runtimes = new HashSet<URI>();
         calculatePreallocatedRuntimes(component, runtimes);
         return runtimes;
     }
 
     @SuppressWarnings({"unchecked"})
-    private void calculatePreallocatedRuntimes(LogicalComponent<?> component, Set<String> runtimes) {
+    private void calculatePreallocatedRuntimes(LogicalComponent<?> component, Set<URI> runtimes) {
         for (LogicalComponent<?> child : component.getComponents()) {
             if (CompositeImplementation.class.isInstance(child.getDefinition().getImplementation())) {
                 calculatePreallocatedRuntimes(child, runtimes);
             } else {
                 URI uri = child.getRuntimeId();
                 if (uri != null) {
-                    String runtime = uri.toString();
-                    if (!runtimes.contains(runtime)) {
-                        runtimes.add(runtime);
+                    if (!runtimes.contains(uri)) {
+                        runtimes.add(uri);
                     }
                 }
             }
@@ -201,19 +199,15 @@ public class DefaultAllocator implements Allocator {
      * @param component             the component to evaluate
      * @param nonRespondingRuntimes the list of non-responding runtimes
      */
-    private void markForReallocation(LogicalComponent<?> component, Set<String> nonRespondingRuntimes) {
+    private void markForReallocation(LogicalComponent<?> component, Set<URI> nonRespondingRuntimes) {
         if (!CompositeImplementation.class.isInstance(component.getDefinition().getImplementation())) {
             URI id = component.getRuntimeId();
-            String stringId = null;
-            if (id != null) {
-                stringId = id.toString();
-            }
-            if (stringId != null && nonRespondingRuntimes.contains(stringId)) {
+            if (id != null && nonRespondingRuntimes.contains(id)) {
                 component.setRuntimeId(null);
                 component.setActive(false);
-            } else if (stringId != null) {
+            } else if (id != null) {
                 // check to see if the component is already running on the service node, and if so record that it is running
-                RuntimeInfo info = getRuntimes().get(stringId);
+                RuntimeInfo info = getRuntimes().get(id);
                 assert info != null;
                 if (info.getComponents().contains(component.getUri())) {
                     component.setActive(true);

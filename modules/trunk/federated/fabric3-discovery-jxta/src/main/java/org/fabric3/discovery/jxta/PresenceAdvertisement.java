@@ -62,7 +62,7 @@ public class PresenceAdvertisement extends Advertisement {
     /*
      * Runtime id.
      */
-    private String runtimeId;
+    private URI runtimeId;
 
     /*
      * Peer id.
@@ -104,7 +104,7 @@ public class PresenceAdvertisement extends Advertisement {
 
             Element elem = (Element) element.getChildren("runtimeId").nextElement();
             if (elem != null && elem.getValue() != null) {
-                adv.runtimeId = elem.getValue().toString();
+                adv.runtimeId = URI.create(elem.getValue().toString());
             }
 
             elem = (Element) element.getChildren("peerId").nextElement();
@@ -219,7 +219,7 @@ public class PresenceAdvertisement extends Advertisement {
     @SuppressWarnings("deprecation")
     public ID getID() {
         try {
-            return (PeerID) IDFactory.fromURL(IDFactory.jxtaURL(peerId));
+            return IDFactory.fromURL(IDFactory.jxtaURL(peerId));
         } catch (Exception e) {
             return null;
         }
