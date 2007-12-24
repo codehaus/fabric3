@@ -76,6 +76,10 @@
     <!-- include JUnit implementation type -->
     <include name="org.fabric3.itest.JunitImplementation" scdlLocation="junitImplementation.composite"/>
 
+    <component name="runtimeInfoService">
+        <system:implementation.system class="org.fabric3.fabric.services.runtime.DefaultRuntimeInfoService"/>
+    </component>
+
     <!-- no recovery for the iTest runtime   -->
     <component name="assemblyRecoveryService">
         <system:implementation.system class="org.fabric3.fabric.assembly.store.NonPersistentAssemblyStore"/>
