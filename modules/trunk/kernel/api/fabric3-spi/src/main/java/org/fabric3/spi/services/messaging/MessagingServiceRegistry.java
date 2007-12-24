@@ -14,23 +14,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.services.discovery;
-
-import org.fabric3.host.Fabric3Exception;
+package org.fabric3.spi.services.messaging;
 
 /**
- * Denotes a general exception when performing a discovery operation.
+ * A registry of MessageServices. Used in runtimes that support more than one MessageService.
  *
  * @version $Rev$ $Date$
  */
-public abstract class DiscoveryException extends Fabric3Exception {
-    private static final long serialVersionUID = 3978739627155168352L;
+public interface MessagingServiceRegistry {
 
-    protected DiscoveryException(String message, String identifier) {
-        super(message, identifier);
-    }
+    void register(MessagingService service);
 
-    public DiscoveryException(String message, String identifier, Throwable cause) {
-        super(message, identifier, cause);
-    }
+    void unRegister(MessagingService service);
+
+    MessagingService getServiceForScheme(String scheme);
+
 }

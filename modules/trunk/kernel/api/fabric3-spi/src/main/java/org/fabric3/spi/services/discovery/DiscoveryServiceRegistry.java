@@ -16,21 +16,34 @@
  */
 package org.fabric3.spi.services.discovery;
 
-import org.fabric3.host.Fabric3Exception;
+import java.util.List;
 
 /**
- * Denotes a general exception when performing a discovery operation.
+ * A registry of DiscoveryServices. Used in runtimes that support more than one DiscoveryService.
  *
  * @version $Rev$ $Date$
  */
-public abstract class DiscoveryException extends Fabric3Exception {
-    private static final long serialVersionUID = 3978739627155168352L;
+public interface DiscoveryServiceRegistry {
 
-    protected DiscoveryException(String message, String identifier) {
-        super(message, identifier);
-    }
+    /**
+     * Registers a DiscoveryService
+     *
+     * @param service the service to register
+     */
+    void register(DiscoveryService service);
 
-    public DiscoveryException(String message, String identifier, Throwable cause) {
-        super(message, identifier, cause);
-    }
+    /**
+     * Un-registers a DiscoveryService
+     *
+     * @param service the service to unregister
+     */
+    void unRegister(DiscoveryService service);
+
+    /**
+     * Returns all registered DiscoveryServices.
+     *
+     * @return all registered DiscoveryServices
+     */
+    List<DiscoveryService> getServices();
+
 }

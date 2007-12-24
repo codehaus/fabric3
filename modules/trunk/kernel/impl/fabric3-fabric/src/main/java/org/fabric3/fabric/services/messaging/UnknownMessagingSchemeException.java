@@ -14,23 +14,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.services.discovery;
+package org.fabric3.fabric.services.messaging;
 
-import org.fabric3.host.Fabric3Exception;
+import org.fabric3.spi.services.messaging.MessagingException;
 
 /**
- * Denotes a general exception when performing a discovery operation.
- *
  * @version $Rev$ $Date$
  */
-public abstract class DiscoveryException extends Fabric3Exception {
-    private static final long serialVersionUID = 3978739627155168352L;
+public class UnknownMessagingSchemeException extends MessagingException {
+    private static final long serialVersionUID = 955789997594671384L;
 
-    protected DiscoveryException(String message, String identifier) {
+    public UnknownMessagingSchemeException(String message, String identifier) {
         super(message, identifier);
-    }
-
-    public DiscoveryException(String message, String identifier, Throwable cause) {
-        super(message, identifier, cause);
     }
 }

@@ -24,38 +24,38 @@
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
            name="org.fabric3.fabric.Common"
            autowire="true">
-    
+
     <component name="physicalPolicyGenerator">
         <system:implementation.system class="org.fabric3.fabric.model.physical.PhysicalPolicyGeneratorImpl"/>
     </component>
-    
+
     <component name="physicalOperationHelper">
         <system:implementation.system class="org.fabric3.fabric.model.physical.PhysicalOperationHelperImpl"/>
     </component>
-    
+
     <component name="atomicComponentInstantiator">
         <system:implementation.system class="org.fabric3.fabric.model.logical.AtomicComponentInstantiator"/>
     </component>
-    
+
     <component name="compositeComponentInstantiator">
         <system:implementation.system class="org.fabric3.fabric.model.logical.CompositeComponentInstantiator"/>
         <reference name="atomicComponentInstantiator" target="atomicComponentInstantiator"/>
     </component>
-    
+
     <component name="domainService">
         <system:implementation.system class="org.fabric3.fabric.domain.DomainServiceImpl"/>
     </component>
-    
+
     <component name="logicalModelGenerator">
         <system:implementation.system class="org.fabric3.fabric.model.logical.LogicalModelGeneratorImpl"/>
         <reference name="atomicComponentInstantiator" target="atomicComponentInstantiator"/>
         <reference name="compositeComponentInstantiator" target="compositeComponentInstantiator"/>
     </component>
-    
+
     <component name="physicalModelGenerator">
         <system:implementation.system class="org.fabric3.fabric.model.physical.PhysicalModelGeneratorImpl"/>
     </component>
-    
+
     <component name="physicalWireGenerator">
         <system:implementation.system class="org.fabric3.fabric.model.physical.PhysicalWireGeneratorImpl"/>
     </component>
@@ -82,10 +82,6 @@
 
     <component name="featureLoader">
         <system:implementation.system class="org.fabric3.fabric.services.advertsiement.FeatureLoader"/>
-    </component>
-
-    <component name="runtimeInfoService">
-        <system:implementation.system class="org.fabric3.fabric.services.runtime.DefaultRuntimeInfoService"/>
     </component>
 
     <component name="proxyService">
@@ -175,5 +171,5 @@
     <component name="JarService">
         <system:implementation.system class="org.fabric3.fabric.services.archive.JarServiceImpl"/>
     </component>
-    
+
 </composite>

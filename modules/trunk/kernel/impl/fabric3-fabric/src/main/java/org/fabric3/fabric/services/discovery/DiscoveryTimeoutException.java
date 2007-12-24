@@ -14,23 +14,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.services.discovery;
+package org.fabric3.fabric.services.discovery;
 
-import org.fabric3.host.Fabric3Exception;
+import org.fabric3.spi.services.discovery.DiscoveryException;
 
 /**
- * Denotes a general exception when performing a discovery operation.
+ * Denotes a timeout while performing a discovery operation.
  *
  * @version $Rev$ $Date$
  */
-public abstract class DiscoveryException extends Fabric3Exception {
-    private static final long serialVersionUID = 3978739627155168352L;
+public class DiscoveryTimeoutException extends DiscoveryException {
+    private static final long serialVersionUID = 7156621402105248064L;
 
-    protected DiscoveryException(String message, String identifier) {
-        super(message, identifier);
-    }
-
-    public DiscoveryException(String message, String identifier, Throwable cause) {
-        super(message, identifier, cause);
+    protected DiscoveryTimeoutException(String message) {
+        super(message, null);
     }
 }
