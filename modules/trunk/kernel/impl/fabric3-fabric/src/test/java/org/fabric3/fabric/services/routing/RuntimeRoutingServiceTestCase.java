@@ -24,7 +24,6 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
 import org.fabric3.fabric.deployer.Deployer;
-import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.command.CommandExecutorRegistry;
 import org.fabric3.spi.model.physical.PhysicalChangeSet;
 
@@ -47,11 +46,8 @@ public class RuntimeRoutingServiceTestCase extends TestCase {
         deployer = EasyMock.createMock(Deployer.class);
         deployer.applyChangeSet(EasyMock.isA(PhysicalChangeSet.class));
         EasyMock.replay(deployer);
-        HostInfo hostInfo = EasyMock.createMock(HostInfo.class);
-        EasyMock.expect(hostInfo.getRuntimeId()).andStubReturn(RUNTIME_ID);
-        EasyMock.replay(hostInfo);
         CommandExecutorRegistry commandRegistry = EasyMock.createMock(CommandExecutorRegistry.class);
         EasyMock.replay(commandRegistry);
-        service = new RuntimeRoutingService(deployer, commandRegistry, hostInfo);
+        service = new RuntimeRoutingService(deployer, commandRegistry);
     }
 }

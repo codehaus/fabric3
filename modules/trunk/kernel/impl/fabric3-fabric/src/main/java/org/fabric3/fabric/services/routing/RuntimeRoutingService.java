@@ -23,7 +23,6 @@ import java.net.URI;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.deployer.Deployer;
-import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.command.CommandExecutorRegistry;
@@ -42,9 +41,7 @@ public class RuntimeRoutingService implements RoutingService {
     private final Deployer deployer;
     private final CommandExecutorRegistry registry;
 
-    public RuntimeRoutingService(@Reference Deployer deployer,
-                                 @Reference CommandExecutorRegistry registry,
-                                 @Reference HostInfo hostInfo) {
+    public RuntimeRoutingService(@Reference Deployer deployer, @Reference CommandExecutorRegistry registry) {
         this.deployer = deployer;
         this.registry = registry;
     }
@@ -52,7 +49,6 @@ public class RuntimeRoutingService implements RoutingService {
     public void route(URI runtimeId, PhysicalChangeSet set) throws RoutingException {
         try {
             deployer.applyChangeSet(set);
-
         } catch (BuilderException e) {
             throw new RoutingException(e);
         } catch (RegistrationException e) {

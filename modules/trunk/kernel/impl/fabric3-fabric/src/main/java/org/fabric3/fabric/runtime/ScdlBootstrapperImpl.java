@@ -304,7 +304,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         } catch (IOException e) {
             throw new InitializationException(e);
         }
-        RuntimeRoutingService routingService = new RuntimeRoutingService(deployer, commandRegistry, info);
+        RuntimeRoutingService routingService = new RuntimeRoutingService(deployer, commandRegistry);
         PromotionNormalizer normalizer = new PromotionNormalizerImpl();
         Allocator allocator = new LocalAllocator();
 
