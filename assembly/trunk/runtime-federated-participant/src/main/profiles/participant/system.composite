@@ -27,16 +27,14 @@
            name="org.fabric3.launcher.System"
            autowire="true">
 
-    <!-- include physical deployment configuration -->
     <include name="org.fabric3.fabric.Common" scdlResource="org/fabric3/fabric/common.composite"/>
 
-<!-- include host services configuration -->
+	<!-- include host services configuration -->
     <include name="org.fabric3.fabric.HostServices" scdlResource="org/fabric3/fabric/hostServices.composite"/>
 
     <!-- include exception formatters  -->
     <include name="org.fabric3.fabric.Formatters" scdlResource="org/fabric3/fabric/formatters.composite"/>
 
-    <!-- include physical deployment configuration -->
     <include name="org.fabric3.fabric.Physical" scdlResource="org/fabric3/fabric/physical.composite"/>
 
     <!-- include loader configuration -->
@@ -62,9 +60,8 @@
 
     <!-- include deployment configuration -->
     <include name="org.fabric3.fabric.Deployment" scdlResource="org/fabric3/fabric/deployment.composite"/>
-    <include name="org.fabric3.fabric.Stores" scdlResource="org/fabric3/fabric/persistentStore.composite"/>
-	 <include name="org.fabric3.fabric.ExtensionsDeployment" scdlResource="org/fabric3/fabric/extensionsDeployment.composite"/>
-
+    <include name="org.fabric3.fabric.Stores" scdlResource="org/fabric3/fabric/nonPersistentStore.composite"/>
+	
     <include name="org.fabric3.fabric.FileSystemResolver" scdlResource="org/fabric3/fabric/fileSystemResolver.composite"/>
 
     <!-- include transform configuration -->
@@ -72,34 +69,6 @@
 
     <!-- include policy configuration -->
     <include name="org.fabric3.policy.Policy" scdlResource="org/fabric3/policy/policy.composite"/>
-
-    <!-- JXTA Network Configurator -->
-    <component name="jxtaNetworkConfigurator">
-        <system:implementation.system class="net.jxta.platform.NetworkConfigurator"/>
-        <property name="password">test-password</property>
-        <property name="principal">test-principal</property>
-    </component>
-
-    <!-- JXTA Service -->
-    <component name="JxtaService">
-        <system:implementation.system class="org.fabric3.jxta.impl.JxtaServiceImpl"/>
-        <property name="tcpPort">2000</property>
-    </component>
-
-    <!-- JXTA Messaging Service -->
-    <component name="MessagingService">
-        <system:implementation.system class="org.fabric3.messaging.jxta.JxtaMessagingService"/>
-    </component>
-
-    <!-- JXTA Messaging Service -->
-    <component name="MessageDestinationService">
-        <system:implementation.system class="org.fabric3.messaging.jxta.JxtaMessageDestinationService"/>
-    </component>
-
-    <!-- JXTA Discovery Service -->
-    <component name="DiscoveryService">
-        <system:implementation.system class="org.fabric3.discovery.jxta.JxtaDiscoveryService"/>
-    </component>
 
     <component name="launchedLoader">
         <system:implementation.system class="org.fabric3.runtime.standalone.host.implementation.launched.LaunchedLoader"/>
@@ -125,5 +94,22 @@
         <system:implementation.system class="org.fabric3.fabric.assembly.store.AssemblyStoreImpl"/>
     </component>
 
+	<component name="DiscoveryServiceRegistry">
+        <system:implementation.system class="org.fabric3.fabric.services.discovery.DiscoveryServiceRegistryImpl"/>
+    </component>
+
+    <component name="DelegatingDiscoveryService">
+        <system:implementation.system class="org.fabric3.fabric.services.discovery.DelegatingDiscoveryService"/>
+    </component>
+
+    <component name="MessagingServiceRegistry">
+        <system:implementation.system class="org.fabric3.fabric.services.messaging.MessagingServiceRegistryImpl"/>
+    </component>
+
+    <component name="DelegatingMessagingService">
+        <system:implementation.system class="org.fabric3.fabric.services.messaging.DelegatingMessagingService"/>
+    </component>
+
+ 
 
 </composite>
