@@ -48,62 +48,61 @@
     <dependencies>
 
         <!-- commands to be included in the bin directory -->
+        <!-- force fabric3-spi dependency as Maven calculates an earlier version in transitive dependency -->
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-spi</artifactId>
+            <version>0.4-SNAPSHOT</version>
+        </dependency>
+
+        <!-- commands to be included in the bin directory -->
         <dependency>
             <groupId>org.codehaus.fabric3.standalone</groupId>
             <artifactId>fabric3-standalone-server</artifactId>
-            <version>0.3-SNAPSHOT</version>
+            <version>0.4-SNAPSHOT</version>
         </dependency>
+
         <dependency>
             <groupId>org.codehaus.fabric3.standalone</groupId>
             <artifactId>fabric3-standalone-shutdown</artifactId>
             <version>0.2</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-spi</artifactId>
-            <version>0.3-SNAPSHOT</version>
-        </dependency>
-
+        <!-- standalone runtime -->
         <dependency>
             <groupId>org.codehaus.fabric3.standalone</groupId>
             <artifactId>fabric3-standalone-host</artifactId>
-            <version>0.3-SNAPSHOT</version>
+            <version>0.4-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-jmx</artifactId>
-            <version>0.2</version>
-        </dependency>
+
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-java</artifactId>
-            <version>0.1</version>
+            <version>0.2-SNAPSHOT</version>
         </dependency>
-		  <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-resource</artifactId>
-            <version>0.1-SNAPSHOT</version>
-        </dependency>
+
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>geronimo-annotation_1.0_spec</artifactId>
             <version>1.1</version>
         </dependency>
+
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-loader</artifactId>
-            <version>0.3-SNAPSHOT</version>
+            <artifactId>fabric3-jmx</artifactId>
+            <version>0.2</version>
         </dependency>
+
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-policy</artifactId>
-            <version>0.2</version>
+            <version>0.4-SNAPSHOT</version>
         </dependency>
+
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-contribution-scanner-spi</artifactId>
-            <version>0.2</version>
+            <version>0.4-SNAPSHOT</version>
         </dependency>
 
         <!-- provided scope dependencies that need to be resolved -->
@@ -113,12 +112,14 @@
             <version>3.2.1</version>
             <scope>runtime</scope>
         </dependency>
+
         <dependency>
             <groupId>org.apache.tuscany</groupId>
             <artifactId>commonj-api_r1.1</artifactId>
             <version>1.0-incubator-M2</version>
             <scope>runtime</scope>
         </dependency>
+
         <dependency>
             <groupId>javax.activation</groupId>
             <artifactId>activation</artifactId>
@@ -129,38 +130,50 @@
         <!-- extensions -->
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-async-loader</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-contribution-scanner</artifactId>
-            <version>0.3-SNAPSHOT</version>
+            <version>0.4-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-jetty</artifactId>
-            <version>0.3-SNAPSHOT</version>
+            <version>0.3</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-console</artifactId>
-            <version>0.3-SNAPSHOT</version>
+            <version>0.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-resource</artifactId>
+            <version>0.2-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-jxta</artifactId>
-            <version>0.2</version>
+            <version>0.3-SNAPSHOT</version>
         </dependency>
 		
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-messaging-jxta</artifactId>
-            <version>0.2</version>
+            <version>0.3-SNAPSHOT</version>
         </dependency>
         		
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-discovery-jxta</artifactId>
-            <version>0.2</version>
+            <version>0.3-SNAPSHOT</version>
         </dependency>
 		  		
     </dependencies>

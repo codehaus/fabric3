@@ -66,8 +66,7 @@
     <!-- include deployment configuration -->
     <include name="org.fabric3.fabric.Deployment" scdlResource="org/fabric3/fabric/deployment.composite"/>
     <include name="org.fabric3.fabric.Stores" scdlResource="org/fabric3/fabric/nonPersistentStore.composite"/>
-	 <include name="org.fabric3.fabric.ExtensionsDeployment" scdlResource="org/fabric3/fabric/extensionsDeployment.composite"/>
-
+	
     <include name="org.fabric3.fabric.FileSystemResolver" scdlResource="org/fabric3/fabric/fileSystemResolver.composite"/>
 
     <!-- include transform configuration -->
@@ -88,37 +87,22 @@
     <component name="assemblyRecoveryService">
         <system:implementation.system class="org.fabric3.fabric.assembly.store.NonPersistentAssemblyStore"/>
     </component>
-
-	 <!-- the following entries will be loaded as normal extensions in the next release -->
-    <!-- JXTA Network Configurator -->
-    <component name="jxtaNetworkConfigurator">
-        <system:implementation.system class="net.jxta.platform.NetworkConfigurator"/>
-        <property name="password">test-password</property>
-        <property name="principal">test-principal</property>
+	 
+	<component name="DiscoveryServiceRegistry">
+        <system:implementation.system class="org.fabric3.fabric.services.discovery.DiscoveryServiceRegistryImpl"/>
     </component>
 
-    <!-- JXTA Service -->
-    <component name="JxtaService">
-        <system:implementation.system class="org.fabric3.jxta.impl.JxtaServiceImpl"/>
-        <property name="tcpPort">2000</property>
+    <component name="DelegatingDiscoveryService">
+        <system:implementation.system class="org.fabric3.fabric.services.discovery.DelegatingDiscoveryService"/>
     </component>
 
-    <!-- JXTA Messaging Service -->
-    <component name="MessagingService">
-        <system:implementation.system class="org.fabric3.messaging.jxta.JxtaMessagingService"/>
+    <component name="MessagingServiceRegistry">
+        <system:implementation.system class="org.fabric3.fabric.services.messaging.MessagingServiceRegistryImpl"/>
     </component>
 
-    <!-- JXTA Messaging Service -->
-    <component name="MessageDestinationService">
-        <system:implementation.system class="org.fabric3.messaging.jxta.JxtaMessageDestinationService"/>
+    <component name="DelegatingMessagingService">
+        <system:implementation.system class="org.fabric3.fabric.services.messaging.DelegatingMessagingService"/>
     </component>
 
-    <!-- JXTA Discovery Service -->
-    <component name="DiscoveryService">
-        <system:implementation.system class="org.fabric3.discovery.jxta.JxtaDiscoveryService"/>
-    </component>
-
-
-	 <!-- END the following entries will be loaded as normal extensions in the next release -->
 
 </composite>
