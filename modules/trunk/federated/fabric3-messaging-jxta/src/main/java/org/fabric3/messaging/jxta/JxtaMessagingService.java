@@ -20,7 +20,6 @@ package org.fabric3.messaging.jxta;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
@@ -29,6 +28,9 @@ import net.jxta.peer.PeerID;
 import net.jxta.peergroup.PeerGroup;
 import net.jxta.resolver.QueryHandler;
 import net.jxta.resolver.ResolverService;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.extension.messaging.AbstractMessagingService;
 import org.fabric3.jxta.JxtaService;
@@ -36,15 +38,15 @@ import org.fabric3.messaging.jxta.prp.Fabric3QueryHandler;
 import org.fabric3.spi.model.topology.RuntimeInfo;
 import org.fabric3.spi.services.discovery.DiscoveryService;
 import org.fabric3.spi.services.messaging.MessagingException;
+import org.fabric3.spi.services.messaging.MessagingServiceRegistry;
 import org.fabric3.spi.util.stax.StaxUtil;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Messaging service implemented using JXTA.
  *
  * @version $Revision$ $Date$
  */
+@EagerInit
 public class JxtaMessagingService extends AbstractMessagingService {
 
     /**
@@ -66,6 +68,7 @@ public class JxtaMessagingService extends AbstractMessagingService {
      * Discovery service.
      */
     private DiscoveryService discoveryService;
+    private MessagingServiceRegistry messagingServiceRegistry;
 
     /**
      * Injected JXTA service to be used.
@@ -87,6 +90,11 @@ public class JxtaMessagingService extends AbstractMessagingService {
         this.discoveryService = discoveryService;
     }
 
+    @Reference
+    public void setMessagingserviceRegistry(MessagingServiceRegistry messagingServiceRegistry) {
+        this.messagingServiceRegistry = messagingServiceRegistry;
+    }
+
     /**
      * Sends a message to the specified runtime.
      *
@@ -98,7 +106,7 @@ public class JxtaMessagingService extends AbstractMessagingService {
     public void sendMessage(final String runtimeId, final XMLStreamReader content) throws MessagingException {
 
         RuntimeInfo runtimeInfo = discoveryService.getRuntimeInfo(runtimeId);
-        String messageDestination = (String) runtimeInfo.getMessageDestination();
+        String messageDestination = runtimeInfo.getMessageDestination();
 
         PeerID peerID;
         try {
@@ -129,11 +137,10 @@ public class JxtaMessagingService extends AbstractMessagingService {
 
     /**
      * Start method.
-     *
      */
     @Init
     public void start() {
-
+        messagingServiceRegistry.register(this);
         domainGroup = jxtaService.getDomainGroup();
         setupResolver();
 
@@ -143,11 +150,9 @@ public class JxtaMessagingService extends AbstractMessagingService {
      * Sets up the resolver service.
      */
     private void setupResolver() {
-
         resolverService = domainGroup.getResolverService();
         QueryHandler queryHandler = new Fabric3QueryHandler(this);
         resolverService.registerHandler(Fabric3QueryHandler.class.getSimpleName(), queryHandler);
-
     }
 
 }

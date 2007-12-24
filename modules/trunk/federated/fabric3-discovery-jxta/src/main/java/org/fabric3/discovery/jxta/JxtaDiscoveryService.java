@@ -18,8 +18,6 @@
  */
 package org.fabric3.discovery.jxta;
 
-import static net.jxta.discovery.DiscoveryService.ADV;
-
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -28,19 +26,23 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static net.jxta.discovery.DiscoveryService.ADV;
 import net.jxta.document.AdvertisementFactory;
 import net.jxta.peergroup.PeerGroup;
+import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Property;
+import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Init;
 
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.jxta.JxtaService;
 import org.fabric3.spi.model.topology.RuntimeInfo;
 import org.fabric3.spi.services.discovery.DiscoveryService;
+import org.fabric3.spi.services.discovery.DiscoveryServiceRegistry;
 import org.fabric3.spi.services.runtime.RuntimeInfoService;
 import org.fabric3.spi.services.work.WorkScheduler;
 import org.fabric3.spi.util.TwosTuple;
-import org.osoa.sca.annotations.Destroy;
-import org.osoa.sca.annotations.Property;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * JXTA implementation of the discovery service.
@@ -67,6 +69,7 @@ import org.osoa.sca.annotations.Reference;
  *
  * @version $Revsion$ $Date$
  */
+@EagerInit
 public class JxtaDiscoveryService implements DiscoveryService {
 
     // Polling interval
@@ -96,6 +99,7 @@ public class JxtaDiscoveryService implements DiscoveryService {
     // Participating runtimes
     private Map<String, TwosTuple<RuntimeInfo, Long>> participatingRuntimes =
             new ConcurrentHashMap<String, TwosTuple<RuntimeInfo, Long>>();
+    private DiscoveryServiceRegistry registry;
 
     public Set<RuntimeInfo> getParticipatingRuntimes() {
         Set<RuntimeInfo> ret = new HashSet<RuntimeInfo>();
@@ -169,6 +173,11 @@ public class JxtaDiscoveryService implements DiscoveryService {
         this.workScheduler = workScheduler;
     }
 
+    @Reference
+    public void setDiscoverySericeRegistry(DiscoveryServiceRegistry registry) {
+        this.registry = registry;
+    }
+
     /**
      * Starts the service.
      *
@@ -197,10 +206,15 @@ public class JxtaDiscoveryService implements DiscoveryService {
         publisher.live.set(false);
     }
 
+    @Init
+    public void init() {
+        registry.register(this);
+    }
+
     /*
-     * Notifier sending information about the current node.
-     *
-     */
+    * Notifier sending information about the current node.
+    *
+    */
     private class Publisher implements Runnable {
 
         private AtomicBoolean live = new AtomicBoolean(true);
@@ -234,7 +248,6 @@ public class JxtaDiscoveryService implements DiscoveryService {
             }
 
         }
-
 
 
     }

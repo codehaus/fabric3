@@ -21,6 +21,10 @@
            name="JXTAMessaging"
            autowire="true">
 
+    <component name="runtimeInfoService">
+        <system:implementation.system class="org.fabric3.fabric.services.runtime.DefaultRuntimeInfoService"/>
+    </component>
+
     <!-- JXTA Messaging Service -->
     <component name="MessagingService">
         <system:implementation.system class="org.fabric3.messaging.jxta.JxtaMessagingService"/>

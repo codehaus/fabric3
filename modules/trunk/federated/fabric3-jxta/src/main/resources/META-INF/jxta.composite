@@ -22,7 +22,7 @@
            autowire="true">
 
     <!-- JXTA Network Configurator -->
-    <component name="jxtaNetworkConfigurator">
+    <component name="JxtaNetworkConfigurator">
         <system:implementation.system class="net.jxta.platform.NetworkConfigurator"/>
         <property name="password">test-password</property>
         <property name="principal">test-principal</property>

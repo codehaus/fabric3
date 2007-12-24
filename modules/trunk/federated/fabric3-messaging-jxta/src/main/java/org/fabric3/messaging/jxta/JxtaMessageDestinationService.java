@@ -37,16 +37,13 @@ public class JxtaMessageDestinationService implements MessageDestinationService 
     /**
      * Injected JXTA service to be used.
      *
-     * @param jxtaService JXTA service..
+     * @param jxtaService JXTA service.
      */
     @Reference
     public void setJxtaService(JxtaService jxtaService) {
         this.jxtaService = jxtaService;
     }
 
-    /**
-     * @see org.fabric3.spi.services.messaging.MessageDestinationService#getMessageDestination()
-     */
     public Object getMessageDestination() {
         return jxtaService.getDomainGroup().getPeerID().toString();
     }
