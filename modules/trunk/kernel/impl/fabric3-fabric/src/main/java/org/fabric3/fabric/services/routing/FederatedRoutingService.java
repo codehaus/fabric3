@@ -121,7 +121,7 @@ public class FederatedRoutingService implements RoutingService {
             marshallerRegistry.marshall(commandSet, writer);
             ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
             XMLStreamReader pcsReader = XMLInputFactory.newInstance().createXMLStreamReader(in);
-            messagingService.sendMessage(runtimeId.toASCIIString(), pcsReader);
+            messagingService.sendMessage(runtimeId, pcsReader);
         } catch (XMLStreamException e) {
             throw new RoutingException("Routing error", e);
         } catch (MarshalException e) {

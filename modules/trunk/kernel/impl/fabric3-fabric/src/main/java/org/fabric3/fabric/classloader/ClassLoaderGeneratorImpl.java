@@ -107,17 +107,13 @@ public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {
     }
 
     private URI generate(LogicalComponent<?> parent,
-                         URI runtimeUri,
+                         URI runtimeId,
                          List<ResourceDescription> descriptions,
                          GeneratorContext context) throws GenerationException {
-        String runtimeId = null;
-        // TODO fix this by making runtime ids URI's
-        if (runtimeUri != null) {
-            runtimeId = runtimeUri.toString();
-        }
         RuntimeInfo info = discoveryService.getRuntimeInfo(runtimeId);
         if (info == null) {
-            throw new ClassLoaderGenerationException("Runtime not found [" + runtimeId + "]", runtimeId);
+            String id = runtimeId.toString();
+            throw new ClassLoaderGenerationException("Runtime not found [" + id + "]", id);
         }
 
         PhysicalChangeSet changeSet = context.getPhysicalChangeSet();

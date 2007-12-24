@@ -19,6 +19,7 @@
 package org.fabric3.spi.services.discovery;
 
 import java.util.Set;
+import java.net.URI;
 
 import org.fabric3.spi.model.topology.RuntimeInfo;
 
@@ -45,7 +46,7 @@ public interface DiscoveryService {
      * @param runtimeId Runtime id.
      * @return Runtime info.
      */
-    RuntimeInfo getRuntimeInfo(String runtimeId);
+    RuntimeInfo getRuntimeInfo(URI runtimeId);
 
     void joinDomain(long timeout) throws DiscoveryException;
 

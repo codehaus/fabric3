@@ -16,6 +16,7 @@
  */
 package org.fabric3.fabric.services.messaging;
 
+import java.net.URI;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
 
@@ -40,7 +41,7 @@ public class DelegatingMessagingService extends AbstractMessagingService {
         this.registry = registry;
     }
 
-    public void sendMessage(String runtimeId, XMLStreamReader content) throws MessagingException {
+    public void sendMessage(URI runtimeId, XMLStreamReader content) throws MessagingException {
         // FIXME selectively dispatch message based on a runtime scheme
         String scheme = null;
         MessagingService service = registry.getServiceForScheme(scheme);

@@ -103,7 +103,7 @@ public class JxtaMessagingService extends AbstractMessagingService {
      * @return The message id.
      * @throws MessagingException In case of Messaging errors.
      */
-    public void sendMessage(final String runtimeId, final XMLStreamReader content) throws MessagingException {
+    public void sendMessage(final URI runtimeId, final XMLStreamReader content) throws MessagingException {
 
         RuntimeInfo runtimeInfo = discoveryService.getRuntimeInfo(runtimeId);
         String messageDestination = runtimeInfo.getMessageDestination();

@@ -18,6 +18,7 @@ package org.fabric3.fabric.services.discovery;
 
 import java.util.Collections;
 import java.util.Set;
+import java.net.URI;
 
 import org.osoa.sca.annotations.Reference;
 
@@ -41,7 +42,7 @@ public class SingleVMDiscoveryService implements DiscoveryService {
         return Collections.emptySet();
     }
 
-    public RuntimeInfo getRuntimeInfo(String runtimeId) {
+    public RuntimeInfo getRuntimeInfo(URI runtimeId) {
         return service.getRuntimeInfo();
     }
 

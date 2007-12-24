@@ -18,6 +18,7 @@
  */
 package org.fabric3.spi.services.messaging;
 
+import java.net.URI;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
 
@@ -36,7 +37,7 @@ public interface MessagingService {
      * @param content   Message content.
      * @throws MessagingException In case of discovery errors.
      */
-    void sendMessage(String runtimeId, XMLStreamReader content) throws MessagingException;
+    void sendMessage(URI runtimeId, XMLStreamReader content) throws MessagingException;
 
     /**
      * Registers a request listener for async messages. Request listeners handle unslolicited async messages sent by

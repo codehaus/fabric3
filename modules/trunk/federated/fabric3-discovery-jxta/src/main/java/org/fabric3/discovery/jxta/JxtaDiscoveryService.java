@@ -110,7 +110,7 @@ public class JxtaDiscoveryService implements DiscoveryService {
         return ret;
     }
 
-    public RuntimeInfo getRuntimeInfo(String runtimeId) {
+    public RuntimeInfo getRuntimeInfo(URI runtimeId) {
         return participatingRuntimes.get(runtimeId).getFirst();
     }
 

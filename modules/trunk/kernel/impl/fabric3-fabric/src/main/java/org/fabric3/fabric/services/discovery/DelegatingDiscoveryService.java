@@ -18,6 +18,7 @@ package org.fabric3.fabric.services.discovery;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.net.URI;
 
 import org.osoa.sca.annotations.Reference;
 
@@ -46,7 +47,7 @@ public class DelegatingDiscoveryService implements DiscoveryService {
         return infos;
     }
 
-    public RuntimeInfo getRuntimeInfo(String runtimeId) {
+    public RuntimeInfo getRuntimeInfo(URI runtimeId) {
         for (DiscoveryService service : registry.getServices()) {
             RuntimeInfo info = service.getRuntimeInfo(runtimeId);
             if (info != null) {

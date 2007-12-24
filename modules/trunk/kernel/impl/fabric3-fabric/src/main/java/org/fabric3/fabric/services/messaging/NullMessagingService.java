@@ -18,6 +18,7 @@
  */
 package org.fabric3.fabric.services.messaging;
 
+import java.net.URI;
 import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.extension.messaging.AbstractMessagingService;
@@ -30,7 +31,7 @@ import org.fabric3.spi.services.messaging.MessagingException;
  */
 public class NullMessagingService extends AbstractMessagingService {
 
-    public void sendMessage(String runtimeId, XMLStreamReader content) throws MessagingException {
+    public void sendMessage(URI runtimeId, XMLStreamReader content) throws MessagingException {
     }
 
     public Object getMessageDestination() {
