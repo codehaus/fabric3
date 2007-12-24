@@ -72,7 +72,10 @@
     <!-- include policy configuration -->
     <include name="org.fabric3.policy.Policy" scdlResource="org/fabric3/policy/policy.composite"/>
 
-    <!-- Null Messaging Service -->
+    <component name="RuntimeInfoService">
+        <system:implementation.system class="org.fabric3.fabric.services.runtime.DefaultRuntimeInfoService"/>
+    </component>
+
     <component name="MessagingService">
         <system:implementation.system class="org.fabric3.fabric.services.messaging.NullMessagingService"/>
     </component>
