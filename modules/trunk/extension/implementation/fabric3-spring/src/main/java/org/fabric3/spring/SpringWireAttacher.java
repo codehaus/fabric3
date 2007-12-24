@@ -16,9 +16,7 @@
  */
 package org.fabric3.spring;
 
-import java.lang.reflect.Method;
 import java.net.URI;
-import java.util.List;
 import java.util.Map;
 
 import org.osoa.sca.annotations.EagerInit;
@@ -32,7 +30,7 @@ import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.builder.component.WireAttacherRegistry;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.Component;
-import org.fabric3.spi.component.ComponentManager;
+import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.model.instance.ValueSource;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;

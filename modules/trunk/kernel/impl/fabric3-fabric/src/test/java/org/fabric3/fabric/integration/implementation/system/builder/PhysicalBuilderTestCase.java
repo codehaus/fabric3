@@ -29,7 +29,7 @@ import org.fabric3.fabric.builder.Connector;
 import org.fabric3.fabric.builder.ConnectorImpl;
 import org.fabric3.fabric.builder.component.DefaultComponentBuilderRegistry;
 import org.fabric3.fabric.builder.component.WireAttacherRegistryImpl;
-import org.fabric3.fabric.component.ComponentManagerImpl;
+import org.fabric3.fabric.services.componentmanager.ComponentManagerImpl;
 import org.fabric3.fabric.services.instancefactory.DefaultInstanceFactoryBuilderRegistry;
 import org.fabric3.fabric.services.instancefactory.ReflectiveInstanceFactoryBuilder;
 import org.fabric3.fabric.services.instancefactory.BuildHelperImpl;
@@ -51,7 +51,7 @@ import org.fabric3.pojo.instancefactory.InjectionSiteMapping;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
 import org.fabric3.spi.builder.component.WireAttacherRegistry;
 import org.fabric3.spi.component.AtomicComponent;
-import org.fabric3.spi.component.ComponentManager;
+import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
@@ -61,7 +61,6 @@ import org.fabric3.spi.model.physical.PhysicalChangeSet;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
-import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.transform.DefaultTransformerRegistry;
 
 /**

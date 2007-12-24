@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.component;
+package org.fabric3.fabric.services.componentmanager;
 
 import java.net.URI;
 import java.util.Map;
@@ -26,8 +26,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.Component;
-import org.fabric3.spi.component.ComponentManager;
-import org.fabric3.spi.component.RegistrationException;
+import org.fabric3.spi.runtime.component.ComponentManager;
+import org.fabric3.spi.runtime.component.RegistrationException;
 import org.fabric3.spi.services.management.Fabric3ManagementService;
 
 /**
@@ -54,7 +54,7 @@ public class ComponentManagerImpl implements ComponentManager {
         assert uri != null;
         assert !uri.toString().endsWith("/");
         if (components.containsKey(uri)) {
-            throw new DuplicateNameException(uri.toString());
+            throw new DuplicateComponentException(uri.toString());
         }
         components.put(uri, component);
 

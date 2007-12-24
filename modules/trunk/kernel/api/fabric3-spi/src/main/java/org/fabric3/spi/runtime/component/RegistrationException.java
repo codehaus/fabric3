@@ -16,23 +16,32 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.component;
+package org.fabric3.spi.runtime.component;
 
-import org.fabric3.spi.component.RegistrationException;
+import org.fabric3.spi.component.ComponentException;
 
 /**
- * Denotes an attempt to add an child to a composite component with a name equal to an existing child
+ * Thrown when an error is encountered registering a service or reference on a composite
  *
  * @version $Rev$ $Date$
  */
-public class DuplicateNameException extends RegistrationException {
+public abstract class RegistrationException extends ComponentException {
+    public RegistrationException() {
+    }
 
-    public DuplicateNameException(String message) {
+    public RegistrationException(String message) {
         super(message);
     }
 
-    public DuplicateNameException(String message, String identifier) {
+    public RegistrationException(String message, String identifier) {
         super(message, identifier);
     }
 
+    public RegistrationException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public RegistrationException(Throwable cause) {
+        super(cause);
+    }
 }

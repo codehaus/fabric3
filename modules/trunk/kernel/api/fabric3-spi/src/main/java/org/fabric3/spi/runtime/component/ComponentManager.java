@@ -16,10 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.component;
+package org.fabric3.spi.runtime.component;
 
 import java.net.URI;
 import java.util.List;
+
+import org.fabric3.spi.component.Component;
 
 /**
  * Responsible for tracking and managing the component tree for a runtime instance. The tree corresponds to components

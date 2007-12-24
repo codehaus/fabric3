@@ -25,6 +25,8 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
 import org.fabric3.spi.component.Component;
+import org.fabric3.fabric.services.componentmanager.ComponentManagerImpl;
+import org.fabric3.fabric.services.componentmanager.DuplicateComponentException;
 
 /**
  * @version $Rev$ $Date$
@@ -75,7 +77,7 @@ public class ComponentManagerImplTestCase extends TestCase {
         try {
             manager.register(duplicate);
             fail();
-        } catch (DuplicateNameException e) {
+        } catch (DuplicateComponentException e) {
             // expected
         }
         assertEquals(root, manager.getComponent(ROOT1));

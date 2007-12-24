@@ -16,30 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.component;
+package org.fabric3.fabric.services.componentmanager;
+
+import org.fabric3.spi.runtime.component.RegistrationException;
 
 /**
- * Thrown when an error is encountered registering a service or reference on a composite
+ * Denotes an attempt to register a component when one is already regsitered with that id.
  *
- * @version $$Rev$$ $$Date$$
+ * @version $Rev$ $Date$
  */
-public abstract class RegistrationException extends ComponentException {
-    public RegistrationException() {
-    }
+public class DuplicateComponentException extends RegistrationException {
 
-    public RegistrationException(String message) {
+    /**
+     * Constructor specifying the id of the component.
+     *
+     * @param message the id of the component, also the default exception message
+     */
+    public DuplicateComponentException(String message) {
         super(message);
     }
 
-    public RegistrationException(String message, String identifier) {
-        super(message, identifier);
-    }
-
-    public RegistrationException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public RegistrationException(Throwable cause) {
-        super(cause);
-    }
 }

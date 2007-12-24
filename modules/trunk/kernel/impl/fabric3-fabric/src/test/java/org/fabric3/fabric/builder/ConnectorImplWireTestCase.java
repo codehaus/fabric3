@@ -23,11 +23,11 @@ import java.net.URI;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
-import org.fabric3.fabric.component.ComponentManagerImpl;
+import org.fabric3.fabric.services.componentmanager.ComponentManagerImpl;
 import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
 import org.fabric3.spi.builder.component.WireAttacherRegistry;
 import org.fabric3.spi.component.AtomicComponent;
-import org.fabric3.spi.component.ComponentManager;
+import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;

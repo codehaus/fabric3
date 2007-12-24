@@ -34,7 +34,7 @@ import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.builder.component.WireAttacher;
 import org.fabric3.spi.builder.component.WireAttacherRegistry;
 import org.fabric3.spi.component.Component;
-import org.fabric3.spi.component.ComponentManager;
+import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.util.UriHelper;

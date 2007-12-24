@@ -20,11 +20,11 @@ import java.net.URI;
 
 import org.fabric3.pojo.wire.PojoWireAttacher;
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.WireAttacherRegistry;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.Component;
-import org.fabric3.spi.component.ComponentManager;
 import org.fabric3.spi.model.instance.ValueSource;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;

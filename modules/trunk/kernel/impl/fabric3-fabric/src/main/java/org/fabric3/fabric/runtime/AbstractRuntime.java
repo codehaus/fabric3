@@ -25,7 +25,7 @@ import javax.xml.namespace.QName;
 
 import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.fabric.assembly.RuntimeAssembly;
-import org.fabric3.fabric.component.ComponentManagerImpl;
+import org.fabric3.fabric.services.componentmanager.ComponentManagerImpl;
 import static org.fabric3.fabric.runtime.ComponentNames.EVENT_SERVICE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.METADATA_STORE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_ASSEMBLY_URI;
@@ -43,7 +43,7 @@ import org.fabric3.scdl.Scope;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.component.AtomicComponent;
-import org.fabric3.spi.component.ComponentManager;
+import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.services.contribution.Contribution;

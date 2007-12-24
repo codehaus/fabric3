@@ -28,7 +28,7 @@ import org.fabric3.spi.command.Command;
 import org.fabric3.spi.command.CommandExecutorRegistry;
 import org.fabric3.spi.command.CommandSet;
 import org.fabric3.spi.command.ExecutionException;
-import org.fabric3.spi.component.RegistrationException;
+import org.fabric3.spi.runtime.component.RegistrationException;
 import org.fabric3.spi.model.physical.PhysicalChangeSet;
 
 /**
