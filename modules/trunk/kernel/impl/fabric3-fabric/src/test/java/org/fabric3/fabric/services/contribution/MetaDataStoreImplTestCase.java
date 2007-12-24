@@ -56,11 +56,8 @@ public class MetaDataStoreImplTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         info = EasyMock.createMock(HostInfo.class);
-        EasyMock.expect(info.getDomain()).andReturn(URI.create("fabric3://./domain/")).anyTimes();
-        EasyMock.expect(info.getRuntimeId()).andReturn(URI.create("runtime")).anyTimes();
         EasyMock.expect(info.getBaseURL()).andReturn(null).atLeastOnce();
         EasyMock.replay(info);
-
         store = new MetaDataStoreImpl(info, new XStreamFactoryImpl());
         store.setRepository(REPOSITORY);
         store.init();
