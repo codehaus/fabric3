@@ -28,6 +28,7 @@ import org.fabric3.spi.wire.Wire;
  *
  * @version $Rev$ $Date$
  */
+@Deprecated
 public interface WireAttacherRegistry {
 
     <PWSD extends PhysicalWireSourceDefinition,

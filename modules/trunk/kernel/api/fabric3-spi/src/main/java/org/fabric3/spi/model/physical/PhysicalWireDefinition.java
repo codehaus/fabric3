@@ -62,36 +62,6 @@ public class PhysicalWireDefinition extends ModelObject {
 
 
     /**
-     * Returns a read-only view of the available non callback operations.
-     *
-     * @return Collection of non-callback operations.
-     */
-    public Set<PhysicalOperationDefinition> getNonCallbackOperations() {
-        Set<PhysicalOperationDefinition> nonCallbackOperations = new HashSet<PhysicalOperationDefinition>();
-        for (PhysicalOperationDefinition operation : operations) {
-            if (!operation.isCallback()) {
-                nonCallbackOperations.add(operation);
-            }
-        }
-        return nonCallbackOperations;
-    }
-
-    /**
-     * Returns a read-only view of the available callback operations.
-     *
-     * @return Collection of callback operations.
-     */
-    public Set<PhysicalOperationDefinition> getCallbackOperations() {
-        Set<PhysicalOperationDefinition> callbackOperations = new HashSet<PhysicalOperationDefinition>();
-        for (PhysicalOperationDefinition operation : operations) {
-            if (operation.isCallback()) {
-                callbackOperations.add(operation);
-            }
-        }
-        return callbackOperations;
-    }
-
-    /**
      * Gets the Wire source URI.
      *
      * @return Wire source URI.

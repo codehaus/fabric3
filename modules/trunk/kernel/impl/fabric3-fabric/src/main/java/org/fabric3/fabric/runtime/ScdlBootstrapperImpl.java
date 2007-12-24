@@ -96,7 +96,6 @@ import org.fabric3.fabric.model.physical.PhysicalPolicyGenerator;
 import org.fabric3.fabric.model.physical.PhysicalPolicyGeneratorImpl;
 import org.fabric3.fabric.model.physical.PhysicalWireGenerator;
 import org.fabric3.fabric.model.physical.PhysicalWireGeneratorImpl;
-import org.fabric3.fabric.monitor.MonitorProcessor;
 import static org.fabric3.fabric.runtime.ComponentNames.APPLICATION_CLASSLOADER_ID;
 import static org.fabric3.fabric.runtime.ComponentNames.BOOT_CLASSLOADER_ID;
 import static org.fabric3.fabric.runtime.ComponentNames.CLASSLOADER_REGISTRY_URI;
