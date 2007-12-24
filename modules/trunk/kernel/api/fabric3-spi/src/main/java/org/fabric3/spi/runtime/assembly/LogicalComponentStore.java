@@ -14,17 +14,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.assembly;
+package org.fabric3.spi.runtime.assembly;
 
-import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.scdl.CompositeImplementation;
+import org.fabric3.spi.model.instance.LogicalComponent;
 
 /**
  * Implementations persist the logical SCA domain model
  *
  * @version $Rev$ $Date$
  */
-public interface AssemblyStore {
+public interface LogicalComponentStore {
 
     /**
      * Stores the domain model.

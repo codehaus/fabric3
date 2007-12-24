@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.assembly.store;
+package org.fabric3.fabric.services.domain;
 
 import java.net.URI;
 
@@ -22,30 +22,30 @@ import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.runtime.HostInfo;
-import org.fabric3.spi.assembly.AssemblyStore;
-import org.fabric3.spi.assembly.RecoveryException;
-import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
+import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.runtime.assembly.LogicalComponentStore;
+import org.fabric3.spi.runtime.assembly.RecoveryException;
 
 /**
- * A non-persistent AssemblyStore
+ * A non-persistent LogicalComponentStore
  *
  * @version $Rev$ $Date$
  */
-public class NonPersistentAssemblyStore implements AssemblyStore {
+public class NonPersistentLogicalComponentStore implements LogicalComponentStore {
     private URI domainUri;
     private Autowire autowire = Autowire.OFF;
 
-    public NonPersistentAssemblyStore(URI domainUri, Autowire autowire) {
+    public NonPersistentLogicalComponentStore(URI domainUri, Autowire autowire) {
         this.domainUri = domainUri;
         this.autowire = autowire;
     }
 
     @Constructor
-    public NonPersistentAssemblyStore(@Reference HostInfo info) {
+    public NonPersistentLogicalComponentStore(@Reference HostInfo info) {
         domainUri = info.getDomain();
     }
 

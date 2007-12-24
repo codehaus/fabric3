@@ -42,8 +42,8 @@
         <reference name="atomicComponentInstantiator" target="atomicComponentInstantiator"/>
     </component>
 
-    <component name="domainService">
-        <system:implementation.system class="org.fabric3.fabric.domain.DomainServiceImpl"/>
+    <component name="logicalComponentManager">
+        <system:implementation.system class="org.fabric3.fabric.services.domain.LogicalComponentManagerImpl"/>
     </component>
 
     <component name="logicalModelGenerator">

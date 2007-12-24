@@ -25,7 +25,7 @@ import java.util.Set;
 
 import org.fabric3.fabric.assembly.resolver.ResolutionException;
 import org.fabric3.fabric.command.InitializeComponentCommand;
-import org.fabric3.fabric.domain.DomainService;
+import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
 import org.fabric3.fabric.generator.DefaultGeneratorContext;
 import org.fabric3.fabric.generator.PolicyException;
 import org.fabric3.fabric.services.routing.RoutingException;
@@ -56,6 +56,7 @@ import org.fabric3.spi.policy.registry.PolicyResolutionException;
 import org.fabric3.spi.policy.registry.PolicyResolver;
 import org.fabric3.spi.policy.registry.PolicyResult;
 import org.fabric3.spi.util.UriHelper;
+
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Element;
@@ -84,7 +85,7 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
 
     private final GeneratorRegistry generatorRegistry;
     private final RoutingService routingService;
-    private final DomainService domainService;
+    private final LogicalComponentManager logicalComponentManager;
     private final PhysicalWireGenerator physicalWireGenerator;
     private final PolicyResolver policyResolver;
     
@@ -96,12 +97,12 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
      */
     public PhysicalModelGeneratorImpl(@Reference GeneratorRegistry generatorRegistry,
                                       @Reference RoutingService routingService,
-                                      @Reference DomainService domainService,
+                                      @Reference LogicalComponentManager logicalComponentManager,
                                       @Reference PhysicalWireGenerator physicalWireGenerator,
                                       @Reference PolicyResolver policyResolver) {
         this.generatorRegistry = generatorRegistry;
         this.routingService = routingService;
-        this.domainService = domainService;
+        this.logicalComponentManager = logicalComponentManager;
         this.physicalWireGenerator = physicalWireGenerator;
         this.policyResolver = policyResolver;
     }
@@ -235,7 +236,7 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
             
             if (entry.getBindings().isEmpty()) {
                 for (URI uri : entry.getTargetUris()) {
-                    LogicalComponent<?> target = domainService.findComponent(uri);
+                    LogicalComponent<?> target = logicalComponentManager.getComponent(uri);
                     String serviceName = uri.getFragment();
                     LogicalService targetService = target.getService(serviceName);
                     assert targetService != null;

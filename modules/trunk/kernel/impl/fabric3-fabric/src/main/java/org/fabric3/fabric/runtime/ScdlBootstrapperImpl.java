@@ -36,7 +36,7 @@ import org.fabric3.fabric.assembly.normalizer.PromotionNormalizer;
 import org.fabric3.fabric.assembly.normalizer.PromotionNormalizerImpl;
 import org.fabric3.fabric.assembly.resolver.DefaultWireResolver;
 import org.fabric3.fabric.assembly.resolver.WireResolver;
-import org.fabric3.fabric.assembly.store.NonPersistentAssemblyStore;
+import org.fabric3.fabric.services.domain.NonPersistentLogicalComponentStore;
 import org.fabric3.fabric.builder.Connector;
 import org.fabric3.fabric.builder.ConnectorImpl;
 import org.fabric3.fabric.builder.component.DefaultComponentBuilderRegistry;
@@ -54,8 +54,9 @@ import org.fabric3.fabric.component.scope.CompositeScopeContainer;
 import org.fabric3.fabric.component.scope.ScopeRegistryImpl;
 import org.fabric3.fabric.deployer.Deployer;
 import org.fabric3.fabric.deployer.DeployerImpl;
-import org.fabric3.fabric.domain.DomainService;
-import org.fabric3.fabric.domain.DomainServiceImpl;
+import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
+import org.fabric3.spi.runtime.assembly.LogicalComponentStore;
+import org.fabric3.fabric.services.domain.LogicalComponentManagerImpl;
 import org.fabric3.fabric.generator.GeneratorRegistryImpl;
 import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
 import org.fabric3.fabric.implementation.IntrospectionRegistryImpl;
@@ -156,7 +157,6 @@ import org.fabric3.scdl.Property;
 import org.fabric3.spi.Constants;
 import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.assembly.AssemblyException;
-import org.fabric3.spi.assembly.AssemblyStore;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.builder.component.WireAttacherRegistry;
 import org.fabric3.spi.builder.resource.ResourceContainerBuilderRegistry;
@@ -308,7 +308,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         Allocator allocator = new LocalAllocator();
 
         // enable autowire for the runtime domain
-        AssemblyStore store = new NonPersistentAssemblyStore(ComponentNames.RUNTIME_URI, Autowire.ON);
+        LogicalComponentStore store = new NonPersistentLogicalComponentStore(ComponentNames.RUNTIME_URI, Autowire.ON);
 
         PhysicalOperationHelper physicalOperationHelper = new PhysicalOperationHelperImpl();
         PhysicalPolicyGenerator policyGenerator = new PhysicalPolicyGeneratorImpl(new NullPolicyResolver(),
@@ -318,9 +318,9 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         PhysicalWireGenerator wireGenerator = new PhysicalWireGeneratorImpl(generatorRegistry,
                                                                             policyGenerator,
                                                                             physicalOperationHelper);
-        DomainService domainService = new DomainServiceImpl(store);
+        LogicalComponentManager logicalComponentManager = new LogicalComponentManagerImpl(store);
         PhysicalModelGenerator physicalModelGenerator =
-                createPhysicalModelGenerator(generatorRegistry, routingService, domainService, wireGenerator);
+                createPhysicalModelGenerator(generatorRegistry, routingService, logicalComponentManager, wireGenerator);
 
         AtomicComponentInstantiator atomicComponentInstantiator = new AtomicComponentInstantiator();
         CompositeComponentInstantiator compositeComponentInstantiator =
@@ -328,7 +328,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
         LogicalModelGenerator logicalModelGenerator = new LogicalModelGeneratorImpl(resolver,
                                                                                     normalizer,
-                                                                                    domainService,
+                                                                                    logicalComponentManager,
                                                                                     atomicComponentInstantiator,
                                                                                     compositeComponentInstantiator);
 
@@ -337,7 +337,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
                                                   metaDataStore,
                                                   physicalModelGenerator,
                                                   logicalModelGenerator,
-                                                  domainService,
+                                                  logicalComponentManager,
                                                   wireGenerator);
         try {
             runtimeAssembly.initialize();
@@ -592,12 +592,12 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
     private PhysicalModelGenerator createPhysicalModelGenerator(GeneratorRegistry generatorRegistry,
                                                                 RoutingService routingService,
-                                                                DomainService domainService,
+                                                                LogicalComponentManager logicalComponentManager,
                                                                 PhysicalWireGenerator wireGenerator) {
 
         return new PhysicalModelGeneratorImpl(generatorRegistry,
                                               routingService,
-                                              domainService,
+                                              logicalComponentManager,
                                               wireGenerator,
                                               new NullPolicyResolver());
 

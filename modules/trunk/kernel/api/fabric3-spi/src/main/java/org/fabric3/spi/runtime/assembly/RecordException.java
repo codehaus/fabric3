@@ -14,7 +14,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.assembly;
+package org.fabric3.spi.runtime.assembly;
+
+import org.fabric3.spi.assembly.AssemblyException;
 
 
 /**

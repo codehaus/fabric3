@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.assembly.store;
+package org.fabric3.fabric.services.domain;
 
 import java.io.File;
 import static java.io.File.separator;
@@ -33,28 +33,28 @@ import org.osoa.sca.annotations.Service;
 import org.fabric3.fabric.services.xstream.XStreamFactory;
 import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.host.runtime.HostInfo;
-import org.fabric3.spi.assembly.AssemblyStore;
-import org.fabric3.spi.assembly.RecordException;
-import org.fabric3.spi.assembly.RecoveryException;
-import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
+import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.runtime.assembly.LogicalComponentStore;
+import org.fabric3.spi.runtime.assembly.RecordException;
+import org.fabric3.spi.runtime.assembly.RecoveryException;
 
 /**
- * Default implementation of the AssemblyStore that persists the logical domain model to disk. The implementation
+ * Default implementation of the LogicalComponentStore that persists the logical domain model to disk. The implementation
  * serializes the domain model using XStream.
  *
  * @version $Rev$ $Date$
  */
-@Service(AssemblyStore.class)
+@Service(LogicalComponentStore.class)
 @EagerInit
-public class AssemblyStoreImpl implements AssemblyStore {
+public class LogicalComponentStoreImpl implements LogicalComponentStore {
     private XStream xstream;
     private File serializedFile;
     private URI domainUri;
 
-    public AssemblyStoreImpl(@Reference HostInfo hostInfo,
+    public LogicalComponentStoreImpl(@Reference HostInfo hostInfo,
                              @Reference XStreamFactory factory) throws IOException {
         domainUri = hostInfo.getDomain();
         xstream = factory.createInstance();

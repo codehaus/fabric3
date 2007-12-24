@@ -29,7 +29,8 @@ import javax.xml.namespace.QName;
 
 import org.fabric3.fabric.assembly.allocator.AllocationException;
 import org.fabric3.fabric.assembly.allocator.Allocator;
-import org.fabric3.fabric.domain.DomainService;
+import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
+import org.fabric3.spi.runtime.assembly.RecordException;
 import org.fabric3.fabric.generator.DefaultGeneratorContext;
 import org.fabric3.fabric.model.logical.LogicalModelGenerator;
 import org.fabric3.fabric.model.physical.PhysicalModelGenerator;
@@ -45,7 +46,6 @@ import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.assembly.Assembly;
 import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.spi.assembly.BindException;
-import org.fabric3.spi.assembly.RecordException;
 import org.fabric3.spi.command.CommandSet;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
@@ -71,7 +71,7 @@ public abstract class AbstractAssembly implements Assembly {
     private final Allocator allocator;
     private final RoutingService routingService;
     private final MetaDataStore metadataStore;
-    private final DomainService domainService;
+    private final LogicalComponentManager logicalComponentManager;
     private final PhysicalWireGenerator wireGenerator;
 
     public AbstractAssembly(Allocator allocator,
@@ -79,21 +79,21 @@ public abstract class AbstractAssembly implements Assembly {
                             MetaDataStore metadataStore,
                             PhysicalModelGenerator physicalModelGenerator,
                             LogicalModelGenerator logicalModelGenerator,
-                            DomainService domainService,
+                            LogicalComponentManager logicalComponentManager,
                             PhysicalWireGenerator wireGenerator) {
         this.allocator = allocator;
         this.routingService = routingService; 
         this.metadataStore = metadataStore;
         this.physicalModelGenerator = physicalModelGenerator;
         this.logicalModelGenerator = logicalModelGenerator;
-        this.domainService = domainService;
+        this.logicalComponentManager = logicalComponentManager;
         this.wireGenerator = wireGenerator;
     }
 
     public void initialize() throws AssemblyException {
 
-        domainService.initialize();
-        Collection<LogicalComponent<?>> components = domainService.getComponents();
+        logicalComponentManager.initialize();
+        Collection<LogicalComponent<?>> components = logicalComponentManager.getComponents();
         
         try {
             for (LogicalComponent<?> component : components) {
@@ -129,7 +129,7 @@ public abstract class AbstractAssembly implements Assembly {
 
     public void includeInDomain(Composite composite) throws ActivateException {
         
-        LogicalComponent<CompositeImplementation> domain = domainService.getDomain();
+        LogicalComponent<CompositeImplementation> domain = logicalComponentManager.getDomain();
         List<LogicalComponent<?>> components = logicalModelGenerator.include(domain, composite);
 
         // Allocate the components to runtime nodes
@@ -147,7 +147,7 @@ public abstract class AbstractAssembly implements Assembly {
         
         try {
             // record the operation
-            domainService.store();
+            logicalComponentManager.store();
         } catch (RecordException e) {
             throw new ActivateException("Error activating deployable", composite.getName().toString(), e);
         }
@@ -157,7 +157,7 @@ public abstract class AbstractAssembly implements Assembly {
 
     public void bindService(URI serviceUri, BindingDefinition bindingDefinition) throws BindException {
         
-        LogicalComponent<?> currentComponent = domainService.findComponent(serviceUri);
+        LogicalComponent<?> currentComponent = logicalComponentManager.getComponent(serviceUri);
         if (currentComponent == null) {
             throw new BindException("Component not found", serviceUri.toString());
         }

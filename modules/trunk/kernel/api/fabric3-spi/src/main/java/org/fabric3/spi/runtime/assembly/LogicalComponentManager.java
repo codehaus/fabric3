@@ -14,51 +14,51 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.domain;
+package org.fabric3.spi.runtime.assembly;
 
 import java.net.URI;
 import java.util.Collection;
 
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.assembly.AssemblyException;
-import org.fabric3.spi.assembly.RecordException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 
 /**
  * @version $Revision$ $Date$
  */
-public interface DomainService {
-    
+public interface LogicalComponentManager {
+
     /**
-     * Gets a reference to the domain.
-     * 
-     * @return Reference to the current domain.
+     * Returns the root component in the domain.
+     *
+     * @return the root component in the domain.
      */
     LogicalComponent<CompositeImplementation> getDomain();
-    
+
     /**
-     * Finds a logical component by URI.
-     * 
-     * @param uri URI of the component.
-     * @return Logical component.
+     * Returns the component uniquely identified by an id.
+     *
+     * @param uri the unique id of the component
+     * @return the component uniquely identified by an id, or null
      */
-    LogicalComponent<?> findComponent(URI uri);
-    
+    LogicalComponent<?> getComponent(URI uri);
+
     /**
-     * Initializes the domain service.
-     */
-    void initialize() throws AssemblyException;
-    
-    /**
-     * Gets all logical components in the domain.
-     * 
-     * @return Logical components in the domain.
+     * Gets the top level logical components in the domain (the immediate children of the domain component).
+     *
+     * @return the top level components in the domain
      */
     Collection<LogicalComponent<?>> getComponents();
-    
+
+    /**
+     * Initializes the domain service.
+     * @throws AssemblyException if there was a problem initializing the components
+     */
+    void initialize() throws AssemblyException;
+
     /**
      * Stores the domain using assembly store.
-     * 
+     *
      * @throws RecordException If unable to store the domain.
      */
     void store() throws RecordException;

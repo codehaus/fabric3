@@ -19,7 +19,7 @@
 package org.fabric3.fabric.assembly;
 
 import org.fabric3.fabric.assembly.allocator.Allocator;
-import org.fabric3.fabric.domain.DomainService;
+import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
 import org.fabric3.fabric.model.logical.LogicalModelGenerator;
 import org.fabric3.fabric.model.physical.PhysicalModelGenerator;
 import org.fabric3.fabric.model.physical.PhysicalWireGenerator;
@@ -41,9 +41,10 @@ public class DistributedAssemblyImpl extends AbstractAssembly implements Distrib
                                    @Reference(name = "store") MetaDataStore metaDataStore,
                                    @Reference PhysicalModelGenerator physicalModelGenerator,
                                    @Reference LogicalModelGenerator logicalModelGenerator,
-                                   @Reference DomainService domainService,
+                                   @Reference LogicalComponentManager logicalComponentManager,
                                    @Reference PhysicalWireGenerator wireGenerator) {
-        super(allocator, routingService, metaDataStore, physicalModelGenerator, logicalModelGenerator, domainService, wireGenerator);
+        super(allocator, routingService, metaDataStore, physicalModelGenerator, logicalModelGenerator,
+              logicalComponentManager, wireGenerator);
     }
 
 }

@@ -14,39 +14,41 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.domain;
+package org.fabric3.fabric.services.domain;
 
 import java.net.URI;
 import java.util.Collection;
 
-import org.fabric3.scdl.CompositeImplementation;
-import org.fabric3.spi.assembly.AssemblyException;
-import org.fabric3.spi.assembly.AssemblyStore;
-import org.fabric3.spi.assembly.RecordException;
-import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.spi.util.UriHelper;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
+
+import org.fabric3.scdl.CompositeImplementation;
+import org.fabric3.spi.assembly.AssemblyException;
+import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
+import org.fabric3.spi.runtime.assembly.LogicalComponentStore;
+import org.fabric3.spi.runtime.assembly.RecordException;
+import org.fabric3.spi.util.UriHelper;
 
 /**
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class DomainServiceImpl implements DomainService {
+public class LogicalComponentManagerImpl implements LogicalComponentManager {
     
     private LogicalComponent<CompositeImplementation> domain;
 
-    private final AssemblyStore assemblyStore;
+    private final LogicalComponentStore logicalComponentStore;
     
-    public DomainServiceImpl(@Reference AssemblyStore assemblyStore) {
-        this.assemblyStore = assemblyStore;
+    public LogicalComponentManagerImpl(@Reference LogicalComponentStore logicalComponentStore) {
+        this.logicalComponentStore = logicalComponentStore;
     }
     
     public void store() throws RecordException {
-        assemblyStore.store(domain);
+        logicalComponentStore.store(domain);
     }
 
-    public LogicalComponent<?> findComponent(URI uri) {
+    public LogicalComponent<?> getComponent(URI uri) {
         
         String defragmentedUri = UriHelper.getDefragmentedNameAsString(uri);
         String domainString = domain.getUri().toString();
@@ -73,7 +75,7 @@ public class DomainServiceImpl implements DomainService {
     }
 
     public void initialize() throws AssemblyException {
-        domain = assemblyStore.read();
+        domain = logicalComponentStore.read();
     }
 
 }
