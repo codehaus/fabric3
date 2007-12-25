@@ -35,6 +35,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.jxta.JxtaService;
+import org.fabric3.spi.services.runtime.RuntimeInfoService;
 
 /**
  * Default implementation of the JXTA service.
@@ -60,6 +61,8 @@ public class JxtaServiceImpl implements JxtaService {
 
     // Network configurator
     private NetworkConfigurator networkConfigurator;
+
+    private RuntimeInfoService runtimeInfoService;
 
     public PeerGroup getDomainGroup() {
         return domainGroup;
@@ -87,6 +90,11 @@ public class JxtaServiceImpl implements JxtaService {
         this.networkConfigurator = networkConfigurator;
     }
 
+    @Reference
+    public void setRuntimeInfoService(RuntimeInfoService runtimeInfoService) {
+        this.runtimeInfoService = runtimeInfoService;
+    }
+
     /**
      * Joins the domain and creates the discovery and resolver services.
      */
@@ -103,7 +111,7 @@ public class JxtaServiceImpl implements JxtaService {
 
         try {
 
-            URI runtimeId = hostInfo.getRuntimeId();
+            URI runtimeId = runtimeInfoService.getCurrentRuntimeId();
             // TODO temporary
             String id = runtimeId.toString();
             networkConfigurator.setName(id);

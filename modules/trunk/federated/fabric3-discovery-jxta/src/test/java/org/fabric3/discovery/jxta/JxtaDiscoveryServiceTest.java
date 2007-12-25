@@ -56,7 +56,6 @@ public class JxtaDiscoveryServiceTest extends TestCase {
         RuntimeInfoService runtimeInfoService = new MyRuntimeInfoService(runtimeId);
 
         discoveryService.setWorkScheduler(workScheduler);
-        discoveryService.setHostInfo(hostInfo);
         discoveryService.setRuntimeInfoService(runtimeInfoService);
         discoveryService.setJxtaService(jxtaService);
 
@@ -121,6 +120,10 @@ public class JxtaDiscoveryServiceTest extends TestCase {
 
         public MyRuntimeInfoService(URI runtimeId) {
             this.runtimeId = runtimeId;
+        }
+
+        public URI getCurrentRuntimeId() {
+            return runtimeId;
         }
 
         public RuntimeInfo getRuntimeInfo() {

@@ -19,24 +19,23 @@
 package org.fabric3.discovery.jxta;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.net.URI;
 
 import static net.jxta.discovery.DiscoveryService.ADV;
 import net.jxta.document.AdvertisementFactory;
 import net.jxta.peergroup.PeerGroup;
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
-import org.osoa.sca.annotations.Init;
 
-import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.jxta.JxtaService;
 import org.fabric3.spi.model.topology.RuntimeInfo;
 import org.fabric3.spi.services.discovery.DiscoveryService;
@@ -46,27 +45,18 @@ import org.fabric3.spi.services.work.WorkScheduler;
 import org.fabric3.spi.util.TwosTuple;
 
 /**
- * JXTA implementation of the discovery service.
- * <p/>
- * <p/>
- * The implementation uses the JXTA PDP to broadcast advertisements on the current node and receive advertisements from
- * the nodes participating in the same domain. Requests for advertisements from remote nodes and publishing
- * advertisements for the current node are performed in a different thread using the work scheduler. This is done every
- * 2 seconds by default, however, this can be configured through the <code>interval</code> property. </p>
- * <p/>
- * <p/>
- * A remote node from which no advertisment has been received for the 10 seconds by default is expelled from the current
- * domain view. However, this can be overridden using the property <code>expirationThreshold</code>. </p>
- * <p/>
- * <p/>
- * The advertisements include serialized information on the <code>RuntimeInfo</code> of the node broadcasting the
- * advertisement. Currently, serialization is performed using xstream and transported using the description attribute of
- * the peer discovery advertisement. However, it is worth investigating using custom advertisements. </p>
- * <p/>
- * <p/>
- * The discovery service is injected with the <code>AdvertisementService</code>. Services within local nodes should use
- * this service as a mediator for locally advertising their features. These features are then broadcasted to the wider
- * domain by the discovery service. </p>
+ * JXTA implementation of the discovery service. <p/> <p/> The implementation uses the JXTA PDP to broadcast
+ * advertisements on the current node and receive advertisements from the nodes participating in the same domain.
+ * Requests for advertisements from remote nodes and publishing advertisements for the current node are performed in a
+ * different thread using the work scheduler. This is done every 2 seconds by default, however, this can be configured
+ * through the <code>interval</code> property. </p> <p/> <p/> A remote node from which no advertisment has been received
+ * for the 10 seconds by default is expelled from the current domain view. However, this can be overridden using the
+ * property <code>expirationThreshold</code>. </p> <p/> <p/> The advertisements include serialized information on the
+ * <code>RuntimeInfo</code> of the node broadcasting the advertisement. Currently, serialization is performed using
+ * xstream and transported using the description attribute of the peer discovery advertisement. However, it is worth
+ * investigating using custom advertisements. </p> <p/> <p/> The discovery service is injected with the
+ * <code>AdvertisementService</code>. Services within local nodes should use this service as a mediator for locally
+ * advertising their features. These features are then broadcasted to the wider domain by the discovery service. </p>
  *
  * @version $Revsion$ $Date$
  */
@@ -84,9 +74,6 @@ public class JxtaDiscoveryService implements DiscoveryService {
 
     // Work scheduler
     private WorkScheduler workScheduler;
-
-    // Host info
-    private HostInfo hostInfo;
 
     // Runtime info service
     private RuntimeInfoService runtimeInfoService;
@@ -135,16 +122,6 @@ public class JxtaDiscoveryService implements DiscoveryService {
     }
 
     /**
-     * Injects the host info.
-     *
-     * @param hostInfo info to be injected in.
-     */
-    @Reference
-    public void setHostInfo(HostInfo hostInfo) {
-        this.hostInfo = hostInfo;
-    }
-
-    /**
      * Injects the JXTA service.
      *
      * @param jxtaService JXTA service to be injected in.
@@ -185,18 +162,10 @@ public class JxtaDiscoveryService implements DiscoveryService {
      * @param timeout the time to wait to join the domain
      */
     public void joinDomain(long timeout) {
-
-        assert workScheduler != null;
-        assert jxtaService != null;
-        assert hostInfo != null;
-
         PeerGroup peerGroup = jxtaService.getDomainGroup();
-
         discoveryService = peerGroup.getDiscoveryService();
-
         publisher = new Publisher();
         workScheduler.scheduleWork(publisher);
-
     }
 
     /**
@@ -290,7 +259,7 @@ public class JxtaDiscoveryService implements DiscoveryService {
                 PresenceAdvertisement presenceAdv1 = (PresenceAdvertisement) object;
                 RuntimeInfo runtimeInfo1 = presenceAdv1.getRuntimeInfo();
 
-                if (runtimeInfo1.getId().equals(hostInfo.getRuntimeId())) {
+                if (runtimeInfo1.getId().equals(runtimeInfoService.getCurrentRuntimeId())) {
                     continue;
                 }
 
@@ -312,7 +281,7 @@ public class JxtaDiscoveryService implements DiscoveryService {
             if (System.currentTimeMillis() - tuple.getSecond() > expirationThreshold) {
                 participatingRuntimes.remove(tuple.getFirst().getId());
             } else {
-                System.err.println(hostInfo.getRuntimeId() + ":" + tuple.getFirst().getId());
+                System.err.println(runtimeInfoService.getCurrentRuntimeId() + ":" + tuple.getFirst().getId());
             }
 
         }

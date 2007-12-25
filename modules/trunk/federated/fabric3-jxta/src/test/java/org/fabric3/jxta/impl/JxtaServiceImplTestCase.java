@@ -26,6 +26,7 @@ import net.jxta.platform.NetworkConfigurator;
 import org.easymock.classextension.EasyMock;
 
 import org.fabric3.host.runtime.HostInfo;
+import org.fabric3.spi.services.runtime.RuntimeInfoService;
 
 /**
  * @version $Revsion$ $Date$
@@ -36,9 +37,11 @@ public class JxtaServiceImplTestCase extends TestCase {
      * Tests the creation of domain group.
      */
     public void testGetDomainGroup() throws Exception {
+        RuntimeInfoService infoService = EasyMock.createMock(RuntimeInfoService.class);
+        EasyMock.expect(infoService.getCurrentRuntimeId()).andReturn(URI.create("jxta://rumtime1"));
+        EasyMock.replay(infoService);
 
         HostInfo hostInfo = EasyMock.createMock(HostInfo.class);
-        EasyMock.expect(hostInfo.getRuntimeId()).andReturn(URI.create("runtime1"));
         EasyMock.expect(hostInfo.getDomain()).andReturn(new URI("domain1"));
         EasyMock.replay(hostInfo);
 
@@ -49,6 +52,7 @@ public class JxtaServiceImplTestCase extends TestCase {
         JxtaServiceImpl jxtaService = new JxtaServiceImpl();
         jxtaService.setHostInfo(hostInfo);
         jxtaService.setNetworkConfigurator(networkConfigurator);
+        jxtaService.setRuntimeInfoService(infoService);
         jxtaService.start();
 
         PeerGroup domainGroup = jxtaService.getDomainGroup();
