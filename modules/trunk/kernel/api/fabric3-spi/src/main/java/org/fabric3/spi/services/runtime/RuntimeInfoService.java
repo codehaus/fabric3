@@ -18,21 +18,28 @@
  */
 package org.fabric3.spi.services.runtime;
 
+import java.net.URI;
+
 import org.fabric3.spi.model.topology.RuntimeInfo;
 
 /**
- * Provides the abstraction to the component that provides information
- * about the local runtime.
- *
+ * Provides the abstraction to the component that provides information about the local runtime.
+ * <p/>
  * Information about the runtime includes,
- *
- * <li>Runtime Id</li>
- * <li>Components that are running in the runtime</li>
- * <li>Features that are supported by the runtime</li>
+ * <p/>
+ * <li>Runtime Id</li> <li>Components that are running in the runtime</li> <li>Features that are supported by the
+ * runtime</li>
  *
  * @version $Revsion$ $Date$
  */
 public interface RuntimeInfoService {
+
+    /**
+     * Returns the current rumtime id.
+     *
+     * @return the current rumtime id
+     */
+    URI getCurrentRuntimeId();
 
     /**
      * Returns the information on the current runtime.

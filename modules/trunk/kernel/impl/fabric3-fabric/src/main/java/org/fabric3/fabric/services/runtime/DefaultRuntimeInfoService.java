@@ -19,16 +19,18 @@
 package org.fabric3.fabric.services.runtime;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Arrays;
 import java.util.Map;
 
+import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.model.topology.ClassLoaderResourceDescription;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.runtime.component.ComponentManager;
+import org.fabric3.spi.model.topology.ClassLoaderResourceDescription;
 import org.fabric3.spi.model.topology.RuntimeInfo;
 import org.fabric3.spi.services.advertisement.AdvertisementService;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
@@ -44,25 +46,41 @@ import org.fabric3.spi.services.runtime.RuntimeInfoService;
  * @version $Revsion$ $Date$
  */
 public class DefaultRuntimeInfoService implements RuntimeInfoService {
-
-    // Advertisement service
-    private AdvertisementService advertisementService;
-
-    // Component manager
+    private AdvertisementService advertService;
     private ComponentManager componentManager;
-
-    // Host info
-    private HostInfo hostInfo;
-
-    // Message destination service
-    private MessageDestinationService messageDestinationService;
-
+    private MessageDestinationService messageService;
     private ClassLoaderRegistry classLoaderRegistry;
+    private HostInfo hostInfo;
+    private String scheme;
+    private URI runtimeId;
+
+    public DefaultRuntimeInfoService(@Reference(name = "advertisementService")AdvertisementService advertService,
+                                     @Reference(name = "componentManager")ComponentManager componentManager,
+                                     @Reference(name = "messageService")MessageDestinationService messageService,
+                                     @Reference(name = "classLoaderRegistry")ClassLoaderRegistry classLoaderRegistry,
+                                     @Reference(name = "hostInfo")HostInfo hostInfo,
+                                     @Property(name = "scheme", required = false)String scheme,
+                                     @Property(name = "runtimeId", required = false)String runtimeId)
+            throws URISyntaxException {
+        this.advertService = advertService;
+        this.componentManager = componentManager;
+        this.messageService = messageService;
+        this.classLoaderRegistry = classLoaderRegistry;
+        this.hostInfo = hostInfo;
+        this.scheme = scheme;
+        if (runtimeId != null) {
+            this.runtimeId = new URI(scheme, runtimeId, null);
+        }
+    }
+
+    public URI getCurrentRuntimeId() {
+        return runtimeId;
+    }
 
     public RuntimeInfo getRuntimeInfo() {
-        RuntimeInfo runtimeInfo = new RuntimeInfo(hostInfo.getRuntimeId());
+        RuntimeInfo runtimeInfo = new RuntimeInfo(runtimeId);
         // add features
-        runtimeInfo.setFeatures(advertisementService.getFeatures());
+        runtimeInfo.setFeatures(advertService.getFeatures());
         // add component URIs
         for (URI componentUri : componentManager.getComponentsInHierarchy(hostInfo.getDomain())) {
             runtimeInfo.addComponent(componentUri);
@@ -80,48 +98,11 @@ public class DefaultRuntimeInfoService implements RuntimeInfoService {
         }
 
         // TODO Fix this in the runtime info
-        String messageDestintaion = (String) messageDestinationService.getMessageDestination();
+        String messageDestintaion = (String) messageService.getMessageDestination();
         runtimeInfo.setMessageDestination(messageDestintaion);
 
         return runtimeInfo;
 
-    }
-
-    /**
-     * @param advertisementService Advertisement service to be injected.
-     */
-    @Reference
-    public void setAdvertisementService(AdvertisementService advertisementService) {
-        this.advertisementService = advertisementService;
-    }
-
-    /**
-     * @param componentManager Component manager to be injected.
-     */
-    @Reference
-    public void setComponentManager(ComponentManager componentManager) {
-        this.componentManager = componentManager;
-    }
-
-    /**
-     * @param hostInfo Host info to be injected.
-     */
-    @Reference
-    public void setHostInfo(HostInfo hostInfo) {
-        this.hostInfo = hostInfo;
-    }
-
-    /**
-     * @param messageDestinationService Message destination service to be injected.
-     */
-    @Reference
-    public void setMessageDestinationService(MessageDestinationService messageDestinationService) {
-        this.messageDestinationService = messageDestinationService;
-    }
-
-    @Reference
-    public void setClassLoaderRegistry(ClassLoaderRegistry classLoaderRegistry) {
-        this.classLoaderRegistry = classLoaderRegistry;
     }
 
 }

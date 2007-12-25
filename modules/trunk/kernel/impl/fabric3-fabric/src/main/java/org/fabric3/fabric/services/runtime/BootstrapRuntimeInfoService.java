@@ -41,6 +41,10 @@ public class BootstrapRuntimeInfoService implements RuntimeInfoService {
         this.classLoaderRegistry = classLoaderRegistry;
     }
 
+    public URI getCurrentRuntimeId() {
+        return null;
+    }
+
     public RuntimeInfo getRuntimeInfo() {
         RuntimeInfo runtimeInfo = new RuntimeInfo();
         // add classloader info

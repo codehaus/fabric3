@@ -25,11 +25,11 @@ import java.util.Set;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.topology.RuntimeInfo;
 import org.fabric3.spi.services.discovery.DiscoveryService;
+import org.fabric3.spi.services.runtime.RuntimeInfoService;
 
 /**
  * Default Allocator implementation.
@@ -37,14 +37,15 @@ import org.fabric3.spi.services.discovery.DiscoveryService;
  * @version $Rev$ $Date$
  */
 public class DefaultAllocator implements Allocator {
-    private HostInfo hostInfo;
+    private URI runtimeId;
     private DiscoveryService discoveryService;
     private long syncPause = 1000;
     private int syncTimes = 1000;
 
 
-    public DefaultAllocator(@Reference HostInfo hostInfo, @Reference DiscoveryService discoveryService) {
-        this.hostInfo = hostInfo;
+    public DefaultAllocator(@Reference RuntimeInfoService runtimeInfoService,
+                            @Reference DiscoveryService discoveryService) {
+        this.runtimeId = runtimeInfoService.getCurrentRuntimeId();
         this.discoveryService = discoveryService;
     }
 
@@ -109,8 +110,9 @@ public class DefaultAllocator implements Allocator {
                 component.setRuntimeId(null);
                 return;
             }
+
             for (RuntimeInfo runtime : runtimes) {
-                if (!hostInfo.getRuntimeId().equals(runtime.getId())) {
+                if (!runtimeId.equals(runtime.getId())) {
                     info = runtime;
                     break;
                 }
