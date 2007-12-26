@@ -52,15 +52,54 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="commons-codec:commons-codec:1.2">
+      <library name="bouncycastle:bcprov-jdk15:132">
         <CLASSES>
-          <root url="jar://$M2_REPO$/commons-codec/commons-codec/1.2/commons-codec-1.2.jar!/" />
+          <root url="jar://$M2_REPO$/bouncycastle/bcprov-jdk15/132/bcprov-jdk15-132.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar://$M2_REPO$/commons-codec/commons-codec/1.2/commons-codec-1.2-javadoc.jar!/" />
+          <root url="jar://$M2_REPO$/bouncycastle/bcprov-jdk15/132/bcprov-jdk15-132-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar://$M2_REPO$/commons-codec/commons-codec/1.2/commons-codec-1.2-sources.jar!/" />
+          <root url="jar://$M2_REPO$/bouncycastle/bcprov-jdk15/132/bcprov-jdk15-132-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="commons-codec:commons-codec:1.3">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/commons-codec/commons-codec/1.3/commons-codec-1.3.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/commons-codec/commons-codec/1.3/commons-codec-1.3-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/commons-codec/commons-codec/1.3/commons-codec-1.3-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="commons-collections:commons-collections:3.1">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/commons-collections/commons-collections/3.1/commons-collections-3.1.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/commons-collections/commons-collections/3.1/commons-collections-3.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/commons-collections/commons-collections/3.1/commons-collections-3.1-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="commons-discovery:commons-discovery:0.2">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/commons-discovery/commons-discovery/0.2/commons-discovery-0.2.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/commons-discovery/commons-discovery/0.2/commons-discovery-0.2-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/commons-discovery/commons-discovery/0.2/commons-discovery-0.2-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
@@ -156,15 +195,15 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="jaxen:jaxen:1.1-beta-9">
+      <library name="jaxen:jaxen:1.1-beta-10">
         <CLASSES>
-          <root url="jar://$M2_REPO$/jaxen/jaxen/1.1-beta-9/jaxen-1.1-beta-9.jar!/" />
+          <root url="jar://$M2_REPO$/jaxen/jaxen/1.1-beta-10/jaxen-1.1-beta-10.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar://$M2_REPO$/jaxen/jaxen/1.1-beta-9/jaxen-1.1-beta-9-javadoc.jar!/" />
+          <root url="jar://$M2_REPO$/jaxen/jaxen/1.1-beta-10/jaxen-1.1-beta-10-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar://$M2_REPO$/jaxen/jaxen/1.1-beta-9/jaxen-1.1-beta-9-sources.jar!/" />
+          <root url="jar://$M2_REPO$/jaxen/jaxen/1.1-beta-10/jaxen-1.1-beta-10-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
@@ -182,15 +221,15 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="log4j:log4j:1.2.12">
+      <library name="log4j:log4j:1.2.13">
         <CLASSES>
-          <root url="jar://$M2_REPO$/log4j/log4j/1.2.12/log4j-1.2.12.jar!/" />
+          <root url="jar://$M2_REPO$/log4j/log4j/1.2.13/log4j-1.2.13.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar://$M2_REPO$/log4j/log4j/1.2.12/log4j-1.2.12-javadoc.jar!/" />
+          <root url="jar://$M2_REPO$/log4j/log4j/1.2.13/log4j-1.2.13-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar://$M2_REPO$/log4j/log4j/1.2.12/log4j-1.2.12-sources.jar!/" />
+          <root url="jar://$M2_REPO$/log4j/log4j/1.2.13/log4j-1.2.13-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
@@ -208,6 +247,97 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
+      <library name="opensaml:opensaml:1.1">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/opensaml/opensaml/1.1/opensaml-1.1.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/opensaml/opensaml/1.1/opensaml-1.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/opensaml/opensaml/1.1/opensaml-1.1-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.apache.ant:ant-launcher:1.7.0">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/apache/ant/ant-launcher/1.7.0/ant-launcher-1.7.0.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/apache/ant/ant-launcher/1.7.0/ant-launcher-1.7.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/apache/ant/ant-launcher/1.7.0/ant-launcher-1.7.0-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.apache.ant:ant-nodeps:1.7.0">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/apache/ant/ant-nodeps/1.7.0/ant-nodeps-1.7.0.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/apache/ant/ant-nodeps/1.7.0/ant-nodeps-1.7.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/apache/ant/ant-nodeps/1.7.0/ant-nodeps-1.7.0-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.apache.ant:ant:1.7.0">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/apache/ant/ant/1.7.0/ant-1.7.0.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/apache/ant/ant/1.7.0/ant-1.7.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/apache/ant/ant/1.7.0/ant-1.7.0-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.apache.axis2:axis2-adb-codegen:1.3">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/apache/axis2/axis2-adb-codegen/1.3/axis2-adb-codegen-1.3.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/apache/axis2/axis2-adb-codegen/1.3/axis2-adb-codegen-1.3-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/apache/axis2/axis2-adb-codegen/1.3/axis2-adb-codegen-1.3-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.apache.axis2:axis2-adb:1.3">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/apache/axis2/axis2-adb/1.3/axis2-adb-1.3.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/apache/axis2/axis2-adb/1.3/axis2-adb-1.3-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/apache/axis2/axis2-adb/1.3/axis2-adb-1.3-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.apache.axis2:axis2-codegen:1.3">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/apache/axis2/axis2-codegen/1.3/axis2-codegen-1.3.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/apache/axis2/axis2-codegen/1.3/axis2-codegen-1.3-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/apache/axis2/axis2-codegen/1.3/axis2-codegen-1.3-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
       <library name="org.apache.axis2:axis2-kernel:1.3">
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/axis2/axis2-kernel/1.3/axis2-kernel-1.3.jar!/" />
@@ -217,6 +347,45 @@
         </JAVADOC>
         <SOURCES>
           <root url="jar://$M2_REPO$/org/apache/axis2/axis2-kernel/1.3/axis2-kernel-1.3-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.apache.axis2:axis2-mtompolicy:1.3">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/apache/axis2/axis2-mtompolicy/1.3/axis2-mtompolicy-1.3.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/apache/axis2/axis2-mtompolicy/1.3/axis2-mtompolicy-1.3-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/apache/axis2/axis2-mtompolicy/1.3/axis2-mtompolicy-1.3-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.apache.axis2:axis2-xmlbeans:1.3">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/apache/axis2/axis2-xmlbeans/1.3/axis2-xmlbeans-1.3.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/apache/axis2/axis2-xmlbeans/1.3/axis2-xmlbeans-1.3-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/apache/axis2/axis2-xmlbeans/1.3/axis2-xmlbeans-1.3-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.apache.geronimo.specs:geronimo-activation_1.1_spec:1.0-M1">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-activation_1.1_spec/1.0-M1/geronimo-activation_1.1_spec-1.0-M1.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-activation_1.1_spec/1.0-M1/geronimo-activation_1.1_spec-1.0-M1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-activation_1.1_spec/1.0-M1/geronimo-activation_1.1_spec-1.0-M1-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
@@ -286,6 +455,58 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
+      <library name="org.apache.rampart:rampart-core:1.3">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/apache/rampart/rampart-core/1.3/rampart-core-1.3.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/apache/rampart/rampart-core/1.3/rampart-core-1.3-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/apache/rampart/rampart-core/1.3/rampart-core-1.3-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.apache.rampart:rampart-policy:1.3">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/apache/rampart/rampart-policy/1.3/rampart-policy-1.3.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/apache/rampart/rampart-policy/1.3/rampart-policy-1.3-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/apache/rampart/rampart-policy/1.3/rampart-policy-1.3-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.apache.rampart:rampart-trust:1.3">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/apache/rampart/rampart-trust/1.3/rampart-trust-1.3.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/apache/rampart/rampart-trust/1.3/rampart-trust-1.3-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/apache/rampart/rampart-trust/1.3/rampart-trust-1.3-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.apache.santuario:xmlsec:1.4.0">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/apache/santuario/xmlsec/1.4.0/xmlsec-1.4.0.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/apache/santuario/xmlsec/1.4.0/xmlsec-1.4.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/apache/santuario/xmlsec/1.4.0/xmlsec-1.4.0-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
       <library name="org.apache.woden:woden:1.0-incubating-M7b">
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/woden/woden/1.0-incubating-M7b/woden-1.0-incubating-M7b.jar!/" />
@@ -347,6 +568,19 @@
         </JAVADOC>
         <SOURCES>
           <root url="jar://$M2_REPO$/org/apache/ws/commons/schema/XmlSchema/1.3.2/XmlSchema-1.3.2-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.apache.ws.security:wss4j:1.5.3">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/apache/ws/security/wss4j/1.5.3/wss4j-1.5.3.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/apache/ws/security/wss4j/1.5.3/wss4j-1.5.3-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/apache/ws/security/wss4j/1.5.3/wss4j-1.5.3-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
@@ -448,15 +682,28 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="xml-apis:xml-apis:1.0.b2">
+      <library name="xml-apis:xml-apis:1.3.03">
         <CLASSES>
-          <root url="jar://$M2_REPO$/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2.jar!/" />
+          <root url="jar://$M2_REPO$/xml-apis/xml-apis/1.3.03/xml-apis-1.3.03.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar://$M2_REPO$/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2-javadoc.jar!/" />
+          <root url="jar://$M2_REPO$/xml-apis/xml-apis/1.3.03/xml-apis-1.3.03-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar://$M2_REPO$/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2-sources.jar!/" />
+          <root url="jar://$M2_REPO$/xml-apis/xml-apis/1.3.03/xml-apis-1.3.03-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="xmlbeans:xbean:2.1.0">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/xmlbeans/xbean/2.1.0/xbean-2.1.0.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/xmlbeans/xbean/2.1.0/xbean-2.1.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/xmlbeans/xbean/2.1.0/xbean-2.1.0-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
