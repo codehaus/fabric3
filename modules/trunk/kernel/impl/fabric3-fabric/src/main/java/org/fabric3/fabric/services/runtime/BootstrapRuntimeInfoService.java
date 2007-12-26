@@ -61,4 +61,8 @@ public class BootstrapRuntimeInfoService implements RuntimeInfoService {
         return runtimeInfo;
     }
 
+    public void registerMessageDestination(String id) {
+        // no-op
+    }
+
 }

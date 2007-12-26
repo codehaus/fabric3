@@ -112,8 +112,7 @@ public class JxtaServiceImpl implements JxtaService {
         try {
 
             URI runtimeId = runtimeInfoService.getCurrentRuntimeId();
-            // TODO temporary
-            String id = runtimeId.toString();
+            String id = runtimeId.getSchemeSpecificPart();
             networkConfigurator.setName(id);
             networkConfigurator.setHome(new File(id));
             networkConfigurator.setMode(NetworkConfigurator.EDGE_NODE);

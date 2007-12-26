@@ -213,6 +213,7 @@ public class JxtaDiscoveryService implements DiscoveryService {
                 } catch (InterruptedException ex) {
                     return;
                 } catch (IOException e) {
+                    e.printStackTrace();
                     // TODO Notify the monitor
                 }
             }

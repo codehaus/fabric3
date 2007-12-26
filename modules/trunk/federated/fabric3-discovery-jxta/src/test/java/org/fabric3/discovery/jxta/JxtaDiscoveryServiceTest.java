@@ -130,6 +130,10 @@ public class JxtaDiscoveryServiceTest extends TestCase {
             return new RuntimeInfo(runtimeId);
         }
 
+        public void registerMessageDestination(String id) {
+
+        }
+
     }
 
 }

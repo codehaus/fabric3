@@ -48,4 +48,11 @@ public interface RuntimeInfoService {
      */
     RuntimeInfo getRuntimeInfo();
 
+    /**
+     * Register the opaque destination identifier to contact this runtime on. The identifier is registered by the
+     * participant messaging infrastructure.
+     *
+     * @param id the opaque identifier
+     */
+    void registerMessageDestination(String id);
 }

@@ -23,7 +23,6 @@ import java.net.URISyntaxException;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.xml.namespace.QName;
 
 import net.jxta.document.Advertisement;
@@ -35,15 +34,12 @@ import net.jxta.document.StructuredDocument;
 import net.jxta.document.StructuredDocumentFactory;
 import net.jxta.id.ID;
 import net.jxta.id.IDFactory;
-import net.jxta.peer.PeerID;
 
 import org.fabric3.jxta.impl.Fabric3JxtaException;
 import org.fabric3.spi.model.topology.RuntimeInfo;
 
 /**
- *
  * @version $Revsion$ $Date$
- *
  */
 public class PresenceAdvertisement extends Advertisement {
 
@@ -51,13 +47,14 @@ public class PresenceAdvertisement extends Advertisement {
      * Register the advertisement type.
      */
     static {
-        AdvertisementFactory.registerAdvertisementInstance(getAdvertisementType(), new PresenceAdvertisement.Instantiator());
+        AdvertisementFactory.registerAdvertisementInstance(getAdvertisementType(),
+                                                           new PresenceAdvertisement.Instantiator());
     }
 
     /*
      * Indexed fields.
      */
-    public static final String indexFields[] = new String[] {};
+    public static final String indexFields[] = new String[]{};
 
     /*
      * Runtime id.
@@ -120,7 +117,7 @@ public class PresenceAdvertisement extends Advertisement {
             elem = (Element) element.getChildren("features").nextElement();
             adv.features = new HashSet<QName>();
             Enumeration children = elem.getChildren("feature");
-            while(children.hasMoreElements()) {
+            while (children.hasMoreElements()) {
                 elem = (Element) children.nextElement();
                 if (elem != null && elem.getValue() != null) {
                     adv.features.add(QName.valueOf(elem.getValue().toString()));
@@ -130,7 +127,7 @@ public class PresenceAdvertisement extends Advertisement {
             elem = (Element) element.getChildren("components").nextElement();
             adv.components = new HashSet<URI>();
             children = elem.getChildren("component");
-            while(children.hasMoreElements()) {
+            while (children.hasMoreElements()) {
                 elem = (Element) children.nextElement();
                 if (elem != null && elem.getValue() != null) {
                     try {
@@ -152,11 +149,11 @@ public class PresenceAdvertisement extends Advertisement {
      */
     public void setRuntimeInfo(RuntimeInfo runtimeInfo) {
         runtimeId = runtimeInfo.getId();
-        if(runtimeInfo.getFeatures() != null) {
+        if (runtimeInfo.getFeatures() != null) {
             features = runtimeInfo.getFeatures();
         }
         messageDestination = runtimeInfo.getMessageDestination();
-        if(runtimeInfo.getComponents() != null) {
+        if (runtimeInfo.getComponents() != null) {
             components = runtimeInfo.getComponents();
         }
     }
@@ -168,7 +165,7 @@ public class PresenceAdvertisement extends Advertisement {
         RuntimeInfo runtimeInfo = new RuntimeInfo(runtimeId);
         runtimeInfo.setFeatures(features);
         runtimeInfo.setMessageDestination(messageDestination);
-        for(URI component : components) {
+        for (URI component : components) {
             runtimeInfo.addComponent(component);
         }
         return runtimeInfo;
@@ -195,7 +192,7 @@ public class PresenceAdvertisement extends Advertisement {
         Element elem = doc.createElement("peerId", peerId);
         doc.appendChild(elem);
 
-        elem = doc.createElement("runtimeId", runtimeId);
+        elem = doc.createElement("runtimeId", runtimeId.toString());
         doc.appendChild(elem);
 
         elem = doc.createElement("messageDestination", messageDestination);
@@ -203,13 +200,13 @@ public class PresenceAdvertisement extends Advertisement {
 
         elem = doc.createElement("features");
         doc.appendChild(elem);
-        for(QName feature : features) {
+        for (QName feature : features) {
             elem.appendChild(doc.createElement("feature", feature.toString()));
         }
 
         elem = doc.createElement("components");
         doc.appendChild(elem);
-        for(URI component : components) {
+        for (URI component : components) {
             elem.appendChild(doc.createElement("component", component.toString()));
         }
 
@@ -256,7 +253,7 @@ public class PresenceAdvertisement extends Advertisement {
         return getID().hashCode();
     }
 
-    public Object clone() {
+    public Object clone() throws CloneNotSupportedException {
         try {
             return super.clone();
         } catch (CloneNotSupportedException impossible) {

@@ -100,9 +100,5 @@
         <system:implementation.system class="org.fabric3.fabric.services.domain.NonPersistentLogicalComponentStore"/>
     </component>
 	 
-	 <component name="MessageDestinationService">
-        <system:implementation.system class="org.fabric3.fabric.services.messaging.NullMessageDestinationService"/>
-    </component>
-
 
 </composite>

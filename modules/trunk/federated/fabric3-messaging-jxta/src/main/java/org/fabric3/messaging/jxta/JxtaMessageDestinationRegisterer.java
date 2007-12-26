@@ -18,34 +18,35 @@
  */
 package org.fabric3.messaging.jxta;
 
-import org.fabric3.jxta.JxtaService;
-import org.fabric3.spi.services.messaging.MessageDestinationService;
+import net.jxta.peer.PeerID;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.jxta.JxtaService;
+import org.fabric3.spi.services.VoidService;
+import org.fabric3.spi.services.runtime.RuntimeInfoService;
+
 /**
- * JXTA implementation of the message destination service.
+ * Registers the message destination for the current runtime with the RuntimeInfoService.
  *
  * @version $Revsion$ $Date$
  */
-public class JxtaMessageDestinationService implements MessageDestinationService {
-
-    /**
-     * JXTA service.
-     */
+@EagerInit
+public class JxtaMessageDestinationRegisterer implements VoidService {
+    private RuntimeInfoService runtimeInfoService;
     private JxtaService jxtaService;
 
-    /**
-     * Injected JXTA service to be used.
-     *
-     * @param jxtaService JXTA service.
-     */
-    @Reference
-    public void setJxtaService(JxtaService jxtaService) {
+    public JxtaMessageDestinationRegisterer(@Reference RuntimeInfoService runtimeInfoService,
+                                            @Reference JxtaService jxtaService) {
+        this.runtimeInfoService = runtimeInfoService;
         this.jxtaService = jxtaService;
     }
 
-    public Object getMessageDestination() {
-        return jxtaService.getDomainGroup().getPeerID().toString();
+    @Init
+    public void init() {
+        PeerID peerID = jxtaService.getDomainGroup().getPeerID();
+        runtimeInfoService.registerMessageDestination(peerID.toString());
     }
 
 }

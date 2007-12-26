@@ -23,6 +23,7 @@ package org.fabric3.spi.services.messaging;
  *
  * @version $Revsion$ $Date$
  */
+@Deprecated
 public interface MessageDestinationService {
 
     /**

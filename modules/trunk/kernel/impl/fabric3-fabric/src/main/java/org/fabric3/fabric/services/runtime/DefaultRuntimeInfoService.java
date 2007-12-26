@@ -29,12 +29,11 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.runtime.HostInfo;
-import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.model.topology.ClassLoaderResourceDescription;
 import org.fabric3.spi.model.topology.RuntimeInfo;
+import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.services.advertisement.AdvertisementService;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
-import org.fabric3.spi.services.messaging.MessageDestinationService;
 import org.fabric3.spi.services.runtime.RuntimeInfoService;
 
 /**
@@ -48,15 +47,13 @@ import org.fabric3.spi.services.runtime.RuntimeInfoService;
 public class DefaultRuntimeInfoService implements RuntimeInfoService {
     private AdvertisementService advertService;
     private ComponentManager componentManager;
-    private MessageDestinationService messageService;
     private ClassLoaderRegistry classLoaderRegistry;
     private HostInfo hostInfo;
-    private String scheme;
     private URI runtimeId;
+    private String messageDestination;
 
     public DefaultRuntimeInfoService(@Reference(name = "advertisementService")AdvertisementService advertService,
                                      @Reference(name = "componentManager")ComponentManager componentManager,
-                                     @Reference(name = "messageService")MessageDestinationService messageService,
                                      @Reference(name = "classLoaderRegistry")ClassLoaderRegistry classLoaderRegistry,
                                      @Reference(name = "hostInfo")HostInfo hostInfo,
                                      @Property(name = "scheme", required = false)String scheme,
@@ -64,13 +61,15 @@ public class DefaultRuntimeInfoService implements RuntimeInfoService {
             throws URISyntaxException {
         this.advertService = advertService;
         this.componentManager = componentManager;
-        this.messageService = messageService;
         this.classLoaderRegistry = classLoaderRegistry;
         this.hostInfo = hostInfo;
-        this.scheme = scheme;
         if (runtimeId != null) {
             this.runtimeId = new URI(scheme, runtimeId, null);
         }
+    }
+
+    public void registerMessageDestination(String destination) {
+        messageDestination = destination;
     }
 
     public URI getCurrentRuntimeId() {
@@ -97,10 +96,7 @@ public class DefaultRuntimeInfoService implements RuntimeInfoService {
             runtimeInfo.addResourceDescription(desc);
         }
 
-        // TODO Fix this in the runtime info
-        String messageDestintaion = (String) messageService.getMessageDestination();
-        runtimeInfo.setMessageDestination(messageDestintaion);
-
+        runtimeInfo.setMessageDestination(messageDestination);
         return runtimeInfo;
 
     }
