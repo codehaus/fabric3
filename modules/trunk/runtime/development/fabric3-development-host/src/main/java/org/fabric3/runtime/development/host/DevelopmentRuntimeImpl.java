@@ -71,7 +71,7 @@ public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo>
         wireCache = getSystemComponent(ClientWireCache.class, WIRE_CACHE_URI);
         mockCache = getSystemComponent(MockObjectCache.class, MOCK_CACHE_URI);
         proxyService = getSystemComponent(ProxyService.class, PROXY_SERVICE_URI);
-        ScopeRegistry scopeRegistry = getScopeRegistry();
+        ScopeRegistry scopeRegistry = getSystemComponent(ScopeRegistry.class, ComponentNames.SCOPE_REGISTRY_URI);
         scopeContainer = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
         super.start();
     }

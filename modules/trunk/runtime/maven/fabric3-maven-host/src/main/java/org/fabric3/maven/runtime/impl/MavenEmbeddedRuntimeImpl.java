@@ -115,12 +115,13 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
         WorkContext workContext = new SimpleWorkContext();
         workContext.setScopeIdentifier(Scope.COMPOSITE, compositeId);
         URI groupId = URI.create(compositeId.toString() + "/");
-        getScopeRegistry().getScopeContainer(Scope.COMPOSITE).startContext(workContext, groupId);
+        ScopeRegistry scopeRegistry = getSystemComponent(ScopeRegistry.class, ComponentNames.SCOPE_REGISTRY_URI);
+        scopeRegistry.getScopeContainer(Scope.COMPOSITE).startContext(workContext, groupId);
     }
 
     public void destroy() {
         // destroy system components
-        ScopeRegistry scopeRegistry = getScopeRegistry();
+        ScopeRegistry scopeRegistry = getSystemComponent(ScopeRegistry.class, ComponentNames.SCOPE_REGISTRY_URI);
         ScopeContainer scopeContainer = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
         WorkContext workContext = new SimpleWorkContext();
         URI systemGroupId = URI.create(ComponentNames.RUNTIME_NAME + "/");

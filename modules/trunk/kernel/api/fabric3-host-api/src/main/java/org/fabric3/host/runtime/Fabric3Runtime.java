@@ -19,7 +19,6 @@
 package org.fabric3.host.runtime;
 
 import java.net.URI;
-import java.util.List;
 
 import org.fabric3.host.management.ManagementService;
 import org.fabric3.host.monitor.MonitorFactory;
@@ -118,13 +117,4 @@ public interface Fabric3Runtime<I extends HostInfo> {
      * @return an implementation of the requested service
      */
     <I> I getSystemComponent(Class<I> service, URI uri);
-
-    /**
-     * Incudes extensions in the runtime domain
-     *
-     * @param contributionUris the list of contribution URIs to include
-     * @throws InitializationException if an error occurs included the extensions
-     */
-    public void includeExtensionContributions(List<URI> contributionUris) throws InitializationException;
-
 }

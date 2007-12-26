@@ -20,19 +20,14 @@ package org.fabric3.fabric.runtime;
 
 import java.net.URI;
 import java.net.URL;
-import java.util.List;
-import javax.xml.namespace.QName;
 
 import org.fabric3.extension.component.SimpleWorkContext;
-import org.fabric3.fabric.assembly.RuntimeAssembly;
+import org.fabric3.fabric.component.scope.CompositeScopeContainer;
+import static org.fabric3.fabric.runtime.ComponentNames.EVENT_SERVICE_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_URI;
 import org.fabric3.fabric.services.componentmanager.ComponentManagerImpl;
 import org.fabric3.fabric.services.domain.LogicalComponentManagerImpl;
 import org.fabric3.fabric.services.domain.NonPersistentLogicalComponentStore;
-import static org.fabric3.fabric.runtime.ComponentNames.EVENT_SERVICE_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.METADATA_STORE_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_ASSEMBLY_URI;
-import org.fabric3.fabric.component.scope.CompositeScopeContainer;
-import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.management.ManagementService;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.host.runtime.Fabric3Runtime;
@@ -40,25 +35,16 @@ import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.StartException;
 import org.fabric3.pojo.PojoWorkContextTunnel;
-import org.fabric3.scdl.Composite;
-import org.fabric3.scdl.Include;
-import org.fabric3.scdl.Scope;
 import org.fabric3.scdl.Autowire;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.ObjectCreationException;
-import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.component.AtomicComponent;
-import org.fabric3.spi.runtime.component.ComponentManager;
+import org.fabric3.spi.component.ScopeContainer;
+import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.runtime.RuntimeServices;
 import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
 import org.fabric3.spi.runtime.assembly.LogicalComponentStore;
-import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.component.WorkContext;
-import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.spi.services.contribution.Contribution;
-import org.fabric3.spi.services.contribution.MetaDataStore;
-import org.fabric3.spi.services.contribution.QNameSymbol;
-import org.fabric3.spi.services.contribution.Resource;
-import org.fabric3.spi.services.contribution.ResourceElement;
+import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.services.event.RuntimeStart;
 import org.fabric3.spi.services.management.Fabric3ManagementService;
@@ -95,7 +81,7 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
     /**
      * The ScopeContainer used to managed system component instances.
      */
-    private ScopeContainer<?> scopeContainer;
+    private CompositeScopeContainer scopeContainer;
 
     private ClassLoader hostClassLoader;
 
@@ -161,7 +147,7 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
     }
 
     public void initialize() throws InitializationException {
-        LogicalComponentStore store = new NonPersistentLogicalComponentStore(ComponentNames.RUNTIME_URI, Autowire.ON);
+        LogicalComponentStore store = new NonPersistentLogicalComponentStore(RUNTIME_URI, Autowire.ON);
         logicalComponentManager = new LogicalComponentManagerImpl(store);
         componentManager = new ComponentManagerImpl((Fabric3ManagementService) getManagementService());
         scopeContainer = new CompositeScopeContainer(getMonitorFactory());
@@ -194,16 +180,6 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
         }
     }
 
-    public void includeExtensionContributions(List<URI> contributionUris) throws InitializationException {
-        RuntimeAssembly assembly = getSystemComponent(RuntimeAssembly.class, RUNTIME_ASSEMBLY_URI);
-        Composite composite = createExensionComposite(contributionUris);
-        try {
-            assembly.includeInDomain(composite);
-        } catch (ActivateException e) {
-            throw new ExtensionInitializationException("Error activating extensions", e);
-        }
-    }
-
     public LogicalComponentManager getLogicalComponentManager() {
         return logicalComponentManager;
     }
@@ -215,53 +191,4 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
     public ScopeContainer<?> getScopeContainer() {
         return scopeContainer;
     }
-
-    protected ScopeRegistry getScopeRegistry() {
-        return getSystemComponent(ScopeRegistry.class, ComponentNames.SCOPE_REGISTRY_URI);
-    }
-
-    /**
-     * Creates an extension composite by including deployables from contributions identified by the list of URIs
-     *
-     * @param contributionUris the contributions containing the deployables to include
-     * @return the extension composite
-     * @throws InitializationException if an error occurs creating the composite
-     */
-    @SuppressWarnings({"unchecked"})
-    private Composite createExensionComposite(List<URI> contributionUris) throws InitializationException {
-        MetaDataStore metaDataStore = getSystemComponent(MetaDataStore.class, METADATA_STORE_URI);
-        if (metaDataStore == null) {
-            String id = METADATA_STORE_URI.toString();
-            throw new InitializationException("Extensions metadata store not configured", id);
-        }
-        QName qName = new QName(org.fabric3.spi.Constants.FABRIC3_SYSTEM_NS, "extension");
-        Composite composite = new Composite(qName);
-        for (URI uri : contributionUris) {
-            Contribution contribution = metaDataStore.find(uri);
-            assert contribution != null;
-
-            for (Resource resource : contribution.getResources()) {
-                for (ResourceElement<?, ?> entry : resource.getResourceElements()) {
-
-                    if (!(entry.getValue() instanceof Composite)) {
-                        continue;
-                    }
-                    ResourceElement<QNameSymbol, Composite> element = (ResourceElement<QNameSymbol, Composite>) entry;
-                    QName name = element.getSymbol().getKey();
-                    Composite childComposite = (Composite) element.getValue();
-                    for (Deployable deployable : contribution.getManifest().getDeployables()) {
-                        if (deployable.getName().equals(name)) {
-                            Include include = new Include();
-                            include.setName(name);
-                            include.setIncluded(childComposite);
-                            composite.add(include);
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-        return composite;
-    }
-
 }
