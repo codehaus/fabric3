@@ -84,11 +84,17 @@
         <system:implementation.system class="org.fabric3.fabric.builder.WiringExceptionFormatter"/>
     </component>
 
-    <component name="assemblyRecoveryService">
-        <system:implementation.system class="org.fabric3.fabric.assembly.store.NonPersistentAssemblyStore"/>
+    <component name="NonPersistentLogicalComponentStore">
+        <system:implementation.system class="org.fabric3.fabric.services.domain.NonPersistentLogicalComponentStore"/>
     </component>
 	 
-	<component name="DiscoveryServiceRegistry">
+	 <component name="RuntimeInfoService">
+        <system:implementation.system class="org.fabric3.fabric.services.runtime.DefaultRuntimeInfoService"/>
+		  <property name="scheme">jxta</property>
+		  <property name="runtimeId">controller</property>
+    </component>
+
+ 	 <component name="DiscoveryServiceRegistry">
         <system:implementation.system class="org.fabric3.fabric.services.discovery.DiscoveryServiceRegistryImpl"/>
     </component>
 
