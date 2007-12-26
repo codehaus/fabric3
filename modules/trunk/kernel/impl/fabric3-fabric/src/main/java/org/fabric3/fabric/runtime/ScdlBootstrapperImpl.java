@@ -163,7 +163,9 @@ import org.fabric3.spi.builder.resource.ResourceContainerBuilderRegistry;
 import org.fabric3.spi.command.CommandExecutorRegistry;
 import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.runtime.component.RegistrationException;
+import org.fabric3.spi.runtime.RuntimeServices;
 import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.deployer.CompositeClassLoader;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.idl.InvalidServiceContractException;
@@ -270,27 +272,29 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
     private void createBootstrapComponents(Fabric3Runtime<?> runtime) throws InitializationException {
 
+        monitorFactory = runtime.getMonitorFactory();
+        HostInfo info = runtime.getHostInfo();
+
+        RuntimeServices runtimeServices = (RuntimeServices) runtime;
+        LogicalComponentManager logicalComponentManager = runtimeServices.getLogicalComponentManager();
+        componentManager = runtimeServices.getComponentManager();
+        ScopeContainer<?> scopeContainer = runtimeServices.getScopeContainer();
+
         xmlFactory = new XMLFactoryImpl();
         interfaceProcessorRegistry = new JavaInterfaceProcessorRegistryImpl();
-        monitorFactory = runtime.getMonitorFactory();
         configLoader = new DefaultConfigLoader();
 
         getUserConfig();
 
         // create the ClassLoaderRegistry
         classLoaderRegistry = new ClassLoaderRegistryImpl();
-        componentManager = ((AbstractRuntime<?>) runtime).getComponentManager();
         WireResolver resolver = new DefaultWireResolver();
         scopeRegistry = new ScopeRegistryImpl();
-        // create the COMPOSITE ScopeContainer
-        CompositeScopeContainer scopeContainer = new CompositeScopeContainer(monitorFactory);
-        scopeContainer.setScopeRegistry(scopeRegistry);
-        scopeContainer.start();
+        scopeRegistry.register(scopeContainer);
 
         IntrospectionRegistry introspector = createIntrospector(interfaceProcessorRegistry);
         loader = createLoader(introspector);
         GeneratorRegistry generatorRegistry = createGeneratorRegistry();
-        HostInfo info = runtime.getHostInfo();
         Deployer deployer = createDeployer();
         CommandExecutorRegistry commandRegistry = createCommandExecutorRegistry(scopeRegistry);
 
@@ -307,9 +311,6 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         PromotionNormalizer normalizer = new PromotionNormalizerImpl();
         Allocator allocator = new LocalAllocator();
 
-        // enable autowire for the runtime domain
-        LogicalComponentStore store = new NonPersistentLogicalComponentStore(ComponentNames.RUNTIME_URI, Autowire.ON);
-
         PhysicalOperationHelper physicalOperationHelper = new PhysicalOperationHelperImpl();
         PhysicalPolicyGenerator policyGenerator = new PhysicalPolicyGeneratorImpl(new NullPolicyResolver(),
                                                                                   physicalOperationHelper,
@@ -318,7 +319,6 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         PhysicalWireGenerator wireGenerator = new PhysicalWireGeneratorImpl(generatorRegistry,
                                                                             policyGenerator,
                                                                             physicalOperationHelper);
-        LogicalComponentManager logicalComponentManager = new LogicalComponentManagerImpl(store);
         PhysicalModelGenerator physicalModelGenerator =
                 createPhysicalModelGenerator(generatorRegistry, routingService, logicalComponentManager, wireGenerator);
 

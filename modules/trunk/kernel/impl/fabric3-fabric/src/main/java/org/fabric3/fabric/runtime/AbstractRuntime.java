@@ -26,9 +26,12 @@ import javax.xml.namespace.QName;
 import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.fabric.assembly.RuntimeAssembly;
 import org.fabric3.fabric.services.componentmanager.ComponentManagerImpl;
+import org.fabric3.fabric.services.domain.LogicalComponentManagerImpl;
+import org.fabric3.fabric.services.domain.NonPersistentLogicalComponentStore;
 import static org.fabric3.fabric.runtime.ComponentNames.EVENT_SERVICE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.METADATA_STORE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_ASSEMBLY_URI;
+import org.fabric3.fabric.component.scope.CompositeScopeContainer;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.management.ManagementService;
 import org.fabric3.host.monitor.MonitorFactory;
@@ -40,12 +43,17 @@ import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Include;
 import org.fabric3.scdl.Scope;
+import org.fabric3.scdl.Autowire;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.runtime.component.ComponentManager;
+import org.fabric3.spi.runtime.RuntimeServices;
+import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
+import org.fabric3.spi.runtime.assembly.LogicalComponentStore;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.QNameSymbol;
@@ -58,7 +66,7 @@ import org.fabric3.spi.services.management.Fabric3ManagementService;
 /**
  * @version $Rev$ $Date$
  */
-public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runtime<I> {
+public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runtime<I>, RuntimeServices {
     private String applicationName;
     private URL applicationScdl;
     private Class<I> hostInfoType;
@@ -75,9 +83,19 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
     private MonitorFactory monitorFactory;
 
     /**
-     * The ComponentManager that manages all components in this runtime.
+     * The LogicalComponentManager that manages all logical components in this runtime.
+     */
+    private LogicalComponentManager logicalComponentManager;
+
+    /**
+     * The ComponentManager that manages all physical components in this runtime.
      */
     private ComponentManager componentManager;
+
+    /**
+     * The ScopeContainer used to managed system component instances.
+     */
+    private ScopeContainer<?> scopeContainer;
 
     private ClassLoader hostClassLoader;
 
@@ -143,7 +161,11 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
     }
 
     public void initialize() throws InitializationException {
+        LogicalComponentStore store = new NonPersistentLogicalComponentStore(ComponentNames.RUNTIME_URI, Autowire.ON);
+        logicalComponentManager = new LogicalComponentManagerImpl(store);
         componentManager = new ComponentManagerImpl((Fabric3ManagementService) getManagementService());
+        scopeContainer = new CompositeScopeContainer(getMonitorFactory());
+        scopeContainer.start();
     }
 
 
@@ -182,8 +204,16 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
         }
     }
 
-    protected ComponentManager getComponentManager() {
+    public LogicalComponentManager getLogicalComponentManager() {
+        return logicalComponentManager;
+    }
+
+    public ComponentManager getComponentManager() {
         return componentManager;
+    }
+
+    public ScopeContainer<?> getScopeContainer() {
+        return scopeContainer;
     }
 
     protected ScopeRegistry getScopeRegistry() {
