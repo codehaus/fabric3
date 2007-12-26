@@ -90,8 +90,14 @@
         <system:implementation.system class="org.fabric3.fabric.wire.IncompatibleServiceContractExceptionFormatter"/>
     </component>
 
- 	 <component name="assemblyRecoveryService">
-        <system:implementation.system class="org.fabric3.fabric.assembly.store.AssemblyStoreImpl"/>
+    <component name="NonPersistentLogicalComponentStore">
+        <system:implementation.system class="org.fabric3.fabric.services.domain.NonPersistentLogicalComponentStore"/>
+    </component>
+
+	 <component name="RuntimeInfoService">
+        <system:implementation.system class="org.fabric3.fabric.services.runtime.DefaultRuntimeInfoService"/>
+		  <property name="scheme">jxta</property>
+		  <property name="runtimeId">participant</property>
     </component>
 
 	<component name="DiscoveryServiceRegistry">
