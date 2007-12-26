@@ -37,9 +37,10 @@ import org.fabric3.host.runtime.StartException;
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.Scope;
-import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.component.AtomicComponent;
+import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
+import org.fabric3.spi.component.TargetResolutionException;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.runtime.RuntimeServices;
 import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
@@ -165,6 +166,7 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
     }
 
     public <I> I getSystemComponent(Class<I> service, URI uri) {
+
         // JFM FIXME WorkContext should be moved down to host-api and should be created by the host
         URI parent = uri.resolve(".");
         AtomicComponent<?> component = (AtomicComponent<?>) componentManager.getComponent(uri);
@@ -172,10 +174,11 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
         workContext.setScopeIdentifier(Scope.COMPOSITE, parent);
         PojoWorkContextTunnel.setThreadWorkContext(workContext);
 
-        // FIXME FABRICTHREE-152 we should get the InstanceWrapper from the composite scope container and then get the instance from it
         try {
-            return service.cast(component.createObjectFactory().getInstance());
-        } catch (ObjectCreationException e) {
+            InstanceWrapper<?> wrapper = scopeContainer.getWrapper(component, workContext);
+            return service.cast(wrapper.getInstance());
+        } catch (TargetResolutionException e) {
+            // FIXME throw something better
             throw new AssertionError();
         }
     }

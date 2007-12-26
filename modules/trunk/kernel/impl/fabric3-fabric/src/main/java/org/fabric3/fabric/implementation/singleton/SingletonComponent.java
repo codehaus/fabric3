@@ -30,6 +30,8 @@ import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.component.TargetInitializationException;
+import org.fabric3.spi.component.TargetDestructionException;
 import org.fabric3.scdl.PropertyValue;
 
 /**
@@ -40,12 +42,14 @@ import org.fabric3.scdl.PropertyValue;
 public class SingletonComponent<T> extends AbstractLifecycle implements AtomicComponent<T> {
     private final URI uri;
     private T instance;
+    private InstanceWrapper<T> wrapper;
     private Map<String, PropertyValue> defaultPropertyValues;
     private String key;
 
     public SingletonComponent(URI componentId, T instance, String key) {
         this.uri = componentId;
         this.instance = instance;
+        this.wrapper = new SingletonWrapper<T>(instance);
         this.key = key;
     }
     
@@ -78,7 +82,7 @@ public class SingletonComponent<T> extends AbstractLifecycle implements AtomicCo
     }
 
     public InstanceWrapper<T> createInstanceWrapper(WorkContext workContext) throws ObjectCreationException {
-        throw new UnsupportedOperationException();
+        return wrapper;
     }
 
     public ObjectFactory<T> createObjectFactory() {
@@ -106,5 +110,25 @@ public class SingletonComponent<T> extends AbstractLifecycle implements AtomicCo
         return "[" + uri.toString() + "] in state [" + super.toString() + ']';
     }
 
+    private static class SingletonWrapper<T> implements InstanceWrapper<T> {
+        private final T instance;
 
+        private SingletonWrapper(T instance) {
+            this.instance = instance;
+        }
+
+        public T getInstance() {
+            return instance;
+        }
+
+        public boolean isStarted() {
+            return true;
+        }
+
+        public void start() throws TargetInitializationException {
+        }
+
+        public void stop() throws TargetDestructionException {
+        }
+    }
 }

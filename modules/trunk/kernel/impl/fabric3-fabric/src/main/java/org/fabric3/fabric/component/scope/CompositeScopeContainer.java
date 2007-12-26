@@ -109,9 +109,11 @@ public class CompositeScopeContainer extends AbstractScopeContainer<URI> {
 
         // FIXME is there a potential race condition here that may result in two instances being created
         wrapper = createInstance(component, workContext);
+        if (!wrapper.isStarted()) {
+            wrapper.start();
+            destroyQueues.get(contextId).add(wrapper);
+        }
         instanceWrappers.put(component, wrapper);
-        wrapper.start();
-        destroyQueues.get(contextId).add(wrapper);
         return wrapper;
     }
 

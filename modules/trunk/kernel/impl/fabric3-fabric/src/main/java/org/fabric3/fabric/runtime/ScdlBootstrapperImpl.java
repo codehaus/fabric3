@@ -21,8 +21,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.w3c.dom.Document;
@@ -204,7 +202,10 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
     private JavaInterfaceProcessorRegistry interfaceProcessorRegistry;
 
+    private LogicalComponentManager logicalComponentManager;
     private ComponentManager componentManager;
+    private ScopeContainer<?> scopeContainer;
+
     private ScopeRegistry scopeRegistry;
     private MonitorFactory monitorFactory;
 
@@ -271,9 +272,9 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         HostInfo info = runtime.getHostInfo();
 
         RuntimeServices runtimeServices = (RuntimeServices) runtime;
-        LogicalComponentManager logicalComponentManager = runtimeServices.getLogicalComponentManager();
+        logicalComponentManager = runtimeServices.getLogicalComponentManager();
         componentManager = runtimeServices.getComponentManager();
-        ScopeContainer<?> scopeContainer = runtimeServices.getScopeContainer();
+        scopeContainer = runtimeServices.getScopeContainer();
 
         xmlFactory = new XMLFactoryImpl();
         interfaceProcessorRegistry = new JavaInterfaceProcessorRegistryImpl();
@@ -371,8 +372,10 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
             Class<?> implClass = instance.getClass();
             ComponentDefinition<SingletonImplementation> definition = createDefinition(name, contract, implClass);
             SingletonComponent<I> component = new SingletonComponent<I>(uri, instance, null);
-            componentManager.register(component);
+
             runtimeAssembly.instantiateHostComponentDefinition(definition);
+            componentManager.register(component);
+            scopeContainer.register(component);
         } catch (InvalidServiceContractException e) {
             throw new InitializationException(e);
         } catch (RegistrationException e) {
