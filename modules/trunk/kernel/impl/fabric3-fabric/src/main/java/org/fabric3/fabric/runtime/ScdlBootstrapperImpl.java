@@ -36,7 +36,6 @@ import org.fabric3.fabric.assembly.normalizer.PromotionNormalizer;
 import org.fabric3.fabric.assembly.normalizer.PromotionNormalizerImpl;
 import org.fabric3.fabric.assembly.resolver.DefaultWireResolver;
 import org.fabric3.fabric.assembly.resolver.WireResolver;
-import org.fabric3.fabric.services.domain.NonPersistentLogicalComponentStore;
 import org.fabric3.fabric.builder.Connector;
 import org.fabric3.fabric.builder.ConnectorImpl;
 import org.fabric3.fabric.builder.component.DefaultComponentBuilderRegistry;
@@ -50,13 +49,10 @@ import org.fabric3.fabric.command.InitializeComponentExecutor;
 import org.fabric3.fabric.command.StartCompositeContextCommand;
 import org.fabric3.fabric.command.StartCompositeContextExecutor;
 import org.fabric3.fabric.command.StartCompositeContextGenerator;
-import org.fabric3.fabric.component.scope.CompositeScopeContainer;
 import org.fabric3.fabric.component.scope.ScopeRegistryImpl;
 import org.fabric3.fabric.deployer.Deployer;
 import org.fabric3.fabric.deployer.DeployerImpl;
 import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
-import org.fabric3.spi.runtime.assembly.LogicalComponentStore;
-import org.fabric3.fabric.services.domain.LogicalComponentManagerImpl;
 import org.fabric3.fabric.generator.GeneratorRegistryImpl;
 import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
 import org.fabric3.fabric.implementation.IntrospectionRegistryImpl;
@@ -150,7 +146,6 @@ import org.fabric3.pojo.processor.IntrospectionRegistry;
 import org.fabric3.pojo.processor.JavaIntrospectionHelper;
 import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Property;
@@ -369,19 +364,13 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     private <S, I extends S> void registerSystemComponent(URI uri, Class<S> type, I instance)
             throws InitializationException {
 
-        List<Class<?>> types = new ArrayList<Class<?>>(1);
-        types.add(type);
-        registerSystemComponent(uri, types, instance);
-
-    }
-
-    private <I> void registerSystemComponent(URI uri, List<Class<?>> types, I instance) throws InitializationException {
         try {
+            JavaServiceContract contract = interfaceProcessorRegistry.introspect(type);
+
             String name = RUNTIME_URI.relativize(uri).toString();
             Class<?> implClass = instance.getClass();
-            List<JavaServiceContract> contracts = createServiceContacts(types);
-            ComponentDefinition<SingletonImplementation> definition = createDefinition(name, contracts, implClass);
-            SingletonComponent<I> component = new SingletonComponent<I>(uri, contracts, instance, null);
+            ComponentDefinition<SingletonImplementation> definition = createDefinition(name, contract, implClass);
+            SingletonComponent<I> component = new SingletonComponent<I>(uri, instance, null);
             componentManager.register(component);
             runtimeAssembly.instantiateHostComponentDefinition(definition);
         } catch (InvalidServiceContractException e) {
@@ -393,33 +382,18 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         } catch (ActivateException e) {
             throw new InitializationException(e);
         }
-    }
-
-    private List<JavaServiceContract> createServiceContacts(List<Class<?>> types)
-            throws InvalidServiceContractException {
-
-        List<JavaServiceContract> contracts = new ArrayList<JavaServiceContract>(types.size());
-
-        for (Class<?> type : types) {
-            JavaServiceContract contract = interfaceProcessorRegistry.introspect(type);
-            contracts.add(contract);
-        }
-
-        return contracts;
 
     }
 
     private <I> ComponentDefinition<SingletonImplementation> createDefinition(String name,
-                                                                              List<JavaServiceContract> contracts,
+                                                                              JavaServiceContract contract,
                                                                               Class<I> implClass)
             throws InvalidServiceContractException {
 
         PojoComponentType componentType = new PojoComponentType(implClass.getName());
-        for (JavaServiceContract contract : contracts) {
-            String serviceName = JavaIntrospectionHelper.getBaseName(contract.getInterfaceName());
-            JavaMappedService service = new JavaMappedService(serviceName, contract);
-            componentType.add(service);
-        }
+        String serviceName = JavaIntrospectionHelper.getBaseName(contract.getInterfaceName());
+        JavaMappedService service = new JavaMappedService(serviceName, contract);
+        componentType.add(service);
 
         SingletonImplementation impl = new SingletonImplementation(componentType, implClass.getName());
         ComponentDefinition<SingletonImplementation> def = new ComponentDefinition<SingletonImplementation>(name);
