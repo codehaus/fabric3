@@ -54,6 +54,7 @@
 
     <component name="physicalModelGenerator">
         <system:implementation.system class="org.fabric3.fabric.model.physical.PhysicalModelGeneratorImpl"/>
+        <reference name="logicalComponentManager" target="logicalComponentManager"/>
     </component>
 
     <component name="physicalWireGenerator">
@@ -62,6 +63,7 @@
 
     <component name="distributedAssembly">
         <system:implementation.system class="org.fabric3.fabric.assembly.DistributedAssemblyImpl"/>
+        <reference name="logicalComponentManager" target="logicalComponentManager"/>
     </component>
 
     <component name="wireResolver">

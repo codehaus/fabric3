@@ -35,4 +35,8 @@
     <component name="org.fabric3.fabric.implementation.system.SystemComponentTypeLoaderImpl">
         <system:implementation.system class="org.fabric3.fabric.implementation.system.SystemComponentTypeLoaderImpl"/>
     </component>
+
+    <component name="org.fabric3.fabric.implementation.system.SystemComponentGenerator">
+        <system:implementation.system class="org.fabric3.fabric.implementation.system.SystemComponentGenerator"/>
+    </component>
 </composite>

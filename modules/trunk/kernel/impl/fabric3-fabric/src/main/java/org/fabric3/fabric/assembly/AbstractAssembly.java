@@ -66,13 +66,13 @@ public abstract class AbstractAssembly implements Assembly {
 
     public static final QName COMPOSITE = new QName(SCA_NS, "composite");
 
-    private final PhysicalModelGenerator physicalModelGenerator;
-    private final LogicalModelGenerator logicalModelGenerator;
-    private final Allocator allocator;
-    private final RoutingService routingService;
-    private final MetaDataStore metadataStore;
-    private final LogicalComponentManager logicalComponentManager;
-    private final PhysicalWireGenerator wireGenerator;
+    protected final PhysicalModelGenerator physicalModelGenerator;
+    protected final LogicalModelGenerator logicalModelGenerator;
+    protected final Allocator allocator;
+    protected final RoutingService routingService;
+    protected final MetaDataStore metadataStore;
+    protected final LogicalComponentManager logicalComponentManager;
+    protected final PhysicalWireGenerator wireGenerator;
 
     public AbstractAssembly(Allocator allocator,
                             RoutingService routingService,
@@ -91,23 +91,6 @@ public abstract class AbstractAssembly implements Assembly {
     }
 
     public void initialize() throws AssemblyException {
-
-        logicalComponentManager.initialize();
-        Collection<LogicalComponent<?>> components = logicalComponentManager.getComponents();
-        
-        try {
-            for (LogicalComponent<?> component : components) {
-                allocator.allocate(component, false);
-            }
-        } catch (AllocationException e) {
-            throw new ActivateException(e);
-        }
-
-        // generate and provision components on nodes that have gone down
-        Map<URI, GeneratorContext> contexts = physicalModelGenerator.generate(components);
-        physicalModelGenerator.provision(contexts);
-        // TODO end temporary recovery code
-        
     }
 
     public void includeInDomain(QName deployable) throws ActivateException {

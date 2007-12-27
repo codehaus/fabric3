@@ -18,13 +18,23 @@
  */
 package org.fabric3.fabric.assembly;
 
+import java.util.Collection;
+import java.util.Map;
+import java.net.URI;
+
 import org.fabric3.fabric.assembly.allocator.Allocator;
+import org.fabric3.fabric.assembly.allocator.AllocationException;
 import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
 import org.fabric3.fabric.model.logical.LogicalModelGenerator;
 import org.fabric3.fabric.model.physical.PhysicalModelGenerator;
 import org.fabric3.fabric.model.physical.PhysicalWireGenerator;
 import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.assembly.AssemblyException;
+import org.fabric3.spi.assembly.ActivateException;
+import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.generator.GeneratorContext;
+
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
@@ -41,10 +51,28 @@ public class DistributedAssemblyImpl extends AbstractAssembly implements Distrib
                                    @Reference(name = "store") MetaDataStore metaDataStore,
                                    @Reference PhysicalModelGenerator physicalModelGenerator,
                                    @Reference LogicalModelGenerator logicalModelGenerator,
-                                   @Reference LogicalComponentManager logicalComponentManager,
+                                   @Reference(name="logicalComponentManager") LogicalComponentManager logicalComponentManager,
                                    @Reference PhysicalWireGenerator wireGenerator) {
         super(allocator, routingService, metaDataStore, physicalModelGenerator, logicalModelGenerator,
               logicalComponentManager, wireGenerator);
     }
 
+    public void initialize() throws AssemblyException {
+        logicalComponentManager.initialize();
+        Collection<LogicalComponent<?>> components = logicalComponentManager.getComponents();
+
+        try {
+            for (LogicalComponent<?> component : components) {
+                allocator.allocate(component, false);
+            }
+        } catch (AllocationException e) {
+            throw new ActivateException(e);
+        }
+
+        // generate and provision components on nodes that have gone down
+        Map<URI, GeneratorContext> contexts = physicalModelGenerator.generate(components);
+        physicalModelGenerator.provision(contexts);
+        // TODO end temporary recovery code
+
+    }
 }

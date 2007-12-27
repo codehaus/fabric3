@@ -45,6 +45,13 @@ public interface Fabric3Runtime<I extends HostInfo> {
     void setHostClassLoader(ClassLoader classLoader);
 
     /**
+     * Returns the type of info supplied by the host.
+     *
+     * @return the type of info supplied by the host
+     */
+    Class<I> getHostInfoType();
+
+    /**
      * Returns the info this runtime will make available to service components.
      *
      * @return the info this runtime will make available to service components

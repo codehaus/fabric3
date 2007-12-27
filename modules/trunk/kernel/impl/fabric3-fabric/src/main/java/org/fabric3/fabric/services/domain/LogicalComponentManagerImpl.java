@@ -21,6 +21,7 @@ import java.util.Collection;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Init;
 
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.assembly.AssemblyException;
@@ -33,7 +34,6 @@ import org.fabric3.spi.util.UriHelper;
 /**
  * @version $Revision$ $Date$
  */
-@EagerInit
 public class LogicalComponentManagerImpl implements LogicalComponentManager {
     
     private LogicalComponent<CompositeImplementation> domain;

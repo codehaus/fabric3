@@ -36,19 +36,23 @@ import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.StartException;
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.scdl.Autowire;
+import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.TargetResolutionException;
 import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.runtime.RuntimeServices;
 import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
 import org.fabric3.spi.runtime.assembly.LogicalComponentStore;
 import org.fabric3.spi.runtime.component.ComponentManager;
+import org.fabric3.spi.runtime.component.RegistrationException;
 import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.services.event.RuntimeStart;
 import org.fabric3.spi.services.management.Fabric3ManagementService;
+import org.fabric3.spi.assembly.AssemblyException;
 
 /**
  * @version $Rev$ $Date$
@@ -150,6 +154,11 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
     public void initialize() throws InitializationException {
         LogicalComponentStore store = new NonPersistentLogicalComponentStore(RUNTIME_URI, Autowire.ON);
         logicalComponentManager = new LogicalComponentManagerImpl(store);
+        try {
+            logicalComponentManager.initialize();
+        } catch (AssemblyException e) {
+            throw new InitializationException(e);
+        }
         componentManager = new ComponentManagerImpl((Fabric3ManagementService) getManagementService());
         scopeContainer = new CompositeScopeContainer(getMonitorFactory());
         scopeContainer.start();
@@ -163,6 +172,13 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
     }
 
     public void destroy() {
+    }
+
+    public void registerComponent(LogicalComponent<?> logical, AtomicComponent<?> physical) throws RegistrationException {
+        LogicalComponent<CompositeImplementation> domain = logicalComponentManager.getDomain();
+        domain.addComponent(logical);
+        componentManager.register(physical);
+        scopeContainer.register(physical);
     }
 
     public <I> I getSystemComponent(Class<I> service, URI uri) {

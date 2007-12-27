@@ -24,10 +24,6 @@ import org.fabric3.fabric.model.logical.LogicalModelGenerator;
 import org.fabric3.fabric.model.physical.PhysicalModelGenerator;
 import org.fabric3.fabric.model.physical.PhysicalWireGenerator;
 import org.fabric3.fabric.services.routing.RoutingService;
-import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.CompositeImplementation;
-import org.fabric3.spi.assembly.ActivateException;
-import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 
 import org.osoa.sca.annotations.Reference;
@@ -37,9 +33,7 @@ import org.osoa.sca.annotations.Reference;
  *
  * @version $Rev$ $Date$
  */
-public class RuntimeAssemblyImpl extends AbstractAssembly implements RuntimeAssembly {
-    
-    private final LogicalComponentManager logicalComponentManager;
+public class RuntimeAssemblyImpl extends AbstractAssembly {
     
     public RuntimeAssemblyImpl(@Reference Allocator allocator,
                                @Reference RoutingService routingService,
@@ -50,14 +44,6 @@ public class RuntimeAssemblyImpl extends AbstractAssembly implements RuntimeAsse
                                @Reference PhysicalWireGenerator wireGenerator) {
         super(allocator, routingService, metadataStore, physicalModelGenerator, logicalModelGenerator,
               logicalComponentManager, wireGenerator);
-        this.logicalComponentManager = logicalComponentManager;
     }
 
-    public void instantiateHostComponentDefinition(ComponentDefinition<?> definition) throws ActivateException {
-        
-        LogicalComponent<CompositeImplementation> domain = logicalComponentManager.getDomain();
-        LogicalComponent<?> component = instantiate(domain, definition);
-        domain.addComponent(component);
-    }
-    
 }

@@ -97,7 +97,7 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
      */
     public PhysicalModelGeneratorImpl(@Reference GeneratorRegistry generatorRegistry,
                                       @Reference RoutingService routingService,
-                                      @Reference LogicalComponentManager logicalComponentManager,
+                                      @Reference(name="logicalComponentManager") LogicalComponentManager logicalComponentManager,
                                       @Reference PhysicalWireGenerator physicalWireGenerator,
                                       @Reference PolicyResolver policyResolver) {
         this.generatorRegistry = generatorRegistry;

@@ -34,7 +34,9 @@ import org.fabric3.fabric.implementation.system.SystemComponentTypeLoaderImpl;
 import org.fabric3.fabric.implementation.system.SystemImplementationLoader;
 import org.fabric3.fabric.loader.LoaderRegistryImpl;
 import org.fabric3.fabric.services.advertsiement.FeatureLoader;
+import org.fabric3.fabric.runtime.ComponentNames;
 import org.fabric3.host.monitor.MonitorFactory;
+import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.loader.common.ComponentReferenceLoader;
 import org.fabric3.loader.common.ComponentServiceLoader;
 import org.fabric3.loader.common.DefaultPolicyHelper;
@@ -55,6 +57,13 @@ import org.fabric3.spi.services.factories.xml.XMLFactory;
  * @version $Rev$ $Date$
  */
 public class BootstrapLoaderFactory {
+    public static Loader createLoader(Fabric3Runtime<?> runtime) {
+        MonitorFactory monitorFactory = runtime.getMonitorFactory();
+        XMLFactory xmlFactory = runtime.getSystemComponent(XMLFactory.class, ComponentNames.XML_FACTORY_URI);
+        MetaDataStore metaDataStore = runtime.getSystemComponent(MetaDataStore.class, ComponentNames.METADATA_STORE_URI);
+        return createLoader(monitorFactory, xmlFactory, metaDataStore);
+    }
+    
     public static Loader createLoader(MonitorFactory monitorFactory,
                            XMLFactory factory,
                            MetaDataStore metaDataStore) {

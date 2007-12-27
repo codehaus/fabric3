@@ -28,28 +28,26 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
-
 import javax.xml.namespace.QName;
 
 import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.fabric.assembly.DistributedAssembly;
-import org.fabric3.fabric.assembly.RuntimeAssembly;
 import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DEFINITIONS_DEPLOYER;
 import static org.fabric3.fabric.runtime.ComponentNames.DISCOVERY_SERVICE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.METADATA_STORE_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.WORK_SCHEDULER_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_ASSEMBLY_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.METADATA_STORE_URI;
 import org.fabric3.fabric.runtime.ExtensionInitializationException;
 import org.fabric3.fabric.services.contribution.manifest.XmlManifestProcessor;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
-import org.fabric3.host.contribution.FileContributionSource;
 import org.fabric3.host.contribution.Deployable;
+import org.fabric3.host.contribution.FileContributionSource;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.CoordinatorMonitor;
 import org.fabric3.host.runtime.InitializationException;
@@ -57,11 +55,12 @@ import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.host.runtime.StartException;
 import org.fabric3.runtime.standalone.StandaloneRuntime;
-import org.fabric3.scdl.Scope;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Include;
-import org.fabric3.spi.assembly.AssemblyException;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.assembly.ActivateException;
+import org.fabric3.spi.assembly.Assembly;
+import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
@@ -70,9 +69,9 @@ import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.MetaDataStoreException;
+import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
-import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.definitions.DefinitionActivationException;
 import org.fabric3.spi.services.definitions.DefinitionsDeployer;
 import org.fabric3.spi.services.discovery.DiscoveryException;
@@ -351,7 +350,7 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
      FIXME it is now duplicated in all coordinators and should be refactored into one place
      */
     public void includeExtensionContributions(List<URI> contributionUris) throws InitializationException {
-        RuntimeAssembly assembly = runtime.getSystemComponent(RuntimeAssembly.class, RUNTIME_ASSEMBLY_URI);
+        Assembly assembly = runtime.getSystemComponent(Assembly.class, RUNTIME_ASSEMBLY_URI);
         Composite composite = createExtensionComposite(contributionUris);
         try {
             assembly.includeInDomain(composite);

@@ -35,7 +35,6 @@ import javax.xml.namespace.QName;
 
 import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.fabric.assembly.DistributedAssembly;
-import org.fabric3.fabric.assembly.RuntimeAssembly;
 import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DEFINITIONS_DEPLOYER;
@@ -60,6 +59,7 @@ import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Include;
 import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.spi.assembly.ActivateException;
+import org.fabric3.spi.assembly.Assembly;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
@@ -264,7 +264,7 @@ public class DevelopmentCoordinator implements RuntimeLifecycleCoordinator<Devel
      FIXME it is now duplicated in all coordinators and should be refactored into one place
      */
     public void includeExtensionContributions(List<URI> contributionUris) throws InitializationException {
-        RuntimeAssembly assembly = runtime.getSystemComponent(RuntimeAssembly.class, RUNTIME_ASSEMBLY_URI);
+        Assembly assembly = runtime.getSystemComponent(Assembly.class, RUNTIME_ASSEMBLY_URI);
         Composite composite = createExtensionComposite(contributionUris);
         try {
             assembly.includeInDomain(composite);

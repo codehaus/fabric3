@@ -22,11 +22,14 @@ import javax.xml.namespace.QName;
 
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Implementation;
+import org.fabric3.spi.Constants;
 
 /**
  * @version $Rev$ $Date$
  */
 public class SingletonImplementation extends Implementation<PojoComponentType> {
+    public static final QName IMPLEMENTATION_SINGLETON = new QName(Constants.FABRIC3_SYSTEM_NS, "singleton");
+    
     private String implementationClass;
 
     public SingletonImplementation() {
@@ -38,7 +41,7 @@ public class SingletonImplementation extends Implementation<PojoComponentType> {
     }
 
     public QName getType() {
-        return null;
+        return IMPLEMENTATION_SINGLETON;
     }
 
     public String getImplementationClass() {
