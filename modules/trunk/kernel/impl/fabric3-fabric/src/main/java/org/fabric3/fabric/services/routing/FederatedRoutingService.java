@@ -44,6 +44,8 @@ import org.fabric3.spi.marshaller.MarshallerRegistry;
 import org.fabric3.spi.model.physical.PhysicalChangeSet;
 import org.fabric3.spi.services.messaging.MessagingException;
 import org.fabric3.spi.services.messaging.MessagingService;
+import org.fabric3.spi.services.factories.xml.XMLFactory;
+import org.fabric3.spi.services.factories.xml.FactoryInstantiationException;
 
 /**
  * A routing service implementation that routes physical changesets across a domain
@@ -55,17 +57,20 @@ public class FederatedRoutingService implements RoutingService {
     private final MessagingService messagingService;
     private final Deployer deployer;
     private final CommandExecutorRegistry executorRegistry;
+    private XMLFactory xmlFactory;
     private RoutingMonitor monitor;
 
     public FederatedRoutingService(@Reference Deployer deployer,
                                    @Reference MarshallerRegistry marshallerRegistry,
                                    @Reference MessagingService messagingService,
                                    @Reference CommandExecutorRegistry executorRegistry,
+                                   @Reference XMLFactory xmlFactory,
                                    @Reference MonitorFactory factory) {
         this.deployer = deployer;
         this.marshallerRegistry = marshallerRegistry;
         this.messagingService = messagingService;
         this.executorRegistry = executorRegistry;
+        this.xmlFactory = xmlFactory;
         monitor = factory.getMonitor(RoutingMonitor.class);
     }
 
@@ -117,11 +122,13 @@ public class FederatedRoutingService implements RoutingService {
     private void routeToDestination(URI runtimeId, Object commandSet) throws RoutingException {
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
-            XMLStreamWriter writer = XMLOutputFactory.newInstance().createXMLStreamWriter(out);
+            XMLStreamWriter writer = xmlFactory.newOutputFactoryInstance().createXMLStreamWriter(out);// XMLOutputFactory.newInstance().createXMLStreamWriter(out);
             marshallerRegistry.marshall(commandSet, writer);
             ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
-            XMLStreamReader pcsReader = XMLInputFactory.newInstance().createXMLStreamReader(in);
+            XMLStreamReader pcsReader = xmlFactory.newInputFactoryInstance().createXMLStreamReader(in);
             messagingService.sendMessage(runtimeId, pcsReader);
+        } catch (FactoryInstantiationException e) {
+            e.printStackTrace();
         } catch (XMLStreamException e) {
             throw new RoutingException("Routing error", e);
         } catch (MarshalException e) {
