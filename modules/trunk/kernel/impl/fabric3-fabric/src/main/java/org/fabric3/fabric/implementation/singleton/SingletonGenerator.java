@@ -46,8 +46,6 @@ public class SingletonGenerator implements ComponentGenerator<LogicalComponent<S
     }
 
     public PhysicalComponentDefinition generate(LogicalComponent<SingletonImplementation> component, 
-                                                Set<Intent> intentsToBeProvided,
-                                                Set<Element> policySetsToBeProvided,
                                                 GeneratorContext context) throws GenerationException {
         throw new UnsupportedOperationException();
     }

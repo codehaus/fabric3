@@ -65,8 +65,6 @@ public class SpringComponentGenerator implements ComponentGenerator<LogicalCompo
      *                                                            org.fabric3.spi.generator.GeneratorContext)
      */
     public PhysicalComponentDefinition generate(LogicalComponent<SpringImplementation> component,
-                                                Set<Intent> intentsToBeProvided,
-                                                Set<Element> policySetsToBeProvided,
                                                 GeneratorContext context)
             throws GenerationException {
         ComponentDefinition<SpringImplementation> componentDefinition = component.getDefinition();

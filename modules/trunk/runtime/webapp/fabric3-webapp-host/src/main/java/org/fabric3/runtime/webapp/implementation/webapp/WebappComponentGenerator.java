@@ -65,9 +65,7 @@ public class WebappComponentGenerator implements ComponentGenerator<LogicalCompo
      *     org.fabric3.spi.generator.GeneratorContext)
      */
     @SuppressWarnings({"unchecked"})
-    public PhysicalComponentDefinition generate(LogicalComponent<WebappImplementation> component, 
-                                                Set<Intent> intentsToBeProvided,
-                                                Set<Element> policySetsToBeProvided,
+    public PhysicalComponentDefinition generate(LogicalComponent<WebappImplementation> component,
                                                 GeneratorContext context) {
         ComponentDefinition<WebappImplementation> definition = component.getDefinition();
         AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property<?>, ResourceDefinition> componentType =

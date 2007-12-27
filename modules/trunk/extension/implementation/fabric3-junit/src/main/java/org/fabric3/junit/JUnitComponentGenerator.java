@@ -52,8 +52,6 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
     }
 
     public PhysicalComponentDefinition generate(LogicalComponent<ImplementationJUnit> component,
-                                                Set<Intent> intentsToBeProvided,
-                                                Set<Element> policySetsToBeProvided,
                                                 GeneratorContext context)
             throws GenerationException {
 

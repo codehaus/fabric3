@@ -58,9 +58,7 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
         this.helper = helper;
     }
 
-    public PhysicalComponentDefinition generate(LogicalComponent<SystemImplementation> component, 
-                                                Set<Intent> intentsToBeProvided,
-                                                Set<Element> policySetsToBeProvided,
+    public PhysicalComponentDefinition generate(LogicalComponent<SystemImplementation> component,
                                                 GeneratorContext context)
             throws GenerationException {
         ComponentDefinition<SystemImplementation> definition = component.getDefinition();

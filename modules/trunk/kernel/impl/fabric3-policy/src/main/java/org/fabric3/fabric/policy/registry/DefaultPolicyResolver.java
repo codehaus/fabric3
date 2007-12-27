@@ -175,7 +175,7 @@ public class DefaultPolicyResolver implements PolicyResolver {
             throw new PolicyResolutionException("Unable to resolve all intents", requiredIntents);
         }
         
-        return createResults(policies, PolicyPhase.WIRE_GENERATION);
+        return createResults(policies, PolicyPhase.PROVIDED);
         
     }
     
@@ -222,7 +222,7 @@ public class DefaultPolicyResolver implements PolicyResolver {
             throw new PolicyResolutionException("Unable to resolve all intents", requiredIntents);
         }
         
-        return createResults(policies, PolicyPhase.CONSTRUCTION);
+        return createResults(policies, PolicyPhase.PROVIDED);
         
     }
 

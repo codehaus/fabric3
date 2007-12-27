@@ -54,9 +54,9 @@ public class PhysicalPolicyGeneratorImpl implements PhysicalPolicyGenerator {
     };
     
     /** Closure for filtering provided policies by bindings or implementations. */
-    private static final Closure<PolicyResult, Boolean> WIRE_GENERATION = new Closure<PolicyResult, Boolean>() {
+    private static final Closure<PolicyResult, Boolean> PROVIDED = new Closure<PolicyResult, Boolean>() {
         public Boolean execute(PolicyResult policyResult) {
-            return policyResult.getPolicyPhase() == PolicyPhase.WIRE_GENERATION;
+            return policyResult.getPolicyPhase() == PolicyPhase.PROVIDED;
         }
     };
     
@@ -110,22 +110,22 @@ public class PhysicalPolicyGeneratorImpl implements PhysicalPolicyGenerator {
                 
                 if (source != null) {
                     policies = policyResolver.resolveImplementationIntents(source);
-                    policySetsProvidedBySource.addAll(CollectionUtils.filter(policies, WIRE_GENERATION));
+                    policySetsProvidedBySource.addAll(CollectionUtils.filter(policies, PROVIDED));
                     interceptedPolicies.addAll(CollectionUtils.filter(policies, INTERCEPTION));
                 }
                 
                 if (target != null) {
                     policies = policyResolver.resolveImplementationIntents(target);
-                    policySetsProvidedByTarget.addAll(CollectionUtils.filter(policies, WIRE_GENERATION));
+                    policySetsProvidedByTarget.addAll(CollectionUtils.filter(policies, PROVIDED));
                     interceptedPolicies.addAll(CollectionUtils.filter(policies, INTERCEPTION));
                 }
                 
                 policies = policyResolver.resolveInteractionIntents(sourceBinding, operation);
-                policySetsProvidedBySource.addAll(CollectionUtils.filter(policies, WIRE_GENERATION));
+                policySetsProvidedBySource.addAll(CollectionUtils.filter(policies, PROVIDED));
                 interceptedPolicies.addAll(CollectionUtils.filter(policies, INTERCEPTION));
                 
                 policies = policyResolver.resolveInteractionIntents(targetBinding, operation);
-                policySetsProvidedByTarget.addAll(CollectionUtils.filter(policies, WIRE_GENERATION));
+                policySetsProvidedByTarget.addAll(CollectionUtils.filter(policies, PROVIDED));
                 interceptedPolicies.addAll(CollectionUtils.filter(policies, INTERCEPTION));
                 
                 setOperationDefinition(operation, wireDefinition, interceptedPolicies);

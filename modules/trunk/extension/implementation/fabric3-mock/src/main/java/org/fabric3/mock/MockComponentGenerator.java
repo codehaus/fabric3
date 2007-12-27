@@ -70,8 +70,6 @@ public class MockComponentGenerator implements ComponentGenerator<LogicalCompone
      * Generates the component definition.
      */
     public MockComponentDefinition generate(LogicalComponent<ImplementationMock> component,
-                                            Set<Intent> intentsToBeProvided,
-                                            Set<Element> policySetsToBeProvided,
                                             GeneratorContext context) throws GenerationException {
 
         MockComponentDefinition componentDefinition = new MockComponentDefinition();

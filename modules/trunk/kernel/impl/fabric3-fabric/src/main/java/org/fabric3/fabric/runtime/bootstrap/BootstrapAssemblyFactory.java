@@ -276,8 +276,7 @@ public class BootstrapAssemblyFactory {
         return new PhysicalModelGeneratorImpl(generatorRegistry,
                                               routingService,
                                               logicalComponentManager,
-                                              wireGenerator,
-                                              new NullPolicyResolver());
+                                              wireGenerator);
 
     }
 }

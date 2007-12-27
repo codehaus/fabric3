@@ -56,8 +56,6 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
     }
 
     public PhysicalComponentDefinition generate(LogicalComponent<GroovyImplementation> component,
-                                                Set<Intent> intentsToBeProvided,
-                                                Set<Element> policySetsToBeProvided,
                                                 GeneratorContext context)
             throws GenerationException {
 

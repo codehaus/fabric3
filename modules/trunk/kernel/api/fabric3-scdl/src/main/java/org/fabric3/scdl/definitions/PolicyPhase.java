@@ -23,6 +23,6 @@ package org.fabric3.scdl.definitions;
  */
 public enum PolicyPhase {
     
-    CONSTRUCTION, INTERCEPTION, WIRE_GENERATION;
+    INTERCEPTION, PROVIDED;
 
 }

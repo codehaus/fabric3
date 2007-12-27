@@ -50,8 +50,6 @@ public interface ComponentGenerator<C extends LogicalComponent<? extends Impleme
      * @throws GenerationException if an error occurs during the generation process
      */
     PhysicalComponentDefinition generate(C component, 
-                                         Set<Intent> intentsToBeProvided,
-                                         Set<Element> policySetsToBeProvided,
                                          GeneratorContext context) throws GenerationException;
 
     /**

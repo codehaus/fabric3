@@ -62,9 +62,7 @@ public class LaunchedComponentGenerator implements ComponentGenerator<LogicalCom
     }
 
     @SuppressWarnings({"unchecked"})
-    public PhysicalComponentDefinition generate(LogicalComponent<Launched> component, 
-                                                Set<Intent> intentsToBeProvided,
-                                                Set<Element> policySetsToBeProvided,
+    public PhysicalComponentDefinition generate(LogicalComponent<Launched> component,
                                                 GeneratorContext context) {
         
         ComponentDefinition<Launched> definition = component.getDefinition();
