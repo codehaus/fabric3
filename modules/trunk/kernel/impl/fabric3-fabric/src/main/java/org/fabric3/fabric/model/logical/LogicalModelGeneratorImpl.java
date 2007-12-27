@@ -212,15 +212,13 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
     public <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalComponent<CompositeImplementation> parent,
                                                                          ComponentDefinition<I> definition) throws InstantiationException {
         
-        URI uri = URI.create(parent.getUri() + "/" + definition.getName());
-        
         I impl = definition.getImplementation();
         if (CompositeImplementation.IMPLEMENTATION_COMPOSITE.equals(impl.getType())) {
             return (LogicalComponent<I>) compositeComponentInstantiator.instantiate(
-                    parent, (ComponentDefinition<CompositeImplementation>) definition, uri);
+                    parent, (ComponentDefinition<CompositeImplementation>) definition);
         } else {
             return (LogicalComponent<I>) atomicComponentInstantiator.instantiate(
-                    parent, (ComponentDefinition<Implementation<?>>) definition, uri);
+                    parent, (ComponentDefinition<Implementation<?>>) definition);
         }
         
     }

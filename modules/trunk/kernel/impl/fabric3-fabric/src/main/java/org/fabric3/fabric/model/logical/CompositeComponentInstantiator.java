@@ -20,6 +20,8 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.fabric.assembly.InstantiationException;
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.ComponentDefinition;
@@ -34,65 +36,67 @@ import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Revision$ $Date$
  */
 public class CompositeComponentInstantiator extends AbstractComponentInstantiator<CompositeImplementation> {
-    
+
     private ComponentInstantiator<Implementation<?>> atomicComponentInstantiator;
-    
-    
+
+
     public CompositeComponentInstantiator(
-            @Reference(name = "atomicComponentInstantiator") 
-                ComponentInstantiator<Implementation<?>> atomicComponentInstantiator) {
+            @Reference(name = "atomicComponentInstantiator")
+            ComponentInstantiator<Implementation<?>> atomicComponentInstantiator) {
         this.atomicComponentInstantiator = atomicComponentInstantiator;
     }
 
     @SuppressWarnings("unchecked")
     public LogicalComponent<CompositeImplementation> instantiate(LogicalComponent<CompositeImplementation> parent,
-            ComponentDefinition<CompositeImplementation> definition, URI uri) throws InstantiationException {
+                                                                 ComponentDefinition<CompositeImplementation> definition
+    ) throws InstantiationException {
 
         URI runtimeId = definition.getRuntimeId();
-        LogicalComponent<CompositeImplementation> component = new LogicalComponent<CompositeImplementation>(uri, runtimeId, definition, parent);
+        URI uri = URI.create(parent.getUri() + "/" + definition.getName());
+        LogicalComponent<CompositeImplementation> component =
+                new LogicalComponent<CompositeImplementation>(uri, runtimeId, definition, parent);
         initializeProperties(component, definition);
 
         Composite composite = component.getDefinition().getImplementation().getComponentType();
 
         // create the child components
         for (ComponentDefinition<? extends Implementation<?>> child : composite.getComponents().values()) {
-            
-            URI childUri = URI.create(uri + "/" + child.getName());
+
             if (CompositeImplementation.IMPLEMENTATION_COMPOSITE.equals(child.getImplementation().getType())) {
-                LogicalComponent<CompositeImplementation> childComponent = 
-                    instantiate(component, (ComponentDefinition<CompositeImplementation>) child, childUri);
+                LogicalComponent<CompositeImplementation> childComponent =
+                        instantiate(component, (ComponentDefinition<CompositeImplementation>) child);
                 component.addComponent(childComponent);
             } else {
-                LogicalComponent<Implementation<?>> childComponent = 
-                    atomicComponentInstantiator.instantiate(component, (ComponentDefinition<Implementation<?>>) child, childUri);
+                LogicalComponent<Implementation<?>> childComponent =
+                        atomicComponentInstantiator.instantiate(component,
+                                                                (ComponentDefinition<Implementation<?>>) child);
                 component.addComponent(childComponent);
             }
-            
+
         }
-        
-        instantiateCompositeServices(uri, component, composite);
-        instantiateCompositeReferences(parent, uri, component, composite);
+
+        instantiateCompositeServices(component, composite);
+        instantiateCompositeReferences(parent, component, composite);
 
         return component;
-        
+
     }
 
-    private <I extends Implementation<?>> void instantiateCompositeServices(URI uri,
-                                                                            LogicalComponent<I> component,
+    private <I extends Implementation<?>> void instantiateCompositeServices(LogicalComponent<I> component,
                                                                             Composite composite) {
         ComponentDefinition<I> definition = component.getDefinition();
+        String uriBase = component.getUri().toString() + "/";
         for (CompositeService service : composite.getServices().values()) {
             String name = service.getName();
-            URI serviceUri = uri.resolve('#' + name);
+            URI serviceUri = component.getUri().resolve('#' + name);
             LogicalService logicalService = new LogicalService(serviceUri, service, component);
             if (service.getPromote() != null) {
-                logicalService.setPromote(URI.create(uri.toString() + "/" + service.getPromote()));
+                logicalService.setPromote(URI.create(uriBase + service.getPromote()));
             }
             for (BindingDefinition binding : service.getBindings()) {
                 logicalService.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalService));
@@ -117,22 +121,22 @@ public class CompositeComponentInstantiator extends AbstractComponentInstantiato
 
     private <I extends Implementation<?>> void instantiateCompositeReferences(
             LogicalComponent<CompositeImplementation> parent,
-            URI uri,
             LogicalComponent<I> component,
             Composite composite) {
-        
+
         ComponentDefinition<I> definition = component.getDefinition();
-        
+        String uriBase = component.getUri().toString() + "/";
+
         // create logical references based on promoted references in the composite definition
         for (CompositeReference reference : composite.getReferences().values()) {
             String name = reference.getName();
-            URI referenceUri = uri.resolve('#' + name);
+            URI referenceUri = component.getUri().resolve('#' + name);
             LogicalReference logicalReference = new LogicalReference(referenceUri, reference, component);
             for (BindingDefinition binding : reference.getBindings()) {
                 logicalReference.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalReference));
             }
             for (URI promotedUri : reference.getPromoted()) {
-                URI resolvedUri = URI.create(uri.toString() + "/" + promotedUri.toString());
+                URI resolvedUri = URI.create(uriBase + promotedUri.toString());
                 logicalReference.addPromotedUri(resolvedUri);
             }
             ComponentReference componentReference = definition.getReferences().get(name);

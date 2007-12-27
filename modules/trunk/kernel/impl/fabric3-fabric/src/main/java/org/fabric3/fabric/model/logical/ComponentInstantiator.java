@@ -22,8 +22,6 @@ import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.spi.model.instance.LogicalComponent;
 
-import java.net.URI;
-
 /**
  * @version $Revision$ $Date$
  */
@@ -37,7 +35,8 @@ public interface ComponentInstantiator<I extends Implementation<?>> {
      * @return the instantiated logical component
      * @throws InstantiationException if an error occurs during instantiation
      */
-    LogicalComponent<I> instantiate(LogicalComponent<CompositeImplementation> parent, ComponentDefinition<I> definition, URI uri)
+    LogicalComponent<I> instantiate(LogicalComponent<CompositeImplementation> parent,
+                                    ComponentDefinition<I> definition)
             throws InstantiationException;
 
 }

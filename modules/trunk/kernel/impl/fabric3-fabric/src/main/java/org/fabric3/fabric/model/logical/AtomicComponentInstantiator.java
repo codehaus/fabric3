@@ -41,9 +41,10 @@ import org.fabric3.spi.model.instance.LogicalService;
 public class AtomicComponentInstantiator extends AbstractComponentInstantiator<Implementation<?>> {
 
     public LogicalComponent<Implementation<?>> instantiate(LogicalComponent<CompositeImplementation> parent,
-            ComponentDefinition<Implementation<?>> definition, URI uri) throws InstantiationException {
+                                                           ComponentDefinition<Implementation<?>> definition) throws InstantiationException {
         
         URI runtimeId = definition.getRuntimeId();
+        URI uri = URI.create(parent.getUri() + "/" + definition.getName());
         LogicalComponent<Implementation<?>> component = new LogicalComponent<Implementation<?>>(uri, runtimeId, definition, parent);
         
         initializeProperties(component, definition);
@@ -51,31 +52,32 @@ public class AtomicComponentInstantiator extends AbstractComponentInstantiator<I
         Implementation<?> impl = definition.getImplementation();
         AbstractComponentType<?, ?, ?, ?> componentType = impl.getComponentType();
 
-        createServices(definition, uri, component, componentType);
-        createReferences(definition, uri, component, componentType);
-        createResources(uri, component, componentType);
+        createServices(definition, component, componentType);
+        createReferences(definition, component, componentType);
+        createResources(component, componentType);
         
         return component;
         
     }
 
-    private void createResources(URI uri, LogicalComponent<Implementation<?>> component,
-            AbstractComponentType<?, ?, ?, ?> componentType) {
+    private void createResources(LogicalComponent<Implementation<?>> component,
+                                 AbstractComponentType<?, ?, ?, ?> componentType) {
         
         for (ResourceDefinition resource : componentType.getResources().values()) {
-            URI resourceUri = uri.resolve('#' + resource.getName());
+            URI resourceUri = component.getUri().resolve('#' + resource.getName());
             LogicalResource<?> logicalResource = createLogicalResource(resource, resourceUri, component);
             component.addResource(logicalResource);
         }
         
     }
 
-    private void createServices(ComponentDefinition<Implementation<?>> definition, URI uri,
-            LogicalComponent<Implementation<?>> component, AbstractComponentType<?, ?, ?, ?> componentType) {
+    private void createServices(ComponentDefinition<Implementation<?>> definition,
+                                LogicalComponent<Implementation<?>> component,
+                                AbstractComponentType<?, ?, ?, ?> componentType) {
         
         for (ServiceDefinition service : componentType.getServices().values()) {
             String name = service.getName();
-            URI serviceUri = uri.resolve('#' + name);
+            URI serviceUri = component.getUri().resolve('#' + name);
             LogicalService logicalService = new LogicalService(serviceUri, service, component);
             ComponentService componentService = definition.getServices().get(name);
             if (componentService != null) {
@@ -89,12 +91,13 @@ public class AtomicComponentInstantiator extends AbstractComponentInstantiator<I
         
     }
 
-    private void createReferences(ComponentDefinition<Implementation<?>> definition, URI uri,
-            LogicalComponent<Implementation<?>> component, AbstractComponentType<?, ?, ?, ?> componentType) {
+    private void createReferences(ComponentDefinition<Implementation<?>> definition,
+                                  LogicalComponent<Implementation<?>> component,
+                                  AbstractComponentType<?, ?, ?, ?> componentType) {
         
         for (ReferenceDefinition reference : componentType.getReferences().values()) {
             String name = reference.getName();
-            URI referenceUri = uri.resolve('#' + name);
+            URI referenceUri = component.getUri().resolve('#' + name);
             LogicalReference logicalReference = new LogicalReference(referenceUri, reference, component);
             ComponentReference componentReference = definition.getReferences().get(name);
             if (componentReference != null) {

@@ -34,7 +34,6 @@ import org.fabric3.fabric.model.logical.ComponentInstantiator;
 import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.APPLICATION_CLASSLOADER_ID;
 import static org.fabric3.fabric.runtime.ComponentNames.BOOT_CLASSLOADER_ID;
-import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_NAME;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_URI;
 import org.fabric3.fabric.runtime.ConfigLoadException;
 import org.fabric3.fabric.runtime.ConfigLoader;
@@ -252,7 +251,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     }
 
     protected <S, I extends S> AtomicComponent<I> createPhysicalComponent(String name, Class<S> type, I instance) {
-        URI uri = URI.create(RUNTIME_NAME + "/" + name);
+        URI uri = URI.create(domain.getUri() + "/" + name);
         return new SingletonComponent<I>(uri, instance, null);
     }
 
@@ -262,9 +261,8 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
             throws InvalidServiceContractException, InstantiationException {
         ComponentDefinition<Implementation<?>> definition = createDefinition(name, type, instance);
 
-        URI uri = URI.create(RUNTIME_NAME + "/" + name);
         ComponentInstantiator<Implementation<?>> instantiator = new AtomicComponentInstantiator();
-        return instantiator.instantiate(domain, definition, uri);
+        return instantiator.instantiate(domain, definition);
     }
 
     protected <S, I extends S> ComponentDefinition<Implementation<?>> createDefinition(String name,
