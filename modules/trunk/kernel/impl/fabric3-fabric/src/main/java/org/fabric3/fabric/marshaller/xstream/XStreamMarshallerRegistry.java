@@ -23,32 +23,33 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.StaxDriver;
+import org.osoa.sca.annotations.Reference;
+
+import org.fabric3.fabric.services.xstream.ClassLoaderStaxDriver;
+import org.fabric3.fabric.services.xstream.XStreamFactory;
 import org.fabric3.spi.marshaller.MarshalException;
 import org.fabric3.spi.marshaller.Marshaller;
 import org.fabric3.spi.marshaller.MarshallerRegistry;
-
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.StaxDriver;
 
 /**
  * @version $Revision$ $Date$
  */
 public class XStreamMarshallerRegistry implements MarshallerRegistry {
-    
+
     /**
      * Thread safe object for marshalling.
      */
-    private XStream xStream = new XStream();
-    
+    private XStream xStream;
+
     /**
      * Thread safe Stax driver.
      */
-    private StaxDriver staxDriver = new StaxDriver();
-    
-    /**
-     * Register the converters.
-     */
-    public XStreamMarshallerRegistry() {
+    private StaxDriver staxDriver = new ClassLoaderStaxDriver(getClass().getClassLoader()); //new StaxDriver();
+
+    public XStreamMarshallerRegistry(@Reference XStreamFactory factory) {
+        xStream = factory.createInstance();
         // TODO Register the converters
     }
 
@@ -61,7 +62,6 @@ public class XStreamMarshallerRegistry implements MarshallerRegistry {
 
     /**
      * Not supported, handled internally.
-     * 
      */
     public Marshaller getMarshaller(QName xmlName) throws MarshalException {
         throw new UnsupportedOperationException();
@@ -69,7 +69,6 @@ public class XStreamMarshallerRegistry implements MarshallerRegistry {
 
     /**
      * Not supported, handled internally.
-     * 
      */
     public void registerMarshaller(Class<?> arg0, QName arg1, Marshaller arg2) {
         throw new UnsupportedOperationException();
@@ -79,7 +78,7 @@ public class XStreamMarshallerRegistry implements MarshallerRegistry {
      * Marshals using XStream.
      */
     public void marshall(Object modelObject, XMLStreamWriter writer) throws MarshalException {
-        
+
         try {
             xStream.marshal(modelObject, staxDriver.createStaxWriter(writer));
         } catch (XMLStreamException ex) {
