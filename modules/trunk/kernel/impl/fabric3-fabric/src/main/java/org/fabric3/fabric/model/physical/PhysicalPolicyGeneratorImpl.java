@@ -22,8 +22,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.fabric3.fabric.generator.PolicyException;
-import org.fabric3.fabric.util.closure.Closure;
-import org.fabric3.fabric.util.closure.CollectionUtils;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.definitions.Intent;
@@ -39,6 +37,8 @@ import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 import org.fabric3.spi.policy.registry.PolicyResolutionException;
 import org.fabric3.spi.policy.registry.PolicyResolver;
 import org.fabric3.spi.policy.registry.PolicyResult;
+import org.fabric3.util.closure.Closure;
+import org.fabric3.util.closure.CollectionUtils;
 import org.osoa.sca.annotations.Reference;
 
 /**

@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.util.closure;
+package org.fabric3.util.closure;
 
 /**
  * Represents a typed closure.

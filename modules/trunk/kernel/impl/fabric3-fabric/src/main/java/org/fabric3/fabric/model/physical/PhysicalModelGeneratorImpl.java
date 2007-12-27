@@ -30,8 +30,6 @@ import org.fabric3.fabric.generator.DefaultGeneratorContext;
 import org.fabric3.fabric.generator.PolicyException;
 import org.fabric3.fabric.services.routing.RoutingException;
 import org.fabric3.fabric.services.routing.RoutingService;
-import org.fabric3.fabric.util.closure.Closure;
-import org.fabric3.fabric.util.closure.CollectionUtils;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
@@ -56,6 +54,8 @@ import org.fabric3.spi.policy.registry.PolicyResolutionException;
 import org.fabric3.spi.policy.registry.PolicyResolver;
 import org.fabric3.spi.policy.registry.PolicyResult;
 import org.fabric3.spi.util.UriHelper;
+import org.fabric3.util.closure.Closure;
+import org.fabric3.util.closure.CollectionUtils;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
