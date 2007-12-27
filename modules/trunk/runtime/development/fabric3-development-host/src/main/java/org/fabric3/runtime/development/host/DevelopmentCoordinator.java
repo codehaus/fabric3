@@ -37,7 +37,7 @@ import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.DEFINITIONS_DEPLOYER;
+import static org.fabric3.fabric.runtime.ComponentNames.DEFINITIONS_REGISTRY;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_ASSEMBLY_URI;
@@ -65,7 +65,7 @@ import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.services.definitions.DefinitionActivationException;
-import org.fabric3.spi.services.definitions.DefinitionsDeployer;
+import org.fabric3.spi.services.definitions.DefinitionsRegistry;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.MetaDataStore;
@@ -206,10 +206,10 @@ public class DevelopmentCoordinator implements RuntimeLifecycleCoordinator<Devel
                                                                                  CONTRIBUTION_SERVICE_URI);
             ContributionSource source = new FileContributionSource(intentsUrl.toURI(), intentsUrl, -1, new byte[0]);
             URI uri = contributionService.contribute(source);
-            DefinitionsDeployer deployer = runtime.getSystemComponent(DefinitionsDeployer.class, DEFINITIONS_DEPLOYER);
+            DefinitionsRegistry definitionsRegistry = runtime.getSystemComponent(DefinitionsRegistry.class, DEFINITIONS_REGISTRY);
             List<URI> intents = new ArrayList<URI>();
             intents.add(uri);
-            deployer.activateDefinitions(intents);
+            definitionsRegistry.activateDefinitions(intents);
         } catch (ContributionException e) {
             throw new InitializationException(e);
         } catch (DefinitionActivationException e) {

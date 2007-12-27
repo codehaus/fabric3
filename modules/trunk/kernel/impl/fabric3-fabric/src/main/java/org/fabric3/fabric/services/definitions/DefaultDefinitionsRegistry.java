@@ -18,9 +18,10 @@
  */
 package org.fabric3.fabric.services.definitions;
 
-import java.util.HashSet;
+import java.net.URI;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.xml.namespace.QName;
@@ -30,7 +31,13 @@ import org.fabric3.scdl.definitions.BindingType;
 import org.fabric3.scdl.definitions.ImplementationType;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
+import org.fabric3.spi.services.contribution.Contribution;
+import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.services.contribution.Resource;
+import org.fabric3.spi.services.contribution.ResourceElement;
+import org.fabric3.spi.services.definitions.DefinitionActivationException;
 import org.fabric3.spi.services.definitions.DefinitionsRegistry;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Default implementation of the definitions registry.
@@ -38,49 +45,69 @@ import org.fabric3.spi.services.definitions.DefinitionsRegistry;
  * @version $Revision$ $Date$
  */
 public class DefaultDefinitionsRegistry implements DefinitionsRegistry {
-    
-    // Definition cache
+
+    private MetaDataStore metaDataStore;
     private Map<Class<? extends AbstractDefinition>, Map<QName, ? extends AbstractDefinition>> cache = 
         new ConcurrentHashMap<Class<? extends AbstractDefinition>, Map<QName,? extends AbstractDefinition>>();
     
     /**
      * Initializes the cache.
      */
-    public DefaultDefinitionsRegistry() {
+    public DefaultDefinitionsRegistry(@Reference MetaDataStore metaDataStore) {    
+        
+        this.metaDataStore = metaDataStore;
         
         cache.put(Intent.class, new ConcurrentHashMap<QName, Intent>());
         cache.put(PolicySet.class, new ConcurrentHashMap<QName, PolicySet>());
         cache.put(BindingType.class, new ConcurrentHashMap<QName, BindingType>());
-        cache.put(ImplementationType.class, new ConcurrentHashMap<QName, ImplementationType>());
-        
+        cache.put(ImplementationType.class, new ConcurrentHashMap<QName, ImplementationType>());        
     }
 
-    @SuppressWarnings("unchecked")
-    public <D extends AbstractDefinition> Set<D> getAllDefinitions(Class<D> definitionClass) {
-        
-        Map<QName, D> subCache = (Map<QName, D>) cache.get(definitionClass);
-        
-        Set<D> definitions = new HashSet<D>();
-        definitions.addAll(subCache.values());
-        
-        return definitions;
-        
+    public <D extends AbstractDefinition> Collection<D> getAllDefinitions(Class<D> definitionClass) {
+        return getSubCache(definitionClass).values();
     }
 
-    @SuppressWarnings("unchecked")
     public <D extends AbstractDefinition> D getDefinition(QName name, Class<D> definitionClass) {
-        
-        Map<QName, D> subCache = (Map<QName, D>) cache.get(definitionClass);
-        return subCache.get(name);
-        
+        return getSubCache(definitionClass).get(name);
     }
 
-    @SuppressWarnings("unchecked")
     public <D extends AbstractDefinition> void registerDefinition(D definition, Class<D> definitionClass) {
-        
-        Map<QName, D> subCache = (Map<QName, D>) cache.get(definitionClass);
-        subCache.put(definition.getName(), definition);
+        getSubCache(definitionClass).put(definition.getName(), definition);
+    }
 
+    public void activateDefinitions(List<URI> contributionUris) throws DefinitionActivationException {
+
+        for (URI uri : contributionUris) {
+            Contribution contribution = metaDataStore.find(uri);
+            for (Resource resource : contribution.getResources()) {
+                for (ResourceElement<?, ?> resourceElement : resource.getResourceElements()) {
+                    Object value = resourceElement.getValue();
+                    if (value instanceof AbstractDefinition) {
+                        activate((AbstractDefinition) value);
+                    }
+                }
+            }
+        }
+
+    }
+
+    private void activate(AbstractDefinition definition) throws DefinitionActivationException {
+
+        if (definition instanceof Intent) {
+            getSubCache(Intent.class).put(definition.getName(), (Intent) definition);
+        } else if (definition instanceof PolicySet) {
+            getSubCache(PolicySet.class).put(definition.getName(), (PolicySet) definition);
+        } else if (definition instanceof BindingType) {
+            getSubCache(BindingType.class).put(definition.getName(), (BindingType) definition);
+        } else if (definition instanceof ImplementationType) {
+            getSubCache(ImplementationType.class).put(definition.getName(), (ImplementationType) definition);
+        }
+
+    }
+    
+    @SuppressWarnings("unchecked")
+    private <D extends AbstractDefinition> Map<QName, D> getSubCache(Class<D> definitionClass) {
+        return (Map<QName, D>) cache.get(definitionClass);
     }
 
 }

@@ -34,7 +34,7 @@ import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.DEFINITIONS_DEPLOYER;
+import static org.fabric3.fabric.runtime.ComponentNames.DEFINITIONS_REGISTRY;
 import static org.fabric3.fabric.runtime.ComponentNames.DISCOVERY_SERVICE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.METADATA_STORE_URI;
@@ -73,7 +73,7 @@ import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.definitions.DefinitionActivationException;
-import org.fabric3.spi.services.definitions.DefinitionsDeployer;
+import org.fabric3.spi.services.definitions.DefinitionsRegistry;
 import org.fabric3.spi.services.discovery.DiscoveryException;
 import org.fabric3.spi.services.discovery.DiscoveryService;
 import org.fabric3.spi.services.work.WorkScheduler;
@@ -293,10 +293,10 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
             URL location = contribuUri.toURL();
             ContributionSource source = new FileContributionSource(contribuUri, location, -1, new byte[0]);
             URI uri = contributionService.contribute(source);
-            DefinitionsDeployer deployer = runtime.getSystemComponent(DefinitionsDeployer.class, DEFINITIONS_DEPLOYER);
+            DefinitionsRegistry definitionsRegistry = runtime.getSystemComponent(DefinitionsRegistry.class, DEFINITIONS_REGISTRY);
             List<URI> intents = new ArrayList<URI>();
             intents.add(uri);
-            deployer.activateDefinitions(intents);
+            definitionsRegistry.activateDefinitions(intents);
         } catch (MalformedURLException e) {
             throw new InitializationException(e);
         } catch (ContributionException e) {

@@ -56,7 +56,7 @@ public final class ComponentNames {
 
     public static final URI APPLICATION_CLASSLOADER_ID = URI.create("sca://./applicationClassLoader");
 
-    public static final URI DEFINITIONS_DEPLOYER = URI.create(RUNTIME_NAME + "/definitionsDeployer");
+    public static final URI DEFINITIONS_REGISTRY = URI.create(RUNTIME_NAME + "/definitionsRegistry");
 
     public static final URI CONTRIBUTION_STORE_URI = URI.create(RUNTIME_NAME + "/ContributionStore");
 

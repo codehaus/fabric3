@@ -18,7 +18,9 @@
  */
 package org.fabric3.spi.services.definitions;
 
-import java.util.Set;
+import java.net.URI;
+import java.util.Collection;
+import java.util.List;
 
 import javax.xml.namespace.QName;
 
@@ -33,21 +35,13 @@ import org.fabric3.scdl.definitions.AbstractDefinition;
 public interface DefinitionsRegistry {
     
     /**
-     * Registers a definition object.
-     * 
-     * @param definition Definition that needs to be registered.
-     * @param definitionClass Definition class.
-     */
-    <D extends AbstractDefinition> void registerDefinition(D definition, Class<D> definitionClass);
-    
-    /**
      * Returns all the definitions of a given type.
      * 
      * @param <D> Definition type.
      * @param definitionClass Definition class.
      * @return All definitions of the given type.
      */
-    <D extends AbstractDefinition> Set<D> getAllDefinitions(Class<D> definitionClass);
+    <D extends AbstractDefinition> Collection<D> getAllDefinitions(Class<D> definitionClass);
     
     /**
      * Returns the definition of specified type and qualified name.
@@ -58,5 +52,13 @@ public interface DefinitionsRegistry {
      * @return Requested definition object if available, otherwise null.
      */
     <D extends AbstractDefinition> D getDefinition(QName name, Class<D> definitionClass);
+    
+    /**
+     * Activates all the definitions in the specified contributions.
+     * 
+     * @param contributionUris The URIs for the contribution.
+     * @throws DefinitionActivationException If unable to find definition.
+     */
+    void activateDefinitions(List<URI> contributionUris) throws DefinitionActivationException;
 
 }

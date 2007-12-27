@@ -159,11 +159,6 @@
         <system:implementation.system class="org.fabric3.fabric.services.definitions.DefaultDefinitionsRegistry"/>
     </component>
 
-    <!-- Definitions deployer -->
-    <component name="definitionsDeployer">
-        <system:implementation.system class="org.fabric3.fabric.services.definitions.DefaultDefinitionsDeployer"/>
-    </component>
-
     <component name="ClasspathProcessorRegistry">
         <system:implementation.system
                 class="org.fabric3.fabric.services.contribution.ClasspathProcessorRegistryImpl"/>
