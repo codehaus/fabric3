@@ -98,7 +98,7 @@ public final class Constants {
     /**
      * Name of the default webapp bootstrap implementation.
      */
-    static final String BOOTSTRAP_DEFAULT = "org.fabric3.fabric.runtime.ScdlBootstrapperImpl";
+    static final String BOOTSTRAP_DEFAULT = "org.fabric3.fabric.runtime.bootstrap.ScdlBootstrapperImpl";
 
     /**
      * Name of the parameter that defines the class to load to coordinate booting the runtime.

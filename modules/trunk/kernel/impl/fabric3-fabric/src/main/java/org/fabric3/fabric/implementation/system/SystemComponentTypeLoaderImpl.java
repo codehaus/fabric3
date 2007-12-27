@@ -20,10 +20,9 @@ package org.fabric3.fabric.implementation.system;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.pojo.processor.IntrospectionRegistry;
 import org.fabric3.pojo.processor.Introspector;
-import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
+import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
@@ -38,7 +37,7 @@ import org.fabric3.spi.loader.MissingResourceException;
 public class SystemComponentTypeLoaderImpl implements SystemComponentTypeLoader {
     private final Introspector introspector;
 
-    public SystemComponentTypeLoaderImpl(@Reference IntrospectionRegistry introspector) {
+    public SystemComponentTypeLoaderImpl(@Reference Introspector introspector) {
         this.introspector = introspector;
     }
 

@@ -26,16 +26,16 @@ import java.util.Map;
 
 import org.osoa.sca.annotations.Reference;
 
-import static org.fabric3.pojo.processor.JavaIntrospectionHelper.toPropertyName;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
-import org.fabric3.pojo.scdl.JavaMappedReference;
-import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.pojo.scdl.MemberSite;
+import static org.fabric3.pojo.processor.JavaIntrospectionHelper.toPropertyName;
 import org.fabric3.pojo.processor.ProcessingException;
+import org.fabric3.pojo.scdl.JavaMappedReference;
+import org.fabric3.pojo.scdl.MemberSite;
+import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Multiplicity;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.idl.InvalidServiceContractException;
-import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
+import org.fabric3.spi.idl.java.InterfaceJavaIntrospector;
 import org.fabric3.spi.loader.LoaderContext;
 
 /**
@@ -46,10 +46,10 @@ import org.fabric3.spi.loader.LoaderContext;
  */
 public class ReferenceProcessor extends ImplementationProcessorExtension {
 
-    private JavaInterfaceProcessorRegistry regsitry;
+    private InterfaceJavaIntrospector interfaceIntrospector;
 
-    public ReferenceProcessor(@Reference JavaInterfaceProcessorRegistry registry) {
-        this.regsitry = registry;
+    public ReferenceProcessor(@Reference InterfaceJavaIntrospector interfaceIntrospector) {
+        this.interfaceIntrospector = interfaceIntrospector;
     }
 
     public void visitMethod(
@@ -79,7 +79,7 @@ public class ReferenceProcessor extends ImplementationProcessorExtension {
         ServiceContract contract;
         try {
             Class<?> baseType = getBaseType(rawType, method.getGenericParameterTypes()[0]);
-            contract = regsitry.introspect(baseType);
+            contract = interfaceIntrospector.introspect(baseType);
         } catch (InvalidServiceContractException e) {
             throw new ProcessingException(e);
         }
@@ -125,7 +125,7 @@ public class ReferenceProcessor extends ImplementationProcessorExtension {
         ServiceContract contract;
         try {
             Class<?> baseType = getBaseType(rawType, field.getGenericType());
-            contract = regsitry.introspect(baseType);
+            contract = interfaceIntrospector.introspect(baseType);
         } catch (InvalidServiceContractException e) {
             throw new ProcessingException(e);
         }

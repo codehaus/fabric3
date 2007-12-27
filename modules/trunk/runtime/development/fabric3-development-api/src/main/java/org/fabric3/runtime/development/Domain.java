@@ -160,7 +160,7 @@ public class Domain {
             ClassLoader cl = new URLClassLoader(urls, getClass().getClassLoader());
             getClass().getClassLoader().loadClass("org.osoa.sca.ServiceUnavailableException");
             URL systemSCDL = new File(baseDir, SYSTEM_SCDL).toURI().toURL();
-            Class<?> bootstrapperClass = cl.loadClass("org.fabric3.fabric.runtime.ScdlBootstrapperImpl");
+            Class<?> bootstrapperClass = cl.loadClass("org.fabric3.fabric.runtime.bootstrap.ScdlBootstrapperImpl");
             ScdlBootstrapper bootstrapper = (ScdlBootstrapper) bootstrapperClass.newInstance();
             bootstrapper.setScdlLocation(systemSCDL);
             Class<?> runtimeClass = cl.loadClass("org.fabric3.runtime.development.host.DevelopmentRuntimeImpl");

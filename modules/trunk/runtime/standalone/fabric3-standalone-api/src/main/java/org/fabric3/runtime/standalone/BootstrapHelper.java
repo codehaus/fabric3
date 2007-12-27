@@ -321,7 +321,7 @@ public final class BootstrapHelper {
 
         // locate the implementation
         String className = hostInfo.getProperty("fabric3.bootstrapperClass",
-                                                "org.fabric3.fabric.runtime.ScdlBootstrapperImpl");
+                                                "org.fabric3.fabric.runtime.bootstrap.ScdlBootstrapperImpl");
         Class<?> implClass = Class.forName(className, true, hostInfo.getBootClassLoader());
         ScdlBootstrapper bootstrapper = (ScdlBootstrapper) implClass.newInstance();
         bootstrapper.setScdlLocation(systemSCDL);

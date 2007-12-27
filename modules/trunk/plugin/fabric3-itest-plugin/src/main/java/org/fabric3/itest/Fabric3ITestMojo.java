@@ -179,7 +179,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
     /**
      * Class name for the implementation of the bootstrapper to use.
      *
-     * @parameter expression="org.fabric3.fabric.runtime.ScdlBootstrapperImpl"
+     * @parameter expression="org.fabric3.fabric.runtime.bootstrap.ScdlBootstrapperImpl"
      */
     public String bootstrapperImpl;
 

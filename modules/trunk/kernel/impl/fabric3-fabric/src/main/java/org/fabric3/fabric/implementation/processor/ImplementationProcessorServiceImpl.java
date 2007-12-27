@@ -43,8 +43,8 @@ import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Multiplicity;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.idl.InvalidServiceContractException;
-import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
 import org.fabric3.spi.idl.java.JavaServiceContract;
+import org.fabric3.spi.idl.java.InterfaceJavaIntrospector;
 
 /**
  * The default implementation of an <code>ImplementationProcessorService</code>
@@ -52,9 +52,9 @@ import org.fabric3.spi.idl.java.JavaServiceContract;
  * @version $Rev$ $Date$
  */
 public class ImplementationProcessorServiceImpl implements ImplementationProcessorService {
-    private JavaInterfaceProcessorRegistry registry;
+    private InterfaceJavaIntrospector registry;
 
-    public ImplementationProcessorServiceImpl(@Reference JavaInterfaceProcessorRegistry registry) {
+    public ImplementationProcessorServiceImpl(@Reference InterfaceJavaIntrospector registry) {
         this.registry = registry;
     }
 
@@ -288,54 +288,6 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
         type.getReferences().put(name, reference);
         addName(explicitNames, pos, name);
     }
-
-    /**
-     * Processes resource metadata for a constructor parameter
-     *
-     * @param resourceAnnot    the resource annotation
-     * @param constructorNames the parameter names as specified in an {@link org.osoa.sca.annotations.Constructor}
-     *                         annotation
-     * @param pos              the position of the parameter in the constructor's parameter list
-     * @param type             the component type associated with the implementation being processed
-     * @param param            the parameter type
-     * @param explicitNames    the collection of injection names to update
-     * @throws ProcessingException
-     */
-    /*private <T> void processResource(
-            Resource resourceAnnot,
-            String[] constructorNames,
-            int pos,
-            PojoComponentType type,
-            Class<T> param,
-            List<String> explicitNames) throws ProcessingException {
-
-        String name = resourceAnnot.name();
-        if (name == null || name.length() == 0) {
-            if (constructorNames.length < pos + 1 || constructorNames[pos] == null
-                    || constructorNames[pos].length() == 0) {
-                String paramNum = String.valueOf(pos + 1);
-                throw new InvalidResourceException("No name specified for resource parameter", paramNum);
-            }
-            name = constructorNames[pos];
-        } else if (pos < constructorNames.length && constructorNames[pos] != null
-                && constructorNames[pos].length() != 0 && !name.equals(constructorNames[pos])) {
-            String paramNum = String.valueOf(pos + 1);
-            throw new InvalidConstructorException("Name specified by @Constructor does not match resource name",
-                                                  paramNum);
-        }
-        if (type.getResources().get(name) != null) {
-            throw new DuplicateResourceException(name);
-        }
-        org.fabric3.pojo.scdl.Resource<T> resource =
-                new org.fabric3.pojo.scdl.Resource<T>(name, param, null);
-        resource.setOptional(resourceAnnot.optional());
-        String mappedName = resourceAnnot.mappedName();
-        if (mappedName.length() > 0) {
-            resource.setMappedName(mappedName);
-        }
-        type.add(resource);
-        addName(explicitNames, pos, name);
-    }*/
 
     protected static Class<?> getBaseType(Class<?> cls, Type genericType) {
         if (cls.isArray()) {
