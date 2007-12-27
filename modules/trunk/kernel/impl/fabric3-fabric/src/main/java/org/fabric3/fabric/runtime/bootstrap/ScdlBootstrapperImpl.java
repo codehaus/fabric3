@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import javax.xml.namespace.QName;
 
 import org.w3c.dom.Document;
 
@@ -60,8 +59,6 @@ import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.Property;
-import org.fabric3.spi.Constants;
 import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.assembly.Assembly;
 import org.fabric3.spi.component.AtomicComponent;
@@ -94,11 +91,10 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     private static final URI HOST_CLASSLOADER_ID = URI.create("sca://./hostClassLoader");
     private static final String USER_CONFIG = System.getProperty("user.home") + "/.fabric3/config.xml";
 
-    private JavaInterfaceProcessorRegistry interfaceProcessorRegistry = new JavaInterfaceProcessorRegistryImpl();
+    private final JavaInterfaceProcessorRegistry interfaceProcessorRegistry = new JavaInterfaceProcessorRegistryImpl();
+    private final ConfigLoader configLoader = new DefaultConfigLoader();
 
     private URL scdlLocation;
-    private ConfigLoader configLoader;
-    private URL userConfigLocation;
     private LogicalComponent<CompositeImplementation> domain;
 
     public URL getScdlLocation() {
@@ -143,7 +139,10 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
             LoaderContext loaderContext = new LoaderContextImpl(bootCl, BOOT_CLASSLOADER_ID, scdlLocation);
             Composite composite = loader.load(scdlLocation, Composite.class, loaderContext);
 
-            setUserConfigProperty(composite);
+            Document userConfig = loadUserConfig();
+            if (userConfig != null) {
+                domain.setPropertyValue("userConfig", userConfig);
+            }
 
             // include in the runtime domain assembly
             runtimeAssembly.includeInDomain(composite);
@@ -178,10 +177,6 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
 
         RuntimeServices runtimeServices = (RuntimeServices) runtime;
-
-        configLoader = new DefaultConfigLoader();
-
-        getUserConfig();
 
         DefaultFormatterRegistry formatterRegistry = new DefaultFormatterRegistry();
         registerSystemComponent(runtimeServices, "FormatterRegistry", FormatterRegistry.class, formatterRegistry);
@@ -293,36 +288,19 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         return def;
     }
 
-    private void getUserConfig() throws InitializationException {
 
+    private Document loadUserConfig() throws ConfigLoadException {
         // Get the user config location
         File configFile = new File(USER_CONFIG);
         if (configFile.exists()) {
             try {
-                userConfigLocation = configFile.toURL();
+                URL url = configFile.toURI().toURL();
+                return configLoader.loadConfig(url);
             } catch (MalformedURLException e) {
-                throw new InitializationException(e);
+                return null;
             }
+        } else {
+            return null;
         }
-
     }
-
-    private void setUserConfigProperty(Composite composite) throws ConfigLoadException {
-
-        if (userConfigLocation != null) {
-
-            Document userConfig = configLoader.loadConfig(userConfigLocation);
-
-            Property<Document> userConfigProperty = new Property<Document>();
-            userConfigProperty.setName("userConfig");
-            userConfigProperty.setJavaType(Document.class);
-            userConfigProperty.setXmlType(new QName(Constants.FABRIC3_NS, "userConfig"));
-            userConfigProperty.setDefaultValue(userConfig);
-
-            composite.add(userConfigProperty);
-
-        }
-
-    }
-
 }

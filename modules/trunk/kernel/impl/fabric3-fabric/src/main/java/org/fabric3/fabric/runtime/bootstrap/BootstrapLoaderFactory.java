@@ -41,6 +41,7 @@ import org.fabric3.loader.common.ComponentReferenceLoader;
 import org.fabric3.loader.common.ComponentServiceLoader;
 import org.fabric3.loader.common.DefaultPolicyHelper;
 import org.fabric3.loader.common.PropertyHelperImpl;
+import org.fabric3.loader.common.PropertyLoader;
 import org.fabric3.loader.composite.ComponentLoader;
 import org.fabric3.loader.composite.CompositeLoader;
 import org.fabric3.loader.composite.IncludeLoader;
@@ -72,8 +73,11 @@ public class BootstrapLoaderFactory {
 
         InterfaceJavaIntrospector interfaceJavaIntrospector = new JavaInterfaceProcessorRegistryImpl();
         Introspector introspector = createIntrospector(monitorFactory, interfaceJavaIntrospector);
+
         PropertyHelperImpl propertyHelper = new PropertyHelperImpl();
+        PropertyLoader propertyLoader = new PropertyLoader(propertyHelper);
         PropertyValueLoader propertyValueLoader = new PropertyValueLoader(propertyHelper);
+
         PolicyHelper policyHelper = new DefaultPolicyHelper();
         ComponentReferenceLoader componentReferenceLoader = new ComponentReferenceLoader(loader, policyHelper);
         ComponentServiceLoader componentServiceLoader = new ComponentServiceLoader(loader, policyHelper);
@@ -86,7 +90,7 @@ public class BootstrapLoaderFactory {
         IncludeLoader includeLoader = new IncludeLoader(loader, metaDataStore);
         CompositeLoader compositeLoader = new CompositeLoader(loader,
                                                               includeLoader,
-                                                              null,
+                                                              propertyLoader,
                                                               null,
                                                               null,
                                                               componentLoader,

@@ -21,9 +21,12 @@
     $Rev$ $Date$
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
            name="org.fabric3.fabric.Common"
            autowire="true">
+
+    <property name="XuserConfig" type="f3:userConfig"/>
 
     <component name="physicalPolicyGenerator">
         <system:implementation.system class="org.fabric3.fabric.model.physical.PhysicalPolicyGeneratorImpl"/>
