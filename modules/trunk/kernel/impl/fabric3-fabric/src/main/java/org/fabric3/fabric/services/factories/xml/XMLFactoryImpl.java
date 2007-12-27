@@ -14,7 +14,7 @@ public final class XMLFactoryImpl implements XMLFactory {
     private final ClassLoader classLoader = getClass().getClassLoader();
 
     public XMLFactoryImpl() {
-        this("com.ctc.wstx.stax.WstxInputFactory", "com.ctc.wstx.stax.WstxInputFactory");
+        this("com.ctc.wstx.stax.WstxInputFactory", "com.ctc.wstx.stax.WstxOutputFactory");
     }
 
     public XMLFactoryImpl(String inputFactoryName, String outputFactoryName) {
