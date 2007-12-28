@@ -34,8 +34,4 @@ public class NullMessagingService extends AbstractMessagingService {
     public void sendMessage(URI runtimeId, XMLStreamReader content) throws MessagingException {
     }
 
-    public Object getMessageDestination() {
-        return null;
-    }
-
 }

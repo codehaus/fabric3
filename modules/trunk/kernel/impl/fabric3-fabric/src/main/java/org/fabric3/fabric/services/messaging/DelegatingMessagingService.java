@@ -17,7 +17,6 @@
 package org.fabric3.fabric.services.messaging;
 
 import java.net.URI;
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.Reference;
@@ -26,7 +25,6 @@ import org.fabric3.extension.messaging.AbstractMessagingService;
 import org.fabric3.spi.services.messaging.MessagingException;
 import org.fabric3.spi.services.messaging.MessagingService;
 import org.fabric3.spi.services.messaging.MessagingServiceRegistry;
-import org.fabric3.spi.services.messaging.RequestListener;
 
 /**
  * MessagingService implementation that deleagtes to other MessagingServices. Messages will be dispatched based on the
@@ -51,7 +49,4 @@ public class DelegatingMessagingService extends AbstractMessagingService {
         service.sendMessage(runtimeId, content);
     }
 
-    public void registerRequestListener(QName messageType, RequestListener listener) {
-
-    }
 }

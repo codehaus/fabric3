@@ -34,14 +34,14 @@ import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.builder.resource.ResourceContainerBuilderRegistry;
 import org.fabric3.spi.component.Component;
-import org.fabric3.spi.runtime.component.ComponentManager;
-import org.fabric3.spi.runtime.component.RegistrationException;
 import org.fabric3.spi.marshaller.MarshallerRegistry;
 import org.fabric3.spi.model.physical.PhysicalChangeSet;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalResourceContainerDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
-import org.fabric3.spi.services.messaging.MessagingService;
+import org.fabric3.spi.runtime.component.ComponentManager;
+import org.fabric3.spi.runtime.component.RegistrationException;
+import org.fabric3.spi.services.messaging.MessagingEventService;
 import org.fabric3.spi.services.messaging.RequestListener;
 
 /**
@@ -137,12 +137,12 @@ public class DeployerImpl implements RequestListener, Deployer {
     }
 
     /**
-     * Injects the messaging service.
+     * Injects the messaging event service.
      *
      * @param messagingService messaging service to be injected.
      */
     @Reference
-    public void setMessagingService(MessagingService messagingService) {
+    public void setMessagingEventService(MessagingEventService messagingService) {
         QName qName = new QName(PhysicalChangeSet.class.getName());
         messagingService.registerRequestListener(qName, this);
     }

@@ -19,55 +19,48 @@ package org.fabric3.extension.command;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
 
-import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
-import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.command.CommandExecutor;
 import org.fabric3.spi.command.CommandExecutorRegistry;
 import org.fabric3.spi.command.ExecutionException;
 import org.fabric3.spi.marshaller.MarshalException;
 import org.fabric3.spi.marshaller.MarshallerRegistry;
-import org.fabric3.spi.services.messaging.MessagingService;
+import org.fabric3.spi.services.messaging.MessagingEventService;
 import org.fabric3.spi.services.messaging.RequestListener;
 
 /**
  * Base Implementation of a CommandExecutor. This implementation may be dispatched to locally or remotely through the
- * {@link org.fabric3.spi.services.messaging.MessagingService}.
+ * {@link org.fabric3.spi.services.messaging.MessagingEventService}.
  *
  * @version $Rev$ $Date$
  */
 @Service(CommandExecutor.class)
 @EagerInit
 public abstract class AbstractCommandExecutor<T extends Command> implements CommandExecutor<T>, RequestListener {
-    private MessagingService messagingService;
+    private MessagingEventService eventService;
     private MarshallerRegistry marshallerRegistry;
     private CommandExecutorRegistry commandExecutorRegistry;
     private CommandListenerMonitor monitor;
 
-    @Constructor
-    public AbstractCommandExecutor(@Reference MessagingService messagingService,
+    public AbstractCommandExecutor(@Reference MessagingEventService eventService,
                                    @Reference MarshallerRegistry marshallerRegistry,
                                    @Reference CommandExecutorRegistry commandExecutorRegistry,
-                                   @Reference MonitorFactory factory) {
-        this.messagingService = messagingService;
+                                   CommandListenerMonitor monitor) {
+        this.eventService = eventService;
         this.marshallerRegistry = marshallerRegistry;
-        this.commandExecutorRegistry = commandExecutorRegistry;
-    }
-
-    public AbstractCommandExecutor(CommandExecutorRegistry commandExecutorRegistry, CommandListenerMonitor monitor) {
         this.commandExecutorRegistry = commandExecutorRegistry;
         this.monitor = monitor;
     }
 
     @Init
     public void init() {
-        if (messagingService != null) {
-            messagingService.registerRequestListener(getCommandQName(), this);
+        if (eventService != null) {
+            eventService.registerRequestListener(getCommandQName(), this);
         }
         commandExecutorRegistry.register(getCommandType(), this);
     }

@@ -25,20 +25,21 @@ import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.extension.command.AbstractCommandExecutor;
+import org.fabric3.extension.command.CommandListenerMonitor;
 import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.host.monitor.MonitorFactory;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.command.CommandExecutorRegistry;
 import org.fabric3.spi.command.ExecutionException;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.Component;
-import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.marshaller.MarshallerRegistry;
-import org.fabric3.scdl.Scope;
-import org.fabric3.spi.services.messaging.MessagingService;
+import org.fabric3.spi.runtime.component.ComponentManager;
+import org.fabric3.spi.services.messaging.MessagingEventService;
 
 /**
  * Eagerly initializes a component on a service node.
@@ -50,14 +51,17 @@ public class InitializeComponentExecutor extends AbstractCommandExecutor<Initial
     private ScopeContainer<?> scopeContainer;
 
     @Constructor
-    public InitializeComponentExecutor(@Reference MessagingService messagingService,
+    public InitializeComponentExecutor(@Reference MessagingEventService eventService,
                                        @Reference MarshallerRegistry marshallerRegistry,
                                        @Reference CommandExecutorRegistry commandExecutorRegistry,
                                        @Reference ScopeRegistry scopeRegistry,
                                        @Reference ComponentManager manager,
                                        @Reference MonitorFactory factory) {
 
-        super(messagingService, marshallerRegistry, commandExecutorRegistry, factory);
+        super(eventService,
+              marshallerRegistry,
+              commandExecutorRegistry,
+              factory.getMonitor(CommandListenerMonitor.class));
         this.manager = manager;
         scopeContainer = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
     }

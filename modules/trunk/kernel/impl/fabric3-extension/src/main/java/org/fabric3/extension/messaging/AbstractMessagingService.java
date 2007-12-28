@@ -18,16 +18,11 @@
  */
 package org.fabric3.extension.messaging;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import javax.xml.namespace.QName;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.services.messaging.MessagingService;
-import org.fabric3.spi.services.messaging.RequestListener;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Abstract implementation of the discovery service.
@@ -41,21 +36,6 @@ public abstract class AbstractMessagingService implements MessagingService {
      * Runtime info.
      */
     private HostInfo hostInfo;
-
-    /**
-     * Request listeners.
-     */
-    private Map<QName, RequestListener> requestListenerMap = new ConcurrentHashMap<QName, RequestListener>();
-
-    /**
-     * Registers a request listener for async messages.
-     *
-     * @param messageType Message type that can be handled by the listener.
-     * @param listener    Recipient of the async message.
-     */
-    public void registerRequestListener(QName messageType, RequestListener listener) {
-        requestListenerMap.put(messageType, listener);
-    }
 
     /**
      * Sets the host info for the runtime using the discovery service.
@@ -74,16 +54,6 @@ public abstract class AbstractMessagingService implements MessagingService {
      */
     protected final HostInfo getHostInfo() {
         return hostInfo;
-    }
-
-    /**
-     * Returns the request listener for the specified message type.
-     *
-     * @param messageType Message type for the incoming message.
-     * @return Listener interested in the message type.
-     */
-    public final RequestListener getRequestListener(QName messageType) {
-        return requestListenerMap.get(messageType);
     }
 
 }

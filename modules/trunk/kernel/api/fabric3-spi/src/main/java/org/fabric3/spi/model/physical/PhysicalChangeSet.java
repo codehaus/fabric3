@@ -38,10 +38,10 @@ import org.fabric3.scdl.ModelObject;
 public class PhysicalChangeSet extends ModelObject {
 
     // Set of physical component definitions
-    private Set<PhysicalComponentDefinition> componentDefinitions;
+    private HashSet<PhysicalComponentDefinition> componentDefinitions;
 
     // Set of wire definitions
-    private Set<PhysicalWireDefinition> wireDefinitions;
+    private HashSet<PhysicalWireDefinition> wireDefinitions;
 
     private Map<Class<? extends PhysicalResourceContainerDefinition>,
             Map<URI, ? extends PhysicalResourceContainerDefinition>> resourceDefinitions;
