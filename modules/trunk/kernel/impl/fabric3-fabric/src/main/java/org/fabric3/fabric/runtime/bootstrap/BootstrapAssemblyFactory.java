@@ -38,7 +38,7 @@ import org.fabric3.fabric.command.InitializeComponentExecutor;
 import org.fabric3.fabric.command.StartCompositeContextCommand;
 import org.fabric3.fabric.command.StartCompositeContextExecutor;
 import org.fabric3.fabric.command.StartCompositeContextGenerator;
-import org.fabric3.fabric.deployer.Deployer;
+import org.fabric3.spi.deployer.Deployer;
 import org.fabric3.fabric.deployer.DeployerImpl;
 import org.fabric3.fabric.generator.GeneratorRegistryImpl;
 import org.fabric3.fabric.implementation.singleton.SingletonGenerator;

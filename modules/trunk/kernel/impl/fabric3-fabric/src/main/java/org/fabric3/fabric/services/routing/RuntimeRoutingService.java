@@ -22,7 +22,7 @@ import java.net.URI;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.deployer.Deployer;
+import org.fabric3.spi.deployer.Deployer;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.command.CommandExecutorRegistry;

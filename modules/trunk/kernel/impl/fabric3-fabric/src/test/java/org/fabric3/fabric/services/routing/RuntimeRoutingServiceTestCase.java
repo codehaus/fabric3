@@ -23,7 +23,7 @@ import java.net.URI;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
-import org.fabric3.fabric.deployer.Deployer;
+import org.fabric3.spi.deployer.Deployer;
 import org.fabric3.spi.command.CommandExecutorRegistry;
 import org.fabric3.spi.model.physical.PhysicalChangeSet;
 

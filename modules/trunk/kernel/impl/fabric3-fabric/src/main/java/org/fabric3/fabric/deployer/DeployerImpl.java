@@ -43,6 +43,7 @@ import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.runtime.component.RegistrationException;
 import org.fabric3.spi.services.messaging.MessagingEventService;
 import org.fabric3.spi.services.messaging.RequestListener;
+import org.fabric3.spi.deployer.Deployer;
 
 /**
  * Deploys components in response to asynchronous messages from the Assembly.

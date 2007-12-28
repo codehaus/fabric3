@@ -23,15 +23,13 @@ import java.io.ByteArrayOutputStream;
 import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.deployer.Deployer;
+import org.fabric3.spi.deployer.Deployer;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.command.Command;

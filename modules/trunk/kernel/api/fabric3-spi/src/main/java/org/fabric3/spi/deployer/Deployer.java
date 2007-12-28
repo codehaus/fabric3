@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.deployer;
+package org.fabric3.spi.deployer;
 
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.runtime.component.RegistrationException;
