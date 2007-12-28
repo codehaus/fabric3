@@ -16,9 +16,9 @@
  */
 package org.fabric3.fabric.services.discovery;
 
+import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
-import java.net.URI;
 
 import org.osoa.sca.annotations.Reference;
 
@@ -26,6 +26,7 @@ import org.fabric3.spi.model.topology.RuntimeInfo;
 import org.fabric3.spi.services.discovery.DiscoveryException;
 import org.fabric3.spi.services.discovery.DiscoveryService;
 import org.fabric3.spi.services.discovery.DiscoveryServiceRegistry;
+import org.fabric3.spi.services.runtime.RuntimeInfoService;
 
 /**
  * A DiscoveryService implementaton that delegates accross mutliple discovery protocols.
@@ -34,9 +35,12 @@ import org.fabric3.spi.services.discovery.DiscoveryServiceRegistry;
  */
 public class DelegatingDiscoveryService implements DiscoveryService {
     private DiscoveryServiceRegistry registry;
+    private RuntimeInfoService runtimeInfoService;
 
-    public DelegatingDiscoveryService(@Reference DiscoveryServiceRegistry registry) {
+    public DelegatingDiscoveryService(@Reference DiscoveryServiceRegistry registry,
+                                      @Reference RuntimeInfoService runtimeInfoService) {
         this.registry = registry;
+        this.runtimeInfoService = runtimeInfoService;
     }
 
     public Set<RuntimeInfo> getParticipatingRuntimes() {
@@ -48,6 +52,10 @@ public class DelegatingDiscoveryService implements DiscoveryService {
     }
 
     public RuntimeInfo getRuntimeInfo(URI runtimeId) {
+        if (runtimeId == null) {
+            // null runtime id denotes the current runtime
+            return runtimeInfoService.getRuntimeInfo();
+        }
         for (DiscoveryService service : registry.getServices()) {
             RuntimeInfo info = service.getRuntimeInfo(runtimeId);
             if (info != null) {
