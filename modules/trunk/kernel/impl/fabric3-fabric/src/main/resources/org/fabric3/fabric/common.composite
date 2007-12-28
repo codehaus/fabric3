@@ -117,6 +117,10 @@
         <system:implementation.system class="org.fabric3.fabric.marshaller.xstream.XStreamMarshallerRegistry"/>
     </component>
 
+    <component name="DelegatingMarshalService">
+        <system:implementation.system class="org.fabric3.fabric.marshaller.DelegatingMarshalServiceImpl"/>
+    </component>
+
     <component name="eventService">
         <system:implementation.system class="org.fabric3.fabric.services.event.EventServiceImpl"/>
     </component>
