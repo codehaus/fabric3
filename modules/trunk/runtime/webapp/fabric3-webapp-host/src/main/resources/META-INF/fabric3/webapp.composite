@@ -104,6 +104,10 @@
         <system:implementation.system class="org.fabric3.fabric.services.messaging.NullMessagingService"/>
     </component>
 
+    <component name="MessagingEventService">
+        <system:implementation.system class="org.fabric3.fabric.services.messaging.MessagingEventServiceImpl"/>
+    </component>
+
     <component name="DiscoveryService">
         <system:implementation.system class="org.fabric3.fabric.services.discovery.SingleVMDiscoveryService"/>
     </component>
