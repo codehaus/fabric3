@@ -19,9 +19,9 @@ package org.fabric3.fabric.services.messaging;
 import java.net.URI;
 import javax.xml.stream.XMLStreamReader;
 
+import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.extension.messaging.AbstractMessagingService;
 import org.fabric3.spi.services.messaging.MessagingException;
 import org.fabric3.spi.services.messaging.MessagingService;
 import org.fabric3.spi.services.messaging.MessagingServiceRegistry;
@@ -32,7 +32,9 @@ import org.fabric3.spi.services.messaging.MessagingServiceRegistry;
  *
  * @version $Rev$ $Date$
  */
-public class DelegatingMessagingService extends AbstractMessagingService {
+@EagerInit
+
+public class DelegatingMessagingService implements MessagingService {
     private MessagingServiceRegistry registry;
 
     public DelegatingMessagingService(@Reference MessagingServiceRegistry registry) {

@@ -21,15 +21,15 @@ package org.fabric3.fabric.services.messaging;
 import java.net.URI;
 import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.extension.messaging.AbstractMessagingService;
 import org.fabric3.spi.services.messaging.MessagingException;
+import org.fabric3.spi.services.messaging.MessagingService;
 
 /**
  * A messaging service implementation fr a single node runtime
  *
  * @version $Rev$ $Date$
  */
-public class NullMessagingService extends AbstractMessagingService {
+public class NullMessagingService implements MessagingService {
 
     public void sendMessage(URI runtimeId, XMLStreamReader content) throws MessagingException {
     }
