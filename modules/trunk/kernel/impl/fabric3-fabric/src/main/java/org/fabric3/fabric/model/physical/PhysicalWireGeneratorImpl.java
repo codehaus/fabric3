@@ -47,7 +47,7 @@ import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.model.type.SCABindingDefinition;
-import org.fabric3.spi.policy.PolicyResolution;
+import org.fabric3.spi.policy.PolicyResult;
 import org.fabric3.spi.policy.PolicyResolutionException;
 import org.fabric3.spi.policy.PolicyResolver;
 import org.osoa.sca.annotations.Reference;
@@ -129,23 +129,23 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         
         PhysicalWireDefinition wireDefinition = new PhysicalWireDefinition();
         
-        PolicyResolution resolution = null;
+        PolicyResult result = null;
         try {
-            resolution = policyResolver.resolvePolicies(serviceContract, sourceBinding, targetBinding, source, target);
+            result = policyResolver.resolvePolicies(serviceContract, sourceBinding, targetBinding, source, target);
         } catch (PolicyResolutionException e) {
             throw new PolicyException(e);
         }
         
         List<Operation<?>> operations = serviceContract.getOperations();
         for (Operation operation : operations) {
-            setOperationDefinition(operation, wireDefinition, resolution.getInterceptedPolicies().get(operation));
+            setOperationDefinition(operation, wireDefinition, result.getInterceptedPolicies().get(operation));
         }
 
         ComponentGenerator<T> targetGenerator = (ComponentGenerator<T>) 
             generatorRegistry.getComponentGenerator(target.getDefinition().getImplementation().getClass());
         
         PhysicalWireTargetDefinition targetDefinition = 
-            targetGenerator.generateWireTarget(service, target, resolution.getTargetIntents(), resolution.getTargetPolicies(), context);
+            targetGenerator.generateWireTarget(service, target, result.getTargetIntents(), result.getTargetPolicies(), context);
 
         wireDefinition.setTarget(targetDefinition);
 
@@ -164,7 +164,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         }
 
         PhysicalWireSourceDefinition sourceDefinition = 
-            sourceGenerator.generateWireSource(source, reference, optimizable, resolution.getSourceIntents(), resolution.getSourcePolicies(), context);
+            sourceGenerator.generateWireSource(source, reference, optimizable, result.getSourceIntents(), result.getSourcePolicies(), context);
         sourceDefinition.setKey(target.getDefinition().getKey());
         wireDefinition.setSource(sourceDefinition);
 
@@ -201,16 +201,16 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         
         PhysicalWireDefinition wireDefinition = new PhysicalWireDefinition();
         
-        PolicyResolution resolution = null;
+        PolicyResult result = null;
         try {
-            resolution = policyResolver.resolvePolicies(contract, sourceBinding, targetBinding, null, component);
+            result = policyResolver.resolvePolicies(contract, sourceBinding, targetBinding, null, component);
         } catch (PolicyResolutionException e) {
             throw new PolicyException(e);
         }
         
         List<Operation<?>> operations = contract.getOperations();
         for (Operation operation : operations) {
-            setOperationDefinition(operation, wireDefinition, resolution.getInterceptedPolicies().get(operation));
+            setOperationDefinition(operation, wireDefinition, result.getInterceptedPolicies().get(operation));
         }
         
         ComponentGenerator<C> targetGenerator = (ComponentGenerator<C>) 
@@ -227,13 +227,13 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         }
         
         PhysicalWireTargetDefinition targetDefinition = 
-            targetGenerator.generateWireTarget(targetService, component, resolution.getTargetIntents(), resolution.getTargetPolicies(), context);
+            targetGenerator.generateWireTarget(targetService, component, result.getTargetIntents(), result.getTargetPolicies(), context);
         wireDefinition.setTarget(targetDefinition);
         
         BindingGenerator sourceGenerator = generatorRegistry.getBindingGenerator(binding.getBinding().getClass());
 
         PhysicalWireSourceDefinition sourceDefinition = 
-            sourceGenerator.generateWireSource(binding, resolution.getSourceIntents(), resolution.getSourcePolicies(), context, service.getDefinition());
+            sourceGenerator.generateWireSource(binding, result.getSourceIntents(), result.getSourcePolicies(), context, service.getDefinition());
         wireDefinition.setSource(sourceDefinition);
 
         setCallbackOperationDefinitions(contract, wireDefinition);
@@ -257,29 +257,29 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         
         PhysicalWireDefinition wireDefinition = new PhysicalWireDefinition();
         
-        PolicyResolution resolution = null;
+        PolicyResult result = null;
         try {
-            resolution = policyResolver.resolvePolicies(contract, sourceBinding, targetBinding, component, null);
+            result = policyResolver.resolvePolicies(contract, sourceBinding, targetBinding, component, null);
         } catch (PolicyResolutionException e) {
             throw new PolicyException(e);
         }
         
         List<Operation<?>> operations = contract.getOperations();
         for (Operation operation : operations) {
-            setOperationDefinition(operation, wireDefinition, resolution.getInterceptedPolicies().get(operation));
+            setOperationDefinition(operation, wireDefinition, result.getInterceptedPolicies().get(operation));
         }
 
         BindingGenerator targetGenerator = generatorRegistry.getBindingGenerator(binding.getBinding().getClass());
         
         PhysicalWireTargetDefinition targetDefinition = 
-            targetGenerator.generateWireTarget(binding, resolution.getTargetIntents(),resolution.getTargetPolicies(),context, reference.getDefinition());
+            targetGenerator.generateWireTarget(binding, result.getTargetIntents(), result.getTargetPolicies(), context, reference.getDefinition());
         wireDefinition.setTarget(targetDefinition);
 
         ComponentGenerator<C> sourceGenerator = (ComponentGenerator<C>) 
             generatorRegistry.getComponentGenerator(component.getDefinition().getImplementation().getClass());
         
         PhysicalWireSourceDefinition sourceDefinition = 
-            sourceGenerator.generateWireSource(component, reference, false, resolution.getSourceIntents(), resolution.getSourcePolicies(), context);
+            sourceGenerator.generateWireSource(component, reference, false, result.getSourceIntents(), result.getSourcePolicies(), context);
         wireDefinition.setSource(sourceDefinition);
 
         setCallbackOperationDefinitions(contract, wireDefinition);

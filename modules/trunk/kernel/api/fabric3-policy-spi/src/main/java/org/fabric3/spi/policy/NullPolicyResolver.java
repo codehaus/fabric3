@@ -27,12 +27,12 @@ import org.fabric3.spi.model.instance.LogicalComponent;
  */
 public class NullPolicyResolver implements PolicyResolver {
     
-    public PolicyResolution resolvePolicies(ServiceContract<?> serviceContract,
+    public PolicyResult resolvePolicies(ServiceContract<?> serviceContract,
                                             LogicalBinding<?> sourceBinding, 
                                             LogicalBinding<?> targetBinding, 
                                             LogicalComponent<?> source, 
                                             LogicalComponent<?> target) throws PolicyResolutionException {
-        return new PolicyResolution();
+        return new PolicyResult();
     }
 
 }

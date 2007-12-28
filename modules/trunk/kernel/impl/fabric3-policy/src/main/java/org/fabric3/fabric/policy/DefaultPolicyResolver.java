@@ -30,7 +30,7 @@ import org.fabric3.scdl.definitions.PolicyPhase;
 import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.spi.policy.PolicyResolution;
+import org.fabric3.spi.policy.PolicyResult;
 import org.fabric3.spi.policy.PolicyResolutionException;
 import org.fabric3.spi.policy.PolicyResolver;
 import org.fabric3.util.closure.Closure;
@@ -77,28 +77,28 @@ public class DefaultPolicyResolver implements PolicyResolver {
      * 
      * @throws PolicyResolutionException If unable to resolve any policies.
      */
-    public PolicyResolution resolvePolicies(ServiceContract<?> serviceContract,
+    public PolicyResult resolvePolicies(ServiceContract<?> serviceContract,
                                             LogicalBinding<?> sourceBinding, 
                                             LogicalBinding<?> targetBinding, 
                                             LogicalComponent<?> source, 
                                             LogicalComponent<?> target) throws PolicyResolutionException {
 
-        Set<Intent> intentsProvidedBySource = new HashSet<Intent>();
-        Set<Intent> intentsProvidedByTarget = new HashSet<Intent>();
+        Set<Intent> sourceIntents = new HashSet<Intent>();
+        Set<Intent> targetIntents = new HashSet<Intent>();
         
-        Set<PolicySet> policySetsProvidedBySource = new HashSet<PolicySet>();
-        Set<PolicySet> policySetsProvidedByTarget = new HashSet<PolicySet>();
+        Set<PolicySet> sourcePolicies = new HashSet<PolicySet>();
+        Set<PolicySet> targetPolicies = new HashSet<PolicySet>();
         
         Map<Operation<?>, Set<PolicySet>> interceptedPolicies = new HashMap<Operation<?>, Set<PolicySet>>();
         
-        intentsProvidedBySource = interactionPolicyHelper.getInteractionIntentsToBeProvided(sourceBinding);
+        sourceIntents = interactionPolicyHelper.getInteractionIntentsToBeProvided(sourceBinding);
         if (source != null) {
-            intentsProvidedBySource.addAll(implementationPolicyHelper.getImplementationIntentsToBeProvided(source));
+            sourceIntents.addAll(implementationPolicyHelper.getImplementationIntentsToBeProvided(source));
         }
             
-        intentsProvidedByTarget = interactionPolicyHelper.getInteractionIntentsToBeProvided(targetBinding);
+        targetIntents = interactionPolicyHelper.getInteractionIntentsToBeProvided(targetBinding);
         if (target != null) {
-            intentsProvidedByTarget.addAll(implementationPolicyHelper.getImplementationIntentsToBeProvided(target));
+            targetIntents.addAll(implementationPolicyHelper.getImplementationIntentsToBeProvided(target));
         }
             
         for (Operation<?> operation : serviceContract.getOperations()) {
@@ -109,31 +109,27 @@ public class DefaultPolicyResolver implements PolicyResolver {
                 
             if (source != null) {
                 policies = implementationPolicyHelper.resolveImplementationIntents(source);
-                policySetsProvidedBySource.addAll(CollectionUtils.filter(policies, PROVIDED));
+                sourcePolicies.addAll(CollectionUtils.filter(policies, PROVIDED));
                 interceptedPolicies.get(operation).addAll(CollectionUtils.filter(policies, INTERCEPTION));
             }
                 
             if (target != null) {
                 policies = implementationPolicyHelper.resolveImplementationIntents(target);
-                policySetsProvidedByTarget.addAll(CollectionUtils.filter(policies, PROVIDED));
+                targetPolicies.addAll(CollectionUtils.filter(policies, PROVIDED));
                 interceptedPolicies.get(operation).addAll(CollectionUtils.filter(policies, INTERCEPTION));
             }
                 
             policies = interactionPolicyHelper.resolveInteractionIntents(sourceBinding, operation);
-            policySetsProvidedBySource.addAll(CollectionUtils.filter(policies, PROVIDED));
+            sourcePolicies.addAll(CollectionUtils.filter(policies, PROVIDED));
             interceptedPolicies.get(operation).addAll(CollectionUtils.filter(policies, INTERCEPTION));
                 
             policies = interactionPolicyHelper.resolveInteractionIntents(targetBinding, operation);
-            policySetsProvidedByTarget.addAll(CollectionUtils.filter(policies, PROVIDED));
+            targetPolicies.addAll(CollectionUtils.filter(policies, PROVIDED));
             interceptedPolicies.get(operation).addAll(CollectionUtils.filter(policies, INTERCEPTION));
                 
         }
         
-        return new PolicyResolution(intentsProvidedBySource, 
-                                    intentsProvidedByTarget, 
-                                    policySetsProvidedBySource, 
-                                    policySetsProvidedByTarget,
-                                    interceptedPolicies);
+        return new PolicyResult(sourceIntents, targetIntents, sourcePolicies, targetPolicies, interceptedPolicies);
         
     }
 
