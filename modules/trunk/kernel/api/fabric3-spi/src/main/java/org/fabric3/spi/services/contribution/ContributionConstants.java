@@ -32,9 +32,6 @@ public final class ContributionConstants {
      */
     public static final String SCA_CONTRIBUTION_GENERATED_META = "META-INF/sca-contribution-generated.xml";
 
-    @Deprecated
-    public static final String DEFAULT_STORE = "DefaultStore";
-
     private ContributionConstants() {
     }
 }
