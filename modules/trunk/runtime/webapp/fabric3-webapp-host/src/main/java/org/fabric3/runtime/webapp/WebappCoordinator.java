@@ -65,7 +65,6 @@ import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.services.contribution.Contribution;
-import org.fabric3.spi.services.contribution.ContributionConstants;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.MetaDataStoreException;
@@ -84,7 +83,6 @@ import org.fabric3.spi.services.work.WorkScheduler;
  * @version $Rev$ $Date$
  */
 public class WebappCoordinator implements RuntimeLifecycleCoordinator<WebappRuntime, Bootstrapper> {
-    private static final String EXTENSIONS = "extensions";
     public static final String EXTENSIONS_DIR = "/WEB-INF/fabric3/extensions";
     private ClassLoader bootClassLoader;
 
@@ -279,8 +277,9 @@ public class WebappCoordinator implements RuntimeLifecycleCoordinator<WebappRunt
             ContributionService contributionService = runtime.getSystemComponent(ContributionService.class,
                                                                                  CONTRIBUTION_SERVICE_URI);
             ContributionSource source = new FileContributionSource(intentsLocation, -1, new byte[0]);
-            URI uri = contributionService.contribute(ContributionConstants.DEFAULT_STORE, source);
-            DefinitionsRegistry definitionsRegistry = runtime.getSystemComponent(DefinitionsRegistry.class, DEFINITIONS_REGISTRY);
+            URI uri = contributionService.contribute(source);
+            DefinitionsRegistry definitionsRegistry =
+                    runtime.getSystemComponent(DefinitionsRegistry.class, DEFINITIONS_REGISTRY);
             List<URI> intents = new ArrayList<URI>();
             intents.add(uri);
             definitionsRegistry.activateDefinitions(intents);
@@ -323,7 +322,7 @@ public class WebappCoordinator implements RuntimeLifecycleCoordinator<WebappRunt
             for (URL file : files) {
                 try {
                     ContributionSource source = new FileContributionSource(file, -1, new byte[0]);
-                    contributionUris.add(contributionService.contribute(EXTENSIONS, source));
+                    contributionUris.add(contributionService.contribute(source));
                 } catch (ContributionException e) {
                     throw new ExtensionInitializationException("Error loading extension", file.toString(), e);
                 }
@@ -416,7 +415,6 @@ public class WebappCoordinator implements RuntimeLifecycleCoordinator<WebappRunt
             throw new InitializationException(e);
         }
     }
-
 
 
 }
