@@ -27,9 +27,19 @@
            name="org.fabric3.policy.Policy"
            autowire="true">
 
+    <!-- Interception policy helper -->
+    <component name="org.fabric3.fabric.policy.InteractionPolicyHelper">
+        <system:implementation.system class="org.fabric3.fabric.policy.InteractionPolicyHelperImpl"/>
+    </component>
+
+    <!-- Implementation policy helper -->
+    <component name="org.fabric3.fabric.policy.ImplementationPolicyHelper">
+        <system:implementation.system class="org.fabric3.fabric.policy.ImplementationPolicyHelperImpl"/>
+    </component>
+
     <!-- Policy resolver -->
-    <component name="org.fabric3.fabric.policy.registry.DefaultPolicyResolver">
-        <system:implementation.system class="org.fabric3.fabric.policy.registry.DefaultPolicyResolver"/>
+    <component name="org.fabric3.fabric.policy.DefaultPolicyResolver">
+        <system:implementation.system class="org.fabric3.fabric.policy.DefaultPolicyResolver"/>
     </component>
     
     <!-- Simple interceptor builder -->

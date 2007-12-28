@@ -55,8 +55,6 @@ import org.fabric3.fabric.model.physical.PhysicalModelGenerator;
 import org.fabric3.fabric.model.physical.PhysicalModelGeneratorImpl;
 import org.fabric3.fabric.model.physical.PhysicalOperationHelper;
 import org.fabric3.fabric.model.physical.PhysicalOperationHelperImpl;
-import org.fabric3.fabric.model.physical.PhysicalPolicyGenerator;
-import org.fabric3.fabric.model.physical.PhysicalPolicyGeneratorImpl;
 import org.fabric3.fabric.model.physical.PhysicalWireGenerator;
 import org.fabric3.fabric.model.physical.PhysicalWireGeneratorImpl;
 import org.fabric3.fabric.runtime.ComponentNames;
@@ -87,7 +85,7 @@ import org.fabric3.spi.builder.resource.ResourceContainerBuilderRegistry;
 import org.fabric3.spi.command.CommandExecutorRegistry;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.generator.GeneratorRegistry;
-import org.fabric3.spi.policy.registry.NullPolicyResolver;
+import org.fabric3.spi.policy.NullPolicyResolver;
 import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
 import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
@@ -133,11 +131,8 @@ public class BootstrapAssemblyFactory {
 
         GeneratorRegistry generatorRegistry = createGeneratorRegistry(classLoaderRegistry);
         PhysicalOperationHelper physicalOperationHelper = new PhysicalOperationHelperImpl();
-        PhysicalPolicyGenerator policyGenerator = new PhysicalPolicyGeneratorImpl(new NullPolicyResolver(),
-                                                                                  physicalOperationHelper,
-                                                                                  generatorRegistry);
         PhysicalWireGenerator wireGenerator = new PhysicalWireGeneratorImpl(generatorRegistry,
-                                                                            policyGenerator,
+                                                                            new NullPolicyResolver(),
                                                                             physicalOperationHelper);
         PhysicalModelGenerator physicalModelGenerator =
                 createPhysicalModelGenerator(generatorRegistry, routingService, logicalComponentManager, wireGenerator);

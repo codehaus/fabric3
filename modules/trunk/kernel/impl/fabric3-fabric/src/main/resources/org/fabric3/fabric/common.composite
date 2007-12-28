@@ -28,10 +28,6 @@
 
     <property name="XuserConfig" type="f3:userConfig"/>
 
-    <component name="physicalPolicyGenerator">
-        <system:implementation.system class="org.fabric3.fabric.model.physical.PhysicalPolicyGeneratorImpl"/>
-    </component>
-
     <component name="physicalOperationHelper">
         <system:implementation.system class="org.fabric3.fabric.model.physical.PhysicalOperationHelperImpl"/>
     </component>

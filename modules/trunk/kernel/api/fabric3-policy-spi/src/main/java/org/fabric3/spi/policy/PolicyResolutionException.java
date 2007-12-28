@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.policy.registry;
+package org.fabric3.spi.policy;
 
 import org.fabric3.host.Fabric3Exception;
 

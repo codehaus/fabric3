@@ -21,7 +21,7 @@ import java.util.Set;
 
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
-import org.fabric3.spi.policy.registry.PolicyResult;
+import org.fabric3.spi.policy.PolicyResult;
 import org.fabric3.util.closure.Closure;
 import org.fabric3.util.closure.CollectionUtils;
 import org.w3c.dom.Element;
