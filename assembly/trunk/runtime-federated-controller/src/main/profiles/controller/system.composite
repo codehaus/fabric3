@@ -106,6 +106,10 @@
         <system:implementation.system class="org.fabric3.fabric.services.messaging.MessagingServiceRegistryImpl"/>
     </component>
 
+    <component name="MessagingEventService">
+        <system:implementation.system class="org.fabric3.fabric.services.messaging.MessagingEventServiceImpl"/>
+    </component>
+
     <component name="DelegatingMessagingService">
         <system:implementation.system class="org.fabric3.fabric.services.messaging.DelegatingMessagingService"/>
     </component>
