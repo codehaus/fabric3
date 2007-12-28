@@ -37,10 +37,11 @@ public interface MarshalService {
     /**
      * Unmarshalls an XML stream to an object.
      *
+     * @param type   the unmarshalled type
      * @param reader Reader from which marshalled information is read.
      * @return object from the marshalled stream.
      * @throws MarshalException if an error is encountered unmarshalling
      */
-    Object unmarshall(XMLStreamReader reader) throws MarshalException;
+    <T> T unmarshall(Class<T> type, XMLStreamReader reader) throws MarshalException;
 
 }
