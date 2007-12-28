@@ -22,7 +22,6 @@ import java.io.Reader;
 import java.io.StringReader;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
@@ -32,30 +31,30 @@ import net.jxta.resolver.QueryHandler;
 import net.jxta.resolver.ResolverService;
 
 import org.fabric3.messaging.jxta.JxtaException;
-import org.fabric3.messaging.jxta.JxtaMessagingService;
-import org.fabric3.spi.services.messaging.RequestListener;
+import org.fabric3.spi.services.messaging.MessagingEventService;
 
 /**
- * Generic quety handler for Fabric3 PRP (Peer Resolver Protocol) messages. The
- * <code>processQuery</code> method is invoked on the receiver and the <code>
- * processResponse</code> is invoked on the sender when the receiver responds.
- * @version $Revision$ $Date$
+ * Generic quety handler for Fabric3 PRP (Peer Resolver Protocol) messages. The <code>processQuery</code> method is
+ * invoked on the receiver and the <code> processResponse</code> is invoked on the sender when the receiver responds.
  *
+ * @version $Revision$ $Date$
  */
 public class Fabric3QueryHandler implements QueryHandler {
 
-    /** Discovery service. */
-    private final JxtaMessagingService messagingService;
+    /**
+     * Discovery service.
+     */
+    private final MessagingEventService eventService;
 
     private final XMLInputFactory xmlFactory;
 
     /**
      * Initializes the JXTA resolver service and Fabric3 discovery service.
      *
-     * @param messagingService Fabric3 messaging service.
+     * @param eventService messaging event service.
      */
-    public Fabric3QueryHandler(final JxtaMessagingService messagingService) {
-        this.messagingService = messagingService;
+    public Fabric3QueryHandler(MessagingEventService eventService) {
+        this.eventService = eventService;
         xmlFactory = XMLInputFactory.newInstance("javax.xml.stream.XMLInputFactory", getClass().getClassLoader());
     }
 
@@ -63,24 +62,16 @@ public class Fabric3QueryHandler implements QueryHandler {
      * Processes a query message.
      */
     public int processQuery(ResolverQueryMsg queryMessage) {
-
         try {
-
-            final String message = queryMessage.getQuery();
+            String message = queryMessage.getQuery();
+            QName messageType = getType(message);
+            // FIXME we should chnage the transport serialization so we do not need to reposition the stream to the top
+            // of the body
             Reader reader = new StringReader(message);
             XMLStreamReader xmlReader = xmlFactory.createXMLStreamReader(reader);
-            //noinspection StatementWithEmptyBody
-            while (xmlReader.next() != XMLStreamConstants.START_ELEMENT);
-
-            final QName messageType = xmlReader.getName();
-            RequestListener messageListener = messagingService.getRequestListener(messageType);
-            if(messageListener != null) {
-                messageListener.onRequest(xmlReader);
-
-            }
+            eventService.publish(messageType, xmlReader);
             return ResolverService.OK;
-
-        } catch(XMLStreamException ex) {
+        } catch (XMLStreamException ex) {
             throw new JxtaException(ex);
         }
 
@@ -92,4 +83,11 @@ public class Fabric3QueryHandler implements QueryHandler {
     public void processResponse(ResolverResponseMsg responseMessage) {
     }
 
+    private QName getType(String message) throws XMLStreamException {
+        Reader reader = new StringReader(message);
+        XMLStreamReader xmlReader = xmlFactory.createXMLStreamReader(reader);
+        xmlReader.nextTag();
+        return xmlReader.getName();
+
+    }
 }

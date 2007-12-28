@@ -37,6 +37,7 @@ import org.fabric3.jxta.JxtaService;
 import org.fabric3.messaging.jxta.prp.Fabric3QueryHandler;
 import org.fabric3.spi.model.topology.RuntimeInfo;
 import org.fabric3.spi.services.discovery.DiscoveryService;
+import org.fabric3.spi.services.messaging.MessagingEventService;
 import org.fabric3.spi.services.messaging.MessagingException;
 import org.fabric3.spi.services.messaging.MessagingServiceRegistry;
 import org.fabric3.spi.util.stax.StaxUtil;
@@ -69,6 +70,8 @@ public class JxtaMessagingService extends AbstractMessagingService {
      */
     private DiscoveryService discoveryService;
     private MessagingServiceRegistry messagingServiceRegistry;
+    private MessagingEventService eventService;
+
 
     /**
      * Injected JXTA service to be used.
@@ -93,6 +96,11 @@ public class JxtaMessagingService extends AbstractMessagingService {
     @Reference
     public void setMessagingserviceRegistry(MessagingServiceRegistry messagingServiceRegistry) {
         this.messagingServiceRegistry = messagingServiceRegistry;
+    }
+
+    @Reference
+    public void setEventService(MessagingEventService eventService) {
+        this.eventService = eventService;
     }
 
     /**
@@ -151,7 +159,7 @@ public class JxtaMessagingService extends AbstractMessagingService {
      */
     private void setupResolver() {
         resolverService = domainGroup.getResolverService();
-        QueryHandler queryHandler = new Fabric3QueryHandler(this);
+        QueryHandler queryHandler = new Fabric3QueryHandler(eventService);
         resolverService.registerHandler(Fabric3QueryHandler.class.getSimpleName(), queryHandler);
     }
 
