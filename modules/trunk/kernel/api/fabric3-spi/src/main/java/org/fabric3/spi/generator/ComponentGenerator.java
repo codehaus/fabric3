@@ -30,7 +30,6 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
-import org.w3c.dom.Element;
 
 /**
  * Implementations are responsible for generating {@link org.fabric3.spi.model.physical.PhysicalChangeSet} metadata used
