@@ -47,7 +47,7 @@ public class DelegatingMessagingService implements MessagingService {
 
     public void sendMessage(URI runtimeId, XMLStreamReader content) throws MessagingException {
         // FIXME selectively dispatch message based on a runtime scheme
-        String scheme = null;
+        String scheme = runtimeId.getScheme();
         MessagingService service = registry.getServiceForScheme(scheme);
         if (service == null) {
             throw new UnknownMessagingSchemeException("No messaging service for scheme [" + scheme + "]", scheme);
