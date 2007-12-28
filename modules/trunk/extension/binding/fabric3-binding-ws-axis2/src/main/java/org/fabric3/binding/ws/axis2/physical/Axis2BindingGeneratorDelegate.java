@@ -26,6 +26,7 @@ import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.definitions.Intent;
+import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.generator.BindingGeneratorDelegate;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GenerationException;
@@ -33,7 +34,6 @@ import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.osoa.sca.annotations.Reference;
-import org.w3c.dom.Element;
 
 /**
  * @version $Revision$ $Date$
@@ -57,7 +57,7 @@ public class Axis2BindingGeneratorDelegate implements BindingGeneratorDelegate<W
      */
     public Axis2WireSourceDefinition generateWireSource(LogicalBinding<WsBindingDefinition> binding,
                                                            Set<Intent> intentsToBeProvided,
-                                                           Set<Element> policiesToBeProvided, 
+                                                           Set<PolicySet> policiesToBeProvided, 
                                                            GeneratorContext context, 
                                                            ServiceDefinition serviceDefinition) throws GenerationException {
         
@@ -87,7 +87,7 @@ public class Axis2BindingGeneratorDelegate implements BindingGeneratorDelegate<W
      */
     public Axis2WireTargetDefinition generateWireTarget(LogicalBinding<WsBindingDefinition> binding,
                                                         Set<Intent> intentsToBeProvided, 
-                                                        Set<Element> policiesToBeProvided,
+                                                        Set<PolicySet> policiesToBeProvided,
                                                         GeneratorContext context, 
                                                         ReferenceDefinition referenceDefinition) throws GenerationException {
 
@@ -110,17 +110,15 @@ public class Axis2BindingGeneratorDelegate implements BindingGeneratorDelegate<W
     }
     
     private void setPolicyConfigs(Axis2PolicyAware policyAware, 
-                                  Set<Element> policiesToBeProvided, 
+                                  Set<PolicySet> policiesToBeProvided, 
                                   Set<Intent> intentsToBeProvided) throws Axis2GenerationException {
         
-        for (Element policyDefinition : policiesToBeProvided) {
+        for (PolicySet policySet : policiesToBeProvided) {
             
-            QName policyElementName = new QName(policyDefinition.getNamespaceURI(), policyDefinition.getNodeName());
-            
-            if (POLICY_ELEMENT_NAME.equals(policyElementName)) {
-                throw new Axis2GenerationException("Unsupported policy element:" + policyElementName);
+            if (POLICY_ELEMENT_NAME.equals(policySet.getExtensionName())) {
+                throw new Axis2GenerationException("Unsupported policy element:" + policySet.getExtensionName());
             }
-            policyAware.addPolicyDefinition(policyDefinition);
+            policyAware.addPolicyDefinition(policySet.getExtension());
         }
         
     }

@@ -11,6 +11,7 @@ import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.definitions.Intent;
+import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
@@ -26,7 +27,6 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
-import org.w3c.dom.Element;
 
 /**
  * @version $Rev$ $Date$
@@ -86,7 +86,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
                                                            LogicalReference reference,
                                                            boolean optimizable,
                                                            Set<Intent> implementationIntentsToBeProvided,
-                                                           Set<Element> implememenantionPolicySetsToBeProvided,
+                                                           Set<PolicySet> implememenantionPolicySetsToBeProvided,
                                                            GeneratorContext context) throws GenerationException {
         JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
         wireDefinition.setUri(reference.getUri());
@@ -100,7 +100,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
                                                            LogicalComponent<ImplementationJUnit> target,
                                                            Set<Intent> implementationIntentsToBeProvided,
-                                                           Set<Element> implememenantionPolicySetsToBeProvided,
+                                                           Set<PolicySet> implememenantionPolicySetsToBeProvided,
                                                            GeneratorContext context) throws GenerationException {
         JavaWireTargetDefinition wireDefinition = new JavaWireTargetDefinition();
         wireDefinition.setUri(service.getUri());

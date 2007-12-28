@@ -26,6 +26,7 @@ import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.definitions.Intent;
+import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.generator.BindingGeneratorDelegate;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GenerationException;
@@ -34,7 +35,6 @@ import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
-import org.w3c.dom.Element;
 
 /**
  * Implementation of the hessian binding generator.
@@ -51,7 +51,7 @@ public class CxfBindingGeneratorDelegate implements BindingGeneratorDelegate<WsB
 
     public CxfWireSourceDefinition generateWireSource(LogicalBinding<WsBindingDefinition> logicalBinding,
                                                      Set<Intent> intentsToBeProvided,
-                                                     Set<Element> policySetsToBeProvided,
+                                                     Set<PolicySet> policySetsToBeProvided,
                                                      GeneratorContext generatorContext,
                                                      ServiceDefinition serviceDefinition) throws GenerationException {
         CxfWireSourceDefinition hwsd = new CxfWireSourceDefinition();
@@ -69,7 +69,7 @@ public class CxfBindingGeneratorDelegate implements BindingGeneratorDelegate<WsB
 
     public CxfWireTargetDefinition generateWireTarget(LogicalBinding<WsBindingDefinition> logicalBinding,
                                                      Set<Intent> intentsToBeProvided,
-                                                     Set<Element> policySetsToBeProvided,
+                                                     Set<PolicySet> policySetsToBeProvided,
                                                      GeneratorContext generatorContext,
                                                      ReferenceDefinition referenceDefinition)
             throws GenerationException {

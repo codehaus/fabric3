@@ -22,6 +22,7 @@ import java.util.Set;
 
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.definitions.Intent;
+import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
@@ -68,7 +69,7 @@ public interface ComponentGenerator<C extends LogicalComponent<? extends Impleme
                                                     LogicalReference reference, 
                                                     boolean optimizable, 
                                                     Set<Intent> intentsToBeProvided,
-                                                    Set<Element> policySetsToBeProvided,
+                                                    Set<PolicySet> policySetsToBeProvided,
                                                     GeneratorContext context) throws GenerationException;
 
     /**
@@ -84,7 +85,7 @@ public interface ComponentGenerator<C extends LogicalComponent<? extends Impleme
     PhysicalWireTargetDefinition generateWireTarget(LogicalService service, 
                                                     C target, 
                                                     Set<Intent> intentsToBeProvided,
-                                                    Set<Element> policySetsToBeProvided,
+                                                    Set<PolicySet> policySetsToBeProvided,
                                                     GeneratorContext context) throws GenerationException;
 
     /**

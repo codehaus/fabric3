@@ -28,6 +28,7 @@ import org.fabric3.fabric.generator.PolicyException;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
@@ -47,11 +48,10 @@ import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.model.type.SCABindingDefinition;
-import org.fabric3.spi.policy.PolicyResult;
 import org.fabric3.spi.policy.PolicyResolutionException;
 import org.fabric3.spi.policy.PolicyResolver;
+import org.fabric3.spi.policy.PolicyResult;
 import org.osoa.sca.annotations.Reference;
-import org.w3c.dom.Element;
 
 /**
  * @version $Revision$ $Date$
@@ -288,7 +288,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
 
     }
 
-    private void setOperationDefinition(Operation<?> operation, PhysicalWireDefinition wireDefinition, Set<Element> policies)
+    private void setOperationDefinition(Operation<?> operation, PhysicalWireDefinition wireDefinition, Set<PolicySet> policies)
             throws GenerationException {
 
         PhysicalOperationDefinition physicalOperation = physicalOperationHelper.mapOperation(operation);
@@ -311,18 +311,18 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
     }
 
     @SuppressWarnings("unchecked")
-    private Set<PhysicalInterceptorDefinition> generateInterceptorDefinitions(Set<Element> policies) throws GenerationException {
+    private Set<PhysicalInterceptorDefinition> generateInterceptorDefinitions(Set<PolicySet> policies) throws GenerationException {
 
         if (policies == null) {
             return Collections.EMPTY_SET;
         }
 
         Set<PhysicalInterceptorDefinition> interceptors = new HashSet<PhysicalInterceptorDefinition>();
-        for (Element policy : policies) {
-            QName qName = new QName(policy.getNamespaceURI(), policy.getNodeName());
+        for (PolicySet policy : policies) {
+            QName qName = policy.getExtensionName();
             InterceptorDefinitionGenerator interceptorDefinitionGenerator = 
                 generatorRegistry.getInterceptorDefinitionGenerator(qName);
-            interceptors.add(interceptorDefinitionGenerator.generate(policy, null));
+            interceptors.add(interceptorDefinitionGenerator.generate(policy.getExtension(), null));
         }
         return interceptors;
 

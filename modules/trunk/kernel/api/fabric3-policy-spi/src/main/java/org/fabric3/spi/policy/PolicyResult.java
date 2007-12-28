@@ -25,26 +25,17 @@ import java.util.Set;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
-import org.fabric3.util.closure.Closure;
-import org.fabric3.util.closure.CollectionUtils;
-import org.w3c.dom.Element;
 
 /**
  * @version $Revision$ $Date$
  */
 public class PolicyResult {
     
-    private static Closure<PolicySet, Element> TRANSFORMER = new Closure<PolicySet, Element>() {
-        public Element execute(PolicySet object) {
-            return object.getExtension();
-        }
-    };
-    
     private final Set<Intent> sourceIntents = new HashSet<Intent>();
     private final Set<Intent> targetIntents = new HashSet<Intent>();
-    private final Set<Element> sourcePolicies = new HashSet<Element>();
-    private final Set<Element> targetPolicies = new HashSet<Element>();
-    private final Map<Operation<?>, Set<Element>> interceptedPolicies = new HashMap<Operation<?>, Set<Element>>();
+    private final Set<PolicySet> sourcePolicies = new HashSet<PolicySet>();
+    private final Set<PolicySet> targetPolicies = new HashSet<PolicySet>();
+    private final Map<Operation<?>, Set<PolicySet>> interceptedPolicies = new HashMap<Operation<?>, Set<PolicySet>>();
     
     public PolicyResult() {
     }
@@ -58,12 +49,10 @@ public class PolicyResult {
         this.sourceIntents.addAll(sourceIntents);
         this.targetIntents.addAll(targetIntents);
         
-        this.sourcePolicies.addAll(CollectionUtils.transform(sourcePolicies, TRANSFORMER));
-        this.targetPolicies.addAll(CollectionUtils.transform(targetPolicies, TRANSFORMER));
+        this.sourcePolicies.addAll(sourcePolicies);
+        this.targetPolicies.addAll(targetPolicies);
         
-        for (Map.Entry<Operation<?>, Set<PolicySet>> policy : interceptedPolicies.entrySet()) {
-            this.interceptedPolicies.put(policy.getKey(), CollectionUtils.transform(policy.getValue(), TRANSFORMER));
-        }
+        this.interceptedPolicies.putAll(interceptedPolicies);
         
     }
 
@@ -75,15 +64,15 @@ public class PolicyResult {
         return Collections.unmodifiableSet(targetIntents);
     }
 
-    public Set<Element> getSourcePolicies() {
+    public Set<PolicySet> getSourcePolicies() {
         return sourcePolicies;
     }
 
-    public Set<Element> getTargetPolicies() {
+    public Set<PolicySet> getTargetPolicies() {
         return targetPolicies;
     }
 
-    public Map<Operation<?>, Set<Element>> getInterceptedPolicies() {
+    public Map<Operation<?>, Set<PolicySet>> getInterceptedPolicies() {
         return Collections.unmodifiableMap(interceptedPolicies);
     }
 

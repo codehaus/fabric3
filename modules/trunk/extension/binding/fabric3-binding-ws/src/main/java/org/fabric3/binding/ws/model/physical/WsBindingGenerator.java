@@ -21,10 +21,6 @@ package org.fabric3.binding.ws.model.physical;
 import java.util.Map;
 import java.util.Set;
 
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
-import org.w3c.dom.Element;
-
 import org.fabric3.binding.ws.model.logical.WsBindingDefinition;
 import org.fabric3.extension.generator.BindingGeneratorExtension;
 import org.fabric3.scdl.ReferenceDefinition;
@@ -37,6 +33,8 @@ import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Implementation of the WS binding generator.
@@ -55,7 +53,7 @@ public class WsBindingGenerator extends BindingGeneratorExtension<PhysicalWireSo
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalBinding<WsBindingDefinition> logicalBinding,
                                                            Set<Intent> intentsToBeProvided,
-                                                           Set<Element> policySetsToBeProvided,
+                                                           Set<PolicySet> policySetsToBeProvided,
                                                            GeneratorContext generatorContext,
                                                            ServiceDefinition serviceDefinition)
             throws GenerationException {
@@ -72,7 +70,7 @@ public class WsBindingGenerator extends BindingGeneratorExtension<PhysicalWireSo
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalBinding<WsBindingDefinition> logicalBinding,
                                                            Set<Intent> intentsToBeProvided,
-                                                           Set<Element> policySetsToBeProvided,
+                                                           Set<PolicySet> policySetsToBeProvided,
                                                            GeneratorContext generatorContext,
                                                            ReferenceDefinition referenceDefinition)
             throws GenerationException {

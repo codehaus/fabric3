@@ -21,6 +21,7 @@ import java.util.Set;
 
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.definitions.Intent;
+import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
@@ -35,7 +36,6 @@ import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
-import org.w3c.dom.Element;
 
 /**
  * @version $Revision$ $Date$
@@ -95,7 +95,7 @@ public class MockComponentGenerator implements ComponentGenerator<LogicalCompone
     public MockWireTargetDefinition generateWireTarget(LogicalService service,
                                                        LogicalComponent<ImplementationMock> component,
                                                        Set<Intent> implementationIntentsToBeProvided,
-                                                       Set<Element> implememenantionPolicySetsToBeProvided,
+                                                       Set<PolicySet> implememenantionPolicySetsToBeProvided,
                                                        GeneratorContext context) throws GenerationException {
 
         MockWireTargetDefinition definition = new MockWireTargetDefinition();
@@ -121,7 +121,7 @@ public class MockComponentGenerator implements ComponentGenerator<LogicalCompone
                                                            LogicalReference reference,
                                                            boolean optmized,
                                                            Set<Intent> implementationIntentsToBeProvided,
-                                                           Set<Element> implememenantionPolicySetsToBeProvided,
+                                                           Set<PolicySet> implememenantionPolicySetsToBeProvided,
                                                            GeneratorContext generatorContext) {
         throw new UnsupportedOperationException("Mock objects cannot be source of a wire");
     }
