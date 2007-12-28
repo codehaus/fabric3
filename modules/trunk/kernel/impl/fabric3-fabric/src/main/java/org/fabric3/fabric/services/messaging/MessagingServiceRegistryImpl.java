@@ -31,17 +31,14 @@ public class MessagingServiceRegistryImpl implements MessagingServiceRegistry {
     private Map<String, MessagingService> services = new HashMap<String, MessagingService>();
 
     public void register(MessagingService service) {
-        if (!services.isEmpty()) {
-            throw new UnsupportedOperationException("Not yet implemented");
-        }
-        services.put("scheme", service);
+        services.put(service.getScheme(), service);
     }
 
     public void unRegister(MessagingService service) {
-        services.remove("scheme");
+        services.remove(service.getScheme());
     }
 
     public MessagingService getServiceForScheme(String scheme) {
-        return services.get("scheme");
+        return services.get(scheme);
     }
 }

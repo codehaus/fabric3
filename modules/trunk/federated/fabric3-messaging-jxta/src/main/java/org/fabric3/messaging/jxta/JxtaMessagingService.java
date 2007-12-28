@@ -103,6 +103,10 @@ public class JxtaMessagingService implements MessagingService {
         this.eventService = eventService;
     }
 
+    public String getScheme() {
+        return "jxta";
+    }
+
     /**
      * Sends a message to the specified runtime.
      *

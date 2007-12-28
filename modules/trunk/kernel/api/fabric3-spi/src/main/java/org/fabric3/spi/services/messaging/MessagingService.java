@@ -29,6 +29,13 @@ import javax.xml.stream.XMLStreamReader;
 public interface MessagingService {
 
     /**
+     * Returns the messaging scheme handled by this service.
+     *
+     * @return the messaging scheme handled by this service
+     */
+    String getScheme();
+
+    /**
      * Sends a message to the specified runtime. The method returns a unique message id for the sent message. The
      * consumers can use the message id for correlating responses to sent messages.
      *

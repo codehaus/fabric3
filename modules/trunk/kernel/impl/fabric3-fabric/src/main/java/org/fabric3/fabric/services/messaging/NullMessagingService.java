@@ -31,6 +31,10 @@ import org.fabric3.spi.services.messaging.MessagingService;
  */
 public class NullMessagingService implements MessagingService {
 
+    public String getScheme() {
+        return null;
+    }
+
     public void sendMessage(URI runtimeId, XMLStreamReader content) throws MessagingException {
     }
 

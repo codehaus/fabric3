@@ -41,6 +41,10 @@ public class DelegatingMessagingService implements MessagingService {
         this.registry = registry;
     }
 
+    public String getScheme() {
+        return null;
+    }
+
     public void sendMessage(URI runtimeId, XMLStreamReader content) throws MessagingException {
         // FIXME selectively dispatch message based on a runtime scheme
         String scheme = null;
