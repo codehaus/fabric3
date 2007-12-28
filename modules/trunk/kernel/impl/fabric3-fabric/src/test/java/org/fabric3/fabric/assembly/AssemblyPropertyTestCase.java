@@ -17,28 +17,27 @@
 package org.fabric3.fabric.assembly;
 
 import java.net.URI;
-
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPathExpressionException;
 
 import junit.framework.TestCase;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import org.fabric3.fabric.model.logical.AbstractComponentInstantiator;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.spi.model.instance.LogicalComponent;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  * @version $Rev$ $Date$
  */
 public class AssemblyPropertyTestCase extends TestCase {
     private static final DocumentBuilderFactory FACTORY = DocumentBuilderFactory.newInstance();
-    private AbstractComponentInstantiator<Implementation<?>> componentInstantiator;
+    private AbstractComponentInstantiator componentInstantiator;
     private LogicalComponent<CompositeImplementation> domain;
     private Element root;
     private Document property;
@@ -76,9 +75,9 @@ public class AssemblyPropertyTestCase extends TestCase {
         NodeList list = child.getChildNodes();
         assertEquals(2, list.getLength());
         assertEquals("http", list.item(0).getNodeName());
-        assertEquals("1", ((Element)list.item(0)).getAttribute("index"));
+        assertEquals("1", ((Element) list.item(0)).getAttribute("index"));
         assertEquals("http", list.item(1).getNodeName());
-        assertEquals("2", ((Element)list.item(1)).getAttribute("index"));
+        assertEquals("2", ((Element) list.item(1)).getAttribute("index"));
     }
 
     public void testUnknownVariable() {
@@ -92,14 +91,17 @@ public class AssemblyPropertyTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        componentInstantiator = new AbstractComponentInstantiator<Implementation<?>>() {
-            public LogicalComponent<Implementation<?>> instantiate(LogicalComponent<CompositeImplementation> parent,
-                                                                   ComponentDefinition<Implementation<?>> definition
-            ) throws InstantiationException {
+        componentInstantiator = new AbstractComponentInstantiator() {
+            public <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalComponent<CompositeImplementation> parent,
+                                                                                 ComponentDefinition<I> definition)
+                    throws InstantiationException {
                 return null;
             }
         };
-        domain = new LogicalComponent<CompositeImplementation>(URI.create("sca://./domain"), URI.create("sca://./domain"), null, null);
+        domain = new LogicalComponent<CompositeImplementation>(URI.create("sca://./domain"),
+                                                               URI.create("sca://./domain"),
+                                                               null,
+                                                               null);
 
         property = FACTORY.newDocumentBuilder().newDocument();
         root = property.createElement("value");

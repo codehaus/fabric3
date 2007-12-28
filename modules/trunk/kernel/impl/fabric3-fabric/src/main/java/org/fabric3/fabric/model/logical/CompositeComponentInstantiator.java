@@ -40,51 +40,59 @@ import org.fabric3.spi.model.instance.LogicalService;
 /**
  * @version $Revision$ $Date$
  */
-public class CompositeComponentInstantiator extends AbstractComponentInstantiator<CompositeImplementation> {
+public class CompositeComponentInstantiator extends AbstractComponentInstantiator {
 
-    private ComponentInstantiator<Implementation<?>> atomicComponentInstantiator;
+    private ComponentInstantiator atomicComponentInstantiator;
 
 
     public CompositeComponentInstantiator(
             @Reference(name = "atomicComponentInstantiator")
-            ComponentInstantiator<Implementation<?>> atomicComponentInstantiator) {
+            ComponentInstantiator atomicComponentInstantiator) {
         this.atomicComponentInstantiator = atomicComponentInstantiator;
     }
 
     @SuppressWarnings("unchecked")
-    public LogicalComponent<CompositeImplementation> instantiate(LogicalComponent<CompositeImplementation> parent,
-                                                                 ComponentDefinition<CompositeImplementation> definition
-    ) throws InstantiationException {
+    public <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalComponent<CompositeImplementation> parent,
+                                                                         ComponentDefinition<I> definition)
+            throws InstantiationException {
+        ComponentDefinition<CompositeImplementation> def = (ComponentDefinition<CompositeImplementation>) definition;
+        return (LogicalComponent<I>) instantiateComposite(parent, def);
+    }
+
+    public LogicalComponent<CompositeImplementation> instantiateComposite(LogicalComponent<CompositeImplementation> parent,
+                                                                          ComponentDefinition<CompositeImplementation> definition)
+            throws InstantiationException {
 
         URI runtimeId = definition.getRuntimeId();
         URI uri = URI.create(parent.getUri() + "/" + definition.getName());
+        Composite composite = definition.getImplementation().getComponentType();
+
         LogicalComponent<CompositeImplementation> component =
                 new LogicalComponent<CompositeImplementation>(uri, runtimeId, definition, parent);
         initializeProperties(component, definition);
-
-        Composite composite = component.getDefinition().getImplementation().getComponentType();
-
-        // create the child components
-        for (ComponentDefinition<? extends Implementation<?>> child : composite.getComponents().values()) {
-
-            if (CompositeImplementation.IMPLEMENTATION_COMPOSITE.equals(child.getImplementation().getType())) {
-                LogicalComponent<CompositeImplementation> childComponent =
-                        instantiate(component, (ComponentDefinition<CompositeImplementation>) child);
-                component.addComponent(childComponent);
-            } else {
-                LogicalComponent<Implementation<?>> childComponent =
-                        atomicComponentInstantiator.instantiate(component,
-                                                                (ComponentDefinition<Implementation<?>>) child);
-                component.addComponent(childComponent);
-            }
-
-        }
-
+        instantiateChildComponents(component, composite);
         instantiateCompositeServices(component, composite);
         instantiateCompositeReferences(parent, component, composite);
 
         return component;
 
+    }
+
+    private void instantiateChildComponents(LogicalComponent<CompositeImplementation> parent,
+                                            Composite composite) throws InstantiationException {
+
+        // create the child components
+        for (ComponentDefinition<? extends Implementation<?>> child : composite.getComponents().values()) {
+
+            LogicalComponent<? extends Implementation<?>> childComponent;
+            if (CompositeImplementation.IMPLEMENTATION_COMPOSITE.equals(child.getImplementation().getType())) {
+                childComponent = instantiate(parent, child);
+            } else {
+                childComponent = atomicComponentInstantiator.instantiate(parent, child);
+            }
+            parent.addComponent(childComponent);
+
+        }
     }
 
     private <I extends Implementation<?>> void instantiateCompositeServices(LogicalComponent<I> component,

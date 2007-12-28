@@ -51,16 +51,16 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
     private final WireResolver wireResolver;
     private final PromotionNormalizer promotionNormalizer;
     private final LogicalComponentManager logicalComponentManager;
-    private final ComponentInstantiator<Implementation<?>> atomicComponentInstantiator;
-    private final ComponentInstantiator<CompositeImplementation> compositeComponentInstantiator;
+    private final ComponentInstantiator atomicComponentInstantiator;
+    private final ComponentInstantiator compositeComponentInstantiator;
     
     public LogicalModelGeneratorImpl(@Reference WireResolver wireResolver,
                                      @Reference PromotionNormalizer promotionNormalizer,
                                      @Reference LogicalComponentManager logicalComponentManager,
                                      @Reference(name = "atomicComponentInstantiator") 
-                                         ComponentInstantiator<Implementation<?>> atomicComponentInstantiator,
+                                         ComponentInstantiator atomicComponentInstantiator,
                                      @Reference(name = "compositeComponentInstantiator") 
-                                         ComponentInstantiator<CompositeImplementation> compositeComponentInstantiator) {
+                                         ComponentInstantiator compositeComponentInstantiator) {
         this.wireResolver = wireResolver;
         this.promotionNormalizer = promotionNormalizer;
         this.logicalComponentManager = logicalComponentManager;

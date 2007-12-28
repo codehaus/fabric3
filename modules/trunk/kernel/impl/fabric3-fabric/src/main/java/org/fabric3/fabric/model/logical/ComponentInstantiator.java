@@ -25,7 +25,7 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 /**
  * @version $Revision$ $Date$
  */
-public interface ComponentInstantiator<I extends Implementation<?>> {
+public interface ComponentInstantiator {
 
     /**
      * Instantiates a logical component from a component definition
@@ -35,8 +35,8 @@ public interface ComponentInstantiator<I extends Implementation<?>> {
      * @return the instantiated logical component
      * @throws InstantiationException if an error occurs during instantiation
      */
-    LogicalComponent<I> instantiate(LogicalComponent<CompositeImplementation> parent,
-                                    ComponentDefinition<I> definition)
+    <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalComponent<CompositeImplementation> parent,
+                                                                  ComponentDefinition<I> definition)
             throws InstantiationException;
 
 }

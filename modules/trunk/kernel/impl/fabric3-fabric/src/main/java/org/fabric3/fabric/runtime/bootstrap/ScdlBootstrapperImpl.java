@@ -92,6 +92,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
     private final JavaInterfaceProcessorRegistry interfaceProcessorRegistry = new JavaInterfaceProcessorRegistryImpl();
     private final ConfigLoader configLoader = new DefaultConfigLoader();
+    private final ComponentInstantiator instantiator = new AtomicComponentInstantiator();
 
     private URL scdlLocation;
     private LogicalComponent<CompositeImplementation> domain;
@@ -259,9 +260,8 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
                                                                                           Class<S> type,
                                                                                           I instance)
             throws InvalidServiceContractException, InstantiationException {
-        ComponentDefinition<Implementation<?>> definition = createDefinition(name, type, instance);
 
-        ComponentInstantiator<Implementation<?>> instantiator = new AtomicComponentInstantiator();
+        ComponentDefinition<Implementation<?>> definition = createDefinition(name, type, instance);
         return instantiator.instantiate(domain, definition);
     }
 

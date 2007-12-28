@@ -22,7 +22,6 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.Map;
-
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -33,6 +32,12 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import javax.xml.xpath.XPathVariableResolver;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
 import org.fabric3.fabric.assembly.InstantiationException;
 import org.fabric3.fabric.assembly.InvalidPropertyFileException;
 import org.fabric3.fabric.util.IOHelper;
@@ -42,16 +47,11 @@ import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Property;
 import org.fabric3.scdl.PropertyValue;
 import org.fabric3.spi.model.instance.LogicalComponent;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 /**
  * @version $Revision$ $Date$
  */
-public abstract class AbstractComponentInstantiator<I extends Implementation<?>> implements ComponentInstantiator<I> {
+public abstract class AbstractComponentInstantiator implements ComponentInstantiator {
 
     private static final DocumentBuilderFactory DOCUMENT_FACTORY;
     private static final XPathFactory XPATH_FACTORY;
@@ -69,18 +69,19 @@ public abstract class AbstractComponentInstantiator<I extends Implementation<?>>
      * @param definition the definition of the component
      * @throws InstantiationException if there was a problem initializing a property value
      */
-    protected void initializeProperties(LogicalComponent<I> component, ComponentDefinition<I> definition)
+    protected <I extends Implementation<?>> void initializeProperties(LogicalComponent<I> component,
+                                                                      ComponentDefinition<I> definition)
             throws InstantiationException {
-        
+
         Map<String, PropertyValue> propertyValues = definition.getPropertyValues();
         AbstractComponentType<?, ?, ?, ?> componentType = definition.getComponentType();
-        
+
         for (Property<?> property : componentType.getProperties().values()) {
-            
+
             String name = property.getName();
             PropertyValue propertyValue = propertyValues.get(name);
             Document value;
-            
+
             if (propertyValue == null) {
                 // use default value from component type
                 value = property.getDefaultValue();
@@ -102,16 +103,16 @@ public abstract class AbstractComponentInstantiator<I extends Implementation<?>>
                 }
 
             }
-            
+
             component.setPropertyValue(name, value);
-            
+
         }
-        
+
     }
 
     public Document deriveValueFromXPath(String source, final LogicalComponent<?> parent)
             throws XPathExpressionException {
-        
+
         XPathVariableResolver variableResolver = new XPathVariableResolver() {
             public Object resolveVariable(QName qName) {
                 String name = qName.getLocalPart();
@@ -122,7 +123,7 @@ public abstract class AbstractComponentInstantiator<I extends Implementation<?>>
                 return value.getDocumentElement();
             }
         };
-        
+
         XPath xpath = XPATH_FACTORY.newXPath();
         xpath.setXPathVariableResolver(variableResolver);
 
@@ -153,11 +154,11 @@ public abstract class AbstractComponentInstantiator<I extends Implementation<?>>
             throw e;
         }
         return value;
-        
+
     }
 
     protected Document loadValueFromFile(String name, URI file) throws InvalidPropertyFileException {
-        
+
         DocumentBuilder builder;
         try {
             builder = DOCUMENT_FACTORY.newDocumentBuilder();
@@ -188,7 +189,7 @@ public abstract class AbstractComponentInstantiator<I extends Implementation<?>>
         } finally {
             IOHelper.closeQueitly(inputStream);
         }
-        
+
     }
 
 }

@@ -38,18 +38,19 @@ import org.fabric3.spi.model.instance.LogicalService;
 /**
  * @version $Revision$ $Date$
  */
-public class AtomicComponentInstantiator extends AbstractComponentInstantiator<Implementation<?>> {
+public class AtomicComponentInstantiator extends AbstractComponentInstantiator {
 
-    public LogicalComponent<Implementation<?>> instantiate(LogicalComponent<CompositeImplementation> parent,
-                                                           ComponentDefinition<Implementation<?>> definition) throws InstantiationException {
-        
+    public <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalComponent<CompositeImplementation> parent,
+                                                                         ComponentDefinition<I> definition)
+            throws InstantiationException {
+
         URI runtimeId = definition.getRuntimeId();
         URI uri = URI.create(parent.getUri() + "/" + definition.getName());
-        LogicalComponent<Implementation<?>> component = new LogicalComponent<Implementation<?>>(uri, runtimeId, definition, parent);
+        LogicalComponent<I> component = new LogicalComponent<I>(uri, runtimeId, definition, parent);
         
         initializeProperties(component, definition);
         
-        Implementation<?> impl = definition.getImplementation();
+        I impl = definition.getImplementation();
         AbstractComponentType<?, ?, ?, ?> componentType = impl.getComponentType();
 
         createServices(definition, component, componentType);
@@ -60,7 +61,7 @@ public class AtomicComponentInstantiator extends AbstractComponentInstantiator<I
         
     }
 
-    private void createResources(LogicalComponent<Implementation<?>> component,
+    private <I extends Implementation<?>>void createResources(LogicalComponent<I> component,
                                  AbstractComponentType<?, ?, ?, ?> componentType) {
         
         for (ResourceDefinition resource : componentType.getResources().values()) {
@@ -71,8 +72,8 @@ public class AtomicComponentInstantiator extends AbstractComponentInstantiator<I
         
     }
 
-    private void createServices(ComponentDefinition<Implementation<?>> definition,
-                                LogicalComponent<Implementation<?>> component,
+    private <I extends Implementation<?>>void createServices(ComponentDefinition<I> definition,
+                                LogicalComponent<I> component,
                                 AbstractComponentType<?, ?, ?, ?> componentType) {
         
         for (ServiceDefinition service : componentType.getServices().values()) {
@@ -91,8 +92,8 @@ public class AtomicComponentInstantiator extends AbstractComponentInstantiator<I
         
     }
 
-    private void createReferences(ComponentDefinition<Implementation<?>> definition,
-                                  LogicalComponent<Implementation<?>> component,
+    private <I extends Implementation<?>>void createReferences(ComponentDefinition<I> definition,
+                                  LogicalComponent<I> component,
                                   AbstractComponentType<?, ?, ?, ?> componentType) {
         
         for (ReferenceDefinition reference : componentType.getReferences().values()) {
