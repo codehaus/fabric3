@@ -27,6 +27,7 @@ import javax.xml.stream.XMLStreamWriter;
  *
  * @version $Rev$ $Date$
  */
+@Deprecated
 public interface MarshallerRegistry {
 
     /**
