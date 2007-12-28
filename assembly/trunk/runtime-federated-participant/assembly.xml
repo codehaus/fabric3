@@ -78,6 +78,7 @@
                 <include>org.codehaus.fabric3:fabric3-monitor</include>
                 <include>org.codehaus.fabric3:fabric3-scdl</include>
                 <include>org.codehaus.fabric3:fabric3-spi</include>
+                <include>org.codehaus.fabric3:fabric3-util</include>
                 <include>org.codehaus.fabric3:fabric3-jmx</include>
                 <include>org.codehaus.fabric3:fabric3-extension</include>
                 <include>org.codehaus.fabric3:fabric3-policy-spi</include>
