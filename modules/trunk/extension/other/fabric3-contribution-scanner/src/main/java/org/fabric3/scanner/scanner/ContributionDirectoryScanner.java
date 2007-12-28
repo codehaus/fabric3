@@ -57,7 +57,6 @@ import org.fabric3.spi.assembly.Assembly;
 import org.fabric3.spi.scanner.FileSystemResource;
 import org.fabric3.spi.scanner.FileSystemResourceFactoryRegistry;
 import org.fabric3.spi.services.VoidService;
-import static org.fabric3.spi.services.contribution.ContributionConstants.DEFAULT_STORE;
 import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.services.event.Fabric3Event;
 import org.fabric3.spi.services.event.Fabric3EventListener;
@@ -95,7 +94,6 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
     private FileSystemResourceFactoryRegistry registry;
     private String path = "../deploy";
     private File processedIndex;
-    private String storeId = DEFAULT_STORE;
     private boolean persistent = true;
 
     private long delay = 5000;
@@ -114,16 +112,6 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
         ClassLoaderStaxDriver driver = new ClassLoaderStaxDriver(this.getClass().getClassLoader());
         this.xstream = new XStream(driver);
         this.monitor = factory.getMonitor(ScannerMonitor.class);
-    }
-
-    /**
-     * Configures the store id to contribute to
-     *
-     * @param storeId the store id
-     */
-    @Property(required = false)
-    public void setStoreId(String storeId) {
-        this.storeId = storeId;
     }
 
     @Property(required = false)
@@ -286,7 +274,7 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
             // added
             try {
                 ContributionSource source = new FileContributionSource(location, timestamp, checksum);
-                URI addedUri = contributionService.contribute(storeId, source);
+                URI addedUri = contributionService.contribute(source);
                 List<Deployable> deployables = contributionService.getDeployables(addedUri);
                 for (Deployable deployable : deployables) {
                     if (Constants.COMPOSITE_TYPE.equals(deployable.getType())) {
