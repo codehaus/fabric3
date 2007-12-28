@@ -46,11 +46,11 @@ public class XStreamMarshallerRegistry implements MarshallerRegistry {
     /**
      * Thread safe Stax driver.
      */
-    private StaxDriver staxDriver = new ClassLoaderStaxDriver(getClass().getClassLoader()); //new StaxDriver();
+    private StaxDriver staxDriver;
 
     public XStreamMarshallerRegistry(@Reference XStreamFactory factory) {
         xStream = factory.createInstance();
-        // TODO Register the converters
+        staxDriver = new ClassLoaderStaxDriver(getClass().getClassLoader());
     }
 
     /**
