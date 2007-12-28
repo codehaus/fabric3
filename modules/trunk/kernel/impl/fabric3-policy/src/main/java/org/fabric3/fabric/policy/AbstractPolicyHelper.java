@@ -22,14 +22,11 @@ import java.util.Set;
 import javax.xml.namespace.QName;
 
 import org.fabric3.scdl.definitions.Intent;
-import org.fabric3.scdl.definitions.PolicyPhase;
 import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.model.instance.LogicalScaArtifact;
 import org.fabric3.spi.model.instance.Referenceable;
 import org.fabric3.spi.policy.PolicyResolutionException;
-import org.fabric3.spi.policy.PolicyResult;
 import org.fabric3.spi.services.definitions.DefinitionsRegistry;
-import org.w3c.dom.Element;
 
 /**
  * @version $Revision$ $Date$
@@ -137,25 +134,6 @@ public class AbstractPolicyHelper {
         }
         return requiredIntents;
 
-    }
-    
-    /*
-     * Create policy results from resolved policies.
-     */
-    protected Set<PolicyResult> createResults(Set<PolicySet> policies, PolicyPhase defaultPhase) {
-        
-        Set<PolicyResult> results = new HashSet<PolicyResult>();
-        for (PolicySet policySet : policies) {
-            Element policyDefinition = policySet.getExtension();
-            PolicyPhase policyPhase = policySet.getPhase();
-            if (policyPhase == null) {
-                policyPhase = defaultPhase;
-            }
-            results.add(new PolicyResult(policyDefinition, policyPhase));
-        }
-        
-        return results;
-        
     }
 
 }

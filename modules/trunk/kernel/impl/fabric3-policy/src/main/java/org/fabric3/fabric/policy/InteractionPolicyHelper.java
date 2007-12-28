@@ -20,9 +20,9 @@ import java.util.Set;
 
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.definitions.Intent;
+import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.policy.PolicyResolutionException;
-import org.fabric3.spi.policy.PolicyResult;
 
 /**
  * @version $Revision$ $Date$
@@ -47,6 +47,6 @@ public interface InteractionPolicyHelper {
      * @return Set of resolved policies.
      * @throws PolicyResolutionException If all intents cannot be resolved.
      */
-    Set<PolicyResult> resolveInteractionIntents(LogicalBinding<?> binding, Operation<?> operation) throws PolicyResolutionException;
+    Set<PolicySet> resolveInteractionIntents(LogicalBinding<?> binding, Operation<?> operation) throws PolicyResolutionException;
 
 }

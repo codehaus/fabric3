@@ -25,11 +25,9 @@ import javax.xml.namespace.QName;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.definitions.ImplementationType;
 import org.fabric3.scdl.definitions.Intent;
-import org.fabric3.scdl.definitions.PolicyPhase;
 import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.policy.PolicyResolutionException;
-import org.fabric3.spi.policy.PolicyResult;
 import org.fabric3.spi.services.definitions.DefinitionsRegistry;
 import org.osoa.sca.annotations.Reference;
 
@@ -77,7 +75,7 @@ public class ImplementationPolicyHelperImpl extends AbstractPolicyHelper impleme
         
     }
     
-    public Set<PolicyResult> resolveImplementationIntents(LogicalComponent<?> logicalComponent) throws PolicyResolutionException {
+    public Set<PolicySet> resolveImplementationIntents(LogicalComponent<?> logicalComponent) throws PolicyResolutionException {
         
         Implementation<?> implementation = logicalComponent.getDefinition().getImplementation();
         QName type = implementation.getType();
@@ -117,7 +115,7 @@ public class ImplementationPolicyHelperImpl extends AbstractPolicyHelper impleme
             throw new PolicyResolutionException("Unable to resolve all intents", requiredIntents);
         }
         
-        return createResults(policies, PolicyPhase.PROVIDED);
+        return policies;
         
     }
 

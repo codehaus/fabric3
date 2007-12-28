@@ -22,6 +22,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.xml.namespace.QName;
+
 import org.fabric3.fabric.generator.PolicyException;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ReferenceDefinition;
@@ -48,8 +50,8 @@ import org.fabric3.spi.model.type.SCABindingDefinition;
 import org.fabric3.spi.policy.PolicyResolution;
 import org.fabric3.spi.policy.PolicyResolutionException;
 import org.fabric3.spi.policy.PolicyResolver;
-import org.fabric3.spi.policy.PolicyResult;
 import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Element;
 
 /**
  * @version $Revision$ $Date$
@@ -286,7 +288,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
 
     }
 
-    private void setOperationDefinition(Operation<?> operation, PhysicalWireDefinition wireDefinition, Set<PolicyResult> policies)
+    private void setOperationDefinition(Operation<?> operation, PhysicalWireDefinition wireDefinition, Set<Element> policies)
             throws GenerationException {
 
         PhysicalOperationDefinition physicalOperation = physicalOperationHelper.mapOperation(operation);
@@ -309,17 +311,18 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
     }
 
     @SuppressWarnings("unchecked")
-    private Set<PhysicalInterceptorDefinition> generateInterceptorDefinitions(Set<PolicyResult> policies) throws GenerationException {
+    private Set<PhysicalInterceptorDefinition> generateInterceptorDefinitions(Set<Element> policies) throws GenerationException {
 
         if (policies == null) {
             return Collections.EMPTY_SET;
         }
 
         Set<PhysicalInterceptorDefinition> interceptors = new HashSet<PhysicalInterceptorDefinition>();
-        for (PolicyResult policy : policies) {
+        for (Element policy : policies) {
+            QName qName = new QName(policy.getNamespaceURI(), policy.getNodeName());
             InterceptorDefinitionGenerator interceptorDefinitionGenerator = 
-                generatorRegistry.getInterceptorDefinitionGenerator(policy.getQualifiedName());
-            interceptors.add(interceptorDefinitionGenerator.generate(policy.getPolicyDefinition(), null));
+                generatorRegistry.getInterceptorDefinitionGenerator(qName);
+            interceptors.add(interceptorDefinitionGenerator.generate(policy, null));
         }
         return interceptors;
 

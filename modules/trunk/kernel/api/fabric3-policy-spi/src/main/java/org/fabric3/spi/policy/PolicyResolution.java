@@ -24,6 +24,7 @@ import java.util.Set;
 
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.definitions.Intent;
+import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.util.closure.Closure;
 import org.fabric3.util.closure.CollectionUtils;
 import org.w3c.dom.Element;
@@ -33,32 +34,37 @@ import org.w3c.dom.Element;
  */
 public class PolicyResolution {
     
-    private static Closure<PolicyResult, Element> TRANSFORMER = new Closure<PolicyResult, Element>() {
-        public Element execute(PolicyResult object) {
-            return object.getPolicyDefinition();
+    private static Closure<PolicySet, Element> TRANSFORMER = new Closure<PolicySet, Element>() {
+        public Element execute(PolicySet object) {
+            return object.getExtension();
         }
     };
     
     private final Set<Intent> intentsProvidedBySource = new HashSet<Intent>();
     private final Set<Intent> intentsProvidedByTarget = new HashSet<Intent>();
-    private final Set<PolicyResult> policiesProvidedBySource = new HashSet<PolicyResult>();
-    private final Set<PolicyResult> policiesProvidedByTarget = new HashSet<PolicyResult>();
-    private final Map<Operation<?>, Set<PolicyResult>> interceptedPolicies = 
-        new HashMap<Operation<?>, Set<PolicyResult>>();
+    private final Set<Element> policiesProvidedBySource = new HashSet<Element>();
+    private final Set<Element> policiesProvidedByTarget = new HashSet<Element>();
+    private final Map<Operation<?>, Set<Element>> interceptedPolicies = new HashMap<Operation<?>, Set<Element>>();
     
     public PolicyResolution() {
     }
     
     public PolicyResolution(Set<Intent> intentsProvidedBySource, 
                             Set<Intent> intentsProvidedByTarget,
-                            Set<PolicyResult> policiesProvidedBySource, 
-                            Set<PolicyResult> policiesProvidedByTarget,
-                            Map<Operation<?>, Set<PolicyResult>> interceptedPolicies) {
+                            Set<PolicySet> policiesProvidedBySource, 
+                            Set<PolicySet> policiesProvidedByTarget,
+                            Map<Operation<?>, Set<PolicySet>> interceptedPolicies) {
+        
         this.intentsProvidedBySource.addAll(intentsProvidedBySource);
         this.intentsProvidedByTarget.addAll(intentsProvidedByTarget);
-        this.policiesProvidedBySource.addAll(policiesProvidedBySource);
-        this.policiesProvidedByTarget.addAll(policiesProvidedByTarget);
-        this.interceptedPolicies.putAll(interceptedPolicies);
+        
+        this.policiesProvidedBySource.addAll(CollectionUtils.transform(policiesProvidedBySource, TRANSFORMER));
+        this.policiesProvidedByTarget.addAll(CollectionUtils.transform(policiesProvidedByTarget, TRANSFORMER));
+        
+        for (Map.Entry<Operation<?>, Set<PolicySet>> policy : interceptedPolicies.entrySet()) {
+            this.interceptedPolicies.put(policy.getKey(), CollectionUtils.transform(policy.getValue(), TRANSFORMER));
+        }
+        
     }
 
     public Set<Intent> getSourceIntents() {
@@ -70,14 +76,14 @@ public class PolicyResolution {
     }
 
     public Set<Element> getSourcePolicies() {
-        return CollectionUtils.transform(policiesProvidedBySource, TRANSFORMER);
+        return policiesProvidedBySource;
     }
 
     public Set<Element> getTargetPolicies() {
-        return CollectionUtils.transform(policiesProvidedByTarget, TRANSFORMER);
+        return policiesProvidedByTarget;
     }
 
-    public Map<Operation<?>, Set<PolicyResult>> getInterceptedPolicies() {
+    public Map<Operation<?>, Set<Element>> getInterceptedPolicies() {
         return Collections.unmodifiableMap(interceptedPolicies);
     }
 

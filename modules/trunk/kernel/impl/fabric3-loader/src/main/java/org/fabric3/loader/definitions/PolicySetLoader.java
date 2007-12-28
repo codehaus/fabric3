@@ -87,6 +87,8 @@ public class PolicySetLoader implements StAXElementLoader<PolicySet> {
             PolicyPhase phase = null;
             if (sPhase != null && !"".equals(sPhase.trim())) {
                 phase = PolicyPhase.valueOf(sPhase);
+            } else {
+                phase = PolicyPhase.PROVIDED;
             }
             
             Element extension = null;

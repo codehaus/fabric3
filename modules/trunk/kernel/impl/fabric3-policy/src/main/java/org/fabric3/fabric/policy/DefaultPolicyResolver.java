@@ -27,12 +27,12 @@ import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicyPhase;
+import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.policy.PolicyResolution;
 import org.fabric3.spi.policy.PolicyResolutionException;
 import org.fabric3.spi.policy.PolicyResolver;
-import org.fabric3.spi.policy.PolicyResult;
 import org.fabric3.util.closure.Closure;
 import org.fabric3.util.closure.CollectionUtils;
 import org.osoa.sca.annotations.Reference;
@@ -43,16 +43,16 @@ import org.osoa.sca.annotations.Reference;
 public class DefaultPolicyResolver implements PolicyResolver {
     
     /** Closure for filtering intercepted policies. */
-    private static final Closure<PolicyResult, Boolean> INTERCEPTION = new Closure<PolicyResult, Boolean>() {
-        public Boolean execute(PolicyResult policyResult) {
-            return policyResult.getPolicyPhase() == PolicyPhase.INTERCEPTION;
+    private static final Closure<PolicySet, Boolean> INTERCEPTION = new Closure<PolicySet, Boolean>() {
+        public Boolean execute(PolicySet policySet) {
+            return policySet.getPhase() == PolicyPhase.INTERCEPTION;
         }
     };
     
     /** Closure for filtering provided policies by bindings or implementations. */
-    private static final Closure<PolicyResult, Boolean> PROVIDED = new Closure<PolicyResult, Boolean>() {
-        public Boolean execute(PolicyResult policyResult) {
-            return policyResult.getPolicyPhase() == PolicyPhase.PROVIDED;
+    private static final Closure<PolicySet, Boolean> PROVIDED = new Closure<PolicySet, Boolean>() {
+        public Boolean execute(PolicySet policySet) {
+            return policySet.getPhase() == PolicyPhase.PROVIDED;
         }
     };
     
@@ -86,10 +86,10 @@ public class DefaultPolicyResolver implements PolicyResolver {
         Set<Intent> intentsProvidedBySource = new HashSet<Intent>();
         Set<Intent> intentsProvidedByTarget = new HashSet<Intent>();
         
-        Set<PolicyResult> policySetsProvidedBySource = new HashSet<PolicyResult>();
-        Set<PolicyResult> policySetsProvidedByTarget = new HashSet<PolicyResult>();
+        Set<PolicySet> policySetsProvidedBySource = new HashSet<PolicySet>();
+        Set<PolicySet> policySetsProvidedByTarget = new HashSet<PolicySet>();
         
-        Map<Operation<?>, Set<PolicyResult>> interceptedPolicies = new HashMap<Operation<?>, Set<PolicyResult>>();
+        Map<Operation<?>, Set<PolicySet>> interceptedPolicies = new HashMap<Operation<?>, Set<PolicySet>>();
         
         intentsProvidedBySource = interactionPolicyHelper.getInteractionIntentsToBeProvided(sourceBinding);
         if (source != null) {
@@ -103,9 +103,9 @@ public class DefaultPolicyResolver implements PolicyResolver {
             
         for (Operation<?> operation : serviceContract.getOperations()) {
                 
-            interceptedPolicies.put(operation, new HashSet<PolicyResult>());
+            interceptedPolicies.put(operation, new HashSet<PolicySet>());
                 
-            Set<PolicyResult> policies = null;
+            Set<PolicySet> policies = null;
                 
             if (source != null) {
                 policies = implementationPolicyHelper.resolveImplementationIntents(source);

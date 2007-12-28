@@ -26,11 +26,9 @@ import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.definitions.BindingType;
 import org.fabric3.scdl.definitions.Intent;
-import org.fabric3.scdl.definitions.PolicyPhase;
 import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.policy.PolicyResolutionException;
-import org.fabric3.spi.policy.PolicyResult;
 import org.fabric3.spi.services.definitions.DefinitionsRegistry;
 import org.osoa.sca.annotations.Reference;
 
@@ -76,7 +74,7 @@ public class InteractionPolicyHelperImpl extends AbstractPolicyHelper implements
         return intentsToBeProvided;
         
     }
-    public Set<PolicyResult> resolveInteractionIntents(LogicalBinding<?> logicalBinding, Operation<?> operation) throws PolicyResolutionException {
+    public Set<PolicySet> resolveInteractionIntents(LogicalBinding<?> logicalBinding, Operation<?> operation) throws PolicyResolutionException {
         
         QName type = logicalBinding.getBinding().getType();
         BindingType bindingType = definitionsRegistry.getDefinition(type, BindingType.class);
@@ -113,7 +111,7 @@ public class InteractionPolicyHelperImpl extends AbstractPolicyHelper implements
             throw new PolicyResolutionException("Unable to resolve all intents", requiredIntents);
         }
         
-        return createResults(policies, PolicyPhase.PROVIDED);
+        return policies;
         
     }
 
