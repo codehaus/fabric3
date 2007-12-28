@@ -19,10 +19,10 @@
 package org.fabric3.discovery.jxta;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.ArrayList;
 import javax.xml.namespace.QName;
 
 import net.jxta.document.Advertisement;
@@ -88,6 +88,9 @@ public class PresenceAdvertisement extends Advertisement {
         runtimeInfo.setMessageDestination(messageDestination);
         for (URI component : components) {
             runtimeInfo.addComponent(component);
+        }
+        for (ResourceDescription<?> description : resourceDescriptions) {
+            runtimeInfo.addResourceDescription(description);
         }
         return runtimeInfo;
     }
