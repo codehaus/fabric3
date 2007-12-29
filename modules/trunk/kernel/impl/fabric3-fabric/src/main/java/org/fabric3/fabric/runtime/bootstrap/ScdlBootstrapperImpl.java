@@ -41,7 +41,6 @@ import org.fabric3.fabric.runtime.DefaultConfigLoader;
 import org.fabric3.fabric.services.classloading.ClassLoaderRegistryImpl;
 import org.fabric3.fabric.services.contribution.MetaDataStoreImpl;
 import org.fabric3.fabric.services.contribution.ProcessorRegistryImpl;
-import org.fabric3.fabric.services.factories.xml.XMLFactoryImpl;
 import org.fabric3.fabric.services.xstream.XStreamFactoryImpl;
 import org.fabric3.host.monitor.FormatterRegistry;
 import org.fabric3.host.monitor.MonitorFactory;
@@ -78,7 +77,6 @@ import org.fabric3.spi.runtime.component.RegistrationException;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
-import org.fabric3.spi.services.factories.xml.XMLFactory;
 
 /**
  * Bootstrapper that initializes a runtime by reading a system SCDL file.
@@ -180,9 +178,6 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
         DefaultFormatterRegistry formatterRegistry = new DefaultFormatterRegistry();
         registerSystemComponent(runtimeServices, "FormatterRegistry", FormatterRegistry.class, formatterRegistry);
-
-        XMLFactory xmlFactory = new XMLFactoryImpl();
-        registerSystemComponent(runtimeServices, "XMLFactory", XMLFactory.class, xmlFactory);
 
         ClassLoaderRegistry classLoaderRegistry = new ClassLoaderRegistryImpl();
         registerSystemComponent(runtimeServices, "ClassLoaderRegistry", ClassLoaderRegistry.class, classLoaderRegistry);

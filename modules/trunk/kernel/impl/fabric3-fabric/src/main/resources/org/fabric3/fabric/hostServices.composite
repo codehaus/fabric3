@@ -26,6 +26,12 @@
            name="org.fabric3.fabric.HostServices"
            autowire="true">
 
+    <component name="XMLFactory">
+        <system:implementation.system class="org.fabric3.fabric.services.factories.xml.XMLFactoryImpl"/>
+        <property name="input">com.ctc.wstx.stax.WstxInputFactory</property>
+        <property name="output">com.ctc.wstx.stax.WstxOutputFactory</property>
+    </component>
+
     <!-- WorkScheduler service -->
     <component name="workManager">
         <system:implementation.system

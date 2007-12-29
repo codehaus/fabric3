@@ -4,6 +4,9 @@ import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
 
+import org.osoa.sca.annotations.Constructor;
+import org.osoa.sca.annotations.Property;
+
 import org.fabric3.spi.services.factories.xml.FactoryInstantiationException;
 import org.fabric3.spi.services.factories.xml.XMLFactory;
 
@@ -17,7 +20,9 @@ public final class XMLFactoryImpl implements XMLFactory {
         this("com.ctc.wstx.stax.WstxInputFactory", "com.ctc.wstx.stax.WstxOutputFactory");
     }
 
-    public XMLFactoryImpl(String inputFactoryName, String outputFactoryName) {
+    @Constructor
+    public XMLFactoryImpl(@Property(name = "input")String inputFactoryName,
+                          @Property(name = "output")String outputFactoryName) {
         this.inputFactoryName = inputFactoryName;
         this.outputFactoryName = outputFactoryName;
     }
