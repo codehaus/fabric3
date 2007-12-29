@@ -21,18 +21,21 @@ package org.fabric3.binding.burlap.model.physical;
 import java.net.URI;
 import java.util.Set;
 
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.binding.burlap.model.logical.BurlapBindingDefinition;
-import org.fabric3.extension.generator.BindingGeneratorExtension;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
+import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
+import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalBinding;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Implementation of the hessian binding generator.
@@ -40,11 +43,19 @@ import org.osoa.sca.annotations.Reference;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class BurlapBindingGenerator extends BindingGeneratorExtension<BurlapWireSourceDefinition, BurlapWireTargetDefinition, BurlapBindingDefinition> {
+public class BurlapBindingGenerator implements BindingGenerator<BurlapWireSourceDefinition, BurlapWireTargetDefinition, BurlapBindingDefinition> {
     private ClassLoaderGenerator classLoaderGenerator;
+    private GeneratorRegistry generatorRegistry;
 
-    public BurlapBindingGenerator(@Reference ClassLoaderGenerator classLoaderGenerator) {
+    public BurlapBindingGenerator(@Reference ClassLoaderGenerator classLoaderGenerator,
+                                  @Reference GeneratorRegistry generatorRegistry) {
         this.classLoaderGenerator = classLoaderGenerator;
+        this.generatorRegistry = generatorRegistry;
+    }
+
+    @Init
+    public void start() {
+        generatorRegistry.register(BurlapBindingDefinition.class, this);
     }
 
     public BurlapWireSourceDefinition generateWireSource(LogicalBinding<BurlapBindingDefinition> logicalBinding,
@@ -74,9 +85,5 @@ public class BurlapBindingGenerator extends BindingGeneratorExtension<BurlapWire
 
     }
 
-    @Override
-    protected Class<BurlapBindingDefinition> getBindingDefinitionClass() {
-        return BurlapBindingDefinition.class;
-    }
 
 }
