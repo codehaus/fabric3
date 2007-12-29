@@ -33,7 +33,7 @@ import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.spi.marshaller.MarshallerRegistry;
+import org.fabric3.spi.marshaller.MarshalService;
 import org.fabric3.spi.services.messaging.MessagingEventService;
 
 /**
@@ -47,11 +47,11 @@ public class StartCompositeContextExecutor extends AbstractCommandExecutor<Start
 
     @Constructor
     public StartCompositeContextExecutor(@Reference MessagingEventService eventService,
-                                         @Reference MarshallerRegistry marshallerRegistry,
+                                         @Reference MarshalService marshalService,
                                          @Reference CommandExecutorRegistry executorRegistry,
                                          @Reference ScopeRegistry scopeRegistry,
                                          @Reference MonitorFactory factory) {
-        super(eventService, marshallerRegistry, executorRegistry, factory.getMonitor(CommandListenerMonitor.class));
+        super(eventService, marshalService, executorRegistry, factory.getMonitor(CommandListenerMonitor.class));
         this.container = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
     }
 

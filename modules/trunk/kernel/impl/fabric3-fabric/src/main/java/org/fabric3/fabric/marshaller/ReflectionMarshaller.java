@@ -50,6 +50,7 @@ import org.osoa.sca.annotations.Reference;
  * 
  * @version $Revision$ $Date$
  */
+@Deprecated
 @EagerInit
 public class ReflectionMarshaller implements Marshaller {
     

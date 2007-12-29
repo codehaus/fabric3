@@ -29,7 +29,7 @@ import org.fabric3.spi.command.CommandExecutor;
 import org.fabric3.spi.command.CommandExecutorRegistry;
 import org.fabric3.spi.command.ExecutionException;
 import org.fabric3.spi.marshaller.MarshalException;
-import org.fabric3.spi.marshaller.MarshallerRegistry;
+import org.fabric3.spi.marshaller.MarshalService;
 import org.fabric3.spi.services.messaging.MessagingEventService;
 import org.fabric3.spi.services.messaging.RequestListener;
 
@@ -43,16 +43,16 @@ import org.fabric3.spi.services.messaging.RequestListener;
 @EagerInit
 public abstract class AbstractCommandExecutor<T extends Command> implements CommandExecutor<T>, RequestListener {
     private MessagingEventService eventService;
-    private MarshallerRegistry marshallerRegistry;
+    private MarshalService marshalService;
     private CommandExecutorRegistry commandExecutorRegistry;
     private CommandListenerMonitor monitor;
 
     public AbstractCommandExecutor(@Reference MessagingEventService eventService,
-                                   @Reference MarshallerRegistry marshallerRegistry,
+                                   @Reference MarshalService marshalService,
                                    @Reference CommandExecutorRegistry commandExecutorRegistry,
                                    CommandListenerMonitor monitor) {
         this.eventService = eventService;
-        this.marshallerRegistry = marshallerRegistry;
+        this.marshalService = marshalService;
         this.commandExecutorRegistry = commandExecutorRegistry;
         this.monitor = monitor;
     }
@@ -67,7 +67,7 @@ public abstract class AbstractCommandExecutor<T extends Command> implements Comm
 
     public XMLStreamReader onRequest(XMLStreamReader reader) {
         try {
-            T command = getCommandType().cast(marshallerRegistry.unmarshall(reader));
+            T command = marshalService.unmarshall(getCommandType(), reader);
             execute(command);
         } catch (MarshalException e) {
             monitor.error(e);

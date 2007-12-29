@@ -34,7 +34,8 @@ import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.builder.resource.ResourceContainerBuilderRegistry;
 import org.fabric3.spi.component.Component;
-import org.fabric3.spi.marshaller.MarshallerRegistry;
+import org.fabric3.spi.deployer.Deployer;
+import org.fabric3.spi.marshaller.MarshalService;
 import org.fabric3.spi.model.physical.PhysicalChangeSet;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalResourceContainerDefinition;
@@ -43,7 +44,6 @@ import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.runtime.component.RegistrationException;
 import org.fabric3.spi.services.messaging.MessagingEventService;
 import org.fabric3.spi.services.messaging.RequestListener;
-import org.fabric3.spi.deployer.Deployer;
 
 /**
  * Deploys components in response to asynchronous messages from the Assembly.
@@ -56,7 +56,7 @@ public class DeployerImpl implements RequestListener, Deployer {
     /**
      * Marshaller registry.
      */
-    private MarshallerRegistry marshallerRegistry;
+    private MarshalService marshalService;
 
     /**
      * Physical component builder registry.
@@ -103,7 +103,7 @@ public class DeployerImpl implements RequestListener, Deployer {
      */
     public XMLStreamReader onRequest(XMLStreamReader content) {
         try {
-            final PhysicalChangeSet changeSet = (PhysicalChangeSet) marshallerRegistry.unmarshall(content);
+            final PhysicalChangeSet changeSet = marshalService.unmarshall(PhysicalChangeSet.class, content);
             applyChangeSet(changeSet);
         } catch (Throwable ex) {
             monitor.error("Demarshalling receiving changeset", ex);
@@ -149,13 +149,13 @@ public class DeployerImpl implements RequestListener, Deployer {
     }
 
     /**
-     * Injects the model marshaller registry.
+     * Injects the MarshalService.
      *
-     * @param marshallerRegistry Marshaller registry.
+     * @param marshalService MarshalService.
      */
     @Reference
-    public void setMarshallerRegistry(MarshallerRegistry marshallerRegistry) {
-        this.marshallerRegistry = marshallerRegistry;
+    public void setMarshalService(MarshalService marshalService) {
+        this.marshalService = marshalService;
     }
 
     /**

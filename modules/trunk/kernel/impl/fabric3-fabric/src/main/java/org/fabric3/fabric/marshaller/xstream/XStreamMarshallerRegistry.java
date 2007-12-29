@@ -36,6 +36,7 @@ import org.fabric3.spi.marshaller.MarshallerRegistry;
 /**
  * @version $Revision$ $Date$
  */
+@Deprecated
 public class XStreamMarshallerRegistry implements MarshallerRegistry {
 
     /**

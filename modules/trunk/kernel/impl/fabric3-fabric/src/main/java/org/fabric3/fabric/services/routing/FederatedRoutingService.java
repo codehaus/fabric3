@@ -26,24 +26,25 @@ import java.util.Set;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
+import javax.xml.stream.XMLOutputFactory;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.deployer.Deployer;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.command.CommandExecutorRegistry;
 import org.fabric3.spi.command.CommandSet;
 import org.fabric3.spi.command.ExecutionException;
-import org.fabric3.spi.runtime.component.RegistrationException;
+import org.fabric3.spi.deployer.Deployer;
 import org.fabric3.spi.marshaller.MarshalException;
-import org.fabric3.spi.marshaller.MarshallerRegistry;
+import org.fabric3.spi.marshaller.MarshalService;
 import org.fabric3.spi.model.physical.PhysicalChangeSet;
+import org.fabric3.spi.runtime.component.RegistrationException;
+import org.fabric3.spi.services.factories.xml.FactoryInstantiationException;
+import org.fabric3.spi.services.factories.xml.XMLFactory;
 import org.fabric3.spi.services.messaging.MessagingException;
 import org.fabric3.spi.services.messaging.MessagingService;
-import org.fabric3.spi.services.factories.xml.XMLFactory;
-import org.fabric3.spi.services.factories.xml.FactoryInstantiationException;
 
 /**
  * A routing service implementation that routes physical changesets across a domain
@@ -51,7 +52,7 @@ import org.fabric3.spi.services.factories.xml.FactoryInstantiationException;
  * @version $Rev$ $Date$
  */
 public class FederatedRoutingService implements RoutingService {
-    private final MarshallerRegistry marshallerRegistry;
+    private final MarshalService marshalService;
     private final MessagingService messagingService;
     private final Deployer deployer;
     private final CommandExecutorRegistry executorRegistry;
@@ -59,13 +60,13 @@ public class FederatedRoutingService implements RoutingService {
     private RoutingMonitor monitor;
 
     public FederatedRoutingService(@Reference Deployer deployer,
-                                   @Reference MarshallerRegistry marshallerRegistry,
+                                   @Reference MarshalService marshalService,
                                    @Reference MessagingService messagingService,
                                    @Reference CommandExecutorRegistry executorRegistry,
                                    @Reference XMLFactory xmlFactory,
                                    @Reference MonitorFactory factory) {
         this.deployer = deployer;
-        this.marshallerRegistry = marshallerRegistry;
+        this.marshalService = marshalService;
         this.messagingService = messagingService;
         this.executorRegistry = executorRegistry;
         this.xmlFactory = xmlFactory;
@@ -120,8 +121,9 @@ public class FederatedRoutingService implements RoutingService {
     private void routeToDestination(URI runtimeId, Object commandSet) throws RoutingException {
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
-            XMLStreamWriter writer = xmlFactory.newOutputFactoryInstance().createXMLStreamWriter(out);// XMLOutputFactory.newInstance().createXMLStreamWriter(out);
-            marshallerRegistry.marshall(commandSet, writer);
+            XMLOutputFactory factory = xmlFactory.newOutputFactoryInstance();
+            XMLStreamWriter writer = factory.createXMLStreamWriter(out);
+            marshalService.marshall(commandSet, writer);
             ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
             XMLStreamReader pcsReader = xmlFactory.newInputFactoryInstance().createXMLStreamReader(in);
             messagingService.sendMessage(runtimeId, pcsReader);

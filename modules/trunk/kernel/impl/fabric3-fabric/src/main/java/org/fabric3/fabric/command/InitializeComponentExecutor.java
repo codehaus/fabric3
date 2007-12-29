@@ -37,7 +37,7 @@ import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.spi.marshaller.MarshallerRegistry;
+import org.fabric3.spi.marshaller.MarshalService;
 import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.services.messaging.MessagingEventService;
 
@@ -52,14 +52,14 @@ public class InitializeComponentExecutor extends AbstractCommandExecutor<Initial
 
     @Constructor
     public InitializeComponentExecutor(@Reference MessagingEventService eventService,
-                                       @Reference MarshallerRegistry marshallerRegistry,
+                                       @Reference MarshalService marshalService,
                                        @Reference CommandExecutorRegistry commandExecutorRegistry,
                                        @Reference ScopeRegistry scopeRegistry,
                                        @Reference ComponentManager manager,
                                        @Reference MonitorFactory factory) {
 
         super(eventService,
-              marshallerRegistry,
+              marshalService,
               commandExecutorRegistry,
               factory.getMonitor(CommandListenerMonitor.class));
         this.manager = manager;

@@ -114,11 +114,6 @@
         <system:implementation.system class="org.fabric3.fabric.services.xstream.XStreamFactoryImpl"/>
     </component>
 
-    <!-- Default marshaller registry -->
-    <component name="defaultMarshallerRegistry">
-        <system:implementation.system class="org.fabric3.fabric.marshaller.xstream.XStreamMarshallerRegistry"/>
-    </component>
-
     <component name="DelegatingMarshalService">
         <system:implementation.system class="org.fabric3.fabric.marshaller.DelegatingMarshalServiceImpl"/>
     </component>
