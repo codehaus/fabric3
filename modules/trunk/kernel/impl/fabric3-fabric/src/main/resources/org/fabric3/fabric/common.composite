@@ -26,8 +26,6 @@
            name="org.fabric3.fabric.Common"
            autowire="true">
 
-    <property name="XuserConfig" type="f3:userConfig"/>
-
     <component name="physicalOperationHelper">
         <system:implementation.system class="org.fabric3.fabric.model.physical.PhysicalOperationHelperImpl"/>
     </component>
