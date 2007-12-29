@@ -93,7 +93,6 @@
                 <include>javax.servlet:servlet-api</include>
                 <include>stax:stax-api</include>
                 <include>org.codehaus.woodstox:wstx-asl</include>
-                <include>com.thoughtworks.xstream:xstream</include>
                 <include>org.apache.tuscany:commonj-api_r1.1</include>
                 <include>javax.activation:activation</include>
             </includes>
