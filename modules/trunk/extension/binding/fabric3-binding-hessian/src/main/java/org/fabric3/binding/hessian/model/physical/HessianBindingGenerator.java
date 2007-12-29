@@ -21,18 +21,21 @@ package org.fabric3.binding.hessian.model.physical;
 import java.net.URI;
 import java.util.Set;
 
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.binding.hessian.model.logical.HessianBindingDefinition;
-import org.fabric3.extension.generator.BindingGeneratorExtension;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
+import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
+import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalBinding;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Implementation of the hessian binding generator.
@@ -40,11 +43,19 @@ import org.osoa.sca.annotations.Reference;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class HessianBindingGenerator extends BindingGeneratorExtension<HessianWireSourceDefinition, HessianWireTargetDefinition, HessianBindingDefinition> {
+public class HessianBindingGenerator implements BindingGenerator<HessianWireSourceDefinition, HessianWireTargetDefinition, HessianBindingDefinition> {
     private ClassLoaderGenerator classLoaderGenerator;
+    private GeneratorRegistry generatorRegistry;
 
-    public HessianBindingGenerator(@Reference ClassLoaderGenerator classLoaderGenerator) {
+    public HessianBindingGenerator(@Reference ClassLoaderGenerator classLoaderGenerator,
+                                   @Reference GeneratorRegistry generatorRegistry) {
         this.classLoaderGenerator = classLoaderGenerator;
+        this.generatorRegistry = generatorRegistry;
+    }
+
+    @Init
+    public void start() {
+        generatorRegistry.register(HessianBindingDefinition.class, this);
     }
 
     public HessianWireSourceDefinition generateWireSource(LogicalBinding<HessianBindingDefinition> logicalBinding,
@@ -74,11 +85,6 @@ public class HessianBindingGenerator extends BindingGeneratorExtension<HessianWi
 
         return hwtd;
 
-    }
-
-    @Override
-    protected Class<HessianBindingDefinition> getBindingDefinitionClass() {
-        return HessianBindingDefinition.class;
     }
 
 }
