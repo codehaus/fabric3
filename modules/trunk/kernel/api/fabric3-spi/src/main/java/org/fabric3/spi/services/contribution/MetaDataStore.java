@@ -28,13 +28,6 @@ import java.net.URI;
 public interface MetaDataStore {
 
     /**
-     * Returns the store id.
-     *
-     * @return the store id
-     */
-    String getId();
-
-    /**
      * Stores the contribution metadata
      *
      * @param contribution the contribution metadata

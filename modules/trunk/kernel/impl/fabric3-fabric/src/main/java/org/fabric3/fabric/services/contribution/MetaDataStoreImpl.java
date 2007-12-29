@@ -26,8 +26,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.xml.namespace.QName;
 
 import org.osoa.sca.Constants;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.ContributionException;
@@ -47,13 +45,11 @@ import org.fabric3.spi.services.contribution.Symbol;
  *
  * @version $Rev$ $Date$
  */
-@EagerInit
 public class MetaDataStoreImpl implements MetaDataStore {
     public static final QName COMPOSITE = new QName(Constants.SCA_NS, "composite");
     private Map<URI, Contribution> cache = new ConcurrentHashMap<URI, Contribution>();
     private Map<QName, Map<Export, Contribution>> exportsToContributionCache =
             new ConcurrentHashMap<QName, Map<Export, Contribution>>();
-    private String storeId = "DefaultStore";
     private ProcessorRegistry processorRegistry;
     private ClassLoaderRegistry classLoaderRegistry;
 
@@ -61,15 +57,6 @@ public class MetaDataStoreImpl implements MetaDataStore {
                              @Reference ProcessorRegistry processorRegistry) {
         this.classLoaderRegistry = classLoaderRegistry;
         this.processorRegistry = processorRegistry;
-    }
-
-    @Property(required = false)
-    public void setStoreId(String storeId) {
-        this.storeId = storeId;
-    }
-
-    public String getId() {
-        return storeId;
     }
 
     public void store(Contribution contribution) throws MetaDataStoreException {
