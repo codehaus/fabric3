@@ -18,47 +18,53 @@
  */
 package org.fabric3.fabric.policy.interceptor.simple;
 
-import org.fabric3.extension.interceptor.InterceptorBuilderExtension;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.spi.builder.BuilderException;
+import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
+import org.fabric3.spi.builder.interceptor.InterceptorBuilderRegistry;
 import org.fabric3.spi.wire.Interceptor;
 
 /**
  * Builder for simple interceptors.
- * 
- * TODO Not sure whether the loader will have the class definition, probably not, 
- * the interceptor builder will need the classloader passed in.
- * 
+ * <p/>
+ * TODO Not sure whether the loader will have the class definition, probably not, the interceptor builder will need the
+ * classloader passed in.
+ *
  * @version $Revision$ $Date$
  */
-public class SimpleInterceptorBuilder extends InterceptorBuilderExtension<SimpleInterceptorDefinition, Interceptor> {
+@EagerInit
+public class SimpleInterceptorBuilder implements InterceptorBuilder<SimpleInterceptorDefinition, Interceptor> {
+    private InterceptorBuilderRegistry registry;
 
-    /**
-     * @see org.fabric3.extension.interceptor.InterceptorBuilderExtension#getInterceptorDefinitionClass()
-     */
-    @Override
-    protected Class<SimpleInterceptorDefinition> getInterceptorDefinitionClass() {
-        return SimpleInterceptorDefinition.class;
+    public SimpleInterceptorBuilder(@Reference InterceptorBuilderRegistry registry) {
+        this.registry = registry;
     }
 
-    /**
-     * @see org.fabric3.spi.builder.interceptor.InterceptorBuilder#build(org.fabric3.spi.model.physical.PhysicalInterceptorDefinition)
-     */
+    @Init
+    public void init() {
+        registry.register(SimpleInterceptorDefinition.class, this);
+    }
+
+
     public Interceptor build(SimpleInterceptorDefinition definition) throws BuilderException {
-        
+
         String className = definition.getInterceptorClass();
-        
+
         try {
             @SuppressWarnings("unchecked")
             Class<Interceptor> interceptorClass = (Class<Interceptor>) Class.forName(className);
             return interceptorClass.newInstance();
         } catch (InstantiationException ex) {
-            throw new SimpleInterceptorBuilderException("Unable to instantiate", className, ex);            
+            throw new SimpleInterceptorBuilderException("Unable to instantiate", className, ex);
         } catch (IllegalAccessException ex) {
             throw new SimpleInterceptorBuilderException("Cannot access class or constructor", className, ex);
         } catch (ClassNotFoundException ex) {
             throw new SimpleInterceptorBuilderException("Class not found", className, ex);
         }
-        
+
     }
 
 }

@@ -20,30 +20,43 @@ package org.fabric3.fabric.policy.interceptor.simple;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.extension.generator.InterceptorDefinitionGeneratorExtension;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Element;
+
 import org.fabric3.spi.Constants;
 import org.fabric3.spi.generator.GeneratorContext;
-import org.w3c.dom.Element;
+import org.fabric3.spi.generator.GeneratorRegistry;
+import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
 
 /**
  * Interceptor definition generator for simple policy set extensions.
- * 
+ *
  * @version $Revision$ $Date$
  */
-public class SimpleInterceptorDefinitionGenerator extends InterceptorDefinitionGeneratorExtension {
-    
+@EagerInit
+public class SimpleInterceptorDefinitionGenerator implements InterceptorDefinitionGenerator {
     // Qualified name of the handled element
     private static final QName EXTENSION_NAME = new QName(Constants.FABRIC3_NS, "interceptor");
+    private GeneratorRegistry generatorRegistry;
 
-    @Override
-    protected QName getExtensionName() {
-        return EXTENSION_NAME;
+    public SimpleInterceptorDefinitionGenerator(@Reference GeneratorRegistry generatorRegistry) {
+        this.generatorRegistry = generatorRegistry;
+    }
+
+    /**
+     * Registers with the registry.
+     */
+    @Init
+    public void start() {
+        generatorRegistry.register(EXTENSION_NAME, this);
     }
 
     public SimpleInterceptorDefinition generate(Element policySetDefinition, GeneratorContext context) {
-        
+
         String interceptorClass = policySetDefinition.getAttribute("class");
-        
+
         return new SimpleInterceptorDefinition(interceptorClass);
     }
 

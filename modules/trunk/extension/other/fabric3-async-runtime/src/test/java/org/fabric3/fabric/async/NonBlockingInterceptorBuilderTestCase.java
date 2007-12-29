@@ -26,7 +26,7 @@ import junit.framework.TestCase;
 public class NonBlockingInterceptorBuilderTestCase extends TestCase {
 
     public void testBuild() throws Exception {
-        NonBlockingInterceptorBuilder builder = new NonBlockingInterceptorBuilder(null);
+        NonBlockingInterceptorBuilder builder = new NonBlockingInterceptorBuilder(null, null);
         NonBlockingInterceptorDefinition definition = new NonBlockingInterceptorDefinition();
         assertNotNull(builder.build(definition));
     }

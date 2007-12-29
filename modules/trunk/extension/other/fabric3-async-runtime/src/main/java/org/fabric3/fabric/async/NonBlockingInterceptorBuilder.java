@@ -19,10 +19,12 @@
 package org.fabric3.fabric.async;
 
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.extension.interceptor.InterceptorBuilderExtension;
 import org.fabric3.spi.builder.BuilderException;
+import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
+import org.fabric3.spi.builder.interceptor.InterceptorBuilderRegistry;
 import org.fabric3.spi.services.work.WorkScheduler;
 
 /**
@@ -30,21 +32,26 @@ import org.fabric3.spi.services.work.WorkScheduler;
  *
  * @version $Rev$ $Date$
  */
-@EagerInit      
+@EagerInit
 public class NonBlockingInterceptorBuilder
-        extends InterceptorBuilderExtension<NonBlockingInterceptorDefinition, NonBlockingInterceptor> {
+        implements InterceptorBuilder<NonBlockingInterceptorDefinition, NonBlockingInterceptor> {
     private WorkScheduler scheduler;
+    private InterceptorBuilderRegistry registry;
 
-    public NonBlockingInterceptorBuilder(@Reference(required = true)WorkScheduler scheduler) {
+    public NonBlockingInterceptorBuilder(@Reference WorkScheduler scheduler,
+                                         @Reference InterceptorBuilderRegistry registry) {
         this.scheduler = scheduler;
+        this.registry = registry;
     }
+
+    @Init
+    public void init() {
+        registry.register(NonBlockingInterceptorDefinition.class, this);
+    }
+
 
     public NonBlockingInterceptor build(NonBlockingInterceptorDefinition definition) throws BuilderException {
         return new NonBlockingInterceptor(scheduler);
     }
 
-    @Override
-    protected Class<NonBlockingInterceptorDefinition> getInterceptorDefinitionClass() {
-        return NonBlockingInterceptorDefinition.class;
-    }
 }

@@ -64,7 +64,6 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="fabric3-extension" exported="" />
     <orderEntry type="module" module-name="fabric3-host-api" exported="" />
     <orderEntry type="module" module-name="fabric3-scdl" exported="" />
     <orderEntry type="module" module-name="fabric3-spi" exported="" />

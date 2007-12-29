@@ -20,29 +20,42 @@ package org.fabric3.tx.interceptor;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.extension.generator.InterceptorDefinitionGeneratorExtension;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Element;
+
 import org.fabric3.spi.Constants;
 import org.fabric3.spi.generator.GeneratorContext;
-import org.w3c.dom.Element;
+import org.fabric3.spi.generator.GeneratorRegistry;
+import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
 
 /**
  * Interceptor definition generator for suspend transaction policy extensions.
- * 
+ *
  * @version $Revision$ $Date$
  */
-public class TxInterceptorDefinitionGenerator extends InterceptorDefinitionGeneratorExtension {
-
+@EagerInit
+public class TxInterceptorDefinitionGenerator implements InterceptorDefinitionGenerator {
     private static final QName EXTENSION_NAME = new QName(Constants.FABRIC3_NS, "transaction");
-    
-    @Override
-    protected QName getExtensionName() {
-        return EXTENSION_NAME;
+    private GeneratorRegistry generatorRegistry;
+
+    public TxInterceptorDefinitionGenerator(@Reference GeneratorRegistry generatorRegistry) {
+        this.generatorRegistry = generatorRegistry;
+    }
+
+    /**
+     * Registers with the registry.
+     */
+    @Init
+    public void start() {
+        generatorRegistry.register(EXTENSION_NAME, this);
     }
 
     public TxInterceptorDefinition generate(Element policySetDefinition, GeneratorContext context) {
 
         String action = policySetDefinition.getAttribute("action");
-        
+
         return new TxInterceptorDefinition(TxAction.valueOf(action));
     }
 

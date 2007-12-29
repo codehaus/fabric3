@@ -20,39 +20,34 @@ package org.fabric3.tx.interceptor;
 
 import javax.transaction.TransactionManager;
 
-import org.fabric3.extension.interceptor.InterceptorBuilderExtension;
-import org.fabric3.spi.builder.BuilderException;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.EagerInit;
+
+import org.fabric3.spi.builder.BuilderException;
+import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
+import org.fabric3.spi.builder.interceptor.InterceptorBuilderRegistry;
 
 /**
  * @version $Revision$ $Date$
  */
-public class TxInterceptorBuilder extends InterceptorBuilderExtension<TxInterceptorDefinition, TxInterceptor> {
-
+@EagerInit
+public class TxInterceptorBuilder implements InterceptorBuilder<TxInterceptorDefinition, TxInterceptor> {
+    private InterceptorBuilderRegistry registry;
     // Transaction manager
     private TransactionManager transactionManager;
-    
-    /**
-     * Injects the transaction manager.
-     * 
-     * @param transactionManager Injected transaction manager.
-     */
-    @Reference(required = true)
-    public void setTransactionManager(TransactionManager transactionManager) {
+
+    public TxInterceptorBuilder(@Reference InterceptorBuilderRegistry registry,
+                                @Reference TransactionManager transactionManager) {
+        this.registry = registry;
         this.transactionManager = transactionManager;
     }
-    
-    /**
-     * @see org.fabric3.extension.interceptor.InterceptorBuilderExtension#getInterceptorDefinitionClass()
-     */
-    @Override
-    protected Class<TxInterceptorDefinition> getInterceptorDefinitionClass() {
-        return TxInterceptorDefinition.class;
+
+    @Init
+    public void init() {
+        registry.register(TxInterceptorDefinition.class, this);
     }
 
-    /**
-     * @see org.fabric3.spi.builder.interceptor.InterceptorBuilder#build(org.fabric3.spi.model.physical.PhysicalInterceptorDefinition)
-     */
     public TxInterceptor build(TxInterceptorDefinition interceptorDefinition) throws BuilderException {
         return new TxInterceptor(transactionManager, interceptorDefinition.getAction());
     }
