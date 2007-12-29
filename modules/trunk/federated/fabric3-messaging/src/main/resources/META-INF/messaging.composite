@@ -21,8 +21,8 @@
            name="MessagingComposite"
            autowire="true">
 
-    <component name="DeploymentListener">
-        <system:implementation.system class="org.fabric3.messaging.impl.DeploymentListener"/>
+    <component name="PhysicalChangeSetListener">
+        <system:implementation.system class="org.fabric3.messaging.listener.PhysicalChangeSetListener"/>
     </component>
 
     <component name="CommandSetListener">
