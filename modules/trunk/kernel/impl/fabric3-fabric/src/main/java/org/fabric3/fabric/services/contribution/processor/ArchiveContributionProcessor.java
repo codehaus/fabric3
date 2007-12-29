@@ -21,7 +21,6 @@ import java.net.URL;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.extension.contribution.ContributionProcessorExtension;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.spi.model.type.ContributionResourceDescription;
 import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
@@ -33,7 +32,7 @@ import org.fabric3.spi.services.contribution.Resource;
  *
  * @version $Rev$ $Date$
  */
-public abstract class ArchiveContributionProcessor extends ContributionProcessorExtension {
+public abstract class ArchiveContributionProcessor extends AbstractContributionProcessor {
     protected ArtifactLocationEncoder encoder;
 
     protected ArchiveContributionProcessor(@Reference ArtifactLocationEncoder encoder) {

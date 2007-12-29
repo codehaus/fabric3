@@ -19,13 +19,12 @@
 
 package org.fabric3.fabric.services.contribution.processor;
 
-import org.fabric3.extension.contribution.ContributionProcessorExtension;
 import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionProcessor;
 
-public class CompositeContributionProcessor extends ContributionProcessorExtension implements ContributionProcessor {
+public class CompositeContributionProcessor extends AbstractContributionProcessor implements ContributionProcessor {
 
     public String[] getContentTypes() {
         return new String[]{Constants.COMPOSITE_CONTENT_TYPE};

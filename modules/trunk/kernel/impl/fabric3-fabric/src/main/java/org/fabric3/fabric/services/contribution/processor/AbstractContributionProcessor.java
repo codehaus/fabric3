@@ -17,7 +17,7 @@
  * under the License.    
  */
 
-package org.fabric3.extension.contribution;
+package org.fabric3.fabric.services.contribution.processor;
 
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
@@ -38,7 +38,7 @@ import org.fabric3.spi.services.contribution.ProcessorRegistry;
  */
 @EagerInit
 @Service(ContributionProcessor.class)
-public abstract class ContributionProcessorExtension implements ContributionProcessor {
+public abstract class AbstractContributionProcessor implements ContributionProcessor {
     protected ProcessorRegistry registry;
 
     /**
