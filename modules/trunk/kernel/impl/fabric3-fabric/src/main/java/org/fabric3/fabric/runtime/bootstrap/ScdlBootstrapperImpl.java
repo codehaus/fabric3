@@ -42,14 +42,12 @@ import org.fabric3.fabric.services.classloading.ClassLoaderRegistryImpl;
 import org.fabric3.fabric.services.contribution.MetaDataStoreImpl;
 import org.fabric3.fabric.services.contribution.ProcessorRegistryImpl;
 import org.fabric3.fabric.services.xstream.XStreamFactoryImpl;
-import org.fabric3.host.monitor.FormatterRegistry;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.loader.common.LoaderContextImpl;
-import org.fabric3.monitor.DefaultFormatterRegistry;
 import org.fabric3.pojo.processor.JavaIntrospectionHelper;
 import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.PojoComponentType;
@@ -175,9 +173,6 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
 
         RuntimeServices runtimeServices = (RuntimeServices) runtime;
-
-        DefaultFormatterRegistry formatterRegistry = new DefaultFormatterRegistry();
-        registerSystemComponent(runtimeServices, "FormatterRegistry", FormatterRegistry.class, formatterRegistry);
 
         ClassLoaderRegistry classLoaderRegistry = new ClassLoaderRegistryImpl();
         registerSystemComponent(runtimeServices, "ClassLoaderRegistry", ClassLoaderRegistry.class, classLoaderRegistry);
