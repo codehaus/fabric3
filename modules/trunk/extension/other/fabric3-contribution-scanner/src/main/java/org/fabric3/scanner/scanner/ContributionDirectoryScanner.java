@@ -35,8 +35,12 @@ import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.XMLStreamWriter;
 
-import com.thoughtworks.xstream.XStream;
 import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
@@ -54,6 +58,8 @@ import org.fabric3.host.contribution.FileContributionSource;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.assembly.Assembly;
+import org.fabric3.spi.marshaller.MarshalException;
+import org.fabric3.spi.marshaller.MarshalService;
 import org.fabric3.spi.scanner.FileSystemResource;
 import org.fabric3.spi.scanner.FileSystemResourceFactoryRegistry;
 import org.fabric3.spi.services.VoidService;
@@ -61,6 +67,7 @@ import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.services.event.Fabric3Event;
 import org.fabric3.spi.services.event.Fabric3EventListener;
 import org.fabric3.spi.services.event.RuntimeStart;
+import org.fabric3.spi.services.factories.xml.XMLFactory;
 
 /**
  * Periodically scans a directory for new, updated, or removed contributions. New contributions are added to the domain
@@ -87,8 +94,10 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
     private final Map<String, FileSystemResource> errorCache = new HashMap<String, FileSystemResource>();
     private final ContributionService contributionService;
     private final EventService eventService;
+    private final MarshalService marshallService;
+    private final XMLInputFactory xmlInputFactory;
+    private final XMLOutputFactory xmlOutputFactory;
     private final ScannerMonitor monitor;
-    private final XStream xstream;
     private final Assembly assembly;
     private Map<String, URI> processed = new HashMap<String, URI>();
     private FileSystemResourceFactoryRegistry registry;
@@ -104,13 +113,16 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
                                         @Reference ContributionService contributionService,
                                         @Reference(name = "assembly")Assembly assembly,
                                         @Reference EventService eventService,
+                                        @Reference MarshalService service,
+                                        @Reference XMLFactory xmlFactory,
                                         @Reference MonitorFactory factory) {
         this.registry = registry;
         this.contributionService = contributionService;
         this.assembly = assembly;
         this.eventService = eventService;
-        ClassLoaderStaxDriver driver = new ClassLoaderStaxDriver(this.getClass().getClassLoader());
-        this.xstream = new XStream(driver);
+        this.marshallService = service;
+        this.xmlInputFactory = xmlFactory.newInputFactoryInstance();
+        this.xmlOutputFactory = xmlFactory.newOutputFactoryInstance();
         this.monitor = factory.getMonitor(ScannerMonitor.class);
     }
 
@@ -145,6 +157,10 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
             executor.scheduleWithFixedDelay(this, 10, delay, TimeUnit.MILLISECONDS);
         } catch (FileNotFoundException e) {
             monitor.recoveryError(e);
+        } catch (MarshalException e) {
+            monitor.recoveryError(e);
+        } catch (XMLStreamException e) {
+            monitor.recoveryError(e);
         }
     }
 
@@ -169,12 +185,16 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
             monitor.recoveryError(e);
         } catch (RuntimeException e) {
             monitor.error(e);
+        } catch (MarshalException e) {
+            monitor.error(e);
+        } catch (XMLStreamException e) {
+            monitor.error(e);
         }
 
     }
 
     @SuppressWarnings({"unchecked"})
-    synchronized void recover() throws FileNotFoundException {
+    synchronized void recover() throws FileNotFoundException, XMLStreamException, MarshalException {
         File extensionDir = new File(path);
         if (!extensionDir.isDirectory()) {
             // we don't have an extension directory, there's nothing to do
@@ -187,7 +207,8 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
         InputStream is = null;
         try {
             is = new BufferedInputStream(new FileInputStream(processedIndex));
-            processed = (HashMap<String, URI>) xstream.fromXML(is);
+            XMLStreamReader reader = xmlInputFactory.createXMLStreamReader(is);
+            processed = marshallService.unmarshall(HashMap.class, reader);
         } finally {
             try {
                 if (is != null) {
@@ -330,16 +351,19 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
     /**
      * Persists the list of processed resources for recovery
      *
-     * @throws java.io.FileNotFoundException if an error occurs opening the persisted file
+     * @throws FileNotFoundException if an error occurs opening the persisted file
+     * @throws XMLStreamException    if an error occurs creating the XML stream
+     * @throws MarshalException      if an error occurs marshalling
      */
-    private synchronized void save() throws FileNotFoundException {
+    private synchronized void save() throws FileNotFoundException, XMLStreamException, MarshalException {
         if (!persistent) {
             return;
         }
         OutputStream os = null;
         try {
             os = new BufferedOutputStream(new FileOutputStream(processedIndex));
-            xstream.toXML(processed, os);
+            XMLStreamWriter writer = xmlOutputFactory.createXMLStreamWriter(os);
+            marshallService.marshall(processed, writer);
         } catch (Error e) {
             e.printStackTrace();
         } finally {
