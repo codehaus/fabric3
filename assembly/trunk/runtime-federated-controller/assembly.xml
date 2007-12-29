@@ -109,8 +109,10 @@
                 <include>org.codehaus.fabric3:fabric3-contribution-scanner-spi</include>
                 <include>org.codehaus.fabric3:fabric3-contribution-scanner</include>
                 <include>org.codehaus.fabric3:fabric3-resource</include>
+ 					 <include>org.codehaus.fabric3:fabric3-marshal-xstream</include>
    				 <include>org.codehaus.fabric3:fabric3-jxta</include>
 					 <include>org.codehaus.fabric3:fabric3-discovery-jxta</include>
+					 <include>org.codehaus.fabric3:fabric3-messaging</include>
 					 <include>org.codehaus.fabric3:fabric3-messaging-jxta</include>
             </includes>
             <outputDirectory>extensions</outputDirectory>
