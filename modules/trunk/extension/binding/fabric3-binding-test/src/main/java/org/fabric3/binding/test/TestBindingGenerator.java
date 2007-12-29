@@ -18,15 +18,19 @@ package org.fabric3.binding.test;
 
 import java.util.Set;
 
-import org.fabric3.extension.generator.BindingGeneratorExtension;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
+import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
+import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalBinding;
-import org.osoa.sca.annotations.EagerInit;
 
 /**
  * Implementation of the test binding generator.
@@ -34,7 +38,17 @@ import org.osoa.sca.annotations.EagerInit;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class TestBindingGenerator extends BindingGeneratorExtension<TestBindingSourceDefinition, TestBindingTargetDefinition, TestBindingDefinition> {
+public class TestBindingGenerator implements BindingGenerator<TestBindingSourceDefinition, TestBindingTargetDefinition, TestBindingDefinition> {
+    private GeneratorRegistry generatorRegistry;
+
+    public TestBindingGenerator(@Reference GeneratorRegistry generatorRegistry) {
+        this.generatorRegistry = generatorRegistry;
+    }
+
+    @Init
+    public void start() {
+        generatorRegistry.register(TestBindingDefinition.class, this);
+    }
 
     public TestBindingSourceDefinition generateWireSource(LogicalBinding<TestBindingDefinition> logicalBinding,
                                                           Set<Intent> intents,
@@ -59,9 +73,5 @@ public class TestBindingGenerator extends BindingGeneratorExtension<TestBindingS
         return definition;
     }
 
-    @Override
-    protected Class<TestBindingDefinition> getBindingDefinitionClass() {
-        return TestBindingDefinition.class;
-    }
 
 }
