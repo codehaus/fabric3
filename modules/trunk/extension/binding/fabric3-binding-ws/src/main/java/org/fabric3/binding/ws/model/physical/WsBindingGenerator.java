@@ -21,20 +21,23 @@ package org.fabric3.binding.ws.model.physical;
 import java.util.Map;
 import java.util.Set;
 
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.binding.ws.model.logical.WsBindingDefinition;
-import org.fabric3.extension.generator.BindingGeneratorExtension;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
+import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.BindingGeneratorDelegate;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
+import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Implementation of the WS binding generator.
@@ -42,13 +45,23 @@ import org.osoa.sca.annotations.Reference;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class WsBindingGenerator extends BindingGeneratorExtension<PhysicalWireSourceDefinition, PhysicalWireTargetDefinition, WsBindingDefinition> {
-
+public class WsBindingGenerator implements BindingGenerator<PhysicalWireSourceDefinition, PhysicalWireTargetDefinition, WsBindingDefinition> {
     private Map<String, BindingGeneratorDelegate<WsBindingDefinition>> delegates;
+    private GeneratorRegistry generatorRegistry;
+
+    @Reference
+    public void setGeneratorRegistry(GeneratorRegistry generatorRegistry) {
+        this.generatorRegistry = generatorRegistry;
+    }
 
     @Reference
     public void setDelegates(Map<String, BindingGeneratorDelegate<WsBindingDefinition>> delegates) {
         this.delegates = delegates;
+    }
+
+    @Init
+    public void start() {
+        generatorRegistry.register(WsBindingDefinition.class, this);
     }
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalBinding<WsBindingDefinition> logicalBinding,
@@ -60,10 +73,10 @@ public class WsBindingGenerator extends BindingGeneratorExtension<PhysicalWireSo
 
         BindingGeneratorDelegate<WsBindingDefinition> delegate = getDelegate(logicalBinding);
 
-        return delegate.generateWireSource(logicalBinding, 
-                                           intentsToBeProvided, 
-                                           policySetsToBeProvided, 
-                                           generatorContext, 
+        return delegate.generateWireSource(logicalBinding,
+                                           intentsToBeProvided,
+                                           policySetsToBeProvided,
+                                           generatorContext,
                                            serviceDefinition);
 
     }
@@ -77,17 +90,12 @@ public class WsBindingGenerator extends BindingGeneratorExtension<PhysicalWireSo
 
         BindingGeneratorDelegate<WsBindingDefinition> delegate = getDelegate(logicalBinding);
 
-        return delegate.generateWireTarget(logicalBinding, 
-                                           intentsToBeProvided, 
-                                           policySetsToBeProvided, 
-                                           generatorContext, 
+        return delegate.generateWireTarget(logicalBinding,
+                                           intentsToBeProvided,
+                                           policySetsToBeProvided,
+                                           generatorContext,
                                            referenceDefinition);
 
-    }
-
-    @Override
-    protected Class<WsBindingDefinition> getBindingDefinitionClass() {
-        return WsBindingDefinition.class;
     }
 
     /*
