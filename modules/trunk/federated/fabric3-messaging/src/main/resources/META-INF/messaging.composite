@@ -25,5 +25,8 @@
         <system:implementation.system class="org.fabric3.messaging.impl.DeploymentListener"/>
     </component>
 
+    <component name="CommandSetListener">
+        <system:implementation.system class="org.fabric3.messaging.listener.CommandSetListener"/>
+    </component>
 
 </composite>

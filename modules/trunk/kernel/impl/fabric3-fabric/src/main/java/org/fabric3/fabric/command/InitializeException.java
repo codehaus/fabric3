@@ -19,7 +19,7 @@ package org.fabric3.fabric.command;
 import org.fabric3.spi.command.ExecutionException;
 
 /**
- * Denotes an error executing the {@link InitializeComponentCommand}
+ * Denotes an error executing the {@link org.fabric3.spi.command.InitializeComponentCommand}
  *
  * @version $Rev$ $Date$
  */

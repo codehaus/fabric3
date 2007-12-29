@@ -24,15 +24,15 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
 import org.fabric3.fabric.generator.DefaultGeneratorContext;
+import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.Composite;
+import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.command.CommandSet;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.Composite;
-import org.fabric3.scdl.CompositeImplementation;
 
 /**
  * @version $Rev$ $Date$
@@ -70,7 +70,8 @@ public class StartCompositeContextGeneratorTestCase extends TestCase {
 
         URI runtimeUri = URI.create("runtime1");
         component = new LogicalComponent<CompositeImplementation>(PARENT, runtimeUri, parentDefinition, null);
-        LogicalComponent<?> child = new LogicalComponent<CompositeImplementation>(CHILD, runtimeUri, childDefinition, null);
+        LogicalComponent<?> child =
+                new LogicalComponent<CompositeImplementation>(CHILD, runtimeUri, childDefinition, null);
         component.addComponent(child);
     }
 
@@ -80,8 +81,8 @@ public class StartCompositeContextGeneratorTestCase extends TestCase {
         impl.setComponentType(type);
         ComponentDefinition<CompositeImplementation> def = new ComponentDefinition<CompositeImplementation>(name);
         def.setImplementation(impl);
-        
-        
+
+
         return def;
     }
 }

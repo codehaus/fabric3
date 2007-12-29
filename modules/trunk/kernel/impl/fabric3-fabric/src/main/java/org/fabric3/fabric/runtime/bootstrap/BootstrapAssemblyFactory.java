@@ -38,7 +38,6 @@ import org.fabric3.fabric.command.InitializeComponentExecutor;
 import org.fabric3.fabric.command.StartCompositeContextCommand;
 import org.fabric3.fabric.command.StartCompositeContextExecutor;
 import org.fabric3.fabric.command.StartCompositeContextGenerator;
-import org.fabric3.spi.deployer.Deployer;
 import org.fabric3.fabric.deployer.DeployerImpl;
 import org.fabric3.fabric.generator.GeneratorRegistryImpl;
 import org.fabric3.fabric.implementation.singleton.SingletonGenerator;
@@ -77,13 +76,14 @@ import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
-import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.spi.assembly.Assembly;
+import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.builder.component.WireAttacherRegistry;
 import org.fabric3.spi.builder.resource.ResourceContainerBuilderRegistry;
 import org.fabric3.spi.command.CommandExecutorRegistry;
 import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.spi.deployer.Deployer;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.policy.NullPolicyResolver;
 import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
@@ -109,24 +109,30 @@ import org.fabric3.transform.dom2java.String2String;
 public class BootstrapAssemblyFactory {
     public static Assembly createAssembly(Fabric3Runtime<?> runtime) throws InitializationException {
         MonitorFactory monitorFactory = runtime.getMonitorFactory();
-        ClassLoaderRegistry classLoaderRegistry = runtime.getSystemComponent(ClassLoaderRegistry.class, ComponentNames.CLASSLOADER_REGISTRY_URI);
-        ComponentManager componentManager = runtime.getSystemComponent(ComponentManager.class, URI.create(ComponentNames.RUNTIME_NAME + "/ComponentManager"));
-        LogicalComponentManager lcm = runtime.getSystemComponent(LogicalComponentManager.class, URI.create(ComponentNames.RUNTIME_NAME + "/LogicalComponentManager"));
-        MetaDataStore metaDataStore = runtime.getSystemComponent(MetaDataStore.class, ComponentNames.METADATA_STORE_URI);
-        ScopeRegistry scopeRegistry = runtime.getSystemComponent(ScopeRegistry.class, ComponentNames.SCOPE_REGISTRY_URI);
+        ClassLoaderRegistry classLoaderRegistry =
+                runtime.getSystemComponent(ClassLoaderRegistry.class, ComponentNames.CLASSLOADER_REGISTRY_URI);
+        ComponentManager componentManager = runtime.getSystemComponent(ComponentManager.class,
+                                                                       URI.create(ComponentNames.RUNTIME_NAME + "/ComponentManager"));
+        LogicalComponentManager lcm = runtime.getSystemComponent(LogicalComponentManager.class,
+                                                                 URI.create(ComponentNames.RUNTIME_NAME + "/LogicalComponentManager"));
+        MetaDataStore metaDataStore =
+                runtime.getSystemComponent(MetaDataStore.class, ComponentNames.METADATA_STORE_URI);
+        ScopeRegistry scopeRegistry =
+                runtime.getSystemComponent(ScopeRegistry.class, ComponentNames.SCOPE_REGISTRY_URI);
         return createAssembly(monitorFactory, classLoaderRegistry, scopeRegistry, componentManager, lcm, metaDataStore);
     }
 
     public static Assembly createAssembly(MonitorFactory monitorFactory,
-                                               ClassLoaderRegistry classLoaderRegistry,
-                                               ScopeRegistry scopeRegistry,
-                                               ComponentManager componentManager,
-                                               LogicalComponentManager logicalComponentManager,
-                                               MetaDataStore metaDataStore) throws InitializationException {
+                                          ClassLoaderRegistry classLoaderRegistry,
+                                          ScopeRegistry scopeRegistry,
+                                          ComponentManager componentManager,
+                                          LogicalComponentManager logicalComponentManager,
+                                          MetaDataStore metaDataStore) throws InitializationException {
         Allocator allocator = new LocalAllocator();
 
         Deployer deployer = createDeployer(monitorFactory, classLoaderRegistry, scopeRegistry, componentManager);
-        CommandExecutorRegistry commandRegistry = createCommandExecutorRegistry(scopeRegistry, monitorFactory, componentManager);
+        CommandExecutorRegistry commandRegistry =
+                createCommandExecutorRegistry(scopeRegistry, componentManager);
         RuntimeRoutingService routingService = new RuntimeRoutingService(deployer, commandRegistry);
 
         GeneratorRegistry generatorRegistry = createGeneratorRegistry(classLoaderRegistry);
@@ -149,12 +155,12 @@ public class BootstrapAssemblyFactory {
                                                                                     compositeComponentInstantiator);
 
         Assembly runtimeAssembly = new RuntimeAssemblyImpl(allocator,
-                                                  routingService,
-                                                  metaDataStore,
-                                                  physicalModelGenerator,
-                                                  logicalModelGenerator,
-                                                  logicalComponentManager,
-                                                  wireGenerator);
+                                                           routingService,
+                                                           metaDataStore,
+                                                           physicalModelGenerator,
+                                                           logicalModelGenerator,
+                                                           logicalComponentManager,
+                                                           wireGenerator);
         try {
             runtimeAssembly.initialize();
         } catch (AssemblyException e) {
@@ -232,21 +238,14 @@ public class BootstrapAssemblyFactory {
 
     }
 
-    private static CommandExecutorRegistry createCommandExecutorRegistry(ScopeRegistry scopeRegistry, MonitorFactory monitorFactory, ComponentManager componentManager) {
+    private static CommandExecutorRegistry createCommandExecutorRegistry(ScopeRegistry scopeRegistry,
+                                                                         ComponentManager componentManager) {
 
         CommandExecutorRegistryImpl commandRegistry = new CommandExecutorRegistryImpl();
-        StartCompositeContextExecutor executor =
-                new StartCompositeContextExecutor(commandRegistry, scopeRegistry, monitorFactory);
-        InitializeComponentExecutor initExecutor =
-                new InitializeComponentExecutor(null,
-                                                null,
-                                                commandRegistry,
-                                                scopeRegistry,
-                                                componentManager,
-                                                monitorFactory);
+        StartCompositeContextExecutor executor = new StartCompositeContextExecutor(scopeRegistry);
+        InitializeComponentExecutor initExecutor = new InitializeComponentExecutor(scopeRegistry, componentManager);
         commandRegistry.register(StartCompositeContextCommand.class, executor);
         commandRegistry.register(InitializeComponentCommand.class, initExecutor);
-
         return commandRegistry;
 
     }
@@ -264,9 +263,9 @@ public class BootstrapAssemblyFactory {
     }
 
     private static PhysicalModelGenerator createPhysicalModelGenerator(GeneratorRegistry generatorRegistry,
-                                                                RoutingService routingService,
-                                                                LogicalComponentManager logicalComponentManager,
-                                                                PhysicalWireGenerator wireGenerator) {
+                                                                       RoutingService routingService,
+                                                                       LogicalComponentManager logicalComponentManager,
+                                                                       PhysicalWireGenerator wireGenerator) {
 
         return new PhysicalModelGeneratorImpl(generatorRegistry,
                                               routingService,

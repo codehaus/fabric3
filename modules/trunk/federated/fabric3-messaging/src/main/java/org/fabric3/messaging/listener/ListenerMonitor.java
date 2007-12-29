@@ -1,8 +1,6 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
+ * See the NOTICE file distributed with this work for information
+ * regarding copyright ownership.  This file is licensed
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
@@ -16,19 +14,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.extension.command;
+package org.fabric3.messaging.listener;
 
 /**
- * Receives command events
- *
  * @version $Rev$ $Date$
  */
-public interface CommandListenerMonitor {
+public interface ListenerMonitor {
 
-    /**
-     * Reports an error generating a command
-     *
-     * @param exception the error
-     */
-    void error(Exception exception);
+    void error(Throwable e);
 }

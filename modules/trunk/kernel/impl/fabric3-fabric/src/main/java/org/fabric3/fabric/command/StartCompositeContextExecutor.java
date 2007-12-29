@@ -17,49 +17,47 @@
 package org.fabric3.fabric.command;
 
 import java.net.URI;
-import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.Constructor;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.extension.command.AbstractCommandExecutor;
-import org.fabric3.extension.command.CommandListenerMonitor;
 import org.fabric3.extension.component.SimpleWorkContext;
-import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.scdl.Scope;
+import org.fabric3.spi.command.CommandExecutor;
 import org.fabric3.spi.command.CommandExecutorRegistry;
 import org.fabric3.spi.command.ExecutionException;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.spi.marshaller.MarshalService;
 import org.fabric3.spi.services.messaging.MessagingEventService;
 
 /**
- * Executes a {@link org.fabric3.fabric.command.StartCompositeContextCommand}. This implementation may be dispatched to
- * locally or remotely theough the {@link MessagingEventService}.
+ * Executes a {@link StartCompositeContextCommand}.
  *
  * @version $Rev$ $Date$
  */
-public class StartCompositeContextExecutor extends AbstractCommandExecutor<StartCompositeContextCommand> {
+@EagerInit
+public class StartCompositeContextExecutor implements CommandExecutor<StartCompositeContextCommand> {
     private ScopeContainer<URI> container;
+    private CommandExecutorRegistry commandExecutorRegistry;
 
     @Constructor
-    public StartCompositeContextExecutor(@Reference MessagingEventService eventService,
-                                         @Reference MarshalService marshalService,
-                                         @Reference CommandExecutorRegistry executorRegistry,
-                                         @Reference ScopeRegistry scopeRegistry,
-                                         @Reference MonitorFactory factory) {
-        super(eventService, marshalService, executorRegistry, factory.getMonitor(CommandListenerMonitor.class));
+    public StartCompositeContextExecutor(@Reference CommandExecutorRegistry commandExecutorRegistry,
+                                         @Reference ScopeRegistry scopeRegistry) {
+        this.commandExecutorRegistry = commandExecutorRegistry;
         this.container = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
     }
 
-    public StartCompositeContextExecutor(CommandExecutorRegistry executorRegistry,
-                                         ScopeRegistry scopeRegistry,
-                                         MonitorFactory factory) {
-        super(null, null, executorRegistry, factory.getMonitor(CommandListenerMonitor.class));
+    public StartCompositeContextExecutor(ScopeRegistry scopeRegistry) {
         this.container = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
+    }
+
+    @Init
+    public void init() {
+        commandExecutorRegistry.register(StartCompositeContextCommand.class, this);
     }
 
     public void execute(StartCompositeContextCommand command) throws ExecutionException {
@@ -72,14 +70,5 @@ public class StartCompositeContextExecutor extends AbstractCommandExecutor<Start
             throw new ExecutionException("Error executing command", e);
         }
     }
-
-    protected QName getCommandQName() {
-        return StartCompositeContextCommand.QNAME;
-    }
-
-    protected Class<StartCompositeContextCommand> getCommandType() {
-        return StartCompositeContextCommand.class;
-    }
-
 
 }

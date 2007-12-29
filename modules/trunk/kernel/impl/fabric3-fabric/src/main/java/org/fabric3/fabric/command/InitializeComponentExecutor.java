@@ -19,16 +19,15 @@ package org.fabric3.fabric.command;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.Constructor;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.extension.command.AbstractCommandExecutor;
-import org.fabric3.extension.command.CommandListenerMonitor;
 import org.fabric3.extension.component.SimpleWorkContext;
-import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.scdl.Scope;
+import org.fabric3.spi.command.CommandExecutor;
 import org.fabric3.spi.command.CommandExecutorRegistry;
 import org.fabric3.spi.command.ExecutionException;
 import org.fabric3.spi.component.AtomicComponent;
@@ -37,33 +36,35 @@ import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.spi.marshaller.MarshalService;
 import org.fabric3.spi.runtime.component.ComponentManager;
-import org.fabric3.spi.services.messaging.MessagingEventService;
 
 /**
  * Eagerly initializes a component on a service node.
  *
  * @version $Rev$ $Date$
  */
-public class InitializeComponentExecutor extends AbstractCommandExecutor<InitializeComponentCommand> {
+@EagerInit
+public class InitializeComponentExecutor implements CommandExecutor<InitializeComponentCommand> {
+    private CommandExecutorRegistry commandExecutorRegistry;
     private ComponentManager manager;
     private ScopeContainer<?> scopeContainer;
 
-    @Constructor
-    public InitializeComponentExecutor(@Reference MessagingEventService eventService,
-                                       @Reference MarshalService marshalService,
-                                       @Reference CommandExecutorRegistry commandExecutorRegistry,
-                                       @Reference ScopeRegistry scopeRegistry,
-                                       @Reference ComponentManager manager,
-                                       @Reference MonitorFactory factory) {
+    public InitializeComponentExecutor(ScopeRegistry scopeRegistry, ComponentManager manager) {
+        this(null, scopeRegistry, manager);
+    }
 
-        super(eventService,
-              marshalService,
-              commandExecutorRegistry,
-              factory.getMonitor(CommandListenerMonitor.class));
+    @Constructor
+    public InitializeComponentExecutor(@Reference CommandExecutorRegistry commandExecutorRegistry,
+                                       @Reference ScopeRegistry scopeRegistry,
+                                       @Reference ComponentManager manager) {
+        this.commandExecutorRegistry = commandExecutorRegistry;
         this.manager = manager;
-        scopeContainer = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
+        this.scopeContainer = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
+    }
+
+    @Init
+    public void init() {
+        commandExecutorRegistry.register(InitializeComponentCommand.class, this);
     }
 
     public void execute(InitializeComponentCommand command) throws ExecutionException {
@@ -83,13 +84,5 @@ public class InitializeComponentExecutor extends AbstractCommandExecutor<Initial
         } catch (GroupInitializationException e) {
             throw new ExecutionException("Error starting components", e);
         }
-    }
-
-    protected QName getCommandQName() {
-        return InitializeComponentCommand.QNAME;
-    }
-
-    protected Class<InitializeComponentCommand> getCommandType() {
-        return InitializeComponentCommand.class;
     }
 }

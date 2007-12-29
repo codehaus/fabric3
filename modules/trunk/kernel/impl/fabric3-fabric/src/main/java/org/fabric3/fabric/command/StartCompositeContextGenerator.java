@@ -22,15 +22,15 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.scdl.AbstractComponentType;
+import org.fabric3.scdl.Composite;
+import org.fabric3.scdl.Implementation;
 import org.fabric3.spi.command.CommandSet;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.scdl.AbstractComponentType;
-import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.Composite;
 
 /**
  * Generates a command to start the composite context on a service node. Child composite contexts will also be started
