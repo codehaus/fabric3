@@ -20,111 +20,107 @@ package org.fabric3.binding.jms.model.physical;
 
 import java.net.URI;
 import java.util.Set;
-
 import javax.xml.namespace.QName;
+
+import org.osoa.sca.Constants;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.jms.TransactionType;
 import org.fabric3.binding.jms.model.logical.JmsBindingDefinition;
-import org.fabric3.extension.generator.BindingGeneratorExtension;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
+import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
+import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalBinding;
-import org.osoa.sca.Constants;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
 
 /**
- * Binding generator that creates the physical source and target definitions for wires. Message 
- * acknowledgement is always expected to be using transactions, either local or global, as expressed by 
- * the intents transactedOneWay, transactedOneWay.local or transactedOneWay.global.
- * 
+ * Binding generator that creates the physical source and target definitions for wires. Message acknowledgement is
+ * always expected to be using transactions, either local or global, as expressed by the intents transactedOneWay,
+ * transactedOneWay.local or transactedOneWay.global.
+ *
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class JmsBindingGenerator extends BindingGeneratorExtension<JmsWireSourceDefinition, JmsWireTargetDefinition, JmsBindingDefinition> {
+public class JmsBindingGenerator implements BindingGenerator<JmsWireSourceDefinition, JmsWireTargetDefinition, JmsBindingDefinition> {
 
     // Transacted one way intent
     private static final QName TRANSACTED_ONEWAY = new QName(Constants.SCA_NS, "transactedOneWay");
     private static final QName TRANSACTED_ONEWAY_LOCAL = new QName(Constants.SCA_NS, "transactedOneWay.local");
     private static final QName TRANSACTED_ONEWAY_GLOBAL = new QName(Constants.SCA_NS, "transactedOneWay.global");
-    
+
     /**
      * Classloader generator.
      */
     private ClassLoaderGenerator classLoaderGenerator;
+    private GeneratorRegistry generatorRegistry;
 
     /**
      * Injects the classloader generator.
+     *
      * @param classLoaderGenerator Classloader generator.
+     * @param generatorRegistry    the generator registry
      */
-    public JmsBindingGenerator(@Reference ClassLoaderGenerator classLoaderGenerator) {
+    public JmsBindingGenerator(@Reference ClassLoaderGenerator classLoaderGenerator,
+                               @Reference GeneratorRegistry generatorRegistry) {
         this.classLoaderGenerator = classLoaderGenerator;
+        this.generatorRegistry = generatorRegistry;
     }
-    
-    /**
-     * @see org.fabric3.spi.generator.BindingGenerator#generateWireSource(org.fabric3.spi.model.instance.LogicalBinding,
-     *                                                                    java.util.Set,
-     *                                                                    org.fabric3.spi.model.type.ServiceDefinition)
-     */
+
+    @Init
+    public void start() {
+        generatorRegistry.register(JmsBindingDefinition.class, this);
+    }
+
+
     public JmsWireSourceDefinition generateWireSource(LogicalBinding<JmsBindingDefinition> logicalBinding,
                                                       Set<Intent> intentsToBeProvided,
                                                       Set<PolicySet> policySetsToBeProvided,
                                                       GeneratorContext context,
                                                       ServiceDefinition serviceDefinition) throws GenerationException {
-        
+
         TransactionType transactionType = getTransactionType(intentsToBeProvided);
         URI classloader = classLoaderGenerator.generate(logicalBinding, context);
         return new JmsWireSourceDefinition(logicalBinding.getBinding().getMetadata(), transactionType, classloader);
-        
+
     }
 
-    /**
-     * @see org.fabric3.spi.generator.BindingGenerator#generateWireTarget(org.fabric3.spi.model.instance.LogicalBinding,
-     *                                                                    java.util.Set,
-     *                                                                    org.fabric3.spi.model.type.ReferenceDefinition)
-     */
     public JmsWireTargetDefinition generateWireTarget(LogicalBinding<JmsBindingDefinition> logicalBinding,
                                                       Set<Intent> intentsToBeProvided,
                                                       Set<PolicySet> policySetsToBeProvided,
                                                       GeneratorContext context,
-                                                      ReferenceDefinition referenceDefinition) throws GenerationException {
-        
+                                                      ReferenceDefinition referenceDefinition)
+            throws GenerationException {
+
         TransactionType transactionType = getTransactionType(intentsToBeProvided);
         URI classloader = classLoaderGenerator.generate(logicalBinding, context);
         return new JmsWireTargetDefinition(logicalBinding.getBinding().getMetadata(), transactionType, classloader);
-        
-    }
 
-    /**
-     * @see org.fabric3.extension.generator.BindingGeneratorExtension#getBindingDefinitionClass()
-     */
-    @Override
-    protected Class<JmsBindingDefinition> getBindingDefinitionClass() {
-        return JmsBindingDefinition.class;
     }
 
     /*
      * Gets the transaction type.
      */
     private TransactionType getTransactionType(Set<Intent> intentsToBeProvided) {
-        
-        for(Intent intent : intentsToBeProvided) {
-            if(TRANSACTED_ONEWAY_GLOBAL.equals(intent.getName())) {
+
+        for (Intent intent : intentsToBeProvided) {
+            if (TRANSACTED_ONEWAY_GLOBAL.equals(intent.getName())) {
                 return TransactionType.GLOBAL;
-            } else if(TRANSACTED_ONEWAY_LOCAL.equals(intent.getName())) {
+            } else if (TRANSACTED_ONEWAY_LOCAL.equals(intent.getName())) {
                 return TransactionType.LOCAL;
-            } else if(TRANSACTED_ONEWAY.equals(intent.getName())) {
+            } else if (TRANSACTED_ONEWAY.equals(intent.getName())) {
                 return TransactionType.GLOBAL;
             }
         }
 
         return null;
-        
+
     }
 
 }
