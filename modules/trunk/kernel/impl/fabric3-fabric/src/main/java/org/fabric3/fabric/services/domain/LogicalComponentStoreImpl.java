@@ -24,40 +24,50 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 
-import com.thoughtworks.xstream.XStream;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
-import org.fabric3.fabric.services.xstream.XStreamFactory;
 import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
+import org.fabric3.spi.marshaller.MarshalException;
+import org.fabric3.spi.marshaller.MarshalService;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.runtime.assembly.LogicalComponentStore;
 import org.fabric3.spi.runtime.assembly.RecordException;
 import org.fabric3.spi.runtime.assembly.RecoveryException;
+import org.fabric3.spi.services.factories.xml.XMLFactory;
 
 /**
- * Default implementation of the LogicalComponentStore that persists the logical domain model to disk. The implementation
- * serializes the domain model using XStream.
+ * Default implementation of the LogicalComponentStore that persists the logical domain model to disk. The
+ * implementation serializes the domain model using XStream.
  *
  * @version $Rev$ $Date$
  */
 @Service(LogicalComponentStore.class)
 @EagerInit
 public class LogicalComponentStoreImpl implements LogicalComponentStore {
-    private XStream xstream;
     private File serializedFile;
     private URI domainUri;
+    private MarshalService marshalService;
+    private XMLInputFactory inputFactory;
+    private XMLOutputFactory outputFactory;
 
     public LogicalComponentStoreImpl(@Reference HostInfo hostInfo,
-                             @Reference XStreamFactory factory) throws IOException {
+                                     @Reference MarshalService marshalService,
+                                     @Reference XMLFactory factory) throws IOException {
+        this.marshalService = marshalService;
+        outputFactory = factory.newOutputFactoryInstance();
+        inputFactory = factory.newInputFactoryInstance();
         domainUri = hostInfo.getDomain();
-        xstream = factory.createInstance();
         URL url = hostInfo.getBaseURL();
         if (url == null) {
             throw new FileNotFoundException("No base directory found");
@@ -77,9 +87,14 @@ public class LogicalComponentStoreImpl implements LogicalComponentStore {
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(serializedFile);
-            xstream.toXML(domain, fos);
+            XMLStreamWriter writer = outputFactory.createXMLStreamWriter(fos);
+            marshalService.marshall(domain, writer);
         } catch (FileNotFoundException e) {
             throw new RecordException("Error serializing assembly", e);
+        } catch (MarshalException e) {
+            throw new RecordException("Error serializing assembly", e);
+        } catch (XMLStreamException e) {
+            e.printStackTrace();
         } finally {
             if (fos != null) {
                 try {
@@ -107,10 +122,14 @@ public class LogicalComponentStoreImpl implements LogicalComponentStore {
         FileInputStream fin = null;
         try {
             fin = new FileInputStream(serializedFile);
-            return (LogicalComponent<CompositeImplementation>) xstream.fromXML(fin);
+            return marshalService.unmarshall(LogicalComponent.class, inputFactory.createXMLStreamReader(fin));
         } catch (FileNotFoundException e) {
             // should not happen
             throw new AssertionError();
+        } catch (MarshalException e) {
+            throw new RecoveryException("Error recovering", e);
+        } catch (XMLStreamException e) {
+            throw new RecoveryException("Error recovering", e);
         } finally {
             if (fin != null) {
                 try {

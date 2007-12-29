@@ -110,10 +110,6 @@
         <system:implementation.system class="org.fabric3.fabric.services.host.DelegatingResourceHostRegistry"/>
     </component>
 
-    <component name="xstreamFactory">
-        <system:implementation.system class="org.fabric3.fabric.services.xstream.XStreamFactoryImpl"/>
-    </component>
-
     <component name="DelegatingMarshalService">
         <system:implementation.system class="org.fabric3.fabric.marshaller.DelegatingMarshalServiceImpl"/>
     </component>

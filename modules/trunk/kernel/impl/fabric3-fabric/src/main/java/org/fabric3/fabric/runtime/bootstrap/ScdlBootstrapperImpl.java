@@ -17,7 +17,6 @@
 package org.fabric3.fabric.runtime.bootstrap;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -41,7 +40,6 @@ import org.fabric3.fabric.runtime.DefaultConfigLoader;
 import org.fabric3.fabric.services.classloading.ClassLoaderRegistryImpl;
 import org.fabric3.fabric.services.contribution.MetaDataStoreImpl;
 import org.fabric3.fabric.services.contribution.ProcessorRegistryImpl;
-import org.fabric3.fabric.services.xstream.XStreamFactoryImpl;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.HostInfo;
@@ -125,7 +123,8 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     }
 
     public void bootSystem(Fabric3Runtime<?> runtime) throws InitializationException {
-        ClassLoaderRegistry classLoaderRegistry = runtime.getSystemComponent(ClassLoaderRegistry.class, ComponentNames.CLASSLOADER_REGISTRY_URI);
+        ClassLoaderRegistry classLoaderRegistry =
+                runtime.getSystemComponent(ClassLoaderRegistry.class, ComponentNames.CLASSLOADER_REGISTRY_URI);
         Loader loader = BootstrapLoaderFactory.createLoader(runtime);
         Assembly runtimeAssembly = runtime.getSystemComponent(Assembly.class, ComponentNames.RUNTIME_ASSEMBLY_URI);
         try {
@@ -153,7 +152,8 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
     }
 
-    private <T extends HostInfo> void registerRuntimeComponents(Fabric3Runtime<T> runtime) throws InitializationException {
+    private <T extends HostInfo> void registerRuntimeComponents(Fabric3Runtime<T> runtime)
+            throws InitializationException {
         RuntimeServices runtimeServices = (RuntimeServices) runtime;
 
         // services available through the outward facing Fabric3Runtime API
@@ -182,10 +182,12 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         registerSystemComponent(runtimeServices, "ScopeRegistry", ScopeRegistry.class, scopeRegistry);
 
         ProcessorRegistry processorRegistry = new ProcessorRegistryImpl();
-        registerSystemComponent(runtimeServices, "ContributionProcessorRegistry", ProcessorRegistry.class, processorRegistry);
+        registerSystemComponent(runtimeServices,
+                                "ContributionProcessorRegistry",
+                                ProcessorRegistry.class,
+                                processorRegistry);
 
-        HostInfo info = runtime.getHostInfo();
-        MetaDataStore metaDataStore = createMetaDataStore(info, classLoaderRegistry, processorRegistry);
+        MetaDataStore metaDataStore = createMetaDataStore(classLoaderRegistry, processorRegistry);
         registerSystemComponent(runtimeServices, "MetaDataStore", MetaDataStore.class, metaDataStore);
 
         Assembly runtimeAssembly = BootstrapAssemblyFactory.createAssembly(runtime);
@@ -196,7 +198,8 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
                                       ClassLoader bootClassLoader,
                                       ClassLoader appClassLoader) {
 
-        ClassLoaderRegistry classLoaderRegistry = runtime.getSystemComponent(ClassLoaderRegistry.class, ComponentNames.CLASSLOADER_REGISTRY_URI);
+        ClassLoaderRegistry classLoaderRegistry =
+                runtime.getSystemComponent(ClassLoaderRegistry.class, ComponentNames.CLASSLOADER_REGISTRY_URI);
         classLoaderRegistry.register(HOST_CLASSLOADER_ID, runtime.getHostClassLoader());
         classLoaderRegistry.register(BOOT_CLASSLOADER_ID, bootClassLoader);
         classLoaderRegistry.register(RUNTIME_URI, new CompositeClassLoader(RUNTIME_URI, bootClassLoader));
@@ -206,20 +209,9 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         classLoaderRegistry.register(domainId, new CompositeClassLoader(domainId, appClassLoader));
     }
 
-    private MetaDataStore createMetaDataStore(HostInfo info,
-                                              ClassLoaderRegistry classLoaderRegistry,
+    private MetaDataStore createMetaDataStore(ClassLoaderRegistry classLoaderRegistry,
                                               ProcessorRegistry processorRegistry) throws InitializationException {
-        MetaDataStoreImpl metaDataStore = new MetaDataStoreImpl(info,
-                                                                classLoaderRegistry,
-                                                                processorRegistry,
-                                                                new XStreamFactoryImpl());
-        metaDataStore.setPersistent("false");
-        try {
-            metaDataStore.init();
-        } catch (IOException e) {
-            throw new InitializationException(e);
-        }
-        return metaDataStore;
+        return new MetaDataStoreImpl(classLoaderRegistry, processorRegistry);
     }
 
     private <S, I extends S> void registerSystemComponent(RuntimeServices runtime,

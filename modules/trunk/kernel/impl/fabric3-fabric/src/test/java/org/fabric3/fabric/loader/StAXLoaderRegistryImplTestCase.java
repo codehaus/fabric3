@@ -29,12 +29,11 @@ import junit.framework.TestCase;
 import org.easymock.classextension.EasyMock;
 
 import org.fabric3.loader.common.LoaderContextImpl;
+import org.fabric3.scdl.ModelObject;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.loader.UnrecognizedElementException;
-import org.fabric3.scdl.ModelObject;
-import org.fabric3.fabric.services.xstream.ClassLoaderStaxDriver;
 
 /**
  * Verifies the default loader registry
@@ -119,8 +118,7 @@ public class StAXLoaderRegistryImplTestCase extends TestCase {
         ClassLoader cl = getClass().getClassLoader();
         loaderContext = new LoaderContextImpl(cl, null, null);
         mockMonitor = EasyMock.createMock(LoaderRegistryImpl.Monitor.class);
-        ClassLoaderStaxDriver staxDriver = new ClassLoaderStaxDriver(cl);
-        XMLInputFactory xmlInputFactory = staxDriver.getInputFactory();
+        XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
         registry = new LoaderRegistryImpl(mockMonitor, xmlInputFactory);
         Map<QName, StAXElementLoader<?>> map = Collections.emptyMap();
         registry.setLoaders(map);
