@@ -21,8 +21,6 @@ package org.fabric3.fabric.deployer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Reference;
@@ -35,15 +33,12 @@ import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.builder.resource.ResourceContainerBuilderRegistry;
 import org.fabric3.spi.component.Component;
 import org.fabric3.spi.deployer.Deployer;
-import org.fabric3.spi.marshaller.MarshalService;
 import org.fabric3.spi.model.physical.PhysicalChangeSet;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalResourceContainerDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.runtime.component.RegistrationException;
-import org.fabric3.spi.services.messaging.MessagingEventService;
-import org.fabric3.spi.services.messaging.RequestListener;
 
 /**
  * Deploys components in response to asynchronous messages from the Assembly.
@@ -51,12 +46,7 @@ import org.fabric3.spi.services.messaging.RequestListener;
  * @version $Revision$ $Date$
  */
 @Service(Deployer.class)
-public class DeployerImpl implements RequestListener, Deployer {
-
-    /**
-     * Marshaller registry.
-     */
-    private MarshalService marshalService;
+public class DeployerImpl implements Deployer {
 
     /**
      * Physical component builder registry.
@@ -93,26 +83,6 @@ public class DeployerImpl implements RequestListener, Deployer {
         this.monitor = monitor;
     }
 
-    /**
-     * Deploys the component.
-     *
-     * @param content SCDL content.
-     * @return Response to the request message.
-     *         <p/>
-     *         TODO Handle response messages.
-     */
-    public XMLStreamReader onRequest(XMLStreamReader content) {
-        try {
-            final PhysicalChangeSet changeSet = marshalService.unmarshall(PhysicalChangeSet.class, content);
-            applyChangeSet(changeSet);
-        } catch (Throwable ex) {
-            monitor.error("Demarshalling receiving changeset", ex);
-            return null;
-        }
-
-        return null;
-    }
-
     public void applyChangeSet(PhysicalChangeSet changeSet) throws BuilderException, RegistrationException {
         monitor.applyChangeset();
         Set<PhysicalComponentDefinition> componentDefinitions = changeSet.getComponentDefinitions();
@@ -135,27 +105,6 @@ public class DeployerImpl implements RequestListener, Deployer {
             component.start();
             monitor.startComponent(component.getUri().toString());
         }
-    }
-
-    /**
-     * Injects the messaging event service.
-     *
-     * @param messagingService messaging service to be injected.
-     */
-    @Reference
-    public void setMessagingEventService(MessagingEventService messagingService) {
-        QName qName = new QName(PhysicalChangeSet.class.getName());
-        messagingService.registerRequestListener(qName, this);
-    }
-
-    /**
-     * Injects the MarshalService.
-     *
-     * @param marshalService MarshalService.
-     */
-    @Reference
-    public void setMarshalService(MarshalService marshalService) {
-        this.marshalService = marshalService;
     }
 
     /**
