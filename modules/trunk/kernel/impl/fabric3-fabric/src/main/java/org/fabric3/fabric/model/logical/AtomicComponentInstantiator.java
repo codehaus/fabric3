@@ -18,7 +18,10 @@ package org.fabric3.fabric.model.logical;
 
 import java.net.URI;
 
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.fabric.assembly.InstantiationException;
+import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.ComponentDefinition;
@@ -39,6 +42,10 @@ import org.fabric3.spi.model.instance.LogicalService;
  * @version $Revision$ $Date$
  */
 public class AtomicComponentInstantiator extends AbstractComponentInstantiator {
+
+    public AtomicComponentInstantiator(@Reference(name="documentLoader") DocumentLoader documentLoader) {
+        super(documentLoader);
+    }
 
     public <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalComponent<CompositeImplementation> parent,
                                                                          ComponentDefinition<I> definition)

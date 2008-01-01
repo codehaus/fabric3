@@ -91,7 +91,7 @@ public class AssemblyPropertyTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        componentInstantiator = new AbstractComponentInstantiator() {
+        componentInstantiator = new AbstractComponentInstantiator(null) {
             public <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalComponent<CompositeImplementation> parent,
                                                                                  ComponentDefinition<I> definition)
                     throws InstantiationException {

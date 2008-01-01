@@ -17,10 +17,7 @@
 package org.fabric3.fabric.model.logical;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URL;
 import java.util.Map;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
@@ -40,7 +37,7 @@ import org.xml.sax.SAXException;
 
 import org.fabric3.fabric.assembly.InstantiationException;
 import org.fabric3.fabric.assembly.InvalidPropertyFileException;
-import org.fabric3.fabric.util.IOHelper;
+import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Implementation;
@@ -60,6 +57,12 @@ public abstract class AbstractComponentInstantiator implements ComponentInstanti
         DOCUMENT_FACTORY = DocumentBuilderFactory.newInstance();
         DOCUMENT_FACTORY.setNamespaceAware(true);
         XPATH_FACTORY = XPathFactory.newInstance();
+    }
+
+    private final DocumentLoader documentLoader;
+
+    protected AbstractComponentInstantiator(DocumentLoader documentLoader) {
+        this.documentLoader = documentLoader;
     }
 
     /**
@@ -158,38 +161,13 @@ public abstract class AbstractComponentInstantiator implements ComponentInstanti
     }
 
     protected Document loadValueFromFile(String name, URI file) throws InvalidPropertyFileException {
-
-        DocumentBuilder builder;
         try {
-            builder = DOCUMENT_FACTORY.newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
-            throw new AssertionError();
-        }
-
-        URL resource;
-        try {
-            resource = file.toURL();
-        } catch (MalformedURLException e) {
-            throw new InvalidPropertyFileException(e.getMessage(), name, e, file);
-        }
-
-        InputStream inputStream;
-        try {
-            inputStream = resource.openStream();
-        } catch (IOException e) {
-            throw new InvalidPropertyFileException(e.getMessage(), name, e, file);
-        }
-
-        try {
-            return builder.parse(inputStream);
+            return documentLoader.load(file);
         } catch (IOException e) {
             throw new InvalidPropertyFileException(e.getMessage(), name, e, file);
         } catch (SAXException e) {
             throw new InvalidPropertyFileException(e.getMessage(), name, e, file);
-        } finally {
-            IOHelper.closeQueitly(inputStream);
         }
-
     }
 
 }

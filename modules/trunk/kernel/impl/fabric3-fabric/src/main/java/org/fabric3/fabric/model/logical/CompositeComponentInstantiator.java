@@ -23,6 +23,7 @@ import java.util.List;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.assembly.InstantiationException;
+import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.ComponentReference;
@@ -46,8 +47,9 @@ public class CompositeComponentInstantiator extends AbstractComponentInstantiato
 
 
     public CompositeComponentInstantiator(
-            @Reference(name = "atomicComponentInstantiator")
-            ComponentInstantiator atomicComponentInstantiator) {
+            @Reference(name = "atomicComponentInstantiator")ComponentInstantiator atomicComponentInstantiator,
+            @Reference(name = "documentLoader")DocumentLoader documentLoader) {
+        super(documentLoader);
         this.atomicComponentInstantiator = atomicComponentInstantiator;
     }
 

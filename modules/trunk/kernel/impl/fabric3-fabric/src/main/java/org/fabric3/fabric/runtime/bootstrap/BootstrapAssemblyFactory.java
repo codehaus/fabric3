@@ -71,6 +71,8 @@ import org.fabric3.fabric.services.instancefactory.ReflectiveInstanceFactoryBuil
 import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.fabric.services.routing.RuntimeRoutingService;
 import org.fabric3.fabric.services.runtime.BootstrapRuntimeInfoService;
+import org.fabric3.fabric.services.documentloader.DocumentLoader;
+import org.fabric3.fabric.services.documentloader.DocumentLoaderImpl;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.InitializationException;
@@ -145,9 +147,11 @@ public class BootstrapAssemblyFactory {
 
         WireResolver resolver = new DefaultWireResolver();
         PromotionNormalizer normalizer = new PromotionNormalizerImpl();
-        AtomicComponentInstantiator atomicComponentInstantiator = new AtomicComponentInstantiator();
+        DocumentLoader documentLoader = new DocumentLoaderImpl();
+        AtomicComponentInstantiator atomicComponentInstantiator = new AtomicComponentInstantiator(documentLoader);
+
         CompositeComponentInstantiator compositeComponentInstantiator =
-                new CompositeComponentInstantiator(atomicComponentInstantiator);
+                new CompositeComponentInstantiator(atomicComponentInstantiator, documentLoader);
         LogicalModelGenerator logicalModelGenerator = new LogicalModelGeneratorImpl(resolver,
                                                                                     normalizer,
                                                                                     logicalComponentManager,

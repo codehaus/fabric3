@@ -57,8 +57,8 @@ public class InstantiationTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         
-        AtomicComponentInstantiator atomicComponentInstantiator = new AtomicComponentInstantiator();
-        CompositeComponentInstantiator compositeComponentInstantiator = new CompositeComponentInstantiator(atomicComponentInstantiator);
+        AtomicComponentInstantiator atomicComponentInstantiator = new AtomicComponentInstantiator(null);
+        CompositeComponentInstantiator compositeComponentInstantiator = new CompositeComponentInstantiator(atomicComponentInstantiator, null);
         
         logicalModelGenerator = new LogicalModelGeneratorImpl(null, null, null, atomicComponentInstantiator, compositeComponentInstantiator);
         parent = new LogicalComponent<CompositeImplementation>(PARENT_URI, null, null, null);

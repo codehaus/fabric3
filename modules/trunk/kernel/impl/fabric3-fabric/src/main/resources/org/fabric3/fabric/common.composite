@@ -34,6 +34,10 @@
         <system:implementation.system class="org.fabric3.fabric.model.physical.PhysicalOperationHelperImpl"/>
     </component>
 
+    <component name="documentLoader">
+        <system:implementation.system class="org.fabric3.fabric.services.documentloader.DocumentLoaderImpl"/>
+    </component>
+
     <component name="atomicComponentInstantiator">
         <system:implementation.system class="org.fabric3.fabric.model.logical.AtomicComponentInstantiator"/>
     </component>

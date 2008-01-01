@@ -17,11 +17,13 @@
 package org.fabric3.fabric.runtime.bootstrap;
 
 import java.io.File;
-import java.net.MalformedURLException;
+import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.net.URI;
 import java.net.URL;
 
 import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import org.fabric3.fabric.assembly.InstantiationException;
 import org.fabric3.fabric.component.scope.ScopeRegistryImpl;
@@ -34,12 +36,11 @@ import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.APPLICATION_CLASSLOADER_ID;
 import static org.fabric3.fabric.runtime.ComponentNames.BOOT_CLASSLOADER_ID;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_URI;
-import org.fabric3.fabric.runtime.ConfigLoadException;
-import org.fabric3.fabric.runtime.ConfigLoader;
-import org.fabric3.fabric.runtime.DefaultConfigLoader;
 import org.fabric3.fabric.services.classloading.ClassLoaderRegistryImpl;
 import org.fabric3.fabric.services.contribution.MetaDataStoreImpl;
 import org.fabric3.fabric.services.contribution.ProcessorRegistryImpl;
+import org.fabric3.fabric.services.documentloader.DocumentLoader;
+import org.fabric3.fabric.services.documentloader.DocumentLoaderImpl;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.HostInfo;
@@ -84,12 +85,18 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     private static final URI HOST_CLASSLOADER_ID = URI.create("sca://./hostClassLoader");
     private static final String USER_CONFIG = System.getProperty("user.home") + "/.fabric3/config.xml";
 
-    private final JavaInterfaceProcessorRegistry interfaceProcessorRegistry = new JavaInterfaceProcessorRegistryImpl();
-    private final ConfigLoader configLoader = new DefaultConfigLoader();
-    private final ComponentInstantiator instantiator = new AtomicComponentInstantiator();
+    private final JavaInterfaceProcessorRegistry interfaceProcessorRegistry;
+    private final DocumentLoader documentLoader;
+    private final ComponentInstantiator instantiator;
 
     private URL scdlLocation;
     private LogicalComponent<CompositeImplementation> domain;
+
+    public ScdlBootstrapperImpl() {
+        interfaceProcessorRegistry = new JavaInterfaceProcessorRegistryImpl();
+        documentLoader = new DocumentLoaderImpl();
+        instantiator = new AtomicComponentInstantiator(documentLoader);
+    }
 
     public URL getScdlLocation() {
         return scdlLocation;
@@ -145,8 +152,6 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         } catch (LoaderException e) {
             throw new InitializationException(e);
         } catch (ActivateException e) {
-            throw new InitializationException(e);
-        } catch (ConfigLoadException e) {
             throw new InitializationException(e);
         }
 
@@ -269,17 +274,16 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     }
 
 
-    private Document loadUserConfig() throws ConfigLoadException {
+    private Document loadUserConfig() {
         // Get the user config location
         File configFile = new File(USER_CONFIG);
-        if (configFile.exists()) {
-            try {
-                URL url = configFile.toURI().toURL();
-                return configLoader.loadConfig(url);
-            } catch (MalformedURLException e) {
-                return null;
-            }
-        } else {
+        try {
+            return documentLoader.load(configFile);
+        } catch (FileNotFoundException e) {
+            return null;
+        } catch (IOException e) {
+            return null;
+        } catch (SAXException e) {
             return null;
         }
     }
