@@ -21,6 +21,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
+import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
@@ -28,9 +29,11 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.pojo.reflection.InvokerInterceptor;
 import org.fabric3.pojo.wire.PojoWireAttacher;
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.runtime.component.ComponentManager;
+import org.fabric3.spi.builder.component.SourceWireAttacher;
+import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
+import org.fabric3.spi.builder.component.TargetWireAttacher;
+import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.builder.component.WireAttachException;
-import org.fabric3.spi.builder.component.WireAttacherRegistry;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.Component;
 import org.fabric3.spi.component.ScopeContainer;
@@ -38,6 +41,7 @@ import org.fabric3.spi.model.instance.ValueSource;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
@@ -53,21 +57,24 @@ import org.fabric3.spi.wire.Wire;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class JavaWireAttacher extends PojoWireAttacher<JavaWireSourceDefinition, JavaWireTargetDefinition> {
+public class JavaWireAttacher extends PojoWireAttacher implements SourceWireAttacher<JavaWireSourceDefinition>, TargetWireAttacher<JavaWireTargetDefinition> {
 
-    private WireAttacherRegistry wireAttacherRegistry;
-    private ComponentManager manager;
-    private ProxyService proxyService;
-    private ClassLoaderRegistry classLoaderRegistry;
+    private final SourceWireAttacherRegistry sourceWireAttacherRegistry;
+    private final TargetWireAttacherRegistry targetWireAttacherRegistry;
+    private final ComponentManager manager;
+    private final ProxyService proxyService;
+    private final ClassLoaderRegistry classLoaderRegistry;
 
     public JavaWireAttacher(@Reference ComponentManager manager,
-                            @Reference WireAttacherRegistry wireAttacherRegistry,
+                            @Reference SourceWireAttacherRegistry sourceWireAttacherRegistry,
+                            @Reference TargetWireAttacherRegistry targetWireAttacherRegistry,
                             @Reference ProxyService proxyService,
                             @Reference ClassLoaderRegistry classLoaderRegistry,
                             @Reference(name = "transformerRegistry")
                             TransformerRegistry<PullTransformer<?, ?>> transformerRegistry) {
         super(transformerRegistry, classLoaderRegistry);
-        this.wireAttacherRegistry = wireAttacherRegistry;
+        this.sourceWireAttacherRegistry = sourceWireAttacherRegistry;
+        this.targetWireAttacherRegistry = targetWireAttacherRegistry;
         this.manager = manager;
         this.proxyService = proxyService;
         this.classLoaderRegistry = classLoaderRegistry;
@@ -75,8 +82,14 @@ public class JavaWireAttacher extends PojoWireAttacher<JavaWireSourceDefinition,
 
     @Init
     public void init() {
-        wireAttacherRegistry.register(JavaWireSourceDefinition.class, this);
-        wireAttacherRegistry.register(JavaWireTargetDefinition.class, this);
+        sourceWireAttacherRegistry.register(JavaWireSourceDefinition.class, this);
+        targetWireAttacherRegistry.register(JavaWireTargetDefinition.class, this);
+    }
+
+    @Destroy
+    public void destroy() {
+        sourceWireAttacherRegistry.unregister(JavaWireSourceDefinition.class, this);
+        targetWireAttacherRegistry.unregister(JavaWireTargetDefinition.class, this);
     }
 
     public void attachToSource(JavaWireSourceDefinition sourceDefinition,
@@ -92,7 +105,7 @@ public class JavaWireAttacher extends PojoWireAttacher<JavaWireSourceDefinition,
 
         Class<?> type = source.getMemberType(referenceSource);
         URI targetUri = targetDefinition.getUri();
-        
+
         Component target = null;
         if (targetUri != null) {
             URI targetName = UriHelper.getDefragmentedName(targetDefinition.getUri());

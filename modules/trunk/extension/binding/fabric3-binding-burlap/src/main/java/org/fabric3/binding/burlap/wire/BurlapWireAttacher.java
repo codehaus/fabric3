@@ -34,9 +34,11 @@ import org.fabric3.binding.burlap.transport.BurlapServiceHandler;
 import org.fabric3.binding.burlap.transport.BurlapTargetInterceptor;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.spi.builder.WiringException;
+import org.fabric3.spi.builder.component.SourceWireAttacher;
+import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
+import org.fabric3.spi.builder.component.TargetWireAttacher;
+import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.builder.component.WireAttachException;
-import org.fabric3.spi.builder.component.WireAttacher;
-import org.fabric3.spi.builder.component.WireAttacherRegistry;
 import org.fabric3.spi.host.ServletHost;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
@@ -51,26 +53,29 @@ import org.fabric3.spi.wire.Wire;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class BurlapWireAttacher implements WireAttacher<BurlapWireSourceDefinition, BurlapWireTargetDefinition> {
-    private ClassLoaderRegistry classLoaderRegistry;
-
-    private ServletHost servletHost;
-    private BurlapWireAttacherMonitor monitor;
+public class BurlapWireAttacher implements SourceWireAttacher<BurlapWireSourceDefinition>, TargetWireAttacher<BurlapWireTargetDefinition> {
+    private final SourceWireAttacherRegistry sourceWireAttacherRegistry;
+    private final TargetWireAttacherRegistry targetWireAttacherRegistry;
+    private final ServletHost servletHost;
+    private final ClassLoaderRegistry classLoaderRegistry;
+    private final BurlapWireAttacherMonitor monitor;
 
     /**
      * Injects the wire attacher registry and servlet host.
      *
-     * @param wireAttacherRegistry Wire attacher registry.
-     * @param servletHost          Servlet host.
-     * @param classLoaderRegistry  the classloader registry to resolve the target classloader from
-     * @param monitorFactory       the system monitor factory
+     * @param sourceWireAttacherRegistry the registry for source wire attachers
+     * @param targetWireAttacherRegistry the registry for target wire attachers
+     * @param servletHost                Servlet host.
+     * @param classLoaderRegistry        the classloader registry to resolve the target classloader from
+     * @param monitorFactory             the system monitor factory
      */
-    public BurlapWireAttacher(@Reference WireAttacherRegistry wireAttacherRegistry,
+    public BurlapWireAttacher(@Reference SourceWireAttacherRegistry sourceWireAttacherRegistry,
+                              @Reference TargetWireAttacherRegistry targetWireAttacherRegistry,
                               @Reference ServletHost servletHost,
                               @Reference ClassLoaderRegistry classLoaderRegistry,
                               @Reference MonitorFactory monitorFactory) {
-        wireAttacherRegistry.register(BurlapWireSourceDefinition.class, this);
-        wireAttacherRegistry.register(BurlapWireTargetDefinition.class, this);
+        this.sourceWireAttacherRegistry = sourceWireAttacherRegistry;
+        this.targetWireAttacherRegistry = targetWireAttacherRegistry;
         this.servletHost = servletHost;
         this.classLoaderRegistry = classLoaderRegistry;
         this.monitor = monitorFactory.getMonitor(BurlapWireAttacherMonitor.class);
@@ -78,12 +83,16 @@ public class BurlapWireAttacher implements WireAttacher<BurlapWireSourceDefiniti
 
     @Init
     public void start() {
+        sourceWireAttacherRegistry.register(BurlapWireSourceDefinition.class, this);
+        targetWireAttacherRegistry.register(BurlapWireTargetDefinition.class, this);
         monitor.extensionStarted();
     }
 
     @Destroy
     public void stop() {
         this.monitor.extensionStopped();
+        sourceWireAttacherRegistry.unregister(BurlapWireSourceDefinition.class, this);
+        targetWireAttacherRegistry.unregister(BurlapWireTargetDefinition.class, this);
     }
 
     public void attachToSource(BurlapWireSourceDefinition sourceDefinition,

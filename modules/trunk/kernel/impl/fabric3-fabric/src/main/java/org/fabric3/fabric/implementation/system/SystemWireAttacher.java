@@ -18,74 +18,88 @@ package org.fabric3.fabric.implementation.system;
 
 import java.net.URI;
 
+import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.pojo.wire.PojoWireAttacher;
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.builder.WiringException;
-import org.fabric3.spi.builder.component.WireAttacherRegistry;
+import org.fabric3.spi.builder.component.SourceWireAttacher;
+import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
+import org.fabric3.spi.builder.component.TargetWireAttacher;
+import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.Component;
 import org.fabric3.spi.model.instance.ValueSource;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.Wire;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 
 /**
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class SystemWireAttacher extends PojoWireAttacher<SystemWireSourceDefinition, SystemWireTargetDefinition> {
+public class SystemWireAttacher extends PojoWireAttacher implements SourceWireAttacher<SystemWireSourceDefinition>, TargetWireAttacher<SystemWireTargetDefinition> {
 
-    private WireAttacherRegistry wireAttacherRegistry;
-    private ComponentManager manager;
+    private final SourceWireAttacherRegistry sourceWireAttacherRegistry;
+    private final TargetWireAttacherRegistry targetWireAttacherRegistry;
+    private final ComponentManager manager;
 
-    public SystemWireAttacher(
-            ComponentManager manager,
-            WireAttacherRegistry wireAttacherRegistry,
-            TransformerRegistry<PullTransformer<?, ?>> transformerRegistry,
-            ClassLoaderRegistry classLoaderRegistry
+    public SystemWireAttacher(@Reference ComponentManager manager,
+                              @Reference SourceWireAttacherRegistry sourceWireAttacherRegistry,
+                              @Reference TargetWireAttacherRegistry targetWireAttacherRegistry,
+                              @Reference TransformerRegistry<PullTransformer<?, ?>> transformerRegistry,
+                              @Reference ClassLoaderRegistry classLoaderRegistry
     ) {
         super(transformerRegistry, classLoaderRegistry);
         this.manager = manager;
-        this.wireAttacherRegistry = wireAttacherRegistry;
+        this.sourceWireAttacherRegistry = sourceWireAttacherRegistry;
+        this.targetWireAttacherRegistry = targetWireAttacherRegistry;
     }
 
     @Init
     public void init() {
-        wireAttacherRegistry.register(SystemWireSourceDefinition.class, this);
-        wireAttacherRegistry.register(SystemWireTargetDefinition.class, this);
+        sourceWireAttacherRegistry.register(SystemWireSourceDefinition.class, this);
+        targetWireAttacherRegistry.register(SystemWireTargetDefinition.class, this);
+    }
+
+    @Destroy
+    public void destroy() {
+        sourceWireAttacherRegistry.unregister(SystemWireSourceDefinition.class, this);
+        targetWireAttacherRegistry.unregister(SystemWireTargetDefinition.class, this);
     }
 
     @SuppressWarnings("unchecked")
     public void attachToSource(SystemWireSourceDefinition sourceDefinition,
                                PhysicalWireTargetDefinition targetDefinition,
                                Wire wire) throws WiringException {
-        
+
         URI sourceName = UriHelper.getDefragmentedName(sourceDefinition.getUri());
-        Component source = manager.getComponent(sourceName);        
-        assert source instanceof SystemComponent;        
+        Component source = manager.getComponent(sourceName);
+        assert source instanceof SystemComponent;
         SystemComponent<?> sourceComponent = (SystemComponent) source;
-        
-        URI targetName = UriHelper.getDefragmentedName(targetDefinition.getUri());        
+
+        URI targetName = UriHelper.getDefragmentedName(targetDefinition.getUri());
         Component target = manager.getComponent(targetName);
         assert target instanceof AtomicComponent;
         AtomicComponent<?> targetComponent = (AtomicComponent<?>) target;
-        
+
         URI sourceUri = sourceDefinition.getUri();
         ValueSource referenceSource = new ValueSource(ValueSource.ValueSourceType.REFERENCE, sourceUri.getFragment());
         ObjectFactory<?> factory = targetComponent.createObjectFactory();
         sourceComponent.setObjectFactory(referenceSource, factory);
-        
+
         Object key = getKey(sourceDefinition, sourceComponent, referenceSource);
 
         sourceComponent.attachReferenceToTarget(referenceSource, factory, key);
-        
+
     }
 
     public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition,

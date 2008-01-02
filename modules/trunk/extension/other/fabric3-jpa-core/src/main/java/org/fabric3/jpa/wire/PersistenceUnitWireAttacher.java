@@ -20,27 +20,27 @@ package org.fabric3.jpa.wire;
 
 import java.net.URI;
 import java.util.Map;
-
 import javax.persistence.EntityManagerFactory;
+
+import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.jpa.generator.PersistenceUnitWireTargetDefinition;
 import org.fabric3.jpa.provider.EmfBuilder;
 import org.fabric3.spi.builder.WiringException;
-import org.fabric3.spi.builder.component.WireAttacher;
-import org.fabric3.spi.builder.component.WireAttacherRegistry;
+import org.fabric3.spi.builder.component.TargetWireAttacher;
+import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.deployer.CompositeClassLoader;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.spi.wire.MessageImpl;
 import org.fabric3.spi.wire.Wire;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Attaches the target side of entity manager factories.
@@ -48,23 +48,22 @@ import org.osoa.sca.annotations.Reference;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class PersistenceUnitWireAttacher implements WireAttacher<PhysicalWireSourceDefinition, PersistenceUnitWireTargetDefinition> {
-
-    private EmfBuilder emfBuilder;
-    private ClassLoaderRegistry classLoaderRegistry;
-    private WireAttacherRegistry wireAttacherRegistry;
+public class PersistenceUnitWireAttacher implements TargetWireAttacher<PersistenceUnitWireTargetDefinition> {
+    private final TargetWireAttacherRegistry targetWireAttacherRegistry;
+    private final EmfBuilder emfBuilder;
+    private final ClassLoaderRegistry classLoaderRegistry;
 
     /**
      * Injects the dependencies.
      * 
-     * @param registry Wire attacher registry.
+     * @param targetWireAttacherRegistry the registry for target wire attachers
      * @param classLoaderRegistry Classloader registry.
      * @param emfBuilder Entity manager factory builder.
      */
-    public PersistenceUnitWireAttacher(@Reference WireAttacherRegistry wireAttacherRegistry, 
+    public PersistenceUnitWireAttacher(@Reference TargetWireAttacherRegistry targetWireAttacherRegistry,
                                        @Reference ClassLoaderRegistry classLoaderRegistry, 
                                        @Reference EmfBuilder emfBuilder) {
-        this.wireAttacherRegistry = wireAttacherRegistry;
+        this.targetWireAttacherRegistry = targetWireAttacherRegistry;
         this.emfBuilder = emfBuilder;
         this.classLoaderRegistry = classLoaderRegistry;
     }
@@ -74,23 +73,14 @@ public class PersistenceUnitWireAttacher implements WireAttacher<PhysicalWireSou
      */
     @Init
     public void start() {
-        wireAttacherRegistry.register(PersistenceUnitWireTargetDefinition.class, this);
+        targetWireAttacherRegistry.register(PersistenceUnitWireTargetDefinition.class, this);
     }
 
-    /**
-     * @see org.fabric3.spi.builder.component.WireAttacher#attachToSource(org.fabric3.spi.model.physical.PhysicalWireSourceDefinition, 
-     *                                                                    org.fabric3.spi.model.physical.PhysicalWireTargetDefinition, 
-     *                                                                    org.fabric3.spi.wire.Wire)
-     */
-    public void attachToSource(PhysicalWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) {
-        // No-op by design
+    @Destroy
+    public void stop() {
+        targetWireAttacherRegistry.unregister(PersistenceUnitWireTargetDefinition.class, this);
     }
 
-    /**
-     * @see org.fabric3.spi.builder.component.WireAttacher#attachToTarget(org.fabric3.spi.model.physical.PhysicalWireSourceDefinition, 
-     *                                                                    org.fabric3.spi.model.physical.PhysicalWireTargetDefinition, 
-     *                                                                    org.fabric3.spi.wire.Wire)
-     */
     public void attachToTarget(PhysicalWireSourceDefinition source, PersistenceUnitWireTargetDefinition target,
             Wire wire) throws WiringException {
 

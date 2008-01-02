@@ -19,24 +19,28 @@ package org.fabric3.binding.ws.axis2.wire;
 import java.util.Map;
 import java.util.Set;
 
+import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Element;
+
 import org.fabric3.binding.ws.axis2.Axis2ServiceProvisioner;
 import org.fabric3.binding.ws.axis2.config.F3Configurator;
 import org.fabric3.binding.ws.axis2.physical.Axis2WireSourceDefinition;
 import org.fabric3.binding.ws.axis2.physical.Axis2WireTargetDefinition;
 import org.fabric3.binding.ws.axis2.policy.PolicyApplierRegistry;
 import org.fabric3.spi.builder.WiringException;
-import org.fabric3.spi.builder.component.WireAttacher;
-import org.fabric3.spi.builder.component.WireAttacherRegistry;
+import org.fabric3.spi.builder.component.SourceWireAttacher;
+import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
+import org.fabric3.spi.builder.component.TargetWireAttacher;
+import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
-import org.w3c.dom.Element;
 
 /**
  * @version $Revision$ $Date$
@@ -44,23 +48,26 @@ import org.w3c.dom.Element;
  * TODO Add support for WSDL contract
  */
 @EagerInit
-public class Axis2WireAttacher implements WireAttacher<Axis2WireSourceDefinition, Axis2WireTargetDefinition> {
-    
+public class Axis2WireAttacher implements SourceWireAttacher<Axis2WireSourceDefinition>, TargetWireAttacher<Axis2WireTargetDefinition> {
+    private final SourceWireAttacherRegistry sourceWireAttacherRegistry;
+    private final TargetWireAttacherRegistry targetWireAttacherRegistry;
     private final Axis2ServiceProvisioner serviceProvisioner;
-    private final WireAttacherRegistry wireAttacherRegistry;
     private final PolicyApplierRegistry policyApplierRegistry;
     private final F3Configurator f3Configurator;
     
     /**
+     * @param sourceWireAttacherRegistry the registry for source wire attachers
+     * @param targetWireAttacherRegistry the registry for target wire attachers
      * @param serviceProvisioner
-     * @param wireAttacherRegistry
      */
     public Axis2WireAttacher(@Reference Axis2ServiceProvisioner serviceProvisioner, 
-                             @Reference WireAttacherRegistry wireAttacherRegistry,
+                             @Reference SourceWireAttacherRegistry sourceWireAttacherRegistry,
+                              @Reference TargetWireAttacherRegistry targetWireAttacherRegistry,
                              @Reference PolicyApplierRegistry policyApplierRegistry,
                              @Reference F3Configurator f3Configurator) {
         this.serviceProvisioner = serviceProvisioner;
-        this.wireAttacherRegistry = wireAttacherRegistry;
+        this.sourceWireAttacherRegistry = sourceWireAttacherRegistry;
+        this.targetWireAttacherRegistry = targetWireAttacherRegistry;
         this.policyApplierRegistry = policyApplierRegistry;
         this.f3Configurator = f3Configurator;
     }
@@ -70,25 +77,21 @@ public class Axis2WireAttacher implements WireAttacher<Axis2WireSourceDefinition
      */
     @Init
     public void start() {
-        wireAttacherRegistry.register(Axis2WireSourceDefinition.class, this);
-        wireAttacherRegistry.register(Axis2WireTargetDefinition.class, this);
+        sourceWireAttacherRegistry.register(Axis2WireSourceDefinition.class, this);
+        targetWireAttacherRegistry.register(Axis2WireTargetDefinition.class, this);
     }
 
-    /**
-     * @see org.fabric3.spi.builder.component.WireAttacher#attachToSource(org.fabric3.spi.model.physical.PhysicalWireSourceDefinition, 
-     *                                                                    org.fabric3.spi.model.physical.PhysicalWireTargetDefinition, 
-     *                                                                    org.fabric3.spi.wire.Wire)
-     */
+    @Destroy
+    public void stop() {
+        sourceWireAttacherRegistry.unregister(Axis2WireSourceDefinition.class, this);
+        targetWireAttacherRegistry.unregister(Axis2WireTargetDefinition.class, this);
+    }
+
     public void attachToSource(Axis2WireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire)
             throws WiringException {
         serviceProvisioner.provision(source, wire);
     }
 
-    /**
-     * @see org.fabric3.spi.builder.component.WireAttacher#attachToTarget(org.fabric3.spi.model.physical.PhysicalWireSourceDefinition, 
-     *                                                                    org.fabric3.spi.model.physical.PhysicalWireTargetDefinition, 
-     *                                                                    org.fabric3.spi.wire.Wire)
-     */
     public void attachToTarget(PhysicalWireSourceDefinition source, Axis2WireTargetDefinition target, Wire wire)
             throws WiringException {
         

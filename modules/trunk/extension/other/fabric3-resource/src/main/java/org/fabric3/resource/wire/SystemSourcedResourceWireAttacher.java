@@ -18,44 +18,37 @@
  */
 package org.fabric3.resource.wire;
 
+import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.resource.model.SystemSourcedWireTargetDefinition;
 import org.fabric3.spi.builder.WiringException;
-import org.fabric3.spi.builder.component.WireAttacher;
-import org.fabric3.spi.builder.component.WireAttacherRegistry;
+import org.fabric3.spi.builder.component.TargetWireAttacher;
+import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.wire.Wire;
 
 /**
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class SystemSourcedResourceWireAttacher implements WireAttacher<PhysicalWireSourceDefinition, SystemSourcedWireTargetDefinition> {
+public class SystemSourcedResourceWireAttacher implements TargetWireAttacher<SystemSourcedWireTargetDefinition> {
+    private final TargetWireAttacherRegistry targetWireAttacherRegistry;
 
-    private WireAttacherRegistry registry;
+    public SystemSourcedResourceWireAttacher(@Reference TargetWireAttacherRegistry targetWireAttacherRegistry) {
+        this.targetWireAttacherRegistry = targetWireAttacherRegistry;
+    }
 
-    /**
-     * Registers the wire attacher with the registry.
-     */
     @Init
     public void start() {
-        registry.register(SystemSourcedWireTargetDefinition.class, this);
+        targetWireAttacherRegistry.register(SystemSourcedWireTargetDefinition.class, this);
     }
 
-    /**
-     * @param registry Injected wire attacher registry.
-     */
-    @Reference
-    public void setRegistry(WireAttacherRegistry registry) {
-        this.registry = registry;
-    }
-
-    public void attachToSource(PhysicalWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire)
-            throws WiringException {
+    @Destroy
+    public void stop() {
+        targetWireAttacherRegistry.unregister(SystemSourcedWireTargetDefinition.class, this);
     }
 
     public void attachToTarget(PhysicalWireSourceDefinition source, SystemSourcedWireTargetDefinition target, Wire wire)

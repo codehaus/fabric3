@@ -19,6 +19,7 @@ package org.fabric3.spring;
 import java.net.URI;
 import java.util.Map;
 
+import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
@@ -26,15 +27,18 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.pojo.instancefactory.Signature;
 import org.fabric3.pojo.wire.PojoWireAttacher;
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.builder.component.SourceWireAttacher;
+import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
+import org.fabric3.spi.builder.component.TargetWireAttacher;
+import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.builder.component.WireAttachException;
-import org.fabric3.spi.builder.component.WireAttacherRegistry;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.Component;
-import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.model.instance.ValueSource;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
@@ -51,23 +55,25 @@ import org.fabric3.spi.wire.Wire;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class SpringWireAttacher extends PojoWireAttacher<SpringWireSourceDefinition, SpringWireTargetDefinition> {
+public class SpringWireAttacher extends PojoWireAttacher implements SourceWireAttacher<SpringWireSourceDefinition>, TargetWireAttacher<SpringWireTargetDefinition> {
+    private final SourceWireAttacherRegistry sourceWireAttacherRegistry;
+    private final TargetWireAttacherRegistry targetWireAttacherRegistry;
+    private final ComponentManager manager;
+    private final ProxyService proxyService;
+    private final ClassLoaderRegistry classLoaderRegistry;
 
-    private WireAttacherRegistry wireAttacherRegistry;
-    private ComponentManager manager;
-    private ProxyService proxyService;
-    private ClassLoaderRegistry classLoaderRegistry;
-    
     private boolean debug = false;
 
     public SpringWireAttacher(@Reference ComponentManager manager,
-                            @Reference WireAttacherRegistry wireAttacherRegistry,
-                            @Reference ProxyService proxyService,
-                            @Reference ClassLoaderRegistry classLoaderRegistry,
-                            @Reference(name = "transformerRegistry")
-                            TransformerRegistry<PullTransformer<?, ?>> transformerRegistry) {
+                              @Reference SourceWireAttacherRegistry sourceWireAttacherRegistry,
+                              @Reference TargetWireAttacherRegistry targetWireAttacherRegistry,
+                              @Reference ProxyService proxyService,
+                              @Reference ClassLoaderRegistry classLoaderRegistry,
+                              @Reference(name = "transformerRegistry")
+                              TransformerRegistry<PullTransformer<?, ?>> transformerRegistry) {
         super(transformerRegistry, classLoaderRegistry);
-        this.wireAttacherRegistry = wireAttacherRegistry;
+        this.sourceWireAttacherRegistry = sourceWireAttacherRegistry;
+        this.targetWireAttacherRegistry = targetWireAttacherRegistry;
         this.manager = manager;
         this.proxyService = proxyService;
         this.classLoaderRegistry = classLoaderRegistry;
@@ -75,14 +81,16 @@ public class SpringWireAttacher extends PojoWireAttacher<SpringWireSourceDefinit
 
     @Init
     public void init() {
-        wireAttacherRegistry.register(SpringWireSourceDefinition.class, this);
-        wireAttacherRegistry.register(SpringWireTargetDefinition.class, this);
+        sourceWireAttacherRegistry.register(SpringWireSourceDefinition.class, this);
+        targetWireAttacherRegistry.register(SpringWireTargetDefinition.class, this);
     }
 
-    /**
-     * @see org.fabric3.spi.builder.component.WireAttacher#attachToSource(org.fabric3.spi.model.physical.PhysicalWireSourceDefinition,
-     *org.fabric3.spi.model.physical.PhysicalWireTargetDefinition,org.fabric3.spi.wire.Wire)
-     */
+    @Destroy
+    public void destroy() {
+        sourceWireAttacherRegistry.unregister(SpringWireSourceDefinition.class, this);
+        targetWireAttacherRegistry.unregister(SpringWireTargetDefinition.class, this);
+    }
+
     public void attachToSource(SpringWireSourceDefinition sourceDefinition,
                                PhysicalWireTargetDefinition targetDefinition,
                                Wire wire) {
@@ -96,14 +104,14 @@ public class SpringWireAttacher extends PojoWireAttacher<SpringWireSourceDefinit
 
         Class<?> type = sourceDefinition.getFieldType();
         URI targetUri = targetDefinition.getUri();
-        
+
         Component target = null;
         if (targetUri != null) {
             URI targetName = UriHelper.getDefragmentedName(targetDefinition.getUri());
             target = manager.getComponent(targetName);
         }
 
-        if (debug) 
+        if (debug)
             System.out.println("##############SpringWireAttacher:attachToSource()" +
                     "; sourceUri=" + sourceUri + "; sourceName=" + sourceName +
                     "; targetUri=" + targetUri + "; targetName=" + UriHelper.getDefragmentedName(targetDefinition.getUri()) +
@@ -125,17 +133,19 @@ public class SpringWireAttacher extends PojoWireAttacher<SpringWireSourceDefinit
             ClassLoader cl = classLoaderRegistry.getClassLoader(sourceDefinition.getClassLoaderId());
 
             try {
-                factory = createWireObjectFactory(cl.loadClass(type.getName()), sourceDefinition.isConversational(), wire);
+                factory = createWireObjectFactory(cl.loadClass(type.getName()),
+                                                  sourceDefinition.isConversational(),
+                                                  wire);
             } catch (ClassNotFoundException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            
+
             String refName = sourceUri.getFragment();
 //            if (target != null) {
 //                source.attachReferenceToTarget(referenceSource, factory, key);
 //            } else {
-                source.addRefNameToObjFactory(refName, factory);
+            source.addRefNameToObjFactory(refName, factory);
 //            }
 //            if (!wire.getCallbackInvocationChains().isEmpty()) {
 //                URI callbackUri = sourceDefinition.getCallbackUri();
@@ -148,10 +158,6 @@ public class SpringWireAttacher extends PojoWireAttacher<SpringWireSourceDefinit
 
     }
 
-    /**
-     * @see org.fabric3.spi.builder.component.WireAttacher#attachToTarget(org.fabric3.spi.model.physical.PhysicalWireSourceDefinition,
-     *org.fabric3.spi.model.physical.PhysicalWireTargetDefinition,org.fabric3.spi.wire.Wire)
-     */
     public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition,
                                SpringWireTargetDefinition targetDefinition,
                                Wire wire) throws WireAttachException {
@@ -171,11 +177,11 @@ public class SpringWireAttacher extends PojoWireAttacher<SpringWireSourceDefinit
 
         // not used yet
         String beanId = targetDefinition.getBeanId();
-        
+
         // attach the invoker interceptor to forward invocation chains
         for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
             PhysicalOperationDefinition operation = entry.getKey();
-            
+
             Signature signature = new Signature(operation.getName(), operation.getParameters());
 
             if (debug)

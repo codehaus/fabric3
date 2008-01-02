@@ -25,10 +25,8 @@ import org.fabric3.fabric.assembly.normalizer.PromotionNormalizer;
 import org.fabric3.fabric.assembly.normalizer.PromotionNormalizerImpl;
 import org.fabric3.fabric.assembly.resolver.DefaultWireResolver;
 import org.fabric3.fabric.assembly.resolver.WireResolver;
-import org.fabric3.fabric.builder.Connector;
 import org.fabric3.fabric.builder.ConnectorImpl;
 import org.fabric3.fabric.builder.component.DefaultComponentBuilderRegistry;
-import org.fabric3.fabric.builder.component.WireAttacherRegistryImpl;
 import org.fabric3.fabric.builder.resource.ResourceContainerBuilderRegistryImpl;
 import org.fabric3.fabric.classloader.ClassLoaderBuilder;
 import org.fabric3.fabric.classloader.ClassLoaderGeneratorImpl;
@@ -64,6 +62,8 @@ import org.fabric3.fabric.services.contribution.ClasspathProcessorRegistryImpl;
 import org.fabric3.fabric.services.contribution.FileSystemResolver;
 import org.fabric3.fabric.services.contribution.processor.JarClasspathProcessor;
 import org.fabric3.fabric.services.discovery.SingleVMDiscoveryService;
+import org.fabric3.fabric.services.documentloader.DocumentLoader;
+import org.fabric3.fabric.services.documentloader.DocumentLoaderImpl;
 import org.fabric3.fabric.services.instancefactory.BuildHelperImpl;
 import org.fabric3.fabric.services.instancefactory.DefaultInstanceFactoryBuilderRegistry;
 import org.fabric3.fabric.services.instancefactory.GenerationHelperImpl;
@@ -71,8 +71,6 @@ import org.fabric3.fabric.services.instancefactory.ReflectiveInstanceFactoryBuil
 import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.fabric.services.routing.RuntimeRoutingService;
 import org.fabric3.fabric.services.runtime.BootstrapRuntimeInfoService;
-import org.fabric3.fabric.services.documentloader.DocumentLoader;
-import org.fabric3.fabric.services.documentloader.DocumentLoaderImpl;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.InitializationException;
@@ -81,7 +79,6 @@ import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.spi.assembly.Assembly;
 import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
-import org.fabric3.spi.builder.component.WireAttacherRegistry;
 import org.fabric3.spi.builder.resource.ResourceContainerBuilderRegistry;
 import org.fabric3.spi.command.CommandExecutorRegistry;
 import org.fabric3.spi.component.ScopeRegistry;
@@ -177,8 +174,6 @@ public class BootstrapAssemblyFactory {
                                                ClassLoaderRegistry classLoaderRegistry,
                                                ScopeRegistry scopeRegistry,
                                                ComponentManager componentManager) {
-        DeployerImpl deployer = new DeployerImpl(monitorFactory);
-        ComponentBuilderRegistry registry = new DefaultComponentBuilderRegistry();
 
         InstanceFactoryBuilderRegistry providerRegistry = new DefaultInstanceFactoryBuilderRegistry();
         InstanceFactoryBuildHelper buildHelper = new BuildHelperImpl(classLoaderRegistry);
@@ -193,6 +188,7 @@ public class BootstrapAssemblyFactory {
         transformerRegistry.register(new String2Class(classLoaderRegistry));
         transformerRegistry.register(new String2QName());
 
+        ComponentBuilderRegistry registry = new DefaultComponentBuilderRegistry();
         SystemComponentBuilder<?> builder = new SystemComponentBuilder<Object>(registry,
                                                                                scopeRegistry,
                                                                                providerRegistry,
@@ -200,21 +196,22 @@ public class BootstrapAssemblyFactory {
                                                                                transformerRegistry);
         builder.init();
 
-        WireAttacherRegistry wireAttacherRegistry = new WireAttacherRegistryImpl();
-        SingletonWireAttacher<?, ?> singletonWireAttacher = new SingletonWireAttacher();
-        wireAttacherRegistry.register(SingletonWireTargetDefinition.class, singletonWireAttacher);
-        SystemWireAttacher wireAttacher =
-                new SystemWireAttacher(componentManager,
-                                       wireAttacherRegistry,
-                                       transformerRegistry,
-                                       classLoaderRegistry);
+        SingletonWireAttacher singletonWireAttacher = new SingletonWireAttacher();
+        ConnectorImpl connector = new ConnectorImpl(null);
+        connector.register(SingletonWireTargetDefinition.class, singletonWireAttacher);
+        SystemWireAttacher wireAttacher = new SystemWireAttacher(componentManager,
+                                                                 connector,
+                                                                 connector,
+                                                                 transformerRegistry,
+                                                                 classLoaderRegistry);
         wireAttacher.init();
 
+        ResourceContainerBuilderRegistry resourceRegistry = createResourceBuilderRegistry(classLoaderRegistry);
+
+        DeployerImpl deployer = new DeployerImpl(monitorFactory);
         deployer.setBuilderRegistry(registry);
         deployer.setComponentManager(componentManager);
-        Connector connector = new ConnectorImpl(null, wireAttacherRegistry);
         deployer.setConnector(connector);
-        ResourceContainerBuilderRegistry resourceRegistry = createResourceBuilderRegistry(classLoaderRegistry);
         deployer.setResourceBuilderRegistry(resourceRegistry);
 
         return deployer;

@@ -21,16 +21,18 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
+import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.pojo.reflection.InvokerInterceptor;
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.runtime.component.ComponentManager;
+import org.fabric3.spi.builder.component.SourceWireAttacher;
+import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
+import org.fabric3.spi.builder.component.TargetWireAttacher;
+import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.builder.component.WireAttachException;
-import org.fabric3.spi.builder.component.WireAttacher;
-import org.fabric3.spi.builder.component.WireAttacherRegistry;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.Component;
 import org.fabric3.spi.component.ScopeContainer;
@@ -38,6 +40,7 @@ import org.fabric3.spi.model.instance.ValueSource;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.ProxyService;
@@ -50,24 +53,32 @@ import org.fabric3.spi.wire.Wire;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class GroovyWireAttacher implements WireAttacher<GroovyWireSourceDefinition, GroovyWireTargetDefinition> {
-
-    private WireAttacherRegistry wireAttacherRegistry;
-    private ComponentManager manager;
-    private ProxyService proxyService;
+public class GroovyWireAttacher implements SourceWireAttacher<GroovyWireSourceDefinition>, TargetWireAttacher<GroovyWireTargetDefinition> {
+    private final SourceWireAttacherRegistry sourceWireAttacherRegistry;
+    private final TargetWireAttacherRegistry targetWireAttacherRegistry;
+    private final ComponentManager manager;
+    private final ProxyService proxyService;
 
     public GroovyWireAttacher(@Reference ComponentManager manager,
-                              @Reference WireAttacherRegistry wireAttacherRegistry,
+                              @Reference SourceWireAttacherRegistry sourceWireAttacherRegistry,
+                              @Reference TargetWireAttacherRegistry targetWireAttacherRegistry,
                               @Reference ProxyService proxyService) {
-        this.wireAttacherRegistry = wireAttacherRegistry;
+        this.sourceWireAttacherRegistry = sourceWireAttacherRegistry;
+        this.targetWireAttacherRegistry = targetWireAttacherRegistry;
         this.manager = manager;
         this.proxyService = proxyService;
     }
 
     @Init
     public void init() {
-        wireAttacherRegistry.register(GroovyWireSourceDefinition.class, this);
-        wireAttacherRegistry.register(GroovyWireTargetDefinition.class, this);
+        sourceWireAttacherRegistry.register(GroovyWireSourceDefinition.class, this);
+        targetWireAttacherRegistry.register(GroovyWireTargetDefinition.class, this);
+    }
+
+    @Destroy
+    public void destroy() {
+        sourceWireAttacherRegistry.unregister(GroovyWireSourceDefinition.class, this);
+        targetWireAttacherRegistry.unregister(GroovyWireTargetDefinition.class, this);
     }
 
     public void attachToSource(GroovyWireSourceDefinition sourceDefinition,

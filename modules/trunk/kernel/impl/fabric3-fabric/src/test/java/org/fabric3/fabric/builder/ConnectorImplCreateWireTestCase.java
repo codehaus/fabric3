@@ -94,11 +94,11 @@ public class ConnectorImplCreateWireTestCase extends TestCase {
     private class TestConnector extends ConnectorImpl {
 
         public TestConnector() {
-            super(null, null);
+            super(null);
         }
 
         public TestConnector(InterceptorBuilderRegistry regisry) {
-            super(regisry, null);
+            super(regisry);
         }
 
 

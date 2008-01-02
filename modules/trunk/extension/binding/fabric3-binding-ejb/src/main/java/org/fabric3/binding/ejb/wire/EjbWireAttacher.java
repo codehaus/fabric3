@@ -25,7 +25,9 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Remotable;
 
@@ -39,8 +41,10 @@ import org.fabric3.binding.ejb.transport.EjbTargetInterceptorFactory;
 import org.fabric3.binding.rmi.wire.WireProxyGenerator;
 import org.fabric3.pojo.instancefactory.Signature;
 import org.fabric3.spi.builder.WiringException;
-import org.fabric3.spi.builder.component.WireAttacher;
-import org.fabric3.spi.builder.component.WireAttacherRegistry;
+import org.fabric3.spi.builder.component.SourceWireAttacher;
+import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
+import org.fabric3.spi.builder.component.TargetWireAttacher;
+import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.deployer.CompositeClassLoader;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
@@ -58,8 +62,9 @@ import org.fabric3.spi.wire.Wire;
  * @version $Revision: 1 $ $Date: 2007-05-14 10:40:37 -0700 (Mon, 14 May 2007) $
  */
 @EagerInit
-public class EjbWireAttacher implements WireAttacher<EjbWireSourceDefinition, EjbWireTargetDefinition> {
-
+public class EjbWireAttacher implements SourceWireAttacher<EjbWireSourceDefinition>, TargetWireAttacher<EjbWireTargetDefinition> {
+    private final SourceWireAttacherRegistry sourceWireAttacherRegistry;
+    private final TargetWireAttacherRegistry targetWireAttacherRegistry;
     private final EjbRegistry ejbRegistry;
     private final ClassLoaderRegistry classLoaderRegistry;
     private final ScopeRegistry scopeRegistry;
@@ -67,31 +72,34 @@ public class EjbWireAttacher implements WireAttacher<EjbWireSourceDefinition, Ej
 
     /**
      * Injects the wire attacher classLoaderRegistry and servlet host.
-     *
-     * @param wireAttacherRegistry Wire attacher registry.
-     *
      */
-    public EjbWireAttacher(@Reference WireAttacherRegistry wireAttacherRegistry,
+    public EjbWireAttacher(@Reference SourceWireAttacherRegistry sourceWireAttacherRegistry,
+                           @Reference TargetWireAttacherRegistry targetWireAttacherRegistry,
                            @Reference ClassLoaderRegistry classLoaderRegistry,
                            @Reference EjbRegistry ejbRegistry,
                            @Reference ScopeRegistry scopeRegistry) {
-        wireAttacherRegistry.register(EjbWireSourceDefinition.class, this);
-        wireAttacherRegistry.register(EjbWireTargetDefinition.class, this);
+        this.sourceWireAttacherRegistry = sourceWireAttacherRegistry;
+        this.targetWireAttacherRegistry = targetWireAttacherRegistry;
         this.ejbRegistry = ejbRegistry;
         this.classLoaderRegistry = classLoaderRegistry;
         this.scopeRegistry = scopeRegistry;
     }
 
-    /**
-     * @see org.fabric3.spi.builder.component.WireAttacher#attachToSource(
-     *      org.fabric3.spi.model.physical.PhysicalWireSourceDefinition,
-     *      org.fabric3.spi.model.physical.PhysicalWireTargetDefinition, org.fabric3.spi.wire.Wire)
-     */
+    @Init
+    public void start() {
+        sourceWireAttacherRegistry.register(EjbWireSourceDefinition.class, this);
+        targetWireAttacherRegistry.register(EjbWireTargetDefinition.class, this);
+    }
+
+    @Destroy
+    public void stop() {
+        sourceWireAttacherRegistry.unregister(EjbWireSourceDefinition.class, this);
+        targetWireAttacherRegistry.unregister(EjbWireTargetDefinition.class, this);
+    }
+
     public void attachToSource(EjbWireSourceDefinition sourceDefinition,
                                PhysicalWireTargetDefinition targetDefinition,
                                Wire wire) throws WiringException {
-        
-        
 
 
         Map<Signature, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops =
@@ -103,7 +111,7 @@ public class EjbWireAttacher implements WireAttacher<EjbWireSourceDefinition, Ej
         }
 
         Object ejbFacade = null;
-        if(sourceDefinition.getBindingDefinition().isEjb3()) {
+        if (sourceDefinition.getBindingDefinition().isEjb3()) {
             ejbFacade = generateEjb3Facade(sourceDefinition, wire, ops);
         } else {
             ejbFacade = generateEjb2Facade(sourceDefinition, wire, ops);
@@ -115,13 +123,13 @@ public class EjbWireAttacher implements WireAttacher<EjbWireSourceDefinition, Ej
         }
 
         String ejbLinkName = sourceDefinition.getBindingDefinition().getEjbLink();
-        if(ejbLinkName != null) {
+        if (ejbLinkName != null) {
             ejbRegistry.registerEjbLink(ejbLinkName, ejbFacade);
         }
 
     }
 
-    private Object generateEjb3Facade(EjbWireSourceDefinition sourceDefinition, Wire wire, 
+    private Object generateEjb3Facade(EjbWireSourceDefinition sourceDefinition, Wire wire,
                                       Map<Signature, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops)
             throws WiringException {
 
@@ -130,9 +138,9 @@ public class EjbWireAttacher implements WireAttacher<EjbWireSourceDefinition, Ej
         EjbServiceHandler handler = new EjbServiceHandler(wire, ops);
 
         Object proxy = Proxy.newProxyInstance(interfaceClass.getClassLoader(),
-                                              new Class[] {interfaceClass}, handler);
+                                              new Class[]{interfaceClass}, handler);
 
-        if(interfaceClass.isAnnotationPresent(Remotable.class)) proxy = generateRemoteWrapper(interfaceClass, proxy);
+        if (interfaceClass.isAnnotationPresent(Remotable.class)) proxy = generateRemoteWrapper(interfaceClass, proxy);
 
         return proxy;
     }
@@ -142,8 +150,8 @@ public class EjbWireAttacher implements WireAttacher<EjbWireSourceDefinition, Ej
             throws WiringException {
 
         String homeInterface = sourceDefinition.getBindingDefinition().getHomeInterface();
-        if(homeInterface == null) {
-           throw new WiringException("Ejb 2.x bindings on services must specify a home interface name");
+        if (homeInterface == null) {
+            throw new WiringException("Ejb 2.x bindings on services must specify a home interface name");
         }
 
         Class homeInterfaceClass = loadClass(homeInterface, sourceDefinition.getClassLoaderURI());
@@ -151,8 +159,8 @@ public class EjbWireAttacher implements WireAttacher<EjbWireSourceDefinition, Ej
         // For 2.x beans, the EJBObject interface is not necessarily an interface implemented by the POJO
         // Rather than using the service interface from the implementation, use the EJBObject interface
         Class interfaceClass = null;
-        for(Method m : homeInterfaceClass.getMethods()) {
-            if(m.getName().startsWith("create")) {
+        for (Method m : homeInterfaceClass.getMethods()) {
+            if (m.getName().startsWith("create")) {
                 interfaceClass = m.getReturnType();
                 break;
             }
@@ -162,17 +170,17 @@ public class EjbWireAttacher implements WireAttacher<EjbWireSourceDefinition, Ej
         EjbServiceHandler handler = new EjbServiceHandler(wire, ops);
 
         Object proxy = Proxy.newProxyInstance(interfaceClass.getClassLoader(),
-                                              new Class[] {interfaceClass}, handler);
+                                              new Class[]{interfaceClass}, handler);
 
         boolean isRemote = javax.ejb.EJBHome.class.isAssignableFrom(homeInterfaceClass);
 
-        if(isRemote) proxy = generateRemoteWrapper(interfaceClass, proxy);
+        if (isRemote) proxy = generateRemoteWrapper(interfaceClass, proxy);
 
         EjbHomeServiceHandler homeHandler = new EjbHomeServiceHandler(proxy);
 
         proxy = Proxy.newProxyInstance(homeInterfaceClass.getClassLoader(),
-                                       new Class[] {homeInterfaceClass}, homeHandler);
-        if(isRemote) proxy = generateRemoteWrapper(homeInterfaceClass, proxy);
+                                       new Class[]{homeInterfaceClass}, homeHandler);
+        if (isRemote) proxy = generateRemoteWrapper(homeInterfaceClass, proxy);
 
         return proxy;
     }
@@ -183,17 +191,12 @@ public class EjbWireAttacher implements WireAttacher<EjbWireSourceDefinition, Ej
         WireProxyGenerator wpg = WireProxyGenerator.getInstance();
         try {
             return wpg.generateRemoteWrapper(interfaceClass, delegate);
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new WiringException(e);
         }
 
     }
 
-    /**
-     * @see org.fabric3.spi.builder.component.WireAttacher#attachToTarget(
-     *      org.fabric3.spi.model.physical.PhysicalWireSourceDefinition,
-     *      org.fabric3.spi.model.physical.PhysicalWireTargetDefinition, org.fabric3.spi.wire.Wire)
-     */
     public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition,
                                EjbWireTargetDefinition targetDefinition,
                                Wire wire) throws WiringException {
@@ -203,7 +206,7 @@ public class EjbWireAttacher implements WireAttacher<EjbWireSourceDefinition, Ej
         EjbBindingDefinition bd = targetDefinition.getBindingDefinition();
         EjbTargetInterceptorFactory interceptorFactory =
                 new EjbTargetInterceptorFactory(bd, resolver, scopeRegistry, getId(bd));
-        
+
         for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
             PhysicalOperationDefinition op = entry.getKey();
             Signature signature = new Signature(op.getName(), op.getParameters());
@@ -216,11 +219,11 @@ public class EjbWireAttacher implements WireAttacher<EjbWireSourceDefinition, Ej
 
     }
 
-    private URI getId(EjbBindingDefinition bd) 
+    private URI getId(EjbBindingDefinition bd)
             throws WiringException {
         try {
             return bd.getTargetUri() != null ? bd.getTargetUri() : new URI(bd.getEjbLink());
-        } catch(URISyntaxException se) {
+        } catch (URISyntaxException se) {
             throw new WiringException(se);
         }
     }
@@ -228,19 +231,19 @@ public class EjbWireAttacher implements WireAttacher<EjbWireSourceDefinition, Ej
     private Class loadClass(String name, URI classLoaderURI)
             throws WiringException {
 
-        if(cl == null) {
+        if (cl == null) {
             CompositeClassLoader compositeCL =
                     (CompositeClassLoader) classLoaderRegistry.getClassLoader(classLoaderURI);
             ClassLoader ccl = Thread.currentThread().getContextClassLoader();
             if (ccl != null) {
                 compositeCL.addParent(ccl);
-            } 
+            }
             cl = compositeCL;
         }
-        
+
         try {
             return cl.loadClass(name);
-        } catch(ClassNotFoundException cnfe) {
+        } catch (ClassNotFoundException cnfe) {
             throw new WiringException(cnfe);
         }
 

@@ -23,25 +23,23 @@ import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.Map;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
 import org.fabric3.pojo.implementation.PojoComponent;
-import org.fabric3.spi.builder.component.WireAttacher;
 import org.fabric3.spi.model.instance.ValueSource;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.model.type.XSDSimpleType;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformerRegistry;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 /**
  * @version $Revision$ $Date$
  */
-public abstract class PojoWireAttacher<PWSD extends PhysicalWireSourceDefinition, PWTD extends PhysicalWireTargetDefinition> implements WireAttacher<PWSD, PWTD> {
+public abstract class PojoWireAttacher {
 
     private static final XSDSimpleType SOURCE_TYPE = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
 
@@ -67,7 +65,7 @@ public abstract class PojoWireAttacher<PWSD extends PhysicalWireSourceDefinition
 
             Element element = keyDocument.getDocumentElement();
             
-            Class<?> formalType = null;
+            Class<?> formalType;
             Type type = source.getGerenricMemberType(referenceSource);
             
             if(type instanceof ParameterizedType) { 

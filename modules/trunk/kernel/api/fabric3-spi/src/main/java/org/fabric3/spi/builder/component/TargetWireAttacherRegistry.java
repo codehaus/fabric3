@@ -14,23 +14,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.monitor;
+package org.fabric3.spi.builder.component;
 
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
-import org.fabric3.spi.builder.component.WireAttacher;
-import org.fabric3.spi.builder.WiringException;
-import org.fabric3.spi.wire.Wire;
 
 /**
+ * Registration interface for TargetWireAttachers.
+ * <p/>
+ * Deprecated as it will be removed once we are able to declaratively wire attachers provided by extensions.
+ *
  * @version $Rev$ $Date$
  */
-public class MonitorWireAttacher implements WireAttacher<PhysicalWireSourceDefinition, MonitorWireTargetDefinition> {
-    public void attachToSource(PhysicalWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire)
-            throws WiringException {
-    }
+@Deprecated
+public interface TargetWireAttacherRegistry {
+    <PWSD extends PhysicalWireTargetDefinition> void register(Class<PWSD> type, TargetWireAttacher<PWSD> attacher);
 
-    public void attachToTarget(PhysicalWireSourceDefinition source, MonitorWireTargetDefinition target, Wire wire)
-            throws WiringException {
-    }
+    <PWSD extends PhysicalWireTargetDefinition> void unregister(Class<PWSD> type, TargetWireAttacher<PWSD> attacher);
 }

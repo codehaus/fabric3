@@ -10,38 +10,33 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.spi.builder.WiringException;
+import org.fabric3.spi.builder.component.TargetWireAttacher;
+import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.builder.component.WireAttachException;
-import org.fabric3.spi.builder.component.WireAttacher;
-import org.fabric3.spi.builder.component.WireAttacherRegistry;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
 /**
- * WireAttacher for the client binding
+ * Wire Attacher for the client binding
  *
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class MockWireAttacher implements WireAttacher<PhysicalWireSourceDefinition, MockWireTargetDefinition> {
-    private MockObjectCache mockCache;
-    private WireAttacherRegistry registry;
+public class MockWireAttacher implements TargetWireAttacher<MockWireTargetDefinition> {
+    private final TargetWireAttacherRegistry targetWireAttacherRegistry;
+    private final MockObjectCache mockCache;
 
-    public MockWireAttacher(@Reference WireAttacherRegistry registry,
+    public MockWireAttacher(@Reference TargetWireAttacherRegistry targetWireAttacherRegistry,
                             @Reference MockObjectCache mockCache) {
-        this.registry = registry;
+        this.targetWireAttacherRegistry = targetWireAttacherRegistry;
         this.mockCache = mockCache;
     }
 
     @Init
     public void init() {
-        registry.register(MockWireTargetDefinition.class, this);
-    }
-
-    public void attachToSource(PhysicalWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) {
-        throw new UnsupportedOperationException();
+        targetWireAttacherRegistry.register(MockWireTargetDefinition.class, this);
     }
 
     public void attachToTarget(PhysicalWireSourceDefinition source, MockWireTargetDefinition target, Wire wire)

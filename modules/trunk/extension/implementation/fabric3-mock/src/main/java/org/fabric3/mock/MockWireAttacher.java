@@ -22,16 +22,16 @@ import java.net.URI;
 import java.util.Map;
 
 import org.easymock.IMocksControl;
+import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.spi.builder.component.TargetWireAttacher;
+import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.builder.component.WireAttachException;
-import org.fabric3.spi.builder.component.WireAttacher;
-import org.fabric3.spi.builder.component.WireAttacherRegistry;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
@@ -43,29 +43,28 @@ import org.fabric3.spi.wire.Wire;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class MockWireAttacher implements WireAttacher<PhysicalWireSourceDefinition, MockWireTargetDefinition> {
+public class MockWireAttacher implements TargetWireAttacher<MockWireTargetDefinition> {
 
-    private final WireAttacherRegistry wireAttacherRegistry;
+    private final TargetWireAttacherRegistry targetWireAttacherRegistry;
     private final ClassLoaderRegistry classLoaderRegistry;
     private final IMocksControl control;
 
-    public MockWireAttacher(@Reference WireAttacherRegistry wireAttacherRegistry,
+    public MockWireAttacher(@Reference TargetWireAttacherRegistry targetWireAttacherRegistry,
                             @Reference ClassLoaderRegistry classLoaderRegistry,
                             @Reference IMocksControl control) {
-        this.wireAttacherRegistry = wireAttacherRegistry;
+        this.targetWireAttacherRegistry = targetWireAttacherRegistry;
         this.classLoaderRegistry = classLoaderRegistry;
         this.control = control;
     }
 
     @Init
     public void init() {
-        wireAttacherRegistry.register(MockWireTargetDefinition.class, this);
+        targetWireAttacherRegistry.register(MockWireTargetDefinition.class, this);
     }
 
-    public void attachToSource(PhysicalWireSourceDefinition wireSourceDefinition,
-                               PhysicalWireTargetDefinition wireTargetDefinition,
-                               Wire wire) {
-        throw new UnsupportedOperationException("Mock components cant be sources for wires");
+    @Destroy
+    public void destroy() {
+        targetWireAttacherRegistry.unregister(MockWireTargetDefinition.class, this);
     }
 
     public void attachToTarget(PhysicalWireSourceDefinition wireSourceDefinition,

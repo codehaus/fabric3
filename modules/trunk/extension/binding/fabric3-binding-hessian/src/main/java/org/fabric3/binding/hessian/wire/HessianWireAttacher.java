@@ -34,9 +34,11 @@ import org.fabric3.binding.hessian.transport.HessianServiceHandler;
 import org.fabric3.binding.hessian.transport.HessianTargetInterceptor;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.spi.builder.WiringException;
+import org.fabric3.spi.builder.component.SourceWireAttacher;
+import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
+import org.fabric3.spi.builder.component.TargetWireAttacher;
+import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.builder.component.WireAttachException;
-import org.fabric3.spi.builder.component.WireAttacher;
-import org.fabric3.spi.builder.component.WireAttacherRegistry;
 import org.fabric3.spi.host.ServletHost;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
@@ -51,28 +53,29 @@ import org.fabric3.spi.wire.Wire;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class HessianWireAttacher implements WireAttacher<HessianWireSourceDefinition, HessianWireTargetDefinition> {
-    private ClassLoaderRegistry classLoaderRegistry;
-    /**
-     * Servlet host.
-     */
-    private ServletHost servletHost;
-    private HessianWireAttacherMonitor monitor;
+public class HessianWireAttacher implements SourceWireAttacher<HessianWireSourceDefinition>, TargetWireAttacher<HessianWireTargetDefinition> {
+    private final SourceWireAttacherRegistry sourceWireAttacherRegistry;
+    private final TargetWireAttacherRegistry targetWireAttacherRegistry;
+    private final ClassLoaderRegistry classLoaderRegistry;
+    private final ServletHost servletHost;
+    private final HessianWireAttacherMonitor monitor;
 
     /**
      * Injects the wire attacher registry and servlet host.
      *
-     * @param wireAttacherRegistry Wire attacher rehistry.
-     * @param servletHost          Servlet host.
-     * @param classLoaderRegistry  the classloader registry
-     * @param monitorFactory       the monitor factory
+     * @param sourceWireAttacherRegistry the registry for source wire attachers
+     * @param targetWireAttacherRegistry the registry for target wire attachers
+     * @param servletHost                Servlet host.
+     * @param classLoaderRegistry        the classloader registry
+     * @param monitorFactory             the monitor factory
      */
-    public HessianWireAttacher(@Reference WireAttacherRegistry wireAttacherRegistry,
+    public HessianWireAttacher(@Reference SourceWireAttacherRegistry sourceWireAttacherRegistry,
+                               @Reference TargetWireAttacherRegistry targetWireAttacherRegistry,
                                @Reference ServletHost servletHost,
                                @Reference ClassLoaderRegistry classLoaderRegistry,
                                @Reference MonitorFactory monitorFactory) {
-        wireAttacherRegistry.register(HessianWireSourceDefinition.class, this);
-        wireAttacherRegistry.register(HessianWireTargetDefinition.class, this);
+        this.sourceWireAttacherRegistry = sourceWireAttacherRegistry;
+        this.targetWireAttacherRegistry = targetWireAttacherRegistry;
         this.servletHost = servletHost;
         this.classLoaderRegistry = classLoaderRegistry;
         this.monitor = monitorFactory.getMonitor(HessianWireAttacherMonitor.class);
@@ -80,12 +83,16 @@ public class HessianWireAttacher implements WireAttacher<HessianWireSourceDefini
 
     @Init
     public void start() {
+        sourceWireAttacherRegistry.register(HessianWireSourceDefinition.class, this);
+        targetWireAttacherRegistry.register(HessianWireTargetDefinition.class, this);
         monitor.extensionStarted();
     }
 
     @Destroy
     public void stop() {
         this.monitor.extensionStopped();
+        sourceWireAttacherRegistry.unregister(HessianWireSourceDefinition.class, this);
+        targetWireAttacherRegistry.unregister(HessianWireTargetDefinition.class, this);
     }
 
     public void attachToSource(HessianWireSourceDefinition sourceDefinition,

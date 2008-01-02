@@ -21,6 +21,7 @@ package org.fabric3.runtime.webapp.implementation.webapp;
 import java.net.URI;
 import java.util.Map;
 
+import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
@@ -30,13 +31,11 @@ import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilder;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
-import org.fabric3.spi.builder.component.WireAttachException;
-import org.fabric3.spi.builder.component.WireAttacher;
-import org.fabric3.spi.builder.component.WireAttacherRegistry;
+import org.fabric3.spi.builder.component.SourceWireAttacher;
+import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
 import org.fabric3.spi.component.Component;
-import org.fabric3.spi.runtime.component.ComponentManager;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.ProxyService;
 import org.fabric3.spi.wire.Wire;
@@ -44,31 +43,36 @@ import org.fabric3.spi.wire.Wire;
 /**
  */
 @EagerInit
-@Service(interfaces = {ComponentBuilder.class, WireAttacher.class})
+@Service(interfaces = {ComponentBuilder.class, SourceWireAttacher.class})
 public class WebappComponentBuilder
         implements ComponentBuilder<WebappComponentDefinition, WebappComponent>,
-        WireAttacher<WebappWireSourceDefinition, PhysicalWireTargetDefinition> {
+        SourceWireAttacher<WebappWireSourceDefinition> {
 
+    private final SourceWireAttacherRegistry sourceWireAttacherRegistry;
     private ProxyService proxyService;
     private ComponentBuilderRegistry builderRegistry;
     private ComponentManager manager;
-    private WireAttacherRegistry wireAttacherRegistry;
 
     public WebappComponentBuilder(@Reference ProxyService proxyService,
                                   @Reference ComponentManager manager,
                                   @Reference ComponentBuilderRegistry builderRegistry,
-                                  @Reference WireAttacherRegistry wireAttacherRegistry) {
+                                  @Reference SourceWireAttacherRegistry sourceWireAttacherRegistry) {
         this.proxyService = proxyService;
         this.manager = manager;
         this.builderRegistry = builderRegistry;
-        this.wireAttacherRegistry = wireAttacherRegistry;
+        this.sourceWireAttacherRegistry = sourceWireAttacherRegistry;
     }
 
 
     @Init
     public void init() {
         builderRegistry.register(WebappComponentDefinition.class, this);
-        wireAttacherRegistry.register(WebappWireSourceDefinition.class, this);
+        sourceWireAttacherRegistry.register(WebappWireSourceDefinition.class, this);
+    }
+
+    @Destroy
+    public void destroy() {
+        sourceWireAttacherRegistry.unregister(WebappWireSourceDefinition.class, this);
     }
 
     public WebappComponent build(WebappComponentDefinition definition) throws BuilderException {
@@ -88,11 +92,4 @@ public class WebappComponentBuilder
         assert source instanceof WebappComponent;
         ((WebappComponent) source).attachWire(wire);
     }
-
-    public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition,
-                               PhysicalWireTargetDefinition target,
-                               Wire wire) throws WireAttachException {
-        throw new UnsupportedOperationException();
-    }
-
 }
