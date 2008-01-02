@@ -145,8 +145,8 @@ public class GroovyWireAttacher implements SourceWireAttacher<GroovyWireSourceDe
                 try {
                     paramTypes[i] = loader.loadClass(param);
                 } catch (ClassNotFoundException e) {
-                    URI sourceUri = wire.getSourceUri();
-                    URI targetUri = wire.getTargetUri();
+                    URI sourceUri = sourceDefinition.getUri();
+                    URI targetUri = targetDefinition.getUri();
                     throw new WireAttachException("Implementation class not found", sourceUri, targetUri, e);
                 }
             }
@@ -154,8 +154,8 @@ public class GroovyWireAttacher implements SourceWireAttacher<GroovyWireSourceDe
             try {
                 method = implementationClass.getMethod(operation.getName(), paramTypes);
             } catch (NoSuchMethodException e) {
-                URI sourceUri = wire.getSourceUri();
-                URI targetUri = wire.getTargetUri();
+                URI sourceUri = sourceDefinition.getUri();
+                URI targetUri = targetDefinition.getUri();
                 throw new WireAttachException("No matching method found", sourceUri, targetUri, e);
             }
             chain.addInterceptor(createInterceptor(method, target, scopeContainer));

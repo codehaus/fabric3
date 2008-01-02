@@ -165,8 +165,8 @@ public class JavaWireAttacher extends PojoWireAttacher implements SourceWireAtta
                 try {
                     paramTypes[i] = classLoaderRegistry.loadClass(loader, param);
                 } catch (ClassNotFoundException e) {
-                    URI sourceUri = wire.getSourceUri();
-                    URI targetUri = wire.getTargetUri();
+                    URI sourceUri = sourceDefinition.getUri();
+                    URI targetUri = targetDefinition.getUri();
                     throw new WireAttachException("Implementation class not found", sourceUri, targetUri, e);
                 }
             }
@@ -174,8 +174,8 @@ public class JavaWireAttacher extends PojoWireAttacher implements SourceWireAtta
             try {
                 method = implementationClass.getMethod(operation.getName(), paramTypes);
             } catch (NoSuchMethodException e) {
-                URI sourceUri = wire.getSourceUri();
-                URI targetUri = wire.getTargetUri();
+                URI sourceUri = sourceDefinition.getUri();
+                URI targetUri = targetDefinition.getUri();
                 throw new WireAttachException("No matching method found", sourceUri, targetUri, e);
             }
             chain.addInterceptor(createInterceptor(method, target, scopeContainer));

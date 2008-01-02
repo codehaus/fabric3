@@ -18,7 +18,6 @@
  */
 package org.fabric3.fabric.builder;
 
-import java.net.URI;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -89,9 +88,9 @@ public class ConnectorImpl implements Connector, SourceWireAttacherRegistry, Tar
      * @throws WiringException
      */
     public void connect(PhysicalWireDefinition definition) throws BuilderException {
-        Wire wire = createWire(definition);
         PhysicalWireSourceDefinition sourceDefinition = definition.getSource();
         PhysicalWireTargetDefinition targetDefinition = definition.getTarget();
+        Wire wire = createWire(definition);
         attachSource(sourceDefinition, targetDefinition, wire);
         attachTarget(sourceDefinition, targetDefinition, wire);
     }
@@ -115,11 +114,7 @@ public class ConnectorImpl implements Connector, SourceWireAttacherRegistry, Tar
     }
 
     protected Wire createWire(PhysicalWireDefinition definition) throws BuilderException {
-        URI sourceURI = definition.getSourceUri();
-        URI targetUri = definition.getTargetUri();
         Wire wire = new WireImpl();
-        wire.setSourceUri(sourceURI);
-        wire.setTargetUri(targetUri);
         for (PhysicalOperationDefinition operation : definition.getOperations()) {
             InvocationChain chain = new InvocationChainImpl(operation);
             for (PhysicalInterceptorDefinition interceptorDefinition : operation.getInterceptors()) {

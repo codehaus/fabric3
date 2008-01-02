@@ -87,9 +87,10 @@ public class WebappComponentBuilder
     public void attachToSource(WebappWireSourceDefinition sourceDefinition,
                                PhysicalWireTargetDefinition targetDefinition,
                                Wire wire) {
-        URI sourceName = UriHelper.getDefragmentedName(sourceDefinition.getUri());
-        Component source = manager.getComponent(sourceName);
+        URI sourceUri = UriHelper.getDefragmentedName(sourceDefinition.getUri());
+        String referenceName = sourceDefinition.getUri().getFragment();
+        Component source = manager.getComponent(sourceUri);
         assert source instanceof WebappComponent;
-        ((WebappComponent) source).attachWire(wire);
+        ((WebappComponent) source).attachWire(referenceName, wire);
     }
 }

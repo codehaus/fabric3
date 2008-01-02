@@ -18,28 +18,58 @@
  */
 package org.fabric3.spi.model.physical;
 
-import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.fabric3.scdl.ModelObject;
 
 /**
- * Model class representing the portable definition of a wire. This class is used to describe the inbound and outbound
- * wires on a physical component definition.
+ * Model class representing the portable definition of a wire.
+ * <p/>
+ * The definition describes a wire between a source component and a target component, defining how the wire should be
+ * attached at both ends. It also describes the operations available on the wire, and whether the connection between the
+ * two components can be optimized.
  *
  * @version $Rev$ $Date$
  */
 public class PhysicalWireDefinition extends ModelObject {
 
-    // Target definition
-    private PhysicalWireTargetDefinition target;
-
     // Source definition
     private PhysicalWireSourceDefinition source;
 
+    // Target definition
+    private PhysicalWireTargetDefinition target;
+
     // Collection of operations
-    private Set<PhysicalOperationDefinition> operations = new HashSet<PhysicalOperationDefinition>();
+    private final Set<PhysicalOperationDefinition> operations = new HashSet<PhysicalOperationDefinition>();
+
+    private boolean optimizable;
+
+    public PhysicalWireDefinition() {
+    }
+
+    public PhysicalWireDefinition(PhysicalWireSourceDefinition source, PhysicalWireTargetDefinition target) {
+        this.source = source;
+        this.target = target;
+    }
+
+    /**
+     * Returns true if the wire can be optimized.
+     *
+     * @return true if the wire can be optimized
+     */
+    public boolean isOptimizable() {
+        return optimizable;
+    }
+
+    /**
+     * Sets whether the wire can be optimized.
+     *
+     * @param optimizable whether the wire can be optimized
+     */
+    public void setOptimizable(boolean optimizable) {
+        this.optimizable = optimizable;
+    }
 
     /**
      * Adds an operation definition.
@@ -62,58 +92,39 @@ public class PhysicalWireDefinition extends ModelObject {
 
 
     /**
-     * Gets the Wire source URI.
+     * Returns the physical definition for the source side of the wire.
      *
-     * @return Wire source URI.
-     */
-    public URI getSourceUri() {
-        return source.getUri();
-    }
-
-    /**
-     * Gets the Wire target URI.
-     *
-     * @return Wire target URI.
-     */
-    public URI getTargetUri() {
-        return target.getUri();
-    }
-
-    /**
-     * Gets the wire source.
-     *
-     * @return Wire source.
+     * @return the physical definition for the source side of the wire
      */
     public PhysicalWireSourceDefinition getSource() {
         return source;
     }
 
     /**
-     * Sets the wire source.
+     * Sets the physical definition for the source side of the wire.
      *
-     * @param source Wire source.
+     * @param source the physical definition for the source side of the wire
      */
     public void setSource(PhysicalWireSourceDefinition source) {
         this.source = source;
     }
 
     /**
-     * Gets the wire target.
+     * Returns the physical definition for the target side of the wire.
      *
-     * @return Wire target.
+     * @return the physical definition for the target side of the wire
      */
     public PhysicalWireTargetDefinition getTarget() {
         return target;
     }
 
     /**
-     * Sets the wire target.
+     * Sets the physical definition for the target side of the wire.
      *
-     * @param target Wire target.
+     * @param target the physical definition for the target side of the wire
      */
     public void setTarget(PhysicalWireTargetDefinition target) {
         this.target = target;
-
     }
 
 }

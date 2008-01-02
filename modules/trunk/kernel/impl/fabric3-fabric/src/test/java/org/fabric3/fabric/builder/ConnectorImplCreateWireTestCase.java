@@ -43,13 +43,11 @@ public class ConnectorImplCreateWireTestCase extends TestCase {
 
     public void testCreateWire() throws Exception {
         TestConnector connector = new TestConnector();
-        PhysicalWireDefinition definition = new PhysicalWireDefinition();
         PhysicalWireSourceDefinition sourceDefinition = new PhysicalWireSourceDefinition();
         sourceDefinition.setUri(URI.create("source"));
         PhysicalWireTargetDefinition targetDefinition = new PhysicalWireTargetDefinition();
         targetDefinition.setUri(URI.create("target"));
-        definition.setSource(sourceDefinition);
-        definition.setTarget(targetDefinition);
+        PhysicalWireDefinition definition = new PhysicalWireDefinition(sourceDefinition, targetDefinition);
         PhysicalOperationDefinition operation = new PhysicalOperationDefinition();
         operation.setName("operation");
         definition.addOperation(operation);
@@ -62,20 +60,17 @@ public class ConnectorImplCreateWireTestCase extends TestCase {
     }
 
     public void testDispatchToBuilder() throws Exception {
-        QName qName = new QName("interceptor");
         InterceptorBuilder builder = EasyMock.createMock(InterceptorBuilder.class);
         EasyMock.expect(builder.build(EasyMock.isA(PhysicalInterceptorDefinition.class))).andReturn(null).times(2);
         EasyMock.replay(builder);
         InterceptorBuilderRegistryImpl regisry = new InterceptorBuilderRegistryImpl();
         regisry.register(PhysicalInterceptorDefinition.class, builder);
         TestConnector connector = new TestConnector(regisry);
-        PhysicalWireDefinition definition = new PhysicalWireDefinition();
         PhysicalWireSourceDefinition sourceDefinition = new PhysicalWireSourceDefinition();
         sourceDefinition.setUri(URI.create("source"));
         PhysicalWireTargetDefinition targetDefinition = new PhysicalWireTargetDefinition();
         targetDefinition.setUri(URI.create("target"));
-        definition.setSource(sourceDefinition);
-        definition.setTarget(targetDefinition);
+        PhysicalWireDefinition definition = new PhysicalWireDefinition(sourceDefinition, targetDefinition);
         PhysicalInterceptorDefinition interceptorDefinition = new PhysicalInterceptorDefinition();
 
         PhysicalOperationDefinition operation = new PhysicalOperationDefinition();

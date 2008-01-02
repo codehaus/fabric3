@@ -18,7 +18,6 @@
  */
 package org.fabric3.fabric.wire;
 
-import java.net.URI;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,31 +32,10 @@ import org.fabric3.spi.wire.Wire;
  * @version $Rev$ $Date$
  */
 public class WireImpl implements Wire {
-    private URI sourceUri;
-    private URI targetUri;
-    private Map<PhysicalOperationDefinition, InvocationChain> chains =
+    private final Map<PhysicalOperationDefinition, InvocationChain> chains =
             new HashMap<PhysicalOperationDefinition, InvocationChain>();
-    private Map<PhysicalOperationDefinition, InvocationChain> callbackChains =
+    private final Map<PhysicalOperationDefinition, InvocationChain> callbackChains =
             new HashMap<PhysicalOperationDefinition, InvocationChain>();
-
-    public WireImpl() {
-    }
-
-    public URI getSourceUri() {
-        return sourceUri;
-    }
-
-    public void setSourceUri(URI sourceUri) {
-        this.sourceUri = sourceUri;
-    }
-
-    public URI getTargetUri() {
-        return targetUri;
-    }
-
-    public void setTargetUri(URI targetUri) {
-        this.targetUri = targetUri;
-    }
 
     public void addInvocationChain(PhysicalOperationDefinition operation, InvocationChain chain) {
         chains.put(operation, chain);

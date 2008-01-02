@@ -66,7 +66,6 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
      * Injects generator registry and assembly store.
      * 
      * @param generatorRegistry Generator registry.
-     * @param assemblyStore Assembly store.
      */
     public PhysicalWireGeneratorImpl(@Reference GeneratorRegistry generatorRegistry,
                                      @Reference PolicyResolver policyResolver,
@@ -97,15 +96,12 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         // Create the wire from the component to the resource
         ServiceContract serviceContract = resource.getResourceDefinition().getServiceContract();
 
-        PhysicalWireDefinition wireDefinition = new PhysicalWireDefinition();
+        PhysicalWireDefinition wireDefinition = new PhysicalWireDefinition(pwsd, pwtd);
         List<Operation<?>> operations = serviceContract.getOperations();
         for (Operation operation : operations) {
             PhysicalOperationDefinition physicalOperation = physicalOperationHelper.mapOperation(operation);
             wireDefinition.addOperation(physicalOperation);
         }
-
-        wireDefinition.setSource(pwsd);
-        wireDefinition.setTarget(pwtd);
 
         context.getPhysicalChangeSet().addWireDefinition(wireDefinition);
 
@@ -128,7 +124,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
             new LogicalBinding<SCABindingDefinition>(SCABindingDefinition.INSTANCE, service);
         
         PhysicalWireDefinition wireDefinition = new PhysicalWireDefinition();
-        
+
         PolicyResult result = null;
         try {
             result = policyResolver.resolvePolicies(serviceContract, sourceBinding, targetBinding, source, target);
@@ -141,10 +137,10 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
             setOperationDefinition(operation, wireDefinition, result.getInterceptedPolicies().get(operation));
         }
 
-        ComponentGenerator<T> targetGenerator = (ComponentGenerator<T>) 
+        ComponentGenerator<T> targetGenerator = (ComponentGenerator<T>)
             generatorRegistry.getComponentGenerator(target.getDefinition().getImplementation().getClass());
-        
-        PhysicalWireTargetDefinition targetDefinition = 
+
+        PhysicalWireTargetDefinition targetDefinition =
             targetGenerator.generateWireTarget(service, target, result.getTargetIntents(), result.getTargetPolicies(), context);
 
         wireDefinition.setTarget(targetDefinition);
@@ -163,7 +159,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
             }
         }
 
-        PhysicalWireSourceDefinition sourceDefinition = 
+        PhysicalWireSourceDefinition sourceDefinition =
             sourceGenerator.generateWireSource(source, reference, optimizable, result.getSourceIntents(), result.getSourcePolicies(), context);
         sourceDefinition.setKey(target.getDefinition().getKey());
         wireDefinition.setSource(sourceDefinition);

@@ -29,35 +29,6 @@ import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
  * @version $$Rev$$ $$Date$$
  */
 public interface Wire {
-
-    /**
-     * Returns the URI of the wire source
-     *
-     * @return the wire source URI
-     */
-    URI getSourceUri();
-
-    /**
-     * Sets the URI of the wire source
-     *
-     * @param uri the source uri
-     */
-    void setSourceUri(URI uri);
-
-    /**
-     * Returns the URI of the wire target
-     *
-     * @return the URI of the wire target
-     */
-    URI getTargetUri();
-
-    /**
-     * Sets the URI of the wire target
-     *
-     * @param uri the URI of the wire target
-     */
-    void setTargetUri(URI uri);
-
     /**
      * Adds the invocation chain associated with the given operation
      *

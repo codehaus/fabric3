@@ -103,8 +103,7 @@ public class WebappComponent<T> extends AbstractLifecycle implements AtomicCompo
 
     }
 
-    public void attachWire(Wire wire) {
-        String name = wire.getSourceUri().getFragment();
+    public void attachWire(String name, Wire wire) {
         referenceFactories.put(name, wire);
     }
 
