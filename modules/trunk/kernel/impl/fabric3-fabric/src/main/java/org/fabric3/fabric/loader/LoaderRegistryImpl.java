@@ -19,6 +19,7 @@
 package org.fabric3.fabric.loader;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -92,7 +93,20 @@ public class LoaderRegistryImpl implements LoaderRegistry {
             loader = mappedLoaders.get(name);
         }
         if (loader == null) {
-            throw new UnrecognizedElementException(name);
+            UnrecognizedElementException e = new UnrecognizedElementException(name);
+            Location location = reader.getLocation();
+            URI contributionUri = loaderContext.getContributionUri();
+            URL sourceBase = loaderContext.getSourceBase();
+            if (sourceBase != null) {
+                e.setResourceURI(sourceBase.toString());
+            }
+            if (contributionUri != null) {
+                e.setResourceURI(contributionUri.toString());
+            }
+
+            e.setLine(location.getLineNumber());
+            e.setColumn(location.getColumnNumber());
+            throw e;
         }
         return type.cast(loader.load(reader, loaderContext));
     }

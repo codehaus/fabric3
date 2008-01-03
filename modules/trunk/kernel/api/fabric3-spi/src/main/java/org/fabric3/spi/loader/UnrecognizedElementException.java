@@ -43,4 +43,12 @@ public class UnrecognizedElementException extends LoaderException {
     public QName getElement() {
         return element;
     }
+
+    public String getMessage() {
+        StringBuffer b = new StringBuffer("The element ").append(getElement());
+        return b.append(
+                " was not reconginized. If this is not a typo, check to ensure extensions are configured properly.").toString();
+
+
+    }
 }
