@@ -18,12 +18,14 @@
  */
 package org.fabric3.binding.ws.cxf.wire;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
+import org.osoa.sca.ServiceUnavailableException;
 
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.spi.wire.MessageImpl;
-import org.osoa.sca.ServiceUnavailableException;
 
 /**
  * @version $Revision: 1589 $ $Date: 2007-10-25 23:13:37 +0100 (Thu, 25 Oct 2007) $
@@ -49,7 +51,7 @@ public class CxfTargetInterceptor implements Interceptor {
      * Initializes the target method and proxy
      *
      * @param method Target method.
-     * @param proxy Proxy to the target.
+     * @param proxy  Proxy to the target.
      */
     public CxfTargetInterceptor(Method method, Object proxy) {
         this.method = method;
@@ -62,18 +64,20 @@ public class CxfTargetInterceptor implements Interceptor {
 
     public Message invoke(Message message) {
 
+        Object[] args = (Object[]) message.getBody();
         try {
-
-            Message result = new MessageImpl();
-            Object[] args = (Object[]) message.getBody();
             Object ret = method.invoke(proxy, args);
+            Message result = new MessageImpl();
             result.setBody(ret);
             return result;
-
-        } catch (Exception ex) {
-            throw new ServiceUnavailableException(ex);
+        } catch (IllegalAccessException e) {
+            throw new ServiceUnavailableException(e);
+        } catch (InvocationTargetException e) {
+            // FIXME CXF throws a SoapFault unchecked exception with a null cause rather than the fault raised by the implementation
+            Message result = new MessageImpl();
+            result.setBodyWithFault(e.getCause());
+            return result;
         }
-
     }
 
     public void setNext(Interceptor next) {

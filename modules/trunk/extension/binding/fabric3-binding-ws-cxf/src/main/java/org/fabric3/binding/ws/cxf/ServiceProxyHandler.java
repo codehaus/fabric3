@@ -61,7 +61,11 @@ public class ServiceProxyHandler implements InvocationHandler {
         Interceptor head = invocationChains.get(methodName).getHeadInterceptor();
         Message input = new MessageImpl(args, false, new SimpleWorkContext(), wire);
         Message output = head.invoke(input);
-        return output.getBody();
+        if (output.isFault()) {
+            throw (Throwable) output.getBody();
+        } else {
+            return output.getBody();
+        }
     }
 
     /**
