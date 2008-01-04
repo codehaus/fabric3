@@ -24,13 +24,13 @@ import java.lang.reflect.Proxy;
 import java.util.Map;
 
 import org.fabric3.extension.component.SimpleWorkContext;
+import org.fabric3.pojo.instancefactory.Signature;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.spi.wire.MessageImpl;
 import org.fabric3.spi.wire.Wire;
-import org.fabric3.pojo.instancefactory.Signature;
 
 /**
  * @version $Revision: 1 $ $Date: 2007-05-14 10:40:37 -0700 (Mon, 14 May 2007) $
@@ -55,14 +55,14 @@ public class EjbServiceHandler implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
         //TODO: I need to rethink this
-        if(method.getName().equals("equals")
-            && method.getParameterTypes().length == 1
-            && (method.getParameterTypes()[0]).equals(Object.class)){
-          if(! Proxy.isProxyClass(args[0].getClass())){
-            return false;
-          }
-          InvocationHandler h = Proxy.getInvocationHandler(args[0]);
-          return this.equals(h);
+        if (method.getName().equals("equals")
+                && method.getParameterTypes().length == 1
+                && (method.getParameterTypes()[0]).equals(Object.class)) {
+            if (!Proxy.isProxyClass(args[0].getClass())) {
+                return false;
+            }
+            InvocationHandler h = Proxy.getInvocationHandler(args[0]);
+            return this.equals(h);
         }
 
         Signature signature = new Signature(method);
@@ -71,6 +71,10 @@ public class EjbServiceHandler implements InvocationHandler {
         Message input = new MessageImpl(args, false, new SimpleWorkContext(), wire);
 
         Message output = head.invoke(input);
-        return output.getBody();
+        if (output.isFault()) {
+            throw (Throwable) output.getBody();
+        } else {
+            return output.getBody();
+        }
     }
 }
