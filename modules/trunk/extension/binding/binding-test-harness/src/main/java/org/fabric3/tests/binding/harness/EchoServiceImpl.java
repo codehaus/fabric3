@@ -27,4 +27,8 @@ public class EchoServiceImpl implements EchoService {
     public int echoInt(int value) {
         return value;
     }
+
+    public void echoFault() throws EchoFault {
+        throw new EchoFault();
+    }
 }

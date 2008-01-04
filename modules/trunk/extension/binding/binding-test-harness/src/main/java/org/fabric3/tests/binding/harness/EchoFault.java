@@ -17,14 +17,7 @@
 package org.fabric3.tests.binding.harness;
 
 /**
- * Simple interface that echos a basic type.
- *
  * @version $Rev$ $Date$
  */
-public interface EchoService {
-    String echoString(String message);
-
-    int echoInt(int value);
-
-    void echoFault() throws EchoFault;
+public class EchoFault extends Exception {
 }

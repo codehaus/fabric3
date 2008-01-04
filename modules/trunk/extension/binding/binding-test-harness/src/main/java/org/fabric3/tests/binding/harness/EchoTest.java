@@ -38,4 +38,13 @@ public class EchoTest extends TestCase {
     public void testInt() {
         assertEquals(123, service.echoInt(123));
     }
+
+    public void testFault() {
+        try {
+            service.echoFault();
+            fail();
+        } catch (EchoFault echoFault) {
+            // OK
+        }
+    }
 }
