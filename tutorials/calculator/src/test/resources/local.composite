@@ -17,12 +17,12 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:fabric3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:hessian="http://www.fabric3.org/binding/hessian/0.2"
-           targetNamespace="http://fabric3.org/xmlns/sca/tutorials/0.3"
-           name="LocalTestComposite"
+           xmlns:tutorials="http://fabric3.org/xmlns/sca/tutorials/0.4-SNAPSHOT"
+           targetNamespace="http://fabric3.org/xmlns/sca/tutorials/0.4-SNAPSHOT"
+           name="LocalCalculatorComposite"
            autowire="true">
 
-    <include name="CalculatorComposite" scdlResource="META-INF/calculator.composite"/>
+    <include name="tutorials:CalculatorComposite"/>
 
     <component name="testComponent">
         <fabric3:junit class="calculator.TestComponent"/>
