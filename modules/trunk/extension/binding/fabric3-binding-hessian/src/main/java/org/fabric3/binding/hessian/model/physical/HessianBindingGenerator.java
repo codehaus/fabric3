@@ -80,7 +80,8 @@ public class HessianBindingGenerator implements BindingGenerator<HessianWireSour
                                                           ReferenceDefinition referenceDefinition)
             throws GenerationException {
 
-        HessianWireTargetDefinition hwtd = new HessianWireTargetDefinition();
+        URI id = classLoaderGenerator.generate(logicalBinding, generatorContext);
+        HessianWireTargetDefinition hwtd = new HessianWireTargetDefinition(id);
         hwtd.setUri(logicalBinding.getBinding().getTargetUri());
 
         return hwtd;

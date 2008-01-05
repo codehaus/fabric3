@@ -18,6 +18,8 @@
  */
 package org.fabric3.binding.hessian.model.physical;
 
+import java.net.URI;
+
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 
 /**
@@ -26,4 +28,24 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
  * @version $Revision$ $Date$
  */
 public class HessianWireTargetDefinition extends PhysicalWireTargetDefinition {
+    private final URI classLoaderId;
+
+    /**
+     * Constructor.
+     *
+     * @param classLoaderId the classloader id to deserialize responses with
+     */
+
+    public HessianWireTargetDefinition(URI classLoaderId) {
+        this.classLoaderId = classLoaderId;
+    }
+
+    /**
+     * Returns the classloader id to deserialize responses with.
+     *
+     * @return the classloader id to deserialize responses with
+     */
+    public URI getClassLoaderId() {
+        return classLoaderId;
+    }
 }

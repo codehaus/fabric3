@@ -28,7 +28,7 @@ import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
  * @version $Revision$ $Date$
  */
 public class HessianWireSourceDefinition extends PhysicalWireSourceDefinition {
-    private URI classLoaderId;
+    private final URI classLoaderId;
 
     /**
      * Constructor.

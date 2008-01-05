@@ -122,13 +122,15 @@ public class HessianWireAttacher implements SourceWireAttacher<HessianWireSource
                                HessianWireTargetDefinition targetDefinition,
                                Wire wire) throws WiringException {
 
+        URI id = targetDefinition.getClassLoaderId();
+        ClassLoader loader = classLoaderRegistry.getClassLoader(id);
         URI uri = targetDefinition.getUri();
 
         try {
             for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
                 PhysicalOperationDefinition op = entry.getKey();
                 InvocationChain chain = entry.getValue();
-                chain.addInterceptor(new HessianTargetInterceptor(uri.toURL(), op.getName()));
+                chain.addInterceptor(new HessianTargetInterceptor(uri.toURL(), op.getName(), loader));
             }
         } catch (MalformedURLException ex) {
             throw new WireAttachException("Invalid URI", sourceDefinition.getUri(), uri, ex);

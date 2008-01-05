@@ -98,8 +98,9 @@ public class HessianServiceHandler extends HttpServlet {
 
         hessianInput.readCall();
         hessianInput.readMethod();
-        String methodName = hessianInput.getMethod();
 
+        // TODO handle method overloading
+        String methodName = hessianInput.getMethod();
         PhysicalOperationDefinition op = ops.get(methodName).getKey();
         Interceptor head = ops.get(methodName).getValue().getHeadInterceptor();
 
@@ -119,20 +120,26 @@ public class HessianServiceHandler extends HttpServlet {
         Message input = new MessageImpl(args, false, new SimpleWorkContext(), wire);
 
         Message output = head.invoke(input);
-        Object ret = output.getBody();
 
         OutputStream out = response.getOutputStream();
         Hessian2Output hessianOutput = new Hessian2Output(out);
         hessianOutput.setSerializerFactory(new SerializerFactory());
 
         hessianOutput.startReply();
-        hessianOutput.writeObject(ret);
+        if (output.isFault()) {
+            Throwable t = (Throwable) output.getBody();
+            // FIXME There is a bug in Hessian pre-3.1.5 that prevents Throwable's being serialized
+            // FIXME See http://bugs.caucho.com/view.php?id=2273
+//            hessianOutput.writeFault("ServiceException", null, t);
+
+            // FIXME remove when fixed
+            hessianOutput.writeFault("ServiceException", t.getMessage(), t.getClass());
+        } else {
+            hessianOutput.writeObject(output.getBody());
+        }
         hessianOutput.completeReply();
         hessianOutput.flush();
         out.close();
-
-        // TODO Add error handling and method overloading
-
     }
 
 }
