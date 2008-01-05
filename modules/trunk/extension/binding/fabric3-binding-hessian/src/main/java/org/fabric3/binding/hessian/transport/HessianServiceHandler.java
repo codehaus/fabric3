@@ -61,7 +61,9 @@ public class HessianServiceHandler extends HttpServlet {
      * The classloader to deserialize parameters in. Referencing the classloader directly is ok given this class must be
      * cleaned up if the target component associated with the classloader for this service is removed.
      */
-    private ClassLoader classLoader;
+    private final ClassLoader classLoader;
+
+    private final SerializerFactory serializerFactory;
 
     /**
      * Initializes the wire associated with the service.
@@ -69,13 +71,16 @@ public class HessianServiceHandler extends HttpServlet {
      * @param wire        Wire that connects the transport to the component.
      * @param ops         Map of op names to operation definitions.
      * @param classLoader the classloader to load parameters in
+     * @param serializerFactory the factory for Hessian serializers
      */
     public HessianServiceHandler(Wire wire,
                                  Map<String, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops,
-                                 ClassLoader classLoader) {
+                                 ClassLoader classLoader,
+                                 SerializerFactory serializerFactory) {
         this.wire = wire;
         this.ops = ops;
         this.classLoader = classLoader;
+        this.serializerFactory = serializerFactory;
     }
 
     @Override
@@ -94,7 +99,7 @@ public class HessianServiceHandler extends HttpServlet {
         InputStream in = request.getInputStream();
 
         Hessian2Input hessianInput = new Hessian2Input(in);
-        hessianInput.setSerializerFactory(new SerializerFactory());
+        hessianInput.setSerializerFactory(serializerFactory);
 
         hessianInput.readCall();
         hessianInput.readMethod();
@@ -123,7 +128,7 @@ public class HessianServiceHandler extends HttpServlet {
 
         OutputStream out = response.getOutputStream();
         Hessian2Output hessianOutput = new Hessian2Output(out);
-        hessianOutput.setSerializerFactory(new SerializerFactory());
+        hessianOutput.setSerializerFactory(serializerFactory);
 
         hessianOutput.startReply();
         if (output.isFault()) {

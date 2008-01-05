@@ -47,6 +47,8 @@ import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
+import com.caucho.hessian.io.SerializerFactory;
+
 /**
  * Wire attacher for Hessian binding.
  *
@@ -59,6 +61,7 @@ public class HessianWireAttacher implements SourceWireAttacher<HessianWireSource
     private final ClassLoaderRegistry classLoaderRegistry;
     private final ServletHost servletHost;
     private final HessianWireAttacherMonitor monitor;
+    private final SerializerFactory serializerFactory;
 
     /**
      * Injects the wire attacher registry and servlet host.
@@ -79,6 +82,7 @@ public class HessianWireAttacher implements SourceWireAttacher<HessianWireSource
         this.servletHost = servletHost;
         this.classLoaderRegistry = classLoaderRegistry;
         this.monitor = monitorFactory.getMonitor(HessianWireAttacherMonitor.class);
+        this.serializerFactory = new SerializerFactory();
     }
 
     @Init
@@ -110,7 +114,7 @@ public class HessianWireAttacher implements SourceWireAttacher<HessianWireSource
         if (loader == null) {
             throw new WiringException("Classloader not found", id.toString());
         }
-        HessianServiceHandler handler = new HessianServiceHandler(wire, ops, loader);
+        HessianServiceHandler handler = new HessianServiceHandler(wire, ops, loader, serializerFactory);
         URI uri = sourceDefinition.getUri();
         String servicePath = uri.getPath();
         servletHost.registerMapping(servicePath, handler);
@@ -130,7 +134,7 @@ public class HessianWireAttacher implements SourceWireAttacher<HessianWireSource
             for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
                 PhysicalOperationDefinition op = entry.getKey();
                 InvocationChain chain = entry.getValue();
-                chain.addInterceptor(new HessianTargetInterceptor(uri.toURL(), op.getName(), loader));
+                chain.addInterceptor(new HessianTargetInterceptor(uri.toURL(), op.getName(), loader, serializerFactory));
             }
         } catch (MalformedURLException ex) {
             throw new WireAttachException("Invalid URI", sourceDefinition.getUri(), uri, ex);

@@ -60,16 +60,23 @@ public class HessianTargetInterceptor implements Interceptor {
     private final ClassLoader classLoader;
 
     /**
+     * Factory for deserializers.
+     */
+    private final SerializerFactory serializerFactory;
+
+    /**
      * Initializes the reference URL.
      * 
      * @param referenceUrl The reference URL.
      * @param methodName the name of the method to invoke
      * @param classLoader classloader to use to deserialize the response
+     * @param serializerFactory the factory for Hessian serializers
      */
-    public HessianTargetInterceptor(URL referenceUrl, String methodName, ClassLoader classLoader) {
+    public HessianTargetInterceptor(URL referenceUrl, String methodName, ClassLoader classLoader, SerializerFactory serializerFactory) {
         this.referenceUrl = referenceUrl;
         this.methodName = methodName;
         this.classLoader = classLoader;
+        this.serializerFactory = serializerFactory;
     }
 
     public Interceptor getNext() {
@@ -103,14 +110,14 @@ public class HessianTargetInterceptor implements Interceptor {
 
         OutputStream os = conn.getOutputStream();
         Hessian2Output output = new Hessian2Output(os);
-        output.setSerializerFactory(new SerializerFactory());
+        output.setSerializerFactory(serializerFactory);
         output.call(methodName, (Object[]) message.getBody());
         output.flush();
     }
 
     private Message receiveResponse(HttpURLConnection con) throws IOException {
         Hessian2Input input = new Hessian2Input(con.getInputStream());
-        input.setSerializerFactory(new SerializerFactory());
+        input.setSerializerFactory(serializerFactory);
 
         ClassLoader oldCL = Thread.currentThread().getContextClassLoader();
         try {
