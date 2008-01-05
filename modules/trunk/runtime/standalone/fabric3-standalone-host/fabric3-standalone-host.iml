@@ -13,19 +13,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library" exported="">
-      <library name="com.thoughtworks.xstream:xstream:1.2">
-        <CLASSES>
-          <root url="jar://$M2_REPO$/com/thoughtworks/xstream/xstream/1.2/xstream-1.2.jar!/" />
-        </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/com/thoughtworks/xstream/xstream/1.2/xstream-1.2-javadoc.jar!/" />
-        </JAVADOC>
-        <SOURCES>
-          <root url="jar://$M2_REPO$/com/thoughtworks/xstream/xstream/1.2/xstream-1.2-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" exported="">
       <library name="commons-codec:commons-codec:1.3">
         <CLASSES>
           <root url="jar://$M2_REPO$/commons-codec/commons-codec/1.3/commons-codec-1.3.jar!/" />
@@ -114,6 +101,7 @@
     <orderEntry type="module" module-name="fabric3-scdl" exported="" />
     <orderEntry type="module" module-name="fabric3-spi" exported="" />
     <orderEntry type="module" module-name="fabric3-transform" exported="" />
+    <orderEntry type="module" module-name="fabric3-util" exported="" />
     <orderEntry type="module-library" exported="">
       <library name="stax:stax-api:1.0">
         <CLASSES>
@@ -124,19 +112,6 @@
         </JAVADOC>
         <SOURCES>
           <root url="jar://$M2_REPO$/stax/stax-api/1.0/stax-api-1.0-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" exported="">
-      <library name="xpp3:xpp3_min:1.1.3.4.O">
-        <CLASSES>
-          <root url="jar://$M2_REPO$/xpp3/xpp3_min/1.1.3.4.O/xpp3_min-1.1.3.4.O.jar!/" />
-        </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/xpp3/xpp3_min/1.1.3.4.O/xpp3_min-1.1.3.4.O-javadoc.jar!/" />
-        </JAVADOC>
-        <SOURCES>
-          <root url="jar://$M2_REPO$/xpp3/xpp3_min/1.1.3.4.O/xpp3_min-1.1.3.4.O-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
