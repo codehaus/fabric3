@@ -27,6 +27,7 @@ import java.net.URLConnection;
 import com.caucho.burlap.io.BurlapInput;
 import com.caucho.burlap.io.BurlapOutput;
 import com.caucho.burlap.io.SerializerFactory;
+import com.caucho.burlap.io.BurlapServiceException;
 import org.osoa.sca.ServiceUnavailableException;
 
 import org.fabric3.spi.wire.Interceptor;
@@ -54,15 +55,19 @@ public class BurlapTargetInterceptor implements Interceptor {
      */
     private String methodName;
 
+    private final ClassLoader classLoader;
+
     /**
      * Initializes the reference URL.
      *
      * @param referenceUrl The reference URL.
      * @param methodName   the method name for the operation
+     * @param classLoader  the classloader to use to deserialize the response
      */
-    public BurlapTargetInterceptor(URL referenceUrl, String methodName) {
+    public BurlapTargetInterceptor(URL referenceUrl, String methodName, ClassLoader classLoader) {
         this.referenceUrl = referenceUrl;
         this.methodName = methodName;
+        this.classLoader = classLoader;
     }
 
     public Interceptor getNext() {
@@ -72,7 +77,9 @@ public class BurlapTargetInterceptor implements Interceptor {
     public Message invoke(Message message) {
         // TODO Cleanup resources in finally
 
+        ClassLoader oldCL = Thread.currentThread().getContextClassLoader();
         try {
+            Thread.currentThread().setContextClassLoader(classLoader);
 
             HttpURLConnection con = (HttpURLConnection) sendRequest(methodName, (Object[]) message.getBody());
 
@@ -80,14 +87,21 @@ public class BurlapTargetInterceptor implements Interceptor {
             input.setSerializerFactory(new SerializerFactory());
 
             Message result = new MessageImpl();
-            Object retValue = input.readReply(null);
-            result.setBody(retValue);
+            try {
+                result.setBody(input.readReply(null));
+            } catch (IOException e) {
+                throw new ServiceUnavailableException(e);
+            } catch (Throwable t) {
+                result.setBodyWithFault(t);
+            }
             return result;
 
         } catch (IOException ex) {
             throw new ServiceUnavailableException(ex);
         } catch (Throwable ex) {
             throw new ServiceUnavailableException(ex);
+        } finally {
+            Thread.currentThread().setContextClassLoader(oldCL);
         }
 
     }

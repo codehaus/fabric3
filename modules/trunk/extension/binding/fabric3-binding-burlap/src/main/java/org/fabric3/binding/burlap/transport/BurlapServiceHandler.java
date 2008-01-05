@@ -125,7 +125,12 @@ public class BurlapServiceHandler extends HttpServlet {
             BurlapOutput burlapOutput = new BurlapOutput(out);
 
             burlapOutput.startReply();
-            burlapOutput.writeObject(ret);
+            if (output.isFault()) {
+                Throwable t = (Throwable) output.getBody();
+                burlapOutput.writeFault("ServiceException", null, t);
+            } else {
+                burlapOutput.writeObject(ret);
+            }
             burlapOutput.completeReply();
 
             out.close();

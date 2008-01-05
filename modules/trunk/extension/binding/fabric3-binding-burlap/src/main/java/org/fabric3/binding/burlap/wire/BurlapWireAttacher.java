@@ -121,13 +121,15 @@ public class BurlapWireAttacher implements SourceWireAttacher<BurlapWireSourceDe
                                BurlapWireTargetDefinition targetDefinition,
                                Wire wire) throws WiringException {
 
+        URI id = targetDefinition.getClassLoaderId();
+        ClassLoader loader = classLoaderRegistry.getClassLoader(id);
         URI uri = targetDefinition.getUri();
 
         try {
             for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
                 PhysicalOperationDefinition op = entry.getKey();
                 InvocationChain chain = entry.getValue();
-                chain.addInterceptor(new BurlapTargetInterceptor(uri.toURL(), op.getName()));
+                chain.addInterceptor(new BurlapTargetInterceptor(uri.toURL(), op.getName(), loader));
             }
         } catch (MalformedURLException ex) {
             throw new WireAttachException("Invalid URI", sourceDefinition.getUri(), uri, ex);

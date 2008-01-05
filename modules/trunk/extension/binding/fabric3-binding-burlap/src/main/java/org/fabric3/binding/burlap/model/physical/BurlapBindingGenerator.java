@@ -79,7 +79,8 @@ public class BurlapBindingGenerator implements BindingGenerator<BurlapWireSource
             throws GenerationException {
 
         // TODO Pass the contract information to the physical
-        BurlapWireTargetDefinition hwtd = new BurlapWireTargetDefinition();
+        URI id = classLoaderGenerator.generate(logicalBinding, context);
+        BurlapWireTargetDefinition hwtd = new BurlapWireTargetDefinition(id);
         hwtd.setUri(logicalBinding.getBinding().getTargetUri());
         return hwtd;
 
