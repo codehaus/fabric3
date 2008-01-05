@@ -20,4 +20,18 @@ package org.fabric3.tests.binding.harness;
  * @version $Rev$ $Date$
  */
 public class EchoFault extends Exception {
+    public EchoFault() {
+    }
+
+    public EchoFault(String s) {
+        super(s);
+    }
+
+    public EchoFault(String s, Throwable throwable) {
+        super(s, throwable);
+    }
+
+    public EchoFault(Throwable throwable) {
+        super(throwable);
+    }
 }
