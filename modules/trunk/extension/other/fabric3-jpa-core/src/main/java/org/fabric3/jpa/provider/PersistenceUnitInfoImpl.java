@@ -69,7 +69,7 @@ class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
     private ClassLoader classLoader;
 
     /** Root Url */
-    private String rootUrl;
+    private URL rootUrl;
 
     /** XPath API */
     private XPath xpath = XPathFactory.newInstance().newXPath();
@@ -81,7 +81,7 @@ class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
      * @param classLoader
      * @param rootUrl
      */
-    public PersistenceUnitInfoImpl(Node persistenceDom, ClassLoader classLoader, String rootUrl) {
+    public PersistenceUnitInfoImpl(Node persistenceDom, ClassLoader classLoader, URL rootUrl) {
 
         this.persistenceDom = persistenceDom;
         this.classLoader = classLoader;
@@ -181,13 +181,7 @@ class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
      * @see javax.persistence.spi.PersistenceUnitInfo#getPersistenceUnitRootUrl()
      */
     public URL getPersistenceUnitRootUrl() {
-
-        try {
-            return new URL(rootUrl);
-        } catch (MalformedURLException ex) {
-            throw new Fabric3JpaException(ex);
-        }
-
+        return rootUrl;
     }
 
     /**

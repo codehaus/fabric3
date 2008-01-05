@@ -22,6 +22,7 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.fabric3.spi.resource.DataSourceRegistry;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Revision$ $Date$
@@ -35,7 +36,13 @@ public class DataSourceRegistryImpl implements DataSourceRegistry {
     }
     
     public void registerDataSource(String name, DataSource dataSource) {
+        // TODO why not map of references?
         dataSources.put(name, dataSource);
+    }
+    
+    @Reference(required = false)
+    public void setDataSources(Map<String, DataSource> dataSources) {
+        this.dataSources = dataSources;
     }
 
 }

@@ -67,8 +67,16 @@ public class ClasspathPersistenceUnitScanner implements PersistenceUnitScanner {
 
                     String rootJarUrl = persistenceUnitUrl.toString();
                     rootJarUrl = rootJarUrl.substring(0, rootJarUrl.lastIndexOf("META-INF"));
+                    
+                    // TODO This is a hack, otherwise, Hibernate doesn't work with WLS
+                    // TODO Need to speak to Prasad why the protocol is zip for jar resources
+                    boolean isJarUrl = (rootJarUrl.startsWith("zip") || rootJarUrl.startsWith("jar")) && rootJarUrl.endsWith(".jar!/");
+                    if (isJarUrl) {
+                        // This needs to be relooked
+                        rootJarUrl = "file" + rootJarUrl.substring(3, rootJarUrl.length() - 2);
+                    }
 
-                    PersistenceUnitInfoImpl info = new PersistenceUnitInfoImpl(persistenceDom, classLoader, rootJarUrl);
+                    PersistenceUnitInfoImpl info = new PersistenceUnitInfoImpl(persistenceDom, classLoader, new URL(rootJarUrl));
                     if (unitName.equals(info.getPersistenceUnitName())) {
                         persistenceUnitInfos.put(unitName, info);
                         return info;
