@@ -20,20 +20,19 @@ package org.fabric3.binding.hessian.transport;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.reflect.Constructor;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
-import java.lang.reflect.Constructor;
+
+import com.caucho.hessian.io.Hessian2Input;
+import com.caucho.hessian.io.Hessian2Output;
+import com.caucho.hessian.io.HessianServiceException;
+import com.caucho.hessian.io.SerializerFactory;
+import org.osoa.sca.ServiceUnavailableException;
 
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.spi.wire.MessageImpl;
-import org.osoa.sca.ServiceUnavailableException;
-
-import com.caucho.hessian.io.Hessian2Input;
-import com.caucho.hessian.io.Hessian2Output;
-import com.caucho.hessian.io.SerializerFactory;
-import com.caucho.hessian.io.HessianServiceException;
 
 /**
  * @version $Revision$ $Date$
@@ -77,83 +76,74 @@ public class HessianTargetInterceptor implements Interceptor {
         return next;
     }
 
-    public Message invoke(Message message) {
-
-        // TODO Cleanup resources in finally
-
-        try {
-
-            HttpURLConnection con = (HttpURLConnection) sendRequest(methodName, (Object[])message.getBody());
-
-            Hessian2Input input = new Hessian2Input(con.getInputStream());
-            input.setSerializerFactory(new SerializerFactory());
-
-            Message result = new MessageImpl();
-            ClassLoader oldCL = Thread.currentThread().getContextClassLoader();
-            try {
-                Thread.currentThread().setContextClassLoader(classLoader);
-                Object retValue = input.readReply(null);
-                result.setBody(retValue);
-            } catch (HessianServiceException e) {
-                // FIXME this is raised if the original exception is not serialized
-                // FIXME see http://bugs.caucho.com/view.php?id=2273
-                // FIXME remove this whole block when this bug is fixed (hessian 3.1.5)
-                String text = e.getMessage();
-                Class<?> type = (Class<?>) e.getDetail();
-                try {
-                    Constructor<?> ctr = type.getConstructor(String.class);
-                    Object cause = ctr.newInstance(text);
-                    result.setBodyWithFault(cause);
-                } catch (Exception ex) {
-                    throw new ServiceUnavailableException(ex);
-                }
-            } catch (Throwable throwable) {
-                result.setBodyWithFault(throwable);
-            } finally {
-                Thread.currentThread().setContextClassLoader(oldCL);
-            }
-            return result;
-
-        } catch (IOException ex) {
-            throw new ServiceUnavailableException(ex);
-        } catch (Throwable ex) {
-            throw new ServiceUnavailableException(ex);
-        }
-
-    }
-
     public void setNext(Interceptor next) {
         this.next = next;
     }
 
-    private URLConnection sendRequest(String methodName, Object[] args) throws IOException {
-
-        URLConnection conn = null;
-
-        conn = openConnection(referenceUrl);
-
-        OutputStream os = conn.getOutputStream();
-
-        Hessian2Output output = new Hessian2Output(os);
-        output.setSerializerFactory(new SerializerFactory());
-        output.call(methodName, args);
-        output.flush();
-
-        return conn;
-
+    public Message invoke(Message message) {
+        HttpURLConnection con;
+        try {
+            con = (HttpURLConnection) referenceUrl.openConnection();
+        } catch (IOException e) {
+            throw new ServiceUnavailableException(e);
+        }
+        try {
+            sendRequest(con, message);
+            return receiveResponse(con);
+        } catch (IOException e) {
+            throw new ServiceUnavailableException(e);
+        } finally {
+            con.disconnect();
+        }
     }
 
-    /**
-     * Creates the URL connection.
-     */
-    private URLConnection openConnection(URL url) throws IOException {
-        URLConnection conn = url.openConnection();
-
+    private void sendRequest(HttpURLConnection conn, Message message) throws IOException {
         conn.setDoOutput(true);
-
         conn.setRequestProperty("Content-Type", "x-application/hessian");
 
-        return conn;
+        OutputStream os = conn.getOutputStream();
+        Hessian2Output output = new Hessian2Output(os);
+        output.setSerializerFactory(new SerializerFactory());
+        output.call(methodName, (Object[]) message.getBody());
+        output.flush();
     }
 
+    private Message receiveResponse(HttpURLConnection con) throws IOException {
+        Hessian2Input input = new Hessian2Input(con.getInputStream());
+        input.setSerializerFactory(new SerializerFactory());
+
+        ClassLoader oldCL = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(classLoader);
+            Message result = new MessageImpl();
+            // reading the reply returns the response or for a fault throws the cause
+            // there does not seem to be a way to separate service exceptions from transport problems
+            // for now, treat all IOEXceptions as transport failures
+            try {
+                Object retValue = input.readReply(null);
+                result.setBody(retValue);
+            } catch (IOException e) {
+                throw e;
+            } catch (HessianServiceException e) {
+                // work around for FABRICTHREE-161
+                result.setBodyWithFault(workAroundThrowableSerialization(e));
+            } catch (Throwable throwable) {
+                result.setBodyWithFault(throwable);
+            }
+            return result;
+        } finally {
+            Thread.currentThread().setContextClassLoader(oldCL);
+        }
+    }
+
+    private Throwable workAroundThrowableSerialization(HessianServiceException e) {
+        String text = e.getMessage();
+        Class<?> type = (Class<?>) e.getDetail();
+        try {
+            Constructor<?> ctr = type.getConstructor(String.class);
+            return (Throwable) ctr.newInstance(text);
+        } catch (Exception ex) {
+            throw new ServiceUnavailableException(ex);
+        }
+    }
 }

@@ -128,11 +128,8 @@ public class HessianServiceHandler extends HttpServlet {
         hessianOutput.startReply();
         if (output.isFault()) {
             Throwable t = (Throwable) output.getBody();
-            // FIXME There is a bug in Hessian pre-3.1.5 that prevents Throwable's being serialized
-            // FIXME See http://bugs.caucho.com/view.php?id=2273
+            // FIXME work around for FABRICTHREE-161
 //            hessianOutput.writeFault("ServiceException", null, t);
-
-            // FIXME remove when fixed
             hessianOutput.writeFault("ServiceException", t.getMessage(), t.getClass());
         } else {
             hessianOutput.writeObject(output.getBody());
