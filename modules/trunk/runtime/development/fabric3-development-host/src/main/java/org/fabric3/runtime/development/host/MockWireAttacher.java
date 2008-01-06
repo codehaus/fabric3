@@ -17,6 +17,7 @@ import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
+import org.fabric3.spi.ObjectFactory;
 
 /**
  * Wire Attacher for the client binding
@@ -75,5 +76,9 @@ public class MockWireAttacher implements TargetWireAttacher<MockWireTargetDefini
             throw new WireAttachException("No matching method found", sourceUri, targetUri, e);
         }
 
+    }
+
+    public ObjectFactory<?> createObjectFactory(MockWireTargetDefinition target) throws WiringException {
+        throw new AssertionError();
     }
 }

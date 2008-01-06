@@ -16,6 +16,7 @@
  */
 package org.fabric3.spi.builder.component;
 
+import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
@@ -24,8 +25,8 @@ import org.fabric3.spi.wire.Wire;
 /**
  * Component that handles attachment of a wire at the source side of the invocation chain.
  * <p/>
- * Implementations attach physical wires to component implementations so that the implementation can invoke other
- * components. These may be for references or for callbacks.
+ * Implementations attach physical wires to component implementations so that the implementation can invoke other components. These may be for
+ * references or for callbacks.
  *
  * @version $Rev$ $Date$
  */
@@ -36,8 +37,16 @@ public interface SourceWireAttacher<PWSD extends PhysicalWireSourceDefinition> {
      * @param source metadata for performing the attach
      * @param target metadata for performing the attach
      * @param wire   the wire
-     * @throws org.fabric3.spi.builder.WiringException
-     *          if an exception occurs during the attach operation
+     * @throws WiringException if an exception occurs during the attach operation
      */
     void attachToSource(PWSD source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException;
+
+    /**
+     * Attaches an ObjectFactory to a source component.
+     *
+     * @param source        the definition of the component reference to attach to
+     * @param objectFactory an ObjectFactory that can produce values compatible with the reference
+     * @throws WiringException if an exception occurs during the attach operation
+     */
+    void attachObjectFactory(PWSD source, ObjectFactory<?> objectFactory) throws WiringException;
 }

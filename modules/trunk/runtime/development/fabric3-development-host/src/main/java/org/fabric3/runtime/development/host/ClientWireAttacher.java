@@ -9,6 +9,7 @@ import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.wire.Wire;
+import org.fabric3.spi.ObjectFactory;
 
 /**
  * Wire Attacher for the client binding
@@ -34,5 +35,9 @@ public class ClientWireAttacher implements SourceWireAttacher<ClientWireSourceDe
     public void attachToSource(ClientWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire)
             throws WiringException {
         wireCache.putWire(target.getUri(), wire);
+    }
+
+    public void attachObjectFactory(ClientWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
+        throw new AssertionError();
     }
 }

@@ -35,6 +35,7 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
+import org.fabric3.spi.ObjectFactory;
 
 /**
  * @version $Rev$ $Date$
@@ -80,5 +81,13 @@ public class TestBindingWireAttacher implements SourceWireAttacher<TestBindingSo
             Interceptor interceptor = new TestBindingInterceptor(channel, destination, name);
             entry.getValue().addInterceptor(interceptor);
         }
+    }
+
+    public void attachObjectFactory(TestBindingSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
+        throw new AssertionError();
+    }
+
+    public ObjectFactory<?> createObjectFactory(TestBindingTargetDefinition target) throws WiringException {
+        throw new AssertionError();
     }
 }

@@ -29,12 +29,12 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.pojo.reflection.InvokerInterceptor;
 import org.fabric3.pojo.wire.PojoWireAttacher;
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.builder.component.WireAttachException;
-import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.Component;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.model.instance.ValueSource;
@@ -70,8 +70,7 @@ public class JavaWireAttacher extends PojoWireAttacher implements SourceWireAtta
                             @Reference TargetWireAttacherRegistry targetWireAttacherRegistry,
                             @Reference ProxyService proxyService,
                             @Reference ClassLoaderRegistry classLoaderRegistry,
-                            @Reference(name = "transformerRegistry")
-                            TransformerRegistry<PullTransformer<?, ?>> transformerRegistry) {
+                            @Reference(name = "transformerRegistry")TransformerRegistry<PullTransformer<?, ?>> transformerRegistry) {
         super(transformerRegistry, classLoaderRegistry);
         this.sourceWireAttacherRegistry = sourceWireAttacherRegistry;
         this.targetWireAttacherRegistry = targetWireAttacherRegistry;
@@ -114,37 +113,24 @@ public class JavaWireAttacher extends PojoWireAttacher implements SourceWireAtta
 
         Object key = getKey(sourceDefinition, source, referenceSource);
 
-        if (sourceDefinition.isOptimizable()) {
-            assert target instanceof AtomicComponent;
-            ObjectFactory<?> factory = ((AtomicComponent<?>) target).createObjectFactory();
-            source.setObjectFactory(referenceSource, factory);
-            if (target != null) {
-                source.attachReferenceToTarget(referenceSource, factory, key);
-            }
+        ObjectFactory<?> factory = createWireObjectFactory(type, sourceDefinition.isConversational(), wire);
+        if (target != null) {
+            source.attachReferenceToTarget(referenceSource, factory, key);
         } else {
-            ObjectFactory<?> factory = createWireObjectFactory(type, sourceDefinition.isConversational(), wire);
-            if (target != null) {
-                source.attachReferenceToTarget(referenceSource, factory, key);
-            } else {
-                source.setObjectFactory(referenceSource, factory);
-            }
-            if (!wire.getCallbackInvocationChains().isEmpty()) {
-                URI callbackUri = sourceDefinition.getCallbackUri();
-                ValueSource callbackSource =
-                        new ValueSource(ValueSource.ValueSourceType.SERVICE, callbackUri.getFragment());
-                Class<?> callbackType = source.getMemberType(callbackSource);
-                source.setObjectFactory(callbackSource, createCallbackWireObjectFactory(callbackType));
-            }
+            source.setObjectFactory(referenceSource, factory);
         }
-
+        if (!wire.getCallbackInvocationChains().isEmpty()) {
+            URI callbackUri = sourceDefinition.getCallbackUri();
+            ValueSource callbackSource =
+                    new ValueSource(ValueSource.ValueSourceType.SERVICE, callbackUri.getFragment());
+            Class<?> callbackType = source.getMemberType(callbackSource);
+            source.setObjectFactory(callbackSource, createCallbackWireObjectFactory(callbackType));
+        }
     }
 
     public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition,
                                JavaWireTargetDefinition targetDefinition,
                                Wire wire) throws WireAttachException {
-        if (sourceDefinition.isOptimizable()) {
-            return;
-        }
         URI targetName = UriHelper.getDefragmentedName(targetDefinition.getUri());
         Component component = manager.getComponent(targetName);
         assert component instanceof JavaComponent;
@@ -180,6 +166,21 @@ public class JavaWireAttacher extends PojoWireAttacher implements SourceWireAtta
             }
             chain.addInterceptor(createInterceptor(method, target, scopeContainer));
         }
+    }
+
+    public void attachObjectFactory(JavaWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
+        URI sourceId = UriHelper.getDefragmentedName(source.getUri());
+        JavaComponent<?> sourceComponent = (JavaComponent<?>) manager.getComponent(sourceId);
+        ValueSource referenceSource = new ValueSource(ValueSource.ValueSourceType.REFERENCE, source.getUri().getFragment());
+
+        Object key = getKey(source, sourceComponent, referenceSource);
+        sourceComponent.attachReferenceToTarget(referenceSource, objectFactory, key);
+    }
+
+    public ObjectFactory<?> createObjectFactory(JavaWireTargetDefinition target) throws WiringException {
+        URI targetId = UriHelper.getDefragmentedName(target.getUri());
+        JavaComponent<?> targetComponent = (JavaComponent<?>) manager.getComponent(targetId);
+        return targetComponent.createObjectFactory();
     }
 
     private <T, CONTEXT> InvokerInterceptor<T, CONTEXT> createInterceptor(Method method,

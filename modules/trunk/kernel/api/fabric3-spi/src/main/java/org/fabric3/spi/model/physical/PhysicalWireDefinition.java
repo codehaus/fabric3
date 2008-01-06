@@ -41,16 +41,26 @@ public class PhysicalWireDefinition extends ModelObject {
     private PhysicalWireTargetDefinition target;
 
     // Collection of operations
-    private final Set<PhysicalOperationDefinition> operations = new HashSet<PhysicalOperationDefinition>();
+    private final Set<PhysicalOperationDefinition> operations;
 
     private boolean optimizable;
 
     public PhysicalWireDefinition() {
+        operations = new HashSet<PhysicalOperationDefinition>();
     }
 
     public PhysicalWireDefinition(PhysicalWireSourceDefinition source, PhysicalWireTargetDefinition target) {
         this.source = source;
         this.target = target;
+        operations = new HashSet<PhysicalOperationDefinition>();
+    }
+
+    public PhysicalWireDefinition(PhysicalWireSourceDefinition source,
+                                  PhysicalWireTargetDefinition target,
+                                  Set<PhysicalOperationDefinition> operations) {
+        this.source = source;
+        this.target = target;
+        this.operations = operations;
     }
 
     /**

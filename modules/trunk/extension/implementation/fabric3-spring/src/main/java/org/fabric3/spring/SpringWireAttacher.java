@@ -32,6 +32,7 @@ import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.builder.component.WireAttachException;
+import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.Component;
 import org.fabric3.spi.model.instance.ValueSource;
@@ -119,7 +120,6 @@ public class SpringWireAttacher extends PojoWireAttacher implements SourceWireAt
 
 //        Object key = getKey(sourceDefinition, source, referenceSource);
 
-        if (sourceDefinition.isOptimizable()) {
             assert target instanceof AtomicComponent;
 //            ObjectFactory<?> factory = ((AtomicComponent<?>) target).createObjectFactory();
 
@@ -154,7 +154,6 @@ public class SpringWireAttacher extends PojoWireAttacher implements SourceWireAt
 //                Class<?> callbackType = source.getMemberType(callbackSource);
 //                source.setObjectFactory(callbackSource, createCallbackWireObjectFactory(callbackType));
 //            }
-        }
 
     }
 
@@ -199,5 +198,13 @@ public class SpringWireAttacher extends PojoWireAttacher implements SourceWireAt
 
     private <T> ObjectFactory<T> createCallbackWireObjectFactory(Class<T> type) {
         throw new UnsupportedOperationException();
+    }
+
+    public void attachObjectFactory(SpringWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
+        throw new AssertionError();
+    }
+
+    public ObjectFactory<?> createObjectFactory(SpringWireTargetDefinition target) throws WiringException {
+        throw new AssertionError();
     }
 }

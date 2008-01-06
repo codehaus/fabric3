@@ -97,7 +97,6 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
             throws GenerationException {
         GroovyWireSourceDefinition wireDefinition = new GroovyWireSourceDefinition();
         wireDefinition.setUri(reference.getUri());
-        wireDefinition.setOptimizable(optimizable);
         wireDefinition.setConversational(reference.getDefinition().getServiceContract().isConversational());
         return wireDefinition;
     }
@@ -125,7 +124,6 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
                                                                    GeneratorContext context) throws GenerationException {
         GroovyWireSourceDefinition wireDefinition = new GroovyWireSourceDefinition();
         wireDefinition.setUri(resource.getUri());
-        wireDefinition.setOptimizable(true);
         wireDefinition.setConversational(false);
         return wireDefinition;
     }

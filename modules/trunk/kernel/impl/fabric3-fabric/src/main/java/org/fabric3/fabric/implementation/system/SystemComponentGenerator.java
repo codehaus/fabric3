@@ -99,7 +99,6 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
         
         SystemWireSourceDefinition wireDefinition = new SystemWireSourceDefinition();
         wireDefinition.setUri(reference.getUri());
-        wireDefinition.setOptimizable(true);
 
         URI classLoaderId = classLoaderGenerator.generate(source, context);
         wireDefinition.setClassLoaderId(classLoaderId);

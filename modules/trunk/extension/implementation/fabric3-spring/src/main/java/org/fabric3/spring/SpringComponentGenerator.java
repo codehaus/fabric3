@@ -115,7 +115,6 @@ public class SpringComponentGenerator implements ComponentGenerator<LogicalCompo
                                                            GeneratorContext context) throws GenerationException {
         SpringWireSourceDefinition wireDefinition = new SpringWireSourceDefinition();
         wireDefinition.setUri(reference.getUri());
-        wireDefinition.setOptimizable(optimizable);
         wireDefinition.setConversational(reference.getDefinition().getServiceContract().isConversational());
 
         URI classLoaderId = classLoaderGenerator.generate(source, context);
@@ -165,7 +164,6 @@ public class SpringComponentGenerator implements ComponentGenerator<LogicalCompo
                                                                    GeneratorContext context) throws GenerationException {
         SpringWireSourceDefinition wireDefinition = new SpringWireSourceDefinition();
         wireDefinition.setUri(resource.getUri());
-        wireDefinition.setOptimizable(true);
         wireDefinition.setConversational(false);
         return wireDefinition;
     }

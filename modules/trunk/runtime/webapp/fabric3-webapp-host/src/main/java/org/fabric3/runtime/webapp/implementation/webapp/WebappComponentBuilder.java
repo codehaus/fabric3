@@ -29,6 +29,7 @@ import org.osoa.sca.annotations.Service;
 
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.BuilderException;
+import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.ComponentBuilder;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
@@ -83,14 +84,19 @@ public class WebappComponentBuilder
         return new WebappComponent(componentId, proxyService, groupId, attributes, referenceTypes, null);
     }
 
-    @SuppressWarnings({"unchecked"})
     public void attachToSource(WebappWireSourceDefinition sourceDefinition,
                                PhysicalWireTargetDefinition targetDefinition,
                                Wire wire) {
         URI sourceUri = UriHelper.getDefragmentedName(sourceDefinition.getUri());
         String referenceName = sourceDefinition.getUri().getFragment();
-        Component source = manager.getComponent(sourceUri);
-        assert source instanceof WebappComponent;
-        ((WebappComponent) source).attachWire(referenceName, wire);
+        WebappComponent source = (WebappComponent) manager.getComponent(sourceUri);
+        source.attachWire(referenceName, wire);
+    }
+
+    public void attachObjectFactory(WebappWireSourceDefinition sourceDefinition, ObjectFactory<?> objectFactory) throws WiringException {
+        URI sourceUri = UriHelper.getDefragmentedName(sourceDefinition.getUri());
+        String referenceName = sourceDefinition.getUri().getFragment();
+        WebappComponent source = (WebappComponent) manager.getComponent(sourceUri);
+        source.attachWire(referenceName, objectFactory);
     }
 }

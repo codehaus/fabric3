@@ -41,6 +41,7 @@ import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.spi.wire.MessageImpl;
 import org.fabric3.spi.wire.Wire;
+import org.fabric3.spi.ObjectFactory;
 
 /**
  * Attaches the target side of entity manager factories.
@@ -163,4 +164,7 @@ public class PersistenceUnitWireAttacher implements TargetWireAttacher<Persisten
 
     }
 
+    public ObjectFactory<?> createObjectFactory(PersistenceUnitWireTargetDefinition target) throws WiringException {
+        throw new AssertionError();
+    }
 }

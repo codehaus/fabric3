@@ -57,6 +57,7 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
+import org.fabric3.spi.ObjectFactory;
 
 @EagerInit
 public class RmiWireAttacher implements SourceWireAttacher<RmiWireSourceDefinition>, TargetWireAttacher<RmiWireTargetDefinition> {
@@ -279,5 +280,13 @@ public class RmiWireAttacher implements SourceWireAttacher<RmiWireSourceDefiniti
                 new WireAttachException(msg,
                                         source, target, e);
         throw we;
+    }
+
+    public void attachObjectFactory(RmiWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
+        throw new AssertionError();
+    }
+
+    public ObjectFactory<?> createObjectFactory(RmiWireTargetDefinition target) throws WiringException {
+        throw new AssertionError();
     }
 }

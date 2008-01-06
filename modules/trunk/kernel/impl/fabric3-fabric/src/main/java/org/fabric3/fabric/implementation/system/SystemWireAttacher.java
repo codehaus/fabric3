@@ -31,7 +31,6 @@ import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.component.AtomicComponent;
-import org.fabric3.spi.component.Component;
 import org.fabric3.spi.model.instance.ValueSource;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
@@ -76,35 +75,28 @@ public class SystemWireAttacher extends PojoWireAttacher implements SourceWireAt
         targetWireAttacherRegistry.unregister(SystemWireTargetDefinition.class, this);
     }
 
-    @SuppressWarnings("unchecked")
-    public void attachToSource(SystemWireSourceDefinition sourceDefinition,
-                               PhysicalWireTargetDefinition targetDefinition,
-                               Wire wire) throws WiringException {
-
-        URI sourceName = UriHelper.getDefragmentedName(sourceDefinition.getUri());
-        Component source = manager.getComponent(sourceName);
-        assert source instanceof SystemComponent;
-        SystemComponent<?> sourceComponent = (SystemComponent) source;
-
-        URI targetName = UriHelper.getDefragmentedName(targetDefinition.getUri());
-        Component target = manager.getComponent(targetName);
-        assert target instanceof AtomicComponent;
-        AtomicComponent<?> targetComponent = (AtomicComponent<?>) target;
-
-        URI sourceUri = sourceDefinition.getUri();
-        ValueSource referenceSource = new ValueSource(ValueSource.ValueSourceType.REFERENCE, sourceUri.getFragment());
-        ObjectFactory<?> factory = targetComponent.createObjectFactory();
-        sourceComponent.setObjectFactory(referenceSource, factory);
-
-        Object key = getKey(sourceDefinition, sourceComponent, referenceSource);
-
-        sourceComponent.attachReferenceToTarget(referenceSource, factory, key);
-
+    public void attachToSource(SystemWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
+        // should never be called as the wire must be optimized
+        throw new AssertionError();
     }
 
-    public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition,
-                               SystemWireTargetDefinition targetDefinition,
-                               Wire wire) throws WiringException {
-        // nothing to do here as the wire will always be optimized
+    public void attachObjectFactory(SystemWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
+        URI sourceId = UriHelper.getDefragmentedName(source.getUri());
+        SystemComponent<?> sourceComponent = (SystemComponent<?>) manager.getComponent(sourceId);
+        ValueSource referenceSource = new ValueSource(ValueSource.ValueSourceType.REFERENCE, source.getUri().getFragment());
+
+        Object key = getKey(source, sourceComponent, referenceSource);
+        sourceComponent.attachReferenceToTarget(referenceSource, objectFactory, key);
+    }
+
+    public void attachToTarget(PhysicalWireSourceDefinition source, SystemWireTargetDefinition target, Wire wire) throws WiringException {
+        // should never be called as the wire must be optimized
+        throw new AssertionError();
+    }
+
+    public ObjectFactory<?> createObjectFactory(SystemWireTargetDefinition target) throws WiringException {
+        URI targetId = UriHelper.getDefragmentedName(target.getUri());
+        SystemComponent<?> targetComponent = (SystemComponent<?>) manager.getComponent(targetId);
+        return targetComponent.createObjectFactory();
     }
 }

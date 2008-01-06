@@ -41,6 +41,7 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
+import org.fabric3.spi.ObjectFactory;
 
 /**
  * @version $Revision$ $Date$
@@ -108,4 +109,11 @@ public class Axis2WireAttacher implements SourceWireAttacher<Axis2WireSourceDefi
         
     }
 
+    public void attachObjectFactory(Axis2WireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
+        throw new AssertionError();
+    }
+
+    public ObjectFactory<?> createObjectFactory(Axis2WireTargetDefinition target) throws WiringException {
+        throw new AssertionError();
+    }
 }

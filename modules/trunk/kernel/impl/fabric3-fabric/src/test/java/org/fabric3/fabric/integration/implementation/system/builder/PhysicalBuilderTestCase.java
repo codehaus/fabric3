@@ -129,9 +129,8 @@ public class PhysicalBuilderTestCase extends TestCase {
         wireSource.setUri(sourceId.resolve("#target"));
         SystemWireTargetDefinition wireTarget = new SystemWireTargetDefinition();
         wireTarget.setUri(targetId);
-        PhysicalWireDefinition wireDefinition = new PhysicalWireDefinition();
-        wireDefinition.setSource(wireSource);
-        wireDefinition.setTarget(wireTarget);
+        PhysicalWireDefinition wireDefinition = new PhysicalWireDefinition(wireSource, wireTarget);
+        wireDefinition.setOptimizable(true);
         return wireDefinition;
     }
 

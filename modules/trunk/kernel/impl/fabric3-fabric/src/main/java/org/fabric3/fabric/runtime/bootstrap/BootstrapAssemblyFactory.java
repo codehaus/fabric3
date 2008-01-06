@@ -196,7 +196,7 @@ public class BootstrapAssemblyFactory {
                                                                                transformerRegistry);
         builder.init();
 
-        SingletonWireAttacher singletonWireAttacher = new SingletonWireAttacher();
+        SingletonWireAttacher singletonWireAttacher = new SingletonWireAttacher(componentManager);
         ConnectorImpl connector = new ConnectorImpl(null);
         connector.register(SingletonWireTargetDefinition.class, singletonWireAttacher);
         SystemWireAttacher wireAttacher = new SystemWireAttacher(componentManager,

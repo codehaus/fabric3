@@ -30,6 +30,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.builder.component.WireAttachException;
+import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
@@ -38,6 +39,7 @@ import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.spi.wire.MessageImpl;
 import org.fabric3.spi.wire.Wire;
+import org.fabric3.spi.ObjectFactory;
 
 /**
  * @version $Revision$ $Date$
@@ -70,10 +72,6 @@ public class MockWireAttacher implements TargetWireAttacher<MockWireTargetDefini
     public void attachToTarget(PhysicalWireSourceDefinition wireSourceDefinition,
                                MockWireTargetDefinition wireTargetDefinition,
                                Wire wire) throws WireAttachException {
-
-        if (wireSourceDefinition.isOptimizable()) {
-            return;
-        }
 
         ClassLoader classLoader = classLoaderRegistry.getClassLoader(wireTargetDefinition.getClassLoaderId());
 
@@ -143,4 +141,7 @@ public class MockWireAttacher implements TargetWireAttacher<MockWireTargetDefini
 
     }
 
+    public ObjectFactory<?> createObjectFactory(MockWireTargetDefinition target) throws WiringException {
+        throw new AssertionError();
+    }
 }

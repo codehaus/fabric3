@@ -46,6 +46,7 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
+import org.fabric3.spi.ObjectFactory;
 
 /**
  * Wire attacher for Hessian binding.
@@ -137,4 +138,11 @@ public class BurlapWireAttacher implements SourceWireAttacher<BurlapWireSourceDe
 
     }
 
+    public void attachObjectFactory(BurlapWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
+        throw new AssertionError();
+    }
+
+    public ObjectFactory<?> createObjectFactory(BurlapWireTargetDefinition target) throws WiringException {
+        throw new AssertionError();
+    }
 }

@@ -100,7 +100,6 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
                                                            GeneratorContext context) throws GenerationException {
         JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
         wireDefinition.setUri(reference.getUri());
-        wireDefinition.setOptimizable(optimizable);
         wireDefinition.setConversational(reference.getDefinition().getServiceContract().isConversational());
 
         URI classLoaderId = classLoaderGenerator.generate(source, context);
@@ -131,7 +130,6 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
                                                                    GeneratorContext context) throws GenerationException {
         JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
         wireDefinition.setUri(resource.getUri());
-        wireDefinition.setOptimizable(true);
         wireDefinition.setConversational(false);
         return wireDefinition;
     }

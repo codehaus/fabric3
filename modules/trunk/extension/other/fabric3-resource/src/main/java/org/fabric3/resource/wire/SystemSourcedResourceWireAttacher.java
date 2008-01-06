@@ -18,6 +18,8 @@
  */
 package org.fabric3.resource.wire;
 
+import java.net.URI;
+
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
@@ -29,15 +31,22 @@ import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.wire.Wire;
+import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.runtime.component.ComponentManager;
+import org.fabric3.spi.component.AtomicComponent;
+import org.fabric3.spi.util.UriHelper;
 
 /**
  * @version $Revision$ $Date$
  */
 @EagerInit
 public class SystemSourcedResourceWireAttacher implements TargetWireAttacher<SystemSourcedWireTargetDefinition> {
+    private final ComponentManager manager;
     private final TargetWireAttacherRegistry targetWireAttacherRegistry;
 
-    public SystemSourcedResourceWireAttacher(@Reference TargetWireAttacherRegistry targetWireAttacherRegistry) {
+    public SystemSourcedResourceWireAttacher(@Reference ComponentManager manager,
+                                             @Reference TargetWireAttacherRegistry targetWireAttacherRegistry) {
+        this.manager = manager;
         this.targetWireAttacherRegistry = targetWireAttacherRegistry;
     }
 
@@ -53,6 +62,12 @@ public class SystemSourcedResourceWireAttacher implements TargetWireAttacher<Sys
 
     public void attachToTarget(PhysicalWireSourceDefinition source, SystemSourcedWireTargetDefinition target, Wire wire)
             throws WiringException {
+        throw new AssertionError();
     }
 
+    public ObjectFactory<?> createObjectFactory(SystemSourcedWireTargetDefinition target) throws WiringException {
+        URI targetId = UriHelper.getDefragmentedName(target.getUri());
+        AtomicComponent<?> targetComponent = (AtomicComponent<?>) manager.getComponent(targetId);
+        return targetComponent.createObjectFactory();
+    }
 }

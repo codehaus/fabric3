@@ -46,6 +46,7 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
+import org.fabric3.spi.ObjectFactory;
 
 import com.caucho.hessian.io.SerializerFactory;
 
@@ -142,4 +143,11 @@ public class HessianWireAttacher implements SourceWireAttacher<HessianWireSource
 
     }
 
+    public void attachObjectFactory(HessianWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
+        throw new AssertionError();
+    }
+
+    public ObjectFactory<?> createObjectFactory(HessianWireTargetDefinition target) throws WiringException {
+        throw new AssertionError();
+    }
 }

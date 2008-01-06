@@ -34,7 +34,6 @@ public class PhysicalWireSourceDefinition extends ModelObject {
     // URI
     private URI uri;
     private URI callbackUri;
-    private boolean optimizable;
     private boolean conversational;
     private Document key;
 
@@ -74,24 +73,6 @@ public class PhysicalWireSourceDefinition extends ModelObject {
         this.callbackUri = uri;
     }
 
-
-    /**
-     * Returns true if the wire may be optimized
-     *
-     * @return true if the wire may be optimized
-     */
-    public boolean isOptimizable() {
-        return optimizable;
-    }
-
-    /**
-     * Setting to true indicates the wire may be optimized
-     *
-     * @param optimizable if the wire can be optimized
-     */
-    public void setOptimizable(boolean optimizable) {
-        this.optimizable = optimizable;
-    }
 
     public boolean isConversational() {
         return conversational;

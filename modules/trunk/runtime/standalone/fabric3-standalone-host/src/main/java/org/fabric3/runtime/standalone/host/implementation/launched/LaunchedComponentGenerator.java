@@ -105,7 +105,6 @@ public class LaunchedComponentGenerator implements ComponentGenerator<LogicalCom
                                                            GeneratorContext context) {
         JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
         wireDefinition.setUri(reference.getUri());
-        wireDefinition.setOptimizable(true);
         return wireDefinition;
     }
 

@@ -90,7 +90,6 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
                                                            GeneratorContext context) throws GenerationException {
         JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
         wireDefinition.setUri(reference.getUri());
-        wireDefinition.setOptimizable(optimizable);
         wireDefinition.setConversational(reference.getDefinition().getServiceContract().isConversational());
         URI classLoaderId = classLoaderGenerator.generate(source, context);
         wireDefinition.setClassLoaderId(classLoaderId);

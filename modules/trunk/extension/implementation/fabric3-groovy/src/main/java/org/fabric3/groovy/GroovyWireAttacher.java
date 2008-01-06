@@ -28,12 +28,12 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.pojo.reflection.InvokerInterceptor;
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.builder.component.WireAttachException;
-import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.Component;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.model.instance.ValueSource;
@@ -47,8 +47,7 @@ import org.fabric3.spi.wire.ProxyService;
 import org.fabric3.spi.wire.Wire;
 
 /**
- * The component builder for Java implementation types. Responsible for creating the Component runtime artifact from a
- * physical component definition
+ * The component builder for Java implementation types. Responsible for creating the Component runtime artifact from a physical component definition
  *
  * @version $Rev$ $Date$
  */
@@ -92,22 +91,14 @@ public class GroovyWireAttacher implements SourceWireAttacher<GroovyWireSourceDe
         ValueSource referenceSource = new ValueSource(ValueSource.ValueSourceType.REFERENCE, sourceUri.getFragment());
 
         Class<?> type = source.getMemberType(referenceSource);
-        if (sourceDefinition.isOptimizable()) {
-            URI targetName = UriHelper.getDefragmentedName(targetDefinition.getUri());
-            Component target = manager.getComponent(targetName);
-            assert target instanceof AtomicComponent;
-            ObjectFactory<?> factory = ((AtomicComponent<?>) target).createObjectFactory();
-            source.setObjectFactory(referenceSource, factory);
-        } else {
-            ObjectFactory<?> factory = createWireObjectFactory(type, sourceDefinition.isConversational(), wire);
-            source.setObjectFactory(referenceSource, factory);
-            if (!wire.getCallbackInvocationChains().isEmpty()) {
-                URI callbackUri = sourceDefinition.getCallbackUri();
-                ValueSource callbackSource =
-                        new ValueSource(ValueSource.ValueSourceType.SERVICE, callbackUri.getFragment());
-                Class<?> callbackType = source.getMemberType(callbackSource);
-                source.setObjectFactory(callbackSource, createCallbackWireObjectFactory(callbackType));
-            }
+        ObjectFactory<?> factory = createWireObjectFactory(type, sourceDefinition.isConversational(), wire);
+        source.setObjectFactory(referenceSource, factory);
+        if (!wire.getCallbackInvocationChains().isEmpty()) {
+            URI callbackUri = sourceDefinition.getCallbackUri();
+            ValueSource callbackSource =
+                    new ValueSource(ValueSource.ValueSourceType.SERVICE, callbackUri.getFragment());
+            Class<?> callbackType = source.getMemberType(callbackSource);
+            source.setObjectFactory(callbackSource, createCallbackWireObjectFactory(callbackType));
         }
     }
 
@@ -122,9 +113,6 @@ public class GroovyWireAttacher implements SourceWireAttacher<GroovyWireSourceDe
     public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition,
                                GroovyWireTargetDefinition targetDefinition,
                                Wire wire) throws WireAttachException {
-        if (sourceDefinition.isOptimizable()) {
-            return;
-        }
         URI targetName = UriHelper.getDefragmentedName(targetDefinition.getUri());
         Component component = manager.getComponent(targetName);
         assert component instanceof GroovyComponent;
@@ -166,5 +154,19 @@ public class GroovyWireAttacher implements SourceWireAttacher<GroovyWireSourceDe
                                                                           GroovyComponent<T> component,
                                                                           ScopeContainer<CONTEXT> scopeContainer) {
         return new InvokerInterceptor<T, CONTEXT>(method, component, scopeContainer);
+    }
+
+    public void attachObjectFactory(GroovyWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
+        URI sourceId = UriHelper.getDefragmentedName(source.getUri());
+        GroovyComponent<?> sourceComponent = (GroovyComponent<?>) manager.getComponent(sourceId);
+        ValueSource referenceSource = new ValueSource(ValueSource.ValueSourceType.REFERENCE, source.getUri().getFragment());
+
+        sourceComponent.attachReferenceToTarget(referenceSource, objectFactory, null);
+    }
+
+    public ObjectFactory<?> createObjectFactory(GroovyWireTargetDefinition target) throws WiringException {
+        URI targetId = UriHelper.getDefragmentedName(target.getUri());
+        GroovyComponent<?> targetComponent = (GroovyComponent<?>) manager.getComponent(targetId);
+        return targetComponent.createObjectFactory();
     }
 }

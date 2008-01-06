@@ -60,6 +60,7 @@ import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
+import org.fabric3.spi.ObjectFactory;
 
 /**
  * Wire attacher for JMS binding.
@@ -300,4 +301,11 @@ public class JmsWireAttacher implements SourceWireAttacher<JmsWireSourceDefiniti
 
     }
 
+    public void attachObjectFactory(JmsWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
+        throw new AssertionError();
+    }
+
+    public ObjectFactory<?> createObjectFactory(JmsWireTargetDefinition target) throws WiringException {
+        throw new AssertionError();
+    }
 }

@@ -54,6 +54,7 @@ import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
+import org.fabric3.spi.ObjectFactory;
 
 
 /**
@@ -249,5 +250,11 @@ public class EjbWireAttacher implements SourceWireAttacher<EjbWireSourceDefiniti
 
     }
 
+    public void attachObjectFactory(EjbWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
+        throw new AssertionError();
+    }
 
+    public ObjectFactory<?> createObjectFactory(EjbWireTargetDefinition target) throws WiringException {
+        throw new AssertionError();
+    }
 }

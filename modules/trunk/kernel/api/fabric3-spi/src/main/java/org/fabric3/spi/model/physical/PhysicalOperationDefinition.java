@@ -97,6 +97,15 @@ public class PhysicalOperationDefinition extends ModelObject {
     }
 
     /**
+     * Sets the interceptor definitions available for this operations.
+     *
+     * @param interceptors the interceptor definitions available for this operations
+     */
+    public void setInterceptors(Set<PhysicalInterceptorDefinition> interceptors) {
+        this.interceptors = interceptors;
+    }
+
+    /**
      * Adds an interceptor definition to the operation.
      *
      * @param interceptor Interceptor definition to be added.

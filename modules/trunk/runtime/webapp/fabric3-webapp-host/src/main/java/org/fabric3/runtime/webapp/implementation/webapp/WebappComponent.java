@@ -55,7 +55,7 @@ public class WebappComponent<T> extends AbstractLifecycle implements AtomicCompo
     private URI groupId;
     private final Map<String, ObjectFactory<?>> propertyFactories;
     private final Map<String, Class<?>> referenceTypes;
-    private final Map<String, Wire> referenceFactories;
+    private final Map<String, ObjectFactory<?>> referenceFactories;
     private final ComponentContext context;
     private final String key;
 
@@ -71,7 +71,7 @@ public class WebappComponent<T> extends AbstractLifecycle implements AtomicCompo
         this.propertyFactories = attributes;
         this.referenceTypes = referenceTypes;
         this.key = key;
-        referenceFactories = new ConcurrentHashMap<String, Wire>(referenceTypes.size());
+        referenceFactories = new ConcurrentHashMap<String, ObjectFactory<?>>(referenceTypes.size());
         context = new WebappComponentContext(this);
     }
 
@@ -104,7 +104,13 @@ public class WebappComponent<T> extends AbstractLifecycle implements AtomicCompo
     }
 
     public void attachWire(String name, Wire wire) {
-        referenceFactories.put(name, wire);
+        Class<?> type = referenceTypes.get(name);
+        ObjectFactory<?> factory = createWireFactory(type, wire);
+        attachWire(name, factory);
+    }
+
+    public void attachWire(String name, ObjectFactory<?> factory) {
+        referenceFactories.put(name, factory);
     }
 
     protected <B> ObjectFactory<B> createWireFactory(Class<B> interfaze, Wire wire) {
@@ -116,11 +122,9 @@ public class WebappComponent<T> extends AbstractLifecycle implements AtomicCompo
         for (Map.Entry<String, ObjectFactory<?>> entry : propertyFactories.entrySet()) {
             servletContext.setAttribute(entry.getKey(), entry.getValue().getInstance());
         }
-        for (Map.Entry<String, Wire> entry : referenceFactories.entrySet()) {
+        for (Map.Entry<String, ObjectFactory<?>> entry : referenceFactories.entrySet()) {
             String name = entry.getKey();
-            Wire wire = entry.getValue();
-            Class<?> type = referenceTypes.get(name);
-            ObjectFactory<?> factory = createWireFactory(type, wire);
+            ObjectFactory<?> factory = entry.getValue();
             servletContext.setAttribute(name, factory.getInstance());
         }
     }
@@ -130,11 +134,9 @@ public class WebappComponent<T> extends AbstractLifecycle implements AtomicCompo
         for (Map.Entry<String, ObjectFactory<?>> entry : propertyFactories.entrySet()) {
             ctx.bind(entry.getKey(), entry.getValue().getInstance());
         }
-        for (Map.Entry<String, Wire> entry : referenceFactories.entrySet()) {
+        for (Map.Entry<String, ObjectFactory<?>> entry : referenceFactories.entrySet()) {
             String name = entry.getKey();
-            Wire wire = entry.getValue();
-            Class<?> type = referenceTypes.get(name);
-            ObjectFactory<?> factory = createWireFactory(type, wire);
+            ObjectFactory<?> factory = entry.getValue();
             ctx.bind(name, factory.getInstance());
         }
     }
@@ -190,21 +192,21 @@ public class WebappComponent<T> extends AbstractLifecycle implements AtomicCompo
     }
 
     public <B> B getService(Class<B> type, String name) throws ObjectCreationException {
-        Wire wire = referenceFactories.get(name);
-        if (wire == null) {
+        ObjectFactory<?> factory = referenceFactories.get(name);
+        if (factory == null) {
             return null;
+        } else {
+            return type.cast(factory.getInstance());
         }
-        ObjectFactory<B> factory = createWireFactory(type, wire);
-        return factory.getInstance();
     }
 
     public <B> ServiceReference<B> getServiceReference(Class<B> type, String name) {
-        Wire wire = referenceFactories.get(name);
-        if (wire == null) {
+        ObjectFactory<B> factory = (ObjectFactory<B>) referenceFactories.get(name);
+        if (factory == null) {
             return null;
+        } else {
+            return new ServiceReferenceImpl<B>(type, factory);
         }
-        ObjectFactory<B> factory = createWireFactory(type, wire);
-        return new ServiceReferenceImpl<B>(type, factory);
     }
 
     @SuppressWarnings({"unchecked"})
