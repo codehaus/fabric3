@@ -145,7 +145,7 @@ public class ExplodedArchiveContributionProcessor extends ArchiveContributionPro
         File[] files = dir.listFiles();
         for (File file : files) {
             if (file.isDirectory()) {
-                iterateArtifactsResursive(contribution, action, dir);
+                iterateArtifactsResursive(contribution, action, file);
             } else {
                 try {
                     URL entryUrl = file.toURI().toURL();
