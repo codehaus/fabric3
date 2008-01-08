@@ -27,10 +27,12 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.SingletonObjectFactory;
+import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.builder.component.WireAttachException;
-import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
@@ -39,7 +41,6 @@ import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.spi.wire.MessageImpl;
 import org.fabric3.spi.wire.Wire;
-import org.fabric3.spi.ObjectFactory;
 
 /**
  * @version $Revision$ $Date$
@@ -73,32 +74,37 @@ public class MockWireAttacher implements TargetWireAttacher<MockWireTargetDefini
                                MockWireTargetDefinition wireTargetDefinition,
                                Wire wire) throws WireAttachException {
 
-        ClassLoader classLoader = classLoaderRegistry.getClassLoader(wireTargetDefinition.getClassLoaderId());
+        Class<?> mockedInterface = loadInterface(wireTargetDefinition);
+        Object mock = control.createMock(mockedInterface);
 
-        String interfaceClass = wireTargetDefinition.getMockedInterface();
+        for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
+            PhysicalOperationDefinition op = entry.getKey();
+            InvocationChain chain = entry.getValue();
 
-        try {
-
-            Class<?> mockedInterface = classLoader.loadClass(interfaceClass);
-            Object mock = control.createMock(mockedInterface);
-
-            for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
-                PhysicalOperationDefinition op = entry.getKey();
-                InvocationChain chain = entry.getValue();
-
-                for (Method method : mockedInterface.getMethods()) {
-                    if (op.getName().equals(method.getName())) {
-                        chain.addInterceptor(new MockTargetInterceptor(mock, method));
-                    }
+            for (Method method : mockedInterface.getMethods()) {
+                if (op.getName().equals(method.getName())) {
+                    chain.addInterceptor(new MockTargetInterceptor(mock, method));
                 }
             }
-
-        } catch (ClassNotFoundException e) {
-            URI sourceUri = wireSourceDefinition.getUri();
-            URI targetUri = wireTargetDefinition.getUri();
-            throw new WireAttachException("Unable to load interface " + interfaceClass, sourceUri, targetUri, e);
         }
 
+    }
+
+    public ObjectFactory<?> createObjectFactory(MockWireTargetDefinition target) throws WiringException {
+        Class<?> mockedInterface = loadInterface(target);
+        Object mock =  control.createMock(mockedInterface);
+        return new SingletonObjectFactory<Object>(mock);
+    }
+
+    private Class<?> loadInterface(MockWireTargetDefinition target) throws WireAttachException {
+        String interfaceClass = target.getMockedInterface();
+        try {
+            ClassLoader classLoader = classLoaderRegistry.getClassLoader(target.getClassLoaderId());
+            return classLoader.loadClass(interfaceClass);
+        } catch (ClassNotFoundException e) {
+            URI targetUri = target.getUri();
+            throw new WireAttachException("Unable to load interface " + interfaceClass, null, targetUri, e);
+        }
     }
 
     private class MockTargetInterceptor implements Interceptor {
@@ -139,9 +145,5 @@ public class MockWireAttacher implements TargetWireAttacher<MockWireTargetDefini
             this.next = next;
         }
 
-    }
-
-    public ObjectFactory<?> createObjectFactory(MockWireTargetDefinition target) throws WiringException {
-        throw new AssertionError();
     }
 }
