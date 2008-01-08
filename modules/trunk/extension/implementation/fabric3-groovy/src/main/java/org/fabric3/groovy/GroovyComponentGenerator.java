@@ -90,7 +90,6 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<GroovyImplementation> source,
                                                            LogicalReference reference,
-                                                           boolean optimizable, 
                                                            Set<Intent> implementationIntentsToBeProvided,
                                                            Set<PolicySet> policySetsToBeProvided,
                                                            GeneratorContext context)

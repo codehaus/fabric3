@@ -119,7 +119,6 @@ public class MockComponentGenerator implements ComponentGenerator<LogicalCompone
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<ImplementationMock> component,
                                                            LogicalReference reference,
-                                                           boolean optmized,
                                                            Set<Intent> implementationIntentsToBeProvided,
                                                            Set<PolicySet> implememenantionPolicySetsToBeProvided,
                                                            GeneratorContext generatorContext) {

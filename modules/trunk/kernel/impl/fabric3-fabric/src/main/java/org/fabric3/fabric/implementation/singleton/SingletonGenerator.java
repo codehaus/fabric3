@@ -52,7 +52,6 @@ public class SingletonGenerator implements ComponentGenerator<LogicalComponent<S
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<SingletonImplementation> source,
                                                            LogicalReference reference,
-                                                           boolean optimizable,  
                                                            Set<Intent> intentsToBeProvided,
                                                            Set<PolicySet> policySetsToBeProvided,
                                                            GeneratorContext context) throws GenerationException {

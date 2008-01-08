@@ -106,11 +106,10 @@ public class WebappComponentGenerator implements ComponentGenerator<LogicalCompo
      *     boolean)
      */
     public WebappWireSourceDefinition generateWireSource(LogicalComponent<WebappImplementation> source,
-                                                                 LogicalReference reference,
-                                                                 boolean optimizable,  
-                                                                 Set<Intent> intentsToBeProvided,
-                                                                 Set<PolicySet> policySetsToBeProvided,
-                                                                 GeneratorContext context) throws GenerationException {
+                                                         LogicalReference reference,
+                                                         Set<Intent> intentsToBeProvided,
+                                                         Set<PolicySet> policySetsToBeProvided,
+                                                         GeneratorContext context) throws GenerationException {
 
         WebappWireSourceDefinition sourceDefinition = new WebappWireSourceDefinition();
         sourceDefinition.setUri(reference.getUri());

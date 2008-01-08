@@ -99,7 +99,6 @@ public class LaunchedComponentGenerator implements ComponentGenerator<LogicalCom
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<Launched> source,
                                                            LogicalReference reference,
-                                                           boolean optimizable, 
                                                            Set<Intent> intentsToBeProvided,
                                                            Set<PolicySet> policySetsToBeProvided,
                                                            GeneratorContext context) {

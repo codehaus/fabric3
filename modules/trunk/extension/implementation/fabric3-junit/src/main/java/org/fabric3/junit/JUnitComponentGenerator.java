@@ -84,7 +84,6 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<ImplementationJUnit> source,
                                                            LogicalReference reference,
-                                                           boolean optimizable,
                                                            Set<Intent> implementationIntentsToBeProvided,
                                                            Set<PolicySet> implememenantionPolicySetsToBeProvided,
                                                            GeneratorContext context) throws GenerationException {

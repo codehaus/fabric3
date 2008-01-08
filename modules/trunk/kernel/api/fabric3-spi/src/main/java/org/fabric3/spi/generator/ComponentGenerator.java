@@ -59,14 +59,11 @@ public interface ComponentGenerator<C extends LogicalComponent<? extends Impleme
      *
      * @param source      the logical component for the wire source
      * @param reference   the source logical reference
-     * @param optimizable true is the wire may be optimized. ComponentGenerator implementations may decide to attach
-     *                    optimizable wires is a specialized manner, such as by not generating proxies
      * @return the metadata used to attach the wire to its source on the service node
      * @throws GenerationException if an error occurs during the generation process
      */
-    PhysicalWireSourceDefinition generateWireSource(C source, 
-                                                    LogicalReference reference, 
-                                                    boolean optimizable, 
+    PhysicalWireSourceDefinition generateWireSource(C source,
+                                                    LogicalReference reference,
                                                     Set<Intent> intentsToBeProvided,
                                                     Set<PolicySet> policySetsToBeProvided,
                                                     GeneratorContext context) throws GenerationException;

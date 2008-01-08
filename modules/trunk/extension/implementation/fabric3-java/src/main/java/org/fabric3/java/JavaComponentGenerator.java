@@ -94,7 +94,6 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<JavaImplementation> source,
                                                            LogicalReference reference,
-                                                           boolean optimizable, 
                                                            Set<Intent> intentsToBeProvided,
                                                            Set<PolicySet> policySetsToBeProvided,
                                                            GeneratorContext context) throws GenerationException {

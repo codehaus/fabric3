@@ -92,7 +92,6 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<SystemImplementation> source,
                                                            LogicalReference reference,
-                                                           boolean optimizable,  
                                                            Set<Intent> intentsToBeProvided,
                                                            Set<PolicySet> policySetsToBeProvided,
                                                            GeneratorContext context) throws GenerationException {
