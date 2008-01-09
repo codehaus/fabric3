@@ -35,13 +35,20 @@
             <os family="windows"/>
         </condition>
     </target>
+    
+    <target name="check-downloaded" depends="check-installed" unless="already.installed">
+    <mkdir dir="${basedir}/target/jxta-download/"/>
+            <get src="http://download.java.net/jxta/jxta-jxse/2.4.1/jxta-lib-2.4.1.zip"
+                dest="${basedir}/target/jxta-download/jxta-lib-2.4.1.zip"
+                verbose="true"
+            usetimestamp="true" ignoreErrors="true"/>
+            <condition property="jxta.downloaded" >
+	                    <available file="${basedir}/target/jxta-download/jxta-lib-2.4.1.zip"/>
+        </condition>
+    </target>
 
-    <target name="install-jxta" depends="check-installed" unless="already.installed">
-        <mkdir dir="${basedir}/target/jxta-download/"/>
-        <get src="http://download.java.net/jxta/jxta-jxse/2.4.1/jxta-lib-2.4.1.zip"
-            dest="${basedir}/target/jxta-download/jxta-lib-2.4.1.zip"
-            verbose="true"
-            usetimestamp="true"/>
+    <target name="install-jxta" depends="check-downloaded" if="jxta.downloaded">
+        
 		<unzip src="${basedir}/target/jxta-download/jxta-lib-2.4.1.zip"
                dest="${basedir}/target/jxta-download/jxta"
                overwrite="false"/>
