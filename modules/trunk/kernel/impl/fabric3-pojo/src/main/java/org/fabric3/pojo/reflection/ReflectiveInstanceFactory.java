@@ -68,7 +68,12 @@ public class ReflectiveInstanceFactory<T> implements InstanceFactory<T> {
                 for (int i = 0; i < args.length; i++) {
                     args[i] = ctrArgs[i].getInstance();
                 }
-                instance = ctr.newInstance(args);
+                try {
+                    instance = ctr.newInstance(args);
+                } catch (IllegalArgumentException e) {
+                    String name = ctr.getDeclaringClass().getName();
+                    throw new ObjectCreationException("Invalid constructor parameter", name, e);
+                }
             }
 
             if (injectors != null) {
