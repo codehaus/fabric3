@@ -34,8 +34,9 @@ public class ReferenceDefinition extends AbstractPolicyAware {
     private ServiceContract<?> serviceContract;
     private Multiplicity multiplicity;
     private boolean required;
-    private List<URI> promoted;
-    private List<BindingDefinition> bindings;
+    private final List<URI> promoted = new ArrayList<URI>();
+    private final List<BindingDefinition> bindings = new ArrayList<BindingDefinition>();
+    private final List<OperationDefinition> operations = new ArrayList<OperationDefinition>();
 
     /**
      * @param name
@@ -43,8 +44,6 @@ public class ReferenceDefinition extends AbstractPolicyAware {
      */
     public ReferenceDefinition(String name, ServiceContract<?> serviceContract) {
         this(name, serviceContract, Multiplicity.ONE_ONE);
-        bindings = new ArrayList<BindingDefinition>();
-        promoted = new ArrayList<URI>();
     }
 
     /**
@@ -56,8 +55,6 @@ public class ReferenceDefinition extends AbstractPolicyAware {
         this.name = name;
         this.serviceContract = serviceContract;
         this.multiplicity = multiplicity;
-        bindings = new ArrayList<BindingDefinition>();
-        promoted = new ArrayList<URI>();
     }
 
     /**
@@ -124,17 +121,31 @@ public class ReferenceDefinition extends AbstractPolicyAware {
     }
 
     /**
-     * @return
+     * @return List of bindings defined against the reference.
      */
     public List<BindingDefinition> getBindings() {
         return Collections.unmodifiableList(bindings);
     }
 
     /**
-     * @param binding
+     * @param binding Binding to be added.
      */
     public void addBinding(BindingDefinition binding) {
         this.bindings.add(binding);
+    }
+    
+    /**
+     * @return Get the list of operations defined against the reference.
+     */
+    public List<OperationDefinition> getOperations() {
+        return Collections.unmodifiableList(operations);
+    }
+    
+    /**
+     * @param operation Operation definition to be added.
+     */
+    public void addOperation(OperationDefinition operation) {
+        operations.add(operation);
     }
 
 }

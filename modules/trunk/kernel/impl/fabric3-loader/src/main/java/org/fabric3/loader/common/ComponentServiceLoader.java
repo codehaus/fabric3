@@ -25,6 +25,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.ComponentService;
 import org.fabric3.scdl.ModelObject;
+import org.fabric3.scdl.OperationDefinition;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.loader.Loader;
 import org.fabric3.spi.loader.LoaderContext;
@@ -68,6 +69,8 @@ public class ComponentServiceLoader implements StAXElementLoader<ComponentServic
                     def.setServiceContract((ServiceContract<?>) type);
                 } else if (type instanceof BindingDefinition) {
                     def.addBinding((BindingDefinition) type);
+                } else if (type instanceof OperationDefinition) {
+                    def.addOperation((OperationDefinition) type);
                 } else {
                     UnrecognizedElementException e = new UnrecognizedElementException(reader.getName());
                     e.setResourceURI(context.getSourceBase().toString());

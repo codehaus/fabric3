@@ -31,7 +31,8 @@ public class ServiceDefinition extends AbstractPolicyAware {
     
     private String name;
     private ServiceContract<?> serviceContract;
-    private final List<BindingDefinition> bindings;
+    private final List<BindingDefinition> bindings = new ArrayList<BindingDefinition>();
+    private final List<OperationDefinition> operations = new ArrayList<OperationDefinition>();
 
     public ServiceDefinition(String name) {
         this(name, null);
@@ -40,12 +41,6 @@ public class ServiceDefinition extends AbstractPolicyAware {
     public ServiceDefinition(String name, ServiceContract<?> serviceContract) {
         this.name = name;
         this.serviceContract = serviceContract;
-        bindings = new ArrayList<BindingDefinition>();
-    }
-
-    @Deprecated
-    public ServiceDefinition() {
-        bindings = new ArrayList<BindingDefinition>();
     }
 
     /**
@@ -91,5 +86,19 @@ public class ServiceDefinition extends AbstractPolicyAware {
      */
     public void addBinding(BindingDefinition binding) {
         this.bindings.add(binding);
+    }
+    
+    /**
+     * @return Get the list of operations defined against the reference.
+     */
+    public List<OperationDefinition> getOperations() {
+        return Collections.unmodifiableList(operations);
+    }
+    
+    /**
+     * @param operation Operation definition to be added.
+     */
+    public void addOperation(OperationDefinition operation) {
+        operations.add(operation);
     }
 }

@@ -30,6 +30,7 @@ import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.ComponentReference;
 import org.fabric3.scdl.ModelObject;
 import org.fabric3.scdl.Multiplicity;
+import org.fabric3.scdl.OperationDefinition;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.loader.InvalidReferenceException;
 import org.fabric3.spi.loader.InvalidValueException;
@@ -102,6 +103,8 @@ public class ComponentReferenceLoader implements StAXElementLoader<ComponentRefe
                     reference.setServiceContract((ServiceContract<?>) type);
                 } else if (type instanceof BindingDefinition) {
                     reference.addBinding((BindingDefinition) type);
+                } else if (type instanceof OperationDefinition) {
+                    reference.addOperation((OperationDefinition) type);
                 } else {
                     UnrecognizedElementException e = new UnrecognizedElementException(reader.getName());
                     e.setResourceURI(context.getSourceBase().toString());
