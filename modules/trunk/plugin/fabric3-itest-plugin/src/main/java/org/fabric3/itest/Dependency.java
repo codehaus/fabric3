@@ -34,11 +34,11 @@ public class Dependency {
 
     private String groupId;
     private String artifactId;
-    private String version = "RELEASE";
+    private String version;
     private String type = "jar";
     private Set<Exclusion> exclusions = new HashSet<Exclusion>();
-    
-    
+
+
 
     /**
      * Default constructor.
@@ -87,6 +87,9 @@ public class Dependency {
         return exclusions;
     }
 
+    public void setVersion(String version){
+    	this.version = version;
+    }
 
     public URI getURI() {
         StringBuilder builder = new StringBuilder();

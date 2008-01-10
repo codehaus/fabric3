@@ -6,15 +6,15 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License.    
+ * under the License.
  */
 package org.fabric3.itest;
 
@@ -33,6 +33,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+
 import javax.xml.namespace.QName;
 
 import org.apache.maven.artifact.Artifact;
@@ -50,6 +51,7 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
+import org.apache.maven.project.MavenProject;
 import org.apache.maven.surefire.report.BriefConsoleReporter;
 import org.apache.maven.surefire.report.BriefFileReporter;
 import org.apache.maven.surefire.report.Reporter;
@@ -58,7 +60,6 @@ import org.apache.maven.surefire.report.ReporterManager;
 import org.apache.maven.surefire.report.XMLReporter;
 import org.apache.maven.surefire.suite.SurefireTestSuite;
 import org.apache.maven.surefire.testset.TestSetFailedException;
-
 import org.fabric3.api.annotation.LogLevel;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.host.runtime.Bootstrapper;
@@ -86,6 +87,15 @@ import org.fabric3.spi.deployer.CompositeClassLoader;
  * @phase integration-test
  */
 public class Fabric3ITestMojo extends AbstractMojo {
+
+    /**
+     * POM
+     *
+     * @parameter expression="${project}"
+     * @readonly
+     * @required
+     */
+    protected MavenProject project;
 
     /**
      * The optional target namespace of the composite to activate.
@@ -370,6 +380,9 @@ public class Fabric3ITestMojo extends AbstractMojo {
         }
         List<URL> urls = new ArrayList<URL>(dependencies.length);
         for (Dependency dependency : dependencies) {
+        	if(dependency.getVersion() == null){
+        		resolveDependencyVersion(dependency);
+        	}
             Artifact artifact = dependency.getArtifact(artifactFactory);
             try {
                 resolver.resolve(artifact, remoteRepositories, localRepository);
@@ -386,6 +399,18 @@ public class Fabric3ITestMojo extends AbstractMojo {
             }
         }
         return urls;
+    }
+
+    private void resolveDependencyVersion(Dependency extension){
+
+    	List<org.apache.maven.model.Dependency> dependencies = project.getDependencyManagement().getDependencies();
+		for(org.apache.maven.model.Dependency dependecy : dependencies) {
+			if(dependecy.getGroupId().equals(extension.getGroupId())
+				&& dependecy.getArtifactId().equals(extension.getArtifactId())){
+				extension.setVersion(dependecy.getVersion());
+
+			}
+		}
     }
 
     private void shutdownRuntime(RuntimeLifecycleCoordinator<MavenEmbeddedRuntime, Bootstrapper> coordinator)
@@ -448,6 +473,10 @@ public class Fabric3ITestMojo extends AbstractMojo {
     }
 
     private void addArtifacts(Set<Artifact> artifacts, Dependency extension) throws MojoExecutionException {
+
+    	if (extension.getVersion() == null) {
+              resolveDependencyVersion(extension);
+    	}
         final Set<Exclusion> exclusions = extension.getExclusions();
 
         Artifact artifact = extension.getArtifact(artifactFactory);
