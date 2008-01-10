@@ -165,8 +165,4 @@
         <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.JarClasspathProcessor"/>
     </component>
 
-    <component name="JarService">
-        <system:implementation.system class="org.fabric3.fabric.services.archive.JarServiceImpl"/>
-    </component>
-
 </composite>

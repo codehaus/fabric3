@@ -22,7 +22,6 @@ import java.util.List;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
-import org.fabric3.fabric.services.archive.JarServiceImpl;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 
 /**
@@ -55,13 +54,11 @@ public class JarClasspathProcessorTestCase extends TestCase {
         List<URL> urls = processor.process(location);
         assertEquals(2, urls.size());
         assertEquals(location, urls.get(0));
-        String url = urls.get(1).toString();
-        assertTrue(url.endsWith("/META-INF/lib/test.jar"));
     }
 
     protected void setUp() throws Exception {
         super.setUp();
         ClasspathProcessorRegistry registry = EasyMock.createNiceMock(ClasspathProcessorRegistry.class);
-        processor = new JarClasspathProcessor(registry, new JarServiceImpl());
+        processor = new JarClasspathProcessor(registry);
     }
 }

@@ -55,8 +55,6 @@ import org.fabric3.fabric.model.physical.PhysicalOperationHelperImpl;
 import org.fabric3.fabric.model.physical.PhysicalWireGenerator;
 import org.fabric3.fabric.model.physical.PhysicalWireGeneratorImpl;
 import org.fabric3.fabric.runtime.ComponentNames;
-import org.fabric3.fabric.services.archive.JarService;
-import org.fabric3.fabric.services.archive.JarServiceImpl;
 import org.fabric3.fabric.services.contribution.ArtifactResolverRegistryImpl;
 import org.fabric3.fabric.services.contribution.ClasspathProcessorRegistryImpl;
 import org.fabric3.fabric.services.contribution.FileSystemResolver;
@@ -227,8 +225,8 @@ public class BootstrapAssemblyFactory {
         resolver.init();
 
         ClasspathProcessorRegistry classpathProcessorRegistry = new ClasspathProcessorRegistryImpl();
-        JarService jarService = new JarServiceImpl();
-        new JarClasspathProcessor(classpathProcessorRegistry, jarService);
+        JarClasspathProcessor classpathProcessor = new JarClasspathProcessor(classpathProcessorRegistry);
+        classpathProcessor.init();
         ClassLoaderBuilder clBuilder = new ClassLoaderBuilder(resourceRegistry,
                                                               classLoaderRegistry,
                                                               artifactResolverRegistry,

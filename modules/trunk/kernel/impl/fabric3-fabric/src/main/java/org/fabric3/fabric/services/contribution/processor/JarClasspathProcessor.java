@@ -16,46 +16,50 @@
  */
 package org.fabric3.fabric.services.contribution.processor;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
-import static java.io.File.separator;
-import java.io.FilenameFilter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarInputStream;
 
+import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.services.archive.JarService;
+import org.fabric3.fabric.util.IOHelper;
 import org.fabric3.spi.services.contribution.ClasspathProcessor;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 
 /**
- * Creates a classpath based on the contents of a jar. Specifically, adds the jar and any zip/jar archives found in
- * META-INF/lib to the classpath
+ * Creates a classpath based on the contents of a jar. Specifically, adds the jar and any zip/jar archives found in META-INF/lib to the classpath
  *
  * @version $Rev$ $Date$
  */
 @EagerInit
 public class JarClasspathProcessor implements ClasspathProcessor {
-    private JarService jarService;
-    private File tempDir;
+    private final ClasspathProcessorRegistry registry;
 
+    public JarClasspathProcessor(@Reference ClasspathProcessorRegistry registry) {
+        this.registry = registry;
+    }
 
-    public JarClasspathProcessor(@Reference ClasspathProcessorRegistry registry, @Reference JarService jarService) {
-        this.jarService = jarService;
-        String tmp = AccessController.doPrivileged(new PrivilegedAction<String>() {
-            public String run() {
-                return System.getProperty("user.home") + separator + ".fabric3" + separator + "tmp";
-            }
-        });
-        tempDir = new File(tmp);
+    @Init
+    public void init() {
         registry.register(this);
     }
+
+    @Destroy
+    public void destroy() {
+        registry.unregister(this);
+    }
+
 
     public boolean canProcess(URL url) {
         String name = url.getFile().toLowerCase();
@@ -66,33 +70,40 @@ public class JarClasspathProcessor implements ClasspathProcessor {
         List<URL> classpath = new ArrayList<URL>();
         // add the the jar itself to the classpath
         classpath.add(url);
-        // expand contents of the lib directory (if it exists) and add the expanded content
-        String file = url.getFile();
-        String name = URLEncoder.encode(file.substring(file.lastIndexOf("/") + 1), "UTF-8");
-        File expandedDir = generateTempDir(name);
-        jarService.expand(url, expandedDir, true);
-        File libDir = new File(expandedDir, "META-INF/lib");
-        File[] libraries = libDir.listFiles(new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-                return (name.endsWith(".jar") || name.endsWith(".mar"));
-            }
-        });
-        if (libraries != null) {
-            for (File library : libraries) {
-                classpath.add(library.toURI().toURL());
-            }
-        }
+
+        // add libraries from the jar
+        addLibraries(classpath, url);
         return classpath;
     }
 
-    private File generateTempDir(String name) {
-        File expandedDir = new File(tempDir, name);
-        int i = 1;
-        while (expandedDir.exists()) {
-            expandedDir = new File(tempDir, name + String.valueOf(i));
-            ++i;
+    private void addLibraries(List<URL> classpath, URL jar) throws IOException {
+        File dir = new File(System.getProperty("java.io.tmpdir"), ".f3");
+        dir.mkdir();
+        InputStream is = jar.openStream();
+        try {
+            JarInputStream jarStream = new JarInputStream(is);
+            JarEntry entry;
+            while ((entry = jarStream.getNextJarEntry()) != null) {
+                if (entry.isDirectory()) {
+                    continue;
+                }
+                String path = entry.getName();
+                if (!path.startsWith("META-INF/lib/")) {
+                    continue;
+                }
+                File jarFile = File.createTempFile("fabric3", ".jar", dir);
+                OutputStream os = new BufferedOutputStream(new FileOutputStream(jarFile));
+                try {
+                    IOHelper.copy(jarStream, os);
+                    os.flush();
+                } finally {
+                    os.close();
+                }
+                jarFile.deleteOnExit();
+                classpath.add(jarFile.toURI().toURL());
+            }
+        } finally {
+            is.close();
         }
-        return expandedDir;
     }
-
 }
