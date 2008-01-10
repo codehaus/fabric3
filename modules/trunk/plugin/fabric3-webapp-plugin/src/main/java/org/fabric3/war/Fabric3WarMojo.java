@@ -36,6 +36,7 @@ import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
 import org.apache.maven.artifact.resolver.ArtifactResolver;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
 
 /**
@@ -143,6 +144,14 @@ public class Fabric3WarMojo extends AbstractMojo {
     public String runTimeVersion;
 
     /**
+     * POM
+     * @parameter expression="${project}"
+     * @readonly
+     * @required
+     */
+    public MavenProject project;
+
+    /**
      * Executes the MOJO.
      */
     public void execute() throws MojoExecutionException {
@@ -169,6 +178,9 @@ public class Fabric3WarMojo extends AbstractMojo {
         File bootDir = new File(webappDirectory, BOOT_PATH);
         bootDir.mkdirs();
         for (Dependency dependency : bootLibs) {
+        	if(dependency.getVersion() == null){
+        		resolveDependencyVersion(dependency);
+        	}
             for (Artifact artifact : resolveArtifact(dependency.getArtifact(artifactFactory), true)) {
                 FileUtils.copyFileToDirectoryIfModified(artifact.getFile(), bootDir);
             }
@@ -183,6 +195,9 @@ public class Fabric3WarMojo extends AbstractMojo {
 
         File bootDir = new File(webappDirectory, EXTENSIONS_PATH);
         for (Dependency dependency : extensions) {
+        	if(dependency.getVersion() == null){
+        		resolveDependencyVersion(dependency);
+        	}
             for (Artifact artifact : resolveArtifact(dependency.getArtifact(artifactFactory), false)) {
                 FileUtils.copyFileToDirectoryIfModified(artifact.getFile(), bootDir);
             }
@@ -190,6 +205,21 @@ public class Fabric3WarMojo extends AbstractMojo {
     }
 
     /**
+     * Resolve the dependency for the given dependency from the dependencyManagement from the pom
+     * @param dependency
+     */
+    private void resolveDependencyVersion(Dependency extension) {
+    	List<org.apache.maven.model.Dependency> dependencies = project.getDependencyManagement().getDependencies();
+		for(org.apache.maven.model.Dependency dependecy : dependencies) {
+			if(dependecy.getGroupId().equals(extension.getGroupId())
+				&& dependecy.getArtifactId().equals(extension.getArtifactId())){
+				extension.setVersion(dependecy.getVersion());
+
+			}
+		}
+	}
+
+	/**
      * Resolves the specified artifact.
      *
      * @param artifact   Artifact to be resolved.

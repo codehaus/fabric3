@@ -87,4 +87,40 @@ public class Dependency {
     public boolean match(Artifact artifact) {
         return artifact.getArtifactId().equals(artifactId);
     }
+
+    /**
+     * Returns the version of dependency.
+     *
+     * @return the version of dependency
+     */
+    public String getVersion() {
+        return this.version;
+    }
+
+    /**
+     * Sets the version for dependency.
+     *
+     * @param version the version for dependency
+     */
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    /**
+     * Returns the artifact id.
+     *
+     * @return the artifact id
+     */
+    public String getArtifactId() {
+        return artifactId;
+    }
+
+    /**
+     * Returns the group id.
+     *
+     * @return the group id
+     */
+    public String getGroupId() {
+        return groupId;
+    }
 }
