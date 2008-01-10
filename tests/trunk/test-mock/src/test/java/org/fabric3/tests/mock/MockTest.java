@@ -17,6 +17,7 @@
 package org.fabric3.tests.mock;
 
 import org.easymock.IMocksControl;
+import org.easymock.EasyMock;
 import org.osoa.sca.annotations.Reference;
 
 import junit.framework.TestCase;
@@ -75,13 +76,26 @@ public class MockTest extends TestCase {
         mockService2.doMock2(1);
         
         control.replay();
-        
+
+        // fail after the try block as we don't want to catch the AssertionError it would throw
+        boolean fail = true;
         try {
             control.verify();
-            fail("Expected error");
-        } catch(Throwable ex) {
+        } catch (AssertionError e) {
+            fail = false;
         }
-        
+        if (fail) {
+            fail("Expected an error");
+        }
+    }
+
+    public void testUsingControlToCreateMock() {
+        control.reset();
+        MockService0 mock = control.createMock(MockService0.class);
+        mock.doMock0(1);
+        control.replay();
+        mock.doMock0(1);
+        control.verify();
     }
 
 }

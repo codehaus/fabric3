@@ -75,7 +75,7 @@ public class MockWireAttacher implements TargetWireAttacher<MockWireTargetDefini
                                Wire wire) throws WireAttachException {
 
         Class<?> mockedInterface = loadInterface(wireTargetDefinition);
-        Object mock = control.createMock(mockedInterface);
+        Object mock = createMock(mockedInterface);
 
         for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
             PhysicalOperationDefinition op = entry.getKey();
@@ -92,8 +92,16 @@ public class MockWireAttacher implements TargetWireAttacher<MockWireTargetDefini
 
     public ObjectFactory<?> createObjectFactory(MockWireTargetDefinition target) throws WiringException {
         Class<?> mockedInterface = loadInterface(target);
-        Object mock =  control.createMock(mockedInterface);
+        Object mock = createMock(mockedInterface);
         return new SingletonObjectFactory<Object>(mock);
+    }
+
+    private Object createMock(Class<?> mockedInterface) {
+        if (IMocksControl.class.isAssignableFrom(mockedInterface)) {
+            return control;
+        } else {
+            return control.createMock(mockedInterface);
+        }
     }
 
     private Class<?> loadInterface(MockWireTargetDefinition target) throws WireAttachException {
