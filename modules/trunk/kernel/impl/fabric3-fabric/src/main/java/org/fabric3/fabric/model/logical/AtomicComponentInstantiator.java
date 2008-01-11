@@ -18,8 +18,6 @@ package org.fabric3.fabric.model.logical;
 
 import java.net.URI;
 
-import org.osoa.sca.annotations.Reference;
-
 import org.fabric3.fabric.assembly.InstantiationException;
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.scdl.AbstractComponentType;
@@ -37,6 +35,7 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Revision$ $Date$
@@ -86,6 +85,7 @@ public class AtomicComponentInstantiator extends AbstractComponentInstantiator {
         for (ServiceDefinition service : componentType.getServices().values()) {
             String name = service.getName();
             URI serviceUri = component.getUri().resolve('#' + name);
+            addOperationLevelIntentsAndPolicies(service);
             LogicalService logicalService = new LogicalService(serviceUri, service, component);
             ComponentService componentService = definition.getServices().get(name);
             if (componentService != null) {
@@ -106,6 +106,7 @@ public class AtomicComponentInstantiator extends AbstractComponentInstantiator {
         for (ReferenceDefinition reference : componentType.getReferences().values()) {
             String name = reference.getName();
             URI referenceUri = component.getUri().resolve('#' + name);
+            addOperationLevelIntentsAndPolicies(reference);
             LogicalReference logicalReference = new LogicalReference(referenceUri, reference, component);
             ComponentReference componentReference = definition.getReferences().get(name);
             if (componentReference != null) {

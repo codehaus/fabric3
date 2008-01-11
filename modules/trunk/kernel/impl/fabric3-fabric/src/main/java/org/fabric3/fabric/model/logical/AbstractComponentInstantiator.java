@@ -18,7 +18,9 @@ package org.fabric3.fabric.model.logical;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
+
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -29,21 +31,25 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import javax.xml.xpath.XPathVariableResolver;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
 import org.fabric3.fabric.assembly.InstantiationException;
 import org.fabric3.fabric.assembly.InvalidPropertyFileException;
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.Operation;
+import org.fabric3.scdl.OperationDefinition;
 import org.fabric3.scdl.Property;
 import org.fabric3.scdl.PropertyValue;
+import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  * @version $Revision$ $Date$
@@ -63,6 +69,24 @@ public abstract class AbstractComponentInstantiator implements ComponentInstanti
 
     protected AbstractComponentInstantiator(DocumentLoader documentLoader) {
         this.documentLoader = documentLoader;
+    }
+    
+    /**
+     * Transfers intents and policy sets declared in the SCDL to the service contract.
+     *
+     * @param serviceDefinition Service definition from the SCDL.
+     */
+    protected void addOperationLevelIntentsAndPolicies(ServiceDefinition serviceDefinition) {      
+        transferIntentsAndPolicies(serviceDefinition.getServiceContract(), serviceDefinition.getOperations());
+    }
+    
+    /**
+     * Transfers intents and policy sets declared in the SCDL to the service contract.
+     *
+     * @param referenceDefinition Reference definition from the SCDL.
+     */
+    protected void addOperationLevelIntentsAndPolicies(ReferenceDefinition referenceDefinition) {        
+        transferIntentsAndPolicies(referenceDefinition.getServiceContract(), referenceDefinition.getOperations());
     }
 
     /**
@@ -167,6 +191,21 @@ public abstract class AbstractComponentInstantiator implements ComponentInstanti
             throw new InvalidPropertyFileException(e.getMessage(), name, e, file);
         } catch (SAXException e) {
             throw new InvalidPropertyFileException(e.getMessage(), name, e, file);
+        }
+    }
+
+    private void transferIntentsAndPolicies(ServiceContract<?> serviceContract, List<OperationDefinition> operationDefinitions) {
+        for (OperationDefinition operationDefinition : operationDefinitions) {
+            for (Operation<?> operation : serviceContract.getOperations()) {
+                if(operationDefinition.getName().equals(operation.getName())) {
+                    for (QName intent : operationDefinition.getIntents()) {
+                        operation.addIntent(intent);
+                    }
+                    for (QName policySet : operationDefinition.getPolicySets()) {
+                        operation.addPolicySet(policySet);
+                    }
+                }
+            }
         }
     }
 

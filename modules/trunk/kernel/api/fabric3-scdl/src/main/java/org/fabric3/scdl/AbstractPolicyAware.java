@@ -53,4 +53,8 @@ public abstract class AbstractPolicyAware extends ModelObject implements PolicyA
         this.policySets = policySets;
     }
 
+    public void addPolicySet(QName policySet) {
+        policySets.add(policySet);
+    }
+
 }
