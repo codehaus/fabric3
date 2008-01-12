@@ -18,17 +18,13 @@
  */
 package org.fabric3.spi.generator;
 
-import java.util.Set;
-
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
-import org.fabric3.scdl.definitions.Intent;
-import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
-import org.fabric3.spi.policy.PolicyResult;
+import org.fabric3.spi.policy.Policy;
 
 /**
  * Delegate for implementing stack specific behavior for the binding.
@@ -47,7 +43,7 @@ public interface BindingGeneratorDelegate<BD extends BindingDefinition> {
      * @throws GenerationException
      */
     PhysicalWireSourceDefinition generateWireSource(LogicalBinding<BD> binding, 
-                            PolicyResult policyResult,
+                            Policy policy,
                             GeneratorContext context,
                             ServiceDefinition serviceDefinition) throws GenerationException;
 
@@ -61,7 +57,7 @@ public interface BindingGeneratorDelegate<BD extends BindingDefinition> {
      * @throws GenerationException
      */
     PhysicalWireTargetDefinition generateWireTarget(LogicalBinding<BD> binding, 
-                            PolicyResult policyResult,
+                            Policy policy,
                             GeneratorContext context,
                             ReferenceDefinition referenceDefinition) throws GenerationException;
 

@@ -79,7 +79,7 @@ public class DefaultPolicyResolver implements PolicyResolver {
                                             LogicalComponent<?> source, 
                                             LogicalComponent<?> target) throws PolicyResolutionException {
         
-        PolicyResult policyResult = new PolicyResult();
+        PolicyResultImpl policyResult = new PolicyResultImpl();
             
         for (Operation<?> operation : serviceContract.getOperations()) {
             

@@ -36,7 +36,7 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
-import org.fabric3.spi.policy.PolicyResult;
+import org.fabric3.spi.policy.Policy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
@@ -92,7 +92,7 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<JavaImplementation> source,
                                                            LogicalReference reference,
-                                                           PolicyResult policyResult,
+                                                           Policy policy,
                                                            GeneratorContext context) throws GenerationException {
         JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
         wireDefinition.setUri(reference.getUri());
@@ -106,7 +106,7 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
                                                            LogicalComponent<JavaImplementation> target,  
-                                                           PolicyResult policyResult,
+                                                           Policy policy,
                                                            GeneratorContext context) throws GenerationException {
         JavaWireTargetDefinition wireDefinition = new JavaWireTargetDefinition();
         URI uri;

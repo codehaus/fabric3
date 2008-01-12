@@ -33,7 +33,7 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
-import org.fabric3.spi.policy.PolicyResult;
+import org.fabric3.spi.policy.Policy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
@@ -88,7 +88,7 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<GroovyImplementation> source,
                                                            LogicalReference reference,
-                                                           PolicyResult policyResult,
+                                                           Policy policy,
                                                            GeneratorContext context)
             throws GenerationException {
         GroovyWireSourceDefinition wireDefinition = new GroovyWireSourceDefinition();
@@ -99,7 +99,7 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
                                                            LogicalComponent<GroovyImplementation> target, 
-                                                           PolicyResult policyResult,
+                                                           Policy policy,
                                                            GeneratorContext context)
             throws GenerationException {
         GroovyWireTargetDefinition wireDefinition = new GroovyWireTargetDefinition();

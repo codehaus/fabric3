@@ -26,7 +26,7 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
-import org.fabric3.spi.policy.PolicyResult;
+import org.fabric3.spi.policy.Policy;
 
 /**
  * Implementations are responsible for generating {@link org.fabric3.spi.model.physical.PhysicalChangeSet} metadata used
@@ -61,7 +61,7 @@ public interface ComponentGenerator<C extends LogicalComponent<? extends Impleme
      */
     PhysicalWireSourceDefinition generateWireSource(C source, 
                                                     LogicalReference reference, 
-                                                    PolicyResult policyResult,
+                                                    Policy policy,
                                                     GeneratorContext context) throws GenerationException;
 
     /**
@@ -76,7 +76,7 @@ public interface ComponentGenerator<C extends LogicalComponent<? extends Impleme
      */
     PhysicalWireTargetDefinition generateWireTarget(LogicalService service, 
                                                     C target, 
-                                                    PolicyResult policyResult,
+                                                    Policy policy,
                                                     GeneratorContext context) throws GenerationException;
 
     /**

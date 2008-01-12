@@ -28,7 +28,7 @@ import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.spi.model.instance.LogicalBinding;
-import org.fabric3.spi.policy.PolicyResult;
+import org.fabric3.spi.policy.Policy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
@@ -57,12 +57,12 @@ public class EjbBindingGenerator implements
     /**
      * @see org.fabric3.spi.generator.BindingGenerator#generateWireSource(
      *      org.fabric3.spi.model.instance.LogicalBinding,
-     *      java.util.Set,
+     *      Policy,
      *      org.fabric3.spi.generator.GeneratorContext,
      *      org.fabric3.scdl.ServiceDefinition)
      */
     public EjbWireSourceDefinition generateWireSource(LogicalBinding<EjbBindingDefinition> logicalBinding,
-                                                      PolicyResult policyResult,
+                                                      Policy policy,
                                                       GeneratorContext generatorContext,
                                                       ServiceDefinition serviceDefinition)
         throws GenerationException {
@@ -82,12 +82,12 @@ public class EjbBindingGenerator implements
     /**
      * @see org.fabric3.spi.generator.BindingGenerator#generateWireTarget(
      *      org.fabric3.spi.model.instance.LogicalBinding,
-     *      java.util.Set,
+     *      Policy,
      *      org.fabric3.spi.generator.GeneratorContext,
      *      org.fabric3.scdl.ReferenceDefinition)
      */
     public EjbWireTargetDefinition generateWireTarget(LogicalBinding<EjbBindingDefinition> logicalBinding,
-                                                      PolicyResult policyResult,
+                                                      Policy policy,
                                                       GeneratorContext generatorContext,
                                                       ReferenceDefinition referenceDefinition)
         throws GenerationException {

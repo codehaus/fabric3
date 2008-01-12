@@ -23,7 +23,7 @@ import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalBinding;
-import org.fabric3.spi.policy.PolicyResult;
+import org.fabric3.spi.policy.Policy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
@@ -48,7 +48,7 @@ public class MockBindingGenerator implements
     }
 
     public ClientWireSourceDefinition generateWireSource(LogicalBinding<MockBindingDefinition> logicalBinding,
-                                                         PolicyResult policyResult,
+                                                         Policy policy,
                                                          GeneratorContext context,
                                                          ServiceDefinition serviceDefinition)
             throws GenerationException {
@@ -56,7 +56,7 @@ public class MockBindingGenerator implements
     }
 
     public MockWireTargetDefinition generateWireTarget(LogicalBinding<MockBindingDefinition> logicalBinding,
-                                                       PolicyResult policyResult,
+                                                       Policy policy,
                                                        GeneratorContext context,
                                                        ReferenceDefinition referenceDefinition)
             throws GenerationException {

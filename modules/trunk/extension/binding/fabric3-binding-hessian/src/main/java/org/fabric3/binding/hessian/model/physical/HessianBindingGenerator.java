@@ -29,7 +29,7 @@ import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalBinding;
-import org.fabric3.spi.policy.PolicyResult;
+import org.fabric3.spi.policy.Policy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
@@ -56,7 +56,7 @@ public class HessianBindingGenerator implements BindingGenerator<HessianWireSour
     }
 
     public HessianWireSourceDefinition generateWireSource(LogicalBinding<HessianBindingDefinition> logicalBinding,
-                                                          PolicyResult policyResult,
+                                                          Policy policy,
                                                           GeneratorContext generatorContext,
                                                           ServiceDefinition serviceDefinition)
             throws GenerationException {
@@ -70,7 +70,7 @@ public class HessianBindingGenerator implements BindingGenerator<HessianWireSour
     }
 
     public HessianWireTargetDefinition generateWireTarget(LogicalBinding<HessianBindingDefinition> logicalBinding,
-                                                          PolicyResult policyResult,
+                                                          Policy policy,
                                                           GeneratorContext generatorContext,
                                                           ReferenceDefinition referenceDefinition)
             throws GenerationException {

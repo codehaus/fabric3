@@ -19,7 +19,6 @@
 package org.fabric3.binding.jms.model.physical;
 
 import java.net.URI;
-import java.util.Set;
 
 import javax.xml.namespace.QName;
 
@@ -36,7 +35,7 @@ import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalBinding;
-import org.fabric3.spi.policy.PolicyResult;
+import org.fabric3.spi.policy.Policy;
 import org.osoa.sca.Constants;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
@@ -82,13 +81,13 @@ public class JmsBindingGenerator implements BindingGenerator<JmsWireSourceDefini
 
 
     public JmsWireSourceDefinition generateWireSource(LogicalBinding<JmsBindingDefinition> logicalBinding,
-                                                      PolicyResult policyResult,
+                                                      Policy policy,
                                                       GeneratorContext context,
                                                       ServiceDefinition serviceDefinition) throws GenerationException {
         
         ServiceContract<?> serviceContract = serviceDefinition.getServiceContract();
 
-        TransactionType transactionType = getTransactionType(policyResult, serviceContract, true);
+        TransactionType transactionType = getTransactionType(policy, serviceContract, true);
         
         URI classloader = classLoaderGenerator.generate(logicalBinding, context);
         return new JmsWireSourceDefinition(logicalBinding.getBinding().getMetadata(), transactionType, classloader);
@@ -96,14 +95,14 @@ public class JmsBindingGenerator implements BindingGenerator<JmsWireSourceDefini
     }
 
     public JmsWireTargetDefinition generateWireTarget(LogicalBinding<JmsBindingDefinition> logicalBinding,
-                                                      PolicyResult policyResult,
+                                                      Policy policy,
                                                       GeneratorContext context,
                                                       ReferenceDefinition referenceDefinition)
             throws GenerationException {
         
         ServiceContract<?> serviceContract = referenceDefinition.getServiceContract();
 
-        TransactionType transactionType = getTransactionType(policyResult, serviceContract, false);
+        TransactionType transactionType = getTransactionType(policy, serviceContract, false);
         
         URI classloader = classLoaderGenerator.generate(logicalBinding, context);
         return new JmsWireTargetDefinition(logicalBinding.getBinding().getMetadata(), transactionType, classloader);
@@ -113,12 +112,11 @@ public class JmsBindingGenerator implements BindingGenerator<JmsWireSourceDefini
     /*
      * Gets the transaction type.
      */
-    private TransactionType getTransactionType(PolicyResult policyResult, ServiceContract<?> serviceContract, boolean source) {
+    private TransactionType getTransactionType(Policy policy, ServiceContract<?> serviceContract, boolean source) {
         
         // If any operation has the intent, return that
         for (Operation<?> operation : serviceContract.getOperations()) {
-            Set<Intent> intentsToBeProvided = source ? policyResult.getSourceIntents(operation) : policyResult.getTargetIntents(operation);
-            for (Intent intent : intentsToBeProvided) {
+            for (Intent intent : policy.getProvidedIntents(operation)) {
                 if (TRANSACTED_ONEWAY_GLOBAL.equals(intent.getName())) {
                     return TransactionType.GLOBAL;
                 } else if (TRANSACTED_ONEWAY_LOCAL.equals(intent.getName())) {

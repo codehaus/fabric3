@@ -30,7 +30,7 @@ import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.policy.PolicyResult;
+import org.fabric3.spi.policy.Policy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
@@ -92,7 +92,7 @@ public class MockComponentGenerator implements ComponentGenerator<LogicalCompone
      */
     public MockWireTargetDefinition generateWireTarget(LogicalService service,
                                                        LogicalComponent<ImplementationMock> component,
-                                                       PolicyResult policyResult,
+                                                       Policy policy,
                                                        GeneratorContext context) throws GenerationException {
 
         MockWireTargetDefinition definition = new MockWireTargetDefinition();
@@ -116,7 +116,7 @@ public class MockComponentGenerator implements ComponentGenerator<LogicalCompone
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<ImplementationMock> component,
                                                            LogicalReference reference,
-                                                           PolicyResult policyResult,
+                                                           Policy policy,
                                                            GeneratorContext generatorContext) {
         throw new UnsupportedOperationException("Mock objects cannot be source of a wire");
     }

@@ -31,7 +31,7 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
-import org.fabric3.spi.policy.PolicyResult;
+import org.fabric3.spi.policy.Policy;
 import org.osoa.sca.annotations.Reference;
 
 /**
@@ -50,14 +50,14 @@ public class SingletonGenerator implements ComponentGenerator<LogicalComponent<S
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<SingletonImplementation> source,
                                                            LogicalReference reference,
-                                                           PolicyResult policyResult,
+                                                           Policy policy,
                                                            GeneratorContext context) throws GenerationException {
         throw new UnsupportedOperationException();
     }
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, 
                                                            LogicalComponent<SingletonImplementation> logical,  
-                                                           PolicyResult policyResult,
+                                                           Policy policy,
                                                            GeneratorContext context) throws GenerationException {
         SingletonWireTargetDefinition wireDefinition = new SingletonWireTargetDefinition();
         URI uri = logical.getUri().resolve(service.getUri());

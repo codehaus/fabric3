@@ -18,7 +18,13 @@
  */
 package org.fabric3.spi.policy;
 
+import java.util.Collections;
+import java.util.Set;
+
+import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.definitions.Intent;
+import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 
@@ -32,7 +38,35 @@ public class NullPolicyResolver implements PolicyResolver {
                                             LogicalBinding<?> targetBinding, 
                                             LogicalComponent<?> source, 
                                             LogicalComponent<?> target) throws PolicyResolutionException {
-        return new PolicyResult();
+        return new PolicyResult() {
+
+            public Set<PolicySet> getInterceptedPolicySets(Operation<?> operation) {
+                return Collections.emptySet();
+            }
+
+            public Policy getSourcePolicy() {
+                return new Policy() {
+                    public Set<Intent> getProvidedIntents(Operation<?> operation) {
+                        return Collections.emptySet();
+                    }
+                    public Set<PolicySet> getProvidedPolicySets(Operation<?> operation) {
+                        return Collections.emptySet();
+                    }
+                };
+            }
+
+            public Policy getTargetPolicy() {
+                return new Policy() {
+                    public Set<Intent> getProvidedIntents(Operation<?> operation) {
+                        return Collections.emptySet();
+                    }
+                    public Set<PolicySet> getProvidedPolicySets(Operation<?> operation) {
+                        return Collections.emptySet();
+                    }
+                };
+            }
+            
+        };
     }
 
 }

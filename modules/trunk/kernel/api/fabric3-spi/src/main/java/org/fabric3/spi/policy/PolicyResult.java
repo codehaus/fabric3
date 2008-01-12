@@ -16,13 +16,9 @@
  */
 package org.fabric3.spi.policy;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.fabric3.scdl.Operation;
-import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
 
 /**
@@ -71,152 +67,22 @@ import org.fabric3.scdl.definitions.PolicySet;
  * 
  * @version $Revision$ $Date$
  */
-public class PolicyResult {
-    
-    private final Map<Operation<?>, Set<Intent>> sourceIntents = new HashMap<Operation<?>, Set<Intent>>();
-    private final Map<Operation<?>, Set<Intent>> targetIntents = new HashMap<Operation<?>, Set<Intent>>();
-    
-    private final Map<Operation<?>, Set<PolicySet>> sourcePolicySets = new HashMap<Operation<?>, Set<PolicySet>>();
-    private final Map<Operation<?>, Set<PolicySet>> targetPolicySets = new HashMap<Operation<?>, Set<PolicySet>>();
-    
-    private final Map<Operation<?>, Set<PolicySet>> interceptedPolicySets = new HashMap<Operation<?>, Set<PolicySet>>();
+public interface PolicyResult {
     
     /**
-     * Adds an intent that is requested on the operation and provided by the source 
-     * component implementation or binding type.
-     * 
-     * @param operation Operation against which the intent was requested.
-     * @param intents Intents that are provided.
+     * @return Policies and intents provided at the source end.
      */
-    public void addSourceIntent(Operation<?> operation, Set<Intent> intents) {
-        addIntents(sourceIntents, operation, intents);
-    }
+    public Policy getSourcePolicy();
     
     /**
-     * Gets the intents that are provided by the source component or binding types 
-     * that are requested by the operation.
-     * 
-     * @param operation Operation against which the intent was requested.
-     * @return All intents that are provided.
+     * @return Policies and intents provided at the target end.
      */
-    public Set<Intent> getSourceIntents(Operation<?> operation) {
-        return sourceIntents.get(operation);
-    }
+    public Policy getTargetPolicy();
     
     /**
-     * Adds an intent that is requested on the operation and provided by the target 
-     * component implementation or binding type.
-     * 
-     * @param operation Operation against which the intent was requested.
-     * @param intents Intents that are provided.
+     * @param operation Operation against which interceptors are defined.
+     * @return Interceptors that are defined against the operation.
      */
-    public void addTargetIntent(Operation<?> operation, Set<Intent> intents) {
-        addIntents(targetIntents, operation, intents);
-    }
-    
-    /**
-     * Gets the intents that are provided by the target component or binding types 
-     * that are requested by the operation.
-     * 
-     * @param operation Operation against which the intent was requested.
-     * @return All intents that are provided.
-     */
-    public Set<Intent> getTargetIntents(Operation<?> operation) {
-        return targetIntents.get(operation);
-    }
-    
-    /**
-     * Adds a policy set mapped to the inetnt that is requested on the operation 
-     * and provided by the source component implementation or binding type.
-     * 
-     * @param operation Operation against which the intent was requested.
-     * @param policySets Resolved policy sets.
-     */
-    public void addSourcePolicySet(Operation<?> operation, Set<PolicySet> policySets) {
-        addPolicySets(sourcePolicySets, operation, policySets);
-    }
-    
-    /**
-     * Gets all the policy sets that are provided by the source component 
-     * implementation or binding type that were resolved against the intents 
-     * requested against the operation.
-     * 
-     * @param operation Operation against which the intent was requested.
-     * @return Resolved policy sets.
-     */
-    public Set<PolicySet> getSourcePolicySets(Operation<?> operation) {
-        return sourcePolicySets.get(operation);
-    }
-    
-    /**
-     * Adds a policy set mapped to the inetnt that is requested on the operation 
-     * and provided by the target component implementation or binding type.
-     * 
-     * @param operation Operation against which the intent was requested.
-     * @param policySets Resolved policy sets.
-     */
-    public void addTargetPolicySet(Operation<?> operation, Set<PolicySet> policySets) {
-        addPolicySets(targetPolicySets, operation, policySets);
-    }
-    
-    /**
-     * Gets all the policy sets that are provided by the target component 
-     * implementation or binding type that were resolved against the intents 
-     * requested against the operation.
-     * 
-     * @param operation Operation against which the intent was requested.
-     * @return Resolved policy sets.
-     */
-    public Set<PolicySet> getTargetPolicySets(Operation<?> operation) {
-        return targetPolicySets.get(operation);
-    }
-    
-    /**
-     * Adds a policy set mapped to the intent that is requested on the operation 
-     * and is implemented as an interceptor.
-     * 
-     * @param operation Operation against which the intent was requested.
-     * @param policySets Resolved policy sets.
-     */
-    public void addInterceptedPolicySet(Operation<?> operation, Set<PolicySet> policySets) {
-        addPolicySets(interceptedPolicySets, operation, policySets);
-    }
-    
-    /**
-     * Gets all the policy sets that are implemented as interceptors that were 
-     * resolved against the intents requested against the operation.
-     * 
-     * @param operation Operation against which the intent was requested.
-     * @return Resolved policy sets.
-     */
-    public Set<PolicySet> getInterceptedPolicySets(Operation<?> operation) {
-        return interceptedPolicySets.get(operation);
-    }
-    
-    /*
-     * Adds an intent to an intent map.
-     */
-    private void addIntents(Map<Operation<?>, Set<Intent>> intentMap, Operation<?> operation, Set<Intent> intents) {
-        
-        if (!intentMap.containsKey(operation)) {
-            intentMap.put(operation, new HashSet<Intent>());
-        }
-        
-        intentMap.get(operation).addAll(intents);
-        
-    }
-    
-    /*
-     * Adds a policy set to a policy set map.
-     */
-    private void addPolicySets(Map<Operation<?>, Set<PolicySet>> policySetMap, Operation<?> operation, Set<PolicySet> policySet) {
-        
-        if (!policySetMap.containsKey(operation)) {
-            policySetMap.put(operation, new HashSet<PolicySet>());
-        }
-        
-        policySetMap.get(operation).addAll(policySet);
-        
-    }
+    public Set<PolicySet> getInterceptedPolicySets(Operation<?> operation);
 
 }

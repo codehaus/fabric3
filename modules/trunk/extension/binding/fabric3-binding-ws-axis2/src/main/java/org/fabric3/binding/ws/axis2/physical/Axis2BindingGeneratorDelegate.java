@@ -17,7 +17,6 @@
 package org.fabric3.binding.ws.axis2.physical;
 
 import java.net.URI;
-import java.util.Set;
 
 import javax.xml.namespace.QName;
 
@@ -33,7 +32,7 @@ import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.spi.model.instance.LogicalBinding;
-import org.fabric3.spi.policy.PolicyResult;
+import org.fabric3.spi.policy.Policy;
 import org.osoa.sca.annotations.Reference;
 
 /**
@@ -51,7 +50,7 @@ public class Axis2BindingGeneratorDelegate implements BindingGeneratorDelegate<W
     }
 
     public Axis2WireSourceDefinition generateWireSource(LogicalBinding<WsBindingDefinition> binding,
-                                                        PolicyResult policyResult, 
+                                                        Policy policy, 
                                                         GeneratorContext context, 
                                                         ServiceDefinition serviceDefinition) throws GenerationException {
         
@@ -67,14 +66,14 @@ public class Axis2BindingGeneratorDelegate implements BindingGeneratorDelegate<W
         URI classloader = classLoaderGenerator.generate(binding, context);
         hwsd.setClassloaderURI(classloader);
         
-        setPolicyConfigs(hwsd, policyResult, contract, true);
+        setPolicyConfigs(hwsd, policy, contract);
         
         return hwsd;
         
     }
 
     public Axis2WireTargetDefinition generateWireTarget(LogicalBinding<WsBindingDefinition> binding,
-                                                        PolicyResult policyResult,
+                                                        Policy policy,
                                                         GeneratorContext context, 
                                                         ReferenceDefinition referenceDefinition) throws GenerationException {
 
@@ -90,22 +89,17 @@ public class Axis2BindingGeneratorDelegate implements BindingGeneratorDelegate<W
         URI classloader = classLoaderGenerator.generate(binding, context);
         hwtd.setClassloaderURI(classloader);
         
-        setPolicyConfigs(hwtd, policyResult, contract, false);
+        setPolicyConfigs(hwtd, policy, contract);
         
         return hwtd;
 
     }
     
-    private void setPolicyConfigs(Axis2PolicyAware policyAware, 
-                                  PolicyResult policyResult, 
-                                  ServiceContract<?> serviceContract,
-                                  boolean source) throws Axis2GenerationException {
+    private void setPolicyConfigs(Axis2PolicyAware policyAware, Policy policy, ServiceContract<?> serviceContract) throws Axis2GenerationException {
         
         for (Operation<?> operation : serviceContract.getOperations()) {
             
-            Set<PolicySet> policySets = source ? policyResult.getSourcePolicySets(operation) : policyResult.getTargetPolicySets(operation);
-            
-            for (PolicySet policySet : policySets) {
+            for (PolicySet policySet : policy.getProvidedPolicySets(operation)) {
                 
                 if (POLICY_ELEMENT_NAME.equals(policySet.getExtensionName())) {
                     throw new Axis2GenerationException("Unsupported policy element:" + policySet.getExtensionName());

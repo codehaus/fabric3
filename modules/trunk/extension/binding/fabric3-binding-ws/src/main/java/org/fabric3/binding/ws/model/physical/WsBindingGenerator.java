@@ -19,17 +19,10 @@
 package org.fabric3.binding.ws.model.physical;
 
 import java.util.Map;
-import java.util.Set;
-
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.ws.model.logical.WsBindingDefinition;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
-import org.fabric3.scdl.definitions.Intent;
-import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.BindingGeneratorDelegate;
 import org.fabric3.spi.generator.GenerationException;
@@ -38,7 +31,10 @@ import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
-import org.fabric3.spi.policy.PolicyResult;
+import org.fabric3.spi.policy.Policy;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Implementation of the WS binding generator.
@@ -66,27 +62,19 @@ public class WsBindingGenerator implements BindingGenerator<PhysicalWireSourceDe
     }
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalBinding<WsBindingDefinition> logicalBinding,
-                                                           PolicyResult policyResult,
+                                                           Policy policy,
                                                            GeneratorContext generatorContext,
                                                            ServiceDefinition serviceDefinition)
             throws GenerationException {
-
-        BindingGeneratorDelegate<WsBindingDefinition> delegate = getDelegate(logicalBinding);
-
-        return delegate.generateWireSource(logicalBinding, policyResult, generatorContext, serviceDefinition);
-
+        return getDelegate(logicalBinding).generateWireSource(logicalBinding, policy, generatorContext, serviceDefinition);
     }
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalBinding<WsBindingDefinition> logicalBinding,
-                                                           PolicyResult policyResult,
+                                                           Policy policy,
                                                            GeneratorContext generatorContext,
                                                            ReferenceDefinition referenceDefinition)
             throws GenerationException {
-
-        BindingGeneratorDelegate<WsBindingDefinition> delegate = getDelegate(logicalBinding);
-
-        return delegate.generateWireTarget(logicalBinding, policyResult, generatorContext, referenceDefinition);
-
+        return getDelegate(logicalBinding).generateWireTarget(logicalBinding, policy, generatorContext, referenceDefinition);
     }
 
     /*
