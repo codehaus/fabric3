@@ -20,12 +20,9 @@ package org.fabric3.spring;
 
 import java.net.URI;
 import java.util.Iterator;
-import java.util.Set;
 
 import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
 import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.definitions.Intent;
-import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
@@ -38,6 +35,7 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.policy.PolicyResult;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
@@ -48,15 +46,14 @@ import org.osoa.sca.annotations.Reference;
  */
 @EagerInit
 public class SpringComponentGenerator implements ComponentGenerator<LogicalComponent<SpringImplementation>> {
-    private final InstanceFactoryGenerationHelper helper;
+
     private final ClassLoaderGenerator classLoaderGenerator;
 
     public SpringComponentGenerator(@Reference GeneratorRegistry registry,
-                                  @Reference ClassLoaderGenerator classLoaderGenerator,
-                                  @Reference InstanceFactoryGenerationHelper helper) {
+                                   @Reference ClassLoaderGenerator classLoaderGenerator,
+                                   @Reference InstanceFactoryGenerationHelper helper) {
         this.classLoaderGenerator = classLoaderGenerator;
         registry.register(SpringImplementation.class, this);
-        this.helper = helper;
     }
 
     /**
@@ -109,8 +106,7 @@ public class SpringComponentGenerator implements ComponentGenerator<LogicalCompo
      */
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<SpringImplementation> source,
                                                            LogicalReference reference,
-                                                           Set<Intent> intentsToBeProvided,
-                                                           Set<PolicySet> policySetsToBeProvided,
+                                                           PolicyResult policyResult,
                                                            GeneratorContext context) throws GenerationException {
         SpringWireSourceDefinition wireDefinition = new SpringWireSourceDefinition();
         wireDefinition.setUri(reference.getUri());
@@ -133,8 +129,7 @@ public class SpringComponentGenerator implements ComponentGenerator<LogicalCompo
      */
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
                                                            LogicalComponent<SpringImplementation> target,   
-                                                           Set<Intent> intentsToBeProvided,
-                                                           Set<PolicySet> policySetsToBeProvided,
+                                                           PolicyResult policyResult,
                                                            GeneratorContext context) throws GenerationException {
         SpringWireTargetDefinition wireDefinition = new SpringWireTargetDefinition();
         URI uri;

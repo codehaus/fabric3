@@ -43,9 +43,9 @@ public interface PolicyResolver {
      * @throws PolicyResolutionException If unable to resolve any policies.
      */
     public abstract PolicyResult resolvePolicies(ServiceContract<?> serviceContract,
-                                                     LogicalBinding<?> sourceBinding, 
-                                                     LogicalBinding<?> targetBinding, 
-                                                     LogicalComponent<?> source, 
-                                                     LogicalComponent<?> target) throws PolicyResolutionException;
+                                                 LogicalBinding<?> sourceBinding, 
+                                                 LogicalBinding<?> targetBinding, 
+                                                 LogicalComponent<?> source, 
+                                                 LogicalComponent<?> target) throws PolicyResolutionException;
 
 }

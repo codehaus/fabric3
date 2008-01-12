@@ -33,6 +33,7 @@ import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.spi.model.instance.LogicalBinding;
+import org.fabric3.spi.policy.PolicyResult;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
@@ -50,8 +51,7 @@ public class CxfBindingGeneratorDelegate implements BindingGeneratorDelegate<WsB
     }
 
     public CxfWireSourceDefinition generateWireSource(LogicalBinding<WsBindingDefinition> logicalBinding,
-                                                     Set<Intent> intentsToBeProvided,
-                                                     Set<PolicySet> policySetsToBeProvided,
+                                                     PolicyResult policyResult,
                                                      GeneratorContext generatorContext,
                                                      ServiceDefinition serviceDefinition) throws GenerationException {
         CxfWireSourceDefinition hwsd = new CxfWireSourceDefinition();
@@ -68,8 +68,7 @@ public class CxfBindingGeneratorDelegate implements BindingGeneratorDelegate<WsB
     }
 
     public CxfWireTargetDefinition generateWireTarget(LogicalBinding<WsBindingDefinition> logicalBinding,
-                                                     Set<Intent> intentsToBeProvided,
-                                                     Set<PolicySet> policySetsToBeProvided,
+                                                     PolicyResult policyResult,
                                                      GeneratorContext generatorContext,
                                                      ReferenceDefinition referenceDefinition)
             throws GenerationException {

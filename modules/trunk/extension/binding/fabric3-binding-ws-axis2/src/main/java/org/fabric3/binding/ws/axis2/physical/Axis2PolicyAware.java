@@ -27,17 +27,14 @@ public interface Axis2PolicyAware {
 
     /**
      * @return Policy definitions.
+     * TODO Allow overloaded methods.
      */
-    public Set<Element> getPolicyDefinitions();
+    public Set<Element> getPolicyDefinitions(String operation);
 
     /**
      * @param policyDefinitions Policy definitions.
+     * TODO Allow overloaded methods.
      */
-    public void setPolicyDefinitions(Set<Element> policyDefinitions);
-
-    /**
-     * @param policyDefinition Policy definition.
-     */
-    public void addPolicyDefinition(Element policyDefinition);
+    public void addPolicyDefinition(String operation, Element policyDefinitions);
 
 }

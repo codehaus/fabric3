@@ -20,25 +20,27 @@ package org.fabric3.binding.jms.model.physical;
 
 import java.net.URI;
 import java.util.Set;
-import javax.xml.namespace.QName;
 
-import org.osoa.sca.Constants;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
+import javax.xml.namespace.QName;
 
 import org.fabric3.binding.jms.TransactionType;
 import org.fabric3.binding.jms.model.logical.JmsBindingDefinition;
+import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.definitions.Intent;
-import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalBinding;
+import org.fabric3.spi.policy.PolicyResult;
+import org.osoa.sca.Constants;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Binding generator that creates the physical source and target definitions for wires. Message acknowledgement is
@@ -80,25 +82,29 @@ public class JmsBindingGenerator implements BindingGenerator<JmsWireSourceDefini
 
 
     public JmsWireSourceDefinition generateWireSource(LogicalBinding<JmsBindingDefinition> logicalBinding,
-                                                      Set<Intent> intentsToBeProvided,
-                                                      Set<PolicySet> policySetsToBeProvided,
+                                                      PolicyResult policyResult,
                                                       GeneratorContext context,
                                                       ServiceDefinition serviceDefinition) throws GenerationException {
+        
+        ServiceContract<?> serviceContract = serviceDefinition.getServiceContract();
 
-        TransactionType transactionType = getTransactionType(intentsToBeProvided);
+        TransactionType transactionType = getTransactionType(policyResult, serviceContract, true);
+        
         URI classloader = classLoaderGenerator.generate(logicalBinding, context);
         return new JmsWireSourceDefinition(logicalBinding.getBinding().getMetadata(), transactionType, classloader);
 
     }
 
     public JmsWireTargetDefinition generateWireTarget(LogicalBinding<JmsBindingDefinition> logicalBinding,
-                                                      Set<Intent> intentsToBeProvided,
-                                                      Set<PolicySet> policySetsToBeProvided,
+                                                      PolicyResult policyResult,
                                                       GeneratorContext context,
                                                       ReferenceDefinition referenceDefinition)
             throws GenerationException {
+        
+        ServiceContract<?> serviceContract = referenceDefinition.getServiceContract();
 
-        TransactionType transactionType = getTransactionType(intentsToBeProvided);
+        TransactionType transactionType = getTransactionType(policyResult, serviceContract, false);
+        
         URI classloader = classLoaderGenerator.generate(logicalBinding, context);
         return new JmsWireTargetDefinition(logicalBinding.getBinding().getMetadata(), transactionType, classloader);
 
@@ -107,15 +113,19 @@ public class JmsBindingGenerator implements BindingGenerator<JmsWireSourceDefini
     /*
      * Gets the transaction type.
      */
-    private TransactionType getTransactionType(Set<Intent> intentsToBeProvided) {
-
-        for (Intent intent : intentsToBeProvided) {
-            if (TRANSACTED_ONEWAY_GLOBAL.equals(intent.getName())) {
-                return TransactionType.GLOBAL;
-            } else if (TRANSACTED_ONEWAY_LOCAL.equals(intent.getName())) {
-                return TransactionType.LOCAL;
-            } else if (TRANSACTED_ONEWAY.equals(intent.getName())) {
-                return TransactionType.GLOBAL;
+    private TransactionType getTransactionType(PolicyResult policyResult, ServiceContract<?> serviceContract, boolean source) {
+        
+        // If any operation has the intent, return that
+        for (Operation<?> operation : serviceContract.getOperations()) {
+            Set<Intent> intentsToBeProvided = source ? policyResult.getSourceIntents(operation) : policyResult.getTargetIntents(operation);
+            for (Intent intent : intentsToBeProvided) {
+                if (TRANSACTED_ONEWAY_GLOBAL.equals(intent.getName())) {
+                    return TransactionType.GLOBAL;
+                } else if (TRANSACTED_ONEWAY_LOCAL.equals(intent.getName())) {
+                    return TransactionType.LOCAL;
+                } else if (TRANSACTED_ONEWAY.equals(intent.getName())) {
+                    return TransactionType.GLOBAL;
+                }
             }
         }
 

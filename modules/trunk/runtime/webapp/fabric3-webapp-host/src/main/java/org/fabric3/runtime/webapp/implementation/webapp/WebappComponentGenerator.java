@@ -21,7 +21,6 @@ package org.fabric3.runtime.webapp.implementation.webapp;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import org.fabric3.pojo.processor.JavaIntrospectionHelper;
 import org.fabric3.scdl.AbstractComponentType;
@@ -31,8 +30,6 @@ import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ResourceDefinition;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
-import org.fabric3.scdl.definitions.Intent;
-import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
@@ -45,6 +42,7 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.policy.PolicyResult;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
@@ -107,8 +105,7 @@ public class WebappComponentGenerator implements ComponentGenerator<LogicalCompo
      */
     public WebappWireSourceDefinition generateWireSource(LogicalComponent<WebappImplementation> source,
                                                          LogicalReference reference,
-                                                         Set<Intent> intentsToBeProvided,
-                                                         Set<PolicySet> policySetsToBeProvided,
+                                                         PolicyResult policyResult,
                                                          GeneratorContext context) throws GenerationException {
 
         WebappWireSourceDefinition sourceDefinition = new WebappWireSourceDefinition();
@@ -123,8 +120,7 @@ public class WebappComponentGenerator implements ComponentGenerator<LogicalCompo
      */
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, 
                                                            LogicalComponent<WebappImplementation> arg1,  
-                                                           Set<Intent> intentsToBeProvided,
-                                                           Set<PolicySet> policySetsToBeProvided,
+                                                           PolicyResult policyResult,
                                                            GeneratorContext context) throws GenerationException {
         // TODO Auto-generated method stub
         return null;

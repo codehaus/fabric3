@@ -20,6 +20,7 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
@@ -123,17 +124,39 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
             
             configurationContext.getAxisConfiguration().addService(axisService);
             
-            for (Element policyDefinition : pwsd.getPolicyDefinitions()) {
+            applyPolicies(pwsd, axisService);
+            
+        } catch (Exception e) {
+            throw new WiringException(e);
+        }
+        
+    }
+
+    private void applyPolicies(Axis2WireSourceDefinition pwsd, AxisService axisService) throws WiringException {
+        
+        for (Iterator<?> i = axisService.getOperations(); i.hasNext();) {
+            
+            AxisOperation axisOp = (AxisOperation) i.next();
+            String operation = axisOp.getName().getLocalPart();
+            
+            System.err.println("Operation name " + operation);
+            
+            Set<Element> policies = pwsd.getPolicyDefinitions(operation);
+            if (policies == null || policies.size() == 0) {
+                continue;
+            }
+            
+            
+            for (Element policyDefinition : policies) {
                 QName policyName = new QName(policyDefinition.getNamespaceURI(), policyDefinition.getNodeName());
                 PolicyApplier policyApplier = policyApplierRegistry.getPolicyApplier(policyName);
                 if (policyApplier == null) {
                     throw new WiringException("Unknown policy " + policyName);
                 }
+                // TODO the policy needs to be applied at operation level
                 policyApplier.applyPolicy(axisService, policyDefinition);
             }
             
-        } catch (Exception e) {
-            throw new WiringException(e);
         }
         
     }

@@ -18,11 +18,7 @@
  */
 package org.fabric3.spi.generator;
 
-import java.util.Set;
-
 import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.definitions.Intent;
-import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
@@ -30,6 +26,7 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.policy.PolicyResult;
 
 /**
  * Implementations are responsible for generating {@link org.fabric3.spi.model.physical.PhysicalChangeSet} metadata used
@@ -62,10 +59,9 @@ public interface ComponentGenerator<C extends LogicalComponent<? extends Impleme
      * @return the metadata used to attach the wire to its source on the service node
      * @throws GenerationException if an error occurs during the generation process
      */
-    PhysicalWireSourceDefinition generateWireSource(C source,
-                                                    LogicalReference reference,
-                                                    Set<Intent> intentsToBeProvided,
-                                                    Set<PolicySet> policySetsToBeProvided,
+    PhysicalWireSourceDefinition generateWireSource(C source, 
+                                                    LogicalReference reference, 
+                                                    PolicyResult policyResult,
                                                     GeneratorContext context) throws GenerationException;
 
     /**
@@ -80,8 +76,7 @@ public interface ComponentGenerator<C extends LogicalComponent<? extends Impleme
      */
     PhysicalWireTargetDefinition generateWireTarget(LogicalService service, 
                                                     C target, 
-                                                    Set<Intent> intentsToBeProvided,
-                                                    Set<PolicySet> policySetsToBeProvided,
+                                                    PolicyResult policyResult,
                                                     GeneratorContext context) throws GenerationException;
 
     /**

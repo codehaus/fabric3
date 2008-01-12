@@ -19,17 +19,12 @@ package org.fabric3.binding.ws.axis2.wire;
 import java.util.Map;
 import java.util.Set;
 
-import org.osoa.sca.annotations.Destroy;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
-import org.w3c.dom.Element;
-
 import org.fabric3.binding.ws.axis2.Axis2ServiceProvisioner;
 import org.fabric3.binding.ws.axis2.config.F3Configurator;
 import org.fabric3.binding.ws.axis2.physical.Axis2WireSourceDefinition;
 import org.fabric3.binding.ws.axis2.physical.Axis2WireTargetDefinition;
 import org.fabric3.binding.ws.axis2.policy.PolicyApplierRegistry;
+import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
@@ -41,7 +36,11 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
-import org.fabric3.spi.ObjectFactory;
+import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Element;
 
 /**
  * @version $Revision$ $Date$
@@ -63,7 +62,7 @@ public class Axis2WireAttacher implements SourceWireAttacher<Axis2WireSourceDefi
      */
     public Axis2WireAttacher(@Reference Axis2ServiceProvisioner serviceProvisioner, 
                              @Reference SourceWireAttacherRegistry sourceWireAttacherRegistry,
-                              @Reference TargetWireAttacherRegistry targetWireAttacherRegistry,
+                             @Reference TargetWireAttacherRegistry targetWireAttacherRegistry,
                              @Reference PolicyApplierRegistry policyApplierRegistry,
                              @Reference F3Configurator f3Configurator) {
         this.serviceProvisioner = serviceProvisioner;
@@ -96,9 +95,11 @@ public class Axis2WireAttacher implements SourceWireAttacher<Axis2WireSourceDefi
     public void attachToTarget(PhysicalWireSourceDefinition source, Axis2WireTargetDefinition target, Wire wire)
             throws WiringException {
         
-        Set<Element> policies = target.getPolicyDefinitions();
-        
         for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
+            
+            String operation = entry.getKey().getName();
+            
+            Set<Element> policies = target.getPolicyDefinitions(operation);
             Interceptor interceptor = new Axis2TargetInterceptor(target, 
                                                                  entry.getKey().getName(), 
                                                                  policies, 

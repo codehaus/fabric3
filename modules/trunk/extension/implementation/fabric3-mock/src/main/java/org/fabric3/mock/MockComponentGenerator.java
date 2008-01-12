@@ -17,11 +17,8 @@
 package org.fabric3.mock;
 
 import java.net.URI;
-import java.util.Set;
 
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.definitions.Intent;
-import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
@@ -33,6 +30,7 @@ import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
+import org.fabric3.spi.policy.PolicyResult;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
@@ -94,8 +92,7 @@ public class MockComponentGenerator implements ComponentGenerator<LogicalCompone
      */
     public MockWireTargetDefinition generateWireTarget(LogicalService service,
                                                        LogicalComponent<ImplementationMock> component,
-                                                       Set<Intent> implementationIntentsToBeProvided,
-                                                       Set<PolicySet> implememenantionPolicySetsToBeProvided,
+                                                       PolicyResult policyResult,
                                                        GeneratorContext context) throws GenerationException {
 
         MockWireTargetDefinition definition = new MockWireTargetDefinition();
@@ -119,8 +116,7 @@ public class MockComponentGenerator implements ComponentGenerator<LogicalCompone
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<ImplementationMock> component,
                                                            LogicalReference reference,
-                                                           Set<Intent> implementationIntentsToBeProvided,
-                                                           Set<PolicySet> implememenantionPolicySetsToBeProvided,
+                                                           PolicyResult policyResult,
                                                            GeneratorContext generatorContext) {
         throw new UnsupportedOperationException("Mock objects cannot be source of a wire");
     }

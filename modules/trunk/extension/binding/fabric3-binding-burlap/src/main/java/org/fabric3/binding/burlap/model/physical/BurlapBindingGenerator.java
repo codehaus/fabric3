@@ -19,23 +19,20 @@
 package org.fabric3.binding.burlap.model.physical;
 
 import java.net.URI;
-import java.util.Set;
-
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.burlap.model.logical.BurlapBindingDefinition;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
-import org.fabric3.scdl.definitions.Intent;
-import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalBinding;
+import org.fabric3.spi.policy.PolicyResult;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Implementation of the hessian binding generator.
@@ -59,8 +56,7 @@ public class BurlapBindingGenerator implements BindingGenerator<BurlapWireSource
     }
 
     public BurlapWireSourceDefinition generateWireSource(LogicalBinding<BurlapBindingDefinition> logicalBinding,
-                                                         Set<Intent> intentsToBeProvided,
-                                                         Set<PolicySet> policySetsToBeProvided,
+                                                         PolicyResult policyResult,
                                                          GeneratorContext context,
                                                          ServiceDefinition serviceDefinition)
             throws GenerationException {
@@ -72,8 +68,7 @@ public class BurlapBindingGenerator implements BindingGenerator<BurlapWireSource
     }
 
     public BurlapWireTargetDefinition generateWireTarget(LogicalBinding<BurlapBindingDefinition> logicalBinding,
-                                                         Set<Intent> intentsToBeProvided,
-                                                         Set<PolicySet> policySetsToBeProvided,
+                                                         PolicyResult policyResult,
                                                          GeneratorContext context,
                                                          ReferenceDefinition referenceDefinition)
             throws GenerationException {

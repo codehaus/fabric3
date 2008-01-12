@@ -22,7 +22,6 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.definitions.BindingType;
 import org.fabric3.scdl.definitions.Intent;
@@ -41,29 +40,19 @@ public class InteractionPolicyHelperImpl extends AbstractPolicyHelper implements
         super(definitionsRegistry);
     }
 
-    public Set<Intent> getInteractionIntentsToBeProvided(LogicalBinding<?> logicalBinding) throws PolicyResolutionException {
-
-        BindingDefinition bindingDefinition = logicalBinding.getBinding();
+    public Set<Intent> getProvidedIntents(LogicalBinding<?> logicalBinding, Operation<?> operation) throws PolicyResolutionException {
+        
         QName type = logicalBinding.getBinding().getType();
         BindingType bindingType = definitionsRegistry.getDefinition(type, BindingType.class);
         
         // FIXME This should not happen, all binding types should be registsred
-        if(bindingType == null) {
+        if (bindingType == null) {
             return Collections.emptySet();
         }
 
         Set<QName> mayProvidedIntents = bindingType.getMayProvide();
         
-        // Aggregate all the intents from the ancestors
-        Set<QName> intentNames = new HashSet<QName>();
-        intentNames.addAll(bindingDefinition.getIntents());
-        intentNames.addAll(aggregateIntents(logicalBinding));
-
-        // Expand all the profile intents
-        Set<Intent> requiredIntents = resolveProfileIntents(intentNames);
-
-        // Remove intents not applicable to the artifact
-        filterInvalidIntents(Intent.BINDING, requiredIntents);
+        Set<Intent> requiredIntents = getRequestedIntents(logicalBinding, operation);
         
         Set<Intent> intentsToBeProvided = new HashSet<Intent>();
         for(Intent intent : requiredIntents) {
@@ -71,11 +60,13 @@ public class InteractionPolicyHelperImpl extends AbstractPolicyHelper implements
                 intentsToBeProvided.add(intent);
             }
         }
+        
         return intentsToBeProvided;
         
     }
-    public Set<PolicySet> resolveInteractionIntents(LogicalBinding<?> logicalBinding, Operation<?> operation) throws PolicyResolutionException {
-        
+    
+    public Set<PolicySet> resolveIntents(LogicalBinding<?> logicalBinding, Operation<?> operation) throws PolicyResolutionException {
+
         QName type = logicalBinding.getBinding().getType();
         BindingType bindingType = definitionsRegistry.getDefinition(type, BindingType.class);
         
@@ -83,20 +74,12 @@ public class InteractionPolicyHelperImpl extends AbstractPolicyHelper implements
         Set<QName> mayProvidedIntents = new HashSet<QName>();
 
         // FIXME This should not happen, all binding types should be registsred
-        if(bindingType != null) {
+        if (bindingType != null) {
             alwaysProvidedIntents = bindingType.getAlwaysProvide();
             mayProvidedIntents = bindingType.getMayProvide();
         }
 
-        // Aggregate all the intents from the ancestors
-        Set<QName> intentNames = aggregateIntents(logicalBinding);
-        intentNames.addAll(operation.getIntents());
-        
-        // Expand all the profile intents
-        Set<Intent> requiredIntents = resolveProfileIntents(intentNames);
-        
-        // Remove intents not applicable to the artifact
-        filterInvalidIntents(Intent.BINDING, requiredIntents);
+        Set<Intent> requiredIntents = getRequestedIntents(logicalBinding, operation);
         
         // Remove intents that are provided
         for(Intent intent : requiredIntents) {
@@ -112,6 +95,25 @@ public class InteractionPolicyHelperImpl extends AbstractPolicyHelper implements
         }
         
         return policies;
+        
+    }
+
+    private Set<Intent> getRequestedIntents(LogicalBinding<?> logicalBinding, 
+                                            Operation<?> operation) throws PolicyResolutionException {
+        
+        // Aggregate all the intents from the ancestors
+        Set<QName> intentNames = new HashSet<QName>();
+        intentNames.addAll(operation.getIntents());
+        intentNames.addAll(logicalBinding.getBinding().getIntents());
+        intentNames.addAll(aggregateIntents(logicalBinding));
+        
+        // Expand all the profile intents
+        Set<Intent> requiredIntents = resolveProfileIntents(intentNames);
+        
+        // Remove intents not applicable to the artifact
+        filterInvalidIntents(Intent.BINDING, requiredIntents);
+        
+        return requiredIntents;
         
     }
 

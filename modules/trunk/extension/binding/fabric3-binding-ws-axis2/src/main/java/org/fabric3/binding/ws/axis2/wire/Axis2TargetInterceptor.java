@@ -119,14 +119,7 @@ public class Axis2TargetInterceptor implements Interceptor {
                 axisService.engageModule(axisModule);
             }
             
-            for (Element policy : policies) {
-                QName policyName = new QName(policy.getNamespaceURI(), policy.getNodeName());
-                PolicyApplier policyApplier = policyApplierRegistry.getPolicyApplier(policyName);
-                if (policyApplier == null) {
-                    throw new AssertionError("Unknown policy " + policyName);
-                }
-                policyApplier.applyPolicy(axisService, policy);
-            }
+            applyPolicies(axisService);
             
             OMElement result = sender.sendReceive(method);
             
@@ -140,6 +133,23 @@ public class Axis2TargetInterceptor implements Interceptor {
             throw new AssertionError(e);
         } finally {
             currentThread.setContextClassLoader(oldCl);
+        }
+        
+    }
+
+    private void applyPolicies(AxisService axisService) throws AssertionError {
+        
+        if (policies == null) {
+            return;
+        }
+        
+        for (Element policy : policies) {
+            QName policyName = new QName(policy.getNamespaceURI(), policy.getNodeName());
+            PolicyApplier policyApplier = policyApplierRegistry.getPolicyApplier(policyName);
+            if (policyApplier == null) {
+                throw new AssertionError("Unknown policy " + policyName);
+            }
+            policyApplier.applyPolicy(axisService, policy);
         }
         
     }

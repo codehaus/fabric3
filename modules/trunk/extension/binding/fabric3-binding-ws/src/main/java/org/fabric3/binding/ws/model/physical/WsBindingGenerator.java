@@ -38,6 +38,7 @@ import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.policy.PolicyResult;
 
 /**
  * Implementation of the WS binding generator.
@@ -65,36 +66,26 @@ public class WsBindingGenerator implements BindingGenerator<PhysicalWireSourceDe
     }
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalBinding<WsBindingDefinition> logicalBinding,
-                                                           Set<Intent> intentsToBeProvided,
-                                                           Set<PolicySet> policySetsToBeProvided,
+                                                           PolicyResult policyResult,
                                                            GeneratorContext generatorContext,
                                                            ServiceDefinition serviceDefinition)
             throws GenerationException {
 
         BindingGeneratorDelegate<WsBindingDefinition> delegate = getDelegate(logicalBinding);
 
-        return delegate.generateWireSource(logicalBinding,
-                                           intentsToBeProvided,
-                                           policySetsToBeProvided,
-                                           generatorContext,
-                                           serviceDefinition);
+        return delegate.generateWireSource(logicalBinding, policyResult, generatorContext, serviceDefinition);
 
     }
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalBinding<WsBindingDefinition> logicalBinding,
-                                                           Set<Intent> intentsToBeProvided,
-                                                           Set<PolicySet> policySetsToBeProvided,
+                                                           PolicyResult policyResult,
                                                            GeneratorContext generatorContext,
                                                            ReferenceDefinition referenceDefinition)
             throws GenerationException {
 
         BindingGeneratorDelegate<WsBindingDefinition> delegate = getDelegate(logicalBinding);
 
-        return delegate.generateWireTarget(logicalBinding,
-                                           intentsToBeProvided,
-                                           policySetsToBeProvided,
-                                           generatorContext,
-                                           referenceDefinition);
+        return delegate.generateWireTarget(logicalBinding, policyResult, generatorContext, referenceDefinition);
 
     }
 

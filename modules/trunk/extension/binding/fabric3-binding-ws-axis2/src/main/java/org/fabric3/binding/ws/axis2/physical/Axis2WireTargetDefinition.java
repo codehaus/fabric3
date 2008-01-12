@@ -17,9 +17,12 @@
 package org.fabric3.binding.ws.axis2.physical;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
+import org.fabric3.scdl.Operation;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.w3c.dom.Element;
 
@@ -29,7 +32,7 @@ import org.w3c.dom.Element;
 public class Axis2WireTargetDefinition extends PhysicalWireTargetDefinition implements Axis2PolicyAware {
 
     private String referenceInterface;
-    private Set<Element> policyDefinitions = new HashSet<Element>();
+    private Map<String, Set<Element>> policyDefinitions = new HashMap<String, Set<Element>>();
     private URI classloaderURI;
 
     /**
@@ -63,22 +66,26 @@ public class Axis2WireTargetDefinition extends PhysicalWireTargetDefinition impl
     /**
      * @return Policy definitions.
      */
-    public Set<Element> getPolicyDefinitions() {
-        return policyDefinitions;
+    public Set<Element> getPolicyDefinitions(Operation<?> operation) {
+        return policyDefinitions.get(operation);
+    }
+
+    /**
+     * @return Policy definitions.
+     */
+    public Set<Element> getPolicyDefinitions(String operation) {
+        return policyDefinitions.get(operation);
     }
 
     /**
      * @param policyDefinitions Policy definitions.
      */
-    public void setPolicyDefinitions(Set<Element> policyDefinitions) {
-        this.policyDefinitions = policyDefinitions;
-    }
-
-    /**
-     * @param policyDefinition Policy definition.
-     */
-    public void addPolicyDefinition(Element policyDefinition) {
-        policyDefinitions.add(policyDefinition);
+    public void addPolicyDefinition(String operation, Element policyDefinitions) {
+        
+        if (!this.policyDefinitions.containsKey(operation)) {
+            this.policyDefinitions.put(operation, new HashSet<Element>());
+        }
+        this.policyDefinitions.get(operation).add(policyDefinitions);
     }
 
 }

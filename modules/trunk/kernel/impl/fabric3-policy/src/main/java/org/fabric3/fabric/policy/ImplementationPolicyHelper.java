@@ -18,6 +18,7 @@ package org.fabric3.fabric.policy;
 
 import java.util.Set;
 
+import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -34,18 +35,20 @@ public interface ImplementationPolicyHelper {
      * declared by the implementation type.
      * 
      * @param logicalComponent Logical component for which intents are to be resolved.
+     * @param operation Operation for which the provided intents are to be computed.
      * @return Set of intents that need to be explictly provided by the implementation.
      * @throws PolicyResolutionException If there are any unidentified intents.
      */
-    Set<Intent> getImplementationIntentsToBeProvided(LogicalComponent<?> logicalComponent) throws PolicyResolutionException;
+    Set<Intent> getProvidedIntents(LogicalComponent<?> logicalComponent, Operation<?> operation) throws PolicyResolutionException;
     
     /**
      * Returns the set of policies that will address the intents that are not provided by the implementation type.
      * 
      * @param logicalComponent Logical component for which policies are to be resolved.
+     * @param operation Operation for which the provided intents are to be computed.
      * @return Set of resolved policies.
      * @throws PolicyResolutionException If all intents cannot be resolved.
      */
-    Set<PolicySet> resolveImplementationIntents(LogicalComponent<?> logicalComponent) throws PolicyResolutionException;
+    Set<PolicySet> resolveIntents(LogicalComponent<?> logicalComponent, Operation<?> operation) throws PolicyResolutionException;
 
 }

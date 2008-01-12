@@ -23,6 +23,7 @@ import java.util.Set;
 import javax.xml.namespace.QName;
 
 import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.definitions.ImplementationType;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
@@ -40,7 +41,7 @@ public class ImplementationPolicyHelperImpl extends AbstractPolicyHelper impleme
         super(definitionsRegistry);
     }
     
-    public Set<Intent> getImplementationIntentsToBeProvided(LogicalComponent<?> logicalComponent) throws PolicyResolutionException {
+    public Set<Intent> getProvidedIntents(LogicalComponent<?> logicalComponent, Operation<?> operation) throws PolicyResolutionException {
         
         Implementation<?> implementation = logicalComponent.getDefinition().getImplementation();
         QName type = implementation.getType();
@@ -53,17 +54,7 @@ public class ImplementationPolicyHelperImpl extends AbstractPolicyHelper impleme
         
         Set<QName> mayProvidedIntents = implementationType.getMayProvide();
 
-        // Aggregate all the intents from the ancestors
-        Set<QName> intentNames = new HashSet<QName>();
-        intentNames.addAll(implementation.getIntents());
-        intentNames.addAll(aggregateIntents(logicalComponent));
-        intentNames.removeAll(mayProvidedIntents);
-
-        // Expand all the profile intents
-        Set<Intent> requiredIntents = resolveProfileIntents(intentNames);
-
-        // Remove intents not applicable to the artifact
-        filterInvalidIntents(Intent.IMPLEMENTATION, requiredIntents);
+        Set<Intent> requiredIntents = getRequestedIntents(logicalComponent, operation);
         
         Set<Intent> intentsToBeProvided = new HashSet<Intent>();
         for(Intent intent : requiredIntents) {
@@ -75,7 +66,7 @@ public class ImplementationPolicyHelperImpl extends AbstractPolicyHelper impleme
         
     }
     
-    public Set<PolicySet> resolveImplementationIntents(LogicalComponent<?> logicalComponent) throws PolicyResolutionException {
+    public Set<PolicySet> resolveIntents(LogicalComponent<?> logicalComponent, Operation<?> operation) throws PolicyResolutionException {
         
         Implementation<?> implementation = logicalComponent.getDefinition().getImplementation();
         QName type = implementation.getType();
@@ -90,17 +81,7 @@ public class ImplementationPolicyHelperImpl extends AbstractPolicyHelper impleme
             mayProvidedIntents = implementationType.getMayProvide();
         }
 
-        // Aggregate all the intents from the ancestors
-        Set<QName> intentNames = new HashSet<QName>();
-        intentNames.addAll(logicalComponent.getDefinition().getImplementation().getIntents());
-        intentNames.addAll(logicalComponent.getDefinition().getIntents());
-        intentNames.addAll(aggregateIntents(logicalComponent));
-
-        // Expand all the profile intents
-        Set<Intent> requiredIntents = resolveProfileIntents(intentNames);
-
-        // Remove intents not applicable to the artifact
-        filterInvalidIntents(Intent.IMPLEMENTATION, requiredIntents);
+        Set<Intent> requiredIntents = getRequestedIntents(logicalComponent, operation);
         
         // Remove intents that are provided
         for(Intent intent : requiredIntents) {
@@ -116,6 +97,24 @@ public class ImplementationPolicyHelperImpl extends AbstractPolicyHelper impleme
         }
         
         return policies;
+        
+    }
+
+    private Set<Intent> getRequestedIntents(LogicalComponent<?> logicalComponent, Operation<?> operation) throws PolicyResolutionException {
+        
+        // Aggregate all the intents from the ancestors
+        Set<QName> intentNames = new HashSet<QName>();
+        intentNames.addAll(operation.getIntents());
+        intentNames.addAll(logicalComponent.getDefinition().getImplementation().getIntents());
+        intentNames.addAll(aggregateIntents(logicalComponent));
+        
+        // Expand all the profile intents
+        Set<Intent> requiredIntents = resolveProfileIntents(intentNames);
+        
+        // Remove intents not applicable to the artifact
+        filterInvalidIntents(Intent.IMPLEMENTATION, requiredIntents);
+        
+        return requiredIntents;
         
     }
 
