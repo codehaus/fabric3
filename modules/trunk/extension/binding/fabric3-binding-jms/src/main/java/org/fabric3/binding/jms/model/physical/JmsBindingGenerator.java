@@ -87,7 +87,7 @@ public class JmsBindingGenerator implements BindingGenerator<JmsWireSourceDefini
         
         ServiceContract<?> serviceContract = serviceDefinition.getServiceContract();
 
-        TransactionType transactionType = getTransactionType(policy, serviceContract, true);
+        TransactionType transactionType = getTransactionType(policy, serviceContract);
         
         URI classloader = classLoaderGenerator.generate(logicalBinding, context);
         return new JmsWireSourceDefinition(logicalBinding.getBinding().getMetadata(), transactionType, classloader);
@@ -102,7 +102,7 @@ public class JmsBindingGenerator implements BindingGenerator<JmsWireSourceDefini
         
         ServiceContract<?> serviceContract = referenceDefinition.getServiceContract();
 
-        TransactionType transactionType = getTransactionType(policy, serviceContract, false);
+        TransactionType transactionType = getTransactionType(policy, serviceContract);
         
         URI classloader = classLoaderGenerator.generate(logicalBinding, context);
         return new JmsWireTargetDefinition(logicalBinding.getBinding().getMetadata(), transactionType, classloader);
@@ -112,7 +112,7 @@ public class JmsBindingGenerator implements BindingGenerator<JmsWireSourceDefini
     /*
      * Gets the transaction type.
      */
-    private TransactionType getTransactionType(Policy policy, ServiceContract<?> serviceContract, boolean source) {
+    private TransactionType getTransactionType(Policy policy, ServiceContract<?> serviceContract) {
         
         // If any operation has the intent, return that
         for (Operation<?> operation : serviceContract.getOperations()) {

@@ -23,16 +23,10 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.MessageListener;
-
-import org.osoa.sca.annotations.Destroy;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Property;
-import org.osoa.sca.annotations.Reference;
-import org.osoa.sca.annotations.Service;
 
 import org.fabric3.binding.jms.TransactionType;
 import org.fabric3.binding.jms.host.JmsHost;
@@ -48,6 +42,7 @@ import org.fabric3.binding.jms.model.physical.JmsWireTargetDefinition;
 import org.fabric3.binding.jms.transport.Fabric3MessageListener;
 import org.fabric3.binding.jms.transport.Fabric3MessageReceiver;
 import org.fabric3.binding.jms.tx.TransactionHandler;
+import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
@@ -60,7 +55,12 @@ import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
-import org.fabric3.spi.ObjectFactory;
+import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Property;
+import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Service;
 
 /**
  * Wire attacher for JMS binding.
@@ -134,9 +134,6 @@ public class JmsWireAttacher implements SourceWireAttacher<JmsWireSourceDefiniti
      */
     @Reference
     public void setDestinationStrategies(Map<CreateOption, DestinationStrategy> strategies) {
-        /*for(Map.Entry<String, DestinationStrategy> entry : strategies.entrySet()) {
-            destinationStrategies.put(CreateOption.valueOf(entry.getKey()), entry.getValue());
-        }*/
         this.destinationStrategies = strategies;
     }
 
@@ -147,9 +144,6 @@ public class JmsWireAttacher implements SourceWireAttacher<JmsWireSourceDefiniti
      */
     @Reference
     public void setConnectionFactoryStrategies(Map<CreateOption, ConnectionFactoryStrategy> strategies) {
-        /*for(Map.Entry<String, ConnectionFactoryStrategy> entry : strategies.entrySet()) {
-            connectionFactoryStrategies.put(CreateOption.valueOf(entry.getKey()), entry.getValue());
-        }*/
         this.connectionFactoryStrategies = strategies;
     }
 
