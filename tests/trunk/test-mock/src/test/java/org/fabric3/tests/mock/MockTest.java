@@ -17,7 +17,6 @@
 package org.fabric3.tests.mock;
 
 import org.easymock.IMocksControl;
-import org.easymock.EasyMock;
 import org.osoa.sca.annotations.Reference;
 
 import junit.framework.TestCase;
