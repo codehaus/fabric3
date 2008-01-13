@@ -96,6 +96,7 @@ public class Axis2TargetInterceptor implements Interceptor {
         options.setTo(epr);
         options.setTransportInProtocol(Constants.TRANSPORT_HTTP);
         options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
+        options.setAction("urn:" + operation);
         
         Thread currentThread = Thread.currentThread();
         ClassLoader oldCl = currentThread.getContextClassLoader();
@@ -108,9 +109,7 @@ public class Axis2TargetInterceptor implements Interceptor {
             
             ServiceClient sender = new ServiceClient(f3Configurator.getConfigurationContext(), null);
             sender.setOptions(options);
-
-            AxisService axisService = sender.getAxisService();
-            applyPolicies(axisService);
+            applyPolicies(sender);
             
             OMElement result = sender.sendReceive(method);
             
@@ -128,14 +127,16 @@ public class Axis2TargetInterceptor implements Interceptor {
         
     }
 
-    private void applyPolicies(AxisService axisService) throws AxisFault {
+    private void applyPolicies(ServiceClient sender) throws AxisFault {
         
         if (policies == null) {
             return;
         }
 
+        AxisService axisService = sender.getAxisService();
+
         for (AxisModule axisModule : f3Configurator.getModules()) {
-            axisService.engageModule(axisModule);
+            sender.engageModule(axisModule.getName());
         }
         
         for (Element policy : policies) {

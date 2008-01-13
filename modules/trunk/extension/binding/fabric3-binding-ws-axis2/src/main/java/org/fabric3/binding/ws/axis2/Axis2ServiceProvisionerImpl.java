@@ -147,6 +147,7 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
             }
             
             for (AxisModule axisModule : f3Configurator.getModules()) {
+                axisOperation.addModule(axisModule.getName());
                 axisOperation.engageModule(axisModule);
             }
             
