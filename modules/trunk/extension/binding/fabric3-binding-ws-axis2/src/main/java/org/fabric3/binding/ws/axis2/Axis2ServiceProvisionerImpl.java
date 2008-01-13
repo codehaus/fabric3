@@ -24,6 +24,7 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
+import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.deployment.util.Utils;
@@ -132,7 +133,7 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
         
     }
 
-    private void applyPolicies(Axis2WireSourceDefinition pwsd, AxisService axisService) throws WiringException {
+    private void applyPolicies(Axis2WireSourceDefinition pwsd, AxisService axisService) throws WiringException, AxisFault {
         
         for (Iterator<?> i = axisService.getOperations(); i.hasNext();) {
             
@@ -144,16 +145,13 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
                 continue;
             }
             
-            
             for (Element policyDefinition : policies) {
                 QName policyName = new QName(policyDefinition.getNamespaceURI(), policyDefinition.getNodeName());
                 PolicyApplier policyApplier = policyApplierRegistry.getPolicyApplier(policyName);
                 if (policyApplier == null) {
                     throw new WiringException("Unknown policy " + policyName);
                 }
-                // policyApplier.applyPolicy(axisOperation, policyDefinition);
-                // TODO engage the policy at operation level
-                policyApplier.applyPolicy(axisService, policyDefinition);
+                policyApplier.applyPolicy(axisOperation, policyDefinition);
             }
             
         }
