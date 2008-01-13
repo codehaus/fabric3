@@ -32,12 +32,6 @@ import javax.xml.namespace.QName;
 public interface ContributionService {
 
     /**
-     * This method is deprecated. Use {@link #contribute(ContributionSource)} instead.
-     */
-    @Deprecated
-    URI contribute(String storeId, ContributionSource source) throws ContributionException;
-
-    /**
      * Contribute an artifact to the SCA Domain, placing it in the specified store.
      *
      * @param source the contribution source

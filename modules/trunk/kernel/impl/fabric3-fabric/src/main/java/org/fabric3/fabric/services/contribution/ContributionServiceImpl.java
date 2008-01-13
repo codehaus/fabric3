@@ -122,11 +122,6 @@ public class ContributionServiceImpl implements ContributionService {
         return uris;
     }
 
-    @Deprecated
-    public URI contribute(String storeId, ContributionSource source) throws ContributionException {
-        return contribute(source);
-    }
-
     public URI contribute(ContributionSource source) throws ContributionException {
         Contribution contribution = store(source);
         processorRegistry.processManifest(contribution);
