@@ -108,17 +108,8 @@ public class Axis2TargetInterceptor implements Interceptor {
             
             ServiceClient sender = new ServiceClient(f3Configurator.getConfigurationContext(), null);
             sender.setOptions(options);
-            
-            for (AxisModule axisModule : f3Configurator.getModules()) {
-                sender.engageModule(axisModule.getName());
-            }
-            
-            // TODO Need to engage the modules globally
+
             AxisService axisService = sender.getAxisService();
-            for (AxisModule axisModule : f3Configurator.getModules()) {
-                axisService.engageModule(axisModule);
-            }
-            
             applyPolicies(axisService);
             
             OMElement result = sender.sendReceive(method);
@@ -137,10 +128,14 @@ public class Axis2TargetInterceptor implements Interceptor {
         
     }
 
-    private void applyPolicies(AxisService axisService) throws AssertionError {
+    private void applyPolicies(AxisService axisService) throws AxisFault {
         
         if (policies == null) {
             return;
+        }
+
+        for (AxisModule axisModule : f3Configurator.getModules()) {
+            axisService.engageModule(axisModule);
         }
         
         for (Element policy : policies) {

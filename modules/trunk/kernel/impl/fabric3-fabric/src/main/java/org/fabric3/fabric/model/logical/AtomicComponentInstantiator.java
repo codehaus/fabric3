@@ -85,10 +85,10 @@ public class AtomicComponentInstantiator extends AbstractComponentInstantiator {
         for (ServiceDefinition service : componentType.getServices().values()) {
             String name = service.getName();
             URI serviceUri = component.getUri().resolve('#' + name);
-            addOperationLevelIntentsAndPolicies(service);
             LogicalService logicalService = new LogicalService(serviceUri, service, component);
             ComponentService componentService = definition.getServices().get(name);
             if (componentService != null) {
+                addOperationLevelIntentsAndPolicies(logicalService, componentService);
                 // service is configured in the component definition
                 for (BindingDefinition binding : componentService.getBindings()) {
                     logicalService.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalService));
@@ -106,10 +106,10 @@ public class AtomicComponentInstantiator extends AbstractComponentInstantiator {
         for (ReferenceDefinition reference : componentType.getReferences().values()) {
             String name = reference.getName();
             URI referenceUri = component.getUri().resolve('#' + name);
-            addOperationLevelIntentsAndPolicies(reference);
             LogicalReference logicalReference = new LogicalReference(referenceUri, reference, component);
             ComponentReference componentReference = definition.getReferences().get(name);
             if (componentReference != null) {
+                addOperationLevelIntentsAndPolicies(logicalReference, componentReference);
                 // reference is configured
                 for (BindingDefinition binding : componentReference.getBindings()) {
                     logicalReference.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalReference));

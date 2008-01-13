@@ -28,4 +28,9 @@ public class Axis2EchoServiceImpl implements Axis2EchoService {
         return parameter;
     }
 
+    public OMElement echoNoSecurity(OMElement operation) {
+        OMElement parameter = operation.getFirstElement();
+        return parameter;
+    }
+
 }

@@ -23,4 +23,5 @@ import org.apache.axiom.om.OMElement;
  */
 public interface Axis2EchoService {
     OMElement echo(OMElement message);
+    OMElement echoNoSecurity(OMElement message);
 }

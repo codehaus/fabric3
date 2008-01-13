@@ -45,6 +45,8 @@ import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalReference;
+import org.fabric3.spi.model.instance.LogicalService;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -76,8 +78,8 @@ public abstract class AbstractComponentInstantiator implements ComponentInstanti
      *
      * @param serviceDefinition Service definition from the SCDL.
      */
-    protected void addOperationLevelIntentsAndPolicies(ServiceDefinition serviceDefinition) {      
-        transferIntentsAndPolicies(serviceDefinition.getServiceContract(), serviceDefinition.getOperations());
+    protected void addOperationLevelIntentsAndPolicies(LogicalService logicalService, ServiceDefinition serviceDefinition) {      
+        transferIntentsAndPolicies(logicalService.getDefinition().getServiceContract(), serviceDefinition.getOperations());
     }
     
     /**
@@ -85,8 +87,8 @@ public abstract class AbstractComponentInstantiator implements ComponentInstanti
      *
      * @param referenceDefinition Reference definition from the SCDL.
      */
-    protected void addOperationLevelIntentsAndPolicies(ReferenceDefinition referenceDefinition) {        
-        transferIntentsAndPolicies(referenceDefinition.getServiceContract(), referenceDefinition.getOperations());
+    protected void addOperationLevelIntentsAndPolicies(LogicalReference logicalReference, ReferenceDefinition referenceDefinition) {        
+        transferIntentsAndPolicies(logicalReference.getDefinition().getServiceContract(), referenceDefinition.getOperations());
     }
 
     /**

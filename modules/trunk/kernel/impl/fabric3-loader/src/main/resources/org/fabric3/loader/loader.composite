@@ -40,6 +40,9 @@
     </component>
 
     <!-- Common SCDL loader implementations -->
+    <component name="loader.Operation">
+        <system:implementation.system class="org.fabric3.loader.common.OperationLoader"/>
+    </component>
     <component name="loader.ComponentReference">
         <system:implementation.system class="org.fabric3.loader.common.ComponentReferenceLoader"/>
     </component>

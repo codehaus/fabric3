@@ -63,7 +63,8 @@ public class AxisConfigPolicyApplier implements PolicyApplier {
                 Parameter param = new Parameter(parameterName, actionElement);
                 param.setParameterElement(parameterElement);
                 
-                axisDescription.getAxisConfiguration().addParameter(param);
+                // axisDescription.getAxisConfiguration().addParameter(param);
+                axisDescription.addParameter(param);
                 
             }
             

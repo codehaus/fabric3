@@ -104,8 +104,8 @@ public class F3ConfiguratorImpl implements F3Configurator {
         addFlowHandlers(axisModule.getFaultInFlow(), moduleClassLoader);
         addFlowHandlers(axisModule.getFaultOutFlow(), moduleClassLoader);
 
-        axisConfiguration.addModule(axisModule);
-        axisConfiguration.engageModule(axisModule);
+        // axisConfiguration.addModule(axisModule);
+        // axisConfiguration.engageModule(axisModule);
         
         modules.add(axisModule);
         

@@ -40,6 +40,17 @@ public class Axis2EchoTest extends TestCase {
     protected Axis2EchoService service;
     private OMFactory factory;
 
+    public void testEchoTextNoSecurity() {
+
+        OMElement message = factory.createOMElement("data", null);
+        OMText text = factory.createOMText(message, "Hello World");
+        message.addChild(text);
+
+        OMElement response = service.echoNoSecurity(message);
+        String responseText = response.getFirstElement().getText();
+        assertEquals("Hello World", responseText);
+    }
+
     public void testEchoText() {
 
         OMElement message = factory.createOMElement("data", null);
@@ -73,6 +84,43 @@ public class Axis2EchoTest extends TestCase {
         message.addChild(text);
 
         OMElement response = service.echo(message);
+        OMText responseText = (OMText) response.getFirstElement().getFirstOMChild();
+        responseText.setOptimize(true);
+        DataHandler responseData = (DataHandler) responseText.getDataHandler();
+        InputStream is = responseData.getInputStream();
+        InputStreamReader reader = new InputStreamReader(is);
+        char buffer[] = new char[1024];
+        StringWriter writer = new StringWriter();
+        for (int count; (count = reader.read(buffer, 0, buffer.length)) > 0;) {
+            writer.write(buffer, 0, count);
+
+        }
+        assertEquals("Hello World", writer.toString());
+
+    }
+
+    public void testEchoDataWithMTOMNoSecurity() throws IOException {
+        DataHandler dataHandler = new DataHandler(new DataSource() {
+            public String getContentType() {
+                return "text/dat";
+            }
+            public InputStream getInputStream() throws IOException {
+                return new ByteArrayInputStream("Hello World".getBytes());
+            }
+            public String getName() {
+                return null;
+            }
+            public OutputStream getOutputStream() throws IOException {
+                return null;
+            }
+        });
+
+        OMElement message = factory.createOMElement("data", null);
+        OMText text = factory.createOMText(dataHandler, true);
+        text.setOptimize(true);
+        message.addChild(text);
+
+        OMElement response = service.echoNoSecurity(message);
         OMText responseText = (OMText) response.getFirstElement().getFirstOMChild();
         responseText.setOptimize(true);
         DataHandler responseData = (DataHandler) responseText.getDataHandler();

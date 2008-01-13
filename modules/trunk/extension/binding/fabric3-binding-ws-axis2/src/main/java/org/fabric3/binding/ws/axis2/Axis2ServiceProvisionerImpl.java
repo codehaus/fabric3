@@ -28,6 +28,7 @@ import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.deployment.util.Utils;
+import org.apache.axis2.description.AxisModule;
 import org.apache.axis2.description.AxisOperation;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.description.Parameter;
@@ -143,6 +144,10 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
             Set<Element> policies = pwsd.getPolicyDefinitions(operation);
             if (policies == null || policies.size() == 0) {
                 continue;
+            }
+            
+            for (AxisModule axisModule : f3Configurator.getModules()) {
+                axisOperation.engageModule(axisModule);
             }
             
             for (Element policyDefinition : policies) {
