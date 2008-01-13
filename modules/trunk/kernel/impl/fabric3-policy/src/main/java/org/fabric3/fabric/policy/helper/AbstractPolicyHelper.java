@@ -14,43 +14,49 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.policy;
+package org.fabric3.fabric.policy.helper;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
 
+import org.fabric3.fabric.policy.infoset.PolicySetEvaluator;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.model.instance.LogicalScaArtifact;
-import org.fabric3.spi.model.instance.Referenceable;
 import org.fabric3.spi.policy.PolicyResolutionException;
 import org.fabric3.spi.services.definitions.DefinitionsRegistry;
+import org.w3c.dom.Element;
 
 /**
  * @version $Revision$ $Date$
  */
 public class AbstractPolicyHelper {
     
-    protected DefinitionsRegistry definitionsRegistry;
+    private final PolicySetEvaluator policySetEvaluator;
+    protected final DefinitionsRegistry definitionsRegistry;
     
-    protected AbstractPolicyHelper(DefinitionsRegistry definitionsRegistry) {
+    protected AbstractPolicyHelper(DefinitionsRegistry definitionsRegistry, PolicySetEvaluator policySetEvaluator) {
         this.definitionsRegistry = definitionsRegistry;
+        this.policySetEvaluator = policySetEvaluator;
     }
 
     /*
      * Resolve the policies.
      */
-    protected Set<PolicySet> resolvePolicies(Set<Intent> requiredIntents, Referenceable referenceable) throws PolicyResolutionException {
+    protected Set<PolicySet> resolvePolicies(Set<Intent> requiredIntents, Element target, String operation) throws PolicyResolutionException {
 
         Set<PolicySet> policies = new HashSet<PolicySet>();
         
         for (PolicySet policySet : definitionsRegistry.getAllDefinitions(PolicySet.class)) {
             for(Intent intent : requiredIntents) {
-                if(policySet.doesProvide(intent.getName()) && policySet.doesApplyTo(referenceable.getUri().toASCIIString())) {
-                    policies.add(policySet);
-                    requiredIntents.remove(intent);
+                if(policySet.doesProvide(intent.getName())) {
+                    String appliesTo = policySet.getAppliesTo();
+                    if (appliesTo == null || policySetEvaluator.doesApply(target, appliesTo, operation)) {
+                        policies.add(policySet);
+                        requiredIntents.remove(intent);
+                    }
                 }
             }
         }

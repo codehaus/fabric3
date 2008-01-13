@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.policy;
+package org.fabric3.fabric.policy.helper;
 
 import java.util.Set;
 
@@ -23,6 +23,7 @@ import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.policy.PolicyResolutionException;
+import org.w3c.dom.Element;
 
 /**
  * @version $Revision$ $Date$
@@ -39,7 +40,8 @@ public interface ImplementationPolicyHelper {
      * @return Set of intents that need to be explictly provided by the implementation.
      * @throws PolicyResolutionException If there are any unidentified intents.
      */
-    Set<Intent> getProvidedIntents(LogicalComponent<?> logicalComponent, Operation<?> operation) throws PolicyResolutionException;
+    Set<Intent> getProvidedIntents(LogicalComponent<?> logicalComponent, Operation<?> operation) 
+    throws PolicyResolutionException;
     
     /**
      * Returns the set of policies that will address the intents that are not provided by the implementation type.
@@ -49,6 +51,6 @@ public interface ImplementationPolicyHelper {
      * @return Set of resolved policies.
      * @throws PolicyResolutionException If all intents cannot be resolved.
      */
-    Set<PolicySet> resolveIntents(LogicalComponent<?> logicalComponent, Operation<?> operation) throws PolicyResolutionException;
+    Set<PolicySet> resolveIntents(LogicalComponent<?> logicalComponent, Operation<?> operation, Element target) throws PolicyResolutionException;
 
 }

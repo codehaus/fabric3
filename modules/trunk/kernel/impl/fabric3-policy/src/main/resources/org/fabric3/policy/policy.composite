@@ -27,14 +27,24 @@
            name="org.fabric3.policy.Policy"
            autowire="true">
 
+    <!-- Policy Infoset Builder -->
+    <component name="org.fabric3.fabric.policy.infoset.PolicyInfosetBuilder">
+        <system:implementation.system class="org.fabric3.fabric.policy.infoset.DefaultPolicyInfosetBuilder"/>
+    </component>
+
+    <!-- Policy Set Evaluator -->
+    <component name="org.fabric3.fabric.policy.infoset.PolicySetEvaluator">
+        <system:implementation.system class="org.fabric3.fabric.policy.infoset.DefaultPolicySetEvaluator"/>
+    </component>
+
     <!-- Interception policy helper -->
-    <component name="org.fabric3.fabric.policy.InteractionPolicyHelper">
-        <system:implementation.system class="org.fabric3.fabric.policy.InteractionPolicyHelperImpl"/>
+    <component name="org.fabric3.fabric.policy.helper.InteractionPolicyHelper">
+        <system:implementation.system class="org.fabric3.fabric.policy.helper.InteractionPolicyHelperImpl"/>
     </component>
 
     <!-- Implementation policy helper -->
-    <component name="org.fabric3.fabric.policy.ImplementationPolicyHelper">
-        <system:implementation.system class="org.fabric3.fabric.policy.ImplementationPolicyHelperImpl"/>
+    <component name="org.fabric3.fabric.policy.helper.ImplementationPolicyHelper">
+        <system:implementation.system class="org.fabric3.fabric.policy.helper.ImplementationPolicyHelperImpl"/>
     </component>
 
     <!-- Policy resolver -->

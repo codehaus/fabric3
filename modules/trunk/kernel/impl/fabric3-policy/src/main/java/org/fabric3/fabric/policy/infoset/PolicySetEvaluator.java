@@ -14,16 +14,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.binding.ws.axis2.policy;
+package org.fabric3.fabric.policy.infoset;
 
-import org.apache.axis2.description.AxisDescription;
 import org.w3c.dom.Element;
 
 /**
  * @version $Revision$ $Date$
  */
-public interface PolicyApplier {
+public interface PolicySetEvaluator {
     
-    void applyPolicy(AxisDescription axisDescription, Element policy);
+    /**
+     * Whether the policy set applies for the target element. The target element 
+     * represents the infoset for either the parent of a binding or implementation.
+     * 
+     * @param target Target element against which the XPath is evaluated.
+     * @param appliesToXPath XPath expression specified against the policy set.
+     * @param operation Operation against which the intents are evaluated.
+     * @return True if the policy set applies against the target element.
+     */
+    boolean doesApply(Element target, String appliesToXPath, String operation);
 
 }

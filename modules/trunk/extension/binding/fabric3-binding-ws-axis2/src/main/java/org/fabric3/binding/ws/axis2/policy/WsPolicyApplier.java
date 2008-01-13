@@ -21,7 +21,7 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
-import org.apache.axis2.description.AxisService;
+import org.apache.axis2.description.AxisDescription;
 import org.apache.neethi.PolicyEngine;
 import org.fabric3.transform.xml.Element2Stream;
 import org.osoa.sca.annotations.EagerInit;
@@ -37,7 +37,7 @@ public class WsPolicyApplier implements PolicyApplier {
     
     private final Element2Stream transformer = new Element2Stream(XMLInputFactory.newInstance());
 
-    public void applyPolicy(AxisService axisService, Element policy) {
+    public void applyPolicy(AxisDescription axisDescription, Element policy) {
         
         try {
             
@@ -45,7 +45,7 @@ public class WsPolicyApplier implements PolicyApplier {
             StAXOMBuilder builder = new StAXOMBuilder(reader);
             OMElement policyElement = builder.getDocumentElement();
             
-            axisService.applyPolicy(PolicyEngine.getPolicy(policyElement));
+            axisDescription.applyPolicy(PolicyEngine.getPolicy(policyElement));
             
         } catch(Exception e) {
             // TODO Handle execption properly

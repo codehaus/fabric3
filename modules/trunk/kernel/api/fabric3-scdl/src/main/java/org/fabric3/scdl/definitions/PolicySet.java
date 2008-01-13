@@ -107,16 +107,6 @@ public final class PolicySet extends AbstractDefinition {
     }
     
     /**
-     * Interim implementation, matches the name of the target service, reference or component.
-     * 
-     * @param name Name of the service, reference or component.
-     * @return True is appliesTo is null or the name matches the applies to value.
-     */
-    public boolean doesApplyTo(String name) {
-        return appliesTo == null || appliesTo.equals(name);
-    }
-    
-    /**
      * @return Gets the policy phase.
      */
     public PolicyPhase getPhase() {

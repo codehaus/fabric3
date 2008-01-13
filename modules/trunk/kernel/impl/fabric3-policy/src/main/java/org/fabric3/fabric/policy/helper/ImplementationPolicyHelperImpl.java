@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.policy;
+package org.fabric3.fabric.policy.helper;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -22,6 +22,7 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
+import org.fabric3.fabric.policy.infoset.PolicySetEvaluator;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.definitions.ImplementationType;
@@ -31,14 +32,16 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.policy.PolicyResolutionException;
 import org.fabric3.spi.services.definitions.DefinitionsRegistry;
 import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Element;
 
 /**
  * @version $Revision$ $Date$
  */
 public class ImplementationPolicyHelperImpl extends AbstractPolicyHelper implements ImplementationPolicyHelper {
 
-    public ImplementationPolicyHelperImpl(@Reference DefinitionsRegistry definitionsRegistry) {
-        super(definitionsRegistry);
+    public ImplementationPolicyHelperImpl(@Reference DefinitionsRegistry definitionsRegistry,
+                                          @Reference PolicySetEvaluator policySetEvaluator) {
+        super(definitionsRegistry, policySetEvaluator);
     }
     
     public Set<Intent> getProvidedIntents(LogicalComponent<?> logicalComponent, Operation<?> operation) throws PolicyResolutionException {
@@ -66,7 +69,7 @@ public class ImplementationPolicyHelperImpl extends AbstractPolicyHelper impleme
         
     }
     
-    public Set<PolicySet> resolveIntents(LogicalComponent<?> logicalComponent, Operation<?> operation) throws PolicyResolutionException {
+    public Set<PolicySet> resolveIntents(LogicalComponent<?> logicalComponent, Operation<?> operation, Element target) throws PolicyResolutionException {
         
         Implementation<?> implementation = logicalComponent.getDefinition().getImplementation();
         QName type = implementation.getType();
@@ -91,7 +94,7 @@ public class ImplementationPolicyHelperImpl extends AbstractPolicyHelper impleme
             }
         }
         
-        Set<PolicySet> policies = resolvePolicies(requiredIntents, logicalComponent);        
+        Set<PolicySet> policies = resolvePolicies(requiredIntents, target, operation.getName());        
         if(requiredIntents.size() > 0) {
             throw new PolicyResolutionException("Unable to resolve all intents", requiredIntents);
         }

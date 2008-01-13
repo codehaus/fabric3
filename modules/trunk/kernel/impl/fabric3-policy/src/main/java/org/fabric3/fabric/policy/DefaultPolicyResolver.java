@@ -20,6 +20,9 @@ package org.fabric3.fabric.policy;
 
 import java.util.Set;
 
+import org.fabric3.fabric.policy.helper.ImplementationPolicyHelper;
+import org.fabric3.fabric.policy.helper.InteractionPolicyHelper;
+import org.fabric3.fabric.policy.infoset.PolicyInfosetBuilder;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.definitions.PolicyPhase;
@@ -32,6 +35,7 @@ import org.fabric3.spi.policy.PolicyResult;
 import org.fabric3.util.closure.Closure;
 import org.fabric3.util.closure.CollectionUtils;
 import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Element;
 
 /**
  * @version $Revision$ $Date$
@@ -52,13 +56,16 @@ public class DefaultPolicyResolver implements PolicyResolver {
         }
     };
     
-    private InteractionPolicyHelper interactionPolicyHelper;
-    private ImplementationPolicyHelper implementationPolicyHelper;
+    private final InteractionPolicyHelper interactionPolicyHelper;
+    private final ImplementationPolicyHelper implementationPolicyHelper;
+    private final PolicyInfosetBuilder policyInfosetBuilder;
     
     public DefaultPolicyResolver(@Reference InteractionPolicyHelper interactionPolicyHelper,
-                                 @Reference ImplementationPolicyHelper implementationPolicyHelper) {
+                                 @Reference ImplementationPolicyHelper implementationPolicyHelper,
+                                 @Reference PolicyInfosetBuilder policyInfosetBuilder) {
         this.interactionPolicyHelper = interactionPolicyHelper;
         this.implementationPolicyHelper = implementationPolicyHelper;
+        this.policyInfosetBuilder = policyInfosetBuilder;
     }
 
     /**
@@ -83,37 +90,42 @@ public class DefaultPolicyResolver implements PolicyResolver {
             
         for (Operation<?> operation : serviceContract.getOperations()) {
             
-            policyResult.addSourceIntent(operation, interactionPolicyHelper.getProvidedIntents(sourceBinding, operation));
+            policyResult.addSourceIntents(operation, interactionPolicyHelper.getProvidedIntents(sourceBinding, operation));
             if (source != null) {
-                policyResult.addSourceIntent(operation, implementationPolicyHelper.getProvidedIntents(source, operation));
+                policyResult.addSourceIntents(operation, implementationPolicyHelper.getProvidedIntents(source, operation));
             }
             
-            policyResult.addTargetIntent(operation, interactionPolicyHelper.getProvidedIntents(targetBinding, operation));
+            policyResult.addTargetIntents(operation, interactionPolicyHelper.getProvidedIntents(targetBinding, operation));
             if (target != null) {
-                policyResult.addSourceIntent(operation, implementationPolicyHelper.getProvidedIntents(target, operation));
+                policyResult.addSourceIntents(operation, implementationPolicyHelper.getProvidedIntents(target, operation));
             }
                 
             Set<PolicySet> policies = null;
+            Element policyInfoset = null;
                 
             if (source != null) {
-                policies = implementationPolicyHelper.resolveIntents(source, operation);
-                policyResult.addSourcePolicySet(operation, CollectionUtils.filter(policies, PROVIDED));
-                policyResult.addInterceptedPolicySet(operation, CollectionUtils.filter(policies, INTERCEPTION));
+                policyInfoset = policyInfosetBuilder.buildInfoSet(source);
+                policies = implementationPolicyHelper.resolveIntents(source, operation, policyInfoset);
+                policyResult.addSourcePolicySets(operation, CollectionUtils.filter(policies, PROVIDED));
+                policyResult.addInterceptedPolicySets(operation, CollectionUtils.filter(policies, INTERCEPTION));
             }
                 
             if (target != null) {
-                policies = implementationPolicyHelper.resolveIntents(target, operation);
-                policyResult.addTargetPolicySet(operation, CollectionUtils.filter(policies, PROVIDED));
-                policyResult.addInterceptedPolicySet(operation, CollectionUtils.filter(policies, INTERCEPTION));
+                policyInfoset = policyInfosetBuilder.buildInfoSet(target);
+                policies = implementationPolicyHelper.resolveIntents(target, operation, policyInfoset);
+                policyResult.addTargetPolicySets(operation, CollectionUtils.filter(policies, PROVIDED));
+                policyResult.addInterceptedPolicySets(operation, CollectionUtils.filter(policies, INTERCEPTION));
             }
-                
-            policies = interactionPolicyHelper.resolveIntents(sourceBinding, operation);
-            policyResult.addSourcePolicySet(operation, CollectionUtils.filter(policies, PROVIDED));
-            policyResult.addInterceptedPolicySet(operation, CollectionUtils.filter(policies, INTERCEPTION));
-                
-            policies = interactionPolicyHelper.resolveIntents(targetBinding, operation);
-            policyResult.addTargetPolicySet(operation, CollectionUtils.filter(policies, PROVIDED));
-            policyResult.addInterceptedPolicySet(operation, CollectionUtils.filter(policies, INTERCEPTION));
+
+            policyInfoset = policyInfosetBuilder.buildInfoSet(sourceBinding);
+            policies = interactionPolicyHelper.resolveIntents(sourceBinding, operation, policyInfoset);
+            policyResult.addSourcePolicySets(operation, CollectionUtils.filter(policies, PROVIDED));
+            policyResult.addInterceptedPolicySets(operation, CollectionUtils.filter(policies, INTERCEPTION));
+
+            policyInfoset = policyInfosetBuilder.buildInfoSet(targetBinding);
+            policies = interactionPolicyHelper.resolveIntents(targetBinding, operation, policyInfoset);
+            policyResult.addTargetPolicySets(operation, CollectionUtils.filter(policies, PROVIDED));
+            policyResult.addInterceptedPolicySets(operation, CollectionUtils.filter(policies, INTERCEPTION));
                 
         }
         

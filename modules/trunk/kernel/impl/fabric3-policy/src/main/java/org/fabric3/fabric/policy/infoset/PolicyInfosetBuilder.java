@@ -14,32 +14,33 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.policy;
+package org.fabric3.fabric.policy.infoset;
 
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.w3c.dom.Element;
 
 /**
+ * Builds an infoset against which the policy set is evaluated.
+ * 
  * @version $Revision$ $Date$
  */
-public interface PolicyApplier {
+public interface PolicyInfosetBuilder {
     
     /**
-     * Whether the specified XPath expression applies to the logical binding.
+     * Builds the infoset to evaluate the policy expression for an interaction intent.
      * 
-     * @param logicalBinding Logical binding against which the XPath needs to be applied.
-     * @param appliesToXPath XPath expression that needs to be evaluated.
-     * @return True if the binding matches the XPath expression.
+     * @param logicalBinding Target binding.
+     * @return Infoset against whch whether the policy appplies is checked.
      */
-    boolean doesApply(LogicalBinding<?> logicalBinding, String appliesToXPath);
+    Element buildInfoSet(LogicalBinding<?> logicalBinding);
     
     /**
-     * Whether the specified XPath expression applies to the logical component.
+     * Builds the infoset to evaluate the policy expression for an implementation intent.
      * 
-     * @param logicalComponent Logical component against which the XPath needs to be applied.
-     * @param appliesToXPath XPath expression that needs to be evaluated.
-     * @return True if the component matches the XPath expression.
+     * @param logicalComponent Target component.
+     * @return Infoset against whch whether the policy appplies is checked.
      */
-    boolean doesApply(LogicalComponent<?> logicalComponent, String appliesToXPath);
+    Element buildInfoSet(LogicalComponent<?> logicalComponent);
 
 }

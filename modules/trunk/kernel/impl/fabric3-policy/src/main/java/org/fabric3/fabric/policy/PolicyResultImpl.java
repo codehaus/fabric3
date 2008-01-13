@@ -70,7 +70,7 @@ public class PolicyResultImpl implements PolicyResult {
      * @param operation Operation against which the intent was requested.
      * @param intents Intents that are provided.
      */
-    void addSourceIntent(Operation<?> operation, Set<Intent> intents) {
+    void addSourceIntents(Operation<?> operation, Set<Intent> intents) {
         sourcePolicy.addIntents(operation, intents);
     }
     
@@ -81,7 +81,7 @@ public class PolicyResultImpl implements PolicyResult {
      * @param operation Operation against which the intent was requested.
      * @param intents Intents that are provided.
      */
-    void addTargetIntent(Operation<?> operation, Set<Intent> intents) {
+    void addTargetIntents(Operation<?> operation, Set<Intent> intents) {
         targetPolicy.addIntents(operation, intents);
     }
     
@@ -92,7 +92,7 @@ public class PolicyResultImpl implements PolicyResult {
      * @param operation Operation against which the intent was requested.
      * @param policySets Resolved policy sets.
      */
-    void addSourcePolicySet(Operation<?> operation, Set<PolicySet> policySets) {
+    void addSourcePolicySets(Operation<?> operation, Set<PolicySet> policySets) {
         sourcePolicy.addPolicySets(operation, policySets);
     }
     
@@ -103,7 +103,7 @@ public class PolicyResultImpl implements PolicyResult {
      * @param operation Operation against which the intent was requested.
      * @param policySets Resolved policy sets.
      */
-    void addTargetPolicySet(Operation<?> operation, Set<PolicySet> policySets) {
+    void addTargetPolicySets(Operation<?> operation, Set<PolicySet> policySets) {
         targetPolicy.addPolicySets(operation, policySets);
     }
     
@@ -114,7 +114,7 @@ public class PolicyResultImpl implements PolicyResult {
      * @param operation Operation against which the intent was requested.
      * @param policySets Resolved policy sets.
      */
-    void addInterceptedPolicySet(Operation<?> operation, Set<PolicySet> policySets) {
+    void addInterceptedPolicySets(Operation<?> operation, Set<PolicySet> policySets) {
         
         if (!interceptedPolicySets.containsKey(operation)) {
             interceptedPolicySets.put(operation, new HashSet<PolicySet>());

@@ -136,10 +136,8 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
         
         for (Iterator<?> i = axisService.getOperations(); i.hasNext();) {
             
-            AxisOperation axisOp = (AxisOperation) i.next();
-            String operation = axisOp.getName().getLocalPart();
-            
-            System.err.println("Operation name " + operation);
+            AxisOperation axisOperation = (AxisOperation) i.next();
+            String operation = axisOperation.getName().getLocalPart();
             
             Set<Element> policies = pwsd.getPolicyDefinitions(operation);
             if (policies == null || policies.size() == 0) {
@@ -153,7 +151,8 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
                 if (policyApplier == null) {
                     throw new WiringException("Unknown policy " + policyName);
                 }
-                // TODO the policy needs to be applied at operation level
+                // policyApplier.applyPolicy(axisOperation, policyDefinition);
+                // TODO engage the policy at operation level
                 policyApplier.applyPolicy(axisService, policyDefinition);
             }
             

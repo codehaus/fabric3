@@ -46,7 +46,9 @@
 	    </wsp:Policy>
 	</policySet-->
 
-	<policySet name="testServerPolicy" provides="sca:authentication.message" appliesTo="fabric3://./domain/EchoService#Axis2EchoService">
+	<policySet name="testServerPolicy" 
+	           provides="sca:authentication.message" 
+	           appliesTo="@name='Axis2EchoService' and ../@name='EchoService' and $Operation='echo'">
 		<f3:AxisConfig>
 		    <parameter name="InflowSecurity" xmlns="">
 		        <action>
@@ -57,7 +59,9 @@
 		</f3:AxisConfig>
     </policySet>
 		
-	<policySet name="testClientPolicy" provides="sca:authentication.message" appliesTo="fabric3://./domain/EchoTest#service">
+	<policySet name="testClientPolicy" 
+	           provides="sca:authentication.message" 
+	           appliesTo="@name='service' and ../@name='EchoTest' and $Operation='echo'">
 		<f3:AxisConfig>
 			<parameter name="OutflowSecurity" xmlns="">
 				<action>

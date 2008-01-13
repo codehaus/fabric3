@@ -17,8 +17,7 @@
 package org.fabric3.binding.ws.axis2.physical;
 
 import java.net.URI;
-
-import javax.xml.namespace.QName;
+import java.util.Set;
 
 import org.fabric3.binding.ws.model.logical.WsBindingDefinition;
 import org.fabric3.scdl.Operation;
@@ -43,7 +42,6 @@ import org.osoa.sca.annotations.Reference;
 public class Axis2BindingGeneratorDelegate implements BindingGeneratorDelegate<WsBindingDefinition> {
     
     private ClassLoaderGenerator classLoaderGenerator;
-    private static final QName POLICY_ELEMENT_NAME = new QName("", "policyConfig");
 
     public Axis2BindingGeneratorDelegate(@Reference ClassLoaderGenerator classLoaderGenerator) {
         this.classLoaderGenerator = classLoaderGenerator;
@@ -98,15 +96,13 @@ public class Axis2BindingGeneratorDelegate implements BindingGeneratorDelegate<W
     private void setPolicyConfigs(Axis2PolicyAware policyAware, Policy policy, ServiceContract<?> serviceContract) throws Axis2GenerationException {
         
         for (Operation<?> operation : serviceContract.getOperations()) {
-            
+            Set<PolicySet> policySets = policy.getProvidedPolicySets(operation);
+            if (policySets == null) {
+                continue;
+            }
             for (PolicySet policySet : policy.getProvidedPolicySets(operation)) {
-                
-                if (POLICY_ELEMENT_NAME.equals(policySet.getExtensionName())) {
-                    throw new Axis2GenerationException("Unsupported policy element:" + policySet.getExtensionName());
-                }
                 policyAware.addPolicyDefinition(operation.getName(), policySet.getExtension());
             }
-            
         }
         
     }

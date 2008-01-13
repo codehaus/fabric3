@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.policy;
+package org.fabric3.fabric.policy.helper;
 
 import java.util.Set;
 
@@ -23,6 +23,7 @@ import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.policy.PolicyResolutionException;
+import org.w3c.dom.Element;
 
 /**
  * @version $Revision$ $Date$
@@ -49,6 +50,6 @@ public interface InteractionPolicyHelper {
      * @return Set of resolved policies.
      * @throws PolicyResolutionException If all intents cannot be resolved.
      */
-    Set<PolicySet> resolveIntents(LogicalBinding<?> binding, Operation<?> operation) throws PolicyResolutionException;
+    Set<PolicySet> resolveIntents(LogicalBinding<?> binding, Operation<?> operation, Element target) throws PolicyResolutionException;
 
 }

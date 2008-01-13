@@ -22,7 +22,7 @@ import javax.xml.stream.XMLStreamReader;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axis2.AxisFault;
-import org.apache.axis2.description.AxisService;
+import org.apache.axis2.description.AxisDescription;
 import org.apache.axis2.description.Parameter;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.transform.xml.Element2Stream;
@@ -40,7 +40,7 @@ public class AxisConfigPolicyApplier implements PolicyApplier {
     
     private final Element2Stream transformer = new Element2Stream(XMLInputFactory.newInstance());
 
-    public void applyPolicy(AxisService axisService, Element policy) {
+    public void applyPolicy(AxisDescription axisDescription, Element policy) {
         
         try {
         
@@ -63,7 +63,7 @@ public class AxisConfigPolicyApplier implements PolicyApplier {
                 Parameter param = new Parameter(parameterName, actionElement);
                 param.setParameterElement(parameterElement);
                 
-                axisService.addParameter(param);
+                axisDescription.addParameter(param);
                 
             }
             
