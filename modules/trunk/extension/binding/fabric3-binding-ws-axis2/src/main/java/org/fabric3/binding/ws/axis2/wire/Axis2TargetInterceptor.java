@@ -119,8 +119,11 @@ public class Axis2TargetInterceptor implements Interceptor {
             return ret;
             
         } catch (AxisFault e) {
-            // TODO Send a fault back
-            throw new AssertionError(e);
+            
+            Message ret = new MessageImpl();
+            ret.setBodyWithFault(e.getCause());
+            return ret;
+            
         } finally {
             currentThread.setContextClassLoader(oldCl);
         }
