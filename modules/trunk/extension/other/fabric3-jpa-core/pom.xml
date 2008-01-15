@@ -16,21 +16,21 @@
  under the License.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    
+
     <modelVersion>4.0.0</modelVersion>
-    
+
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric</artifactId>
         <version>4</version>
     </parent>
-    
+
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-jpa-core</artifactId>
     <version>0.2-SNAPSHOT</version>
     <name>Fabric3 JPA Integration (Core)</name>
     <description>Fabric3 JPA Integration (Core).</description>
-    
+
     <packaging>sca-contribution-jar</packaging>
 
     <repositories>
@@ -43,7 +43,7 @@
     </repositories>
 
     <dependencies>
-    
+
         <dependency>
             <groupId>javax.persistence</groupId>
             <artifactId>persistence-api</artifactId>
@@ -62,7 +62,6 @@
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-pojo</artifactId>
             <version>0.4-SNAPSHOT</version>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -83,7 +82,7 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apache.openjpa</groupId>
             <artifactId>openjpa-persistence-jdbc</artifactId>
@@ -110,5 +109,5 @@
         <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-jpa-core</developerConnection>
         <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/extension/other/fabric3-jpa-core</url>
     </scm>
-    
+
 </project>
