@@ -18,7 +18,9 @@
  */
 package org.fabric3.jpa.provider;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.JarURLConnection;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -64,19 +66,9 @@ public class ClasspathPersistenceUnitScanner implements PersistenceUnitScanner {
 
                     URL persistenceUnitUrl = persistenceUnitUrls.nextElement();
                     Document persistenceDom = db.parse(persistenceUnitUrl.openStream());
+                    URL rootUrl = getRootJarUrl(persistenceUnitUrl);
 
-                    String rootJarUrl = persistenceUnitUrl.toString();
-                    rootJarUrl = rootJarUrl.substring(0, rootJarUrl.lastIndexOf("META-INF"));
-                    
-                    // TODO This is a hack, otherwise, Hibernate doesn't work with WLS
-                    // TODO Need to speak to Prasad why the protocol is zip for jar resources
-                    boolean isJarUrl = (rootJarUrl.startsWith("zip") || rootJarUrl.startsWith("jar")) && rootJarUrl.endsWith(".jar!/");
-                    if (isJarUrl) {
-                        // This needs to be relooked
-                        rootJarUrl = "file" + rootJarUrl.substring(3, rootJarUrl.length() - 2);
-                    }
-
-                    PersistenceUnitInfoImpl info = new PersistenceUnitInfoImpl(persistenceDom, classLoader, new URL(rootJarUrl));
+                    PersistenceUnitInfoImpl info = new PersistenceUnitInfoImpl(persistenceDom, classLoader, rootUrl);
                     if (unitName.equals(info.getPersistenceUnitName())) {
                         persistenceUnitInfos.put(unitName, info);
                         return info;
@@ -96,6 +88,22 @@ public class ClasspathPersistenceUnitScanner implements PersistenceUnitScanner {
 
         throw new Fabric3JpaException("Unable to find persistence unit: " + unitName);
 
+    }
+    
+    private URL getRootJarUrl(URL persistenceUnitUrl) throws IOException {
+        
+        String protocol = persistenceUnitUrl.getProtocol();
+        
+        if ("jar".equals(protocol) || "zip".equals(protocol)) {
+            JarURLConnection jarURLConnection = (JarURLConnection) persistenceUnitUrl.openConnection();
+            return jarURLConnection.getJarFileURL();
+        } else if ("file".equals(protocol)){
+            String path = persistenceUnitUrl.getPath();
+            return new File(path).getParentFile().getParentFile().toURL();
+        } else {
+            throw new Fabric3JpaException("Unable to handle protocol: " + protocol);
+        }
+        
     }
 
 }
