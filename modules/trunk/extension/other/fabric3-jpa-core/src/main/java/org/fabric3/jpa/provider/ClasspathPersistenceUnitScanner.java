@@ -6,15 +6,15 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License.    
+ * under the License.
  */
 package org.fabric3.jpa.provider;
 
@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.JarURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,7 +43,7 @@ import org.xml.sax.SAXException;
 public class ClasspathPersistenceUnitScanner implements PersistenceUnitScanner {
 
     private static DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-    
+
     private Map<String, PersistenceUnitInfo> persistenceUnitInfos = new HashMap<String, PersistenceUnitInfo>();
 
     /**
@@ -89,21 +90,26 @@ public class ClasspathPersistenceUnitScanner implements PersistenceUnitScanner {
         throw new Fabric3JpaException("Unable to find persistence unit: " + unitName);
 
     }
-    
+
     private URL getRootJarUrl(URL persistenceUnitUrl) throws IOException {
-        
-        String protocol = persistenceUnitUrl.getProtocol();
-        
-        if ("jar".equals(protocol) || "zip".equals(protocol)) {
-            JarURLConnection jarURLConnection = (JarURLConnection) persistenceUnitUrl.openConnection();
-            return jarURLConnection.getJarFileURL();
-        } else if ("file".equals(protocol)){
-            String path = persistenceUnitUrl.getPath();
-            return new File(path).getParentFile().getParentFile().toURL();
-        } else {
-            throw new Fabric3JpaException("Unable to handle protocol: " + protocol);
-        }
-        
-    }
+		String protocol = persistenceUnitUrl.getProtocol();
+
+		if ("jar".equals(protocol)) {
+			JarURLConnection jarURLConnection = (JarURLConnection) persistenceUnitUrl
+					.openConnection();
+			return jarURLConnection.getJarFileURL();
+		} else if ("file".equals(protocol)) {
+			String path = persistenceUnitUrl.getPath();
+			return new File(path).getParentFile().getParentFile().toURL();
+		} else if ("zip".equals(protocol)) {
+			String path = persistenceUnitUrl.getPath();
+			String rootJarUrl = path.substring(0,path.lastIndexOf("META-INF") - 2);
+			rootJarUrl = "file:" + rootJarUrl;
+			return new URL(rootJarUrl);
+		} else {
+			throw new Fabric3JpaException("Unable to handle protocol: "	+ protocol);
+		}
+	}
+
 
 }
