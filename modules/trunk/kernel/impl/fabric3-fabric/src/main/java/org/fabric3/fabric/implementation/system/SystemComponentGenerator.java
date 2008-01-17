@@ -94,6 +94,7 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
                                                            GeneratorContext context) throws GenerationException {
         
         SystemWireSourceDefinition wireDefinition = new SystemWireSourceDefinition();
+        wireDefinition.setOptimizable(true);
         wireDefinition.setUri(reference.getUri());
 
         URI classLoaderId = classLoaderGenerator.generate(source, context);
@@ -107,6 +108,7 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
                                                            Policy policy,
                                                            GeneratorContext context) throws GenerationException {
         SystemWireTargetDefinition wireDefinition = new SystemWireTargetDefinition();
+        wireDefinition.setOptimizable(true);
         wireDefinition.setUri(service.getUri());
         return wireDefinition;
     }

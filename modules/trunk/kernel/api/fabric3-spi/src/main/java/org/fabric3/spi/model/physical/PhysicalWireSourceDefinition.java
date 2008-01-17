@@ -21,8 +21,9 @@ package org.fabric3.spi.model.physical;
 
 import java.net.URI;
 
-import org.fabric3.scdl.ModelObject;
 import org.w3c.dom.Document;
+
+import org.fabric3.scdl.ModelObject;
 
 /**
  * Represents a physical wire source definition.
@@ -31,25 +32,25 @@ import org.w3c.dom.Document;
  */
 public class PhysicalWireSourceDefinition extends ModelObject {
 
-    // URI
     private URI uri;
     private URI callbackUri;
+    private boolean optimizable;
     private boolean conversational;
     private Document key;
 
     /**
-     * Gets the URI.
+     * Returns the URI of the physical component that is the source of invocations on this wire.
      *
-     * @return the URI.
+     * @return the URI of the physical component that is the source of invocations on this wire
      */
     public URI getUri() {
         return uri;
     }
 
     /**
-     * Sets the URI.
+     * Sets the URI of the physical component that is the source of invocations on this wire.
      *
-     * @param uri the URI.
+     * @param uri the URI of the physical component that is the source of invocations on this wire
      */
     public void setUri(URI uri) {
         this.uri = uri;
@@ -65,7 +66,7 @@ public class PhysicalWireSourceDefinition extends ModelObject {
     }
 
     /**
-     * Sets the URI.
+     * Sets the callback URI.
      *
      * @param uri the callback URI.
      */
@@ -74,27 +75,59 @@ public class PhysicalWireSourceDefinition extends ModelObject {
     }
 
 
+    /**
+     * Returns whether the source side of the wire is optimizable.
+     *
+     * @return true if the source side of the wire is optimizable
+     */
+    public boolean isOptimizable() {
+        return optimizable;
+    }
+
+    /**
+     * Sets whether the source side of the wire is optimizable.
+     *
+     * @param optimizable whether the source side of the wire is optimizable
+     */
+    public void setOptimizable(boolean optimizable) {
+        this.optimizable = optimizable;
+    }
+
+    /**
+     * Returns whether the service contract for this wire is conversational.
+     * <p/>
+     * If needed, this should be moved up to the PhysicalWireDefinition as it applies to both source and target.
+     *
+     * @return true if the service contract is conversational
+     */
+    @Deprecated
     public boolean isConversational() {
         return conversational;
     }
 
+    /**
+     * Sets whether the service contract for this wire is conversational.
+     *
+     * @param conversational true if the service contract is conversational
+     */
+    @Deprecated
     public void setConversational(boolean conversational) {
         this.conversational = conversational;
     }
 
     /**
-     * Gets the key if the wire is for a map based reference.
-     * 
-     * @return The key if the wire is for a map based reference.
+     * Returns the key to be used when this wire is part of a Map reference.
+     *
+     * @return the key to be used when this wire is part of a Map reference
      */
     public Document getKey() {
         return key;
     }
 
     /**
-     * Gets the key if the wire is for a map based reference.
-     * 
-     * @param key The key if the wire is for a map based reference.
+     * Sets the key to be used when this wire is part of a Map reference.
+     *
+     * @param key the key to be used when this wire is part of a Map reference
      */
     public void setKey(Document key) {
         this.key = key;

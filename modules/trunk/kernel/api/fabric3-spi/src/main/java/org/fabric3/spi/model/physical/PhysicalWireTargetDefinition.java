@@ -24,29 +24,48 @@ import java.net.URI;
 import org.fabric3.scdl.ModelObject;
 
 /**
- * Represents a physical wire target definition.
- * 
+ * Represents the target set of a physical wire.
+ *
  * @version $Revision$ $Date$
  */
 public class PhysicalWireTargetDefinition extends ModelObject {
-    
-    // URI
+
     private URI uri;
+    private boolean optimizable;
 
     /**
-     * Gets the URI.
-     * @return Gets the URI.
+     * Returns the URI of the physical component targeted by this wire.
+     *
+     * @return the URI of the physical component targeted by this wire
      */
     public URI getUri() {
         return uri;
     }
 
     /**
-     * Sets the URI.
-     * @param uri Sets the URI.
+     * Sets the URI of the physical component targeted by this wire.
+     *
+     * @param uri the URI of the physical component targeted by this wire
      */
     public void setUri(URI uri) {
         this.uri = uri;
     }
 
+    /**
+     * Returns whether the target side of the wire is optimizable.
+     *
+     * @return true if the target side of the wire is optimizable
+     */
+    public boolean isOptimizable() {
+        return optimizable;
+    }
+
+    /**
+     * Sets whether the target side of the wire is optimizable.
+     *
+     * @param optimizable whether the target side of the wire is optimizable
+     */
+    public void setOptimizable(boolean optimizable) {
+        this.optimizable = optimizable;
+    }
 }

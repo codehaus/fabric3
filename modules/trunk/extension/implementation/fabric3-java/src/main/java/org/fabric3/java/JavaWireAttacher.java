@@ -93,32 +93,27 @@ public class JavaWireAttacher extends PojoWireAttacher implements SourceWireAtta
 
     public void attachToSource(JavaWireSourceDefinition sourceDefinition,
                                PhysicalWireTargetDefinition targetDefinition,
-                               Wire wire) {
+                               Wire wire) throws WireAttachException {
 
         URI sourceUri = sourceDefinition.getUri();
         URI sourceName = UriHelper.getDefragmentedName(sourceDefinition.getUri());
-        Component component = manager.getComponent(sourceName);
-        assert component instanceof JavaComponent;
-        JavaComponent<?> source = (JavaComponent) component;
+        JavaComponent<?> source = (JavaComponent) manager.getComponent(sourceName);
         ValueSource referenceSource = new ValueSource(ValueSource.ValueSourceType.REFERENCE, sourceUri.getFragment());
 
-        Class<?> type = source.getMemberType(referenceSource);
-        URI targetUri = targetDefinition.getUri();
-
-        Component target = null;
-        if (targetUri != null) {
-            URI targetName = UriHelper.getDefragmentedName(targetDefinition.getUri());
-            target = manager.getComponent(targetName);
+        Class<?> type;
+        try {
+            type = classLoaderRegistry.loadClass(sourceDefinition.getClassLoaderId(), sourceDefinition.getInterfaceName());
+        } catch (ClassNotFoundException e) {
+            throw new WireAttachException("Unable to load interface class: " + sourceDefinition.getInterfaceName(),
+                                          sourceUri,
+                                          null,
+                                          e);
         }
-
-        Object key = getKey(sourceDefinition, source, referenceSource);
 
         ObjectFactory<?> factory = createWireObjectFactory(type, sourceDefinition.isConversational(), wire);
-        if (target != null) {
-            source.attachReferenceToTarget(referenceSource, factory, key);
-        } else {
-            source.setObjectFactory(referenceSource, factory);
-        }
+        Object key = getKey(sourceDefinition, source, referenceSource);
+        source.attachReferenceToTarget(referenceSource, factory, key);
+
         if (!wire.getCallbackInvocationChains().isEmpty()) {
             URI callbackUri = sourceDefinition.getCallbackUri();
             ValueSource callbackSource =

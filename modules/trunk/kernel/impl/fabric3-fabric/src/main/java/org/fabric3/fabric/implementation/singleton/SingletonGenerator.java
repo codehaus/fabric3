@@ -62,6 +62,7 @@ public class SingletonGenerator implements ComponentGenerator<LogicalComponent<S
         SingletonWireTargetDefinition wireDefinition = new SingletonWireTargetDefinition();
         URI uri = logical.getUri().resolve(service.getUri());
         wireDefinition.setUri(uri);
+        wireDefinition.setOptimizable(true);
         return wireDefinition;
     }
 

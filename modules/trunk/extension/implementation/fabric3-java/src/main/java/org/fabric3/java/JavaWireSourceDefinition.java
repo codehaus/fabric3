@@ -19,7 +19,6 @@
 package org.fabric3.java;
 
 import org.fabric3.pojo.wire.PojoWireSourceDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 
 /**
  * Models a Java physical wire source definition.

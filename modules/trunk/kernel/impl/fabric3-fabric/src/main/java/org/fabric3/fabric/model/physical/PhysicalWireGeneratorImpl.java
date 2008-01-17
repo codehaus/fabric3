@@ -136,7 +136,11 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
 
         PhysicalWireDefinition wireDefinition = new PhysicalWireDefinition(sourceDefinition, targetDefinition, operationDefinitions);
         setCallbackOperationDefinitions(serviceContract, wireDefinition);
-        wireDefinition.setOptimizable(checkOptimization(serviceContract, operationDefinitions));
+        boolean optimizable = sourceDefinition.isOptimizable() &&
+                targetDefinition.isOptimizable() &&
+                checkOptimization(serviceContract, operationDefinitions);
+//        boolean optimizable = checkOptimization(serviceContract, operationDefinitions);
+        wireDefinition.setOptimizable(optimizable);
 
         context.getPhysicalChangeSet().addWireDefinition(wireDefinition);
 
@@ -200,7 +204,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
 
         ServiceContract<?> contract = reference.getDefinition().getServiceContract();
         LogicalBinding<SCABindingDefinition> sourceBinding = new LogicalBinding<SCABindingDefinition>(SCABindingDefinition.INSTANCE, reference);
-        
+
         PolicyResult policyResult = resolvePolicies(contract, sourceBinding, binding, component, null);
         Policy sourcePolicy = policyResult.getSourcePolicy();
         Policy targetPolicy = policyResult.getTargetPolicy();
@@ -208,11 +212,11 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         BindingGenerator targetGenerator = getGenerator(binding);
         PhysicalWireTargetDefinition targetDefinition = targetGenerator.generateWireTarget(binding, targetPolicy, context, reference.getDefinition());
         ComponentGenerator<C> sourceGenerator = getGenerator(component);
-        
+
         PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(component, reference, sourcePolicy, context);
 
         Set<PhysicalOperationDefinition> operationDefinitions = generateOperations(contract, policyResult);
-        
+
         PhysicalWireDefinition wireDefinition = new PhysicalWireDefinition(sourceDefinition, targetDefinition, operationDefinitions);
         setCallbackOperationDefinitions(contract, wireDefinition);
 
@@ -222,10 +226,10 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
 
 
     private Set<PhysicalOperationDefinition> generateOperations(ServiceContract<?> contract, PolicyResult policyResult) throws GenerationException {
-        
+
         List<? extends Operation<?>> operations = contract.getOperations();
         Set<PhysicalOperationDefinition> physicalOperations = new HashSet<PhysicalOperationDefinition>(operations.size());
-        
+
         for (Operation<?> operation : operations) {
             PhysicalOperationDefinition physicalOperation = physicalOperationHelper.mapOperation(operation);
             if (policyResult != null) {
@@ -235,9 +239,9 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
             }
             physicalOperations.add(physicalOperation);
         }
-        
+
         return physicalOperations;
-        
+
     }
 
     @SuppressWarnings({"unchecked"})
@@ -274,13 +278,13 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
                                          LogicalBinding<?> targetBinding,
                                          LogicalComponent<?> source,
                                          LogicalComponent<?> target) throws PolicyException {
-        
+
         try {
             return policyResolver.resolvePolicies(serviceContract, sourceBinding, targetBinding, source, target);
         } catch (PolicyResolutionException e) {
             throw new PolicyException(e);
         }
-        
+
     }
 
     @SuppressWarnings("unchecked")
@@ -300,23 +304,23 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
     }
 
     private boolean checkOptimization(ServiceContract<?> serviceContract, Set<PhysicalOperationDefinition> operationDefinitions) {
-        
+
         if (serviceContract.isConversational()) {
             return false;
         }
-        
+
         if (serviceContract.isRemotable()) {
             return false;
         }
-        
+
         for (PhysicalOperationDefinition operation : operationDefinitions) {
             if (!operation.getInterceptors().isEmpty()) {
                 return false;
             }
         }
-        
+
         return true;
-        
+
     }
-    
+
 }

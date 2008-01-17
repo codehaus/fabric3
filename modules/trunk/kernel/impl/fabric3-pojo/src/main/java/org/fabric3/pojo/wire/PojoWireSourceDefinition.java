@@ -23,22 +23,44 @@ import java.net.URI;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 
 /**
- *
  * @version $Revision$ $Date$
  */
 public class PojoWireSourceDefinition extends PhysicalWireSourceDefinition {
-    
+
+    private String interfaceName;
     private URI classLoaderId;
 
     /**
-     * @return the classLoaderId
+     * Returns the name of the Java interface for the service contract.
+     *
+     * @return the name of the Java interface for the service contract
+     */
+    public String getInterfaceName() {
+        return interfaceName;
+    }
+
+    /**
+     * Sets the name of the Java interface for the service contract.
+     *
+     * @param interfaceName the name of the Java interface for the service contract
+     */
+    public void setInterfaceName(String interfaceName) {
+        this.interfaceName = interfaceName;
+    }
+
+    /**
+     * Returns the id of the classloader that should be used to load the interface class.
+     *
+     * @return the id of the classloader that should be used to load the interface class
      */
     public URI getClassLoaderId() {
         return classLoaderId;
     }
 
     /**
-     * @param classLoaderId the classLoaderId to set
+     * Sets the id of the classloader that should be used to load the interface class.
+     *
+     * @param classLoaderId the id of the classloader that should be used to load the interface class
      */
     public void setClassLoaderId(URI classLoaderId) {
         this.classLoaderId = classLoaderId;

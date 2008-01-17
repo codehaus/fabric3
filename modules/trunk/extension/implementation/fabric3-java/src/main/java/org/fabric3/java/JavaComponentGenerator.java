@@ -24,6 +24,8 @@ import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.Scope;
+import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
@@ -37,6 +39,8 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.Policy;
+import org.fabric3.spi.idl.java.JavaServiceContract;
+
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
@@ -96,12 +100,44 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
                                                            GeneratorContext context) throws GenerationException {
         JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
         wireDefinition.setUri(reference.getUri());
-        wireDefinition.setConversational(reference.getDefinition().getServiceContract().isConversational());
+        ServiceContract<?> serviceContract = reference.getDefinition().getServiceContract();
+        String interfaceName = getInterfaceName(serviceContract);
+        wireDefinition.setInterfaceName(interfaceName);
+        wireDefinition.setConversational(serviceContract.isConversational());
+
+        // assume for now that any wire from a Java component can be optimized
+        wireDefinition.setOptimizable(true);
 
         URI classLoaderId = classLoaderGenerator.generate(source, context);
         wireDefinition.setClassLoaderId(classLoaderId);
         
         return wireDefinition;
+    }
+
+    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<JavaImplementation> source,
+                                                                   LogicalResource<?> resource,
+                                                                   GeneratorContext context) throws GenerationException {
+        JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
+        wireDefinition.setUri(resource.getUri());
+        wireDefinition.setConversational(false);
+
+        URI classLoaderId = classLoaderGenerator.generate(source, context);
+        wireDefinition.setClassLoaderId(classLoaderId);
+
+        ServiceContract<?> serviceContract = resource.getResourceDefinition().getServiceContract();
+        String interfaceName = getInterfaceName(serviceContract);
+        wireDefinition.setInterfaceName(interfaceName);
+        return wireDefinition;
+    }
+
+    private String getInterfaceName(ServiceContract<?> contract) {
+        // FIXME we should have a way of returning the Java mapped name of the contract
+        if (contract instanceof JavaServiceContract) {
+            JavaServiceContract javaServiceContract = (JavaServiceContract) contract;
+            return javaServiceContract.getInterfaceClass();
+        } else {
+            return contract.getInterfaceName();
+        }
     }
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
@@ -117,17 +153,10 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
             uri = target.getUri();
         }
         wireDefinition.setUri(uri);
+
+        // assume for now that only wires to composite scope components can be optimized
+        Scope<?> scope = target.getDefinition().getImplementation().getComponentType().getImplementationScope();
+        wireDefinition.setOptimizable(Scope.COMPOSITE.equals(scope));
         return wireDefinition;
     }
-    
-    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<JavaImplementation> source,
-                                                                   LogicalResource<?> resource, 
-                                                                   GeneratorContext context) throws GenerationException {
-        JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
-        wireDefinition.setUri(resource.getUri());
-        wireDefinition.setConversational(false);
-        return wireDefinition;
-    }
-
-
 }
