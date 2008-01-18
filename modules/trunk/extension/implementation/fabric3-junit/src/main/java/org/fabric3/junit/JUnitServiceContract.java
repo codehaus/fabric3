@@ -37,4 +37,10 @@ public class JUnitServiceContract extends ServiceContract<Type> {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public String getQualifiedInterfaceName() {
+        // TODO Identify the qualified interface name for JUnit components - test class?
+        return null;
+    }
+
 }

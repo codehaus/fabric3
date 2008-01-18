@@ -18,7 +18,6 @@
  */
 package org.fabric3.runtime.standalone.host.implementation.launched;
 
-import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -36,6 +35,12 @@ public class LaunchedServiceContract extends ServiceContract<Type> {
 
     public boolean isAssignableFrom(ServiceContract<?> contract) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public String getQualifiedInterfaceName() {
+        // TODO Identify the qualified interface name for launched components - implementation class?
+        return null;
     }
 
 }

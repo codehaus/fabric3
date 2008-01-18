@@ -119,13 +119,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
     }
 
     private String getInterfaceName(ServiceContract<?> contract) {
-        // FIXME we should have a way of returning the Java mapped name of the contract
-        if (contract instanceof JavaServiceContract) {
-            JavaServiceContract javaServiceContract = (JavaServiceContract) contract;
-            return javaServiceContract.getInterfaceClass();
-        } else {
-            return contract.getInterfaceName();
-        }
+        return contract.getQualifiedInterfaceName();
     }
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,

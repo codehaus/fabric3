@@ -159,6 +159,8 @@ public abstract class ServiceContract<T> extends ModelObject {
      * @return true if the contracts are compatible
      */
     public abstract boolean isAssignableFrom(ServiceContract<?> contract);
+    
+    public abstract String getQualifiedInterfaceName();
 
     public String toString() {
         if (interfaceName != null) {

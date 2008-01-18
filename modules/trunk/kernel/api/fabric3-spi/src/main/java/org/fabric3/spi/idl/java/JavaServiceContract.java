@@ -56,6 +56,10 @@ public class JavaServiceContract extends ServiceContract<Type> {
         this.interfaceClass = interfaceClazz.getName();
         addInterfaces(interfaceClazz, interfaces);
     }
+    
+    public String getQualifiedInterfaceName() {
+        return getInterfaceClass();
+    }
 
     /**
      * Returns the fully qualified class name used to represent the service contract.

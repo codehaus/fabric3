@@ -328,6 +328,12 @@ public class ContractCompatibilityServiceImplTestCase extends TestCase {
             return false;
         }
 
+        @Override
+        public String getQualifiedInterfaceName() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
     }
 
 }

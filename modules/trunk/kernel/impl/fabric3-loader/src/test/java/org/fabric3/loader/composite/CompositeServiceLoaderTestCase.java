@@ -102,6 +102,12 @@ public class CompositeServiceLoaderTestCase extends TestCase {
                 return false;
             }
 
+            @Override
+            public String getQualifiedInterfaceName() {
+                // TODO Auto-generated method stub
+                return null;
+            }
+
         };
         expect(mockReader.getAttributeValue(null, "name")).andReturn(serviceName);
         expect(mockReader.getAttributeValue(null, "promote")).andReturn(componentName);
