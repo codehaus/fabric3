@@ -24,6 +24,14 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.util.Set;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
 import org.apache.maven.archiver.MavenArchiveConfiguration;
 import org.apache.maven.archiver.MavenArchiver;
 import org.apache.maven.artifact.Artifact;
@@ -34,6 +42,9 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectHelper;
 import org.codehaus.plexus.archiver.jar.JarArchiver;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
 /**
  * Builds an archive suitable for contribution to an SCA Domain.
@@ -43,9 +54,16 @@ import org.codehaus.plexus.archiver.jar.JarArchiver;
  * @phase package
  */
 public class Fabric3ContributionMojo extends AbstractMojo {
+    
     private static final String[] DEFAULT_EXCLUDES = new String[]{"**/package.html"};
-
     private static final String[] DEFAULT_INCLUDES = new String[]{"**/**"};
+    
+    private static final DocumentBuilderFactory DBF = DocumentBuilderFactory.newInstance();
+    private static final TransformerFactory TF = TransformerFactory.newInstance();
+    
+    static {
+        DBF.setNamespaceAware(true);
+    }
 
     /**
      * Build output directory.
@@ -116,8 +134,19 @@ public class Fabric3ContributionMojo extends AbstractMojo {
      */
     protected String packaging;
     
+    /**
+     * @parameter
+     */
+    protected String[] deployables;
+    
+    /**
+     * @parameter
+     */
+    protected MavenImport[] mavenImports;
+    
 
     public void execute() throws MojoExecutionException, MojoFailureException {
+        
         File contribution = createArchive();
 
         if (classifier != null) {
@@ -125,9 +154,11 @@ public class Fabric3ContributionMojo extends AbstractMojo {
         } else {
             project.getArtifact().setFile(contribution);
         }
+        
     }
 
-    protected File createArchive() throws MojoExecutionException {
+    private File createArchive() throws MojoExecutionException {
+
         File contribution = getJarFile(outputDirectory, contributionName, classifier);
 
         MavenArchiver archiver = new MavenArchiver();
@@ -140,8 +171,8 @@ public class Fabric3ContributionMojo extends AbstractMojo {
             if (!contentDirectory.exists()) {
                 throw new FileNotFoundException(String.format("Unable to package contribution, %s does not exist.",contentDirectory));
             } else {
-            	handleContributionFile(contentDirectory);
             	includeDependencies(contentDirectory);
+            	generateScaContributionFile(contentDirectory);
             	archiver.getArchiver().addDirectory(contentDirectory, DEFAULT_INCLUDES, DEFAULT_EXCLUDES);
             }
 
@@ -152,9 +183,11 @@ public class Fabric3ContributionMojo extends AbstractMojo {
         catch (Exception e) {
             throw new MojoExecutionException("Error assembling contribution", e);
         }
+        
     }
 
-    protected File getJarFile(File buildDir, String finalName, String classifier) {
+    private File getJarFile(File buildDir, String finalName, String classifier) {
+        
     	getLog().debug( "Calculating the archive file name");
         if (classifier != null) {
             classifier = classifier.trim();
@@ -167,22 +200,104 @@ public class Fabric3ContributionMojo extends AbstractMojo {
             extension=".jar";
         }
         return new File(buildDir, finalName + extension);
+        
+    }
+    
+    private void generateScaContributionFile(File contentDirectory) throws TransformerException, 
+                                                                           IOException, 
+                                                                           ParserConfigurationException, 
+                                                                           SAXException, 
+                                                                           MojoExecutionException {
+        
+        File scaContribution = new File(contentDirectory, "META-INF" + File.separator + "sca-contribution.xml");
+        
+        if ((deployables != null || mavenImports != null) && scaContribution.exists()) {
+            throw new MojoExecutionException("SCA contribution xml already exists");
+        }
+        Document document = DBF.newDocumentBuilder().newDocument();
+        
+        Element root = document.createElement("contribution");
+        root.setAttribute("xmlns", "http://www.osoa.org/xmlns/sca/1.0");
+        root.setAttribute("xmlns:maven", "http://fabric3.org/xmlns/sca/2.0-alpha/maven");
+        
+        document.appendChild(root);
+        
+        generateDeployables(contentDirectory, document, root);
+        
+        generateMavenImports(document, root);
+        
+        Transformer transformer = TF.newTransformer();
+        transformer.setOutputProperty("indent", "yes");
+        FileOutputStream out = new FileOutputStream(scaContribution);
+        transformer.transform(new DOMSource(document), new StreamResult(out));
+        
+        out.close();
+        
     }
 
-    protected void handleContributionFile(File contentDirectory)throws FileNotFoundException{
-    	getLog().debug( "checking for sca-contribution.xml file");
-    	File contributionFile = new File(contentDirectory,"META-INF"+ File.separator + "sca-contribution.xml");
-    	if (!contributionFile.exists()){
-    		//generate sca-contribution-generated.xml?
-    		throw new FileNotFoundException(String.format("Missing sca-contribution.xml file %s",contributionFile));
-    	}
+    private void generateMavenImports(Document document, Element root) {
+        
+        if (mavenImports == null) {
+            return;
+        }
+            
+        @SuppressWarnings("unchecked")
+        Set<Artifact> artifacts = (Set<Artifact>) project.getArtifacts();
+        
+        for (MavenImport mavenImport : mavenImports) {
+            
+            String groupId = mavenImport.getGroupId();
+            String artifactId = mavenImport.getArtifactId();
+            
+            Element mavenImportElement = document.createElement("maven:import");
+            mavenImportElement.setAttribute("groupId",groupId);
+            mavenImportElement.setAttribute("artifactId", artifactId);
+            
+            for (Artifact artifact : artifacts) {
+                if (groupId.equals(artifact.getGroupId()) && artifactId.equals(artifact.getArtifactId())) {
+                    getLog().info("Found artifact:" + artifact.getArtifactId());
+                    mavenImportElement.setAttribute("version", artifact.getVersion());
+                }
+            }
+            
+            root.appendChild(mavenImportElement);
+            
+        }
+        
     }
 
-    protected void includeDependencies(File contentDirectory) throws IOException{
+    private void generateDeployables(File contentDirectory, Document document, Element root) throws SAXException,
+                                                                                                    IOException, 
+                                                                                                    ParserConfigurationException {
+        
+        if (deployables == null) {
+            return;
+        }
+            
+        for (String deployable : deployables) {
+            
+            File deployableFile = new File(contentDirectory, deployable);
+            Document composite = DBF.newDocumentBuilder().parse(deployableFile);
+            Element compositeElement = composite.getDocumentElement();
+            
+            String uri = compositeElement.getAttribute("targetNamespace");
+            String name = compositeElement.getAttribute("name");
+            
+            Element deployableElement = document.createElement("deployable");
+            deployableElement.setAttribute("xmlns:dep", uri);
+            deployableElement.setAttribute("composite", "dep:" + name);
+            root.appendChild(deployableElement);
+            
+        }
+
+    }
+
+    private void includeDependencies(File contentDirectory) throws IOException {
+        
 	 	getLog().debug( "including dependencies in archive");
 	 	//include all the dependencies that are required for runtime operation and are not sca-contributions(they
 	 	// will be deployed separately);
-                File libDir = new File( contentDirectory,"META-INF" + File.separator + "lib" );
+        File libDir = new File( contentDirectory,"META-INF" + File.separator + "lib" );
 	 	ScopeArtifactFilter filter = new ScopeArtifactFilter( Artifact.SCOPE_RUNTIME );
 
         @SuppressWarnings("unchecked")
@@ -204,5 +319,7 @@ public class Fabric3ContributionMojo extends AbstractMojo {
             	srcChannel.close();
             }
         }
+        
     }
+    
 }

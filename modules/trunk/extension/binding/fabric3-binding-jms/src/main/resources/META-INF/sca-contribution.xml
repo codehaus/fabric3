@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="ASCII"?>
-<contribution xmlns="http://www.osoa.org/xmlns/sca/1.0"
-              xmlns:f3="org.codehaus.fabric3">
-    <deployable composite="f3:JMSBindingExtension"/>
-</contribution>
-
-
-

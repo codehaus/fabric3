@@ -117,9 +117,19 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-contribution-plugin</artifactId>
-                <version>RELEASE</version>
+                <version>0.3-SNAPSHOT</version>
                 <extensions>true</extensions>
-                <configuration />
+                <configuration>
+                    <mavenImports>
+                        <mavenImport>
+                           <groupId>org.codehaus.fabric3</groupId>
+                           <artifactId>fabric3-spi</artifactId>
+                       </mavenImport>
+                    </mavenImports>
+                    <deployables>
+                        <deployable>META-INF/hibernate.composite</deployable>
+                    </deployables>
+                </configuration>
             </plugin>
         </plugins>
     </build>

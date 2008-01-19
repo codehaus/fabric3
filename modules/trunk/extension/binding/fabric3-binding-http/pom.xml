@@ -27,7 +27,6 @@
     <version>0.1-SNAPSHOT</version>
     <name>Fabric3 HTTP Binding</name>
     <description>Fabric3 HTTP Binding Implementation.</description>
-    <packaging>sca-contribution-jar</packaging>
 
     <dependencies>
 
@@ -37,17 +36,6 @@
         </dependency>
 
     </dependencies>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.fabric3</groupId>
-                <artifactId>fabric3-contribution-plugin</artifactId>
-                <version>RELEASE</version>
-                <extensions>true</extensions>
-                <configuration />
-            </plugin>
-        </plugins>
-    </build>
 
     <scm>
         <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/binding/fabric3-binding-http</connection>
