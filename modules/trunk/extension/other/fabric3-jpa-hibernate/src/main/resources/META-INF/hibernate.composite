@@ -34,4 +34,9 @@
         <system:implementation.system class="org.fabric3.jpa.hibernate.HibernateDelegate"/>
     </component>
     
+    <!-- Transaction manager lookup -->
+    <component name="org.fabric3.jpa.hibernate.F3HibernateTransactionManagerLookup">
+        <system:implementation.system class="org.fabric3.jpa.hibernate.F3HibernateTransactionManagerLookup"/>
+    </component>
+    
 </composite>

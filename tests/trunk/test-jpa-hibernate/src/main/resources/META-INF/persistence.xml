@@ -28,7 +28,7 @@
       <properties>
          <property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
          <property name="hibernate.transaction.manager_lookup_class" 
-                   value="org.hibernate.transaction.JOTMTransactionManagerLookup"/>
+                   value="org.fabric3.jpa.hibernate.F3HibernateTransactionManagerLookup"/>
          <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
          <!-- property name="hibernate.cglib.use_reflection_optimizer" value="false"/-->
       </properties>
