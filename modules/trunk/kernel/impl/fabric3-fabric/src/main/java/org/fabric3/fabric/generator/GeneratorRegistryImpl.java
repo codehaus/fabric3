@@ -56,22 +56,14 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
     private Map<Class<? extends ResourceDefinition>, ResourceWireGenerator<?, ? extends ResourceDefinition>> resourceWireGenerators =
         new ConcurrentHashMap<Class<? extends ResourceDefinition>, ResourceWireGenerator<?, ? extends ResourceDefinition>>();
 
-    /**
-     * Registers a component generator.
-     *
-     * @param clazz The implementation type the generator handles.
-     * @param generator The generator to register.
-     */
     public <T extends Implementation<?>> void register(Class<T> clazz, ComponentGenerator<LogicalComponent<T>> generator) {
         componentGenerators.put(clazz, generator);
     }
-    
-    /**
-     * Gets a component generator for the specified implementation.
-     * 
-     * @param clazz The implementation type the generator handles.
-     * @return The registered component generator.
-     */
+
+    public <T extends Implementation<?>> void unregister(Class<T> clazz, ComponentGenerator<LogicalComponent<T>> generator) {
+        componentGenerators.remove(clazz);
+    }
+
     @SuppressWarnings("unchecked")
     public <T extends Implementation<?>> ComponentGenerator<LogicalComponent<T>> getComponentGenerator(Class<T> clazz)  
         throws GeneratorNotFoundException {
@@ -81,22 +73,14 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         return (ComponentGenerator<LogicalComponent<T>>) componentGenerators.get(clazz);
     }
     
-    /**
-     * Registers a binding generator.
-     *
-     * @param clazz The binding type type the generator handles.
-     * @param generator The generator to register.
-     */
     public <T extends BindingDefinition> void register(Class<T> clazz, BindingGenerator<?, ?, T> generator) {
         bindingGenerators.put(clazz, generator);
     }
-    
-    /**
-     * Gets a binding generator for the specified binding class.
-     * 
-     * @param clazz The binding type type the generator handles.
-     * @return The registered binding generator.
-     */
+
+    public <T extends BindingDefinition> void unregister(Class<T> clazz, BindingGenerator<?, ?, T> generator) {
+        bindingGenerators.remove(clazz);
+    }
+
     @SuppressWarnings("unchecked")
     public <T extends BindingDefinition> BindingGenerator<?, ?, T> getBindingGenerator(Class<T> clazz) 
         throws GeneratorNotFoundException {        
@@ -106,22 +90,14 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         return (BindingGenerator<?, ?, T>) bindingGenerators.get(clazz);
     }
 
-    /**
-     * Registers a resource wire generator.
-     *
-     * @param clazz The resource type the generator handles.
-     * @param generator The generator to register.
-     */
     public <T extends ResourceDefinition> void register(Class<T> clazz, ResourceWireGenerator<?, T> generator) {
         resourceWireGenerators.put(clazz, generator);
     }
 
-    /**
-     * Gets the resource wire generator for the resource type.
-     * 
-     * @param clazz The resource type the generator handles.
-     * @return The registered resource wire generator.
-     */
+    public <T extends ResourceDefinition> void unregister(Class<T> clazz, ResourceWireGenerator<?, T> generator) {
+        resourceWireGenerators.remove(clazz);
+    }
+
     @SuppressWarnings("unchecked")
     public <T extends ResourceDefinition> ResourceWireGenerator<?, T> getResourceWireGenerator(Class<T> clazz) 
         throws GeneratorNotFoundException {      
@@ -131,23 +107,15 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         return (ResourceWireGenerator<?, T>) resourceWireGenerators.get(clazz);
     }
     
-    /**
-     * Registers an interceptor generator by type.
-     * 
-     * @param extensionName Fully qualified name of the extension.
-     * @param generator Interceptor generator to register.
-     */
     public void register(QName extensionName, InterceptorDefinitionGenerator interceptorDefinitionGenerator) {
         interceptorDefinitionGenerators.put(extensionName, interceptorDefinitionGenerator);
     }
 
-    /**
-     * Gets the interceptor definition generator for the qualified name.
-     * 
-     * @param extensionName Qualified name of the policy extension.
-     * @return Interceptor definition generator.
-     */
-    public InterceptorDefinitionGenerator getInterceptorDefinitionGenerator(QName extensionName) 
+    public void unregister(QName extensionName, InterceptorDefinitionGenerator generator) {
+        interceptorDefinitionGenerators.remove(extensionName);
+    }
+
+    public InterceptorDefinitionGenerator getInterceptorDefinitionGenerator(QName extensionName)
         throws GeneratorNotFoundException {
         if (!interceptorDefinitionGenerators.containsKey(extensionName)) {
             throw new GeneratorNotFoundException(extensionName);
@@ -155,20 +123,14 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
         return interceptorDefinitionGenerators.get(extensionName);
     }
     
-    /**
-     * Registers a command generator
-     *
-     * @param generator the generator to register
-     */
     public void register(CommandGenerator generator) {
         commandGenerators.add(generator);
     }
-    
-    /**
-     * Gets all the registered command generators.
-     * 
-     * @return All the registered command generators.
-     */
+
+    public void unregister(CommandGenerator generator) {
+        commandGenerators.remove(generator);
+    }
+
     public List<CommandGenerator> getCommandGenerators() {
         return commandGenerators;
     }
