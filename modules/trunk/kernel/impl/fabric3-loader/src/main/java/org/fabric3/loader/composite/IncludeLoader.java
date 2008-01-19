@@ -61,7 +61,7 @@ public class IncludeLoader implements StAXElementLoader<Include> {
 
         String nameAttr = reader.getAttributeValue(null, "name");
         if (nameAttr == null || nameAttr.length() == 0) {
-            throw new InvalidNameException(nameAttr, loaderContext.getSourceBase());
+            throw new InvalidNameException(nameAttr);
         }
         QName name = LoaderUtil.getQName(nameAttr, loaderContext.getTargetNamespace(), reader.getNamespaceContext());
         String scdlLocation = reader.getAttributeValue(null, "scdlLocation");
@@ -76,9 +76,7 @@ public class IncludeLoader implements StAXElementLoader<Include> {
                 url = new URL(loaderContext.getSourceBase(), scdlLocation);
                 return loadFromSideFile(name, cl,contributionUri, url);
             } catch (MalformedURLException e) {
-                MissingResourceException e2 = new MissingResourceException(scdlLocation, name.toString(), e);
-                e2.setResourceURI(loaderContext.getSourceBase().toString());
-                throw e2;
+                throw new MissingResourceException(scdlLocation, name.toString(), e);
             }
         } else if (scdlResource != null) {
             url = cl.getResource(scdlResource);

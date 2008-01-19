@@ -24,7 +24,6 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.Location;
 
 import junit.framework.TestCase;
 import org.easymock.classextension.EasyMock;
@@ -83,10 +82,7 @@ public class StAXLoaderRegistryImplTestCase extends TestCase {
     }
 
     public void testUnsuccessfulDispatch() throws LoaderException, XMLStreamException {
-        Location location = EasyMock.createNiceMock(Location.class);
-        EasyMock.replay(location);
         EasyMock.expect(mockReader.getName()).andReturn(name);
-        EasyMock.expect(mockReader.getLocation()).andReturn(location);
         EasyMock.replay(mockReader);
         mockMonitor.elementLoad(EasyMock.eq(name));
         EasyMock.replay(mockMonitor);

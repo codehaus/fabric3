@@ -63,9 +63,7 @@ public class ComponentReferenceLoader implements StAXElementLoader<ComponentRefe
 
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {
-            InvalidReferenceException e = new InvalidReferenceException("No reference name specified");
-            e.setResourceURI(context.getSourceBase().toString());
-            throw e;
+            throw new InvalidReferenceException("No reference name specified");
         }
         ComponentReference reference = new ComponentReference(name);
 
@@ -76,10 +74,7 @@ public class ComponentReferenceLoader implements StAXElementLoader<ComponentRefe
             Multiplicity multiplicity = Multiplicity.fromString(reader.getAttributeValue(null, "multiplicity"));
             reference.setMultiplicity(multiplicity);
         } catch (IllegalArgumentException e) {
-            InvalidValueException e2 =
-                    new InvalidValueException(reader.getAttributeValue(null, "multiplicity"), "multiplicity");
-            e2.setResourceURI(context.getSourceBase().toString());
-            throw e2;
+            throw new InvalidValueException(reader.getAttributeValue(null, "multiplicity"), "multiplicity");
         }
 
         String target = reader.getAttributeValue(null, "target");
@@ -106,9 +101,7 @@ public class ComponentReferenceLoader implements StAXElementLoader<ComponentRefe
                 } else if (type instanceof OperationDefinition) {
                     reference.addOperation((OperationDefinition) type);
                 } else {
-                    UnrecognizedElementException e = new UnrecognizedElementException(reader.getName());
-                    e.setResourceURI(context.getSourceBase().toString());
-                    throw e;
+                    throw new UnrecognizedElementException(reader.getName());
                 }
                 break;
             case XMLStreamConstants.END_ELEMENT:

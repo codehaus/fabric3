@@ -30,12 +30,8 @@ import org.fabric3.spi.loader.LoaderException;
 public class InvalidNameException extends LoaderException {
     private static final long serialVersionUID = 1L;
 
-    public InvalidNameException(String identifier, URL locationUrl) {
-        super("Invaid name", identifier);
-        if (locationUrl != null) {
-            // FIXME create typed ctor param for LoaderException in next SPI rev
-            setResourceURI(locationUrl.toString());
-        }
+    public InvalidNameException(String identifier) {
+        super("Invalid name", identifier);
     }
 
 }

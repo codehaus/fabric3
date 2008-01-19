@@ -26,11 +26,7 @@ import org.fabric3.spi.loader.LoaderException;
 public class MissingServiceNameException extends LoaderException {
     private static final long serialVersionUID = -2508555527406904391L;
 
-    public MissingServiceNameException(URL resourceLocation) {
+    public MissingServiceNameException() {
         super("Service name not specified");
-        if (resourceLocation != null) {
-            // FIXME create typed ctor param for LoaderException in next SPI rev
-            setResourceURI(resourceLocation.toString());
-        }
     }
 }

@@ -51,7 +51,7 @@ public class PropertyValueLoader implements StAXElementLoader<PropertyValue> {
             throws XMLStreamException, LoaderException {
         String name = reader.getAttributeValue(null, "name");
         if (name == null || name.length() == 0) {
-            throw new InvalidNameException(name, context.getSourceBase());
+            throw new InvalidNameException(name);
         }
 
         String source = reader.getAttributeValue(null, "source");
@@ -68,9 +68,7 @@ public class PropertyValueLoader implements StAXElementLoader<PropertyValue> {
                 LoaderUtil.skipToEndElement(reader);
                 return new PropertyValue(name, uri);
             } catch (URISyntaxException e) {
-                InvalidValueException e2 = new InvalidValueException(file, name, e);
-                e2.setResourceURI(context.getSourceBase().toString());
-                throw e2;
+                throw new InvalidValueException(file, name, e);
 
             }
         } else {
@@ -85,10 +83,7 @@ public class PropertyValueLoader implements StAXElementLoader<PropertyValue> {
         String element = reader.getAttributeValue(null, "element");
         if (type != null) {
             if (element != null) {
-                InvalidValueException e =
-                        new InvalidValueException("Cannot supply both type and element for property ", name);
-                e.setResourceURI(context.getSourceBase().toString());
-                throw e;
+                throw new InvalidValueException("Cannot supply both type and element for property ", name);
             }
             // TODO support type attribute
             throw new UnsupportedOperationException();

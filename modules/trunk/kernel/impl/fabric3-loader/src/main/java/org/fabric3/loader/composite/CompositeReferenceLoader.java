@@ -61,9 +61,7 @@ public class CompositeReferenceLoader implements StAXElementLoader<CompositeRefe
 
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {
-            InvalidValueException e = new InvalidValueException("Reference name not specified", name);
-            e.setResourceURI(context.getSourceBase().toString());
-            throw e;
+            throw new InvalidValueException("Reference name not specified", name);
         }
 
         CompositeReference referenceDefinition = new CompositeReference(name, null);
@@ -80,10 +78,7 @@ public class CompositeReferenceLoader implements StAXElementLoader<CompositeRefe
                 referenceDefinition.setRequired(true);
             }
         } catch (IllegalArgumentException e) {
-            InvalidValueException e2 =
-                    new InvalidValueException(reader.getAttributeValue(null, "multiplicity"), "multiplicity");
-            e2.setResourceURI(context.getSourceBase().toString());
-            throw e2;
+            throw new InvalidValueException(reader.getAttributeValue(null, "multiplicity"), "multiplicity");
         }
 
         while (true) {
@@ -97,9 +92,7 @@ public class CompositeReferenceLoader implements StAXElementLoader<CompositeRefe
                 } else if (type instanceof OperationDefinition) {
                     referenceDefinition.addOperation((OperationDefinition) type);
                 } else {
-                    UnrecognizedElementException e = new UnrecognizedElementException(reader.getName());
-                    e.setResourceURI(context.getSourceBase().toString());
-                    throw e;
+                    throw new UnrecognizedElementException(reader.getName());
                 }
                 break;
             case XMLStreamConstants.END_ELEMENT:
@@ -120,9 +113,7 @@ public class CompositeReferenceLoader implements StAXElementLoader<CompositeRefe
 
         String promoted = reader.getAttributeValue(null, "promote");
         if (promoted == null || promoted.trim().length() < 1) {
-            InvalidReferenceException e = new InvalidReferenceException("No promoted reference specified", name);
-            e.setResourceURI(context.getSourceBase().toString());
-            throw e;
+            throw new InvalidReferenceException("No promoted reference specified", name);
         }
         StringTokenizer tokenizer = new StringTokenizer(promoted, " ");
         while (tokenizer.hasMoreTokens()) {

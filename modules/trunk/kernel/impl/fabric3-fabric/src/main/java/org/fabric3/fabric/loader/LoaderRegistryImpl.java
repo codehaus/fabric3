@@ -19,7 +19,7 @@
 package org.fabric3.fabric.loader;
 
 import java.io.IOException;
-import java.net.URI;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -93,36 +93,46 @@ public class LoaderRegistryImpl implements LoaderRegistry {
             loader = mappedLoaders.get(name);
         }
         if (loader == null) {
-            UnrecognizedElementException e = new UnrecognizedElementException(name);
-            Location location = reader.getLocation();
-            URI contributionUri = loaderContext.getContributionUri();
-            URL sourceBase = loaderContext.getSourceBase();
-            if (sourceBase != null) {
-                e.setResourceURI(sourceBase.toString());
-            }
-            if (contributionUri != null) {
-                e.setResourceURI(contributionUri.toString());
-            }
-
-            e.setLine(location.getLineNumber());
-            e.setColumn(location.getColumnNumber());
-            throw e;
+            throw new UnrecognizedElementException(name);
         }
         return type.cast(loader.load(reader, loaderContext));
     }
 
     public <O> O load(URL url, Class<O> type, LoaderContext ctx) throws LoaderException {
-        XMLStreamReader reader = null;
+        InputStream stream;
         try {
-            reader = xmlFactory.createXMLStreamReader(url.toString(), url.openStream());
-            reader.nextTag();
-            return load(reader, type, ctx);
+            stream = url.openStream();
         } catch (IOException e) {
             LoaderException sfe = new LoaderException(e);
             sfe.setResourceURI(url.toString());
             throw sfe;
+        }
+        try {
+            return load(url, stream, type, ctx);
+        } finally {
+            try {
+                stream.close();
+            } catch (IOException e) {
+                // ignore
+            }
+        }
+    }
+
+    private <O> O load(URL url, InputStream stream, Class<O> type, LoaderContext ctx) throws LoaderException {
+        XMLStreamReader reader;
+        try {
+            reader = xmlFactory.createXMLStreamReader(url.toString(), stream);
         } catch (XMLStreamException e) {
             throw new InvalidConfigurationException("Invalid or missing resource", url.toString(), e);
+        }
+
+        try {
+            try {
+                reader.nextTag();
+                return load(reader, type, ctx);
+            } catch (XMLStreamException e) {
+                throw new InvalidConfigurationException("Invalid or missing resource", url.toString(), e);
+            }
         } catch (LoaderException e) {
             Location location = reader.getLocation();
             e.setResourceURI(location.getSystemId());
@@ -133,7 +143,8 @@ public class LoaderRegistryImpl implements LoaderRegistry {
             if (reader != null) {
                 try {
                     reader.close();
-                } catch (Exception e) {
+                } catch (XMLStreamException e) {
+                    // ignore
                 }
             }
         }

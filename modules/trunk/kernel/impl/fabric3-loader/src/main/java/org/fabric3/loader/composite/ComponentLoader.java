@@ -134,7 +134,7 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
                         throw new ComponentPropertyNotFoundException(name, value.getName());
                     }
                     if (componentDefinition.getPropertyValues().containsKey(value.getName())) {
-                        throw new DuplicateConfiguredPropertyException(value.getName(), context.getSourceBase());
+                        throw new DuplicateConfiguredPropertyException(value.getName());
                     }
                     componentDefinition.add(value);
                 } else if (REFERENCE.equals(qname)) {
@@ -144,7 +144,7 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
                         throw new ComponentReferenceNotFoundException(name, reference.getName());
                     }
                     if (componentDefinition.getReferences().containsKey(reference.getName())) {
-                        throw new DuplicateConfiguredReferenceException(reference.getName(), context.getSourceBase());
+                        throw new DuplicateConfiguredReferenceException(reference.getName());
                     }
                     componentDefinition.add(reference);
                 } else if (SERVICE.equals(qname)) {
@@ -154,7 +154,7 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
                         throw new ComponentServiceNotFoundException(name, service.getName());
                     }
                     if (componentDefinition.getServices().containsKey(service.getName())) {
-                        throw new DuplicateConfiguredServiceException(service.getName(), context.getSourceBase());
+                        throw new DuplicateConfiguredServiceException(service.getName());
                     }
                     componentDefinition.add(service);
                 } else {
@@ -213,9 +213,7 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
             try {
                 return Integer.valueOf(initLevel);
             } catch (NumberFormatException e) {
-                InvalidValueException e2 = new InvalidValueException(initLevel, "initValue", e);
-                e2.setResourceURI(context.getSourceBase().toString());
-                throw e2;
+                throw new InvalidValueException(initLevel, "initValue", e);
             }
         }
     }
@@ -231,9 +229,7 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
             try {
                 return new URI(runtimeAttr);
             } catch (URISyntaxException e) {
-                InvalidValueException e2 = new InvalidValueException(runtimeAttr, "runtimeId", e);
-                e2.setResourceURI(context.getSourceBase().toString());
-                throw e2;
+                throw new InvalidValueException(runtimeAttr, "runtimeId", e);
             }
         }
     }

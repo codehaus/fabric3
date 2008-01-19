@@ -26,11 +26,7 @@ import org.fabric3.spi.loader.LoaderException;
 public class DuplicateConfiguredServiceException extends LoaderException {
     private static final long serialVersionUID = 316549203790360060L;
 
-    public DuplicateConfiguredServiceException(String identifier, URL resourceLocation) {
+    public DuplicateConfiguredServiceException(String identifier) {
         super("Service configured more than once", identifier);
-        if (resourceLocation != null) {
-            // FIXME create typed ctor param for LoaderException in next SPI rev
-            setResourceURI(resourceLocation.toString());
-        }
     }
 }

@@ -57,15 +57,11 @@ public class CompositeServiceLoader implements StAXElementLoader<CompositeServic
             throws XMLStreamException, LoaderException {
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {
-            InvalidValueException e = new InvalidValueException("Service name not specified", name);
-            e.setResourceURI(context.getSourceBase().toString());
-            throw e;
+            throw new InvalidValueException("Service name not specified", name);
         }
         String promote = reader.getAttributeValue(null, "promote");
         if (promote == null) {
-            InvalidValueException e = new InvalidValueException("Promote not specified", name);
-            e.setResourceURI(context.getSourceBase().toString());
-            throw e;
+            throw new InvalidValueException("Promote not specified", name);
         }
 
         CompositeService def = new CompositeService(name, null);
@@ -84,9 +80,7 @@ public class CompositeServiceLoader implements StAXElementLoader<CompositeServic
                 } else if (type instanceof OperationDefinition) {
                     def.addOperation((OperationDefinition) type);
                 } else {
-                    UnrecognizedElementException e = new UnrecognizedElementException(reader.getName());
-                    e.setResourceURI(context.getSourceBase().toString());
-                    throw e;
+                    throw new UnrecognizedElementException(reader.getName());
                 }
                 break;
             case END_ELEMENT:

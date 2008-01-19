@@ -51,9 +51,7 @@ public class SystemImplementationLoader extends LoaderExtension<SystemImplementa
         assert SystemImplementation.IMPLEMENTATION_SYSTEM.equals(reader.getName());
         String implClass = reader.getAttributeValue(null, "class");
         if (implClass == null) {
-            InvalidValueException e = new InvalidValueException("Missing implementation class");
-            e.setResourceURI(loaderContext.getSourceBase().toString());
-            throw e;
+            throw new InvalidValueException("Missing implementation class");
         }
         LoaderUtil.skipToEndElement(reader);
 

@@ -91,9 +91,7 @@ public class ImplementationCompositeLoader implements StAXElementLoader<Composit
             try {
                 url = new URL(loaderContext.getSourceBase(), scdlLocation);
             } catch (MalformedURLException e) {
-                MissingResourceException e2 = new MissingResourceException(scdlLocation, scdlLocation, e);
-                e2.setResourceURI(loaderContext.getSourceBase().toString());
-                throw e2;
+                throw new MissingResourceException(scdlLocation, scdlLocation, e);
             }
             LoaderContext childContext = new LoaderContextImpl(cl, contributionUri, url);
             Composite composite = loader.load(url, Composite.class, childContext);
@@ -103,9 +101,7 @@ public class ImplementationCompositeLoader implements StAXElementLoader<Composit
         } else if (scdlResource != null) {
             url = cl.getResource(scdlResource);
             if (url == null) {
-                MissingResourceException e = new MissingResourceException(scdlResource, scdlResource);
-                e.setResourceURI(loaderContext.getSourceBase().toString());
-                throw e;
+                throw new MissingResourceException(scdlResource, scdlResource);
             }
             LoaderContext childContext = new LoaderContextImpl(cl, contributionUri, url);
             Composite composite = loader.load(url, Composite.class, childContext);

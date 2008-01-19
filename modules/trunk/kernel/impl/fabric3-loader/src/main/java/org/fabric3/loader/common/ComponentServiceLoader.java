@@ -54,7 +54,7 @@ public class ComponentServiceLoader implements StAXElementLoader<ComponentServic
 
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {
-            throw new MissingServiceNameException(context.getSourceBase());
+            throw new MissingServiceNameException();
         }
         ComponentService def = new ComponentService(name, null);
 
@@ -72,9 +72,7 @@ public class ComponentServiceLoader implements StAXElementLoader<ComponentServic
                 } else if (type instanceof OperationDefinition) {
                     def.addOperation((OperationDefinition) type);
                 } else {
-                    UnrecognizedElementException e = new UnrecognizedElementException(reader.getName());
-                    e.setResourceURI(context.getSourceBase().toString());
-                    throw e;
+                    throw new UnrecognizedElementException(reader.getName());
                 }
                 break;
             case XMLStreamConstants.END_ELEMENT:

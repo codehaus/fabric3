@@ -58,9 +58,7 @@ public class OperationLoader implements StAXElementLoader<OperationDefinition> {
         
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {
-            InvalidValueException e = new InvalidValueException("operation name not supplied");
-            e.setResourceURI(context.getSourceBase().toString());
-            throw e;
+            throw new InvalidValueException("operation name not supplied");
         }
         
         OperationDefinition operationDefinition = new OperationDefinition();
