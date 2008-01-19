@@ -32,9 +32,9 @@ import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.scdl.Composite;
+import org.fabric3.spi.loader.Loader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.QNameSymbol;
@@ -45,21 +45,21 @@ import org.fabric3.spi.services.contribution.ResourceProcessor;
 import org.fabric3.spi.services.factories.xml.XMLFactory;
 
 /**
- * Introspects a composite SCDL file in a contribution and produces a Composite type. This implementation assumes the
- * CCL has all necessary artifacts to perform introspection on its classpath.
+ * Introspects a composite SCDL file in a contribution and produces a Composite type. This implementation assumes the CCL has all necessary artifacts
+ * to perform introspection on its classpath.
  *
  * @version $Rev$ $Date$
  */
 @EagerInit
 public class CompositeResourceProcessor implements ResourceProcessor {
-    private LoaderRegistry loaderRegistry;
+    private Loader loader;
     private final XMLInputFactory xmlFactory;
 
     public CompositeResourceProcessor(@Reference ProcessorRegistry processorRegistry,
-                                      @Reference LoaderRegistry loaderRegistry,
+                                      @Reference Loader loader,
                                       @Reference XMLFactory xmlFactory) {
         processorRegistry.register(this);
-        this.loaderRegistry = loaderRegistry;
+        this.loader = loader;
         this.xmlFactory = xmlFactory.newInputFactoryInstance();
     }
 
@@ -121,11 +121,7 @@ public class CompositeResourceProcessor implements ResourceProcessor {
                 String identifier = composite.getName().toString();
                 throw new ResourceElementNotFoundException("Resource element not found", identifier);
             }
-        } catch (IOException e) {
-            throw new ContributionException(e);
         } catch (LoaderException e) {
-            throw new ContributionException(e);
-        } catch (XMLStreamException e) {
             throw new ContributionException(e);
         }
     }
@@ -137,37 +133,11 @@ public class CompositeResourceProcessor implements ResourceProcessor {
      * @param loader          the classloader to load resources with
      * @param contributionUri the current contribution uri
      * @return the component type
-     * @throws IOException        if an error occurs reading the URL stream
-     * @throws XMLStreamException if an error occurs parsing the XML
-     * @throws LoaderException    if an error occurs processing the component type
+     * @throws LoaderException if an error occurs processing the component type
      */
-    private Composite processComponentType(URL url, ClassLoader loader, URI contributionUri)
-            throws IOException, XMLStreamException, LoaderException {
-        InputStream stream = null;
-        XMLStreamReader reader = null;
-        try {
-            stream = url.openStream();
-            reader = xmlFactory.createXMLStreamReader(stream);
-            reader.nextTag();
-            LoaderContext context = new LoaderContextImpl(loader, contributionUri, url);
-            return loaderRegistry.load(reader, Composite.class, context);
-
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (XMLStreamException e) {
-                    e.printStackTrace();
-                }
-            }
-            try {
-                if (stream != null) {
-                    stream.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+    private Composite processComponentType(URL url, ClassLoader loader, URI contributionUri) throws LoaderException {
+        LoaderContext context = new LoaderContextImpl(loader, contributionUri, url);
+        return this.loader.load(url, Composite.class, context);
     }
 
 

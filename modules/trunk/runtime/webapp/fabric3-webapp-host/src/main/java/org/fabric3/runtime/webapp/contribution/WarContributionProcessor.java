@@ -23,8 +23,6 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Set;
 import javax.servlet.ServletContext;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
@@ -34,9 +32,9 @@ import org.fabric3.fabric.services.contribution.processor.Action;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.runtime.webapp.WebappHostInfo;
+import org.fabric3.spi.loader.Loader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.model.type.ContributionResourceDescription;
 import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolver;
@@ -45,7 +43,6 @@ import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.ContributionProcessor;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.Resource;
-import org.fabric3.spi.services.factories.xml.XMLFactory;
 
 /**
  * Processes a WAR contribution.
@@ -59,19 +56,16 @@ public class WarContributionProcessor implements ContributionProcessor {
     private WebappHostInfo info;
     private ProcessorRegistry registry;
     private ContentTypeResolver contentTypeResolver;
-    private XMLFactory xmlFactory;
-    private LoaderRegistry loaderRegistry;
+    private Loader loader;
 
     public WarContributionProcessor(@Reference WebappHostInfo info,
                                     @Reference ProcessorRegistry registry,
                                     @Reference ContentTypeResolver contentTypeResolver,
-                                    @Reference XMLFactory xmlFactory,
-                                    @Reference LoaderRegistry loaderRegistry) {
+                                    @Reference Loader loader) {
         this.info = info;
         this.registry = registry;
         this.contentTypeResolver = contentTypeResolver;
-        this.xmlFactory = xmlFactory;
-        this.loaderRegistry = loaderRegistry;
+        this.loader = loader;
     }
 
     public String[] getContentTypes() {
@@ -91,58 +85,49 @@ public class WarContributionProcessor implements ContributionProcessor {
     }
 
     public void processManifest(Contribution contribution) throws ContributionException {
-        XMLStreamReader reader = null;
+        URL manifestURL;
         try {
-            URL manifestURL = info.getServletContext().getResource("/WEB-INF/sca-contribution.xml");
+            manifestURL = info.getServletContext().getResource("/WEB-INF/sca-contribution.xml");
             if (manifestURL == null) {
-                ContributionManifest manifest = new ContributionManifest();
-                contribution.setManifest(manifest);
+                contribution.setManifest(new ContributionManifest());
                 return;
             }
-            InputStream stream = manifestURL.openStream();
-            reader = xmlFactory.newInputFactoryInstance().createXMLStreamReader(stream);
-            reader.nextTag();
+        } catch (MalformedURLException e) {
+            contribution.setManifest(new ContributionManifest());
+            return;
+        }
+
+        try {
+
             ClassLoader cl = getClass().getClassLoader();
             URI uri = contribution.getUri();
             LoaderContext context = new LoaderContextImpl(cl, uri, null);
-            ContributionManifest manifest = loaderRegistry.load(reader, ContributionManifest.class, context);
+            ContributionManifest manifest = loader.load(manifestURL, ContributionManifest.class, context);
             contribution.setManifest(manifest);
-            iterateArtifacts(contribution, new Action() {
-                public void process(Contribution contribution, String contentType, URL url)
-                        throws ContributionException {
-                    InputStream stream = null;
-                    try {
-                        stream = url.openStream();
-                        registry.processManifestArtifact(contribution.getManifest(), contentType, stream);
-                    } catch (IOException e) {
-                        throw new ContributionException(e);
-                    } finally {
-                        try {
-                            if (stream != null) {
-                                stream.close();
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            });
-        } catch (XMLStreamException e) {
-            throw new ContributionException(e);
         } catch (LoaderException e) {
             throw new ContributionException(e);
-        } catch (IOException e) {
-            throw new ContributionException(e);
-        } finally {
-            if (reader != null) {
+        }
+
+        iterateArtifacts(contribution, new Action() {
+            public void process(Contribution contribution, String contentType, URL url)
+                    throws ContributionException {
+                InputStream stream = null;
                 try {
-                    reader.close();
-                } catch (XMLStreamException e) {
-                    // TODO log exception
-                    e.printStackTrace();
+                    stream = url.openStream();
+                    registry.processManifestArtifact(contribution.getManifest(), contentType, stream);
+                } catch (IOException e) {
+                    throw new ContributionException(e);
+                } finally {
+                    try {
+                        if (stream != null) {
+                            stream.close();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-        }
+        });
     }
 
     public void index(Contribution contribution) throws ContributionException {

@@ -27,9 +27,6 @@ import java.net.URI;
 import java.net.URL;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.Reference;
 
@@ -38,7 +35,7 @@ import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
+import org.fabric3.spi.loader.Loader;
 import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolver;
 import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
@@ -46,26 +43,22 @@ import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.ContributionProcessor;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
-import org.fabric3.spi.services.factories.xml.XMLFactory;
 
 /**
  * Introspects a Zip-based contribution, delegating to ResourceProcessors for handling leaf-level children.
  */
 public class ZipContributionProcessor extends ArchiveContributionProcessor implements ContributionProcessor {
-    private final LoaderRegistry loaderRegistry;
-    private final XMLInputFactory xmlFactory;
+    private final Loader loader;
     private final ContentTypeResolver contentTypeResolver;
 
     public ZipContributionProcessor(@Reference ProcessorRegistry processorRegistry,
-                                    @Reference LoaderRegistry loaderRegistry,
-                                    @Reference XMLFactory xmlFactory,
+                                    @Reference Loader loader,
                                     @Reference ArtifactLocationEncoder encoder,
                                     @Reference ContentTypeResolver contentTypeResolver) {
 
         super(encoder);
         this.registry = processorRegistry;
-        this.loaderRegistry = loaderRegistry;
-        this.xmlFactory = xmlFactory.newInputFactoryInstance();
+        this.loader = loader;
         this.contentTypeResolver = contentTypeResolver;
     }
 
@@ -74,61 +67,45 @@ public class ZipContributionProcessor extends ArchiveContributionProcessor imple
     }
 
     public void processManifest(Contribution contribution) throws ContributionException {
-        XMLStreamReader reader = null;
+        ContributionManifest manifest;
         try {
             URL sourceUrl = contribution.getLocation();
             URL manifestURL = new URL("jar:" + sourceUrl.toExternalForm() + "!/META-INF/sca-contribution.xml");
-            InputStream stream;
-            try {
-                stream = manifestURL.openStream();
-            } catch (FileNotFoundException e) {
-                ContributionManifest manifest = new ContributionManifest();
-                contribution.setManifest(manifest);
-                return;
-            }
-            reader = xmlFactory.createXMLStreamReader(stream);
-            reader.nextTag();
             ClassLoader cl = getClass().getClassLoader();
             URI uri = contribution.getUri();
             LoaderContext context = new LoaderContextImpl(cl, uri, null);
-            ContributionManifest manifest = loaderRegistry.load(reader, ContributionManifest.class, context);
-            contribution.setManifest(manifest);
-            iterateArtifacts(contribution, new Action() {
-                public void process(Contribution contribution, String contentType, URL url)
-                        throws ContributionException {
-                    InputStream stream = null;
+            manifest = loader.load(manifestURL, ContributionManifest.class, context);
+        } catch (LoaderException e) {
+            if (e.getCause() instanceof FileNotFoundException) {
+                manifest = new ContributionManifest();
+            } else {
+                throw new ContributionException(e);
+            }
+        } catch (MalformedURLException e) {
+            manifest = new ContributionManifest();
+        }
+        contribution.setManifest(manifest);
+
+        iterateArtifacts(contribution, new Action() {
+            public void process(Contribution contribution, String contentType, URL url)
+                    throws ContributionException {
+                InputStream stream = null;
+                try {
+                    stream = url.openStream();
+                    registry.processManifestArtifact(contribution.getManifest(), contentType, stream);
+                } catch (IOException e) {
+                    throw new ContributionException(e);
+                } finally {
                     try {
-                        stream = url.openStream();
-                        registry.processManifestArtifact(contribution.getManifest(), contentType, stream);
-                    } catch (IOException e) {
-                        throw new ContributionException(e);
-                    } finally {
-                        try {
-                            if (stream != null) {
-                                stream.close();
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                        if (stream != null) {
+                            stream.close();
                         }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 }
-            });
-        } catch (XMLStreamException e) {
-            throw new ContributionException(e);
-        } catch (LoaderException e) {
-            throw new ContributionException(e);
-        } catch (IOException e) {
-            throw new ContributionException(e);
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (XMLStreamException e) {
-                    // TODO log exception
-                    e.printStackTrace();
-                }
             }
-        }
+        });
     }
 
     protected void iterateArtifacts(Contribution contribution, Action action)

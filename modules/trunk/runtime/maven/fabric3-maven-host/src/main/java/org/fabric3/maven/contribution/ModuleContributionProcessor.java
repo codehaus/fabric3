@@ -23,8 +23,6 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
@@ -35,9 +33,9 @@ import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.loader.common.LoaderContextImpl;
 import org.fabric3.maven.runtime.MavenHostInfo;
+import org.fabric3.spi.loader.Loader;
 import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.model.type.ContributionResourceDescription;
 import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolver;
@@ -47,7 +45,6 @@ import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.ContributionProcessor;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.Resource;
-import org.fabric3.spi.services.factories.xml.XMLFactory;
 
 /**
  * Processes a Maven module directory.
@@ -56,27 +53,24 @@ import org.fabric3.spi.services.factories.xml.XMLFactory;
  */
 @EagerInit
 public class ModuleContributionProcessor implements ContributionProcessor {
-    public static final String[] CONTENT_TYPES = new String[]{"application/vnd.fabric3.maven-project"};
+    public static final String[] CONTENT_TYPES = {"application/vnd.fabric3.maven-project"};
 
     private ProcessorRegistry registry;
     private ContentTypeResolver contentTypeResolver;
     private ArtifactLocationEncoder encoder;
     private MavenHostInfo hostInfo;
-    private XMLFactory xmlFactory;
-    private LoaderRegistry loaderRegistry;
+    private Loader loader;
 
     public ModuleContributionProcessor(@Reference ProcessorRegistry registry,
                                        @Reference ContentTypeResolver contentTypeResolver,
                                        @Reference ArtifactLocationEncoder encoder,
                                        @Reference MavenHostInfo hostInfo,
-                                       @Reference XMLFactory xmlFactory,
-                                       @Reference LoaderRegistry loaderRegistry) {
+                                       @Reference Loader loader) {
         this.registry = registry;
         this.contentTypeResolver = contentTypeResolver;
         this.encoder = encoder;
         this.hostInfo = hostInfo;
-        this.xmlFactory = xmlFactory;
-        this.loaderRegistry = loaderRegistry;
+        this.loader = loader;
     }
 
     public String[] getContentTypes() {
@@ -102,61 +96,45 @@ public class ModuleContributionProcessor implements ContributionProcessor {
     }
 
     public void processManifest(Contribution contribution) throws ContributionException {
-        XMLStreamReader reader = null;
+        ContributionManifest manifest;
         try {
             URL sourceUrl = contribution.getLocation();
             URL manifestURL = new URL(sourceUrl.toExternalForm() + "/classes/META-INF/sca-contribution.xml");
-            InputStream stream;
-            try {
-                stream = manifestURL.openStream();
-            } catch (FileNotFoundException e) {
-                ContributionManifest manifest = new ContributionManifest();
-                contribution.setManifest(manifest);
-                return;
-            }
-            reader = xmlFactory.newInputFactoryInstance().createXMLStreamReader(stream);
-            reader.nextTag();
             ClassLoader cl = getClass().getClassLoader();
             URI uri = contribution.getUri();
             LoaderContext context = new LoaderContextImpl(cl, uri, null);
-            ContributionManifest manifest = loaderRegistry.load(reader, ContributionManifest.class, context);
-            contribution.setManifest(manifest);
-            iterateArtifacts(contribution, new Action() {
-                public void process(Contribution contribution, String contentType, URL url)
-                        throws ContributionException {
-                    InputStream stream = null;
+            manifest = loader.load(manifestURL, ContributionManifest.class, context);
+        } catch (LoaderException e) {
+            if (e.getCause() instanceof FileNotFoundException) {
+                manifest = new ContributionManifest();
+            } else {
+                throw new ContributionException(e);
+            }
+        } catch (MalformedURLException e) {
+            manifest = new ContributionManifest();
+        }
+        contribution.setManifest(manifest);
+
+        iterateArtifacts(contribution, new Action() {
+            public void process(Contribution contribution, String contentType, URL url)
+                    throws ContributionException {
+                InputStream stream = null;
+                try {
+                    stream = url.openStream();
+                    registry.processManifestArtifact(contribution.getManifest(), contentType, stream);
+                } catch (IOException e) {
+                    throw new ContributionException(e);
+                } finally {
                     try {
-                        stream = url.openStream();
-                        registry.processManifestArtifact(contribution.getManifest(), contentType, stream);
-                    } catch (IOException e) {
-                        throw new ContributionException(e);
-                    } finally {
-                        try {
-                            if (stream != null) {
-                                stream.close();
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                        if (stream != null) {
+                            stream.close();
                         }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 }
-            });
-        } catch (XMLStreamException e) {
-            throw new ContributionException(e);
-        } catch (LoaderException e) {
-            throw new ContributionException(e);
-        } catch (IOException e) {
-            throw new ContributionException(e);
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (XMLStreamException e) {
-                    // TODO log exception
-                    e.printStackTrace();
-                }
             }
-        }
+        });
     }
 
     public void index(Contribution contribution) throws ContributionException {
