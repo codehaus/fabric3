@@ -86,7 +86,7 @@ public class IncludeLoaderTestCase extends TestCase {
     public void testWithAbsoluteScdlLocation() throws LoaderException, XMLStreamException {
         expect(reader.getAttributeValue(null, "name")).andReturn(name.getLocalPart());
         expect(reader.getNamespaceContext()).andReturn(namespaceContext);
-        expect(reader.getAttributeValue(null, "scdlLocation")).andReturn("http://example.com/include.scdl");
+        expect(reader.getAttributeValue(null, "scdlLocation")).andReturn("file://example.com/include.scdl");
         expect(reader.getAttributeValue(null, "scdlResource")).andReturn(null);
         expect(reader.next()).andReturn(END_ELEMENT);
 
@@ -166,11 +166,11 @@ public class IncludeLoaderTestCase extends TestCase {
         registry = createMock(LoaderRegistry.class);
         reader = createMock(XMLStreamReader.class);
         namespaceContext = createMock(NamespaceContext.class);
-        namespace = "http://example.com/xmlns";
+        namespace = "urn:example.com:xmlns";
         context = createMock(LoaderContext.class);
         cl = getClass().getClassLoader();
-        base = new URL("http://example.com/test.scdl");
-        includeURL = new URL("http://example.com/include.scdl");
+        base = new URL("file://example.com/test.scdl");
+        includeURL = new URL("file://example.com/include.scdl");
         store = createMock(MetaDataStore.class);
         loader = new IncludeLoader(registry, store);
         name = new QName(namespace, "foo");
