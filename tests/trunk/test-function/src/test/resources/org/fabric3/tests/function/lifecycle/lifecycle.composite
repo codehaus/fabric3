@@ -17,16 +17,13 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           name="FunctionTestHarnessComposite">
+           name="LifecycleComposite">
 
-    <include name="CommonComposite"/>
-    <include name="SmokeTestComposite"/>
-    <include name="OuterComposite"/>
-    <include name="ConversationComposite"/>
-    <include name="PropertiesComposite"/>
-    <include name="ReferencesComposite"/>
-    <include name="BindingComposite"/>
-    <include name="WiringComposite"/>
-    <include name="AutoWireComposite"/>
-    <include name="LifecycleComposite"/>
+    <component name="EagerInitTest">
+        <f3:junit class="org.fabric3.tests.function.lifecycle.EagerInitTest"/>
+    </component>
+
+    <component name="EagerInitImpl">
+        <implementation.java class="org.fabric3.tests.function.lifecycle.EagerInitImpl"/>
+    </component>
 </composite>
