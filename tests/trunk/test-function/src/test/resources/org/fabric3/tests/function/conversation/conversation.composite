@@ -26,5 +26,6 @@
     <component name="ConversationTest">
         <f3:junit class="org.fabric3.tests.function.conversation.ConversationTest"/>
         <reference name="service" target="ConversationalServiceImpl"/>
+        <reference name="subService" target="ConversationalServiceImpl"/>
     </component>
 </composite>

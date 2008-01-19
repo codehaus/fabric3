@@ -18,6 +18,7 @@
  */
 package org.fabric3.fabric.idl.java;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -81,7 +82,7 @@ public class JavaInterfaceProcessorRegistryImpl implements JavaInterfaceProcesso
         contract.setInterfaceName(getBaseName(type));
         boolean remotable = type.isAnnotationPresent(Remotable.class);
         contract.setRemotable(remotable);
-        boolean conversational = type.isAnnotationPresent(Conversational.class);
+        boolean conversational = isAnnotationPresent(type, Conversational.class);
         contract.setConversational(conversational);
         contract.setOperations(getOperations(type, remotable, conversational, false));
 
@@ -95,6 +96,28 @@ public class JavaInterfaceProcessorRegistryImpl implements JavaInterfaceProcesso
             processor.visitInterface(type, callback, contract);
         }
         return contract;
+    }
+
+    /**
+     * Determine if an annotation is present on this interface or any superinterface.
+     *
+     * This is similar to the use of @Inherited on classes (given @Inherited does not apply to interfaces).
+     *
+     * @param type the interface to check
+     * @param annotationType the annotation to look for
+     * @return true if the annotation is present
+     */
+    private boolean isAnnotationPresent(Class<?> type, Class<? extends Annotation> annotationType) {
+        if (type.isAnnotationPresent(annotationType)) {
+            return true;
+        }
+        Class<?>[] interfaces = type.getInterfaces();
+        for (Class<?> superInterface : interfaces) {
+            if (isAnnotationPresent(superInterface, annotationType)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private <T> List<Operation<Type>> getOperations(Class<T> type,

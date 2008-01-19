@@ -26,6 +26,9 @@ public class ConversationTest extends TestCase {
     @Reference
     public ConversationalService service;
 
+    @Reference
+    public ConversationalSubservice subService;
+
     public void testStateIsRetained() {
         assertNull(service.getValue());
         service.setValue("Hello");
@@ -37,5 +40,12 @@ public class ConversationTest extends TestCase {
         service.setValue("Hello");
         assertEquals("Hello", service.end());
         assertNull(service.getValue());
+    }
+
+    public void testConversationalityIsInherited() {
+        assertNull(subService.getValue());
+        subService.setValue("Hello");
+        assertEquals("Hello", subService.getValue());
+        assertEquals("Hello", subService.getValue());
     }
 }
