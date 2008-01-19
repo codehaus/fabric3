@@ -23,14 +23,16 @@ import org.apache.axiom.om.OMElement;
  */
 public class Axis2EchoServiceImpl implements Axis2EchoService {
 
-    public OMElement echo(OMElement operation) {
-        OMElement parameter = operation.getFirstElement();
-        return parameter;
+    public OMElement echoWs(OMElement operation) {
+        return operation.getFirstElement();
+    }
+
+    public OMElement echoRampart(OMElement operation) {
+        return operation.getFirstElement();
     }
 
     public OMElement echoNoSecurity(OMElement operation) {
-        OMElement parameter = operation.getFirstElement();
-        return parameter;
+        return operation.getFirstElement();
     }
 
 }

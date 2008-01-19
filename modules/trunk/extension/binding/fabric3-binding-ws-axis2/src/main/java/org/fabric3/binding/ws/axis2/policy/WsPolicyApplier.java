@@ -16,6 +16,10 @@
  */
 package org.fabric3.binding.ws.axis2.policy;
 
+import java.util.Iterator;
+
+import javax.imageio.spi.ServiceRegistry;
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 
@@ -23,6 +27,8 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axis2.description.AxisDescription;
 import org.apache.neethi.PolicyEngine;
+import org.apache.neethi.builders.AssertionBuilder;
+import org.apache.neethi.builders.xml.XMLPrimitiveAssertionBuilder;
 import org.fabric3.transform.xml.Element2Stream;
 import org.osoa.sca.annotations.EagerInit;
 import org.w3c.dom.Element;
@@ -34,24 +40,61 @@ import org.w3c.dom.Element;
  */
 @EagerInit
 public class WsPolicyApplier implements PolicyApplier {
-    
+
+    static {
+        buildAssertionBuilders();
+    }
+
     private final Element2Stream transformer = new Element2Stream(XMLInputFactory.newInstance());
 
     public void applyPolicy(AxisDescription axisDescription, Element policy) {
-        
+
         try {
-            
+
             XMLStreamReader reader = transformer.transform(policy, null);
             StAXOMBuilder builder = new StAXOMBuilder(reader);
             OMElement policyElement = builder.getDocumentElement();
-            
+
             axisDescription.applyPolicy(PolicyEngine.getPolicy(policyElement));
-            
-        } catch(Exception e) {
+
+        } catch (Exception e) {
             // TODO Handle execption properly
             throw new AssertionError(e);
         }
 
+    }
+
+    /*
+     * Load assertion builders associated with WS-SP.This is normally done when AssertionBuilderFactory is loaded 
+     * but since the Thread Context class loader at that time is the Boot Class loader, so it is not able to find 
+     * extensions jars and hence this is done here!!
+     * 
+     * @see org.apache.neethi.AssertionBuilderFactory
+     */
+    private static void buildAssertionBuilders() {
+        
+        // Get the current context class loader
+        ClassLoader originalCL = Thread.currentThread().getContextClassLoader();
+
+        try {
+            
+            Thread.currentThread().setContextClassLoader(WsPolicyApplier.class.getClassLoader());
+            QName XML_ASSERTION_BUILDER = new QName("http://test.org/test", "test");
+            
+            Iterator<AssertionBuilder> asseryionBuilders = ServiceRegistry.lookupProviders(AssertionBuilder.class);
+            while (asseryionBuilders.hasNext()) {
+                AssertionBuilder builder = asseryionBuilders.next();
+                for (QName knownElement : builder.getKnownElements()) {
+                    PolicyEngine.registerBuilder(knownElement, builder);
+                }
+            }
+            
+            PolicyEngine.registerBuilder(XML_ASSERTION_BUILDER, new XMLPrimitiveAssertionBuilder());
+            
+        } finally {
+            // Change class loader back to what it was !!
+            Thread.currentThread().setContextClassLoader(originalCL);
+        }
     }
 
 }
