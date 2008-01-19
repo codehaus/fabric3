@@ -2,12 +2,12 @@
 <definitions xmlns="http://www.osoa.org/xmlns/sca/1.0"
 	xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
 	targetNamespace="http://fabric3.org/xmlns/sca/2.0-alpha"
-	xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha">
-	
-	<!-- Server policy using ws-policy -->
-	<policySet name="testServerPolicyWs" 
-	           provides="sca:authentication.message" 
-	           appliesTo="@name='Axis2EchoService' and ../@name='EchoService' and $Operation='echoWs'">
+    xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha">
+    
+    <!-- Server policy using ws-policy -->
+    <policySet name="testServerPolicyWs" 
+               provides="sca:authentication.message" 
+               appliesTo="@name='Axis2EchoService' and ../@name='EchoService' and $Operation='echoWs'">
         <wsp:Policy wsu:Id="UTOverTransport" 
                     xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" 
                     xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy">
@@ -17,22 +17,22 @@
                         <wsp:Policy>
                             <sp:UsernameToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient" />
                         </wsp:Policy>
-				    </sp:SignedSupportingTokens>
-				    <ramp:RampartConfig xmlns:ramp="http://ws.apache.org/rampart/policy"> 				        
-					    <ramp:passwordCallbackClass>org.fabric3.tests.security.PasswordHandler</ramp:passwordCallbackClass>
-				    </ramp:RampartConfig>
-				</wsp:All>
-			</wsp:ExactlyOne>
-		</wsp:Policy>
+                    </sp:SignedSupportingTokens>
+                    <ramp:RampartConfig xmlns:ramp="http://ws.apache.org/rampart/policy">                         
+                        <ramp:passwordCallbackClass>org.fabric3.tests.security.PasswordHandler</ramp:passwordCallbackClass>
+                    </ramp:RampartConfig>
+                </wsp:All>
+            </wsp:ExactlyOne>
+        </wsp:Policy>
     </policySet>
-	
-	<!-- Client policy using ws-policy -->
+    
+    <!-- Client policy using ws-policy -->
     <policySet name="testClientPolicyWs" 
                provides="sca:authentication.message" 
                appliesTo="@name='service' and ../@name='EchoTest' and $Operation='echoWs'">
         <wsp:Policy wsu:Id="UTOverTransport" 
-	 		        xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" 
-	 		        xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy">
+                     xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" 
+                     xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy">
             <wsp:ExactlyOne>
                 <wsp:All>
                     <sp:SignedSupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
@@ -50,33 +50,33 @@
     </policySet>
 
     <!-- Server policy using Rampart -->
-	<policySet name="testServerPolicyRampart" 
-	           provides="sca:authentication.message" 
-	           appliesTo="@name='Axis2EchoService' and ../@name='EchoService' and $Operation='echoRampart'">
-		<f3:AxisConfig>
-		    <parameter name="InflowSecurity" xmlns="">
-		        <action>
-		            <items>UsernameToken</items>
-		            <passwordCallbackClass>org.fabric3.tests.security.PasswordHandler</passwordCallbackClass>
-		        </action>
-		    </parameter>
-		</f3:AxisConfig>
+    <policySet name="testServerPolicyRampart" 
+               provides="sca:authentication.message" 
+               appliesTo="@name='Axis2EchoService' and ../@name='EchoService' and $Operation='echoRampart'">
+        <f3:AxisConfig>
+            <parameter name="InflowSecurity" xmlns="">
+                <action>
+                    <items>UsernameToken</items>
+                    <passwordCallbackClass>org.fabric3.tests.security.PasswordHandler</passwordCallbackClass>
+                </action>
+            </parameter>
+        </f3:AxisConfig>
     </policySet>
-		
+        
     <!-- Client policy using Rampart -->
-	<policySet name="testClientPolicyRampart" 
-	           provides="sca:authentication.message" 
-	           appliesTo="@name='service' and ../@name='EchoTest' and $Operation='echoRampart'">
-		<f3:AxisConfig>
-			<parameter name="OutflowSecurity" xmlns="">
-				<action>
-					<items>UsernameToken</items>
-					<user>Fred</user>
-		            <passwordCallbackClass>org.fabric3.tests.security.PasswordHandler</passwordCallbackClass>
-					<passwordType>PasswordText</passwordType>
-				</action>
-			</parameter>
-		</f3:AxisConfig>
-	</policySet>
+    <policySet name="testClientPolicyRampart" 
+               provides="sca:authentication.message" 
+               appliesTo="@name='service' and ../@name='EchoTest' and $Operation='echoRampart'">
+        <f3:AxisConfig>
+            <parameter name="OutflowSecurity" xmlns="">
+                <action>
+                    <items>UsernameToken</items>
+                    <user>Fred</user>
+                    <passwordCallbackClass>org.fabric3.tests.security.PasswordHandler</passwordCallbackClass>
+                    <passwordType>PasswordText</passwordType>
+                </action>
+            </parameter>
+        </f3:AxisConfig>
+    </policySet>
 
 </definitions>
