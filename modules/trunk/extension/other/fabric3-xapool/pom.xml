@@ -66,18 +66,6 @@
 
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.fabric3</groupId>
-                <artifactId>fabric3-contribution-plugin</artifactId>
-                <version>RELEASE</version>
-                <extensions>true</extensions>
-                <configuration />
-            </plugin>
-        </plugins>
-    </build>
-
     <scm>
         <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-xapool</connection>
         <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-xapool</developerConnection>

@@ -37,17 +37,6 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.fabric3</groupId>
-                <artifactId>fabric3-contribution-plugin</artifactId>
-                <version>RELEASE</version>
-                <extensions>true</extensions>
-                <configuration />
-            </plugin>
-        </plugins>
-    </build>
 
     <scm>
         <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/implementation/fabric3-junit</connection>
