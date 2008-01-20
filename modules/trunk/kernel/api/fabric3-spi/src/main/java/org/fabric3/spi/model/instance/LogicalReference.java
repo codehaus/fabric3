@@ -88,7 +88,7 @@ public class LogicalReference extends Bindable {
      * @return
      */
     public List<URI> getPromotedUris() {
-        return Collections.unmodifiableList(promoted);
+        return promoted;
     }
 
     /**

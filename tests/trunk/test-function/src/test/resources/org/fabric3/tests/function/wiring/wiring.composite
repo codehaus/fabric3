@@ -24,7 +24,6 @@
         <reference name="testService" target="TestComponent"/>
     </component>
 
-    <!--Uncomment for FABRICTHREE-119
     <component name="SingeReferenceTest">
         <f3:junit class="org.fabric3.tests.function.wiring.SingleReferenceTest"/>
     </component>
@@ -32,7 +31,6 @@
     <reference name="promotedDefaultReference" promote="SingeReferenceTest">
         <f3:binding.test uri="WiringCompositeHelloService"/>
     </reference>
-    -->
     
     <component name="TestComponent">
         <implementation.java class="org.fabric3.tests.function.wiring.TestComponent"/>
