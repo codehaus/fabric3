@@ -20,6 +20,7 @@ package org.fabric3.loader.composite;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Map;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
@@ -42,6 +43,7 @@ import org.fabric3.scdl.ComponentService;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.PropertyValue;
 import org.fabric3.scdl.AbstractComponentType;
+import org.fabric3.scdl.Property;
 import org.fabric3.spi.Constants;
 import org.fabric3.spi.loader.InvalidValueException;
 import org.fabric3.spi.loader.Loader;
@@ -164,7 +166,19 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
                 break;
             case END_ELEMENT:
                 assert COMPONENT.equals(reader.getName());
+                validateRequiredProperties(componentDefinition);
                 return componentDefinition;
+            }
+        }
+    }
+
+    private void validateRequiredProperties(ComponentDefinition<? extends Implementation<?>> definition) throws RequiredPropertyNotProvidedException {
+        AbstractComponentType<?,?,?,?> type = definition.getImplementation().getComponentType();
+        Map<String,? extends Property<?>> properties = type.getProperties();
+        Map<String, PropertyValue> values = definition.getPropertyValues();
+        for (Property<?> property : properties.values()) {
+            if (property.isRequired() && !values.containsKey(property.getName())) {
+                throw new RequiredPropertyNotProvidedException(definition.getName(), property.getName());
             }
         }
     }
