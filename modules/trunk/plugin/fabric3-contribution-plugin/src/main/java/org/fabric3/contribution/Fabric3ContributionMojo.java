@@ -209,9 +209,10 @@ public class Fabric3ContributionMojo extends AbstractMojo {
                                                                            SAXException, 
                                                                            MojoExecutionException {
         
-        File scaContribution = new File(contentDirectory, "META-INF" + File.separator + "sca-contribution.xml");
+        File srcContributionFile = new File(project.getBuild().getSourceDirectory(), "META-INF" + File.separator + "sca-contribution.xml");
+        File targetContributionFile = new File(contentDirectory, "META-INF" + File.separator + "sca-contribution.xml");
         
-        if ((deployables != null || mavenImports != null) && scaContribution.exists()) {
+        if ((deployables != null || mavenImports != null) && srcContributionFile.exists()) {
             throw new MojoExecutionException("SCA contribution xml already exists");
         }
         Document document = DBF.newDocumentBuilder().newDocument();
@@ -228,7 +229,7 @@ public class Fabric3ContributionMojo extends AbstractMojo {
         
         Transformer transformer = TF.newTransformer();
         transformer.setOutputProperty("indent", "yes");
-        FileOutputStream out = new FileOutputStream(scaContribution);
+        FileOutputStream out = new FileOutputStream(targetContributionFile);
         transformer.transform(new DOMSource(document), new StreamResult(out));
         
         out.close();
