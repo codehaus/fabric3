@@ -22,16 +22,26 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * F3 specific persistence unit annotation that suppports CDI for JPA entity manager factories.
+ * 
+ * Standard JPA annotation can be applied on constructor arguments.
+ * 
  * @version $Revision$ $Date$
  */
 @Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PersistenceUnit {
 
-    // Method descriptor #5 ()Ljava/lang/String;
+    /**
+     * @return The name by which the entity manager factory is to be accessed in 
+     * the environment referencing context, and is not needed when dependency 
+     * injection is used.
+     */
     public abstract java.lang.String name() default "";
 
-    // Method descriptor #5 ()Ljava/lang/String;
+    /**
+     * @return The name of the persistence unit as defined in the persistence.xml file.
+     */
     public abstract java.lang.String unitName() default "";
 
 }
