@@ -30,10 +30,11 @@
     <!-- include host services configuration -->
     <include name="org.fabric3.fabric.host.services" scdlResource="org/fabric3/fabric/hostServices.composite"/>
 
+    <!-- include monitor configuration -->
+    <include name="org.fabric3.fabric.Monitor" scdlResource="org/fabric3/fabric/monitor.composite"/>
+
     <!-- include policy configuration -->
     <include name="org.fabric3.fabric.Policy" scdlResource="org/fabric3/policy/policy.composite"/>
-
-    <!-- include name="org.fabric3.fabric.Resource" scdlResource="META-INF/resource.composite"/-->
 
     <!-- include physical deployment configuration -->
     <include name="org.fabric3.fabric.Common" scdlResource="org/fabric3/fabric/common.composite"/>

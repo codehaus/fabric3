@@ -26,19 +26,6 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="geronimo-spec:geronimo-spec-jta:1.0.1B-rc4">
-        <CLASSES>
-          <root url="jar://$M2_REPO$/geronimo-spec/geronimo-spec-jta/1.0.1B-rc4/geronimo-spec-jta-1.0.1B-rc4.jar!/" />
-        </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/geronimo-spec/geronimo-spec-jta/1.0.1B-rc4/geronimo-spec-jta-1.0.1B-rc4-javadoc.jar!/" />
-        </JAVADOC>
-        <SOURCES>
-          <root url="jar://$M2_REPO$/geronimo-spec/geronimo-spec-jta/1.0.1B-rc4/geronimo-spec-jta-1.0.1B-rc4-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" exported="">
       <library name="javax.activation:activation:1.1">
         <CLASSES>
           <root url="jar://$M2_REPO$/javax/activation/activation/1.1/activation-1.1.jar!/" />

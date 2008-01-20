@@ -14,32 +14,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.monitor;
+package org.fabric3.tests.function.monitor;
 
-import java.net.URI;
+import junit.framework.TestCase;
 
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.api.annotation.Monitor;
+import org.fabric3.api.annotation.LogLevel;
 
 /**
  * @version $Rev$ $Date$
  */
-public class MonitorWireTargetDefinition extends PhysicalWireTargetDefinition {
-    private URI classLoaderId;
-    private String monitorType;
+public class MonitorTest extends TestCase {
 
-    public URI getClassLoaderId() {
-        return classLoaderId;
+    @Monitor
+    protected MyMonitor monitor;
+
+    public void testMonitor() {
+        assertNotNull(monitor);
+        monitor.wasCalled();
     }
 
-    public void setClassLoaderId(URI classLoaderId) {
-        this.classLoaderId = classLoaderId;
-    }
-
-    public String getMonitorType() {
-        return monitorType;
-    }
-
-    public void setMonitorType(String monitorType) {
-        this.monitorType = monitorType;
+    public static interface MyMonitor {
+        @LogLevel("INFO")
+        void wasCalled();
     }
 }

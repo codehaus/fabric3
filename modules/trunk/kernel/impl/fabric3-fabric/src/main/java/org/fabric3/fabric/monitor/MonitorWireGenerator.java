@@ -18,16 +18,20 @@ package org.fabric3.fabric.monitor;
 
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.ResourceWireGenerator;
 import org.fabric3.spi.model.instance.LogicalResource;
+import org.fabric3.spi.model.instance.LogicalComponent;
 
 /**
  * @version $Rev$ $Date$
  */
+@EagerInit
 public class MonitorWireGenerator implements ResourceWireGenerator<MonitorWireTargetDefinition, MonitorResource> {
 
     private final GeneratorRegistry registry;
@@ -41,17 +45,23 @@ public class MonitorWireGenerator implements ResourceWireGenerator<MonitorWireTa
         registry.register(MonitorResource.class, this);
     }
 
-/*
     @Destroy
     public void destroy() {
-        registry.unregister(MonitorResource.class);
+        registry.unregister(MonitorResource.class, this);
     }
-*/
 
     public MonitorWireTargetDefinition generateWireTargetDefinition(LogicalResource<MonitorResource> resource,
                                                                     GeneratorContext context)
             throws GenerationException {
 
-        return new MonitorWireTargetDefinition();
+        LogicalComponent<?> component = resource.getParent();
+
+        MonitorWireTargetDefinition definition = new MonitorWireTargetDefinition();
+        definition.setMonitorType(resource.getResourceDefinition().getServiceContract().getQualifiedInterfaceName());
+        definition.setUri(component.getUri());
+        // TODO is this a good way to get the classloader id?
+        definition.setClassLoaderId(component.getParent().getUri());
+
+        return definition;
     }
 }

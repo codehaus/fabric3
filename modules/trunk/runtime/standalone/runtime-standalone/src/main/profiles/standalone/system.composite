@@ -33,6 +33,9 @@
     <!-- include host services configuration -->
     <include name="org.fabric3.fabric.HostServices" scdlResource="org/fabric3/fabric/hostServices.composite"/>
 
+    <!-- include monitor configuration -->
+    <include name="org.fabric3.fabric.Monitor" scdlResource="org/fabric3/fabric/monitor.composite"/>
+
     <!-- include exception formatters  -->
     <include name="org.fabric3.fabric.Formatters" scdlResource="org/fabric3/fabric/formatters.composite"/>
 

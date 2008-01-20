@@ -17,17 +17,9 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           name="FunctionTestHarnessComposite">
+           name="MonitorTestComposite">
 
-    <include name="CommonComposite"/>
-    <include name="SmokeTestComposite"/>
-    <include name="MonitorTestComposite"/>
-    <include name="OuterComposite"/>
-    <include name="ConversationComposite"/>
-    <include name="PropertiesComposite"/>
-    <include name="ReferencesComposite"/>
-    <include name="BindingComposite"/>
-    <include name="WiringComposite"/>
-    <include name="AutoWireComposite"/>
-    <include name="LifecycleComposite"/>
+    <component name="MonitorTest">
+        <f3:junit class="org.fabric3.tests.function.monitor.MonitorTest"/>
+    </component>
 </composite>

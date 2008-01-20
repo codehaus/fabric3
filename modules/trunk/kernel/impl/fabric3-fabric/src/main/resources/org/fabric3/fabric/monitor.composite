@@ -16,18 +16,17 @@
  under the License.
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           name="FunctionTestHarnessComposite">
+           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           name="org.fabric3.fabric.Monitor"
+           autowire="true">
 
-    <include name="CommonComposite"/>
-    <include name="SmokeTestComposite"/>
-    <include name="MonitorTestComposite"/>
-    <include name="OuterComposite"/>
-    <include name="ConversationComposite"/>
-    <include name="PropertiesComposite"/>
-    <include name="ReferencesComposite"/>
-    <include name="BindingComposite"/>
-    <include name="WiringComposite"/>
-    <include name="AutoWireComposite"/>
-    <include name="LifecycleComposite"/>
+    <component name="implementation.Monitor">
+        <system:implementation.system class="org.fabric3.fabric.monitor.MonitorProcessor"/>
+    </component>
+    <component name="MonitorWireGenerator">
+        <system:implementation.system class="org.fabric3.fabric.monitor.MonitorWireGenerator"/>
+    </component>
+    <component name="MonitorWireAttacher">
+        <system:implementation.system class="org.fabric3.fabric.monitor.MonitorWireAttacher"/>
+    </component>
 </composite>
