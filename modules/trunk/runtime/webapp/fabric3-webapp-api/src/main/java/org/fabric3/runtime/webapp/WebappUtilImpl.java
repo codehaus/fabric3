@@ -53,6 +53,9 @@ import org.fabric3.monitor.JavaLoggingMonitorFactory;
  * @version $Rev$ $Date$
  */
 public class WebappUtilImpl implements WebappUtil {
+    
+    private static final String SYSTEM_CONFIG = "/WEB-INF/systemConfig.xml";
+    
     private final ServletContext servletContext;
 
     public WebappUtilImpl(ServletContext servletContext) {
@@ -79,13 +82,17 @@ public class WebappUtilImpl implements WebappUtil {
     public ScdlBootstrapper getBootstrapper(ClassLoader bootClassLoader) throws Fabric3InitException {
         try {
             String className = getInitParameter(BOOTSTRAP_PARAM, BOOTSTRAP_DEFAULT);
-            return (ScdlBootstrapper) bootClassLoader.loadClass(className).newInstance();
+            ScdlBootstrapper scdlBootstrapper = (ScdlBootstrapper) bootClassLoader.loadClass(className).newInstance();
+            scdlBootstrapper.setSystemConfig(servletContext.getResource(SYSTEM_CONFIG));
+            return scdlBootstrapper;
         } catch (InstantiationException e) {
             throw new Fabric3InitException(e);
         } catch (IllegalAccessException e) {
             throw new Fabric3InitException(e);
         } catch (ClassNotFoundException e) {
             throw new Fabric3InitException("Bootstrapper Implementation not found", e);
+        } catch (MalformedURLException e) {
+            throw new Fabric3InitException(e);
         }
     }
 

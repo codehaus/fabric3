@@ -222,7 +222,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
     public Dependency[] contributions;
 
     /**
-     * Set of extension artifacts that should be deployed to the runtime.
+     * Libraries available to application and runtime.
      *
      * @parameter
      */
@@ -286,6 +286,14 @@ public class Fabric3ITestMojo extends AbstractMojo {
      * @readonly
      */
     public ArtifactFactory artifactFactory;
+
+    /**
+     * Build output directory.
+     *
+     * @parameter expression="${project.build.directory}"
+     * @required
+     */
+    protected File outputDirectory;
 
     @SuppressWarnings({"ThrowFromFinallyBlock"})
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -426,6 +434,8 @@ public class Fabric3ITestMojo extends AbstractMojo {
             throws Exception {
         ScdlBootstrapper bootstrapper = createHostComponent(ScdlBootstrapper.class, bootstrapperImpl, bootClassLoader);
         bootstrapper.setScdlLocation(systemScdl);
+        URL systemConfig = getSystemConfig();
+        bootstrapper.setSystemConfig(systemConfig);
         coordinator.bootPrimordial(runtime, bootstrapper, bootClassLoader, testClassLoader);
         coordinator.initialize();
         Future<Void> future = coordinator.joinDomain(-1);
@@ -434,6 +444,11 @@ public class Fabric3ITestMojo extends AbstractMojo {
         future.get();
         future = coordinator.start();
         future.get();
+    }
+
+    private URL getSystemConfig() throws MalformedURLException {
+        File systemConfig = new File(outputDirectory, "classes" + File.separator + "META-INF" + File.separator + "systemConfig.xml");
+        return systemConfig.exists() ? systemConfig.toURL() : null;
     }
 
     private ClassLoader createBootClassLoader(ClassLoader parent, Set<Artifact> artifacts)

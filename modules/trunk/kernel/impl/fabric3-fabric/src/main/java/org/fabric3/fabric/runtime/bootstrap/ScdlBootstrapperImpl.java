@@ -90,6 +90,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     private final ComponentInstantiator instantiator;
 
     private URL scdlLocation;
+    private URL systemConfig;
     private LogicalComponent<CompositeImplementation> domain;
 
     public ScdlBootstrapperImpl() {
@@ -104,6 +105,10 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
     public void setScdlLocation(URL scdlLocation) {
         this.scdlLocation = scdlLocation;
+    }
+    
+    public void setSystemConfig(URL systemConfig) {
+        this.systemConfig = systemConfig;
     }
 
     public void bootPrimordial(Fabric3Runtime<?> runtime, ClassLoader bootClassLoader, ClassLoader appClassLoader)
@@ -144,6 +149,11 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
             Document userConfig = loadUserConfig();
             if (userConfig != null) {
                 domain.setPropertyValue("userConfig", userConfig);
+            }
+            
+            Document systemConfig = loadSystemConfig();
+            if (systemConfig != null) {
+                domain.setPropertyValue("systemConfig", systemConfig);
             }
 
             // include in the runtime domain assembly
@@ -279,6 +289,23 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         File configFile = new File(USER_CONFIG);
         try {
             return documentLoader.load(configFile);
+        } catch (FileNotFoundException e) {
+            return null;
+        } catch (IOException e) {
+            return null;
+        } catch (SAXException e) {
+            return null;
+        }
+    }
+
+
+    private Document loadSystemConfig() {
+        // Get the system config location
+        if (systemConfig == null) {
+            return null;
+        }
+        try {
+            return documentLoader.load(systemConfig);
         } catch (FileNotFoundException e) {
             return null;
         } catch (IOException e) {

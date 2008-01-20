@@ -35,4 +35,11 @@ public interface ScdlBootstrapper extends Bootstrapper {
      * @param scdlLocation the location of the SCDL used to boot this runtime
      */
     void setScdlLocation(URL scdlLocation);
+    
+    /**
+     * Sets the system configuration for the host.
+     * 
+     * @param systemConfig System configuration.
+     */
+    void setSystemConfig(URL systemConfig);
 }
