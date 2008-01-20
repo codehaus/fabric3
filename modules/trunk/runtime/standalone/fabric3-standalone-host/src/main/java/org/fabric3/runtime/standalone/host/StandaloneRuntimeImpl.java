@@ -20,7 +20,7 @@ package org.fabric3.runtime.standalone.host;
 
 import org.fabric3.api.annotation.LogLevel;
 import org.fabric3.fabric.runtime.AbstractRuntime;
-import org.fabric3.monitor.JavaLoggingMonitorFactory;
+import org.fabric3.monitor.impl.JavaLoggingMonitorFactory;
 import org.fabric3.runtime.standalone.StandaloneHostInfo;
 import org.fabric3.runtime.standalone.StandaloneRuntime;
 

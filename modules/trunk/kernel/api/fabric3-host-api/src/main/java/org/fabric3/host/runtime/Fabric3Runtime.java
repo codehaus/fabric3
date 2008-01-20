@@ -21,7 +21,7 @@ package org.fabric3.host.runtime;
 import java.net.URI;
 
 import org.fabric3.host.management.ManagementService;
-import org.fabric3.host.monitor.MonitorFactory;
+import org.fabric3.monitor.MonitorFactory;
 
 /**
  * Represents a node in the service network. Runtimes may host components and/or function as a Domain controller.

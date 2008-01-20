@@ -44,7 +44,7 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.ws.cxf.wire.CxfTargetInterceptor;
-import org.fabric3.host.monitor.MonitorFactory;
+import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.spi.host.ServletHost;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.wire.InvocationChain;

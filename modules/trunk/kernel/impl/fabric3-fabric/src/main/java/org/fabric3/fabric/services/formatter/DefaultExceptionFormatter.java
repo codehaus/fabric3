@@ -16,34 +16,27 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.host.monitor;
+package org.fabric3.fabric.services.formatter;
+
+import java.io.PrintWriter;
+
+import org.fabric3.spi.services.formatter.ExceptionFormatter;
 
 /**
- * A registry for exception formatters
+ * Default formatter for all exceptions that simply calls printStackTrace.
  *
  * @version $Rev$ $Date$
  */
-public interface FormatterRegistry {
-    /**
-     * Registers a formatter for a type of exception.
-     *
-     * @param type the type of exception the formatter can handle
-     * @param formatter the formatter to register
-     */
-    <T extends Throwable> void register(Class<T> type, ExceptionFormatter<? super T> formatter);
+public class DefaultExceptionFormatter implements ExceptionFormatter<Throwable> {
+    public DefaultExceptionFormatter() {
+    }
 
-    /**
-     * Unregisters the given formatter
-     *
-     * @param type the type of formatter to unregister
-     */
-    void unregister(Class<?> type);
+    public Class<Throwable> getType() {
+        return Throwable.class;
+    }
 
-    /**
-     * Return the formatter for a type of exception.
-     *
-     * @param type the type of exception
-     * @return a formatter that can handle that type
-     */
-    <T extends Throwable> ExceptionFormatter<? super T> getFormatter(Class<? extends T> type);
+    public void write(PrintWriter writer, Throwable exception) {
+        exception.printStackTrace(writer);
+    }
+
 }

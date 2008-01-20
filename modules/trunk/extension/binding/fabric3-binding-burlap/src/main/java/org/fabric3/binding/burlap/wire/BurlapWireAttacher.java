@@ -32,7 +32,7 @@ import org.fabric3.binding.burlap.model.physical.BurlapWireSourceDefinition;
 import org.fabric3.binding.burlap.model.physical.BurlapWireTargetDefinition;
 import org.fabric3.binding.burlap.transport.BurlapServiceHandler;
 import org.fabric3.binding.burlap.transport.BurlapTargetInterceptor;
-import org.fabric3.host.monitor.MonitorFactory;
+import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;

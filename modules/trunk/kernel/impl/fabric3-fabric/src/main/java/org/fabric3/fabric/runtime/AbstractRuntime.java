@@ -29,7 +29,7 @@ import org.fabric3.fabric.services.componentmanager.ComponentManagerImpl;
 import org.fabric3.fabric.services.domain.LogicalComponentManagerImpl;
 import org.fabric3.fabric.services.domain.NonPersistentLogicalComponentStore;
 import org.fabric3.host.management.ManagementService;
-import org.fabric3.host.monitor.MonitorFactory;
+import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;

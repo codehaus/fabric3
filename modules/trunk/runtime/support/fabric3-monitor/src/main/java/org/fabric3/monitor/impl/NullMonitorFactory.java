@@ -16,17 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.monitor;
+package org.fabric3.monitor.impl;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.URI;
 
-import org.fabric3.host.monitor.MonitorFactory;
+import org.fabric3.monitor.MonitorFactory;
 
 /**
- * Implementation of a {@link org.fabric3.host.monitor.MonitorFactory} that produces implementations that simply
+ * Implementation of a {@link MonitorFactory} that produces implementations that simply
  * return.
  *
  * @version $Rev$ $Date$

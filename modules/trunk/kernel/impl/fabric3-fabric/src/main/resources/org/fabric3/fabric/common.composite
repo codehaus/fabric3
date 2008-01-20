@@ -27,7 +27,7 @@
            autowire="true">
 
     <component name="FormatterRegistry">
-        <system:implementation.system class="org.fabric3.monitor.DefaultFormatterRegistry"/>
+        <system:implementation.system class="org.fabric3.fabric.services.formatter.DefaultFormatterRegistry"/>
     </component>
 
     <component name="physicalOperationHelper">

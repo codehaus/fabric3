@@ -14,13 +14,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.monitor;
+package org.fabric3.fabric.services.formatter;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.fabric3.host.monitor.ExceptionFormatter;
-import org.fabric3.host.monitor.FormatterRegistry;
+import org.fabric3.spi.services.formatter.ExceptionFormatter;
+import org.fabric3.spi.services.formatter.FormatterRegistry;
 
 /**
  * @version $Rev$ $Date$

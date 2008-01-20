@@ -1,4 +1,4 @@
-package org.fabric3.monitor;
+package org.fabric3.fabric.services.formatter;
 
 import java.io.PrintWriter;
 

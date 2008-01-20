@@ -44,7 +44,7 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
-import org.fabric3.host.monitor.MonitorFactory;
+import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.host.ServletHost;
 import org.fabric3.spi.services.work.WorkScheduler;

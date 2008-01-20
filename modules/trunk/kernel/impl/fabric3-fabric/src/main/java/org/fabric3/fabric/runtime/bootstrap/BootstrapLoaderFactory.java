@@ -36,7 +36,7 @@ import org.fabric3.fabric.loader.LoaderRegistryImpl;
 import org.fabric3.fabric.services.advertsiement.FeatureLoader;
 import org.fabric3.fabric.services.factories.xml.XMLFactoryImpl;
 import org.fabric3.fabric.runtime.ComponentNames;
-import org.fabric3.host.monitor.MonitorFactory;
+import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.loader.common.ComponentReferenceLoader;
 import org.fabric3.loader.common.ComponentServiceLoader;

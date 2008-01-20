@@ -24,7 +24,7 @@ import java.io.StringWriter;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
-import org.fabric3.host.monitor.FormatterRegistry;
+import org.fabric3.spi.services.formatter.FormatterRegistry;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ServiceContract;
 

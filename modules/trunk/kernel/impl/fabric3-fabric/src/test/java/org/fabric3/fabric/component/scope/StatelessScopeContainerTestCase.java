@@ -26,7 +26,7 @@ import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.scdl.Scope;
-import org.fabric3.host.monitor.MonitorFactory;
+import org.fabric3.monitor.MonitorFactory;
 
 /**
  * Unit tests for the composite scope container

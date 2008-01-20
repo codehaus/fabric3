@@ -24,7 +24,7 @@ import org.osoa.sca.Conversation;
 import org.fabric3.spi.component.InstanceWrapperStore;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.scdl.Scope;
-import org.fabric3.host.monitor.MonitorFactory;
+import org.fabric3.monitor.MonitorFactory;
 
 /**
  * Scope container for the standard CONVERSATIONAL scope.

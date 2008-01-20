@@ -30,7 +30,7 @@ import javax.xml.stream.XMLOutputFactory;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.host.monitor.MonitorFactory;
+import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.command.CommandExecutorRegistry;

@@ -25,7 +25,7 @@ import java.net.URI;
 import org.fabric3.spi.builder.WiringException;
 
 import junit.framework.TestCase;
-import org.fabric3.host.monitor.FormatterRegistry;
+import org.fabric3.spi.services.formatter.FormatterRegistry;
 import org.easymock.EasyMock;
 
 /**

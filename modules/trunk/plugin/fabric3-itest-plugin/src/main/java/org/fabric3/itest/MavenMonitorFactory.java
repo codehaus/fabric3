@@ -35,7 +35,7 @@ import java.util.logging.Level;
 import org.apache.maven.plugin.logging.Log;
 
 import org.fabric3.api.annotation.LogLevel;
-import org.fabric3.host.monitor.MonitorFactory;
+import org.fabric3.monitor.MonitorFactory;
 
 /**
  * @version $Rev$ $Date$

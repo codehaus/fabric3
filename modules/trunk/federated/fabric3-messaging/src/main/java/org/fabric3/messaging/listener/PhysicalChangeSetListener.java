@@ -23,7 +23,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.host.monitor.MonitorFactory;
+import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.spi.deployer.Deployer;
 import org.fabric3.spi.marshaller.MarshalService;
 import org.fabric3.spi.model.physical.PhysicalChangeSet;

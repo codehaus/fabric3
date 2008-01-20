@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.monitor;
+package org.fabric3.monitor.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ import java.util.logging.Logger;
 import junit.framework.TestCase;
 
 import org.fabric3.api.annotation.LogLevel;
-import org.fabric3.host.monitor.MonitorFactory;
+import org.fabric3.monitor.MonitorFactory;
 
 /**
  * Test case for the JavaLoggingMonitorFactory.

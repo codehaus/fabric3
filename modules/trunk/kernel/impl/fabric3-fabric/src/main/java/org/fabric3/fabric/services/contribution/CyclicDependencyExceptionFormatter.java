@@ -26,8 +26,8 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.util.graph.Cycle;
 import org.fabric3.fabric.util.graph.Vertex;
-import org.fabric3.host.monitor.ExceptionFormatter;
-import org.fabric3.host.monitor.FormatterRegistry;
+import org.fabric3.spi.services.formatter.ExceptionFormatter;
+import org.fabric3.spi.services.formatter.FormatterRegistry;
 import org.fabric3.spi.services.contribution.Contribution;
 
 /**

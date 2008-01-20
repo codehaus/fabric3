@@ -16,13 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.monitor;
+package org.fabric3.fabric.services.formatter;
 
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
 
 import junit.framework.TestCase;
 import org.easymock.classextension.EasyMock;
+
+import org.fabric3.fabric.services.formatter.DefaultExceptionFormatter;
 
 /**
  * @version $Rev$ $Date$

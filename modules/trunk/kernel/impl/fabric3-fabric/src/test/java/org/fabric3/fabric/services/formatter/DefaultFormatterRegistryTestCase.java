@@ -14,12 +14,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.monitor;
+package org.fabric3.fabric.services.formatter;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
-import org.fabric3.host.monitor.ExceptionFormatter;
+import org.fabric3.spi.services.formatter.ExceptionFormatter;
+import org.fabric3.fabric.services.formatter.DefaultFormatterRegistry;
 
 /**
  * @version $Rev$ $Date$
