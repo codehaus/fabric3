@@ -40,4 +40,8 @@ public class Referenceable {
     public URI getUri() {
         return uri;
     }
+
+    public String toString() {
+        return uri.toString();
+    }
 }
