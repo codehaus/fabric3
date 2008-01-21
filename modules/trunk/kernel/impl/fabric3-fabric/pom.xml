@@ -54,12 +54,6 @@
             <artifactId>fabric3-monitor</artifactId>
             <version>0.1</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-policy-spi</artifactId>
-            <version>0.3-SNAPSHOT</version>
-        </dependency>
         
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
