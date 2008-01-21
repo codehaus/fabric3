@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with this work for information
+ regarding copyright ownership.  This file is licensed
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+           targetNamespace="org.codehaus.fabric3"
+           name="Axis2WebServicesBindingExtension"
+           autowire="true">
+
+    <!-- Axis wire attacher -->
+    <component name="Axis2WireAttacher">
+        <system:implementation.system class="org.fabric3.binding.ws.axis2.wire.Axis2WireAttacher"/>
+        <!--<property name="contextPath">/services/*</property>-->
+    </component>
+    
+    <!-- Axis service provisioner -->
+    <component name="Axis2ServiceProvisioner">
+        <system:implementation.system class="org.fabric3.binding.ws.axis2.Axis2ServiceProvisionerImpl"/>
+    </component>
+
+    <!-- Axis Binding Generator -->
+    <component name="Axis2Delegate" f3:key="axis2">
+        <system:implementation.system class="org.fabric3.binding.ws.axis2.physical.Axis2BindingGeneratorDelegate"/>
+    </component>
+    
+    <!-- Policy Applier Registry -->
+    <component name="Axis2PolicyApplierRegistry">
+        <system:implementation.system class="org.fabric3.binding.ws.axis2.policy.PolicyApplierRegistryImpl"/>
+        <reference name="policyAppliers" target="WsPolicyApplier Axs2ConfigPolicyApplier"/>
+    </component>
+    
+    <!-- WS Policy Applier -->
+    <component name="WsPolicyApplier" f3:key="wsp:Policy">
+        <system:implementation.system class="org.fabric3.binding.ws.axis2.policy.WsPolicyApplier"/>
+    </component>
+    
+    <!-- Axis Config Policy Applier -->
+    <component name="Axs2ConfigPolicyApplier" f3:key="f3:AxisConfig">
+        <system:implementation.system class="org.fabric3.binding.ws.axis2.policy.AxisConfigPolicyApplier"/>
+        
+    </component>
+    
+    <!-- Configurator -->
+    <component name="Axis2F3Configurator">
+        <system:implementation.system class="org.fabric3.binding.ws.axis2.config.F3ConfiguratorImpl"/>
+    </component>
+
+    <!-- Feature -->
+    <system:feature name="WsAxis2BindingFeature">{http://fabric3.org/xmlns/binding}ws-axis2</system:feature>
+
+</composite>
