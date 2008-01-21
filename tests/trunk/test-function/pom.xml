@@ -53,9 +53,9 @@
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-itest-plugin</artifactId>
                 <!-- generally this should point to the latest plugin and kernel version -->
-                <version>0.4-SNAPSHOT</version>
+                <version>0.4</version>
                 <configuration>
-                    <runtimeVersion>0.4-SNAPSHOT</runtimeVersion>
+                    <runtimeVersion>0.5-SNAPSHOT</runtimeVersion>
                     <extensions>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
