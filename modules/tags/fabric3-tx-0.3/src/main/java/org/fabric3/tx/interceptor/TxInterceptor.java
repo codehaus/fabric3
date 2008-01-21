@@ -1,0 +1,184 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.    
+ */
+package org.fabric3.tx.interceptor;
+
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.InvalidTransactionException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.Status;
+import javax.transaction.SystemException;
+import javax.transaction.Transaction;
+import javax.transaction.TransactionManager;
+
+import org.fabric3.spi.wire.Interceptor;
+import org.fabric3.spi.wire.Message;
+import org.fabric3.tx.TxException;
+
+/**
+ * @version $Revision$ $Date$
+ */
+public class TxInterceptor implements Interceptor {
+    
+    // Next interceptor
+    private Interceptor next;
+    
+    // Transaction manager
+    private TransactionManager transactionManager;
+    
+    // Transaction action
+    private TxAction txAction;
+    
+    /**
+     * Initializes the transaction manager.
+     * 
+     * @param transactionManager Transaction manager to be initialized.
+     */
+    public TxInterceptor(TransactionManager transactionManager, TxAction txAction) {
+        this.transactionManager = transactionManager;
+        this.txAction = txAction;
+    }
+
+    /**
+     * @see org.fabric3.spi.wire.Interceptor#getNext()
+     */
+    public Interceptor getNext() {
+        return next;
+    }
+
+    /**
+     * @see org.fabric3.spi.wire.Interceptor#setNext(org.fabric3.spi.wire.Interceptor)
+     */
+    public void setNext(Interceptor next) {
+        this.next = next;
+    }
+
+    /**
+     * @see org.fabric3.spi.wire.Interceptor#invoke(org.fabric3.spi.wire.Message)
+     */
+    public Message invoke(Message message) {
+        
+        Transaction transaction =  getTransaction();
+            
+        if (txAction == TxAction.BEGIN && transaction == null) {
+            begin();
+        } else if (txAction == TxAction.SUSPEND && transaction != null) {
+            suspend();
+        }
+
+        Message ret = null;
+        try {
+            ret = next.invoke(message);
+        } catch (RuntimeException e) {
+            if(txAction == TxAction.BEGIN && transaction == null) {
+                rollback();
+            } else if(txAction == TxAction.SUSPEND && transaction != null) {
+                setRollbackOnly();
+            }
+            throw e;
+        }
+            
+        if(txAction == TxAction.BEGIN && transaction == null) {
+            commit();
+        } else if(txAction == TxAction.SUSPEND && transaction != null) {
+            resume(transaction);
+        }
+            
+        return ret;
+        
+    }
+    
+    private void setRollbackOnly() {
+        try {
+            transactionManager.setRollbackOnly();
+        } catch (SystemException e) {
+            throw new TxException(e);
+        }
+    }
+    
+    private Transaction getTransaction() {
+        try {
+            return transactionManager.getTransaction();
+        } catch (SystemException e) {
+            throw new TxException(e);
+        }
+    }
+    
+    private void rollback() {
+        try {
+            transactionManager.rollback();
+        } catch (SystemException e) {
+            throw new TxException(e);
+        }
+    }
+    
+    private void begin() {
+        try {
+            transactionManager.begin();
+        } catch (NotSupportedException e) {
+            throw new TxException(e);
+        } catch (SystemException e) {
+            throw new TxException(e);
+        }
+    }
+    
+    private void suspend() {
+        try {
+            transactionManager.suspend();
+        } catch (SystemException e) {
+            throw new TxException(e);
+        }
+    }
+    
+    private void resume(Transaction transaction) {
+        try {
+            transactionManager.resume(transaction);
+        } catch (SystemException e) {
+            throw new TxException(e);
+        } catch (InvalidTransactionException e) {
+            throw new TxException(e);
+        } catch (IllegalStateException e) {
+            throw new TxException(e);
+        }
+    }
+    
+    private void commit() {
+        try {
+            if (transactionManager.getStatus() != Status.STATUS_MARKED_ROLLBACK) {
+                transactionManager.commit();
+            } else {
+                rollback();
+            }
+        } catch (SystemException e) {
+            throw new TxException(e);
+        } catch (IllegalStateException e) {
+            throw new TxException(e);
+        } catch (SecurityException e) {
+            throw new TxException(e);
+        } catch (HeuristicMixedException e) {
+            throw new TxException(e);
+        } catch (HeuristicRollbackException e) {
+            throw new TxException(e);
+        } catch (RollbackException e) {
+            throw new TxException(e);
+        }
+    }
+
+}

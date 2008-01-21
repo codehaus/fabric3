@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ASCII"?>
+<definitions 
+    xmlns="http://www.osoa.org/xmlns/sca/1.0" 
+    xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
+    targetNamespace="http://fabric3.org/xmlns/sca/2.0-alpha" 
+    xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha">
+    
+    <!-- Begins a transaction if one not already in progress and commits it -->
+    <policySet name="managedTransactionPolicy" provides="sca:managedTransaction" f3:phase="INTERCEPTION">
+        <f3:transaction action="BEGIN"/>
+    </policySet> 
+    
+    <!-- Suspends the transaction if one already in progress and resumes it -->
+    <policySet name="suspendsTransactionPolicy" provides="sca:suspendsTransaction" f3:phase="INTERCEPTION">
+        <f3:transaction action="SUSPEND"/>
+    </policySet>
+    
+    <!-- No op -->
+    <policySet name="propagatesTransactionPolicy" provides="sca:propagatesTransaction" f3:phase="INTERCEPTION">
+        <f3:transaction action="PROPOGATE"/>
+    </policySet>
+
+</definitions>
