@@ -33,7 +33,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-java</artifactId>
-            <version>0.2-SNAPSHOT</version>
+            <version>0.2</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
