@@ -15,7 +15,7 @@
  specific language governing permissions and limitations
  under the License.
 -->
-<project>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
@@ -35,25 +35,6 @@
             <artifactId>sca-api-r1.0</artifactId>
             <version>0.2.1</version>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>groovy</groupId>-->
-            <!--<artifactId>groovy</artifactId>-->
-            <!--<version>1.1-BETA-1</version>-->
-            <!--<scope>runtime</scope>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>asm</groupId>-->
-            <!--<artifactId>asm</artifactId>-->
-            <!--<version>2.2.3</version>-->
-            <!--<scope>runtime</scope>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>antlr</groupId>-->
-            <!--<artifactId>antlr</artifactId>-->
-            <!--<version>2.7.7</version>-->
-            <!--<scope>runtime</scope>-->
-        <!--</dependency>-->
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -69,13 +50,14 @@
                 <artifactId>fabric3-itest-plugin</artifactId>
                 <version>0.4-SNAPSHOT</version>
                 <configuration>
-                    <contributions>
+                    <runtimeVersion>0.4-SNAPSHOT</runtimeVersion>
+                    <extensions>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-groovy</artifactId>
                             <version>0.3-SNAPSHOT</version>
                         </dependency>
-                    </contributions>
+                    </extensions>
                 </configuration>
                 <executions>
                     <execution>

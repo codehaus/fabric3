@@ -38,7 +38,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-monitor</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <version>0.1</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -55,13 +55,14 @@
                 <!-- generally this should point to the latest plugin and kernel version -->
                 <version>0.4-SNAPSHOT</version>
                 <configuration>
-                    <contributions>
+                    <runtimeVersion>0.4-SNAPSHOT</runtimeVersion>
+                    <extensions>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-binding-test</artifactId>
                             <version>0.2-SNAPSHOT</version>
                         </dependency>
-                    </contributions>
+                    </extensions>
                     <compositeName>FunctionTestHarnessComposite</compositeName>
                     <properties>
                         <property>

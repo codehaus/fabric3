@@ -15,7 +15,7 @@
  specific language governing permissions and limitations
  under the License.
 -->
-<project>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -35,21 +35,19 @@
     <dependencies>
     
         <dependency>
+            <groupId>org.codehaus.fabric3.spec</groupId>
+            <artifactId>sca-api-r1.0</artifactId>
+            <version>0.2.1</version>
+        </dependency>
+
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <scope>compile</scope>
         </dependency>
         
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
-            <scope>test</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.codehaus.fabric3.spec</groupId>
-            <artifactId>sca-api-r1.0</artifactId>
-            <version>0.2.1</version>
         </dependency>
         
     </dependencies>
@@ -62,20 +60,21 @@
                 <artifactId>fabric3-itest-plugin</artifactId>
                 <version>0.4-SNAPSHOT</version>
                 <configuration>
-                    <contributions>
+                    <runtimeVersion>0.4-SNAPSHOT</runtimeVersion>
+                    <extensions>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-mock</artifactId>
                             <version>0.2-SNAPSHOT</version>
                         </dependency>
-                    </contributions>
-                    <extensions>
+                    </extensions>
+                    <shared>
                         <dependency>
                             <groupId>org.easymock</groupId>
                             <artifactId>easymock</artifactId>
                             <version>2.2</version>
                         </dependency>
-                    </extensions>
+                    </shared>
                 </configuration>
                 <executions>
                     <execution>

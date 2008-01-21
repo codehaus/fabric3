@@ -210,7 +210,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
     /**
      * The version of the runtime to use.
      *
-     * @parameter expression="0.4-SNAPSHOT"
+     * @parameter expression="0.4"
      */
     public String runtimeVersion;
 
@@ -219,14 +219,14 @@ public class Fabric3ITestMojo extends AbstractMojo {
      *
      * @parameter
      */
-    public Dependency[] contributions;
+    public Dependency[] extensions;
 
     /**
      * Libraries available to application and runtime.
      *
      * @parameter
      */
-    public Dependency[] extensions;
+    public Dependency[] shared;
 
     /**
      * Properties passed to the runtime throught the HostInfo interface.
@@ -330,7 +330,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
             intentsLocation = bootClassLoader.getResource("META-INF/fabric3/intents.xml");
         }
 
-        List<URL> contributionURLs = resolveDependencies(contributions);
+        List<URL> extensionUrls = resolveDependencies(extensions);
 
 
         log.info("Starting Embedded Fabric3 Runtime ...");
@@ -344,7 +344,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
             throw new MojoExecutionException("Error creating fabric3 runtime", e);
         }
         try {
-            coordinator.setExtensions(contributionURLs);
+            coordinator.setExtensions(extensionUrls);
             coordinator.setIntentsLocation(intentsLocation);
             bootRuntime(coordinator, runtime, bootClassLoader, hostClassLoader);
         } catch (InitializationException e) {
@@ -674,9 +674,8 @@ public class Fabric3ITestMojo extends AbstractMojo {
         addArtifacts(hostArtifacts, jsr250API);
 
         // add shared artifacts to the host classpath
-        // FIXME we should rename "extensions" to somehting that better denotes shared artifacts
-        if (extensions != null) {
-            for (Dependency extension : extensions) {
+        if (shared != null) {
+            for (Dependency extension : shared) {
                 addArtifacts(hostArtifacts, extension);
             }
         }

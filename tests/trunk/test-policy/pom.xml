@@ -15,7 +15,7 @@
 	specific language governing permissions and limitations
 	under the License.
 -->
-<project>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -42,12 +42,6 @@
         </dependency>
 
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>compile</scope>
-        </dependency>
-        
-        <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>geronimo-annotation_1.0_spec</artifactId>
             <version>1.1</version>
@@ -58,6 +52,11 @@
             <groupId>geronimo-spec</groupId>
             <artifactId>geronimo-spec-jta</artifactId>
             <version>1.0.1B-rc4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
         </dependency>
     </dependencies>
 
@@ -71,7 +70,8 @@
                 <artifactId>fabric3-itest-plugin</artifactId>
                 <version>0.4-SNAPSHOT</version>
                 <configuration>
-                    <contributions>
+                    <runtimeVersion>0.4-SNAPSHOT</runtimeVersion>
+                    <extensions>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-tx</artifactId>
@@ -87,8 +87,8 @@
                             <artifactId>fabric3-resource</artifactId>
                             <version>0.2-SNAPSHOT</version>
                         </dependency>
-                    </contributions>
-                    <extensions>
+                    </extensions>
+                    <shared>
                         <dependency>
                             <groupId>geronimo-spec</groupId>
                             <artifactId>geronimo-spec-jta</artifactId>
@@ -99,7 +99,7 @@
                             <artifactId>geronimo-spec-j2ee-connector</artifactId>
                             <version>1.5-rc4</version>
                         </dependency>
-                    </extensions>
+                    </shared>
                 </configuration>
                 <executions>
                     <execution>

@@ -15,7 +15,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<project>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <parent>
@@ -53,7 +53,8 @@ under the License.
                 <artifactId>fabric3-itest-plugin</artifactId>
                 <version>0.4-SNAPSHOT</version>
                 <configuration>
-                    <contributions>
+                    <runtimeVersion>0.4-SNAPSHOT</runtimeVersion>
+                    <extensions>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-binding-jms</artifactId>
@@ -69,8 +70,8 @@ under the License.
                             <artifactId>fabric3-tx</artifactId>
                             <version>0.3-SNAPSHOT</version>
                         </dependency>
-                    </contributions>
-                    <extensions>
+                    </extensions>
+                    <shared>
                         <dependency>
                             <groupId>geronimo-spec</groupId>
                             <artifactId>geronimo-spec-jms</artifactId>
@@ -91,7 +92,7 @@ under the License.
                             <artifactId>activemq-core</artifactId>
                             <version>4.1.1</version>
                         </dependency>
-                    </extensions>
+                    </shared>
                 </configuration>
                 <executions>
                     <execution>
