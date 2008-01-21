@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.    
+-->
+<!--
+    Default loader configuration for the launcher environment.
+    
+    $Rev$ $Date$
+-->
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           name="org.fabric3.fabric.Loader"
+           autowire="true">
+
+    <!-- Loader and LoaderRegistry -->
+    <component name="loader">
+        <system:implementation.system class="org.fabric3.fabric.loader.LoaderRegistryImpl"/>
+    </component>
+
+    <!-- Property Helper -->
+    <component name="loader.PropertyHelper">
+        <system:implementation.system class="org.fabric3.loader.common.PropertyHelperImpl"/>
+    </component>
+
+    <!-- Common SCDL loader implementations -->
+    <component name="loader.Operation">
+        <system:implementation.system class="org.fabric3.loader.common.OperationLoader"/>
+    </component>
+    <component name="loader.ComponentReference">
+        <system:implementation.system class="org.fabric3.loader.common.ComponentReferenceLoader"/>
+    </component>
+    <component name="loader.ComponentService">
+        <system:implementation.system class="org.fabric3.loader.common.ComponentServiceLoader"/>
+    </component>
+    <component name="loader.Property">
+        <system:implementation.system class="org.fabric3.loader.common.PropertyLoader"/>
+    </component>
+    <component f3:key="sca:interface.java" name="loader.JavaInterface">
+        <system:implementation.system class="org.fabric3.loader.common.JavaInterfaceLoader"/>
+    </component>
+
+    <!-- Composite SCDL loader implementations -->
+    <component name="loader.PropertyValue">
+        <system:implementation.system class="org.fabric3.loader.composite.PropertyValueLoader"/>
+    </component>
+    <component name="loader.Component">
+        <system:implementation.system class="org.fabric3.loader.composite.ComponentLoader"/>
+        <reference name="propertyValue" target="loader.PropertyValue"/>
+        <reference name="reference" target="loader.ComponentReference"/>
+        <reference name="service" target="loader.ComponentService"/>
+        <reference name="policyHelper" target="policyHelper"/>
+    </component>
+    <component name="loader.Include">
+        <system:implementation.system class="org.fabric3.loader.composite.IncludeLoader"/>
+    </component>
+    <component name="loader.CompositeReference">
+        <system:implementation.system class="org.fabric3.loader.composite.CompositeReferenceLoader"/>
+    </component>
+    <component name="loader.CompositeService">
+        <system:implementation.system class="org.fabric3.loader.composite.CompositeServiceLoader"/>
+    </component>
+    <component name="loader.Wire">
+        <system:implementation.system class="org.fabric3.loader.composite.WireLoader"/>
+    </component>
+
+    <component name="loader.Composite">
+        <system:implementation.system class="org.fabric3.loader.composite.CompositeLoader"/>
+        <reference name="include" target="loader.Include"/>
+        <reference name="property" target="loader.Property"/>
+        <reference name="service" target="loader.CompositeService"/>
+        <reference name="reference" target="loader.CompositeReference"/>
+        <reference name="component" target="loader.Component"/>
+        <reference name="wire" target="loader.Wire"/>
+    </component>
+
+    <component name="elementLoader.componentType">
+        <system:implementation.system class="org.fabric3.loader.componentType.ComponentTypeLoader"/>
+        <reference name="property" target="loader.Property"/>
+        <reference name="service" target="loader.ComponentService"/>
+        <reference name="reference" target="loader.ComponentReference"/>
+    </component>
+
+    <!-- Definitions SCDL loader implementation -->
+    <component name="loader.definitions">
+        <system:implementation.system class="org.fabric3.loader.definitions.DefinitionsLoader"/>
+    </component>
+
+    <component name="DefinitionsIndexer">
+        <system:implementation.system class="org.fabric3.loader.definitions.DefinitionsIndexer"/>
+    </component>
+
+    <component f3:key="sca:intent" name="loader.intent">
+        <system:implementation.system class="org.fabric3.loader.definitions.IntentLoader"/>
+    </component>
+
+    <component name="loader.policySet">
+        <system:implementation.system class="org.fabric3.loader.definitions.PolicySetLoader"/>
+    </component>
+
+    <component name="loader.bindingType">
+        <system:implementation.system class="org.fabric3.loader.definitions.BindingTypeLoader"/>
+    </component>
+
+    <component name="loader.implementationType">
+        <system:implementation.system class="org.fabric3.loader.definitions.ImplementationTypeLoader"/>
+    </component>
+
+    <!-- Policy helper -->
+    <component name="policyHelper">
+        <system:implementation.system class="org.fabric3.loader.common.DefaultPolicyHelper"/>
+    </component>
+
+</composite>
