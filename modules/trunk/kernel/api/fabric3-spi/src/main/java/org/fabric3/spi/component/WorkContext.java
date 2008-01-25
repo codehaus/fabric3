@@ -20,6 +20,8 @@ package org.fabric3.spi.component;
 
 import java.util.LinkedList;
 
+import javax.security.auth.Subject;
+
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.wire.Wire;
 
@@ -29,6 +31,13 @@ import org.fabric3.spi.wire.Wire;
  * @version $Rev$ $Date$
  */
 public interface WorkContext {
+    
+    /**
+     * Gets the subject associated with the current invocation.
+     * 
+     * @return Subject associated with the current invocation.
+     */
+    Subject getSubject();
 
     /**
      * Returns the identifier currently associated with the supplied scope.
