@@ -24,6 +24,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.osoa.sca.annotations.Callback;
 import org.osoa.sca.annotations.Property;
@@ -272,7 +273,7 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
         }
         JavaMappedReference reference = new JavaMappedReference(name, contract, null);
         reference.setRequired(required);
-        if (param.isArray() || Collection.class.isAssignableFrom(param)) {
+        if (param.isArray() || Collection.class.isAssignableFrom(param) || Map.class.isAssignableFrom(param)) {
             if (required) {
                 reference.setMultiplicity(Multiplicity.ONE_N);
             } else {
@@ -304,6 +305,21 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
                     return (Class<?>) ((ParameterizedType) baseType).getRawType();
                 } else {
                     return null;
+                }
+            }
+        } else if (Map.class.isAssignableFrom(cls)) {
+            if (genericType == cls) {
+                return Object.class;
+            } else {
+                ParameterizedType parameterizedType = (ParameterizedType) genericType;
+                Type type = parameterizedType.getActualTypeArguments()[1];
+                if (type instanceof Class) {
+                    return (Class<?>) type;
+                } else if (type instanceof ParameterizedType) {
+                    ParameterizedType valueType = (ParameterizedType) type;
+                    return (Class<?>) valueType.getRawType();
+                } else {
+                    throw new AssertionError();
                 }
             }
         } else {

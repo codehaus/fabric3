@@ -31,11 +31,20 @@ public class MapTest extends TestCase {
     @Reference
     public Map<String, IdentityService> field;
 
+    private final Map<String, IdentityService> constructor;
     private Map<String, IdentityService> setter;
+
+    public MapTest(@Reference(name="constructor") Map<String, IdentityService> constructor) {
+        this.constructor = constructor;
+    }
 
     @Reference
     public void setSetter(Map<String, IdentityService> setter) {
         this.setter = setter;
+    }
+
+    public void testConstructor() {
+        checkMap(constructor);
     }
 
     public void testSetter() {
