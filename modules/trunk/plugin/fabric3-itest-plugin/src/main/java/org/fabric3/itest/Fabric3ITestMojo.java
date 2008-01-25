@@ -79,8 +79,7 @@ import org.fabric3.scdl.Operation;
 import org.fabric3.spi.deployer.CompositeClassLoader;
 
 /**
- * Integration-tests an SCA composite by running it in a local copy of Fabric3 and calling JUnit-based test components
- * to exercise it.
+ * Run integration tests on a SCA composite using an embedded Fabric3 runtime.
  *
  * @version $Rev$ $Date$
  * @goal test
