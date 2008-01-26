@@ -15,3 +15,16 @@
  specific language governing permissions and limitations
  under the License.
 -->
+<project>
+  <body>
+    <menu name="Overview">
+      <item name="Introduction" href="index.html"/>
+      <item name="Goals" href="plugin-info.html"/>
+      <item name="Usage" href="usage.html">
+          <item name="Basic" href="usage.html"/>
+          <item name="Mocking" href="mocks.html"/>
+          <item name="Extensions" href="extensions.html"/>
+      </item>
+    </menu>
+  </body>
+</project>
