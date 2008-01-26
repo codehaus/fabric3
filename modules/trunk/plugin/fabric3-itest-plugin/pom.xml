@@ -43,6 +43,14 @@
         </repository>
     </repositories>
 
+    <distributionManagement>
+        <site>
+            <id>dav.codehaus.org</id>
+            <name>Fabric3 Website</name>
+            <url>dav:https://dav.codehaus.org/fabric3/fabric3-itest-plugin</url>
+        </site>
+    </distributionManagement>
+
     <dependencies>
         <dependency>
             <groupId>org.apache.maven</groupId>
