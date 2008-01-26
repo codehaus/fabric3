@@ -39,23 +39,83 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
-      <library name="org.codehaus.fabric3:fabric3-api:0.2">
+      <library name="org.codehaus.fabric3:fabric3-api:0.3">
         <CLASSES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.2/fabric3-api-0.2.jar!/" />
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.3/fabric3-api-0.3.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.2/fabric3-api-0.2-javadoc.jar!/" />
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.3/fabric3-api-0.3-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.2/fabric3-api-0.2-sources.jar!/" />
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.3/fabric3-api-0.3-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="fabric3-extension" exported="" />
-    <orderEntry type="module" module-name="fabric3-host-api" exported="" />
-    <orderEntry type="module" module-name="fabric3-monitor" exported="" />
-    <orderEntry type="module" module-name="fabric3-scdl" exported="" />
-    <orderEntry type="module" module-name="fabric3-spi" exported="" />
+    <orderEntry type="module-library" exported="">
+      <library name="org.codehaus.fabric3:fabric3-extension:0.4">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-extension/0.4/fabric3-extension-0.4.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-extension/0.4/fabric3-extension-0.4-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-extension/0.4/fabric3-extension-0.4-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.codehaus.fabric3:fabric3-host-api:0.3">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-host-api/0.3/fabric3-host-api-0.3.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-host-api/0.3/fabric3-host-api-0.3-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-host-api/0.3/fabric3-host-api-0.3-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.codehaus.fabric3:fabric3-monitor:0.1">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-monitor/0.1/fabric3-monitor-0.1.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-monitor/0.1/fabric3-monitor-0.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-monitor/0.1/fabric3-monitor-0.1-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.codehaus.fabric3:fabric3-scdl:0.4">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-scdl/0.4/fabric3-scdl-0.4.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-scdl/0.4/fabric3-scdl-0.4-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-scdl/0.4/fabric3-scdl-0.4-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.codehaus.fabric3:fabric3-spi:0.4">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-spi/0.4/fabric3-spi-0.4.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-spi/0.4/fabric3-spi-0.4-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-spi/0.4/fabric3-spi-0.4-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
     <orderEntry type="module-library" exported="">
       <library name="stax:stax-api:1.0">
         <CLASSES>
