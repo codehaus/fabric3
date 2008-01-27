@@ -67,3 +67,25 @@ Usage
     </build>
 </project>
 +---+
+
+* Bootstrapping the Runtime
+
+  The simplest way to boot the fabric3 runtime inside your webapp is to do it when the application
+  starts using a ServletContextListener. If you have references from Servlets or JSPs to local
+  SCA components, you also need to notify the runtime when the request starts which can be done
+  using a ServletRequestListener.
+
+  Default implementations of these are provided in the fabric3-webapp-api and all you need to
+  do to use them is include the following entries in your <<web.xml>>:
+
++---+
+    <!-- ServletContextListener that boots the fabric3 runtime -->
+    <listener>
+        <listener-class>org.fabric3.runtime.webapp.Fabric3ContextListener</listener-class>
+    </listener>
+
+    <!-- RequestContextListener that notifies the runtime a request is being processed -->
+    <listener>
+        <listener-class>org.fabric3.runtime.webapp.Fabric3RequestListener</listener-class>
+    </listener>
++---+
