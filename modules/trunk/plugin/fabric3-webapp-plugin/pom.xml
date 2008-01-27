@@ -29,6 +29,14 @@
     <name>Fabric3 Webapp Plugin</name>
     <description>Fabric3 Webapp Plugin.</description>
 
+    <distributionManagement>
+        <site>
+            <id>dav.codehaus.org</id>
+            <name>Fabric3 Website</name>
+            <url>dav:https://dav.codehaus.org/fabric3/fabric3-webapp-plugin</url>
+        </site>
+    </distributionManagement>
+
     <dependencies>
         <dependency>
             <groupId>org.apache.maven</groupId>
@@ -65,6 +73,16 @@
             </plugin>
         </plugins>
     </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-plugin-plugin</artifactId>
+                <version>2.2</version>
+            </plugin>
+        </plugins>
+    </reporting>
 
     <scm>
         <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/plugin/fabric3-webapp-plugin</connection>
