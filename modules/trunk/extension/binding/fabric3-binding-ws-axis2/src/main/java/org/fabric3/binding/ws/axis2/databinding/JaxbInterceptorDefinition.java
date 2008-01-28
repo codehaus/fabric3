@@ -16,6 +16,8 @@
  */
 package org.fabric3.binding.ws.axis2.databinding;
 
+import java.net.URI;
+
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 
 /**
@@ -23,20 +25,20 @@ import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
  */
 public class JaxbInterceptorDefinition extends PhysicalInterceptorDefinition {
     
-    private final String classLoaderId;
-    private final String[] classNames;
+    private final URI classLoaderId;
+    private final String packageName;
     
-    public JaxbInterceptorDefinition(String classLoaderId, String[] classNames) {
+    public JaxbInterceptorDefinition(URI classLoaderId, String packageName) {
         this.classLoaderId = classLoaderId;
-        this.classNames = classNames;
+        this.packageName = packageName;
     }
 
-    public String getClassLoaderId() {
+    public URI getClassLoaderId() {
         return classLoaderId;
     }
 
-    public String[] getClassNames() {
-        return classNames;
+    public String getPackageName() {
+        return packageName;
     }
     
     

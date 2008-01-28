@@ -16,9 +16,12 @@
  */
 package org.fabric3.binding.ws.axis2.databinding;
 
+import java.net.URI;
+
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
 import org.fabric3.spi.builder.interceptor.InterceptorBuilderRegistry;
+import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
@@ -27,20 +30,27 @@ import org.osoa.sca.annotations.Reference;
  */
 public class JaxbInterceptorBuilder implements InterceptorBuilder<JaxbInterceptorDefinition, JaxbInterceptor> {
     
-    private InterceptorBuilderRegistry registry;
+    private InterceptorBuilderRegistry interceptorBuilderRegistry;
+    private ClassLoaderRegistry classLoaderRegistry;
     
-    public JaxbInterceptorBuilder(@Reference InterceptorBuilderRegistry registry) {
-        this.registry = registry;
+    public JaxbInterceptorBuilder(@Reference InterceptorBuilderRegistry interceptorBuilderRegistry, 
+                                  @Reference ClassLoaderRegistry classLoaderRegistry) {
+        this.interceptorBuilderRegistry = interceptorBuilderRegistry;
+        this.classLoaderRegistry = classLoaderRegistry;
     }
     
     @Init
     public void init() {
-        registry.register(JaxbInterceptorDefinition.class, this);
+        interceptorBuilderRegistry.register(JaxbInterceptorDefinition.class, this);
     }
 
     public JaxbInterceptor build(JaxbInterceptorDefinition definition) throws BuilderException {
+        
+        URI classLoaderId = definition.getClassLoaderId();
+        
+        ClassLoader classLoader = classLoaderRegistry.getClassLoader(classLoaderId);
         // TODO Auto-generated method stub
-        return null;
+        return new JaxbInterceptor(classLoader, definition.getPackageName());
     }
 
 }

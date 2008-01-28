@@ -16,24 +16,60 @@
  */
 package org.fabric3.binding.ws.axis2.databinding;
 
+import org.apache.axiom.om.OMElement;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.Message;
+import org.fabric3.spi.wire.MessageImpl;
 
 /**
+ * Interceptor that transforms an OMElement to a JAXB bound object on the way in 
+ * and JAXB bound object to OMElement on the way out.
+ * 
  * @version $Revision$ $Date$
  */
 public class JaxbInterceptor implements Interceptor {
     
     private Interceptor next;
+    private ClassLoader classLoader;
+    private OMElement2Jaxb inTransformer;
+    private Jaxb2OMElement outTransformer;
+
+    public JaxbInterceptor(ClassLoader classLoader, String packageName) {
+        this.classLoader = classLoader;
+        inTransformer = new OMElement2Jaxb(packageName);
+        outTransformer = new Jaxb2OMElement(packageName);
+    }
 
     public Interceptor getNext() {
-        // TODO Auto-generated method stub
         return next;
     }
 
     public Message invoke(Message message) {
-        // TODO Auto-generated method stub
-        return message;
+        
+        ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+        
+        try {
+            
+            Thread.currentThread().setContextClassLoader(classLoader);
+            
+            OMElement inOmElement = (OMElement) message.getBody();
+            Object inJaxbObject = inTransformer.transform(inOmElement, null);
+            
+            Message transformedMessage = new MessageImpl();
+            transformedMessage.setBody(inJaxbObject);
+            
+            Message response = next.invoke(transformedMessage);
+            Object outJaxbObject = response.getBody();
+            OMElement outOmElement = outTransformer.transform(outJaxbObject, null);
+            
+            transformedMessage = new MessageImpl();
+            transformedMessage.setBody(outOmElement);
+            
+            return transformedMessage;
+            
+        } finally {
+            Thread.currentThread().setContextClassLoader(oldCl);
+        }
     }
 
     public void setNext(Interceptor next) {

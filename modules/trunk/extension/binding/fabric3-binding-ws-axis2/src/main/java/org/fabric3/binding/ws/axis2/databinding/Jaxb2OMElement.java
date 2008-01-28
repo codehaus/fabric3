@@ -25,11 +25,19 @@ import org.fabric3.transform.AbstractPullTransformer;
 /**
  * @version $Revision$ $Date$
  */
-public class Jaxb2OMElement extends AbstractPullTransformer<OMElement, Object> {
+public class Jaxb2OMElement extends AbstractPullTransformer<Object, OMElement> {
     
-    private static final JavaClass<Object> TARGET = new JavaClass<Object>(Object.class);
+    private static final JavaClass<OMElement> TARGET = new JavaClass<OMElement>(OMElement.class);
+    
+    private String packageName;
+    
+    public Jaxb2OMElement(String packageName) {
+        this.packageName = packageName;
+    }
 
-    public Object transform(OMElement source, TransformContext arg1) throws Exception {
+    public OMElement transform(Object source, TransformContext context) {
+        
+        // TODO use the marshaller
         return null;
     }
 

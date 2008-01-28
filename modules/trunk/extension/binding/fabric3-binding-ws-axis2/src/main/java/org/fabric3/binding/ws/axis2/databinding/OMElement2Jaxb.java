@@ -16,6 +16,8 @@
  */
 package org.fabric3.binding.ws.axis2.databinding;
 
+import javax.xml.stream.XMLStreamReader;
+
 import org.apache.axiom.om.OMElement;
 import org.fabric3.scdl.DataType;
 import org.fabric3.spi.model.type.JavaClass;
@@ -25,11 +27,20 @@ import org.fabric3.transform.AbstractPullTransformer;
 /**
  * @version $Revision$ $Date$
  */
-public class OMElement2Jaxb extends AbstractPullTransformer<Object, OMElement> {
+public class OMElement2Jaxb extends AbstractPullTransformer<OMElement, Object> {
     
-    private static final JavaClass<OMElement> TARGET = new JavaClass<OMElement>(OMElement.class);
+    private static final JavaClass<Object> TARGET = new JavaClass<Object>(Object.class);
+    
+    private String packageName;
+    
+    public OMElement2Jaxb(String packageName) {
+        this.packageName = packageName;
+    }
 
-    public OMElement transform(Object source, TransformContext arg1) throws Exception {
+    public Object transform(OMElement source, TransformContext context) {
+        
+        XMLStreamReader reader = source.getXMLStreamReader();
+        // Use the unmarshaller method that accepts a stream reader
         return null;
     }
 
