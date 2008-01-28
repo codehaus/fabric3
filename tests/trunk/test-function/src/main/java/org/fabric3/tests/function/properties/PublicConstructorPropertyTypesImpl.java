@@ -20,6 +20,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
 
 import org.osoa.sca.annotations.Property;
 
@@ -51,6 +52,7 @@ public class PublicConstructorPropertyTypesImpl implements PropertyTypes {
     private final Calendar calendarValue;
 
     private final int[] intArray;
+    private final Map<String, String> map;
 
     public PublicConstructorPropertyTypesImpl(@Property(name = "booleanPrimitive")boolean booleanPrimitive,
                                               @Property(name = "bytePrimitive")byte bytePrimitive,
@@ -72,7 +74,8 @@ public class PublicConstructorPropertyTypesImpl implements PropertyTypes {
                                               @Property(name = "urlValue")URL urlValue,
                                               @Property(name = "dateValue")Date dateValue,
                                               @Property(name = "calendarValue")Calendar calendarValue,
-                                              @Property(name = "intArray") int[] intArray) {
+                                              @Property(name = "intArray") int[] intArray,
+                                              @Property(name = "mapValue") Map<String, String> mapValue) {
         this.booleanPrimitive = booleanPrimitive;
         this.bytePrimitive = bytePrimitive;
         this.shortPrimitive = shortPrimitive;
@@ -94,6 +97,7 @@ public class PublicConstructorPropertyTypesImpl implements PropertyTypes {
         this.dateValue = dateValue;
         this.calendarValue = calendarValue;
         this.intArray = intArray;
+        this.map = mapValue;
     }
 
     public boolean getBooleanPrimitive() {
@@ -178,5 +182,9 @@ public class PublicConstructorPropertyTypesImpl implements PropertyTypes {
 
     public int[] getIntArray() {
         return intArray;
+    }
+
+    public Map<String, String> getMapValue() {
+        return map;
     }
 }

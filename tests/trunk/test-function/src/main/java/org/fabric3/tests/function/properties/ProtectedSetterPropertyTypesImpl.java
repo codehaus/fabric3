@@ -20,6 +20,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
 
 import org.osoa.sca.annotations.Property;
 
@@ -51,6 +52,7 @@ public class ProtectedSetterPropertyTypesImpl implements PropertyTypes {
     private Calendar calendarValue;
 
     private int[] intArray;
+    private Map<String, String> map;
 
     public boolean getBooleanPrimitive() {
         return booleanPrimitive;
@@ -239,5 +241,14 @@ public class ProtectedSetterPropertyTypesImpl implements PropertyTypes {
     @Property
     protected void setIntArray(int[] intArray) {
         this.intArray = intArray;
+    }
+
+    public Map<String, String> getMapValue() {
+        return map;
+    }
+
+    @Property
+    protected void setMap(Map<String, String> map) {
+        this.map = map;
     }
 }

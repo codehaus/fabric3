@@ -53,6 +53,10 @@
             <int>3</int>
         </property>
 -->
+        <property name="mapValue">
+            <one>1</one>
+            <two>2</two>
+        </property>
     </component>
 
     <component name="ProtectedFieldPropertyTypesTest">

@@ -19,10 +19,10 @@ package org.fabric3.tests.function.properties;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
+import java.util.Map;
 
 import junit.framework.TestCase;
 import org.osoa.sca.annotations.Reference;
@@ -128,4 +128,10 @@ public class PropertyTypeTest extends TestCase {
         assertTrue(Arrays.equals(new int[]{1,2,3}, service.getIntArray()));
     }
 */
+
+    public void testMap() {
+        Map<String, String> map = service.getMapValue();
+        assertEquals("1", map.get("one"));
+        assertEquals("2", map.get("two"));
+    }
 }

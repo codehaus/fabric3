@@ -20,6 +20,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Date;
 import java.util.Calendar;
+import java.util.Map;
 
 /**
  * Test service for returning Properties with different types.
@@ -68,4 +69,6 @@ public interface PropertyTypes {
     Calendar getCalendarValue();
 
     int[] getIntArray();
+
+    Map<String, String> getMapValue();
 }
