@@ -16,7 +16,6 @@
  */
 package org.fabric3.binding.ws.axis2.policy;
 
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 
 import org.apache.axiom.om.OMElement;
@@ -24,9 +23,11 @@ import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.description.AxisDescription;
 import org.apache.axis2.description.Parameter;
+import org.fabric3.spi.services.factories.xml.XMLFactory;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.transform.xml.Element2Stream;
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -38,7 +39,11 @@ import org.w3c.dom.NodeList;
 @EagerInit
 public class AxisConfigPolicyApplier implements PolicyApplier {
     
-    private final Element2Stream transformer = new Element2Stream(XMLInputFactory.newInstance());
+    private final Element2Stream transformer;
+    
+    public AxisConfigPolicyApplier(@Reference XMLFactory xmlFactory){
+        transformer = new Element2Stream(xmlFactory.newInputFactoryInstance());
+    }
 
     public void applyPolicy(AxisDescription axisDescription, Element policy) {
         
@@ -74,6 +79,6 @@ public class AxisConfigPolicyApplier implements PolicyApplier {
             throw new AssertionError(e);
         }
 
-    }
+    }  
 
 }
