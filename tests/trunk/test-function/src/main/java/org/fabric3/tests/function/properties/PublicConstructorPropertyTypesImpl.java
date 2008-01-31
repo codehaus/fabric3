@@ -52,7 +52,7 @@ public class PublicConstructorPropertyTypesImpl implements PropertyTypes {
     private final Calendar calendarValue;
 
     private final int[] intArray;
-    private final Map<String, String> map;
+    private final Map<String, String> mapValue;
 
     public PublicConstructorPropertyTypesImpl(@Property(name = "booleanPrimitive")boolean booleanPrimitive,
                                               @Property(name = "bytePrimitive")byte bytePrimitive,
@@ -97,7 +97,7 @@ public class PublicConstructorPropertyTypesImpl implements PropertyTypes {
         this.dateValue = dateValue;
         this.calendarValue = calendarValue;
         this.intArray = intArray;
-        this.map = mapValue;
+        this.mapValue = mapValue;
     }
 
     public boolean getBooleanPrimitive() {
@@ -185,6 +185,6 @@ public class PublicConstructorPropertyTypesImpl implements PropertyTypes {
     }
 
     public Map<String, String> getMapValue() {
-        return map;
+        return mapValue;
     }
 }

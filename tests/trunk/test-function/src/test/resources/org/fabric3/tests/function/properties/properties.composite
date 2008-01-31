@@ -86,6 +86,10 @@
         <property name="urlValue">file://./root</property>
         <property name="dateValue">31/10/2007</property>
         <property name="calendarValue">2007-10-31T01:00:00Z</property>
+        <property name="mapValue">
+            <one>1</one>
+            <two>2</two>
+        </property>
     </component>
 
     <component name="PublicSetterPropertyTypesTest">
@@ -115,6 +119,10 @@
         <property name="urlValue">file://./root</property>
         <property name="dateValue">31/10/2007</property>
         <property name="calendarValue">2007-10-31T01:00:00Z</property>
+        <property name="mapValue">
+            <one>1</one>
+            <two>2</two>
+        </property>
     </component>
 
     <component name="ProtectedSetterPropertyTypesTest">
@@ -144,6 +152,10 @@
         <property name="urlValue">file://./root</property>
         <property name="dateValue">31/10/2007</property>
         <property name="calendarValue">2007-10-31T01:00:00Z</property>
+        <property name="mapValue">
+            <one>1</one>
+            <two>2</two>
+        </property>
     </component>
 
     <component name="PublicConstructorPropertyTypesTest">
@@ -173,6 +185,10 @@
         <property name="urlValue">file://./root</property>
         <property name="dateValue">31/10/2007</property>
         <property name="calendarValue">2007-10-31T01:00:00Z</property>
+        <property name="mapValue">
+            <one>1</one>
+            <two>2</two>
+        </property>
     </component>
 
     <component name="PropertyFromFileImpl">

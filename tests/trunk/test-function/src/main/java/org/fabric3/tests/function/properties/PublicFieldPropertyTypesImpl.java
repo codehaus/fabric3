@@ -52,7 +52,7 @@ public class PublicFieldPropertyTypesImpl implements PropertyTypes {
     @Property public Calendar calendarValue;
 
     @Property public int[] intArray;
-    @Property public Map<String, String> map;
+    @Property public Map<String, String> mapValue;
 
 
     public boolean getBooleanPrimitive() {
@@ -140,6 +140,6 @@ public class PublicFieldPropertyTypesImpl implements PropertyTypes {
     }
 
     public Map<String, String> getMapValue() {
-        return map;
+        return mapValue;
     }
 }

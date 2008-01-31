@@ -52,7 +52,7 @@ public class ProtectedFieldPropertyTypesImpl implements PropertyTypes {
     @Property protected Calendar calendarValue;
 
     @Property protected int[] intArray;
-    @Property protected Map<String, String> map;
+    @Property protected Map<String, String> mapValue;
 
 
     public boolean getBooleanPrimitive() {
@@ -140,6 +140,6 @@ public class ProtectedFieldPropertyTypesImpl implements PropertyTypes {
     }
 
     public Map<String, String> getMapValue() {
-        return map;
+        return mapValue;
     }
 }

@@ -52,7 +52,7 @@ public class PublicSetterPropertyTypesImpl implements PropertyTypes {
     private Calendar calendarValue;
 
     private int[] intArray;
-    private Map<String, String> map;
+    private Map<String, String> mapValue;
 
     public boolean getBooleanPrimitive() {
         return booleanPrimitive;
@@ -244,11 +244,11 @@ public class PublicSetterPropertyTypesImpl implements PropertyTypes {
     }
 
     public Map<String, String> getMapValue() {
-        return map;
+        return mapValue;
     }
 
     @Property
-    public void setMapValue(Map<String, String> map) {
-        this.map = map;
+    public void setMapValue(Map<String, String> mapValue) {
+        this.mapValue = mapValue;
     }
 }
