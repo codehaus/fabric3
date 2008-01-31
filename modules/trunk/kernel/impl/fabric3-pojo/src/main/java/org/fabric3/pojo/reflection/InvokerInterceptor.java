@@ -21,6 +21,7 @@ package org.fabric3.pojo.reflection;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
@@ -80,14 +81,18 @@ public class InvokerInterceptor<T, CONTEXT> implements Interceptor {
         } catch (TargetResolutionException e) {
             throw new InvocationRuntimeException(e);
         }
+
         try {
             Object instance = wrapper.getInstance();
+            WorkContext oldWorkContext = PojoWorkContextTunnel.setThreadWorkContext(workContext);
             try {
                 msg.setBody(operation.invoke(instance, (Object[]) body));
             } catch (InvocationTargetException e) {
                 msg.setBodyWithFault(e.getCause());
             } catch (IllegalAccessException e) {
                 throw new InvocationRuntimeException(e);
+            } finally {
+                PojoWorkContextTunnel.setThreadWorkContext(oldWorkContext);
             }
             return msg;
         } finally {
