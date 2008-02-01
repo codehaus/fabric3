@@ -11,8 +11,12 @@ import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Element;
 
 /**
- * Policy definition format: <f3:authorization roles="ADMIN,USER"/>
+ * Generates the physical interceptor definition from the underlying policy infoset. An example 
+ * for the policy definition is shown below,
  * 
+ * <f3:authorization roles="ADMIN,USER"/>
+ * 
+ * where the namespace prefix f3 maps to the url http://fabric3.org/xmlns/sca/2.0-alpha.
  * 
  * @version $Revision$ $Date$
  *
@@ -22,18 +26,36 @@ public class AuthorizationInterceptorDefinitionGenerator implements InterceptorD
     private static final QName EXTENSION_NAME = new QName(Constants.FABRIC3_NS, "authorization");
     private GeneratorRegistry generatorRegistry;
 
-    @Init
-    public void start() {
-        generatorRegistry.register(EXTENSION_NAME, this);
-    }
-
+    /**
+     * Initializes the interceptor definition generator registry.
+     * 
+     * @param generatorRegistry Interceptor definition generator registry.
+     */
     public AuthorizationInterceptorDefinitionGenerator(@Reference GeneratorRegistry generatorRegistry) {
         this.generatorRegistry = generatorRegistry;
     }
 
+    /**
+     * Registers with the intereceptor generator registry.
+     */
+    @Init
+    public void init() {
+        generatorRegistry.register(EXTENSION_NAME, this);
+    }
+
+    /**
+     * Generates the interceptor definition from the underlying policy infoset.
+     * 
+     * @param policyDefinition Policy infoset as required by the schema.
+     * @param generatorContext Generator context.
+     * @return An instance of authorization interceptor definition.
+     */
     public AuthorizationInterceptorDefinition generate(Element policyDefinition, GeneratorContext generatorContext) {
         
         String rolesAttribute = policyDefinition.getAttribute("roles");
+        if (rolesAttribute == null) {
+            throw new AssertionError("No roles are defined in the authorization policy");
+        }
         String[] roles = rolesAttribute.split(",");
         
         return new AuthorizationInterceptorDefinition(roles);

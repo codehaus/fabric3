@@ -3,7 +3,8 @@ package org.fabric3.security.authorization;
 import javax.security.auth.Subject;
 
 /**
- * SPI extension point for authorization.
+ * SPI extension point for authorization. The service is required to be 
+ * provided by the user of the authorization interceptor.
  * 
  * @version $Revsion$ $Date$
  *
@@ -11,10 +12,12 @@ import javax.security.auth.Subject;
 public interface AuthorizationService {
     
     /**
-     * @param subject
-     * @param roles
-     * @return
+     * Checks whether the specified subject has the requested roles.
+     * 
+     * @param subject Subject whose roles need to be checked.
+     * @param roles Roles that need to be checked for the subject.
+     * @return Result indicating the access check.
      */
-    boolean hasRoles(Subject subject, String[] roles);
+    AuthorizationResult hasRoles(Subject subject, String[] roles);
 
 }
