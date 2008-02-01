@@ -28,5 +28,15 @@
            targetNamespace="org.codehaus.fabric3"
            name="SecurityExtension"
            autowire="true">
+
+    <!-- Authorization Interceptor Builder -->
+    <component name="authorizationInterceptorBuilder">
+        <system:implementation.system class="org.fabric3.security.authorization.AuthorizationInterceptorBuilder"/>
+    </component>
+
+    <!-- Authorization Interceptor Generator -->
+    <component name="authorizationInterceptorGenerator">
+        <system:implementation.system class="org.fabric3.security.authorization.AuthorizationInterceptorDefinitionGenerator"/>
+    </component>
     
 </composite>
