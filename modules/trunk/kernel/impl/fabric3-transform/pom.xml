@@ -29,10 +29,11 @@
     <description>Fabric3 Data Transformations.</description>
 
     <dependencies>
+    
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
-            <version>0.4</version>
+            <version>0.5-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -49,14 +50,17 @@
             <version>3.2.2</version>
             <scope>provided</scope>
         </dependency>
+        
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
+        
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
         </dependency>
+        
     </dependencies>
 
     <scm>

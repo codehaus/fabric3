@@ -33,13 +33,15 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
-            <version>0.4</version>
+            <version>0.5-SNAPSHOT</version>
         </dependency>
+        
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-pojo</artifactId>
-            <version>0.4</version>
+            <version>0.5-SNAPSHOT</version>
         </dependency>
+        
         <dependency>
             <groupId>stax</groupId>
             <artifactId>stax-api</artifactId>
@@ -50,6 +52,7 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
+        
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymockclassextension</artifactId>

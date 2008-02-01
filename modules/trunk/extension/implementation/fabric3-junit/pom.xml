@@ -30,12 +30,14 @@
     <description>Fabric3 JUnit Extension.</description>
 
     <dependencies>
+    
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-java</artifactId>
-            <version>0.2</version>
+            <version>0.3-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+        
     </dependencies>
 
     <scm>

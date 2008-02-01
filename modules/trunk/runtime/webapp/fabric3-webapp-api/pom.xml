@@ -29,6 +29,7 @@
     <description>Fabric3 Webapp Runtime API.</description>
 
     <dependencies>
+    
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
@@ -41,11 +42,13 @@
             <artifactId>fabric3-api</artifactId>
             <version>0.3</version>
         </dependency>
+        
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-host-api</artifactId>
             <version>0.3</version>
         </dependency>
+        
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-monitor</artifactId>
@@ -56,10 +59,12 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
+        
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymockclassextension</artifactId>
         </dependency>
+        
     </dependencies>
 
     <scm>

@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-itest-plugin</artifactId>
-    <version>0.4.1-SNAPSHOT</version>
+    <version>0.5-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
     <name>Fabric3 Integration Test Maven Plugin</name>
     <description>Fabric3 Integration Test Maven Plugin.</description>
@@ -52,30 +52,35 @@
     </distributionManagement>
 
     <dependencies>
+    
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-plugin-api</artifactId>
             <version>2.0.4</version>
             <scope>compile</scope>
         </dependency>
+        
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-project</artifactId>
             <version>2.0.4</version>
             <scope>compile</scope>
         </dependency>
+        
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-artifact</artifactId>
             <version>2.0.4</version>
             <scope>compile</scope>
         </dependency>
+        
         <dependency>
             <groupId>org.apache.maven.surefire</groupId>
             <artifactId>surefire-junit</artifactId>
             <version>2.0</version>
             <scope>compile</scope>
         </dependency>
+        
         <dependency>
             <groupId>stax</groupId>
             <artifactId>stax-api</artifactId>
@@ -93,23 +98,27 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
-            <version>0.4</version>
+            <version>0.5-SNAPSHOT</version>
         </dependency>
+        
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-java</artifactId>
-            <version>0.2</version>
+            <version>0.3-SNAPSHOT</version>
         </dependency>
+        
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-monitor</artifactId>
             <version>0.1</version>
         </dependency>
+        
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-junit</artifactId>
-            <version>0.2</version>
+            <version>0.3-SNAPSHOT</version>
         </dependency>
+        
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-maven-api</artifactId>
@@ -122,24 +131,28 @@
             <version>3.2.2</version>
             <scope>runtime</scope>
         </dependency>
+        
         <dependency>
             <groupId>org.apache.tuscany</groupId>
             <artifactId>commonj-api_r1.1</artifactId>
             <version>1.0-incubator-M2</version>
             <scope>runtime</scope>
         </dependency>
+        
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
             <version>2.4</version>
             <scope>runtime</scope>
         </dependency>
+        
         <dependency>
             <groupId>javax.activation</groupId>
             <artifactId>activation</artifactId>
             <version>1.1</version>
             <scope>runtime</scope>
         </dependency>
+        
     </dependencies>
 
     <build>

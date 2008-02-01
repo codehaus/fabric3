@@ -24,6 +24,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.security.auth.Subject;
+
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.wire.Wire;
@@ -40,6 +42,15 @@ public class SimpleWorkContext implements WorkContext {
 
     private LinkedList<Wire> callbackWires;
     private Object correlationId;
+    private Subject subject;
+    
+    public void setSubject(Subject subject) {
+        this.subject = subject;
+    }
+    
+    public Subject getSubject() {
+        return subject;
+    }
 
     public <T> T getScopeIdentifier(Scope<T> scope) {
         return scope.getIdentifierType().cast(scopeIdentifiers.get(scope));
