@@ -100,7 +100,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         boolean optimizable = pwtd.getUri() != null;
 
         // Create the wire from the component to the resource
-        Set<PhysicalOperationDefinition> operations = generateOperations(serviceContract, null);
+        Set<PhysicalOperationDefinition> operations = generateOperations(serviceContract, context, null, null);
         PhysicalWireDefinition wireDefinition = new PhysicalWireDefinition(pwsd, pwtd, operations);
         wireDefinition.setOptimizable(optimizable);
 
@@ -132,7 +132,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(source, reference, sourcePolicy, context);
         sourceDefinition.setKey(target.getDefinition().getKey());
 
-        Set<PhysicalOperationDefinition> operationDefinitions = generateOperations(serviceContract, policyResult);
+        Set<PhysicalOperationDefinition> operationDefinitions = generateOperations(serviceContract, context, policyResult, sourceBinding);
 
         PhysicalWireDefinition wireDefinition = new PhysicalWireDefinition(sourceDefinition, targetDefinition, operationDefinitions);
         setCallbackOperationDefinitions(serviceContract, wireDefinition);
@@ -187,7 +187,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         BindingGenerator sourceGenerator = getGenerator(binding);
         PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(binding, sourcePolicy, context, service.getDefinition());
 
-        Set<PhysicalOperationDefinition> operationDefinitions = generateOperations(contract, policyResult);
+        Set<PhysicalOperationDefinition> operationDefinitions = generateOperations(contract, context, policyResult, binding);
         PhysicalWireDefinition wireDefinition = new PhysicalWireDefinition(sourceDefinition, targetDefinition, operationDefinitions);
         setCallbackOperationDefinitions(contract, wireDefinition);
 
@@ -215,7 +215,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
 
         PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(component, reference, sourcePolicy, context);
 
-        Set<PhysicalOperationDefinition> operationDefinitions = generateOperations(contract, policyResult);
+        Set<PhysicalOperationDefinition> operationDefinitions = generateOperations(contract, context, policyResult, binding);
 
         PhysicalWireDefinition wireDefinition = new PhysicalWireDefinition(sourceDefinition, targetDefinition, operationDefinitions);
         setCallbackOperationDefinitions(contract, wireDefinition);
@@ -225,7 +225,10 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
     }
 
 
-    private Set<PhysicalOperationDefinition> generateOperations(ServiceContract<?> contract, PolicyResult policyResult) throws GenerationException {
+    private Set<PhysicalOperationDefinition> generateOperations(ServiceContract<?> contract, 
+                                                                GeneratorContext context,
+                                                                PolicyResult policyResult,
+                                                                LogicalBinding<?> logicalBinding) throws GenerationException {
 
         List<? extends Operation<?>> operations = contract.getOperations();
         Set<PhysicalOperationDefinition> physicalOperations = new HashSet<PhysicalOperationDefinition>(operations.size());
@@ -234,7 +237,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
             PhysicalOperationDefinition physicalOperation = physicalOperationHelper.mapOperation(operation);
             if (policyResult != null) {
                 Set<PolicySet> policies = policyResult.getInterceptedPolicySets(operation);
-                Set<PhysicalInterceptorDefinition> interceptors = generateInterceptorDefinitions(policies);
+                Set<PhysicalInterceptorDefinition> interceptors = generateInterceptorDefinitions(policies, context, operation, logicalBinding);
                 physicalOperation.setInterceptors(interceptors);
             }
             physicalOperations.add(physicalOperation);
@@ -256,7 +259,10 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
     }
 
     @SuppressWarnings("unchecked")
-    private Set<PhysicalInterceptorDefinition> generateInterceptorDefinitions(Set<PolicySet> policies) throws GenerationException {
+    private Set<PhysicalInterceptorDefinition> generateInterceptorDefinitions(Set<PolicySet> policies, 
+                                                                              GeneratorContext context, 
+                                                                              Operation<?> operation,
+                                                                              LogicalBinding<?> logicalBinding) throws GenerationException {
 
         if (policies == null) {
             return Collections.EMPTY_SET;
@@ -265,9 +271,9 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         Set<PhysicalInterceptorDefinition> interceptors = new HashSet<PhysicalInterceptorDefinition>();
         for (PolicySet policy : policies) {
             QName qName = policy.getExtensionName();
-            InterceptorDefinitionGenerator interceptorDefinitionGenerator =
-                    generatorRegistry.getInterceptorDefinitionGenerator(qName);
-            interceptors.add(interceptorDefinitionGenerator.generate(policy.getExtension(), null));
+            InterceptorDefinitionGenerator idg = generatorRegistry.getInterceptorDefinitionGenerator(qName);
+            PhysicalInterceptorDefinition pid = idg.generate(policy.getExtension(), context, operation, logicalBinding);
+            interceptors.add(pid);
         }
         return interceptors;
 

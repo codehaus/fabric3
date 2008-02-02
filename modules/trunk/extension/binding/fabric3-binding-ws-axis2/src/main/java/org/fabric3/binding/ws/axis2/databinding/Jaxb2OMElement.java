@@ -16,7 +16,17 @@
  */
 package org.fabric3.binding.ws.axis2.databinding;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.stream.XMLStreamException;
+
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.impl.builder.StAXOMBuilder;
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.fabric3.scdl.DataType;
 import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.transform.TransformContext;
@@ -29,16 +39,34 @@ public class Jaxb2OMElement extends AbstractPullTransformer<Object, OMElement> {
     
     private static final JavaClass<OMElement> TARGET = new JavaClass<OMElement>(OMElement.class);
     
-    private String packageName;
+    private Class<?> outClass;
     
-    public Jaxb2OMElement(String packageName) {
-        this.packageName = packageName;
+    public Jaxb2OMElement(Class<?> outClass) {
+        this.outClass = outClass;
     }
 
     public OMElement transform(Object source, TransformContext context) {
         
-        // TODO use the marshaller
-        return null;
+        try {
+            
+            JAXBContext jaxbContext = JAXBContext.newInstance(outClass);
+            Marshaller marshaller = jaxbContext.createMarshaller();
+            
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            marshaller.marshal(source, out);
+            
+            byte[] data = out.toByteArray();
+            InputStream in = new ByteArrayInputStream(data);
+            
+            StAXOMBuilder builder = new StAXOMBuilder(in);
+            return builder.getDocumentElement();
+            
+        } catch (JAXBException e) {
+            throw new AssertionError(e);
+        } catch (XMLStreamException e) {
+            throw new AssertionError(e);
+        }
+
     }
 
     public DataType<?> getTargetType() {

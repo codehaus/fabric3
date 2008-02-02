@@ -16,6 +16,8 @@
  */
 package org.fabric3.binding.ws.axis2.databinding;
 
+import java.util.List;
+
 import org.apache.axiom.om.OMElement;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.Message;
@@ -34,10 +36,10 @@ public class JaxbInterceptor implements Interceptor {
     private OMElement2Jaxb inTransformer;
     private Jaxb2OMElement outTransformer;
 
-    public JaxbInterceptor(ClassLoader classLoader, String packageName) {
+    public JaxbInterceptor(ClassLoader classLoader, List<Class<?>> inClasses, Class<?> outClass) {
         this.classLoader = classLoader;
-        inTransformer = new OMElement2Jaxb(packageName);
-        outTransformer = new Jaxb2OMElement(packageName);
+        inTransformer = new OMElement2Jaxb(inClasses);
+        outTransformer = new Jaxb2OMElement(outClass);
     }
 
     public Interceptor getNext() {

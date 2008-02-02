@@ -17,6 +17,8 @@
 package org.fabric3.binding.ws.axis2.databinding;
 
 import java.net.URI;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
@@ -49,8 +51,22 @@ public class JaxbInterceptorBuilder implements InterceptorBuilder<JaxbIntercepto
         URI classLoaderId = definition.getClassLoaderId();
         
         ClassLoader classLoader = classLoaderRegistry.getClassLoader(classLoaderId);
-        // TODO Auto-generated method stub
-        return new JaxbInterceptor(classLoader, definition.getPackageName());
+        
+        try {
+            
+            List<Class<?>> inClasses = new LinkedList<Class<?>>();
+            
+            for (String inClassName : definition.getInClassNames()) {
+                inClasses.add(classLoader.loadClass(inClassName));
+            }
+            
+            Class<?> outClass = classLoader.loadClass(definition.getOutClassName());
+            return new JaxbInterceptor(classLoader, inClasses, outClass);
+            
+        } catch (ClassNotFoundException ex) {
+            throw new JaxbBuilderException(ex);
+        }
+        
     }
 
 }

@@ -25,10 +25,12 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Element;
 
+import org.fabric3.scdl.Operation;
 import org.fabric3.spi.Constants;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
+import org.fabric3.spi.model.instance.LogicalBinding;
 
 /**
  * Interceptor definition generator for simple policy set extensions.
@@ -37,6 +39,7 @@ import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
  */
 @EagerInit
 public class SimpleInterceptorDefinitionGenerator implements InterceptorDefinitionGenerator {
+    
     // Qualified name of the handled element
     private static final QName EXTENSION_NAME = new QName(Constants.FABRIC3_NS, "interceptor");
     private GeneratorRegistry generatorRegistry;
@@ -53,7 +56,10 @@ public class SimpleInterceptorDefinitionGenerator implements InterceptorDefiniti
         generatorRegistry.register(EXTENSION_NAME, this);
     }
 
-    public SimpleInterceptorDefinition generate(Element policySetDefinition, GeneratorContext context) {
+    public SimpleInterceptorDefinition generate(Element policySetDefinition, 
+                                                GeneratorContext context,
+                                                Operation<?> operation,
+                                                LogicalBinding<?> logicalBinding) {
 
         String interceptorClass = policySetDefinition.getAttribute("class");
 

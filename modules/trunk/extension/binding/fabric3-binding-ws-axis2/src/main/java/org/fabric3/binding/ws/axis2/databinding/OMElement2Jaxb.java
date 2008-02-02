@@ -16,6 +16,11 @@
  */
 package org.fabric3.binding.ws.axis2.databinding;
 
+import java.util.List;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.stream.XMLStreamReader;
 
 import org.apache.axiom.om.OMElement;
@@ -31,17 +36,25 @@ public class OMElement2Jaxb extends AbstractPullTransformer<OMElement, Object> {
     
     private static final JavaClass<Object> TARGET = new JavaClass<Object>(Object.class);
     
-    private String packageName;
+    private List<Class<?>> inClasses;
     
-    public OMElement2Jaxb(String packageName) {
-        this.packageName = packageName;
+    public OMElement2Jaxb(List<Class<?>> inClasses) {
+        this.inClasses = inClasses;
     }
 
     public Object transform(OMElement source, TransformContext context) {
         
         XMLStreamReader reader = source.getXMLStreamReader();
-        // Use the unmarshaller method that accepts a stream reader
-        return null;
+        
+        // Assume doc-lit wrapped and the service contract accepts only one argument
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(inClasses.get(0));
+            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+            return unmarshaller.unmarshal(reader);
+        } catch (JAXBException e) {
+            throw new AssertionError(e);
+        }
+        
     }
 
     public DataType<?> getTargetType() {

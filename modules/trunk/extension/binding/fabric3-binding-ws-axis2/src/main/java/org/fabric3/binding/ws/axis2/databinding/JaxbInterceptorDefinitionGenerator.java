@@ -16,12 +16,22 @@
  */
 package org.fabric3.binding.ws.axis2.databinding;
 
+import java.lang.reflect.Type;
+import java.net.URI;
+import java.util.LinkedList;
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
+import org.fabric3.scdl.DataType;
+import org.fabric3.scdl.Operation;
 import org.fabric3.spi.Constants;
+import org.fabric3.spi.generator.ClassLoaderGenerator;
+import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
+import org.fabric3.spi.model.instance.LogicalBinding;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Element;
@@ -34,9 +44,11 @@ public class JaxbInterceptorDefinitionGenerator implements InterceptorDefinition
     private static final QName EXTENSION_NAME = new QName(Constants.FABRIC3_NS, "jaxb-axis");
     
     private GeneratorRegistry generatorRegistry;
+    private ClassLoaderGenerator classLoaderGenerator;
 
-    public JaxbInterceptorDefinitionGenerator(@Reference GeneratorRegistry generatorRegistry) {
+    public JaxbInterceptorDefinitionGenerator(@Reference GeneratorRegistry generatorRegistry, @Reference ClassLoaderGenerator classLoaderGenerator) {
         this.generatorRegistry = generatorRegistry;
+        this.classLoaderGenerator = classLoaderGenerator;
     }
 
     /**
@@ -47,8 +59,30 @@ public class JaxbInterceptorDefinitionGenerator implements InterceptorDefinition
         generatorRegistry.register(EXTENSION_NAME, this);
     }
 
-    public JaxbInterceptorDefinition generate(Element policySet, GeneratorContext generatorContext) {
-        return new JaxbInterceptorDefinition(null, null);
+    @SuppressWarnings("unchecked")
+    public JaxbInterceptorDefinition generate(Element policySet, 
+                                              GeneratorContext generatorContext,
+                                              Operation<?> operation,
+                                              LogicalBinding<?> logicalBinding) throws GenerationException {
+        
+        URI classLoaderId = classLoaderGenerator.generate(logicalBinding, generatorContext);
+        
+        // This assumes a Java interface contract
+        Operation<Type> javaOperation = (Operation<Type>) operation;
+        
+        List<DataType<Type>> inputTypes = javaOperation.getInputType().getLogical();
+        DataType<Type> outputType = javaOperation.getOutputType();
+        
+        List<String> inClassNames = new LinkedList<String>();
+        
+        for (DataType<Type> inputType : inputTypes) {
+            String inClassName = ((Class) inputType.getLogical()).getName();
+            inClassNames.add(inClassName);
+        }
+        
+        String outClassName = ((Class) outputType.getLogical()).getName();
+        
+        return new JaxbInterceptorDefinition(classLoaderId, inClassNames, outClassName);
     }
 
 }
