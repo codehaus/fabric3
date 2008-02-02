@@ -23,6 +23,5 @@ import org.apache.axiom.om.OMElement;
  */
 public interface Axis2EchoService {
     OMElement echoWs(OMElement message);
-    OMElement echoRampart(OMElement message);
     OMElement echoNoSecurity(OMElement message);
 }

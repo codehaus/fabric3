@@ -26,7 +26,6 @@ import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.MessageContext;
-import org.apache.axis2.description.AxisOperation;
 import org.apache.axis2.receivers.AbstractInOutMessageReceiver;
 import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.spi.wire.Interceptor;
@@ -41,8 +40,6 @@ import org.fabric3.spi.wire.Wire;
  * @version $Revision: 1589 $ $Date: 2007-10-25 23:13:37 +0100 (Thu, 25 Oct 2007) $
  */
 public class InOutServiceProxyHandler extends AbstractInOutMessageReceiver {
-    
-    // Test
 
     /**
      * Wire attached to the servlet.
@@ -71,8 +68,6 @@ public class InOutServiceProxyHandler extends AbstractInOutMessageReceiver {
     @Override
     public void invokeBusinessLogic(MessageContext inMessage, MessageContext outMessage) throws AxisFault {
         
-        AxisOperation op = inMessage.getOperationContext().getAxisOperation();
-        
         Interceptor head = invocationChain.getHeadInterceptor();
         OMElement bodyContent = getInBodyContent(inMessage);
         
@@ -82,14 +77,10 @@ public class InOutServiceProxyHandler extends AbstractInOutMessageReceiver {
         OMElement resObject = (OMElement) ret.getBody();
         
         SOAPFactory fac = getSOAPFactory(inMessage);
-        
-        String partName = op.getName() + "Response";
 
         SOAPEnvelope envelope = fac.getDefaultEnvelope();
-        bodyContent = fac.createOMElement(partName, null);
         
-        bodyContent.addChild(resObject);
-        envelope.getBody().addChild(bodyContent);
+        envelope.getBody().addChild(resObject);
         
         outMessage.setEnvelope(envelope);
         

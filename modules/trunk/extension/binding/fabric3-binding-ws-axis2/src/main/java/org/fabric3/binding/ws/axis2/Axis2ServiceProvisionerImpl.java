@@ -22,12 +22,11 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import javax.xml.namespace.QName;
-
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.deployment.util.Utils;
+import org.apache.axis2.description.AxisDescription;
 import org.apache.axis2.description.AxisModule;
 import org.apache.axis2.description.AxisOperation;
 import org.apache.axis2.description.AxisService;
@@ -36,8 +35,8 @@ import org.apache.axis2.engine.MessageReceiver;
 import org.apache.axis2.transport.http.AxisServlet;
 import org.fabric3.binding.ws.axis2.config.F3Configurator;
 import org.fabric3.binding.ws.axis2.physical.Axis2WireSourceDefinition;
+import org.fabric3.binding.ws.axis2.policy.AxisPolicy;
 import org.fabric3.binding.ws.axis2.policy.PolicyApplier;
-import org.fabric3.binding.ws.axis2.policy.PolicyApplierRegistry;
 import org.fabric3.binding.ws.axis2.servlet.F3AxisServlet;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.host.ServletHost;
@@ -59,7 +58,7 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
     
     private final ServletHost servletHost;
     private final ClassLoaderRegistry classLoaderRegistry;
-    private final PolicyApplierRegistry policyApplierRegistry;
+    private final PolicyApplier policyApplier;
     private final F3Configurator f3Configurator;
     
     private ConfigurationContext configurationContext;
@@ -67,11 +66,11 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
     
     public Axis2ServiceProvisionerImpl(@Reference ServletHost servletHost,
                                        @Reference ClassLoaderRegistry classLoaderRegistry,
-                                       @Reference PolicyApplierRegistry policyApplierRegistry,
+                                       @Reference PolicyApplier policyApplier,
                                        @Reference F3Configurator f3Configurator) {
         this.servletHost = servletHost;
         this.classLoaderRegistry = classLoaderRegistry;
-        this.policyApplierRegistry = policyApplierRegistry;
+        this.policyApplier = policyApplier;
         this.f3Configurator = f3Configurator;
     }
     
@@ -141,23 +140,27 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
             AxisOperation axisOperation = (AxisOperation) i.next();
             String operation = axisOperation.getName().getLocalPart();
             
-            Set<Element> policies = pwsd.getPolicyDefinitions(operation);
+            Set<AxisPolicy> policies = pwsd.getPolicies(operation);
             if (policies == null || policies.size() == 0) {
                 continue;
             }
             
-            for (AxisModule axisModule : f3Configurator.getModules()) {
-                axisOperation.addModule(axisModule.getName());
-                axisOperation.engageModule(axisModule);
-            }
+            AxisDescription axisDescription = axisOperation;
             
-            for (Element policyDefinition : policies) {
-                QName policyName = new QName(policyDefinition.getNamespaceURI(), policyDefinition.getNodeName());
-                PolicyApplier policyApplier = policyApplierRegistry.getPolicyApplier(policyName);
-                if (policyApplier == null) {
-                    throw new WiringException("Unknown policy " + policyName);
+            for (AxisPolicy axisPolicy : policies) {
+                
+                String message = axisPolicy.getMessage();
+                String module = axisPolicy.getModule();
+                Element opaquePolicy = axisPolicy.getOpaquePolicy();
+                
+                AxisModule axisModule = f3Configurator.getModule(module);
+                
+                if (message != null) {
+                    axisDescription = axisOperation.getMessage(message);
                 }
-                policyApplier.applyPolicy(axisOperation, policyDefinition);
+                
+                axisDescription.engageModule(axisModule);
+                policyApplier.applyPolicy(axisDescription, opaquePolicy);
             }
             
         }

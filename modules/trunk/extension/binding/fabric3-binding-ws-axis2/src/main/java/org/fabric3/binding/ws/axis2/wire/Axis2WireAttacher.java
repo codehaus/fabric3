@@ -23,7 +23,8 @@ import org.fabric3.binding.ws.axis2.Axis2ServiceProvisioner;
 import org.fabric3.binding.ws.axis2.config.F3Configurator;
 import org.fabric3.binding.ws.axis2.physical.Axis2WireSourceDefinition;
 import org.fabric3.binding.ws.axis2.physical.Axis2WireTargetDefinition;
-import org.fabric3.binding.ws.axis2.policy.PolicyApplierRegistry;
+import org.fabric3.binding.ws.axis2.policy.AxisPolicy;
+import org.fabric3.binding.ws.axis2.policy.PolicyApplier;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
@@ -40,7 +41,6 @@ import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
-import org.w3c.dom.Element;
 
 /**
  * @version $Revision$ $Date$
@@ -49,10 +49,11 @@ import org.w3c.dom.Element;
  */
 @EagerInit
 public class Axis2WireAttacher implements SourceWireAttacher<Axis2WireSourceDefinition>, TargetWireAttacher<Axis2WireTargetDefinition> {
+    
     private final SourceWireAttacherRegistry sourceWireAttacherRegistry;
     private final TargetWireAttacherRegistry targetWireAttacherRegistry;
     private final Axis2ServiceProvisioner serviceProvisioner;
-    private final PolicyApplierRegistry policyApplierRegistry;
+    private final PolicyApplier policyApplier;
     private final F3Configurator f3Configurator;
     
     /**
@@ -63,12 +64,12 @@ public class Axis2WireAttacher implements SourceWireAttacher<Axis2WireSourceDefi
     public Axis2WireAttacher(@Reference Axis2ServiceProvisioner serviceProvisioner, 
                              @Reference SourceWireAttacherRegistry sourceWireAttacherRegistry,
                              @Reference TargetWireAttacherRegistry targetWireAttacherRegistry,
-                             @Reference PolicyApplierRegistry policyApplierRegistry,
+                             @Reference PolicyApplier policyApplier,
                              @Reference F3Configurator f3Configurator) {
         this.serviceProvisioner = serviceProvisioner;
         this.sourceWireAttacherRegistry = sourceWireAttacherRegistry;
         this.targetWireAttacherRegistry = targetWireAttacherRegistry;
-        this.policyApplierRegistry = policyApplierRegistry;
+        this.policyApplier = policyApplier;
         this.f3Configurator = f3Configurator;
     }
     
@@ -99,12 +100,12 @@ public class Axis2WireAttacher implements SourceWireAttacher<Axis2WireSourceDefi
             
             String operation = entry.getKey().getName();
             
-            Set<Element> policies = target.getPolicyDefinitions(operation);
+            Set<AxisPolicy> policies = target.getPolicies(operation);
             Interceptor interceptor = new Axis2TargetInterceptor(target, 
                                                                  entry.getKey().getName(), 
                                                                  policies, 
                                                                  f3Configurator,
-                                                                 policyApplierRegistry);
+                                                                 policyApplier);
             entry.getValue().addInterceptor(interceptor);
         }
         

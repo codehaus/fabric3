@@ -18,9 +18,9 @@ package org.fabric3.binding.ws.axis2.config;
 
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContext;
@@ -42,7 +42,7 @@ public class F3ConfiguratorImpl implements F3Configurator {
     
     private ConfigurationContext configurationContext;
     private String servicePath = "axis2";
-    List<AxisModule> modules = new ArrayList<AxisModule>();
+    private Map<String, AxisModule> modules = new HashMap<String, AxisModule>();
     
     /**
      * @param servicePath Service path for Axis requests.
@@ -75,10 +75,7 @@ public class F3ConfiguratorImpl implements F3Configurator {
             ModuleBuilder moduleBuilder = new ModuleBuilder(moduleStream, axisModule, axisConfiguration);
             moduleBuilder.populateModule();
             
-            // TODO Find a better way of doing this
-            if ("rampart".equals(axisModule.getName())) {
-                addNewModule(axisModule, axisConfiguration);
-            }
+            addNewModule(axisModule, axisConfiguration);
             
         }
         
@@ -87,8 +84,8 @@ public class F3ConfiguratorImpl implements F3Configurator {
         
     }
     
-    public List<AxisModule> getModules() {
-        return modules;
+    public AxisModule getModule(String name) {
+        return modules.get(name);
     }
     
     public ConfigurationContext getConfigurationContext() {
@@ -105,9 +102,8 @@ public class F3ConfiguratorImpl implements F3Configurator {
         addFlowHandlers(axisModule.getFaultOutFlow(), moduleClassLoader);
 
         axisConfiguration.addModule(axisModule);
-        // axisConfiguration.engageModule(axisModule);
         
-        modules.add(axisModule);
+        modules.put(axisModule.getName(), axisModule);
         
     }
     

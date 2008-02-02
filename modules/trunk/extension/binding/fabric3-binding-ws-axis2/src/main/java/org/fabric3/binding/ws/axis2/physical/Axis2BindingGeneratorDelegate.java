@@ -19,12 +19,16 @@ package org.fabric3.binding.ws.axis2.physical;
 import java.net.URI;
 import java.util.Set;
 
+import javax.xml.namespace.QName;
+
+import org.fabric3.binding.ws.axis2.policy.AxisPolicy;
 import org.fabric3.binding.ws.model.logical.WsBindingDefinition;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.definitions.PolicySet;
+import org.fabric3.spi.Constants;
 import org.fabric3.spi.generator.BindingGeneratorDelegate;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GenerationException;
@@ -33,6 +37,8 @@ import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.policy.Policy;
 import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
  * @version $Revision$ $Date$
@@ -40,6 +46,8 @@ import org.osoa.sca.annotations.Reference;
  * TODO Add support for WSDL Contract
  */
 public class Axis2BindingGeneratorDelegate implements BindingGeneratorDelegate<WsBindingDefinition> {
+    
+    private static final QName POLICY_ELEMENT = new QName(Constants.FABRIC3_NS, "axisPolicy");
     
     private ClassLoaderGenerator classLoaderGenerator;
 
@@ -96,13 +104,37 @@ public class Axis2BindingGeneratorDelegate implements BindingGeneratorDelegate<W
     private void setPolicyConfigs(Axis2PolicyAware policyAware, Policy policy, ServiceContract<?> serviceContract) throws Axis2GenerationException {
         
         for (Operation<?> operation : serviceContract.getOperations()) {
+            
             Set<PolicySet> policySets = policy.getProvidedPolicySets(operation);
             if (policySets == null) {
                 continue;
             }
+            
             for (PolicySet policySet : policy.getProvidedPolicySets(operation)) {
-                policyAware.addPolicyDefinition(operation.getName(), policySet.getExtension());
+                
+                Element policyDefinition = policySet.getExtension();
+                QName qname = new QName(policyDefinition.getNamespaceURI(), policyDefinition.getNodeName());
+                if (POLICY_ELEMENT.equals(qname)) {
+                    throw new Axis2GenerationException("Unknow policy element " + qname);
+                }
+                
+                String module = policyDefinition.getAttribute("module");
+                String message = policyDefinition.getAttribute("message");
+                Element opaquePolicy = null;
+                
+                NodeList nodeList = policyDefinition.getChildNodes();
+                for (int i = 0;i < nodeList.getLength();i++) {
+                    if (nodeList.item(i) instanceof Element) {
+                        opaquePolicy = (Element) nodeList.item(i);
+                        break;
+                    }
+                }
+                
+                AxisPolicy axisPolicy = new AxisPolicy(message, module, opaquePolicy);
+                policyAware.addPolicy(operation.getName(), axisPolicy);
+                
             }
+            
         }
         
     }

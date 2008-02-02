@@ -22,8 +22,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.fabric3.binding.ws.axis2.policy.AxisPolicy;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.w3c.dom.Element;
 
 /**
  * @version $Revision$ $Date$
@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
 public class Axis2WireSourceDefinition extends PhysicalWireSourceDefinition implements Axis2PolicyAware {
 
     private String serviceInterface;
-    private Map<String, Set<Element>> policyDefinitions = new HashMap<String, Set<Element>>();
+    private Map<String, Set<AxisPolicy>> policies = new HashMap<String, Set<AxisPolicy>>();
     private URI classloaderURI;
 
     /**
@@ -65,19 +65,19 @@ public class Axis2WireSourceDefinition extends PhysicalWireSourceDefinition impl
     /**
      * @return Policy definitions.
      */
-    public Set<Element> getPolicyDefinitions(String operation) {
-        return policyDefinitions.get(operation);
+    public Set<AxisPolicy> getPolicies(String operation) {
+        return policies.get(operation);
     }
 
     /**
-     * @param policyDefinitions Policy definitions.
+     * @param policy Policy definitions.
      */
-    public void addPolicyDefinition(String operation, Element policyDefinitions) {
+    public void addPolicy(String operation, AxisPolicy policy) {
         
-        if (!this.policyDefinitions.containsKey(operation)) {
-            this.policyDefinitions.put(operation, new HashSet<Element>());
+        if (!this.policies.containsKey(operation)) {
+            this.policies.put(operation, new HashSet<AxisPolicy>());
         }
-        this.policyDefinitions.get(operation).add(policyDefinitions);
+        this.policies.get(operation).add(policy);
     }
 
 }

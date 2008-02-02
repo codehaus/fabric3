@@ -18,23 +18,29 @@ package org.fabric3.binding.ws.axis2.physical;
 
 import java.util.Set;
 
-import org.w3c.dom.Element;
+import org.fabric3.binding.ws.axis2.policy.AxisPolicy;
 
 /**
  * @version $Revision$ $Date$
+ * 
+ * TODO Support overloading.
  */
 public interface Axis2PolicyAware {
 
     /**
-     * @return Policy definitions.
-     * TODO Allow overloaded methods.
+     * Gets all the policies for requested operation.
+     * 
+     * @param operation Operation against which policies are requested.
+     * @return Policies defined against the operation.
      */
-    public Set<Element> getPolicyDefinitions(String operation);
+    public Set<AxisPolicy> getPolicies(String operation);
 
     /**
-     * @param policyDefinitions Policy definitions.
-     * TODO Allow overloaded methods.
+     * Adds a policy against an operation.
+     * 
+     * @param operation Operation against which policy is added.
+     * @param axisPolicy Policy that needs to be added.
      */
-    public void addPolicyDefinition(String operation, Element policyDefinitions);
+    public void addPolicy(String operation, AxisPolicy axisPolicy);
 
 }

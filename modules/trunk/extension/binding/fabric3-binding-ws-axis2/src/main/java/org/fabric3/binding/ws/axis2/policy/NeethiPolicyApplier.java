@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class WsPolicyApplier implements PolicyApplier {
+public class NeethiPolicyApplier implements PolicyApplier {
     
     private final Element2Stream transformer;
 
@@ -48,7 +48,7 @@ public class WsPolicyApplier implements PolicyApplier {
         buildAssertionBuilders();
     }
     
-    public WsPolicyApplier(@Reference XMLFactory xmlFactory){
+    public NeethiPolicyApplier(@Reference XMLFactory xmlFactory){
         transformer = new Element2Stream(xmlFactory.newInputFactoryInstance());
     }
 
@@ -82,7 +82,7 @@ public class WsPolicyApplier implements PolicyApplier {
 
         try {
             
-            Thread.currentThread().setContextClassLoader(WsPolicyApplier.class.getClassLoader());
+            Thread.currentThread().setContextClassLoader(NeethiPolicyApplier.class.getClassLoader());
             QName XML_ASSERTION_BUILDER = new QName("http://test.org/test", "test");
             
             Iterator<AssertionBuilder> asseryionBuilders = ServiceRegistry.lookupProviders(AssertionBuilder.class);

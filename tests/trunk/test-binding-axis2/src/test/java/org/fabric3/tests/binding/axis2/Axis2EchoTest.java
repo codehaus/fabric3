@@ -53,21 +53,9 @@ public class Axis2EchoTest extends TestCase {
         verifyOutputText(response);
     }
 
-    public void testEchoTextRampart() {
-        OMElement message = getInputText();
-        OMElement response = service.echoRampart(message);
-        verifyOutputText(response);
-    }
-
     public void testEchoDataWsWithMTOM() throws IOException {
         OMElement message = getInputMtom();
         OMElement response = service.echoWs(message);
-        verifyOutputMtom(response);
-    }
-
-    public void testEchoDataRampartWithMTOM() throws IOException {
-        OMElement message = getInputMtom();
-        OMElement response = service.echoRampart(message);
         verifyOutputMtom(response);
     }
 
@@ -88,7 +76,7 @@ public class Axis2EchoTest extends TestCase {
     }
     
     private void verifyOutputText(OMElement response) {
-        String responseText = response.getFirstElement().getText();
+        String responseText = response.getText();
         assertEquals("Hello World", responseText);
     }
     
@@ -120,7 +108,7 @@ public class Axis2EchoTest extends TestCase {
     
     private void verifyOutputMtom(OMElement response) throws IOException {
         
-        OMText responseText = (OMText) response.getFirstElement().getFirstOMChild();
+        OMText responseText = (OMText) response.getFirstOMChild();
         responseText.setOptimize(true);
         DataHandler responseData = (DataHandler) responseText.getDataHandler();
         InputStream is = responseData.getInputStream();

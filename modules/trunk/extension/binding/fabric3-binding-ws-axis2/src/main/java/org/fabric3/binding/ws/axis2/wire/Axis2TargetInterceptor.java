@@ -18,27 +18,24 @@ package org.fabric3.binding.ws.axis2.wire;
 
 import java.util.Set;
 
-import javax.xml.namespace.QName;
-
-import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.OMFactory;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
+import org.apache.axis2.description.AxisDescription;
 import org.apache.axis2.description.AxisModule;
+import org.apache.axis2.description.AxisOperation;
 import org.apache.axis2.description.AxisService;
 import org.fabric3.binding.ws.axis2.config.F3Configurator;
 import org.fabric3.binding.ws.axis2.physical.Axis2WireTargetDefinition;
+import org.fabric3.binding.ws.axis2.policy.AxisPolicy;
 import org.fabric3.binding.ws.axis2.policy.PolicyApplier;
-import org.fabric3.binding.ws.axis2.policy.PolicyApplierRegistry;
 import org.fabric3.spi.deployer.CompositeClassLoader;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.spi.wire.MessageImpl;
-import org.w3c.dom.Element;
 
 /**
  * @version $Revision$ $Date$
@@ -48,9 +45,9 @@ public class Axis2TargetInterceptor implements Interceptor {
     private Interceptor next;
     private final EndpointReference epr;
     private final String operation;
-    private final Set<Element> policies;
+    private final Set<AxisPolicy> policies;
     private final F3Configurator f3Configurator;
-    private final PolicyApplierRegistry policyApplierRegistry;
+    private final PolicyApplier policyApplier;
     
     /**
      * Initializes the end point reference.
@@ -60,15 +57,15 @@ public class Axis2TargetInterceptor implements Interceptor {
      */
     public Axis2TargetInterceptor(Axis2WireTargetDefinition target, 
                                   String operation, 
-                                  Set<Element> policies, 
+                                  Set<AxisPolicy> policies, 
                                   F3Configurator f3Configurator,
-                                  PolicyApplierRegistry policyApplierRegistry) {
+                                  PolicyApplier policyApplier) {
         
         this.operation = operation;
         this.epr = new EndpointReference(target.getUri().toASCIIString());
         this.policies = policies;
         this.f3Configurator = f3Configurator;
-        this.policyApplierRegistry = policyApplierRegistry;
+        this.policyApplier = policyApplier;
         
     }
 
@@ -87,11 +84,6 @@ public class Axis2TargetInterceptor implements Interceptor {
         Object[] payload = (Object[]) msg.getBody();
         OMElement message = (OMElement) payload[0];
         
-        OMFactory fac = OMAbstractFactory.getOMFactory();
-
-        OMElement method = fac.createOMElement(operation, null);
-        method.addChild(message);
-        
         Options options = new Options();
         options.setTo(epr);
         options.setTransportInProtocol(Constants.TRANSPORT_HTTP);
@@ -103,15 +95,14 @@ public class Axis2TargetInterceptor implements Interceptor {
         
         try {
             
-            // TODO May be we want to do an MPCL with app cl as well
             CompositeClassLoader systemCl = (CompositeClassLoader) getClass().getClassLoader();
             currentThread.setContextClassLoader(systemCl);
             
             ServiceClient sender = new ServiceClient(f3Configurator.getConfigurationContext(), null);
             sender.setOptions(options);
-            applyPolicies(sender);
+            applyPolicies(sender, operation);
             
-            OMElement result = sender.sendReceive(method);
+            OMElement result = sender.sendReceive(message);
             
             Message ret = new MessageImpl();
             ret.setBody(result);
@@ -130,25 +121,33 @@ public class Axis2TargetInterceptor implements Interceptor {
         
     }
 
-    private void applyPolicies(ServiceClient sender) throws AxisFault {
+    private void applyPolicies(ServiceClient sender, String operation) throws AxisFault {
         
         if (policies == null) {
             return;
         }
 
         AxisService axisService = sender.getAxisService();
-
-        for (AxisModule axisModule : f3Configurator.getModules()) {
-            sender.engageModule(axisModule.getName());
+        AxisOperation axisOperation = axisService.getOperationBySOAPAction("urn:" + operation);
+        if (axisOperation == null) {
+            axisOperation = axisService.getOperation(ServiceClient.ANON_OUT_IN_OP);
         }
+        AxisDescription axisDescription = axisOperation;
         
-        for (Element policy : policies) {
-            QName policyName = new QName(policy.getNamespaceURI(), policy.getNodeName());
-            PolicyApplier policyApplier = policyApplierRegistry.getPolicyApplier(policyName);
-            if (policyApplier == null) {
-                throw new AssertionError("Unknown policy " + policyName);
+        for (AxisPolicy policy : policies) {
+
+            String moduleName = policy.getModule();
+            String message = policy.getMessage();
+            
+            AxisModule axisModule = f3Configurator.getModule(moduleName);
+            
+            if (message != null) {
+                axisDescription = axisOperation.getMessage(message);
             }
-            policyApplier.applyPolicy(axisService, policy);
+
+            
+            axisDescription.engageModule(axisModule);
+            policyApplier.applyPolicy(axisDescription, policy.getOpaquePolicy());
         }
         
     }
