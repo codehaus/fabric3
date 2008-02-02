@@ -17,6 +17,7 @@
 package org.fabric3.fabric.policy.helper;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
@@ -70,13 +71,15 @@ public class AbstractPolicyHelper {
      */
     protected void filterInvalidIntents(QName type, Set<Intent> requiredIntents) throws PolicyResolutionException {
 
-        for (Intent intent : requiredIntents) {
+        for (Iterator<Intent> it = requiredIntents.iterator();it.hasNext();) {
+            
+            Intent intent = it.next();
 
             QName intentName = intent.getName();
 
             if (intent.getIntentType() != null) {
                 if (!intent.doesConstrain(type)) {
-                    requiredIntents.remove(intent);
+                    it.remove();
                 }
             } else {
                 if (!intent.isQualified()) {
@@ -87,7 +90,7 @@ public class AbstractPolicyHelper {
                     throw new PolicyResolutionException("Unknown intent", intent.getQualifiable());
                 }
                 if (!qualifiableIntent.doesConstrain(type)) {
-                    requiredIntents.remove(intent);
+                    it.remove();
                 }
             }
         }

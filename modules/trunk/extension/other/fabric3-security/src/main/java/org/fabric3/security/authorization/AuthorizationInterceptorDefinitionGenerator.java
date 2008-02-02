@@ -6,6 +6,7 @@ import org.fabric3.spi.Constants;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
+import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Element;
@@ -21,6 +22,7 @@ import org.w3c.dom.Element;
  * @version $Revision$ $Date$
  *
  */
+@EagerInit
 public class AuthorizationInterceptorDefinitionGenerator implements InterceptorDefinitionGenerator {
     
     private static final QName EXTENSION_NAME = new QName(Constants.FABRIC3_NS, "authorization");

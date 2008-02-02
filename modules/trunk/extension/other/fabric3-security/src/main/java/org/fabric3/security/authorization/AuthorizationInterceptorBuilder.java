@@ -3,6 +3,7 @@ package org.fabric3.security.authorization;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
 import org.fabric3.spi.builder.interceptor.InterceptorBuilderRegistry;
+import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
@@ -18,6 +19,7 @@ import org.osoa.sca.annotations.Reference;
  * @version $Revision$ $Date$
  *
  */
+@EagerInit
 public class AuthorizationInterceptorBuilder implements InterceptorBuilder<AuthorizationInterceptorDefinition, AuthorizationInterceptor> {
     
     private AuthorizationService authorizationService;
