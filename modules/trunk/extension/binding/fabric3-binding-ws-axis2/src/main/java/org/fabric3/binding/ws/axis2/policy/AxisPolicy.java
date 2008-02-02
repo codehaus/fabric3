@@ -21,7 +21,7 @@ public final class AxisPolicy {
      * @param opaquePolicy Opaque policy definition.
      */
     public AxisPolicy(final String message, final String module, final Element opaquePolicy) {
-        this.message = message;
+        this.message = "".equals(message) ? null : message;
         this.module = module;
         this.opaquePolicy = opaquePolicy;
     }
