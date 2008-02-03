@@ -105,6 +105,7 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
         try {
             
             String uri = pwsd.getUri().getPath();
+            URI scopeId = pwsd.getScopeId();
             URI classLoaderUri = pwsd.getClassloaderURI();
             String serviceClass = pwsd.getServiceInterface();
             
@@ -121,7 +122,7 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
             Parameter interfaceParameter = new Parameter(Constants.SERVICE_CLASS, serviceClass);
             axisService.addParameter(interfaceParameter);
             
-            setMessageReceivers(wire, axisService);
+            setMessageReceivers(wire, axisService, scopeId);
             
             configurationContext.getAxisConfiguration().addService(axisService);
             
@@ -170,7 +171,7 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
     /*
      * Adds the message receivers.
      */
-    private void setMessageReceivers(Wire wire, AxisService axisService) throws Exception {
+    private void setMessageReceivers(Wire wire, AxisService axisService, URI scopeId) throws Exception {
         
         Map<String, InvocationChain> interceptors = new HashMap<String, InvocationChain>();
         for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
@@ -183,7 +184,7 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
             AxisOperation axisOp = (AxisOperation) i.next();
             InvocationChain invocationChain = interceptors.get(axisOp.getName().getLocalPart());
             // TODO Select message receiver based on MEP
-            MessageReceiver messageReceiver = new InOutServiceProxyHandler(wire, invocationChain);
+            MessageReceiver messageReceiver = new InOutServiceProxyHandler(wire, invocationChain, scopeId);
             axisOp.setMessageReceiver(messageReceiver);
         }
         

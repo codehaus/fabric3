@@ -61,6 +61,7 @@ public class Axis2BindingGeneratorDelegate implements BindingGeneratorDelegate<W
                                                         ServiceDefinition serviceDefinition) throws GenerationException {
         
         Axis2WireSourceDefinition hwsd = new Axis2WireSourceDefinition();
+        hwsd.setScopeId(binding.getParent().getParent().getParent().getUri());
         hwsd.setUri(binding.getBinding().getTargetUri());
         
         ServiceContract<?> contract = serviceDefinition.getServiceContract();

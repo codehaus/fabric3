@@ -20,6 +20,7 @@
 package org.fabric3.binding.ws.axis2;
 
 import java.util.Iterator;
+import java.net.URI;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.soap.SOAPEnvelope;
@@ -33,6 +34,7 @@ import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.spi.wire.MessageImpl;
 import org.fabric3.spi.wire.Wire;
+import org.fabric3.scdl.Scope;
 
 /**
  * Proxy handler for the invocation.
@@ -41,23 +43,20 @@ import org.fabric3.spi.wire.Wire;
  */
 public class InOutServiceProxyHandler extends AbstractInOutMessageReceiver {
 
-    /**
-     * Wire attached to the servlet.
-     */
-    private Wire wire;
-
-    /**
-     * Invocation chain.
-     */
-    private InvocationChain invocationChain;
+    private final Wire wire;
+    private final InvocationChain invocationChain;
+    private final URI scopeId;
 
     /**
      * @param wire Wire which is proxied.
+     * @param invocationChain the invocation chain to invoke
+     * @param scopeId the id of the composite scope to use
      */
-    public InOutServiceProxyHandler(Wire wire, InvocationChain invocationChain) {
+    public InOutServiceProxyHandler(Wire wire, InvocationChain invocationChain, URI scopeId) {
         
         this.wire = wire;
         this.invocationChain = invocationChain;
+        this.scopeId = scopeId;
         
     }
 
@@ -70,8 +69,10 @@ public class InOutServiceProxyHandler extends AbstractInOutMessageReceiver {
         
         Interceptor head = invocationChain.getHeadInterceptor();
         OMElement bodyContent = getInBodyContent(inMessage);
-        
-        Message input = new MessageImpl(new Object[] {bodyContent}, false, new SimpleWorkContext(), wire);
+
+        SimpleWorkContext workContext = new SimpleWorkContext();
+        workContext.setScopeIdentifier(Scope.COMPOSITE, scopeId);
+        Message input = new MessageImpl(new Object[] {bodyContent}, false, workContext, wire);
         
         Message ret = head.invoke(input);
         OMElement resObject = (OMElement) ret.getBody();
