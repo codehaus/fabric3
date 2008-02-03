@@ -17,18 +17,34 @@
 package org.fabric3.tests.function.lifecycle;
 
 import junit.framework.TestCase;
+import org.osoa.sca.ComponentContext;
 import org.osoa.sca.RequestContext;
 import org.osoa.sca.annotations.Context;
+import org.osoa.sca.annotations.Property;
 
 /**
  * @version $Rev$ $Date$
  */
 public class ContextTest extends TestCase {
 
+/*
     @Context
     protected RequestContext requestContext;
+*/
 
+    @Context
+    protected ComponentContext componentContext;
+
+    @Property
+    protected String uri;
+/*
     public void testRequestContext() {
         assertNotNull(requestContext);
+    }
+*/
+
+    public void testComponentContext() {
+        assertNotNull(componentContext);
+        assertEquals(uri, componentContext.getURI());
     }
 }

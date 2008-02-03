@@ -19,11 +19,10 @@
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            name="LifecycleComposite">
 
-<!--
     <component name="ContextTest">
         <f3:junit class="org.fabric3.tests.function.lifecycle.ContextTest"/>
+        <property name="uri">fabric3://./domain/ContextTest</property>
     </component>
--->
 
     <component name="EagerInitTest">
         <f3:junit class="org.fabric3.tests.function.lifecycle.EagerInitTest"/>
