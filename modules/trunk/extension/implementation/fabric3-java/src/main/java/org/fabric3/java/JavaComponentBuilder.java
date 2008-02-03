@@ -99,7 +99,7 @@ public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaCompone
         PojoRequestContext requestContext = new PojoRequestContext();
         provider.setObjectFactory(REQUEST_CONTEXT_SOURCE, new SingletonObjectFactory<PojoRequestContext>(requestContext));
 
-        PojoComponentContext componentContext = new PojoComponentContext(component);
+        PojoComponentContext componentContext = new PojoComponentContext(component, requestContext);
         provider.setObjectFactory(COMPONENT_CONTEXT_SOURCE, new SingletonObjectFactory<PojoComponentContext>(componentContext));
 
         return component;

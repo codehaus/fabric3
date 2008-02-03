@@ -26,9 +26,11 @@ import org.osoa.sca.RequestContext;
  */
 public class PojoComponentContext implements ComponentContext {
     private final PojoComponent<?> component;
+    private final PojoRequestContext requestContext;
 
-    public PojoComponentContext(PojoComponent<?> component) {
+    public PojoComponentContext(PojoComponent<?> component, PojoRequestContext requestContext) {
         this.component = component;
+        this.requestContext = requestContext;
     }
 
     public String getURI() {
@@ -60,6 +62,6 @@ public class PojoComponentContext implements ComponentContext {
     }
 
     public RequestContext getRequestContext() {
-        return null;
+        return requestContext;
     }
 }
