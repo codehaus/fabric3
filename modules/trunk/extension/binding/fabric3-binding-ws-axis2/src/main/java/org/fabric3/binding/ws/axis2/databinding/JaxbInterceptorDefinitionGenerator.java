@@ -25,13 +25,14 @@ import javax.xml.namespace.QName;
 
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.Operation;
-import org.fabric3.spi.Constants;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
 import org.fabric3.spi.model.instance.LogicalBinding;
+import org.fabric3.spi.model.instance.LogicalService;
+import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Element;
@@ -39,9 +40,10 @@ import org.w3c.dom.Element;
 /**
  * @version $Revision$ $Date$
  */
+@EagerInit
 public class JaxbInterceptorDefinitionGenerator implements InterceptorDefinitionGenerator {
-    
-    private static final QName EXTENSION_NAME = new QName(Constants.FABRIC3_NS, "jaxb-axis");
+
+    private static final QName EXTENSION_NAME = new QName("http://fabric3.org/xmlns/sca/2.0-alpha/axis", "dataBinding.jaxb");
     
     private GeneratorRegistry generatorRegistry;
     private ClassLoaderGenerator classLoaderGenerator;
@@ -65,6 +67,8 @@ public class JaxbInterceptorDefinitionGenerator implements InterceptorDefinition
                                               Operation<?> operation,
                                               LogicalBinding<?> logicalBinding) throws GenerationException {
         
+        boolean service = logicalBinding.getParent() instanceof LogicalService;
+        
         URI classLoaderId = classLoaderGenerator.generate(logicalBinding, generatorContext);
         
         // This assumes a Java interface contract
@@ -82,7 +86,7 @@ public class JaxbInterceptorDefinitionGenerator implements InterceptorDefinition
         
         String outClassName = ((Class) outputType.getLogical()).getName();
         
-        return new JaxbInterceptorDefinition(classLoaderId, inClassNames, outClassName);
+        return new JaxbInterceptorDefinition(classLoaderId, inClassNames, outClassName, service);
     }
 
 }

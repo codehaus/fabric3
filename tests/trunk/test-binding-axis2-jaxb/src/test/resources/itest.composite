@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with this work for information
+ regarding copyright ownership.  This file is licensed
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:f3-axis="http://fabric3.org/xmlns/sca/2.0-alpha/axis"
+           name="Axis2TestComposite">
+
+    <component name="WeatherTest">
+        <f3:junit class="org.fabric3.tests.binding.axis.jaxb.WeatherServiceTest"/>
+        <reference name="weatherService">
+            <binding.ws uri="http://localhost:8900/axis2/weatherService" f3:impl="axis2" requires="f3-axis:dataBinding.jaxb"/>
+        </reference>
+    </component>
+
+    <component name="WeatherService">
+        <implementation.java class="org.fabric3.tests.binding.axis.jaxb.WeatherServiceImpl"/>
+        <service name="WeatherService">
+            <binding.ws uri="weatherService" f3:impl="axis2" requires="f3-axis:dataBinding.jaxb"/>
+        </service>
+    </component>
+    
+</composite>

@@ -29,11 +29,13 @@ public class JaxbInterceptorDefinition extends PhysicalInterceptorDefinition {
     private final URI classLoaderId;
     private final List<String> inClassNames;
     private final String outClassName;
+    private final boolean service;
     
-    public JaxbInterceptorDefinition(URI classLoaderId, List<String> inClassNames, String outClassName) {
+    public JaxbInterceptorDefinition(URI classLoaderId, List<String> inClassNames, String outClassName, boolean service) {
         this.classLoaderId = classLoaderId;
         this.inClassNames = inClassNames;
         this.outClassName = outClassName;
+        this.service = service;
     }
 
     public URI getClassLoaderId() {
@@ -46,6 +48,10 @@ public class JaxbInterceptorDefinition extends PhysicalInterceptorDefinition {
 
     public String getOutClassName() {
         return outClassName;
+    }
+
+    public boolean isService() {
+        return service;
     }
 
 }

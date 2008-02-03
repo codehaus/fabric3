@@ -36,6 +36,14 @@ public class DefaultPolicySetEvaluatorTest extends TestCase {
         
     }
 
+    public void testDoesApplyForBindingSimple() {
+        
+        Element bindableElement = policyInfosetBuilder.buildInfoSet(DefaultPolicyInfosetBuilderTest.getTestBinding());
+        String expression = "local-name() = 'reference'";
+        assertTrue(policySetEvaluator.doesApply(bindableElement, expression, "testOperation"));
+        
+    }
+
     public void testDoesApplyForBindingFalse() {
         
         Element bindableElement = policyInfosetBuilder.buildInfoSet(DefaultPolicyInfosetBuilderTest.getTestBinding());

@@ -30,7 +30,7 @@ import org.fabric3.scdl.ResourceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.spi.model.instance.LogicalService;
+import org.fabric3.spi.model.instance.LogicalReference;
 import org.w3c.dom.Element;
 
 /**
@@ -77,12 +77,12 @@ public class DefaultPolicyInfosetBuilderTest extends TestCase {
         ComponentDefinition<TestImplementation> componentDefinition = new ComponentDefinition<TestImplementation>("testComponent", implementation);
         LogicalComponent<TestImplementation> logicalComponent = new LogicalComponent<TestImplementation>(null, null, componentDefinition, null);
         
-        ServiceDefinition serviceDefinition = new ServiceDefinition("testService");
-        LogicalService logicalService = new LogicalService(null, serviceDefinition, logicalComponent);
+        ReferenceDefinition referenceDefinition = new ReferenceDefinition("testService", null);
+        LogicalReference logicalReference = new LogicalReference(null, referenceDefinition, logicalComponent);
         
         TestBinidingDefinition testBinidingDefinition = new TestBinidingDefinition();
-        LogicalBinding<TestBinidingDefinition> logicalBinding = new LogicalBinding<TestBinidingDefinition>(testBinidingDefinition, logicalService);
-        logicalService.addBinding(logicalBinding);
+        LogicalBinding<TestBinidingDefinition> logicalBinding = new LogicalBinding<TestBinidingDefinition>(testBinidingDefinition, logicalReference);
+        logicalReference.addBinding(logicalBinding);
         
         return logicalBinding;
         

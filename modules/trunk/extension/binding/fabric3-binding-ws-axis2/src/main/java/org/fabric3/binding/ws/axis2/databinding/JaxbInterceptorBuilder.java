@@ -24,12 +24,14 @@ import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
 import org.fabric3.spi.builder.interceptor.InterceptorBuilderRegistry;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Revision$ $Date$
  */
+@EagerInit
 public class JaxbInterceptorBuilder implements InterceptorBuilder<JaxbInterceptorDefinition, JaxbInterceptor> {
     
     private InterceptorBuilderRegistry interceptorBuilderRegistry;
@@ -54,14 +56,15 @@ public class JaxbInterceptorBuilder implements InterceptorBuilder<JaxbIntercepto
         
         try {
             
-            List<Class<?>> inClasses = new LinkedList<Class<?>>();
+            List<Class<?>> classes = new LinkedList<Class<?>>();
             
             for (String inClassName : definition.getInClassNames()) {
-                inClasses.add(classLoader.loadClass(inClassName));
+                classes.add(classLoader.loadClass(inClassName));
             }
             
-            Class<?> outClass = classLoader.loadClass(definition.getOutClassName());
-            return new JaxbInterceptor(classLoader, inClasses, outClass);
+            classes.add(classLoader.loadClass(definition.getOutClassName()));
+            
+            return new JaxbInterceptor(classLoader, classes, definition.isService());
             
         } catch (ClassNotFoundException ex) {
             throw new JaxbBuilderException(ex);

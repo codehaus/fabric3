@@ -36,10 +36,10 @@ public class OMElement2Jaxb extends AbstractPullTransformer<OMElement, Object> {
     
     private static final JavaClass<Object> TARGET = new JavaClass<Object>(Object.class);
     
-    private List<Class<?>> inClasses;
+    private List<Class<?>> classes;
     
     public OMElement2Jaxb(List<Class<?>> inClasses) {
-        this.inClasses = inClasses;
+        this.classes = inClasses;
     }
 
     public Object transform(OMElement source, TransformContext context) {
@@ -48,7 +48,9 @@ public class OMElement2Jaxb extends AbstractPullTransformer<OMElement, Object> {
         
         // Assume doc-lit wrapped and the service contract accepts only one argument
         try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(inClasses.get(0));
+            Class<?>[] classArray = new Class<?>[classes.size()];
+            classArray = classes.toArray(classArray);
+            JAXBContext jaxbContext = JAXBContext.newInstance(classArray);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             return unmarshaller.unmarshal(reader);
         } catch (JAXBException e) {
