@@ -17,10 +17,12 @@
 package org.fabric3.tests.binding.axis2;
 
 import org.apache.axiom.om.OMElement;
+import org.osoa.sca.annotations.Scope;
 
 /**
  * @version $Rev$ $Date$
  */
+@Scope("COMPOSITE")
 public class Axis2EchoServiceImpl implements Axis2EchoService {
 
     public OMElement echoWs(OMElement message) {
