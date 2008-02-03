@@ -97,7 +97,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         ResourceWireGenerator targetGenerator = getGenerator(resourceDefinition);
         @SuppressWarnings("unchecked")
         PhysicalWireTargetDefinition pwtd = targetGenerator.generateWireTargetDefinition(resource, context);
-        boolean optimizable = pwtd.getUri() != null;
+        boolean optimizable = pwtd.isOptimizable();
 
         // Create the wire from the component to the resource
         Set<PhysicalOperationDefinition> operations = generateOperations(serviceContract, context, null, null);

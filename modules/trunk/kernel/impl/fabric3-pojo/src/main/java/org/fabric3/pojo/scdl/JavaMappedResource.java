@@ -18,62 +18,27 @@
  */
 package org.fabric3.pojo.scdl;
 
-import java.lang.reflect.Member;
-
 import org.fabric3.scdl.ResourceDefinition;
-import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.idl.java.JavaServiceContract;
 
 /**
- * A resource dependency declared by a Java component implementation.
+ * A resource dependency declared by a POJO component implementation.
  * 
  * @version $Rev$ $Date$
- * @param <T> the Java type of the resource
  */
-public class JavaMappedResource<T> extends ResourceDefinition {
+public class JavaMappedResource extends ResourceDefinition {
+    private final MemberSite memberSite;
 
-    private Member member;
-    private Class<T> type;
-    private ObjectFactory<T> objectFactory;
-
-    public JavaMappedResource(String name, Class<T> type, Member member, boolean optional, JavaServiceContract serviceContract) {
+    public JavaMappedResource(String name, MemberSite memberSite, boolean optional, JavaServiceContract serviceContract) {
         super(name, serviceContract, optional);
-        this.type = type;
-        this.member = member;
+        this.memberSite = memberSite;
     }
 
     /**
-     * Returns the Member that this resource is mapped to.
-     * 
-     * @return the Member that this resource is mapped to
+     * Returns the member site where this resource should be injected.
+     * @return the member site where this resource should be injected
      */
-    public Member getMember() {
-        return member;
+    public MemberSite getMemberSite() {
+        return memberSite;
     }
-
-    /**
-     * Returns the resource type
-     * 
-     * @return the resource type
-     */
-    public Class<T> getType() {
-        return type;
-    }
-
-    /**
-     * Returns the obeject factory
-     * 
-     * @return the object factory
-     */
-    public ObjectFactory<T> getObjectFactory() {
-        return objectFactory;
-    }
-
-    /**
-     * Sets the object factory
-     */
-    public void setObjectFactory(ObjectFactory<T> objectFactory) {
-        this.objectFactory = objectFactory;
-    }
-    
 }

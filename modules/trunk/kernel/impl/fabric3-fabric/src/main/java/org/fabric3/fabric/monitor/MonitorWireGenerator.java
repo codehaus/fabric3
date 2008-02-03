@@ -59,6 +59,7 @@ public class MonitorWireGenerator implements ResourceWireGenerator<MonitorWireTa
         MonitorWireTargetDefinition definition = new MonitorWireTargetDefinition();
         definition.setMonitorType(resource.getResourceDefinition().getServiceContract().getQualifiedInterfaceName());
         definition.setUri(component.getUri());
+        definition.setOptimizable(true);
         // TODO is this a good way to get the classloader id?
         definition.setClassLoaderId(component.getParent().getUri());
 

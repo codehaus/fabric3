@@ -25,44 +25,35 @@ import org.osoa.sca.ComponentContext;
 import org.osoa.sca.RequestContext;
 import org.osoa.sca.annotations.Context;
 
-import org.fabric3.fabric.injection.RequestContextObjectFactory;
-import org.fabric3.pojo.processor.JavaIntrospectionHelper;
-import org.fabric3.spi.loader.LoaderContext;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
-import org.fabric3.pojo.scdl.JavaMappedResource;
-import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
+import org.fabric3.pojo.scdl.MemberSite;
+import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.spi.loader.LoaderContext;
 
 /**
- * Processes {@link @Context} annotations on a component implementation and adds a {@link org.fabric3.pojo.scdl.JavaMappedProperty} to the
- * component type which will be used to inject the appropriate context
+ * Processes {@link @Context} annotations on a component implementation.
  *
  * @version $Rev$ $Date$
  */
 public class ContextProcessor extends ImplementationProcessorExtension {
     public void visitMethod(
-        Method method,
-        PojoComponentType type,
-        LoaderContext context)
-        throws ProcessingException {
+            Method method,
+            PojoComponentType type,
+            LoaderContext context)
+            throws ProcessingException {
         if (method.getAnnotation(Context.class) == null) {
             return;
         }
         if (method.getParameterTypes().length != 1) {
             throw new IllegalContextException("Context setter must have one parameter", method.toString());
         }
+        MemberSite site = new MemberSite(method);
         Class<?> paramType = method.getParameterTypes()[0];
-        if (ComponentContext.class.equals(paramType)) {
-            String name = JavaIntrospectionHelper.toPropertyName(method.getName());
-            JavaMappedResource<ComponentContext> resource = new JavaMappedResource<ComponentContext>(name, ComponentContext.class, method, true, null);
-            type.getResources().put(name, resource);
-        } else if (RequestContext.class.equals(paramType)) {
-            String name = JavaIntrospectionHelper.toPropertyName(method.getName());
-            JavaMappedResource<RequestContext> resource = new JavaMappedResource<RequestContext>(name, RequestContext.class, method, true, null);
-            resource.setObjectFactory(new RequestContextObjectFactory());
-            type.getResources().put(name, resource);
-        } else {
-            throw new UnknownContextTypeException(paramType.getName());
+        if (paramType.isAssignableFrom(ComponentContext.class)) {
+            type.setComponentContextMember(site);
+        } else if (paramType.isAssignableFrom(RequestContext.class)) {
+            type.setRequestContextMember(site);
         }
     }
 
@@ -72,19 +63,12 @@ public class ContextProcessor extends ImplementationProcessorExtension {
         if (field.getAnnotation(Context.class) == null) {
             return;
         }
+        MemberSite site = new MemberSite(field);
         Class<?> paramType = field.getType();
-        if (ComponentContext.class.equals(paramType)) {
-            String name = field.getName();
-            JavaMappedResource<ComponentContext> resource = new JavaMappedResource<ComponentContext>(name, ComponentContext.class, field, true, null);
-            type.getResources().put(name, resource);
-        } else if (RequestContext.class.equals(paramType)) {
-            String name = field.getName();
-            name = JavaIntrospectionHelper.toPropertyName(name);
-            JavaMappedResource<RequestContext> resource = new JavaMappedResource<RequestContext>(name, RequestContext.class, field, true, null);
-            resource.setObjectFactory(new RequestContextObjectFactory());
-            type.getResources().put(name, resource);
-        } else {
-            throw new UnknownContextTypeException(paramType.getName());
+        if (paramType.isAssignableFrom(ComponentContext.class)) {
+            type.setComponentContextMember(site);
+        } else if (paramType.isAssignableFrom(RequestContext.class)) {
+            type.setRequestContextMember(site);
         }
     }
 }

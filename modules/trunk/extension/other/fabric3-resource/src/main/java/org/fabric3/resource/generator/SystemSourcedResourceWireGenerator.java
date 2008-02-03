@@ -73,6 +73,7 @@ public class SystemSourcedResourceWireGenerator implements ResourceWireGenerator
         URI targetUri = URI.create(SYSTEM_URI + mappedName);
 
         SystemSourcedWireTargetDefinition wtd = new SystemSourcedWireTargetDefinition();
+        wtd.setOptimizable(true);
         wtd.setUri(targetUri);
 
         return wtd;

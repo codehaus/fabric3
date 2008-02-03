@@ -21,22 +21,18 @@ package org.fabric3.fabric.implementation.processor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import junit.framework.TestCase;
 import org.osoa.sca.ComponentContext;
 import org.osoa.sca.RequestContext;
 import org.osoa.sca.annotations.Context;
 
-import org.fabric3.spi.component.Component;
 import org.fabric3.pojo.scdl.PojoComponentType;
-
-import junit.framework.TestCase;
-import org.easymock.EasyMock;
 
 /**
  * @version $Rev$ $Date$
  */
 public class ContextProcessorTestCase extends TestCase {
     private ContextProcessor processor;
-    private Component composite;
 
     // FIXME: resurrect to test ComponentContext injection
 /*
@@ -62,44 +58,17 @@ public class ContextProcessorTestCase extends TestCase {
 
     public void testRequestContextMethod() throws Exception {
         Method method = Foo.class.getMethod("setRequestContext", RequestContext.class);
-        PojoComponentType type =
-            new PojoComponentType(null);
+        PojoComponentType type = new PojoComponentType(null);
         processor.visitMethod(method, type, null);
-        assertNotNull(type.getResources().get("requestContext"));
+        assertEquals("setRequestContext", type.getRequestContextMember().getName());
     }
 
     public void testRequestContextField() throws Exception {
         Field field = Foo.class.getDeclaredField("requestContext");
-        PojoComponentType type =
-            new PojoComponentType(null);
+        PojoComponentType type = new PojoComponentType(null);
         processor.visitField(field, type, null);
-        assertNotNull(type.getResources().get("requestContext"));
+        assertEquals("requestContext", type.getRequestContextMember().getName());
     }
-
-    public void testInvalidParamType() throws Exception {
-        Method method = Foo.class.getMethod("setContext", String.class);
-        PojoComponentType type =
-            new PojoComponentType(null);
-        try {
-            processor.visitMethod(method, type, null);
-            fail();
-        } catch (UnknownContextTypeException e) {
-            // expected
-        }
-    }
-
-    public void testInvalidParamTypeField() throws Exception {
-        Field field = Foo.class.getDeclaredField("badContext");
-        PojoComponentType type =
-            new PojoComponentType(null);
-        try {
-            processor.visitField(field, type, null);
-            fail();
-        } catch (UnknownContextTypeException e) {
-            // expected
-        }
-    }
-
 
     public void testInvalidParamNum() throws Exception {
         Method method = Foo.class.getMethod("setContext", ComponentContext.class, String.class);
@@ -144,7 +113,6 @@ public class ContextProcessorTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         processor = new ContextProcessor();
-        composite = EasyMock.createNiceMock(Component.class);
     }
 
     private class Foo {

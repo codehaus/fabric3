@@ -184,10 +184,10 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
         Implementation<PojoComponentType> implementation = component.getDefinition().getImplementation();
         PojoComponentType type = implementation.getComponentType();
 
-        for (Map.Entry<String, JavaMappedResource<?>> entry : type.getResources().entrySet()) {
+        for (Map.Entry<String, JavaMappedResource> entry : type.getResources().entrySet()) {
 
-            JavaMappedResource<?> resource = entry.getValue();
-            MemberSite memberSite = new MemberSite(resource.getMember());
+            JavaMappedResource resource = entry.getValue();
+            MemberSite memberSite = resource.getMemberSite();
 
             LogicalResource<?> logicalResource = component.getResource(resource.getName());
             if (logicalResource != null) {

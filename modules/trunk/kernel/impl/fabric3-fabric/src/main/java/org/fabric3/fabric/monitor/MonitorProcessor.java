@@ -30,10 +30,11 @@ import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.processor.InvalidSetterException;
 import static org.fabric3.pojo.processor.JavaIntrospectionHelper.toPropertyName;
 import org.fabric3.pojo.processor.ProcessingException;
+import org.fabric3.pojo.scdl.MemberSite;
 import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.spi.idl.InvalidServiceContractException;
 import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
 import org.fabric3.spi.idl.java.JavaServiceContract;
-import org.fabric3.spi.idl.InvalidServiceContractException;
 import org.fabric3.spi.loader.LoaderContext;
 
 /**
@@ -64,7 +65,7 @@ public class MonitorProcessor extends ImplementationProcessorExtension {
             throw new DuplicateResourceException(name);
         }
 
-        MonitorResource<?> resource = createResource(name, resourceType, method);
+        MonitorResource resource = createResource(name, resourceType, method);
         type.add(resource);
     }
 
@@ -80,14 +81,15 @@ public class MonitorProcessor extends ImplementationProcessorExtension {
             throw new DuplicateResourceException(name);
         }
 
-        MonitorResource<?> resource = createResource(name, resourceType, field);
+        MonitorResource resource = createResource(name, resourceType, field);
         type.add(resource);
     }
 
-    private <T> MonitorResource<T> createResource(String name, Class<T> type, Member member) throws ProcessingException {
+    private MonitorResource createResource(String name, Class<?> type, Member member) throws ProcessingException {
         try {
             JavaServiceContract serviceContract = interfaceProcessorRegistry.introspect(type);
-            return new MonitorResource<T>(name, type, member, false, serviceContract);
+            MemberSite site = new MemberSite(member);
+            return new MonitorResource(name, site, false, serviceContract);
         } catch (InvalidServiceContractException e) {
             throw new ProcessingException(e);
         }

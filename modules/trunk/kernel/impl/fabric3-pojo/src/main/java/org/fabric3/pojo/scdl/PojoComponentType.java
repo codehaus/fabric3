@@ -29,12 +29,14 @@ import org.fabric3.scdl.AbstractComponentType;
 public class PojoComponentType extends AbstractComponentType<JavaMappedService,
         JavaMappedReference,
         JavaMappedProperty<?>,
-        JavaMappedResource<?>> {
+        JavaMappedResource> {
     private String implClass;
     private ConstructorDefinition<?> constructorDefinition;
     private Signature initMethod;
     private Signature destroyMethod;
     private MemberSite conversationIDMember;
+    private MemberSite componentContextMember;
+    private MemberSite requestContextMember;
 
     /**
      * Constructor used only for deserialization
@@ -120,5 +122,21 @@ public class PojoComponentType extends AbstractComponentType<JavaMappedService,
 
     public void setConversationIDMember(MemberSite conversationIDMember) {
         this.conversationIDMember = conversationIDMember;
+    }
+
+    public MemberSite getComponentContextMember() {
+        return componentContextMember;
+    }
+
+    public void setComponentContextMember(MemberSite componentContextMember) {
+        this.componentContextMember = componentContextMember;
+    }
+
+    public MemberSite getRequestContextMember() {
+        return requestContextMember;
+    }
+
+    public void setRequestContextMember(MemberSite requestContextMember) {
+        this.requestContextMember = requestContextMember;
     }
 }
