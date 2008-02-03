@@ -141,10 +141,15 @@ public final class JDKInvocationHandler<B> implements InvocationHandler, Service
             Message resp;
             try {
                 resp = headInterceptor.invoke(msg);
-            } catch (Exception e) {
-                // wrap exceptions raised by the runtime
+            } catch (ServiceUnavailableException e) {
+                // simply rethrow ServiceUnavailableExceptions
+                throw e;
+            } catch (RuntimeException e) {
+                // wrap other exceptions raised by the runtime
                 throw new ServiceUnavailableException(e);
             }
+
+            // handle response from the application, returning or throwing is as appropriate
             Object body = resp.getBody();
             if (resp.isFault()) {
                 throw (Throwable) body;
