@@ -21,12 +21,16 @@ import javax.security.auth.Subject;
 import org.osoa.sca.RequestContext;
 import org.osoa.sca.CallableReference;
 
+import org.fabric3.pojo.PojoWorkContextTunnel;
+import org.fabric3.spi.component.WorkContext;
+
 /**
  * @version $Rev$ $Date$
  */
 public class PojoRequestContext implements RequestContext {
     public Subject getSecuritySubject() {
-        return null;
+        WorkContext workContext = PojoWorkContextTunnel.getThreadWorkContext();
+        return workContext.getSubject();
     }
 
     public String getServiceName() {
