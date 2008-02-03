@@ -38,6 +38,7 @@ public class ContextTest extends TestCase {
 
     public void testRequestContext() {
         assertNotNull(requestContext);
+        assertSame(requestContext, componentContext.getRequestContext());
     }
 
     public void testComponentContext() {
