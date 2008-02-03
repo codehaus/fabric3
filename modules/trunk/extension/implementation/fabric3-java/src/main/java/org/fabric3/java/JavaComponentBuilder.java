@@ -27,6 +27,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.pojo.implementation.PojoComponentBuilder;
 import org.fabric3.pojo.implementation.PojoComponentContext;
+import org.fabric3.pojo.implementation.PojoRequestContext;
 import org.fabric3.pojo.injection.MultiplicityObjectFactory;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
@@ -94,6 +95,9 @@ public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaCompone
 
         JavaComponent<T> component = new JavaComponent<T>(componentId, provider, scopeContainer, groupId, initLevel, -1, -1, proxyService,
                                                           propertyFactories, referenceFactories);
+
+        PojoRequestContext requestContext = new PojoRequestContext();
+        provider.setObjectFactory(REQUEST_CONTEXT_SOURCE, new SingletonObjectFactory<PojoRequestContext>(requestContext));
 
         PojoComponentContext componentContext = new PojoComponentContext(component);
         provider.setObjectFactory(COMPONENT_CONTEXT_SOURCE, new SingletonObjectFactory<PojoComponentContext>(componentContext));
