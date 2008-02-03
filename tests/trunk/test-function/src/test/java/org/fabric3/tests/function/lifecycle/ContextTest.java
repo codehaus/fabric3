@@ -27,21 +27,18 @@ import org.osoa.sca.annotations.Property;
  */
 public class ContextTest extends TestCase {
 
-/*
     @Context
     protected RequestContext requestContext;
-*/
 
     @Context
     protected ComponentContext componentContext;
 
     @Property
     protected String uri;
-/*
+
     public void testRequestContext() {
         assertNotNull(requestContext);
     }
-*/
 
     public void testComponentContext() {
         assertNotNull(componentContext);
