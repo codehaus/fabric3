@@ -36,6 +36,7 @@ import org.fabric3.spi.deployer.CompositeClassLoader;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.spi.wire.MessageImpl;
+import org.fabric3.spi.wire.InvocationRuntimeException;
 
 /**
  * @version $Revision$ $Date$
@@ -110,11 +111,7 @@ public class Axis2TargetInterceptor implements Interceptor {
             return ret;
             
         } catch (AxisFault e) {
-            
-            Message ret = new MessageImpl();
-            ret.setBodyWithFault(e.getCause());
-            return ret;
-            
+            throw new InvocationRuntimeException(e);
         } finally {
             currentThread.setContextClassLoader(oldCl);
         }
