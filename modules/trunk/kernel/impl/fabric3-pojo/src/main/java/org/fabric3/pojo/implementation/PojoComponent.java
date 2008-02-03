@@ -35,7 +35,6 @@ import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.model.instance.ValueSource;
-import org.osoa.sca.ComponentContext;
 
 /**
  * Base class for Component implementations based on Java objects.
@@ -119,10 +118,6 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
 
     public <R> ObjectFactory<R> createObjectFactory(Class<R> type, String serviceName) throws ObjectCreationException {
         throw new UnsupportedOperationException();
-    }
-
-    public ComponentContext getComponentContext() {
-        return null;
     }
 
     public Map<String, PropertyValue> getDefaultPropertyValues() {

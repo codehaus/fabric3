@@ -118,7 +118,7 @@ public class WebappComponent<T> extends AbstractLifecycle implements AtomicCompo
     }
 
     public void bind(ServletContext servletContext) throws ObjectCreationException {
-        servletContext.setAttribute(Constants.CONTEXT_ATTRIBUTE, getComponentContext());
+        servletContext.setAttribute(Constants.CONTEXT_ATTRIBUTE, context);
         for (Map.Entry<String, ObjectFactory<?>> entry : propertyFactories.entrySet()) {
             servletContext.setAttribute(entry.getKey(), entry.getValue().getInstance());
         }
@@ -130,7 +130,7 @@ public class WebappComponent<T> extends AbstractLifecycle implements AtomicCompo
     }
 
     public void bind(Context ctx) throws NamingException, ObjectCreationException {
-        ctx.bind(Constants.CONTEXT_ATTRIBUTE, getComponentContext());
+        ctx.bind(Constants.CONTEXT_ATTRIBUTE, context);
         for (Map.Entry<String, ObjectFactory<?>> entry : propertyFactories.entrySet()) {
             ctx.bind(entry.getKey(), entry.getValue().getInstance());
         }
@@ -176,10 +176,6 @@ public class WebappComponent<T> extends AbstractLifecycle implements AtomicCompo
 
     public <R> ObjectFactory<R> createObjectFactory(Class<R> type, String serviceName) throws ObjectCreationException {
         throw new UnsupportedOperationException();
-    }
-
-    public ComponentContext getComponentContext() {
-        return context;
     }
 
     public <B> B getProperty(Class<B> type, String propertyName) throws ObjectCreationException {

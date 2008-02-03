@@ -26,11 +26,13 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.pojo.implementation.PojoComponentBuilder;
+import org.fabric3.pojo.implementation.PojoComponentContext;
 import org.fabric3.pojo.injection.MultiplicityObjectFactory;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.SingletonObjectFactory;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.component.InstanceFactoryProvider;
@@ -42,15 +44,13 @@ import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.spi.wire.ProxyService;
 
 /**
- * The component builder for Java implementation types. Responsible for creating the Component runtime artifact from a
- * physical component definition
+ * The component builder for Java implementation types. Responsible for creating the Component runtime artifact from a physical component definition
  *
  * @version $Rev$ $Date$
  * @param <T> the implementation class for the defined component
  */
 @EagerInit
 public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaComponentDefinition, JavaComponent<T>> {
-
     private ProxyService proxyService;
 
     public JavaComponentBuilder(@Reference ComponentBuilderRegistry builderRegistry,
@@ -90,11 +90,15 @@ public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaCompone
         InstanceFactoryProvider<T> provider = providerBuilders.build(providerDefinition, classLoader);
 
         Map<String, ObjectFactory<?>> propertyFactories = createPropertyFactories(definition, provider);
-        Map<String, MultiplicityObjectFactory<?>> referenceFactories =
-                createMultiplicityReferenceFactories(providerDefinition);
+        Map<String, MultiplicityObjectFactory<?>> referenceFactories = createMultiplicityReferenceFactories(providerDefinition);
 
-        return new JavaComponent<T>(componentId, provider, scopeContainer, groupId, initLevel, -1, -1, proxyService,
-                                    propertyFactories, referenceFactories);
+        JavaComponent<T> component = new JavaComponent<T>(componentId, provider, scopeContainer, groupId, initLevel, -1, -1, proxyService,
+                                                          propertyFactories, referenceFactories);
+
+        PojoComponentContext componentContext = new PojoComponentContext(component);
+        provider.setObjectFactory(COMPONENT_CONTEXT_SOURCE, new SingletonObjectFactory<PojoComponentContext>(componentContext));
+
+        return component;
 
     }
 }

@@ -21,8 +21,6 @@ package org.fabric3.spi.component;
 import java.net.URI;
 import java.util.Map;
 
-import org.osoa.sca.ComponentContext;
-
 import org.fabric3.spi.Lifecycle;
 import org.fabric3.scdl.PropertyValue;
 
@@ -39,13 +37,6 @@ public interface Component extends Lifecycle {
      * @return the component URI
      */
     URI getUri();
-
-    /**
-     * Returns the SCA ComponentContext for this component.
-     *
-     * @return the SCA ComponentContext for this component
-     */
-    ComponentContext getComponentContext();
 
     /**
      * Returns the default property values associated with the component.

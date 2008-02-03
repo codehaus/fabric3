@@ -61,6 +61,9 @@ import org.fabric3.spi.transform.TransformContext;
 public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinition, C extends Component>
         implements ComponentBuilder<PCD, C> {
 
+    public static final ValueSource COMPONENT_CONTEXT_SOURCE = new ValueSource(ValueSource.ValueSourceType.REFERENCE, "COMPONENT_CONTEXT");
+    public static final ValueSource REQUEST_CONTEXT_SOURCE = new ValueSource(ValueSource.ValueSourceType.REFERENCE, "REQUEST_CONTEXT");
+
     protected final ComponentBuilderRegistry builderRegistry;
     protected final ScopeRegistry scopeRegistry;
     protected final InstanceFactoryBuilderRegistry providerBuilders;

@@ -70,6 +70,7 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
         processPropertySites(component, providerDefinition);
         processReferenceSites(component, providerDefinition);
         processResourceSites(component, providerDefinition);
+        processContextSites(component, providerDefinition);
     }
 
     public void processConstructorSites(PojoComponentType type,
@@ -145,20 +146,26 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
         for (JavaMappedProperty<?> property : type.getProperties().values()) {
             String name = property.getName();
             MemberSite memberSite = property.getMemberSite();
-            if (memberSite == null) {
-                continue;
-            }
             Document value = component.getPropertyValue(name);
-            if (value == null) {
-                continue;
+            // add mapping for property only if it is mapped and has an explicit value defined
+            if (memberSite != null && value != null) {
+                addMapping(providerDefinition, new ValueSource(PROPERTY, name), memberSite);
             }
+        }
+    }
 
-            ValueSource source = new ValueSource(PROPERTY, name);
+    public void processContextSites(LogicalComponent<? extends Implementation<PojoComponentType>> component,
+                                     InstanceFactoryDefinition providerDefinition) {
 
-            InjectionSiteMapping mapping = new InjectionSiteMapping();
-            mapping.setSource(source);
-            mapping.setSite(memberSite);
-            providerDefinition.addInjectionSite(mapping);
+        Implementation<PojoComponentType> implementation = component.getDefinition().getImplementation();
+        PojoComponentType type = implementation.getComponentType();
+        MemberSite componentContextSite = type.getComponentContextMember();
+        if (componentContextSite != null) {
+            addMapping(providerDefinition, new ValueSource(REFERENCE, "COMPONENT_CONTEXT"), componentContextSite);
+        }
+        MemberSite requestContextSite = type.getRequestContextMember();
+        if (requestContextSite != null) {
+            addMapping(providerDefinition, new ValueSource(REFERENCE, "REQUEST_CONTEXT"), requestContextSite);
         }
     }
 
@@ -185,21 +192,18 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
         PojoComponentType type = implementation.getComponentType();
 
         for (Map.Entry<String, JavaMappedResource> entry : type.getResources().entrySet()) {
-
             JavaMappedResource resource = entry.getValue();
-            MemberSite memberSite = resource.getMemberSite();
-
             LogicalResource<?> logicalResource = component.getResource(resource.getName());
             if (logicalResource != null) {
-                ValueSource source = new ValueSource(REFERENCE, entry.getKey());
-
-                InjectionSiteMapping mapping = new InjectionSiteMapping();
-                mapping.setSource(source);
-                mapping.setSite(memberSite);
-
-                providerDefinition.addInjectionSite(mapping);
+                addMapping(providerDefinition, new ValueSource(REFERENCE, entry.getKey()), resource.getMemberSite());
             }
         }
     }
 
+    private void addMapping(InstanceFactoryDefinition providerDefinition, ValueSource source, MemberSite memberSite) {
+        InjectionSiteMapping mapping = new InjectionSiteMapping();
+        mapping.setSource(source);
+        mapping.setSite(memberSite);
+        providerDefinition.addInjectionSite(mapping);
+    }
 }
