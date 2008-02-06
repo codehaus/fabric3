@@ -26,9 +26,13 @@ import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Element;
 
 import org.fabric3.spi.Constants;
+import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
+import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
+import org.fabric3.spi.generator.GenerationException;
+import org.fabric3.scdl.Operation;
 
 /**
  * Interceptor definition generator for suspend transaction policy extensions.
@@ -52,11 +56,12 @@ public class TxInterceptorDefinitionGenerator implements InterceptorDefinitionGe
         generatorRegistry.register(EXTENSION_NAME, this);
     }
 
-    public TxInterceptorDefinition generate(Element policySetDefinition, GeneratorContext context) {
-
-        String action = policySetDefinition.getAttribute("action");
+    public PhysicalInterceptorDefinition generate(Element policyDefinition,
+                                                  GeneratorContext generatorContext,
+                                                  Operation<?> operation,
+                                                  LogicalBinding<?> logicalBinding) throws GenerationException {
+        String action = policyDefinition.getAttribute("action");
 
         return new TxInterceptorDefinition(TxAction.valueOf(action));
     }
-
 }
