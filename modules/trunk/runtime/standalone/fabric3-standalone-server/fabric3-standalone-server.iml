@@ -40,6 +40,8 @@
     </orderEntry>
     <orderEntry type="module" module-name="fabric3-standalone-api" exported="" />
     <orderEntry type="module" module-name="fabric3-api" exported="" />
+    <orderEntry type="module" module-name="fabric3-host-api" exported="" />
+    <orderEntry type="module" module-name="fabric3-monitor" exported="" />
     <orderEntry type="module-library" exported="">
       <library name="stax:stax-api:1.0">
         <CLASSES>

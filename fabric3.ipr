@@ -365,7 +365,6 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/support/fabric3-monitor/fabric3-monitor.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/support/fabric3-monitor/fabric3-monitor.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-pojo/fabric3-pojo.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-pojo/fabric3-pojo.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-policy/fabric3-policy.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-policy/fabric3-policy.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-policy-spi/fabric3-policy-spi.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-policy-spi/fabric3-policy-spi.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-resource/fabric3-resource.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-resource/fabric3-resource.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-scdl/fabric3-scdl.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-scdl/fabric3-scdl.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-spi/fabric3-spi.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-spi/fabric3-spi.iml" />
@@ -388,6 +387,7 @@
       <module fileurl="file://$PROJECT_DIR$/spec/trunk/sca-spec.iml" filepath="$PROJECT_DIR$/spec/trunk/sca-spec.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-async/test-async.iml" filepath="$PROJECT_DIR$/tests/trunk/test-async/test-async.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-axis2/test-binding-axis2.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-axis2/test-binding-axis2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-axis2-jaxb/test-binding-axis2-jaxb.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-axis2-jaxb/test-binding-axis2-jaxb.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-burlap/test-binding-burlap.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-burlap/test-binding-burlap.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-cxf/test-binding-cxf.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-cxf/test-binding-cxf.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-hessian/test-binding-hessian.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-hessian/test-binding-hessian.iml" />
@@ -397,6 +397,7 @@
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-interop-cxf-axis2/test-interop-cxf-axis2.iml" filepath="$PROJECT_DIR$/tests/trunk/test-interop-cxf-axis2/test-interop-cxf-axis2.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-jpa-hibernate/test-jpa-hibernate.iml" filepath="$PROJECT_DIR$/tests/trunk/test-jpa-hibernate/test-jpa-hibernate.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-mock/test-mock.iml" filepath="$PROJECT_DIR$/tests/trunk/test-mock/test-mock.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-ordering/test-ordering.iml" filepath="$PROJECT_DIR$/tests/trunk/test-ordering/test-ordering.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-policy/test-policy.iml" filepath="$PROJECT_DIR$/tests/trunk/test-policy/test-policy.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-runtime-development/test-runtime-development.iml" filepath="$PROJECT_DIR$/tests/trunk/test-runtime-development/test-runtime-development.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-runtime-jetty/test-runtime-jetty.iml" filepath="$PROJECT_DIR$/tests/trunk/test-runtime-jetty/test-runtime-jetty.iml" />
