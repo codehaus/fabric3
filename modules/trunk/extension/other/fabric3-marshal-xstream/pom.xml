@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-marshal-xstream</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.5-SNAPSHOT</version>
     <name>Fabric3 XStream Marshalling Implementation</name>
     <description>Fabric3 XStream Marshalling Implementation.</description>
     <packaging>sca-contribution-jar</packaging>
@@ -34,7 +34,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
-            <version>0.4</version>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

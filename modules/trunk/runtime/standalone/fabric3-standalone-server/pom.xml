@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3.standalone</groupId>
     <artifactId>fabric3-standalone-server</artifactId>
-    <version>0.4-SNAPSHOT</version>
+    <version>0.5-SNAPSHOT</version>
     <name>Fabric3 Standalone Runtime Server</name>
     <description>Fabric3 Standalone Runtime Server Start Command.</description>
 
@@ -33,13 +33,13 @@
         <dependency>
             <groupId>org.codehaus.fabric3.standalone</groupId>
             <artifactId>fabric3-standalone-api</artifactId>
-            <version>0.4-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
              <groupId>org.codehaus.fabric3</groupId>
              <artifactId>fabric3-api</artifactId>
-             <version>0.3</version>
+             <version>${project.version}</version>
          </dependency>
 
         <dependency>

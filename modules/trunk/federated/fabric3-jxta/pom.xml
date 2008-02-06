@@ -27,7 +27,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-jxta</artifactId>
-    <version>0.3-SNAPSHOT</version>
+    <version>0.5-SNAPSHOT</version>
     <name>Fabric3 JXTA Service</name>
     <description>Fabric3 JXTA ServiceA.</description>
     <packaging>sca-contribution-jar</packaging>
@@ -44,7 +44,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
-            <version>0.4</version>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -58,7 +58,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-install-jxta</artifactId>
-            <version>0.1</version>
+            <version>${project.version}</version>
             <type>pom</type>
             <scope>provided</scope>
         </dependency>

@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-async-runtime</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.5-SNAPSHOT</version>
     <name>Fabric3 Asynchronous Implementation</name>
     <description>Fabric3 Asynchronous Implementation.</description>
     <packaging>sca-contribution-jar</packaging>
@@ -33,14 +33,14 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
-            <version>0.4</version>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-extension</artifactId>
-            <version>0.4</version>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -49,7 +49,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-async-loader</artifactId>
-            <version>0.1</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>

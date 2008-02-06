@@ -27,7 +27,7 @@
 
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-mock</artifactId>
-    <version>0.3-SNAPSHOT</version>
+    <version>0.5-SNAPSHOT</version>
     <packaging>sca-contribution-jar</packaging>
     <name>Fabric3 Mock Extension</name>
     <description>Fabric3 extension for mocking references.</description>
@@ -37,7 +37,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-pojo</artifactId>
-            <version>0.4</version>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
         

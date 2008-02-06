@@ -30,7 +30,7 @@ import org.fabric3.spi.idl.java.JavaServiceContract;
  *
  * @version $Revision$ $Date$
  */
-public final class PersistenceUnitResource extends JavaMappedResource<EntityManagerFactory> {
+public final class PersistenceUnitResource extends JavaMappedResource {
     
     private final String unitName;
 
@@ -42,7 +42,7 @@ public final class PersistenceUnitResource extends JavaMappedResource<EntityMana
      * @param member Member against which the annotation is declared.
      */
     public PersistenceUnitResource(String name, String unitName, Member member, JavaServiceContract serviceContract) {
-        super(name, EntityManagerFactory.class, member, true, serviceContract);
+        super(name, member, true, serviceContract);
         this.unitName = unitName;
     }
     
