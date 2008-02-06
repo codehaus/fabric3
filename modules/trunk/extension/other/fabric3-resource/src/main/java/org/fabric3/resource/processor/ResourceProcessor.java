@@ -18,23 +18,23 @@
  */
 package org.fabric3.resource.processor;
 
-import static org.fabric3.pojo.processor.JavaIntrospectionHelper.toPropertyName;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 
-import org.fabric3.pojo.processor.ImplementationProcessorExtension;
-import org.fabric3.pojo.processor.ProcessingException;
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.pojo.processor.DuplicateResourceException;
-import org.fabric3.pojo.scdl.JavaMappedResource;
+import org.fabric3.pojo.processor.ImplementationProcessorExtension;
+import static org.fabric3.pojo.processor.JavaIntrospectionHelper.toPropertyName;
+import org.fabric3.pojo.processor.ProcessingException;
+import org.fabric3.pojo.scdl.MemberSite;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.resource.model.SystemSourcedResource;
 import org.fabric3.spi.idl.InvalidServiceContractException;
 import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
 import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.spi.loader.LoaderContext;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Processes an {@link @Resource} annotation, updating the component type with corresponding {@link
@@ -72,7 +72,7 @@ public class ResourceProcessor extends ImplementationProcessorExtension {
             throw new DuplicateResourceException(name);
         }
 
-        SystemSourcedResource<?> resource = createResource(name, resourceType, method, annotation.optional(), annotation.mappedName());
+        SystemSourcedResource resource = createResource(name, resourceType, method, annotation.optional(), annotation.mappedName());
 
         type.add(resource);
         
@@ -94,17 +94,17 @@ public class ResourceProcessor extends ImplementationProcessorExtension {
 
         Class<?> fieldType = field.getType();
 
-        JavaMappedResource<?> resource = createResource(name, fieldType, field, annotation.optional(), annotation.mappedName());
+        SystemSourcedResource resource = createResource(name, fieldType, field, annotation.optional(), annotation.mappedName());
 
         type.add(resource);
         
     }
 
-    private <T> SystemSourcedResource<T> createResource(String name, Class<T> type, Member member, boolean optional, String mappedName) {
+    private SystemSourcedResource createResource(String name, Class<?> type, Member member, boolean optional, String mappedName) {
         
         try {
             JavaServiceContract serviceContract = interfaceProcessorRegistry.introspect(type);
-            return new SystemSourcedResource<T>(name, type, member, optional, mappedName, serviceContract);
+            return new SystemSourcedResource(name, new MemberSite(member), optional, mappedName, serviceContract);
         }  catch (InvalidServiceContractException e) {
             throw new AssertionError(e);
         }

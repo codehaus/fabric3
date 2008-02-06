@@ -63,7 +63,7 @@ public class SystemSourcedResourceWireGenerator implements ResourceWireGenerator
                                                                           GeneratorContext context)
             throws GenerationException {
 
-        SystemSourcedResource<?> resourceDefinition = logicalResource.getResourceDefinition();
+        SystemSourcedResource resourceDefinition = logicalResource.getResourceDefinition();
         String mappedName = resourceDefinition.getMappedName();
 
         if (mappedName == null) {
