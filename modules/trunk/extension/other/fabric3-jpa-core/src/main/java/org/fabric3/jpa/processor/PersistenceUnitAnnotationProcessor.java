@@ -22,23 +22,23 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
-
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
+
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.jpa.PersistenceUnitResource;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.processor.ProcessingException;
+import org.fabric3.pojo.scdl.MemberSite;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.spi.idl.InvalidServiceContractException;
 import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
 import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.spi.loader.LoaderContext;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Implementation processor for persistence unit annotations.
@@ -99,7 +99,7 @@ public class PersistenceUnitAnnotationProcessor extends ImplementationProcessorE
     /*
      * Processes the annotation.
      */
-    private void processAnnotation(PojoComponentType type, AccessibleObject accessibleObject, PersistenceUnit annotation) {
+    private void processAnnotation(PojoComponentType type, Member member, PersistenceUnit annotation) {
 
         String name = annotation.name();
         String unitName = annotation.unitName();
@@ -111,7 +111,7 @@ public class PersistenceUnitAnnotationProcessor extends ImplementationProcessorE
             throw new AssertionError(e);
         }
         
-        type.add(new PersistenceUnitResource(name, unitName, (Member) accessibleObject, serviceContract));
+        type.add(new PersistenceUnitResource(name, unitName, new MemberSite(member), serviceContract));
         
     }
 

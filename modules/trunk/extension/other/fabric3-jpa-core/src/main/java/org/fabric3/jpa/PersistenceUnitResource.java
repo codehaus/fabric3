@@ -18,11 +18,8 @@
  */
 package org.fabric3.jpa;
 
-import java.lang.reflect.Member;
-
-import javax.persistence.EntityManagerFactory;
-
 import org.fabric3.pojo.scdl.JavaMappedResource;
+import org.fabric3.pojo.scdl.MemberSite;
 import org.fabric3.spi.idl.java.JavaServiceContract;
 
 /**
@@ -39,10 +36,11 @@ public final class PersistenceUnitResource extends JavaMappedResource {
      * 
      * @param name Name of the resource.
      * @param unitName Persistence unit name.
-     * @param member Member against which the annotation is declared.
+     * @param memberSite Member against which the annotation is declared.
+     * @param serviceContract the service contract for the persistence unit
      */
-    public PersistenceUnitResource(String name, String unitName, Member member, JavaServiceContract serviceContract) {
-        super(name, member, true, serviceContract);
+    public PersistenceUnitResource(String name, String unitName, MemberSite memberSite, JavaServiceContract serviceContract) {
+        super(name, memberSite, true, serviceContract);
         this.unitName = unitName;
     }
     

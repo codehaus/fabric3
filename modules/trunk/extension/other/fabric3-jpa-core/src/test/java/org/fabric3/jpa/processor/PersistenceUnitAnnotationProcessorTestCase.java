@@ -72,7 +72,7 @@ public class PersistenceUnitAnnotationProcessorTestCase extends TestCase {
         Field field = Foo.class.getDeclaredField("emf1");
         processor.visitField(field, type, null);
         
-        JavaMappedResource<?> jmr = type.getResources().get("someName");
+        JavaMappedResource jmr = type.getResources().get("someName");
         assertNotNull(jmr);
         PersistenceUnitResource resource = PersistenceUnitResource.class.cast(jmr);
         assertEquals("someName", resource.getName());
@@ -98,7 +98,7 @@ public class PersistenceUnitAnnotationProcessorTestCase extends TestCase {
         Method method = Foo.class.getDeclaredMethod("setEmf3", EntityManagerFactory.class);
         processor.visitMethod(method, type, null);
         
-        JavaMappedResource<?> jmr = type.getResources().get("someName");
+        JavaMappedResource jmr = type.getResources().get("someName");
         assertNotNull(jmr);
         PersistenceUnitResource resource = PersistenceUnitResource.class.cast(jmr);
         assertEquals("someName", resource.getName());
