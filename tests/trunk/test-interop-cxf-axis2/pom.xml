@@ -67,12 +67,12 @@
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-binding-ws-cxf</artifactId>
-                            <version>0.3-SNAPSHOT</version>
+                            <version>0.5-SNAPSHOT</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-binding-ws-axis2</artifactId>
-                            <version>0.3-SNAPSHOT</version>
+                            <version>0.5-SNAPSHOT</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>

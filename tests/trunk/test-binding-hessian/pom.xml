@@ -49,7 +49,7 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-itest-plugin</artifactId>
-                <version>0.4</version>
+                <version>0.5-SNAPSHOT</version>
                 <configuration>
                     <runtimeVersion>0.5-SNAPSHOT</runtimeVersion>
                     <extensions>
