@@ -39,8 +39,8 @@ import org.apache.woden.wsdl20.enumeration.Direction;
 import org.apache.ws.commons.schema.XmlSchemaCollection;
 import org.apache.ws.commons.schema.XmlSchemaType;
 import org.fabric3.idl.wsdl.version.WsdlVersionChecker.WsdlVersion;
-import org.fabric3.spi.model.type.DataType;
-import org.fabric3.spi.model.type.Operation;
+import org.fabric3.scdl.DataType;
+import org.fabric3.scdl.Operation;
 import org.w3c.dom.Document;
 
 /**

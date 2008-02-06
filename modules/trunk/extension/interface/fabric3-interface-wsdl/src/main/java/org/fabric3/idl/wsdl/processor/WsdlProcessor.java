@@ -25,7 +25,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.apache.ws.commons.schema.XmlSchemaType;
-import org.fabric3.spi.model.type.Operation;
+import org.fabric3.scdl.Operation;
 
 /**
  * Abstraction for processing WSDL.

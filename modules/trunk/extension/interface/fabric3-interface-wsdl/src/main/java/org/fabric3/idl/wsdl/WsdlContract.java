@@ -21,7 +21,7 @@ package org.fabric3.idl.wsdl;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.spi.model.type.ServiceContract;
+import org.fabric3.scdl.ServiceContract;
 
 /**
  * WSDL Service contract.
@@ -68,4 +68,11 @@ public class WsdlContract extends ServiceContract {
         this.callbackQname = callbackQname;
     }
 
+    public boolean isAssignableFrom(ServiceContract serviceContract) {
+        throw new UnsupportedOperationException();
+    }
+
+    public String getQualifiedInterfaceName() {
+        return qname.toString();
+    }
 }
