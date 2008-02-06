@@ -80,6 +80,8 @@ public class ConsoleServlet extends Fabric3Servlet {
                 return;
             }
         }
+        // FIXME commenting out to make compile with 0.5 code
+/*
         LogicalComponent<CompositeImplementation> domain = assembly.getDomain();
         Set<RuntimeInfo> runtimes = discoveryService.getParticipatingRuntimes();
         PrintWriter writer = res.getWriter();
@@ -93,7 +95,7 @@ public class ConsoleServlet extends Fabric3Servlet {
                     "<table><th width=\"120\"/><th align=\"left\" width=\"120\">ID</th><th align=\"left\" width=\"120\">Status</th><th align=\"left\" width=\"120\">Features</th>");
             for (RuntimeInfo runtimeInfo : runtimes) {
                 writer.write("<tr><td><img src=\"\\console\\runtimes.gif\"></img></td><td>");
-                writer.write(runtimeInfo.getId());
+                writer.write(runtimeInfo.getId().toString());
                 writer.write("</td><td>Running</td><td>");
                 for (QName feature : runtimeInfo.getFeatures()) {
                     writer.write(feature.getLocalPart() + " - " + feature.getNamespaceURI());
@@ -118,6 +120,7 @@ public class ConsoleServlet extends Fabric3Servlet {
             }
         }
         writer.write("</table></body></html>");
+*/
     }
 
     public int copy(InputStream input, OutputStream output) throws IOException {

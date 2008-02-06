@@ -116,9 +116,45 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="fabric3-standalone-api" exported="" />
-    <orderEntry type="module" module-name="fabric3-standalone-host" exported="" />
-    <orderEntry type="module" module-name="fabric3-standalone-server" exported="" />
+    <orderEntry type="module-library" exported="">
+      <library name="org.codehaus.fabric3.standalone:fabric3-standalone-api:0.4-SNAPSHOT">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/standalone/fabric3-standalone-api/0.4-SNAPSHOT/fabric3-standalone-api-0.4-SNAPSHOT.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/standalone/fabric3-standalone-api/0.4-SNAPSHOT/fabric3-standalone-api-0.4-SNAPSHOT-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/standalone/fabric3-standalone-api/0.4-SNAPSHOT/fabric3-standalone-api-0.4-SNAPSHOT-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.codehaus.fabric3.standalone:fabric3-standalone-host:0.4-SNAPSHOT">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/standalone/fabric3-standalone-host/0.4-SNAPSHOT/fabric3-standalone-host-0.4-SNAPSHOT.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/standalone/fabric3-standalone-host/0.4-SNAPSHOT/fabric3-standalone-host-0.4-SNAPSHOT-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/standalone/fabric3-standalone-host/0.4-SNAPSHOT/fabric3-standalone-host-0.4-SNAPSHOT-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.codehaus.fabric3.standalone:fabric3-standalone-server:0.4-SNAPSHOT">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/standalone/fabric3-standalone-server/0.4-SNAPSHOT/fabric3-standalone-server-0.4-SNAPSHOT.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/standalone/fabric3-standalone-server/0.4-SNAPSHOT/fabric3-standalone-server-0.4-SNAPSHOT-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/standalone/fabric3-standalone-server/0.4-SNAPSHOT/fabric3-standalone-server-0.4-SNAPSHOT-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
     <orderEntry type="module-library" exported="">
       <library name="org.codehaus.fabric3.standalone:fabric3-standalone-shutdown:0.2">
         <CLASSES>
@@ -184,8 +220,32 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="fabric3-contribution-scanner-spi" exported="" />
-    <orderEntry type="module" module-name="fabric3-contribution-scanner" exported="" />
+    <orderEntry type="module-library" exported="">
+      <library name="org.codehaus.fabric3:fabric3-contribution-scanner-spi:0.4-SNAPSHOT">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-contribution-scanner-spi/0.4-SNAPSHOT/fabric3-contribution-scanner-spi-0.4-SNAPSHOT.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-contribution-scanner-spi/0.4-SNAPSHOT/fabric3-contribution-scanner-spi-0.4-SNAPSHOT-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-contribution-scanner-spi/0.4-SNAPSHOT/fabric3-contribution-scanner-spi-0.4-SNAPSHOT-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.codehaus.fabric3:fabric3-contribution-scanner:0.4-SNAPSHOT">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-contribution-scanner/0.4-SNAPSHOT/fabric3-contribution-scanner-0.4-SNAPSHOT.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-contribution-scanner/0.4-SNAPSHOT/fabric3-contribution-scanner-0.4-SNAPSHOT-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-contribution-scanner/0.4-SNAPSHOT/fabric3-contribution-scanner-0.4-SNAPSHOT-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
     <orderEntry type="module-library" exported="">
       <library name="org.codehaus.fabric3:fabric3-extension:0.4-SNAPSHOT">
         <CLASSES>

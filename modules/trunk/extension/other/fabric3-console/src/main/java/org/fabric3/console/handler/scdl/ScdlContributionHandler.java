@@ -3,6 +3,7 @@ package org.fabric3.console.handler.scdl;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.URI;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -67,7 +68,7 @@ public class ScdlContributionHandler extends Fabric3Servlet {
             ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
             XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(in);
 
-            messagingService.sendMessage("slave1", reader);
+            messagingService.sendMessage(URI.create("slave1"), reader);
             
             System.err.println("Message sent");
             
