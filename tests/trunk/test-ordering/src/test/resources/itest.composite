@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           name="orderingTest">
+    
+    <component name="OrderedInjectionTest">
+        <f3:junit class="ordering.OrderingITest"/>
+        <reference name="displayService" target="OrderedDisplayService"/>
+    </component>
+
+    <component name="OrderedDisplayService">
+        <implementation.composite name="OrderedDisplayService" scdlResource="ordering.composite"/>
+    </component>
+   
+    
+</composite>
