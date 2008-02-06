@@ -41,14 +41,14 @@ public class PhysicalChangeSet extends ModelObject {
     private HashSet<PhysicalComponentDefinition> componentDefinitions;
 
     // Set of wire definitions
-    private HashSet<PhysicalWireDefinition> wireDefinitions;
+    private ArrayList<PhysicalWireDefinition> wireDefinitions;
 
     private Map<Class<? extends PhysicalResourceContainerDefinition>,
             Map<URI, ? extends PhysicalResourceContainerDefinition>> resourceDefinitions;
 
     public PhysicalChangeSet() {
         componentDefinitions = new HashSet<PhysicalComponentDefinition>();
-        wireDefinitions = new HashSet<PhysicalWireDefinition>();
+        wireDefinitions = new ArrayList<PhysicalWireDefinition>();
         resourceDefinitions = new HashMap<Class<? extends PhysicalResourceContainerDefinition>,
                 Map<URI, ? extends PhysicalResourceContainerDefinition>>();
     }
@@ -67,7 +67,7 @@ public class PhysicalChangeSet extends ModelObject {
      *
      * @return Wire definitions in the changeset.
      */
-    public Set<PhysicalWireDefinition> getWireDefinitions() {
+    public List<PhysicalWireDefinition> getWireDefinitions() {
         return wireDefinitions;
     }
 
