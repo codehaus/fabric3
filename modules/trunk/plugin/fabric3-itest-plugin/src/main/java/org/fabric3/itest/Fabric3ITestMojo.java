@@ -124,7 +124,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
      *
      * @parameter expression="${project.artifacts}
      */
-    public Set<Artifact> artifacts;
+    //public Set<Artifact> artifacts;
 
     /**
      * test composite .
@@ -294,7 +294,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
      */
     protected File outputDirectory;
 
-    @SuppressWarnings({"ThrowFromFinallyBlock"})
+    @SuppressWarnings({"ThrowFromFinallyBlock", "unchecked"})
     public void execute() throws MojoExecutionException, MojoFailureException {
         Log log = getLog();
         if (!testScdl.exists()) {
@@ -316,7 +316,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
 
         Set<Artifact> runtimeArtifacts = calculateRuntimeArtifacts(runtimeVersion);
         Set<Artifact> hostArtifacts = calculateHostArtifacts(runtimeArtifacts);
-        Set<URL> moduleDependencies = calculateModuleDependencies(artifacts, hostArtifacts);
+        Set<URL> moduleDependencies = calculateModuleDependencies(project.getDependencyArtifacts(), hostArtifacts);
         ClassLoader parentClassLoader = getClass().getClassLoader();
         ClassLoader hostClassLoader = createHostClassLoader(parentClassLoader, hostArtifacts);
         ClassLoader bootClassLoader = createBootClassLoader(hostClassLoader, runtimeArtifacts);
