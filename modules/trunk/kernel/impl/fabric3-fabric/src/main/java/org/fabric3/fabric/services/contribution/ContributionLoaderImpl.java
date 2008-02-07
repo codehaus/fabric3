@@ -13,6 +13,7 @@ import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.Import;
+import org.fabric3.spi.services.contribution.MatchingExportNotFoundException;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 
 /**
@@ -35,7 +36,8 @@ public class ContributionLoaderImpl implements ContributionLoader {
         this.classpathProcessorRegistry = classpathProcessorRegistry;
     }
 
-    public ClassLoader loadContribution(Contribution contribution) throws ContributionLoadException {
+    public ClassLoader loadContribution(Contribution contribution)
+            throws ContributionLoadException, MatchingExportNotFoundException {
         ClassLoader cl = classLoaderRegistry.getClassLoader(HOST_CLASSLOADER);
         URI contributionUri = contribution.getUri();
         CompositeClassLoader loader = new CompositeClassLoader(contributionUri, cl);
@@ -54,8 +56,7 @@ public class ContributionLoaderImpl implements ContributionLoader {
         for (Import imprt : manifest.getImports()) {
             Contribution imported = store.resolve(imprt);
             if (imported == null) {
-                throw new AssertionError();
-                //throw new MatchingExportNotFoundException(imprt.toString());
+                throw new MatchingExportNotFoundException(imprt.toString());
             }
             // add the resolved URI to the contribution
             URI importedUri = imported.getUri();
@@ -64,7 +65,7 @@ public class ContributionLoaderImpl implements ContributionLoader {
             ClassLoader importedLoader = classLoaderRegistry.getClassLoader(importedUri);
             if (importedLoader == null) {
                 // TODO load in a transient classloader
-                throw new AssertionError();
+                throw new ContributionLoadException("imported classloader could not be found", importedUri.toString());
             }
             loader.addParent(importedLoader);
         }
