@@ -10,7 +10,6 @@ public class ContractCompatibilityServiceImpl implements ContractCompatibilitySe
 
     public boolean checkCompatibility(ServiceContract<?> source,
                                       ServiceContract<?> target,
-                                      boolean ignoreCallback,
                                       boolean silent)
             throws IncompatibleServiceContractException {
         if (source == target) {
@@ -58,42 +57,7 @@ public class ContractCompatibilityServiceImpl implements ContractCompatibilitySe
             }
         }
 
-        if (ignoreCallback) {
-            return true;
-        }
-
-        for (Operation<?> operation : source.getCallbackOperations()) {
-            // FIXME support overloading
-            Operation<?> targetOperation = null;
-            for (Operation<?> o : target.getOperations()) {
-                if (o.getName().equals(operation.getName())) {
-                    targetOperation = o;
-                    break;
-                }
-            }
-            if (targetOperation == null) {
-                if (!silent) {
-                    throw new IncompatibleServiceContractException("Callback operation not found on target",
-                                                                   source,
-                                                                   target,
-                                                                   null,
-                                                                   targetOperation);
-                } else {
-                    return false;
-                }
-            }
-            if (!operation.equals(targetOperation)) {
-                if (!silent) {
-                    throw new IncompatibleServiceContractException("Target callback operation is not compatible",
-                                                                   source,
-                                                                   target,
-                                                                   operation,
-                                                                   targetOperation);
-                } else {
-                    return false;
-                }
-            }
-        }
+        // TODO JFM add callback check
         return true;
     }
 

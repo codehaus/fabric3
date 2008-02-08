@@ -135,7 +135,6 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         Set<PhysicalOperationDefinition> operationDefinitions = generateOperations(serviceContract, context, policyResult, sourceBinding);
 
         PhysicalWireDefinition wireDefinition = new PhysicalWireDefinition(sourceDefinition, targetDefinition, operationDefinitions);
-        setCallbackOperationDefinitions(serviceContract, wireDefinition);
         boolean optimizable = sourceDefinition.isOptimizable() &&
                 targetDefinition.isOptimizable() &&
                 checkOptimization(serviceContract, operationDefinitions);
@@ -189,8 +188,6 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
 
         Set<PhysicalOperationDefinition> operationDefinitions = generateOperations(contract, context, policyResult, binding);
         PhysicalWireDefinition wireDefinition = new PhysicalWireDefinition(sourceDefinition, targetDefinition, operationDefinitions);
-        setCallbackOperationDefinitions(contract, wireDefinition);
-
         context.getPhysicalChangeSet().addWireDefinition(wireDefinition);
 
     }
@@ -218,7 +215,6 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         Set<PhysicalOperationDefinition> operationDefinitions = generateOperations(contract, context, policyResult, binding);
 
         PhysicalWireDefinition wireDefinition = new PhysicalWireDefinition(sourceDefinition, targetDefinition, operationDefinitions);
-        setCallbackOperationDefinitions(contract, wireDefinition);
 
         context.getPhysicalChangeSet().addWireDefinition(wireDefinition);
 
@@ -244,17 +240,6 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         }
 
         return physicalOperations;
-
-    }
-
-    @SuppressWarnings({"unchecked"})
-    private void setCallbackOperationDefinitions(ServiceContract<?> contract, PhysicalWireDefinition wireDefinition) {
-
-        for (Operation o : contract.getCallbackOperations()) {
-            PhysicalOperationDefinition physicalOperation = physicalOperationHelper.mapOperation(o);
-            physicalOperation.setCallback(true);
-            wireDefinition.addOperation(physicalOperation);
-        }
 
     }
 

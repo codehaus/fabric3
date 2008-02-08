@@ -19,7 +19,6 @@
 package org.fabric3.fabric.wire;
 
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.fabric.wire.IncompatibleServiceContractException;
 
 /**
  * Temporary until this capability moves into the controller infrastructure
@@ -43,10 +42,9 @@ public interface ContractCompatibilityService {
      * <p>Please note this test is not symetric: the success of checkCompatibility(A, B) does NOT imply
      * checkCompatibility(B, A)
      *
-     * @param source         The source service contract
-     * @param target         The target service contract
-     * @param ignoreCallback Indicate the callback should be checked
-     * @param silent         if true, errors will be thrown if the service contracts are not compatible
+     * @param source The source service contract
+     * @param target The target service contract
+     * @param silent if true, errors will be thrown if the service contracts are not compatible
      * @return true if the service contracts are compatible
      * @throws IncompatibleServiceContractException
      *          If the source service contract is not compatible with the target one
@@ -55,7 +53,6 @@ public interface ContractCompatibilityService {
      */
     boolean checkCompatibility(ServiceContract<?> source,
                                ServiceContract<?> target,
-                               boolean ignoreCallback,
                                boolean silent) throws IncompatibleServiceContractException;
 
 

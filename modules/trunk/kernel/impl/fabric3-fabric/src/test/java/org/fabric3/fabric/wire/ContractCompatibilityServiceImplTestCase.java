@@ -19,7 +19,6 @@
 package org.fabric3.fabric.wire;
 
 import java.lang.reflect.Type;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,8 +26,8 @@ import junit.framework.TestCase;
 
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.Operation;
-import org.fabric3.scdl.ServiceContract;
 import static org.fabric3.scdl.Operation.NO_CONVERSATION;
+import org.fabric3.scdl.ServiceContract;
 
 /**
  * TODO some tests commented out due to DataType.equals() needing to be strict
@@ -42,7 +41,7 @@ public class ContractCompatibilityServiceImplTestCase extends TestCase {
     public void testNoOperation() throws Exception {
         ServiceContract source = new MockContract<Type>();
         ServiceContract target = new MockContract<Type>();
-        proxyService.checkCompatibility(source, target, false, false);
+        proxyService.checkCompatibility(source, target, false);
     }
 
     public void testBasic() throws Exception {
@@ -56,7 +55,7 @@ public class ContractCompatibilityServiceImplTestCase extends TestCase {
         List<Operation<Type>> targetOperations = new ArrayList<Operation<Type>>();
         targetOperations.add(opSource2);
         target.setOperations(targetOperations);
-        proxyService.checkCompatibility(source, target, false, false);
+        proxyService.checkCompatibility(source, target, false);
     }
 
     public void testBasicIncompatibleOperationNames() throws Exception {
@@ -71,7 +70,7 @@ public class ContractCompatibilityServiceImplTestCase extends TestCase {
         targetOperations.add(opSource2);
         target.setOperations(targetOperations);
         try {
-            proxyService.checkCompatibility(source, target, false, false);
+            proxyService.checkCompatibility(source, target, false);
             fail();
         } catch (IncompatibleServiceContractException e) {
             //expected
@@ -100,7 +99,7 @@ public class ContractCompatibilityServiceImplTestCase extends TestCase {
         List<Operation<Type>> targetOperations = new ArrayList<Operation<Type>>();
         targetOperations.add(opTarget);
         target.setOperations(targetOperations);
-        proxyService.checkCompatibility(source, target, false, false);
+        proxyService.checkCompatibility(source, target, false);
     }
 
 
@@ -127,7 +126,7 @@ public class ContractCompatibilityServiceImplTestCase extends TestCase {
         targetOperations.add(opTarget);
         target.setOperations(targetOperations);
         try {
-            proxyService.checkCompatibility(source, target, false, false);
+            proxyService.checkCompatibility(source, target, false);
             fail();
         } catch (IncompatibleServiceContractException e) {
             //expected
@@ -176,7 +175,7 @@ public class ContractCompatibilityServiceImplTestCase extends TestCase {
         List<Operation<Type>> targetOperations = new ArrayList<Operation<Type>>();
         targetOperations.add(opTarget);
         target.setOperations(targetOperations);
-        proxyService.checkCompatibility(source, target, false, false);
+        proxyService.checkCompatibility(source, target, false);
     }
 
     /**
@@ -216,7 +215,7 @@ public class ContractCompatibilityServiceImplTestCase extends TestCase {
         targetOperations.add(opTarget);
         target.setOperations(targetOperations);
         try {
-            proxyService.checkCompatibility(source, target, false, false);
+            proxyService.checkCompatibility(source, target, false);
             fail();
         } catch (IncompatibleServiceContractException e) {
             //expected
@@ -244,7 +243,7 @@ public class ContractCompatibilityServiceImplTestCase extends TestCase {
         List<Operation<Type>> targetOperations = new ArrayList<Operation<Type>>();
         targetOperations.add(opTarget);
         target.setOperations(targetOperations);
-        proxyService.checkCompatibility(source, target, false, false);
+        proxyService.checkCompatibility(source, target, false);
     }
 
     public void testSourceFaultTargetNoFaultCompatibility() throws Exception {
@@ -263,7 +262,7 @@ public class ContractCompatibilityServiceImplTestCase extends TestCase {
         List<Operation<Type>> targetOperations = new ArrayList<Operation<Type>>();
         targetOperations.add(opTarget);
         target.setOperations(targetOperations);
-        proxyService.checkCompatibility(source, target, false, false);
+        proxyService.checkCompatibility(source, target, false);
     }
 
     /**

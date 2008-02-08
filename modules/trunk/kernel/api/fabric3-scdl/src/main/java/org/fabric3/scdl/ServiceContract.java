@@ -32,7 +32,6 @@ public abstract class ServiceContract<T> extends ModelObject {
     protected String interfaceName;
     protected String callbackName;
     protected List<Operation<T>> operations;
-    protected List<Operation<T>> callbackOperations;
 
     protected ServiceContract() {
     }
@@ -131,27 +130,6 @@ public abstract class ServiceContract<T> extends ModelObject {
     }
 
     /**
-     * Returns the callback operations for the service contract.
-     *
-     * @return the callback operations for the service contract
-     */
-    public List<Operation<T>> getCallbackOperations() {
-        if (callbackOperations == null) {
-            return Collections.emptyList();
-        }
-        return Collections.unmodifiableList(callbackOperations);
-    }
-
-    /**
-     * Sets the callback operations for the service contract.
-     *
-     * @param callbacksOperations the operations for the service contract
-     */
-    public void setCallbackOperations(List<Operation<T>> callbacksOperations) {
-        this.callbackOperations = callbacksOperations;
-    }
-
-    /**
      * Determines if this contract is compatible with the given contract. Compatibility is determined according to the
      * specifics of the IDL's compatibility semantics.
      *
@@ -159,7 +137,7 @@ public abstract class ServiceContract<T> extends ModelObject {
      * @return true if the contracts are compatible
      */
     public abstract boolean isAssignableFrom(ServiceContract<?> contract);
-    
+
     public abstract String getQualifiedInterfaceName();
 
     public String toString() {

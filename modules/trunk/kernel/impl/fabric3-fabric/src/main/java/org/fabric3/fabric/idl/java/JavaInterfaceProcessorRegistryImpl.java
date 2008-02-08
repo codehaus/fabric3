@@ -89,7 +89,6 @@ public class JavaInterfaceProcessorRegistryImpl implements JavaInterfaceProcesso
         if (callback != null) {
             contract.setCallbackName(getBaseName(callback));
             contract.setCallbackClass(callback.getName());
-            contract.setCallbackOperations(getOperations(callback, remotable, conversational, true));
         }
 
         for (JavaInterfaceProcessor processor : processors) {
@@ -100,10 +99,10 @@ public class JavaInterfaceProcessorRegistryImpl implements JavaInterfaceProcesso
 
     /**
      * Determine if an annotation is present on this interface or any superinterface.
-     *
+     * <p/>
      * This is similar to the use of @Inherited on classes (given @Inherited does not apply to interfaces).
      *
-     * @param type the interface to check
+     * @param type           the interface to check
      * @param annotationType the annotation to look for
      * @return true if the annotation is present
      */
