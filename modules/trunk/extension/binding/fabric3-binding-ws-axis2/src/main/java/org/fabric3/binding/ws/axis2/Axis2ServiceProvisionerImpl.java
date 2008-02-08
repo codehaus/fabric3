@@ -155,12 +155,12 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
                 Element opaquePolicy = axisPolicy.getOpaquePolicy();
                 
                 AxisModule axisModule = f3Configurator.getModule(module);
+                axisOperation.addModule(axisModule.getName());
+                axisOperation.engageModule(axisModule);
                 
                 if (message != null) {
                     axisDescription = axisOperation.getMessage(message);
                 }
-                
-                axisDescription.engageModule(axisModule);
                 policyApplier.applyPolicy(axisDescription, opaquePolicy);
             }
             
