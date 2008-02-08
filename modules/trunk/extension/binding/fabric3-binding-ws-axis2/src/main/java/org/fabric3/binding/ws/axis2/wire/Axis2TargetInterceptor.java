@@ -137,13 +137,13 @@ public class Axis2TargetInterceptor implements Interceptor {
             String message = policy.getMessage();
             
             AxisModule axisModule = f3Configurator.getModule(moduleName);
+            axisOperation.addModule(axisModule.getName());
+            axisOperation.engageModule(axisModule);
             
             if (message != null) {
                 axisDescription = axisOperation.getMessage(message);
-            }
-
+            }            
             
-            axisDescription.engageModule(axisModule);
             policyApplier.applyPolicy(axisDescription, policy.getOpaquePolicy());
         }
         
