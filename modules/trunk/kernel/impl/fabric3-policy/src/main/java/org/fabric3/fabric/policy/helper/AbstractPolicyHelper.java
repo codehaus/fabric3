@@ -51,12 +51,14 @@ public class AbstractPolicyHelper {
         Set<PolicySet> policies = new HashSet<PolicySet>();
         
         for (PolicySet policySet : definitionsRegistry.getAllDefinitions(PolicySet.class)) {
-            for(Intent intent : requiredIntents) {
+            Iterator<Intent> iterator = requiredIntents.iterator();
+            while(iterator.hasNext()) {
+                Intent intent = iterator.next();
                 if(policySet.doesProvide(intent.getName())) {
                     String appliesTo = policySet.getAppliesTo();
                     if (appliesTo == null || policySetEvaluator.doesApply(target, appliesTo, operation)) {
                         policies.add(policySet);
-                        requiredIntents.remove(intent);
+                        iterator.remove();
                     }
                 }
             }
