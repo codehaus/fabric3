@@ -336,6 +336,7 @@
     <orderEntry type="module" module-name="fabric3-api" exported="" />
     <orderEntry type="module" module-name="fabric3-extension" exported="" />
     <orderEntry type="module" module-name="fabric3-host-api" exported="" />
+    <orderEntry type="module" module-name="fabric3-introspection-spi" exported="" />
     <orderEntry type="module" module-name="fabric3-jpa-spi" exported="" />
     <orderEntry type="module" module-name="fabric3-monitor" exported="" />
     <orderEntry type="module" module-name="fabric3-pojo" exported="" />

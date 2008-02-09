@@ -235,6 +235,7 @@
     </orderEntry>
     <orderEntry type="module" module-name="fabric3-api" exported="" />
     <orderEntry type="module" module-name="fabric3-host-api" exported="" />
+    <orderEntry type="module" module-name="fabric3-introspection-spi" exported="" />
     <orderEntry type="module" module-name="fabric3-java" exported="" />
     <orderEntry type="module" module-name="fabric3-junit" exported="" />
     <orderEntry type="module" module-name="fabric3-maven-api" exported="" />

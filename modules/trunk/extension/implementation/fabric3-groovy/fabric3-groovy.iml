@@ -120,6 +120,7 @@
     <orderEntry type="module" module-name="fabric3-extension" exported="" />
     <orderEntry type="module" module-name="fabric3-fabric" exported="" />
     <orderEntry type="module" module-name="fabric3-host-api" exported="" />
+    <orderEntry type="module" module-name="fabric3-introspection-spi" exported="" />
     <orderEntry type="module" module-name="fabric3-loader" exported="" />
     <orderEntry type="module" module-name="fabric3-monitor" exported="" />
     <orderEntry type="module" module-name="fabric3-pojo" exported="" />
