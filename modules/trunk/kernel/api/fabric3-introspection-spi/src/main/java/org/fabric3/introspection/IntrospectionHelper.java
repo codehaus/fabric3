@@ -74,5 +74,5 @@ public interface IntrospectionHelper {
      * @return the type of value the constructor injects
      * @throws IntrospectionException if there was a problem determining the type
      */
-    Type getType(Constructor constructor, int index) throws IntrospectionException;
+    Type getType(Constructor<?> constructor, int index) throws IntrospectionException;
 }
