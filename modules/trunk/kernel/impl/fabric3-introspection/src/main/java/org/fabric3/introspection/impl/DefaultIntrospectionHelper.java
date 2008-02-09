@@ -54,7 +54,7 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
         return method.getGenericParameterTypes()[index];
     }
 
-    public Type getType(Constructor constructor, int index) throws IntrospectionException {
+    public Type getType(Constructor<?> constructor, int index) throws IntrospectionException {
         return constructor.getGenericParameterTypes()[index];
     }
 }
