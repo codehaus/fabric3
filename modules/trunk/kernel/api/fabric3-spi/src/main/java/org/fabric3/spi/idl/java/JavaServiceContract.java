@@ -35,7 +35,6 @@ public class JavaServiceContract extends ServiceContract<Type> {
     // accross classloaders. This class may also be deserialized as part of a domain assembly in a context where the
     // Java class may not be present on the classpath.
     private String interfaceClass;
-    private String callbackClass;
     private List<String> interfaces;
     private String superType;
     private List<MethodSignature> methodSignatures;
@@ -56,7 +55,7 @@ public class JavaServiceContract extends ServiceContract<Type> {
         this.interfaceClass = interfaceClazz.getName();
         addInterfaces(interfaceClazz, interfaces);
     }
-    
+
     public String getQualifiedInterfaceName() {
         return getInterfaceClass();
     }
@@ -68,24 +67,6 @@ public class JavaServiceContract extends ServiceContract<Type> {
      */
     public String getInterfaceClass() {
         return interfaceClass;
-    }
-
-    /**
-     * Returns the fully qualified class name used to represent the callback service.
-     *
-     * @return the class name used to represent the callback service
-     */
-    public String getCallbackClass() {
-        return callbackClass;
-    }
-
-    /**
-     * Sets the class used to represent the callback service.
-     *
-     * @param callbackClass the class used to represent the callback service
-     */
-    public void setCallbackClass(String callbackClass) {
-        this.callbackClass = callbackClass;
     }
 
     /*

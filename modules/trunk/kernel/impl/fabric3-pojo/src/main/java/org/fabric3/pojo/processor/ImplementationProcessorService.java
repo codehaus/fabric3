@@ -44,16 +44,6 @@ public interface ImplementationProcessorService {
     JavaMappedReference createReference(String name, Member member, Class<?> paramType) throws ProcessingException;
 
     /**
-     * Processes the callback contract for a given interface type
-     *
-     * @param interfaze the interface type to examine
-     * @param contract  the service contract the callback is associated wth
-     * @throws InvalidServiceContractException
-     *
-     */
-    void processCallback(Class<?> interfaze, JavaServiceContract contract) throws InvalidServiceContractException;
-
-    /**
      * Determines if all the members of a collection have unique types
      *
      * @param collection the collection to analyze

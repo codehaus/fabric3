@@ -41,7 +41,6 @@ public class Operation<T> extends AbstractPolicyAware {
     private List<DataType<T>> faultTypes;
     private String dataBinding;
     private boolean wrapperStyle;
-    private boolean callback;
     private boolean nonBlocking;
     private int conversationSequence = NO_CONVERSATION;
     private Map<String, Object> metaData;
@@ -58,7 +57,7 @@ public class Operation<T> extends AbstractPolicyAware {
                      DataType<List<DataType<T>>> inputType,
                      DataType<T> outputType,
                      List<DataType<T>> faultTypes) {
-        this(name, inputType, outputType, faultTypes, false, false, null, NO_CONVERSATION);
+        this(name, inputType, outputType, faultTypes, false, null, NO_CONVERSATION);
     }
 
     /**
@@ -69,7 +68,6 @@ public class Operation<T> extends AbstractPolicyAware {
      * @param outputType  the data type returned by the operation
      * @param faultTypes  the data type of faults raised by the operation
      * @param nonBlocking if the operation is non-blocking
-     * @param callback    if the operation is a callback operation
      * @param dataBinding the data-binding type required by the operation
      * @param sequence    the conversational attributes of the operation, {@link #NO_CONVERSATION}, {@link
      *                    #CONVERSATION_CONTINUE}, {@link #CONVERSATION_CONTINUE}
@@ -79,7 +77,6 @@ public class Operation<T> extends AbstractPolicyAware {
                      final DataType<T> outputType,
                      final List<DataType<T>> faultTypes,
                      boolean nonBlocking,
-                     boolean callback,
                      String dataBinding,
                      int sequence) {
         super();
@@ -89,27 +86,8 @@ public class Operation<T> extends AbstractPolicyAware {
         this.outputType = outputType;
         this.faultTypes = (faultTypes == null) ? types : faultTypes;
         this.nonBlocking = nonBlocking;
-        this.callback = callback;
         this.dataBinding = dataBinding;
         this.conversationSequence = sequence;
-    }
-
-    /**
-     * Returns true if the operation is part of the callback contract.
-     *
-     * @return true if the operation is part of the callback contract.
-     */
-    public boolean isCallback() {
-        return callback;
-    }
-
-    /**
-     * Sets whether the operation is part of the callback contract.
-     *
-     * @param callback whether the operation is part of the callback contract.
-     */
-    public void setCallback(boolean callback) {
-        this.callback = callback;
     }
 
     /**

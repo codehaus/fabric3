@@ -30,8 +30,8 @@ public abstract class ServiceContract<T> extends ModelObject {
     protected boolean conversational;
     protected boolean remotable;
     protected String interfaceName;
-    protected String callbackName;
     protected List<Operation<T>> operations;
+    protected ServiceContract<?> callbackContract;
 
     protected ServiceContract() {
     }
@@ -91,24 +91,6 @@ public abstract class ServiceContract<T> extends ModelObject {
     }
 
     /**
-     * Returns the name of the callback or null if the contract is unidirectional.
-     *
-     * @return the name of the callback or null if the contract is unidirectional
-     */
-    public String getCallbackName() {
-        return callbackName;
-    }
-
-    /**
-     * Sets the name of the callback service
-     *
-     * @param callbackName the callback service name
-     */
-    public void setCallbackName(String callbackName) {
-        this.callbackName = callbackName;
-    }
-
-    /**
      * Returns the operations for the service contract.
      *
      * @return the operations for the service contract
@@ -127,6 +109,25 @@ public abstract class ServiceContract<T> extends ModelObject {
      */
     public void setOperations(List<Operation<T>> operations) {
         this.operations = operations;
+    }
+
+    /**
+     * Returns the callback contract associated with the service contract or null if the service does not have a
+     * callback.
+     *
+     * @return the callback contract or null
+     */
+    public ServiceContract<?> getCallbackContract() {
+        return callbackContract;
+    }
+
+    /**
+     * Sets the callback contract associated with the service contract.
+     *
+     * @param callbackContract the callback contract
+     */
+    public void setCallbackContract(ServiceContract<?> callbackContract) {
+        this.callbackContract = callbackContract;
     }
 
     /**

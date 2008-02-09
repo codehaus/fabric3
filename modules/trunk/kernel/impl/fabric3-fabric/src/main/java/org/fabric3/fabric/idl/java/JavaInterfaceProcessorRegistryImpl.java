@@ -65,34 +65,47 @@ public class JavaInterfaceProcessorRegistryImpl implements JavaInterfaceProcesso
         processors.remove(processor);
     }
 
-    public <T> JavaServiceContract introspect(Class<T> type) throws InvalidServiceContractException {
-        Class<?> callbackClass = null;
-        Callback callback = type.getAnnotation(Callback.class);
-        if (callback != null && !Void.class.equals(callback.value())) {
-            callbackClass = callback.value();
-        } else if (callback != null && Void.class.equals(callback.value())) {
-            throw new IllegalCallbackException("No callback interface specified on annotation", type.getName());
+    public JavaServiceContract introspect(Class<?> interfaze) throws InvalidServiceContractException {
+        Callback callback = interfaze.getAnnotation(Callback.class);
+        if (callback != null && Void.class.equals(callback.value())) {
+            throw new IllegalCallbackException("No callback interface specified on annotation", interfaze.getName());
         }
-        return introspect(type, callbackClass);
+        if (callback == null || Void.class.equals(callback.value())) {
+            return introspectInterface(interfaze);
+        } else {
+            Class<?> callbackInterface = callback.value();
+            return introspect(interfaze, callbackInterface);
+        }
+
     }
 
-    public <I, C> JavaServiceContract introspect(Class<I> type, Class<C> callback)
+    public JavaServiceContract introspect(Class<?> interfaze, Class<?> callback)
             throws InvalidServiceContractException {
-        JavaServiceContract contract = new JavaServiceContract(type);
-        contract.setInterfaceName(getBaseName(type));
-        boolean remotable = type.isAnnotationPresent(Remotable.class);
-        contract.setRemotable(remotable);
-        boolean conversational = isAnnotationPresent(type, Conversational.class);
-        contract.setConversational(conversational);
-        contract.setOperations(getOperations(type, remotable, conversational, false));
+        JavaServiceContract contract = introspectInterface(interfaze);
+        JavaServiceContract callbackContract = introspectInterface(callback);
+        contract.setCallbackContract(callbackContract);
+        return contract;
+    }
 
-        if (callback != null) {
-            contract.setCallbackName(getBaseName(callback));
-            contract.setCallbackClass(callback.getName());
-        }
+    /**
+     * Introspects a class, returning its service contract.
+     *
+     * @param interfaze the interface to introspect
+     * @return the service contract
+     * @throws InvalidServiceContractException
+     *          if the class is an invalid service inteface or contains invalid service meatadata
+     */
+    private JavaServiceContract introspectInterface(Class<?> interfaze) throws InvalidServiceContractException {
+        JavaServiceContract contract = new JavaServiceContract(interfaze);
+        contract.setInterfaceName(getBaseName(interfaze));
+        boolean remotable = interfaze.isAnnotationPresent(Remotable.class);
+        contract.setRemotable(remotable);
+        boolean conversational = isAnnotationPresent(interfaze, Conversational.class);
+        contract.setConversational(conversational);
+        contract.setOperations(getOperations(interfaze, remotable, conversational));
 
         for (JavaInterfaceProcessor processor : processors) {
-            processor.visitInterface(type, callback, contract);
+            processor.visitInterface(interfaze, contract);
         }
         return contract;
     }
@@ -121,8 +134,7 @@ public class JavaInterfaceProcessorRegistryImpl implements JavaInterfaceProcesso
 
     private <T> List<Operation<Type>> getOperations(Class<T> type,
                                                     boolean remotable,
-                                                    boolean conversational,
-                                                    boolean callback)
+                                                    boolean conversational)
             throws InvalidServiceContractException {
         Method[] methods = type.getMethods();
         List<Operation<Type>> operations = new ArrayList<Operation<Type>>(methods.length);
@@ -170,7 +182,6 @@ public class JavaInterfaceProcessorRegistryImpl implements JavaInterfaceProcesso
                                                             returnDataType,
                                                             faultDataTypes,
                                                             nonBlocking,
-                                                            callback,
                                                             UNKNOWN_DATABINDING,
                                                             conversationSequence);
             for (JavaInterfaceProcessor processor : this.processors) {

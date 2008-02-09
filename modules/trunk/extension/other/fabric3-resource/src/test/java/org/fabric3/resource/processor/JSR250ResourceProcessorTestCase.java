@@ -50,11 +50,11 @@ public class JSR250ResourceProcessorTestCase extends TestCase {
             public void unregisterProcessor(JavaInterfaceProcessor processor) {
             }
 
-            public <I> JavaServiceContract introspect(Class<I> type) throws InvalidServiceContractException {
+            public JavaServiceContract introspect(Class<?> type) throws InvalidServiceContractException {
                 return new JavaServiceContract(type);
             }
 
-            public <I, C> JavaServiceContract introspect(Class<I> type, Class<C> callback)
+            public JavaServiceContract introspect(Class<?> type, Class<?> callback)
                     throws InvalidServiceContractException {
                 return null;
             }

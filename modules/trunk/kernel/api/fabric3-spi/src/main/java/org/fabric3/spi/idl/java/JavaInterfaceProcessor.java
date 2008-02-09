@@ -30,10 +30,8 @@ import org.fabric3.spi.idl.InvalidServiceContractException;
  */
 public interface JavaInterfaceProcessor {
 
-    void visitInterface(Class<?> clazz, Class<?> callbackClass, JavaServiceContract contract)
-            throws InvalidServiceContractException;
+    void visitInterface(Class<?> clazz, JavaServiceContract contract) throws InvalidServiceContractException;
 
-    void visitOperation(Method mmethod, Operation operation)
-            throws InvalidServiceContractException;
+    void visitOperation(Method mmethod, Operation operation) throws InvalidServiceContractException;
 
 }

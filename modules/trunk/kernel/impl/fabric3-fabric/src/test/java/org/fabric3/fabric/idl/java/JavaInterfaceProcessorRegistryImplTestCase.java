@@ -22,17 +22,18 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import junit.framework.TestCase;
-import org.easymock.EasyMock;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.EasyMock.isA;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
+import org.osoa.sca.annotations.Callback;
 
-import org.fabric3.pojo.processor.JavaIntrospectionHelper;
+import static org.fabric3.pojo.processor.JavaIntrospectionHelper.getBaseName;
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.Operation;
+import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.idl.InvalidServiceContractException;
 import org.fabric3.spi.idl.java.JavaInterfaceProcessor;
 import org.fabric3.spi.idl.java.JavaServiceContract;
@@ -46,8 +47,7 @@ public class JavaInterfaceProcessorRegistryImplTestCase extends TestCase {
     @SuppressWarnings({"unchecked"})
     public void testSimpleInterface() throws InvalidServiceContractException {
         JavaServiceContract contract = impl.introspect(Simple.class);
-        // TODO spec to clairfy interface name
-        assertEquals(JavaIntrospectionHelper.getBaseName(Simple.class), contract.getInterfaceName());
+        assertEquals(getBaseName(Simple.class), contract.getInterfaceName());
         assertEquals(Simple.class.getName(), contract.getInterfaceClass());
         List<Operation<Type>> operations = contract.getOperations();
         assertEquals(1, operations.size());
@@ -71,9 +71,21 @@ public class JavaInterfaceProcessorRegistryImplTestCase extends TestCase {
         assertEquals(IllegalArgumentException.class, fault0.getLogical());
     }
 
+    public void testCallbackInterface() throws InvalidServiceContractException {
+        JavaServiceContract contract = impl.introspect(ForwardInterface.class);
+        ServiceContract<?> callback = contract.getCallbackContract();
+        JavaServiceContract javaCallback = JavaServiceContract.class.cast(callback);
+        assertEquals(getBaseName(CallbackInterface.class), javaCallback.getInterfaceName());
+        assertEquals(CallbackInterface.class.getName(), javaCallback.getInterfaceClass());
+        List<Operation<Type>> operations = javaCallback.getOperations();
+        assertEquals(1, operations.size());
+        Operation<Type> back = operations.get(0);
+        assertEquals("back", back.getName());
+    }
+
     public void testUnregister() throws Exception {
         JavaInterfaceProcessor processor = createMock(JavaInterfaceProcessor.class);
-        processor.visitInterface(eq(Base.class), EasyMock.same((Class) null), isA(JavaServiceContract.class));
+        processor.visitInterface(eq(Base.class), isA(JavaServiceContract.class));
         processor.visitOperation(eq(Base.class.getMethod("baseInt", Integer.TYPE)), isA(Operation.class));
         expectLastCall().once();
         replay(processor);
@@ -97,4 +109,14 @@ public class JavaInterfaceProcessorRegistryImplTestCase extends TestCase {
     private static interface Simple extends Base {
 
     }
+
+    @Callback(CallbackInterface.class)
+    private static interface ForwardInterface {
+        int forward() throws IllegalArgumentException;
+    }
+
+    private static interface CallbackInterface {
+        int back() throws IllegalArgumentException;
+    }
+
 }

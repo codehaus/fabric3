@@ -26,13 +26,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.osoa.sca.annotations.Callback;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Resource;
-import org.fabric3.fabric.idl.java.IllegalCallbackException;
-import static org.fabric3.pojo.processor.JavaIntrospectionHelper.getBaseName;
 import org.fabric3.pojo.processor.DuplicatePropertyException;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.processor.ProcessingException;
@@ -44,8 +41,8 @@ import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Multiplicity;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.idl.InvalidServiceContractException;
-import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.spi.idl.java.InterfaceJavaIntrospector;
+import org.fabric3.spi.idl.java.JavaServiceContract;
 
 /**
  * The default implementation of an <code>ImplementationProcessorService</code>
@@ -62,17 +59,6 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
     public JavaMappedService createService(Class<?> interfaze) throws InvalidServiceContractException {
         ServiceContract<?> contract = registry.introspect(interfaze);
         return new JavaMappedService(interfaze.getSimpleName(), contract);
-    }
-
-    public void processCallback(Class<?> interfaze, JavaServiceContract contract) throws IllegalCallbackException {
-        Callback callback = interfaze.getAnnotation(Callback.class);
-        if (callback != null && !Void.class.equals(callback.value())) {
-            Class<?> callbackClass = callback.value();
-            contract.setCallbackClass(callbackClass.getName());
-            contract.setCallbackName(getBaseName(callbackClass));
-        } else if (callback != null && Void.class.equals(callback.value())) {
-            throw new IllegalCallbackException("No callback interface specified on annotation", interfaze.getName());
-        }
     }
 
     public boolean areUnique(Class[] collection) {
@@ -138,11 +124,6 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
             contract = registry.introspect(paramType);
         } catch (InvalidServiceContractException e1) {
             throw new ProcessingException(e1);
-        }
-        try {
-            processCallback(paramType, contract);
-        } catch (IllegalCallbackException e) {
-            throw new ProcessingException(e);
         }
         MemberSite memberSite = new MemberSite(member);
         JavaMappedReference reference = new JavaMappedReference(name, contract, memberSite);

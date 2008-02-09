@@ -48,8 +48,6 @@ public class ImplementationProcessorServiceTestCase extends TestCase {
         JavaServiceContract contract = JavaServiceContract.class.cast(service.getServiceContract());
         assertTrue(Foo.class.getName().equals(contract.getInterfaceClass()));
         assertTrue(contract.isConversational());
-        assertTrue(Bar.class.getName().equals(contract.getCallbackClass()));
-        assertTrue("ImplementationProcessorServiceTestCase$Bar".equals(contract.getCallbackName()));
     }
 
     public void testCreateDefaultService() throws Exception {

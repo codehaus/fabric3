@@ -52,7 +52,7 @@ public class NonBlockingInterfaceProcessor implements JavaInterfaceProcessor {
         registry.registerProcessor(this);
     }
 
-    public void visitInterface(Class<?> clazz, Class<?> callbackClass, JavaServiceContract contract)
+    public void visitInterface(Class<?> clazz, JavaServiceContract contract)
             throws InvalidServiceContractException {
         // do nothing
     }

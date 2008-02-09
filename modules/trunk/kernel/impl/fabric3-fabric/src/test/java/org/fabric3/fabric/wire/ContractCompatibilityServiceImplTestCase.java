@@ -46,12 +46,12 @@ public class ContractCompatibilityServiceImplTestCase extends TestCase {
 
     public void testBasic() throws Exception {
         ServiceContract<Type> source = new MockContract<Type>();
-        Operation<Type> opSource1 = new Operation<Type>("op1", null, null, null, false, false, null, NO_CONVERSATION);
+        Operation<Type> opSource1 = new Operation<Type>("op1", null, null, null, false, null, NO_CONVERSATION);
         List<Operation<Type>> sourceOperations = new ArrayList<Operation<Type>>();
         sourceOperations.add(opSource1);
         source.setOperations(sourceOperations);
         ServiceContract<Type> target = new MockContract<Type>();
-        Operation<Type> opSource2 = new Operation<Type>("op1", null, null, null, false, false, null, NO_CONVERSATION);
+        Operation<Type> opSource2 = new Operation<Type>("op1", null, null, null, false, null, NO_CONVERSATION);
         List<Operation<Type>> targetOperations = new ArrayList<Operation<Type>>();
         targetOperations.add(opSource2);
         target.setOperations(targetOperations);
@@ -60,12 +60,12 @@ public class ContractCompatibilityServiceImplTestCase extends TestCase {
 
     public void testBasicIncompatibleOperationNames() throws Exception {
         ServiceContract<Type> source = new MockContract<Type>();
-        Operation<Type> opSource1 = new Operation<Type>("op1", null, null, null, false, false, null, NO_CONVERSATION);
+        Operation<Type> opSource1 = new Operation<Type>("op1", null, null, null, false, null, NO_CONVERSATION);
         List<Operation<Type>> sourceOperations = new ArrayList<Operation<Type>>();
         sourceOperations.add(opSource1);
         source.setOperations(sourceOperations);
         ServiceContract<Type> target = new MockContract<Type>();
-        Operation<Type> opSource2 = new Operation<Type>("op2", null, null, null, false, false, null, NO_CONVERSATION);
+        Operation<Type> opSource2 = new Operation<Type>("op2", null, null, null, false, null, NO_CONVERSATION);
         List<Operation<Type>> targetOperations = new ArrayList<Operation<Type>>();
         targetOperations.add(opSource2);
         target.setOperations(targetOperations);
@@ -82,8 +82,7 @@ public class ContractCompatibilityServiceImplTestCase extends TestCase {
         List<DataType<Type>> sourceInputTypes = new ArrayList<DataType<Type>>();
         sourceInputTypes.add(new DataType<Type>(Object.class, Object.class));
         DataType<List<DataType<Type>>> inputType = new DataType<List<DataType<Type>>>(String.class, sourceInputTypes);
-        Operation<Type> opSource1 = new Operation<Type>("op1", inputType, null, null, false,
-                                                        false, null, NO_CONVERSATION);
+        Operation<Type> opSource1 = new Operation<Type>("op1", inputType, null, null, false, null, NO_CONVERSATION);
         List<Operation<Type>> sourceOperations = new ArrayList<Operation<Type>>();
         sourceOperations.add(opSource1);
         source.setOperations(sourceOperations);
@@ -95,7 +94,7 @@ public class ContractCompatibilityServiceImplTestCase extends TestCase {
                 new DataType<List<DataType<Type>>>(String.class, targetInputTypes);
 
         Operation<Type> opTarget =
-                new Operation<Type>("op1", targetInputType, null, null, false, false, null, NO_CONVERSATION);
+                new Operation<Type>("op1", targetInputType, null, null, false, null, NO_CONVERSATION);
         List<Operation<Type>> targetOperations = new ArrayList<Operation<Type>>();
         targetOperations.add(opTarget);
         target.setOperations(targetOperations);
@@ -108,8 +107,7 @@ public class ContractCompatibilityServiceImplTestCase extends TestCase {
         List<DataType<Type>> sourceInputTypes = new ArrayList<DataType<Type>>();
         sourceInputTypes.add(new DataType<Type>(Integer.class, Integer.class));
         DataType<List<DataType<Type>>> inputType = new DataType<List<DataType<Type>>>(String.class, sourceInputTypes);
-        Operation<Type> opSource1 = new Operation<Type>("op1", inputType, null, null, false,
-                                                        false, null, NO_CONVERSATION);
+        Operation<Type> opSource1 = new Operation<Type>("op1", inputType, null, null, false, null, NO_CONVERSATION);
         List<Operation<Type>> sourceOperations = new ArrayList<Operation<Type>>();
         sourceOperations.add(opSource1);
         source.setOperations(sourceOperations);
@@ -121,7 +119,7 @@ public class ContractCompatibilityServiceImplTestCase extends TestCase {
                 new DataType<List<DataType<Type>>>(String.class, targetInputTypes);
 
         Operation<Type> opTarget =
-                new Operation<Type>("op1", targetInputType, null, null, false, false, null, NO_CONVERSATION);
+                new Operation<Type>("op1", targetInputType, null, null, false, null, NO_CONVERSATION);
         List<Operation<Type>> targetOperations = new ArrayList<Operation<Type>>();
         targetOperations.add(opTarget);
         target.setOperations(targetOperations);
@@ -163,7 +161,7 @@ public class ContractCompatibilityServiceImplTestCase extends TestCase {
         ServiceContract<Type> source = new MockContract<Type>();
         DataType<Type> sourceOutputType = new DataType<Type>(String.class, String.class);
         Operation<Type> opSource1 =
-                new Operation<Type>("op1", null, sourceOutputType, null, false, false, null, NO_CONVERSATION);
+                new Operation<Type>("op1", null, sourceOutputType, null, false, null, NO_CONVERSATION);
         List<Operation<Type>> sourceOperations = new ArrayList<Operation<Type>>();
         sourceOperations.add(opSource1);
         source.setOperations(sourceOperations);
@@ -171,7 +169,7 @@ public class ContractCompatibilityServiceImplTestCase extends TestCase {
         ServiceContract<Type> target = new MockContract<Type>();
         DataType<Type> targetOutputType = new DataType<Type>(String.class, String.class);
         Operation<Type> opTarget =
-                new Operation<Type>("op1", null, targetOutputType, null, false, false, null, NO_CONVERSATION);
+                new Operation<Type>("op1", null, targetOutputType, null, false, null, NO_CONVERSATION);
         List<Operation<Type>> targetOperations = new ArrayList<Operation<Type>>();
         targetOperations.add(opTarget);
         target.setOperations(targetOperations);
@@ -202,7 +200,7 @@ public class ContractCompatibilityServiceImplTestCase extends TestCase {
         ServiceContract<Type> source = new MockContract<Type>();
         DataType<Type> sourceOutputType = new DataType<Type>(String.class, String.class);
         Operation<Type> opSource1 =
-                new Operation<Type>("op1", null, sourceOutputType, null, false, false, null, NO_CONVERSATION);
+                new Operation<Type>("op1", null, sourceOutputType, null, false, null, NO_CONVERSATION);
         List<Operation<Type>> sourceOperations = new ArrayList<Operation<Type>>();
         sourceOperations.add(opSource1);
         source.setOperations(sourceOperations);
@@ -210,7 +208,7 @@ public class ContractCompatibilityServiceImplTestCase extends TestCase {
         ServiceContract<Type> target = new MockContract<Type>();
         DataType<Type> targetOutputType = new DataType<Type>(Integer.class, Integer.class);
         Operation<Type> opTarget =
-                new Operation<Type>("op1", null, targetOutputType, null, false, false, null, NO_CONVERSATION);
+                new Operation<Type>("op1", null, targetOutputType, null, false, null, NO_CONVERSATION);
         List<Operation<Type>> targetOperations = new ArrayList<Operation<Type>>();
         targetOperations.add(opTarget);
         target.setOperations(targetOperations);
@@ -228,7 +226,7 @@ public class ContractCompatibilityServiceImplTestCase extends TestCase {
         List<DataType<Type>> sourceFaultTypes = new ArrayList<DataType<Type>>();
         sourceFaultTypes.add(0, sourceFaultType);
         Operation<Type> opSource1 =
-                new Operation<Type>("op1", null, null, sourceFaultTypes, false, false, null, NO_CONVERSATION);
+                new Operation<Type>("op1", null, null, sourceFaultTypes, false, null, NO_CONVERSATION);
         List<Operation<Type>> sourceOperations = new ArrayList<Operation<Type>>();
         sourceOperations.add(opSource1);
         source.setOperations(sourceOperations);
@@ -239,7 +237,7 @@ public class ContractCompatibilityServiceImplTestCase extends TestCase {
         targetFaultTypes.add(0, targetFaultType);
 
         Operation<Type> opTarget =
-                new Operation<Type>("op1", null, null, targetFaultTypes, false, false, null, NO_CONVERSATION);
+                new Operation<Type>("op1", null, null, targetFaultTypes, false, null, NO_CONVERSATION);
         List<Operation<Type>> targetOperations = new ArrayList<Operation<Type>>();
         targetOperations.add(opTarget);
         target.setOperations(targetOperations);
@@ -252,13 +250,13 @@ public class ContractCompatibilityServiceImplTestCase extends TestCase {
         List<DataType<Type>> sourceFaultTypes = new ArrayList<DataType<Type>>();
         sourceFaultTypes.add(0, sourceFaultType);
         Operation<Type> opSource1 =
-                new Operation<Type>("op1", null, null, sourceFaultTypes, false, false, null, NO_CONVERSATION);
+                new Operation<Type>("op1", null, null, sourceFaultTypes, false, null, NO_CONVERSATION);
         List<Operation<Type>> sourceOperations = new ArrayList<Operation<Type>>();
         sourceOperations.add(opSource1);
         source.setOperations(sourceOperations);
 
         ServiceContract<Type> target = new MockContract<Type>();
-        Operation<Type> opTarget = new Operation<Type>("op1", null, null, null, false, false, null, NO_CONVERSATION);
+        Operation<Type> opTarget = new Operation<Type>("op1", null, null, null, false, null, NO_CONVERSATION);
         List<Operation<Type>> targetOperations = new ArrayList<Operation<Type>>();
         targetOperations.add(opTarget);
         target.setOperations(targetOperations);

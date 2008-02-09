@@ -30,21 +30,21 @@ public interface InterfaceJavaIntrospector {
     /**
      * Introspect a Java interface and return a service contract definition.
      *
-     * @param type the interface to inspect
+     * @param interfaze the interface to inspect
      * @return a JavaServiceContract corresponding to the Java interface
      * @throws InvalidServiceContractException
      *          if an error occurs introspecting the interface
      */
-    <I> JavaServiceContract introspect(Class<I> type) throws InvalidServiceContractException;
+    JavaServiceContract introspect(Class<?> interfaze) throws InvalidServiceContractException;
 
     /**
      * Introspect a Java interface and return a service contract definition.
      *
-     * @param type     the interface to inspect
-     * @param callback the callback interface to inspec
+     * @param interfaze the interface to inspect
+     * @param callback  the callback interface to inspec
      * @return a JavaServiceContract corresponding to the Java interface
      * @throws InvalidServiceContractException
      *          if an error occurs introspecting the interface
      */
-    <I, C> JavaServiceContract introspect(Class<I> type, Class<C> callback) throws InvalidServiceContractException;
+    JavaServiceContract introspect(Class<?> interfaze, Class<?> callback) throws InvalidServiceContractException;
 }

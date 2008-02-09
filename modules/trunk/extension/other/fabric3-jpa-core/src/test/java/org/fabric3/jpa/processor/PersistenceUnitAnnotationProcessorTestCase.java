@@ -20,7 +20,6 @@ package org.fabric3.jpa.processor;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 
@@ -36,14 +35,13 @@ import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
 import org.fabric3.spi.idl.java.JavaServiceContract;
 
 /**
- *
  * @version $Revision$ $Date$
  */
 public class PersistenceUnitAnnotationProcessorTestCase extends TestCase {
 
     private PojoComponentType type;
     private PersistenceUnitAnnotationProcessor processor;
-    
+
     public void setUp() {
         type = new PojoComponentType();
         processor = new PersistenceUnitAnnotationProcessor();
@@ -55,103 +53,103 @@ public class PersistenceUnitAnnotationProcessorTestCase extends TestCase {
             public void unregisterProcessor(JavaInterfaceProcessor processor) {
             }
 
-            public <I> JavaServiceContract introspect(Class<I> type) throws InvalidServiceContractException {
+            public JavaServiceContract introspect(Class<?> type) throws InvalidServiceContractException {
                 return new JavaServiceContract(type);
             }
 
-            public <I, C> JavaServiceContract introspect(Class<I> type, Class<C> callback)
+            public JavaServiceContract introspect(Class<?> type, Class<?> callback)
                     throws InvalidServiceContractException {
                 return null;
             }
-            
+
         });
     }
 
     public void testValidField() throws Exception {
-        
+
         Field field = Foo.class.getDeclaredField("emf1");
         processor.visitField(field, type, null);
-        
+
         JavaMappedResource jmr = type.getResources().get("someName");
         assertNotNull(jmr);
         PersistenceUnitResource resource = PersistenceUnitResource.class.cast(jmr);
         assertEquals("someName", resource.getName());
         assertEquals("someUnitName", resource.getUnitName());
-        
+
     }
 
     public void testInvalidFieldWithIncorrectType() throws Exception {
-        
+
         try {
             Field field = Foo.class.getDeclaredField("emf2");
             processor.visitField(field, type, null);
-        } catch(ProcessingException ex) {
+        } catch (ProcessingException ex) {
             return;
         }
-        
+
         fail("Expected processing exception");
-        
+
     }
 
     public void testValidMethod() throws Exception {
-        
+
         Method method = Foo.class.getDeclaredMethod("setEmf3", EntityManagerFactory.class);
         processor.visitMethod(method, type, null);
-        
+
         JavaMappedResource jmr = type.getResources().get("someName");
         assertNotNull(jmr);
         PersistenceUnitResource resource = PersistenceUnitResource.class.cast(jmr);
         assertEquals("someName", resource.getName());
         assertEquals("someUnitName", resource.getUnitName());
-        
+
     }
 
     public void testInvalidMethodWithIncorrectType() throws Exception {
-        
+
         try {
             Method method = Foo.class.getDeclaredMethod("setEmf4", String.class);
             processor.visitMethod(method, type, null);
-        } catch(ProcessingException ex) {
+        } catch (ProcessingException ex) {
             return;
         }
-        
+
         fail("Expected processing exception");
-        
+
     }
 
     public void testInvalidMethodWithIncorrectNumberOfArguments() throws Exception {
-        
+
         try {
             Method method = Foo.class.getDeclaredMethod("setEmf5", EntityManagerFactory.class, String.class);
             processor.visitMethod(method, type, null);
-        } catch(ProcessingException ex) {
+        } catch (ProcessingException ex) {
             return;
         }
-        
+
         fail("Expected processing exception");
-        
+
     }
-    
+
     private static class Foo {
-        
-        @PersistenceUnit(name="someName", unitName="someUnitName")
+
+        @PersistenceUnit(name = "someName", unitName = "someUnitName")
         protected EntityManagerFactory emf1;
-        
-        @PersistenceUnit(name="someName", unitName="someUnitName")
+
+        @PersistenceUnit(name = "someName", unitName = "someUnitName")
         protected String emf2;
-        
-        @PersistenceUnit(name="someName", unitName="someUnitName")
+
+        @PersistenceUnit(name = "someName", unitName = "someUnitName")
         public void setEmf3(EntityManagerFactory emf) {
         }
-        
-        @PersistenceUnit(name="someName", unitName="someUnitName")
+
+        @PersistenceUnit(name = "someName", unitName = "someUnitName")
         public void setEmf4(String emf) {
         }
-        
-        @PersistenceUnit(name="someName", unitName="someUnitName")
+
+        @PersistenceUnit(name = "someName", unitName = "someUnitName")
         public void setEmf5(EntityManagerFactory emf, String name) {
         }
-        
+
     }
 
 }

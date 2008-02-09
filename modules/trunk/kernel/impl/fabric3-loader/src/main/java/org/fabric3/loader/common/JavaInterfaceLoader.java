@@ -23,11 +23,11 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.idl.InvalidServiceContractException;
 import org.fabric3.spi.idl.java.InterfaceJavaIntrospector;
 import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.spi.loader.InvalidValueException;
-import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.StAXElementLoader;
@@ -67,7 +67,12 @@ public class JavaInterfaceLoader implements StAXElementLoader<JavaServiceContrac
         LoaderUtil.skipToEndElement(reader);
 
         try {
-            JavaServiceContract serviceContract = introspector.introspect(interfaceClass, callbackClass);
+            JavaServiceContract serviceContract;
+            if (callbackClass == null) {
+                serviceContract = introspector.introspect(interfaceClass);
+            } else {
+                serviceContract = introspector.introspect(interfaceClass, callbackClass);
+            }
             serviceContract.setConversational(conversational);
             return serviceContract;
         } catch (InvalidServiceContractException e) {
