@@ -101,7 +101,7 @@
                         <dependency>
                             <groupId>org.codehaus.fabric3.tests</groupId>
                             <artifactId>test-ds-extension</artifactId>
-                            <version>0.5-SNAPSHOT</version>
+                            <version>0.1-SNAPSHOT</version>
                         </dependency>
                     </extensions>
                     <!-- Requires Hibernate and JOTM shared between app and system -->
