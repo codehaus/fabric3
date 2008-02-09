@@ -16,10 +16,8 @@
  */
 package org.fabric3.introspection;
 
-import org.fabric3.host.Fabric3Exception;
-
 /**
  * @version $Rev$ $Date$
  */
-public abstract class IntrospectionException extends Fabric3Exception {
+public abstract class InvalidServiceContractException extends IntrospectionException{
 }

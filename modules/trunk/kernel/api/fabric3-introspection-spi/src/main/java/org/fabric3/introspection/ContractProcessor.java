@@ -16,10 +16,22 @@
  */
 package org.fabric3.introspection;
 
-import org.fabric3.host.Fabric3Exception;
+import java.lang.reflect.Type;
+
+import org.fabric3.scdl.ServiceContract;
 
 /**
+ * Interface for processors that can construct a ServiceContract from a Java type.
+ *
  * @version $Rev$ $Date$
  */
-public abstract class IntrospectionException extends Fabric3Exception {
+public interface ContractProcessor {
+    /**
+     * Introspect a Java Type (e.g. a Class) and return the ServiceContract.
+     *
+     * @param type the Java Type to introspect
+     * @return the ServiceContract corresponding to the interface type
+     * @throws InvalidServiceContractException if the type does not define a valid service contract
+     */
+    ServiceContract<Type> introspect(Type type) throws InvalidServiceContractException;
 }
