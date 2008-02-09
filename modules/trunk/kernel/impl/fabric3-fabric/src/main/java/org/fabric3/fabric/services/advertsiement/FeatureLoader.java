@@ -35,7 +35,7 @@ import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.PropertyValue;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.Constants;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 
@@ -78,7 +78,7 @@ public class FeatureLoader extends LoaderExtension<ComponentDefinition> {
      * Registers the metadata with the marshaller registry.
      */
     @SuppressWarnings("unchecked")
-    public ComponentDefinition load(XMLStreamReader reader, LoaderContext context)
+    public ComponentDefinition load(XMLStreamReader reader, IntrospectionContext context)
             throws XMLStreamException, LoaderException {
 
         String name = reader.getAttributeValue(null, "name");
@@ -104,7 +104,7 @@ public class FeatureLoader extends LoaderExtension<ComponentDefinition> {
     /*
     * Loads the component type for the reflection marshaller.
     */
-    private PojoComponentType getComponentType(Class<FeatureComponent> implClass, LoaderContext context)
+    private PojoComponentType getComponentType(Class<FeatureComponent> implClass, IntrospectionContext context)
             throws LoaderException {
 
         PojoComponentType componentType = new PojoComponentType(implClass.getName());

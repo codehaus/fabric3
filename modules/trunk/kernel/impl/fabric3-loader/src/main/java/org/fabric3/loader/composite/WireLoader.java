@@ -21,7 +21,7 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamException;
 
 import org.fabric3.spi.loader.StAXElementLoader;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.scdl.WireDefinition;
@@ -30,7 +30,7 @@ import org.fabric3.scdl.WireDefinition;
  * @version $Rev$ $Date$
  */
 public class WireLoader implements StAXElementLoader<WireDefinition> {
-    public WireDefinition load(XMLStreamReader reader, LoaderContext context)
+    public WireDefinition load(XMLStreamReader reader, IntrospectionContext context)
             throws XMLStreamException, LoaderException {
 
         String source = reader.getAttributeValue(null, "source");

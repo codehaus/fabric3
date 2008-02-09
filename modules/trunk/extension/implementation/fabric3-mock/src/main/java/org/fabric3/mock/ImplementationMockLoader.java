@@ -23,10 +23,9 @@ import java.util.StringTokenizer;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
@@ -92,7 +91,7 @@ public class ImplementationMockLoader implements StAXElementLoader<Implementatio
      * @return An instance of mock implementation.
      * @throws LoaderException If unable to load implementation.mock from the SCDL.
      */
-    public ImplementationMock load(XMLStreamReader reader, LoaderContext context) throws XMLStreamException,
+    public ImplementationMock load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException,
             LoaderException {
         
         assert reader.getName().equals(ImplementationMock.IMPLEMENTATION_MOCK);

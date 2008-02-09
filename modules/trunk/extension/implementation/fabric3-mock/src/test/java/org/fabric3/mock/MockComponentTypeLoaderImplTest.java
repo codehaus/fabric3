@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.easymock.EasyMock;
 import org.fabric3.pojo.scdl.JavaMappedService;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 
 import junit.framework.TestCase;
 
@@ -32,7 +32,7 @@ public class MockComponentTypeLoaderImplTest extends TestCase {
 
     public void testLoad() throws Exception {
         
-        LoaderContext context = EasyMock.createMock(LoaderContext.class);
+        IntrospectionContext context = EasyMock.createMock(IntrospectionContext.class);
         EasyMock.expect(context.getTargetClassLoader()).andReturn(getClass().getClassLoader());
         EasyMock.replay(context);
         

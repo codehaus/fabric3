@@ -53,7 +53,7 @@ import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.idl.InvalidServiceContractException;
 import org.fabric3.spi.idl.java.InterfaceJavaIntrospector;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 
 /**
  * Heuristically evaluates an un-annotated Java implementation type to determine services, references, and properties
@@ -79,7 +79,7 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
     public <T> void visitEnd(
             Class<T> clazz,
             PojoComponentType type,
-            LoaderContext context) throws ProcessingException {
+            IntrospectionContext context) throws ProcessingException {
         Map<String, JavaMappedService> services = type.getServices();
         if (services.isEmpty()) {
             // heuristically determine the service

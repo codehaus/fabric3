@@ -18,7 +18,7 @@ package org.fabric3.mock;
 
 import java.util.List;
 
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 
 /**
@@ -32,9 +32,9 @@ public interface MockComponentTypeLoader {
      * Loads the mock component type.
      * 
      * @param interfaces Interfaces that need to be mocked.
-     * @param loaderContext Loader context.
+     * @param introspectionContext Loader context.
      * @return Mock component type.
      */
-    MockComponentType load(List<String> interfaces, LoaderContext loaderContext) throws LoaderException;
+    MockComponentType load(List<String> interfaces, IntrospectionContext introspectionContext) throws LoaderException;
 
 }

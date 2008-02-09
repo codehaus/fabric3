@@ -28,9 +28,9 @@ import javax.xml.stream.XMLStreamReader;
 import junit.framework.TestCase;
 import org.easymock.classextension.EasyMock;
 
-import org.fabric3.loader.common.LoaderContextImpl;
+import org.fabric3.loader.common.IntrospectionContextImpl;
 import org.fabric3.scdl.ModelObject;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.loader.UnrecognizedElementException;
@@ -46,7 +46,7 @@ public class StAXLoaderRegistryImplTestCase extends TestCase {
     private LoaderRegistryImpl.Monitor mockMonitor;
     private StAXElementLoader<Object> mockLoader;
     private XMLStreamReader mockReader;
-    private LoaderContext loaderContext;
+    private IntrospectionContext introspectionContext;
     private ModelObject modelType;
 
     public void testLoaderRegistration() {
@@ -71,10 +71,10 @@ public class StAXLoaderRegistryImplTestCase extends TestCase {
         EasyMock.replay(mockMonitor);
         EasyMock.expect(mockLoader.load(
                 EasyMock.eq(mockReader),
-                EasyMock.eq(loaderContext))).andReturn(modelType);
+                EasyMock.eq(introspectionContext))).andReturn(modelType);
         EasyMock.replay(mockLoader);
         registry.registerLoader(name, mockLoader);
-        assertSame(modelType, registry.load(mockReader, ModelObject.class, loaderContext));
+        assertSame(modelType, registry.load(mockReader, ModelObject.class, introspectionContext));
         EasyMock.verify(mockLoader);
         EasyMock.verify(mockMonitor);
         EasyMock.verify(mockReader);
@@ -87,7 +87,7 @@ public class StAXLoaderRegistryImplTestCase extends TestCase {
         mockMonitor.elementLoad(EasyMock.eq(name));
         EasyMock.replay(mockMonitor);
         try {
-            registry.load(mockReader, ModelObject.class, loaderContext);
+            registry.load(mockReader, ModelObject.class, introspectionContext);
             fail();
         } catch (UnrecognizedElementException e) {
             assertSame(name, e.getElement());
@@ -104,10 +104,10 @@ public class StAXLoaderRegistryImplTestCase extends TestCase {
         EasyMock.replay(mockMonitor);
         EasyMock.expect(mockLoader.load(
                 EasyMock.eq(mockReader),
-                EasyMock.eq(loaderContext))).andReturn(modelType);
+                EasyMock.eq(introspectionContext))).andReturn(modelType);
         EasyMock.replay(mockLoader);
         registry.registerLoader(name, mockLoader);
-        assertSame(modelType, registry.load(mockReader, ModelObject.class, loaderContext));
+        assertSame(modelType, registry.load(mockReader, ModelObject.class, introspectionContext));
         EasyMock.verify(mockLoader);
     }
 
@@ -116,7 +116,7 @@ public class StAXLoaderRegistryImplTestCase extends TestCase {
         super.setUp();
         name = new QName("http://mock", "test");
         ClassLoader cl = getClass().getClassLoader();
-        loaderContext = new LoaderContextImpl(cl, null, null);
+        introspectionContext = new IntrospectionContextImpl(cl, null, null);
         mockMonitor = EasyMock.createMock(LoaderRegistryImpl.Monitor.class);
         XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
         registry = new LoaderRegistryImpl(mockMonitor, xmlInputFactory);

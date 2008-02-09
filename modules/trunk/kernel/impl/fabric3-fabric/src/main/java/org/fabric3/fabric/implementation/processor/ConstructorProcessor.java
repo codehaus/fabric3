@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.pojo.scdl.ConstructorDefinition;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
@@ -48,7 +48,7 @@ public class ConstructorProcessor extends ImplementationProcessorExtension {
 
     public <T> void visitClass(Class<T> clazz,
                                PojoComponentType type,
-                               LoaderContext context) throws ProcessingException {
+                               IntrospectionContext context) throws ProcessingException {
         Constructor[] ctors = clazz.getConstructors();
         boolean found = false;
         for (Constructor constructor : ctors) {
@@ -64,7 +64,7 @@ public class ConstructorProcessor extends ImplementationProcessorExtension {
 
     public <T> void visitConstructor(Constructor<T> constructor,
                                      PojoComponentType type,
-                                     LoaderContext context) throws ProcessingException {
+                                     IntrospectionContext context) throws ProcessingException {
         org.osoa.sca.annotations.Constructor annotation =
             constructor.getAnnotation(org.osoa.sca.annotations.Constructor.class);
         if (annotation == null) {

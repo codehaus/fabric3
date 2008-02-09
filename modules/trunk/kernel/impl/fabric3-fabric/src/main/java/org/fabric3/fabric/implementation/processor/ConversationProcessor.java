@@ -25,7 +25,7 @@ import org.osoa.sca.annotations.ConversationAttributes;
 import org.osoa.sca.annotations.ConversationID;
 import org.osoa.sca.annotations.Scope;
 
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
@@ -43,7 +43,7 @@ public class ConversationProcessor extends ImplementationProcessorExtension {
 
     public <T> void visitClass(Class<T> clazz,
                                PojoComponentType type,
-                               LoaderContext context) throws ProcessingException {
+                               IntrospectionContext context) throws ProcessingException {
 
         ConversationAttributes conversation = clazz.getAnnotation(ConversationAttributes.class);
         if (conversation == null) {
@@ -87,7 +87,7 @@ public class ConversationProcessor extends ImplementationProcessorExtension {
 
     public void visitMethod(Method method,
                             PojoComponentType type,
-                            LoaderContext context)
+                            IntrospectionContext context)
         throws ProcessingException {
         ConversationID conversationID = method.getAnnotation(ConversationID.class);
         if (conversationID == null) {
@@ -98,7 +98,7 @@ public class ConversationProcessor extends ImplementationProcessorExtension {
 
     public void visitField(Field field,
                            PojoComponentType type,
-                           LoaderContext context) throws ProcessingException {
+                           IntrospectionContext context) throws ProcessingException {
         ConversationID conversationID = field.getAnnotation(ConversationID.class);
         if (conversationID == null) {
             return;

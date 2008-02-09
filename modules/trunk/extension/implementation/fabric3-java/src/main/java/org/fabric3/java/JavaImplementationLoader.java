@@ -23,7 +23,7 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.PolicyHelper;
@@ -43,7 +43,7 @@ public class JavaImplementationLoader implements StAXElementLoader<JavaImplement
     }
 
 
-    public JavaImplementation load(XMLStreamReader reader, LoaderContext loaderContext)
+    public JavaImplementation load(XMLStreamReader reader, IntrospectionContext introspectionContext)
             throws XMLStreamException, LoaderException {
 
         assert JavaImplementation.IMPLEMENTATION_JAVA.equals(reader.getName());
@@ -57,7 +57,7 @@ public class JavaImplementationLoader implements StAXElementLoader<JavaImplement
         LoaderUtil.skipToEndElement(reader);
 
         implementation.setImplementationClass(implClass);
-        componentTypeLoader.load(implementation, loaderContext);
+        componentTypeLoader.load(implementation, introspectionContext);
         return implementation;
     }
 

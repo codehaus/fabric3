@@ -23,7 +23,7 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
 import org.fabric3.fabric.services.factories.xml.XMLFactoryImpl;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.services.factories.xml.XMLFactory;
 
@@ -60,7 +60,7 @@ public class XmlResourceProcessorTestCase extends TestCase {
         registry = EasyMock.createMock(LoaderRegistry.class);
         EasyMock.expect(registry.load(EasyMock.isA(XMLStreamReader.class),
                                       EasyMock.isA(Class.class),
-                                      EasyMock.isA(LoaderContext.class))).andReturn(null);
+                                      EasyMock.isA(IntrospectionContext.class))).andReturn(null);
         EasyMock.replay(registry);
         processor = new XmlResourceProcessor(null, null, null, factory);
 

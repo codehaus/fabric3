@@ -23,7 +23,7 @@ import java.lang.reflect.Constructor;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.pojo.processor.AbstractPropertyProcessor;
 import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.PojoComponentType;
@@ -46,13 +46,13 @@ public class PropertyProcessor extends AbstractPropertyProcessor<Property> {
 
     protected <T> void initProperty(JavaMappedProperty<T> property,
                                     Property annotation,
-                                    LoaderContext context) {
+                                    IntrospectionContext context) {
         property.setRequired(annotation.required());
     }
 
     public <T> void visitConstructor(Constructor<T> constructor,
                                      PojoComponentType type,
-                                     LoaderContext context) throws ProcessingException {
+                                     IntrospectionContext context) throws ProcessingException {
         // override since heuristic pojo processor evalautes properties
     }
 }

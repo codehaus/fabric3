@@ -33,7 +33,7 @@ import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.scdl.JavaMappedService;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 
 /**
  * Processes an {@link org.osoa.sca.annotations.Service} annotation and updates the component type with corresponding
@@ -51,7 +51,7 @@ public class ServiceProcessor extends ImplementationProcessorExtension {
 
     public <T> void visitClass(Class<T> clazz,
                                PojoComponentType type,
-                               LoaderContext context) throws ProcessingException {
+                               IntrospectionContext context) throws ProcessingException {
         org.osoa.sca.annotations.Service annotation = clazz.getAnnotation(org.osoa.sca.annotations.Service.class);
         if (annotation == null) {
             Class<?> superClass = clazz.getSuperclass();
@@ -108,7 +108,7 @@ public class ServiceProcessor extends ImplementationProcessorExtension {
     public void visitMethod(
             Method method,
             PojoComponentType type,
-            LoaderContext context) throws ProcessingException {
+            IntrospectionContext context) throws ProcessingException {
 
 /*
         Callback annotation = method.getAnnotation(Callback.class);
@@ -137,7 +137,7 @@ public class ServiceProcessor extends ImplementationProcessorExtension {
 
     public void visitField(Field field,
                            PojoComponentType type,
-                           LoaderContext context) throws ProcessingException {
+                           IntrospectionContext context) throws ProcessingException {
 
 /*
         Callback annotation = field.getAnnotation(Callback.class);

@@ -30,10 +30,10 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
-import org.fabric3.loader.common.LoaderContextImpl;
+import org.fabric3.loader.common.IntrospectionContextImpl;
 import org.fabric3.scdl.Composite;
 import org.fabric3.spi.loader.Loader;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
@@ -136,7 +136,7 @@ public class CompositeResourceProcessor implements ResourceProcessor {
      * @throws LoaderException if an error occurs processing the component type
      */
     private Composite processComponentType(URL url, ClassLoader loader, URI contributionUri) throws LoaderException {
-        LoaderContext context = new LoaderContextImpl(loader, contributionUri, url);
+        IntrospectionContext context = new IntrospectionContextImpl(loader, contributionUri, url);
         return this.loader.load(url, Composite.class, context);
     }
 

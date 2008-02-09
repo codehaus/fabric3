@@ -31,8 +31,8 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
-import org.fabric3.loader.common.LoaderContextImpl;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.loader.common.IntrospectionContextImpl;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.Loader;
 import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
@@ -68,7 +68,7 @@ public class ExplodedArchiveContributionProcessor extends ArchiveContributionPro
             URL manifestUrl = new URL(sourceUrl.toString() + "/META-INF/sca-contribution.xml");
             ClassLoader cl = getClass().getClassLoader();
             URI uri = contribution.getUri();
-            LoaderContext context = new LoaderContextImpl(cl, uri, null);
+            IntrospectionContext context = new IntrospectionContextImpl(cl, uri, null);
             manifest = loader.load(manifestUrl, ContributionManifest.class, context);
         } catch (LoaderException e) {
             if (e.getCause() instanceof FileNotFoundException) {

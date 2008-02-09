@@ -28,7 +28,7 @@ import org.fabric3.scdl.ModelObject;
 import org.fabric3.scdl.OperationDefinition;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.loader.Loader;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.PolicyHelper;
 import org.fabric3.spi.loader.StAXElementLoader;
@@ -49,7 +49,7 @@ public class ComponentServiceLoader implements StAXElementLoader<ComponentServic
         this.policyHelper = policyHelper;
     }
 
-    public ComponentService load(XMLStreamReader reader, LoaderContext context)
+    public ComponentService load(XMLStreamReader reader, IntrospectionContext context)
             throws XMLStreamException, LoaderException {
 
         String name = reader.getAttributeValue(null, "name");

@@ -35,7 +35,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.spi.loader.InvalidConfigurationException;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.StAXElementLoader;
@@ -84,7 +84,7 @@ public class LoaderRegistryImpl implements LoaderRegistry {
         loaders.remove(element);
     }
 
-    public <O> O load(XMLStreamReader reader, Class<O> type, LoaderContext loaderContext)
+    public <O> O load(XMLStreamReader reader, Class<O> type, IntrospectionContext introspectionContext)
             throws XMLStreamException, LoaderException {
         QName name = reader.getName();
         monitor.elementLoad(name);
@@ -95,10 +95,10 @@ public class LoaderRegistryImpl implements LoaderRegistry {
         if (loader == null) {
             throw new UnrecognizedElementException(name);
         }
-        return type.cast(loader.load(reader, loaderContext));
+        return type.cast(loader.load(reader, introspectionContext));
     }
 
-    public <O> O load(URL url, Class<O> type, LoaderContext ctx) throws LoaderException {
+    public <O> O load(URL url, Class<O> type, IntrospectionContext ctx) throws LoaderException {
         InputStream stream;
         try {
             stream = url.openStream();
@@ -118,7 +118,7 @@ public class LoaderRegistryImpl implements LoaderRegistry {
         }
     }
 
-    private <O> O load(URL url, InputStream stream, Class<O> type, LoaderContext ctx) throws LoaderException {
+    private <O> O load(URL url, InputStream stream, Class<O> type, IntrospectionContext ctx) throws LoaderException {
         XMLStreamReader reader;
         try {
             reader = xmlFactory.createXMLStreamReader(url.toString(), stream);

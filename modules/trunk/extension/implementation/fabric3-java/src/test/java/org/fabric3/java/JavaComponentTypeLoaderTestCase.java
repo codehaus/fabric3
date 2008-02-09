@@ -24,7 +24,7 @@ import org.easymock.IAnswer;
 
 import org.fabric3.pojo.processor.IntrospectionRegistry;
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 
 /**
  * @version $Rev$ $Date$
@@ -37,14 +37,14 @@ public class JavaComponentTypeLoaderTestCase extends TestCase {
         registry.introspect(
                 (Class) EasyMock.isA(Object.class),
                 EasyMock.isA(PojoComponentType.class),
-                EasyMock.isA(LoaderContext.class));
+                EasyMock.isA(IntrospectionContext.class));
         EasyMock.expectLastCall().andStubAnswer(new IAnswer() {
             public Object answer() throws Throwable {
                 return null;
             }
         });
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        LoaderContext context = EasyMock.createMock(LoaderContext.class);
+        IntrospectionContext context = EasyMock.createMock(IntrospectionContext.class);
         EasyMock.expect(context.getTargetClassLoader()).andStubReturn(cl);
         EasyMock.replay(registry, context);
         JavaComponentTypeLoaderImpl loader = new JavaComponentTypeLoaderImpl(registry);
@@ -61,7 +61,7 @@ public class JavaComponentTypeLoaderTestCase extends TestCase {
         registry.load(
                 (URL) EasyMock.isNull(),
             EasyMock.eq(PojoComponentType.class),
-            (LoaderContext) EasyMock.isNull());
+            (IntrospectionContext) EasyMock.isNull());
         EasyMock.expectLastCall().andStubAnswer(new IAnswer() {
             public Object answer() throws Throwable {
                 return EasyMock.getCurrentArguments()[0];

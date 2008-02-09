@@ -34,7 +34,7 @@ import org.fabric3.binding.jms.model.DestinationType;
 import org.fabric3.binding.jms.model.JmsBindingMetadata;
 import org.fabric3.binding.jms.model.ResponseDefinition;
 import org.fabric3.extension.loader.LoaderExtension;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.PolicyHelper;
@@ -74,9 +74,9 @@ public class JmsBindingLoader extends LoaderExtension<JmsBindingDefinition> {
     /**
      * @see org.fabric3.spi.loader.StAXElementLoader#load(java.lang.Object,
      *      javax.xml.stream.XMLStreamReader,
-     *      org.fabric3.spi.loader.LoaderContext)
+     *      org.fabric3.introspection.IntrospectionContext)
      */
-    public JmsBindingDefinition load(XMLStreamReader reader, LoaderContext loaderContext)
+    public JmsBindingDefinition load(XMLStreamReader reader, IntrospectionContext introspectionContext)
         throws XMLStreamException, LoaderException {
 
         JmsBindingMetadata metadata = new JmsBindingMetadata();

@@ -22,6 +22,8 @@ import java.net.URL;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import org.fabric3.introspection.IntrospectionContext;
+
 /**
  * System service for loading configuration artifacts from an XML source.
  *
@@ -43,7 +45,7 @@ public interface Loader {
      * @throws XMLStreamException if there was a problem reading the stream
      * @throws ClassCastException if the XML type cannot be cast to the expected output type
      */
-    <OUTPUT> OUTPUT load(XMLStreamReader reader, Class<OUTPUT> type, LoaderContext context)
+    <OUTPUT> OUTPUT load(XMLStreamReader reader, Class<OUTPUT> type, IntrospectionContext context)
             throws XMLStreamException, LoaderException;
 
     /**
@@ -56,5 +58,5 @@ public interface Loader {
      * @throws LoaderException    if there was a problem loading the document
      * @throws ClassCastException if the XML type cannot be cast to the expected output type
      */
-    <OUTPUT> OUTPUT load(URL url, Class<OUTPUT> type, LoaderContext context) throws LoaderException;
+    <OUTPUT> OUTPUT load(URL url, Class<OUTPUT> type, IntrospectionContext context) throws LoaderException;
 }

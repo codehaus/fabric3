@@ -27,7 +27,7 @@ import static org.osoa.sca.Constants.SCA_NS;
 import org.fabric3.scdl.ComponentType;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Property;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.PolicyHelper;
@@ -41,7 +41,7 @@ public class CompositeLoaderDuplicatePropertyTestCase extends TestCase {
 
     private CompositeLoader loader;
     private XMLStreamReader reader;
-    private LoaderContext ctx;
+    private IntrospectionContext ctx;
 
     /**
      * Verifies an exception is thrown if an attempt is made to configure a property twice.
@@ -65,7 +65,7 @@ public class CompositeLoaderDuplicatePropertyTestCase extends TestCase {
         EasyMock.replay(helper);
         loader = new CompositeLoader(registry, null, propLoader, null, null, null, null, helper);
         reader = createReader();
-        ctx = EasyMock.createNiceMock(LoaderContext.class);
+        ctx = EasyMock.createNiceMock(IntrospectionContext.class);
     }
 
 
@@ -74,7 +74,7 @@ public class CompositeLoaderDuplicatePropertyTestCase extends TestCase {
         Implementation impl = createImpl();
         EasyMock.expect(registry.load(EasyMock.isA(XMLStreamReader.class),
                                       EasyMock.eq(Implementation.class),
-                                      EasyMock.isA(LoaderContext.class))).andReturn(impl);
+                                      EasyMock.isA(IntrospectionContext.class))).andReturn(impl);
 
         EasyMock.replay(registry);
         return registry;
@@ -85,7 +85,7 @@ public class CompositeLoaderDuplicatePropertyTestCase extends TestCase {
         StAXElementLoader loader = EasyMock.createMock(StAXElementLoader.class);
         Property<?> value = new Property<T>(PROP_NAME, null, null);
         EasyMock.expect(loader.load(EasyMock.isA(XMLStreamReader.class),
-                                    EasyMock.isA(LoaderContext.class))).andReturn(value).times(2);
+                                    EasyMock.isA(IntrospectionContext.class))).andReturn(value).times(2);
         EasyMock.replay(loader);
         return (StAXElementLoader<Property<?>>) loader;
     }

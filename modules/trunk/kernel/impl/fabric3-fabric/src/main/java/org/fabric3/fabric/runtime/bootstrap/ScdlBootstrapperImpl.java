@@ -46,7 +46,7 @@ import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.ScdlBootstrapper;
-import org.fabric3.loader.common.LoaderContextImpl;
+import org.fabric3.loader.common.IntrospectionContextImpl;
 import org.fabric3.pojo.processor.JavaIntrospectionHelper;
 import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.PojoComponentType;
@@ -64,7 +64,7 @@ import org.fabric3.spi.idl.InvalidServiceContractException;
 import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
 import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.spi.loader.Loader;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.runtime.RuntimeServices;
@@ -143,8 +143,8 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
             // load the system composite
             ClassLoader bootCl = classLoaderRegistry.getClassLoader(BOOT_CLASSLOADER_ID);
-            LoaderContext loaderContext = new LoaderContextImpl(bootCl, BOOT_CLASSLOADER_ID, scdlLocation);
-            Composite composite = loader.load(scdlLocation, Composite.class, loaderContext);
+            IntrospectionContext introspectionContext = new IntrospectionContextImpl(bootCl, BOOT_CLASSLOADER_ID, scdlLocation);
+            Composite composite = loader.load(scdlLocation, Composite.class, introspectionContext);
 
             Document userConfig = loadUserConfig();
             if (userConfig != null) {

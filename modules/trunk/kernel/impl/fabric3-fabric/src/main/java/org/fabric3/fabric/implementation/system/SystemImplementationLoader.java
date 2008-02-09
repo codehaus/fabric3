@@ -26,7 +26,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.spi.loader.InvalidValueException;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
@@ -46,7 +46,7 @@ public class SystemImplementationLoader extends LoaderExtension<SystemImplementa
         this.componentTypeLoader = componentTypeLoader;
     }
 
-    public SystemImplementation load(XMLStreamReader reader, LoaderContext loaderContext)
+    public SystemImplementation load(XMLStreamReader reader, IntrospectionContext introspectionContext)
             throws XMLStreamException, LoaderException {
         assert SystemImplementation.IMPLEMENTATION_SYSTEM.equals(reader.getName());
         String implClass = reader.getAttributeValue(null, "class");
@@ -57,7 +57,7 @@ public class SystemImplementationLoader extends LoaderExtension<SystemImplementa
 
         SystemImplementation implementation = new SystemImplementation();
         implementation.setImplementationClass(implClass);
-        componentTypeLoader.load(implementation, loaderContext);
+        componentTypeLoader.load(implementation, introspectionContext);
         return implementation;
     }
 

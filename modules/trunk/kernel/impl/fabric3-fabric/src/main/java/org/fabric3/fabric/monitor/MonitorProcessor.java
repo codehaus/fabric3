@@ -35,7 +35,7 @@ import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.spi.idl.InvalidServiceContractException;
 import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
 import org.fabric3.spi.idl.java.JavaServiceContract;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 
 /**
  * Processes an {@link @Monitor} annotation}
@@ -49,7 +49,7 @@ public class MonitorProcessor extends ImplementationProcessorExtension {
         this.interfaceProcessorRegistry = interfaceProcessorRegistry;
     }
 
-    public void visitMethod(Method method, PojoComponentType type, LoaderContext context) throws ProcessingException {
+    public void visitMethod(Method method, PojoComponentType type, IntrospectionContext context) throws ProcessingException {
         Monitor annotation = method.getAnnotation(Monitor.class);
         if (annotation == null) {
             return;
@@ -69,7 +69,7 @@ public class MonitorProcessor extends ImplementationProcessorExtension {
         type.add(resource);
     }
 
-    public void visitField(Field field, PojoComponentType type, LoaderContext context) throws ProcessingException {
+    public void visitField(Field field, PojoComponentType type, IntrospectionContext context) throws ProcessingException {
         Monitor annotation = field.getAnnotation(Monitor.class);
         if (annotation == null) {
             return;

@@ -34,7 +34,7 @@ import org.fabric3.scdl.CompositeService;
 import org.fabric3.scdl.ModelObject;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.PolicyHelper;
@@ -52,7 +52,7 @@ public class CompositeServiceLoaderTestCase extends TestCase {
     private final URI componentServiceURI = URI.create("component#service");
 
     private CompositeServiceLoader loader;
-    private LoaderContext loaderContext;
+    private IntrospectionContext introspectionContext;
     private XMLStreamReader mockReader;
     private LoaderRegistry mockRegistry;
     private PolicyHelper mockPolicyHelper;
@@ -62,7 +62,7 @@ public class CompositeServiceLoaderTestCase extends TestCase {
         expect(mockReader.getAttributeValue(null, "promote")).andReturn(componentName);
         expect(mockReader.next()).andReturn(END_ELEMENT);
         replay(mockReader);
-        CompositeService serviceDefinition = loader.load(mockReader, loaderContext);
+        CompositeService serviceDefinition = loader.load(mockReader, introspectionContext);
         assertNotNull(serviceDefinition);
         assertEquals(serviceName, serviceDefinition.getName());
         assertEquals(componentURI, serviceDefinition.getPromote());
@@ -73,7 +73,7 @@ public class CompositeServiceLoaderTestCase extends TestCase {
         expect(mockReader.getAttributeValue(null, "promote")).andReturn(componentServiceName);
         expect(mockReader.next()).andReturn(END_ELEMENT);
         replay(mockReader);
-        CompositeService serviceDefinition = loader.load(mockReader, loaderContext);
+        CompositeService serviceDefinition = loader.load(mockReader, introspectionContext);
         assertNotNull(serviceDefinition);
         assertEquals(serviceName, serviceDefinition.getName());
         assertEquals(componentServiceURI, serviceDefinition.getPromote());
@@ -89,10 +89,10 @@ public class CompositeServiceLoaderTestCase extends TestCase {
 
         BindingDefinition binding = new BindingDefinition(null) {
         };
-        expect(mockRegistry.load(mockReader, ModelObject.class, loaderContext)).andReturn(binding).times(2);
+        expect(mockRegistry.load(mockReader, ModelObject.class, introspectionContext)).andReturn(binding).times(2);
         replay(mockRegistry);
 
-        ServiceDefinition serviceDefinition = loader.load(mockReader, loaderContext);
+        ServiceDefinition serviceDefinition = loader.load(mockReader, introspectionContext);
         assertEquals(2, serviceDefinition.getBindings().size());
     }
 
@@ -112,13 +112,13 @@ public class CompositeServiceLoaderTestCase extends TestCase {
         expect(mockReader.getAttributeValue(null, "name")).andReturn(serviceName);
         expect(mockReader.getAttributeValue(null, "promote")).andReturn(componentName);
         expect(mockReader.next()).andReturn(START_ELEMENT);
-        expect(mockRegistry.load(mockReader, ModelObject.class, loaderContext)).andReturn(sc);
+        expect(mockRegistry.load(mockReader, ModelObject.class, introspectionContext)).andReturn(sc);
         expect(mockReader.next()).andReturn(END_ELEMENT);
 
         replay(mockReader);
         replay(mockRegistry);
 
-        ServiceDefinition serviceDefinition = loader.load(mockReader, loaderContext);
+        ServiceDefinition serviceDefinition = loader.load(mockReader, introspectionContext);
         assertSame(sc, serviceDefinition.getServiceContract());
     }
 
@@ -128,7 +128,7 @@ public class CompositeServiceLoaderTestCase extends TestCase {
         mockRegistry = EasyMock.createMock(LoaderRegistry.class);
         mockPolicyHelper = EasyMock.createMock(PolicyHelper.class);
         loader = new CompositeServiceLoader(mockRegistry, mockPolicyHelper);
-        loaderContext = EasyMock.createMock(LoaderContext.class);
-        EasyMock.replay(loaderContext);
+        introspectionContext = EasyMock.createMock(IntrospectionContext.class);
+        EasyMock.replay(introspectionContext);
     }
 }

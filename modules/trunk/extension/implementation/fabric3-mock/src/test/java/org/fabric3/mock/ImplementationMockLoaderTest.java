@@ -24,7 +24,7 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 
 import org.easymock.EasyMock;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderRegistry;
 
 import junit.framework.TestCase;
@@ -38,7 +38,7 @@ public class ImplementationMockLoaderTest extends TestCase {
         
         MockComponentTypeLoader componentTypeLoader = EasyMock.createMock(MockComponentTypeLoader.class);
         LoaderRegistry loaderRegistry = EasyMock.createMock(LoaderRegistry.class);
-        LoaderContext context = EasyMock.createMock(LoaderContext.class);
+        IntrospectionContext context = EasyMock.createMock(IntrospectionContext.class);
         
         ImplementationMockLoader loader = new ImplementationMockLoader(loaderRegistry, componentTypeLoader);
         

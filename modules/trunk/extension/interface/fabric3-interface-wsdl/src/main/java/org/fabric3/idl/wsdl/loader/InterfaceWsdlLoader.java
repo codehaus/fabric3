@@ -30,7 +30,7 @@ import org.osoa.sca.Constants;
 import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.idl.wsdl.WsdlContract;
 import org.fabric3.idl.wsdl.processor.WsdlProcessor;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 
@@ -69,9 +69,9 @@ public class InterfaceWsdlLoader extends LoaderExtension<WsdlContract> implement
     }
 
     /**
-     * @see org.fabric3.spi.loader.StAXElementLoader#load(javax.xml.stream.XMLStreamReader,org.fabric3.spi.loader.LoaderContext)
+     * @see org.fabric3.spi.loader.StAXElementLoader#load(javax.xml.stream.XMLStreamReader, org.fabric3.introspection.IntrospectionContext)
      */
-    public WsdlContract load(XMLStreamReader reader, LoaderContext context) throws XMLStreamException, LoaderException {
+    public WsdlContract load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {
 
         WsdlContract wsdlContract = new WsdlContract();
 

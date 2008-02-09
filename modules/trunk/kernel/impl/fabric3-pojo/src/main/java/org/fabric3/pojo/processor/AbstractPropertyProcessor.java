@@ -26,7 +26,7 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Map;
 
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.scdl.ConstructorDefinition;
@@ -49,7 +49,7 @@ public abstract class AbstractPropertyProcessor<A extends Annotation> extends Im
     public void visitMethod(
             Method method,
             PojoComponentType type,
-            LoaderContext context) throws ProcessingException {
+            IntrospectionContext context) throws ProcessingException {
         A annotation = method.getAnnotation(annotationClass);
         if (annotation == null) {
             return;
@@ -90,7 +90,7 @@ public abstract class AbstractPropertyProcessor<A extends Annotation> extends Im
     public void visitField(
             Field field,
             PojoComponentType type,
-            LoaderContext context) throws ProcessingException {
+            IntrospectionContext context) throws ProcessingException {
 
         A annotation = field.getAnnotation(annotationClass);
         if (annotation == null) {
@@ -121,7 +121,7 @@ public abstract class AbstractPropertyProcessor<A extends Annotation> extends Im
 
     public <T> void visitConstructor(Constructor<T> constructor,
                                      PojoComponentType type,
-                                     LoaderContext context) throws ProcessingException {
+                                     IntrospectionContext context) throws ProcessingException {
 
         ConstructorDefinition<?> definition = type.getConstructorDefinition();
         if (definition != null && !definition.match(constructor)){
@@ -161,7 +161,7 @@ public abstract class AbstractPropertyProcessor<A extends Annotation> extends Im
 
     protected abstract String getName(A annotation);
 
-    protected <T> void initProperty(JavaMappedProperty<T> property, A annotation, LoaderContext context)
+    protected <T> void initProperty(JavaMappedProperty<T> property, A annotation, IntrospectionContext context)
             throws ProcessingException {
     }
 

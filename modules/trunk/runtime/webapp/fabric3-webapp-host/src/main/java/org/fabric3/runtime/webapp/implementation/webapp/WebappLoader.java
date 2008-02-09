@@ -28,10 +28,10 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.loader.common.LoaderContextImpl;
+import org.fabric3.loader.common.IntrospectionContextImpl;
 import org.fabric3.scdl.ComponentType;
 import org.fabric3.scdl.Scope;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
@@ -60,24 +60,24 @@ public class WebappLoader implements StAXElementLoader<WebappImplementation> {
         registry.unregisterLoader(WebappImplementation.IMPLEMENTATION_WEBAPP);
     }
 
-    public WebappImplementation load(XMLStreamReader reader, LoaderContext loaderContext)
+    public WebappImplementation load(XMLStreamReader reader, IntrospectionContext introspectionContext)
             throws XMLStreamException, LoaderException {
 
-        ComponentType componentType = loadComponentType(loaderContext);
+        ComponentType componentType = loadComponentType(introspectionContext);
         WebappImplementation impl = new WebappImplementation();
         impl.setComponentType(componentType);
         LoaderUtil.skipToEndElement(reader);
         return impl;
     }
 
-    private ComponentType loadComponentType(LoaderContext context) throws LoaderException {
+    private ComponentType loadComponentType(IntrospectionContext context) throws LoaderException {
         URL url;
         try {
             url = new URL(context.getSourceBase(), "web.componentType");
         } catch (MalformedURLException e) {
             throw new LoaderException(e.getMessage(), e);
         }
-        LoaderContext childContext = new LoaderContextImpl(context.getTargetClassLoader(), null, url);
+        IntrospectionContext childContext = new IntrospectionContextImpl(context.getTargetClassLoader(), null, url);
         ComponentType componentType = registry.load(url, ComponentType.class, childContext);
         componentType.setImplementationScope(Scope.COMPOSITE);
         return componentType;

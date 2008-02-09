@@ -16,7 +16,7 @@
  */
 package org.fabric3.spring.xml;
 
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spring.SpringImplementation;
 
@@ -24,5 +24,5 @@ import org.fabric3.spring.SpringImplementation;
  * @version $Rev$ $Date$
  */
 public interface SpringComponentTypeLoader {
-    void load(SpringImplementation implementation, LoaderContext loaderContext) throws LoaderException;
+    void load(SpringImplementation implementation, IntrospectionContext introspectionContext) throws LoaderException;
 }

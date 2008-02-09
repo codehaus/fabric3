@@ -28,7 +28,7 @@ import org.easymock.EasyMock;
 import org.fabric3.fabric.implementation.IntrospectionRegistryImpl.Monitor;
 import org.fabric3.pojo.processor.ImplementationProcessor;
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 
 /**
  * @version $Rev$ $Date$
@@ -57,27 +57,27 @@ public class IntrospectionRegistryTestCase extends TestCase {
         processor.visitClass(
             EasyMock.eq(Bar.class),
             EasyMock.isA(PojoComponentType.class),
-            EasyMock.isA(LoaderContext.class));
+            EasyMock.isA(IntrospectionContext.class));
         processor.visitConstructor(
             EasyMock.isA(Constructor.class),
             EasyMock.isA(PojoComponentType.class),
-            EasyMock.isA(LoaderContext.class));
+            EasyMock.isA(IntrospectionContext.class));
         processor.visitMethod(
             EasyMock.isA(Method.class),
             EasyMock.isA(PojoComponentType.class),
-            EasyMock.isA(LoaderContext.class));
+            EasyMock.isA(IntrospectionContext.class));
         processor.visitField(
             EasyMock.isA(Field.class),
             EasyMock.isA(PojoComponentType.class),
-            EasyMock.isA(LoaderContext.class));
+            EasyMock.isA(IntrospectionContext.class));
         processor.visitSuperClass(
             EasyMock.isA(Class.class),
             EasyMock.isA(PojoComponentType.class),
-            EasyMock.isA(LoaderContext.class));
+            EasyMock.isA(IntrospectionContext.class));
         processor.visitEnd(
             EasyMock.isA(Class.class),
             EasyMock.isA(PojoComponentType.class),
-            EasyMock.isA(LoaderContext.class));
+            EasyMock.isA(IntrospectionContext.class));
 
         //   mock.expects(once()).method("visitClass");
 //        mock.expects(once()).method("visitMethod");
@@ -90,7 +90,7 @@ public class IntrospectionRegistryTestCase extends TestCase {
         registry.introspect(
             Bar.class,
             new PojoComponentType(null),
-            EasyMock.createNiceMock(LoaderContext.class));
+            EasyMock.createNiceMock(IntrospectionContext.class));
         EasyMock.verify(processor);
     }
 

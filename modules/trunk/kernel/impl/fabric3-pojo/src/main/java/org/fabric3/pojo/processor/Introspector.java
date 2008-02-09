@@ -18,7 +18,7 @@
  */
 package org.fabric3.pojo.processor;
 
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.pojo.scdl.PojoComponentType;
 
 /**
@@ -39,6 +39,6 @@ public interface Introspector {
      */
     PojoComponentType introspect(Class<?> clazz,
                                  PojoComponentType type,
-                                 LoaderContext context) throws ProcessingException;
+                                 IntrospectionContext context) throws ProcessingException;
 
 }

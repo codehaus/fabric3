@@ -32,11 +32,11 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.services.contribution.manifest.MissingAttributeException;
-import org.fabric3.loader.common.LoaderContextImpl;
+import org.fabric3.loader.common.IntrospectionContextImpl;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.loader.Loader;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
@@ -74,7 +74,7 @@ public class ImplementationCompositeLoader implements StAXElementLoader<Composit
         registry.unregisterLoader(CompositeImplementation.IMPLEMENTATION_COMPOSITE);
     }
 
-    public CompositeImplementation load(XMLStreamReader reader, LoaderContext loaderContext)
+    public CompositeImplementation load(XMLStreamReader reader, IntrospectionContext introspectionContext)
             throws XMLStreamException, LoaderException {
 
         assert CompositeImplementation.IMPLEMENTATION_COMPOSITE.equals(reader.getName());
@@ -83,17 +83,17 @@ public class ImplementationCompositeLoader implements StAXElementLoader<Composit
         String scdlResource = reader.getAttributeValue(null, "scdlResource");
         LoaderUtil.skipToEndElement(reader);
 
-        ClassLoader cl = loaderContext.getTargetClassLoader();
+        ClassLoader cl = introspectionContext.getTargetClassLoader();
         CompositeImplementation impl = new CompositeImplementation();
-        URI contributionUri = loaderContext.getContributionUri();
+        URI contributionUri = introspectionContext.getContributionUri();
         URL url;
         if (scdlLocation != null) {
             try {
-                url = new URL(loaderContext.getSourceBase(), scdlLocation);
+                url = new URL(introspectionContext.getSourceBase(), scdlLocation);
             } catch (MalformedURLException e) {
                 throw new MissingResourceException(scdlLocation, scdlLocation, e);
             }
-            LoaderContext childContext = new LoaderContextImpl(cl, contributionUri, url);
+            IntrospectionContext childContext = new IntrospectionContextImpl(cl, contributionUri, url);
             Composite composite = loader.load(url, Composite.class, childContext);
             impl.setName(composite.getName());
             impl.setComponentType(composite);
@@ -103,13 +103,13 @@ public class ImplementationCompositeLoader implements StAXElementLoader<Composit
             if (url == null) {
                 throw new MissingResourceException(scdlResource, scdlResource);
             }
-            LoaderContext childContext = new LoaderContextImpl(cl, contributionUri, url);
+            IntrospectionContext childContext = new IntrospectionContextImpl(cl, contributionUri, url);
             Composite composite = loader.load(url, Composite.class, childContext);
             impl.setName(composite.getName());
             impl.setComponentType(composite);
             return impl;
         } else if (nameAttr != null) {
-            String targetNamespace = loaderContext.getTargetNamespace();
+            String targetNamespace = introspectionContext.getTargetNamespace();
             NamespaceContext namespaceContext = reader.getNamespaceContext();
             QName name = LoaderUtil.getQName(nameAttr, targetNamespace, namespaceContext);
             QNameSymbol symbol = new QNameSymbol(name);

@@ -26,7 +26,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
@@ -57,13 +57,13 @@ public class ImplementationJUnitLoader implements StAXElementLoader<Implementati
         registry.unregisterLoader(ImplementationJUnit.IMPLEMENTATION_JUNIT);
     }
 
-    public ImplementationJUnit load(XMLStreamReader reader, LoaderContext loaderContext)
+    public ImplementationJUnit load(XMLStreamReader reader, IntrospectionContext introspectionContext)
             throws XMLStreamException, LoaderException {
         String className = reader.getAttributeValue(null, "class");
         LoaderUtil.skipToEndElement(reader);
 
         ImplementationJUnit impl = new ImplementationJUnit(className);
-        componentTypeLoader.load(impl, loaderContext);
+        componentTypeLoader.load(impl, introspectionContext);
         return impl;
     }
 

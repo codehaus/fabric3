@@ -16,12 +16,12 @@
  */
 package org.fabric3.java;
 
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 
 /**
  * @version $Rev$ $Date$
  */
 public interface JavaComponentTypeLoader {
-    void load(JavaImplementation implementation, LoaderContext loaderContext) throws LoaderException;
+    void load(JavaImplementation implementation, IntrospectionContext introspectionContext) throws LoaderException;
 }

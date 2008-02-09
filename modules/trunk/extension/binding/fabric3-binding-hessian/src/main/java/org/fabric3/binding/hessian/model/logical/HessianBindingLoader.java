@@ -26,7 +26,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.extension.loader.LoaderExtension;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
@@ -60,7 +60,7 @@ public class HessianBindingLoader extends LoaderExtension<HessianBindingDefiniti
         return BINDING_QNAME;
     }
 
-    public HessianBindingDefinition load(XMLStreamReader reader, LoaderContext loaderContext)
+    public HessianBindingDefinition load(XMLStreamReader reader, IntrospectionContext introspectionContext)
         throws XMLStreamException, LoaderException {
         
         HessianBindingDefinition bd = null;

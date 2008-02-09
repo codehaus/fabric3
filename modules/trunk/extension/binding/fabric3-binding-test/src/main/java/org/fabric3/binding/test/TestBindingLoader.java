@@ -27,7 +27,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.spi.Constants;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
@@ -52,7 +52,7 @@ public class TestBindingLoader extends LoaderExtension<TestBindingDefinition> {
         return BINDING_QNAME;
     }
 
-    public TestBindingDefinition load(XMLStreamReader reader, LoaderContext context)
+    public TestBindingDefinition load(XMLStreamReader reader, IntrospectionContext context)
             throws XMLStreamException, LoaderException {
 
         TestBindingDefinition definition;

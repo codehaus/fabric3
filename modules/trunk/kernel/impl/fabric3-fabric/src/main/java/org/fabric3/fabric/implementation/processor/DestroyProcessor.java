@@ -26,7 +26,7 @@ import org.fabric3.pojo.instancefactory.Signature;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 
 /**
  * Processes the {@link @Destroy} annotation on a component implementation and updates the component type with the
@@ -38,7 +38,7 @@ public class DestroyProcessor extends ImplementationProcessorExtension {
 
     public void visitMethod(Method method,
                             PojoComponentType type,
-                            LoaderContext context)
+                            IntrospectionContext context)
         throws ProcessingException {
         Destroy annotation = method.getAnnotation(Destroy.class);
         if (annotation == null) {

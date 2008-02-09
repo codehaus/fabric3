@@ -27,7 +27,7 @@ import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 
 import org.fabric3.scdl.Property;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.StAXElementLoader;
 
@@ -48,7 +48,7 @@ public class PropertyLoader implements StAXElementLoader<Property<?>> {
         this.helper = helper;
     }
 
-    public Property<?> load(XMLStreamReader reader, LoaderContext ctx) throws XMLStreamException, LoaderException {
+    public Property<?> load(XMLStreamReader reader, IntrospectionContext ctx) throws XMLStreamException, LoaderException {
         String name = reader.getAttributeValue(null, NAME);
         boolean many = Boolean.parseBoolean(reader.getAttributeValue(null, MANY));
         boolean mustSupply = Boolean.parseBoolean(reader.getAttributeValue(null, MUST_SUPPLY));

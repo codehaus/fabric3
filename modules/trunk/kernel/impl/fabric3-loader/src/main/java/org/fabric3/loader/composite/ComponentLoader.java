@@ -47,7 +47,7 @@ import org.fabric3.scdl.Property;
 import org.fabric3.spi.Constants;
 import org.fabric3.spi.loader.InvalidValueException;
 import org.fabric3.spi.loader.Loader;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.PolicyHelper;
@@ -95,7 +95,7 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
         this.policyHelper = policyHelper;
     }
 
-    public ComponentDefinition<?> load(XMLStreamReader reader, LoaderContext context)
+    public ComponentDefinition<?> load(XMLStreamReader reader, IntrospectionContext context)
             throws XMLStreamException, LoaderException {
 
         String name = reader.getAttributeValue(null, "name");
@@ -219,7 +219,7 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
     /*
      * Loads the init level.
      */
-    private Integer loadInitLevel(XMLStreamReader reader, LoaderContext context) throws InvalidValueException {
+    private Integer loadInitLevel(XMLStreamReader reader, IntrospectionContext context) throws InvalidValueException {
         String initLevel = reader.getAttributeValue(null, "initLevel");
         if (initLevel == null || initLevel.length() == 0) {
             return null;
@@ -235,7 +235,7 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
     /*
      * Loads the runtime id.
      */
-    private URI loadRuntimeId(XMLStreamReader reader, LoaderContext context) throws InvalidValueException {
+    private URI loadRuntimeId(XMLStreamReader reader, IntrospectionContext context) throws InvalidValueException {
         String runtimeAttr = reader.getAttributeValue(null, "runtimeId");
         if (runtimeAttr == null) {
             return null;
@@ -251,7 +251,7 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
     /*
      * Loads the component implementation.
      */
-    private Implementation<?> loadImplementation(XMLStreamReader reader, LoaderContext context)
+    private Implementation<?> loadImplementation(XMLStreamReader reader, IntrospectionContext context)
             throws XMLStreamException, LoaderException {
         reader.nextTag();
         return loader.load(reader, Implementation.class, context);

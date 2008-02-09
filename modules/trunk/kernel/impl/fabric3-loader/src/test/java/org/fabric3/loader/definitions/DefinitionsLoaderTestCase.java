@@ -34,7 +34,7 @@ import junit.framework.TestCase;
 import org.fabric3.scdl.definitions.AbstractDefinition;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.StAXElementLoader;
@@ -153,13 +153,13 @@ public class DefinitionsLoaderTestCase extends TestCase {
 
         @SuppressWarnings("unchecked")
         public <OUTPUT> OUTPUT load(XMLStreamReader reader, Class<OUTPUT> type,
-                                    LoaderContext context) throws XMLStreamException,
+                                    IntrospectionContext context) throws XMLStreamException,
                 LoaderException {
             return (OUTPUT) loaders.get(reader.getName()).load(reader, context);
         }
 
         public <OUTPUT> OUTPUT load(URL url, Class<OUTPUT> type,
-                                    LoaderContext context) throws LoaderException {
+                                    IntrospectionContext context) throws LoaderException {
             // TODO Auto-generated method stub
             return null;
         }

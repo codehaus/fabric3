@@ -31,7 +31,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.pojo.processor.Introspector;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Scope;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
@@ -67,7 +67,7 @@ public class GroovyImplementationLoader implements StAXElementLoader<GroovyImple
         registry.unregisterLoader(GroovyImplementation.IMPLEMENTATION_GROOVY);
     }
 
-    public GroovyImplementation load(XMLStreamReader reader, LoaderContext context)
+    public GroovyImplementation load(XMLStreamReader reader, IntrospectionContext context)
             throws XMLStreamException, LoaderException {
 
         String className = reader.getAttributeValue(null, "class");

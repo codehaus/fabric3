@@ -14,7 +14,7 @@ import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI
 import static org.fabric3.fabric.runtime.ComponentNames.LOADER_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_NAME;
 import org.fabric3.host.runtime.StartException;
-import org.fabric3.loader.common.LoaderContextImpl;
+import org.fabric3.loader.common.IntrospectionContextImpl;
 import org.fabric3.monitor.impl.JavaLoggingMonitorFactory;
 import org.fabric3.pojo.processor.JavaIntrospectionHelper;
 import org.fabric3.scdl.Composite;
@@ -28,7 +28,7 @@ import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.loader.Loader;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.wire.ProxyService;
 import org.fabric3.spi.wire.Wire;
@@ -82,8 +82,8 @@ public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo>
                 throw new IllegalArgumentException("Composite URL was null");
             }
             Loader loader = getSystemComponent(Loader.class, LOADER_URI);
-            LoaderContext loaderContext = new LoaderContextImpl(getHostClassLoader(), null, compositeFile);
-            Composite composite = loader.load(compositeFile, Composite.class, loaderContext);
+            IntrospectionContext introspectionContext = new IntrospectionContextImpl(getHostClassLoader(), null, compositeFile);
+            Composite composite = loader.load(compositeFile, Composite.class, introspectionContext);
             for (String name : mockCache.getMockDefinitions().keySet()) {
                 CompositeReference reference = composite.getReferences().get(name);
                 if (reference == null) {

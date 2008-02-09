@@ -27,7 +27,7 @@ import org.fabric3.spi.idl.InvalidServiceContractException;
 import org.fabric3.spi.idl.java.InterfaceJavaIntrospector;
 import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.spi.loader.InvalidValueException;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.StAXElementLoader;
@@ -45,7 +45,7 @@ public class JavaInterfaceLoader implements StAXElementLoader<JavaServiceContrac
         this.introspector = introspector;
     }
 
-    public JavaServiceContract load(XMLStreamReader reader, LoaderContext loaderContext)
+    public JavaServiceContract load(XMLStreamReader reader, IntrospectionContext introspectionContext)
             throws XMLStreamException, LoaderException {
 
         String conversationalAttr = reader.getAttributeValue(null, "conversational");
@@ -58,11 +58,11 @@ public class JavaInterfaceLoader implements StAXElementLoader<JavaServiceContrac
         if (name == null) {
             throw new InvalidValueException("interface name not supplied");
         }
-        Class<?> interfaceClass = LoaderUtil.loadClass(name, loaderContext.getTargetClassLoader());
+        Class<?> interfaceClass = LoaderUtil.loadClass(name, introspectionContext.getTargetClassLoader());
 
         name = reader.getAttributeValue(null, "callbackInterface");
         Class<?> callbackClass =
-                (name != null) ? LoaderUtil.loadClass(name, loaderContext.getTargetClassLoader()) : null;
+                (name != null) ? LoaderUtil.loadClass(name, introspectionContext.getTargetClassLoader()) : null;
 
         LoaderUtil.skipToEndElement(reader);
 

@@ -28,7 +28,7 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.scdl.ConstructorDefinition;
@@ -117,7 +117,7 @@ public class AbstractPropertyProcessorTestCase extends TestCase {
         @SuppressWarnings("unchecked")
         protected <T> void initProperty(JavaMappedProperty<T> property,
                                         Bar annotation,
-                                        LoaderContext context) {
+                                        IntrospectionContext context) {
             property.setName("test");
         }
 

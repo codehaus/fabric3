@@ -32,7 +32,7 @@ import org.fabric3.fabric.implementation.processor.InitProcessor;
 import org.fabric3.fabric.implementation.processor.PropertyProcessor;
 import org.fabric3.fabric.implementation.processor.ReferenceProcessor;
 import org.fabric3.fabric.implementation.processor.ServiceProcessor;
-import org.fabric3.loader.common.LoaderContextImpl;
+import org.fabric3.loader.common.IntrospectionContextImpl;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Property;
@@ -49,7 +49,7 @@ public class SystemComponentTypeLoaderTestCase extends TestCase {
     public void testIntrospectUnannotatedClass() throws Exception {
         SystemImplementation impl = new SystemImplementation(BasicInterfaceImpl.class.getName());
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        LoaderContextImpl context = new LoaderContextImpl(cl, null, null);
+        IntrospectionContextImpl context = new IntrospectionContextImpl(cl, null, null);
         PojoComponentType componentType = loader.loadByIntrospection(impl, context);
         ServiceDefinition service = componentType.getServices().get(BasicInterface.class.getSimpleName());
         JavaServiceContract contract = JavaServiceContract.class.cast(service.getServiceContract());

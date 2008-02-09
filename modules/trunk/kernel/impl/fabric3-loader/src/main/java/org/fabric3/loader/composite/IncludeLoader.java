@@ -28,11 +28,11 @@ import javax.xml.stream.XMLStreamReader;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.loader.common.InvalidNameException;
-import org.fabric3.loader.common.LoaderContextImpl;
+import org.fabric3.loader.common.IntrospectionContextImpl;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Include;
 import org.fabric3.spi.loader.Loader;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.MissingResourceException;
@@ -56,24 +56,24 @@ public class IncludeLoader implements StAXElementLoader<Include> {
         this.store = store;
     }
 
-    public Include load(XMLStreamReader reader, LoaderContext loaderContext)
+    public Include load(XMLStreamReader reader, IntrospectionContext introspectionContext)
             throws XMLStreamException, LoaderException {
 
         String nameAttr = reader.getAttributeValue(null, "name");
         if (nameAttr == null || nameAttr.length() == 0) {
             throw new InvalidNameException(nameAttr);
         }
-        QName name = LoaderUtil.getQName(nameAttr, loaderContext.getTargetNamespace(), reader.getNamespaceContext());
+        QName name = LoaderUtil.getQName(nameAttr, introspectionContext.getTargetNamespace(), reader.getNamespaceContext());
         String scdlLocation = reader.getAttributeValue(null, "scdlLocation");
         String scdlResource = reader.getAttributeValue(null, "scdlResource");
         LoaderUtil.skipToEndElement(reader);
 
-        ClassLoader cl = loaderContext.getTargetClassLoader();
-        URI contributionUri = loaderContext.getContributionUri();
+        ClassLoader cl = introspectionContext.getTargetClassLoader();
+        URI contributionUri = introspectionContext.getContributionUri();
         URL url;
         if (scdlLocation != null) {
             try {
-                url = new URL(loaderContext.getSourceBase(), scdlLocation);
+                url = new URL(introspectionContext.getSourceBase(), scdlLocation);
                 return loadFromSideFile(name, cl,contributionUri, url);
             } catch (MalformedURLException e) {
                 throw new MissingResourceException(scdlLocation, name.toString(), e);
@@ -105,7 +105,7 @@ public class IncludeLoader implements StAXElementLoader<Include> {
 
     private Include loadFromSideFile(QName name, ClassLoader cl, URI contributionUri, URL url) throws InvalidIncludeException {
         Include include = new Include();
-        LoaderContext childContext = new LoaderContextImpl(cl, contributionUri, url);
+        IntrospectionContext childContext = new IntrospectionContextImpl(cl, contributionUri, url);
         Composite composite;
         try {
             composite = loader.load(url, Composite.class, childContext);

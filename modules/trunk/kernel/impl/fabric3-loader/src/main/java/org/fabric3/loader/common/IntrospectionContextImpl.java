@@ -21,7 +21,7 @@ package org.fabric3.loader.common;
 import java.net.URI;
 import java.net.URL;
 
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.transform.TransformContext;
 
 /**
@@ -30,11 +30,11 @@ import org.fabric3.spi.transform.TransformContext;
  *
  * @version $Rev$ $Date$
  */
-public class LoaderContextImpl extends TransformContext implements LoaderContext {
+public class IntrospectionContextImpl extends TransformContext implements IntrospectionContext {
     private String targetNamespace;
     private URI contributionUri;
 
-    public LoaderContextImpl(URI contributionUri, ClassLoader classLoader, String targetNamespace) {
+    public IntrospectionContextImpl(URI contributionUri, ClassLoader classLoader, String targetNamespace) {
         super(null, classLoader, null, null);
         this.targetNamespace = targetNamespace;
         this.contributionUri = contributionUri;
@@ -47,7 +47,7 @@ public class LoaderContextImpl extends TransformContext implements LoaderContext
      * @param contributionUri the active contribution URI
      * @param scdlLocation    the location of the SCDL defining this composite
      */
-    public LoaderContextImpl(ClassLoader classLoader, URI contributionUri, URL scdlLocation) {
+    public IntrospectionContextImpl(ClassLoader classLoader, URI contributionUri, URL scdlLocation) {
         super(null, classLoader, scdlLocation, null);
         this.contributionUri = contributionUri;
     }
@@ -58,7 +58,7 @@ public class LoaderContextImpl extends TransformContext implements LoaderContext
      * @param parentContext   Parent context.
      * @param targetNamespace Target namespace.
      */
-    public LoaderContextImpl(LoaderContext parentContext, String targetNamespace) {
+    public IntrospectionContextImpl(IntrospectionContext parentContext, String targetNamespace) {
         super(null, parentContext.getTargetClassLoader(), parentContext.getSourceBase(), null);
         this.targetNamespace = targetNamespace;
         this.contributionUri = parentContext.getContributionUri();

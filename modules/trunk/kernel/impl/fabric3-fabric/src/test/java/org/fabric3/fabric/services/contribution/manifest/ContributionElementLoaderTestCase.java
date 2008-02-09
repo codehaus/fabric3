@@ -27,7 +27,7 @@ import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
 import static org.osoa.sca.Constants.SCA_NS;
 
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.Export;
@@ -82,7 +82,7 @@ public class ContributionElementLoaderTestCase extends TestCase {
         };
         EasyMock.expect(loaderRegistry.load(
                 EasyMock.isA(XMLStreamReader.class),
-                EasyMock.eq(Object.class), (LoaderContext) EasyMock.isNull())).andReturn(contribImport);
+                EasyMock.eq(Object.class), (IntrospectionContext) EasyMock.isNull())).andReturn(contribImport);
         EasyMock.expect(reader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
         EasyMock.expect(reader.getName()).andReturn(IMPORT_ELEMENT);
 
@@ -99,7 +99,7 @@ public class ContributionElementLoaderTestCase extends TestCase {
         };
         EasyMock.expect(loaderRegistry.load(
                 EasyMock.isA(XMLStreamReader.class),
-                EasyMock.eq(Object.class), (LoaderContext) EasyMock.isNull())).andReturn(contribExport);
+                EasyMock.eq(Object.class), (IntrospectionContext) EasyMock.isNull())).andReturn(contribExport);
         EasyMock.expect(reader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
         EasyMock.expect(reader.getName()).andReturn(EXPORT_ELEMENT);
 

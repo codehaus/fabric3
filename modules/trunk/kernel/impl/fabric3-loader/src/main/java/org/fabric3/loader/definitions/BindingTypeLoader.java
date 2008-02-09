@@ -25,12 +25,13 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.scdl.definitions.BindingType;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.util.stax.StaxUtil;
+
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
@@ -50,7 +51,7 @@ public class BindingTypeLoader implements StAXElementLoader<BindingType> {
         registry.registerLoader(DefinitionsLoader.BINDING_TYPE, this);
     }
 
-    public BindingType load(XMLStreamReader reader, LoaderContext context) throws XMLStreamException, LoaderException {
+    public BindingType load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {
         
 
         String name = reader.getAttributeValue(null, "name");

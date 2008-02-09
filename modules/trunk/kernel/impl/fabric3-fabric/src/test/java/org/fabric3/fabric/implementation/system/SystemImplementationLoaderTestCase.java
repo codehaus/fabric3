@@ -26,7 +26,7 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
 import org.fabric3.spi.Constants;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderRegistry;
 
 /**
@@ -36,7 +36,7 @@ public class SystemImplementationLoaderTestCase extends TestCase {
 
     public static final QName SYSTEM_IMPLEMENTATION = new QName(Constants.FABRIC3_SYSTEM_NS, "implementation.system");
     private LoaderRegistry registry;
-    private LoaderContext context;
+    private IntrospectionContext context;
     private XMLStreamReader reader;
     private SystemComponentTypeLoader componentTypeLoader;
     private SystemImplementationLoader loader;
@@ -64,7 +64,7 @@ public class SystemImplementationLoaderTestCase extends TestCase {
         registry = EasyMock.createMock(LoaderRegistry.class);
         componentTypeLoader = EasyMock.createMock(SystemComponentTypeLoader.class);
 
-        context = EasyMock.createMock(LoaderContext.class);
+        context = EasyMock.createMock(IntrospectionContext.class);
         EasyMock.replay(context);
 
         reader = EasyMock.createMock(XMLStreamReader.class);

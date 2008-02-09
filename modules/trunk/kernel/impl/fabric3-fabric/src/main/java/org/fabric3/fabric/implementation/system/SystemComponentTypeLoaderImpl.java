@@ -24,7 +24,7 @@ import org.fabric3.pojo.processor.Introspector;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Scope;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.MissingResourceException;
@@ -41,14 +41,14 @@ public class SystemComponentTypeLoaderImpl implements SystemComponentTypeLoader 
         this.introspector = introspector;
     }
 
-    public void load(SystemImplementation implementation, LoaderContext loaderContext) throws LoaderException {
-        PojoComponentType componentType = loadByIntrospection(implementation, loaderContext);
+    public void load(SystemImplementation implementation, IntrospectionContext introspectionContext) throws LoaderException {
+        PojoComponentType componentType = loadByIntrospection(implementation, introspectionContext);
         // this means system components are always composite scoped
         componentType.setImplementationScope(Scope.COMPOSITE);
         implementation.setComponentType(componentType);
     }
 
-    protected PojoComponentType loadByIntrospection(SystemImplementation implementation, LoaderContext context)
+    protected PojoComponentType loadByIntrospection(SystemImplementation implementation, IntrospectionContext context)
             throws ProcessingException, MissingResourceException {
         ClassLoader cl = context.getTargetClassLoader();
         Class<?> implClass = LoaderUtil.loadClass(implementation.getImplementationClass(), cl);

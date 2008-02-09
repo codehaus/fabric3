@@ -25,7 +25,7 @@ import javax.xml.stream.XMLStreamReader;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.scdl.ModelObject;
@@ -59,7 +59,7 @@ public class LoaderExtensionTestCase extends TestCase {
             return new QName("");
         }
 
-        public ModelObject load(XMLStreamReader reader, LoaderContext loaderContext)
+        public ModelObject load(XMLStreamReader reader, IntrospectionContext introspectionContext)
                 throws XMLStreamException, LoaderException {
             throw new AssertionError();
         }

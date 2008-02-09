@@ -37,7 +37,7 @@ import static org.easymock.EasyMock.verify;
 
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Include;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.services.contribution.MetaDataStore;
@@ -53,7 +53,7 @@ public class IncludeLoaderTestCase extends TestCase {
     private IncludeLoader loader;
     private XMLStreamReader reader;
     private NamespaceContext namespaceContext;
-    private LoaderContext context;
+    private IntrospectionContext context;
     private URL base;
     private URL includeURL;
     private ClassLoader cl;
@@ -98,7 +98,7 @@ public class IncludeLoaderTestCase extends TestCase {
         expect(registry.load(
                 eq(includeURL),
                 eq(Composite.class),
-                isA(LoaderContext.class)))
+                isA(IntrospectionContext.class)))
                 .andReturn(null);
         replay(registry, reader, namespaceContext, context, store);
 
@@ -123,7 +123,7 @@ public class IncludeLoaderTestCase extends TestCase {
         expect(registry.load(
                 eq(includeURL),
                 eq(Composite.class),
-                isA(LoaderContext.class)))
+                isA(IntrospectionContext.class)))
                 .andReturn(null);
         replay(registry, reader, namespaceContext, context, store);
 
@@ -151,7 +151,7 @@ public class IncludeLoaderTestCase extends TestCase {
         expect(registry.load(
                 eq(includeURL),
                 eq(Composite.class),
-                isA(LoaderContext.class)))
+                isA(IntrospectionContext.class)))
                 .andReturn(null);
         replay(registry, reader, namespaceContext, context, store);
 
@@ -167,7 +167,7 @@ public class IncludeLoaderTestCase extends TestCase {
         reader = createMock(XMLStreamReader.class);
         namespaceContext = createMock(NamespaceContext.class);
         namespace = "urn:example.com:xmlns";
-        context = createMock(LoaderContext.class);
+        context = createMock(IntrospectionContext.class);
         cl = getClass().getClassLoader();
         base = new URL("file://example.com/test.scdl");
         includeURL = new URL("file://example.com/include.scdl");

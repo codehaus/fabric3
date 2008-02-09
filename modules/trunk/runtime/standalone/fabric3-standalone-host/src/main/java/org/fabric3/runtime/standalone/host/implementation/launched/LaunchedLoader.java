@@ -25,7 +25,7 @@ import javax.xml.stream.XMLStreamReader;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.extension.loader.LoaderExtension;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
@@ -47,14 +47,14 @@ public class LaunchedLoader extends LoaderExtension<Launched> {
         return Launched.IMPLEMENTATION_LAUNCHED;
     }
 
-    public Launched load(XMLStreamReader reader, LoaderContext loaderContext)
+    public Launched load(XMLStreamReader reader, IntrospectionContext introspectionContext)
             throws XMLStreamException, LoaderException {
         String className = reader.getAttributeValue(null, "class");
         String factoryName = reader.getAttributeValue(null, "factory");
         LoaderUtil.skipToEndElement(reader);
 
         Launched impl = new Launched(className, factoryName);
-        componentTypeLoader.load(impl, loaderContext);
+        componentTypeLoader.load(impl, introspectionContext);
         return impl;
     }
 }

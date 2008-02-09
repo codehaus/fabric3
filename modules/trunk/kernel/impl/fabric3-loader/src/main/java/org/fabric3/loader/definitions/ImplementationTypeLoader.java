@@ -27,7 +27,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.scdl.definitions.ImplementationType;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
@@ -51,7 +51,7 @@ public class ImplementationTypeLoader implements StAXElementLoader<Implementatio
         registry.registerLoader(DefinitionsLoader.IMPLEMENTATION_TYPE, this);
     }
 
-    public ImplementationType load(XMLStreamReader reader, LoaderContext context)
+    public ImplementationType load(XMLStreamReader reader, IntrospectionContext context)
             throws XMLStreamException, LoaderException {
 
         String name = reader.getAttributeValue(null, "name");

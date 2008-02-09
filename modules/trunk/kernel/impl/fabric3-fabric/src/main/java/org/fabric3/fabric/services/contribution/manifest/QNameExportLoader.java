@@ -26,7 +26,7 @@ import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.extension.loader.LoaderExtension;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.services.contribution.ManifestLoadException;
 import org.fabric3.spi.services.contribution.QNameExport;
@@ -52,7 +52,7 @@ public class QNameExportLoader extends LoaderExtension<QNameExport> {
         return EXPORT;
     }
 
-    public QNameExport load(XMLStreamReader reader, LoaderContext context)
+    public QNameExport load(XMLStreamReader reader, IntrospectionContext context)
             throws ManifestLoadException, XMLStreamException {
         String ns = reader.getAttributeValue(null, "namespace");
         if (ns == null) {

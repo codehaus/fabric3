@@ -16,12 +16,12 @@
  */
 package org.fabric3.fabric.implementation.system;
 
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 
 /**
  * @version $Rev$ $Date$
  */
 public interface SystemComponentTypeLoader {
-    void load(SystemImplementation implementation, LoaderContext loaderContext) throws LoaderException;
+    void load(SystemImplementation implementation, IntrospectionContext introspectionContext) throws LoaderException;
 }

@@ -38,7 +38,7 @@ import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.Scope;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.MissingResourceException;
 
@@ -54,7 +54,7 @@ public class JUnitComponentTypeLoaderImpl implements JUnitComponentTypeLoader {
         this.introspector = introspector;
     }
 
-    public void load(ImplementationJUnit implementation, LoaderContext context) throws LoaderException {
+    public void load(ImplementationJUnit implementation, IntrospectionContext context) throws LoaderException {
         String className = implementation.getImplementationClass();
         Class<?> implClass;
         try {
@@ -69,10 +69,10 @@ public class JUnitComponentTypeLoaderImpl implements JUnitComponentTypeLoader {
         implementation.setComponentType(componentType);
     }
 
-    protected PojoComponentType loadByIntrospection(LoaderContext loaderContext, Class<?> implClass)
+    protected PojoComponentType loadByIntrospection(IntrospectionContext introspectionContext, Class<?> implClass)
             throws ProcessingException {
         PojoComponentType componentType = new PojoComponentType(implClass.getName());
-        introspector.introspect(implClass, componentType, loaderContext);
+        introspector.introspect(implClass, componentType, introspectionContext);
 
         if (componentType.getInitMethod() == null) {
             componentType.setInitMethod(getCallback(implClass, "setUp"));

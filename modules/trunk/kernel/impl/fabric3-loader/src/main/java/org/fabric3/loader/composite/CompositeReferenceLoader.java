@@ -35,7 +35,7 @@ import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.loader.InvalidReferenceException;
 import org.fabric3.spi.loader.InvalidValueException;
 import org.fabric3.spi.loader.Loader;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.PolicyHelper;
@@ -56,7 +56,7 @@ public class CompositeReferenceLoader implements StAXElementLoader<CompositeRefe
         this.policyHelper = policyHelper;
     }
 
-    public CompositeReference load(XMLStreamReader reader, LoaderContext context)
+    public CompositeReference load(XMLStreamReader reader, IntrospectionContext context)
             throws XMLStreamException, LoaderException {
 
         String name = reader.getAttributeValue(null, "name");
@@ -108,7 +108,7 @@ public class CompositeReferenceLoader implements StAXElementLoader<CompositeRefe
     private void setPromoted(XMLStreamReader reader,
                              ReferenceDefinition referenceDefinition,
                              String name,
-                             LoaderContext context)
+                             IntrospectionContext context)
             throws InvalidReferenceException, InvalidNameException {
 
         String promoted = reader.getAttributeValue(null, "promote");

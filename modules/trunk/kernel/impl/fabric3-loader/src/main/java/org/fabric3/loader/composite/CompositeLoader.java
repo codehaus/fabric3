@@ -30,7 +30,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.loader.common.LoaderContextImpl;
+import org.fabric3.loader.common.IntrospectionContextImpl;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
@@ -41,7 +41,7 @@ import org.fabric3.scdl.ModelObject;
 import org.fabric3.scdl.Property;
 import org.fabric3.scdl.WireDefinition;
 import org.fabric3.spi.loader.InvalidServiceException;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
@@ -104,12 +104,12 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
         registry.unregisterLoader(COMPOSITE);
     }
 
-    public Composite load(XMLStreamReader reader, LoaderContext loaderContext)
+    public Composite load(XMLStreamReader reader, IntrospectionContext introspectionContext)
             throws XMLStreamException, LoaderException {
         String name = reader.getAttributeValue(null, "name");
         String targetNamespace = reader.getAttributeValue(null, "targetNamespace");
         boolean local = Boolean.valueOf(reader.getAttributeValue(null, "local"));
-        loaderContext = new LoaderContextImpl(loaderContext, targetNamespace);
+        introspectionContext = new IntrospectionContextImpl(introspectionContext, targetNamespace);
         QName compositeName = new QName(targetNamespace, name);
         QName constrainingType = LoaderUtil.getQName(reader.getAttributeValue(null, "constrainingType"),
                                                      targetNamespace,
@@ -127,7 +127,7 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
                 case START_ELEMENT:
                     QName qname = reader.getName();
                     if (INCLUDE.equals(qname)) {
-                        Include include = includeLoader.load(reader, loaderContext);
+                        Include include = includeLoader.load(reader, introspectionContext);
                         QName includeName = include.getName();
                         if (type.getIncludes().containsKey(includeName)) {
                             throw new DuplicateIncludeException("Include already defined with name", includeName.toString());
@@ -140,36 +140,36 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
                         }
                         type.add(include);
                     } else if (PROPERTY.equals(qname)) {
-                        Property<?> property = propertyLoader.load(reader, loaderContext);
+                        Property<?> property = propertyLoader.load(reader, introspectionContext);
                         if (type.getProperties().containsKey(property.getName())) {
                             throw new DuplicatePropertyException(property.getName());
                         }
                         type.add(property);
                     } else if (SERVICE.equals(qname)) {
-                        CompositeService service = serviceLoader.load(reader, loaderContext);
+                        CompositeService service = serviceLoader.load(reader, introspectionContext);
                         if (type.getServices().containsKey(service.getName())) {
                             throw new DuplicateServiceException(service.getName());
                         }
                         type.add(service);
                     } else if (REFERENCE.equals(qname)) {
-                        CompositeReference reference = referenceLoader.load(reader, loaderContext);
+                        CompositeReference reference = referenceLoader.load(reader, introspectionContext);
                         if (type.getReferences().containsKey(reference.getName())) {
                             throw new DuplicateReferenceException(reference.getName());
                         }
                         type.add(reference);
                     } else if (COMPONENT.equals(qname)) {
-                        ComponentDefinition<?> componentDefinition = componentLoader.load(reader, loaderContext);
+                        ComponentDefinition<?> componentDefinition = componentLoader.load(reader, introspectionContext);
                         String key = componentDefinition.getName();
                         if (type.getComponents().containsKey(key)) {
                             throw new DuplicateComponentNameException("Component with name already defined", key);
                         }
                         type.add(componentDefinition);
                     } else if (WIRE.equals(qname)) {
-                        WireDefinition wire = wireLoader.load(reader, loaderContext);
+                        WireDefinition wire = wireLoader.load(reader, introspectionContext);
                         type.add(wire);
                     } else {
                         // Extension element - for now try to load and see if we can handle it
-                        ModelObject modelObject = registry.load(reader, ModelObject.class, loaderContext);
+                        ModelObject modelObject = registry.load(reader, ModelObject.class, introspectionContext);
                         if (modelObject instanceof Property) {
                             type.add((Property<?>) modelObject);
                         } else if (modelObject instanceof CompositeService) {
@@ -185,7 +185,7 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
                     break;
                 case END_ELEMENT:
                     assert COMPOSITE.equals(reader.getName());
-                    verifyCompositeCompleteness(type, loaderContext);
+                    verifyCompositeCompleteness(type, introspectionContext);
                     return type;
                 }
             }
@@ -195,7 +195,7 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
         }
     }
 
-    protected void verifyCompositeCompleteness(Composite composite, LoaderContext loaderContext)
+    protected void verifyCompositeCompleteness(Composite composite, IntrospectionContext introspectionContext)
             throws InvalidServiceException {
         // check if all of the composite services have been wired
         for (CompositeService svcDefn : composite.getDeclaredServices().values()) {

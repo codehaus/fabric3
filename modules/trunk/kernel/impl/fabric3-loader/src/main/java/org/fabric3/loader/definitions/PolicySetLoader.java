@@ -29,12 +29,13 @@ import javax.xml.stream.XMLStreamReader;
 import org.fabric3.scdl.definitions.PolicyPhase;
 import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.Constants;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.util.stax.StaxUtil;
 import org.fabric3.transform.xml.Stream2Document;
+
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
@@ -66,7 +67,7 @@ public class PolicySetLoader implements StAXElementLoader<PolicySet> {
         registry.registerLoader(DefinitionsLoader.POLICY_SET, this);
     }
 
-    public PolicySet load(XMLStreamReader reader, LoaderContext context) throws XMLStreamException, LoaderException {
+    public PolicySet load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {
         
         try {
         

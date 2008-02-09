@@ -38,7 +38,7 @@ import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.spi.idl.InvalidServiceContractException;
 import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
 import org.fabric3.spi.idl.java.JavaServiceContract;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 
 /**
  * Implementation processor for persistence unit annotations.
@@ -60,9 +60,9 @@ public class PersistenceUnitAnnotationProcessor extends ImplementationProcessorE
     /**
      * @see org.fabric3.pojo.processor.ImplementationProcessorExtension#visitMethod(java.lang.reflect.Method, 
      *                                                                              org.fabric3.pojo.scdl.PojoComponentType, 
-     *                                                                              org.fabric3.spi.loader.LoaderContext)
+     *                                                                              org.fabric3.introspection.IntrospectionContext)
      */
-    public void visitMethod(Method method, PojoComponentType type, LoaderContext context) throws ProcessingException {
+    public void visitMethod(Method method, PojoComponentType type, IntrospectionContext context) throws ProcessingException {
         
         PersistenceUnit annotation = method.getAnnotation(PersistenceUnit.class);
         if(annotation == null) {
@@ -78,9 +78,9 @@ public class PersistenceUnitAnnotationProcessor extends ImplementationProcessorE
     /**
      * @see org.fabric3.pojo.processor.ImplementationProcessorExtension#visitField(java.lang.reflect.Field, 
      *                                                                             org.fabric3.pojo.scdl.PojoComponentType, 
-     *                                                                             org.fabric3.spi.loader.LoaderContext)
+     *                                                                             org.fabric3.introspection.IntrospectionContext)
      */
-    public void visitField(Field field, PojoComponentType type, LoaderContext context) throws ProcessingException {
+    public void visitField(Field field, PojoComponentType type, IntrospectionContext context) throws ProcessingException {
         
         PersistenceUnit annotation = field.getAnnotation(PersistenceUnit.class);
         if(annotation == null) {

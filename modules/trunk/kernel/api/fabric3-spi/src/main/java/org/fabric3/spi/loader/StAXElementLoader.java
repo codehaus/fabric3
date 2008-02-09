@@ -21,6 +21,8 @@ package org.fabric3.spi.loader;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import org.fabric3.introspection.IntrospectionContext;
+
 /**
  * Deserializes an element from a StAX input stream.
  *
@@ -37,5 +39,5 @@ public interface StAXElementLoader<OUTPUT> {
      * @throws LoaderException    if an error loading the type occurs
      * @throws XMLStreamException if an error reading the XML stream occurs
      */
-    OUTPUT load(XMLStreamReader reader, LoaderContext context) throws XMLStreamException, LoaderException;
+    OUTPUT load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException;
 }

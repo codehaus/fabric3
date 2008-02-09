@@ -31,7 +31,7 @@ import org.fabric3.loader.common.PropertyHelper;
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.PropertyValue;
 import org.fabric3.spi.loader.InvalidValueException;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.StAXElementLoader;
@@ -47,7 +47,7 @@ public class PropertyValueLoader implements StAXElementLoader<PropertyValue> {
         this.helper = helper;
     }
 
-    public PropertyValue load(XMLStreamReader reader, LoaderContext context)
+    public PropertyValue load(XMLStreamReader reader, IntrospectionContext context)
             throws XMLStreamException, LoaderException {
         String name = reader.getAttributeValue(null, "name");
         if (name == null || name.length() == 0) {
@@ -76,7 +76,7 @@ public class PropertyValueLoader implements StAXElementLoader<PropertyValue> {
         }
     }
 
-    protected PropertyValue loadInlinePropertyValue(String name, XMLStreamReader reader, LoaderContext context)
+    protected PropertyValue loadInlinePropertyValue(String name, XMLStreamReader reader, IntrospectionContext context)
             throws InvalidValueException, XMLStreamException {
         DataType<QName> dataType;
         String type = reader.getAttributeValue(null, "type");

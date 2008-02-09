@@ -28,7 +28,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.extension.loader.LoaderExtension;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
@@ -55,7 +55,7 @@ public class RmiBindingLoader extends LoaderExtension<RmiBindingDefinition> {
         return BINDING_QNAME;
     }
 
-    public RmiBindingDefinition load(XMLStreamReader reader, LoaderContext loaderContext)
+    public RmiBindingDefinition load(XMLStreamReader reader, IntrospectionContext introspectionContext)
             throws XMLStreamException, LoaderException {
         String uri = reader.getAttributeValue(null, "uri");
         String name = reader.getAttributeValue(null, "name");

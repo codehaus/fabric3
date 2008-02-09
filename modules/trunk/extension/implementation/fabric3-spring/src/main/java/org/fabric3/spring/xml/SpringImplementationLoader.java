@@ -43,15 +43,13 @@ import org.osoa.sca.Constants;
 import org.osoa.sca.annotations.Reference;
 
 import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.pojo.processor.IntrospectionRegistry;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.scdl.JavaMappedReference;
 import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.PolicyHelper;
@@ -88,7 +86,7 @@ public class SpringImplementationLoader implements StAXElementLoader<SpringImple
     }
 
 
-    public SpringImplementation load(XMLStreamReader reader, LoaderContext loaderContext)
+    public SpringImplementation load(XMLStreamReader reader, IntrospectionContext introspectionContext)
             throws XMLStreamException, LoaderException {
 
         assert SpringImplementation.IMPLEMENTATION_SPRING.equals(reader.getName());
@@ -106,19 +104,19 @@ public class SpringImplementationLoader implements StAXElementLoader<SpringImple
         if (debug)
             System.out.println("####################location=" + location);
 
-        loadSpringAppContextXML(location, implementation, loaderContext);
+        loadSpringAppContextXML(location, implementation, introspectionContext);
         
 
         policyHelper.loadPolicySetsAndIntents(implementation, reader);
         LoaderUtil.skipToEndElement(reader);
 
         implementation.setLocation(location);
-        componentTypeLoader.load(implementation, loaderContext);
+        componentTypeLoader.load(implementation, introspectionContext);
         return implementation;
 
     }
 
-    private void loadSpringAppContextXML(String location, SpringImplementation implementation, LoaderContext loaderContext) 
+    private void loadSpringAppContextXML(String location, SpringImplementation implementation, IntrospectionContext introspectionContext)
             throws LoaderException {
 
         Resource ac = getApplicationContextResource(location);
@@ -200,10 +198,10 @@ public class SpringImplementationLoader implements StAXElementLoader<SpringImple
             throw new LoaderException(e);
         }
         
-        generateSpringComponentType(beans, implementation, loaderContext);
+        generateSpringComponentType(beans, implementation, introspectionContext);
     }
     
-    protected void generateSpringComponentType(List<SpringBeanElement> beanElements, SpringImplementation implementation, LoaderContext loaderContext) {
+    protected void generateSpringComponentType(List<SpringBeanElement> beanElements, SpringImplementation implementation, IntrospectionContext introspectionContext) {
         SpringComponentType springComponentType = implementation.getComponentType();
         
         // don't need this if explicit service is declared, not DONE
@@ -213,9 +211,9 @@ public class SpringImplementationLoader implements StAXElementLoader<SpringImple
         for (SpringBeanElement beanElement : beanElements) {
             Class<?> implClass;
             try {
-                implClass = LoaderUtil.loadClass(beanElement.getClassName(), loaderContext.getTargetClassLoader());
+                implClass = LoaderUtil.loadClass(beanElement.getClassName(), introspectionContext.getTargetClassLoader());
                 PojoComponentType pojoComponentType = new PojoComponentType(implClass.getName());
-                introspector.introspect(implClass, pojoComponentType, loaderContext);
+                introspector.introspect(implClass, pojoComponentType, introspectionContext);
                 springComponentType.getServices().putAll(pojoComponentType.getServices());
                 
                 // TODO work around: Use @Reference in spring bean to create a reference for now

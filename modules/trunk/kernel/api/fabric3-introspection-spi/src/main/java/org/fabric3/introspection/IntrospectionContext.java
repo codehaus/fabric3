@@ -16,18 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.loader;
+package org.fabric3.introspection;
 
 import java.net.URI;
 import java.net.URL;
 
 /**
- * A holder that can be used during the load process to store information that is not part of the logical assembly
- * model. This should be regarded as transient and references to this context should not be stored inside the model.
+ * Context for the current introspection session. It provides information about the environment in which the
+ * components being introspected will be used.
  *
  * @version $Rev$ $Date$
  */
-public interface LoaderContext {
+public interface IntrospectionContext {
 
     /**
      * Returns a class loader that can be used to load application resources.

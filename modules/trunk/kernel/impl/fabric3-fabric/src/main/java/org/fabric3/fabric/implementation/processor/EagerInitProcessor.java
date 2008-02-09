@@ -20,7 +20,7 @@ package org.fabric3.fabric.implementation.processor;
 
 import org.osoa.sca.annotations.EagerInit;
 
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
@@ -34,7 +34,7 @@ public class EagerInitProcessor extends ImplementationProcessorExtension {
 
     public <T> void visitClass(Class<T> clazz,
                                PojoComponentType type,
-                               LoaderContext context) throws ProcessingException {
+                               IntrospectionContext context) throws ProcessingException {
         super.visitClass(clazz, type, context);
         EagerInit annotation = clazz.getAnnotation(EagerInit.class);
         if (annotation == null) {

@@ -29,7 +29,7 @@ import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.scdl.MemberSite;
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 
 /**
  * Processes {@link @Context} annotations on a component implementation.
@@ -40,7 +40,7 @@ public class ContextProcessor extends ImplementationProcessorExtension {
     public void visitMethod(
             Method method,
             PojoComponentType type,
-            LoaderContext context)
+            IntrospectionContext context)
             throws ProcessingException {
         if (method.getAnnotation(Context.class) == null) {
             return;
@@ -59,7 +59,7 @@ public class ContextProcessor extends ImplementationProcessorExtension {
 
     public void visitField(Field field,
                            PojoComponentType type,
-                           LoaderContext context) throws ProcessingException {
+                           IntrospectionContext context) throws ProcessingException {
         if (field.getAnnotation(Context.class) == null) {
             return;
         }

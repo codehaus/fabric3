@@ -35,7 +35,7 @@ import org.fabric3.scdl.ModelObject;
 import org.fabric3.scdl.Property;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
@@ -83,10 +83,10 @@ public class ComponentTypeLoader implements StAXElementLoader<ComponentType> {
         return COMPONENT_TYPE;
     }
 
-    public ComponentType load(XMLStreamReader reader, LoaderContext loaderContext)
+    public ComponentType load(XMLStreamReader reader, IntrospectionContext introspectionContext)
             throws XMLStreamException, LoaderException {
         QName constrainingType = LoaderUtil.getQName(reader.getAttributeValue(null, "constrainingType"),
-                                                     loaderContext.getTargetNamespace(),
+                                                     introspectionContext.getTargetNamespace(),
                                                      reader.getNamespaceContext());
 
         ComponentType type = new ComponentType();
@@ -96,17 +96,17 @@ public class ComponentTypeLoader implements StAXElementLoader<ComponentType> {
             case START_ELEMENT:
                 QName qname = reader.getName();
                 if (PROPERTY.equals(qname)) {
-                    Property<?> property = propertyLoader.load(reader, loaderContext);
+                    Property<?> property = propertyLoader.load(reader, introspectionContext);
                     type.add(property);
                 } else if (SERVICE.equals(qname)) {
-                    ServiceDefinition service = serviceLoader.load(reader, loaderContext);
+                    ServiceDefinition service = serviceLoader.load(reader, introspectionContext);
                     type.add(service);
                 } else if (REFERENCE.equals(qname)) {
-                    ReferenceDefinition reference = referenceLoader.load(reader, loaderContext);
+                    ReferenceDefinition reference = referenceLoader.load(reader, introspectionContext);
                     type.add(reference);
                 } else {
                     // Extension element - for now try to load and see if we can handle it
-                    ModelObject modelObject = registry.load(reader, ModelObject.class, loaderContext);
+                    ModelObject modelObject = registry.load(reader, ModelObject.class, introspectionContext);
                     if (modelObject instanceof Property) {
                         type.add((Property<?>) modelObject);
                     } else if (modelObject instanceof ServiceDefinition) {

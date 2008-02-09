@@ -27,7 +27,7 @@ import java.util.Set;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.pojo.processor.ImplementationProcessor;
 import org.fabric3.pojo.processor.IntrospectionRegistry;
 import org.fabric3.pojo.scdl.PojoComponentType;
@@ -78,7 +78,7 @@ public class IntrospectionRegistryImpl implements IntrospectionRegistry {
 
     public PojoComponentType introspect(Class<?> clazz,
                                         PojoComponentType type,
-                                        LoaderContext context)
+                                        IntrospectionContext context)
         throws ProcessingException {
         for (ImplementationProcessor processor : cache) {
             processor.visitClass(clazz, type, context);
@@ -117,7 +117,7 @@ public class IntrospectionRegistryImpl implements IntrospectionRegistry {
 
     private void visitSuperClass(Class<?> clazz,
                                  PojoComponentType type,
-                                 LoaderContext context)
+                                 IntrospectionContext context)
         throws ProcessingException {
         if (!Object.class.equals(clazz)) {
             for (ImplementationProcessor processor : cache) {

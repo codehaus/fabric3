@@ -32,7 +32,7 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 
 /**
  * A convenience class for annotation processors which alleviates the need to implement unused callbacks
@@ -71,25 +71,25 @@ public abstract class ImplementationProcessorExtension implements Implementation
         registry.unregisterProcessor(this);
     }
 
-    public <T> void visitClass(Class<T> clazz, PojoComponentType type, LoaderContext context)
+    public <T> void visitClass(Class<T> clazz, PojoComponentType type, IntrospectionContext context)
             throws ProcessingException {
     }
 
-    public <T> void visitSuperClass(Class<T> clazz, PojoComponentType type, LoaderContext context)
+    public <T> void visitSuperClass(Class<T> clazz, PojoComponentType type, IntrospectionContext context)
             throws ProcessingException {
     }
 
-    public void visitMethod(Method method, PojoComponentType type, LoaderContext context) throws ProcessingException {
+    public void visitMethod(Method method, PojoComponentType type, IntrospectionContext context) throws ProcessingException {
     }
 
-    public <T> void visitConstructor(Constructor<T> constructor, PojoComponentType type, LoaderContext context)
+    public <T> void visitConstructor(Constructor<T> constructor, PojoComponentType type, IntrospectionContext context)
             throws ProcessingException {
     }
 
-    public void visitField(Field field, PojoComponentType type, LoaderContext context) throws ProcessingException {
+    public void visitField(Field field, PojoComponentType type, IntrospectionContext context) throws ProcessingException {
     }
 
-    public <T> void visitEnd(Class<T> clazz, PojoComponentType type, LoaderContext context) throws ProcessingException {
+    public <T> void visitEnd(Class<T> clazz, PojoComponentType type, IntrospectionContext context) throws ProcessingException {
     }
 
     /**

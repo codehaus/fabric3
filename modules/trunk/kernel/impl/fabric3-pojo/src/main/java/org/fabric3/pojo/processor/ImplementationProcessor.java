@@ -22,7 +22,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.pojo.scdl.PojoComponentType;
 
 /**
@@ -47,7 +47,7 @@ public interface ImplementationProcessor {
      */
     <T> void visitClass(Class<T> clazz,
                         PojoComponentType type,
-                        LoaderContext context) throws ProcessingException;
+                        IntrospectionContext context) throws ProcessingException;
 
     /**
      * A callback received as the component implementation class hierarchy is evaluated
@@ -60,7 +60,7 @@ public interface ImplementationProcessor {
     <T> void visitSuperClass(
         Class<T> clazz,
         PojoComponentType type,
-        LoaderContext context) throws ProcessingException;
+        IntrospectionContext context) throws ProcessingException;
 
     /**
      * A callback received as the component implementation's public and protected methods are evaluated
@@ -73,7 +73,7 @@ public interface ImplementationProcessor {
     void visitMethod(
         Method method,
         PojoComponentType type,
-        LoaderContext context) throws ProcessingException;
+        IntrospectionContext context) throws ProcessingException;
 
     /**
      * A callback received as the component implementation's constructor used for instantiation by the runtime is
@@ -88,7 +88,7 @@ public interface ImplementationProcessor {
     <T> void visitConstructor(
         Constructor<T> constructor,
         PojoComponentType type,
-        LoaderContext context)
+        IntrospectionContext context)
         throws ProcessingException;
 
     /**
@@ -102,7 +102,7 @@ public interface ImplementationProcessor {
     void visitField(
         Field field,
         PojoComponentType type,
-        LoaderContext context) throws ProcessingException;
+        IntrospectionContext context) throws ProcessingException;
 
     /**
      * The final callback received when all other callbacks during evaluation of the component implementation have been
@@ -116,6 +116,6 @@ public interface ImplementationProcessor {
     <T> void visitEnd(
         Class<T> clazz,
         PojoComponentType type,
-        LoaderContext context) throws ProcessingException;
+        IntrospectionContext context) throws ProcessingException;
 
 }

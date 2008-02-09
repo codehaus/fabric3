@@ -22,7 +22,7 @@ import org.easymock.IMocksControl;
 import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.idl.java.JavaServiceContract;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 
 /**
@@ -34,16 +34,16 @@ public class MockComponentTypeLoaderImpl implements MockComponentTypeLoader {
      * Loads the mock component type.
      * 
      * @param mockedInterfaces Interfaces that need to be mocked.
-     * @param loaderContext Loader context.
+     * @param introspectionContext Loader context.
      * @return Mock component type.
      */
-    public MockComponentType load(List<String> mockedInterfaces, LoaderContext loaderContext) throws LoaderException {
+    public MockComponentType load(List<String> mockedInterfaces, IntrospectionContext introspectionContext) throws LoaderException {
         
         try {
             
             MockComponentType componentType = new MockComponentType();
             
-            ClassLoader classLoader = loaderContext.getTargetClassLoader();
+            ClassLoader classLoader = introspectionContext.getTargetClassLoader();
             for(String mockedInterface : mockedInterfaces) {
                 Class<?> interfaceClass = classLoader.loadClass(mockedInterface);
                 JavaServiceContract serviceContract = new JavaServiceContract(interfaceClass);

@@ -25,7 +25,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.fabric.services.contribution.MissingPackageException;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 
@@ -45,7 +45,7 @@ public class JavaExportLoader extends LoaderExtension<JavaExport> {
         return EXPORT;
     }
 
-    public JavaExport load(XMLStreamReader reader, LoaderContext context)
+    public JavaExport load(XMLStreamReader reader, IntrospectionContext context)
             throws XMLStreamException, LoaderException {
         String packageName = reader.getAttributeValue(null, "package");
         if (packageName == null) {

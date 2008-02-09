@@ -20,7 +20,7 @@ package org.fabric3.fabric.implementation.processor;
 
 import org.osoa.sca.annotations.AllowsPassByReference;
 
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
@@ -34,7 +34,7 @@ public class AllowsPassByReferenceProcessor extends ImplementationProcessorExten
 
     public <T> void visitClass(Class<T> clazz,
                                PojoComponentType type,
-                               LoaderContext context)
+                               IntrospectionContext context)
         throws ProcessingException {
         AllowsPassByReference annotation = clazz.getAnnotation(AllowsPassByReference.class);
         if (annotation == null) {

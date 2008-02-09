@@ -30,10 +30,10 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.services.contribution.processor.Action;
 import org.fabric3.host.contribution.ContributionException;
-import org.fabric3.loader.common.LoaderContextImpl;
+import org.fabric3.loader.common.IntrospectionContextImpl;
 import org.fabric3.runtime.webapp.WebappHostInfo;
 import org.fabric3.spi.loader.Loader;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.model.type.ContributionResourceDescription;
 import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
@@ -101,7 +101,7 @@ public class WarContributionProcessor implements ContributionProcessor {
 
             ClassLoader cl = getClass().getClassLoader();
             URI uri = contribution.getUri();
-            LoaderContext context = new LoaderContextImpl(cl, uri, null);
+            IntrospectionContext context = new IntrospectionContextImpl(cl, uri, null);
             ContributionManifest manifest = loader.load(manifestURL, ContributionManifest.class, context);
             contribution.setManifest(manifest);
         } catch (LoaderException e) {

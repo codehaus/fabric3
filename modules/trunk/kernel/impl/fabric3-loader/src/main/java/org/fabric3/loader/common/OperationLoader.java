@@ -22,7 +22,7 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.scdl.OperationDefinition;
 import org.fabric3.spi.loader.InvalidValueException;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
@@ -54,7 +54,7 @@ public class OperationLoader implements StAXElementLoader<OperationDefinition> {
         loaderRegistry.registerLoader(new QName(Constants.SCA_NS, "operation"), this);
     }
 
-    public OperationDefinition load(XMLStreamReader reader, LoaderContext context) throws  LoaderException, XMLStreamException {
+    public OperationDefinition load(XMLStreamReader reader, IntrospectionContext context) throws  LoaderException, XMLStreamException {
         
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {

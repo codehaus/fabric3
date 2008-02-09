@@ -24,7 +24,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.spi.Constants;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 
@@ -44,7 +44,7 @@ public class MavenExportLoader extends LoaderExtension<MavenExport> {
         return IMPORT;
     }
 
-    public MavenExport load(XMLStreamReader reader, LoaderContext context)
+    public MavenExport load(XMLStreamReader reader, IntrospectionContext context)
             throws XMLStreamException, LoaderException {
         String groupId = reader.getAttributeValue(null, "groupId");
         if (groupId == null) {

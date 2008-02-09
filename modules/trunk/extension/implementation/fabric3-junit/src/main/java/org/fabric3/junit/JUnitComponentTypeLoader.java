@@ -16,12 +16,12 @@
  */
 package org.fabric3.junit;
 
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 
 /**
  * @version $Rev$ $Date$
  */
 public interface JUnitComponentTypeLoader {
-    void load(ImplementationJUnit implementation, LoaderContext context) throws LoaderException;
+    void load(ImplementationJUnit implementation, IntrospectionContext context) throws LoaderException;
 }

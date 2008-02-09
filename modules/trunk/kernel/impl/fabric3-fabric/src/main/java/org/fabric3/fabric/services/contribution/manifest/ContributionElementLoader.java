@@ -30,7 +30,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.Deployable;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.services.contribution.ContributionManifest;
@@ -58,7 +58,7 @@ public class ContributionElementLoader extends LoaderExtension<ContributionManif
         return CONTRIBUTION;
     }
 
-    public ContributionManifest load(XMLStreamReader reader, LoaderContext context)
+    public ContributionManifest load(XMLStreamReader reader, IntrospectionContext context)
             throws XMLStreamException, LoaderException {
         ContributionManifest contribution = new ContributionManifest();
         while (true) {

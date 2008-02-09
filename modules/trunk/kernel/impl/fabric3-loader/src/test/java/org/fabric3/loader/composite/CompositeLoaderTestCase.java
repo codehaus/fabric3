@@ -26,7 +26,7 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import static org.osoa.sca.Constants.SCA_NS;
 
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.PolicyHelper;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.Composite;
@@ -39,7 +39,7 @@ public class CompositeLoaderTestCase extends TestCase {
     public static final QName COMPOSITE = new QName(SCA_NS, "composite");
     private CompositeLoader loader;
     private QName name;
-    private LoaderContext loaderContext;
+    private IntrospectionContext introspectionContext;
 
     public void testLoadNameAndDefaultAutowire() throws Exception {
         XMLStreamReader reader = EasyMock.createMock(XMLStreamReader.class);
@@ -51,11 +51,11 @@ public class CompositeLoaderTestCase extends TestCase {
         EasyMock.expect(reader.getAttributeValue(null, "autowire")).andReturn(null);
         EasyMock.expect(reader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
         EasyMock.expect(reader.getName()).andReturn(COMPOSITE);
-        EasyMock.replay(reader, loaderContext);
-        Composite type = loader.load(reader, loaderContext);
+        EasyMock.replay(reader, introspectionContext);
+        Composite type = loader.load(reader, introspectionContext);
         assertEquals(name, type.getName());
         assertEquals(Autowire.INHERITED, type.getAutowire());
-        EasyMock.verify(reader, loaderContext);
+        EasyMock.verify(reader, introspectionContext);
     }
 
     public void testAutowire() throws Exception {
@@ -68,18 +68,18 @@ public class CompositeLoaderTestCase extends TestCase {
         EasyMock.expect(reader.getAttributeValue(null, "autowire")).andReturn("true");
         EasyMock.expect(reader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
         EasyMock.expect(reader.getName()).andReturn(COMPOSITE);
-        EasyMock.replay(reader, loaderContext);
-        Composite type = loader.load(reader, loaderContext);
+        EasyMock.replay(reader, introspectionContext);
+        Composite type = loader.load(reader, introspectionContext);
         assertEquals(Autowire.ON, type.getAutowire());
-        EasyMock.verify(reader, loaderContext);
+        EasyMock.verify(reader, introspectionContext);
     }
 
     protected void setUp() throws Exception {
         super.setUp();
-        loaderContext = EasyMock.createMock(LoaderContext.class);
-        EasyMock.expect(loaderContext.getSourceBase()).andStubReturn(null);
-        EasyMock.expect(loaderContext.getTargetClassLoader()).andStubReturn(null);
-        EasyMock.expect(loaderContext.getContributionUri()).andStubReturn(null);
+        introspectionContext = EasyMock.createMock(IntrospectionContext.class);
+        EasyMock.expect(introspectionContext.getSourceBase()).andStubReturn(null);
+        EasyMock.expect(introspectionContext.getTargetClassLoader()).andStubReturn(null);
+        EasyMock.expect(introspectionContext.getContributionUri()).andStubReturn(null);
 
         PolicyHelper policyHelper = EasyMock.createMock(PolicyHelper.class);
         policyHelper.loadPolicySetsAndIntents(EasyMock.isA(PolicyAware.class), EasyMock.isA(XMLStreamReader.class));

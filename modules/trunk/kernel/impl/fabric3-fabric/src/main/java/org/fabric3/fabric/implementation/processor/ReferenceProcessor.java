@@ -36,7 +36,7 @@ import org.fabric3.scdl.Multiplicity;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.idl.InvalidServiceContractException;
 import org.fabric3.spi.idl.java.InterfaceJavaIntrospector;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 
 /**
  * Processes an {@link @Reference} annotation, updating the component type with corresponding {@link
@@ -55,7 +55,7 @@ public class ReferenceProcessor extends ImplementationProcessorExtension {
     public void visitMethod(
         Method method,
         PojoComponentType type,
-        LoaderContext context) throws ProcessingException {
+        IntrospectionContext context) throws ProcessingException {
         Reference annotation = method.getAnnotation(Reference.class);
         if (annotation == null) {
             return; // Not a reference annotation.
@@ -105,7 +105,7 @@ public class ReferenceProcessor extends ImplementationProcessorExtension {
     public void visitField(
         Field field,
         PojoComponentType type,
-        LoaderContext context) throws ProcessingException {
+        IntrospectionContext context) throws ProcessingException {
         Reference annotation = field.getAnnotation(Reference.class);
         if (annotation == null) {
             return;
@@ -151,7 +151,7 @@ public class ReferenceProcessor extends ImplementationProcessorExtension {
     public <T> void visitConstructor(
         Constructor<T> constructor,
         PojoComponentType type,
-        LoaderContext context) throws ProcessingException {
+        IntrospectionContext context) throws ProcessingException {
 
     }
 }

@@ -34,7 +34,7 @@ import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.Scope;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.MissingResourceException;
 
@@ -49,25 +49,25 @@ public class LaunchedComponentTypeLoaderImpl implements LaunchedComponentTypeLoa
         this.introspector = introspector;
     }
 
-    public void load(Launched implementation, LoaderContext loaderContext) throws LoaderException {
+    public void load(Launched implementation, IntrospectionContext introspectionContext) throws LoaderException {
         String className = implementation.getImplementationClass();
         Class<?> implClass;
         try {
-            implClass = loaderContext.getTargetClassLoader().loadClass(className);
+            implClass = introspectionContext.getTargetClassLoader().loadClass(className);
         } catch (ClassNotFoundException e) {
             throw new MissingResourceException(className, e);
         }
-        PojoComponentType componentType = loadByIntrospection(implementation, loaderContext, implClass);
+        PojoComponentType componentType = loadByIntrospection(implementation, introspectionContext, implClass);
         componentType.setImplementationScope(Scope.COMPOSITE);
         implementation.setComponentType(componentType);
     }
 
     protected PojoComponentType loadByIntrospection(
             Launched implementation,
-            LoaderContext loaderContext,
+            IntrospectionContext introspectionContext,
             Class<?> implClass) throws ProcessingException {
         PojoComponentType componentType = new PojoComponentType(implClass.getName());
-        introspector.introspect(implClass, componentType, loaderContext);
+        introspector.introspect(implClass, componentType, introspectionContext);
 
         ServiceContract launchedContract = generateContract(implClass);
         JavaMappedService testService = new JavaMappedService(SERVICE_NAME, launchedContract);

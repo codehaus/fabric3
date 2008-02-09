@@ -28,7 +28,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.scdl.definitions.Intent;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.util.stax.StaxUtil;
@@ -40,7 +40,7 @@ import org.fabric3.spi.util.stax.StaxUtil;
  */
 public class IntentLoader implements StAXElementLoader<Intent> {
 
-    public Intent load(XMLStreamReader reader, LoaderContext context) throws XMLStreamException, LoaderException {
+    public Intent load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {
         
         String name = reader.getAttributeValue(null, "name");
         QName qName = new QName(context.getTargetNamespace(), name);

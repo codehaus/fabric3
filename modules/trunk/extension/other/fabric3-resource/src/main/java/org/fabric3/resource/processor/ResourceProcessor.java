@@ -34,7 +34,7 @@ import org.fabric3.resource.model.SystemSourcedResource;
 import org.fabric3.spi.idl.InvalidServiceContractException;
 import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
 import org.fabric3.spi.idl.java.JavaServiceContract;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 
 /**
  * Processes an {@link @Resource} annotation, updating the component type with corresponding {@link
@@ -54,7 +54,7 @@ public class ResourceProcessor extends ImplementationProcessorExtension {
         this.interfaceProcessorRegistry = interfaceProcessorRegistry;
     }
 
-    public void visitMethod(Method method, PojoComponentType type, LoaderContext context) throws ProcessingException {
+    public void visitMethod(Method method, PojoComponentType type, IntrospectionContext context) throws ProcessingException {
         org.fabric3.api.annotation.Resource annotation = method.getAnnotation(org.fabric3.api.annotation.Resource.class);
         if (annotation == null) {
             return;
@@ -78,7 +78,7 @@ public class ResourceProcessor extends ImplementationProcessorExtension {
         
     }
 
-    public void visitField(Field field, PojoComponentType type, LoaderContext context) throws ProcessingException {
+    public void visitField(Field field, PojoComponentType type, IntrospectionContext context) throws ProcessingException {
 
         org.fabric3.api.annotation.Resource annotation = field.getAnnotation(org.fabric3.api.annotation.Resource.class);
         if (annotation == null) {

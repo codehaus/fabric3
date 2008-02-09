@@ -18,21 +18,14 @@
  */
 package org.fabric3.spring.xml;
 
-import java.net.URL;
-
 import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.pojo.processor.IntrospectionRegistry;
 import org.fabric3.pojo.processor.Introspector;
-import org.fabric3.pojo.processor.JavaIntrospectionHelper;
-import org.fabric3.pojo.processor.ProcessingException;
-import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Scope;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderUtil;
-import org.fabric3.spi.loader.MissingResourceException;
 import org.fabric3.spring.SpringComponentType;
 import org.fabric3.spring.SpringImplementation;
 
@@ -47,16 +40,16 @@ public class SpringComponentTypeLoaderImpl implements SpringComponentTypeLoader 
         this.introspector = introspector;
     }
 
-    public void load(SpringImplementation implementation, LoaderContext loaderContext) throws LoaderException {
+    public void load(SpringImplementation implementation, IntrospectionContext introspectionContext) throws LoaderException {
         SpringComponentType componentType = implementation.getComponentType();
-//        componentType = loadByIntrospection(implementation, loaderContext);
+//        componentType = loadByIntrospection(implementation, introspectionContext);
         if (componentType.getImplementationScope() == null) {
             componentType.setImplementationScope(Scope.STATELESS);
         }
         implementation.setComponentType(componentType);
     }
 
-//    protected PojoComponentType loadByIntrospection(SpringImplementation implementation, LoaderContext context)
+//    protected PojoComponentType loadByIntrospection(SpringImplementation implementation, IntrospectionContext context)
 //            throws ProcessingException, MissingResourceException {
 //        Class<?> implClass = null;
 ////                LoaderUtil.loadClass(implementation.getLocation(), context.getTargetClassLoader());

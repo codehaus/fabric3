@@ -18,7 +18,7 @@
  */
 package org.fabric3.fabric.implementation.processor;
 
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
@@ -41,7 +41,7 @@ public class ScopeProcessor extends ImplementationProcessorExtension {
 
     public <T> void visitClass(Class<T> clazz,
                                PojoComponentType type,
-                               LoaderContext context)
+                               IntrospectionContext context)
         throws ProcessingException {
         org.osoa.sca.annotations.Scope annotation = clazz.getAnnotation(org.osoa.sca.annotations.Scope.class);
         if (annotation == null) {

@@ -33,13 +33,13 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.ContributionException;
-import org.fabric3.loader.common.LoaderContextImpl;
+import org.fabric3.loader.common.IntrospectionContextImpl;
 import org.fabric3.scdl.definitions.AbstractDefinition;
 import org.fabric3.scdl.definitions.BindingType;
 import org.fabric3.scdl.definitions.ImplementationType;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
-import org.fabric3.spi.loader.LoaderContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.services.contribution.QNameSymbol;
@@ -91,7 +91,7 @@ public class DefinitionsLoader implements XmlResourceElementLoader {
 
         String targetNamespace = reader.getAttributeValue(null, "targetNamespace");
 
-        LoaderContext context = new LoaderContextImpl(contributionUri, loader, targetNamespace);
+        IntrospectionContext context = new IntrospectionContextImpl(contributionUri, loader, targetNamespace);
 
         while (true) {
             switch (reader.next()) {
