@@ -61,7 +61,7 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
 
     public JavaMappedService createService(Class<?> interfaze) throws InvalidServiceContractException {
         ServiceContract<?> contract = registry.introspect(interfaze);
-        return new JavaMappedService(interfaze.getSimpleName(), contract, interfaze.getName());
+        return new JavaMappedService(interfaze.getSimpleName(), contract);
     }
 
     public void processCallback(Class<?> interfaze, JavaServiceContract contract) throws IllegalCallbackException {

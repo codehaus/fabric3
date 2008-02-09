@@ -52,15 +52,18 @@ public class MockComponentTypeLoaderImplTest extends TestCase {
         
         JavaMappedService service = services.get("service0");
         assertNotNull(service);
-        assertEquals("org.fabric3.mock.Foo", service.getServiceInterface());
-        
+        assertEquals("Foo", service.getName());
+        assertEquals("org.fabric3.mock.Foo", service.getServiceContract().getQualifiedInterfaceName());
+
         service = services.get("service1");
         assertNotNull(service);
-        assertEquals("org.fabric3.mock.Bar", service.getServiceInterface());
-        
+        assertEquals("Bar", service.getName());
+        assertEquals("org.fabric3.mock.Bar", service.getServiceContract().getQualifiedInterfaceName());
+
         service = services.get("service2");
         assertNotNull(service);
-        assertEquals("org.fabric3.mock.Baz", service.getServiceInterface());
+        assertEquals("Baz", service.getName());
+        assertEquals("org.fabric3.mock.Baz", service.getServiceContract().getQualifiedInterfaceName());
         
         
     }

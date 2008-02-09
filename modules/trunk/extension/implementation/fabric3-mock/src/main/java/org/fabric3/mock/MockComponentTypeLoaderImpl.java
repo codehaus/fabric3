@@ -52,10 +52,10 @@ public class MockComponentTypeLoaderImpl implements MockComponentTypeLoader {
                 if (index != -1) {
                     name = name.substring(index+1);
                 }
-                componentType.add(new JavaMappedService(name, serviceContract, mockedInterface));
+                componentType.add(new JavaMappedService(name, serviceContract));
             }
             JavaServiceContract mockControlContract = new JavaServiceContract(IMocksControl.class);
-            componentType.add(new JavaMappedService("mockControl", mockControlContract, IMocksControl.class.getName()));
+            componentType.add(new JavaMappedService("mockControl", mockControlContract));
             componentType.setImplementationScope(Scope.STATELESS);
             
             return componentType;

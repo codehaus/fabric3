@@ -382,7 +382,7 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
      */
     private boolean isInServiceInterface(Method operation, Map<String, JavaMappedService> services) {
         for (JavaMappedService service : services.values()) {
-            String interfaze = service.getServiceInterface();
+            String interfaze = service.getServiceContract().getQualifiedInterfaceName();
             try {
                 // Class<?> clazz = Class.forName(interfaze);
                 // TODO The classloader needs to be passed in

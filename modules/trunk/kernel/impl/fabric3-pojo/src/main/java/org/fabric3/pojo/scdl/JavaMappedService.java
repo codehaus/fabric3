@@ -30,25 +30,9 @@ import org.fabric3.scdl.ServiceDefinition;
  * @version $Rev$ $Date$
  */
 public class JavaMappedService extends ServiceDefinition {
-    private String serviceInterface;
 
     public JavaMappedService(String name, ServiceContract contract) {
         super(name, contract);
-    }
-
-    public JavaMappedService(String name, ServiceContract contract, String serviceInterface) {
-        super(name, contract);
-        this.serviceInterface = serviceInterface;
-    }
-
-    /**
-     * Returns the Java interface for this service. This may be different from the interface that defines the service
-     * contract.
-     *
-     * @return the Java interface for this service
-     */
-    public String getServiceInterface() {
-        return serviceInterface;
     }
 
 }
