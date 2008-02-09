@@ -105,18 +105,20 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
             }
         }
         Set<Method> methods = getAllUniquePublicProtectedMethods(clazz);
-        if (!type.getReferences().isEmpty() || !type.getProperties().isEmpty()) {
-            // references and properties have been explicitly defined
-            if (type.getServices().isEmpty()) {
-                calculateServiceInterface(clazz, type, methods);
-                if (type.getServices().isEmpty()) {
-                    throw new ServiceTypeNotFoundException(clazz.getName());
-                }
-            }
-            evaluateConstructor(type, clazz);
-            return;
+
+        // if no references or properties have been defined infer them from the implementation
+        if (type.getReferences().isEmpty() && type.getProperties().isEmpty()) {
+            calcPropRefs(methods, services, type, clazz);
         }
-        calcPropRefs(methods, services, type, clazz);
+
+        // if no services have been defined, infer them from the implementation
+        if (type.getServices().isEmpty()) {
+            calculateServiceInterface(clazz, type, methods);
+            if (type.getServices().isEmpty()) {
+                throw new ServiceTypeNotFoundException(clazz.getName());
+            }
+        }
+        
         evaluateConstructor(type, clazz);
     }
 

@@ -30,6 +30,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Remotable;
+import org.osoa.sca.annotations.Service;
 
 import org.fabric3.binding.ejb.model.logical.EjbBindingDefinition;
 import org.fabric3.binding.ejb.model.physical.EjbWireSourceDefinition;
@@ -63,6 +64,7 @@ import org.fabric3.spi.ObjectFactory;
  * @version $Revision: 1 $ $Date: 2007-05-14 10:40:37 -0700 (Mon, 14 May 2007) $
  */
 @EagerInit
+@Service(interfaces={SourceWireAttacher.class, TargetWireAttacher.class})
 public class EjbWireAttacher implements SourceWireAttacher<EjbWireSourceDefinition>, TargetWireAttacher<EjbWireTargetDefinition> {
     private final SourceWireAttacherRegistry sourceWireAttacherRegistry;
     private final TargetWireAttacherRegistry targetWireAttacherRegistry;

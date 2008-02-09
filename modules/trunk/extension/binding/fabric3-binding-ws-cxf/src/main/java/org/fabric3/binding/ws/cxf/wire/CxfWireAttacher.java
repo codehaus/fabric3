@@ -25,6 +25,7 @@ import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Service;
 
 import org.fabric3.binding.ws.cxf.CXFService;
 import org.fabric3.binding.ws.cxf.physical.CxfWireSourceDefinition;
@@ -46,6 +47,7 @@ import org.fabric3.spi.ObjectFactory;
  * @version $Revision: 1589 $ $Date: 2007-10-25 23:13:37 +0100 (Thu, 25 Oct 2007) $
  */
 @EagerInit
+@Service(interfaces={SourceWireAttacher.class, TargetWireAttacher.class})
 public class CxfWireAttacher implements SourceWireAttacher<CxfWireSourceDefinition>, TargetWireAttacher<CxfWireTargetDefinition> {
 
     /*

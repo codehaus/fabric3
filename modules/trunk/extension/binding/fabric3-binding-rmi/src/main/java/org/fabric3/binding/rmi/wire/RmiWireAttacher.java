@@ -38,6 +38,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.Service;
 
 import org.fabric3.binding.rmi.model.logical.RmiBindingDefinition;
 import org.fabric3.binding.rmi.model.physical.RmiWireSourceDefinition;
@@ -60,6 +61,7 @@ import org.fabric3.spi.wire.Wire;
 import org.fabric3.spi.ObjectFactory;
 
 @EagerInit
+@Service(interfaces={SourceWireAttacher.class, TargetWireAttacher.class})
 public class RmiWireAttacher implements SourceWireAttacher<RmiWireSourceDefinition>, TargetWireAttacher<RmiWireTargetDefinition> {
 
     static {

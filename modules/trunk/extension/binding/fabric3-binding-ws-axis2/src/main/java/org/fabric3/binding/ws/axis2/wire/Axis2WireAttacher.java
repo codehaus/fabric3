@@ -41,6 +41,7 @@ import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Service;
 
 /**
  * @version $Revision$ $Date$
@@ -48,6 +49,7 @@ import org.osoa.sca.annotations.Reference;
  * TODO Add support for WSDL contract
  */
 @EagerInit
+@Service(interfaces={SourceWireAttacher.class, TargetWireAttacher.class})
 public class Axis2WireAttacher implements SourceWireAttacher<Axis2WireSourceDefinition>, TargetWireAttacher<Axis2WireTargetDefinition> {
     
     private final SourceWireAttacherRegistry sourceWireAttacherRegistry;

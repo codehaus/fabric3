@@ -27,6 +27,7 @@ import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Service;
 
 import org.fabric3.binding.hessian.model.physical.HessianWireSourceDefinition;
 import org.fabric3.binding.hessian.model.physical.HessianWireTargetDefinition;
@@ -56,6 +57,7 @@ import com.caucho.hessian.io.SerializerFactory;
  * @version $Revision$ $Date$
  */
 @EagerInit
+@Service(interfaces={SourceWireAttacher.class, TargetWireAttacher.class})
 public class HessianWireAttacher implements SourceWireAttacher<HessianWireSourceDefinition>, TargetWireAttacher<HessianWireTargetDefinition> {
     private final SourceWireAttacherRegistry sourceWireAttacherRegistry;
     private final TargetWireAttacherRegistry targetWireAttacherRegistry;
