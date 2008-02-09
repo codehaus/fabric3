@@ -1,13 +1,22 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>spikes</groupId>
-    <artifactId>f3-ordering-test</artifactId>
+    <parent>
+        <groupId>org.codehaus.fabric3</groupId>
+        <artifactId>fabric</artifactId>
+        <version>4</version>
+    </parent>
+    <artifactId>test-ordering</artifactId>
     <packaging>jar</packaging>
     <version>0.1-SNAPSHOT</version>
     <name>f3-ordering-test</name>
 
     <dependencies>
+        <dependency>
+            <groupId>org.codehaus.fabric3.spec</groupId>
+            <artifactId>sca-api-r1.0</artifactId>
+            <version>0.2.1</version>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -20,13 +29,9 @@
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-itest-plugin</artifactId>
                 <version>0.5-SNAPSHOT</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.codehaus.fabric3</groupId>
-                        <artifactId>fabric3-fabric</artifactId>
-                        <version>0.5-SNAPSHOT</version>
-                    </dependency>
-                </dependencies>
+                <configuration>
+                    <runtimeVersion>0.5-SNAPSHOT</runtimeVersion>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
