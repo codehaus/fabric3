@@ -20,8 +20,14 @@ package org.fabric3.spi.model.instance;
 
 /**
  * Identifies the source of a value supplied from SCA to an implementation. This is essentially something that can be
- * configured through SCDL. Currently supported types are Services (primarily to support callbacks), References and
- * Properties.
+ * configured through SCDL. Currently supported types are:
+ * <ul>
+ * <li>Services (primarily to support callbacks)</li>
+ * <li>References</li>
+ * <li>Properties</li>
+ * <li>Resources</li>
+ * <li>Context (the implementation-specific context)</li>
+ * </ul>
  *
  * @version $Revision$ $Date$
  */
@@ -32,7 +38,9 @@ public class ValueSource {
     public static enum ValueSourceType {
         SERVICE,
         REFERENCE,
-        PROPERTY
+        PROPERTY,
+        RESOURCE,
+        CONTEXT
     }
 
     private ValueSourceType valueType;
@@ -93,39 +101,17 @@ public class ValueSource {
     }
 
     @Override
-    public int hashCode() {
-        int result = 31 + ((name == null) ? 0 : name.hashCode());
-        result = 31 * result + ((valueType == null) ? 0 : valueType.hashCode());
-        return result;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ValueSource that = (ValueSource) o;
+        return name.equals(that.name) && valueType == that.valueType;
+
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final ValueSource other = (ValueSource) obj;
-        if (name == null) {
-            if (other.name != null) {
-                return false;
-            }
-        } else if (!name.equals(other.name)) {
-            return false;
-        }
-        if (valueType == null) {
-            if (other.valueType != null) {
-                return false;
-            }
-        } else if (valueType != other.valueType) {
-            return false;
-        }
-        return true;
+    public int hashCode() {
+        return valueType.hashCode() * 31 + name.hashCode();
     }
-
 }

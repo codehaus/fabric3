@@ -40,8 +40,10 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.ValueSource;
+import static org.fabric3.spi.model.instance.ValueSource.ValueSourceType.CONTEXT;
 import static org.fabric3.spi.model.instance.ValueSource.ValueSourceType.PROPERTY;
 import static org.fabric3.spi.model.instance.ValueSource.ValueSourceType.REFERENCE;
+import static org.fabric3.spi.model.instance.ValueSource.ValueSourceType.RESOURCE;
 import static org.fabric3.spi.model.instance.ValueSource.ValueSourceType.SERVICE;
 
 /**
@@ -161,11 +163,11 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
         PojoComponentType type = implementation.getComponentType();
         MemberSite componentContextSite = type.getComponentContextMember();
         if (componentContextSite != null) {
-            addMapping(providerDefinition, new ValueSource(REFERENCE, "COMPONENT_CONTEXT"), componentContextSite);
+            addMapping(providerDefinition, new ValueSource(CONTEXT, "ComponentContext"), componentContextSite);
         }
         MemberSite requestContextSite = type.getRequestContextMember();
         if (requestContextSite != null) {
-            addMapping(providerDefinition, new ValueSource(REFERENCE, "REQUEST_CONTEXT"), requestContextSite);
+            addMapping(providerDefinition, new ValueSource(CONTEXT, "RequestContext"), requestContextSite);
         }
     }
 
@@ -195,7 +197,7 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
             JavaMappedResource resource = entry.getValue();
             LogicalResource<?> logicalResource = component.getResource(resource.getName());
             if (logicalResource != null) {
-                addMapping(providerDefinition, new ValueSource(REFERENCE, entry.getKey()), resource.getMemberSite());
+                addMapping(providerDefinition, new ValueSource(RESOURCE, entry.getKey()), resource.getMemberSite());
             }
         }
     }

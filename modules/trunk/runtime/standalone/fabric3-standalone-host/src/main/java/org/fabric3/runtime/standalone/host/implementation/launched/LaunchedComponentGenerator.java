@@ -99,8 +99,10 @@ public class LaunchedComponentGenerator implements ComponentGenerator<LogicalCom
                                                            LogicalReference reference,
                                                            Policy policy,
                                                            GeneratorContext context) {
+        URI uri = reference.getUri();
         JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
-        wireDefinition.setUri(reference.getUri());
+        wireDefinition.setUri(uri);
+        wireDefinition.setValueSource(new ValueSource(ValueSource.ValueSourceType.RESOURCE, uri.getFragment()));
         return wireDefinition;
     }
 

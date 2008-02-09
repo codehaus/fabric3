@@ -24,6 +24,7 @@ import java.net.URI;
 import org.w3c.dom.Document;
 
 import org.fabric3.scdl.ModelObject;
+import org.fabric3.spi.model.instance.ValueSource;
 
 /**
  * Represents a physical wire source definition.
@@ -33,6 +34,7 @@ import org.fabric3.scdl.ModelObject;
 public class PhysicalWireSourceDefinition extends ModelObject {
 
     private URI uri;
+    private ValueSource valueSource;
     private URI callbackUri;
     private boolean optimizable;
     private boolean conversational;
@@ -54,6 +56,22 @@ public class PhysicalWireSourceDefinition extends ModelObject {
      */
     public void setUri(URI uri) {
         this.uri = uri;
+    }
+
+    /**
+     * Returns the value source for this wire. This identifies which reference or resource on the component this wire applies to.
+     * @return the value source for this wire
+     */
+    public ValueSource getValueSource() {
+        return valueSource;
+    }
+
+    /**
+     * Sets the value source for this wire.
+     * @param valueSource the value source for this wire
+     */
+    public void setValueSource(ValueSource valueSource) {
+        this.valueSource = valueSource;
     }
 
     /**

@@ -98,7 +98,7 @@ public class JavaWireAttacher extends PojoWireAttacher implements SourceWireAtta
         URI sourceUri = sourceDefinition.getUri();
         URI sourceName = UriHelper.getDefragmentedName(sourceDefinition.getUri());
         JavaComponent<?> source = (JavaComponent) manager.getComponent(sourceName);
-        ValueSource referenceSource = new ValueSource(ValueSource.ValueSourceType.REFERENCE, sourceUri.getFragment());
+        ValueSource valueSource = sourceDefinition.getValueSource();
 
         Class<?> type;
         try {
@@ -111,8 +111,8 @@ public class JavaWireAttacher extends PojoWireAttacher implements SourceWireAtta
         }
 
         ObjectFactory<?> factory = createWireObjectFactory(type, sourceDefinition.isConversational(), wire);
-        Object key = getKey(sourceDefinition, source, referenceSource);
-        source.attachReferenceToTarget(referenceSource, factory, key);
+        Object key = getKey(sourceDefinition, source, valueSource);
+        source.attachReferenceToTarget(valueSource, factory, key);
 
         if (!wire.getCallbackInvocationChains().isEmpty()) {
             URI callbackUri = sourceDefinition.getCallbackUri();
@@ -166,10 +166,10 @@ public class JavaWireAttacher extends PojoWireAttacher implements SourceWireAtta
     public void attachObjectFactory(JavaWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
         URI sourceId = UriHelper.getDefragmentedName(source.getUri());
         JavaComponent<?> sourceComponent = (JavaComponent<?>) manager.getComponent(sourceId);
-        ValueSource referenceSource = new ValueSource(ValueSource.ValueSourceType.REFERENCE, source.getUri().getFragment());
+        ValueSource valueSource = source.getValueSource();
 
-        Object key = getKey(source, sourceComponent, referenceSource);
-        sourceComponent.attachReferenceToTarget(referenceSource, objectFactory, key);
+        Object key = getKey(source, sourceComponent, valueSource);
+        sourceComponent.attachReferenceToTarget(valueSource, objectFactory, key);
     }
 
     public ObjectFactory<?> createObjectFactory(JavaWireTargetDefinition target) throws WiringException {

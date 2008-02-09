@@ -19,11 +19,11 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
+import org.fabric3.spi.model.instance.ValueSource;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.Policy;
-import org.fabric3.spi.idl.java.JavaServiceContract;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
@@ -87,17 +87,20 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
                                                            LogicalReference reference,
                                                            Policy policy,
                                                            GeneratorContext context) throws GenerationException {
-        JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
-        wireDefinition.setUri(reference.getUri());
+        URI uri = reference.getUri();
         ServiceContract<?> serviceContract = reference.getDefinition().getServiceContract();
         String interfaceName = getInterfaceName(serviceContract);
+        URI classLoaderId = classLoaderGenerator.generate(source, context);
+
+        JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
+        wireDefinition.setUri(uri);
+        wireDefinition.setValueSource(new ValueSource(ValueSource.ValueSourceType.REFERENCE, uri.getFragment()));
         wireDefinition.setInterfaceName(interfaceName);
         wireDefinition.setConversational(serviceContract.isConversational());
 
         // assume for now that any wire from a JUnit component can be optimized
         wireDefinition.setOptimizable(true);
 
-        URI classLoaderId = classLoaderGenerator.generate(source, context);
         wireDefinition.setClassLoaderId(classLoaderId);
         return wireDefinition;
     }
@@ -106,14 +109,17 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
                                                                    LogicalResource<?> resource,
                                                                    GeneratorContext context)
             throws GenerationException {
-        JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
-        wireDefinition.setUri(resource.getUri());
 
-        URI classLoaderId = classLoaderGenerator.generate(source, context);
-        wireDefinition.setClassLoaderId(classLoaderId);
-
+        URI uri = resource.getUri();
         ServiceContract<?> serviceContract = resource.getResourceDefinition().getServiceContract();
         String interfaceName = getInterfaceName(serviceContract);
+        URI classLoaderId = classLoaderGenerator.generate(source, context);
+
+        JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
+        wireDefinition.setUri(uri);
+        wireDefinition.setValueSource(new ValueSource(ValueSource.ValueSourceType.RESOURCE, uri.getFragment()));
+        wireDefinition.setConversational(false);
+        wireDefinition.setClassLoaderId(classLoaderId);
         wireDefinition.setInterfaceName(interfaceName);
         return wireDefinition;
     }
