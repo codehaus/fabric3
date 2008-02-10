@@ -28,14 +28,14 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.pojo.instancefactory.InjectionSiteMapping;
+import org.fabric3.scdl.InjectionSiteMapping;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilder;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderException;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.pojo.reflection.ReflectiveInstanceFactoryProvider;
-import org.fabric3.spi.model.instance.ValueSource;
+import org.fabric3.scdl.ValueSource;
 
 /**
  * Builds a reflection-based instance factory provider.

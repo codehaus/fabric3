@@ -34,7 +34,7 @@ import org.fabric3.fabric.implementation.processor.InitProcessor;
 import org.fabric3.fabric.implementation.processor.PropertyProcessor;
 import org.fabric3.fabric.implementation.processor.ReferenceProcessor;
 import org.fabric3.fabric.implementation.processor.ScopeProcessor;
-import org.fabric3.pojo.instancefactory.Signature;
+import org.fabric3.scdl.Signature;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import static org.fabric3.scdl.Scope.COMPOSITE;

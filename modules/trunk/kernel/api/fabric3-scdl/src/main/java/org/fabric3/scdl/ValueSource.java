@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.model.instance;
+package org.fabric3.scdl;
 
 /**
  * Identifies the source of a value supplied from SCA to an implementation. This is essentially something that can be

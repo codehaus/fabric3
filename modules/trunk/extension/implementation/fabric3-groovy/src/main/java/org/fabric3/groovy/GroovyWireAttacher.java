@@ -37,7 +37,7 @@ import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.component.Component;
 import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.spi.model.instance.ValueSource;
+import org.fabric3.scdl.ValueSource;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;

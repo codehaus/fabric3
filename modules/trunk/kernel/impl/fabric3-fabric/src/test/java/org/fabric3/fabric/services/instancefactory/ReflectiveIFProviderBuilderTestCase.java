@@ -24,13 +24,13 @@ import java.lang.reflect.Field;
 import junit.framework.TestCase;
 
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
-import org.fabric3.pojo.instancefactory.InjectionSiteMapping;
-import org.fabric3.pojo.scdl.MemberSite;
-import org.fabric3.pojo.instancefactory.Signature;
+import org.fabric3.scdl.InjectionSiteMapping;
+import org.fabric3.scdl.MemberSite;
+import org.fabric3.scdl.Signature;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
 import org.fabric3.spi.component.InstanceFactoryProvider;
-import org.fabric3.spi.model.instance.ValueSource;
-import org.fabric3.spi.model.instance.ValueSource.ValueSourceType;
+import org.fabric3.scdl.ValueSource;
+import org.fabric3.scdl.ValueSource.ValueSourceType;
 import org.fabric3.fabric.services.instancefactory.ReflectiveInstanceFactoryBuilder;
 import org.fabric3.fabric.services.classloading.ClassLoaderRegistryImpl;
 

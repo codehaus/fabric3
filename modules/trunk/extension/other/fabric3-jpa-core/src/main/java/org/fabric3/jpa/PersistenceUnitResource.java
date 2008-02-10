@@ -19,7 +19,7 @@
 package org.fabric3.jpa;
 
 import org.fabric3.pojo.scdl.JavaMappedResource;
-import org.fabric3.pojo.scdl.MemberSite;
+import org.fabric3.scdl.MemberSite;
 import org.fabric3.spi.idl.java.JavaServiceContract;
 
 /**

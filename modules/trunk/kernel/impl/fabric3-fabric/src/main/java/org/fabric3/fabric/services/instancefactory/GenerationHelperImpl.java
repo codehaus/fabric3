@@ -22,16 +22,16 @@ import java.util.Map;
 import org.w3c.dom.Document;
 
 import org.fabric3.pojo.implementation.PojoComponentDefinition;
-import org.fabric3.pojo.instancefactory.InjectionSiteMapping;
+import org.fabric3.scdl.InjectionSiteMapping;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
-import org.fabric3.pojo.instancefactory.Signature;
+import org.fabric3.scdl.Signature;
 import org.fabric3.pojo.scdl.ConstructorDefinition;
 import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.JavaMappedReference;
 import org.fabric3.pojo.scdl.JavaMappedResource;
 import org.fabric3.pojo.scdl.JavaMappedService;
-import org.fabric3.pojo.scdl.MemberSite;
+import org.fabric3.scdl.MemberSite;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Implementation;
@@ -39,12 +39,12 @@ import org.fabric3.scdl.Property;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
-import org.fabric3.spi.model.instance.ValueSource;
-import static org.fabric3.spi.model.instance.ValueSource.ValueSourceType.CONTEXT;
-import static org.fabric3.spi.model.instance.ValueSource.ValueSourceType.PROPERTY;
-import static org.fabric3.spi.model.instance.ValueSource.ValueSourceType.REFERENCE;
-import static org.fabric3.spi.model.instance.ValueSource.ValueSourceType.RESOURCE;
-import static org.fabric3.spi.model.instance.ValueSource.ValueSourceType.SERVICE;
+import org.fabric3.scdl.ValueSource;
+import static org.fabric3.scdl.ValueSource.ValueSourceType.CONTEXT;
+import static org.fabric3.scdl.ValueSource.ValueSourceType.PROPERTY;
+import static org.fabric3.scdl.ValueSource.ValueSourceType.REFERENCE;
+import static org.fabric3.scdl.ValueSource.ValueSourceType.RESOURCE;
+import static org.fabric3.scdl.ValueSource.ValueSourceType.SERVICE;
 
 /**
  * @version $Rev$ $Date$

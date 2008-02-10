@@ -22,7 +22,9 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
-import org.fabric3.spi.model.instance.ValueSource;
+import org.fabric3.scdl.ValueSource;
+import org.fabric3.scdl.Signature;
+import org.fabric3.scdl.InjectionSiteMapping;
 
 /**
  * @version $Rev$ $Date$

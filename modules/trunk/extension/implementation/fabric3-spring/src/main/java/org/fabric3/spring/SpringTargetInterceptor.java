@@ -23,7 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.osoa.sca.ServiceRuntimeException;
 
-import org.fabric3.pojo.instancefactory.Signature;
+import org.fabric3.scdl.Signature;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.Message;

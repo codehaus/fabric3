@@ -24,7 +24,7 @@ import javax.ejb.EJBLocalHome;
 import org.osoa.sca.ServiceRuntimeException;
 
 import org.fabric3.binding.ejb.wire.EjbResolver;
-import org.fabric3.pojo.instancefactory.Signature;
+import org.fabric3.scdl.Signature;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.TargetDestructionException;
 import org.fabric3.spi.component.TargetResolutionException;

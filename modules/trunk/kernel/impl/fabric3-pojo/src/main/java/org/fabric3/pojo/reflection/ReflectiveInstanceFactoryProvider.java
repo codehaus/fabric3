@@ -30,7 +30,7 @@ import java.util.Map;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.InstanceFactory;
 import org.fabric3.spi.component.InstanceFactoryProvider;
-import org.fabric3.spi.model.instance.ValueSource;
+import org.fabric3.scdl.ValueSource;
 
 /**
  * @version $Rev$ $Date$

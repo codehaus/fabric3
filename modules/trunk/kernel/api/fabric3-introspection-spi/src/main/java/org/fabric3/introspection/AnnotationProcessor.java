@@ -22,6 +22,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.InjectingComponentType;
 
 /**
  * Interface for processors that handle annotations attached to Java declarations.
@@ -29,7 +30,7 @@ import org.fabric3.scdl.Implementation;
  * @version $Rev$ $Date$
  * @param <A> the type of annotation this processor handles
  */
-public interface AnnotationProcessor<A extends Annotation, I extends Implementation<?>> {
+public interface AnnotationProcessor<A extends Annotation, I extends Implementation<? extends InjectingComponentType>> {
     /**
      * Returns the type of annotation this processor handles.
      *

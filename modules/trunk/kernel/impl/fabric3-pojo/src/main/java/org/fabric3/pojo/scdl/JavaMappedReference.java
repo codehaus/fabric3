@@ -20,6 +20,7 @@ package org.fabric3.pojo.scdl;
 
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.MemberSite;
 
 /**
  * A ReferenceDefinition definition that is mapped to a specific location in the implementation class. This location

@@ -40,7 +40,7 @@ import org.fabric3.binding.ejb.transport.EjbHomeServiceHandler;
 import org.fabric3.binding.ejb.transport.EjbServiceHandler;
 import org.fabric3.binding.ejb.transport.EjbTargetInterceptorFactory;
 import org.fabric3.binding.rmi.wire.WireProxyGenerator;
-import org.fabric3.pojo.instancefactory.Signature;
+import org.fabric3.scdl.Signature;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;

@@ -22,13 +22,14 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.InjectingComponentType;
 
 /**
  * Abstract base class for annotation processors that provides default implementations of the interface methods that simply return.
  *
  * @version $Rev$ $Date$
  */
-public abstract class AbstractAnnotationProcessor<A extends Annotation, I extends Implementation<?>> implements AnnotationProcessor<A, I> {
+public abstract class AbstractAnnotationProcessor<A extends Annotation, I extends Implementation<? extends InjectingComponentType>> implements AnnotationProcessor<A, I> {
     private final Class<A> type;
 
     /**

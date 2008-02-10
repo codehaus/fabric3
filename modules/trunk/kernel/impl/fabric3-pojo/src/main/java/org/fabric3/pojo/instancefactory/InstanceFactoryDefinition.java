@@ -22,8 +22,10 @@ package org.fabric3.pojo.instancefactory;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.fabric3.spi.model.instance.ValueSource;
+import org.fabric3.scdl.ValueSource;
 import org.fabric3.scdl.ModelObject;
+import org.fabric3.scdl.Signature;
+import org.fabric3.scdl.InjectionSiteMapping;
 
 /**
  * Base class for instance factory definitions.

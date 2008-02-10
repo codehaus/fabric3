@@ -23,6 +23,7 @@ import org.fabric3.pojo.scdl.ConstructorDefinition;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.Signature;
 import org.fabric3.spi.model.instance.LogicalComponent;
 
 /**

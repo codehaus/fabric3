@@ -21,6 +21,7 @@ package org.fabric3.pojo.scdl;
 import javax.xml.namespace.QName;
 
 import org.fabric3.scdl.Property;
+import org.fabric3.scdl.MemberSite;
 
 /**
  * A Property definition that is mapped to a specific location in the implementation class. This location will typically

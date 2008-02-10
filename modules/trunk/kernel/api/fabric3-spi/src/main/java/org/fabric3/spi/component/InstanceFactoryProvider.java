@@ -21,7 +21,7 @@ package org.fabric3.spi.component;
 import java.lang.reflect.Type;
 
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.model.instance.ValueSource;
+import org.fabric3.scdl.ValueSource;
 
 /**
  * @version $Rev$ $Date$

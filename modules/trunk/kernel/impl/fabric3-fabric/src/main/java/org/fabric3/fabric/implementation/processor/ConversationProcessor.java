@@ -29,7 +29,7 @@ import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
-import org.fabric3.pojo.scdl.MemberSite;
+import org.fabric3.scdl.MemberSite;
 
 /**
  * @version $Rev$ $Date$

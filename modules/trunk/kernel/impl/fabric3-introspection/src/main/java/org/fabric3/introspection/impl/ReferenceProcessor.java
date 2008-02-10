@@ -17,9 +17,9 @@
 package org.fabric3.introspection.impl;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Map;
 
@@ -31,14 +31,17 @@ import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.InjectingComponentType;
 import org.fabric3.scdl.Multiplicity;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.ValueSource;
+import org.fabric3.scdl.MemberSite;
 
 /**
  * @version $Rev$ $Date$
  */
-public class ReferenceProcessor extends AbstractAnnotationProcessor<Reference, Implementation<?>> {
+public class ReferenceProcessor<I extends Implementation<? extends InjectingComponentType>> extends AbstractAnnotationProcessor<Reference, I> {
     private final ContractProcessor contractProcessor;
     private final IntrospectionHelper helper;
 
@@ -49,32 +52,35 @@ public class ReferenceProcessor extends AbstractAnnotationProcessor<Reference, I
         this.helper = helper;
     }
 
-    public void visitField(Reference annotation, Field field, Implementation<?> implementation, IntrospectionContext context)
+    public void visitField(Reference annotation, Field field, I implementation, IntrospectionContext context)
             throws IntrospectionException {
 
         String name = helper.getSiteName(field, annotation.name());
-        ReferenceDefinition definition = createDefinition(name, annotation.required(), field.getGenericType());
+        createDefinition(implementation.getComponentType(), name, annotation.required(), field.getGenericType(), new MemberSite(field));
     }
 
-    public void visitMethod(Reference annotation, Method method, Implementation<?> implementation, IntrospectionContext context)
+    public void visitMethod(Reference annotation, Method method, I implementation, IntrospectionContext context)
             throws IntrospectionException {
 
         String name = helper.getSiteName(method, annotation.name());
-        ReferenceDefinition definition = createDefinition(name, annotation.required(), helper.getType(method));
+        createDefinition(implementation.getComponentType(), name, annotation.required(), helper.getType(method), new MemberSite(method));
     }
 
-    ReferenceDefinition createDefinition(String name, boolean required, Type type) throws IntrospectionException {
+    void createDefinition(InjectingComponentType componentType, String name, boolean required, Type type, MemberSite site) throws IntrospectionException {
 
         ServiceContract<Type> contract = contractProcessor.introspect(type);
         Multiplicity multiplicity = multiplicity(required, type);
-        return new ReferenceDefinition(name, contract, multiplicity);
+        ReferenceDefinition definition = new ReferenceDefinition(name, contract, multiplicity);
+        ValueSource valueSource = new ValueSource(ValueSource.ValueSourceType.REFERENCE, name);
+        componentType.add(definition);
+        componentType.addInjectionMapping(valueSource, site);
     }
 
     /**
      * Returns the multiplicity of a type based on whether it describes a single value or a collection.
      *
      * @param required whether a value must be supplied (implies 1.. multiplicity)
-     * @param type the multiplicity of a type
+     * @param type     the multiplicity of a type
      * @return the multiplicity of the type
      */
     Multiplicity multiplicity(boolean required, Type type) {

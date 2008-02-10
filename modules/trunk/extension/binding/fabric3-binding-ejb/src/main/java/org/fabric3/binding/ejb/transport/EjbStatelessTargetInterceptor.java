@@ -19,7 +19,7 @@
 package org.fabric3.binding.ejb.transport;
 
 import org.fabric3.binding.ejb.wire.EjbResolver;
-import org.fabric3.pojo.instancefactory.Signature;
+import org.fabric3.scdl.Signature;
 import org.fabric3.spi.wire.Message;
 
 

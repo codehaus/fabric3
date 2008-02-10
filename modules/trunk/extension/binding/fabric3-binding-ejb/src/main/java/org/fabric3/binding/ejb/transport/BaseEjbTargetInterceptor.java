@@ -24,7 +24,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.osoa.sca.ServiceRuntimeException;
 
 import org.fabric3.binding.ejb.wire.EjbResolver;
-import org.fabric3.pojo.instancefactory.Signature;
+import org.fabric3.scdl.Signature;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.spi.wire.MessageImpl;

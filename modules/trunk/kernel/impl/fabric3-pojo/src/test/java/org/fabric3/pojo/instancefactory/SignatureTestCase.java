@@ -20,6 +20,8 @@ import java.lang.reflect.Method;
 
 import junit.framework.TestCase;
 
+import org.fabric3.scdl.Signature;
+
 /**
  * @version $Rev$ $Date$
  */

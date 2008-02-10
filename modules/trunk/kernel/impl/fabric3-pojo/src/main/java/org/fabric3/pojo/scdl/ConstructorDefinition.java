@@ -22,7 +22,7 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.fabric3.pojo.instancefactory.Signature;
+import org.fabric3.scdl.Signature;
 
 /**
  * Hold injection information for the constructor used to instantiate a component implementation instance

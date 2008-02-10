@@ -25,6 +25,7 @@ import java.util.Map;
 import org.fabric3.pojo.ComponentObjectFactory;
 import org.fabric3.pojo.injection.MultiplicityObjectFactory;
 import org.fabric3.scdl.PropertyValue;
+import org.fabric3.scdl.ValueSource;
 import org.fabric3.spi.AbstractLifecycle;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
@@ -34,7 +35,6 @@ import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.spi.model.instance.ValueSource;
 
 /**
  * Base class for Component implementations based on Java objects.

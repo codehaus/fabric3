@@ -4,7 +4,7 @@ import java.net.URI;
 
 import org.fabric3.binding.ejb.model.logical.EjbBindingDefinition;
 import org.fabric3.binding.ejb.wire.EjbResolver;
-import org.fabric3.pojo.instancefactory.Signature;
+import org.fabric3.scdl.Signature;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;

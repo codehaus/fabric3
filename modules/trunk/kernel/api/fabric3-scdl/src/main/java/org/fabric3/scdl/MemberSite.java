@@ -1,12 +1,10 @@
-package org.fabric3.pojo.scdl;
+package org.fabric3.scdl;
 
 import java.lang.annotation.ElementType;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
-
-import org.fabric3.pojo.instancefactory.Signature;
 
 /**
  * Represents an injection site on a Java-based component implementation.
@@ -28,6 +26,24 @@ public class MemberSite {
     private String type;
 
     public MemberSite() {
+    }
+
+    public MemberSite(Field field) {
+        name = field.getName();
+        elementType = ElementType.FIELD;
+        type = field.getType().getName();
+    }
+
+    public MemberSite(Method method) {
+        name = method.getName();
+        elementType = ElementType.METHOD;
+        signature = new Signature(method);
+    }
+
+    public MemberSite(Constructor<?> constructor) {
+        name = constructor.getName();
+        elementType = ElementType.CONSTRUCTOR;
+        signature = new Signature(constructor);
     }
 
     public MemberSite(Member member) {

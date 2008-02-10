@@ -24,7 +24,7 @@ import java.net.URI;
 import org.w3c.dom.Document;
 
 import org.fabric3.scdl.ModelObject;
-import org.fabric3.spi.model.instance.ValueSource;
+import org.fabric3.scdl.ValueSource;
 
 /**
  * Represents a physical wire source definition.

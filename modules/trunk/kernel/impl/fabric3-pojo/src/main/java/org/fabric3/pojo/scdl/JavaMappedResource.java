@@ -19,6 +19,7 @@
 package org.fabric3.pojo.scdl;
 
 import org.fabric3.scdl.ResourceDefinition;
+import org.fabric3.scdl.MemberSite;
 import org.fabric3.spi.idl.java.JavaServiceContract;
 
 /**

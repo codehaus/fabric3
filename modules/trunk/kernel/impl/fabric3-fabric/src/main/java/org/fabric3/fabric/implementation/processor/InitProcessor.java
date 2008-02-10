@@ -22,7 +22,7 @@ import java.lang.reflect.Method;
 
 import org.osoa.sca.annotations.Init;
 
-import org.fabric3.pojo.instancefactory.Signature;
+import org.fabric3.scdl.Signature;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;

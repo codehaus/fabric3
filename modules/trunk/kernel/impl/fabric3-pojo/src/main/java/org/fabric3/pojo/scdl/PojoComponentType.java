@@ -18,8 +18,9 @@
  */
 package org.fabric3.pojo.scdl;
 
-import org.fabric3.pojo.instancefactory.Signature;
+import org.fabric3.scdl.Signature;
 import org.fabric3.scdl.AbstractComponentType;
+import org.fabric3.scdl.MemberSite;
 
 /**
  * A component type specialization for POJO implementations
