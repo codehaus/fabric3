@@ -25,13 +25,13 @@ import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.ComponentReference;
 import org.fabric3.scdl.ComponentService;
-import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ResourceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
@@ -46,8 +46,7 @@ public class AtomicComponentInstantiator extends AbstractComponentInstantiator {
         super(documentLoader);
     }
 
-    public <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalComponent<CompositeImplementation> parent,
-                                                                         ComponentDefinition<I> definition)
+    public <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalCompositeComponent parent, ComponentDefinition<I> definition)
             throws InstantiationException {
 
         URI runtimeId = definition.getRuntimeId();

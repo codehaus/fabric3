@@ -31,6 +31,7 @@ import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 
 /**
  * @version $Rev$ $Date$
@@ -92,7 +93,7 @@ public class AssemblyPropertyTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         componentInstantiator = new AbstractComponentInstantiator(null) {
-            public <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalComponent<CompositeImplementation> parent,
+            public <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalCompositeComponent parent,
                                                                                  ComponentDefinition<I> definition)
                     throws InstantiationException {
                 return null;

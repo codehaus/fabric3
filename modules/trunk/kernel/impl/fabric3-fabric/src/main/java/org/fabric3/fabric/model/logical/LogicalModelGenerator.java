@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
-import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.model.instance.LogicalComponent;

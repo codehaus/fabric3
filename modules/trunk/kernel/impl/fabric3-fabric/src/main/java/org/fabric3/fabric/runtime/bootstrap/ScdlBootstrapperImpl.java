@@ -67,6 +67,7 @@ import org.fabric3.spi.loader.Loader;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.runtime.RuntimeServices;
 import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
 import org.fabric3.spi.runtime.component.ComponentManager;
@@ -91,7 +92,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
     private URL scdlLocation;
     private URL systemConfig;
-    private LogicalComponent<CompositeImplementation> domain;
+    private LogicalCompositeComponent domain;
 
     public ScdlBootstrapperImpl() {
         interfaceProcessorRegistry = new JavaInterfaceProcessorRegistryImpl();
@@ -128,7 +129,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
     }
 
-    private LogicalComponent<CompositeImplementation> getDomain(Fabric3Runtime<?> runtime) {
+    private LogicalCompositeComponent getDomain(Fabric3Runtime<?> runtime) {
         RuntimeServices runtimeServices = (RuntimeServices) runtime;
         LogicalComponentManager logicalComponentManager = runtimeServices.getLogicalComponentManager();
         return logicalComponentManager.getDomain();

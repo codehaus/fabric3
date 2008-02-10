@@ -35,6 +35,7 @@ import org.fabric3.scdl.CompositeService;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 
@@ -54,23 +55,21 @@ public class CompositeComponentInstantiator extends AbstractComponentInstantiato
     }
 
     @SuppressWarnings("unchecked")
-    public <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalComponent<CompositeImplementation> parent,
-                                                                         ComponentDefinition<I> definition)
+    public <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalCompositeComponent parent, ComponentDefinition<I> definition)
             throws InstantiationException {
         ComponentDefinition<CompositeImplementation> def = (ComponentDefinition<CompositeImplementation>) definition;
         return (LogicalComponent<I>) instantiateComposite(parent, def);
     }
 
-    public LogicalComponent<CompositeImplementation> instantiateComposite(LogicalComponent<CompositeImplementation> parent,
-                                                                          ComponentDefinition<CompositeImplementation> definition)
+    public LogicalCompositeComponent instantiateComposite(LogicalCompositeComponent parent, ComponentDefinition<CompositeImplementation> definition)
             throws InstantiationException {
 
         URI runtimeId = definition.getRuntimeId();
         URI uri = URI.create(parent.getUri() + "/" + definition.getName());
         Composite composite = definition.getImplementation().getComponentType();
 
-        LogicalComponent<CompositeImplementation> component =
-                new LogicalComponent<CompositeImplementation>(uri, runtimeId, definition, parent);
+        LogicalCompositeComponent component = new LogicalCompositeComponent(uri, runtimeId, definition, parent);
+        
         initializeProperties(component, definition);
         instantiateChildComponents(component, composite);
         instantiateCompositeServices(component, composite);
@@ -80,8 +79,7 @@ public class CompositeComponentInstantiator extends AbstractComponentInstantiato
 
     }
 
-    private void instantiateChildComponents(LogicalComponent<CompositeImplementation> parent,
-                                            Composite composite) throws InstantiationException {
+    private void instantiateChildComponents(LogicalCompositeComponent parent, Composite composite) throws InstantiationException {
 
         // create the child components
         for (ComponentDefinition<? extends Implementation<?>> child : composite.getComponents().values()) {
@@ -95,6 +93,7 @@ public class CompositeComponentInstantiator extends AbstractComponentInstantiato
             parent.addComponent(childComponent);
 
         }
+        
     }
 
     private <I extends Implementation<?>> void instantiateCompositeServices(LogicalComponent<I> component,

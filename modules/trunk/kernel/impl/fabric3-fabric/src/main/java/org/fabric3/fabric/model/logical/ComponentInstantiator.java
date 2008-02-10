@@ -18,9 +18,9 @@ package org.fabric3.fabric.model.logical;
 
 import org.fabric3.fabric.assembly.InstantiationException;
 import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 
 /**
  * @version $Revision$ $Date$
@@ -35,8 +35,7 @@ public interface ComponentInstantiator {
      * @return the instantiated logical component
      * @throws InstantiationException if an error occurs during instantiation
      */
-    <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalComponent<CompositeImplementation> parent,
-                                                                  ComponentDefinition<I> definition)
+    <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalCompositeComponent parent, ComponentDefinition<I> definition)
             throws InstantiationException;
 
 }
