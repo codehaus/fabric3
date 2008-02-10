@@ -28,7 +28,7 @@ import org.fabric3.pojo.scdl.JavaMappedReference;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Multiplicity;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.introspection.impl.DefaultContractProcessor;
+import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 
 /**
  * @version $Rev$ $Date$

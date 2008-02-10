@@ -22,7 +22,7 @@ import java.util.List;
 import org.easymock.EasyMock;
 import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.impl.DefaultContractProcessor;
+import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 
 import junit.framework.TestCase;
 

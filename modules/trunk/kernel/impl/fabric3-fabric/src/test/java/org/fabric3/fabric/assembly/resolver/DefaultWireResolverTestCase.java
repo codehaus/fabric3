@@ -37,7 +37,7 @@ import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
-import org.fabric3.introspection.impl.JavaServiceContract;
+import org.fabric3.introspection.impl.contract.JavaServiceContract;
 
 /**
  * @version $Rev$ $Date$

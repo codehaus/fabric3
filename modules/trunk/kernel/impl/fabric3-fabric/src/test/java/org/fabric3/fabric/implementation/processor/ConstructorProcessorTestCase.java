@@ -32,7 +32,7 @@ import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Multiplicity;
 
 import junit.framework.TestCase;
-import org.fabric3.introspection.impl.DefaultContractProcessor;
+import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 
 /**
  * @version $Rev$ $Date$

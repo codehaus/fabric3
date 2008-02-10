@@ -39,7 +39,7 @@ import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.introspection.ContractProcessor;
-import org.fabric3.introspection.impl.DefaultContractProcessor;
+import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 
 /**
  * @version $Rev$ $Date$

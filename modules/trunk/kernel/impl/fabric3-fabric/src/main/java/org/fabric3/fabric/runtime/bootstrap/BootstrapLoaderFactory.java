@@ -52,7 +52,7 @@ import org.fabric3.spi.loader.PolicyHelper;
 import org.fabric3.spi.loader.Loader;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.factories.xml.XMLFactory;
-import org.fabric3.introspection.impl.DefaultContractProcessor;
+import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.introspection.ContractProcessor;
 
 /**

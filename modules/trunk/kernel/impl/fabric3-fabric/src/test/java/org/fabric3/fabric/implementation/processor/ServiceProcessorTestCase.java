@@ -24,7 +24,7 @@ import org.osoa.sca.annotations.Remotable;
 import org.osoa.sca.annotations.Service;
 
 import org.fabric3.introspection.ContractProcessor;
-import org.fabric3.introspection.impl.DefaultContractProcessor;
+import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ServiceContract;

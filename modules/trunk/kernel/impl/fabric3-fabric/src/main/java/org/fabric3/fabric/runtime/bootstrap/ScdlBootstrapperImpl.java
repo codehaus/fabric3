@@ -63,7 +63,7 @@ import org.fabric3.spi.loader.Loader;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.ContractProcessor;
 import org.fabric3.introspection.InvalidServiceContractException;
-import org.fabric3.introspection.impl.DefaultContractProcessor;
+import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;

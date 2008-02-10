@@ -39,7 +39,7 @@ import org.fabric3.pojo.scdl.PojoComponentType;
 import static org.fabric3.scdl.Scope.COMPOSITE;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.introspection.ContractProcessor;
-import org.fabric3.introspection.impl.DefaultContractProcessor;
+import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 
 /**
  * Sanity check of the <code>IntegrationRegistry</code> to verify operation with processors

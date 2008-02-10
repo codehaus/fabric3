@@ -28,6 +28,6 @@
            autowire="true">
 
     <component name="interfaceJava.interfaceProcessorRegistry">
-        <system:implementation.system class="org.fabric3.introspection.impl.DefaultContractProcessor"/>
+        <system:implementation.system class="org.fabric3.introspection.impl.contract.DefaultContractProcessor"/>
     </component>
 </composite>

@@ -36,7 +36,7 @@ import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.introspection.impl.DefaultContractProcessor;
+import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 
 /**
  * Verfies component type information is properly introspected from an unadorned POJO according to the SCA Java Client

@@ -26,7 +26,7 @@ import org.fabric3.pojo.scdl.ConstructorDefinition;
 import org.fabric3.pojo.scdl.PojoComponentType;
 
 import junit.framework.TestCase;
-import org.fabric3.introspection.impl.DefaultContractProcessor;
+import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 
 /**
  * Verifies the constructor processor works when parameters are marked with custom extension annotations

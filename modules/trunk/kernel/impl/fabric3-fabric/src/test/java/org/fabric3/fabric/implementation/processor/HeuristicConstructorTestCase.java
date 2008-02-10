@@ -24,7 +24,7 @@ import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Remotable;
 
 import org.fabric3.introspection.ContractProcessor;
-import org.fabric3.introspection.impl.DefaultContractProcessor;
+import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.JavaMappedReference;
 import org.fabric3.pojo.scdl.PojoComponentType;

@@ -27,7 +27,7 @@ import org.fabric3.pojo.scdl.JavaMappedReference;
 import org.fabric3.pojo.scdl.PojoComponentType;
 
 import junit.framework.TestCase;
-import org.fabric3.introspection.impl.DefaultContractProcessor;
+import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 
 /**
  * @version $Rev$ $Date$

@@ -21,7 +21,7 @@ package org.fabric3.fabric.implementation.processor;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 
 import junit.framework.TestCase;
-import org.fabric3.introspection.impl.DefaultContractProcessor;
+import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 
 /**
  * @version $Rev$ $Date$

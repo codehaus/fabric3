@@ -33,7 +33,7 @@ import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.introspection.impl.DefaultContractProcessor;
+import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 
 /**
  * @version $Rev$ $Date$

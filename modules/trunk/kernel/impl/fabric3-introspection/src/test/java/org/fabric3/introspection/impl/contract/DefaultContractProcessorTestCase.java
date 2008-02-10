@@ -16,13 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.introspection.impl;
+package org.fabric3.introspection.impl.contract;
 
 import java.lang.reflect.Type;
 import java.util.List;
 
 import junit.framework.TestCase;
 import org.osoa.sca.annotations.Callback;
+import org.osoa.sca.annotations.EndsConversation;
+import org.osoa.sca.annotations.Conversational;
 
 import org.fabric3.introspection.InvalidServiceContractException;
 import org.fabric3.scdl.DataType;
@@ -35,7 +37,6 @@ import org.fabric3.scdl.ServiceContract;
 public class DefaultContractProcessorTestCase extends TestCase {
     private DefaultContractProcessor impl;
 
-    @SuppressWarnings({"unchecked"})
     public void testSimpleInterface() throws InvalidServiceContractException {
         ServiceContract<Type> contract = impl.introspect(Simple.class);
         assertEquals("Simple", contract.getInterfaceName());
@@ -73,6 +74,47 @@ public class DefaultContractProcessorTestCase extends TestCase {
         assertEquals("back", back.getName());
     }
 
+    public void testConversationalInformationIntrospection() throws Exception {
+        ServiceContract<Type> contract = impl.introspect(Foo.class);
+        assertTrue(contract.isConversational());
+        boolean testedContinue = false;
+        boolean testedEnd = false;
+        for (Operation<Type> operation : contract.getOperations()) {
+            if (operation.getName().equals("operation")) {
+                assertEquals(Operation.CONVERSATION_CONTINUE, operation.getConversationSequence());
+                testedContinue = true;
+            } else if (operation.getName().equals("endOperation")) {
+                assertEquals(Operation.CONVERSATION_END, operation.getConversationSequence());
+                testedEnd = true;
+            }
+        }
+        assertTrue(testedContinue);
+        assertTrue(testedEnd);
+    }
+
+    public void testNonConversationalInformationIntrospection() throws Exception {
+        ServiceContract<Type> contract = impl.introspect(NonConversationalFoo.class);
+        assertFalse(contract.isConversational());
+        boolean tested = false;
+        for (Operation<Type> operation : contract.getOperations()) {
+            if (operation.getName().equals("operation")) {
+                int seq = operation.getConversationSequence();
+                assertEquals(Operation.NO_CONVERSATION, seq);
+                tested = true;
+            }
+        }
+        assertTrue(tested);
+    }
+
+    public void testInvalidConversationalAttribute() throws Exception {
+        try {
+            impl.introspect(BadConversation.class);
+            fail();
+        } catch (InvalidConversationalOperationException e) {
+            //expected
+        }
+    }
+
 /*
     public void testUnregister() throws Exception {
         JavaInterfaceProcessor processor = createMock(JavaInterfaceProcessor.class);
@@ -99,7 +141,6 @@ public class DefaultContractProcessorTestCase extends TestCase {
     }
 
     private static interface Simple extends Base {
-
     }
 
     @Callback(CallbackInterface.class)
@@ -109,6 +150,25 @@ public class DefaultContractProcessorTestCase extends TestCase {
 
     private static interface CallbackInterface {
         int back() throws IllegalArgumentException;
+    }
+
+    private interface NonConversationalFoo {
+        void operation();
+    }
+
+    @Conversational
+    private interface Foo {
+        void operation();
+
+        @EndsConversation
+        void endOperation();
+    }
+
+    private static interface BadConversation {
+        void operation();
+
+        @EndsConversation
+        void endOperation();
     }
 
 }
