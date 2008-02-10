@@ -20,4 +20,26 @@ package org.fabric3.introspection;
  * @version $Rev$ $Date$
  */
 public abstract class InvalidServiceContractException extends IntrospectionException{
+    protected InvalidServiceContractException() {
+    }
+
+    protected InvalidServiceContractException(String message) {
+        super(message);
+    }
+
+    protected InvalidServiceContractException(String message, String identifier) {
+        super(message, identifier);
+    }
+
+    protected InvalidServiceContractException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    protected InvalidServiceContractException(String message, String identifier, Throwable cause) {
+        super(message, identifier, cause);
+    }
+
+    protected InvalidServiceContractException(Throwable cause) {
+        super(cause);
+    }
 }

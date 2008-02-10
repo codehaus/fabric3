@@ -21,12 +21,12 @@ package org.fabric3.binding.rmi.model.physical;
 import org.fabric3.binding.rmi.model.logical.RmiBindingDefinition;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
-import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.policy.Policy;
 import org.osoa.sca.annotations.EagerInit;
@@ -61,8 +61,8 @@ public class RmiBindingGenerator
         RmiWireSourceDefinition ewsd = new RmiWireSourceDefinition();
         ewsd.setUri(logicalBinding.getBinding().getTargetUri());
         ewsd.setBindingDefinition(logicalBinding.getBinding());
-        JavaServiceContract contract = JavaServiceContract.class.cast(serviceDefinition.getServiceContract());
-        ewsd.setInterfaceName(contract.getInterfaceClass());
+        ServiceContract<?> contract = serviceDefinition.getServiceContract();
+        ewsd.setInterfaceName(contract.getQualifiedInterfaceName());
         ewsd.setClassLoaderURI(classLoaderGenerator.generate(logicalBinding, generatorContext));
         return ewsd;
 
@@ -80,8 +80,8 @@ public class RmiBindingGenerator
         RmiWireTargetDefinition ewtd = new RmiWireTargetDefinition();
         ewtd.setUri(logicalBinding.getBinding().getTargetUri());
         ewtd.setBindingDefinition(logicalBinding.getBinding());
-        JavaServiceContract contract = JavaServiceContract.class.cast(referenceDefinition.getServiceContract());
-        ewtd.setInterfaceName(contract.getInterfaceClass());
+        ServiceContract<?> contract = referenceDefinition.getServiceContract();
+        ewtd.setInterfaceName(contract.getQualifiedInterfaceName());
         ewtd.setClassLoaderURI(classLoaderGenerator.generate(logicalBinding, generatorContext));
         return ewtd;
 

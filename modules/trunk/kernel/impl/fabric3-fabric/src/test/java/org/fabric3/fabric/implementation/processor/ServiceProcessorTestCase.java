@@ -23,10 +23,11 @@ import org.osoa.sca.annotations.Callback;
 import org.osoa.sca.annotations.Remotable;
 import org.osoa.sca.annotations.Service;
 
-import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
+import org.fabric3.introspection.ContractProcessor;
+import org.fabric3.introspection.impl.DefaultContractProcessor;
 import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.spi.idl.java.JavaServiceContract;
+import org.fabric3.scdl.ServiceContract;
 
 /**
  * @version $Rev$ $Date$
@@ -39,8 +40,8 @@ public class ServiceProcessorTestCase extends TestCase {
         processor.visitClass(FooMultiple.class, type, null);
         assertEquals(2, type.getServices().size());
         JavaMappedService service = type.getServices().get(Baz.class.getSimpleName());
-        JavaServiceContract contract = JavaServiceContract.class.cast(service.getServiceContract());
-        assertEquals(Baz.class.getName(), contract.getInterfaceClass());
+        ServiceContract contract = service.getServiceContract();
+        assertEquals(Baz.class.getName(), contract.getQualifiedInterfaceName());
         assertNotNull(type.getServices().get(Bar.class.getSimpleName()));
     }
 
@@ -67,8 +68,8 @@ public class ServiceProcessorTestCase extends TestCase {
         processor.visitClass(FooRemotableNoService.class, type, null);
         assertEquals(1, type.getServices().size());
         JavaMappedService service = type.getServices().get(BazRemotable.class.getSimpleName());
-        JavaServiceContract contract = JavaServiceContract.class.cast(service.getServiceContract());
-        assertEquals(BazRemotable.class.getName(), contract.getInterfaceClass());
+        ServiceContract contract = service.getServiceContract();
+        assertEquals(BazRemotable.class.getName(), contract.getQualifiedInterfaceName());
     }
 
     public void testNonInterface() throws Exception {
@@ -96,8 +97,8 @@ public class ServiceProcessorTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        JavaInterfaceProcessorRegistryImpl registry = new JavaInterfaceProcessorRegistryImpl();
-        processor = new ServiceProcessor(new ImplementationProcessorServiceImpl(registry));
+        ContractProcessor contractProcessor = new DefaultContractProcessor();
+        processor = new ServiceProcessor(new ImplementationProcessorServiceImpl(contractProcessor));
         type = new PojoComponentType(null);
     }
 

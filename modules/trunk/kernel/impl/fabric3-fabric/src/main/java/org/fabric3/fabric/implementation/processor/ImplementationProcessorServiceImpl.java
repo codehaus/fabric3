@@ -40,9 +40,8 @@ import org.fabric3.scdl.MemberSite;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Multiplicity;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.spi.idl.InvalidServiceContractException;
-import org.fabric3.spi.idl.java.InterfaceJavaIntrospector;
-import org.fabric3.spi.idl.java.JavaServiceContract;
+import org.fabric3.introspection.ContractProcessor;
+import org.fabric3.introspection.InvalidServiceContractException;
 
 /**
  * The default implementation of an <code>ImplementationProcessorService</code>
@@ -50,9 +49,9 @@ import org.fabric3.spi.idl.java.JavaServiceContract;
  * @version $Rev$ $Date$
  */
 public class ImplementationProcessorServiceImpl implements ImplementationProcessorService {
-    private InterfaceJavaIntrospector registry;
+    private ContractProcessor registry;
 
-    public ImplementationProcessorServiceImpl(@Reference InterfaceJavaIntrospector registry) {
+    public ImplementationProcessorServiceImpl(@Reference ContractProcessor registry) {
         this.registry = registry;
     }
 
@@ -119,7 +118,7 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
 
     public JavaMappedReference createReference(String name, Member member, Class<?> paramType)
             throws ProcessingException {
-        JavaServiceContract contract;
+        ServiceContract<Type> contract;
         try {
             contract = registry.introspect(paramType);
         } catch (InvalidServiceContractException e1) {

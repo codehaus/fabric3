@@ -27,13 +27,13 @@ import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Remotable;
 
 import static org.fabric3.pojo.processor.JavaIntrospectionHelper.getAllInterfaces;
-import org.fabric3.spi.idl.InvalidServiceContractException;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.InvalidServiceContractException;
 
 /**
  * Processes an {@link org.osoa.sca.annotations.Service} annotation and updates the component type with corresponding

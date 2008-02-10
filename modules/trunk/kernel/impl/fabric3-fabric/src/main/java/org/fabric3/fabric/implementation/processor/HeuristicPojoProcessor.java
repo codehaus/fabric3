@@ -36,24 +36,24 @@ import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Remotable;
 import org.osoa.sca.annotations.Service;
 
+import org.fabric3.introspection.ContractProcessor;
+import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.InvalidServiceContractException;
+import org.fabric3.pojo.processor.ImplementationProcessorExtension;
+import org.fabric3.pojo.processor.ImplementationProcessorService;
 import static org.fabric3.pojo.processor.JavaIntrospectionHelper.getAllInterfaces;
 import static org.fabric3.pojo.processor.JavaIntrospectionHelper.getAllPublicAndProtectedFields;
 import static org.fabric3.pojo.processor.JavaIntrospectionHelper.getAllUniquePublicProtectedMethods;
 import static org.fabric3.pojo.processor.JavaIntrospectionHelper.getBaseName;
 import static org.fabric3.pojo.processor.JavaIntrospectionHelper.toPropertyName;
-import org.fabric3.pojo.processor.ImplementationProcessorExtension;
-import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.scdl.ConstructorDefinition;
 import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.JavaMappedReference;
 import org.fabric3.pojo.scdl.JavaMappedService;
-import org.fabric3.scdl.MemberSite;
 import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.scdl.MemberSite;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.spi.idl.InvalidServiceContractException;
-import org.fabric3.spi.idl.java.InterfaceJavaIntrospector;
-import org.fabric3.introspection.IntrospectionContext;
 
 /**
  * Heuristically evaluates an un-annotated Java implementation type to determine services, references, and properties
@@ -68,10 +68,10 @@ import org.fabric3.introspection.IntrospectionContext;
  */
 public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
     private ImplementationProcessorService implService;
-    private InterfaceJavaIntrospector interfaceIntrospector;
+    private ContractProcessor interfaceIntrospector;
 
     public HeuristicPojoProcessor(
-            @Reference ImplementationProcessorService service, @Reference InterfaceJavaIntrospector introspector) {
+            @Reference ImplementationProcessorService service, @Reference ContractProcessor introspector) {
         this.implService = service;
         this.interfaceIntrospector = introspector;
     }

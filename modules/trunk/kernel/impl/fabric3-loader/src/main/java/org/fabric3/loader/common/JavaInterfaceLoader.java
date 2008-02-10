@@ -23,10 +23,10 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.introspection.ContractProcessor;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.spi.idl.InvalidServiceContractException;
-import org.fabric3.spi.idl.java.InterfaceJavaIntrospector;
-import org.fabric3.spi.idl.java.JavaServiceContract;
+import org.fabric3.introspection.InvalidServiceContractException;
+import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.loader.InvalidValueException;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderUtil;
@@ -37,15 +37,15 @@ import org.fabric3.spi.loader.StAXElementLoader;
  *
  * @version $Rev$ $Date$
  */
-public class JavaInterfaceLoader implements StAXElementLoader<JavaServiceContract> {
+public class JavaInterfaceLoader implements StAXElementLoader<ServiceContract> {
 
-    private final InterfaceJavaIntrospector introspector;
+    private final ContractProcessor contractProcessor;
 
-    public JavaInterfaceLoader(@Reference InterfaceJavaIntrospector introspector) {
-        this.introspector = introspector;
+    public JavaInterfaceLoader(@Reference ContractProcessor contractProcessor) {
+        this.contractProcessor = contractProcessor;
     }
 
-    public JavaServiceContract load(XMLStreamReader reader, IntrospectionContext introspectionContext)
+    public ServiceContract load(XMLStreamReader reader, IntrospectionContext introspectionContext)
             throws XMLStreamException, LoaderException {
 
         String conversationalAttr = reader.getAttributeValue(null, "conversational");
@@ -67,11 +67,10 @@ public class JavaInterfaceLoader implements StAXElementLoader<JavaServiceContrac
         LoaderUtil.skipToEndElement(reader);
 
         try {
-            JavaServiceContract serviceContract;
-            if (callbackClass == null) {
-                serviceContract = introspector.introspect(interfaceClass);
-            } else {
-                serviceContract = introspector.introspect(interfaceClass, callbackClass);
+            ServiceContract<?> serviceContract = contractProcessor.introspect(interfaceClass);
+            if (callbackClass != null) {
+                ServiceContract<?> callbackContract = contractProcessor.introspect(callbackClass);
+                serviceContract.setCallbackContract(callbackContract);
             }
             serviceContract.setConversational(conversational);
             return serviceContract;

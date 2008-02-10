@@ -16,7 +16,6 @@
  */
 package org.fabric3.fabric.runtime.bootstrap;
 
-import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
 import org.fabric3.fabric.implementation.IntrospectionRegistryImpl;
 import org.fabric3.fabric.implementation.processor.ConstructorProcessor;
 import org.fabric3.fabric.implementation.processor.DestroyProcessor;
@@ -49,11 +48,12 @@ import org.fabric3.loader.composite.IncludeLoader;
 import org.fabric3.loader.composite.PropertyValueLoader;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.processor.Introspector;
-import org.fabric3.spi.idl.java.InterfaceJavaIntrospector;
 import org.fabric3.spi.loader.PolicyHelper;
 import org.fabric3.spi.loader.Loader;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.factories.xml.XMLFactory;
+import org.fabric3.introspection.impl.DefaultContractProcessor;
+import org.fabric3.introspection.ContractProcessor;
 
 /**
  * @version $Rev$ $Date$
@@ -71,7 +71,7 @@ public class BootstrapLoaderFactory {
         XMLFactory xmlFactory = new XMLFactoryImpl();
         LoaderRegistryImpl loader = new LoaderRegistryImpl(monitorFactory, xmlFactory);
 
-        InterfaceJavaIntrospector interfaceJavaIntrospector = new JavaInterfaceProcessorRegistryImpl();
+        ContractProcessor interfaceJavaIntrospector = new DefaultContractProcessor();
         Introspector introspector = createIntrospector(monitorFactory, interfaceJavaIntrospector);
 
         PropertyHelperImpl propertyHelper = new PropertyHelperImpl();
@@ -109,7 +109,7 @@ public class BootstrapLoaderFactory {
     }
 
     private static Introspector createIntrospector(MonitorFactory monitorFactory,
-                                            InterfaceJavaIntrospector interfaceIntrospector) {
+                                            ContractProcessor interfaceIntrospector) {
 
         ImplementationProcessorService service = new ImplementationProcessorServiceImpl(interfaceIntrospector);
         IntrospectionRegistryImpl.Monitor monitor = monitorFactory.getMonitor(IntrospectionRegistryImpl.Monitor.class);

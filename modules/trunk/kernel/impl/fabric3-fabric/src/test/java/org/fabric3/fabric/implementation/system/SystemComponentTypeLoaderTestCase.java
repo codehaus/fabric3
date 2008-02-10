@@ -22,7 +22,6 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
 import org.fabric3.fabric.implementation.IntrospectionRegistryImpl;
 import org.fabric3.fabric.implementation.processor.ConstructorProcessor;
 import org.fabric3.fabric.implementation.processor.DestroyProcessor;
@@ -38,7 +37,9 @@ import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Property;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
-import org.fabric3.spi.idl.java.JavaServiceContract;
+import org.fabric3.scdl.ServiceContract;
+import org.fabric3.introspection.ContractProcessor;
+import org.fabric3.introspection.impl.DefaultContractProcessor;
 
 /**
  * @version $Rev$ $Date$
@@ -52,27 +53,26 @@ public class SystemComponentTypeLoaderTestCase extends TestCase {
         IntrospectionContextImpl context = new IntrospectionContextImpl(cl, null, null);
         PojoComponentType componentType = loader.loadByIntrospection(impl, context);
         ServiceDefinition service = componentType.getServices().get(BasicInterface.class.getSimpleName());
-        JavaServiceContract contract = JavaServiceContract.class.cast(service.getServiceContract());
-        assertEquals(BasicInterface.class.getName(), contract.getInterfaceClass());
+        ServiceContract contract = service.getServiceContract();
+        assertEquals(BasicInterface.class.getName(), contract.getQualifiedInterfaceName());
         Property<?> property = componentType.getProperties().get("publicProperty");
         assertEquals(String.class, property.getJavaType());
         ReferenceDefinition referenceDefinition = componentType.getReferences().get("protectedReference");
-        JavaServiceContract refContract = JavaServiceContract.class.cast(referenceDefinition.getServiceContract());
-        assertEquals(BasicInterface.class.getName(), refContract.getInterfaceClass());
+        ServiceContract refContract = referenceDefinition.getServiceContract();
+        assertEquals(BasicInterface.class.getName(), refContract.getQualifiedInterfaceName());
     }
 
     protected void setUp() throws Exception {
         super.setUp();
-        JavaInterfaceProcessorRegistryImpl interfaceProcessorRegistry = new JavaInterfaceProcessorRegistryImpl();
-        ImplementationProcessorService service =
-                new ImplementationProcessorServiceImpl(interfaceProcessorRegistry);
+        ContractProcessor contractProcessor = new DefaultContractProcessor();
+        ImplementationProcessorService service = new ImplementationProcessorServiceImpl(contractProcessor);
         IntrospectionRegistryImpl registry = new IntrospectionRegistryImpl();
         registry.setMonitor(EasyMock.createMock(IntrospectionRegistryImpl.Monitor.class));
         registry.registerProcessor(new ConstructorProcessor(service));
         registry.registerProcessor(new DestroyProcessor());
         registry.registerProcessor(new InitProcessor());
         registry.registerProcessor(new PropertyProcessor(service));
-        registry.registerProcessor(new ReferenceProcessor(interfaceProcessorRegistry));
+        registry.registerProcessor(new ReferenceProcessor(contractProcessor));
         registry.registerProcessor(new ServiceProcessor(service));
         registry.registerProcessor(new HeuristicPojoProcessor(service, null));
         loader = new SystemComponentTypeLoaderImpl(registry);

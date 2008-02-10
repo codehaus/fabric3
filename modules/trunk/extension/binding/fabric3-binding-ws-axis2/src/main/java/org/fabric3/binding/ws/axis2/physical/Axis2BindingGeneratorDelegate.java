@@ -33,7 +33,6 @@ import org.fabric3.spi.generator.BindingGeneratorDelegate;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
-import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.policy.Policy;
 import org.osoa.sca.annotations.Reference;
@@ -65,10 +64,7 @@ public class Axis2BindingGeneratorDelegate implements BindingGeneratorDelegate<W
         hwsd.setUri(binding.getBinding().getTargetUri());
         
         ServiceContract<?> contract = serviceDefinition.getServiceContract();
-        if (!(JavaServiceContract.class.isInstance(contract))) {
-            throw new UnsupportedOperationException("Temporarily unsupported: interfaces must be Java types");
-        }
-        hwsd.setServiceInterface((JavaServiceContract.class.cast(contract).getInterfaceClass()));
+        hwsd.setServiceInterface(contract.getQualifiedInterfaceName());
         
         URI classloader = classLoaderGenerator.generate(binding, context);
         hwsd.setClassloaderURI(classloader);
@@ -88,10 +84,7 @@ public class Axis2BindingGeneratorDelegate implements BindingGeneratorDelegate<W
         hwtd.setUri(binding.getBinding().getTargetUri());
         
         ServiceContract<?> contract = referenceDefinition.getServiceContract();
-        if (!(JavaServiceContract.class.isInstance(contract))) {
-            throw new UnsupportedOperationException("Temporarily unsupported: interfaces must be Java types");
-        }
-        hwtd.setReferenceInterface((JavaServiceContract.class.cast(contract).getInterfaceClass()));
+        hwtd.setReferenceInterface(contract.getQualifiedInterfaceName());
         
         URI classloader = classLoaderGenerator.generate(binding, context);
         hwtd.setClassloaderURI(classloader);

@@ -23,13 +23,12 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Remotable;
 
-import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
+import org.fabric3.introspection.ContractProcessor;
+import org.fabric3.introspection.impl.DefaultContractProcessor;
 import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.JavaMappedReference;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
-import org.fabric3.spi.idl.java.JavaServiceContract;
 
 /**
  * @version $Rev$ $Date$
@@ -37,6 +36,7 @@ import org.fabric3.spi.idl.java.JavaServiceContract;
 public class HeuristicConstructorTestCase extends TestCase {
 
     private HeuristicPojoProcessor processor;
+    private ContractProcessor contractProcessor;
 
     /**
      * Verifies a single constructor is chosen with a parameter as the type
@@ -56,7 +56,7 @@ public class HeuristicConstructorTestCase extends TestCase {
      */
     public void testSingleConstructorWithRef() throws Exception {
         PojoComponentType type = new PojoComponentType(null);
-        ServiceContract contract = new JavaServiceContract(String.class);
+        ServiceContract contract = contractProcessor.introspect(String.class);
         JavaMappedReference ref = new JavaMappedReference("foo", contract, null);
         type.getReferences().put("foo", ref);
         processor.visitEnd(Foo1.class, type, null);
@@ -74,7 +74,7 @@ public class HeuristicConstructorTestCase extends TestCase {
         prop.setJavaType(String.class);
         type.getProperties().put("foo", prop);
 
-        ServiceContract contract = new JavaServiceContract(Foo1.class);
+        ServiceContract contract = contractProcessor.introspect(Foo1.class);
         JavaMappedReference ref = new JavaMappedReference("ref", contract, null);
 
         type.getReferences().put("ref", ref);
@@ -94,14 +94,13 @@ public class HeuristicConstructorTestCase extends TestCase {
         PojoComponentType type = new PojoComponentType(null);
         processor.visitEnd(Foo6.class, type, null);
         ServiceContract<?> contract = type.getReferences().get("heuristicconstructortestcase$ref").getServiceContract();
-        JavaServiceContract jContract = JavaServiceContract.class.cast(contract);
-        assertEquals(Ref.class.getName(), jContract.getInterfaceClass());
+        assertEquals(Ref.class.getName(), contract.getQualifiedInterfaceName());
     }
 
     public void testSingleConstructorAmbiguousRef() throws Exception {
         PojoComponentType type =
                 new PojoComponentType(null);
-        ServiceContract contract = new JavaServiceContract(Foo1.class);
+        ServiceContract contract = contractProcessor.introspect(Foo1.class);
         JavaMappedReference ref = new JavaMappedReference("ref", contract, null);
         type.getReferences().put("ref", ref);
         JavaMappedReference ref2 = new JavaMappedReference("ref2", contract, null);
@@ -276,8 +275,8 @@ public class HeuristicConstructorTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        JavaInterfaceProcessorRegistry processorRegistry = new JavaInterfaceProcessorRegistryImpl();
-        ImplementationProcessorServiceImpl processorService = new ImplementationProcessorServiceImpl(processorRegistry);
-        processor = new HeuristicPojoProcessor(processorService, processorRegistry);
+        contractProcessor = new DefaultContractProcessor();
+        ImplementationProcessorServiceImpl processorService = new ImplementationProcessorServiceImpl(contractProcessor);
+        processor = new HeuristicPojoProcessor(processorService, contractProcessor);
     }
 }

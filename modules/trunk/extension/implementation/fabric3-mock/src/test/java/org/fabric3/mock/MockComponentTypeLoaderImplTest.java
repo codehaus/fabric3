@@ -22,6 +22,7 @@ import java.util.List;
 import org.easymock.EasyMock;
 import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.impl.DefaultContractProcessor;
 
 import junit.framework.TestCase;
 
@@ -36,7 +37,7 @@ public class MockComponentTypeLoaderImplTest extends TestCase {
         EasyMock.expect(context.getTargetClassLoader()).andReturn(getClass().getClassLoader());
         EasyMock.replay(context);
         
-        MockComponentTypeLoader componentTypeLoader = new MockComponentTypeLoaderImpl();
+        MockComponentTypeLoader componentTypeLoader = new MockComponentTypeLoaderImpl(new DefaultContractProcessor());
         
         List<String> mockedInterfaces = new LinkedList<String>();
         mockedInterfaces.add("org.fabric3.mock.Foo");

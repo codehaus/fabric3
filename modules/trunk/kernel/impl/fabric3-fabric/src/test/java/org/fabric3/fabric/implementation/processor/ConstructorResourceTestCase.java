@@ -24,10 +24,9 @@ import java.util.List;
 import org.fabric3.api.annotation.Resource;
 
 import org.fabric3.pojo.scdl.PojoComponentType;
-// import org.fabric3.resource.processor.DuplicateResourceException;
 
 import junit.framework.TestCase;
-import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
+import org.fabric3.introspection.impl.DefaultContractProcessor;
 
 /**
  * @version $Rev$ $Date$
@@ -35,7 +34,7 @@ import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
 public class ConstructorResourceTestCase extends TestCase {
 
     ConstructorProcessor processor =
-        new ConstructorProcessor(new ImplementationProcessorServiceImpl(new JavaInterfaceProcessorRegistryImpl()));
+        new ConstructorProcessor(new ImplementationProcessorServiceImpl(new DefaultContractProcessor()));
 
     public void testDummy() {
     }

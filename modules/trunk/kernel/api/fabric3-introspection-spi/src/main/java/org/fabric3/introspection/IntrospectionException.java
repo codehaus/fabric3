@@ -22,4 +22,26 @@ import org.fabric3.host.Fabric3Exception;
  * @version $Rev$ $Date$
  */
 public abstract class IntrospectionException extends Fabric3Exception {
+    protected IntrospectionException() {
+    }
+
+    protected IntrospectionException(String message) {
+        super(message);
+    }
+
+    protected IntrospectionException(String message, String identifier) {
+        super(message, identifier);
+    }
+
+    protected IntrospectionException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    protected IntrospectionException(String message, String identifier, Throwable cause) {
+        super(message, identifier, cause);
+    }
+
+    protected IntrospectionException(Throwable cause) {
+        super(cause);
+    }
 }

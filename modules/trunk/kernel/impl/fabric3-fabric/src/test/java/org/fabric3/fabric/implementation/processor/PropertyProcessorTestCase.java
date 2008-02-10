@@ -29,7 +29,7 @@ import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.PojoComponentType;
 
 import junit.framework.TestCase;
-import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
+import org.fabric3.introspection.impl.DefaultContractProcessor;
 
 /**
  * @version $Rev$ $Date$
@@ -105,8 +105,7 @@ public class PropertyProcessorTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         type = new PojoComponentType(null);
-        JavaInterfaceProcessorRegistryImpl registry = new JavaInterfaceProcessorRegistryImpl();
-        processor = new PropertyProcessor(new ImplementationProcessorServiceImpl(registry));
+        processor = new PropertyProcessor(new ImplementationProcessorServiceImpl(new DefaultContractProcessor()));
     }
 
     private class Foo {

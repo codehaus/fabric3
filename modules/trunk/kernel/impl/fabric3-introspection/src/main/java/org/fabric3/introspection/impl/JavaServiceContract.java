@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.idl.java;
+package org.fabric3.introspection.impl;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;

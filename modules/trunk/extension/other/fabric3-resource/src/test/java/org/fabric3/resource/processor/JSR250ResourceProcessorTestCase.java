@@ -23,13 +23,10 @@ import java.lang.reflect.Method;
 
 import junit.framework.TestCase;
 
+import org.fabric3.introspection.impl.DefaultContractProcessor;
 import org.fabric3.pojo.processor.DuplicateResourceException;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.resource.model.SystemSourcedResource;
-import org.fabric3.spi.idl.InvalidServiceContractException;
-import org.fabric3.spi.idl.java.JavaInterfaceProcessor;
-import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
-import org.fabric3.spi.idl.java.JavaServiceContract;
 
 /**
  * @version $Rev: 751 $ $Date: 2007-08-16 14:50:14 -0500 (Thu, 16 Aug 2007) $
@@ -38,28 +35,10 @@ public class JSR250ResourceProcessorTestCase extends TestCase {
 
     PojoComponentType type;
     JSR250ResourceProcessor processor;
-    
+
     public void setUp() {
-        processor = new JSR250ResourceProcessor();
+        processor = new JSR250ResourceProcessor(new DefaultContractProcessor());
         type = new PojoComponentType(null);
-        processor.setJavaInterfaceProcessorRegistry(new JavaInterfaceProcessorRegistry() {
-
-            public void registerProcessor(JavaInterfaceProcessor processor) {
-            }
-
-            public void unregisterProcessor(JavaInterfaceProcessor processor) {
-            }
-
-            public JavaServiceContract introspect(Class<?> type) throws InvalidServiceContractException {
-                return new JavaServiceContract(type);
-            }
-
-            public JavaServiceContract introspect(Class<?> type, Class<?> callback)
-                    throws InvalidServiceContractException {
-                return null;
-            }
-            
-        });
     }
 
     public void testVisitField() throws Exception {
@@ -75,7 +54,7 @@ public class JSR250ResourceProcessorTestCase extends TestCase {
         resource = (SystemSourcedResource) type.getResources().get("someName");
         assertNotNull(resource);
         assertFalse(resource.isOptional());
-        assertEquals("mapped",resource.getMappedName());
+        assertEquals("mapped", resource.getMappedName());
     }
 
     public void testVisitMethod() throws Exception {
@@ -91,7 +70,7 @@ public class JSR250ResourceProcessorTestCase extends TestCase {
         resource = (SystemSourcedResource) type.getResources().get("someName");
         assertNotNull(resource);
         assertFalse(resource.isOptional());
-        assertEquals("mapped",resource.getMappedName());
+        assertEquals("mapped", resource.getMappedName());
 
     }
 
@@ -103,13 +82,13 @@ public class JSR250ResourceProcessorTestCase extends TestCase {
         } catch (IllegalResourceException e) {
             // expected
         }
-        method = JSR250ResourceProcessorTestCase.Foo.class.getMethod("setBadMethodType",Bar.class);
+        method = JSR250ResourceProcessorTestCase.Foo.class.getMethod("setBadMethodType", Bar.class);
         try {
             processor.visitMethod(method, type, null);
             fail();
         } catch (IllegalResourceException e) {
             // expected
-        } 
+        }
         method = JSR250ResourceProcessorTestCase.Foo.class.getMethod("setBadMethodReturnType");
         try {
             processor.visitMethod(method, type, null);
@@ -118,8 +97,8 @@ public class JSR250ResourceProcessorTestCase extends TestCase {
             // expected
         }
     }
-    
-        public void testVisitBadField() throws Exception {
+
+    public void testVisitBadField() throws Exception {
         Field field = JSR250ResourceProcessorTestCase.Foo.class.getDeclaredField("badField");
         try {
             processor.visitField(field, type, null);
@@ -146,44 +125,44 @@ public class JSR250ResourceProcessorTestCase extends TestCase {
         @javax.annotation.Resource
         protected Bar bar;
 
-        @javax.annotation.Resource(name = "someName", mappedName = "mapped", type = SubBar.class, shareable=false)
+        @javax.annotation.Resource(name = "someName", mappedName = "mapped", type = SubBar.class, shareable = false)
         protected Bar subBar;
 
-        @javax.annotation.Resource(type=Foo.class)
+        @javax.annotation.Resource(type = Foo.class)
         protected Bar badField;
 
         @javax.annotation.Resource
         public void setBar(Bar bar) {
         }
 
-        @javax.annotation.Resource(name = "someName", mappedName = "mapped", type = SubBar.class, shareable=false)
+        @javax.annotation.Resource(name = "someName", mappedName = "mapped", type = SubBar.class, shareable = false)
         public void setSubBar(Bar bar) {
         }
 
-        
+
         @javax.annotation.Resource
         public void setBadMethod() {
         }
-        
-        @javax.annotation.Resource(type=Foo.class)
+
+        @javax.annotation.Resource(type = Foo.class)
         public void setBadMethodType(Bar bar) {
         }
-        
+
         @javax.annotation.Resource
         public String setBadMethodReturnType() {
             return null;
         }
 
     }
-    
+
     private class SubFoo extends Foo {
-        
+
     }
 
     private interface Bar {
 
     }
-    
+
     private interface SubBar extends Bar {
 
     }

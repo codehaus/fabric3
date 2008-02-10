@@ -21,17 +21,18 @@ package org.fabric3.resource.processor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.processor.DuplicateResourceException;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.MemberSite;
+import org.fabric3.scdl.ServiceContract;
 import org.fabric3.resource.model.SystemSourcedResource;
-import org.fabric3.spi.idl.InvalidServiceContractException;
-import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
-import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.ContractProcessor;
+import org.fabric3.introspection.InvalidServiceContractException;
 
 import org.osoa.sca.annotations.Reference;
 
@@ -43,14 +44,10 @@ import org.osoa.sca.annotations.Reference;
  */
 public class JSR250ResourceProcessor extends ImplementationProcessorExtension {
     
-    private JavaInterfaceProcessorRegistry interfaceProcessorRegistry;
-    
-    /**
-     * @param interfaceProcessorRegistry Injects the interface processor registry.
-     */
-    @Reference
-    public void setJavaInterfaceProcessorRegistry(JavaInterfaceProcessorRegistry interfaceProcessorRegistry) {
-        this.interfaceProcessorRegistry = interfaceProcessorRegistry;
+    private final ContractProcessor contractProcessor;
+
+    public JSR250ResourceProcessor(@Reference ContractProcessor contractProcessor) {
+        this.contractProcessor = contractProcessor;
     }
 
     public void visitMethod(Method method, PojoComponentType type, IntrospectionContext context) throws ProcessingException {
@@ -126,13 +123,14 @@ public class JSR250ResourceProcessor extends ImplementationProcessorExtension {
         type.add(resource);
     }
 
-    private SystemSourcedResource createResource(String name, Class<?> type, Member member, boolean optional, String mappedName) {
+    private SystemSourcedResource createResource(String name, Class<?> type, Member member, boolean optional, String mappedName)
+            throws ProcessingException {
         
         try {
-            JavaServiceContract serviceContract = interfaceProcessorRegistry.introspect(type);
+            ServiceContract<Type> serviceContract = contractProcessor.introspect(type);
             return new SystemSourcedResource(name, new MemberSite(member), optional, mappedName, serviceContract);
         }  catch (InvalidServiceContractException e) {
-            throw new AssertionError(e);
+            throw new ProcessingException(e);
         }
         
     }

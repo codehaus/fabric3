@@ -16,35 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.idl;
+package org.fabric3.introspection.impl;
 
-import org.fabric3.host.Fabric3Exception;
+import org.fabric3.introspection.InvalidServiceContractException;
 
 /**
+ * Denotes an missing callback interface
+ *
  * @version $Rev$ $Date$
  */
-public abstract class InvalidServiceContractException extends Fabric3Exception {
 
-    public InvalidServiceContractException() {
+public class MissingCallbackException extends InvalidServiceContractException {
+
+    public MissingCallbackException(String identifier) {
+        super(null, identifier);
     }
 
-    public InvalidServiceContractException(String message) {
-        super(message);
-    }
-
-    protected InvalidServiceContractException(String message, String identifier) {
-        super(message, identifier);
-    }
-
-    public InvalidServiceContractException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    protected InvalidServiceContractException(String message, String identifier, Throwable cause) {
-        super(message, identifier, cause);
-    }
-
-    public InvalidServiceContractException(Throwable cause) {
-        super(cause);
+    public String getMessage() {
+        return "No interface was specified in the @Callback annotation on interface " + getIdentifier();
     }
 }

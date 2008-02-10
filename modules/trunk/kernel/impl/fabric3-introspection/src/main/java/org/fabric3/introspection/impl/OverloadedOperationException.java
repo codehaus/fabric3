@@ -16,19 +16,28 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.idl.java;
+package org.fabric3.introspection.impl;
 
-import org.fabric3.spi.idl.InvalidServiceContractException;
+import java.lang.reflect.Method;
+
+import org.fabric3.introspection.InvalidServiceContractException;
 
 /**
- * Denotes an illegal callback interface
+ * Exception thrown to indicate that a service contract specification contains an overloaded method.
  *
  * @version $Rev$ $Date$
  */
+public class OverloadedOperationException extends InvalidServiceContractException {
+    private static final long serialVersionUID = -4658711318608885638L;
+    private final Method operation;
 
-public class IllegalCallbackException extends InvalidServiceContractException {
-
-    public IllegalCallbackException(String message, String identifier) {
-        super(message, identifier);
+    public OverloadedOperationException(Method operation) {
+        super(null, operation.getDeclaringClass().getName());
+        this.operation = operation;
     }
+
+    public Method getOperation() {
+        return operation;
+    }
+
 }

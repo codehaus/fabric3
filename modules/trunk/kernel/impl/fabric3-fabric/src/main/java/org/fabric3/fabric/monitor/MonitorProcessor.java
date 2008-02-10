@@ -31,11 +31,11 @@ import org.fabric3.pojo.processor.InvalidSetterException;
 import static org.fabric3.pojo.processor.JavaIntrospectionHelper.toPropertyName;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.scdl.MemberSite;
+import org.fabric3.scdl.ServiceContract;
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.spi.idl.InvalidServiceContractException;
-import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
-import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.ContractProcessor;
+import org.fabric3.introspection.InvalidServiceContractException;
 
 /**
  * Processes an {@link @Monitor} annotation}
@@ -43,10 +43,10 @@ import org.fabric3.introspection.IntrospectionContext;
  * @version $Rev$ $Date$
  */
 public class MonitorProcessor extends ImplementationProcessorExtension {
-    private final JavaInterfaceProcessorRegistry interfaceProcessorRegistry;
+    private final ContractProcessor contractProcessor;
 
-    public MonitorProcessor(@Reference(name="processorRegistry") JavaInterfaceProcessorRegistry interfaceProcessorRegistry) {
-        this.interfaceProcessorRegistry = interfaceProcessorRegistry;
+    public MonitorProcessor(@Reference(name="processorRegistry")ContractProcessor contractProcessor) {
+        this.contractProcessor = contractProcessor;
     }
 
     public void visitMethod(Method method, PojoComponentType type, IntrospectionContext context) throws ProcessingException {
@@ -87,7 +87,7 @@ public class MonitorProcessor extends ImplementationProcessorExtension {
 
     private MonitorResource createResource(String name, Class<?> type, Member member) throws ProcessingException {
         try {
-            JavaServiceContract serviceContract = interfaceProcessorRegistry.introspect(type);
+            ServiceContract<?> serviceContract = contractProcessor.introspect(type);
             MemberSite site = new MemberSite(member);
             return new MonitorResource(name, site, false, serviceContract);
         } catch (InvalidServiceContractException e) {

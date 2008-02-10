@@ -27,7 +27,6 @@ import org.xml.sax.SAXException;
 
 import org.fabric3.fabric.assembly.InstantiationException;
 import org.fabric3.fabric.component.scope.ScopeRegistryImpl;
-import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
 import org.fabric3.fabric.implementation.singleton.SingletonComponent;
 import org.fabric3.fabric.implementation.singleton.SingletonImplementation;
 import org.fabric3.fabric.model.logical.AtomicComponentInstantiator;
@@ -52,19 +51,19 @@ import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
-import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.assembly.Assembly;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.deployer.CompositeClassLoader;
-import org.fabric3.spi.idl.InvalidServiceContractException;
-import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
-import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.spi.loader.Loader;
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.ContractProcessor;
+import org.fabric3.introspection.InvalidServiceContractException;
+import org.fabric3.introspection.impl.DefaultContractProcessor;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
@@ -86,7 +85,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     private static final URI HOST_CLASSLOADER_ID = URI.create("sca://./hostClassLoader");
     private static final String USER_CONFIG = System.getProperty("user.home") + "/.fabric3/config.xml";
 
-    private final JavaInterfaceProcessorRegistry interfaceProcessorRegistry;
+    private final ContractProcessor interfaceProcessorRegistry;
     private final DocumentLoader documentLoader;
     private final ComponentInstantiator instantiator;
 
@@ -95,7 +94,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     private LogicalCompositeComponent domain;
 
     public ScdlBootstrapperImpl() {
-        interfaceProcessorRegistry = new JavaInterfaceProcessorRegistryImpl();
+        interfaceProcessorRegistry = new DefaultContractProcessor();
         documentLoader = new DocumentLoaderImpl();
         instantiator = new AtomicComponentInstantiator(documentLoader);
     }
@@ -270,7 +269,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
         String implClassName = instance.getClass().getName();
 
-        JavaServiceContract contract = interfaceProcessorRegistry.introspect(type);
+        ServiceContract<?> contract = interfaceProcessorRegistry.introspect(type);
         String serviceName = JavaIntrospectionHelper.getBaseName(contract.getInterfaceName());
         JavaMappedService service = new JavaMappedService(serviceName, contract);
 

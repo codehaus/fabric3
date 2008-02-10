@@ -16,31 +16,27 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.idl.java;
+package org.fabric3.introspection.impl;
 
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
+import java.lang.reflect.Method;
+
+import org.fabric3.introspection.InvalidServiceContractException;
 
 /**
- * A convenience class for <code>JavaInterfaceProcessor</code> extensions that performs autowiring
+ * Denotes an invalid conversational interface definition
  *
  * @version $Rev$ $Date$
  */
-@EagerInit
-public abstract class JavaInterfaceProcessorExtension implements JavaInterfaceProcessor {
+public class InvalidConversationalOperationException extends InvalidServiceContractException {
+    private final Method operation;
 
-    protected JavaInterfaceProcessorRegistry registry;
-
-    @Reference
-    public void setRegistry(JavaInterfaceProcessorRegistry registry) {
-        this.registry = registry;
+    public InvalidConversationalOperationException(String message, String identifier, Method operation) {
+        super(message, identifier);
+        this.operation = operation;
     }
 
-    @Init
-    public void init() {
-        registry.registerProcessor(this);
+    public Method getOperation() {
+        return operation;
     }
-
 
 }

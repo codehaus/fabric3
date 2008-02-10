@@ -24,11 +24,11 @@ import java.util.List;
 import junit.framework.TestCase;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
 import org.fabric3.pojo.scdl.JavaMappedReference;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Multiplicity;
-import org.fabric3.spi.idl.java.JavaServiceContract;
+import org.fabric3.scdl.ServiceContract;
+import org.fabric3.introspection.impl.DefaultContractProcessor;
 
 /**
  * @version $Rev$ $Date$
@@ -36,15 +36,15 @@ import org.fabric3.spi.idl.java.JavaServiceContract;
 public class ReferenceProcessorTestCase extends TestCase {
 
     PojoComponentType type = new PojoComponentType(null);
-    ReferenceProcessor processor = new ReferenceProcessor(new JavaInterfaceProcessorRegistryImpl());
+    ReferenceProcessor processor = new ReferenceProcessor(new DefaultContractProcessor());
 
     public void testMethodAnnotation() throws Exception {
         processor.visitMethod(ReferenceProcessorTestCase.Foo.class.getMethod("setFoo", Ref.class), type, null);
         JavaMappedReference reference = type.getReferences().get("foo");
         assertNotNull(reference);
-        JavaServiceContract contract = JavaServiceContract.class.cast(reference.getServiceContract());
-        assertEquals(Ref.class.getName(), contract.getInterfaceClass());
-        assertEquals("ReferenceProcessorTestCase$Ref", contract.getInterfaceName());
+        ServiceContract contract = reference.getServiceContract();
+        assertEquals(Ref.class.getName(), contract.getQualifiedInterfaceName());
+        assertEquals("Ref", contract.getInterfaceName());
     }
 
     public void testMethodRequired() throws Exception {
@@ -69,9 +69,9 @@ public class ReferenceProcessorTestCase extends TestCase {
         processor.visitField(ReferenceProcessorTestCase.Foo.class.getDeclaredField("baz"), type, null);
         JavaMappedReference reference = type.getReferences().get("baz");
         assertNotNull(reference);
-        JavaServiceContract contract = JavaServiceContract.class.cast(reference.getServiceContract());
-        assertEquals(Ref.class.getName(), contract.getInterfaceClass());
-        assertEquals("ReferenceProcessorTestCase$Ref", contract.getInterfaceName());
+        ServiceContract contract = reference.getServiceContract();
+        assertEquals(Ref.class.getName(), contract.getQualifiedInterfaceName());
+        assertEquals("Ref", contract.getInterfaceName());
     }
 
     public void testFieldRequired() throws Exception {
@@ -121,7 +121,7 @@ public class ReferenceProcessorTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         type = new PojoComponentType(null);
-        processor = new ReferenceProcessor(new JavaInterfaceProcessorRegistryImpl());
+        processor = new ReferenceProcessor(new DefaultContractProcessor());
     }
 
     private interface Ref {
@@ -193,8 +193,8 @@ public class ReferenceProcessorTestCase extends TestCase {
         processor.visitField(Multiple.class.getDeclaredField("refs1"), type, null);
         JavaMappedReference prop = type.getReferences().get("refs1");
         assertNotNull(prop);
-        JavaServiceContract contract = JavaServiceContract.class.cast(prop.getServiceContract());
-        assertSame(Ref.class.getName(), contract.getInterfaceClass());
+        ServiceContract contract = prop.getServiceContract();
+        assertSame(Ref.class.getName(), contract.getQualifiedInterfaceName());
         assertEquals(Multiplicity.ONE_N, prop.getMultiplicity());
         assertTrue(prop.isRequired());
     }
@@ -203,8 +203,8 @@ public class ReferenceProcessorTestCase extends TestCase {
         processor.visitField(Multiple.class.getDeclaredField("refs2"), type, null);
         JavaMappedReference prop = type.getReferences().get("refs2");
         assertNotNull(prop);
-        JavaServiceContract contract = JavaServiceContract.class.cast(prop.getServiceContract());
-        assertSame(Ref.class.getName(), contract.getInterfaceClass());
+        ServiceContract contract = prop.getServiceContract();
+        assertSame(Ref.class.getName(), contract.getQualifiedInterfaceName());
         assertEquals(Multiplicity.ZERO_N, prop.getMultiplicity());
         assertFalse(prop.isRequired());
     }
@@ -213,8 +213,8 @@ public class ReferenceProcessorTestCase extends TestCase {
         processor.visitMethod(Multiple.class.getMethod("setRefs3", Ref[].class), type, null);
         JavaMappedReference prop = type.getReferences().get("refs3");
         assertNotNull(prop);
-        JavaServiceContract contract = JavaServiceContract.class.cast(prop.getServiceContract());
-        assertSame(Ref.class.getName(), contract.getInterfaceClass());
+        ServiceContract contract = prop.getServiceContract();
+        assertSame(Ref.class.getName(), contract.getQualifiedInterfaceName());
         assertEquals(Multiplicity.ONE_N, prop.getMultiplicity());
         assertTrue(prop.isRequired());
     }
@@ -223,8 +223,8 @@ public class ReferenceProcessorTestCase extends TestCase {
         processor.visitMethod(Multiple.class.getMethod("setRefs4", Collection.class), type, null);
         JavaMappedReference prop = type.getReferences().get("refs4");
         assertNotNull(prop);
-        JavaServiceContract contract = JavaServiceContract.class.cast(prop.getServiceContract());
-        assertSame(Ref.class.getName(), contract.getInterfaceClass());
+        ServiceContract contract = prop.getServiceContract();
+        assertSame(Ref.class.getName(), contract.getQualifiedInterfaceName());
         assertEquals(Multiplicity.ZERO_N, prop.getMultiplicity());
         assertFalse(prop.isRequired());
     }

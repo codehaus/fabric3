@@ -23,13 +23,10 @@ import java.lang.reflect.Method;
 
 import junit.framework.TestCase;
 
+import org.fabric3.introspection.impl.DefaultContractProcessor;
 import org.fabric3.pojo.processor.DuplicateResourceException;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.resource.model.SystemSourcedResource;
-import org.fabric3.spi.idl.InvalidServiceContractException;
-import org.fabric3.spi.idl.java.JavaInterfaceProcessor;
-import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
-import org.fabric3.spi.idl.java.JavaServiceContract;
 
 /**
  * @version $Rev$ $Date$
@@ -41,26 +38,8 @@ public class ResourceProcessorTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        processor = new ResourceProcessor();
+        processor = new ResourceProcessor(new DefaultContractProcessor());
         type = new PojoComponentType(null);
-        processor.setJavaInterfaceProcessorRegistry(new JavaInterfaceProcessorRegistry() {
-
-            public void registerProcessor(JavaInterfaceProcessor processor) {
-            }
-
-            public void unregisterProcessor(JavaInterfaceProcessor processor) {
-            }
-
-            public JavaServiceContract introspect(Class<?> type) throws InvalidServiceContractException {
-                return new JavaServiceContract(type);
-            }
-
-            public JavaServiceContract introspect(Class<?> type, Class<?> callback)
-                    throws InvalidServiceContractException {
-                return null;
-            }
-            
-        });
     }
 
     public void testVisitField() throws Exception {

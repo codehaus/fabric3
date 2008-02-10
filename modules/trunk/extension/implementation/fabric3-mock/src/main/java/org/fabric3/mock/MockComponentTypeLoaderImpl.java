@@ -16,54 +16,72 @@
  */
 package org.fabric3.mock;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 import org.easymock.IMocksControl;
+import org.osoa.sca.annotations.Reference;
+
+import org.fabric3.introspection.ContractProcessor;
+import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.InvalidServiceContractException;
 import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.scdl.Scope;
-import org.fabric3.spi.idl.java.JavaServiceContract;
-import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.loader.LoaderException;
 
 /**
  * @version $Revision$ $Date$
  */
 public class MockComponentTypeLoaderImpl implements MockComponentTypeLoader {
-    
+    private final ContractProcessor contractProcessor;
+    private final JavaMappedService controlService;
+
+    public MockComponentTypeLoaderImpl(@Reference ContractProcessor contractProcessor) {
+        this.contractProcessor = contractProcessor;
+        try {
+            ServiceContract<Type> controlServiceContract = contractProcessor.introspect(IMocksControl.class);
+            controlService = new JavaMappedService("mockControl", controlServiceContract);
+        } catch (InvalidServiceContractException e) {
+            throw new AssertionError(e);
+        }
+    }
+
     /**
      * Loads the mock component type.
-     * 
-     * @param mockedInterfaces Interfaces that need to be mocked.
+     *
+     * @param mockedInterfaces     Interfaces that need to be mocked.
      * @param introspectionContext Loader context.
      * @return Mock component type.
      */
     public MockComponentType load(List<String> mockedInterfaces, IntrospectionContext introspectionContext) throws LoaderException {
-        
+
         try {
-            
+
             MockComponentType componentType = new MockComponentType();
-            
+
             ClassLoader classLoader = introspectionContext.getTargetClassLoader();
-            for(String mockedInterface : mockedInterfaces) {
+            for (String mockedInterface : mockedInterfaces) {
                 Class<?> interfaceClass = classLoader.loadClass(mockedInterface);
-                JavaServiceContract serviceContract = new JavaServiceContract(interfaceClass);
+                ServiceContract<?> serviceContract = contractProcessor.introspect(interfaceClass);
                 String name = interfaceClass.getName();
                 int index = name.lastIndexOf('.');
                 if (index != -1) {
-                    name = name.substring(index+1);
+                    name = name.substring(index + 1);
                 }
                 componentType.add(new JavaMappedService(name, serviceContract));
             }
-            JavaServiceContract mockControlContract = new JavaServiceContract(IMocksControl.class);
-            componentType.add(new JavaMappedService("mockControl", mockControlContract));
+            componentType.add(controlService);
             componentType.setImplementationScope(Scope.STATELESS);
-            
+
             return componentType;
-            
-        } catch(ClassNotFoundException ex) {
+
+        } catch (ClassNotFoundException ex) {
             throw new LoaderException(ex);
+        } catch (InvalidServiceContractException e) {
+            throw new LoaderException(e);
         }
-        
+
     }
 
 }

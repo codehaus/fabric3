@@ -24,7 +24,6 @@ import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
-import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
@@ -101,8 +100,7 @@ public class MockComponentGenerator implements ComponentGenerator<LogicalCompone
         definition.setClassLoaderId(classLoaderId);
         ServiceContract<?> serviceContract = service.getDefinition().getServiceContract();
 
-        JavaServiceContract javaServiceContract = JavaServiceContract.class.cast(serviceContract);
-        definition.setMockedInterface(javaServiceContract.getInterfaceClass());
+        definition.setMockedInterface(serviceContract.getQualifiedInterfaceName());
 
         return definition;
 

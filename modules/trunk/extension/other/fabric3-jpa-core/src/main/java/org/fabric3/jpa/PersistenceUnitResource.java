@@ -20,7 +20,7 @@ package org.fabric3.jpa;
 
 import org.fabric3.pojo.scdl.JavaMappedResource;
 import org.fabric3.scdl.MemberSite;
-import org.fabric3.spi.idl.java.JavaServiceContract;
+import org.fabric3.scdl.ServiceContract;
 
 /**
  * Represents an entity manager factory treated as a resource.
@@ -39,7 +39,7 @@ public final class PersistenceUnitResource extends JavaMappedResource {
      * @param memberSite Member against which the annotation is declared.
      * @param serviceContract the service contract for the persistence unit
      */
-    public PersistenceUnitResource(String name, String unitName, MemberSite memberSite, JavaServiceContract serviceContract) {
+    public PersistenceUnitResource(String name, String unitName, MemberSite memberSite, ServiceContract<?> serviceContract) {
         super(name, memberSite, true, serviceContract);
         this.unitName = unitName;
     }

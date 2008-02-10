@@ -25,6 +25,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 
@@ -34,11 +35,11 @@ import org.fabric3.jpa.PersistenceUnitResource;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.scdl.MemberSite;
+import org.fabric3.scdl.ServiceContract;
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.spi.idl.InvalidServiceContractException;
-import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
-import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.ContractProcessor;
+import org.fabric3.introspection.InvalidServiceContractException;
 
 /**
  * Implementation processor for persistence unit annotations.
@@ -47,14 +48,10 @@ import org.fabric3.introspection.IntrospectionContext;
  */
 public class PersistenceUnitAnnotationProcessor extends ImplementationProcessorExtension {
     
-    private JavaInterfaceProcessorRegistry interfaceProcessorRegistry;
-    
-    /**
-     * @param interfaceProcessorRegistry Injects the interface processor registry.
-     */
-    @Reference
-    public void setJavaInterfaceProcessorRegistry(JavaInterfaceProcessorRegistry interfaceProcessorRegistry) {
-        this.interfaceProcessorRegistry = interfaceProcessorRegistry;
+    private final ServiceContract<Type> factoryServiceContract;
+
+    public PersistenceUnitAnnotationProcessor(@Reference ContractProcessor contractProcessor) throws InvalidServiceContractException {
+        factoryServiceContract = contractProcessor.introspect(EntityManagerFactory.class);
     }
 
     /**
@@ -103,15 +100,7 @@ public class PersistenceUnitAnnotationProcessor extends ImplementationProcessorE
 
         String name = annotation.name();
         String unitName = annotation.unitName();
-
-        JavaServiceContract serviceContract;
-        try {
-            serviceContract = interfaceProcessorRegistry.introspect(EntityManagerFactory.class);
-        } catch (InvalidServiceContractException e) {
-            throw new AssertionError(e);
-        }
-        
-        type.add(new PersistenceUnitResource(name, unitName, new MemberSite(member), serviceContract));
+        type.add(new PersistenceUnitResource(name, unitName, new MemberSite(member), factoryServiceContract));
         
     }
 

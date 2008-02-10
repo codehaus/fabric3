@@ -22,10 +22,6 @@
            name="AsyncLoaderExtension"
            autowire="true">
 
-    <component name="NonBlockingInterfaceProcessor">
-        <system:implementation.system class="org.fabric3.fabric.async.NonBlockingInterfaceProcessor"/>
-    </component>
-
     <component name="NonBlockingGenerator">
         <system:implementation.system class="org.fabric3.fabric.async.NonBlockingGenerator"/>
     </component>

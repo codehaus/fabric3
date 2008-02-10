@@ -26,7 +26,7 @@ import org.fabric3.pojo.scdl.ConstructorDefinition;
 import org.fabric3.pojo.scdl.PojoComponentType;
 
 import junit.framework.TestCase;
-import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
+import org.fabric3.introspection.impl.DefaultContractProcessor;
 
 /**
  * Verifies the constructor processor works when parameters are marked with custom extension annotations
@@ -35,7 +35,7 @@ import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
  */
 public class ConstructorProcessorExtensibilityTestCase extends TestCase {
     private ConstructorProcessor processor =
-        new ConstructorProcessor(new ImplementationProcessorServiceImpl(new JavaInterfaceProcessorRegistryImpl()));
+        new ConstructorProcessor(new ImplementationProcessorServiceImpl(new DefaultContractProcessor()));
 
     public void testProcessFirst() throws Exception {
         PojoComponentType type =

@@ -191,6 +191,7 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="fabric3-introspection" />
     <orderEntryProperties />
   </component>
 </module>

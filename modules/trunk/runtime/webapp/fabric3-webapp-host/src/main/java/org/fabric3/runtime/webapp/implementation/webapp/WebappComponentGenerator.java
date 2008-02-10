@@ -34,7 +34,6 @@ import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
-import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
@@ -56,12 +55,6 @@ public class WebappComponentGenerator implements ComponentGenerator<LogicalCompo
         registry.register(WebappImplementation.class, this);
     }
 
-    /**
-     * @see org.fabric3.spi.generator.ComponentGenerator#generate(
-     *     org.fabric3.spi.model.instance.LogicalComponent, 
-     *     java.util.Set, 
-     *     org.fabric3.spi.generator.GeneratorContext)
-     */
     @SuppressWarnings({"unchecked"})
     public PhysicalComponentDefinition generate(LogicalComponent<WebappImplementation> component,
                                                 GeneratorContext context) {
@@ -79,11 +72,7 @@ public class WebappComponentGenerator implements ComponentGenerator<LogicalCompo
             String name = referenceDefinition.getName();
             // JFM is this correct to assume?
             ServiceContract<?> contract = referenceDefinition.getServiceContract();
-            if (!(JavaServiceContract.class.isInstance(contract))) {
-                throw new AssertionError("Invalid service contract type [" + contract.getClass().getName() + "]");
-            }
-            JavaServiceContract jContract = JavaServiceContract.class.cast(contract);
-            String interfaceClass = jContract.getInterfaceClass();
+            String interfaceClass = contract.getQualifiedInterfaceName();
             try {
                 Class<?> type = JavaIntrospectionHelper.loadClass(interfaceClass);
                 referenceTypes.put(name, type);
@@ -97,12 +86,6 @@ public class WebappComponentGenerator implements ComponentGenerator<LogicalCompo
         return pDefinition;
     }
 
-    /**
-     * @see org.fabric3.spi.generator.ComponentGenerator#generateWireSource(
-     *     org.fabric3.spi.model.instance.LogicalComponent, 
-     *     org.fabric3.spi.model.instance.LogicalReference, 
-     *     boolean)
-     */
     public WebappWireSourceDefinition generateWireSource(LogicalComponent<WebappImplementation> source,
                                                          LogicalReference reference,
                                                          Policy policy,
@@ -113,11 +96,6 @@ public class WebappComponentGenerator implements ComponentGenerator<LogicalCompo
         return sourceDefinition;
     }
 
-    /**
-     * @see org.fabric3.spi.generator.ComponentGenerator#generateWireTarget(
-     *     org.fabric3.spi.model.instance.LogicalService, 
-     *     org.fabric3.spi.model.instance.LogicalComponent)
-     */
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, 
                                                            LogicalComponent<WebappImplementation> arg1,  
                                                            Policy policy,

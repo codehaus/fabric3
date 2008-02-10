@@ -16,39 +16,30 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.idl.java;
+package org.fabric3.introspection.impl;
 
 import java.lang.reflect.Type;
 import java.util.List;
 
 import junit.framework.TestCase;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.eq;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.isA;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
 import org.osoa.sca.annotations.Callback;
 
-import static org.fabric3.pojo.processor.JavaIntrospectionHelper.getBaseName;
+import org.fabric3.introspection.InvalidServiceContractException;
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.spi.idl.InvalidServiceContractException;
-import org.fabric3.spi.idl.java.JavaInterfaceProcessor;
-import org.fabric3.spi.idl.java.JavaServiceContract;
 
 /**
  * @version $Rev$ $Date$
  */
-public class JavaInterfaceProcessorRegistryImplTestCase extends TestCase {
-    private JavaInterfaceProcessorRegistryImpl impl;
+public class DefaultContractProcessorTestCase extends TestCase {
+    private DefaultContractProcessor impl;
 
     @SuppressWarnings({"unchecked"})
     public void testSimpleInterface() throws InvalidServiceContractException {
-        JavaServiceContract contract = impl.introspect(Simple.class);
-        assertEquals(getBaseName(Simple.class), contract.getInterfaceName());
-        assertEquals(Simple.class.getName(), contract.getInterfaceClass());
+        ServiceContract<Type> contract = impl.introspect(Simple.class);
+        assertEquals("Simple", contract.getInterfaceName());
+        assertEquals(Simple.class.getName(), contract.getQualifiedInterfaceName());
         List<Operation<Type>> operations = contract.getOperations();
         assertEquals(1, operations.size());
         Operation<Type> baseInt = operations.get(0);
@@ -72,17 +63,17 @@ public class JavaInterfaceProcessorRegistryImplTestCase extends TestCase {
     }
 
     public void testCallbackInterface() throws InvalidServiceContractException {
-        JavaServiceContract contract = impl.introspect(ForwardInterface.class);
+        ServiceContract<?> contract = impl.introspect(ForwardInterface.class);
         ServiceContract<?> callback = contract.getCallbackContract();
-        JavaServiceContract javaCallback = JavaServiceContract.class.cast(callback);
-        assertEquals(getBaseName(CallbackInterface.class), javaCallback.getInterfaceName());
-        assertEquals(CallbackInterface.class.getName(), javaCallback.getInterfaceClass());
-        List<Operation<Type>> operations = javaCallback.getOperations();
+        assertEquals("CallbackInterface", callback.getInterfaceName());
+        assertEquals(CallbackInterface.class.getName(), callback.getQualifiedInterfaceName());
+        List<? extends Operation<?>> operations = callback.getOperations();
         assertEquals(1, operations.size());
-        Operation<Type> back = operations.get(0);
+        Operation<?> back = operations.get(0);
         assertEquals("back", back.getName());
     }
 
+/*
     public void testUnregister() throws Exception {
         JavaInterfaceProcessor processor = createMock(JavaInterfaceProcessor.class);
         processor.visitInterface(eq(Base.class), isA(JavaServiceContract.class));
@@ -95,10 +86,11 @@ public class JavaInterfaceProcessorRegistryImplTestCase extends TestCase {
         impl.introspect(Base.class);
         verify(processor);
     }
+*/
 
     protected void setUp() throws Exception {
         super.setUp();
-        impl = new JavaInterfaceProcessorRegistryImpl();
+        impl = new DefaultContractProcessor();
 
     }
 

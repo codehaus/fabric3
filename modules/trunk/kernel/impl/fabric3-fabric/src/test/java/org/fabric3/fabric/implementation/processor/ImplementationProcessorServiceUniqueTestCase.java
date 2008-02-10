@@ -21,7 +21,7 @@ package org.fabric3.fabric.implementation.processor;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 
 import junit.framework.TestCase;
-import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
+import org.fabric3.introspection.impl.DefaultContractProcessor;
 
 /**
  * @version $Rev$ $Date$
@@ -29,7 +29,7 @@ import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
 public class ImplementationProcessorServiceUniqueTestCase extends TestCase {
 
     private ImplementationProcessorService service =
-        new ImplementationProcessorServiceImpl(new JavaInterfaceProcessorRegistryImpl());
+        new ImplementationProcessorServiceImpl(new DefaultContractProcessor());
 
     public void testUniquess1() throws Exception {
         Class[] classes = new Class[2];

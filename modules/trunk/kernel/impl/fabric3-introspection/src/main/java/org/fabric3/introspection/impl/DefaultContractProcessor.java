@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.idl.java;
+package org.fabric3.introspection.impl;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -24,66 +24,57 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
 import org.osoa.sca.annotations.Callback;
 import org.osoa.sca.annotations.Conversational;
 import org.osoa.sca.annotations.EndsConversation;
 import org.osoa.sca.annotations.OneWay;
 import org.osoa.sca.annotations.Remotable;
+import org.osoa.sca.Constants;
 
-import static org.fabric3.pojo.processor.JavaIntrospectionHelper.getBaseName;
+import org.fabric3.introspection.ContractProcessor;
+import org.fabric3.introspection.InvalidServiceContractException;
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.Operation;
 import static org.fabric3.scdl.Operation.CONVERSATION_END;
 import static org.fabric3.scdl.Operation.NO_CONVERSATION;
-import org.fabric3.spi.idl.InvalidConversationalOperationException;
-import org.fabric3.spi.idl.InvalidServiceContractException;
-import org.fabric3.spi.idl.OverloadedOperationException;
-import org.fabric3.spi.idl.java.JavaInterfaceProcessor;
-import org.fabric3.spi.idl.java.JavaInterfaceProcessorRegistry;
-import org.fabric3.spi.idl.java.JavaServiceContract;
+import org.fabric3.scdl.ServiceContract;
 
 /**
  * Default implementation of an InterfaceJavaIntrospector.
  *
  * @version $Rev$ $Date$
  */
-public class JavaInterfaceProcessorRegistryImpl implements JavaInterfaceProcessorRegistry {
+public class DefaultContractProcessor implements ContractProcessor {
     public static final String IDL_INPUT = "idl:input";
+    public static final QName ONEWAY_INTENT = new QName(Constants.SCA_NS, "oneWay");
+
 
     private static final String UNKNOWN_DATABINDING = null;
 
-    private List<JavaInterfaceProcessor> processors = new ArrayList<JavaInterfaceProcessor>();
-
-    public JavaInterfaceProcessorRegistryImpl() {
+    public DefaultContractProcessor() {
     }
 
-    public void registerProcessor(JavaInterfaceProcessor processor) {
-        processors.add(processor);
-    }
-
-    public void unregisterProcessor(JavaInterfaceProcessor processor) {
-        processors.remove(processor);
+    public ServiceContract<Type> introspect(Type type) throws InvalidServiceContractException {
+        if (type instanceof Class) {
+            return introspect((Class<?>) type);
+        } else {
+            throw new UnsupportedOperationException("Interface introspection is only supported for classes");
+        }
     }
 
     public JavaServiceContract introspect(Class<?> interfaze) throws InvalidServiceContractException {
-        Callback callback = interfaze.getAnnotation(Callback.class);
-        if (callback != null && Void.class.equals(callback.value())) {
-            throw new IllegalCallbackException("No callback interface specified on annotation", interfaze.getName());
-        }
-        if (callback == null || Void.class.equals(callback.value())) {
-            return introspectInterface(interfaze);
-        } else {
-            Class<?> callbackInterface = callback.value();
-            return introspect(interfaze, callbackInterface);
-        }
-
-    }
-
-    public JavaServiceContract introspect(Class<?> interfaze, Class<?> callback)
-            throws InvalidServiceContractException {
         JavaServiceContract contract = introspectInterface(interfaze);
-        JavaServiceContract callbackContract = introspectInterface(callback);
-        contract.setCallbackContract(callbackContract);
+        Callback callback = interfaze.getAnnotation(Callback.class);
+        if (callback != null) {
+            Class<?> callbackClass = callback.value();
+            if (Void.class.equals(callbackClass)) {
+                throw new MissingCallbackException(interfaze.getName());
+            }
+            JavaServiceContract callbackContract = introspectInterface(callbackClass);
+            contract.setCallbackContract(callbackContract);
+        }
         return contract;
     }
 
@@ -97,16 +88,18 @@ public class JavaInterfaceProcessorRegistryImpl implements JavaInterfaceProcesso
      */
     private JavaServiceContract introspectInterface(Class<?> interfaze) throws InvalidServiceContractException {
         JavaServiceContract contract = new JavaServiceContract(interfaze);
-        contract.setInterfaceName(getBaseName(interfaze));
+        contract.setInterfaceName(interfaze.getSimpleName());
+
+        // TODO this should be refactored to its own processor
         boolean remotable = interfaze.isAnnotationPresent(Remotable.class);
         contract.setRemotable(remotable);
+
+        // TODO this should be refactored to its own processor
         boolean conversational = isAnnotationPresent(interfaze, Conversational.class);
         contract.setConversational(conversational);
+
         contract.setOperations(getOperations(interfaze, remotable, conversational));
 
-        for (JavaInterfaceProcessor processor : processors) {
-            processor.visitInterface(interfaze, contract);
-        }
         return contract;
     }
 
@@ -184,8 +177,10 @@ public class JavaInterfaceProcessorRegistryImpl implements JavaInterfaceProcesso
                                                             nonBlocking,
                                                             UNKNOWN_DATABINDING,
                                                             conversationSequence);
-            for (JavaInterfaceProcessor processor : this.processors) {
-                processor.visitOperation(method, operation);
+
+            // TODO this should be refactored to its own processor
+            if (method.isAnnotationPresent(OneWay.class)) {
+                operation.addIntent(ONEWAY_INTENT);
             }
             operations.add(operation);
         }

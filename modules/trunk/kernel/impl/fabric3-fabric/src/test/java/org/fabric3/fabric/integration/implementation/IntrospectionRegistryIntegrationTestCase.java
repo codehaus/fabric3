@@ -26,7 +26,6 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Scope;
 
-import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
 import org.fabric3.fabric.implementation.IntrospectionRegistryImpl;
 import org.fabric3.fabric.implementation.processor.DestroyProcessor;
 import org.fabric3.fabric.implementation.processor.ImplementationProcessorServiceImpl;
@@ -39,6 +38,8 @@ import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import static org.fabric3.scdl.Scope.COMPOSITE;
 import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.introspection.ContractProcessor;
+import org.fabric3.introspection.impl.DefaultContractProcessor;
 
 /**
  * Sanity check of the <code>IntegrationRegistry</code> to verify operation with processors
@@ -72,7 +73,7 @@ public class IntrospectionRegistryIntegrationTestCase extends TestCase {
         registry.registerProcessor(new DestroyProcessor());
         registry.registerProcessor(new InitProcessor());
         registry.registerProcessor(new ScopeProcessor(scopeRegistry));
-        JavaInterfaceProcessorRegistryImpl interfaceProcessorRegistry = new JavaInterfaceProcessorRegistryImpl();
+        ContractProcessor interfaceProcessorRegistry = new DefaultContractProcessor();
         ImplementationProcessorService service = new ImplementationProcessorServiceImpl(interfaceProcessorRegistry);
         registry.registerProcessor(new PropertyProcessor(service));
         registry.registerProcessor(new ReferenceProcessor(interfaceProcessorRegistry));

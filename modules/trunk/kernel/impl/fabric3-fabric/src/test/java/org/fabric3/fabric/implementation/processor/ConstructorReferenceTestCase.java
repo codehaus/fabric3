@@ -27,7 +27,7 @@ import org.fabric3.pojo.scdl.JavaMappedReference;
 import org.fabric3.pojo.scdl.PojoComponentType;
 
 import junit.framework.TestCase;
-import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
+import org.fabric3.introspection.impl.DefaultContractProcessor;
 
 /**
  * @version $Rev$ $Date$
@@ -107,7 +107,7 @@ public class ConstructorReferenceTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         processor =
-            new ConstructorProcessor(new ImplementationProcessorServiceImpl(new JavaInterfaceProcessorRegistryImpl()));
+            new ConstructorProcessor(new ImplementationProcessorServiceImpl(new DefaultContractProcessor()));
     }
 
 //    public void testMultiplicityRequired() throws Exception {

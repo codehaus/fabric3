@@ -29,14 +29,14 @@ import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Remotable;
 import org.osoa.sca.annotations.Service;
 
-import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
 import org.fabric3.pojo.scdl.ConstructorDefinition;
 import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.JavaMappedReference;
 import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
-import org.fabric3.spi.idl.java.JavaServiceContract;
+import org.fabric3.scdl.ServiceContract;
+import org.fabric3.introspection.impl.DefaultContractProcessor;
 
 /**
  * Verfies component type information is properly introspected from an unadorned POJO according to the SCA Java Client
@@ -46,9 +46,14 @@ import org.fabric3.spi.idl.java.JavaServiceContract;
  */
 public class HeuristicPojoProcessorTestCase extends TestCase {
 
-    private HeuristicPojoProcessor processor =
-            new HeuristicPojoProcessor(new ImplementationProcessorServiceImpl(new JavaInterfaceProcessorRegistryImpl()),
-                                       null);
+    private HeuristicPojoProcessor processor;
+
+    protected void setUp() throws Exception {
+        super.setUp();
+        DefaultContractProcessor contractProcessor = new DefaultContractProcessor();
+        ImplementationProcessorServiceImpl processorService = new ImplementationProcessorServiceImpl(contractProcessor);
+        processor = new HeuristicPojoProcessor(processorService, contractProcessor);
+    }
 
     /**
      * Verifies a single service interface is computed when only one interface is implemented
@@ -61,8 +66,8 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
         assertEquals(1, type.getServices().size());
         Map<String, JavaMappedService> services = type.getServices();
         JavaMappedService mappedService = services.get(PropertyInterface.class.getSimpleName());
-        JavaServiceContract contract = JavaServiceContract.class.cast(mappedService.getServiceContract());
-        assertEquals(PropertyInterface.class.getName(), contract.getInterfaceClass());
+        ServiceContract contract = mappedService.getServiceContract();
+        assertEquals(PropertyInterface.class.getName(), contract.getQualifiedInterfaceName());
         assertTrue(type.getProperties().isEmpty());
         assertTrue(type.getReferences().isEmpty());
     }
@@ -79,15 +84,15 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
         assertEquals(1, type.getServices().size());
         Map<String, JavaMappedService> services = type.getServices();
         JavaMappedService mappedService = services.get(Interface1.class.getSimpleName());
-        JavaServiceContract contract = JavaServiceContract.class.cast(mappedService.getServiceContract());
-        assertEquals(Interface1.class.getName(), contract.getInterfaceClass());
+        ServiceContract<?> contract = mappedService.getServiceContract();
+        assertEquals(Interface1.class.getName(), contract.getQualifiedInterfaceName());
         assertEquals(1, type.getProperties().size());
         assertEquals(ComplexProperty.class, type.getProperties().get("property").getJavaType());
         assertEquals(1, type.getReferences().size());
         Map<String, JavaMappedReference> references = type.getReferences();
         JavaMappedReference mappedReference = references.get("reference");
-        JavaServiceContract refContract = JavaServiceContract.class.cast(mappedReference.getServiceContract());
-        assertEquals(Ref.class.getName(), refContract.getInterfaceClass());
+        ServiceContract refContract = mappedReference.getServiceContract();
+        assertEquals(Ref.class.getName(), refContract.getQualifiedInterfaceName());
     }
 
     /**

@@ -18,13 +18,13 @@ package org.fabric3.fabric.monitor;
 
 import org.fabric3.pojo.scdl.JavaMappedResource;
 import org.fabric3.scdl.MemberSite;
-import org.fabric3.spi.idl.java.JavaServiceContract;
+import org.fabric3.scdl.ServiceContract;
 
 /**
  * @version $Rev$ $Date$
  */
 public class MonitorResource extends JavaMappedResource {
-    public MonitorResource(String name, MemberSite site, boolean optional, JavaServiceContract serviceContract) {
+    public MonitorResource(String name, MemberSite site, boolean optional, ServiceContract<?> serviceContract) {
         super(name, site, optional, serviceContract);
     }
 }

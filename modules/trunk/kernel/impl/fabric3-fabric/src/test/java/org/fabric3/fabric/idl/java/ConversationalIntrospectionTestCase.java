@@ -24,18 +24,20 @@ import junit.framework.TestCase;
 import org.osoa.sca.annotations.Conversational;
 import org.osoa.sca.annotations.EndsConversation;
 
-import org.fabric3.spi.idl.InvalidConversationalOperationException;
-import org.fabric3.spi.idl.java.JavaServiceContract;
 import org.fabric3.scdl.Operation;
+import org.fabric3.scdl.ServiceContract;
+import org.fabric3.introspection.impl.InvalidConversationalOperationException;
+import org.fabric3.introspection.impl.DefaultContractProcessor;
+import org.fabric3.introspection.ContractProcessor;
 
 /**
  * @version $Rev$ $Date$
  */
 public class ConversationalIntrospectionTestCase extends TestCase {
-    private JavaInterfaceProcessorRegistryImpl registry = new JavaInterfaceProcessorRegistryImpl();
+    private ContractProcessor registry = new DefaultContractProcessor();
 
     public void testServiceContractConversationalInformationIntrospection() throws Exception {
-        JavaServiceContract contract = registry.introspect(Foo.class);
+        ServiceContract<Type> contract = registry.introspect(Foo.class);
         assertTrue(contract.isConversational());
         boolean testedContinue = false;
         boolean testedEnd = false;
@@ -62,7 +64,7 @@ public class ConversationalIntrospectionTestCase extends TestCase {
     }
 
     public void testNonConversationalInformationIntrospection() throws Exception {
-        JavaServiceContract contract = registry.introspect(NonConversationalFoo.class);
+        ServiceContract<Type> contract = registry.introspect(NonConversationalFoo.class);
         assertFalse(contract.isConversational());
         boolean tested = false;
         for (Operation<Type> operation : contract.getOperations()) {

@@ -20,7 +20,7 @@ package org.fabric3.pojo.scdl;
 
 import org.fabric3.scdl.ResourceDefinition;
 import org.fabric3.scdl.MemberSite;
-import org.fabric3.spi.idl.java.JavaServiceContract;
+import org.fabric3.scdl.ServiceContract;
 
 /**
  * A resource dependency declared by a POJO component implementation.
@@ -30,7 +30,7 @@ import org.fabric3.spi.idl.java.JavaServiceContract;
 public class JavaMappedResource extends ResourceDefinition {
     private final MemberSite memberSite;
 
-    public JavaMappedResource(String name, MemberSite memberSite, boolean optional, JavaServiceContract serviceContract) {
+    public JavaMappedResource(String name, MemberSite memberSite, boolean optional, ServiceContract<?> serviceContract) {
         super(name, serviceContract, optional);
         this.memberSite = memberSite;
     }

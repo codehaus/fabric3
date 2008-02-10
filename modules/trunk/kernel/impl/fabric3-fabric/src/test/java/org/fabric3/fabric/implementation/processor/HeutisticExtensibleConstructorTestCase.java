@@ -26,7 +26,7 @@ import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.PojoComponentType;
 
 import junit.framework.TestCase;
-import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
+import org.fabric3.introspection.impl.DefaultContractProcessor;
 
 /**
  * Verifies constructors that have extensible annotation types, i.e. that have parameters marked by annotations which
@@ -36,9 +36,14 @@ import org.fabric3.fabric.idl.java.JavaInterfaceProcessorRegistryImpl;
  */
 public class HeutisticExtensibleConstructorTestCase extends TestCase {
 
-    private HeuristicPojoProcessor processor =
-        new HeuristicPojoProcessor(new ImplementationProcessorServiceImpl(new JavaInterfaceProcessorRegistryImpl()),
-                                   null);
+    private HeuristicPojoProcessor processor;
+
+    protected void setUp() throws Exception {
+        super.setUp();
+        DefaultContractProcessor contractProcessor = new DefaultContractProcessor();
+        ImplementationProcessorServiceImpl processorService = new ImplementationProcessorServiceImpl(contractProcessor);
+        processor = new HeuristicPojoProcessor(processorService, contractProcessor);
+    }
 
     /**
      * Verifies heuristic processing can be called priot to an extension annotation processors being called.
