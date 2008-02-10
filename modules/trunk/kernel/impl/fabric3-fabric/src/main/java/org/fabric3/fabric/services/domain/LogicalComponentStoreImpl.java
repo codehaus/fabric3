@@ -16,22 +16,20 @@
  */
 package org.fabric3.fabric.services.domain;
 
-import java.io.File;
 import static java.io.File.separator;
+
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
+
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
-import org.osoa.sca.annotations.Service;
 
 import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.host.runtime.HostInfo;
@@ -40,11 +38,14 @@ import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.marshaller.MarshalException;
 import org.fabric3.spi.marshaller.MarshalService;
-import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.runtime.assembly.LogicalComponentStore;
 import org.fabric3.spi.runtime.assembly.RecordException;
 import org.fabric3.spi.runtime.assembly.RecoveryException;
 import org.fabric3.spi.services.factories.xml.XMLFactory;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Service;
 
 /**
  * Default implementation of the LogicalComponentStore that persists the logical domain model to disk. The
@@ -83,7 +84,7 @@ public class LogicalComponentStoreImpl implements LogicalComponentStore {
         serializedFile = new File(root, "assembly.ser");
     }
 
-    public void store(LogicalComponent<CompositeImplementation> domain) throws RecordException {
+    public void store(LogicalCompositeComponent domain) throws RecordException {
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(serializedFile);
@@ -108,7 +109,7 @@ public class LogicalComponentStoreImpl implements LogicalComponentStore {
     }
 
     @SuppressWarnings({"unchecked"})
-    public LogicalComponent<CompositeImplementation> read() throws RecoveryException {
+    public LogicalCompositeComponent read() throws RecoveryException {
         if (!serializedFile.exists()) {
             // no serialized file, create a new domain
             Composite type = new Composite(null);
@@ -117,12 +118,12 @@ public class LogicalComponentStoreImpl implements LogicalComponentStore {
             ComponentDefinition<CompositeImplementation> definition =
                     new ComponentDefinition<CompositeImplementation>(domainUri.toString());
             definition.setImplementation(impl);
-            return new LogicalComponent<CompositeImplementation>(domainUri, domainUri, definition, null);
+            return new LogicalCompositeComponent(domainUri, domainUri, definition, null);
         }
         FileInputStream fin = null;
         try {
             fin = new FileInputStream(serializedFile);
-            return marshalService.unmarshall(LogicalComponent.class, inputFactory.createXMLStreamReader(fin));
+            return marshalService.unmarshall(LogicalCompositeComponent.class, inputFactory.createXMLStreamReader(fin));
         } catch (FileNotFoundException e) {
             // should not happen
             throw new AssertionError();

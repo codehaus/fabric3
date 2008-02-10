@@ -16,8 +16,7 @@
  */
 package org.fabric3.spi.runtime.assembly;
 
-import org.fabric3.scdl.CompositeImplementation;
-import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 
 /**
  * Implementations persist the logical SCA domain model
@@ -32,7 +31,7 @@ public interface LogicalComponentStore {
      * @param domain the domain model
      * @throws RecordException if an error occurs storing the domain
      */
-    void store(LogicalComponent<CompositeImplementation> domain) throws RecordException;
+    void store(LogicalCompositeComponent domain) throws RecordException;
 
     /**
      * Reads the domain model from the store.
@@ -40,6 +39,6 @@ public interface LogicalComponentStore {
      * @return the domain model from the store
      * @throws RecoveryException f an error occurs reading from the store
      */
-    LogicalComponent<CompositeImplementation> read() throws RecoveryException;
+    LogicalCompositeComponent read() throws RecoveryException;
 
 }

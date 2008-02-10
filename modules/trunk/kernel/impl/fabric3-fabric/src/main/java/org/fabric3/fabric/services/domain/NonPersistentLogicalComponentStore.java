@@ -18,17 +18,16 @@ package org.fabric3.fabric.services.domain;
 
 import java.net.URI;
 
-import org.osoa.sca.annotations.Constructor;
-import org.osoa.sca.annotations.Reference;
-
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
-import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.runtime.assembly.LogicalComponentStore;
 import org.fabric3.spi.runtime.assembly.RecoveryException;
+import org.osoa.sca.annotations.Constructor;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * A non-persistent LogicalComponentStore
@@ -49,7 +48,7 @@ public class NonPersistentLogicalComponentStore implements LogicalComponentStore
         domainUri = info.getDomain();
     }
 
-    public LogicalComponent<CompositeImplementation> read() throws RecoveryException {
+    public LogicalCompositeComponent read() throws RecoveryException {
         Composite type = new Composite(null);
         CompositeImplementation impl = new CompositeImplementation();
         impl.setComponentType(type);
@@ -57,10 +56,10 @@ public class NonPersistentLogicalComponentStore implements LogicalComponentStore
                 new ComponentDefinition<CompositeImplementation>(domainUri.toString());
         definition.setImplementation(impl);
         type.setAutowire(autowire);
-        return new LogicalComponent<CompositeImplementation>(domainUri, domainUri, definition, null);
+        return new LogicalCompositeComponent(domainUri, domainUri, definition, null);
     }
 
-    public void store(LogicalComponent<CompositeImplementation> domain) {
+    public void store(LogicalCompositeComponent domain) {
         // no op
     }
 }

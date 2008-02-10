@@ -22,8 +22,8 @@ import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
-import java.net.URL;
 import java.net.URI;
+import java.net.URL;
 
 import javax.servlet.ServletContext;
 

@@ -19,9 +19,9 @@ package org.fabric3.spi.runtime.assembly;
 import java.net.URI;
 import java.util.Collection;
 
-import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 
 /**
  * @version $Revision$ $Date$
@@ -33,7 +33,7 @@ public interface LogicalComponentManager {
      *
      * @return the root component in the domain.
      */
-    LogicalComponent<CompositeImplementation> getDomain();
+    LogicalCompositeComponent getDomain();
 
     /**
      * Returns the component uniquely identified by an id.

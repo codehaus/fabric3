@@ -38,6 +38,7 @@ import org.fabric3.scdl.Property;
 import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.osoa.sca.annotations.Reference;
@@ -68,9 +69,31 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
         this.compositeComponentInstantiator = compositeComponentInstantiator;
     }
 
+    /**
+     * Instantiates a logical component from a component definition
+     *
+     * @param parent     the parent logical component
+     * @param definition the component definition to instantiate from
+     * @return the instantiated logical component
+     * @throws InstantiationException if an error occurs during instantiation
+     */
     @SuppressWarnings("unchecked")
-    public List<LogicalComponent<?>> include(LogicalComponent<CompositeImplementation> parent, Composite composite)
-            throws ActivateException {
+    public <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalCompositeComponent parent, ComponentDefinition<I> definition) 
+    throws InstantiationException {
+        
+        I impl = definition.getImplementation();
+        if (CompositeImplementation.IMPLEMENTATION_COMPOSITE.equals(impl.getType())) {
+            return (LogicalComponent<I>) compositeComponentInstantiator.instantiate(
+                    parent, (ComponentDefinition<CompositeImplementation>) definition);
+        } else {
+            return (LogicalComponent<I>) atomicComponentInstantiator.instantiate(
+                    parent, (ComponentDefinition<Implementation<?>>) definition);
+        }
+        
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<LogicalComponent<?>> include(LogicalCompositeComponent parent, Composite composite) throws ActivateException {
 
         // merge the property values into the parent
         for (Property<?> property : composite.getProperties().values()) {
@@ -178,7 +201,7 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
         
     }
 
-    private void instantiateComponents(LogicalComponent<CompositeImplementation> parent, Composite composite,
+    private void instantiateComponents(LogicalCompositeComponent parent, Composite composite,
             Collection<ComponentDefinition<? extends Implementation<?>>> definitions,
             List<LogicalComponent<?>> components) throws InstantiationException {
         
@@ -196,29 +219,6 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
             }
             components.add(logicalComponent);
             parent.addComponent(logicalComponent);
-        }
-        
-    }
-
-    /**
-     * Instantiates a logical component from a component definition
-     *
-     * @param parent     the parent logical component
-     * @param definition the component definition to instantiate from
-     * @return the instantiated logical component
-     * @throws InstantiationException if an error occurs during instantiation
-     */
-    @SuppressWarnings("unchecked")
-    public <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalComponent<CompositeImplementation> parent,
-                                                                         ComponentDefinition<I> definition) throws InstantiationException {
-        
-        I impl = definition.getImplementation();
-        if (CompositeImplementation.IMPLEMENTATION_COMPOSITE.equals(impl.getType())) {
-            return (LogicalComponent<I>) compositeComponentInstantiator.instantiate(
-                    parent, (ComponentDefinition<CompositeImplementation>) definition);
-        } else {
-            return (LogicalComponent<I>) atomicComponentInstantiator.instantiate(
-                    parent, (ComponentDefinition<Implementation<?>>) definition);
         }
         
     }

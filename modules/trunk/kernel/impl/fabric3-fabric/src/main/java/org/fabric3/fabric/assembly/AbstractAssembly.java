@@ -51,6 +51,7 @@ import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalChangeSet;
 import org.fabric3.spi.services.contribution.MetaDataStore;
@@ -112,7 +113,7 @@ public abstract class AbstractAssembly implements Assembly {
 
     public void includeInDomain(Composite composite) throws ActivateException {
         
-        LogicalComponent<CompositeImplementation> domain = logicalComponentManager.getDomain();
+        LogicalCompositeComponent domain = logicalComponentManager.getDomain();
         List<LogicalComponent<?>> components = logicalModelGenerator.include(domain, composite);
 
         // Allocate the components to runtime nodes
@@ -179,7 +180,7 @@ public abstract class AbstractAssembly implements Assembly {
         
     }
     
-    public <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalComponent<CompositeImplementation> parent,
+    public <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalCompositeComponent parent,
             ComponentDefinition<I> definition) throws ActivateException {
         return logicalModelGenerator.instantiate(parent, definition);
     }

@@ -19,33 +19,25 @@ package org.fabric3.fabric.services.domain;
 import java.net.URI;
 import java.util.Collection;
 
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
-import org.osoa.sca.annotations.Init;
-
-import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
 import org.fabric3.spi.runtime.assembly.LogicalComponentStore;
 import org.fabric3.spi.runtime.assembly.RecordException;
 import org.fabric3.spi.util.UriHelper;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Revision$ $Date$
  */
 public class LogicalComponentManagerImpl implements LogicalComponentManager {
     
-    private LogicalComponent<CompositeImplementation> domain;
-
+    private LogicalCompositeComponent domain;
     private final LogicalComponentStore logicalComponentStore;
     
     public LogicalComponentManagerImpl(@Reference LogicalComponentStore logicalComponentStore) {
         this.logicalComponentStore = logicalComponentStore;
-    }
-    
-    public void store() throws RecordException {
-        logicalComponentStore.store(domain);
     }
 
     public LogicalComponent<?> getComponent(URI uri) {
@@ -70,12 +62,16 @@ public class LogicalComponentManagerImpl implements LogicalComponentManager {
         return domain.getComponents();
     }
 
-    public LogicalComponent<CompositeImplementation> getDomain() {
+    public LogicalCompositeComponent getDomain() {
         return domain;
     }
 
     public void initialize() throws AssemblyException {
-        domain = logicalComponentStore.read();
+        domain = (LogicalCompositeComponent) logicalComponentStore.read();
+    }
+    
+    public void store() throws RecordException {
+        logicalComponentStore.store(domain);
     }
 
 }

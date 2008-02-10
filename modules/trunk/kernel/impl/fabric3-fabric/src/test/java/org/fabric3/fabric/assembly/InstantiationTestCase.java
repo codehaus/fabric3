@@ -19,6 +19,7 @@ import org.fabric3.scdl.CompositeReference;
 import org.fabric3.scdl.CompositeService;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 
@@ -34,7 +35,7 @@ public class InstantiationTestCase extends TestCase {
     public static final String REFERENCE_URI = COMPONENT_URI + "#reference";
 
     private LogicalModelGenerator logicalModelGenerator;
-    private LogicalComponent<CompositeImplementation> parent;
+    private LogicalCompositeComponent parent;
 
     public void testInstantiateChildren() throws Exception {
         ComponentDefinition<?> definition = createParentWithChild();
@@ -61,7 +62,7 @@ public class InstantiationTestCase extends TestCase {
         CompositeComponentInstantiator compositeComponentInstantiator = new CompositeComponentInstantiator(atomicComponentInstantiator, null);
         
         logicalModelGenerator = new LogicalModelGeneratorImpl(null, null, null, atomicComponentInstantiator, compositeComponentInstantiator);
-        parent = new LogicalComponent<CompositeImplementation>(PARENT_URI, null, null, null);
+        parent = new LogicalCompositeComponent(PARENT_URI, null, null, null);
     }
 
     private ComponentDefinition<?> createParentWithChild() {

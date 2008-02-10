@@ -18,26 +18,28 @@
  */
 package org.fabric3.fabric.runtime;
 
+import static org.fabric3.fabric.runtime.ComponentNames.EVENT_SERVICE_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_URI;
+
 import java.net.URI;
 import java.net.URL;
 
 import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.fabric.component.scope.CompositeScopeContainer;
-import static org.fabric3.fabric.runtime.ComponentNames.EVENT_SERVICE_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_URI;
 import org.fabric3.fabric.services.componentmanager.ComponentManagerImpl;
 import org.fabric3.fabric.services.domain.LogicalComponentManagerImpl;
 import org.fabric3.fabric.services.domain.NonPersistentLogicalComponentStore;
 import org.fabric3.host.management.ManagementService;
-import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.StartException;
+import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Scope;
+import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
@@ -52,7 +54,6 @@ import org.fabric3.spi.runtime.component.RegistrationException;
 import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.services.event.RuntimeStart;
 import org.fabric3.spi.services.management.Fabric3ManagementService;
-import org.fabric3.spi.assembly.AssemblyException;
 
 /**
  * @version $Rev$ $Date$

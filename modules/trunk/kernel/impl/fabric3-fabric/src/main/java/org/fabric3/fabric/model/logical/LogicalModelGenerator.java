@@ -24,6 +24,7 @@ import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 
 /**
  * Interface that abstracts the concerns of instantiating and maintaining 
@@ -43,7 +44,7 @@ public interface LogicalModelGenerator {
      * @return Components within the composite.
      * @throws ActivateException If unable to include the composite.
      */
-    List<LogicalComponent<?>> include(LogicalComponent<CompositeImplementation> domain, Composite composite) throws ActivateException;
+    List<LogicalComponent<?>> include(LogicalCompositeComponent domain, Composite composite) throws ActivateException;
     
     /**
      * Instantiate a component.
@@ -56,7 +57,7 @@ public interface LogicalModelGenerator {
      * @return
      * @throws ActivateException
      */
-    <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalComponent<CompositeImplementation> parent,
-            ComponentDefinition<I> definition) throws ActivateException;
+    <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalCompositeComponent parent, ComponentDefinition<I> definition) 
+    throws ActivateException;
 
 }
