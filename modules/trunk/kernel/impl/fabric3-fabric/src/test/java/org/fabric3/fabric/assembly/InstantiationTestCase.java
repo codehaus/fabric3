@@ -6,6 +6,10 @@ import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 
+import org.easymock.classextension.EasyMock;
+import org.fabric3.fabric.assembly.normalizer.PromotionNormalizer;
+import org.fabric3.fabric.assembly.resolver.ResolutionException;
+import org.fabric3.fabric.assembly.resolver.WireResolver;
 import org.fabric3.fabric.model.logical.AtomicComponentInstantiator;
 import org.fabric3.fabric.model.logical.CompositeComponentInstantiator;
 import org.fabric3.fabric.model.logical.LogicalModelGenerator;
@@ -39,7 +43,9 @@ public class InstantiationTestCase extends TestCase {
 
     public void testInstantiateChildren() throws Exception {
         ComponentDefinition<?> definition = createParentWithChild();
-        LogicalComponent<?> logicalComponent = logicalModelGenerator.instantiate(parent, definition);
+        Composite composite = new Composite(null);
+        composite.add(definition);
+        LogicalComponent<?> logicalComponent = logicalModelGenerator.include(parent, composite).get(0);
         assertEquals(COMPONENT_URI, logicalComponent.getUri().toString());
         LogicalComponent<?> logicalChild = logicalComponent.getComponent(URI.create(CHILD_URI));
         assertEquals(CHILD_URI, logicalChild.getUri().toString());
@@ -47,7 +53,9 @@ public class InstantiationTestCase extends TestCase {
 
     public void testInstantiateServiceReference() throws Exception {
         ComponentDefinition<?> definition = createParentWithServiceAndReference();
-        LogicalComponent<?> logicalComponent = logicalModelGenerator.instantiate(parent, definition);
+        Composite composite = new Composite(null);
+        composite.add(definition);
+        LogicalComponent<?> logicalComponent = logicalModelGenerator.include(parent, composite).get(0);
         LogicalService logicalService = logicalComponent.getService("service");
         assertEquals(SERVICE_URI, logicalService.getUri().toString());
         LogicalReference logicalReference = logicalComponent.getReference("reference");
@@ -60,8 +68,10 @@ public class InstantiationTestCase extends TestCase {
         
         AtomicComponentInstantiator atomicComponentInstantiator = new AtomicComponentInstantiator(null);
         CompositeComponentInstantiator compositeComponentInstantiator = new CompositeComponentInstantiator(atomicComponentInstantiator, null);
+        WireResolver wireResolver = EasyMock.createMock(WireResolver.class);
+        PromotionNormalizer normalizer = EasyMock.createMock(PromotionNormalizer.class);
         
-        logicalModelGenerator = new LogicalModelGeneratorImpl(null, null, null, atomicComponentInstantiator, compositeComponentInstantiator);
+        logicalModelGenerator = new LogicalModelGeneratorImpl(wireResolver, normalizer, null, atomicComponentInstantiator, compositeComponentInstantiator);
         parent = new LogicalCompositeComponent(PARENT_URI, null, null, null);
     }
 

@@ -179,10 +179,5 @@ public abstract class AbstractAssembly implements Assembly {
         }
         
     }
-    
-    public <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalCompositeComponent parent,
-            ComponentDefinition<I> definition) throws ActivateException {
-        return logicalModelGenerator.instantiate(parent, definition);
-    }
 
 }

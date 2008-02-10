@@ -69,29 +69,6 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
         this.compositeComponentInstantiator = compositeComponentInstantiator;
     }
 
-    /**
-     * Instantiates a logical component from a component definition
-     *
-     * @param parent     the parent logical component
-     * @param definition the component definition to instantiate from
-     * @return the instantiated logical component
-     * @throws InstantiationException if an error occurs during instantiation
-     */
-    @SuppressWarnings("unchecked")
-    public <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalCompositeComponent parent, ComponentDefinition<I> definition) 
-    throws InstantiationException {
-        
-        I impl = definition.getImplementation();
-        if (CompositeImplementation.IMPLEMENTATION_COMPOSITE.equals(impl.getType())) {
-            return (LogicalComponent<I>) compositeComponentInstantiator.instantiate(
-                    parent, (ComponentDefinition<CompositeImplementation>) definition);
-        } else {
-            return (LogicalComponent<I>) atomicComponentInstantiator.instantiate(
-                    parent, (ComponentDefinition<Implementation<?>>) definition);
-        }
-        
-    }
-
     @SuppressWarnings("unchecked")
     public List<LogicalComponent<?>> include(LogicalCompositeComponent parent, Composite composite) throws ActivateException {
 
@@ -125,6 +102,18 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
 
         return components;
 
+    }
+
+    @SuppressWarnings("unchecked")
+    private LogicalComponent<?> instantiate(LogicalCompositeComponent parent, ComponentDefinition<?> definition)  throws InstantiationException {
+        
+        Implementation<?> impl = definition.getImplementation();
+        if (CompositeImplementation.IMPLEMENTATION_COMPOSITE.equals(impl.getType())) {
+            return compositeComponentInstantiator.instantiate(parent, (ComponentDefinition<CompositeImplementation>) definition);
+        } else {
+            return atomicComponentInstantiator.instantiate(parent, (ComponentDefinition<Implementation<?>>) definition);
+        }
+        
     }
 
     private void resolveWires(List<LogicalComponent<?>> components, List<LogicalService> services,
