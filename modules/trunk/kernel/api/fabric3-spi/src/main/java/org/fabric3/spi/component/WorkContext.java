@@ -18,12 +18,9 @@
  */
 package org.fabric3.spi.component;
 
-import java.util.LinkedList;
-
 import javax.security.auth.Subject;
 
 import org.fabric3.scdl.Scope;
-import org.fabric3.spi.wire.Wire;
 
 /**
  * Implementations track information associated with a request as it is processed by the runtime
@@ -31,10 +28,10 @@ import org.fabric3.spi.wire.Wire;
  * @version $Rev$ $Date$
  */
 public interface WorkContext {
-    
+
     /**
      * Gets the subject associated with the current invocation.
-     * 
+     *
      * @return Subject associated with the current invocation.
      */
     Subject getSubject();
@@ -55,58 +52,4 @@ public interface WorkContext {
      */
     <T> void setScopeIdentifier(Scope<T> scope, T identifier);
 
-    /**
-     * Returns an ordered list of callback wures for the current context. Ordering is based on the sequence of service
-     * invocations for collocated components
-     *
-     * @return the current list of callback wires
-     */
-    LinkedList<Wire> getCallbackWires();
-
-    /**
-     * Sets an ordered list of callback wires for the current context. Ordering is based on the sequence of service
-     * invocations for collocated components
-     */
-    void setCallbackWires(LinkedList<Wire> wires);
-
-    /**
-     * Returns the correlation id for the current invocation or null if not available. Transports may use correlation
-     * ids for message routing.
-     *
-     * @return the correlation id for the current invocation or null
-     */
-    Object getCorrelationId();
-
-    /**
-     * Sets the correlation id for the current invocation. Transports may use correlation ids for message routing.
-     *
-     * @param id the correlation id
-     */
-    void setCorrelationId(Object id);
-
-    /**
-     * Removes and returns the name of the last remotable service to handle the current request
-     *
-     * @return the name of the last remotable service to handle the current request or null
-     */
-    String popServiceName();
-
-    /**
-     * Returns the name of the last remotable service to handle the current request
-     *
-     * @return the name of the last remotable service to handle the current request or null
-     */
-    String getCurrentServiceName();
-
-    /**
-     * Adds the name of the last remotable service to handle the current request
-     *
-     * @param name the name of the last remotable service to handle the current request or null
-     */
-    void pushServiceName(String name);
-
-    /**
-     * Clears the stack of current service names
-     */
-    void clearServiceNames();
 }
