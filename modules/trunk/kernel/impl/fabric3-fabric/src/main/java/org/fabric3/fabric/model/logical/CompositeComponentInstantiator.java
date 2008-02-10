@@ -58,7 +58,7 @@ public class CompositeComponentInstantiator extends AbstractComponentInstantiato
     public <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalCompositeComponent parent, ComponentDefinition<I> definition)
             throws InstantiationException {
         ComponentDefinition<CompositeImplementation> def = (ComponentDefinition<CompositeImplementation>) definition;
-        return (LogicalComponent<I>) instantiateComposite(parent, def);
+        return LogicalComponent.class.cast(instantiateComposite(parent, def));
     }
 
     public LogicalCompositeComponent instantiateComposite(LogicalCompositeComponent parent, ComponentDefinition<CompositeImplementation> definition)
