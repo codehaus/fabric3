@@ -30,12 +30,12 @@ import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.ComponentReference;
 import org.fabric3.scdl.Composite;
-import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.util.UriHelper;
@@ -90,13 +90,13 @@ public class DefaultWireResolver implements WireResolver {
         }
     }
 
-    public void resolveReference(LogicalReference logicalReference, LogicalComponent<CompositeImplementation> composite)
+    public void resolveReference(LogicalReference logicalReference, LogicalCompositeComponent composite)
             throws ResolutionException {
         List<URI> promotedUris = logicalReference.getPromotedUris();
         for (int i = 0; i < promotedUris.size(); i++) {
             URI promotedUri = promotedUris.get(i);
             URI componentId = UriHelper.getDefragmentedName(promotedUri);
-            LogicalComponent parent = logicalReference.getParent();
+            LogicalComponent<?> parent = logicalReference.getParent();
             LogicalComponent<?> promotedComponent = parent.getComponent(componentId);
             if (promotedComponent == null) {
                 throw new PromotedComponentNotFoundException(logicalReference.getUri(), componentId);
@@ -208,7 +208,7 @@ public class DefaultWireResolver implements WireResolver {
      * @throws ResolutionException if an error occurs during resolution
      */
     private void resolveReferences(LogicalComponent<?> component) throws ResolutionException {
-        LogicalComponent<CompositeImplementation> composite = component.getParent();
+        LogicalCompositeComponent composite = component.getParent();
         ComponentDefinition<? extends Implementation<?>> definition = component.getDefinition();
         AbstractComponentType<?, ?, ?, ?> componentType = definition.getImplementation().getComponentType();
         for (ReferenceDefinition reference : componentType.getReferences().values()) {

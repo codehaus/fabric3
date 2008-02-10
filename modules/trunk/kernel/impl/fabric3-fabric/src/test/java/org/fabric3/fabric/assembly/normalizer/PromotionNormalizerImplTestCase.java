@@ -18,6 +18,7 @@ import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 
@@ -71,10 +72,9 @@ public class PromotionNormalizerImplTestCase extends TestCase {
      */
     private LogicalComponent<?> createServiceAssembly() {
         //setup grandparent
-        LogicalComponent<CompositeImplementation> grandParent = createComposite(URI.create("grandParent"), null);
+        LogicalCompositeComponent grandParent = createComposite(URI.create("grandParent"), null);
         // setup parent
-        LogicalComponent<CompositeImplementation> parent =
-                createComposite(URI.create("grandParent/parent"), grandParent);
+        LogicalCompositeComponent parent = createComposite(URI.create("grandParent/parent"), grandParent);
         LogicalComponent<?> component = createComponent(URI.create("grandParent/parent/component"), parent);
         parent.addComponent(component);
         grandParent.addComponent(parent);
@@ -130,10 +130,9 @@ public class PromotionNormalizerImplTestCase extends TestCase {
      */
     private LogicalComponent<?> createReferenceAssembly() {
         //setup grandparent
-        LogicalComponent<CompositeImplementation> grandParent = createComposite(URI.create("grandParent"), null);
+        LogicalCompositeComponent grandParent = createComposite(URI.create("grandParent"), null);
         // setup parent
-        LogicalComponent<CompositeImplementation> parent =
-                createComposite(URI.create("grandParent/parent"), grandParent);
+        LogicalCompositeComponent parent = createComposite(URI.create("grandParent/parent"), grandParent);
         LogicalComponent<?> component = createComponent(URI.create("grandParent/parent/component"), parent);
         parent.addComponent(component);
         grandParent.addComponent(parent);
@@ -173,7 +172,7 @@ public class PromotionNormalizerImplTestCase extends TestCase {
         return component;
     }
 
-    private LogicalComponent<CompositeImplementation> createComposite(URI uri, LogicalComponent<CompositeImplementation> parent) {
+    private LogicalCompositeComponent createComposite(URI uri, LogicalCompositeComponent parent) {
         URI runtimeID = URI.create("id");
         Composite type = new Composite(null);
         //parentType.add();
@@ -182,11 +181,11 @@ public class PromotionNormalizerImplTestCase extends TestCase {
         ComponentDefinition<CompositeImplementation> definition =
                 new ComponentDefinition<CompositeImplementation>(uri.toString());
         definition.setImplementation(impl);
-        return new LogicalComponent<CompositeImplementation>(uri, runtimeID, definition, parent);
+        return new LogicalCompositeComponent(uri, runtimeID, definition, parent);
 
     }
 
-    private LogicalComponent<?> createComponent(URI uri, LogicalComponent<CompositeImplementation> parent) {
+    private LogicalComponent<?> createComponent(URI uri, LogicalCompositeComponent parent) {
         URI runtimeID = URI.create("id");
         ComponentType type = new ComponentType();
         MockImplementation impl = new MockImplementation();

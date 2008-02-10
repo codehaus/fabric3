@@ -41,7 +41,7 @@ import org.w3c.dom.Document;
  *
  * @version $Rev$ $Date$
  */
-public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArtifact<LogicalComponent<CompositeImplementation>> {
+public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArtifact<LogicalCompositeComponent> {
 
     private static final QName TYPE = new QName(Constants.SCA_NS, "component");
 
@@ -63,7 +63,7 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
      */
     public LogicalComponent(URI uri, URI runtimeId,
                             ComponentDefinition<I> definition,
-                            LogicalComponent<CompositeImplementation> parent) {
+                            LogicalCompositeComponent parent) {
         super(uri, parent, TYPE);
         this.runtimeId = runtimeId;
         this.definition = definition;

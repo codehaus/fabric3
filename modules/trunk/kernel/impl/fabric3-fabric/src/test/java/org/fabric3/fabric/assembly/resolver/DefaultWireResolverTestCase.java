@@ -36,6 +36,7 @@ import org.fabric3.scdl.ResourceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.introspection.impl.contract.JavaServiceContract;
 
@@ -46,11 +47,11 @@ public class DefaultWireResolverTestCase extends TestCase {
     private static final URI REFERENCE_URI = URI.create("source#ref");
     private static final URI SOURCE_URI = URI.create("source");
     private static final URI TARGET_URI = URI.create("target#service");
-    private LogicalComponent<CompositeImplementation> domain;
+    private LogicalCompositeComponent domain;
     private DefaultWireResolver resolver;
 
     public void testAutowireAtomicToAtomic() throws Exception {
-        LogicalComponent<CompositeImplementation> composite = createWiredComposite(domain, Foo.class, Foo.class);
+        LogicalCompositeComponent composite = createWiredComposite(domain, Foo.class, Foo.class);
         resolver.resolve(composite);
         LogicalComponent<?> source = composite.getComponent(SOURCE_URI);
         assertEquals(TARGET_URI, source.getReference("ref").getTargetUris().get(0));
@@ -85,8 +86,8 @@ public class DefaultWireResolverTestCase extends TestCase {
     }
 
     public void testNestedAutowireAtomicToAtomic() throws Exception {
-        LogicalComponent<CompositeImplementation> composite = createWiredComposite(domain, Foo.class, Foo.class);
-        LogicalComponent<CompositeImplementation> parent = createComposite("parent", composite);
+        LogicalCompositeComponent composite = createWiredComposite(domain, Foo.class, Foo.class);
+        LogicalCompositeComponent parent = createComposite("parent", composite);
         parent.addComponent(composite);
         parent.getDefinition().getImplementation().getComponentType().add(composite.getDefinition());
         resolver.resolve(parent);
@@ -95,7 +96,7 @@ public class DefaultWireResolverTestCase extends TestCase {
     }
 
     public void testAutowireIncludeInComposite() throws Exception {
-        LogicalComponent<CompositeImplementation> composite = createComposite("composite", domain);
+        LogicalCompositeComponent composite = createComposite("composite", domain);
         LogicalComponent<?> source = createSourceAtomic(Foo.class, composite);
         composite.addComponent(source);
         LogicalComponent<?> target = createTargetAtomic(Foo.class, composite);
@@ -104,8 +105,8 @@ public class DefaultWireResolverTestCase extends TestCase {
     }
 
     public void testAutowireToSiblingIncludeInComposite() throws Exception {
-        LogicalComponent<CompositeImplementation> parent = createComposite("parent", null);
-        LogicalComponent<CompositeImplementation> composite = createComposite("composite", parent);
+        LogicalCompositeComponent parent = createComposite("parent", null);
+        LogicalCompositeComponent composite = createComposite("composite", parent);
         LogicalComponent<?> source = createSourceAtomic(Foo.class, composite);
         composite.addComponent(source);
         LogicalComponent<?> target = createTargetAtomic(Foo.class, composite);
@@ -120,13 +121,13 @@ public class DefaultWireResolverTestCase extends TestCase {
         resolver = new DefaultWireResolver();
         URI domainUri = URI.create("fabric3://./runtime");
         URI runtimeUri = URI.create("runtime");
-        domain = new LogicalComponent<CompositeImplementation>(domainUri, runtimeUri, null, null);
+        domain = new LogicalCompositeComponent(domainUri, runtimeUri, null, null);
     }
 
-    private LogicalComponent<CompositeImplementation> createWiredComposite(LogicalComponent<CompositeImplementation> parent,
+    private LogicalCompositeComponent createWiredComposite(LogicalCompositeComponent parent,
                                                                            Class<?> sourceClass,
                                                                            Class<?> targetClass) {
-        LogicalComponent<CompositeImplementation> composite = createComposite("composite", parent);
+        LogicalCompositeComponent composite = createComposite("composite", parent);
         LogicalComponent<?> source = createSourceAtomic(sourceClass, composite);
         composite.addComponent(source);
         Composite type = composite.getDefinition().getImplementation().getComponentType();
@@ -137,7 +138,7 @@ public class DefaultWireResolverTestCase extends TestCase {
         return composite;
     }
 
-    private LogicalComponent<CompositeImplementation> createComposite(String uri, LogicalComponent<CompositeImplementation> parent) {
+    private LogicalCompositeComponent createComposite(String uri, LogicalCompositeComponent parent) {
         URI parentUri = URI.create(uri);
         Composite type = new Composite(null);
         CompositeImplementation impl = new CompositeImplementation();
@@ -146,10 +147,10 @@ public class DefaultWireResolverTestCase extends TestCase {
                 new ComponentDefinition<CompositeImplementation>(parentUri.toString());
         definition.setImplementation(impl);
         URI id = URI.create("runtime");
-        return new LogicalComponent<CompositeImplementation>(parentUri, id, definition, parent);
+        return new LogicalCompositeComponent(parentUri, id, definition, parent);
     }
 
-    private LogicalComponent<?> createSourceAtomic(Class<?> requiredInterface, LogicalComponent<CompositeImplementation> parent) {
+    private LogicalComponent<?> createSourceAtomic(Class<?> requiredInterface, LogicalCompositeComponent parent) {
 
         ServiceContract contract = new JavaServiceContract(requiredInterface);
         ReferenceDefinition referenceDefinition = new ReferenceDefinition("ref", contract);
@@ -172,7 +173,7 @@ public class DefaultWireResolverTestCase extends TestCase {
         return component;
     }
 
-    private LogicalComponent<?> createTargetAtomic(Class<?> serviceInterface, LogicalComponent<CompositeImplementation> parent) {
+    private LogicalComponent<?> createTargetAtomic(Class<?> serviceInterface, LogicalCompositeComponent parent) {
         URI uri = URI.create("target");
         JavaServiceContract contract = new JavaServiceContract(serviceInterface);
         ServiceDefinition service = new ServiceDefinition("service", contract);

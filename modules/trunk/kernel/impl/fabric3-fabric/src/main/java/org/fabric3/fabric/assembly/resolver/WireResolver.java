@@ -18,8 +18,8 @@
  */
 package org.fabric3.fabric.assembly.resolver;
 
-import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 
@@ -54,7 +54,6 @@ public interface WireResolver {
      * @param composite        the composite to resolve against
      * @throws ResolutionException if an error occuurs during resolution
      */
-    public void resolveReference(LogicalReference logicalReference, LogicalComponent<CompositeImplementation> composite)
-            throws ResolutionException;
+    public void resolveReference(LogicalReference logicalReference, LogicalCompositeComponent composite) throws ResolutionException;
 
 }

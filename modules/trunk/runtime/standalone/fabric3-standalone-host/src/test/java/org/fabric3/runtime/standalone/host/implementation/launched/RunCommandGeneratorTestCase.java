@@ -30,6 +30,7 @@ import org.fabric3.spi.command.Command;
 import org.fabric3.spi.command.CommandSet;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 
 /**
  * @version $Rev$ $Date$
@@ -40,7 +41,7 @@ public class RunCommandGeneratorTestCase extends TestCase {
     private static final URI CHILD = URI.create("parent/child");
     private static final URI LAUNCHED2 = URI.create("parent/child/launched");
     private RunCommandGenerator generator;
-    private LogicalComponent<CompositeImplementation> composite;
+    private LogicalCompositeComponent composite;
 
     public void testHierarchyGeneration() throws Exception {
         CommandSet commandSet = new CommandSet();
@@ -60,9 +61,8 @@ public class RunCommandGeneratorTestCase extends TestCase {
         generator = new RunCommandGenerator(null);
 
         ComponentDefinition<CompositeImplementation> parentDefinition = createComposite("parent");
-        composite = new LogicalComponent<CompositeImplementation>(PARENT, PARENT, parentDefinition, null);
-        LogicalComponent<CompositeImplementation> childComposite =
-                new LogicalComponent<CompositeImplementation>(CHILD, CHILD, parentDefinition, composite);
+        composite = new LogicalCompositeComponent(PARENT, PARENT, parentDefinition, null);
+        LogicalCompositeComponent childComposite = new LogicalCompositeComponent(CHILD, CHILD, parentDefinition, composite);
 
         ComponentDefinition<Launched> launched2Def = createLaunched("launched2");
         LogicalComponent<Launched> launched2 =

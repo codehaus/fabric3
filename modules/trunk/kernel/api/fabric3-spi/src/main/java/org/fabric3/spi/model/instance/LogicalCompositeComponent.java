@@ -27,7 +27,7 @@ public class LogicalCompositeComponent extends LogicalComponent<CompositeImpleme
     public LogicalCompositeComponent(URI uri, 
                                      URI runtimeId, 
                                      ComponentDefinition<CompositeImplementation> definition, 
-                                     LogicalComponent<CompositeImplementation> parent) {
+                                     LogicalCompositeComponent parent) {
         super(uri, runtimeId, definition, parent);
     }
     
