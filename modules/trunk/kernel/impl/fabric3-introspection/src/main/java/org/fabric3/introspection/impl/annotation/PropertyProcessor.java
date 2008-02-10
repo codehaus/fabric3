@@ -16,6 +16,7 @@
  */
 package org.fabric3.introspection.impl.annotation;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -43,15 +44,22 @@ public class PropertyProcessor<I extends Implementation<? extends InjectingCompo
 
     public void visitField(Property annotation, Field field, I implementation, IntrospectionContext context) throws IntrospectionException {
         String name = helper.getSiteName(field, annotation.name());
-        createDefinition(implementation.getComponentType(), name, field.getType(), annotation.required(), new MemberSite(field));
+        createDefinition(implementation.getComponentType(), name, annotation.required(), field.getType(), new MemberSite(field));
     }
 
     public void visitMethod(Property annotation, Method method, I implementation, IntrospectionContext context) throws IntrospectionException {
         String name = helper.getSiteName(method, annotation.name());
-        createDefinition(implementation.getComponentType(), name, helper.getType(method), annotation.required(), new MemberSite(method));
+        createDefinition(implementation.getComponentType(), name, annotation.required(), helper.getType(method), new MemberSite(method));
     }
 
-    <T> void createDefinition(InjectingComponentType componentType, String name, Class<T> type, boolean required, MemberSite memberSite) {
+    public void visitConstructorParameter(Property annotation, Constructor<?> constructor, int index, I implementation, IntrospectionContext context)
+            throws IntrospectionException {
+        String name = helper.getSiteName(constructor, index, annotation.name());
+        Class<?> type = helper.getType(constructor, index);
+        createDefinition(implementation.getComponentType(), name, annotation.required(), type, new MemberSite(constructor));
+    }
+
+    <T> void createDefinition(InjectingComponentType componentType, String name, boolean required, Class<T> type, MemberSite memberSite) {
         org.fabric3.scdl.Property<T> property = new org.fabric3.scdl.Property<T>();
         property.setName(name);
         property.setJavaType(type);

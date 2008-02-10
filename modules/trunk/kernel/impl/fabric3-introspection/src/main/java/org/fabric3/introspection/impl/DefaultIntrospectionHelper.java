@@ -42,11 +42,28 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
         if (override != null && override.length() != 0) {
             return override;
         }
+
         String name = setter.getName();
         if (name.length() > 3 && name.startsWith("set")) {
-            name = Character.toLowerCase(name.charAt(3)) + name.substring(4);
+            return Character.toLowerCase(name.charAt(3)) + name.substring(4);
+        } else {
+            return name;
         }
-        return name;
+    }
+
+    public String getSiteName(Constructor<?> constructor, int index, String override) throws IntrospectionException {
+        if (override != null && override.length() != 0) {
+            return override;
+        }
+
+        org.osoa.sca.annotations.Constructor annotation = constructor.getAnnotation(org.osoa.sca.annotations.Constructor.class);
+        if (annotation != null) {
+            String[] names = annotation.value();
+            if (names != null && names.length > index) {
+                return names[index];
+            }
+        }
+        return "<init>[" + index + ']';
     }
 
     public Type getGenericType(Method setter) throws IntrospectionException {

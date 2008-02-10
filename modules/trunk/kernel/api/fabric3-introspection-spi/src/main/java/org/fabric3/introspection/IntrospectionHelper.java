@@ -16,10 +16,10 @@
  */
 package org.fabric3.introspection;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.lang.reflect.Constructor;
 
 /**
  * Helper service that provides support methods to simplify introspection.
@@ -48,6 +48,17 @@ public interface IntrospectionHelper {
     String getSiteName(Method setter, String override) throws IntrospectionException;
 
     /**
+     * Derive the name of an injection site from a setter method.
+     *
+     * @param constructor the constructor to inspect
+     * @param index       the index of the constructor parameter to inspect
+     * @param override    an override specified in an annotation
+     * @return the name of the injection site
+     * @throws IntrospectionException if the method is not a valid injection site
+     */
+    String getSiteName(Constructor<?> constructor, int index, String override) throws IntrospectionException;
+
+    /**
      * Returns the generic type of a setter method.
      *
      * @param setter the method to inspect
@@ -70,7 +81,7 @@ public interface IntrospectionHelper {
      * Returns the generic type of a constructor parameter.
      *
      * @param constructor the constructor to inspect
-     * @param index  the parameter index
+     * @param index       the parameter index
      * @return the type of value the constructor injects
      * @throws IntrospectionException if there was a problem determining the type
      */
@@ -99,7 +110,7 @@ public interface IntrospectionHelper {
      * Returns the raw type of a constructor parameter.
      *
      * @param constructor the constructor to inspect
-     * @param index  the parameter index
+     * @param index       the parameter index
      * @return the type of value the constructor injects
      * @throws IntrospectionException if there was a problem determining the type
      */
@@ -107,7 +118,7 @@ public interface IntrospectionHelper {
 
     /**
      * Returns true if the supplied type should be treated as many-valued.
-     *
+     * <p/>
      * This is generally true for arrays, Collection or Map types.
      *
      * @param type the type to check

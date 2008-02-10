@@ -19,6 +19,7 @@ package org.fabric3.introspection.impl.annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.lang.reflect.Constructor;
 
 import org.osoa.sca.annotations.Reference;
 
@@ -60,6 +61,13 @@ public class ReferenceProcessor<I extends Implementation<? extends InjectingComp
 
         String name = helper.getSiteName(method, annotation.name());
         createDefinition(implementation.getComponentType(), name, annotation.required(), helper.getGenericType(method), new MemberSite(method));
+    }
+
+    public void visitConstructorParameter(Reference annotation, Constructor<?> constructor, int index, I implementation, IntrospectionContext context)
+            throws IntrospectionException {
+        String name = helper.getSiteName(constructor, index, annotation.name());
+        Type type = helper.getGenericType(constructor, index);
+        createDefinition(implementation.getComponentType(), name, annotation.required(), type, new MemberSite(constructor));
     }
 
     void createDefinition(InjectingComponentType componentType, String name, boolean required, Type type, MemberSite site) throws IntrospectionException {
