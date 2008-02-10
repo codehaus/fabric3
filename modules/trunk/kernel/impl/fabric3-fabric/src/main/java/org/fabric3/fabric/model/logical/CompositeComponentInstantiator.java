@@ -96,20 +96,25 @@ public class CompositeComponentInstantiator extends AbstractComponentInstantiato
         
     }
 
-    private <I extends Implementation<?>> void instantiateCompositeServices(LogicalComponent<I> component,
-                                                                            Composite composite) {
-        ComponentDefinition<I> definition = component.getDefinition();
+    private void instantiateCompositeServices(LogicalCompositeComponent component, Composite composite) {
+        
+        ComponentDefinition<CompositeImplementation> definition = component.getDefinition();
         String uriBase = component.getUri().toString() + "/";
+        
         for (CompositeService service : composite.getServices().values()) {
+            
             String name = service.getName();
             URI serviceUri = component.getUri().resolve('#' + name);
             LogicalService logicalService = new LogicalService(serviceUri, service, component);
+            
             if (service.getPromote() != null) {
                 logicalService.setPromote(URI.create(uriBase + service.getPromote()));
             }
+            
             for (BindingDefinition binding : service.getBindings()) {
                 logicalService.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalService));
             }
+            
             ComponentService componentService = definition.getServices().get(name);
             if (componentService != null) {
                 // Merge/override logical reference configuration created above with service configuration on the
@@ -124,32 +129,38 @@ public class CompositeComponentInstantiator extends AbstractComponentInstantiato
                     logicalService.overrideBindings(bindings);
                 }
             }
+            
             component.addService(logicalService);
+            
         }
+        
     }
 
-    private <I extends Implementation<?>> void instantiateCompositeReferences(
-            LogicalComponent<CompositeImplementation> parent,
-            LogicalComponent<I> component,
-            Composite composite) {
+    private void instantiateCompositeReferences(LogicalCompositeComponent parent, LogicalCompositeComponent component, Composite composite) {
 
-        ComponentDefinition<I> definition = component.getDefinition();
+        ComponentDefinition<CompositeImplementation> definition = component.getDefinition();
         String uriBase = component.getUri().toString() + "/";
 
         // create logical references based on promoted references in the composite definition
         for (CompositeReference reference : composite.getReferences().values()) {
+            
             String name = reference.getName();
             URI referenceUri = component.getUri().resolve('#' + name);
             LogicalReference logicalReference = new LogicalReference(referenceUri, reference, component);
+            
             for (BindingDefinition binding : reference.getBindings()) {
                 logicalReference.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalReference));
             }
+            
             for (URI promotedUri : reference.getPromoted()) {
                 URI resolvedUri = URI.create(uriBase + promotedUri.toString());
                 logicalReference.addPromotedUri(resolvedUri);
             }
+            
             ComponentReference componentReference = definition.getReferences().get(name);
+            
             if (componentReference != null) {
+                
                 // Merge/override logical reference configuration created above with reference configuration on the
                 // composite use. For example, when the component is used as an implementation, it may contain
                 // reference configuration. This information must be merged with or used to override any
@@ -161,6 +172,7 @@ public class CompositeComponentInstantiator extends AbstractComponentInstantiato
                     }
                     logicalReference.overrideBindings(bindings);
                 }
+                
                 if (!componentReference.getTargets().isEmpty()) {
                     List<URI> targets = new ArrayList<URI>();
                     for (URI targetUri : componentReference.getTargets()) {
@@ -169,8 +181,11 @@ public class CompositeComponentInstantiator extends AbstractComponentInstantiato
                     }
                     logicalReference.overrideTargets(targets);
                 }
+                
             }
+            
             component.addReference(logicalReference);
+            
         }
     }
 
