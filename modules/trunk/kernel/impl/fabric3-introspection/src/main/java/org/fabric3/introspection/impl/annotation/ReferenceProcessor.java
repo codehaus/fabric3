@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.introspection.impl;
+package org.fabric3.introspection.impl.annotation;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -35,7 +35,6 @@ import org.fabric3.scdl.InjectingComponentType;
 import org.fabric3.scdl.Multiplicity;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.ValueSource;
 import org.fabric3.scdl.MemberSite;
 
 /**
@@ -71,9 +70,7 @@ public class ReferenceProcessor<I extends Implementation<? extends InjectingComp
         ServiceContract<Type> contract = contractProcessor.introspect(type);
         Multiplicity multiplicity = multiplicity(required, type);
         ReferenceDefinition definition = new ReferenceDefinition(name, contract, multiplicity);
-        ValueSource valueSource = new ValueSource(ValueSource.ValueSourceType.REFERENCE, name);
-        componentType.add(definition);
-        componentType.addInjectionMapping(valueSource, site);
+        componentType.add(definition, site);
     }
 
     /**
