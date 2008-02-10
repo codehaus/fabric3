@@ -27,6 +27,8 @@ import java.util.HashMap;
 public class InjectingComponentType extends AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property<?>, ResourceDefinition> {
 
     private final Map<ValueSource, MemberSite> injectionMappings = new HashMap<ValueSource, MemberSite>();
+    private Signature initMethod;
+    private Signature destroyMethod;
 
     /**
      * Default constructor.
@@ -54,5 +56,41 @@ public class InjectingComponentType extends AbstractComponentType<ServiceDefinit
         super.add(property);
         ValueSource valueSource = new ValueSource(ValueSource.ValueSourceType.PROPERTY, property.getName());
         injectionMappings.put(valueSource, memberSite);
+    }
+
+    /**
+     * Returns the component initializer method.
+     *
+     * @return the component initializer method
+     */
+    public Signature getInitMethod() {
+        return initMethod;
+    }
+
+    /**
+     * Sets the component initializer method.
+     *
+     * @param initMethod the component initializer method
+     */
+    public void setInitMethod(Signature initMethod) {
+        this.initMethod = initMethod;
+    }
+
+    /**
+     * Returns the component destructor method.
+     *
+     * @return the component destructor method
+     */
+    public Signature getDestroyMethod() {
+        return destroyMethod;
+    }
+
+    /**
+     * Sets the component destructor method.
+     *
+     * @param destroyMethod the component destructor method
+     */
+    public void setDestroyMethod(Signature destroyMethod) {
+        this.destroyMethod = destroyMethod;
     }
 }
