@@ -39,11 +39,6 @@ import org.fabric3.spi.wire.Wire;
 public class ServiceProxyHandler implements InvocationHandler {
 
     /**
-     * Wire attached to the servlet.
-     */
-    private Wire wire;
-
-    /**
      * Map of op names to head interceptors.
      */
     private Map<String, InvocationChain> invocationChains;
@@ -51,15 +46,14 @@ public class ServiceProxyHandler implements InvocationHandler {
     /*
     * Creates a new proxy handler.
     */
-    private ServiceProxyHandler(Wire wire, Map<String, InvocationChain> invocationChains) {
-        this.wire = wire;
+    private ServiceProxyHandler(Map<String, InvocationChain> invocationChains) {
         this.invocationChains = invocationChains;
     }
 
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         String methodName = method.getName();
         Interceptor head = invocationChains.get(methodName).getHeadInterceptor();
-        Message input = new MessageImpl(args, false, new SimpleWorkContext(), wire);
+        Message input = new MessageImpl(args, false, new SimpleWorkContext());
         Message output = head.invoke(input);
         if (output.isFault()) {
             throw (Throwable) output.getBody();
@@ -80,7 +74,7 @@ public class ServiceProxyHandler implements InvocationHandler {
     @SuppressWarnings("unchecked")
     public static <T> T newInstance(Class<T> intf, Map<String, InvocationChain> invocationChains, Wire wire) {
         ClassLoader cl = intf.getClassLoader();
-        InvocationHandler handler = new ServiceProxyHandler(wire, invocationChains);
+        InvocationHandler handler = new ServiceProxyHandler(invocationChains);
         return (T) Proxy.newProxyInstance(cl, new Class<?>[]{intf}, handler);
     }
 

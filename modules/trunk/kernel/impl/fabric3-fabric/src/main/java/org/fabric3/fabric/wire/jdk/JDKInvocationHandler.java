@@ -135,7 +135,6 @@ public final class JDKInvocationHandler<B> implements InvocationHandler, Service
         Message msg = new MessageImpl();
         msg.setBody(args);
         msg.setWorkContext(workContext);
-        msg.setWire(wire);
         try {
             // dispatch the wire down the chain and get the response
             Message resp;

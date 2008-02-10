@@ -109,14 +109,6 @@ public class NonBlockingInterceptor implements Interceptor {
             throw new UnsupportedOperationException();
         }
 
-        public Wire getWire() {
-            throw new UnsupportedOperationException();
-        }
-
-        public void setWire(Wire wire) {
-            throw new UnsupportedOperationException();
-        }
-
         public boolean isFault() {
             return false;
         }

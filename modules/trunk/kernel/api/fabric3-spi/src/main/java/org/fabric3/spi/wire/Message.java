@@ -67,17 +67,4 @@ public interface Message {
      */
     void setWorkContext(WorkContext workContext);
 
-    /**
-     * Returns the wire associated with the message.
-     *
-     * @return the wire associated with the message
-     */
-    Wire getWire();
-
-    /**
-     * Sets the wire associated with the message.
-     *
-     * @param wire the wire associated with the message
-     */
-    void setWire(Wire wire);
 }

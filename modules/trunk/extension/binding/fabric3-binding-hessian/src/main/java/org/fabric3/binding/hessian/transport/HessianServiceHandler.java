@@ -37,7 +37,6 @@ import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.spi.wire.MessageImpl;
-import org.fabric3.spi.wire.Wire;
 
 /**
  * Servlet for handling the hessian service requests.
@@ -48,18 +47,13 @@ import org.fabric3.spi.wire.Wire;
 public class HessianServiceHandler extends HttpServlet {
 
     /**
-     * Wire attached to the servlet.
-     */
-    private Wire wire;
-
-    /**
      * Map of op names to operation definitions.
      */
     private Map<String, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops;
 
     /**
-     * The classloader to deserialize parameters in. Referencing the classloader directly is ok given this class must be
-     * cleaned up if the target component associated with the classloader for this service is removed.
+     * The classloader to deserialize parameters in. Referencing the classloader directly is ok given this class must be cleaned up if the target
+     * component associated with the classloader for this service is removed.
      */
     private final ClassLoader classLoader;
 
@@ -68,16 +62,13 @@ public class HessianServiceHandler extends HttpServlet {
     /**
      * Initializes the wire associated with the service.
      *
-     * @param wire        Wire that connects the transport to the component.
-     * @param ops         Map of op names to operation definitions.
-     * @param classLoader the classloader to load parameters in
+     * @param ops               Map of op names to operation definitions.
+     * @param classLoader       the classloader to load parameters in
      * @param serializerFactory the factory for Hessian serializers
      */
-    public HessianServiceHandler(Wire wire,
-                                 Map<String, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops,
+    public HessianServiceHandler(Map<String, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops,
                                  ClassLoader classLoader,
                                  SerializerFactory serializerFactory) {
-        this.wire = wire;
         this.ops = ops;
         this.classLoader = classLoader;
         this.serializerFactory = serializerFactory;
@@ -122,7 +113,7 @@ public class HessianServiceHandler extends HttpServlet {
         }
         hessianInput.completeCall();
 
-        Message input = new MessageImpl(args, false, new SimpleWorkContext(), wire);
+        Message input = new MessageImpl(args, false, new SimpleWorkContext());
 
         Message output = head.invoke(input);
 

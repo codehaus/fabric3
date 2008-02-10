@@ -117,7 +117,7 @@ public class HessianWireAttacher implements SourceWireAttacher<HessianWireSource
         if (loader == null) {
             throw new WiringException("Classloader not found", id.toString());
         }
-        HessianServiceHandler handler = new HessianServiceHandler(wire, ops, loader, serializerFactory);
+        HessianServiceHandler handler = new HessianServiceHandler(ops, loader, serializerFactory);
         URI uri = sourceDefinition.getUri();
         String servicePath = uri.getPath();
         servletHost.registerMapping(servicePath, handler);

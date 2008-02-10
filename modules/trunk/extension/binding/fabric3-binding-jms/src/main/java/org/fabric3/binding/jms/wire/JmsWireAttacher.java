@@ -235,7 +235,6 @@ public class JmsWireAttacher implements SourceWireAttacher<JmsWireSourceDefiniti
                                                                   resCf,
                                                                   ops,
                                                                   correlationScheme,
-                                                                  wire,
                                                                   transactionHandler,
                                                                   transactionType);
             listeners.add(listener);

@@ -131,7 +131,7 @@ public class RmiWireAttacher implements SourceWireAttacher<RmiWireSourceDefiniti
         } catch (NoSuchMethodException nsme) {
             throwWireAttachException(sourceDefinition.getUri(), targetDefinition.getUri(), nsme);
         }
-        RmiServiceHandler handler = new RmiServiceHandler(wire, ops);
+        RmiServiceHandler handler = new RmiServiceHandler(ops);
         Remote proxy = generateProxy(interfaceClass,
                                      handler,
                                      sourceDefinition.getUri(), targetDefinition.getUri());

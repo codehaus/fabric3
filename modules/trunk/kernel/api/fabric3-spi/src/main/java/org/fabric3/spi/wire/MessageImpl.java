@@ -29,16 +29,14 @@ public class MessageImpl implements Message {
     private Object body;
     private boolean isFault;
     private WorkContext workContext;
-    private Wire wire;
 
     public MessageImpl() {
     }
 
-    public MessageImpl(Object body, boolean isFault, WorkContext workContext, Wire wire) {
+    public MessageImpl(Object body, boolean isFault, WorkContext workContext) {
         this.body = body;
         this.isFault = isFault;
         this.workContext = workContext;
-        this.wire = wire;
     }
 
     public Object getBody() {
@@ -67,11 +65,4 @@ public class MessageImpl implements Message {
         this.workContext = workContext;
     }
 
-    public Wire getWire() {
-        return wire;
-    }
-
-    public void setWire(Wire wire) {
-        this.wire = wire;
-    }
 }

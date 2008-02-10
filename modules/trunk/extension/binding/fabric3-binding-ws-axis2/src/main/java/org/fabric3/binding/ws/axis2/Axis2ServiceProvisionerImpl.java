@@ -184,7 +184,7 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
             AxisOperation axisOp = (AxisOperation) i.next();
             InvocationChain invocationChain = interceptors.get(axisOp.getName().getLocalPart());
             // TODO Select message receiver based on MEP
-            MessageReceiver messageReceiver = new InOutServiceProxyHandler(wire, invocationChain, scopeId);
+            MessageReceiver messageReceiver = new InOutServiceProxyHandler(invocationChain, scopeId);
             axisOp.setMessageReceiver(messageReceiver);
         }
         

@@ -138,7 +138,7 @@ public class EjbWireAttacher implements SourceWireAttacher<EjbWireSourceDefiniti
 
         Class interfaceClass = loadClass(sourceDefinition.getInterfaceName(), sourceDefinition.getClassLoaderURI());
 
-        EjbServiceHandler handler = new EjbServiceHandler(wire, ops);
+        EjbServiceHandler handler = new EjbServiceHandler(ops);
 
         Object proxy = Proxy.newProxyInstance(interfaceClass.getClassLoader(),
                                               new Class[]{interfaceClass}, handler);
@@ -170,7 +170,7 @@ public class EjbWireAttacher implements SourceWireAttacher<EjbWireSourceDefiniti
         }
 
         //TODO: we really need an EJB2ServiceHandler to deal with calls to EJBObject
-        EjbServiceHandler handler = new EjbServiceHandler(wire, ops);
+        EjbServiceHandler handler = new EjbServiceHandler(ops);
 
         Object proxy = Proxy.newProxyInstance(interfaceClass.getClassLoader(),
                                               new Class[]{interfaceClass}, handler);

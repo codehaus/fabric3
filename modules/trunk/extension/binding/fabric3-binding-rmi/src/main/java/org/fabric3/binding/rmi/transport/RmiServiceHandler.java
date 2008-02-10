@@ -29,13 +29,8 @@ import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.spi.wire.MessageImpl;
-import org.fabric3.spi.wire.Wire;
 
 public class RmiServiceHandler implements InvocationHandler {
-    /**
-     * Wire attached to the EJB.
-     */
-    private final Wire wire;
 
     /**
      * Map of op names to operation definitions.
@@ -43,8 +38,7 @@ public class RmiServiceHandler implements InvocationHandler {
     private final Map<Method, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops;
 
 
-    public RmiServiceHandler(Wire wire, Map<Method, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops) {
-        this.wire = wire;
+    public RmiServiceHandler(Map<Method, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops) {
         this.ops = ops;
     }
 
@@ -62,7 +56,7 @@ public class RmiServiceHandler implements InvocationHandler {
 
         Interceptor head = ops.get(method).getValue().getHeadInterceptor();
 
-        Message input = new MessageImpl(args, false, new SimpleWorkContext(), wire);
+        Message input = new MessageImpl(args, false, new SimpleWorkContext());
 
         Message output = head.invoke(input);
         if (output.isFault()) {

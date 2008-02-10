@@ -30,16 +30,11 @@ import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.spi.wire.MessageImpl;
-import org.fabric3.spi.wire.Wire;
 
 /**
  * @version $Revision: 1 $ $Date: 2007-05-14 10:40:37 -0700 (Mon, 14 May 2007) $
  */
 public class EjbServiceHandler implements InvocationHandler {
-    /**
-     * Wire attached to the EJB.
-     */
-    private final Wire wire;
 
     /**
      * Map of op names to operation definitions.
@@ -47,8 +42,7 @@ public class EjbServiceHandler implements InvocationHandler {
     private final Map<Signature, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops;
 
 
-    public EjbServiceHandler(Wire wire, Map<Signature, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops) {
-        this.wire = wire;
+    public EjbServiceHandler(Map<Signature, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops) {
         this.ops = ops;
     }
 
@@ -68,7 +62,7 @@ public class EjbServiceHandler implements InvocationHandler {
         Signature signature = new Signature(method);
         Interceptor head = ops.get(signature).getValue().getHeadInterceptor();
 
-        Message input = new MessageImpl(args, false, new SimpleWorkContext(), wire);
+        Message input = new MessageImpl(args, false, new SimpleWorkContext());
 
         Message output = head.invoke(input);
         if (output.isFault()) {

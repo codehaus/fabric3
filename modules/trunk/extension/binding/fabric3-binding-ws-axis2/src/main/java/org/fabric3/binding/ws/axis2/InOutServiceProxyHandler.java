@@ -19,12 +19,11 @@
 
 package org.fabric3.binding.ws.axis2;
 
+import java.net.URI;
 import java.security.Principal;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Vector;
-import java.net.URI;
-
 import javax.security.auth.Subject;
 
 import org.apache.axiom.om.OMElement;
@@ -38,13 +37,13 @@ import org.apache.ws.security.WSSecurityEngineResult;
 import org.apache.ws.security.handler.WSHandlerConstants;
 import org.apache.ws.security.handler.WSHandlerResult;
 import org.apache.ws.security.util.WSSecurityUtil;
+
 import org.fabric3.extension.component.SimpleWorkContext;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.spi.wire.MessageImpl;
-import org.fabric3.spi.wire.Wire;
-import org.fabric3.scdl.Scope;
 
 /**
  * Proxy handler for the invocation.
@@ -53,30 +52,21 @@ import org.fabric3.scdl.Scope;
  */
 public class InOutServiceProxyHandler extends AbstractInOutMessageReceiver {
 
-    private final Wire wire;
     private final InvocationChain invocationChain;
     private final URI scopeId;
 
     /**
-     * @param wire Wire which is proxied.
      * @param invocationChain the invocation chain to invoke
-     * @param scopeId the id of the composite scope to use
+     * @param scopeId         the id of the composite scope to use
      */
-    public InOutServiceProxyHandler(Wire wire, InvocationChain invocationChain, URI scopeId) {
-        
-        this.wire = wire;
+    public InOutServiceProxyHandler(InvocationChain invocationChain, URI scopeId) {
         this.invocationChain = invocationChain;
         this.scopeId = scopeId;
-        
     }
 
-    /**
-     * @see org.apache.axis2.receivers.AbstractInOutMessageReceiver#invokeBusinessLogic(org.apache.axis2.context.MessageContext, 
-     *                                                                                  org.apache.axis2.context.MessageContext)
-     */
     @Override
     public void invokeBusinessLogic(MessageContext inMessage, MessageContext outMessage) throws AxisFault {
-        
+
         Interceptor head = invocationChain.getHeadInterceptor();
         OMElement bodyContent = getInBodyContent(inMessage);
 
@@ -85,78 +75,78 @@ public class InOutServiceProxyHandler extends AbstractInOutMessageReceiver {
         //Attach authenticated Subject to work context
         attachSubjectToWorkContext(workContext, inMessage);
 
-        Message input = new MessageImpl(new Object[] {bodyContent}, false, workContext, wire);
-        
+        Message input = new MessageImpl(new Object[]{bodyContent}, false, workContext);
+
         Message ret = head.invoke(input);
         OMElement resObject = (OMElement) ret.getBody();
-        
+
         SOAPFactory fac = getSOAPFactory(inMessage);
 
         SOAPEnvelope envelope = fac.getDefaultEnvelope();
-        
+
         envelope.getBody().addChild(resObject);
-        
+
         outMessage.setEnvelope(envelope);
-        
+
     }
-    
+
     /**
      * Attaches the Security principal found after axis2/wss4j security processing to work context.
-     * 
+     *
+     * @param workContext f3 work context
+     * @param inMessage   In coming axis2 message context
      * @see org.apache.ws.security.processor.SignatureProcessor
      * @see org.apache.rampart.handler.RampartReceiver
-     * 
-     * @param workContext f3 work context
-     * @param inMessage In coming axis2 message context
      */
-    private void attachSubjectToWorkContext(SimpleWorkContext workContext, MessageContext inMessage){
+    private void attachSubjectToWorkContext(SimpleWorkContext workContext, MessageContext inMessage) {
         Vector<WSHandlerResult> wsHandlerResults = (Vector<WSHandlerResult>) inMessage.getProperty(WSHandlerConstants.RECV_RESULTS);
-        
+
         // Iterate over principals
-        if((wsHandlerResults != null) && (wsHandlerResults.size() > 0)) {
+        if ((wsHandlerResults != null) && (wsHandlerResults.size() > 0)) {
             HashSet<Principal> principals = new HashSet<Principal>();
-            
+
             for (WSHandlerResult wsHandlerResult : wsHandlerResults) {//Iterate through all wsHandler results to find Principals
                 Principal foundPrincipal = null;
                 WSSecurityEngineResult signResult = WSSecurityUtil.fetchActionResult(wsHandlerResult.getResults(), WSConstants.UT);
-                if(signResult == null) {
+                if (signResult == null) {
                     signResult = WSSecurityUtil.fetchActionResult(wsHandlerResult.getResults(), WSConstants.SIGN);
                 }
-                
-                if(signResult != null) {
+
+                if (signResult != null) {
                     foundPrincipal = (Principal) signResult.get(WSSecurityEngineResult.TAG_PRINCIPAL);
                 }
-                
+
                 //Create Subject with principal found
-                if(foundPrincipal != null) {
-                    principals.add(foundPrincipal);;
+                if (foundPrincipal != null) {
+                    principals.add(foundPrincipal);
+                    ;
                 }
-            }            
-            
-            if(principals.size() > 0 ) {// If we have found principals then set newly created Subject on work context
+            }
+
+            if (principals.size() > 0) {// If we have found principals then set newly created Subject on work context
                 workContext.setSubject(new Subject(false, principals, new HashSet<Principal>(), new HashSet<Principal>()));
             }
-        }        
+        }
     }
 
     /*
      * Gets the body content of the incoming message.
      */
     private OMElement getInBodyContent(MessageContext inMessage) {
-        
+
         SOAPEnvelope envelope = inMessage.getEnvelope();
-        
+
         OMElement child = null;
         Iterator<?> children = envelope.getChildElements();
-        while(children.hasNext()) {
+        while (children.hasNext()) {
             child = (OMElement) children.next();
-            if("Body".equals(child.getLocalName())) {
+            if ("Body".equals(child.getLocalName())) {
                 break;
             }
         }
         OMElement bodyContent = child.getFirstElement();
         return bodyContent;
-        
+
     }
 
 }

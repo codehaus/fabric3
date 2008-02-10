@@ -22,7 +22,6 @@ package org.fabric3.binding.jms.transport;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
@@ -43,11 +42,10 @@ import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.MessageImpl;
-import org.fabric3.spi.wire.Wire;
 
 /**
  * Message listeher for service requests.
- * 
+ *
  * @version $Revison$ $Date$
  */
 public class Fabric3MessageListener implements MessageListener {
@@ -66,47 +64,40 @@ public class Fabric3MessageListener implements MessageListener {
      * Operations available on the contract.
      */
     private Map<String, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops;
-    
+
     /**
      * Correlation scheme.
      */
     private CorrelationScheme correlationScheme;
-    
-    /**
-     * Wire.
-     */
-    private Wire wire;
-    
+
     /**
      * Transaction handler.
      */
     private TransactionHandler transactionHandler;
-    
+
     /**
      * Transaction type.
      */
     private TransactionType transactionType;
-    
+
     /**
-     * @param destination Destination for sending responses.
-     * @param connectionFactory Connection factory for sending responses.
-     * @param ops Map of operation definitions.
-     * @param correlationScheme Correlation scheme.
-     * @param wire Wire associated with this listener.
+     * @param destination        Destination for sending responses.
+     * @param connectionFactory  Connection factory for sending responses.
+     * @param ops                Map of operation definitions.
+     * @param correlationScheme  Correlation scheme.
      * @param transactionHandler Transaction handler.
+     * @param transactionType    the type of transaction
      */
     public Fabric3MessageListener(Destination destination,
                                   ConnectionFactory connectionFactory,
                                   Map<String, Entry<PhysicalOperationDefinition, InvocationChain>> ops,
                                   CorrelationScheme correlationScheme,
-                                  Wire wire,
                                   TransactionHandler transactionHandler,
                                   TransactionType transactionType) {
         this.destination = destination;
         this.connectionFactory = connectionFactory;
         this.ops = ops;
         this.correlationScheme = correlationScheme;
-        this.wire = wire;
         this.transactionHandler = transactionHandler;
         this.transactionType = transactionType;
     }
@@ -115,48 +106,48 @@ public class Fabric3MessageListener implements MessageListener {
      * @see javax.jms.MessageListener#onMessage(javax.jms.Message)
      */
     public void onMessage(Message request) {
-        
+
         Connection connection = null;
-        
+
         try {
 
             String opName = request.getStringProperty("scaOperationName");
             Interceptor interceptor = getInterceptor(opName);
-            
+
             ObjectMessage objectMessage = (ObjectMessage) request;
             Object[] payload = (Object[]) objectMessage.getObject();
-            
-            org.fabric3.spi.wire.Message inMessage = new MessageImpl(payload, false, new SimpleWorkContext(), wire);
+
+            org.fabric3.spi.wire.Message inMessage = new MessageImpl(payload, false, new SimpleWorkContext());
             org.fabric3.spi.wire.Message outMessage = interceptor.invoke(inMessage);
-            
+
             connection = connectionFactory.createConnection();
             Session session = connection.createSession(true, Session.SESSION_TRANSACTED);
-            
-            if(transactionType == TransactionType.GLOBAL) {
+
+            if (transactionType == TransactionType.GLOBAL) {
                 transactionHandler.enlist(session);
             }
-            
+
             MessageProducer producer = session.createProducer(destination);
             Message response = session.createObjectMessage((Serializable) outMessage.getBody());
-            
-            switch(correlationScheme) {
-                case RequestCorrelIDToCorrelID: {
-                    response.setStringProperty("JMSCorrelationID", request.getJMSCorrelationID());
-                    break;
-                }
-                case RequestMsgIDToCorrelID: {
-                    response.setStringProperty("JMSCorrelationID", request.getJMSMessageID());
-                    break;
-                }
+
+            switch (correlationScheme) {
+            case RequestCorrelIDToCorrelID: {
+                response.setStringProperty("JMSCorrelationID", request.getJMSCorrelationID());
+                break;
             }
-            
+            case RequestMsgIDToCorrelID: {
+                response.setStringProperty("JMSCorrelationID", request.getJMSMessageID());
+                break;
+            }
+            }
+
             producer.send(response);
-            
-            if(transactionType == TransactionType.LOCAL) {
+
+            if (transactionType == TransactionType.LOCAL) {
                 session.commit();
             }
-            
-        } catch(JMSException ex) {
+
+        } catch (JMSException ex) {
             throw new Fabric3JmsException("Unable to send response", ex);
         } finally {
             JmsHelper.closeQuietly(connection);
@@ -168,17 +159,17 @@ public class Fabric3MessageListener implements MessageListener {
      * Finds the matching interceptor.
      */
     private Interceptor getInterceptor(String opName) {
-        
-        if(ops.size() == 1) {
+
+        if (ops.size() == 1) {
             return ops.values().iterator().next().getValue().getHeadInterceptor();
-        } else if(opName != null && ops.containsKey(opName)) {
+        } else if (opName != null && ops.containsKey(opName)) {
             return ops.get(opName).getValue().getHeadInterceptor();
-        } else if(ops.containsKey("onMessage")) {
+        } else if (ops.containsKey("onMessage")) {
             return ops.get("onMessage").getValue().getHeadInterceptor();
         } else {
             throw new Fabric3JmsException("Unable to match operation on the service contract");
         }
-        
+
     }
 
 }

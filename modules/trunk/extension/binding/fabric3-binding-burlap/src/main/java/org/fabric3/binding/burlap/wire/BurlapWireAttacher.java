@@ -34,6 +34,7 @@ import org.fabric3.binding.burlap.model.physical.BurlapWireTargetDefinition;
 import org.fabric3.binding.burlap.transport.BurlapServiceHandler;
 import org.fabric3.binding.burlap.transport.BurlapTargetInterceptor;
 import org.fabric3.monitor.MonitorFactory;
+import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
@@ -47,7 +48,6 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
-import org.fabric3.spi.ObjectFactory;
 
 /**
  * Wire attacher for Hessian binding.
@@ -55,7 +55,7 @@ import org.fabric3.spi.ObjectFactory;
  * @version $Revision$ $Date$
  */
 @EagerInit
-@Service(interfaces={SourceWireAttacher.class, TargetWireAttacher.class})
+@Service(interfaces = {SourceWireAttacher.class, TargetWireAttacher.class})
 public class BurlapWireAttacher implements SourceWireAttacher<BurlapWireSourceDefinition>, TargetWireAttacher<BurlapWireTargetDefinition> {
     private final SourceWireAttacherRegistry sourceWireAttacherRegistry;
     private final TargetWireAttacherRegistry targetWireAttacherRegistry;
@@ -113,7 +113,7 @@ public class BurlapWireAttacher implements SourceWireAttacher<BurlapWireSourceDe
         if (loader == null) {
             throw new WiringException("Classloader not found", id.toString());
         }
-        BurlapServiceHandler handler = new BurlapServiceHandler(wire, ops, loader);
+        BurlapServiceHandler handler = new BurlapServiceHandler(ops, loader);
         URI uri = sourceDefinition.getUri();
         String servicePath = uri.getPath();
         servletHost.registerMapping(servicePath, handler);
