@@ -18,10 +18,7 @@ package org.fabric3.introspection.impl.annotation;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.Map;
 
 import org.osoa.sca.annotations.Reference;
 
@@ -32,10 +29,10 @@ import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.InjectingComponentType;
+import org.fabric3.scdl.MemberSite;
 import org.fabric3.scdl.Multiplicity;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.MemberSite;
 
 /**
  * @version $Rev$ $Date$
@@ -62,11 +59,10 @@ public class ReferenceProcessor<I extends Implementation<? extends InjectingComp
             throws IntrospectionException {
 
         String name = helper.getSiteName(method, annotation.name());
-        createDefinition(implementation.getComponentType(), name, annotation.required(), helper.getType(method), new MemberSite(method));
+        createDefinition(implementation.getComponentType(), name, annotation.required(), helper.getGenericType(method), new MemberSite(method));
     }
 
     void createDefinition(InjectingComponentType componentType, String name, boolean required, Type type, MemberSite site) throws IntrospectionException {
-
         ServiceContract<Type> contract = contractProcessor.introspect(type);
         Multiplicity multiplicity = multiplicity(required, type);
         ReferenceDefinition definition = new ReferenceDefinition(name, contract, multiplicity);
@@ -81,12 +77,7 @@ public class ReferenceProcessor<I extends Implementation<? extends InjectingComp
      * @return the multiplicity of the type
      */
     Multiplicity multiplicity(boolean required, Type type) {
-        if (type instanceof ParameterizedType) {
-            ParameterizedType parameterizedType = (ParameterizedType) type;
-            type = parameterizedType.getRawType();
-        }
-        Class<?> clazz = (Class<?>) type;
-        if (clazz.isArray() || clazz.isAssignableFrom(Collection.class) || clazz.isAssignableFrom(Map.class)) {
+        if (helper.isManyValued(type)) {
             return required ? Multiplicity.ONE_N : Multiplicity.ZERO_N;
         } else {
             return required ? Multiplicity.ONE_ONE : Multiplicity.ZERO_ONE;

@@ -34,7 +34,6 @@ public class InjectingComponentType extends AbstractComponentType<ServiceDefinit
     public InjectingComponentType() {
     }
 
-
     /**
      * Add a reference and associate with an injection site.
      * @param reference the reference to add
@@ -43,6 +42,17 @@ public class InjectingComponentType extends AbstractComponentType<ServiceDefinit
     public void add(ReferenceDefinition reference, MemberSite memberSite) {
         super.add(reference);
         ValueSource valueSource = new ValueSource(ValueSource.ValueSourceType.REFERENCE, reference.getName());
+        injectionMappings.put(valueSource, memberSite);
+    }
+
+    /**
+     * Add a property and associate with an injection site.
+     * @param property the property to add
+     * @param memberSite the injection site for the property
+     */
+    public void add(Property<?> property, MemberSite memberSite) {
+        super.add(property);
+        ValueSource valueSource = new ValueSource(ValueSource.ValueSourceType.PROPERTY, property.getName());
         injectionMappings.put(valueSource, memberSite);
     }
 }

@@ -20,6 +20,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.ParameterizedType;
+import java.util.Collection;
+import java.util.Map;
 
 import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.IntrospectionHelper;
@@ -46,15 +49,36 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
         return name;
     }
 
-    public Type getType(Method setter) throws IntrospectionException {
-        return getType(setter, 0);
+    public Type getGenericType(Method setter) throws IntrospectionException {
+        return getGenericType(setter, 0);
     }
 
-    public Type getType(Method method, int index) throws IntrospectionException {
+    public Type getGenericType(Method method, int index) throws IntrospectionException {
         return method.getGenericParameterTypes()[index];
     }
 
-    public Type getType(Constructor<?> constructor, int index) throws IntrospectionException {
+    public Type getGenericType(Constructor<?> constructor, int index) throws IntrospectionException {
         return constructor.getGenericParameterTypes()[index];
+    }
+
+    public Class<?> getType(Method setter) throws IntrospectionException {
+        return getType(setter, 0);
+    }
+
+    public Class<?> getType(Method method, int index) throws IntrospectionException {
+        return method.getParameterTypes()[index];
+    }
+
+    public Class<?> getType(Constructor<?> constructor, int index) throws IntrospectionException {
+        return constructor.getParameterTypes()[index];
+    }
+
+    public boolean isManyValued(Type type) {
+        if (type instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = (ParameterizedType) type;
+            type = parameterizedType.getRawType();
+        }
+        Class<?> clazz = (Class<?>) type;
+        return clazz.isArray() || clazz.isAssignableFrom(Collection.class) || clazz.isAssignableFrom(Map.class);
     }
 }
