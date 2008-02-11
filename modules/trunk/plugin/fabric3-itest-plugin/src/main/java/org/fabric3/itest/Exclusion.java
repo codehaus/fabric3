@@ -19,25 +19,5 @@ package org.fabric3.itest;
 /**
  * @version $Revision$ $Date$
  */
-public class Exclusion {
-
-    private String groupId;
-    private String artifactId;
-
-    public String getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(String groupId) {
-        this.groupId = groupId;
-    }
-
-    public String getArtifactId() {
-        return artifactId;
-    }
-
-    public void setArtifactId(String artifactId) {
-        this.artifactId = artifactId;
-    }
-
+public class Exclusion extends org.apache.maven.model.Exclusion {
 }
