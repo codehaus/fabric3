@@ -29,20 +29,6 @@
     <name>Fabric3 EJB Binding</name>
     <description>Fabric3 EJB Binding Implementation.</description>
 
-    <repositories>
-        <repository>
-            <id>objectstyle.org</id>
-            <name>Object Style</name>
-            <url>http://objectstyle.org/maven2/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-
     <dependencies>
 
         <dependency>
