@@ -18,86 +18,10 @@
  */
 package org.fabric3.itest;
 
-import java.net.URI;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.factory.ArtifactFactory;
-
 /**
- * Represents a configured Fabric3 dependency for boot and extension libraries.
+ * Local subclass of Maven's dependency as Plexus looks for elements in the same package.
  *
  * @version $Rev$ $Date$
  */
-public class Dependency {
-
-    private String groupId;
-    private String artifactId;
-    private String version;
-    private String type = "jar";
-    private Set<Exclusion> exclusions = new HashSet<Exclusion>();
-
-
-
-    /**
-     * Default constructor.
-     */
-    public Dependency() {
-    }
-
-    /**
-     * Initializes the field.
-     *
-     * @param groupId    Group id.
-     * @param artifactId Artifact id.
-     * @param version    Artifact version.
-     */
-    public Dependency(String groupId, String artifactId, String version, Set<Exclusion> exclusions) {
-        super();
-        this.groupId = groupId;
-        this.artifactId = artifactId;
-        this.version = version;
-        this.exclusions = exclusions;
-    }
-
-    /**
-     * Gets the artifact using the specified artifact factory.
-     *
-     * @param artifactFactory Artifact factory to use.
-     * @return Artifact identified by the dependency.
-     */
-    public Artifact getArtifact(ArtifactFactory artifactFactory) {
-        return artifactFactory.createArtifact(groupId, artifactId, version, Artifact.SCOPE_RUNTIME, type);
-    }
-
-    public String getGroupId() {
-        return groupId;
-    }
-
-    public String getArtifactId() {
-        return artifactId;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public Set<Exclusion> getExclusions() {
-        return exclusions;
-    }
-
-    public void setVersion(String version){
-    	this.version = version;
-    }
-
-    public URI getURI() {
-        StringBuilder builder = new StringBuilder();
-        builder.append(groupId);
-        builder.append(':');
-        builder.append(artifactId);
-        builder.append(':');
-        builder.append(version);
-        return URI.create(builder.toString());
-    }
+public class Dependency extends org.apache.maven.model.Dependency {
 }

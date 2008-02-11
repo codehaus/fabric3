@@ -33,7 +33,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-
 import javax.xml.namespace.QName;
 
 import org.apache.maven.artifact.Artifact;
@@ -47,6 +46,7 @@ import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
 import org.apache.maven.artifact.resolver.ArtifactResolver;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
+import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -60,8 +60,8 @@ import org.apache.maven.surefire.report.ReporterManager;
 import org.apache.maven.surefire.report.XMLReporter;
 import org.apache.maven.surefire.suite.SurefireTestSuite;
 import org.apache.maven.surefire.testset.TestSetFailedException;
+
 import org.fabric3.api.annotation.LogLevel;
-import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
@@ -70,6 +70,7 @@ import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.junit.ImplementationJUnit;
 import org.fabric3.maven.runtime.MavenCoordinator;
 import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
+import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
@@ -118,13 +119,6 @@ public class Fabric3ITestMojo extends AbstractMojo {
      * @parameter expression="${project.build.testOutputDirectory}/itest.composite"
      */
     public File testScdl;
-
-    /**
-     * The project artifacts
-     *
-     * @parameter expression="${project.artifacts}
-     */
-    //public Set<Artifact> artifacts;
 
     /**
      * test composite .
@@ -316,7 +310,8 @@ public class Fabric3ITestMojo extends AbstractMojo {
 
         Set<Artifact> runtimeArtifacts = calculateRuntimeArtifacts(runtimeVersion);
         Set<Artifact> hostArtifacts = calculateHostArtifacts(runtimeArtifacts);
-        Set<URL> moduleDependencies = calculateModuleDependencies(project.getDependencyArtifacts(), hostArtifacts);
+        Set<Artifact> dependencies = calculateDependencies(project.getDependencies());
+        Set<URL> moduleDependencies = calculateModuleDependencies(dependencies, hostArtifacts);
         ClassLoader parentClassLoader = getClass().getClassLoader();
         ClassLoader hostClassLoader = createHostClassLoader(parentClassLoader, hostArtifacts);
         ClassLoader bootClassLoader = createBootClassLoader(hostClassLoader, runtimeArtifacts);
@@ -390,7 +385,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
         	if(dependency.getVersion() == null){
         		resolveDependencyVersion(dependency);
         	}
-            Artifact artifact = dependency.getArtifact(artifactFactory);
+            Artifact artifact = createArtifact(dependency);
             try {
                 resolver.resolve(artifact, remoteRepositories, localRepository);
             } catch (ArtifactResolutionException e) {
@@ -406,6 +401,14 @@ public class Fabric3ITestMojo extends AbstractMojo {
             }
         }
         return urls;
+    }
+
+    private Artifact createArtifact(Dependency dependency) {
+        return artifactFactory.createArtifact(dependency.getGroupId(),
+                                              dependency.getArtifactId(),
+                                              dependency.getVersion(),
+                                              Artifact.SCOPE_RUNTIME,
+                                              dependency.getType());
     }
 
     private void resolveDependencyVersion(Dependency extension){
@@ -479,9 +482,12 @@ public class Fabric3ITestMojo extends AbstractMojo {
     private Set<Artifact> calculateRuntimeArtifacts(String runtimeVersion) throws MojoExecutionException {
         Set<Artifact> artifacts = new HashSet<Artifact>();
         // add in the runtime
-        Set<Exclusion> exclusions = Collections.emptySet();
-        Dependency dependency =
-                new Dependency("org.codehaus.fabric3", "fabric3-maven-host", runtimeVersion, exclusions);
+        List<Exclusion> exclusions = Collections.emptyList();
+        Dependency dependency = new Dependency();
+        dependency.setGroupId("org.codehaus.fabric3");
+        dependency.setArtifactId("fabric3-maven-host");
+        dependency.setVersion(runtimeVersion);
+        dependency.setExclusions(exclusions);
         addArtifacts(artifacts, dependency);
         return artifacts;
     }
@@ -491,9 +497,9 @@ public class Fabric3ITestMojo extends AbstractMojo {
     	if (extension.getVersion() == null) {
               resolveDependencyVersion(extension);
     	}
-        final Set<Exclusion> exclusions = extension.getExclusions();
+        final List<Exclusion> exclusions = extension.getExclusions();
 
-        Artifact artifact = extension.getArtifact(artifactFactory);
+        Artifact artifact = createArtifact(extension);
         try {
             resolver.resolve(artifact, remoteRepositories, localRepository);
             ResolutionGroup resolutionGroup = metadataSource.retrieve(artifact,
@@ -532,6 +538,13 @@ public class Fabric3ITestMojo extends AbstractMojo {
         } catch (ArtifactMetadataRetrievalException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
+    }
+
+    // this is a hack for now
+    private Set<Artifact> resolveArtifacts(Dependency dependency) throws MojoExecutionException {
+        Set<Artifact> artifacts = new HashSet<Artifact>();
+        addArtifacts(artifacts, dependency);
+        return artifacts;
     }
 
     public boolean runSurefire(SurefireTestSuite testSuite) throws MojoExecutionException {
@@ -650,7 +663,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
     private Set<Artifact> calculateHostArtifacts(Set<Artifact> runtimeArtifacts)
             throws MojoExecutionException {
         Set<Artifact> hostArtifacts = new HashSet<Artifact>();
-        Set<Exclusion> exclusions = Collections.emptySet();
+        List<Exclusion> exclusions = Collections.emptyList();
         // find the version of fabric3-api being used by the runtime
         String version = null;
         for (Artifact artifact : runtimeArtifacts) {
@@ -664,12 +677,19 @@ public class Fabric3ITestMojo extends AbstractMojo {
             throw new MojoExecutionException("org.codehaus.fabric3:fabric3-api version not found");
         }
         // add transitive dependencies of fabric3-api to the list of artifacts in the host classloader
-        Dependency dependency = new Dependency("org.codehaus.fabric3", "fabric3-api", version, exclusions);
+        Dependency dependency = new Dependency();
+        dependency.setGroupId("org.codehaus.fabric3");
+        dependency.setArtifactId("fabric3-api");
+        dependency.setVersion(version);
+        dependency.setExclusions(exclusions);
         addArtifacts(hostArtifacts, dependency);
 
         // add commons annotations dependency
-        Dependency jsr250API =
-                new Dependency("org.apache.geronimo.specs", "geronimo-annotation_1.0_spec", "1.1", exclusions);
+        Dependency jsr250API = new Dependency();
+        jsr250API.setGroupId("org.apache.geronimo.specs");
+        jsr250API.setArtifactId("geronimo-annotation_1.0_spec");
+        jsr250API.setVersion("1.1");
+        jsr250API.setExclusions(exclusions);
         addArtifacts(hostArtifacts, jsr250API);
 
         // add shared artifacts to the host classpath
@@ -679,6 +699,14 @@ public class Fabric3ITestMojo extends AbstractMojo {
             }
         }
         return hostArtifacts;
+    }
+
+    private Set<Artifact> calculateDependencies(List<Dependency> dependencies) throws MojoExecutionException {
+        Set<Artifact> artifacts = new HashSet<Artifact>();
+        for (Dependency dependency : dependencies) {
+            addArtifacts(artifacts, dependency);
+        }
+        return artifacts;
     }
 
     /**
