@@ -19,7 +19,6 @@
 package org.fabric3.resource.processor;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
@@ -69,7 +68,7 @@ public class ResourceProcessor extends ImplementationProcessorExtension {
             throw new DuplicateResourceException(name);
         }
 
-        SystemSourcedResource resource = createResource(name, resourceType, method, annotation.optional(), annotation.mappedName());
+        SystemSourcedResource resource = createResource(name, resourceType, new MemberSite(method), annotation.optional(), annotation.mappedName());
 
         type.add(resource);
         
@@ -91,18 +90,18 @@ public class ResourceProcessor extends ImplementationProcessorExtension {
 
         Class<?> fieldType = field.getType();
 
-        SystemSourcedResource resource = createResource(name, fieldType, field, annotation.optional(), annotation.mappedName());
+        SystemSourcedResource resource = createResource(name, fieldType, new MemberSite(field), annotation.optional(), annotation.mappedName());
 
         type.add(resource);
         
     }
 
-    private SystemSourcedResource createResource(String name, Class<?> type, Member member, boolean optional, String mappedName)
+    private SystemSourcedResource createResource(String name, Class<?> type, MemberSite member, boolean optional, String mappedName)
             throws ProcessingException {
         
         try {
             ServiceContract<Type> serviceContract = contractProcessor.introspect(type);
-            return new SystemSourcedResource(name, new MemberSite(member), optional, mappedName, serviceContract);
+            return new SystemSourcedResource(name, member, optional, mappedName, serviceContract);
         }  catch (InvalidServiceContractException e) {
             throw new ProcessingException(e);
         }

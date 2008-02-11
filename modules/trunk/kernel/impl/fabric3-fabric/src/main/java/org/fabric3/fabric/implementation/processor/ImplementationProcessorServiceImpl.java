@@ -19,7 +19,6 @@
 package org.fabric3.fabric.implementation.processor;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Member;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
@@ -116,7 +115,7 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
         return false;
     }
 
-    public JavaMappedReference createReference(String name, Member member, Class<?> paramType)
+    public JavaMappedReference createReference(String name, MemberSite member, Class<?> paramType)
             throws ProcessingException {
         ServiceContract<Type> contract;
         try {
@@ -124,8 +123,7 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
         } catch (InvalidServiceContractException e1) {
             throw new ProcessingException(e1);
         }
-        MemberSite memberSite = new MemberSite(member);
-        JavaMappedReference reference = new JavaMappedReference(name, contract, memberSite);
+        JavaMappedReference reference = new JavaMappedReference(name, contract, member);
         reference.setRequired(false);
         return reference;
     }

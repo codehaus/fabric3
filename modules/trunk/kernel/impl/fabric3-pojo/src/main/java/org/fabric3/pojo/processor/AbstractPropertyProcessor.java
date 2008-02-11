@@ -21,7 +21,6 @@ package org.fabric3.pojo.processor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Map;
@@ -78,7 +77,7 @@ public abstract class AbstractPropertyProcessor<A extends Annotation> extends Im
         }
 
         Class<?> baseType = getBaseType(javaType, method.getGenericParameterTypes()[0]);
-        JavaMappedProperty<?> property = createProperty(name, baseType, method);
+        JavaMappedProperty<?> property = createProperty(name, baseType, new MemberSite(method));
         if (javaType.isArray() || Collection.class.isAssignableFrom(javaType)) {
             property.setMany(true);
         }
@@ -110,7 +109,7 @@ public abstract class AbstractPropertyProcessor<A extends Annotation> extends Im
         }
 
         Class<?> baseType = getBaseType(javaType, field.getGenericType());
-        JavaMappedProperty<?> property = createProperty(name, baseType, field);
+        JavaMappedProperty<?> property = createProperty(name, baseType, new MemberSite(field));
         if (javaType.isArray() || Collection.class.isAssignableFrom(javaType)) {
             property.setMany(true);
         }
@@ -147,7 +146,7 @@ public abstract class AbstractPropertyProcessor<A extends Annotation> extends Im
                     }
 
                     Class<?> baseType = getBaseType(param, constructor.getGenericParameterTypes()[i]);
-                    JavaMappedProperty<?> property = createProperty(name, baseType, constructor);
+                    JavaMappedProperty<?> property = createProperty(name, baseType, new MemberSite(constructor));
                     if (param.isArray() || Collection.class.isAssignableFrom(param)) {
                         property.setMany(true);
                     }
@@ -165,10 +164,9 @@ public abstract class AbstractPropertyProcessor<A extends Annotation> extends Im
             throws ProcessingException {
     }
 
-    protected <T> JavaMappedProperty<T> createProperty(String name, Class<T> javaType, Member member)
+    protected <T> JavaMappedProperty<T> createProperty(String name, Class<T> javaType, MemberSite member)
             throws ProcessingException {
-        MemberSite memberSite = new MemberSite(member);
-        return new JavaMappedProperty<T>(name, null, javaType, memberSite);
+        return new JavaMappedProperty<T>(name, null, javaType, member);
     }
 
 

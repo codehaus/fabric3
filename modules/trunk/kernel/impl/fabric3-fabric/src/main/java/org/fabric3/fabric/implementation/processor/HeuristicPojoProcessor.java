@@ -21,7 +21,6 @@ package org.fabric3.fabric.implementation.processor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
@@ -140,10 +139,11 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
                 if (!type.getProperties().containsKey(name) && !type.getReferences().containsKey(name)) {
                     Class<?> param = method.getParameterTypes()[0];
                     Type genericType = method.getGenericParameterTypes()[0];
+                    MemberSite site = new MemberSite(method);
                     if (isReferenceType(genericType)) {
-                        type.add(createReference(name, method, param));
+                        type.add(createReference(name, site, param));
                     } else {
-                        type.add(createProperty(name, method, param));
+                        type.add(createProperty(name, site, param));
                     }
                 }
             }
@@ -159,20 +159,22 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
             String name = toPropertyName(method.getName());
             // avoid duplicate property or ref names
             if (!type.getProperties().containsKey(name) && !type.getReferences().containsKey(name)) {
+                MemberSite site = new MemberSite(method);
                 if (isReferenceType(param)) {
-                    type.add(createReference(name, method, param));
+                    type.add(createReference(name, site, param));
                 } else {
-                    type.add(createProperty(name, method, param));
+                    type.add(createProperty(name, site, param));
                 }
             }
         }
         Set<Field> fields = getAllPublicAndProtectedFields(clazz);
         for (Field field : fields) {
             Class<?> paramType = field.getType();
+            MemberSite site = new MemberSite(field);
             if (isReferenceType(paramType)) {
-                type.add(createReference(field.getName(), field, paramType));
+                type.add(createReference(field.getName(), site, paramType));
             } else {
-                type.add(createProperty(field.getName(), field, paramType));
+                type.add(createProperty(field.getName(), site, paramType));
             }
         }
     }
@@ -300,10 +302,11 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
         // heuristically determine refs and props from the parameter types
         for (Class<?> param : params) {
             String name = getBaseName(param).toLowerCase();
+            MemberSite site = new MemberSite(ctor);
             if (isReferenceType(param)) {
-                refs.put(name, createReference(name, ctor, param));
+                refs.put(name, createReference(name, site, param));
             } else {
-                props.put(name, createProperty(name, ctor, param));
+                props.put(name, createProperty(name, site, param));
             }
             paramNames.add(name);
         }
@@ -426,7 +429,7 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
      * @param member    the injection site the reference maps to
      * @param paramType the service interface of the reference
      */
-    private JavaMappedReference createReference(String name, Member member, Class<?> paramType)
+    private JavaMappedReference createReference(String name, MemberSite member, Class<?> paramType)
             throws ProcessingException {
         return implService.createReference(name, member, paramType);
     }
@@ -438,10 +441,9 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
      * @param member    the injection site the reference maps to
      * @param paramType the property type
      */
-    private <T> JavaMappedProperty<T> createProperty(String name, Member member, Class<T> paramType) {
+    private <T> JavaMappedProperty<T> createProperty(String name, MemberSite memberSite, Class<T> paramType) {
         JavaMappedProperty<T> property = new JavaMappedProperty<T>();
         property.setName(name);
-        MemberSite memberSite = new MemberSite(member);
         property.setMemberSite(memberSite);
         property.setJavaType(paramType);
         return property;

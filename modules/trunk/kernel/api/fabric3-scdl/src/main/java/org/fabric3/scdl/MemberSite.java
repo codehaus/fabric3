@@ -3,7 +3,6 @@ package org.fabric3.scdl;
 import java.lang.annotation.ElementType;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 
 /**
@@ -44,20 +43,6 @@ public class MemberSite {
         name = constructor.getName();
         elementType = ElementType.CONSTRUCTOR;
         signature = new Signature(constructor);
-    }
-
-    public MemberSite(Member member) {
-        name = member.getName();
-        if (member instanceof Method) {
-            elementType = ElementType.METHOD;
-            signature = new Signature((Method) member);
-        } else if (member instanceof Field) {
-            elementType = ElementType.FIELD;
-            type = ((Field) member).getType().getName();
-        } else if (member instanceof Constructor) {
-            elementType = ElementType.CONSTRUCTOR;
-            signature = new Signature((Constructor<?>) member);
-        }
     }
 
     public MemberSite(ElementType elementType, String name) {

@@ -19,7 +19,6 @@
 package org.fabric3.fabric.monitor;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 
 import org.osoa.sca.annotations.Reference;
@@ -65,7 +64,7 @@ public class MonitorProcessor extends ImplementationProcessorExtension {
             throw new DuplicateResourceException(name);
         }
 
-        MonitorResource resource = createResource(name, resourceType, method);
+        MonitorResource resource = createResource(name, resourceType, new MemberSite(method));
         type.add(resource);
     }
 
@@ -81,15 +80,14 @@ public class MonitorProcessor extends ImplementationProcessorExtension {
             throw new DuplicateResourceException(name);
         }
 
-        MonitorResource resource = createResource(name, resourceType, field);
+        MonitorResource resource = createResource(name, resourceType, new MemberSite(field));
         type.add(resource);
     }
 
-    private MonitorResource createResource(String name, Class<?> type, Member member) throws ProcessingException {
+    private MonitorResource createResource(String name, Class<?> type, MemberSite member) throws ProcessingException {
         try {
             ServiceContract<?> serviceContract = contractProcessor.introspect(type);
-            MemberSite site = new MemberSite(member);
-            return new MonitorResource(name, site, false, serviceContract);
+            return new MonitorResource(name, member, false, serviceContract);
         } catch (InvalidServiceContractException e) {
             throw new ProcessingException(e);
         }

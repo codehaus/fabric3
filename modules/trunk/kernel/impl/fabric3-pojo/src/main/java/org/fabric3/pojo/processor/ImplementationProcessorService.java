@@ -27,6 +27,7 @@ import org.fabric3.pojo.scdl.JavaMappedReference;
 import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.introspection.InvalidServiceContractException;
+import org.fabric3.scdl.MemberSite;
 
 /**
  * Provides utility methods for Java implementation processing
@@ -40,7 +41,7 @@ public interface ImplementationProcessorService {
      */
     JavaMappedService createService(Class<?> interfaze) throws InvalidServiceContractException;
 
-    JavaMappedReference createReference(String name, Member member, Class<?> paramType) throws ProcessingException;
+    JavaMappedReference createReference(String name, MemberSite member, Class<?> paramType) throws ProcessingException;
 
     /**
      * Determines if all the members of a collection have unique types

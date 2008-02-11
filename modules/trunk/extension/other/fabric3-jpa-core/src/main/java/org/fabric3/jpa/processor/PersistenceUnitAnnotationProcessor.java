@@ -23,7 +23,6 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import javax.persistence.EntityManagerFactory;
@@ -68,7 +67,7 @@ public class PersistenceUnitAnnotationProcessor extends ImplementationProcessorE
         
         checkMethod(method);
         
-        processAnnotation(type, method, annotation);
+        processAnnotation(type, new MemberSite(method), annotation);
         
     }
 
@@ -89,18 +88,18 @@ public class PersistenceUnitAnnotationProcessor extends ImplementationProcessorE
             throw new ProcessingException("Field is not an entity manager factory", field.toString());
         }
         
-        processAnnotation(type, field, annotation);
+        processAnnotation(type, new MemberSite(field), annotation);
         
     }
 
     /*
      * Processes the annotation.
      */
-    private void processAnnotation(PojoComponentType type, Member member, PersistenceUnit annotation) {
+    private void processAnnotation(PojoComponentType type, MemberSite member, PersistenceUnit annotation) {
 
         String name = annotation.name();
         String unitName = annotation.unitName();
-        type.add(new PersistenceUnitResource(name, unitName, new MemberSite(member), factoryServiceContract));
+        type.add(new PersistenceUnitResource(name, unitName, member, factoryServiceContract));
         
     }
 
