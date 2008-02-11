@@ -10,6 +10,7 @@ import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.scdl.Implementation;
 
 /**
@@ -45,10 +46,15 @@ public class RunCommandGenerator implements CommandGenerator {
      * @return the updated run command or null if no launched implementations were found
      */
     private RunCommand generateCommand(LogicalComponent<?> component, RunCommand command) {
-        // perform a depth-first traversal
-        for (LogicalComponent<?> child : component.getComponents()) {
-            command = generateCommand(child, command);
+        
+        if (component instanceof LogicalCompositeComponent) {
+            LogicalCompositeComponent composite = (LogicalCompositeComponent) component;
+            // perform a depth-first traversal
+            for (LogicalComponent<?> child : composite.getComponents()) {
+                command = generateCommand(child, command);
+            }
         }
+        
         if (isLaunched(component)) {
             if (command == null) {
                 command = new RunCommand();

@@ -31,6 +31,7 @@ import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 
 /**
  * Generates a command to start the composite context on a service node. Child composite contexts will also be started
@@ -61,12 +62,17 @@ public class StartCompositeContextGenerator implements CommandGenerator {
     }
 
     private void addToCommandSet(LogicalComponent<?> component, CommandSet commandSet) {
-        // perform depth-first traversal
-        for (LogicalComponent<?> child : component.getComponents()) {
-            if (isComposite(child)) {
-                addToCommandSet(child, commandSet);
+        
+        if (component instanceof LogicalCompositeComponent) {
+            LogicalCompositeComponent composite = (LogicalCompositeComponent) component;
+            // perform depth-first traversal
+            for (LogicalComponent<?> child : composite.getComponents()) {
+                if (isComposite(child)) {
+                    addToCommandSet(child, commandSet);
+                }
             }
         }
+        
         // @FIXME a trailing slash is needed since group ids are set on ComponentDefinitions using URI#resolve(",")
         // This should be revisited
         URI groupId = URI.create(component.getUri().toString() + "/");

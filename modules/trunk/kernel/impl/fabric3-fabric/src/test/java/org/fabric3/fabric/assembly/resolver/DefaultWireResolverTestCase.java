@@ -58,7 +58,7 @@ public class DefaultWireResolverTestCase extends TestCase {
     }
 
     public void testAutowireAtomicToAtomicRequiresSuperInterface() throws Exception {
-        LogicalComponent<CompositeImplementation> composite = createWiredComposite(domain, SuperFoo.class, Foo.class);
+        LogicalCompositeComponent composite = createWiredComposite(domain, SuperFoo.class, Foo.class);
         resolver.resolve(composite);
         LogicalComponent<?> source = composite.getComponent(SOURCE_URI);
         resolver.resolve(composite);

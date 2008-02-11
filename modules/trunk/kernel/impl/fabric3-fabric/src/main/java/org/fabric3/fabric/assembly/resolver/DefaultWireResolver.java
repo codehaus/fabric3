@@ -48,14 +48,20 @@ import org.fabric3.spi.util.UriHelper;
 public class DefaultWireResolver implements WireResolver {
 
     public void resolve(LogicalComponent<?> component) throws ResolutionException {
-        Collection<LogicalComponent<?>> components = component.getComponents();
-        if (!components.isEmpty()) {
-            for (LogicalComponent<?> child : component.getComponents()) {
-                resolve(child);
+        
+        if (component instanceof LogicalCompositeComponent) {
+            LogicalCompositeComponent composite = (LogicalCompositeComponent) component;
+            Collection<LogicalComponent<?>> components = composite.getComponents();
+            if (!components.isEmpty()) {
+                for (LogicalComponent<?> child : components) {
+                    resolve(child);
+                }
             }
         }
+        
         resolveReferences(component);
         resolveServices(component);
+        
     }
 
     public void resolve(LogicalService service) throws ResolutionException {
@@ -68,7 +74,7 @@ public class DefaultWireResolver implements WireResolver {
 
         URI promotedComponentUri = UriHelper.getDefragmentedName(promotedUri);
         String promotedServiceName = promotedUri.getFragment();
-        LogicalComponent<?> composite = service.getParent();
+        LogicalCompositeComponent composite = (LogicalCompositeComponent) service.getParent();
         LogicalComponent<?> promotedComponent = composite.getComponent(promotedComponentUri);
         if (promotedComponent == null) {
             throw new PromotedComponentNotFoundException(serviceUri, promotedComponentUri);
@@ -96,7 +102,7 @@ public class DefaultWireResolver implements WireResolver {
         for (int i = 0; i < promotedUris.size(); i++) {
             URI promotedUri = promotedUris.get(i);
             URI componentId = UriHelper.getDefragmentedName(promotedUri);
-            LogicalComponent<?> parent = logicalReference.getParent();
+            LogicalCompositeComponent parent = (LogicalCompositeComponent) logicalReference.getParent();
             LogicalComponent<?> promotedComponent = parent.getComponent(componentId);
             if (promotedComponent == null) {
                 throw new PromotedComponentNotFoundException(logicalReference.getUri(), componentId);
@@ -231,7 +237,7 @@ public class DefaultWireResolver implements WireResolver {
      * @throws AmbiguousAutowireTargetException
      *          if more than one target satisfies the type criteria
      */
-    private List<URI> resolveByType(LogicalComponent<?> composite,
+    private List<URI> resolveByType(LogicalCompositeComponent composite,
                                     LogicalComponent<?> component,
                                     String referenceName,
                                     ServiceContract<?> requiredContract)
@@ -330,7 +336,7 @@ public class DefaultWireResolver implements WireResolver {
      * @return the fully resolved URI of the target service
      * @throws ResolutionException if the target is invalid
      */
-    private URI resolveByUri(LogicalReference reference, URI targetUri, LogicalComponent<?> composite)
+    private URI resolveByUri(LogicalReference reference, URI targetUri, LogicalCompositeComponent composite)
             throws ResolutionException {
         URI sourceUri = reference.getUri();
         URI targetComponentUri = UriHelper.getDefragmentedName(targetUri);
@@ -415,7 +421,7 @@ public class DefaultWireResolver implements WireResolver {
         URI promotes = reference.getPromotedUris().get(0);
         URI defragmented = UriHelper.getDefragmentedName(promotes);
         String promotedReferenceName = promotes.getFragment();
-        LogicalComponent<?> parent = reference.getParent();
+        LogicalCompositeComponent parent = (LogicalCompositeComponent) reference.getParent();
         LogicalComponent<?> promotedComponent = parent.getComponent(defragmented);
         LogicalReference promotedReference;
         if (promotedReferenceName == null) {

@@ -30,7 +30,6 @@ import javax.xml.namespace.QName;
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Scope;
 import org.osoa.sca.Constants;
@@ -47,7 +46,6 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
 
     private final ComponentDefinition<I> definition;
     private final Map<String, Document> propertyValues = new HashMap<String, Document>();
-    private final Map<URI, LogicalComponent<?>> components = new HashMap<URI, LogicalComponent<?>>();
     private final Map<String, LogicalService> services = new HashMap<String, LogicalService>();
     private final Map<String, LogicalReference> references = new HashMap<String, LogicalReference>();
     private final Map<String, LogicalResource<?>> resources = new HashMap<String, LogicalResource<?>>();
@@ -121,34 +119,6 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
      */
     public void setAutowireOverride(Autowire autowire) {
         this.autowire = autowire;
-    }
-
-    /**
-     * Returns the child components of the current component.
-     *
-     * @return the child components of the current component
-     */
-    public Collection<LogicalComponent<?>> getComponents() {
-        return Collections.unmodifiableCollection(components.values());
-    }
-
-    /**
-     * Returns a child component with the given URI.
-     *
-     * @param uri the child component URI
-     * @return a child component with the given URI.
-     */
-    public LogicalComponent<?> getComponent(URI uri) {
-        return components.get(uri);
-    }
-
-    /**
-     * Adds a child component
-     *
-     * @param component the child component to add
-     */
-    public void addComponent(LogicalComponent<?> component) {
-        components.put(component.getUri(), component);
     }
 
     /**

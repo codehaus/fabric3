@@ -45,7 +45,7 @@ public class InstantiationTestCase extends TestCase {
         ComponentDefinition<?> definition = createParentWithChild();
         Composite composite = new Composite(null);
         composite.add(definition);
-        LogicalComponent<?> logicalComponent = logicalModelGenerator.include(parent, composite).get(0);
+        LogicalCompositeComponent logicalComponent = (LogicalCompositeComponent) logicalModelGenerator.include(parent, composite).get(0);
         assertEquals(COMPONENT_URI, logicalComponent.getUri().toString());
         LogicalComponent<?> logicalChild = logicalComponent.getComponent(URI.create(CHILD_URI));
         assertEquals(CHILD_URI, logicalChild.getUri().toString());

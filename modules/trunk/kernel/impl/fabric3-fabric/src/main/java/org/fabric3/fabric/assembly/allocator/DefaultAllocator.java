@@ -27,6 +27,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.topology.RuntimeInfo;
 import org.fabric3.spi.services.discovery.DiscoveryService;
 import org.fabric3.spi.services.runtime.RuntimeInfoService;
@@ -78,8 +79,10 @@ public class DefaultAllocator implements Allocator {
     }
 
     public void allocate(Set<RuntimeInfo> runtimes, LogicalComponent<?> component) throws AllocationException {
+        
         if (CompositeImplementation.class.isInstance(component.getDefinition().getImplementation())) {
-            for (LogicalComponent<?> child : component.getComponents()) {
+            LogicalCompositeComponent composite = (LogicalCompositeComponent) component;
+            for (LogicalComponent<?> child : composite.getComponents()) {
                 if (CompositeImplementation.class.isInstance(child.getDefinition().getImplementation())) {
                     // the component is a composite, recurse and asign its children
                     allocate(runtimes, child);
@@ -90,6 +93,7 @@ public class DefaultAllocator implements Allocator {
         } else {
             assign(runtimes, component);
         }
+        
     }
 
 
@@ -180,15 +184,17 @@ public class DefaultAllocator implements Allocator {
 
     @SuppressWarnings({"unchecked"})
     private void calculatePreallocatedRuntimes(LogicalComponent<?> component, Set<URI> runtimes) {
-        for (LogicalComponent<?> child : component.getComponents()) {
-            if (CompositeImplementation.class.isInstance(child.getDefinition().getImplementation())) {
+        
+        if (component instanceof LogicalCompositeComponent) {
+            LogicalCompositeComponent composite = (LogicalCompositeComponent) component;
+            for (LogicalComponent<?> child : composite.getComponents()) {
                 calculatePreallocatedRuntimes(child, runtimes);
-            } else {
-                URI uri = child.getRuntimeId();
-                if (uri != null) {
-                    if (!runtimes.contains(uri)) {
-                        runtimes.add(uri);
-                    }
+            }
+        } else {
+            URI uri = component.getRuntimeId();
+            if (uri != null) {
+                if (!runtimes.contains(uri)) {
+                    runtimes.add(uri);
                 }
             }
         }
@@ -220,9 +226,14 @@ public class DefaultAllocator implements Allocator {
             }
         }
 
-        for (LogicalComponent<?> child : component.getComponents()) {
-            markForReallocation(child, nonRespondingRuntimes);
+        
+        if (component instanceof LogicalCompositeComponent) {
+            LogicalCompositeComponent composite = (LogicalCompositeComponent) component;
+            for (LogicalComponent<?> child : composite.getComponents()) {
+                markForReallocation(child, nonRespondingRuntimes);
+            }
         }
+        
     }
 
 

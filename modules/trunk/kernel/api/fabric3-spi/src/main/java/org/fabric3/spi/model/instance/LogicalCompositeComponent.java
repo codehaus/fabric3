@@ -1,8 +1,11 @@
 package org.fabric3.spi.model.instance;
 
 import java.net.URI;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.fabric3.scdl.ComponentDefinition;
@@ -15,6 +18,7 @@ import org.fabric3.scdl.CompositeImplementation;
 public class LogicalCompositeComponent extends LogicalComponent<CompositeImplementation> {
     
     private final Set<LogicalWire> wires = new HashSet<LogicalWire>();
+    private final Map<URI, LogicalComponent<?>> components = new HashMap<URI, LogicalComponent<?>>();
 
     /**
      * Instantiates a composite composite component.
@@ -47,6 +51,34 @@ public class LogicalCompositeComponent extends LogicalComponent<CompositeImpleme
      */
     public final void addWire(LogicalWire wire) {
         wires.add(wire);
+    }
+
+    /**
+     * Returns the child components of the current component.
+     *
+     * @return the child components of the current component
+     */
+    public Collection<LogicalComponent<?>> getComponents() {
+        return Collections.unmodifiableCollection(components.values());
+    }
+
+    /**
+     * Returns a child component with the given URI.
+     *
+     * @param uri the child component URI
+     * @return a child component with the given URI.
+     */
+    public LogicalComponent<?> getComponent(URI uri) {
+        return components.get(uri);
+    }
+
+    /**
+     * Adds a child component
+     *
+     * @param component the child component to add
+     */
+    public void addComponent(LogicalComponent<?> component) {
+        components.put(component.getUri(), component);
     }
 
 }

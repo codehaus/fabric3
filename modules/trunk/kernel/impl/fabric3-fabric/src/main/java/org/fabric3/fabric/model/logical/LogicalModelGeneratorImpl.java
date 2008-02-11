@@ -222,7 +222,8 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
         Implementation<?> implementation = component.getDefinition().getImplementation();
         
         if (CompositeImplementation.IMPLEMENTATION_COMPOSITE.equals(implementation.getType())) {
-            for (LogicalComponent<?> child : component.getComponents()) {
+            LogicalCompositeComponent composite = (LogicalCompositeComponent) component;
+            for (LogicalComponent<?> child : composite.getComponents()) {
                 normalize(child);
             }
         } else {

@@ -37,7 +37,6 @@ import org.fabric3.host.runtime.StartException;
 import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.scdl.Autowire;
-import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.spi.component.AtomicComponent;
@@ -46,6 +45,7 @@ import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.TargetResolutionException;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.runtime.RuntimeServices;
 import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
 import org.fabric3.spi.runtime.assembly.LogicalComponentStore;
@@ -176,7 +176,7 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
     }
 
     public void registerComponent(LogicalComponent<?> logical, AtomicComponent<?> physical) throws RegistrationException {
-        LogicalComponent<CompositeImplementation> domain = logicalComponentManager.getDomain();
+        LogicalCompositeComponent domain = logicalComponentManager.getDomain();
         domain.addComponent(logical);
         componentManager.register(physical);
         scopeContainer.register(physical);

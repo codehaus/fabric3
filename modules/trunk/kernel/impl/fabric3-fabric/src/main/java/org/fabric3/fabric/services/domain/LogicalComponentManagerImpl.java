@@ -49,7 +49,10 @@ public class LogicalComponentManagerImpl implements LogicalComponentManager {
         LogicalComponent<?> currentComponent = domain;
         for (String name : hierarchy) {
             currentUri = currentUri + "/" + name;
-            currentComponent = currentComponent.getComponent(URI.create(currentUri));
+            if (currentComponent instanceof LogicalCompositeComponent) {
+                LogicalCompositeComponent composite = (LogicalCompositeComponent) currentComponent;
+                currentComponent = composite.getComponent(URI.create(currentUri));
+            }
             if (currentComponent == null) {
                 return null;
             }

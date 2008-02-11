@@ -43,6 +43,7 @@ import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
@@ -154,7 +155,8 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
         ComponentDefinition<? extends Implementation<?>> definition = component.getDefinition();
         Implementation<?> implementation = definition.getImplementation();
         if (CompositeImplementation.IMPLEMENTATION_COMPOSITE.equals(implementation.getType())) {
-            for (LogicalComponent<?> child : component.getComponents()) {
+            LogicalCompositeComponent composite = (LogicalCompositeComponent) component;
+            for (LogicalComponent<?> child : composite.getComponents()) {
                 // if the component is already running on a node (e.g. during recovery), skip provisioning
                 if (child.isActive()) {
                     continue;
@@ -207,9 +209,10 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
                     LogicalService targetService = target.getService(serviceName);
                     assert targetService != null;
                     while (CompositeImplementation.class.isInstance(target.getDefinition().getImplementation())) {
+                        LogicalCompositeComponent composite = (LogicalCompositeComponent) target;
                         URI promoteUri = targetService.getPromote();
                         URI promotedComponent = UriHelper.getDefragmentedName(promoteUri);
-                        target = target.getComponent(promotedComponent);
+                        target = composite.getComponent(promotedComponent);
                         targetService = target.getService(promoteUri.getFragment());
                     }
                     LogicalReference reference = component.getReference(entry.getUri().getFragment());
@@ -277,8 +280,11 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
             }
         }
 
-        for (LogicalComponent<?> child : component.getComponents()) {
-            generateCommandSets(child, contexts);
+        if (component instanceof LogicalCompositeComponent) {
+            LogicalCompositeComponent composite = (LogicalCompositeComponent) component;
+            for (LogicalComponent<?> child : composite.getComponents()) {
+                generateCommandSets(child, contexts);
+            }
         }
 
     }

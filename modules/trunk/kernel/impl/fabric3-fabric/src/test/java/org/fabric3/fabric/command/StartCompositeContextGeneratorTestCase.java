@@ -33,6 +33,7 @@ import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 
 /**
  * @version $Rev$ $Date$
@@ -42,7 +43,7 @@ public class StartCompositeContextGeneratorTestCase extends TestCase {
     private static final URI CHILD = URI.create("parent/child");
 
     StartCompositeContextGenerator generator;
-    LogicalComponent<?> component;
+    LogicalCompositeComponent component;
 
     public void testNestedCompositeGeneration() throws Exception {
         CommandSet commandSet = new CommandSet();
@@ -69,7 +70,7 @@ public class StartCompositeContextGeneratorTestCase extends TestCase {
         ComponentDefinition<CompositeImplementation> childDefinition = createComposite("child");
 
         URI runtimeUri = URI.create("runtime1");
-        component = new LogicalComponent<CompositeImplementation>(PARENT, runtimeUri, parentDefinition, null);
+        component = new LogicalCompositeComponent(PARENT, runtimeUri, parentDefinition, null);
         LogicalComponent<?> child =
                 new LogicalComponent<CompositeImplementation>(CHILD, runtimeUri, childDefinition, null);
         component.addComponent(child);
