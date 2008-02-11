@@ -41,26 +41,48 @@ public class DefaultClassWalker<I extends Implementation<? extends InjectingComp
 
     public void walk(I implementation, Class<?> clazz, IntrospectionContext context) throws IntrospectionException {
         if (!clazz.isInterface()) {
-            Class<?> superClass = clazz.getSuperclass();
-            if (superClass != null) {
-                walk(implementation, superClass, context);
-            }
+            walkSuperClasses(implementation, clazz, context);
         }
 
+        walkInterfaces(implementation, clazz, context);
+
+        walkClass(implementation, clazz, context);
+
+        walkFields(implementation, clazz, context);
+
+        walkMethods(implementation, clazz, context);
+
+        walkConstructors(implementation, clazz, context);
+    }
+
+    private void walkSuperClasses(I implementation, Class<?> clazz, IntrospectionContext context) throws IntrospectionException {
+        Class<?> superClass = clazz.getSuperclass();
+        if (superClass != null) {
+            walk(implementation, superClass, context);
+        }
+    }
+
+    private void walkInterfaces(I implementation, Class<?> clazz, IntrospectionContext context) throws IntrospectionException {
         for (Class<?> interfaze : clazz.getInterfaces()) {
             walk(implementation, interfaze, context);
         }
+    }
 
+    private void walkClass(I implementation, Class<?> clazz, IntrospectionContext context) throws IntrospectionException {
         for (Annotation annotation : clazz.getDeclaredAnnotations()) {
             visitType(annotation, clazz, implementation, context);
         }
+    }
 
+    private void walkFields(I implementation, Class<?> clazz, IntrospectionContext context) throws IntrospectionException {
         for (Field field : clazz.getDeclaredFields()) {
             for (Annotation annotation : field.getDeclaredAnnotations()) {
                 visitField(annotation, field, implementation, context);
             }
         }
+    }
 
+    private void walkMethods(I implementation, Class<?> clazz, IntrospectionContext context) throws IntrospectionException {
         for (Method method : clazz.getDeclaredMethods()) {
             for (Annotation annotation : method.getDeclaredAnnotations()) {
                 visitMethod(annotation, method, implementation, context);
@@ -74,7 +96,9 @@ public class DefaultClassWalker<I extends Implementation<? extends InjectingComp
                 }
             }
         }
+    }
 
+    private void walkConstructors(I implementation, Class<?> clazz, IntrospectionContext context) throws IntrospectionException {
         for (Constructor<?> constructor : clazz.getDeclaredConstructors()) {
             for (Annotation annotation : constructor.getDeclaredAnnotations()) {
                 visitConstructor(annotation, constructor, implementation, context);
