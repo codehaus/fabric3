@@ -407,6 +407,7 @@
     <orderEntry type="module" module-name="fabric3-fabric" exported="" />
     <orderEntry type="module" module-name="fabric3-host-api" exported="" />
     <orderEntry type="module" module-name="fabric3-introspection-spi" exported="" />
+    <orderEntry type="module" module-name="fabric3-introspection" exported="" />
     <orderEntry type="module" module-name="fabric3-java" exported="" />
     <orderEntry type="module" module-name="fabric3-loader" exported="" />
     <orderEntry type="module" module-name="fabric3-maven-api" exported="" />
