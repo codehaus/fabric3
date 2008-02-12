@@ -17,18 +17,8 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           name="FunctionTestHarnessComposite">
+           name="CallbackComposite" autowire="false">
 
-    <include name="CommonComposite"/>
-    <include name="SmokeTestComposite"/>
-    <include name="MonitorTestComposite"/>
-    <include name="OuterComposite"/>
-    <include name="ConversationComposite"/>
-    <include name="PropertiesComposite"/>
-    <include name="ReferencesComposite"/>
-    <include name="BindingComposite"/>
-    <include name="WiringComposite"/>
-    <include name="AutoWireComposite"/>
-    <include name="LifecycleComposite"/>
-    <include name="CallbackComposite"/>
+    <include name="StatelessCallbackComposite"/>
+
 </composite>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with this work for information
+ regarding copyright ownership.  This file is licensed
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
+<!-- An assembly used for stateless callback functional testing -->
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           name="StatelessCallbackComposite" autowire="false">
+
+    <component name="CallbackTestComponent">
+        <f3:junit class="org.fabric3.tests.function.callback.stateless.CallbackTest"/>
+        <reference name="client1" target="CallbackClient1"/>
+        <reference name="client2" target="CallbackClient2"/>
+    </component>
+
+    <component name="CallbackClient1">
+        <implementation.java class="org.fabric3.tests.function.callback.stateless.CallbackClient"/>
+        <reference name="forwardService" target="ForwardService"/>
+        <!-- FABRICTHREE-209 -->
+        <!--<reference name="serviceReference" target="ForwardService"/>-->
+    </component>
+
+    <component name="CallbackClient2">
+        <implementation.java class="org.fabric3.tests.function.callback.stateless.CallbackClient"/>
+        <reference name="forwardService" target="ForwardService"/>
+        <!-- FABRICTHREE-209 -->
+        <!--<reference name="serviceReference" target="ForwardService"/>-->
+    </component>
+
+    <component name="ForwardService">
+        <implementation.java class="org.fabric3.tests.function.callback.stateless.ForwardServiceImpl"/>
+        <reference name="endService" target="EndService"/>
+    </component>
+
+    <component name="EndService">
+        <implementation.java class="org.fabric3.tests.function.callback.stateless.EndServiceImpl"/>
+    </component>
+
+</composite>
