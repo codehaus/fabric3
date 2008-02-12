@@ -40,7 +40,6 @@
             <modules>
                 <module>test-function</module>
 
-                <module>test-async</module>
                 <module>test-groovy</module>
                 <module>test-policy</module>
                 <module>test-mock</module>

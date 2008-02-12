@@ -17,15 +17,15 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           name="AsyncTestComposite"
-           autowire="true">
+           name="AsyncComposite">
 
     <component name="AsyncTest">
-        <f3:junit class="org.fabric3.tests.async.AsyncTest"/>
+        <f3:junit class="org.fabric3.tests.function.async.AsyncTest"/>
+        <reference name="asyncService" target="AsyncService"/>
     </component>
 
     <component name="AsyncService">
-        <implementation.java class="org.fabric3.tests.async.AsyncServiceImpl"/>
+        <implementation.java class="org.fabric3.tests.function.async.AsyncServiceImpl"/>
     </component>
-    
+
 </composite>

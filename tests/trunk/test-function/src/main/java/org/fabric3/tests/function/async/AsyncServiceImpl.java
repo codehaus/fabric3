@@ -14,16 +14,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.tests.async;
+package org.fabric3.tests.function.async;
 
-import org.osoa.sca.annotations.OneWay;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * @version $Revision$ $Date$
  */
-public interface AsyncService {
-    
-    @OneWay
-    void sendOneway(String payload);
+public class AsyncServiceImpl implements AsyncService {
+
+    public void sendOneway(CountDownLatch latch) {
+        latch.countDown();
+    }
 
 }

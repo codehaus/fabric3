@@ -30,5 +30,6 @@
     <include name="WiringComposite"/>
     <include name="AutoWireComposite"/>
     <include name="LifecycleComposite"/>
+    <include name="AsyncComposite"/>
     <include name="CallbackComposite"/>
 </composite>

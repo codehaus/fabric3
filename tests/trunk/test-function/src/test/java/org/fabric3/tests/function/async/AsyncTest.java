@@ -14,15 +14,29 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.tests.async;
+package org.fabric3.tests.function.async;
+
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
+import junit.framework.TestCase;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Revision$ $Date$
  */
-public class AsyncServiceImpl implements AsyncService {
+public class AsyncTest extends TestCase {
 
-    public void sendOneway(String payload) {
-        System.setProperty("payload", payload);
+    private AsyncService asyncService;
+
+    @Reference
+    public void setAsyncService(AsyncService asyncService) {
+        this.asyncService = asyncService;
     }
 
+    public void testAsync() throws Exception {
+        CountDownLatch latch = new CountDownLatch(1);
+        asyncService.sendOneway(latch);
+        assertTrue(latch.await(4000, TimeUnit.MILLISECONDS));
+    }
 }
