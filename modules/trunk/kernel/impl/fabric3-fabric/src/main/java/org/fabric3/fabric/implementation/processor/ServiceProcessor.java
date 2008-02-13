@@ -18,26 +18,24 @@
  */
 package org.fabric3.fabric.implementation.processor;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.Set;
 
 import org.osoa.sca.annotations.Callback;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Remotable;
 
-import static org.fabric3.pojo.processor.JavaIntrospectionHelper.getAllInterfaces;
-import org.fabric3.pojo.processor.ImplementationProcessorExtension;
-import org.fabric3.pojo.processor.ProcessingException;
-import org.fabric3.pojo.processor.ImplementationProcessorService;
-import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.InvalidServiceContractException;
+import org.fabric3.pojo.processor.ImplementationProcessorExtension;
+import org.fabric3.pojo.processor.ImplementationProcessorService;
+import static org.fabric3.pojo.processor.JavaIntrospectionHelper.getAllInterfaces;
+import org.fabric3.pojo.processor.ProcessingException;
+import org.fabric3.pojo.scdl.JavaMappedService;
+import org.fabric3.pojo.scdl.PojoComponentType;
 
 /**
- * Processes an {@link org.osoa.sca.annotations.Service} annotation and updates the component type with corresponding
- * {@link JavaMappedService}s. Also processes related {@link org.osoa.sca.annotations.Callback} annotations.
+ * Processes an {@link org.osoa.sca.annotations.Service} annotation and updates the component type with corresponding {@link JavaMappedService}s. Also
+ * processes related {@link org.osoa.sca.annotations.Callback} annotations.
  *
  * @version $Rev$ $Date$
  */
@@ -103,63 +101,5 @@ public class ServiceProcessor extends ImplementationProcessorExtension {
             type.getServices().put(service.getName(), service);
         }
     }
-
-
-    public void visitMethod(
-            Method method,
-            PojoComponentType type,
-            IntrospectionContext context) throws ProcessingException {
-
-/*
-        Callback annotation = method.getAnnotation(Callback.class);
-        if (annotation == null) {
-            return;
-        }
-        if (method.getParameterTypes().length != 1) {
-            throw new IllegalCallbackReferenceException("Setter must have one parameter", method.toString());
-        }
-        String name = toPropertyName(method.getName());
-        JavaMappedService callbackService = null;
-        Class<?> callbackClass = method.getParameterTypes()[0];
-        for (JavaMappedService service : type.getServices().values()) {
-            ServiceContract serviceContract = service.getServiceContract();
-            if (serviceContract.getCallbackClass().equals(callbackClass)) {
-                callbackService = service;
-            }
-        }
-        if (callbackService == null) {
-            throw new IllegalCallbackReferenceException("Callback type does not match a service callback interface");
-        }
-        callbackService.setCallbackReferenceName(name);
-        callbackService.setCallbackMember(method);
-*/
-    }
-
-    public void visitField(Field field,
-                           PojoComponentType type,
-                           IntrospectionContext context) throws ProcessingException {
-
-/*
-        Callback annotation = field.getAnnotation(Callback.class);
-        if (annotation == null) {
-            return;
-        }
-        String name = field.getName();
-        JavaMappedService callbacksService = null;
-        Class<?> callbackClass = field.getType();
-        for (JavaMappedService service : type.getServices().values()) {
-            ServiceContract serviceContract = service.getServiceContract();
-            if (serviceContract.getCallbackClass().equals(callbackClass)) {
-                callbacksService = service;
-            }
-        }
-        if (callbacksService == null) {
-            throw new IllegalCallbackReferenceException("Callback type does not match a service callback interface");
-        }
-        callbacksService.setCallbackReferenceName(name);
-        callbacksService.setCallbackMember(field);
-*/
-    }
-
 
 }

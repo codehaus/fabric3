@@ -25,13 +25,14 @@ import org.fabric3.pojo.processor.ProcessingException;
  *
  * @version $Rev$ $Date$
  */
-public class IllegalCallbackReferenceException extends ProcessingException {
+public class IllegalCallbackException extends ProcessingException {
+    private static final long serialVersionUID = 6516020160964197032L;
 
-    public IllegalCallbackReferenceException(String message) {
+    public IllegalCallbackException(String message) {
         super(message);
     }
 
-    public IllegalCallbackReferenceException(String message, String identifier) {
+    public IllegalCallbackException(String message, String identifier) {
         super(message, identifier);
     }
 }
