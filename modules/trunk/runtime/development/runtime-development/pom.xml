@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>runtime-development</artifactId>
-    <version>0.4-SNAPSHOT</version>
+    <version>0.5-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Fabric3 Development Runtime Assembly</name>
     <description>Fabric3 Development Distribution Assembly.</description>
@@ -34,42 +34,42 @@
 		  <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
-            <version>0.4-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
        
 		  <dependency>
             <groupId>org.codehaus.fabric3.development</groupId>
             <artifactId>fabric3-development-host</artifactId>
-            <version>0.3-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-java</artifactId>
-            <version>0.1</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-policy</artifactId>
-            <version>0.4-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
 
 		  <!-- extensions -->
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-async-loader</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-async-runtime</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-resource</artifactId>
-            <version>0.2-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
 		  
 				
