@@ -396,6 +396,7 @@
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-function/test-function.iml" filepath="$PROJECT_DIR$/tests/trunk/test-function/test-function.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-groovy/test-groovy.iml" filepath="$PROJECT_DIR$/tests/trunk/test-groovy/test-groovy.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-interop-cxf-axis2/test-interop-cxf-axis2.iml" filepath="$PROJECT_DIR$/tests/trunk/test-interop-cxf-axis2/test-interop-cxf-axis2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-jpa-core/test-jpa-core.iml" filepath="$PROJECT_DIR$/tests/trunk/test-jpa-core/test-jpa-core.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-jpa-hibernate/test-jpa-hibernate.iml" filepath="$PROJECT_DIR$/tests/trunk/test-jpa-hibernate/test-jpa-hibernate.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-mock/test-mock.iml" filepath="$PROJECT_DIR$/tests/trunk/test-mock/test-mock.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-ordering/test-ordering.iml" filepath="$PROJECT_DIR$/tests/trunk/test-ordering/test-ordering.iml" />

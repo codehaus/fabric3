@@ -23,7 +23,6 @@ import static org.fabric3.jpa.provider.JpaConstants.EXCLUDE_UNLISTED_CLASSES;
 import static org.fabric3.jpa.provider.JpaConstants.JAR_FILE;
 import static org.fabric3.jpa.provider.JpaConstants.JTA_DATA_SOURCE;
 import static org.fabric3.jpa.provider.JpaConstants.MAPPING_FILE;
-import static org.fabric3.jpa.provider.JpaConstants.NAME;
 import static org.fabric3.jpa.provider.JpaConstants.NON_JTA_DATA_SOURCE;
 import static org.fabric3.jpa.provider.JpaConstants.PROPERTY;
 import static org.fabric3.jpa.provider.JpaConstants.PROPERTY_NAME;
@@ -33,6 +32,7 @@ import static org.fabric3.jpa.provider.JpaConstants.TRANSACTION_TYPE;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
@@ -73,20 +73,41 @@ class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
 
     /** XPath API */
     private XPath xpath = XPathFactory.newInstance().newXPath();
+    
+    /** The name of the persistence unit wrapped by an instance of this type **/
+    private String unitName;
 
     /**
+     * Static factory method to be used instead of a directly called constructor
+     * @param unitName
+     * @param persistenceDom
+     * @param classLoader
+     * @param rootUrl
+     * @return
+     */
+    public static PersistenceUnitInfoImpl getInstance(String unitName, Node persistenceDom, ClassLoader classLoader, URL rootUrl) {
+    	PersistenceUnitInfoImpl matchedUnit = null;		
+		List<String> persistenceUnitNames = getPersistenceUnitNames(persistenceDom);
+		if(persistenceUnitNames.contains(unitName)) {
+			matchedUnit = new PersistenceUnitInfoImpl(unitName, persistenceDom, classLoader, rootUrl);			
+		}		
+
+		return matchedUnit;    	
+    }    
+    
+    /**
      * Initializes the properties.
-     * 
+     * @param unitName 
      * @param persistenceDom
      * @param classLoader
      * @param rootUrl
      */
-    public PersistenceUnitInfoImpl(Node persistenceDom, ClassLoader classLoader, URL rootUrl) {
+    private PersistenceUnitInfoImpl(String unitName, Node persistenceDom, ClassLoader classLoader, URL rootUrl) {
 
         this.persistenceDom = persistenceDom;
         this.classLoader = classLoader;
         this.rootUrl = rootUrl;
-        
+        this.unitName = unitName;        
     }
 
     /**
@@ -98,7 +119,7 @@ class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
     /**
      * @see javax.persistence.spi.PersistenceUnitInfo#excludeUnlistedClasses()
      */
-    public boolean excludeUnlistedClasses() {
+    public boolean excludeUnlistedClasses() {    	
         return getBooleanValue(persistenceDom, EXCLUDE_UNLISTED_CLASSES);
     }
 
@@ -174,7 +195,7 @@ class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
      * @see javax.persistence.spi.PersistenceUnitInfo#getPersistenceUnitName()
      */
     public String getPersistenceUnitName() {
-        return getSingleValue(persistenceDom, NAME);
+        return unitName;
     }
 
     /**
@@ -220,7 +241,8 @@ class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
     private Properties getProperties(Node root) {
 
         try {
-            NodeList nodeList = (NodeList) xpath.evaluate(PROPERTY, root, XPathConstants.NODESET);
+        	String namedNodeExpression = getNamedNodeExpression(PROPERTY);
+            NodeList nodeList = (NodeList) xpath.evaluate(namedNodeExpression, root, XPathConstants.NODESET);
             Properties data = new Properties();
             for (int i = 0; i < nodeList.getLength(); i++) {
                 Element property = (Element) nodeList.item(i);
@@ -239,7 +261,8 @@ class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
     private List<String> getMultipleValues(Node context, String expression) {
 
         try {
-            NodeList nodeList = (NodeList) xpath.evaluate(expression, context, XPathConstants.NODESET);
+        	String namedNodeExpression = getNamedNodeExpression(expression);
+            NodeList nodeList = (NodeList) xpath.evaluate(namedNodeExpression, context, XPathConstants.NODESET);
             List<String> data = new LinkedList<String>();
             for (int i = 0; i < nodeList.getLength(); i++) {
                 data.add(nodeList.item(i).getTextContent());
@@ -257,7 +280,8 @@ class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
     private String getSingleValue(Node context, String expression) {
 
         try {
-            String val = xpath.evaluate(expression, context);
+        	String namedNodeExpression = getNamedNodeExpression(expression);
+            String val = xpath.evaluate(namedNodeExpression, context);
             return "".equals(val) ? null : val;
         } catch (XPathExpressionException ex) {
             throw new Fabric3JpaException(ex);
@@ -271,5 +295,34 @@ class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
     private boolean getBooleanValue(Node context, String expression) {
         return Boolean.valueOf(getSingleValue(context, expression));
     }
+
+    /**
+     * Gets the xpath expression which provides the required value within a persistence unit of the given name 
+     * @param expression the xpath expression for use within the named persistence unit
+     * @return the input expression targeted for the named persistence unit
+     */
+    private String getNamedNodeExpression(String expression) {
+		return MessageFormat.format(JpaConstants.NAMED_UNIT, unitName) + expression;
+    }
+
+    /**
+     * gets the names of all of the persistence unit elements within the input node
+     * @param searchBaseNode probably the base node of a persistence.xml document
+     * @return a list of all persistence unit names
+     */
+	private static List<String> getPersistenceUnitNames(Node searchBaseNode) {    	
+    	List<String> unitNames = new LinkedList<String>();
+        try {
+        	XPath xpath = XPathFactory.newInstance().newXPath();
+            NodeList nodeList = (NodeList) xpath.evaluate(JpaConstants.ANY_UNIT + JpaConstants.NAME, searchBaseNode, XPathConstants.NODESET);            
+            for (int i = 0; i < nodeList.getLength(); i++) {
+            	unitNames.add(nodeList.item(i).getTextContent());
+            }            
+        } catch (XPathExpressionException ex) {
+            throw new Fabric3JpaException(ex);
+        }
+        
+        return unitNames;
+	}	    
 
 }

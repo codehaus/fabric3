@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	See the NOTICE file distributed with this work for information
+	regarding copyright ownership.  This file is licensed
+	to you under the Apache License, Version 2.0 (the
+	"License"); you may not use this file except in compliance
+	with the License.  You may obtain a copy of the License at
+	
+	http://www.apache.org/licenses/LICENSE-2.0
+	
+	Unless required by applicable law or agreed to in writing,
+	software distributed under the License is distributed on an
+	"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+	KIND, either express or implied.  See the License for the
+	specific language governing permissions and limitations
+	under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.codehaus.fabric3</groupId>
+        <artifactId>fabric</artifactId>
+        <version>2</version>
+    </parent>
+
+    <groupId>org.codehaus.fabric3.tests</groupId>
+    <artifactId>test-jpa-core</artifactId>
+    <version>0.5-SNAPSHOT</version>
+    <name>Fabric3 JPA Core Test</name>
+    <packaging>jar</packaging>
+    <description>Fabric3 JPA Core Test</description>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.codehaus.fabric3.spec</groupId>
+            <artifactId>sca-api-r1.0</artifactId>
+            <version>0.2.1</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>compile</scope>
+        </dependency>
+    
+        <dependency>
+            <groupId>javax.persistence</groupId>
+            <artifactId>persistence-api</artifactId>
+            <version>1.0</version>
+        </dependency>
+        
+    </dependencies>
+
+    <build>
+
+        <defaultGoal>verify</defaultGoal>
+
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.fabric3</groupId>
+                <artifactId>fabric3-itest-plugin</artifactId>
+                <version>0.5-SNAPSHOT</version>
+                <configuration>
+                    <runtimeVersion>0.5-SNAPSHOT</runtimeVersion>
+                    <extensions>
+                        <!-- JPA Hibernate Extensions -->
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-jpa-hibernate</artifactId>
+                            <version>0.5-SNAPSHOT</version>
+                        </dependency>
+                        <!-- JPA Core Components -->
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-jpa-core</artifactId>
+                            <version>0.5-SNAPSHOT</version>
+                        </dependency>
+                        <!-- Transaction Manager Using JOTM -->
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-tx-jotm</artifactId>
+                            <version>0.5-SNAPSHOT</version>
+                        </dependency>
+                        <!-- Declarative Transaction Policies -->
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-tx</artifactId>
+                            <version>0.5-SNAPSHOT</version>
+                        </dependency>
+                        <!-- JSR 250 Resource Support and Datasource Management -->
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-resource</artifactId>
+                            <version>0.5-SNAPSHOT</version>
+                        </dependency>
+                        <!-- Test Extension to Install the Datasource -->
+                        <dependency>
+                            <groupId>org.codehaus.fabric3.tests</groupId>
+                            <artifactId>test-ds-extension</artifactId>
+                            <version>0.1-SNAPSHOT</version>
+                        </dependency>
+                    </extensions>
+                    <!-- Requires Hibernate and JOTM shared between app and system -->
+                    <shared>
+                        <dependency>
+                            <groupId>javax.persistence</groupId>
+                            <artifactId>persistence-api</artifactId>
+                            <version>1.0</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>log4j</groupId>
+                            <artifactId>log4j</artifactId>
+                            <version>1.2.15</version>
+                            <exclusions>
+                                <exclusion>
+                                    <groupId>javax.jms</groupId>
+                                    <artifactId>jms</artifactId>
+                                </exclusion>
+                                <exclusion>
+                                    <groupId>com.sun.jdmk</groupId>
+                                    <artifactId>jmxtools</artifactId>
+                                </exclusion>
+                                <exclusion>
+                                    <groupId>com.sun.jmx</groupId>
+                                    <artifactId>jmxri</artifactId>
+                                </exclusion>
+                            </exclusions>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.hibernate</groupId>
+                            <artifactId>hibernate-entitymanager</artifactId>
+                            <version>3.3.1.ga</version>
+                            <exclusions>
+                                <exclusion>
+                                    <groupId>javax.transaction</groupId>
+                                    <artifactId>jta</artifactId>
+                                </exclusion>
+                            </exclusions>
+                        </dependency>
+                        <dependency>
+                            <groupId>concurrent</groupId>
+                            <artifactId>concurrent</artifactId>
+                            <version>1.3.4</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>jotm</groupId>
+                            <artifactId>jotm</artifactId>
+                            <version>2.0.10</version>
+                            <exclusions>
+                                <exclusion>
+                                    <artifactId>jta</artifactId>
+                                    <groupId>javax.transaction</groupId>
+                                </exclusion>
+                                <exclusion>
+                                    <artifactId>connector</artifactId>
+                                    <groupId>javax.resource</groupId>
+                                </exclusion>
+                                <exclusion>
+                                    <artifactId>jts</artifactId>
+                                    <groupId>javax.jts</groupId>
+                                </exclusion>
+                            </exclusions>
+                        </dependency>
+                        <dependency>
+                            <groupId>geronimo-spec</groupId>
+                            <artifactId>geronimo-spec-jta</artifactId>
+                            <version>1.0.1B-rc4</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>geronimo-spec</groupId>
+                            <artifactId>geronimo-spec-j2ee-connector</artifactId>
+                            <version>1.5-rc4</version>
+                        </dependency>
+                    </shared>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>testDB</directory>
+                            <includes>
+                                <include>**/**</include>
+                            </includes>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

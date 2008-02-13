@@ -32,4 +32,30 @@
          <property name="openjpa.Log" value="DefaultLevel=WARN, Tool=INFO"/>
       </properties>
    </persistence-unit>
+   <persistence-unit name="testTwo" transaction-type="JTA">
+      <provider>org.test.ProviderNameTwo</provider>
+      <jta-data-source>EmployeeDSTwo</jta-data-source>
+      <class>org.fabric3.jpa.model.Employee</class>
+      <class>org.fabric3.jpa.model.Employee2</class>
+      <properties>
+         <property name="hibernate.dialect" value="org.hibernate.test.dialect.Two"/>
+         <property name="hibernate.transaction.manager_lookup_class" 
+                   value="org.fabric3.jpa.hibernate.F3HibernateTransactionManagerLookupTwo"/>
+         <property name="hibernate.hbm2ddl.auto" value="create-drop-two"/>                        
+      </properties>
+   </persistence-unit>
+   <persistence-unit name="testThree" transaction-type="JTA">
+      <provider>org.test.ProviderNameThree</provider>
+      <jta-data-source>EmployeeDSThree</jta-data-source>
+      <class>org.fabric3.jpa.model.Employee</class>
+      <class>org.fabric3.jpa.model.Employee2</class>
+      <class>org.fabric3.jpa.model.Employee3</class>
+      <class>org.fabric3.jpa.model.Employee4</class>
+      <properties>
+         <property name="hibernate.dialect" value="org.hibernate.test.dialect.Three"/>
+         <property name="hibernate.transaction.manager_lookup_class" 
+                   value="org.fabric3.jpa.hibernate.F3HibernateTransactionManagerLookupThree"/>
+         <property name="hibernate.hbm2ddl.auto" value="create-drop-three"/>             
+      </properties>
+   </persistence-unit>
 </persistence>

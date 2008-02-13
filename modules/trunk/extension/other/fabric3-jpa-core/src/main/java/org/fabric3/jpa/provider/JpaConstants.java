@@ -27,25 +27,29 @@ public class JpaConstants {
     public static final String PROPERTY_VALUE = "value";
 
     public static final String PROPERTY_NAME = "name";
+    
+    public static final String NAMED_UNIT = "//persistence-unit[@name=''{0}'']";
+    
+    public static final String ANY_UNIT = "//persistence-unit";
 
-    public static final String PROPERTY = "//persistence-unit/properties/property";
+    public static final String PROPERTY = "/properties/property";
 
-    public static final String TRANSACTION_TYPE = "//persistence-unit/@transaction-type";
+    public static final String TRANSACTION_TYPE = "/@transaction-type";    
+    
+    public static final String NAME = "/@name";
 
-    public static final String NAME = "//persistence-unit/@name";
+    public static final String PROVIDER = "/provider";
 
-    public static final String PROVIDER = "//persistence-unit/provider";
+    public static final String NON_JTA_DATA_SOURCE = "/non-jta-data-source";
 
-    public static final String NON_JTA_DATA_SOURCE = "//persistence-unit/non-jta-data-source";
+    public static final String MAPPING_FILE = "/mapping-file";
 
-    public static final String MAPPING_FILE = "//persistence-unit/mapping-file";
+    public static final String CLASS = "/class";
 
-    public static final String CLASS = "//persistence-unit/class";
+    public static final String JTA_DATA_SOURCE = "/jta-data-source";
 
-    public static final String JTA_DATA_SOURCE = "//persistence-unit/jta-data-source";
+    public static final String JAR_FILE = "/jar-file";
 
-    public static final String JAR_FILE = "//persistence-unit/jar-file";
-
-    public static final String EXCLUDE_UNLISTED_CLASSES = "//persistence-unit/exclude-unlisted-classes";
+    public static final String EXCLUDE_UNLISTED_CLASSES = "/exclude-unlisted-classes";
 
 }

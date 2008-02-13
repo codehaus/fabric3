@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.JarURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -69,8 +68,8 @@ public class ClasspathPersistenceUnitScanner implements PersistenceUnitScanner {
                     Document persistenceDom = db.parse(persistenceUnitUrl.openStream());
                     URL rootUrl = getRootJarUrl(persistenceUnitUrl);
 
-                    PersistenceUnitInfoImpl info = new PersistenceUnitInfoImpl(persistenceDom, classLoader, rootUrl);
-                    if (unitName.equals(info.getPersistenceUnitName())) {
+                    PersistenceUnitInfo info = PersistenceUnitInfoImpl.getInstance(unitName, persistenceDom, classLoader, rootUrl);
+                    if (info != null) {
                         persistenceUnitInfos.put(unitName, info);
                         return info;
                     }
