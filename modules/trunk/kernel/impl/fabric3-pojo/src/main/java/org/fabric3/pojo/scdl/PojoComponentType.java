@@ -18,9 +18,13 @@
  */
 package org.fabric3.pojo.scdl;
 
-import org.fabric3.scdl.Signature;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.MemberSite;
+import org.fabric3.scdl.Signature;
 
 /**
  * A component type specialization for POJO implementations
@@ -38,6 +42,7 @@ public class PojoComponentType extends AbstractComponentType<JavaMappedService,
     private MemberSite conversationIDMember;
     private MemberSite componentContextMember;
     private MemberSite requestContextMember;
+    private List<MemberSite> callbackMembers = new ArrayList<MemberSite>();
 
     /**
      * Constructor used only for deserialization
@@ -79,6 +84,24 @@ public class PojoComponentType extends AbstractComponentType<JavaMappedService,
      */
     public void setConstructorDefinition(ConstructorDefinition<?> definition) {
         this.constructorDefinition = definition;
+    }
+
+    /**
+     * Returns a collection of defined callback injection sites for the component implementation
+     *
+     * @return the callback injection sites
+     */
+    public List<MemberSite> getCallbackSites() {
+        return Collections.unmodifiableList(callbackMembers);
+    }
+
+    /**
+     * Adds a defined callback injection site for the component implementation
+     *
+     * @param site the field or setter method the callback is mapped to
+     */
+    public void addCallbackSite(MemberSite site) {
+        callbackMembers.add(site);
     }
 
     /**
