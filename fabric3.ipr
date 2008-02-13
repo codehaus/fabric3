@@ -361,7 +361,6 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/maven/fabric3-maven-api/fabric3-maven-api.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/maven/fabric3-maven-api/fabric3-maven-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/maven/fabric3-maven-host/fabric3-maven-host.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/maven/fabric3-maven-host/fabric3-maven-host.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/federated/fabric3-messaging/fabric3-messaging.iml" filepath="$PROJECT_DIR$/modules/trunk/federated/fabric3-messaging/fabric3-messaging.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/federated/fabric3-messaging-jms/fabric3-messaging-jms.iml" filepath="$PROJECT_DIR$/modules/trunk/federated/fabric3-messaging-jms/fabric3-messaging-jms.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/federated/fabric3-messaging-jxta/fabric3-messaging-jxta.iml" filepath="$PROJECT_DIR$/modules/trunk/federated/fabric3-messaging-jxta/fabric3-messaging-jxta.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-mock/fabric3-mock.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-mock/fabric3-mock.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/support/fabric3-monitor/fabric3-monitor.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/support/fabric3-monitor/fabric3-monitor.iml" />
