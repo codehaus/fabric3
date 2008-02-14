@@ -57,6 +57,10 @@
             <one>1</one>
             <two>2</two>
         </property>
+        <property name="propertiesValue"><![CDATA[
+prop1=value1
+prop2=value2
+        ]]></property>
     </component>
 
     <component name="ProtectedFieldPropertyTypesTest">
@@ -90,6 +94,10 @@
             <one>1</one>
             <two>2</two>
         </property>
+        <property name="propertiesValue"><![CDATA[
+prop1=value1
+prop2=value2
+        ]]></property>
     </component>
 
     <component name="PublicSetterPropertyTypesTest">
@@ -123,6 +131,10 @@
             <one>1</one>
             <two>2</two>
         </property>
+        <property name="propertiesValue"><![CDATA[
+prop1=value1
+prop2=value2
+        ]]></property>
     </component>
 
     <component name="ProtectedSetterPropertyTypesTest">
@@ -156,6 +168,10 @@
             <one>1</one>
             <two>2</two>
         </property>
+        <property name="propertiesValue"><![CDATA[
+prop1=value1
+prop2=value2
+        ]]></property>
     </component>
 
     <component name="PublicConstructorPropertyTypesTest">
@@ -189,6 +205,10 @@
             <one>1</one>
             <two>2</two>
         </property>
+        <property name="propertiesValue"><![CDATA[
+prop1=value1
+prop2=value2
+        ]]></property>
     </component>
 
     <component name="PropertyFromFileImpl">

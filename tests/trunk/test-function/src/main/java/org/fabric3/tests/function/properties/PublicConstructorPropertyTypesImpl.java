@@ -21,6 +21,7 @@ import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
+import java.util.Properties;
 
 import org.osoa.sca.annotations.Property;
 
@@ -53,6 +54,7 @@ public class PublicConstructorPropertyTypesImpl implements PropertyTypes {
 
     private final int[] intArray;
     private final Map<String, String> mapValue;
+    private final Properties propertiesValue;
 
     public PublicConstructorPropertyTypesImpl(@Property(name = "booleanPrimitive")boolean booleanPrimitive,
                                               @Property(name = "bytePrimitive")byte bytePrimitive,
@@ -75,7 +77,8 @@ public class PublicConstructorPropertyTypesImpl implements PropertyTypes {
                                               @Property(name = "dateValue")Date dateValue,
                                               @Property(name = "calendarValue")Calendar calendarValue,
                                               @Property(name = "intArray") int[] intArray,
-                                              @Property(name = "mapValue") Map<String, String> mapValue) {
+                                              @Property(name = "mapValue") Map<String, String> mapValue,
+                                              @Property(name = "propertiesValue") Properties propertiesValue) {
         this.booleanPrimitive = booleanPrimitive;
         this.bytePrimitive = bytePrimitive;
         this.shortPrimitive = shortPrimitive;
@@ -98,6 +101,7 @@ public class PublicConstructorPropertyTypesImpl implements PropertyTypes {
         this.calendarValue = calendarValue;
         this.intArray = intArray;
         this.mapValue = mapValue;
+        this.propertiesValue = propertiesValue;
     }
 
     public boolean getBooleanPrimitive() {
@@ -186,5 +190,9 @@ public class PublicConstructorPropertyTypesImpl implements PropertyTypes {
 
     public Map<String, String> getMapValue() {
         return mapValue;
+    }
+
+    public Properties getPropertiesValue() {
+        return propertiesValue;
     }
 }

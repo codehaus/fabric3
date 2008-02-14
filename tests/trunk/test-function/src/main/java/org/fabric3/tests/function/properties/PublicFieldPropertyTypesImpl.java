@@ -21,6 +21,7 @@ import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
+import java.util.Properties;
 
 import org.osoa.sca.annotations.Property;
 
@@ -53,6 +54,7 @@ public class PublicFieldPropertyTypesImpl implements PropertyTypes {
 
     @Property public int[] intArray;
     @Property public Map<String, String> mapValue;
+    @Property public Properties propertiesValue;
 
 
     public boolean getBooleanPrimitive() {
@@ -141,5 +143,9 @@ public class PublicFieldPropertyTypesImpl implements PropertyTypes {
 
     public Map<String, String> getMapValue() {
         return mapValue;
+    }
+
+    public Properties getPropertiesValue() {
+        return propertiesValue;
     }
 }

@@ -21,6 +21,7 @@ import java.net.URL;
 import java.util.Date;
 import java.util.Calendar;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * Test service for returning Properties with different types.
@@ -71,4 +72,6 @@ public interface PropertyTypes {
     int[] getIntArray();
 
     Map<String, String> getMapValue();
+
+    Properties getPropertiesValue();
 }

@@ -23,6 +23,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 import java.util.Map;
+import java.util.Properties;
 
 import junit.framework.TestCase;
 import org.osoa.sca.annotations.Reference;
@@ -133,5 +134,11 @@ public class PropertyTypeTest extends TestCase {
         Map<String, String> map = service.getMapValue();
         assertEquals("1", map.get("one"));
         assertEquals("2", map.get("two"));
+    }
+
+    public void testProperties() {
+        Properties properties = service.getPropertiesValue();
+        assertEquals("value1", properties.getProperty("prop1"));
+        assertEquals("value2", properties.getProperty("prop2"));
     }
 }
