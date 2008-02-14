@@ -74,7 +74,6 @@
         </JAVADOC>
         <SOURCES>
           <root url="jar://$M2_REPO$/jotm/jotm/2.0.10/jotm-2.0.10-sources.jar!/" />
-          <root url="file:///tmp/jotm/jotm-2.0.10/src/main" />
         </SOURCES>
       </library>
     </orderEntry>
@@ -147,7 +146,6 @@
         </JAVADOC>
         <SOURCES>
           <root url="jar://$M2_REPO$/org/objectweb/carol/carol/2.0.5/carol-2.0.5-sources.jar!/" />
-          <root url="file:///tmp/carol-2.0.5-src/src" />
         </SOURCES>
       </library>
     </orderEntry>
