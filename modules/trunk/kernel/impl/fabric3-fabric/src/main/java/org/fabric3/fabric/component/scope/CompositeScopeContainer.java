@@ -96,22 +96,11 @@ public class CompositeScopeContainer extends AbstractScopeContainer<URI> {
             return wrapper;
         }
 
-        if (workContext == null) {
-            String id = component.getUri().toString();
-            throw new NoWorkContextException("No work context bound when loading component: " + id, id);
-        }
-
-        URI contextId = workContext.getScopeIdentifier(getScope());
-        if (contextId == null) {
-            String id = component.getUri().toString();
-            throw new NoCompositeException("No composite specified in work context for component: " + id, id);
-        }
-
         // FIXME is there a potential race condition here that may result in two instances being created
         wrapper = createInstance(component, workContext);
         if (!wrapper.isStarted()) {
             wrapper.start();
-            destroyQueues.get(contextId).add(wrapper);
+            destroyQueues.get(component.getGroupId()).add(wrapper);
         }
         instanceWrappers.put(component, wrapper);
         return wrapper;

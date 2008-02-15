@@ -54,6 +54,7 @@ public class CompositeScopeContainerTestCase<T> extends TestCase {
         EasyMock.expect(component.createInstanceWrapper(workContext)).andReturn(wrapper);
         EasyMock.expect(wrapper.isStarted()).andReturn(false);
         wrapper.start();
+        EasyMock.expect(component.getGroupId()).andStubReturn(contextId);
         control.replay();
         scopeContainer.register(component);
         scopeContainer.startContext(workContext, groupId);
