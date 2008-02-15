@@ -46,8 +46,6 @@
                 <module>test-security-policy</module>
                 <module>test-ordering</module>
 
-                <!--Comment out runtime-development as we can't find javac on the CI server-->
-                <!--<module>test-runtime-development</module>-->
                 <module>test-runtime-jetty</module>
                 <!--module>test-runtime-tomcat</module-->
 
