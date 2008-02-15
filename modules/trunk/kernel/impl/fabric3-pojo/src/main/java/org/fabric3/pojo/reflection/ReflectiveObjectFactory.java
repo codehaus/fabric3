@@ -44,14 +44,30 @@ public class ReflectiveObjectFactory<T> implements ObjectFactory<T> {
                     ObjectFactory<?> paramFactory = paramFactories[i];
                     params[i] = paramFactory.getInstance();
                 }
-                return constructor.newInstance(params);
+                try {
+                    return constructor.newInstance(params);
+                } catch (IllegalArgumentException e) {
+                    // check which of the parameters could not be assigned
+                    Class<?>[] paramTypes = constructor.getParameterTypes();
+                    String name = constructor.toString();
+                    for (int i = 0; i < paramTypes.length; i++) {
+                        Class<?> paramType = paramTypes[i];
+                        if (paramType.isPrimitive() && params[i] == null) {
+                            throw new NullPrimitiveException(name, i);
+                        }
+                        if (params[i] != null && paramType.isInstance(params[i])) {
+                            throw new IncompatibleArgumentException(name, i, params[i].getClass().getName());
+                        }
+                    }
+                    // did not fail because of incompatible assignment
+                    throw new ObjectCreationException(name, e);
+                }
             }
         } catch (InstantiationException e) {
             String name = constructor.getDeclaringClass().getName();
             throw new AssertionError("Class is not instantiable [" + name + "]");
         } catch (IllegalAccessException e) {
-            String name = constructor.getDeclaringClass().getName();
-            throw new AssertionError("Constructor is not accessible [" + name + "]");
+            throw new AssertionError("Constructor is not accessible [" + constructor.toString() + "]");
         } catch (InvocationTargetException e) {
             String name = constructor.getDeclaringClass().getName();
             throw new ObjectCreationException("Exception thrown by constructor", name, e.getCause());
