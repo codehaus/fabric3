@@ -338,8 +338,6 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/plugin/fabric3-contribution-plugin/fabric3-contribution-plugin.iml" filepath="$PROJECT_DIR$/modules/trunk/plugin/fabric3-contribution-plugin/fabric3-contribution-plugin.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-contribution-scanner/fabric3-contribution-scanner.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-contribution-scanner/fabric3-contribution-scanner.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-contribution-scanner-spi/fabric3-contribution-scanner-spi.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-contribution-scanner-spi/fabric3-contribution-scanner-spi.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/development/fabric3-development-api/fabric3-development-api.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/development/fabric3-development-api/fabric3-development-api.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/development/fabric3-development-host/fabric3-development-host.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/development/fabric3-development-host/fabric3-development-host.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/federated/fabric3-discovery-jxta/fabric3-discovery-jxta.iml" filepath="$PROJECT_DIR$/modules/trunk/federated/fabric3-discovery-jxta/fabric3-discovery-jxta.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-extension/fabric3-extension.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-extension/fabric3-extension.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-fabric/fabric3-fabric.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-fabric/fabric3-fabric.iml" />
@@ -403,7 +401,6 @@
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-ordering/test-ordering.iml" filepath="$PROJECT_DIR$/tests/trunk/test-ordering/test-ordering.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-policy/test-policy.iml" filepath="$PROJECT_DIR$/tests/trunk/test-policy/test-policy.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-resource/test-resource.iml" filepath="$PROJECT_DIR$/tests/trunk/test-resource/test-resource.iml" />
-      <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-runtime-development/test-runtime-development.iml" filepath="$PROJECT_DIR$/tests/trunk/test-runtime-development/test-runtime-development.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-runtime-jetty/test-runtime-jetty.iml" filepath="$PROJECT_DIR$/tests/trunk/test-runtime-jetty/test-runtime-jetty.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-runtime-tomcat/test-runtime-tomcat.iml" filepath="$PROJECT_DIR$/tests/trunk/test-runtime-tomcat/test-runtime-tomcat.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-security-policy/test-security-policy.iml" filepath="$PROJECT_DIR$/tests/trunk/test-security-policy/test-security-policy.iml" />
