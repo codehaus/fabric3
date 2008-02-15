@@ -75,7 +75,7 @@ public class SpringComponentGenerator implements ComponentGenerator<LogicalCompo
         URI componentId = component.getUri();
         SpringComponentDefinition physical = new SpringComponentDefinition();
         physical.setComponentId(componentId);
-        physical.setGroupId(componentId.resolve("."));
+        physical.setGroupId(component.getParent().getUri());
         physical.setScope(type.getImplementationScope());
 
         // generate the classloader resource definition

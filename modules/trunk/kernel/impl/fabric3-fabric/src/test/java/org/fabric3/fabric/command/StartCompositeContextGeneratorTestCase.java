@@ -53,10 +53,10 @@ public class StartCompositeContextGeneratorTestCase extends TestCase {
         assertEquals(2, commands.size());
         Command command = commands.get(0);
         assertTrue(command instanceof StartCompositeContextCommand);
-        assertEquals("parent/child/", ((StartCompositeContextCommand) command).getGroupId().toString());
+        assertEquals("parent/child", ((StartCompositeContextCommand) command).getGroupId().toString());
         command = commands.get(1);
         assertTrue(command instanceof StartCompositeContextCommand);
-        assertEquals("parent/", ((StartCompositeContextCommand) command).getGroupId().toString());
+        assertEquals("parent", ((StartCompositeContextCommand) command).getGroupId().toString());
     }
 
 

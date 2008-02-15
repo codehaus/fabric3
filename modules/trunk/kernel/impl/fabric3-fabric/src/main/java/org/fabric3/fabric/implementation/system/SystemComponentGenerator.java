@@ -75,7 +75,7 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
         URI componentId = component.getUri();
         SystemComponentDefinition physical = new SystemComponentDefinition();
         physical.setComponentId(componentId);
-        physical.setGroupId(componentId.resolve("."));
+        physical.setGroupId(component.getParent().getUri());
         physical.setScope(type.getImplementationScope());
         physical.setInitLevel(helper.getInitLevel(definition, type));
         physical.setInstanceFactoryProviderDefinition(providerDefinition);

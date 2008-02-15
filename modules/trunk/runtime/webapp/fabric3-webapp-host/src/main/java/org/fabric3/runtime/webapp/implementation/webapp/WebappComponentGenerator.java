@@ -65,7 +65,7 @@ public class WebappComponentGenerator implements ComponentGenerator<LogicalCompo
         WebappComponentDefinition pDefinition = new WebappComponentDefinition();
         URI componentId = component.getUri();
         pDefinition.setComponentId(componentId);
-        pDefinition.setGroupId(componentId.resolve("."));
+        pDefinition.setGroupId(component.getParent().getUri());
 
         Map<String, Class<?>> referenceTypes = new HashMap<String, Class<?>>();
         for (ReferenceDefinition referenceDefinition : componentType.getReferences().values()) {

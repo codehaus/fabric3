@@ -47,8 +47,8 @@ import org.fabric3.spi.wire.Wire;
  * @version $Rev$ $Date$
  */
 public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo> implements DevelopmentRuntime {
-    public static final URI DOMAIN_URI = URI.create("fabric3://./domain/");
-    private static final String DOMAIN_STRING = DOMAIN_URI.toString();
+    public static final String DOMAIN_NAME = "fabric3://./domain";
+    public static final URI DOMAIN_URI = URI.create(DOMAIN_NAME);
     private static final URI WIRE_CACHE_URI = URI.create(RUNTIME_NAME + "/ClientWireCache");
     private static final URI MOCK_CACHE_URI = URI.create(RUNTIME_NAME + "/MockObjectCache");
     private static final URI PROXY_SERVICE_URI = URI.create(RUNTIME_NAME + "/proxyService");
@@ -118,8 +118,7 @@ public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo>
 
             // shut system components down
             workContext = new SimpleWorkContext();
-            URI systemGroupId = URI.create(ComponentNames.RUNTIME_NAME + "/");
-            workContext.setScopeIdentifier(Scope.COMPOSITE, systemGroupId);
+            workContext.setScopeIdentifier(Scope.COMPOSITE, ComponentNames.RUNTIME_URI);
             scopeContainer.stopContext(workContext);
 
             scopeContainer = null;
@@ -131,7 +130,7 @@ public class DevelopmentRuntimeImpl extends AbstractRuntime<DevelopmentHostInfo>
     }
 
     public <T> T connectTo(Class<T> interfaze, String serviceUri) {
-        URI uri = URI.create(DOMAIN_STRING + serviceUri);
+        URI uri = URI.create(DOMAIN_NAME + "/" + serviceUri);
         if (uri.getFragment() == null) {
             // no service name specified, calculate from the interface
             uri = URI.create(uri.toString() + "#" + JavaIntrospectionHelper.getBaseName(interfaze));

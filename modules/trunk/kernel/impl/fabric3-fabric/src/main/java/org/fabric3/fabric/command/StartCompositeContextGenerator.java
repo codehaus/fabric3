@@ -73,10 +73,7 @@ public class StartCompositeContextGenerator implements CommandGenerator {
             }
         }
         
-        // @FIXME a trailing slash is needed since group ids are set on ComponentDefinitions using URI#resolve(",")
-        // This should be revisited
-        URI groupId = URI.create(component.getUri().toString() + "/");
-        commandSet.add(CommandSet.Phase.FIRST, new StartCompositeContextCommand(groupId));
+        commandSet.add(CommandSet.Phase.FIRST, new StartCompositeContextCommand(component.getUri()));
     }
 
     private boolean isComposite(LogicalComponent<?> component) {

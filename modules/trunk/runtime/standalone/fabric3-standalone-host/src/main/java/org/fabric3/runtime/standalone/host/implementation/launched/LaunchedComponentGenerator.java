@@ -69,7 +69,7 @@ public class LaunchedComponentGenerator implements ComponentGenerator<LogicalCom
         PojoComponentType type = implementation.getComponentType();
         JavaComponentDefinition pDefinition = new JavaComponentDefinition();
         URI componentId = component.getUri();
-        pDefinition.setGroupId(componentId.resolve("."));
+        pDefinition.setGroupId(component.getParent().getUri());
         pDefinition.setComponentId(componentId);
         // set the classloader id temporarily until multiparent classloading is in palce
         pDefinition.setClassLoaderId(URI.create("sca://./applicationClassLoader"));

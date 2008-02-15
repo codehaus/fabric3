@@ -124,17 +124,15 @@ public class WebappCoordinator implements RuntimeLifecycleCoordinator<WebappRunt
             ScopeContainer<URI> container = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
 
             // start the system context
-            URI systemGroupId = URI.create(ComponentNames.RUNTIME_NAME + "/");
             WorkContext workContext = new SimpleWorkContext();
-            workContext.setScopeIdentifier(Scope.COMPOSITE, systemGroupId);
-            container.startContext(workContext, systemGroupId);
+            workContext.setScopeIdentifier(Scope.COMPOSITE, ComponentNames.RUNTIME_URI);
+            container.startContext(workContext, ComponentNames.RUNTIME_URI);
 
             // start the domain context
             URI domainUri = runtime.getHostInfo().getDomain();
-            URI groupId = URI.create(domainUri.toString() + "/");
             workContext = new SimpleWorkContext();
-            workContext.setScopeIdentifier(Scope.COMPOSITE, groupId);
-            container.startContext(workContext, groupId);
+            workContext.setScopeIdentifier(Scope.COMPOSITE, domainUri);
+            container.startContext(workContext, domainUri);
         } catch (GroupInitializationException e) {
             throw new InitializationException(e);
         }

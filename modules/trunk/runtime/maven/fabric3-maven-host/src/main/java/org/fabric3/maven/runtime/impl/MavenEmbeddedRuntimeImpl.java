@@ -114,9 +114,8 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
     public void startContext(URI compositeId) throws GroupInitializationException {
         WorkContext workContext = new SimpleWorkContext();
         workContext.setScopeIdentifier(Scope.COMPOSITE, compositeId);
-        URI groupId = URI.create(compositeId.toString() + "/");
         ScopeRegistry scopeRegistry = getSystemComponent(ScopeRegistry.class, ComponentNames.SCOPE_REGISTRY_URI);
-        scopeRegistry.getScopeContainer(Scope.COMPOSITE).startContext(workContext, groupId);
+        scopeRegistry.getScopeContainer(Scope.COMPOSITE).startContext(workContext, compositeId);
     }
 
     public void destroy() {
@@ -124,8 +123,7 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
         ScopeRegistry scopeRegistry = getSystemComponent(ScopeRegistry.class, ComponentNames.SCOPE_REGISTRY_URI);
         ScopeContainer scopeContainer = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
         WorkContext workContext = new SimpleWorkContext();
-        URI systemGroupId = URI.create(ComponentNames.RUNTIME_NAME + "/");
-        workContext.setScopeIdentifier(Scope.COMPOSITE, systemGroupId);
+        workContext.setScopeIdentifier(Scope.COMPOSITE, ComponentNames.RUNTIME_URI);
         scopeContainer.stopContext(workContext);
     }
 

@@ -115,14 +115,13 @@ public class DevelopmentCoordinator implements RuntimeLifecycleCoordinator<Devel
             ScopeRegistry scopeRegistry = runtime.getSystemComponent(ScopeRegistry.class, SCOPE_REGISTRY_URI);
             ScopeContainer<URI> container = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
             // start the system context
-            URI systemGroupId = URI.create(ComponentNames.RUNTIME_NAME + "/");
+            URI systemGroupId = ComponentNames.RUNTIME_URI;
             WorkContext workContext = new SimpleWorkContext();
             workContext.setScopeIdentifier(Scope.COMPOSITE, systemGroupId);
             container.startContext(workContext, systemGroupId);
 
             // start the domain context
-            URI domainUri = runtime.getHostInfo().getDomain();
-            URI groupId = URI.create(domainUri.toString() + "/");
+            URI groupId = runtime.getHostInfo().getDomain();
             workContext = new SimpleWorkContext();
             workContext.setScopeIdentifier(Scope.COMPOSITE, groupId);
             container.startContext(workContext, groupId);
