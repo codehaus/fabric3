@@ -111,8 +111,9 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
 
     public InstanceFactory<T> createFactory() {
         ObjectFactory<?>[] initArgs = getConstructorArgs();
+        ObjectFactory<T> factory = new ReflectiveObjectFactory<T>(constructor, initArgs);
         Injector<T>[] injectors = getInjectors();
-        return new ReflectiveInstanceFactory<T>(constructor, initArgs, injectors, initInvoker, destroyInvoker, cl);
+        return new ReflectiveInstanceFactory<T>(factory, injectors, initInvoker, destroyInvoker, cl);
     }
 
     protected ObjectFactory<?>[] getConstructorArgs() {

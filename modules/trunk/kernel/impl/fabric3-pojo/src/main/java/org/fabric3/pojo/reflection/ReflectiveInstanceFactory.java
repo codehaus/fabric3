@@ -18,9 +18,6 @@
  */
 package org.fabric3.pojo.reflection;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
@@ -32,20 +29,18 @@ import org.fabric3.spi.component.WorkContext;
  * @version $Rev$ $Date$
  */
 public class ReflectiveInstanceFactory<T> implements InstanceFactory<T> {
-    private final Constructor<T> ctr;
-    private final ObjectFactory<?>[] ctrArgs;
+    private final ObjectFactory<T> constructor;
     private final Injector<T>[] injectors;
     private final EventInvoker<T> initInvoker;
     private final EventInvoker<T> destroyInvoker;
     private final ClassLoader cl;
 
-    public ReflectiveInstanceFactory(Constructor<T> ctr,
-                                     ObjectFactory<?>[] ctrArgs,
+    public ReflectiveInstanceFactory(ObjectFactory<T> constructor,
                                      Injector<T>[] injectors,
                                      EventInvoker<T> initInvoker,
-                                     EventInvoker<T> destroyInvoker, ClassLoader cl) {
-        this.ctr = ctr;
-        this.ctrArgs = ctrArgs;
+                                     EventInvoker<T> destroyInvoker,
+                                     ClassLoader cl) {
+        this.constructor = constructor;
         this.injectors = injectors;
         this.initInvoker = initInvoker;
         this.destroyInvoker = destroyInvoker;
@@ -58,39 +53,13 @@ public class ReflectiveInstanceFactory<T> implements InstanceFactory<T> {
         Thread.currentThread().setContextClassLoader(cl);
         WorkContext oldContext = PojoWorkContextTunnel.setThreadWorkContext(workContext);
         try {
-            T instance;
-            if (ctrArgs == null) {
-                // use no-arg constructor
-                instance = ctr.newInstance();
-            } else {
-                // create constructor values
-                Object[] args = new Object[ctrArgs.length];
-                for (int i = 0; i < args.length; i++) {
-                    args[i] = ctrArgs[i].getInstance();
-                }
-                try {
-                    instance = ctr.newInstance(args);
-                } catch (IllegalArgumentException e) {
-                    String name = ctr.getDeclaringClass().getName();
-                    throw new ObjectCreationException("Invalid constructor parameter", name, e);
-                }
-            }
-
+            T instance = constructor.getInstance();
             if (injectors != null) {
                 for (Injector<T> injector : injectors) {
                     injector.inject(instance);
                 }
             }
             return new ReflectiveInstanceWrapper<T>(instance, cl, initInvoker, destroyInvoker);
-        } catch (InstantiationException e) {
-            String name = ctr.getDeclaringClass().getName();
-            throw new AssertionError("Class is not instantiable [" + name + "]");
-        } catch (IllegalAccessException e) {
-            String name = ctr.getDeclaringClass().getName();
-            throw new AssertionError("Constructor is not accessible [" + name + "]");
-        } catch (InvocationTargetException e) {
-            String name = ctr.getDeclaringClass().getName();
-            throw new ObjectCreationException("Exception thrown by constructor", name, e.getCause());
         } finally {
             PojoWorkContextTunnel.setThreadWorkContext(oldContext);
             Thread.currentThread().setContextClassLoader(oldCl);
