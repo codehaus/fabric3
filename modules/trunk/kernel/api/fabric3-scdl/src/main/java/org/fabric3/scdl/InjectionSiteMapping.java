@@ -30,27 +30,6 @@ public class InjectionSiteMapping {
 
     // Site of the mapping
     private InjectionSite site;
-    
-    // Multiplicity
-    private Multiplicity multiplicity;
-    
-    /**
-     * Gets the multiplicity for the injection site.
-     * 
-     * @return Multiplicity for the injection site.
-     */
-    public Multiplicity getMultiplicity() {
-        return multiplicity;
-    }
-    
-    /**
-     * Sets the multiplicity for the injection site.
-     * 
-     * @param multiplicity Multiplicity for the injection site.
-     */
-    public void setMultiplicity(Multiplicity multiplicity) {
-        this.multiplicity = multiplicity;
-    }
 
     /**
      * Gets the source of the injection.
