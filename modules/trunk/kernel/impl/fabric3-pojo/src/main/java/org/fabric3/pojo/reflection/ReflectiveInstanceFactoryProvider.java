@@ -110,23 +110,22 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
     }
 
     public InstanceFactory<T> createFactory() {
-        ObjectFactory<?>[] initArgs = getConstructorArgs();
-        ObjectFactory<T> factory = new ReflectiveObjectFactory<T>(constructor, initArgs);
+        ObjectFactory<T> factory = new ReflectiveObjectFactory<T>(constructor, getArgumentFactories(constructorNames));
         Injector<T>[] injectors = getInjectors();
         return new ReflectiveInstanceFactory<T>(factory, injectors, initInvoker, destroyInvoker, cl);
     }
 
-    protected ObjectFactory<?>[] getConstructorArgs() {
-        ObjectFactory<?>[] initArgs = new ObjectFactory<?>[constructorNames.size()];
-        for (int i = 0; i < initArgs.length; i++) {
-            ValueSource name = constructorNames.get(i);
-            ObjectFactory<?> factory = factories.get(name);
+    protected ObjectFactory<?>[] getArgumentFactories(List<ValueSource> sources) {
+        ObjectFactory<?>[] argumentFactories = new ObjectFactory<?>[sources.size()];
+        for (int i = 0; i < argumentFactories.length; i++) {
+            ValueSource source = sources.get(i);
+            ObjectFactory<?> factory = factories.get(source);
             if (factory == null) {
                 factory = NULL_FACTORY;
             }
-            initArgs[i] = factory;
+            argumentFactories[i] = factory;
         }
-        return initArgs;
+        return argumentFactories;
     }
 
     protected Injector<T>[] getInjectors() {

@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Collections;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
@@ -55,7 +56,8 @@ public class ReflectiveInstanceFactoryProviderTestCase extends TestCase {
     private ValueSource stringProperty = new ValueSource(ValueSource.ValueSourceType.PROPERTY, "string");
 
     public void testNoConstructorArgs() {
-        ObjectFactory<?>[] args = provider.getConstructorArgs();
+        List<ValueSource> sources = Collections.emptyList();
+        ObjectFactory<?>[] args = provider.getArgumentFactories(sources);
         assertEquals(0, args.length);
     }
 
@@ -70,7 +72,7 @@ public class ReflectiveInstanceFactoryProviderTestCase extends TestCase {
                                                               Foo.class.getClassLoader());
         provider.setObjectFactory(intProperty, intFactory);
         provider.setObjectFactory(stringProperty, stringFactory);
-        ObjectFactory<?>[] args = provider.getConstructorArgs();
+        ObjectFactory<?>[] args = provider.getArgumentFactories(ctrNames);
         assertEquals(2, args.length);
         assertSame(intFactory, args[0]);
         assertSame(stringFactory, args[1]);
