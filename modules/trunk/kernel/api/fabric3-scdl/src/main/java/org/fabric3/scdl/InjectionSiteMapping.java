@@ -19,7 +19,7 @@
 package org.fabric3.scdl;
 
 /**
- * Maps a MemberSite to an ValueSource for a Java-based component implementations
+ * Maps a InjectionSite to an ValueSource for a Java-based component implementations
  *
  * @version $Rev$ $Date$
  */
@@ -29,7 +29,7 @@ public class InjectionSiteMapping {
     private ValueSource source;
 
     // Site of the mapping
-    private MemberSite site;
+    private InjectionSite site;
     
     // Multiplicity
     private Multiplicity multiplicity;
@@ -75,7 +75,7 @@ public class InjectionSiteMapping {
      *
      * @return Injection site.
      */
-    public MemberSite getSite() {
+    public InjectionSite getSite() {
         return site;
     }
 
@@ -84,7 +84,7 @@ public class InjectionSiteMapping {
      *
      * @param site Injection site.
      */
-    public void setSite(MemberSite site) {
+    public void setSite(InjectionSite site) {
         this.site = site;
     }
 }

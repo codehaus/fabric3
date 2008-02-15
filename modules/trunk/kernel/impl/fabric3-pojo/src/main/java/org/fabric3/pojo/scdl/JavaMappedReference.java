@@ -20,7 +20,7 @@ package org.fabric3.pojo.scdl;
 
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.MemberSite;
+import org.fabric3.scdl.InjectionSite;
 
 /**
  * A ReferenceDefinition definition that is mapped to a specific location in the implementation class. This location
@@ -29,11 +29,11 @@ import org.fabric3.scdl.MemberSite;
  * @version $Rev$ $Date$
  */
 public class JavaMappedReference extends ReferenceDefinition {
-    private MemberSite memberSite;
+    private InjectionSite injectionSite;
 
-    public JavaMappedReference(String name, ServiceContract serviceContract, MemberSite memberSite) {
+    public JavaMappedReference(String name, ServiceContract serviceContract, InjectionSite injectionSite) {
         super(name, serviceContract);
-        this.memberSite = memberSite;
+        this.injectionSite = injectionSite;
     }
 
     /**
@@ -41,8 +41,8 @@ public class JavaMappedReference extends ReferenceDefinition {
      *
      * @return the memberSiteSite that this reference is mapped to
      */
-    public MemberSite getMemberSite() {
-        return memberSite;
+    public InjectionSite getMemberSite() {
+        return injectionSite;
     }
 
 }

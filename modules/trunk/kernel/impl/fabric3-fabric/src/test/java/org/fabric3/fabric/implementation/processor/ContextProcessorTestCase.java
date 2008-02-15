@@ -20,6 +20,7 @@ package org.fabric3.fabric.implementation.processor;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.annotation.ElementType;
 
 import junit.framework.TestCase;
 import org.osoa.sca.ComponentContext;
@@ -27,6 +28,10 @@ import org.osoa.sca.RequestContext;
 import org.osoa.sca.annotations.Context;
 
 import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.scdl.InjectionSite;
+import org.fabric3.scdl.MethodInjectionSite;
+import org.fabric3.scdl.Signature;
+import org.fabric3.scdl.FieldInjectionSite;
 
 /**
  * @version $Rev$ $Date$
@@ -60,14 +65,20 @@ public class ContextProcessorTestCase extends TestCase {
         Method method = Foo.class.getMethod("setRequestContext", RequestContext.class);
         PojoComponentType type = new PojoComponentType(null);
         processor.visitMethod(method, type, null);
-        assertEquals("setRequestContext", type.getRequestContextMember().getName());
+        InjectionSite requestContextMember = type.getRequestContextMember();
+        assertEquals(ElementType.METHOD, requestContextMember.getElementType());
+        assertEquals(RequestContext.class.getName(), requestContextMember.getType());
+        assertEquals(new Signature(method), ((MethodInjectionSite)requestContextMember).getSignature());
     }
 
     public void testRequestContextField() throws Exception {
         Field field = Foo.class.getDeclaredField("requestContext");
         PojoComponentType type = new PojoComponentType(null);
         processor.visitField(field, type, null);
-        assertEquals("requestContext", type.getRequestContextMember().getName());
+        InjectionSite requestContextMember = type.getRequestContextMember();
+        assertEquals(ElementType.FIELD, requestContextMember.getElementType());
+        assertEquals(RequestContext.class.getName(), requestContextMember.getType());
+        assertEquals(field.getName(), ((FieldInjectionSite)requestContextMember).getName());
     }
 
     public void testInvalidParamNum() throws Exception {

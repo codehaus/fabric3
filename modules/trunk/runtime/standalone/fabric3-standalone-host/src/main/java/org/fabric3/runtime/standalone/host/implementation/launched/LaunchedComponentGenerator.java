@@ -30,7 +30,7 @@ import org.fabric3.pojo.scdl.ConstructorDefinition;
 import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.JavaMappedReference;
 import org.fabric3.pojo.scdl.JavaMappedService;
-import org.fabric3.scdl.MemberSite;
+import org.fabric3.scdl.InjectionSite;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Property;
@@ -171,8 +171,8 @@ public class LaunchedComponentGenerator implements ComponentGenerator<LogicalCom
         Map<String, JavaMappedReference> references = type.getReferences();
         for (Map.Entry<String, JavaMappedReference> entry : references.entrySet()) {
             JavaMappedReference reference = entry.getValue();
-            MemberSite memberSite = reference.getMemberSite();
-            if (memberSite == null) {
+            InjectionSite injectionSite = reference.getMemberSite();
+            if (injectionSite == null) {
                 // JFM this is dubious, the reference is mapped to a constructor so skip processing
                 // ImplementationProcessorService does not set the member type to a ctor when creating the ref
                 continue;
@@ -181,7 +181,7 @@ public class LaunchedComponentGenerator implements ComponentGenerator<LogicalCom
 
             InjectionSiteMapping mapping = new InjectionSiteMapping();
             mapping.setSource(source);
-            mapping.setSite(memberSite);
+            mapping.setSite(injectionSite);
             providerDefinition.addInjectionSite(mapping);
         }
     }

@@ -35,7 +35,7 @@ import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.JavaMappedReference;
 import org.fabric3.pojo.scdl.JavaMappedService;
-import org.fabric3.scdl.MemberSite;
+import org.fabric3.scdl.InjectionSite;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Multiplicity;
 import org.fabric3.scdl.ServiceContract;
@@ -115,7 +115,7 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
         return false;
     }
 
-    public JavaMappedReference createReference(String name, MemberSite member, Class<?> paramType)
+    public JavaMappedReference createReference(String name, InjectionSite injectionSite, Class<?> paramType)
             throws ProcessingException {
         ServiceContract<Type> contract;
         try {
@@ -123,7 +123,7 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
         } catch (InvalidServiceContractException e1) {
             throw new ProcessingException(e1);
         }
-        JavaMappedReference reference = new JavaMappedReference(name, contract, member);
+        JavaMappedReference reference = new JavaMappedReference(name, contract, injectionSite);
         reference.setRequired(false);
         return reference;
     }

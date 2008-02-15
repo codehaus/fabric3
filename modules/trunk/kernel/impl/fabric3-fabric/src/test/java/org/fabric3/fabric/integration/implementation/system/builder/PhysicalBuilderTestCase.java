@@ -18,7 +18,6 @@
  */
 package org.fabric3.fabric.integration.implementation.system.builder;
 
-import java.lang.annotation.ElementType;
 import java.net.URI;
 
 import junit.framework.TestCase;
@@ -46,9 +45,9 @@ import org.fabric3.scdl.InjectionSiteMapping;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
-import org.fabric3.scdl.MemberSite;
 import org.fabric3.scdl.Scope;
 import org.fabric3.scdl.ValueSource;
+import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
@@ -94,12 +93,12 @@ public class PhysicalBuilderTestCase extends TestCase {
         }
     }
 
-    private SystemComponentDefinition createSourceComponentDefinition() {
+    private SystemComponentDefinition createSourceComponentDefinition() throws Exception {
         InstanceFactoryDefinition sourceProviderDefinition = new InstanceFactoryDefinition();
         sourceProviderDefinition.setImplementationClass(SourceImpl.class.getName());
         InjectionSiteMapping mapping = new InjectionSiteMapping();
         mapping.setSource(new ValueSource(ValueSource.ValueSourceType.REFERENCE, "target"));
-        mapping.setSite(new MemberSite(ElementType.FIELD, "target"));
+        mapping.setSite(new FieldInjectionSite(SourceImpl.class.getField("target")));
         sourceProviderDefinition.addInjectionSite(mapping);
 
         SystemComponentDefinition source = new SystemComponentDefinition();

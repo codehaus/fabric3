@@ -29,7 +29,10 @@ import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.scdl.ConstructorDefinition;
-import org.fabric3.scdl.MemberSite;
+import org.fabric3.scdl.InjectionSite;
+import org.fabric3.scdl.FieldInjectionSite;
+import org.fabric3.scdl.MethodInjectionSite;
+import org.fabric3.scdl.ConstructorInjectionSite;
 
 /**
  * Base class for ImplementationProcessors that handle annotations that add Properties.
@@ -77,7 +80,7 @@ public abstract class AbstractPropertyProcessor<A extends Annotation> extends Im
         }
 
         Class<?> baseType = getBaseType(javaType, method.getGenericParameterTypes()[0]);
-        JavaMappedProperty<?> property = createProperty(name, baseType, new MemberSite(method));
+        JavaMappedProperty<?> property = createProperty(name, baseType, new MethodInjectionSite(method, 0));
         if (javaType.isArray() || Collection.class.isAssignableFrom(javaType)) {
             property.setMany(true);
         }
@@ -109,7 +112,7 @@ public abstract class AbstractPropertyProcessor<A extends Annotation> extends Im
         }
 
         Class<?> baseType = getBaseType(javaType, field.getGenericType());
-        JavaMappedProperty<?> property = createProperty(name, baseType, new MemberSite(field));
+        JavaMappedProperty<?> property = createProperty(name, baseType, new FieldInjectionSite(field));
         if (javaType.isArray() || Collection.class.isAssignableFrom(javaType)) {
             property.setMany(true);
         }
@@ -146,7 +149,7 @@ public abstract class AbstractPropertyProcessor<A extends Annotation> extends Im
                     }
 
                     Class<?> baseType = getBaseType(param, constructor.getGenericParameterTypes()[i]);
-                    JavaMappedProperty<?> property = createProperty(name, baseType, new MemberSite(constructor));
+                    JavaMappedProperty<?> property = createProperty(name, baseType, new ConstructorInjectionSite(constructor, i));
                     if (param.isArray() || Collection.class.isAssignableFrom(param)) {
                         property.setMany(true);
                     }
@@ -164,9 +167,9 @@ public abstract class AbstractPropertyProcessor<A extends Annotation> extends Im
             throws ProcessingException {
     }
 
-    protected <T> JavaMappedProperty<T> createProperty(String name, Class<T> javaType, MemberSite member)
+    protected <T> JavaMappedProperty<T> createProperty(String name, Class<T> javaType, InjectionSite injectionSite)
             throws ProcessingException {
-        return new JavaMappedProperty<T>(name, null, javaType, member);
+        return new JavaMappedProperty<T>(name, null, javaType, injectionSite);
     }
 
 

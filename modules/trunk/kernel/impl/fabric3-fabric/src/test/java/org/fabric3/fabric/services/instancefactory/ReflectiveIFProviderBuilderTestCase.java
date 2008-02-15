@@ -25,11 +25,13 @@ import junit.framework.TestCase;
 
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.scdl.InjectionSiteMapping;
-import org.fabric3.scdl.MemberSite;
+import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.Signature;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
 import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.scdl.ValueSource;
+import org.fabric3.scdl.FieldInjectionSite;
+import org.fabric3.scdl.MethodInjectionSite;
 import org.fabric3.scdl.ValueSource.ValueSourceType;
 import org.fabric3.fabric.services.instancefactory.ReflectiveInstanceFactoryBuilder;
 import org.fabric3.fabric.services.classloading.ClassLoaderRegistryImpl;
@@ -65,9 +67,9 @@ public class ReflectiveIFProviderBuilderTestCase extends TestCase {
     public void testProtectedFieldInjectionSource() throws Exception {
         ValueSource valueSource = new ValueSource(ValueSourceType.REFERENCE, "xyz");
         Field field = Foo.class.getDeclaredField("xyz");
-        MemberSite memberSite = new MemberSite(field);
+        InjectionSite injectionSite = new FieldInjectionSite(field);
         InjectionSiteMapping mapping = new InjectionSiteMapping();
-        mapping.setSite(memberSite);
+        mapping.setSite(injectionSite);
         mapping.setSource(valueSource);
         definition.addInjectionSite(mapping);
 
@@ -85,9 +87,9 @@ public class ReflectiveIFProviderBuilderTestCase extends TestCase {
     public void testMethodInjectionSource() throws Exception {
         ValueSource valueSource = new ValueSource(ValueSourceType.REFERENCE, "abc");
         Method method = Foo.class.getMethod("setAbc", Bar.class);
-        MemberSite memberSite = new MemberSite(method);
+        InjectionSite injectionSite = new MethodInjectionSite(method, 0);
         InjectionSiteMapping mapping = new InjectionSiteMapping();
-        mapping.setSite(memberSite);
+        mapping.setSite(injectionSite);
         mapping.setSource(valueSource);
         definition.addInjectionSite(mapping);
 

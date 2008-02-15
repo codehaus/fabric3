@@ -31,7 +31,7 @@ import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.JavaMappedReference;
 import org.fabric3.pojo.scdl.JavaMappedResource;
 import org.fabric3.pojo.scdl.JavaMappedService;
-import org.fabric3.scdl.MemberSite;
+import org.fabric3.scdl.InjectionSite;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Implementation;
@@ -115,8 +115,8 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
         Map<String, JavaMappedReference> references = type.getReferences();
         for (Map.Entry<String, JavaMappedReference> entry : references.entrySet()) {
             JavaMappedReference reference = entry.getValue();
-            MemberSite memberSite = reference.getMemberSite();
-            if (memberSite == null) {
+            InjectionSite injectionSite = reference.getMemberSite();
+            if (injectionSite == null) {
                 // JFM this is dubious, the reference is mapped to a constructor so skip processing
                 // ImplementationProcessorService does not set the member type to a ctor when creating the ref
                 continue;
@@ -133,7 +133,7 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
 
             InjectionSiteMapping mapping = new InjectionSiteMapping();
             mapping.setSource(source);
-            mapping.setSite(memberSite);
+            mapping.setSite(injectionSite);
             mapping.setMultiplicity(reference.getMultiplicity());
 
             providerDefinition.addInjectionSite(mapping);
@@ -147,11 +147,11 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
         PojoComponentType type = implementation.getComponentType();
         for (JavaMappedProperty<?> property : type.getProperties().values()) {
             String name = property.getName();
-            MemberSite memberSite = property.getMemberSite();
+            InjectionSite injectionSite = property.getMemberSite();
             Document value = component.getPropertyValue(name);
             // add mapping for property only if it is mapped and has an explicit value defined
-            if (memberSite != null && value != null) {
-                addMapping(providerDefinition, new ValueSource(PROPERTY, name), memberSite);
+            if (injectionSite != null && value != null) {
+                addMapping(providerDefinition, new ValueSource(PROPERTY, name), injectionSite);
             }
         }
     }
@@ -161,11 +161,11 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
 
         Implementation<PojoComponentType> implementation = component.getDefinition().getImplementation();
         PojoComponentType type = implementation.getComponentType();
-        MemberSite componentContextSite = type.getComponentContextMember();
+        InjectionSite componentContextSite = type.getComponentContextMember();
         if (componentContextSite != null) {
             addMapping(providerDefinition, new ValueSource(CONTEXT, "ComponentContext"), componentContextSite);
         }
-        MemberSite requestContextSite = type.getRequestContextMember();
+        InjectionSite requestContextSite = type.getRequestContextMember();
         if (requestContextSite != null) {
             addMapping(providerDefinition, new ValueSource(CONTEXT, "RequestContext"), requestContextSite);
         }
@@ -202,10 +202,10 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
         }
     }
 
-    private void addMapping(InstanceFactoryDefinition providerDefinition, ValueSource source, MemberSite memberSite) {
+    private void addMapping(InstanceFactoryDefinition providerDefinition, ValueSource source, InjectionSite injectionSite) {
         InjectionSiteMapping mapping = new InjectionSiteMapping();
         mapping.setSource(source);
-        mapping.setSite(memberSite);
+        mapping.setSite(injectionSite);
         providerDefinition.addInjectionSite(mapping);
     }
 }

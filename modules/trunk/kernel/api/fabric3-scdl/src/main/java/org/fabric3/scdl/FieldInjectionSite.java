@@ -14,17 +14,29 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.monitor;
+package org.fabric3.scdl;
 
-import org.fabric3.pojo.scdl.JavaMappedResource;
-import org.fabric3.scdl.InjectionSite;
-import org.fabric3.scdl.ServiceContract;
+import java.lang.reflect.Field;
+import java.lang.annotation.ElementType;
 
 /**
  * @version $Rev$ $Date$
  */
-public class MonitorResource extends JavaMappedResource {
-    public MonitorResource(String name, InjectionSite site, boolean optional, ServiceContract<?> serviceContract) {
-        super(name, site, optional, serviceContract);
+public class FieldInjectionSite extends InjectionSite {
+    private String name;
+
+    public FieldInjectionSite(Field field) {
+        super(ElementType.FIELD, field.getType().getName());
+        name = field.getName();
     }
+
+    /**
+     * Gets the name of the field.
+     *
+     * @return Site name.
+     */
+    public String getName() {
+        return name;
+    }
+
 }

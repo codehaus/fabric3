@@ -33,8 +33,10 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.jpa.PersistenceUnitResource;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.processor.ProcessingException;
-import org.fabric3.scdl.MemberSite;
+import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.FieldInjectionSite;
+import org.fabric3.scdl.MethodInjectionSite;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.ContractProcessor;
@@ -67,7 +69,7 @@ public class PersistenceUnitAnnotationProcessor extends ImplementationProcessorE
         
         checkMethod(method);
         
-        processAnnotation(type, new MemberSite(method), annotation);
+        processAnnotation(type, new MethodInjectionSite(method, 0), annotation);
         
     }
 
@@ -88,18 +90,18 @@ public class PersistenceUnitAnnotationProcessor extends ImplementationProcessorE
             throw new ProcessingException("Field is not an entity manager factory", field.toString());
         }
         
-        processAnnotation(type, new MemberSite(field), annotation);
+        processAnnotation(type, new FieldInjectionSite(field), annotation);
         
     }
 
     /*
      * Processes the annotation.
      */
-    private void processAnnotation(PojoComponentType type, MemberSite member, PersistenceUnit annotation) {
+    private void processAnnotation(PojoComponentType type, InjectionSite injectionSite, PersistenceUnit annotation) {
 
         String name = annotation.name();
         String unitName = annotation.unitName();
-        type.add(new PersistenceUnitResource(name, unitName, member, factoryServiceContract));
+        type.add(new PersistenceUnitResource(name, unitName, injectionSite, factoryServiceContract));
         
     }
 

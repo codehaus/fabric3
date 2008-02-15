@@ -23,7 +23,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.fabric3.scdl.AbstractComponentType;
-import org.fabric3.scdl.MemberSite;
+import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.Signature;
 
 /**
@@ -39,10 +39,10 @@ public class PojoComponentType extends AbstractComponentType<JavaMappedService,
     private ConstructorDefinition<?> constructorDefinition;
     private Signature initMethod;
     private Signature destroyMethod;
-    private MemberSite conversationIDMember;
-    private MemberSite componentContextMember;
-    private MemberSite requestContextMember;
-    private List<MemberSite> callbackMembers = new ArrayList<MemberSite>();
+    private InjectionSite conversationIDInjectionSite;
+    private InjectionSite componentContextInjectionSite;
+    private InjectionSite requestContextInjectionSite;
+    private List<InjectionSite> callbackInjectionSites = new ArrayList<InjectionSite>();
 
     /**
      * Constructor used only for deserialization
@@ -91,8 +91,8 @@ public class PojoComponentType extends AbstractComponentType<JavaMappedService,
      *
      * @return the callback injection sites
      */
-    public List<MemberSite> getCallbackSites() {
-        return Collections.unmodifiableList(callbackMembers);
+    public List<InjectionSite> getCallbackSites() {
+        return Collections.unmodifiableList(callbackInjectionSites);
     }
 
     /**
@@ -100,8 +100,8 @@ public class PojoComponentType extends AbstractComponentType<JavaMappedService,
      *
      * @param site the field or setter method the callback is mapped to
      */
-    public void addCallbackSite(MemberSite site) {
-        callbackMembers.add(site);
+    public void addCallbackSite(InjectionSite site) {
+        callbackInjectionSites.add(site);
     }
 
     /**
@@ -140,27 +140,27 @@ public class PojoComponentType extends AbstractComponentType<JavaMappedService,
         this.destroyMethod = destroyMethod;
     }
 
-    public MemberSite getConversationIDMember() {
-        return this.conversationIDMember;
+    public InjectionSite getConversationIDMember() {
+        return this.conversationIDInjectionSite;
     }
 
-    public void setConversationIDMember(MemberSite conversationIDMember) {
-        this.conversationIDMember = conversationIDMember;
+    public void setConversationIDMember(InjectionSite conversationIDInjectionSite) {
+        this.conversationIDInjectionSite = conversationIDInjectionSite;
     }
 
-    public MemberSite getComponentContextMember() {
-        return componentContextMember;
+    public InjectionSite getComponentContextMember() {
+        return componentContextInjectionSite;
     }
 
-    public void setComponentContextMember(MemberSite componentContextMember) {
-        this.componentContextMember = componentContextMember;
+    public void setComponentContextMember(InjectionSite componentContextInjectionSite) {
+        this.componentContextInjectionSite = componentContextInjectionSite;
     }
 
-    public MemberSite getRequestContextMember() {
-        return requestContextMember;
+    public InjectionSite getRequestContextMember() {
+        return requestContextInjectionSite;
     }
 
-    public void setRequestContextMember(MemberSite requestContextMember) {
-        this.requestContextMember = requestContextMember;
+    public void setRequestContextMember(InjectionSite requestContextInjectionSite) {
+        this.requestContextInjectionSite = requestContextInjectionSite;
     }
 }

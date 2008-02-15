@@ -51,8 +51,11 @@ import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.JavaMappedReference;
 import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.scdl.MemberSite;
+import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.FieldInjectionSite;
+import org.fabric3.scdl.MethodInjectionSite;
+import org.fabric3.scdl.ConstructorInjectionSite;
 
 /**
  * Heuristically evaluates an un-annotated Java implementation type to determine services, references, and properties
@@ -139,7 +142,7 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
                 if (!type.getProperties().containsKey(name) && !type.getReferences().containsKey(name)) {
                     Class<?> param = method.getParameterTypes()[0];
                     Type genericType = method.getGenericParameterTypes()[0];
-                    MemberSite site = new MemberSite(method);
+                    InjectionSite site = new MethodInjectionSite(method, 0);
                     if (isReferenceType(genericType)) {
                         type.add(createReference(name, site, param));
                     } else {
@@ -159,7 +162,7 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
             String name = toPropertyName(method.getName());
             // avoid duplicate property or ref names
             if (!type.getProperties().containsKey(name) && !type.getReferences().containsKey(name)) {
-                MemberSite site = new MemberSite(method);
+                InjectionSite site = new MethodInjectionSite(method, 0);
                 if (isReferenceType(param)) {
                     type.add(createReference(name, site, param));
                 } else {
@@ -170,7 +173,7 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
         Set<Field> fields = getAllPublicAndProtectedFields(clazz);
         for (Field field : fields) {
             Class<?> paramType = field.getType();
-            MemberSite site = new MemberSite(field);
+            InjectionSite site = new FieldInjectionSite(field);
             if (isReferenceType(paramType)) {
                 type.add(createReference(field.getName(), site, paramType));
             } else {
@@ -300,9 +303,10 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
                                      List<String> paramNames)
             throws ProcessingException {
         // heuristically determine refs and props from the parameter types
-        for (Class<?> param : params) {
+        for (int i = 0; i < params.length; i++) {
+            Class<?> param = params[i];
             String name = getBaseName(param).toLowerCase();
-            MemberSite site = new MemberSite(ctor);
+            InjectionSite site = new ConstructorInjectionSite(ctor, i);
             if (isReferenceType(param)) {
                 refs.put(name, createReference(name, site, param));
             } else {
@@ -426,12 +430,12 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
      * Creates a mapped reference
      *
      * @param name      the reference name
-     * @param member    the injection site the reference maps to
+     * @param injectionSite    the injection site the reference maps to
      * @param paramType the service interface of the reference
      */
-    private JavaMappedReference createReference(String name, MemberSite member, Class<?> paramType)
+    private JavaMappedReference createReference(String name, InjectionSite injectionSite, Class<?> paramType)
             throws ProcessingException {
-        return implService.createReference(name, member, paramType);
+        return implService.createReference(name, injectionSite, paramType);
     }
 
     /*
@@ -441,10 +445,10 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
      * @param member    the injection site the reference maps to
      * @param paramType the property type
      */
-    private <T> JavaMappedProperty<T> createProperty(String name, MemberSite memberSite, Class<T> paramType) {
+    private <T> JavaMappedProperty<T> createProperty(String name, InjectionSite injectionSite, Class<T> paramType) {
         JavaMappedProperty<T> property = new JavaMappedProperty<T>();
         property.setName(name);
-        property.setMemberSite(memberSite);
+        property.setMemberSite(injectionSite);
         property.setJavaType(paramType);
         return property;
     }

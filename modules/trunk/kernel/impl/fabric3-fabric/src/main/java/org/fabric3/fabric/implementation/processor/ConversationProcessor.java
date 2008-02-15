@@ -29,7 +29,8 @@ import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
-import org.fabric3.scdl.MemberSite;
+import org.fabric3.scdl.FieldInjectionSite;
+import org.fabric3.scdl.MethodInjectionSite;
 
 /**
  * @version $Rev$ $Date$
@@ -93,7 +94,7 @@ public class ConversationProcessor extends ImplementationProcessorExtension {
         if (conversationID == null) {
             return;
         }
-        type.setConversationIDMember(new MemberSite(method));
+        type.setConversationIDMember(new MethodInjectionSite(method, 0));
     }
 
     public void visitField(Field field,
@@ -103,7 +104,7 @@ public class ConversationProcessor extends ImplementationProcessorExtension {
         if (conversationID == null) {
             return;
         }
-        type.setConversationIDMember(new MemberSite(field));
+        type.setConversationIDMember(new FieldInjectionSite(field));
     }
 
     protected long convertTimeMillis(String expr) throws NumberFormatException {

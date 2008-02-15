@@ -29,8 +29,10 @@ import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.processor.InvalidSetterException;
 import static org.fabric3.pojo.processor.JavaIntrospectionHelper.toPropertyName;
 import org.fabric3.pojo.processor.ProcessingException;
-import org.fabric3.scdl.MemberSite;
+import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.FieldInjectionSite;
+import org.fabric3.scdl.MethodInjectionSite;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.ContractProcessor;
@@ -64,7 +66,7 @@ public class MonitorProcessor extends ImplementationProcessorExtension {
             throw new DuplicateResourceException(name);
         }
 
-        MonitorResource resource = createResource(name, resourceType, new MemberSite(method));
+        MonitorResource resource = createResource(name, resourceType, new MethodInjectionSite(method, 0));
         type.add(resource);
     }
 
@@ -80,14 +82,14 @@ public class MonitorProcessor extends ImplementationProcessorExtension {
             throw new DuplicateResourceException(name);
         }
 
-        MonitorResource resource = createResource(name, resourceType, new MemberSite(field));
+        MonitorResource resource = createResource(name, resourceType, new FieldInjectionSite(field));
         type.add(resource);
     }
 
-    private MonitorResource createResource(String name, Class<?> type, MemberSite member) throws ProcessingException {
+    private MonitorResource createResource(String name, Class<?> type, InjectionSite injectionSite) throws ProcessingException {
         try {
             ServiceContract<?> serviceContract = contractProcessor.introspect(type);
-            return new MonitorResource(name, member, false, serviceContract);
+            return new MonitorResource(name, injectionSite, false, serviceContract);
         } catch (InvalidServiceContractException e) {
             throw new ProcessingException(e);
         }

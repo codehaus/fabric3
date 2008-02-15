@@ -16,7 +16,6 @@
  */
 package org.fabric3.fabric.services.instancefactory;
 
-import java.lang.annotation.ElementType;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
@@ -29,9 +28,11 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.scdl.InjectionSiteMapping;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderException;
-import org.fabric3.scdl.MemberSite;
+import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.Signature;
 import org.fabric3.scdl.ValueSource;
+import org.fabric3.scdl.FieldInjectionSite;
+import org.fabric3.scdl.MethodInjectionSite;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 
 /**
@@ -70,27 +71,25 @@ public class BuildHelperImpl implements InstanceFactoryBuildHelper {
     public Map<ValueSource, Member> getInjectionSites(Class implClass, List<InjectionSiteMapping> mappings)
             throws NoSuchFieldException, NoSuchMethodException, InstanceFactoryBuilderException {
         Map<ValueSource, Member> injectionSites = new HashMap<ValueSource, Member>();
-        for (InjectionSiteMapping injectionSite : mappings) {
+        for (InjectionSiteMapping mapping : mappings) {
 
-            ValueSource source = injectionSite.getSource();
-            MemberSite memberSite = injectionSite.getSite();
-            ElementType elementType = memberSite.getElementType();
-            String name = memberSite.getName();
-
-            Member member = null;
-            if (elementType == ElementType.FIELD) {
-                member = implClass.getDeclaredField(name);
-            } else if (elementType == ElementType.METHOD) {
-                Signature signature = memberSite.getSignature();
+            ValueSource source = mapping.getSource();
+            InjectionSite injectionSite = mapping.getSite();
+            Member member;
+            switch (injectionSite.getElementType()) {
+            case METHOD:
+                MethodInjectionSite methodSite = (MethodInjectionSite) injectionSite;
                 try {
-                    member = signature.getMethod(implClass);
-                } catch(ClassNotFoundException cnfe) {
-                    throw new InstanceFactoryBuilderException(cnfe);
+                    member = methodSite.getSignature().getMethod(implClass);
+                } catch (ClassNotFoundException e) {
+                    throw new InstanceFactoryBuilderException(e);
                 }
-                                
-            }
-            if (member == null) {
-                throw new UnknownInjectionSiteException(name);
+                break;
+            case FIELD:
+                member = implClass.getDeclaredField(((FieldInjectionSite)injectionSite).getName());
+                break;
+            default:
+                throw new AssertionError();
             }
             injectionSites.put(source, member);
         }

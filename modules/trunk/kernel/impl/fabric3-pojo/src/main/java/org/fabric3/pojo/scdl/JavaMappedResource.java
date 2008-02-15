@@ -19,7 +19,7 @@
 package org.fabric3.pojo.scdl;
 
 import org.fabric3.scdl.ResourceDefinition;
-import org.fabric3.scdl.MemberSite;
+import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.ServiceContract;
 
 /**
@@ -28,18 +28,18 @@ import org.fabric3.scdl.ServiceContract;
  * @version $Rev$ $Date$
  */
 public class JavaMappedResource extends ResourceDefinition {
-    private final MemberSite memberSite;
+    private final InjectionSite injectionSite;
 
-    public JavaMappedResource(String name, MemberSite memberSite, boolean optional, ServiceContract<?> serviceContract) {
+    public JavaMappedResource(String name, InjectionSite injectionSite, boolean optional, ServiceContract<?> serviceContract) {
         super(name, serviceContract, optional);
-        this.memberSite = memberSite;
+        this.injectionSite = injectionSite;
     }
 
     /**
      * Returns the member site where this resource should be injected.
      * @return the member site where this resource should be injected
      */
-    public MemberSite getMemberSite() {
-        return memberSite;
+    public InjectionSite getMemberSite() {
+        return injectionSite;
     }
 }

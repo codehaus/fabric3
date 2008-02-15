@@ -19,7 +19,7 @@
 package org.fabric3.jpa;
 
 import org.fabric3.pojo.scdl.JavaMappedResource;
-import org.fabric3.scdl.MemberSite;
+import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.ServiceContract;
 
 /**
@@ -36,11 +36,11 @@ public final class PersistenceUnitResource extends JavaMappedResource {
      * 
      * @param name Name of the resource.
      * @param unitName Persistence unit name.
-     * @param memberSite Member against which the annotation is declared.
+     * @param injectionSite Member against which the annotation is declared.
      * @param serviceContract the service contract for the persistence unit
      */
-    public PersistenceUnitResource(String name, String unitName, MemberSite memberSite, ServiceContract<?> serviceContract) {
-        super(name, memberSite, true, serviceContract);
+    public PersistenceUnitResource(String name, String unitName, InjectionSite injectionSite, ServiceContract<?> serviceContract) {
+        super(name, injectionSite, true, serviceContract);
         this.unitName = unitName;
     }
     

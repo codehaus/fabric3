@@ -34,6 +34,7 @@ import org.fabric3.fabric.implementation.processor.PropertyProcessor;
 import org.fabric3.fabric.implementation.processor.ReferenceProcessor;
 import org.fabric3.fabric.implementation.processor.ScopeProcessor;
 import org.fabric3.scdl.Signature;
+import org.fabric3.scdl.MethodInjectionSite;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import static org.fabric3.scdl.Scope.COMPOSITE;
@@ -56,10 +57,8 @@ public class IntrospectionRegistryIntegrationTestCase extends TestCase {
         assertEquals(new Signature(Foo.class.getMethod("init")), type.getInitMethod());
         assertEquals(new Signature(Foo.class.getMethod("destroy")), type.getDestroyMethod());
         assertEquals(COMPOSITE, type.getImplementationScope());
-        assertEquals("setBar", type.getProperties().get("bar").getMemberSite().getName());
-        String targetName = type.getReferences().get("target").getMemberSite().getName();
-        assertEquals("setTarget", targetName);
-        //assertEquals(Foo.class.getMethod("setResource", Foo.class), type.getResources().get("resource").getMember());
+        assertEquals(new Signature(Foo.class.getMethod("setBar", String.class)), ((MethodInjectionSite)type.getProperties().get("bar").getMemberSite()).getSignature());
+        assertEquals(new Signature(Foo.class.getMethod("setTarget", Foo.class)), ((MethodInjectionSite)type.getReferences().get("target").getMemberSite()).getSignature());
     }
 
     protected void setUp() throws Exception {

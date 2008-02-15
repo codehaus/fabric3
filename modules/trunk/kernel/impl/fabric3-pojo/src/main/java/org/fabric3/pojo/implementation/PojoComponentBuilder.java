@@ -18,7 +18,6 @@
  */
 package org.fabric3.pojo.implementation;
 
-import java.lang.annotation.ElementType;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +34,7 @@ import org.fabric3.pojo.injection.SetMultiplicityObjectFactory;
 import org.fabric3.scdl.InjectionSiteMapping;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
-import org.fabric3.scdl.MemberSite;
+import org.fabric3.scdl.InjectionSite;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.SingletonObjectFactory;
 import org.fabric3.spi.builder.BuilderException;
@@ -157,16 +156,8 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
                 continue;
             }
             
-            MemberSite memberSite = injectionSiteMapping.getSite();
-            ElementType elementType = memberSite.getElementType();
-            
-            String referenceType = null;
-            if(ElementType.METHOD == elementType) {
-                referenceType = memberSite.getSignature().getParameterTypes().get(0);
-            } else if(ElementType.FIELD == elementType) {
-                referenceType = memberSite.getType();
-            }
-            
+            InjectionSite injectionSite = injectionSiteMapping.getSite();
+            String referenceType = injectionSite.getType();
             addMultiplicityFactory(referenceType, injectionSiteMapping.getSource(), referenceFactories);
             
         }

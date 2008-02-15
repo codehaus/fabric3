@@ -25,7 +25,9 @@ import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.scdl.MemberSite;
+import org.fabric3.scdl.InjectionSite;
+import org.fabric3.scdl.FieldInjectionSite;
+import org.fabric3.scdl.MethodInjectionSite;
 
 /**
  * TODO: Verify the injected callback sites have a service contract that maps to a callback service contract associated with a service the
@@ -46,7 +48,7 @@ public class CallbackProcessor extends ImplementationProcessorExtension {
             String name = method.getName();
             throw new IllegalCallbackException("Method must have one parameter [" + name + "]", name);
         }
-        MemberSite site = new MemberSite(method);
+        InjectionSite site = new MethodInjectionSite(method, 0);
         type.addCallbackSite(site);
     }
 
@@ -55,7 +57,7 @@ public class CallbackProcessor extends ImplementationProcessorExtension {
         if (annotation == null) {
             return;
         }
-        MemberSite site = new MemberSite(field);
+        InjectionSite site = new FieldInjectionSite(field);
         type.addCallbackSite(site);
     }
 

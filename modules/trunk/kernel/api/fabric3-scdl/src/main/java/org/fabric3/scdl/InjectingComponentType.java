@@ -26,7 +26,7 @@ import java.util.HashMap;
  */
 public class InjectingComponentType extends AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property<?>, ResourceDefinition> {
 
-    private final Map<ValueSource, MemberSite> injectionMappings = new HashMap<ValueSource, MemberSite>();
+    private final Map<ValueSource, InjectionSite> injectionMappings = new HashMap<ValueSource, InjectionSite>();
     private Signature initMethod;
     private Signature destroyMethod;
 
@@ -39,23 +39,23 @@ public class InjectingComponentType extends AbstractComponentType<ServiceDefinit
     /**
      * Add a reference and associate with an injection site.
      * @param reference the reference to add
-     * @param memberSite the injection site for the reference
+     * @param injectionSite the injection site for the reference
      */
-    public void add(ReferenceDefinition reference, MemberSite memberSite) {
+    public void add(ReferenceDefinition reference, InjectionSite injectionSite) {
         super.add(reference);
         ValueSource valueSource = new ValueSource(ValueSource.ValueSourceType.REFERENCE, reference.getName());
-        injectionMappings.put(valueSource, memberSite);
+        injectionMappings.put(valueSource, injectionSite);
     }
 
     /**
      * Add a property and associate with an injection site.
      * @param property the property to add
-     * @param memberSite the injection site for the property
+     * @param injectionSite the injection site for the property
      */
-    public void add(Property<?> property, MemberSite memberSite) {
+    public void add(Property<?> property, InjectionSite injectionSite) {
         super.add(property);
         ValueSource valueSource = new ValueSource(ValueSource.ValueSourceType.PROPERTY, property.getName());
-        injectionMappings.put(valueSource, memberSite);
+        injectionMappings.put(valueSource, injectionSite);
     }
 
     /**

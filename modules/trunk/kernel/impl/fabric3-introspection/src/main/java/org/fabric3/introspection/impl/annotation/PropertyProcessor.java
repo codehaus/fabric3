@@ -29,7 +29,10 @@ import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.InjectingComponentType;
-import org.fabric3.scdl.MemberSite;
+import org.fabric3.scdl.InjectionSite;
+import org.fabric3.scdl.FieldInjectionSite;
+import org.fabric3.scdl.MethodInjectionSite;
+import org.fabric3.scdl.ConstructorInjectionSite;
 
 /**
  * @version $Rev$ $Date$
@@ -44,27 +47,27 @@ public class PropertyProcessor<I extends Implementation<? extends InjectingCompo
 
     public void visitField(Property annotation, Field field, I implementation, IntrospectionContext context) throws IntrospectionException {
         String name = helper.getSiteName(field, annotation.name());
-        createDefinition(implementation.getComponentType(), name, annotation.required(), field.getType(), new MemberSite(field));
+        createDefinition(implementation.getComponentType(), name, annotation.required(), field.getType(), new FieldInjectionSite(field));
     }
 
     public void visitMethod(Property annotation, Method method, I implementation, IntrospectionContext context) throws IntrospectionException {
         String name = helper.getSiteName(method, annotation.name());
-        createDefinition(implementation.getComponentType(), name, annotation.required(), helper.getType(method), new MemberSite(method));
+        createDefinition(implementation.getComponentType(), name, annotation.required(), helper.getType(method), new MethodInjectionSite(method, 0));
     }
 
     public void visitConstructorParameter(Property annotation, Constructor<?> constructor, int index, I implementation, IntrospectionContext context)
             throws IntrospectionException {
         String name = helper.getSiteName(constructor, index, annotation.name());
         Class<?> type = helper.getType(constructor, index);
-        createDefinition(implementation.getComponentType(), name, annotation.required(), type, new MemberSite(constructor));
+        createDefinition(implementation.getComponentType(), name, annotation.required(), type, new ConstructorInjectionSite(constructor, index));
     }
 
-    <T> void createDefinition(InjectingComponentType componentType, String name, boolean required, Class<T> type, MemberSite memberSite) {
+    <T> void createDefinition(InjectingComponentType componentType, String name, boolean required, Class<T> type, InjectionSite injectionSite) {
         org.fabric3.scdl.Property<T> property = new org.fabric3.scdl.Property<T>();
         property.setName(name);
         property.setJavaType(type);
         property.setRequired(required);
         property.setMany(helper.isManyValued(type));
-        componentType.add(property, memberSite);
+        componentType.add(property, injectionSite);
     }
 }

@@ -27,7 +27,9 @@ import org.osoa.sca.annotations.Context;
 
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.processor.ProcessingException;
-import org.fabric3.scdl.MemberSite;
+import org.fabric3.scdl.InjectionSite;
+import org.fabric3.scdl.FieldInjectionSite;
+import org.fabric3.scdl.MethodInjectionSite;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.introspection.IntrospectionContext;
 
@@ -48,7 +50,7 @@ public class ContextProcessor extends ImplementationProcessorExtension {
         if (method.getParameterTypes().length != 1) {
             throw new IllegalContextException("Context setter must have one parameter", method.toString());
         }
-        MemberSite site = new MemberSite(method);
+        InjectionSite site = new MethodInjectionSite(method, 0);
         Class<?> paramType = method.getParameterTypes()[0];
         if (paramType.isAssignableFrom(ComponentContext.class)) {
             type.setComponentContextMember(site);
@@ -63,7 +65,7 @@ public class ContextProcessor extends ImplementationProcessorExtension {
         if (field.getAnnotation(Context.class) == null) {
             return;
         }
-        MemberSite site = new MemberSite(field);
+        InjectionSite site = new FieldInjectionSite(field);
         Class<?> paramType = field.getType();
         if (paramType.isAssignableFrom(ComponentContext.class)) {
             type.setComponentContextMember(site);

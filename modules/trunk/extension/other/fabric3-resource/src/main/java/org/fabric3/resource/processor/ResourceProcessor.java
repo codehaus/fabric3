@@ -28,8 +28,10 @@ import org.fabric3.pojo.processor.DuplicateResourceException;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import static org.fabric3.pojo.processor.JavaIntrospectionHelper.toPropertyName;
 import org.fabric3.pojo.processor.ProcessingException;
-import org.fabric3.scdl.MemberSite;
+import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.FieldInjectionSite;
+import org.fabric3.scdl.MethodInjectionSite;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.resource.model.SystemSourcedResource;
 import org.fabric3.introspection.IntrospectionContext;
@@ -68,7 +70,7 @@ public class ResourceProcessor extends ImplementationProcessorExtension {
             throw new DuplicateResourceException(name);
         }
 
-        SystemSourcedResource resource = createResource(name, resourceType, new MemberSite(method), annotation.optional(), annotation.mappedName());
+        SystemSourcedResource resource = createResource(name, resourceType, new MethodInjectionSite(method, 0), annotation.optional(), annotation.mappedName());
 
         type.add(resource);
         
@@ -90,18 +92,18 @@ public class ResourceProcessor extends ImplementationProcessorExtension {
 
         Class<?> fieldType = field.getType();
 
-        SystemSourcedResource resource = createResource(name, fieldType, new MemberSite(field), annotation.optional(), annotation.mappedName());
+        SystemSourcedResource resource = createResource(name, fieldType, new FieldInjectionSite(field), annotation.optional(), annotation.mappedName());
 
         type.add(resource);
         
     }
 
-    private SystemSourcedResource createResource(String name, Class<?> type, MemberSite member, boolean optional, String mappedName)
+    private SystemSourcedResource createResource(String name, Class<?> type, InjectionSite injectionSite, boolean optional, String mappedName)
             throws ProcessingException {
         
         try {
             ServiceContract<Type> serviceContract = contractProcessor.introspect(type);
-            return new SystemSourcedResource(name, member, optional, mappedName, serviceContract);
+            return new SystemSourcedResource(name, injectionSite, optional, mappedName, serviceContract);
         }  catch (InvalidServiceContractException e) {
             throw new ProcessingException(e);
         }

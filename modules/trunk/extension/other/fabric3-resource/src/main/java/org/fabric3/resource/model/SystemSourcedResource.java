@@ -21,7 +21,7 @@ package org.fabric3.resource.model;
 import java.lang.reflect.Type;
 
 import org.fabric3.pojo.scdl.JavaMappedResource;
-import org.fabric3.scdl.MemberSite;
+import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.ServiceContract;
 
 /**
@@ -32,11 +32,11 @@ public class SystemSourcedResource extends JavaMappedResource {
     private String mappedName;
 
     public SystemSourcedResource(String name,
-                                 MemberSite member,
+                                 InjectionSite injectionSite,
                                  boolean optional, 
                                  String mappedName, 
                                  ServiceContract<Type> serviceContract) {
-        super(name, member, optional, serviceContract);
+        super(name, injectionSite, optional, serviceContract);
         this.mappedName = mappedName;
     }
     

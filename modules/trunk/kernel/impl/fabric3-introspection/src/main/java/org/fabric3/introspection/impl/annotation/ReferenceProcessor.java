@@ -30,10 +30,13 @@ import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.InjectingComponentType;
-import org.fabric3.scdl.MemberSite;
+import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.Multiplicity;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.FieldInjectionSite;
+import org.fabric3.scdl.MethodInjectionSite;
+import org.fabric3.scdl.ConstructorInjectionSite;
 
 /**
  * @version $Rev$ $Date$
@@ -53,24 +56,24 @@ public class ReferenceProcessor<I extends Implementation<? extends InjectingComp
             throws IntrospectionException {
 
         String name = helper.getSiteName(field, annotation.name());
-        createDefinition(implementation.getComponentType(), name, annotation.required(), field.getGenericType(), new MemberSite(field));
+        createDefinition(implementation.getComponentType(), name, annotation.required(), field.getGenericType(), new FieldInjectionSite(field));
     }
 
     public void visitMethod(Reference annotation, Method method, I implementation, IntrospectionContext context)
             throws IntrospectionException {
 
         String name = helper.getSiteName(method, annotation.name());
-        createDefinition(implementation.getComponentType(), name, annotation.required(), helper.getGenericType(method), new MemberSite(method));
+        createDefinition(implementation.getComponentType(), name, annotation.required(), helper.getGenericType(method), new MethodInjectionSite(method, 0));
     }
 
     public void visitConstructorParameter(Reference annotation, Constructor<?> constructor, int index, I implementation, IntrospectionContext context)
             throws IntrospectionException {
         String name = helper.getSiteName(constructor, index, annotation.name());
         Type type = helper.getGenericType(constructor, index);
-        createDefinition(implementation.getComponentType(), name, annotation.required(), type, new MemberSite(constructor));
+        createDefinition(implementation.getComponentType(), name, annotation.required(), type, new ConstructorInjectionSite(constructor, index));
     }
 
-    void createDefinition(InjectingComponentType componentType, String name, boolean required, Type type, MemberSite site) throws IntrospectionException {
+    void createDefinition(InjectingComponentType componentType, String name, boolean required, Type type, InjectionSite site) throws IntrospectionException {
         ServiceContract<Type> contract = contractProcessor.introspect(type);
         Multiplicity multiplicity = multiplicity(required, type);
         ReferenceDefinition definition = new ReferenceDefinition(name, contract, multiplicity);
