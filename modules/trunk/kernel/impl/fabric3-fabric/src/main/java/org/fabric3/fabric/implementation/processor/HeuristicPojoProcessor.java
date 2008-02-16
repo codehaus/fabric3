@@ -51,20 +51,19 @@ import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.JavaMappedReference;
 import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.scdl.InjectionSite;
-import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.FieldInjectionSite;
-import org.fabric3.scdl.MethodInjectionSite;
 import org.fabric3.scdl.ConstructorInjectionSite;
+import org.fabric3.scdl.FieldInjectionSite;
+import org.fabric3.scdl.InjectionSite;
+import org.fabric3.scdl.MethodInjectionSite;
+import org.fabric3.scdl.ServiceContract;
 
 /**
- * Heuristically evaluates an un-annotated Java implementation type to determine services, references, and properties
- * according to the algorithm described in the SCA Java Client and Implementation Model Specification <p/> TODO
- * Implement:
+ * Heuristically evaluates an un-annotated Java implementation type to determine services, references, and properties according to the algorithm
+ * described in the SCA Java Client and Implementation Model Specification <p/> TODO Implement:
  * <p/>
- * When no service inteface is annotated, need to calculate a single service comprising all public methods that are not
- * reference or property injection sites. If that service can be exactly mapped to an interface implemented by the class
- * then the service interface will be defined in terms of that interface.
+ * When no service inteface is annotated, need to calculate a single service comprising all public methods that are not reference or property
+ * injection sites. If that service can be exactly mapped to an interface implemented by the class then the service interface will be defined in terms
+ * of that interface.
  *
  * @version $Rev$ $Date$
  */
@@ -120,8 +119,10 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
                 throw new ServiceTypeNotFoundException(clazz.getName());
             }
         }
-        
-        evaluateConstructor(type, clazz);
+
+        if (type.getConstructorDefinition() == null) {
+            evaluateConstructor(type, clazz);
+        }
     }
 
     private <T> void calcPropRefs(Set<Method> methods,
@@ -188,70 +189,39 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
      * @param type  the component type
      * @param clazz the implementation class corresponding to the component type
      * @throws NoConstructorException        if no suitable constructor is found
-     * @throws AmbiguousConstructorException if the parameters of a constructor cannot be unambiguously mapped to
-     *                                       references and properties
+     * @throws AmbiguousConstructorException if the parameters of a constructor cannot be unambiguously mapped to references and properties
      */
     @SuppressWarnings("unchecked")
-    private <T> void evaluateConstructor(
-            PojoComponentType type,
-            Class<T> clazz) throws ProcessingException {
-        // determine constructor if one is not annotated
-        ConstructorDefinition<?> definition = type.getConstructorDefinition();
-        Constructor constructor;
-        boolean explict = false;
-        if (definition != null
-                && definition.getConstructor().getAnnotation(org.osoa.sca.annotations.Constructor.class) != null) {
-            // the constructor was already defined explicitly
-            return;
-        } else if (definition != null) {
-            explict = true;
-            constructor = definition.getConstructor();
-        } else {
-            // no definition, heuristically determine constructor
-            Constructor[] constructors = clazz.getConstructors();
-            if (constructors.length == 0) {
-                throw new NoConstructorException("No public constructor for class", clazz.getName());
-            } else if (constructors.length == 1) {
-                constructor = constructors[0];
-            } else {
-                // FIXME multiple constructors, none yet done
-                Constructor<T> selected = null;
-                int sites = type.getProperties().size() + type.getReferences().size();
-                for (Constructor<T> ctor : constructors) {
-                    if (ctor.getParameterTypes().length == 0) {
-                        selected = ctor;
-                    }
-                    if (ctor.getParameterTypes().length == sites) {
-                        // TODO finish
-                        // selected = constructor;
-                        // select constructor
-                        // break;
-                    }
-                }
-                if (selected == null) {
-                    throw new NoConstructorException();
-                }
-                constructor = selected;
-                definition = new ConstructorDefinition<T>(selected);
-                type.setConstructorDefinition(definition);
-                // return;
-            }
-            definition = new ConstructorDefinition<T>(constructor);
-            type.setConstructorDefinition(definition);
+    private <T> void evaluateConstructor(PojoComponentType type, Class<T> clazz) throws ProcessingException {
+        // heuristically determine constructor
+        Constructor[] constructors = clazz.getConstructors();
+        if (constructors.length == 0) {
+            throw new NoConstructorException("No public constructor for class", clazz.getName());
         }
+
+        Constructor constructor;
+        if (constructors.length == 1) {
+            constructor = constructors[0];
+        } else {
+            try {
+                constructor = clazz.getConstructor();
+            } catch (NoSuchMethodException e) {
+                throw new NoConstructorException();
+            }
+        }
+        ConstructorDefinition<?> definition = new ConstructorDefinition<T>(constructor);
+        type.setConstructorDefinition(definition);
+
         Class[] params = constructor.getParameterTypes();
         if (params.length == 0) {
             return;
         }
+
         List<String> paramNames = definition.getInjectionNames();
         Map<String, JavaMappedProperty<?>> props = type.getProperties();
         Map<String, JavaMappedReference> refs = type.getReferences();
         Annotation[][] annotations = constructor.getParameterAnnotations();
-        if (!explict) {
-            // the constructor wasn't defined by an annotation, so check to see if any of the params have an annotation
-            // which we can impute as explicitly defining the constructor, e.g. @Property, @Reference, or @Autowire
-            explict = implService.injectionAnnotationsPresent(annotations);
-        }
+        boolean explict = implService.injectionAnnotationsPresent(annotations);
         if (explict) {
             for (int i = 0; i < params.length; i++) {
                 Class param = params[i];

@@ -46,23 +46,6 @@ public class HeutisticExtensibleConstructorTestCase extends TestCase {
     }
 
     /**
-     * Verifies heuristic processing can be called priot to an extension annotation processors being called.
-     */
-    public void testBarAnnotationProcessedFirst() throws Exception {
-        PojoComponentType type =
-            new PojoComponentType(null);
-        Constructor<Foo> ctor = Foo.class.getConstructor(String.class, String.class);
-        ConstructorDefinition<Foo> definition = new ConstructorDefinition<Foo>(ctor);
-        type.setConstructorDefinition(definition);
-        JavaMappedProperty property = new JavaMappedProperty();
-        property.setName("myBar");
-        definition.getInjectionNames().add("myBar");
-        type.getProperties().put("myBar", property);
-        processor.visitEnd(Foo.class, type, null);
-        assertEquals(2, type.getProperties().size());
-    }
-
-    /**
      * Verifies heuristic processing can be called before an extension annotation processors is called.
      * <p/>
      * For example, given:
@@ -86,29 +69,6 @@ public class HeutisticExtensibleConstructorTestCase extends TestCase {
 
         assertEquals(2, type.getProperties().size());
         assertEquals("foo", definition.getInjectionNames().get(1));
-    }
-
-    /**
-     * Verifies heuristic processing can be called before an extension annotation processors is called with the
-     * extension parameter in a middle position. Specifically, verifies that the heuristic processor updates injection
-     * names and preserves their ordering.
-     */
-    public void testBarAnnotationProcessedFirstInMiddle() throws Exception {
-        PojoComponentType type =
-            new PojoComponentType(null);
-        Constructor<Foo2> ctor = Foo2.class.getConstructor(String.class, String.class, String.class);
-        ConstructorDefinition<Foo2> definition = new ConstructorDefinition<Foo2>(ctor);
-        type.setConstructorDefinition(definition);
-        // insert placeholder for first param, which would be done by a processor
-        definition.getInjectionNames().add("");
-        JavaMappedProperty property = new JavaMappedProperty();
-        property.setName("myBar");
-        definition.getInjectionNames().add("myBar");
-        type.getProperties().put("myBar", property);
-        processor.visitEnd(Foo2.class, type, null);
-        assertEquals("baz", definition.getInjectionNames().get(0));
-        assertEquals(2, type.getProperties().size());
-        assertEquals(1, type.getReferences().size());
     }
 
     public @interface Bar {

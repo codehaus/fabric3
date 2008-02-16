@@ -41,10 +41,8 @@ public class HeuristicAndPropertyTestCase extends TestCase {
      */
     @SuppressWarnings("unchecked")
     public void testPropertyProcessorWithHeuristicProcessor() throws Exception {
-        PojoComponentType type =
-            new PojoComponentType(null);
+        PojoComponentType type = new PojoComponentType(null);
         Constructor ctor = Foo.class.getConstructor(String.class);
-        type.setConstructorDefinition(new ConstructorDefinition(ctor));
         propertyProcessor.visitConstructor(ctor, type, null);
         heuristicProcessor.visitEnd(Foo.class, type, null);
         assertEquals(1, type.getProperties().size());

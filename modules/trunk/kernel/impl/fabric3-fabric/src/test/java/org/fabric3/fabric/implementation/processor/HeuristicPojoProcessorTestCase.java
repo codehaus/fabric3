@@ -206,11 +206,8 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
     }
 
     public void testSetDataTypes() throws Exception {
-        PojoComponentType type =
-                new PojoComponentType(null);
-        Constructor<PropertyIntTypeOnConstructor> ctor = PropertyIntTypeOnConstructor.class.getConstructor(int.class);
-        type.setConstructorDefinition(new ConstructorDefinition<PropertyIntTypeOnConstructor>(ctor));
-        processor.visitEnd(ProtectedRemotableRefMethodImpl.class, type, null);
+        PojoComponentType type = new PojoComponentType(null);
+        processor.visitEnd(PropertyIntTypeOnConstructor.class, type, null);
         org.fabric3.scdl.Property<?> foo = type.getProperties().get("foo");
         assertEquals(int.class, foo.getJavaType());
     }
