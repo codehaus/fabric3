@@ -26,8 +26,6 @@ import java.util.Map;
 import org.osoa.sca.annotations.Property;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.pojo.processor.DuplicatePropertyException;
-import org.fabric3.pojo.processor.IllegalPropertyException;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.scdl.JavaMappedProperty;

@@ -23,8 +23,8 @@ import java.util.List;
 
 import org.osoa.sca.annotations.Property;
 
-import org.fabric3.pojo.processor.DuplicatePropertyException;
-import org.fabric3.pojo.processor.IllegalPropertyException;
+import org.fabric3.fabric.implementation.processor.DuplicatePropertyException;
+import org.fabric3.fabric.implementation.processor.IllegalPropertyException;
 import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.PojoComponentType;
 

@@ -29,7 +29,7 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Resource;
-import org.fabric3.pojo.processor.DuplicatePropertyException;
+import org.fabric3.fabric.implementation.processor.DuplicatePropertyException;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.scdl.JavaMappedProperty;

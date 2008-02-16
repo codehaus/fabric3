@@ -16,7 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.pojo.processor;
+package org.fabric3.fabric.implementation.processor;
+
+import org.fabric3.pojo.processor.ProcessingException;
 
 /**
  * Denotes an illegal property definition in a component type
