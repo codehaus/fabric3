@@ -162,7 +162,7 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
             
         }
         
-        List<String> ctrArguments = providerDefinition.getConstructorArguments();
+        List<String> ctrArguments = providerDefinition.getConstructor().getParameterTypes();
         List<ValueSource> cdiSources = providerDefinition.getCdiSources();
         
         for (int i = 0;i < cdiSources.size();i++) {

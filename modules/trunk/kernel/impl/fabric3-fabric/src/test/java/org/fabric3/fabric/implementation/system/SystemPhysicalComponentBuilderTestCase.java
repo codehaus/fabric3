@@ -29,6 +29,7 @@ import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.scdl.Scope;
+import org.fabric3.scdl.Signature;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 
 /**
@@ -69,6 +70,7 @@ public class SystemPhysicalComponentBuilderTestCase<T> extends TestCase {
 
         providerBuilders = EasyMock.createMock(InstanceFactoryBuilderRegistry.class);
         providerDefinition = new InstanceFactoryDefinition();
+        providerDefinition.setConstructor(new Signature("Foo"));
         instanceFactoryProvider = EasyMock.createMock(InstanceFactoryProvider.class);
         EasyMock.expect(providerBuilders.build(providerDefinition, classLoader)).andStubReturn(instanceFactoryProvider);
         EasyMock.replay(providerBuilders);

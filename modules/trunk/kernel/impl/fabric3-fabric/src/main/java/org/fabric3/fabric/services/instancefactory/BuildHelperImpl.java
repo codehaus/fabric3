@@ -49,16 +49,11 @@ public class BuildHelperImpl implements InstanceFactoryBuildHelper {
         return classLoaderRegistry.loadClass(cl, name);
     }
 
-    public <T> Constructor<T> getConstructor(Class<T> implClass, List<String> argNames)
+    public <T> Constructor<T> getConstructor(Class<T> implClass, Signature signature)
             throws ClassNotFoundException, NoSuchMethodException {
 
-        ClassLoader cl = implClass.getClassLoader();
-        Class[] ctrArgs = new Class[argNames.size()];
-        for (int i = 0; i < ctrArgs.length; i++) {
-            ctrArgs[i] = loadClass(cl, argNames.get(i));
-        }
-
-        Constructor<T> ctr = implClass.getDeclaredConstructor(ctrArgs);
+        @SuppressWarnings("unchecked")
+        Constructor<T> ctr = signature.getConstructor(implClass);
         ctr.setAccessible(true);
         return ctr;
     }

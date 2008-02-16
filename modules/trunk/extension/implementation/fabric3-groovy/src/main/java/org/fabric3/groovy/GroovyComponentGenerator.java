@@ -63,11 +63,11 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
 
         // create the instance factory definition
         GroovyInstanceFactoryDefinition providerDefinition = new GroovyInstanceFactoryDefinition();
+        providerDefinition.setConstructor(type.getConstructorDefinition().getSignature());
         providerDefinition.setInitMethod(type.getInitMethod());
         providerDefinition.setDestroyMethod(type.getDestroyMethod());
         providerDefinition.setImplementationClass(implementation.getClassName());
         providerDefinition.setScriptName(implementation.getScriptName());
-        helper.processConstructorArguments(type.getConstructorDefinition(), providerDefinition);
         helper.processInjectionSites(component, providerDefinition);
 
         // create the physical component definition

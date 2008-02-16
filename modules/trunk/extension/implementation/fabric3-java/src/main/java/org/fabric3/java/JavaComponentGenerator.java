@@ -71,10 +71,10 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
 
         // create the instance factory definition
         InstanceFactoryDefinition providerDefinition = new InstanceFactoryDefinition();
+        providerDefinition.setConstructor(type.getConstructorDefinition().getSignature());
         providerDefinition.setInitMethod(type.getInitMethod());
         providerDefinition.setDestroyMethod(type.getDestroyMethod());
         providerDefinition.setImplementationClass(implementation.getImplementationClass());
-        helper.processConstructorArguments(type.getConstructorDefinition(), providerDefinition);
         helper.processInjectionSites(component, providerDefinition);
 
         // create the physical component definition

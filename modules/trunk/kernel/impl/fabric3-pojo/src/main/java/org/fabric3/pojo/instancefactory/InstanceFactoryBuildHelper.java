@@ -32,7 +32,7 @@ import org.fabric3.scdl.InjectionSiteMapping;
 public interface InstanceFactoryBuildHelper {
     Class<?> loadClass(ClassLoader cl, String name) throws ClassNotFoundException;
 
-    <T> Constructor<T> getConstructor(Class<T> implClass, List<String> argNames)
+    <T> Constructor<T> getConstructor(Class<T> implClass, Signature signature)
             throws ClassNotFoundException, NoSuchMethodException;
 
     Method getMethod(Class<?> implClass, Signature signature)

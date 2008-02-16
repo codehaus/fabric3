@@ -104,8 +104,7 @@ public class ReflectiveIFProviderBuilderTestCase extends TestCase {
         super.setUp();
         definition = new InstanceFactoryDefinition();
         definition.setImplementationClass(Foo.class.getName());
-        definition.addConstructorArgument("java.lang.String");
-        definition.addConstructorArgument("java.lang.Long");
+        definition.setConstructor(new Signature(Foo.class.getConstructor(String.class, Long.class)));
         definition.setInitMethod(new Signature("init"));
         definition.setDestroyMethod(new Signature("destroy"));
     }

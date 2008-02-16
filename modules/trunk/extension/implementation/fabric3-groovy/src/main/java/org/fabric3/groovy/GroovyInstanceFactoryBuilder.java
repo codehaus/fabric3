@@ -66,7 +66,7 @@ public class GroovyInstanceFactoryBuilder<T>
         try {
             Class<T> implClass = getImplClass(ifpd, gcl);
             
-            Constructor<T> ctr = helper.getConstructor(implClass, ifpd.getConstructorArguments());
+            Constructor<T> ctr = helper.getConstructor(implClass, ifpd.getConstructor());
 
             Method initMethod = helper.getMethod(implClass, ifpd.getInitMethod());
 

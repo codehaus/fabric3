@@ -45,6 +45,14 @@ public class ConstructorDefinition<T> {
     }
 
     /**
+     * Returns the signature of the constructor.
+     * @return the signature of the constructor
+     */
+    public Signature getSignature() {
+        return signature;
+    }
+
+    /**
      * TODO JFM remove this method when HueristicPojoProcessor is refactored
      */
     public Constructor<T> getConstructor() {

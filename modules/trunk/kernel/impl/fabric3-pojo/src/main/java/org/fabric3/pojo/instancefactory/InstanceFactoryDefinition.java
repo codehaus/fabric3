@@ -22,10 +22,10 @@ package org.fabric3.pojo.instancefactory;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.fabric3.scdl.ValueSource;
+import org.fabric3.scdl.InjectionSiteMapping;
 import org.fabric3.scdl.ModelObject;
 import org.fabric3.scdl.Signature;
-import org.fabric3.scdl.InjectionSiteMapping;
+import org.fabric3.scdl.ValueSource;
 
 /**
  * Base class for instance factory definitions.
@@ -33,30 +33,27 @@ import org.fabric3.scdl.InjectionSiteMapping;
  * @version $Revsion$ $Date$
  */
 public class InstanceFactoryDefinition extends ModelObject {
-    // Implementation class
-    private String implementationClass;// Constructor arguments
-    private List<String> constructorArguments = new LinkedList<String>();// Init method
-    private Signature initMethod;// Destroy method
-    private Signature destroyMethod;// Constructor injection sites
-    private List<ValueSource> cdiSources = new LinkedList<ValueSource>();// Injection sites
+    private String implementationClass;
+    private Signature constructor;
+    private Signature initMethod;
+    private Signature destroyMethod;
+    private List<ValueSource> cdiSources = new LinkedList<ValueSource>();
     private List<InjectionSiteMapping> injectionSites = new LinkedList<InjectionSiteMapping>();
 
     /**
-     * returns the constructor argument.
-     *
-     * @return the constructorArguments Fully qualified names of the constructor atgument types.
+     * Returns the signature of the constrctor that should be used.
+     * @return the signature of the constrctor that should be used
      */
-    public List<String> getConstructorArguments() {
-        return constructorArguments;
+    public Signature getConstructor() {
+        return constructor;
     }
 
     /**
-     * Adds a constructor argument type.
-     *
-     * @param constructorArgument the constructorArguments to set
+     * Sets the signature of the constrctor that should be used.
+     * @param constructor the signature of the constrctor that should be used
      */
-    public void addConstructorArgument(String constructorArgument) {
-        constructorArguments.add(constructorArgument);
+    public void setConstructor(Signature constructor) {
+        this.constructor = constructor;
     }
 
     /**

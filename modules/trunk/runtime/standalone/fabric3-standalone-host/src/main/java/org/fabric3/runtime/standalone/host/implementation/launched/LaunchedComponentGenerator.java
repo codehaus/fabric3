@@ -87,7 +87,7 @@ public class LaunchedComponentGenerator implements ComponentGenerator<LogicalCom
             pDefinition.setInitLevel(level);
         }
         providerDefinition.setImplementationClass(implementation.getImplementationClass());
-        processConstructorArguments(type.getConstructorDefinition(), providerDefinition);
+        providerDefinition.setConstructor(type.getConstructorDefinition().getSignature());
         processConstructorSites(type, providerDefinition);
         processReferenceSites(type, providerDefinition);
         // TODO process properties
@@ -183,19 +183,6 @@ public class LaunchedComponentGenerator implements ComponentGenerator<LogicalCom
             mapping.setSource(source);
             mapping.setSite(injectionSite);
             providerDefinition.addInjectionSite(mapping);
-        }
-    }
-
-    /**
-     * Adds the constructor parameter types to the provider definition
-     *
-     * @param ctorDef            the constructor definition
-     * @param providerDefinition the provider definition
-     */
-    private void processConstructorArguments(ConstructorDefinition<?> ctorDef,
-                                             InstanceFactoryDefinition providerDefinition) {
-        for (String type : ctorDef.getParameterTypes()) {
-            providerDefinition.addConstructorArgument(type);
         }
     }
 

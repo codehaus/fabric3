@@ -19,7 +19,6 @@ package org.fabric3.pojo.instancefactory;
 import java.lang.reflect.Method;
 
 import org.fabric3.pojo.implementation.PojoComponentDefinition;
-import org.fabric3.pojo.scdl.ConstructorDefinition;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Implementation;
@@ -67,14 +66,6 @@ public interface InstanceFactoryGenerationHelper {
      * @param providerDefinition the instance factory provider definition
      */
     void processResourceSites(LogicalComponent<? extends Implementation<PojoComponentType>> component, InstanceFactoryDefinition providerDefinition);
-
-    /**
-     * Adds the constructor parameter types to the provider definition
-     *
-     * @param ctorDef            the constructor definition
-     * @param providerDefinition the provider definition
-     */
-    void processConstructorArguments(ConstructorDefinition<?> ctorDef, InstanceFactoryDefinition providerDefinition);
 
     /**
      * Set the actual values of the physical properties.

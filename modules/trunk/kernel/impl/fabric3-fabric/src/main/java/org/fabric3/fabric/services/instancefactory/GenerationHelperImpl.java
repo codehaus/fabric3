@@ -207,13 +207,6 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
         }
     }
 
-    public void processConstructorArguments(ConstructorDefinition<?> ctorDef,
-                                            InstanceFactoryDefinition providerDefinition) {
-        for (String type : ctorDef.getParameterTypes()) {
-            providerDefinition.addConstructorArgument(type);
-        }
-    }
-
     public void processResourceSites(LogicalComponent<? extends Implementation<PojoComponentType>> component,
                                      InstanceFactoryDefinition providerDefinition) {
 

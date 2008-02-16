@@ -67,7 +67,7 @@ public class ReflectiveInstanceFactoryBuilder<T>
             @SuppressWarnings("unchecked")
             Class<T> implClass = (Class<T>) helper.loadClass(cl, ifpd.getImplementationClass());
 
-            Constructor<T> ctr = helper.getConstructor(implClass, ifpd.getConstructorArguments());
+            Constructor<T> ctr = helper.getConstructor(implClass, ifpd.getConstructor());
 
             Method initMethod = helper.getMethod(implClass, ifpd.getInitMethod());
 

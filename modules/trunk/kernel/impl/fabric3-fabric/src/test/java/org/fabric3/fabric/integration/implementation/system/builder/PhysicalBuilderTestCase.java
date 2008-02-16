@@ -48,6 +48,7 @@ import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.scdl.Scope;
 import org.fabric3.scdl.ValueSource;
 import org.fabric3.scdl.FieldInjectionSite;
+import org.fabric3.scdl.Signature;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
@@ -96,6 +97,7 @@ public class PhysicalBuilderTestCase extends TestCase {
     private SystemComponentDefinition createSourceComponentDefinition() throws Exception {
         InstanceFactoryDefinition sourceProviderDefinition = new InstanceFactoryDefinition();
         sourceProviderDefinition.setImplementationClass(SourceImpl.class.getName());
+        sourceProviderDefinition.setConstructor(new Signature(SourceImpl.class.getConstructor()));
         InjectionSiteMapping mapping = new InjectionSiteMapping();
         mapping.setSource(new ValueSource(ValueSource.ValueSourceType.REFERENCE, "target"));
         mapping.setSite(new FieldInjectionSite(SourceImpl.class.getField("target")));
@@ -110,9 +112,10 @@ public class PhysicalBuilderTestCase extends TestCase {
         return source;
     }
 
-    private SystemComponentDefinition createTargetComponentDefinition() {
+    private SystemComponentDefinition createTargetComponentDefinition() throws Exception{
         InstanceFactoryDefinition targetProviderDefinition = new InstanceFactoryDefinition();
         targetProviderDefinition.setImplementationClass(TargetImpl.class.getName());
+        targetProviderDefinition.setConstructor(new Signature(TargetImpl.class.getConstructor()));
 
         SystemComponentDefinition target = new SystemComponentDefinition();
         target.setComponentId(targetId);
