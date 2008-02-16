@@ -20,14 +20,12 @@ package org.fabric3.spi.model.instance;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
 
 import org.fabric3.scdl.ReferenceDefinition;
-
 import org.osoa.sca.Constants;
 
 /**
@@ -40,7 +38,6 @@ public class LogicalReference extends Bindable {
     private static final QName TYPE = new QName(Constants.SCA_NS, "reference");
     
     private final ReferenceDefinition definition;
-    private List<URI> targets;
     private List<URI> promoted;
 
     /**
@@ -51,7 +48,6 @@ public class LogicalReference extends Bindable {
     public LogicalReference(URI uri, ReferenceDefinition definition, LogicalComponent<?> parent) {
         super(uri, parent, TYPE);
         this.definition = definition;
-        targets = new ArrayList<URI>();
         promoted = new ArrayList<URI>();
     }
 
@@ -66,22 +62,21 @@ public class LogicalReference extends Bindable {
      * @return
      */
     public List<URI> getTargetUris() {
-        return Collections.unmodifiableList(targets);
+        return getComposite().getWireTargets(this);
     }
 
     /**
      * @param uri
      */
     public void addTargetUri(URI uri) {
-        targets.add(uri);
+        getComposite().addWireTarget(this, uri);
     }
 
     /**
      * @param targets
      */
     public void overrideTargets(List<URI> targets) {
-        this.targets.clear();
-        this.targets.addAll(targets);
+        getComposite().overrideWireTargets(this, targets);
     }
 
     /**
@@ -124,6 +119,15 @@ public class LogicalReference extends Bindable {
      */
     public void setPolicySets(Set<QName> policySets) {
         definition.setPolicySets(policySets);
+    }
+    
+    private LogicalCompositeComponent getComposite() {
+        
+        LogicalComponent<?> parent = getParent();
+        LogicalCompositeComponent composite = parent.getParent();
+        
+        return composite != null ? composite : (LogicalCompositeComponent) parent;
+        
     }
     
 }

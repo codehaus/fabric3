@@ -4,9 +4,9 @@ import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.CompositeImplementation;
@@ -17,7 +17,7 @@ import org.fabric3.scdl.CompositeImplementation;
  */
 public class LogicalCompositeComponent extends LogicalComponent<CompositeImplementation> {
     
-    private final Set<LogicalWire> wires = new HashSet<LogicalWire>();
+    private final Map<LogicalReference, List<URI>> wires = new HashMap<LogicalReference, List<URI>>();
     private final Map<URI, LogicalComponent<?>> components = new HashMap<URI, LogicalComponent<?>>();
 
     /**
@@ -36,12 +36,19 @@ public class LogicalCompositeComponent extends LogicalComponent<CompositeImpleme
     }
     
     /**
-     * Gets the list of wires resolved within this composite component.
+     * Adds a wire to this composite component.
      * 
-     * @return List of wires resolved within this composite component.
+     * @param wire Wire to be added to this composite component.
      */
-    public final Set<LogicalWire> getWires() {
-        return Collections.unmodifiableSet(wires);
+    public final void addWireTarget(LogicalReference logicalReference, URI target) {
+        
+        List<URI> targets = wires.get(logicalReference);
+        if (targets == null) {
+            targets = new LinkedList<URI>();
+            wires.put(logicalReference, targets);
+        }
+        targets.add(target);
+        
     }
     
     /**
@@ -49,8 +56,25 @@ public class LogicalCompositeComponent extends LogicalComponent<CompositeImpleme
      * 
      * @param wire Wire to be added to this composite component.
      */
-    public final void addWire(LogicalWire wire) {
-        wires.add(wire);
+    public final void overrideWireTargets(LogicalReference logicalReference, List<URI> targets) {
+        wires.put(logicalReference, targets);
+    }
+    
+    /**
+     * Gets the resolved targets sourced by the specified logical reference.
+     * 
+     * @param logicalReference Logical reference that sources the wire.
+     * @return Resolved targets for the reference.
+     */
+    public final List<URI> getWireTargets(LogicalReference logicalReference) {
+        
+        List<URI> targets = wires.get(logicalReference);
+        if (targets == null) {
+            targets = new LinkedList<URI>();
+            wires.put(logicalReference, targets);
+        }
+        return targets;
+        
     }
 
     /**

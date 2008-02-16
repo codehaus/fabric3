@@ -37,7 +37,9 @@ import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
+import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
+import org.fabric3.spi.model.instance.LogicalWire;
 import org.fabric3.spi.util.UriHelper;
 
 /**

@@ -39,7 +39,7 @@ public final class LogicalWire extends LogicalScaArtifact<LogicalComponent<?>> {
 
     private static final QName TYPE = new QName(Constants.SCA_NS, "wire");
 
-    private final URI sourceUri;
+    private final LogicalReference source;
     private final URI targetUri;
     private final WireType wireType;
 
@@ -52,12 +52,12 @@ public final class LogicalWire extends LogicalScaArtifact<LogicalComponent<?>> {
      * @param targetUri Target URI of the wire.
      * @param wireType Type of the wire.
      */
-    public LogicalWire(final URI uri, final LogicalComponent<?> parent, final URI sourceUri, final URI targetUri, final WireType wireType) {
+    public LogicalWire(final URI uri, final LogicalComponent<?> parent, final LogicalReference source, final URI targetUri, final WireType wireType) {
         
         super(uri, parent, TYPE);
         
-        if (sourceUri == null) {
-            throw new IllegalArgumentException("Source URI cannot be null");
+        if (source == null) {
+            throw new IllegalArgumentException("Source cannot be null");
         };
         
         if (targetUri == null) {
@@ -68,19 +68,19 @@ public final class LogicalWire extends LogicalScaArtifact<LogicalComponent<?>> {
             throw new IllegalArgumentException("Wire type cannot be null");
         }
         
-        this.sourceUri = sourceUri;
+        this.source = source;
         this.targetUri = targetUri;
         this.wireType = wireType;
         
     }
 
     /**
-     * Gets the source URI of the wire.
+     * Gets the source of the wire.
      * 
-     * @return Source URI of the wire.
+     * @return Source of the wire.
      */
-    public final URI getSourceUri() {
-        return sourceUri;
+    public final LogicalReference getSource() {
+        return source;
     }
 
     /**
@@ -158,7 +158,7 @@ public final class LogicalWire extends LogicalScaArtifact<LogicalComponent<?>> {
         }
         
         LogicalWire test = (LogicalWire) obj;
-        return targetUri.equals(test.targetUri) && sourceUri.equals(test.sourceUri);
+        return targetUri.equals(test.targetUri) && source.equals(test.source);
         
     }
 
@@ -170,7 +170,7 @@ public final class LogicalWire extends LogicalScaArtifact<LogicalComponent<?>> {
     public int hashCode() {
         
         int hash = 7;
-        hash = 31 * hash + sourceUri.hashCode();
+        hash = 31 * hash + source.hashCode();
         hash = 31 * hash + targetUri.hashCode();
         return hash;
         
