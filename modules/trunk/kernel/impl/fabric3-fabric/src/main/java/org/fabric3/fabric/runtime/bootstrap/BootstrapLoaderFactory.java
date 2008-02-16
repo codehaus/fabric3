@@ -120,7 +120,7 @@ public class BootstrapLoaderFactory {
         introspectionRegistry.registerProcessor(new PreDestroyProcessor());
         introspectionRegistry.registerProcessor(new PostConstructProcessor());
         introspectionRegistry.registerProcessor(new EagerInitProcessor());
-        introspectionRegistry.registerProcessor(new PropertyProcessor(service));
+        introspectionRegistry.registerProcessor(new PropertyProcessor());
         introspectionRegistry.registerProcessor(new ReferenceProcessor(interfaceIntrospector));
         introspectionRegistry.registerProcessor(new ServiceProcessor(service));
         introspectionRegistry.registerProcessor(new HeuristicPojoProcessor(service, interfaceIntrospector));

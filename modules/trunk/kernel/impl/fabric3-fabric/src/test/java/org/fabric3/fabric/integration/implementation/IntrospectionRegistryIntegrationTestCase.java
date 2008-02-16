@@ -74,7 +74,7 @@ public class IntrospectionRegistryIntegrationTestCase extends TestCase {
         registry.registerProcessor(new ScopeProcessor(scopeRegistry));
         ContractProcessor interfaceProcessorRegistry = new DefaultContractProcessor();
         ImplementationProcessorService service = new ImplementationProcessorServiceImpl(interfaceProcessorRegistry);
-        registry.registerProcessor(new PropertyProcessor(service));
+        registry.registerProcessor(new PropertyProcessor());
         registry.registerProcessor(new ReferenceProcessor(interfaceProcessorRegistry));
         //registry.registerProcessor(new ResourceProcessor());
     }
