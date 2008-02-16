@@ -16,11 +16,34 @@
  */
 package org.fabric3.scdl;
 
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * @version $Rev$ $Date$
  */
 public class CompositeReference extends ReferenceDefinition {
-    public CompositeReference(String name, ServiceContract serviceContract) {
+    
+    private final List<URI> promotedUris = new ArrayList<URI>();
+    
+    public CompositeReference(String name, ServiceContract<?> serviceContract) {
         super(name, serviceContract);
     }
+
+    /**
+     * @return
+     */
+    public List<URI> getPromotedUris() {
+        return Collections.unmodifiableList(promotedUris);
+    }
+
+    /**
+     * @param uri
+     */
+    public void addPromotedUri(URI uri) {
+        promotedUris.add(uri);
+    }
+    
 }

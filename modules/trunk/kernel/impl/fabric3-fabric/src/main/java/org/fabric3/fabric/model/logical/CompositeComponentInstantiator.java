@@ -152,7 +152,7 @@ public class CompositeComponentInstantiator extends AbstractComponentInstantiato
                 logicalReference.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalReference));
             }
             
-            for (URI promotedUri : reference.getPromoted()) {
+            for (URI promotedUri : reference.getPromotedUris()) {
                 URI resolvedUri = URI.create(uriBase + promotedUri.toString());
                 logicalReference.addPromotedUri(resolvedUri);
             }

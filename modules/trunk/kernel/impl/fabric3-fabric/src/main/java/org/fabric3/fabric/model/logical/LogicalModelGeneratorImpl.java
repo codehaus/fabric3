@@ -156,7 +156,7 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
         for (CompositeReference compositeReference : composite.getReferences().values()) {
             URI referenceURi = URI.create(base + '#' + compositeReference.getName());
             LogicalReference logicalReference = new LogicalReference(referenceURi, compositeReference, parent);
-            for (URI promotedUri : compositeReference.getPromoted()) {
+            for (URI promotedUri : compositeReference.getPromotedUris()) {
                 URI resolvedUri = URI.create(base + "/" + promotedUri.toString());
                 logicalReference.addPromotedUri(resolvedUri);
             }

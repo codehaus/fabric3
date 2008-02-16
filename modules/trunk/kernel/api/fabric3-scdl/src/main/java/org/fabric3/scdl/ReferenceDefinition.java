@@ -34,7 +34,6 @@ public class ReferenceDefinition extends AbstractPolicyAware {
     private ServiceContract<?> serviceContract;
     private Multiplicity multiplicity;
     private boolean required;
-    private final List<URI> promoted = new ArrayList<URI>();
     private final List<BindingDefinition> bindings = new ArrayList<BindingDefinition>();
     private final List<OperationDefinition> operations = new ArrayList<OperationDefinition>();
 
@@ -104,20 +103,6 @@ public class ReferenceDefinition extends AbstractPolicyAware {
      */
     public void setRequired(boolean required) {
         this.required = required;
-    }
-
-    /**
-     * @return
-     */
-    public List<URI> getPromoted() {
-        return Collections.unmodifiableList(promoted);
-    }
-
-    /**
-     * @param uri
-     */
-    public void addPromoted(URI uri) {
-        promoted.add(uri);
     }
 
     /**

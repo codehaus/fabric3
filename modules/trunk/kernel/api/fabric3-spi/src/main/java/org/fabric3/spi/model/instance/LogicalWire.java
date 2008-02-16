@@ -41,7 +41,7 @@ public final class LogicalWire extends LogicalScaArtifact<LogicalComponent<?>> {
 
     private final LogicalReference source;
     private final URI targetUri;
-    private final WireType wireType;
+    private boolean provisioned;
 
     /**
      * Instantiates a logical wire.
@@ -52,9 +52,9 @@ public final class LogicalWire extends LogicalScaArtifact<LogicalComponent<?>> {
      * @param targetUri Target URI of the wire.
      * @param wireType Type of the wire.
      */
-    public LogicalWire(final URI uri, final LogicalComponent<?> parent, final LogicalReference source, final URI targetUri, final WireType wireType) {
+    public LogicalWire(final LogicalComponent<?> parent, final LogicalReference source, final URI targetUri) {
         
-        super(uri, parent, TYPE);
+        super(null, parent, TYPE);
         
         if (source == null) {
             throw new IllegalArgumentException("Source cannot be null");
@@ -64,13 +64,8 @@ public final class LogicalWire extends LogicalScaArtifact<LogicalComponent<?>> {
             throw new IllegalArgumentException("Target URI cannot be null");
         };
         
-        if (wireType == null) {
-            throw new IllegalArgumentException("Wire type cannot be null");
-        }
-        
         this.source = source;
         this.targetUri = targetUri;
-        this.wireType = wireType;
         
     }
 
@@ -90,15 +85,6 @@ public final class LogicalWire extends LogicalScaArtifact<LogicalComponent<?>> {
      */
     public final URI getTargetUri() {
         return targetUri;
-    }
-
-    /**
-     * Gets the type of the wire.
-     * 
-     * @return Type of the wire.
-     */
-    public final WireType getWireType() {
-        return wireType;
     }
 
     /**
@@ -174,6 +160,24 @@ public final class LogicalWire extends LogicalScaArtifact<LogicalComponent<?>> {
         hash = 31 * hash + targetUri.hashCode();
         return hash;
         
+    }
+
+    /**
+     * Checks whether the wire has been provisioned.
+     * 
+     * @return True if the wire has been provisioned.
+     */
+    public boolean isProvisioned() {
+        return provisioned;
+    }
+
+    /**
+     * Marks thw wire as provisioned/unprovisioned.
+     * 
+     * @param provisioned True if the wire has been provisioned.
+     */
+    public void setProvisioned(boolean provisioned) {
+        this.provisioned = provisioned;
     }
 
 }

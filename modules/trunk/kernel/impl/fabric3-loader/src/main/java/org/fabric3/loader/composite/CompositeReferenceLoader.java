@@ -106,7 +106,7 @@ public class CompositeReferenceLoader implements StAXElementLoader<CompositeRefe
      * Processes the promotes attribute.
      */
     private void setPromoted(XMLStreamReader reader,
-                             ReferenceDefinition referenceDefinition,
+                             CompositeReference referenceDefinition,
                              String name,
                              IntrospectionContext context)
             throws InvalidReferenceException, InvalidNameException {
@@ -118,7 +118,7 @@ public class CompositeReferenceLoader implements StAXElementLoader<CompositeRefe
         StringTokenizer tokenizer = new StringTokenizer(promoted, " ");
         while (tokenizer.hasMoreTokens()) {
             URI uri = LoaderUtil.getURI(tokenizer.nextToken());
-            referenceDefinition.addPromoted(uri);
+            referenceDefinition.addPromotedUri(uri);
         }
 
     }
