@@ -46,37 +46,19 @@ public class ConstructorProcessor extends ImplementationProcessorExtension {
         this.service = service;
     }
 
-    public <T> void visitClass(Class<T> clazz,
-                               PojoComponentType type,
-                               IntrospectionContext context) throws ProcessingException {
-        Constructor[] ctors = clazz.getConstructors();
-        boolean found = false;
-        for (Constructor constructor : ctors) {
-            if (constructor.getAnnotation(org.osoa.sca.annotations.Constructor.class) != null) {
-                if (found) {
-                    String name = constructor.getDeclaringClass().getName();
-                    throw new DuplicateConstructorException("Multiple constructors marked with @Constructor", name);
-                }
-                found = true;
-            }
-        }
-    }
-
     public <T> void visitConstructor(Constructor<T> constructor,
                                      PojoComponentType type,
                                      IntrospectionContext context) throws ProcessingException {
-        org.osoa.sca.annotations.Constructor annotation =
-            constructor.getAnnotation(org.osoa.sca.annotations.Constructor.class);
+        org.osoa.sca.annotations.Constructor annotation = constructor.getAnnotation(org.osoa.sca.annotations.Constructor.class);
         if (annotation == null) {
             return;
         }
-        ConstructorDefinition<?> definition = type.getConstructorDefinition();
-        if (definition != null && !definition.match(constructor)) {
+
+        if (type.getConstructorDefinition() != null) {
             String name = constructor.getDeclaringClass().getName();
             throw new DuplicateConstructorException("Multiple constructor definitions found", name);
-        } else if (definition == null) {
-            definition = new ConstructorDefinition(constructor);
         }
+        ConstructorDefinition<?> definition = new ConstructorDefinition(constructor);
         Class<?>[] params = constructor.getParameterTypes();
         String[] names = annotation.value();
         Annotation[][] annotations = constructor.getParameterAnnotations();

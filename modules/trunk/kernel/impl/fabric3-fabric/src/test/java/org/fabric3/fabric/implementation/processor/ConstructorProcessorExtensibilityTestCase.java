@@ -24,6 +24,7 @@ import org.osoa.sca.annotations.Property;
 
 import org.fabric3.pojo.scdl.ConstructorDefinition;
 import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.pojo.processor.ProcessingException;
 
 import junit.framework.TestCase;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
@@ -46,21 +47,20 @@ public class ConstructorProcessorExtensibilityTestCase extends TestCase {
     }
 
     /**
-     * Verifies the constructor processor can be called after another processor has evaluated the constructor and found
-     * an annotation
+     * Verifies the constructor processor throws an exception if another processor has selected a constructor.
      *
      * @throws Exception
      */
     public void testProcessLast() throws Exception {
-        PojoComponentType type =
-            new PojoComponentType(null);
+        PojoComponentType type = new PojoComponentType(null);
         Constructor<Foo> ctor1 = Foo.class.getConstructor(String.class, String.class);
         ConstructorDefinition<Foo> definition = new ConstructorDefinition<Foo>(ctor1);
-        definition.getInjectionNames().add("");
-        definition.getInjectionNames().add("mybar");
         type.setConstructorDefinition(definition);
-        processor.visitConstructor(ctor1, type, null);
-        assertEquals("foo", type.getConstructorDefinition().getInjectionNames().get(0));
+        try {
+            processor.visitConstructor(ctor1, type, null);
+            fail();
+        } catch (DuplicateConstructorException e) {
+        }
     }
 
 

@@ -42,10 +42,10 @@ public class ConstructorProcessorTestCase extends TestCase {
         new ConstructorProcessor(new ImplementationProcessorServiceImpl(new DefaultContractProcessor()));
 
     public void testDuplicateConstructor() throws Exception {
-        PojoComponentType type =
-            new PojoComponentType(null);
+        PojoComponentType type = new PojoComponentType(null);
+        processor.visitConstructor(BadFoo.class.getConstructor(String.class), type, null);
         try {
-            processor.visitClass(BadFoo.class, type, null);
+            processor.visitConstructor(BadFoo.class.getConstructor(String.class, String.class), type, null);
             fail();
         } catch (DuplicateConstructorException e) {
             // expected
