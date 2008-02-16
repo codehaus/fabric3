@@ -18,7 +18,6 @@
  */
 package org.fabric3.fabric.implementation.processor;
 
-import java.lang.reflect.Constructor;
 import java.util.List;
 
 import org.fabric3.pojo.scdl.ConstructorDefinition;
@@ -61,7 +60,7 @@ public class HeutisticExtensibleConstructorTestCase extends TestCase {
         processor.visitEnd(Foo.class, type, null);
 
         // now simulate process the bar impl
-        ConstructorDefinition<?> definition = type.getConstructorDefinition();
+        ConstructorDefinition definition = type.getConstructorDefinition();
         List<String> injectionNames = definition.getInjectionNames();
         injectionNames.remove(0);
         injectionNames.add(0, "mybar");

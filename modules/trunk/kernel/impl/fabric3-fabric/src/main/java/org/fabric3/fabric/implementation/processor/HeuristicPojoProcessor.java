@@ -56,6 +56,7 @@ import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.MethodInjectionSite;
 import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.Signature;
 
 /**
  * Heuristically evaluates an un-annotated Java implementation type to determine services, references, and properties according to the algorithm
@@ -209,7 +210,7 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
                 throw new NoConstructorException();
             }
         }
-        ConstructorDefinition<?> definition = new ConstructorDefinition<T>(constructor);
+        ConstructorDefinition definition = new ConstructorDefinition(new Signature(constructor));
         type.setConstructorDefinition(definition);
 
         Class[] params = constructor.getParameterTypes();

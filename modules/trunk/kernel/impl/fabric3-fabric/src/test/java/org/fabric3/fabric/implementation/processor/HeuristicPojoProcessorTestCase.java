@@ -36,6 +36,7 @@ import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.Signature;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 
 /**
@@ -61,7 +62,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
     public void testSingleInterface() throws Exception {
         PojoComponentType type =  new PojoComponentType(null);
         Constructor<SingleInterfaceImpl> ctor = SingleInterfaceImpl.class.getConstructor();
-        type.setConstructorDefinition(new ConstructorDefinition<SingleInterfaceImpl>(ctor));
+        type.setConstructorDefinition(new ConstructorDefinition(new Signature(ctor)));
         processor.visitEnd(SingleInterfaceImpl.class, type, null);
         assertEquals(1, type.getServices().size());
         Map<String, JavaMappedService> services = type.getServices();
@@ -79,7 +80,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
         PojoComponentType type = new PojoComponentType(null);
         Constructor<SingleInterfaceWithPropertyReferenceImpl> ctor =
                 SingleInterfaceWithPropertyReferenceImpl.class.getConstructor();
-        type.setConstructorDefinition(new ConstructorDefinition<SingleInterfaceWithPropertyReferenceImpl>(ctor));
+        type.setConstructorDefinition(new ConstructorDefinition(new Signature(ctor)));
         processor.visitEnd(SingleInterfaceWithPropertyReferenceImpl.class, type, null);
         assertEquals(1, type.getServices().size());
         Map<String, JavaMappedService> services = type.getServices();
@@ -102,7 +103,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
         PojoComponentType type =
                 new PojoComponentType(null);
         Constructor<SingleInterfaceImpl> ctor = SingleInterfaceImpl.class.getConstructor();
-        type.setConstructorDefinition(new ConstructorDefinition<SingleInterfaceImpl>(ctor));
+        type.setConstructorDefinition(new ConstructorDefinition(new Signature(ctor)));
         processor.visitEnd(SingleInterfaceImpl.class, type, null);
         assertEquals(0, type.getProperties().size());
     }
@@ -114,7 +115,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
         PojoComponentType type =
                 new PojoComponentType(null);
         Constructor<RefInterfaceImpl> ctor = RefInterfaceImpl.class.getConstructor();
-        type.setConstructorDefinition(new ConstructorDefinition<RefInterfaceImpl>(ctor));
+        type.setConstructorDefinition(new ConstructorDefinition(new Signature(ctor)));
         processor.visitEnd(RefInterfaceImpl.class, type, null);
         assertEquals(0, type.getReferences().size());
     }
@@ -126,7 +127,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
         PojoComponentType type =
                 new PojoComponentType(null);
         Constructor<ReferenceCollectionImpl> ctor = ReferenceCollectionImpl.class.getConstructor();
-        type.setConstructorDefinition(new ConstructorDefinition<ReferenceCollectionImpl>(ctor));
+        type.setConstructorDefinition(new ConstructorDefinition(new Signature(ctor)));
         processor.visitEnd(ReferenceCollectionImpl.class, type, null);
         assertEquals(0, type.getProperties().size());
         assertEquals(4, type.getReferences().size());
@@ -139,7 +140,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
         PojoComponentType type =
                 new PojoComponentType(null);
         Constructor<PropertyCollectionImpl> ctor = PropertyCollectionImpl.class.getConstructor();
-        type.setConstructorDefinition(new ConstructorDefinition<PropertyCollectionImpl>(ctor));
+        type.setConstructorDefinition(new ConstructorDefinition(new Signature(ctor)));
         processor.visitEnd(PropertyCollectionImpl.class, type, null);
         assertEquals(0, type.getReferences().size());
         assertEquals(4, type.getProperties().size());
@@ -152,7 +153,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
         PojoComponentType type =
                 new PojoComponentType(null);
         Constructor<RemotableRefImpl> ctor = RemotableRefImpl.class.getConstructor();
-        type.setConstructorDefinition(new ConstructorDefinition<RemotableRefImpl>(ctor));
+        type.setConstructorDefinition(new ConstructorDefinition(new Signature(ctor)));
         processor.visitEnd(RemotableRefImpl.class, type, null);
         assertEquals(2, type.getReferences().size());
         assertEquals(0, type.getProperties().size());
@@ -162,7 +163,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
         PojoComponentType type =
                 new PojoComponentType(null);
         Constructor<Child> ctor = Child.class.getConstructor();
-        type.setConstructorDefinition(new ConstructorDefinition<Child>(ctor));
+        type.setConstructorDefinition(new ConstructorDefinition(new Signature(ctor)));
         processor.visitEnd(Child.class, type, null);
         assertTrue(type.getServices().containsKey(Interface1.class.getSimpleName()));
     }
@@ -191,7 +192,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
         PojoComponentType type =
                 new PojoComponentType(null);
         Constructor<ProtectedRemotableRefFieldImpl> ctor = ProtectedRemotableRefFieldImpl.class.getConstructor();
-        type.setConstructorDefinition(new ConstructorDefinition<ProtectedRemotableRefFieldImpl>(ctor));
+        type.setConstructorDefinition(new ConstructorDefinition(new Signature(ctor)));
         processor.visitEnd(ProtectedRemotableRefFieldImpl.class, type, null);
         assertNotNull(type.getReferences().get("otherRef"));
     }
@@ -200,7 +201,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
         PojoComponentType type =
                 new PojoComponentType(null);
         Constructor<ProtectedRemotableRefMethodImpl> ctor = ProtectedRemotableRefMethodImpl.class.getConstructor();
-        type.setConstructorDefinition(new ConstructorDefinition<ProtectedRemotableRefMethodImpl>(ctor));
+        type.setConstructorDefinition(new ConstructorDefinition(new Signature(ctor)));
         processor.visitEnd(ProtectedRemotableRefMethodImpl.class, type, null);
         assertNotNull(type.getReferences().get("otherRef"));
     }

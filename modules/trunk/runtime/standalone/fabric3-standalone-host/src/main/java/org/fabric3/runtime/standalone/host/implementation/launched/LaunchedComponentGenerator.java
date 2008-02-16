@@ -134,7 +134,7 @@ public class LaunchedComponentGenerator implements ComponentGenerator<LogicalCom
         Map<String, JavaMappedService> services = type.getServices();
 
         // process constructor injectors
-        ConstructorDefinition<?> ctorDef = type.getConstructorDefinition();
+        ConstructorDefinition ctorDef = type.getConstructorDefinition();
         for (String name : ctorDef.getInjectionNames()) {
             JavaMappedReference reference = references.get(name);
             if (reference != null) {

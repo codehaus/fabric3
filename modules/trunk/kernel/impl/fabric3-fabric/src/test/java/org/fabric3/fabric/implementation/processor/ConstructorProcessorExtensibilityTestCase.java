@@ -24,10 +24,10 @@ import org.osoa.sca.annotations.Property;
 
 import org.fabric3.pojo.scdl.ConstructorDefinition;
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.pojo.processor.ProcessingException;
 
 import junit.framework.TestCase;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
+import org.fabric3.scdl.Signature;
 
 /**
  * Verifies the constructor processor works when parameters are marked with custom extension annotations
@@ -54,7 +54,7 @@ public class ConstructorProcessorExtensibilityTestCase extends TestCase {
     public void testProcessLast() throws Exception {
         PojoComponentType type = new PojoComponentType(null);
         Constructor<Foo> ctor1 = Foo.class.getConstructor(String.class, String.class);
-        ConstructorDefinition<Foo> definition = new ConstructorDefinition<Foo>(ctor1);
+        ConstructorDefinition definition = new ConstructorDefinition(new Signature(ctor1));
         type.setConstructorDefinition(definition);
         try {
             processor.visitConstructor(ctor1, type, null);

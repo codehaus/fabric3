@@ -30,6 +30,7 @@ import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
+import org.fabric3.scdl.Signature;
 
 
 /**
@@ -58,7 +59,7 @@ public class ConstructorProcessor extends ImplementationProcessorExtension {
             String name = constructor.getDeclaringClass().getName();
             throw new DuplicateConstructorException("Multiple constructor definitions found", name);
         }
-        ConstructorDefinition<?> definition = new ConstructorDefinition(constructor);
+        ConstructorDefinition definition = new ConstructorDefinition(new Signature(constructor));
         Class<?>[] params = constructor.getParameterTypes();
         String[] names = annotation.value();
         Annotation[][] annotations = constructor.getParameterAnnotations();

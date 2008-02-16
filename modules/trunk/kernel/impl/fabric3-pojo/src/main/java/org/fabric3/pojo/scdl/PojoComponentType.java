@@ -36,7 +36,7 @@ public class PojoComponentType extends AbstractComponentType<JavaMappedService,
         JavaMappedProperty<?>,
         JavaMappedResource> {
     private String implClass;
-    private ConstructorDefinition<?> constructorDefinition;
+    private ConstructorDefinition constructorDefinition;
     private Signature initMethod;
     private Signature destroyMethod;
     private InjectionSite conversationIDInjectionSite;
@@ -73,7 +73,7 @@ public class PojoComponentType extends AbstractComponentType<JavaMappedService,
      *
      * @return the constructor used to instantiate implementation instances
      */
-    public ConstructorDefinition<?> getConstructorDefinition() {
+    public ConstructorDefinition getConstructorDefinition() {
         return constructorDefinition;
     }
 
@@ -82,7 +82,7 @@ public class PojoComponentType extends AbstractComponentType<JavaMappedService,
      *
      * @param definition the constructor used to instantiate implementation instances
      */
-    public void setConstructorDefinition(ConstructorDefinition<?> definition) {
+    public void setConstructorDefinition(ConstructorDefinition definition) {
         this.constructorDefinition = definition;
     }
 
