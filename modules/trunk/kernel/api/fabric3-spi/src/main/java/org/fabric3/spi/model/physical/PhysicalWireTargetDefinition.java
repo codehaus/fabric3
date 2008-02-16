@@ -29,9 +29,9 @@ import org.fabric3.scdl.ModelObject;
  * @version $Revision$ $Date$
  */
 public class PhysicalWireTargetDefinition extends ModelObject {
-
     private URI uri;
     private boolean optimizable;
+    private URI callbackUri;
 
     /**
      * Returns the URI of the physical component targeted by this wire.
@@ -50,6 +50,25 @@ public class PhysicalWireTargetDefinition extends ModelObject {
     public void setUri(URI uri) {
         this.uri = uri;
     }
+
+    /**
+     * Gets the callback URI.
+     *
+     * @return the callback URI.
+     */
+    public URI getCallbackUri() {
+        return callbackUri;
+    }
+
+    /**
+     * Sets the callback URI.
+     *
+     * @param uri the callback URI.
+     */
+    public void setCallbackUri(URI uri) {
+        this.callbackUri = uri;
+    }
+
 
     /**
      * Returns whether the target side of the wire is optimizable.

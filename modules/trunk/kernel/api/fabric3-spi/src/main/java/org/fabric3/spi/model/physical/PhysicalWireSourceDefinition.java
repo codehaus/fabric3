@@ -32,10 +32,8 @@ import org.fabric3.scdl.ValueSource;
  * @version $Revision$ $Date$
  */
 public class PhysicalWireSourceDefinition extends ModelObject {
-
     private URI uri;
     private ValueSource valueSource;
-    private URI callbackUri;
     private boolean optimizable;
     private boolean conversational;
     private Document key;
@@ -73,25 +71,6 @@ public class PhysicalWireSourceDefinition extends ModelObject {
     public void setValueSource(ValueSource valueSource) {
         this.valueSource = valueSource;
     }
-
-    /**
-     * Gets the callback URI.
-     *
-     * @return the callback URI.
-     */
-    public URI getCallbackUri() {
-        return callbackUri;
-    }
-
-    /**
-     * Sets the callback URI.
-     *
-     * @param uri the callback URI.
-     */
-    public void setCallbackUri(URI uri) {
-        this.callbackUri = uri;
-    }
-
 
     /**
      * Returns whether the source side of the wire is optimizable.

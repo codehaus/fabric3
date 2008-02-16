@@ -113,7 +113,7 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
         wireDefinition.setOptimizable(true);
 
         wireDefinition.setClassLoaderId(classLoaderId);
-        
+
         return wireDefinition;
     }
 
@@ -139,7 +139,7 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
     }
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
-                                                           LogicalComponent<JavaImplementation> target,  
+                                                           LogicalComponent<JavaImplementation> target,
                                                            Policy policy,
                                                            GeneratorContext context) throws GenerationException {
         JavaWireTargetDefinition wireDefinition = new JavaWireTargetDefinition();

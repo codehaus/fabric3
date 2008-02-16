@@ -74,5 +74,8 @@
     <component name="implementation.ContextProcessor">
         <system:implementation.system class="org.fabric3.fabric.implementation.processor.ContextProcessor"/>
     </component>
+    <component name="implementation.CallbackProcessor">
+        <system:implementation.system class="org.fabric3.fabric.implementation.processor.CallbackProcessor"/>
+    </component>
 
 </composite>

@@ -40,6 +40,9 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.scdl.ValueSource;
+import org.fabric3.scdl.FieldInjectionSite;
+import org.fabric3.scdl.MethodInjectionSite;
+import org.fabric3.scdl.ConstructorInjectionSite;
 import static org.fabric3.scdl.ValueSource.ValueSourceType.CONTEXT;
 import static org.fabric3.scdl.ValueSource.ValueSourceType.PROPERTY;
 import static org.fabric3.scdl.ValueSource.ValueSourceType.REFERENCE;
@@ -71,12 +74,12 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
         processConstructorSites(type, providerDefinition);
         processPropertySites(component, providerDefinition);
         processReferenceSites(component, providerDefinition);
+        processCallbackSites(component, providerDefinition);
         processResourceSites(component, providerDefinition);
         processContextSites(component, providerDefinition);
     }
 
-    public void processConstructorSites(PojoComponentType type,
-                                        InstanceFactoryDefinition providerDefinition) {
+    public void processConstructorSites(PojoComponentType type, InstanceFactoryDefinition providerDefinition) {
         Map<String, JavaMappedReference> references = type.getReferences();
         Map<String, JavaMappedProperty<?>> properties = type.getProperties();
         Map<String, JavaMappedService> services = type.getServices();
@@ -155,8 +158,32 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
         }
     }
 
+
+    private void processCallbackSites(LogicalComponent<? extends Implementation<PojoComponentType>> component,
+                                      InstanceFactoryDefinition providerDefinition) {
+
+        Implementation<PojoComponentType> implementation = component.getDefinition().getImplementation();
+        PojoComponentType type = implementation.getComponentType();
+
+        for (InjectionSite site : type.getCallbackSites()) {
+            // JFM move getName to InjectionSite  
+            String name;
+            if (site instanceof FieldInjectionSite) {
+                name = ((FieldInjectionSite) site).getName();
+            } else if (site instanceof MethodInjectionSite) {
+                name = ((MethodInjectionSite) site).getSignature().getName();
+            } else if (site instanceof ConstructorInjectionSite) {
+                name = ((ConstructorInjectionSite) site).getSignature().getName();
+            } else {
+                throw new UnsupportedClassVersionError("Unknown InjectionSite type [" + site.getClass() + "]");
+            }
+            ValueSource source = new ValueSource(SERVICE, name);
+            addMapping(providerDefinition, source, site);
+        }
+    }
+
     public void processContextSites(LogicalComponent<? extends Implementation<PojoComponentType>> component,
-                                     InstanceFactoryDefinition providerDefinition) {
+                                    InstanceFactoryDefinition providerDefinition) {
 
         Implementation<PojoComponentType> implementation = component.getDefinition().getImplementation();
         PojoComponentType type = implementation.getComponentType();
@@ -187,7 +214,8 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
         }
     }
 
-    public void processResourceSites(LogicalComponent<? extends Implementation<PojoComponentType>> component, InstanceFactoryDefinition providerDefinition) {
+    public void processResourceSites(LogicalComponent<? extends Implementation<PojoComponentType>> component,
+                                     InstanceFactoryDefinition providerDefinition) {
 
         Implementation<PojoComponentType> implementation = component.getDefinition().getImplementation();
         PojoComponentType type = implementation.getComponentType();

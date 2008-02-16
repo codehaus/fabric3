@@ -92,9 +92,16 @@ public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaCompone
 
         Map<String, ObjectFactory<?>> propertyFactories = createPropertyFactories(definition, provider);
         Map<String, MultiplicityObjectFactory<?>> referenceFactories = createMultiplicityReferenceFactories(providerDefinition);
-
-        JavaComponent<T> component = new JavaComponent<T>(componentId, provider, scopeContainer, groupId, initLevel, -1, -1, proxyService,
-                                                          propertyFactories, referenceFactories);
+        JavaComponent<T> component = new JavaComponent<T>(componentId,
+                                                          provider,
+                                                          scopeContainer,
+                                                          groupId,
+                                                          initLevel,
+                                                          -1,
+                                                          -1,
+                                                          proxyService,
+                                                          propertyFactories,
+                                                          referenceFactories);
 
         PojoRequestContext requestContext = new PojoRequestContext();
         provider.setObjectFactory(REQUEST_CONTEXT_SOURCE, new SingletonObjectFactory<PojoRequestContext>(requestContext));

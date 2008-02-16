@@ -21,8 +21,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import javax.xml.namespace.QName;
+
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.generator.PolicyException;
 import org.fabric3.scdl.BindingDefinition;
@@ -56,7 +57,6 @@ import org.fabric3.spi.policy.Policy;
 import org.fabric3.spi.policy.PolicyResolutionException;
 import org.fabric3.spi.policy.PolicyResolver;
 import org.fabric3.spi.policy.PolicyResult;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Revision$ $Date$
@@ -132,15 +132,22 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(source, reference, sourcePolicy, context);
         sourceDefinition.setKey(target.getDefinition().getKey());
 
-        Set<PhysicalOperationDefinition> operationDefinitions = generateOperations(serviceContract, context, policyResult, sourceBinding);
+        Set<PhysicalOperationDefinition> operations = generateOperations(serviceContract, context, policyResult, sourceBinding);
+        ServiceContract<?> callbackContract = serviceContract.getCallbackContract();
+        Set<PhysicalOperationDefinition> callbackOperations;
+        if (callbackContract == null) {
+            callbackOperations = Collections.emptySet();
+        } else {
+            callbackOperations = generateOperations(callbackContract, context, null, null);
+            targetDefinition.setCallbackUri(sourceDefinition.getUri().resolve("#" + callbackContract.getInterfaceName()));
+        }
 
-        PhysicalWireDefinition wireDefinition = new PhysicalWireDefinition(sourceDefinition, targetDefinition, operationDefinitions);
+        PhysicalWireDefinition wireDefinition = new PhysicalWireDefinition(sourceDefinition, targetDefinition, operations, callbackOperations);
         boolean optimizable = sourceDefinition.isOptimizable() &&
                 targetDefinition.isOptimizable() &&
-                checkOptimization(serviceContract, operationDefinitions);
+                checkOptimization(serviceContract, operations);
 //        boolean optimizable = checkOptimization(serviceContract, operationDefinitions);
         wireDefinition.setOptimizable(optimizable);
-
         context.getPhysicalChangeSet().addWireDefinition(wireDefinition);
 
     }
@@ -186,8 +193,16 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         BindingGenerator sourceGenerator = getGenerator(binding);
         PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(binding, sourcePolicy, context, service.getDefinition());
 
-        Set<PhysicalOperationDefinition> operationDefinitions = generateOperations(contract, context, policyResult, binding);
-        PhysicalWireDefinition wireDefinition = new PhysicalWireDefinition(sourceDefinition, targetDefinition, operationDefinitions);
+        Set<PhysicalOperationDefinition> operations = generateOperations(contract, context, policyResult, binding);
+        ServiceContract<?> callbackContract = contract.getCallbackContract();
+        Set<PhysicalOperationDefinition> callbackOperations;
+        if (callbackContract == null) {
+            callbackOperations = Collections.emptySet();
+        } else {
+            callbackOperations = generateOperations(callbackContract, context, null, null);
+            targetDefinition.setCallbackUri(sourceDefinition.getUri().resolve("#" + callbackContract.getInterfaceName()));
+        }
+        PhysicalWireDefinition wireDefinition = new PhysicalWireDefinition(sourceDefinition, targetDefinition, operations, callbackOperations);
         context.getPhysicalChangeSet().addWireDefinition(wireDefinition);
 
     }
@@ -212,16 +227,24 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
 
         PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(component, reference, sourcePolicy, context);
 
-        Set<PhysicalOperationDefinition> operationDefinitions = generateOperations(contract, context, policyResult, binding);
+        Set<PhysicalOperationDefinition> operation = generateOperations(contract, context, policyResult, binding);
+        ServiceContract<?> callbackContract = contract.getCallbackContract();
+        Set<PhysicalOperationDefinition> callbackOperations;
+        if (callbackContract == null) {
+            callbackOperations = Collections.emptySet();
+        } else {
+            callbackOperations = generateOperations(callbackContract, context, null, null);
+            targetDefinition.setCallbackUri(sourceDefinition.getUri().resolve("#" + callbackContract.getInterfaceName()));
+        }
 
-        PhysicalWireDefinition wireDefinition = new PhysicalWireDefinition(sourceDefinition, targetDefinition, operationDefinitions);
+        PhysicalWireDefinition wireDefinition = new PhysicalWireDefinition(sourceDefinition, targetDefinition, operation, callbackOperations);
 
         context.getPhysicalChangeSet().addWireDefinition(wireDefinition);
 
     }
 
 
-    private Set<PhysicalOperationDefinition> generateOperations(ServiceContract<?> contract, 
+    private Set<PhysicalOperationDefinition> generateOperations(ServiceContract<?> contract,
                                                                 GeneratorContext context,
                                                                 PolicyResult policyResult,
                                                                 LogicalBinding<?> logicalBinding) throws GenerationException {
@@ -244,8 +267,8 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
     }
 
     @SuppressWarnings("unchecked")
-    private Set<PhysicalInterceptorDefinition> generateInterceptorDefinitions(Set<PolicySet> policies, 
-                                                                              GeneratorContext context, 
+    private Set<PhysicalInterceptorDefinition> generateInterceptorDefinitions(Set<PolicySet> policies,
+                                                                              GeneratorContext context,
                                                                               Operation<?> operation,
                                                                               LogicalBinding<?> logicalBinding) throws GenerationException {
 
