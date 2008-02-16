@@ -95,21 +95,10 @@ public class GroovyWireAttacher implements SourceWireAttacher<GroovyWireSourceDe
         Class<?> type = source.getMemberType(referenceSource);
         ObjectFactory<?> factory = createWireObjectFactory(type, sourceDefinition.isConversational(), wire);
         source.setObjectFactory(referenceSource, factory);
-        if (!wire.getCallbackInvocationChains().isEmpty()) {
-            URI callbackUri = sourceDefinition.getCallbackUri();
-            ValueSource callbackSource =
-                    new ValueSource(ValueSource.ValueSourceType.SERVICE, callbackUri.getFragment());
-            Class<?> callbackType = source.getMemberType(callbackSource);
-            source.setObjectFactory(callbackSource, createCallbackWireObjectFactory(callbackType));
-        }
     }
 
     private <T> ObjectFactory<T> createWireObjectFactory(Class<T> type, boolean isConversational, Wire wire) {
         return proxyService.createObjectFactory(type, isConversational, wire);
-    }
-
-    private <T> ObjectFactory<T> createCallbackWireObjectFactory(Class<T> type) {
-        throw new UnsupportedOperationException();
     }
 
     public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition,
@@ -150,6 +139,8 @@ public class GroovyWireAttacher implements SourceWireAttacher<GroovyWireSourceDe
             }
             chain.addInterceptor(createInterceptor(method, target, scopeContainer));
         }
+
+        // TODO handle callbacks
     }
 
     private <T, CONTEXT> InvokerInterceptor<T, CONTEXT> createInterceptor(Method method,
