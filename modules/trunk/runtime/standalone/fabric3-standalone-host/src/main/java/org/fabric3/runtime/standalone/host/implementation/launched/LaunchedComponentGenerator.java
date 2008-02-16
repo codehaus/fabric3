@@ -151,7 +151,7 @@ public class LaunchedComponentGenerator implements ComponentGenerator<LogicalCom
             JavaMappedService service = services.get(name);
             if (service != null) {
                 // SPEC The SCA spec does not specifically allow this yet -  submit an enhnacement request
-                ValueSource source = new ValueSource(ValueSource.ValueSourceType.SERVICE, name);
+                ValueSource source = new ValueSource(ValueSource.ValueSourceType.CALLBACK, name);
                 providerDefinition.addCdiSource(source);
                 continue;
             }

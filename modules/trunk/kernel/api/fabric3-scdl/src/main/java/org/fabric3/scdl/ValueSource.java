@@ -22,7 +22,7 @@ package org.fabric3.scdl;
  * Identifies the source of a value supplied from SCA to an implementation. This is essentially something that can be
  * configured through SCDL. Currently supported types are:
  * <ul>
- * <li>Services (primarily to support callbacks)</li>
+ * <li>Callbacks</li>
  * <li>References</li>
  * <li>Properties</li>
  * <li>Resources</li>
@@ -36,7 +36,7 @@ public class ValueSource {
      * Enumeration of the type of ValueSource supported.
      */
     public static enum ValueSourceType {
-        SERVICE,
+        CALLBACK,
         REFERENCE,
         PROPERTY,
         RESOURCE,

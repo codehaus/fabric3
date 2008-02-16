@@ -30,7 +30,6 @@ import org.osoa.sca.annotations.Service;
 import org.fabric3.pojo.reflection.InvokerInterceptor;
 import org.fabric3.pojo.wire.PojoWireAttacher;
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
@@ -159,7 +158,7 @@ public class JavaWireAttacher extends PojoWireAttacher implements SourceWireAtta
         if (!wire.getCallbackInvocationChains().isEmpty()) {
             URI callbackUri = targetDefinition.getCallbackUri();
             assert callbackUri != null;
-            ValueSource callbackSource = new ValueSource(ValueSource.ValueSourceType.SERVICE, callbackUri.getFragment());
+            ValueSource callbackSource = new ValueSource(ValueSource.ValueSourceType.CALLBACK, callbackUri.getFragment());
             Class<?> callbackType = target.getMemberType(callbackSource);
             // JFM TODO update object factory in target
         }

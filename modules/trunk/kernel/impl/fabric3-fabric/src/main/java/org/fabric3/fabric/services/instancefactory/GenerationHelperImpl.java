@@ -47,7 +47,7 @@ import static org.fabric3.scdl.ValueSource.ValueSourceType.CONTEXT;
 import static org.fabric3.scdl.ValueSource.ValueSourceType.PROPERTY;
 import static org.fabric3.scdl.ValueSource.ValueSourceType.REFERENCE;
 import static org.fabric3.scdl.ValueSource.ValueSourceType.RESOURCE;
-import static org.fabric3.scdl.ValueSource.ValueSourceType.SERVICE;
+import static org.fabric3.scdl.ValueSource.ValueSourceType.CALLBACK;
 
 /**
  * @version $Rev$ $Date$
@@ -102,7 +102,7 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
             JavaMappedService service = services.get(name);
             if (service != null) {
                 // SPEC The SCA spec does not specifically allow this yet -  submit an enhnacement request
-                ValueSource source = new ValueSource(SERVICE, name);
+                ValueSource source = new ValueSource(CALLBACK, name);
                 providerDefinition.addCdiSource(source);
                 continue;
             }
@@ -177,7 +177,7 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
             } else {
                 throw new UnsupportedClassVersionError("Unknown InjectionSite type [" + site.getClass() + "]");
             }
-            ValueSource source = new ValueSource(SERVICE, name);
+            ValueSource source = new ValueSource(CALLBACK, name);
             addMapping(providerDefinition, source, site);
         }
     }

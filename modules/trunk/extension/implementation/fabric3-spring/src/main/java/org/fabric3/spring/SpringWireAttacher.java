@@ -152,7 +152,7 @@ public class SpringWireAttacher extends PojoWireAttacher implements SourceWireAt
 //            if (!wire.getCallbackInvocationChains().isEmpty()) {
 //                URI callbackUri = sourceDefinition.getCallbackUri();
 //                ValueSource callbackSource =
-//                        new ValueSource(ValueSource.ValueSourceType.SERVICE, callbackUri.getFragment());
+//                        new ValueSource(ValueSource.ValueSourceType.CALLBACK, callbackUri.getFragment());
 //                Class<?> callbackType = source.getMemberType(callbackSource);
 //                source.setObjectFactory(callbackSource, createCallbackWireObjectFactory(callbackType));
 //            }
