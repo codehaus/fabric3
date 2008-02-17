@@ -22,7 +22,6 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.fabric3.pojo.processor.JavaIntrospectionHelper;
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Property;
@@ -55,7 +54,6 @@ public class WebappComponentGenerator implements ComponentGenerator<LogicalCompo
         registry.register(WebappImplementation.class, this);
     }
 
-    @SuppressWarnings({"unchecked"})
     public PhysicalComponentDefinition generate(LogicalComponent<WebappImplementation> component,
                                                 GeneratorContext context) {
         ComponentDefinition<WebappImplementation> definition = component.getDefinition();
@@ -74,7 +72,8 @@ public class WebappComponentGenerator implements ComponentGenerator<LogicalCompo
             ServiceContract<?> contract = referenceDefinition.getServiceContract();
             String interfaceClass = contract.getQualifiedInterfaceName();
             try {
-                Class<?> type = JavaIntrospectionHelper.loadClass(interfaceClass);
+                ClassLoader loader = Thread.currentThread().getContextClassLoader();
+                Class<?> type = Class.forName(interfaceClass, true, loader);
                 referenceTypes.put(name, type);
             } catch (ClassNotFoundException e) {
                 throw new AssertionError(e);
