@@ -19,63 +19,44 @@
 package org.fabric3.runtime.webapp.implementation.webapp;
 
 import java.net.URI;
-import java.util.Map;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
-import org.osoa.sca.annotations.Service;
 
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.builder.BuilderException;
-import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.BuilderConfigException;
+import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilder;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
-import org.fabric3.spi.builder.component.SourceWireAttacher;
-import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
-import org.fabric3.spi.runtime.component.ComponentManager;
-import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.ProxyService;
-import org.fabric3.spi.wire.Wire;
 
 /**
  */
 @EagerInit
-@Service(interfaces = {ComponentBuilder.class, SourceWireAttacher.class})
-public class WebappComponentBuilder
-        implements ComponentBuilder<WebappComponentDefinition, WebappComponent>,
-        SourceWireAttacher<WebappWireSourceDefinition> {
+public class WebappComponentBuilder implements ComponentBuilder<WebappComponentDefinition, WebappComponent> {
 
-    private final SourceWireAttacherRegistry sourceWireAttacherRegistry;
     private ProxyService proxyService;
     private ComponentBuilderRegistry builderRegistry;
-    private ComponentManager manager;
 
     public WebappComponentBuilder(@Reference ProxyService proxyService,
-                                  @Reference ComponentManager manager,
-                                  @Reference ComponentBuilderRegistry builderRegistry,
-                                  @Reference SourceWireAttacherRegistry sourceWireAttacherRegistry) {
+                                  @Reference ComponentBuilderRegistry builderRegistry) {
         this.proxyService = proxyService;
-        this.manager = manager;
         this.builderRegistry = builderRegistry;
-        this.sourceWireAttacherRegistry = sourceWireAttacherRegistry;
     }
 
 
     @Init
     public void init() {
         builderRegistry.register(WebappComponentDefinition.class, this);
-        sourceWireAttacherRegistry.register(WebappWireSourceDefinition.class, this);
     }
 
     @Destroy
     public void destroy() {
-        sourceWireAttacherRegistry.unregister(WebappWireSourceDefinition.class, this);
     }
 
     public WebappComponent build(WebappComponentDefinition definition) throws BuilderException {
@@ -103,21 +84,5 @@ public class WebappComponentBuilder
         } catch (ClassNotFoundException e) {
             throw new BuilderConfigException(e);
         }
-    }
-
-    public void attachToSource(WebappWireSourceDefinition sourceDefinition,
-                               PhysicalWireTargetDefinition targetDefinition,
-                               Wire wire) {
-        URI sourceUri = UriHelper.getDefragmentedName(sourceDefinition.getUri());
-        String referenceName = sourceDefinition.getUri().getFragment();
-        WebappComponent source = (WebappComponent) manager.getComponent(sourceUri);
-        source.attachWire(referenceName, wire);
-    }
-
-    public void attachObjectFactory(WebappWireSourceDefinition sourceDefinition, ObjectFactory<?> objectFactory) throws WiringException {
-        URI sourceUri = UriHelper.getDefragmentedName(sourceDefinition.getUri());
-        String referenceName = sourceDefinition.getUri().getFragment();
-        WebappComponent source = (WebappComponent) manager.getComponent(sourceUri);
-        source.attachWire(referenceName, objectFactory);
     }
 }

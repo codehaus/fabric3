@@ -85,6 +85,10 @@
         <system:implementation.system class="org.fabric3.runtime.webapp.implementation.webapp.WebappComponentBuilder"/>
     </component>
 
+    <component name="webappSourceWireAttacher">
+        <system:implementation.system class="org.fabric3.runtime.webapp.implementation.webapp.WebappSourceWireAttacher"/>
+    </component>
+
     <component name="webappComponentGenerator">
         <system:implementation.system class="org.fabric3.runtime.webapp.implementation.webapp.WebappComponentGenerator"/>
     </component>
