@@ -19,6 +19,8 @@
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            name="CallbackComposite" autowire="false">
 
+<!--
     <include name="StatelessCallbackComposite"/>
+-->
 
 </composite>
