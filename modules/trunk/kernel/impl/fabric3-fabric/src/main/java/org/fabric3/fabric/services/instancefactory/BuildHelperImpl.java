@@ -42,7 +42,6 @@ public class BuildHelperImpl implements InstanceFactoryBuildHelper {
     public <T> Constructor<T> getConstructor(Class<T> implClass, Signature signature)
             throws ClassNotFoundException, NoSuchMethodException {
 
-        @SuppressWarnings("unchecked")
         Constructor<T> ctr = signature.getConstructor(implClass);
         ctr.setAccessible(true);
         return ctr;
