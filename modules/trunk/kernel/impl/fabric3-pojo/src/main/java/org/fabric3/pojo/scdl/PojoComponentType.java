@@ -34,8 +34,6 @@ public class PojoComponentType extends InjectingComponentType {
     private String implClass;
     private ConstructorDefinition constructorDefinition;
     private InjectionSite conversationIDInjectionSite;
-    private InjectionSite componentContextInjectionSite;
-    private InjectionSite requestContextInjectionSite;
     private List<InjectionSite> callbackInjectionSites = new ArrayList<InjectionSite>();
 
     /**
@@ -104,21 +102,5 @@ public class PojoComponentType extends InjectingComponentType {
 
     public void setConversationIDMember(InjectionSite conversationIDInjectionSite) {
         this.conversationIDInjectionSite = conversationIDInjectionSite;
-    }
-
-    public InjectionSite getComponentContextMember() {
-        return componentContextInjectionSite;
-    }
-
-    public void setComponentContextMember(InjectionSite componentContextInjectionSite) {
-        this.componentContextInjectionSite = componentContextInjectionSite;
-    }
-
-    public InjectionSite getRequestContextMember() {
-        return requestContextInjectionSite;
-    }
-
-    public void setRequestContextMember(InjectionSite requestContextInjectionSite) {
-        this.requestContextInjectionSite = requestContextInjectionSite;
     }
 }

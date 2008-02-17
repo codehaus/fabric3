@@ -45,7 +45,7 @@ public class InjectingComponentType extends AbstractComponentType<ServiceDefinit
     public void add(ReferenceDefinition reference, InjectionSite injectionSite) {
         super.add(reference);
         ValueSource valueSource = new ValueSource(ValueSource.ValueSourceType.REFERENCE, reference.getName());
-        injectionMappings.put(valueSource, injectionSite);
+        addInjectionSite(valueSource, injectionSite);
     }
 
     /**
@@ -57,7 +57,7 @@ public class InjectingComponentType extends AbstractComponentType<ServiceDefinit
     public void add(Property<?> property, InjectionSite injectionSite) {
         super.add(property);
         ValueSource valueSource = new ValueSource(ValueSource.ValueSourceType.PROPERTY, property.getName());
-        injectionMappings.put(valueSource, injectionSite);
+        addInjectionSite(valueSource, injectionSite);
     }
 
     /**
@@ -69,7 +69,17 @@ public class InjectingComponentType extends AbstractComponentType<ServiceDefinit
     public void add(ResourceDefinition resource, InjectionSite injectionSite) {
         super.add(resource);
         ValueSource valueSource = new ValueSource(ValueSource.ValueSourceType.RESOURCE, resource.getName());
-        injectionMappings.put(valueSource, injectionSite);
+        addInjectionSite(valueSource, injectionSite);
+    }
+
+    /**
+     * Add the injection site for an injectable value.
+     *
+     * @param source the value to be injected
+     * @param site the injection site
+     */
+    public void addInjectionSite(ValueSource source, InjectionSite site) {
+        injectionMappings.put(source, site);
     }
 
     /**

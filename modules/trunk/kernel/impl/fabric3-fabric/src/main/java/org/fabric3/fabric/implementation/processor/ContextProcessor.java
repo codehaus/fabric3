@@ -30,6 +30,7 @@ import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.MethodInjectionSite;
+import org.fabric3.scdl.ValueSource;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.introspection.IntrospectionContext;
 
@@ -53,9 +54,9 @@ public class ContextProcessor extends ImplementationProcessorExtension {
         InjectionSite site = new MethodInjectionSite(method, 0);
         Class<?> paramType = method.getParameterTypes()[0];
         if (paramType.isAssignableFrom(ComponentContext.class)) {
-            type.setComponentContextMember(site);
+            type.addInjectionSite(ValueSource.COMPONENT_CONTEXT, site);
         } else if (paramType.isAssignableFrom(RequestContext.class)) {
-            type.setRequestContextMember(site);
+            type.addInjectionSite(ValueSource.REQUEST_CONTEXT, site);
         }
     }
 
@@ -68,9 +69,9 @@ public class ContextProcessor extends ImplementationProcessorExtension {
         InjectionSite site = new FieldInjectionSite(field);
         Class<?> paramType = field.getType();
         if (paramType.isAssignableFrom(ComponentContext.class)) {
-            type.setComponentContextMember(site);
+            type.addInjectionSite(ValueSource.COMPONENT_CONTEXT, site);
         } else if (paramType.isAssignableFrom(RequestContext.class)) {
-            type.setRequestContextMember(site);
+            type.addInjectionSite(ValueSource.REQUEST_CONTEXT, site);
         }
     }
 }

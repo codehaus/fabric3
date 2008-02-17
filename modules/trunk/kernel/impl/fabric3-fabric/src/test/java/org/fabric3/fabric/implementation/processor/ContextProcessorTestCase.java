@@ -32,6 +32,7 @@ import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.MethodInjectionSite;
 import org.fabric3.scdl.Signature;
 import org.fabric3.scdl.FieldInjectionSite;
+import org.fabric3.scdl.ValueSource;
 
 /**
  * @version $Rev$ $Date$
@@ -65,7 +66,7 @@ public class ContextProcessorTestCase extends TestCase {
         Method method = Foo.class.getMethod("setRequestContext", RequestContext.class);
         PojoComponentType type = new PojoComponentType(null);
         processor.visitMethod(method, type, null);
-        InjectionSite requestContextMember = type.getRequestContextMember();
+        InjectionSite requestContextMember = type.getInjectionSite(ValueSource.REQUEST_CONTEXT);
         assertEquals(ElementType.METHOD, requestContextMember.getElementType());
         assertEquals(RequestContext.class.getName(), requestContextMember.getType());
         assertEquals(new Signature(method), ((MethodInjectionSite)requestContextMember).getSignature());
@@ -75,7 +76,7 @@ public class ContextProcessorTestCase extends TestCase {
         Field field = Foo.class.getDeclaredField("requestContext");
         PojoComponentType type = new PojoComponentType(null);
         processor.visitField(field, type, null);
-        InjectionSite requestContextMember = type.getRequestContextMember();
+        InjectionSite requestContextMember = type.getInjectionSite(ValueSource.REQUEST_CONTEXT);
         assertEquals(ElementType.FIELD, requestContextMember.getElementType());
         assertEquals(RequestContext.class.getName(), requestContextMember.getType());
         assertEquals(field.getName(), ((FieldInjectionSite)requestContextMember).getName());

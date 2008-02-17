@@ -32,6 +32,9 @@ package org.fabric3.scdl;
  * @version $Revision$ $Date$
  */
 public class ValueSource {
+    public static final ValueSource COMPONENT_CONTEXT = new ValueSource(org.fabric3.scdl.ValueSource.ValueSourceType.CONTEXT, "ComponentContext");
+    public static final ValueSource REQUEST_CONTEXT = new ValueSource(org.fabric3.scdl.ValueSource.ValueSourceType.CONTEXT, "RequestContext");
+
     /**
      * Enumeration of the type of ValueSource supported.
      */
