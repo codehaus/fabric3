@@ -18,24 +18,18 @@
  */
 package org.fabric3.fabric.implementation.system;
 
-import java.lang.reflect.Type;
-import java.util.Set;
-import java.util.Collections;
+import java.util.Collection;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.pojo.processor.ProcessingException;
-import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.ClassWalker;
+import org.fabric3.introspection.HeuristicProcessor;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionException;
-import org.fabric3.introspection.ContractProcessor;
-import org.fabric3.introspection.IntrospectionHelper;
-import org.fabric3.introspection.InvalidServiceContractException;
+import org.fabric3.pojo.processor.ProcessingException;
+import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderUtil;
-import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.ServiceDefinition;
 
 /**
  * Loads a system component type
@@ -44,15 +38,12 @@ import org.fabric3.scdl.ServiceDefinition;
  */
 public class SystemComponentTypeLoaderImpl2 implements SystemComponentTypeLoader {
     private final ClassWalker<SystemImplementation> classWalker;
-    private final ContractProcessor contractProcessor;
-    private final IntrospectionHelper helper;
+    private final Collection<HeuristicProcessor<SystemImplementation>> heuristics;
 
     public SystemComponentTypeLoaderImpl2(@Reference ClassWalker<SystemImplementation> classWalker,
-                                          @Reference ContractProcessor contractProcessor,
-                                          @Reference IntrospectionHelper helper) {
+                                          @Reference Collection<HeuristicProcessor<SystemImplementation>> heuristics) {
         this.classWalker = classWalker;
-        this.contractProcessor = contractProcessor;
-        this.helper = helper;
+        this.heuristics = heuristics;
     }
 
     public void load(SystemImplementation implementation, IntrospectionContext context) throws LoaderException {
@@ -63,37 +54,13 @@ public class SystemComponentTypeLoaderImpl2 implements SystemComponentTypeLoader
         ClassLoader cl = context.getTargetClassLoader();
         Class<?> implClass = LoaderUtil.loadClass(implClassName, cl);
         try {
-            introspect(implementation, implClass, context);
+            classWalker.walk(implementation, implClass, context);
+
+            for (HeuristicProcessor<SystemImplementation> heuristic : heuristics) {
+                heuristic.applyHeuristics(implementation, implClass, context);
+            }
         } catch (IntrospectionException e) {
             throw new ProcessingException(e);
         }
-    }
-
-    void introspect(SystemImplementation implementation, Class<?> implClass, IntrospectionContext context) throws IntrospectionException {
-        classWalker.walk(implementation, implClass, context);
-
-        // if no services were defined, apply heuristics
-        if (implementation.getComponentType().getServices().isEmpty()) {
-            serviceHeuristics(implementation, implClass, context);
-        }
-    }
-
-    void serviceHeuristics(SystemImplementation implementation, Class<?> implClass, IntrospectionContext context) throws IntrospectionException {
-        PojoComponentType componentType = implementation.getComponentType();
-        Set<Class<?>> interfaces = helper.getImplementedInterfaces(implClass);
-
-        // if the class does not implement any interfaces, then the class itself is the service contract
-        if (interfaces.isEmpty()) {
-            componentType.add(createServiceDefinition(implClass));
-        } else {
-            for (Class<?> serviceInterface : interfaces) {
-                componentType.add(createServiceDefinition(serviceInterface));
-            }
-        }
-    }
-
-    ServiceDefinition createServiceDefinition(Class<?> serviceInterface) throws InvalidServiceContractException {
-        ServiceContract<Type> contract = contractProcessor.introspect(serviceInterface);
-        return new ServiceDefinition(contract.getInterfaceName(), contract);
     }
 }

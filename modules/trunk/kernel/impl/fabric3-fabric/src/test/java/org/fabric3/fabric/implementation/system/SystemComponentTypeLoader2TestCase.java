@@ -16,98 +16,64 @@
  */
 package org.fabric3.fabric.implementation.system;
 
-import java.lang.reflect.Type;
-import java.util.Map;
-import java.util.Collections;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import junit.framework.TestCase;
-import org.easymock.classextension.EasyMock;
+import org.easymock.EasyMock;
+import org.easymock.IMocksControl;
 
 import org.fabric3.introspection.ClassWalker;
-import org.fabric3.introspection.ContractProcessor;
+import org.fabric3.introspection.HeuristicProcessor;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionException;
-import org.fabric3.introspection.IntrospectionHelper;
-import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.spi.loader.LoaderException;
 
 /**
  * @version $Rev$ $Date$
  */
 public class SystemComponentTypeLoader2TestCase extends TestCase {
-    private static final Set<Class<?>> NOCLASSES = Collections.emptySet();
     private SystemComponentTypeLoaderImpl2 loader;
     private ClassWalker<SystemImplementation> classWalker;
-    private ContractProcessor contractProcessor;
-    private IntrospectionHelper helper;
     private IntrospectionContext context;
     private SystemImplementation impl;
-    private PojoComponentType componentType;
-    private ServiceContract<Type> serviceInterfaceContract;
-    private ServiceContract<Type> noInterfaceContract;
+    private Collection<HeuristicProcessor<SystemImplementation>> heuristics;
+    private HeuristicProcessor<SystemImplementation> heuristic;
+    private IMocksControl control;
 
-    public void testServiceHeuristicsNoInterface() throws IntrospectionException {
-        EasyMock.expect(helper.getImplementedInterfaces(NoInterface.class)).andReturn(NOCLASSES);
-        EasyMock.expect(contractProcessor.introspect(NoInterface.class)).andReturn(noInterfaceContract);
-        EasyMock.replay(helper, contractProcessor);
+    public void testSimple() throws LoaderException, IntrospectionException {
+        impl.setImplementationClass(Simple.class.getName());
 
-        loader.serviceHeuristics(impl, NoInterface.class, context);
-        Map<String,ServiceDefinition> services = componentType.getServices();
-        assertEquals(1, services.size());
-        assertEquals(noInterfaceContract, services.get("NoInterface").getServiceContract());
-        EasyMock.verify(helper, contractProcessor);
+        classWalker.walk(impl, Simple.class, context);
+        heuristic.applyHeuristics(impl, Simple.class, context);
+        control.replay();
+        loader.load(impl, context);
+
+        PojoComponentType componentType = impl.getComponentType();
+        assertNotNull(componentType);
+        assertEquals(Simple.class.getName(), componentType.getImplClass());
+        control.verify();
     }
 
-    public void testServiceHeuristicsWithInterface() throws IntrospectionException {
-        Set<Class<?>> interfaces = new HashSet<Class<?>>();
-        interfaces.add(ServiceInterface.class);
-        
-        EasyMock.expect(helper.getImplementedInterfaces(OneInterface.class)).andReturn(interfaces);
-        EasyMock.expect(contractProcessor.introspect(ServiceInterface.class)).andReturn(serviceInterfaceContract);
-        EasyMock.replay(helper, contractProcessor);
-
-        loader.serviceHeuristics(impl, OneInterface.class, context);
-        Map<String,ServiceDefinition> services = componentType.getServices();
-        assertEquals(1, services.size());
-        assertEquals(serviceInterfaceContract, services.get("ServiceInterface").getServiceContract());
-        EasyMock.verify(helper, contractProcessor);
-    }
-
-    public static interface ServiceInterface {
-    }
-
-    public static class NoInterface {
-    }
-
-    public static class OneInterface implements ServiceInterface {
+    private static class Simple {
     }
 
     @SuppressWarnings("unchecked")
     protected void setUp() throws Exception {
         super.setUp();
         impl = new SystemImplementation();
-        componentType = new PojoComponentType();
-        impl.setComponentType(componentType);
-
-        noInterfaceContract = createServiceContract(NoInterface.class);
-        serviceInterfaceContract = createServiceContract(ServiceInterface.class);
 
         context = EasyMock.createMock(IntrospectionContext.class);
-        classWalker = EasyMock.createMock(ClassWalker.class);
-        contractProcessor = EasyMock.createMock(ContractProcessor.class);
-        helper = EasyMock.createMock(IntrospectionHelper.class);
-        this.loader = new SystemComponentTypeLoaderImpl2(classWalker, contractProcessor, helper);
-    }
+        EasyMock.expect(context.getTargetClassLoader()).andStubReturn(getClass().getClassLoader());
+        EasyMock.replay(context);
 
-    private ServiceContract<Type> createServiceContract(Class<?> type) {
-        @SuppressWarnings("unchecked")
-        ServiceContract<Type> contract = EasyMock.createMock(ServiceContract.class);
-        EasyMock.expect(contract.getInterfaceName()).andStubReturn(type.getSimpleName());
-        EasyMock.replay(contract);
-        return contract;
+        control = EasyMock.createControl();
+        classWalker = control.createMock(ClassWalker.class);
+        heuristic = control.createMock(HeuristicProcessor.class);
+
+        heuristics = new ArrayList<HeuristicProcessor<SystemImplementation>>();
+        heuristics.add(heuristic);
+        this.loader = new SystemComponentTypeLoaderImpl2(classWalker, heuristics);
     }
 }
