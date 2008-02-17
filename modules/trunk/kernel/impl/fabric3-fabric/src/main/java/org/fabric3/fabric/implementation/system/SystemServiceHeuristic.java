@@ -47,6 +47,11 @@ public class SystemServiceHeuristic implements HeuristicProcessor<SystemImplemen
     public void applyHeuristics(SystemImplementation implementation, Class<?> implClass, IntrospectionContext context) throws IntrospectionException {
         PojoComponentType componentType = implementation.getComponentType();
 
+        // if the service contracts have alredy been defined then just return 
+        if (!componentType.getServices().isEmpty()) {
+            return;
+        }
+
         // get the most specific interfaces implemented by the class
         Set<Class<?>> interfaces = helper.getImplementedInterfaces(implClass);
 

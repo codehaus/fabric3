@@ -50,7 +50,7 @@ public class SystemServiceHeuristicTestCase extends TestCase {
     private ServiceContract<Type> noInterfaceContract;
     private IMocksControl control;
 
-    public void testServiceHeuristicsNoInterface() throws IntrospectionException {
+    public void testNoInterface() throws IntrospectionException {
         EasyMock.expect(helper.getImplementedInterfaces(NoInterface.class)).andReturn(NOCLASSES);
         EasyMock.expect(contractProcessor.introspect(NoInterface.class)).andReturn(noInterfaceContract);
         control.replay();
@@ -62,7 +62,7 @@ public class SystemServiceHeuristicTestCase extends TestCase {
         control.verify();
     }
 
-    public void testServiceHeuristicsWithInterface() throws IntrospectionException {
+    public void testWithInterface() throws IntrospectionException {
         Set<Class<?>> interfaces = new HashSet<Class<?>>();
         interfaces.add(ServiceInterface.class);
 
@@ -74,6 +74,18 @@ public class SystemServiceHeuristicTestCase extends TestCase {
         Map<String,ServiceDefinition> services = componentType.getServices();
         assertEquals(1, services.size());
         assertEquals(serviceInterfaceContract, services.get("ServiceInterface").getServiceContract());
+        control.verify();
+    }
+
+    public void testServiceWithExistingServices() throws IntrospectionException {
+        ServiceDefinition definition = new ServiceDefinition("Contract");
+        impl.getComponentType().add(definition);
+        control.replay();
+
+        heuristic.applyHeuristics(impl, NoInterface.class, context);
+        Map<String, ServiceDefinition> services = impl.getComponentType().getServices();
+        assertEquals(1, services.size());
+        assertSame(definition, services.get("Contract"));
         control.verify();
     }
 
