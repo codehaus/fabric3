@@ -21,29 +21,19 @@ package org.fabric3.runtime.webapp.implementation.webapp;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 
 /**
  * @version $Rev$ $Date$
  */
 public class WebappComponentDefinition extends PhysicalComponentDefinition {
-    private Map<String, ObjectFactory<?>> attributes = new HashMap<String, ObjectFactory<?>>();
-    private Map<String, Class<?>> referenceTypes = new HashMap<String, Class<?>>();
+    private Map<String, String> referenceTypes = new HashMap<String, String>();
 
-    public Map<String, ObjectFactory<?>> getAttributes() {
-        return attributes;
-    }
-
-    public void setAttributes(Map<String, ObjectFactory<?>> attributes) {
-        this.attributes = attributes;
-    }
-
-    public Map<String, Class<?>> getReferenceTypes() {
+    public Map<String, String> getReferenceTypes() {
         return referenceTypes;
     }
 
-    public void setReferenceTypes(Map<String, Class<?>> referenceTypes) {
+    public void setReferenceTypes(Map<String, String> referenceTypes) {
         this.referenceTypes = referenceTypes;
     }
 }

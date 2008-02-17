@@ -20,6 +20,8 @@ package org.fabric3.runtime.webapp.implementation.webapp;
 
 import java.net.URI;
 import java.util.Map;
+import java.util.Collections;
+import java.util.HashMap;
 
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
@@ -30,11 +32,11 @@ import org.osoa.sca.annotations.Service;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.WiringException;
+import org.fabric3.spi.builder.BuilderConfigException;
 import org.fabric3.spi.builder.component.ComponentBuilder;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
-import org.fabric3.spi.component.Component;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.util.UriHelper;
@@ -79,9 +81,28 @@ public class WebappComponentBuilder
     public WebappComponent build(WebappComponentDefinition definition) throws BuilderException {
         URI componentId = definition.getComponentId();
         URI groupId = definition.getGroupId();
-        Map<String, ObjectFactory<?>> attributes = definition.getAttributes();
-        Map<String, Class<?>> referenceTypes = definition.getReferenceTypes();
+        Map<String, ObjectFactory<?>> attributes = Collections.emptyMap();
+
+        Map<String, Class<?>> referenceTypes = loadReferenceTypes(definition.getReferenceTypes());
         return new WebappComponent(componentId, proxyService, groupId, attributes, referenceTypes, null);
+    }
+
+    private Map<String, Class<?>> loadReferenceTypes(Map<String, String> references) throws BuilderException {
+        // assume that the TCCL is the webapp classloader
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+
+        try {
+            Map<String, Class<?>> referenceTypes = new HashMap<String,Class<?>>(references.size());
+            for (Map.Entry<String, String> entry : references.entrySet()) {
+                String name = entry.getKey();
+                String className = entry.getValue();
+                Class<?> type = Class.forName(className, true, cl);
+                referenceTypes.put(name, type);
+            }
+            return referenceTypes;
+        } catch (ClassNotFoundException e) {
+            throw new BuilderConfigException(e);
+        }
     }
 
     public void attachToSource(WebappWireSourceDefinition sourceDefinition,

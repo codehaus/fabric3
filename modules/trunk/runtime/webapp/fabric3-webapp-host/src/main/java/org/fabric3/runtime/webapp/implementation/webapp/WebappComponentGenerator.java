@@ -22,13 +22,13 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.fabric3.scdl.AbstractComponentType;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.Property;
+import org.fabric3.scdl.ComponentType;
 import org.fabric3.scdl.ReferenceDefinition;
-import org.fabric3.scdl.ResourceDefinition;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
@@ -41,8 +41,6 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.Policy;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Rev$ $Date$
@@ -57,32 +55,24 @@ public class WebappComponentGenerator implements ComponentGenerator<LogicalCompo
     public PhysicalComponentDefinition generate(LogicalComponent<WebappImplementation> component,
                                                 GeneratorContext context) {
         ComponentDefinition<WebappImplementation> definition = component.getDefinition();
-        AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property<?>, ResourceDefinition> componentType =
-                definition.getImplementation().getComponentType();
+        ComponentType componentType = definition.getImplementation().getComponentType();
 
-        WebappComponentDefinition pDefinition = new WebappComponentDefinition();
         URI componentId = component.getUri();
-        pDefinition.setComponentId(componentId);
-        pDefinition.setGroupId(component.getParent().getUri());
 
-        Map<String, Class<?>> referenceTypes = new HashMap<String, Class<?>>();
-        for (ReferenceDefinition referenceDefinition : componentType.getReferences().values()) {
+        WebappComponentDefinition physical = new WebappComponentDefinition();
+        physical.setComponentId(componentId);
+        physical.setGroupId(component.getParent().getUri());
+
+        Map<String, ReferenceDefinition> references = componentType.getReferences();
+        Map<String, String> referenceTypes = new HashMap<String, String>(references.size());
+        for (ReferenceDefinition referenceDefinition : references.values()) {
             String name = referenceDefinition.getName();
-            // JFM is this correct to assume?
             ServiceContract<?> contract = referenceDefinition.getServiceContract();
             String interfaceClass = contract.getQualifiedInterfaceName();
-            try {
-                ClassLoader loader = Thread.currentThread().getContextClassLoader();
-                Class<?> type = Class.forName(interfaceClass, true, loader);
-                referenceTypes.put(name, type);
-            } catch (ClassNotFoundException e) {
-                throw new AssertionError(e);
-            }
+            referenceTypes.put(name, interfaceClass);
         }
-        pDefinition.setReferenceTypes(referenceTypes);
-        context.getPhysicalChangeSet().addComponentDefinition(pDefinition);
-        
-        return pDefinition;
+        physical.setReferenceTypes(referenceTypes);
+        return physical;
     }
 
     public WebappWireSourceDefinition generateWireSource(LogicalComponent<WebappImplementation> source,
@@ -95,15 +85,15 @@ public class WebappComponentGenerator implements ComponentGenerator<LogicalCompo
         return sourceDefinition;
     }
 
-    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, 
-                                                           LogicalComponent<WebappImplementation> arg1,  
+    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
+                                                           LogicalComponent<WebappImplementation> arg1,
                                                            Policy policy,
                                                            GeneratorContext context) throws GenerationException {
         // TODO Auto-generated method stub
         return null;
     }
 
-    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<WebappImplementation> source, 
+    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<WebappImplementation> source,
                                                                    LogicalResource<?> resource,
                                                                    GeneratorContext context) throws GenerationException {
         // TODO Auto-generated method stub
