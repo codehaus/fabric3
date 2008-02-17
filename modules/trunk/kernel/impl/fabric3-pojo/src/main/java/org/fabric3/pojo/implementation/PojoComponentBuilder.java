@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.lang.annotation.ElementType;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -149,35 +150,13 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
     protected Map<String, MultiplicityObjectFactory<?>> createMultiplicityReferenceFactories(InstanceFactoryDefinition providerDefinition) {
 
         Map<String, MultiplicityObjectFactory<?>> referenceFactories = new HashMap<String, MultiplicityObjectFactory<?>>();
-        
-        for (InjectionSiteMapping injectionSiteMapping : providerDefinition.getInjectionSites()) {
-            
-            if (injectionSiteMapping.getSource().getValueType() != ValueSource.ValueSourceType.REFERENCE) {
-                continue;
+        for (InjectionSiteMapping mapping : providerDefinition.getInjectionSites()) {
+            ValueSource valueSource = mapping.getSource();
+            InjectionSite site = mapping.getSite();
+            if (valueSource.getValueType() == ValueSourceType.REFERENCE) {
+                addMultiplicityFactory(site.getType(), valueSource, referenceFactories);
             }
-            
-            InjectionSite injectionSite = injectionSiteMapping.getSite();
-            String referenceType = injectionSite.getType();
-            addMultiplicityFactory(referenceType, injectionSiteMapping.getSource(), referenceFactories);
-            
         }
-        
-        List<String> ctrArguments = providerDefinition.getConstructor().getParameterTypes();
-        List<ValueSource> cdiSources = providerDefinition.getCdiSources();
-        
-        for (int i = 0;i < cdiSources.size();i++) {
-            
-            ValueSource cdiSource = cdiSources.get(i);
-            
-            if(cdiSource.getValueType() != ValueSourceType.REFERENCE) {
-                continue;
-            }
-            
-            String referenceType = ctrArguments.get(i);
-            addMultiplicityFactory(referenceType, cdiSource, referenceFactories);
-            
-        }
-        
         return referenceFactories;
         
     }

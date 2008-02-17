@@ -71,15 +71,23 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
 
         Implementation<PojoComponentType> implementation = component.getDefinition().getImplementation();
         PojoComponentType type = implementation.getComponentType();
+        Map<ValueSource, InjectionSite> mappings = type.getInjectionMappings();
+        for (Map.Entry<ValueSource, InjectionSite> entry : mappings.entrySet()) {
+            ValueSource source = entry.getKey();
+            InjectionSite site = entry.getValue();
+            addMapping(providerDefinition, source, site);
+        }
+/*
         processConstructorSites(type, providerDefinition);
         processPropertySites(component, providerDefinition);
         processReferenceSites(component, providerDefinition);
         processCallbackSites(component, providerDefinition);
         processResourceSites(component, providerDefinition);
+*/
         processContextSites(component, providerDefinition);
     }
 
-    public void processConstructorSites(PojoComponentType type, InstanceFactoryDefinition providerDefinition) {
+    private void processConstructorSites(PojoComponentType type, InstanceFactoryDefinition providerDefinition) {
         Map<String, JavaMappedReference> references = type.getReferences();
         Map<String, JavaMappedProperty<?>> properties = type.getProperties();
         Map<String, JavaMappedService> services = type.getServices();
@@ -111,14 +119,15 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
 
     }
 
-    public void processReferenceSites(LogicalComponent<? extends Implementation<PojoComponentType>> component,
+    private void processReferenceSites(LogicalComponent<? extends Implementation<PojoComponentType>> component,
                                       InstanceFactoryDefinition providerDefinition) {
         Implementation<PojoComponentType> implementation = component.getDefinition().getImplementation();
         PojoComponentType type = implementation.getComponentType();
         Map<String, JavaMappedReference> references = type.getReferences();
         for (Map.Entry<String, JavaMappedReference> entry : references.entrySet()) {
+            ValueSource source = new ValueSource(REFERENCE, entry.getKey());
             JavaMappedReference reference = entry.getValue();
-            InjectionSite injectionSite = reference.getMemberSite();
+            InjectionSite injectionSite = type.getInjectionSite(source);
             if (injectionSite == null) {
                 // JFM this is dubious, the reference is mapped to a constructor so skip processing
                 // ImplementationProcessorService does not set the member type to a ctor when creating the ref
@@ -131,7 +140,6 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
                     continue;
                 }
             }
-            ValueSource source = new ValueSource(REFERENCE, entry.getKey());
 
             InjectionSiteMapping mapping = new InjectionSiteMapping();
             mapping.setSource(source);
@@ -142,7 +150,7 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
 
     }
 
-    public void processPropertySites(LogicalComponent<? extends Implementation<PojoComponentType>> component,
+    private void processPropertySites(LogicalComponent<? extends Implementation<PojoComponentType>> component,
                                      InstanceFactoryDefinition providerDefinition) {
         Implementation<PojoComponentType> implementation = component.getDefinition().getImplementation();
         PojoComponentType type = implementation.getComponentType();
@@ -206,7 +214,7 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
         }
     }
 
-    public void processResourceSites(LogicalComponent<? extends Implementation<PojoComponentType>> component,
+    private void processResourceSites(LogicalComponent<? extends Implementation<PojoComponentType>> component,
                                      InstanceFactoryDefinition providerDefinition) {
 
         Implementation<PojoComponentType> implementation = component.getDefinition().getImplementation();

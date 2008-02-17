@@ -90,9 +90,10 @@ public class JSR250ResourceProcessor extends ImplementationProcessorExtension {
             declaredType = methodParameterType;
         }
 
-        SystemSourcedResource resource = createResource(name, declaredType, new MethodInjectionSite(method, 0), false, annotation.mappedName());
+        MethodInjectionSite site = new MethodInjectionSite(method, 0);
+        SystemSourcedResource resource = createResource(name, declaredType, site, false, annotation.mappedName());
 
-        type.add(resource);
+        type.add(resource, site);
     }
 
     public void visitField(Field field, PojoComponentType type, IntrospectionContext context) throws ProcessingException {
@@ -119,9 +120,10 @@ public class JSR250ResourceProcessor extends ImplementationProcessorExtension {
             declaredType = fieldType;
         }
 
-        SystemSourcedResource resource = createResource(name, declaredType, new FieldInjectionSite(field), false, annotation.mappedName());
+        FieldInjectionSite site = new FieldInjectionSite(field);
+        SystemSourcedResource resource = createResource(name, declaredType, site, false, annotation.mappedName());
 
-        type.add(resource);
+        type.add(resource, site);
     }
 
     private SystemSourcedResource createResource(String name, Class<?> type, InjectionSite injectionSite, boolean optional, String mappedName)

@@ -40,6 +40,7 @@ import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.introspection.ContractProcessor;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
+import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 
 /**
  * @version $Rev$ $Date$
@@ -65,7 +66,7 @@ public class SystemComponentTypeLoaderTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         ContractProcessor contractProcessor = new DefaultContractProcessor();
-        ImplementationProcessorService service = new ImplementationProcessorServiceImpl(contractProcessor);
+        ImplementationProcessorService service = new ImplementationProcessorServiceImpl(contractProcessor, new DefaultIntrospectionHelper());
         IntrospectionRegistryImpl registry = new IntrospectionRegistryImpl();
         registry.setMonitor(EasyMock.createMock(IntrospectionRegistryImpl.Monitor.class));
         registry.registerProcessor(new ConstructorProcessor(service));

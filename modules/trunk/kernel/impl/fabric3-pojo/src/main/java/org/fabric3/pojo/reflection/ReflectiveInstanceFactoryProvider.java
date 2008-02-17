@@ -20,17 +20,21 @@ package org.fabric3.pojo.reflection;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 
+import org.fabric3.scdl.ConstructorInjectionSite;
+import org.fabric3.scdl.FieldInjectionSite;
+import org.fabric3.scdl.InjectionSite;
+import org.fabric3.scdl.MethodInjectionSite;
+import org.fabric3.scdl.ValueSource;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.InstanceFactory;
 import org.fabric3.spi.component.InstanceFactoryProvider;
-import org.fabric3.scdl.ValueSource;
 
 /**
  * @version $Rev$ $Date$
@@ -44,22 +48,22 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
 
     private final Class<T> implementationClass;
     private final Constructor<T> constructor;
-    private final List<ValueSource> constructorNames;
-    private final Map<ValueSource, Member> injectionSites;
+    private final List<ValueSource> cdiSources;
+    private final Map<ValueSource, InjectionSite> injectionSites;
     private final EventInvoker<T> initInvoker;
     private final EventInvoker<T> destroyInvoker;
     private final Map<ValueSource, ObjectFactory<?>> factories = new HashMap<ValueSource, ObjectFactory<?>>();
     private final ClassLoader cl;
 
     public ReflectiveInstanceFactoryProvider(Constructor<T> constructor,
-                                             List<ValueSource> constructorNames,
-                                             Map<ValueSource, Member> injectionSites,
+                                             List<ValueSource> cdiSources,
+                                             Map<ValueSource, InjectionSite> injectionSites,
                                              Method initMethod,
                                              Method destroyMethod,
                                              ClassLoader cl) {
         this.implementationClass = constructor.getDeclaringClass();
         this.constructor = constructor;
-        this.constructorNames = constructorNames;
+        this.cdiSources = cdiSources;
         this.injectionSites = injectionSites;
         this.initInvoker = initMethod == null ? null : new MethodEventInvoker<T>(initMethod);
         this.destroyInvoker = destroyMethod == null ? null : new MethodEventInvoker<T>(destroyMethod);
@@ -71,38 +75,93 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
     }
 
     public Class<?> getMemberType(ValueSource valueSource) {
-        Member member = injectionSites.get(valueSource);
-        if(member != null) {
-            if(member instanceof Field) {
-                return ((Field) member).getType();
-            } else {
-                return ((Method) member).getParameterTypes()[0];
-            }
-        } else {
-            int index = constructorNames.indexOf(valueSource);
-            if(index >= 0) {
-                return constructor.getParameterTypes()[index];
-            }
+        InjectionSite site = injectionSites.get(valueSource);
+        if (site == null) {
+            throw new AssertionError("No injection site for " + valueSource);
         }
-        return null;
+        switch (site.getElementType()) {
+        case FIELD:
+            try {
+                FieldInjectionSite fieldSite = (FieldInjectionSite) site;
+                Field field = getField(fieldSite.getName());
+                return field.getType();
+            } catch (NoSuchFieldException e) {
+                throw new AssertionError(e);
+            }
+        case METHOD:
+            try {
+                MethodInjectionSite methodSite = (MethodInjectionSite) site;
+                Method method = methodSite.getSignature().getMethod(implementationClass);
+                return method.getParameterTypes()[methodSite.getParam()];
+            } catch (ClassNotFoundException e) {
+                throw new AssertionError(e);
+            } catch (NoSuchMethodException e) {
+                throw new AssertionError(e);
+            }
+        case CONSTRUCTOR:
+            try {
+                ConstructorInjectionSite methodSite = (ConstructorInjectionSite) site;
+                Constructor<T> method = methodSite.getSignature().getConstructor(implementationClass);
+                return method.getParameterTypes()[methodSite.getParam()];
+            } catch (ClassNotFoundException e) {
+                throw new AssertionError(e);
+            } catch (NoSuchMethodException e) {
+                throw new AssertionError(e);
+            }
+        default:
+            throw new AssertionError();
+        }
     }
 
     public Type getGenericType(ValueSource valueSource) {
-        Member member = injectionSites.get(valueSource);
-        if(member != null) {
-            if(member instanceof Field) {
-                return ((Field) member).getGenericType();
-            } else {
-                return ((Method) member).getGenericParameterTypes()[0];
+        InjectionSite site = injectionSites.get(valueSource);
+        if (site == null) {
+            throw new AssertionError("No injection site for " + valueSource);
+        }
+        switch (site.getElementType()) {
+        case FIELD:
+            try {
+                FieldInjectionSite fieldSite = (FieldInjectionSite) site;
+                Field field = getField(fieldSite.getName());
+                return field.getGenericType();
+            } catch (NoSuchFieldException e) {
+                throw new AssertionError(e);
             }
-        } else {
-            int index = constructorNames.indexOf(valueSource);
-            if(index >= 0) {
-                return constructor.getGenericParameterTypes()[index];
+        case METHOD:
+            try {
+                MethodInjectionSite methodSite = (MethodInjectionSite) site;
+                Method method = methodSite.getSignature().getMethod(implementationClass);
+                return method.getGenericParameterTypes()[methodSite.getParam()];
+            } catch (ClassNotFoundException e) {
+                throw new AssertionError(e);
+            } catch (NoSuchMethodException e) {
+                throw new AssertionError(e);
+            }
+        case CONSTRUCTOR:
+            try {
+                ConstructorInjectionSite methodSite = (ConstructorInjectionSite) site;
+                Constructor<T> method = methodSite.getSignature().getConstructor(implementationClass);
+                return method.getGenericParameterTypes()[methodSite.getParam()];
+            } catch (ClassNotFoundException e) {
+                throw new AssertionError(e);
+            } catch (NoSuchMethodException e) {
+                throw new AssertionError(e);
+            }
+        default:
+            throw new AssertionError();
+        }
+    }
+
+    private Field getField(String name) throws NoSuchFieldException {
+        Class<?> clazz = implementationClass;
+        while (clazz != null) {
+            try {
+                return clazz.getDeclaredField(name);
+            } catch (NoSuchFieldException e) {
+                clazz = clazz.getSuperclass();
             }
         }
-        return null;
-        
+        throw new NoSuchFieldException(name);
     }
 
     public Class<T> getImplementationClass() {
@@ -110,8 +169,8 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
     }
 
     public InstanceFactory<T> createFactory() {
-        ObjectFactory<T> factory = new ReflectiveObjectFactory<T>(constructor, getArgumentFactories(constructorNames));
-        Injector<T>[] injectors = getInjectors();
+        ObjectFactory<T> factory = new ReflectiveObjectFactory<T>(constructor, getArgumentFactories(cdiSources));
+        List<Injector<T>> injectors = getInjectors();
         return new ReflectiveInstanceFactory<T>(factory, injectors, initInvoker, destroyInvoker, cl);
     }
 
@@ -128,23 +187,35 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
         return argumentFactories;
     }
 
-    protected Injector<T>[] getInjectors() {
-        // work around JDK1.5 issue with allocating generic arrays
-        @SuppressWarnings("unchecked")
-        Injector<T>[] injectors = (Injector<T>[]) new Injector[injectionSites.size()];
-
-        int i = 0;
-        for (Map.Entry<ValueSource, Member> entry : injectionSites.entrySet()) {
+    protected List<Injector<T>> getInjectors() {
+        List<Injector<T>> injectors = new ArrayList<Injector<T>>(injectionSites.size());
+        for (Map.Entry<ValueSource, InjectionSite> entry : injectionSites.entrySet()) {
             ValueSource name = entry.getKey();
-            Member site = entry.getValue();
+            InjectionSite site = entry.getValue();
             ObjectFactory<?> factory = factories.get(name);
-            assert factory != null;
-            if (site instanceof Field) {
-                injectors[i++] = new FieldInjector<T>((Field) site, factory);
-            } else if (site instanceof Method) {
-                injectors[i++] = new MethodInjector<T>((Method) site, factory);
-            } else {
-                throw new AssertionError(String.valueOf(site));
+            if (factory != null) {
+                switch (site.getElementType()) {
+                case FIELD:
+                    try {
+                        FieldInjectionSite fieldSite = (FieldInjectionSite) site;
+                        Field field = getField(fieldSite.getName());
+                        injectors.add(new FieldInjector<T>(field, factory));
+                    } catch (NoSuchFieldException e) {
+                        throw new AssertionError(e);
+                    }
+                    break;
+                case METHOD:
+                    try {
+                        MethodInjectionSite methodSite = (MethodInjectionSite) site;
+                        Method method = methodSite.getSignature().getMethod(implementationClass);
+                        injectors.add(new MethodInjector<T>(method, factory));
+                    } catch (ClassNotFoundException e) {
+                        throw new AssertionError(e);
+                    } catch (NoSuchMethodException e) {
+                        throw new AssertionError(e);
+                    }
+                    break;
+                }
             }
         }
         return injectors;

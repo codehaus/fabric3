@@ -41,6 +41,7 @@ import static org.fabric3.scdl.Scope.COMPOSITE;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.introspection.ContractProcessor;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
+import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 
 /**
  * Sanity check of the <code>IntegrationRegistry</code> to verify operation with processors
@@ -73,7 +74,7 @@ public class IntrospectionRegistryIntegrationTestCase extends TestCase {
         registry.registerProcessor(new InitProcessor());
         registry.registerProcessor(new ScopeProcessor(scopeRegistry));
         ContractProcessor interfaceProcessorRegistry = new DefaultContractProcessor();
-        ImplementationProcessorService service = new ImplementationProcessorServiceImpl(interfaceProcessorRegistry);
+        ImplementationProcessorService service = new ImplementationProcessorServiceImpl(interfaceProcessorRegistry, new DefaultIntrospectionHelper());
         registry.registerProcessor(new PropertyProcessor());
         registry.registerProcessor(new ReferenceProcessor(interfaceProcessorRegistry));
         //registry.registerProcessor(new ResourceProcessor());

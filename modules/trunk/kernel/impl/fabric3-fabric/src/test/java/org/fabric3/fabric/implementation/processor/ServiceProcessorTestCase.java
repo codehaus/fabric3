@@ -25,6 +25,7 @@ import org.osoa.sca.annotations.Service;
 
 import org.fabric3.introspection.ContractProcessor;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
+import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ServiceContract;
@@ -98,7 +99,7 @@ public class ServiceProcessorTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         ContractProcessor contractProcessor = new DefaultContractProcessor();
-        processor = new ServiceProcessor(new ImplementationProcessorServiceImpl(contractProcessor));
+        processor = new ServiceProcessor(new ImplementationProcessorServiceImpl(contractProcessor, new DefaultIntrospectionHelper()));
         type = new PojoComponentType(null);
     }
 

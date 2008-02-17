@@ -16,21 +16,44 @@
  */
 package org.fabric3.introspection.impl;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.GenericArrayType;
+import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.Map;
+import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Queue;
+import java.util.SortedSet;
+
+import org.osoa.sca.annotations.Remotable;
+import org.osoa.sca.annotations.Service;
+import org.osoa.sca.ComponentContext;
+import org.osoa.sca.RequestContext;
 
 import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.IntrospectionHelper;
+import org.fabric3.scdl.ValueSource;
 
 /**
  * @version $Rev$ $Date$
  */
 public class DefaultIntrospectionHelper implements IntrospectionHelper {
+    // the Collection classes we understand and which all have a single type parameter
+    private static final Set<Class<?>> COLLECTIONS;
+    static {
+        COLLECTIONS = new HashSet<Class<?>>();
+        COLLECTIONS.add(Collection.class);
+        COLLECTIONS.add(List.class);
+        COLLECTIONS.add(Queue.class);
+        COLLECTIONS.add(Set.class);
+        COLLECTIONS.add(SortedSet.class); }
+
     public String getSiteName(Field field, String override) throws IntrospectionException {
         if (override != null && override.length() != 0) {
             return override;
@@ -59,11 +82,11 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
         org.osoa.sca.annotations.Constructor annotation = constructor.getAnnotation(org.osoa.sca.annotations.Constructor.class);
         if (annotation != null) {
             String[] names = annotation.value();
-            if (names != null && names.length > index) {
+            if (names.length != 1 || names[0].length() != 0) {
                 return names[index];
             }
         }
-        return "<init>[" + index + ']';
+        return constructor.getDeclaringClass().getSimpleName() + "[" + index + ']';
     }
 
     public Type getGenericType(Method setter) throws IntrospectionException {
@@ -90,12 +113,87 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
         return constructor.getParameterTypes()[index];
     }
 
-    public boolean isManyValued(Type type) {
+    public Type getBaseType(Type type) {
+        if (type instanceof Class) {
+            Class<?> clazz = (Class<?>) type;
+            if (clazz.isArray()) {
+                return clazz.getComponentType();
+            } else if (COLLECTIONS.contains(clazz) || Map.class.equals(clazz)) {
+                return Object.class;
+            } else {
+                return clazz;
+            }
+        } else if (type instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = (ParameterizedType) type;
+            Class<?> clazz = (Class<?>) parameterizedType.getRawType();
+            Type[] typeArguments = parameterizedType.getActualTypeArguments();
+            if (COLLECTIONS.contains(clazz)) {
+                return typeArguments[0];
+            } else if (Map.class.equals(clazz)) {
+                return typeArguments[1];
+            } else {
+                return clazz;
+            }
+
+        } else if (type instanceof GenericArrayType) {
+            GenericArrayType arrayType = (GenericArrayType) type;
+            return arrayType.getGenericComponentType();
+        } else {
+            throw new AssertionError("Unknown Type: " + type);
+        }
+    }
+
+    public Class<?> getRawType(Type type) {
         if (type instanceof ParameterizedType) {
             ParameterizedType parameterizedType = (ParameterizedType) type;
-            type = parameterizedType.getRawType();
+            return getRawType(parameterizedType.getRawType());
+        } else {
+            return (Class<?>) type;
         }
-        Class<?> clazz = (Class<?>) type;
-        return clazz.isArray() || clazz.isAssignableFrom(Collection.class) || clazz.isAssignableFrom(Map.class);
     }
+
+    public boolean isManyValued(Type type) {
+        return type instanceof GenericArrayType || isManyValued(getRawType(type));
+    }
+
+    public boolean isManyValued(Class<?> clazz) {
+        return clazz.isArray() || COLLECTIONS.contains(clazz) || Map.class.equals(clazz);
+    }
+
+    public ValueSource.ValueSourceType inferType(Type type) {
+        Type baseType = getBaseType(type);
+        Class<?> rawType = getRawType(baseType);
+
+        // if it's not an interface, it must be a property
+        if (!rawType.isInterface()) {
+            return ValueSource.ValueSourceType.PROPERTY;
+        }
+
+        // it it's a context interfaces, it must be a context
+        if (ComponentContext.class.isAssignableFrom(rawType) || RequestContext.class.isAssignableFrom(rawType)) {
+            return ValueSource.ValueSourceType.CONTEXT;
+        }
+
+        // if it's Remotable or a local Service, it must be a reference
+        if (isAnnotationPresent(rawType, Remotable.class) || isAnnotationPresent(rawType, Service.class)) {
+            return ValueSource.ValueSourceType.REFERENCE;
+        }
+
+        // otherwise it's a property
+        return ValueSource.ValueSourceType.PROPERTY;
+    }
+
+    public boolean isAnnotationPresent(Class<?> type, Class<? extends Annotation> annotationType) {
+        if (type.isAnnotationPresent(annotationType)) {
+            return true;
+        }
+        Class<?>[] interfaces = type.getInterfaces();
+        for (Class<?> superInterface : interfaces) {
+            if (isAnnotationPresent(superInterface, annotationType)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

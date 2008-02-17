@@ -17,25 +17,28 @@
 package org.fabric3.groovy;
 
 import java.io.IOException;
+import java.lang.annotation.ElementType;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyCodeSource;
+import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
-import org.osoa.sca.annotations.EagerInit;
 
-import org.fabric3.scdl.InjectionSiteMapping;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilder;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderException;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.reflection.ReflectiveInstanceFactoryProvider;
+import org.fabric3.scdl.ConstructorInjectionSite;
+import org.fabric3.scdl.InjectionSite;
+import org.fabric3.scdl.InjectionSiteMapping;
 import org.fabric3.scdl.ValueSource;
 
 /**
@@ -66,18 +69,29 @@ public class GroovyInstanceFactoryBuilder<T>
         try {
             Class<T> implClass = getImplClass(ifpd, gcl);
             
+            List<InjectionSiteMapping> mappings = ifpd.getInjectionSites();
+            Map<ValueSource, InjectionSite> injectionSites = helper.getInjectionSites(implClass, mappings);
+
             Constructor<T> ctr = helper.getConstructor(implClass, ifpd.getConstructor());
+            ValueSource[] cdiSources = new ValueSource[ctr.getParameterTypes().length];
+            for (Map.Entry<ValueSource, InjectionSite> entry : injectionSites.entrySet()) {
+                InjectionSite injectionSite = entry.getValue();
+                if (injectionSite.getElementType() == ElementType.CONSTRUCTOR) {
+                    ConstructorInjectionSite constructorSite = (ConstructorInjectionSite) injectionSite;
+                    cdiSources[constructorSite.getParam()] = entry.getKey();
+                }
+            }
+            for (int i = 0; i < cdiSources.length; i++) {
+                if (cdiSources[i] == null) {
+                    throw new InstanceFactoryBuilderException("No source for constructor parameter " + i, ctr.getName());
+                }
+            }
 
             Method initMethod = helper.getMethod(implClass, ifpd.getInitMethod());
-
             Method destroyMethod = helper.getMethod(implClass, ifpd.getDestroyMethod());
 
-            List<ValueSource> ctrInjectSites = ifpd.getCdiSources();
-
-            List<InjectionSiteMapping> mappings = ifpd.getInjectionSites();
-            Map<ValueSource, Member> injectionSites = helper.getInjectionSites(implClass, mappings);
             return new ReflectiveInstanceFactoryProvider<T>(ctr,
-                                                            ctrInjectSites,
+                                                            Arrays.asList(cdiSources),
                                                             injectionSites,
                                                             initMethod,
                                                             destroyMethod,
@@ -85,8 +99,6 @@ public class GroovyInstanceFactoryBuilder<T>
         } catch (ClassNotFoundException e) {
             throw new InstanceFactoryBuilderException(e);
         } catch (NoSuchMethodException ex) {
-            throw new InstanceFactoryBuilderException(ex);
-        } catch (NoSuchFieldException ex) {
             throw new InstanceFactoryBuilderException(ex);
         }
     }

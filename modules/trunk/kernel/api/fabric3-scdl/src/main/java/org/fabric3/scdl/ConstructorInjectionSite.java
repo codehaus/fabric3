@@ -16,8 +16,8 @@
  */
 package org.fabric3.scdl;
 
-import java.lang.reflect.Constructor;
 import java.lang.annotation.ElementType;
+import java.lang.reflect.Constructor;
 
 /**
  * @version $Rev$ $Date$
@@ -34,6 +34,7 @@ public class ConstructorInjectionSite extends InjectionSite {
 
     /**
      * Returns the signature that identifies the method.
+     *
      * @return the signature that identifies the method
      */
     public Signature getSignature() {
@@ -47,5 +48,19 @@ public class ConstructorInjectionSite extends InjectionSite {
      */
     public int getParam() {
         return param;
+    }
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ConstructorInjectionSite that = (ConstructorInjectionSite) o;
+
+        return param == that.param && signature.equals(that.signature);
+
+    }
+
+    public int hashCode() {
+        return 31 * signature.hashCode() + param;
     }
 }

@@ -122,7 +122,7 @@ public class Signature {
      * @throws ClassNotFoundException if the class for one of the parameters could not be loaded
      * @throws NoSuchMethodException  if no matching constructor could be found
      */
-    public Constructor getConstructor(Class<?> clazz) throws ClassNotFoundException, NoSuchMethodException {
+    public <T> Constructor<T> getConstructor(Class<T> clazz) throws ClassNotFoundException, NoSuchMethodException {
         if (!isConstructor) throw new AssertionError("Illegal call to getConstructor on a Method Signature");
         Class<?>[] types = getParameterTypes(clazz.getClassLoader());
         return clazz.getConstructor(types);

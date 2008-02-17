@@ -146,9 +146,9 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
                     Type genericType = method.getGenericParameterTypes()[0];
                     InjectionSite site = new MethodInjectionSite(method, 0);
                     if (isReferenceType(genericType)) {
-                        type.add(createReference(name, site, param));
+                        type.add(createReference(name, site, param), site);
                     } else {
-                        type.add(createProperty(name, site, param));
+                        type.add(createProperty(name, site, param), site);
                     }
                 }
             }
@@ -166,9 +166,9 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
             if (!type.getProperties().containsKey(name) && !type.getReferences().containsKey(name)) {
                 InjectionSite site = new MethodInjectionSite(method, 0);
                 if (isReferenceType(param)) {
-                    type.add(createReference(name, site, param));
+                    type.add(createReference(name, site, param), site);
                 } else {
-                    type.add(createProperty(name, site, param));
+                    type.add(createProperty(name, site, param), site);
                 }
             }
         }
@@ -177,9 +177,9 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
             Class<?> paramType = field.getType();
             InjectionSite site = new FieldInjectionSite(field);
             if (isReferenceType(paramType)) {
-                type.add(createReference(field.getName(), site, paramType));
+                type.add(createReference(field.getName(), site, paramType), site);
             } else {
-                type.add(createProperty(field.getName(), site, paramType));
+                type.add(createProperty(field.getName(), site, paramType), site);
             }
         }
     }
@@ -218,6 +218,9 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
             return;
         }
 
+        implService.processParameters(constructor, type);
+/*
+
         List<String> paramNames = definition.getInjectionNames();
         Map<String, JavaMappedProperty<?>> props = type.getProperties();
         Map<String, JavaMappedReference> refs = type.getReferences();
@@ -250,6 +253,7 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
 
             }
         }
+*/
     }
 
     private void calcParamNames(Class[] params,

@@ -19,13 +19,13 @@
 package org.fabric3.pojo.processor;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
+import java.lang.reflect.Constructor;
 import java.util.List;
 
+import org.fabric3.introspection.InvalidServiceContractException;
 import org.fabric3.pojo.scdl.JavaMappedReference;
 import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.introspection.InvalidServiceContractException;
 import org.fabric3.scdl.InjectionSite;
 
 /**
@@ -56,27 +56,17 @@ public interface ImplementationProcessorService {
     void addName(List<String> names, int pos, String name);
 
     /**
-     * Processes a constructor parameter by introspecting its annotations
+     * Process constructor parameters.
      *
-     * @param param            the parameter to process
-     * @param genericParam     the generic type of the parameter
-     * @param paramAnnotations the parameter annotations
-     * @param constructorNames the array of constructorNames specified by
-     * @param pos              the declaration position of the constructor parameter
-     * @param type             the component type associated with implementation being reflected
-     * @param injectionNames   the list of parameter constructorNames specified on parameter annotations
-     * @throws ProcessingException
+     * @param constructor the constructor to process
+     * @param componentType the componentType to be updated with the results of processing
+     * @throws ProcessingException if there was a problem processing the parameters
      */
-    boolean processParam(Class<?> param,
-                         Type genericParam,
-                         Annotation[] paramAnnotations,
-                         String[] constructorNames,
-                         int pos,
-                         PojoComponentType type,
-                         List<String> injectionNames) throws ProcessingException;
+    void processParameters(Constructor<?> constructor, PojoComponentType componentType) throws ProcessingException;
 
     /**
      * Returns true if <code>@Property</code> or <code>@Reference</code> are present in the given array
+     *
      * @return true if one of the annotations are present
      */
     boolean injectionAnnotationsPresent(Annotation[][] annots);

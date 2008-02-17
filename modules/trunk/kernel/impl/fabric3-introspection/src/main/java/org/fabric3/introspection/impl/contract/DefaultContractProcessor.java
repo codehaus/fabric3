@@ -108,10 +108,13 @@ public class DefaultContractProcessor implements ContractProcessor {
      * <p/>
      * This is similar to the use of @Inherited on classes (given @Inherited does not apply to interfaces).
      *
+     * This has been deprecated as there is a duplicate in the IntrospectionHelper interface.
+     *
      * @param type           the interface to check
      * @param annotationType the annotation to look for
      * @return true if the annotation is present
      */
+    @Deprecated
     private boolean isAnnotationPresent(Class<?> type, Class<? extends Annotation> annotationType) {
         if (type.isAnnotationPresent(annotationType)) {
             return true;

@@ -21,10 +21,13 @@ package org.fabric3.pojo.scdl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.Signature;
+import org.fabric3.scdl.ValueSource;
 
 /**
  * A component type specialization for POJO implementations
@@ -43,6 +46,7 @@ public class PojoComponentType extends AbstractComponentType<JavaMappedService,
     private InjectionSite componentContextInjectionSite;
     private InjectionSite requestContextInjectionSite;
     private List<InjectionSite> callbackInjectionSites = new ArrayList<InjectionSite>();
+    private final Map<ValueSource, InjectionSite> injectionMappings = new HashMap<ValueSource, InjectionSite>();
 
     /**
      * Constructor used only for deserialization
@@ -162,5 +166,46 @@ public class PojoComponentType extends AbstractComponentType<JavaMappedService,
 
     public void setRequestContextMember(InjectionSite requestContextInjectionSite) {
         this.requestContextInjectionSite = requestContextInjectionSite;
+    }
+
+    /**
+     * Add a property and associate with an injection site.
+     * @param property the property to add
+     * @param injectionSite the injection site for the property
+     */
+    public void add(JavaMappedProperty<?> property, InjectionSite injectionSite) {
+        super.add(property);
+        ValueSource valueSource = new ValueSource(ValueSource.ValueSourceType.PROPERTY, property.getName());
+        injectionMappings.put(valueSource, injectionSite);
+    }
+
+    /**
+     * Add a reference and associate with an injection site.
+     * @param reference the reference to add
+     * @param injectionSite the injection site for the reference
+     */
+    public void add(JavaMappedReference reference, InjectionSite injectionSite) {
+        super.add(reference);
+        ValueSource valueSource = new ValueSource(ValueSource.ValueSourceType.REFERENCE, reference.getName());
+        injectionMappings.put(valueSource, injectionSite);
+    }
+
+    /**
+     * Add a resource and associate with an injection site.
+     * @param resource the resource to add
+     * @param injectionSite the injection site for the resource
+     */
+    public void add(JavaMappedResource resource, InjectionSite injectionSite) {
+        super.add(resource);
+        ValueSource valueSource = new ValueSource(ValueSource.ValueSourceType.RESOURCE, resource.getName());
+        injectionMappings.put(valueSource, injectionSite);
+    }
+
+    public InjectionSite getInjectionSite(ValueSource source) {
+        return injectionMappings.get(source);
+    }
+
+    public Map<ValueSource, InjectionSite> getInjectionMappings() {
+        return injectionMappings;
     }
 }

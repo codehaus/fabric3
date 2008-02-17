@@ -28,6 +28,7 @@ import org.fabric3.pojo.scdl.PojoComponentType;
 
 import junit.framework.TestCase;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
+import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 
 /**
  * @version $Rev$ $Date$
@@ -64,14 +65,6 @@ public class ConstructorReferenceTestCase extends TestCase {
         }
     }
 
-    public void testNoName() throws Exception {
-        PojoComponentType type =
-            new PojoComponentType(null);
-        Constructor<NoNameFoo> ctor = NoNameFoo.class.getConstructor(String.class);
-        processor.visitConstructor(ctor, type, null);
-        assertNotNull(type.getReferences().get("_ref0"));
-    }
-
     public void testNamesOnConstructor() throws Exception {
         PojoComponentType type =
             new PojoComponentType(null);
@@ -87,18 +80,6 @@ public class ConstructorReferenceTestCase extends TestCase {
         try {
             processor.visitConstructor(ctor, type, null);
             fail();
-        } catch (InvalidReferenceException e) {
-            // expected
-        }
-    }
-
-    public void testNoMatchingNames() throws Exception {
-        PojoComponentType type =
-            new PojoComponentType(null);
-        Constructor<BadFoo> ctor = BadFoo.class.getConstructor(List.class, List.class);
-        try {
-            processor.visitConstructor(ctor, type, null);
-            fail();
         } catch (InvalidConstructorException e) {
             // expected
         }
@@ -107,7 +88,7 @@ public class ConstructorReferenceTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         processor =
-            new ConstructorProcessor(new ImplementationProcessorServiceImpl(new DefaultContractProcessor()));
+                new ConstructorProcessor(new ImplementationProcessorServiceImpl(new DefaultContractProcessor(), new DefaultIntrospectionHelper()));
     }
 
 //    public void testMultiplicityRequired() throws Exception {

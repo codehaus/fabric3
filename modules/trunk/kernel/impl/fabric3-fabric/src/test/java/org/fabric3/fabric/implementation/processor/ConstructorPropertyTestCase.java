@@ -23,12 +23,12 @@ import java.util.List;
 
 import org.osoa.sca.annotations.Property;
 
-import org.fabric3.fabric.implementation.processor.DuplicatePropertyException;
 import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.PojoComponentType;
 
 import junit.framework.TestCase;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
+import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 
 /**
  * @version $Rev$ $Date$
@@ -36,11 +36,10 @@ import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 public class ConstructorPropertyTestCase extends TestCase {
 
     ConstructorProcessor processor =
-        new ConstructorProcessor(new ImplementationProcessorServiceImpl(new DefaultContractProcessor()));
+            new ConstructorProcessor(new ImplementationProcessorServiceImpl(new DefaultContractProcessor(), new DefaultIntrospectionHelper()));
 
     public void testProperty() throws Exception {
-        PojoComponentType type =
-            new PojoComponentType(null);
+        PojoComponentType type = new PojoComponentType(null);
         Constructor<Foo> ctor = Foo.class.getConstructor(String.class);
         processor.visitConstructor(ctor, type, null);
         JavaMappedProperty<?> property = type.getProperties().get("myProp");
@@ -58,8 +57,7 @@ public class ConstructorPropertyTestCase extends TestCase {
     }
 
     public void testDuplicateProperty() throws Exception {
-        PojoComponentType type =
-            new PojoComponentType(null);
+        PojoComponentType type = new PojoComponentType(null);
         Constructor<BadFoo> ctor = BadFoo.class.getConstructor(String.class, String.class);
         try {
             processor.visitConstructor(ctor, type, null);
@@ -69,42 +67,16 @@ public class ConstructorPropertyTestCase extends TestCase {
         }
     }
 
-    public void testNoName() throws Exception {
-        PojoComponentType type =
-            new PojoComponentType(null);
-        Constructor<BadFoo> ctor = BadFoo.class.getConstructor(String.class);
-        try {
-            processor.visitConstructor(ctor, type, null);
-            fail();
-        } catch (InvalidPropertyException e) {
-            // expected
-        }
-    }
-
     public void testNamesOnConstructor() throws Exception {
-        PojoComponentType type =
-            new PojoComponentType(null);
+        PojoComponentType type = new PojoComponentType(null);
         Constructor<Foo> ctor = Foo.class.getConstructor(Integer.class);
         processor.visitConstructor(ctor, type, null);
         assertNotNull(type.getProperties().get("myProp"));
     }
 
     public void testInvalidNumberOfNames() throws Exception {
-        PojoComponentType type =
-            new PojoComponentType(null);
+        PojoComponentType type = new PojoComponentType(null);
         Constructor<BadFoo> ctor = BadFoo.class.getConstructor(Integer.class, Integer.class);
-        try {
-            processor.visitConstructor(ctor, type, null);
-            fail();
-        } catch (InvalidPropertyException e) {
-            // expected
-        }
-    }
-
-    public void testNoMatchingNames() throws Exception {
-        PojoComponentType type =
-            new PojoComponentType(null);
-        Constructor<BadFoo> ctor = BadFoo.class.getConstructor(List.class, List.class);
         try {
             processor.visitConstructor(ctor, type, null);
             fail();
@@ -112,10 +84,6 @@ public class ConstructorPropertyTestCase extends TestCase {
             // expected
         }
     }
-
-//    public void testMultiplicityRequired() throws Exception {
-    // TODO multiplicity
-//    }
 
     private static class Foo {
 

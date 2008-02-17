@@ -27,6 +27,7 @@ import org.fabric3.pojo.scdl.PojoComponentType;
 
 import junit.framework.TestCase;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
+import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.scdl.Signature;
 
 /**
@@ -36,14 +37,14 @@ import org.fabric3.scdl.Signature;
  */
 public class ConstructorProcessorExtensibilityTestCase extends TestCase {
     private ConstructorProcessor processor =
-        new ConstructorProcessor(new ImplementationProcessorServiceImpl(new DefaultContractProcessor()));
+        new ConstructorProcessor(new ImplementationProcessorServiceImpl(new DefaultContractProcessor(), new DefaultIntrospectionHelper()));
 
     public void testProcessFirst() throws Exception {
         PojoComponentType type =
             new PojoComponentType(null);
         Constructor<Foo> ctor1 = Foo.class.getConstructor(String.class, String.class);
         processor.visitConstructor(ctor1, type, null);
-        assertEquals("foo", type.getConstructorDefinition().getInjectionNames().get(0));
+        assertTrue(type.getProperties().containsKey("foo"));
     }
 
     /**

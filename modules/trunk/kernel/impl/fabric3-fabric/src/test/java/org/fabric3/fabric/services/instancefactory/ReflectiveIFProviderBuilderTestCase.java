@@ -20,6 +20,9 @@ package org.fabric3.fabric.services.instancefactory;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
+import java.lang.reflect.Constructor;
+import java.util.List;
+import java.util.ArrayList;
 
 import junit.framework.TestCase;
 
@@ -32,6 +35,7 @@ import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.scdl.ValueSource;
 import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.MethodInjectionSite;
+import org.fabric3.scdl.ConstructorInjectionSite;
 import org.fabric3.scdl.ValueSource.ValueSourceType;
 import org.fabric3.fabric.services.instancefactory.ReflectiveInstanceFactoryBuilder;
 import org.fabric3.fabric.services.classloading.ClassLoaderRegistryImpl;
@@ -43,6 +47,8 @@ public class ReflectiveIFProviderBuilderTestCase extends TestCase {
     private InstanceFactoryBuildHelper helper = new BuildHelperImpl(new ClassLoaderRegistryImpl());
     private ReflectiveInstanceFactoryBuilder builder = new ReflectiveInstanceFactoryBuilder(null, helper);
     private InstanceFactoryDefinition definition;
+    private Constructor<Foo> constructor;
+    private ClassLoader cl;
 
     /**
      * Verifies an ValueSource is set properly for constructor parameters
@@ -50,13 +56,8 @@ public class ReflectiveIFProviderBuilderTestCase extends TestCase {
      * @throws Exception
      */
     public void testCdiSource() throws Exception {
-        ValueSource cdiSource = new ValueSource(ValueSourceType.REFERENCE, "abc");
-        definition.addCdiSource(cdiSource);
-
-        ClassLoader cl = getClass().getClassLoader();
         InstanceFactoryProvider provider = builder.build(definition, cl);
-        Class<?> clazz = provider.getMemberType(cdiSource);
-        assertEquals(String.class, clazz);
+        assertEquals(String.class, provider.getMemberType(new ValueSource(ValueSourceType.PROPERTY, "a")));
     }
 
     /**
@@ -73,7 +74,6 @@ public class ReflectiveIFProviderBuilderTestCase extends TestCase {
         mapping.setSource(valueSource);
         definition.addInjectionSite(mapping);
 
-        ClassLoader cl = getClass().getClassLoader();
         InstanceFactoryProvider provider = builder.build(definition, cl);
         Class<?> clazz = provider.getMemberType(valueSource);
         assertEquals(Bar.class, clazz);
@@ -93,7 +93,6 @@ public class ReflectiveIFProviderBuilderTestCase extends TestCase {
         mapping.setSource(valueSource);
         definition.addInjectionSite(mapping);
 
-        ClassLoader cl = getClass().getClassLoader();
         InstanceFactoryProvider provider = builder.build(definition, cl);
         Class<?> clazz = provider.getMemberType(valueSource);
         assertEquals(Bar.class, clazz);
@@ -102,11 +101,25 @@ public class ReflectiveIFProviderBuilderTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
+        cl = getClass().getClassLoader();
+        constructor = Foo.class.getConstructor(String.class, Long.class);
+
         definition = new InstanceFactoryDefinition();
         definition.setImplementationClass(Foo.class.getName());
-        definition.setConstructor(new Signature(Foo.class.getConstructor(String.class, Long.class)));
+        definition.setConstructor(new Signature(constructor));
         definition.setInitMethod(new Signature("init"));
         definition.setDestroyMethod(new Signature("destroy"));
+        definition.addInjectionSite(createMapping("a", 0, ValueSourceType.PROPERTY));
+        definition.addInjectionSite(createMapping("b", 1, ValueSourceType.REFERENCE));
+    }
+
+    private InjectionSiteMapping createMapping(String name, int pos, ValueSourceType type) {
+        InjectionSite site = new ConstructorInjectionSite(constructor, pos);
+        ValueSource source = new ValueSource(type, name);
+        InjectionSiteMapping mapping = new InjectionSiteMapping();
+        mapping.setSource(source);
+        mapping.setSite(site);
+        return mapping;
     }
 
     public static class Foo {

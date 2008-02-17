@@ -101,7 +101,7 @@ public class ReferenceProcessor extends ImplementationProcessorExtension {
                 reference.setMultiplicity(Multiplicity.ZERO_ONE);
             }
         }
-        type.getReferences().put(name, reference);
+        type.add(reference, injectionSite);
     }
 
     public void visitField(
@@ -147,7 +147,7 @@ public class ReferenceProcessor extends ImplementationProcessorExtension {
                 reference.setMultiplicity(Multiplicity.ZERO_ONE);
             }
         }
-        type.getReferences().put(name, reference);
+        type.add(reference, injectionSite);
     }
 
     public <T> void visitConstructor(

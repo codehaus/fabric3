@@ -70,9 +70,10 @@ public class ResourceProcessor extends ImplementationProcessorExtension {
             throw new DuplicateResourceException(name);
         }
 
-        SystemSourcedResource resource = createResource(name, resourceType, new MethodInjectionSite(method, 0), annotation.optional(), annotation.mappedName());
+        MethodInjectionSite site = new MethodInjectionSite(method, 0);
+        SystemSourcedResource resource = createResource(name, resourceType, site, annotation.optional(), annotation.mappedName());
 
-        type.add(resource);
+        type.add(resource, site);
         
     }
 
@@ -92,9 +93,10 @@ public class ResourceProcessor extends ImplementationProcessorExtension {
 
         Class<?> fieldType = field.getType();
 
-        SystemSourcedResource resource = createResource(name, fieldType, new FieldInjectionSite(field), annotation.optional(), annotation.mappedName());
+        FieldInjectionSite site = new FieldInjectionSite(field);
+        SystemSourcedResource resource = createResource(name, fieldType, site, annotation.optional(), annotation.mappedName());
 
-        type.add(resource);
+        type.add(resource, site);
         
     }
 

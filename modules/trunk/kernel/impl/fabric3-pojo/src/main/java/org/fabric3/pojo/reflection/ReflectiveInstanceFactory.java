@@ -18,6 +18,8 @@
  */
 package org.fabric3.pojo.reflection;
 
+import java.util.List;
+
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
@@ -30,13 +32,13 @@ import org.fabric3.spi.component.WorkContext;
  */
 public class ReflectiveInstanceFactory<T> implements InstanceFactory<T> {
     private final ObjectFactory<T> constructor;
-    private final Injector<T>[] injectors;
+    private final List<Injector<T>> injectors;
     private final EventInvoker<T> initInvoker;
     private final EventInvoker<T> destroyInvoker;
     private final ClassLoader cl;
 
     public ReflectiveInstanceFactory(ObjectFactory<T> constructor,
-                                     Injector<T>[] injectors,
+                                     List<Injector<T>> injectors,
                                      EventInvoker<T> initInvoker,
                                      EventInvoker<T> destroyInvoker,
                                      ClassLoader cl) {

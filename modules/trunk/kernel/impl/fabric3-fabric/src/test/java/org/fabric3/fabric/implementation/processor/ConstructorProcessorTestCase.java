@@ -30,16 +30,20 @@ import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.JavaMappedReference;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Multiplicity;
+import org.fabric3.scdl.Signature;
+import org.fabric3.scdl.ValueSource;
+import org.fabric3.scdl.ConstructorInjectionSite;
 
 import junit.framework.TestCase;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
+import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 
 /**
  * @version $Rev$ $Date$
  */
 public class ConstructorProcessorTestCase extends TestCase {
     private ConstructorProcessor processor =
-        new ConstructorProcessor(new ImplementationProcessorServiceImpl(new DefaultContractProcessor()));
+            new ConstructorProcessor(new ImplementationProcessorServiceImpl(new DefaultContractProcessor(), new DefaultIntrospectionHelper()));
 
     public void testDuplicateConstructor() throws Exception {
         PojoComponentType type = new PojoComponentType(null);
@@ -53,11 +57,10 @@ public class ConstructorProcessorTestCase extends TestCase {
     }
 
     public void testConstructorAnnotation() throws Exception {
-        PojoComponentType type =
-            new PojoComponentType(null);
+        PojoComponentType type = new PojoComponentType(null);
         Constructor<Foo> ctor1 = Foo.class.getConstructor(String.class);
         processor.visitConstructor(ctor1, type, null);
-        assertEquals("foo", type.getConstructorDefinition().getInjectionNames().get(0));
+        assertEquals(new Signature(ctor1), type.getConstructorDefinition().getSignature());
     }
 
     public void testNoAnnotation() throws Exception {
@@ -81,13 +84,15 @@ public class ConstructorProcessorTestCase extends TestCase {
     }
 
     public void testMixedParameters() throws Exception {
-        PojoComponentType type =
-            new PojoComponentType(null);
+        PojoComponentType type = new PojoComponentType(null);
         Constructor<Mixed> ctor1 = Mixed.class.getConstructor(String.class, String.class, String.class);
         processor.visitConstructor(ctor1, type, null);
-        assertEquals("_ref0", type.getConstructorDefinition().getInjectionNames().get(0));
-        assertEquals("foo", type.getConstructorDefinition().getInjectionNames().get(1));
-        assertEquals("bar", type.getConstructorDefinition().getInjectionNames().get(2));
+        assertNotNull(type.getReferences().get("Mixed[0]"));
+        assertEquals(new ConstructorInjectionSite(ctor1, 0), type.getInjectionSite(new ValueSource(ValueSource.ValueSourceType.REFERENCE, "Mixed[0]")));
+        assertNotNull(type.getProperties().get("foo"));
+        assertEquals(new ConstructorInjectionSite(ctor1, 1), type.getInjectionSite(new ValueSource(ValueSource.ValueSourceType.PROPERTY, "foo")));
+        assertNotNull(type.getReferences().get("bar"));
+        assertEquals(new ConstructorInjectionSite(ctor1, 2), type.getInjectionSite(new ValueSource(ValueSource.ValueSourceType.REFERENCE, "bar")));
     }
 
     private static class BadFoo {
@@ -141,25 +146,19 @@ public class ConstructorProcessorTestCase extends TestCase {
     }
 
     public void testMultiplicity() throws Exception {
-        PojoComponentType type =
-            new PojoComponentType(null);
-        Constructor<Multiple> ctor1 =
-            Multiple.class.getConstructor(Collection.class, String[].class, List.class, Set.class, String[].class);
+        PojoComponentType type = new PojoComponentType(null);
+        Constructor<Multiple> ctor1 = Multiple.class.getConstructor(Collection.class, String[].class, List.class, Set.class, String[].class);
         processor.visitConstructor(ctor1, type, null);
-        JavaMappedReference ref0 = type.getReferences().get("_ref0");
-        assertNotNull(ref0);
+
+        JavaMappedReference ref0 = type.getReferences().get("Multiple[0]");
         assertEquals(Multiplicity.ONE_N, ref0.getMultiplicity());
         JavaMappedReference ref1 = type.getReferences().get("bar");
-        assertNotNull(ref1);
         assertEquals(Multiplicity.ZERO_N, ref1.getMultiplicity());
         JavaMappedReference ref2 = type.getReferences().get("xyz");
-        assertNotNull(ref2);
         assertEquals(Multiplicity.ONE_N, ref2.getMultiplicity());
         JavaMappedProperty prop1 = type.getProperties().get("foo");
-        assertNotNull(prop1);
         assertTrue(prop1.isMany());
         JavaMappedProperty prop2 = type.getProperties().get("abc");
-        assertNotNull(prop2);
         assertTrue(prop2.isMany());
     }
 

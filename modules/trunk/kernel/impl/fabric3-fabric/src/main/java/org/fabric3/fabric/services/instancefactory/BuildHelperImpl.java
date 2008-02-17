@@ -25,14 +25,15 @@ import java.util.Map;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.scdl.InjectionSiteMapping;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderException;
+import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.InjectionSite;
+import org.fabric3.scdl.InjectionSiteMapping;
+import org.fabric3.scdl.MethodInjectionSite;
 import org.fabric3.scdl.Signature;
 import org.fabric3.scdl.ValueSource;
-import org.fabric3.scdl.FieldInjectionSite;
-import org.fabric3.scdl.MethodInjectionSite;
+import org.fabric3.scdl.ConstructorInjectionSite;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 
 /**
@@ -63,30 +64,13 @@ public class BuildHelperImpl implements InstanceFactoryBuildHelper {
         return signature == null ? null : signature.getMethod(implClass);
     }
 
-    public Map<ValueSource, Member> getInjectionSites(Class implClass, List<InjectionSiteMapping> mappings)
-            throws NoSuchFieldException, NoSuchMethodException, InstanceFactoryBuilderException {
-        Map<ValueSource, Member> injectionSites = new HashMap<ValueSource, Member>();
+    public Map<ValueSource, InjectionSite> getInjectionSites(Class implClass, List<InjectionSiteMapping> mappings) {
+        Map<ValueSource, InjectionSite> injectionSites = new HashMap<ValueSource, InjectionSite>();
         for (InjectionSiteMapping mapping : mappings) {
 
             ValueSource source = mapping.getSource();
             InjectionSite injectionSite = mapping.getSite();
-            Member member;
-            switch (injectionSite.getElementType()) {
-            case METHOD:
-                MethodInjectionSite methodSite = (MethodInjectionSite) injectionSite;
-                try {
-                    member = methodSite.getSignature().getMethod(implClass);
-                } catch (ClassNotFoundException e) {
-                    throw new InstanceFactoryBuilderException(e);
-                }
-                break;
-            case FIELD:
-                member = implClass.getDeclaredField(((FieldInjectionSite)injectionSite).getName());
-                break;
-            default:
-                throw new AssertionError();
-            }
-            injectionSites.put(source, member);
+            injectionSites.put(source, injectionSite);
         }
         return injectionSites;
     }

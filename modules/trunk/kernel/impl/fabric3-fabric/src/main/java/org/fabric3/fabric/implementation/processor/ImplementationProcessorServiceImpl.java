@@ -19,28 +19,29 @@
 package org.fabric3.fabric.implementation.processor;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Type;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Resource;
-import org.fabric3.fabric.implementation.processor.DuplicatePropertyException;
+import org.fabric3.introspection.ContractProcessor;
+import org.fabric3.introspection.IntrospectionException;
+import org.fabric3.introspection.IntrospectionHelper;
+import org.fabric3.introspection.InvalidServiceContractException;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.JavaMappedReference;
 import org.fabric3.pojo.scdl.JavaMappedService;
-import org.fabric3.scdl.InjectionSite;
 import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.scdl.ConstructorInjectionSite;
+import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.Multiplicity;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.introspection.ContractProcessor;
-import org.fabric3.introspection.InvalidServiceContractException;
+import org.fabric3.scdl.ValueSource;
 
 /**
  * The default implementation of an <code>ImplementationProcessorService</code>
@@ -48,14 +49,17 @@ import org.fabric3.introspection.InvalidServiceContractException;
  * @version $Rev$ $Date$
  */
 public class ImplementationProcessorServiceImpl implements ImplementationProcessorService {
-    private ContractProcessor registry;
+    private final IntrospectionHelper helper;
+    private final ContractProcessor contractProcessor;
 
-    public ImplementationProcessorServiceImpl(@Reference ContractProcessor registry) {
-        this.registry = registry;
+    public ImplementationProcessorServiceImpl(@Reference ContractProcessor contractProcessor,
+                                              @Reference IntrospectionHelper helper) {
+        this.contractProcessor = contractProcessor;
+        this.helper = helper;
     }
 
     public JavaMappedService createService(Class<?> interfaze) throws InvalidServiceContractException {
-        ServiceContract<?> contract = registry.introspect(interfaze);
+        ServiceContract<?> contract = contractProcessor.introspect(interfaze);
         return new JavaMappedService(interfaze.getSimpleName(), contract);
     }
 
@@ -77,28 +81,41 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
         }
     }
 
-    public boolean processParam(
-            Class<?> param,
-            Type genericParam,
-            Annotation[] paramAnnotations,
-            String[] constructorNames,
-            int pos,
-            PojoComponentType type,
-            List<String> injectionNames) throws ProcessingException {
-        boolean processed = false;
-        for (Annotation annot : paramAnnotations) {
-            if (Property.class.equals(annot.annotationType())) {
-                processed = true;
-                processProperty(annot, constructorNames, pos, type, param, genericParam, injectionNames);
-            } else if (Reference.class.equals(annot.annotationType())) {
-                processed = true;
-                processReference(annot, constructorNames, pos, type, param, genericParam, injectionNames);
-            }/* else if (Resource.class.equals(annot.annotationType())) {
-                processed = true;
-                processResource((Resource) annot, constructorNames, pos, type, param, injectionNames);
-            }*/
+    public void processParameters(Constructor<?> constructor, PojoComponentType componentType) throws ProcessingException {
+        try {
+            Type[] parameterTypes = constructor.getGenericParameterTypes();
+            Annotation[][] parameterAnnotations = constructor.getParameterAnnotations();
+            param: for (int i = 0; i < parameterTypes.length; i++) {
+                Annotation[] annotations = parameterAnnotations[i];
+                for (Annotation annotation : annotations) {
+                    Class<? extends Annotation> annotationType = annotation.annotationType();
+                    if (Property.class.equals(annotationType)) {
+                        processProperty((Property) annotation, constructor, i, componentType);
+                        continue param;
+                    } else if (Reference.class.equals(annotationType)) {
+                        processReference((Reference) annotation, constructor, i, componentType);
+                        continue param;
+                    }
+                }
+                ValueSource.ValueSourceType sourceType = helper.inferType(parameterTypes[i]);
+                switch (sourceType) {
+                case PROPERTY:
+                    processProperty(null, constructor, i, componentType);
+                    break;
+                case REFERENCE:
+                    processReference(null, constructor, i, componentType);
+                    break;
+                case CONTEXT:
+                    break;
+                case CALLBACK:
+                    throw new ProcessingException("CDI for callbacks is not yet supported");
+                case RESOURCE:
+                    throw new ProcessingException("CDI for resources is not yet supported");
+                }
+            }
+        } catch (IntrospectionException e) {
+            throw new ProcessingException(e);
         }
-        return processed;
     }
 
     public boolean injectionAnnotationsPresent(Annotation[][] annots) {
@@ -119,7 +136,7 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
             throws ProcessingException {
         ServiceContract<Type> contract;
         try {
-            contract = registry.introspect(paramType);
+            contract = contractProcessor.introspect(paramType);
         } catch (InvalidServiceContractException e1) {
             throw new ProcessingException(e1);
         }
@@ -145,163 +162,53 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
         return start + 1 >= collection.length || areUnique(collection, start + 1);
     }
 
-    /**
-     * Processes parameter metadata for a constructor parameter
-     *
-     * @param annot            the parameter annotation
-     * @param constructorNames the parameter names as specified in an {@link org.osoa.sca.annotations.Constructor}
-     *                         annotation
-     * @param pos              the position of the parameter in the constructor's parameter list
-     * @param type             the component type associated with the implementation being processed
-     * @param param            the parameter type
-     * @param explicitNames    the collection of injection names to update
-     * @throws ProcessingException
-     */
-    @SuppressWarnings("unchecked")
-    private void processProperty(
-            Annotation annot,
-            String[] constructorNames,
-            int pos,
-            PojoComponentType type,
-            Class<?> param,
-            Type genericParam,
-            List<String> explicitNames) throws ProcessingException {
-        // the param is marked as a property
-        Property propAnnot = (Property) annot;
-        JavaMappedProperty property = new JavaMappedProperty();
-        Class<?> baseType = getBaseType(param, genericParam);
-        if (param.isArray() || Collection.class.isAssignableFrom(param)) {
-            property.setMany(true);
-        }
-        property.setJavaType(baseType);
-        String name = propAnnot.name();
-        if (name == null || name.length() == 0) {
-            if (constructorNames.length < pos + 1 || constructorNames[pos] == null
-                    || constructorNames[pos].length() == 0) {
-                throw new InvalidPropertyException("No name specified for property parameter " + (pos + 1));
-            }
-            name = constructorNames[pos];
-        } else if (pos < constructorNames.length && constructorNames[pos] != null
-                && constructorNames[pos].length() != 0 && !name.equals(constructorNames[pos])) {
-            String paramNum = String.valueOf(pos + 1);
-            throw new InvalidConstructorException("Name specified by @Constructor does not match property name",
-                                                  paramNum);
-        }
-        if (type.getProperties().get(name) != null) {
+    private void processProperty(Property annotation, Constructor<?> constructor, int index, PojoComponentType componentType) throws IntrospectionException, ProcessingException {
+        String name = helper.getSiteName(constructor, index, annotation == null ? "" : annotation.name());
+        if (componentType.getProperties().containsKey(name)) {
             throw new DuplicatePropertyException(name);
         }
-        property.setName(name);
-        property.setRequired(propAnnot.required());
-
-        type.getProperties().put(name, property);
-        addName(explicitNames, pos, name);
+        Class<?> type = helper.getType(constructor, index);
+        InjectionSite injectionSite = new ConstructorInjectionSite(constructor, index);
+        JavaMappedProperty<?> property = createDefinition(annotation, name, type);
+        componentType.add(property, injectionSite);
     }
 
-    /**
-     * Processes reference metadata for a constructor parameter
-     *
-     * @param annot            the parameter annotation
-     * @param constructorNames the parameter names as specified in an {@link org.osoa.sca.annotations.Constructor}
-     *                         annotation
-     * @param pos              the position of the parameter in the constructor's parameter list
-     * @param type             the component type associated with the implementation being processed
-     * @param param            the parameter type
-     * @param explicitNames    the collection of injection names to update
-     * @throws ProcessingException
-     */
-    private void processReference(
-            Annotation annot,
-            String[] constructorNames,
-            int pos,
-            PojoComponentType type,
-            Class<?> param,
-            Type genericParam,
-            List<String> explicitNames) throws ProcessingException {
+    private <T> JavaMappedProperty<T> createDefinition(Property annotation, String name, Class<T> type) {
+        JavaMappedProperty<T> property = new JavaMappedProperty<T>();
+        property.setName(name);
+        property.setJavaType(type);
+        property.setRequired(annotation == null || annotation.required());
+        property.setMany(helper.isManyValued(type));
+        return property;
+    }
 
-        // TODO multiplicity
-        // the param is marked as a reference
-        Reference refAnnotation = (Reference) annot;
-        String name = refAnnotation.name();
-        if (name == null || name.length() == 0) {
-            if (constructorNames.length == 0 || constructorNames[0].length() == 0) {
-                name = "_ref" + pos;
-            } else if (constructorNames.length < pos + 1 || constructorNames[pos] == null
-                    || constructorNames[pos].length() == 0) {
-                throw new InvalidReferenceException("No name specified for reference parameter " + (pos + 1));
-            } else {
-                name = constructorNames[pos];
-            }
-        } else if (pos < constructorNames.length && constructorNames[pos] != null
-                && constructorNames[pos].length() != 0 && !name.equals(constructorNames[pos])) {
-            String paramNum = String.valueOf(pos + 1);
-            throw new InvalidConstructorException("Name specified by @Constructor does not match reference name",
-                                                  paramNum);
-        }
-        if (type.getReferences().get(name) != null) {
+    private void processReference(Reference annotation, Constructor<?> constructor, int index, PojoComponentType componentType) throws IntrospectionException, ProcessingException {
+        String name = helper.getSiteName(constructor, index, annotation == null ? "" : annotation.name());
+        if (componentType.getReferences().containsKey(name)) {
             throw new DuplicateReferenceException(name);
         }
-        boolean required = refAnnotation.required();
+        Type type = helper.getGenericType(constructor, index);
+        InjectionSite injectionSite = new ConstructorInjectionSite(constructor, index);
+        JavaMappedReference reference = createDefinition(name, annotation == null || annotation.required(), type);
+        componentType.add(reference, injectionSite);
+    }
 
-        Class<?> baseType = getBaseType(param, genericParam);
-        ServiceContract<?> contract;
-        try {
-            contract = registry.introspect(baseType);
-        } catch (InvalidServiceContractException e) {
-            throw new ProcessingException(e);
-        }
+    private JavaMappedReference createDefinition(String name, boolean required, Type type) throws IntrospectionException {
+        ServiceContract<Type> contract = contractProcessor.introspect(helper.getBaseType(type));
+        Multiplicity multiplicity = multiplicity(required, type);
+
         JavaMappedReference reference = new JavaMappedReference(name, contract, null);
         reference.setRequired(required);
-        if (param.isArray() || Collection.class.isAssignableFrom(param) || Map.class.isAssignableFrom(param)) {
-            if (required) {
-                reference.setMultiplicity(Multiplicity.ONE_N);
-            } else {
-                reference.setMultiplicity(Multiplicity.ZERO_N);
-            }
-        } else {
-            if (required) {
-                reference.setMultiplicity(Multiplicity.ONE_ONE);
-            } else {
-                reference.setMultiplicity(Multiplicity.ZERO_ONE);
-            }
-        }
-        type.getReferences().put(name, reference);
-        addName(explicitNames, pos, name);
+        reference.setMultiplicity(multiplicity);
+        return reference;
     }
 
-    protected static Class<?> getBaseType(Class<?> cls, Type genericType) {
-        if (cls.isArray()) {
-            return cls.getComponentType();
-        } else if (Collection.class.isAssignableFrom(cls)) {
-            if (genericType == cls) {
-                return Object.class;
-            } else {
-                ParameterizedType parameterizedType = (ParameterizedType) genericType;
-                Type baseType = parameterizedType.getActualTypeArguments()[0];
-                if (baseType instanceof Class) {
-                    return (Class<?>) baseType;
-                } else if (baseType instanceof ParameterizedType) {
-                    return (Class<?>) ((ParameterizedType) baseType).getRawType();
-                } else {
-                    return null;
-                }
-            }
-        } else if (Map.class.isAssignableFrom(cls)) {
-            if (genericType == cls) {
-                return Object.class;
-            } else {
-                ParameterizedType parameterizedType = (ParameterizedType) genericType;
-                Type type = parameterizedType.getActualTypeArguments()[1];
-                if (type instanceof Class) {
-                    return (Class<?>) type;
-                } else if (type instanceof ParameterizedType) {
-                    ParameterizedType valueType = (ParameterizedType) type;
-                    return (Class<?>) valueType.getRawType();
-                } else {
-                    throw new AssertionError();
-                }
-            }
+    private Multiplicity multiplicity(boolean required, Type type) {
+        if (helper.isManyValued(type)) {
+            return required ? Multiplicity.ONE_N : Multiplicity.ZERO_N;
         } else {
-            return cls;
+            return required ? Multiplicity.ONE_ONE : Multiplicity.ZERO_ONE;
         }
     }
+
 }

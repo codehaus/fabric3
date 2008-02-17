@@ -19,10 +19,12 @@
 package org.fabric3.fabric.services.instancefactory;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.lang.annotation.ElementType;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
@@ -36,6 +38,8 @@ import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.pojo.reflection.ReflectiveInstanceFactoryProvider;
 import org.fabric3.scdl.ValueSource;
+import org.fabric3.scdl.InjectionSite;
+import org.fabric3.scdl.ConstructorInjectionSite;
 
 /**
  * Builds a reflection-based instance factory provider.
@@ -67,18 +71,29 @@ public class ReflectiveInstanceFactoryBuilder<T>
             @SuppressWarnings("unchecked")
             Class<T> implClass = (Class<T>) helper.loadClass(cl, ifpd.getImplementationClass());
 
+            List<InjectionSiteMapping> mappings = ifpd.getInjectionSites();
+            Map<ValueSource, InjectionSite> injectionSites = helper.getInjectionSites(implClass, mappings);
+
             Constructor<T> ctr = helper.getConstructor(implClass, ifpd.getConstructor());
+            ValueSource[] cdiSources = new ValueSource[ctr.getParameterTypes().length];
+            for (Map.Entry<ValueSource, InjectionSite> entry : injectionSites.entrySet()) {
+                InjectionSite injectionSite = entry.getValue();
+                if (injectionSite.getElementType() == ElementType.CONSTRUCTOR) {
+                    ConstructorInjectionSite constructorSite = (ConstructorInjectionSite) injectionSite;
+                    cdiSources[constructorSite.getParam()] = entry.getKey();
+                }
+            }
+            for (int i = 0; i < cdiSources.length; i++) {
+                if (cdiSources[i] == null) {
+                    throw new InstanceFactoryBuilderException("No source for constructor parameter " + i, ctr.getName());
+                }
+            }
 
             Method initMethod = helper.getMethod(implClass, ifpd.getInitMethod());
-
             Method destroyMethod = helper.getMethod(implClass, ifpd.getDestroyMethod());
 
-            List<ValueSource> ctrInjectSites = ifpd.getCdiSources();
-
-            List<InjectionSiteMapping> mappings = ifpd.getInjectionSites();
-            Map<ValueSource, Member> injectionSites = helper.getInjectionSites(implClass, mappings);
             return new ReflectiveInstanceFactoryProvider<T>(ctr,
-                                                            ctrInjectSites,
+                                                            Arrays.asList(cdiSources),
                                                             injectionSites,
                                                             initMethod,
                                                             destroyMethod,
@@ -87,8 +102,6 @@ public class ReflectiveInstanceFactoryBuilder<T>
         } catch (ClassNotFoundException ex) {
             throw new InstanceFactoryBuilderException(ex);
         } catch (NoSuchMethodException ex) {
-            throw new InstanceFactoryBuilderException(ex);
-        } catch (NoSuchFieldException ex) {
             throw new InstanceFactoryBuilderException(ex);
         }
     }

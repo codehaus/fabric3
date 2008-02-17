@@ -76,13 +76,14 @@ public class PropertyProcessor extends ImplementationProcessorExtension {
         }
 
         Class<?> baseType = getBaseType(javaType, method.getGenericParameterTypes()[0]);
-        JavaMappedProperty<?> property = createProperty(name, baseType, new MethodInjectionSite(method, 0));
+        MethodInjectionSite site = new MethodInjectionSite(method, 0);
+        JavaMappedProperty<?> property = createProperty(name, baseType, site);
         if (javaType.isArray() || Collection.class.isAssignableFrom(javaType)) {
             property.setMany(true);
         }
 
         property.setRequired(annotation.required());
-        properties.put(name, property);
+        type.add(property, site);
     }
 
     public void visitField(
@@ -108,13 +109,14 @@ public class PropertyProcessor extends ImplementationProcessorExtension {
         }
 
         Class<?> baseType = getBaseType(javaType, field.getGenericType());
-        JavaMappedProperty<?> property = createProperty(name, baseType, new FieldInjectionSite(field));
+        FieldInjectionSite site = new FieldInjectionSite(field);
+        JavaMappedProperty<?> property = createProperty(name, baseType, site);
         if (javaType.isArray() || Collection.class.isAssignableFrom(javaType)) {
             property.setMany(true);
         }
 
         property.setRequired(annotation.required());
-        properties.put(name, property);
+        type.add(property, site);
     }
 
     protected <T> JavaMappedProperty<T> createProperty(String name, Class<T> javaType, InjectionSite injectionSite)

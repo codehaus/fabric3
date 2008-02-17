@@ -20,23 +20,25 @@ package org.fabric3.pojo.reflection;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Collections;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
+import org.fabric3.scdl.FieldInjectionSite;
+import org.fabric3.scdl.InjectionSite;
+import org.fabric3.scdl.MethodInjectionSite;
+import org.fabric3.scdl.ValueSource;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.InstanceFactory;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.TargetInitializationException;
-import org.fabric3.scdl.ValueSource;
 
 /**
  * @version $Rev$ $Date$
@@ -44,7 +46,7 @@ import org.fabric3.scdl.ValueSource;
 public class ReflectiveInstanceFactoryProviderTestCase extends TestCase {
     private Constructor<Foo> argConstructor;
     private List<ValueSource> ctrNames;
-    private Map<ValueSource, Member> sites;
+    private Map<ValueSource, InjectionSite> sites;
     private ObjectFactory intFactory;
     private ObjectFactory stringFactory;
     private ReflectiveInstanceFactoryProvider<Foo> provider;
@@ -79,10 +81,10 @@ public class ReflectiveInstanceFactoryProviderTestCase extends TestCase {
     }
 
     public void testFieldInjectors() throws ObjectCreationException {
-        sites.put(intProperty, intField);
-        sites.put(stringProperty, stringField);
-        Injector<Foo>[] injectors = provider.getInjectors();
-        assertEquals(2, injectors.length);
+        sites.put(intProperty, new FieldInjectionSite(intField));
+        sites.put(stringProperty, new FieldInjectionSite(stringField));
+        List<Injector<Foo>> injectors = provider.getInjectors();
+        assertEquals(2, injectors.size());
 
         Foo foo = new Foo();
         for (Injector<Foo> injector : injectors) {
@@ -95,10 +97,10 @@ public class ReflectiveInstanceFactoryProviderTestCase extends TestCase {
     }
 
     public void testMethodInjectors() throws ObjectCreationException {
-        sites.put(intProperty, intSetter);
-        sites.put(stringProperty, stringSetter);
-        Injector<Foo>[] injectors = provider.getInjectors();
-        assertEquals(2, injectors.length);
+        sites.put(intProperty, new MethodInjectionSite(intSetter, 0));
+        sites.put(stringProperty, new MethodInjectionSite(stringSetter, 0));
+        List<Injector<Foo>> injectors = provider.getInjectors();
+        assertEquals(2, injectors.size());
 
         Foo foo = new Foo();
         for (Injector<Foo> injector : injectors) {
@@ -111,8 +113,8 @@ public class ReflectiveInstanceFactoryProviderTestCase extends TestCase {
     }
 
     public void testFactory() throws ObjectCreationException {
-        sites.put(intProperty, intSetter);
-        sites.put(stringProperty, stringField);
+        sites.put(intProperty, new MethodInjectionSite(intSetter, 0));
+        sites.put(stringProperty, new MethodInjectionSite(stringSetter, 0));
         InstanceFactory<Foo> instanceFactory = provider.createFactory();
         InstanceWrapper<Foo> instanceWrapper = instanceFactory.newInstance(null);
         try {
@@ -136,7 +138,7 @@ public class ReflectiveInstanceFactoryProviderTestCase extends TestCase {
         intSetter = Foo.class.getMethod("setIntField", int.class);
         stringSetter = Foo.class.getMethod("setStringField", String.class);
         ctrNames = new ArrayList<ValueSource>();
-        sites = new HashMap<ValueSource, Member>();
+        sites = new HashMap<ValueSource, InjectionSite>();
         provider = new ReflectiveInstanceFactoryProvider<Foo>(noArgConstructor,
                                                               ctrNames,
                                                               sites,

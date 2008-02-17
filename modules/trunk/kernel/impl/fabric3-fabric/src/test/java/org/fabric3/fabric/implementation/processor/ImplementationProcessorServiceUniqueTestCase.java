@@ -22,6 +22,7 @@ import org.fabric3.pojo.processor.ImplementationProcessorService;
 
 import junit.framework.TestCase;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
+import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 
 /**
  * @version $Rev$ $Date$
@@ -29,7 +30,7 @@ import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 public class ImplementationProcessorServiceUniqueTestCase extends TestCase {
 
     private ImplementationProcessorService service =
-        new ImplementationProcessorServiceImpl(new DefaultContractProcessor());
+        new ImplementationProcessorServiceImpl(new DefaultContractProcessor(), new DefaultIntrospectionHelper());
 
     public void testUniquess1() throws Exception {
         Class[] classes = new Class[2];

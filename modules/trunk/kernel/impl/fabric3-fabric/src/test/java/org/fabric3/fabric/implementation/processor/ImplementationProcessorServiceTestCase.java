@@ -18,10 +18,7 @@
  */
 package org.fabric3.fabric.implementation.processor;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.List;
 
 import junit.framework.TestCase;
 import org.osoa.sca.annotations.Callback;
@@ -29,11 +26,12 @@ import org.osoa.sca.annotations.Conversational;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Remotable;
 
+import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
+import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 
 /**
  * @version $Rev$ $Date$
@@ -41,7 +39,7 @@ import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 public class ImplementationProcessorServiceTestCase extends TestCase {
 
     private ImplementationProcessorService implService =
-            new ImplementationProcessorServiceImpl(new DefaultContractProcessor());
+            new ImplementationProcessorServiceImpl(new DefaultContractProcessor(), new DefaultIntrospectionHelper());
 
     public void testCreateConversationalService() throws Exception {
         JavaMappedService service = implService.createService(Foo.class);
@@ -58,18 +56,11 @@ public class ImplementationProcessorServiceTestCase extends TestCase {
     }
 
     public void testProcessParamProperty() throws Exception {
+
         PojoComponentType type = new PojoComponentType(null);
         Constructor<PropertyClass> ctor = PropertyClass.class.getConstructor(int.class);
-        Annotation[] paramAnnotations = ctor.getParameterAnnotations()[0];
-        List<String> injectionNames = new ArrayList<String>();
-        String[] names = new String[]{"foo"};
-        implService.processParam(int.class,
-                                 ctor.getGenericParameterTypes()[0],
-                                 paramAnnotations,
-                                 names,
-                                 0,
-                                 type,
-                                 injectionNames);
+        implService.processParameters(ctor, type);
+
         org.fabric3.scdl.Property<?> property = type.getProperties().get("foo");
         assertEquals(int.class, property.getJavaType());
     }

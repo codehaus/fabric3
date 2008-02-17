@@ -100,6 +100,10 @@ public class ValueSource {
         this.name = name;
     }
 
+    public String toString() {
+        return name + '[' + valueType + ']';
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -27,6 +27,7 @@ import org.fabric3.pojo.scdl.PojoComponentType;
 
 import junit.framework.TestCase;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
+import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 
 /**
  * @version $Rev$ $Date$
@@ -52,7 +53,7 @@ public class HeuristicAndPropertyTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         ImplementationProcessorServiceImpl service =
-            new ImplementationProcessorServiceImpl(new DefaultContractProcessor());
+            new ImplementationProcessorServiceImpl(new DefaultContractProcessor(), new DefaultIntrospectionHelper());
         propertyProcessor = new PropertyProcessor();
         heuristicProcessor = new HeuristicPojoProcessor(service, null);
     }

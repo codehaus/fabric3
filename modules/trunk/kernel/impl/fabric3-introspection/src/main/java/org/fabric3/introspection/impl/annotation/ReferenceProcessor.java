@@ -77,6 +77,7 @@ public class ReferenceProcessor<I extends Implementation<? extends InjectingComp
         ServiceContract<Type> contract = contractProcessor.introspect(type);
         Multiplicity multiplicity = multiplicity(required, type);
         ReferenceDefinition definition = new ReferenceDefinition(name, contract, multiplicity);
+        definition.setRequired(required);
         componentType.add(definition, site);
     }
 

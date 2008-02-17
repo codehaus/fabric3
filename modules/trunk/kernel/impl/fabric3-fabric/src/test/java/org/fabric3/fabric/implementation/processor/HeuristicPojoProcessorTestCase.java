@@ -38,6 +38,7 @@ import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.Signature;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
+import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 
 /**
  * Verfies component type information is properly introspected from an unadorned POJO according to the SCA Java Client
@@ -52,7 +53,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         DefaultContractProcessor contractProcessor = new DefaultContractProcessor();
-        ImplementationProcessorServiceImpl processorService = new ImplementationProcessorServiceImpl(contractProcessor);
+        ImplementationProcessorServiceImpl processorService = new ImplementationProcessorServiceImpl(contractProcessor, new DefaultIntrospectionHelper());
         processor = new HeuristicPojoProcessor(processorService, contractProcessor);
     }
 

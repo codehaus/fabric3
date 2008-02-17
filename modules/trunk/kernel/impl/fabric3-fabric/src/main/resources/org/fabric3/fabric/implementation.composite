@@ -33,9 +33,11 @@
     </component>
 
     <!-- Foundation implementation processors -->
+    <component name="implementation.IntrospectionHelper">
+        <system:implementation.system class="org.fabric3.introspection.impl.DefaultIntrospectionHelper"/>
+    </component>
     <component name="implementation.ImplementationProcessorService">
-        <system:implementation.system
-            class="org.fabric3.fabric.implementation.processor.ImplementationProcessorServiceImpl"/>
+        <system:implementation.system class="org.fabric3.fabric.implementation.processor.ImplementationProcessorServiceImpl"/>
     </component>
     <component name="implementation.Constructor">
         <system:implementation.system class="org.fabric3.fabric.implementation.processor.ConstructorProcessor"/>

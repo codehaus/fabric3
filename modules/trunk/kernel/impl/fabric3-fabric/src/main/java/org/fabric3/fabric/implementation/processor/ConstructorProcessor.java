@@ -20,6 +20,7 @@ package org.fabric3.fabric.implementation.processor;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Type;
 import java.util.List;
 
 import org.osoa.sca.annotations.Reference;
@@ -59,9 +60,22 @@ public class ConstructorProcessor extends ImplementationProcessorExtension {
             String name = constructor.getDeclaringClass().getName();
             throw new DuplicateConstructorException("Multiple constructor definitions found", name);
         }
-        ConstructorDefinition definition = new ConstructorDefinition(new Signature(constructor));
-        Class<?>[] params = constructor.getParameterTypes();
+
         String[] names = annotation.value();
+        // check that if names have been provided then the number matches the number of parameters
+        if (names.length != 1 || names[0].length() != 0) {
+            if (names.length != constructor.getParameterTypes().length) {
+                throw new InvalidConstructorException("Names in @Constructor do not match number of parameters");
+            }
+        }
+
+        ConstructorDefinition definition = new ConstructorDefinition(new Signature(constructor));
+        type.setConstructorDefinition(definition);
+
+        service.processParameters(constructor, type);
+
+/*
+        Class<?>[] params = constructor.getParameterTypes();
         Annotation[][] annotations = constructor.getParameterAnnotations();
         List<String> injectionNames = definition.getInjectionNames();
         for (int i = 0; i < params.length; i++) {
@@ -69,7 +83,7 @@ public class ConstructorProcessor extends ImplementationProcessorExtension {
             Annotation[] paramAnnotations = annotations[i];
             try {
                 if (!service.processParam(param,
-                    constructor.getGenericParameterTypes()[i],
+                    paramTypes[i],
                     paramAnnotations,
                     names,
                     i,
@@ -83,9 +97,6 @@ public class ConstructorProcessor extends ImplementationProcessorExtension {
                 throw e;
             }
         }
-        if (names.length != 0 && names[0].length() != 0 && names.length != params.length) {
-            throw new InvalidConstructorException("Names in @Constructor do not match number of parameters");
-        }
-        type.setConstructorDefinition(definition);
+*/
     }
 }

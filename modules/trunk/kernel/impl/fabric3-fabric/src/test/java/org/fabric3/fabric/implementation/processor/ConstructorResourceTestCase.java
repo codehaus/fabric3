@@ -27,6 +27,7 @@ import org.fabric3.pojo.scdl.PojoComponentType;
 
 import junit.framework.TestCase;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
+import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 
 /**
  * @version $Rev$ $Date$
@@ -34,7 +35,7 @@ import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 public class ConstructorResourceTestCase extends TestCase {
 
     ConstructorProcessor processor =
-        new ConstructorProcessor(new ImplementationProcessorServiceImpl(new DefaultContractProcessor()));
+            new ConstructorProcessor(new ImplementationProcessorServiceImpl(new DefaultContractProcessor(), new DefaultIntrospectionHelper()));
 
     public void testDummy() {
     }

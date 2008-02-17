@@ -20,6 +20,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.lang.annotation.Annotation;
+
+import org.fabric3.scdl.ValueSource;
 
 /**
  * Helper service that provides support methods to simplify introspection.
@@ -125,4 +128,23 @@ public interface IntrospectionHelper {
      * @return true if the type should be treated as many-valued
      */
     boolean isManyValued(Type type);
+
+    Class<?> getRawType(Type type);
+
+    boolean isManyValued(Class<?> clazz);
+
+    ValueSource.ValueSourceType inferType(Type type);
+
+    /**
+     * Determine if an annotation is present on this interface or any superinterface.
+     * <p/>
+     * This is similar to the use of @Inherited on classes (given @Inherited does not apply to interfaces).
+     *
+     * @param type           the interface to check
+     * @param annotationType the annotation to look for
+     * @return true if the annotation is present
+     */
+    boolean isAnnotationPresent(Class<?> type, Class<? extends Annotation> annotationType);
+
+    Type getBaseType(Type type);
 }

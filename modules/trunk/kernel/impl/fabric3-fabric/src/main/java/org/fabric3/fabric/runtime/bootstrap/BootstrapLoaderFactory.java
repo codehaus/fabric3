@@ -32,11 +32,14 @@ import org.fabric3.fabric.implementation.system.SystemComponentTypeLoader;
 import org.fabric3.fabric.implementation.system.SystemComponentTypeLoaderImpl;
 import org.fabric3.fabric.implementation.system.SystemImplementationLoader;
 import org.fabric3.fabric.loader.LoaderRegistryImpl;
+import org.fabric3.fabric.runtime.ComponentNames;
 import org.fabric3.fabric.services.advertsiement.FeatureLoader;
 import org.fabric3.fabric.services.factories.xml.XMLFactoryImpl;
-import org.fabric3.fabric.runtime.ComponentNames;
-import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.host.runtime.Fabric3Runtime;
+import org.fabric3.introspection.ContractProcessor;
+import org.fabric3.introspection.IntrospectionHelper;
+import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
+import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.loader.common.ComponentReferenceLoader;
 import org.fabric3.loader.common.ComponentServiceLoader;
 import org.fabric3.loader.common.DefaultPolicyHelper;
@@ -46,14 +49,13 @@ import org.fabric3.loader.composite.ComponentLoader;
 import org.fabric3.loader.composite.CompositeLoader;
 import org.fabric3.loader.composite.IncludeLoader;
 import org.fabric3.loader.composite.PropertyValueLoader;
+import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.processor.Introspector;
-import org.fabric3.spi.loader.PolicyHelper;
 import org.fabric3.spi.loader.Loader;
+import org.fabric3.spi.loader.PolicyHelper;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.factories.xml.XMLFactory;
-import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
-import org.fabric3.introspection.ContractProcessor;
 
 /**
  * @version $Rev$ $Date$
@@ -64,7 +66,7 @@ public class BootstrapLoaderFactory {
         MetaDataStore metaDataStore = runtime.getSystemComponent(MetaDataStore.class, ComponentNames.METADATA_STORE_URI);
         return createLoader(monitorFactory, metaDataStore);
     }
-    
+
     public static Loader createLoader(MonitorFactory monitorFactory,
                                       MetaDataStore metaDataStore) {
 
@@ -109,9 +111,10 @@ public class BootstrapLoaderFactory {
     }
 
     private static Introspector createIntrospector(MonitorFactory monitorFactory,
-                                            ContractProcessor interfaceIntrospector) {
+                                                   ContractProcessor interfaceIntrospector) {
 
-        ImplementationProcessorService service = new ImplementationProcessorServiceImpl(interfaceIntrospector);
+        IntrospectionHelper helper = new DefaultIntrospectionHelper();
+        ImplementationProcessorService service = new ImplementationProcessorServiceImpl(interfaceIntrospector, helper);
         IntrospectionRegistryImpl.Monitor monitor = monitorFactory.getMonitor(IntrospectionRegistryImpl.Monitor.class);
         IntrospectionRegistryImpl introspectionRegistry = new IntrospectionRegistryImpl(monitor);
         introspectionRegistry.registerProcessor(new ConstructorProcessor(service));

@@ -66,8 +66,9 @@ public class MonitorProcessor extends ImplementationProcessorExtension {
             throw new DuplicateResourceException(name);
         }
 
-        MonitorResource resource = createResource(name, resourceType, new MethodInjectionSite(method, 0));
-        type.add(resource);
+        MethodInjectionSite site = new MethodInjectionSite(method, 0);
+        MonitorResource resource = createResource(name, resourceType, site);
+        type.add(resource, site);
     }
 
     public void visitField(Field field, PojoComponentType type, IntrospectionContext context) throws ProcessingException {
@@ -82,8 +83,9 @@ public class MonitorProcessor extends ImplementationProcessorExtension {
             throw new DuplicateResourceException(name);
         }
 
-        MonitorResource resource = createResource(name, resourceType, new FieldInjectionSite(field));
-        type.add(resource);
+        FieldInjectionSite site = new FieldInjectionSite(field);
+        MonitorResource resource = createResource(name, resourceType, site);
+        type.add(resource, site);
     }
 
     private MonitorResource createResource(String name, Class<?> type, InjectionSite injectionSite) throws ProcessingException {
