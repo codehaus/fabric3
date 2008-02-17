@@ -21,36 +21,22 @@ package org.fabric3.pojo.scdl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 
-import org.fabric3.scdl.AbstractComponentType;
+import org.fabric3.scdl.InjectingComponentType;
 import org.fabric3.scdl.InjectionSite;
-import org.fabric3.scdl.Signature;
-import org.fabric3.scdl.ValueSource;
-import org.fabric3.scdl.ServiceDefinition;
-import org.fabric3.scdl.Property;
-import org.fabric3.scdl.ReferenceDefinition;
-import org.fabric3.scdl.ResourceDefinition;
 
 /**
  * A component type specialization for POJO implementations
  *
  * @version $$Rev$$ $$Date$$
  */
-public class PojoComponentType extends AbstractComponentType<ServiceDefinition,
-        ReferenceDefinition,
-        Property<?>,
-        ResourceDefinition> {
+public class PojoComponentType extends InjectingComponentType {
     private String implClass;
     private ConstructorDefinition constructorDefinition;
-    private Signature initMethod;
-    private Signature destroyMethod;
     private InjectionSite conversationIDInjectionSite;
     private InjectionSite componentContextInjectionSite;
     private InjectionSite requestContextInjectionSite;
     private List<InjectionSite> callbackInjectionSites = new ArrayList<InjectionSite>();
-    private final Map<ValueSource, InjectionSite> injectionMappings = new HashMap<ValueSource, InjectionSite>();
 
     /**
      * Constructor used only for deserialization
@@ -112,42 +98,6 @@ public class PojoComponentType extends AbstractComponentType<ServiceDefinition,
         callbackInjectionSites.add(site);
     }
 
-    /**
-     * Returns the component initializer method.
-     *
-     * @return the component initializer method
-     */
-    public Signature getInitMethod() {
-        return initMethod;
-    }
-
-    /**
-     * Sets the component initializer method.
-     *
-     * @param initMethod the component initializer method
-     */
-    public void setInitMethod(Signature initMethod) {
-        this.initMethod = initMethod;
-    }
-
-    /**
-     * Returns the component destructor method.
-     *
-     * @return the component destructor method
-     */
-    public Signature getDestroyMethod() {
-        return destroyMethod;
-    }
-
-    /**
-     * Sets the component destructor method.
-     *
-     * @param destroyMethod the component destructor method
-     */
-    public void setDestroyMethod(Signature destroyMethod) {
-        this.destroyMethod = destroyMethod;
-    }
-
     public InjectionSite getConversationIDMember() {
         return this.conversationIDInjectionSite;
     }
@@ -170,46 +120,5 @@ public class PojoComponentType extends AbstractComponentType<ServiceDefinition,
 
     public void setRequestContextMember(InjectionSite requestContextInjectionSite) {
         this.requestContextInjectionSite = requestContextInjectionSite;
-    }
-
-    /**
-     * Add a property and associate with an injection site.
-     * @param property the property to add
-     * @param injectionSite the injection site for the property
-     */
-    public void add(Property<?> property, InjectionSite injectionSite) {
-        super.add(property);
-        ValueSource valueSource = new ValueSource(ValueSource.ValueSourceType.PROPERTY, property.getName());
-        injectionMappings.put(valueSource, injectionSite);
-    }
-
-    /**
-     * Add a reference and associate with an injection site.
-     * @param reference the reference to add
-     * @param injectionSite the injection site for the reference
-     */
-    public void add(ReferenceDefinition reference, InjectionSite injectionSite) {
-        super.add(reference);
-        ValueSource valueSource = new ValueSource(ValueSource.ValueSourceType.REFERENCE, reference.getName());
-        injectionMappings.put(valueSource, injectionSite);
-    }
-
-    /**
-     * Add a resource and associate with an injection site.
-     * @param resource the resource to add
-     * @param injectionSite the injection site for the resource
-     */
-    public void add(ResourceDefinition resource, InjectionSite injectionSite) {
-        super.add(resource);
-        ValueSource valueSource = new ValueSource(ValueSource.ValueSourceType.RESOURCE, resource.getName());
-        injectionMappings.put(valueSource, injectionSite);
-    }
-
-    public InjectionSite getInjectionSite(ValueSource source) {
-        return injectionMappings.get(source);
-    }
-
-    public Map<ValueSource, InjectionSite> getInjectionMappings() {
-        return injectionMappings;
     }
 }

@@ -16,8 +16,8 @@
  */
 package org.fabric3.scdl;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A component type associated with an implementation that supports injection.
@@ -38,7 +38,8 @@ public class InjectingComponentType extends AbstractComponentType<ServiceDefinit
 
     /**
      * Add a reference and associate with an injection site.
-     * @param reference the reference to add
+     *
+     * @param reference     the reference to add
      * @param injectionSite the injection site for the reference
      */
     public void add(ReferenceDefinition reference, InjectionSite injectionSite) {
@@ -49,13 +50,45 @@ public class InjectingComponentType extends AbstractComponentType<ServiceDefinit
 
     /**
      * Add a property and associate with an injection site.
-     * @param property the property to add
+     *
+     * @param property      the property to add
      * @param injectionSite the injection site for the property
      */
     public void add(Property<?> property, InjectionSite injectionSite) {
         super.add(property);
         ValueSource valueSource = new ValueSource(ValueSource.ValueSourceType.PROPERTY, property.getName());
         injectionMappings.put(valueSource, injectionSite);
+    }
+
+    /**
+     * Add a resource and associate with an injection site.
+     *
+     * @param resource      the resource to add
+     * @param injectionSite the injection site for the resource
+     */
+    public void add(ResourceDefinition resource, InjectionSite injectionSite) {
+        super.add(resource);
+        ValueSource valueSource = new ValueSource(ValueSource.ValueSourceType.RESOURCE, resource.getName());
+        injectionMappings.put(valueSource, injectionSite);
+    }
+
+    /**
+     * Returns the injection site for a value.
+     *
+     * @param source the value for which the site should be returned
+     * @return in the injection site for the supplied value
+     */
+    public InjectionSite getInjectionSite(ValueSource source) {
+        return injectionMappings.get(source);
+    }
+
+    /**
+     * Returns the map of all injection mappings.
+     *
+     * @return the map of all injection mappings
+     */
+    public Map<ValueSource, InjectionSite> getInjectionMappings() {
+        return injectionMappings;
     }
 
     /**
