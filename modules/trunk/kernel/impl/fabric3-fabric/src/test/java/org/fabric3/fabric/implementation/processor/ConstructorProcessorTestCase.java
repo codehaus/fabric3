@@ -26,7 +26,6 @@ import java.util.Set;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.JavaMappedReference;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Multiplicity;
@@ -156,9 +155,9 @@ public class ConstructorProcessorTestCase extends TestCase {
         assertEquals(Multiplicity.ZERO_N, ref1.getMultiplicity());
         JavaMappedReference ref2 = type.getReferences().get("xyz");
         assertEquals(Multiplicity.ONE_N, ref2.getMultiplicity());
-        JavaMappedProperty prop1 = type.getProperties().get("foo");
+        org.fabric3.scdl.Property<?> prop1 = type.getProperties().get("foo");
         assertTrue(prop1.isMany());
-        JavaMappedProperty prop2 = type.getProperties().get("abc");
+        org.fabric3.scdl.Property<?> prop2 = type.getProperties().get("abc");
         assertTrue(prop2.isMany());
     }
 

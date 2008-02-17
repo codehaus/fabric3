@@ -30,7 +30,6 @@ import org.osoa.sca.annotations.Remotable;
 import org.osoa.sca.annotations.Service;
 
 import org.fabric3.pojo.scdl.ConstructorDefinition;
-import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.JavaMappedReference;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
@@ -54,7 +53,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
         super.setUp();
         DefaultContractProcessor contractProcessor = new DefaultContractProcessor();
         ImplementationProcessorServiceImpl processorService = new ImplementationProcessorServiceImpl(contractProcessor, new DefaultIntrospectionHelper());
-        processor = new HeuristicPojoProcessor(processorService, contractProcessor);
+        processor = new HeuristicPojoProcessor(processorService);
     }
 
     /**
@@ -179,10 +178,10 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
         type.add(ref);
         JavaMappedReference ref2 = new JavaMappedReference("reference2", null, null);
         type.add(ref2);
-        JavaMappedProperty<?> prop1 = new JavaMappedProperty();
+        org.fabric3.scdl.Property<?> prop1 = new org.fabric3.scdl.Property();
         prop1.setName("string1");
         type.add(prop1);
-        JavaMappedProperty<?> prop2 = new JavaMappedProperty();
+        org.fabric3.scdl.Property<?> prop2 = new org.fabric3.scdl.Property();
         prop2.setName("string2");
         type.add(prop2);
         processor.visitEnd(MockService.class, type, null);

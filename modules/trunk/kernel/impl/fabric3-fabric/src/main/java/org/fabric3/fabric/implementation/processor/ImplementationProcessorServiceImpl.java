@@ -33,7 +33,6 @@ import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.introspection.InvalidServiceContractException;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.processor.ProcessingException;
-import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.JavaMappedReference;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ConstructorInjectionSite;
@@ -169,12 +168,12 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
         }
         Class<?> type = helper.getType(constructor, index);
         InjectionSite injectionSite = new ConstructorInjectionSite(constructor, index);
-        JavaMappedProperty<?> property = createDefinition(annotation, name, type);
+        org.fabric3.scdl.Property<?> property = createDefinition(annotation, name, type);
         componentType.add(property, injectionSite);
     }
 
-    private <T> JavaMappedProperty<T> createDefinition(Property annotation, String name, Class<T> type) {
-        JavaMappedProperty<T> property = new JavaMappedProperty<T>();
+    private <T> org.fabric3.scdl.Property<T> createDefinition(Property annotation, String name, Class<T> type) {
+        org.fabric3.scdl.Property<T> property = new org.fabric3.scdl.Property<T>();
         property.setName(name);
         property.setJavaType(type);
         property.setRequired(annotation == null || annotation.required());

@@ -21,14 +21,10 @@ package org.fabric3.fabric.implementation.processor;
 import java.util.Collection;
 import java.util.List;
 
+import junit.framework.TestCase;
 import org.osoa.sca.annotations.Property;
 
-import org.fabric3.fabric.implementation.processor.DuplicatePropertyException;
-import org.fabric3.fabric.implementation.processor.IllegalPropertyException;
-import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.PojoComponentType;
-
-import junit.framework.TestCase;
 
 /**
  * @version $Rev$ $Date$
@@ -45,7 +41,7 @@ public class PropertyProcessorTestCase extends TestCase {
 
     public void testMethodRequired() throws Exception {
         processor.visitMethod(Foo.class.getMethod("setFooRequired", String.class), type, null);
-        JavaMappedProperty prop = type.getProperties().get("fooRequired");
+        org.fabric3.scdl.Property<?> prop = type.getProperties().get("fooRequired");
         assertNotNull(prop);
         assertTrue(prop.isRequired());
     }
@@ -62,7 +58,7 @@ public class PropertyProcessorTestCase extends TestCase {
 
     public void testFieldRequired() throws Exception {
         processor.visitField(Foo.class.getDeclaredField("bazRequired"), type, null);
-        JavaMappedProperty prop = type.getProperties().get("bazRequired");
+        org.fabric3.scdl.Property<?> prop = type.getProperties().get("bazRequired");
         assertNotNull(prop);
         assertTrue(prop.isRequired());
     }
@@ -171,7 +167,7 @@ public class PropertyProcessorTestCase extends TestCase {
 
     public void testMultiplicityCollection() throws Exception {
         processor.visitField(Multiple.class.getDeclaredField("refs1"), type, null);
-        JavaMappedProperty prop = type.getProperties().get("refs1");
+        org.fabric3.scdl.Property<?> prop = type.getProperties().get("refs1");
         assertNotNull(prop);
         assertSame(String.class, prop.getJavaType());
         assertTrue(prop.isMany());
@@ -179,7 +175,7 @@ public class PropertyProcessorTestCase extends TestCase {
 
     public void testMultiplicityArray() throws Exception {
         processor.visitField(Multiple.class.getDeclaredField("refs2"), type, null);
-        JavaMappedProperty prop = type.getProperties().get("refs2");
+        org.fabric3.scdl.Property<?> prop = type.getProperties().get("refs2");
         assertNotNull(prop);
         assertSame(String.class, prop.getJavaType());
         assertTrue(prop.isMany());
@@ -187,7 +183,7 @@ public class PropertyProcessorTestCase extends TestCase {
 
     public void testMultiplicityArrayMethod() throws Exception {
         processor.visitMethod(Multiple.class.getMethod("setRefs3", String[].class), type, null);
-        JavaMappedProperty prop = type.getProperties().get("refs3");
+        org.fabric3.scdl.Property<?> prop = type.getProperties().get("refs3");
         assertNotNull(prop);
         assertSame(String.class, prop.getJavaType());
         assertTrue(prop.isMany());
@@ -195,7 +191,7 @@ public class PropertyProcessorTestCase extends TestCase {
 
     public void testMultiplicityCollectionMethod() throws Exception {
         processor.visitMethod(Multiple.class.getMethod("setRefs4", Collection.class), type, null);
-        JavaMappedProperty prop = type.getProperties().get("refs4");
+        org.fabric3.scdl.Property<?> prop = type.getProperties().get("refs4");
         assertNotNull(prop);
         assertSame(String.class, prop.getJavaType());
         assertTrue(prop.isMany());

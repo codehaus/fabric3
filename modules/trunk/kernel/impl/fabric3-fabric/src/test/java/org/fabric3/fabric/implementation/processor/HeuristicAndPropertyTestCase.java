@@ -22,7 +22,6 @@ import java.lang.reflect.Constructor;
 
 import org.osoa.sca.annotations.Property;
 
-import org.fabric3.pojo.scdl.ConstructorDefinition;
 import org.fabric3.pojo.scdl.PojoComponentType;
 
 import junit.framework.TestCase;
@@ -55,7 +54,7 @@ public class HeuristicAndPropertyTestCase extends TestCase {
         ImplementationProcessorServiceImpl service =
             new ImplementationProcessorServiceImpl(new DefaultContractProcessor(), new DefaultIntrospectionHelper());
         propertyProcessor = new PropertyProcessor();
-        heuristicProcessor = new HeuristicPojoProcessor(service, null);
+        heuristicProcessor = new HeuristicPojoProcessor(service);
     }
 
     public static class Foo {

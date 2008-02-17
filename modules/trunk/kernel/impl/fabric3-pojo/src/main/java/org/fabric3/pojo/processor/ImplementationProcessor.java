@@ -26,12 +26,10 @@ import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.pojo.scdl.PojoComponentType;
 
 /**
- * Implementations process class-level metadata, typically parsing annotations and updating the corresponding
- * <code>ComponentType</code>. A processor may, for example, create a {@link org.fabric3.pojo.scdl.JavaMappedProperty} which is responsible
- * for injecting a complex type on a component implementation instance when it is instantiated.
+ * Implementations process class-level metadata, typically parsing annotations and updating the corresponding <code>ComponentType</code>.
  * <p/>
- * Processors will receive callbacks as the implementation class is walked while evalauting an assembly. It is the
- * responsibility of the parser to determine whether to perform an action during the callback.
+ * Processors will receive callbacks as the implementation class is walked while evalauting an assembly. It is the responsibility of the parser to
+ * determine whether to perform an action during the callback.
  *
  * @version $Rev$ $Date$
  */
@@ -58,9 +56,9 @@ public interface ImplementationProcessor {
      * @throws ProcessingException if an error is encountered while processing metadata
      */
     <T> void visitSuperClass(
-        Class<T> clazz,
-        PojoComponentType type,
-        IntrospectionContext context) throws ProcessingException;
+            Class<T> clazz,
+            PojoComponentType type,
+            IntrospectionContext context) throws ProcessingException;
 
     /**
      * A callback received as the component implementation's public and protected methods are evaluated
@@ -71,14 +69,14 @@ public interface ImplementationProcessor {
      * @throws ProcessingException if an error is encountered while processing metadata
      */
     void visitMethod(
-        Method method,
-        PojoComponentType type,
-        IntrospectionContext context) throws ProcessingException;
+            Method method,
+            PojoComponentType type,
+            IntrospectionContext context) throws ProcessingException;
 
     /**
-     * A callback received as the component implementation's constructor used for instantiation by the runtime is
-     * evaluated. If an implementation contains more than one constructor, the constructor passed to the callback will
-     * be chosen according to the algorithm described in the SCA Java Client and Implementation Model Specification.
+     * A callback received as the component implementation's constructor used for instantiation by the runtime is evaluated. If an implementation
+     * contains more than one constructor, the constructor passed to the callback will be chosen according to the algorithm described in the SCA Java
+     * Client and Implementation Model Specification.
      *
      * @param constructor the constructor used for instantiating component implementation instances
      * @param type        the incomplete component type associated with the implementation class
@@ -86,10 +84,10 @@ public interface ImplementationProcessor {
      * @throws ProcessingException if an error is encountered while processing metadata
      */
     <T> void visitConstructor(
-        Constructor<T> constructor,
-        PojoComponentType type,
-        IntrospectionContext context)
-        throws ProcessingException;
+            Constructor<T> constructor,
+            PojoComponentType type,
+            IntrospectionContext context)
+            throws ProcessingException;
 
     /**
      * A callback received as the component implementation's public and protected fields are evaluated
@@ -100,13 +98,12 @@ public interface ImplementationProcessor {
      * @throws ProcessingException if an error is encountered while processing metadata
      */
     void visitField(
-        Field field,
-        PojoComponentType type,
-        IntrospectionContext context) throws ProcessingException;
+            Field field,
+            PojoComponentType type,
+            IntrospectionContext context) throws ProcessingException;
 
     /**
-     * The final callback received when all other callbacks during evaluation of the component implementation have been
-     * issued
+     * The final callback received when all other callbacks during evaluation of the component implementation have been issued
      *
      * @param clazz   the component implementation class
      * @param type    the incomplete component type associated with the implementation class
@@ -114,8 +111,8 @@ public interface ImplementationProcessor {
      * @throws ProcessingException if an error is encountered while processing metadata
      */
     <T> void visitEnd(
-        Class<T> clazz,
-        PojoComponentType type,
-        IntrospectionContext context) throws ProcessingException;
+            Class<T> clazz,
+            PojoComponentType type,
+            IntrospectionContext context) throws ProcessingException;
 
 }

@@ -80,6 +80,6 @@ public class HeuristicConstructorTestCase extends TestCase {
         super.setUp();
         contractProcessor = new DefaultContractProcessor();
         ImplementationProcessorServiceImpl processorService = new ImplementationProcessorServiceImpl(contractProcessor, new DefaultIntrospectionHelper());
-        processor = new HeuristicPojoProcessor(processorService, contractProcessor);
+        processor = new HeuristicPojoProcessor(processorService);
     }
 }

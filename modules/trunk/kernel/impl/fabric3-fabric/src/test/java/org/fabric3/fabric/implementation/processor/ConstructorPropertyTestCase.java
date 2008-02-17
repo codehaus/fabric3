@@ -23,7 +23,6 @@ import java.util.List;
 
 import org.osoa.sca.annotations.Property;
 
-import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.PojoComponentType;
 
 import junit.framework.TestCase;
@@ -42,7 +41,7 @@ public class ConstructorPropertyTestCase extends TestCase {
         PojoComponentType type = new PojoComponentType(null);
         Constructor<Foo> ctor = Foo.class.getConstructor(String.class);
         processor.visitConstructor(ctor, type, null);
-        JavaMappedProperty<?> property = type.getProperties().get("myProp");
+        org.fabric3.scdl.Property<?> property = type.getProperties().get("myProp");
         assertTrue(property.isRequired());
         assertEquals("myProp", property.getName());
     }

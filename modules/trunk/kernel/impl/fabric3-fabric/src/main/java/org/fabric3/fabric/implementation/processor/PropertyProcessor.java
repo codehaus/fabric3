@@ -28,14 +28,12 @@ import org.osoa.sca.annotations.Property;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.processor.ProcessingException;
-import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.FieldInjectionSite;
-import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.MethodInjectionSite;
 
 /**
- * Processes an {@link @Property} annotation, updating the component type with corresponding {@link org.fabric3.pojo.scdl.JavaMappedProperty}
+ * Processes an {@link @Property} annotation.
  *
  * @version $Rev$ $Date$
  */
@@ -70,14 +68,14 @@ public class PropertyProcessor extends ImplementationProcessorExtension {
             }
         }
 
-        Map<String, JavaMappedProperty<?>> properties = type.getProperties();
+        Map<String, org.fabric3.scdl.Property<?>> properties = type.getProperties();
         if (properties.containsKey(name)) {
             throw new DuplicatePropertyException(name);
         }
 
         Class<?> baseType = getBaseType(javaType, method.getGenericParameterTypes()[0]);
         MethodInjectionSite site = new MethodInjectionSite(method, 0);
-        JavaMappedProperty<?> property = createProperty(name, baseType, site);
+        org.fabric3.scdl.Property<?> property = createProperty(name, baseType);
         if (javaType.isArray() || Collection.class.isAssignableFrom(javaType)) {
             property.setMany(true);
         }
@@ -103,14 +101,14 @@ public class PropertyProcessor extends ImplementationProcessorExtension {
             name = field.getName();
         }
 
-        Map<String, JavaMappedProperty<?>> properties = type.getProperties();
+        Map<String, org.fabric3.scdl.Property<?>> properties = type.getProperties();
         if (properties.containsKey(name)) {
             throw new DuplicatePropertyException(name);
         }
 
         Class<?> baseType = getBaseType(javaType, field.getGenericType());
         FieldInjectionSite site = new FieldInjectionSite(field);
-        JavaMappedProperty<?> property = createProperty(name, baseType, site);
+        org.fabric3.scdl.Property<?> property = createProperty(name, baseType);
         if (javaType.isArray() || Collection.class.isAssignableFrom(javaType)) {
             property.setMany(true);
         }
@@ -119,9 +117,8 @@ public class PropertyProcessor extends ImplementationProcessorExtension {
         type.add(property, site);
     }
 
-    protected <T> JavaMappedProperty<T> createProperty(String name, Class<T> javaType, InjectionSite injectionSite)
-            throws ProcessingException {
-        return new JavaMappedProperty<T>(name, null, javaType, injectionSite);
+    protected <T> org.fabric3.scdl.Property<T> createProperty(String name, Class<T> javaType) throws ProcessingException {
+        return new org.fabric3.scdl.Property<T>(name, null, javaType);
     }
 
     public static String toPropertyName(String name) {

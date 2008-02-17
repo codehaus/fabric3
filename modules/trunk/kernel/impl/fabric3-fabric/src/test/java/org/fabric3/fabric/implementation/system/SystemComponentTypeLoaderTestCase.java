@@ -75,7 +75,7 @@ public class SystemComponentTypeLoaderTestCase extends TestCase {
         registry.registerProcessor(new PropertyProcessor());
         registry.registerProcessor(new ReferenceProcessor(contractProcessor));
         registry.registerProcessor(new ServiceProcessor(service));
-        registry.registerProcessor(new HeuristicPojoProcessor(service, null));
+        registry.registerProcessor(new HeuristicPojoProcessor(service));
         loader = new SystemComponentTypeLoaderImpl(registry);
     }
 

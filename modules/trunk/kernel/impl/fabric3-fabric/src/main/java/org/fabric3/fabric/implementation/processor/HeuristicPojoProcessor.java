@@ -34,7 +34,6 @@ import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Remotable;
 import org.osoa.sca.annotations.Service;
 
-import org.fabric3.introspection.ContractProcessor;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.InvalidServiceContractException;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
@@ -42,20 +41,17 @@ import org.fabric3.pojo.processor.ImplementationProcessorService;
 import static org.fabric3.pojo.processor.JavaIntrospectionHelper.getAllInterfaces;
 import static org.fabric3.pojo.processor.JavaIntrospectionHelper.getAllPublicAndProtectedFields;
 import static org.fabric3.pojo.processor.JavaIntrospectionHelper.getAllUniquePublicProtectedMethods;
-import static org.fabric3.pojo.processor.JavaIntrospectionHelper.getBaseName;
 import static org.fabric3.pojo.processor.JavaIntrospectionHelper.toPropertyName;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.scdl.ConstructorDefinition;
-import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.JavaMappedReference;
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.scdl.ConstructorInjectionSite;
 import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.MethodInjectionSite;
-import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.Signature;
 import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.scdl.Signature;
+import org.fabric3.scdl.Property;
 
 /**
  * Heuristically evaluates an un-annotated Java implementation type to determine services, references, and properties according to the algorithm
@@ -69,12 +65,9 @@ import org.fabric3.scdl.ServiceDefinition;
  */
 public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
     private ImplementationProcessorService implService;
-    private ContractProcessor interfaceIntrospector;
 
-    public HeuristicPojoProcessor(
-            @Reference ImplementationProcessorService service, @Reference ContractProcessor introspector) {
+    public HeuristicPojoProcessor(@Reference ImplementationProcessorService service) {
         this.implService = service;
-        this.interfaceIntrospector = introspector;
     }
 
     public <T> void visitEnd(
@@ -147,7 +140,7 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
                     if (isReferenceType(genericType)) {
                         type.add(createReference(name, site, param), site);
                     } else {
-                        type.add(createProperty(name, site, param), site);
+                        type.add(createProperty(name, param), site);
                     }
                 }
             }
@@ -167,7 +160,7 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
                 if (isReferenceType(param)) {
                     type.add(createReference(name, site, param), site);
                 } else {
-                    type.add(createProperty(name, site, param), site);
+                    type.add(createProperty(name, param), site);
                 }
             }
         }
@@ -178,7 +171,7 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
             if (isReferenceType(paramType)) {
                 type.add(createReference(field.getName(), site, paramType), site);
             } else {
-                type.add(createProperty(field.getName(), site, paramType), site);
+                type.add(createProperty(field.getName(), paramType), site);
             }
         }
     }
@@ -218,114 +211,6 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
         }
 
         implService.processParameters(constructor, type);
-/*
-
-        List<String> paramNames = definition.getInjectionNames();
-        Map<String, JavaMappedProperty<?>> props = type.getProperties();
-        Map<String, JavaMappedReference> refs = type.getReferences();
-        Annotation[][] annotations = constructor.getParameterAnnotations();
-        boolean explict = implService.injectionAnnotationsPresent(annotations);
-        if (explict) {
-            for (int i = 0; i < params.length; i++) {
-                Class param = params[i];
-                implService.processParam(param,
-                                         constructor.getGenericParameterTypes()[i],
-                                         annotations[i],
-                                         new String[0],
-                                         i,
-                                         type,
-                                         paramNames);
-            }
-        } else {
-            if (!implService.areUnique(params)) {
-                throw new AmbiguousConstructorException("Cannot resolve non-unique parameter types, use @Constructor");
-            }
-            boolean empty = props.size() + refs.size() == 0;
-            if (!empty) {
-                try {
-                    calcParamNames(params, props, refs, paramNames);
-                } catch (InvalidServiceContractException e) {
-                    throw new ProcessingException(e);
-                }
-            } else {
-                heuristicParamNames(constructor, params, refs, props, paramNames);
-
-            }
-        }
-*/
-    }
-
-    private void calcParamNames(Class[] params,
-                                Map<String, JavaMappedProperty<?>> props,
-                                Map<String, JavaMappedReference> refs,
-                                List<String> paramNames)
-            throws AmbiguousConstructorException, InvalidServiceContractException {
-        // the constructor param types must unambiguously match defined reference or property types
-        for (Class param : params) {
-            String name = findReferenceOrProperty(param, props, refs);
-            if (name == null) {
-                throw new AmbiguousConstructorException(param.getName());
-            }
-            paramNames.add(name);
-        }
-    }
-
-    private void heuristicParamNames(Constructor ctor,
-                                     Class[] params,
-                                     Map<String, JavaMappedReference> refs,
-                                     Map<String, JavaMappedProperty<?>> props,
-                                     List<String> paramNames)
-            throws ProcessingException {
-        // heuristically determine refs and props from the parameter types
-        for (int i = 0; i < params.length; i++) {
-            Class<?> param = params[i];
-            String name = getBaseName(param).toLowerCase();
-            InjectionSite site = new ConstructorInjectionSite(ctor, i);
-            if (isReferenceType(param)) {
-                refs.put(name, createReference(name, site, param));
-            } else {
-                props.put(name, createProperty(name, site, param));
-            }
-            paramNames.add(name);
-        }
-    }
-
-    /*
-     * Unambiguously finds the reference or property associated with the given type
-     *
-     * @return the name of the reference or property if found, null if not
-     * @throws AmbiguousConstructorException if the constructor parameter cannot be resolved to a property or reference
-     */
-    private String findReferenceOrProperty(
-            Class<?> type,
-            Map<String, JavaMappedProperty<?>> props,
-            Map<String, JavaMappedReference> refs)
-            throws AmbiguousConstructorException, InvalidServiceContractException {
-
-        String name = null;
-        for (JavaMappedProperty<?> property : props.values()) {
-            if (property.getJavaType().equals(type)) {
-                if (name != null) {
-                    throw new AmbiguousConstructorException("Ambiguous property or reference for constructor type",
-                                                            type.getName());
-                }
-                name = property.getName();
-                // do not break since ambiguities must be checked, i.e. more than one prop or ref of the same type
-            }
-        }
-        for (JavaMappedReference reference : refs.values()) {
-            ServiceContract<?> contractType = interfaceIntrospector.introspect(type);
-            ServiceContract<?> refContract = reference.getServiceContract();
-            if (refContract.isAssignableFrom(contractType)) {
-                if (name != null) {
-                    throw new AmbiguousConstructorException("Ambiguous property or reference for constructor type",
-                                                            type.getName());
-                }
-                name = reference.getName();
-                // do not break since ambiguities must be checked, i.e. more than one prop or ref of the same type
-            }
-        }
-        return name;
     }
 
     /*
@@ -419,10 +304,9 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
      * @param member    the injection site the reference maps to
      * @param paramType the property type
      */
-    private <T> JavaMappedProperty<T> createProperty(String name, InjectionSite injectionSite, Class<T> paramType) {
-        JavaMappedProperty<T> property = new JavaMappedProperty<T>();
+    private <T> Property<T> createProperty(String name, Class<T> paramType) {
+        Property<T> property = new Property<T>();
         property.setName(name);
-        property.setMemberSite(injectionSite);
         property.setJavaType(paramType);
         return property;
     }
@@ -443,7 +327,7 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
         List<Method> nonPropRefMethods = new ArrayList<Method>();
         // Map<String, JavaMappedService> services = type.getServices();
         Map<String, JavaMappedReference> references = type.getReferences();
-        Map<String, JavaMappedProperty<?>> properties = type.getProperties();
+        Map<String, Property<?>> properties = type.getProperties();
         // calculate methods that are not properties or references
         for (Method method : methods) {
             String name = toPropertyName(method.getName());
