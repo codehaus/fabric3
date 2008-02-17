@@ -46,7 +46,6 @@ import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.loader.common.IntrospectionContextImpl;
-import org.fabric3.pojo.processor.JavaIntrospectionHelper;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
@@ -237,7 +236,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
         try {
             LogicalComponent<?> logical = createLogicalComponent(name, type, instance);
-            AtomicComponent<I> physical = createPhysicalComponent(name, type, instance);
+            AtomicComponent<I> physical = createPhysicalComponent(name, instance);
             runtime.registerComponent(logical, physical);
         } catch (InvalidServiceContractException e) {
             throw new InitializationException(e);
@@ -248,7 +247,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         }
     }
 
-    protected <S, I extends S> AtomicComponent<I> createPhysicalComponent(String name, Class<S> type, I instance) {
+    protected <I> AtomicComponent<I> createPhysicalComponent(String name, I instance) {
         URI uri = URI.create(domain.getUri() + "/" + name);
         return new SingletonComponent<I>(uri, instance, null);
     }
@@ -270,7 +269,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         String implClassName = instance.getClass().getName();
 
         ServiceContract<?> contract = interfaceProcessorRegistry.introspect(type);
-        String serviceName = JavaIntrospectionHelper.getBaseName(contract.getInterfaceName());
+        String serviceName = contract.getInterfaceName();
         ServiceDefinition service = new ServiceDefinition(serviceName, contract);
 
         PojoComponentType componentType = new PojoComponentType(implClassName);
