@@ -16,15 +16,15 @@
  */
 package org.fabric3.fabric.monitor;
 
-import org.fabric3.pojo.scdl.JavaMappedResource;
 import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.ResourceDefinition;
 
 /**
  * @version $Rev$ $Date$
  */
-public class MonitorResource extends JavaMappedResource {
-    public MonitorResource(String name, InjectionSite site, boolean optional, ServiceContract<?> serviceContract) {
-        super(name, site, optional, serviceContract);
+public class MonitorResource extends ResourceDefinition {
+    public MonitorResource(String name, boolean optional, ServiceContract<?> serviceContract) {
+        super(name, serviceContract, optional);
     }
 }

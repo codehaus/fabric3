@@ -39,8 +39,7 @@ import org.fabric3.introspection.ContractProcessor;
 import org.fabric3.introspection.InvalidServiceContractException;
 
 /**
- * Processes an {@link @Resource} annotation, updating the component type with corresponding {@link
- * org.fabric3.pojo.scdl.JavaMappedResource}
+ * Processes an {@link @Resource} annotation
  *
  * @version $Rev$ $Date$
  */
@@ -105,7 +104,7 @@ public class ResourceProcessor extends ImplementationProcessorExtension {
         
         try {
             ServiceContract<Type> serviceContract = contractProcessor.introspect(type);
-            return new SystemSourcedResource(name, injectionSite, optional, mappedName, serviceContract);
+            return new SystemSourcedResource(name, optional, mappedName, serviceContract);
         }  catch (InvalidServiceContractException e) {
             throw new ProcessingException(e);
         }

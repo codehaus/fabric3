@@ -31,6 +31,7 @@ import org.fabric3.scdl.ValueSource;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.Property;
 import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.ResourceDefinition;
 
 /**
  * A component type specialization for POJO implementations
@@ -40,7 +41,7 @@ import org.fabric3.scdl.ReferenceDefinition;
 public class PojoComponentType extends AbstractComponentType<ServiceDefinition,
         ReferenceDefinition,
         Property<?>,
-        JavaMappedResource> {
+        ResourceDefinition> {
     private String implClass;
     private ConstructorDefinition constructorDefinition;
     private Signature initMethod;
@@ -198,7 +199,7 @@ public class PojoComponentType extends AbstractComponentType<ServiceDefinition,
      * @param resource the resource to add
      * @param injectionSite the injection site for the resource
      */
-    public void add(JavaMappedResource resource, InjectionSite injectionSite) {
+    public void add(ResourceDefinition resource, InjectionSite injectionSite) {
         super.add(resource);
         ValueSource valueSource = new ValueSource(ValueSource.ValueSourceType.RESOURCE, resource.getName());
         injectionMappings.put(valueSource, injectionSite);

@@ -91,7 +91,7 @@ public class MonitorProcessor extends ImplementationProcessorExtension {
     private MonitorResource createResource(String name, Class<?> type, InjectionSite injectionSite) throws ProcessingException {
         try {
             ServiceContract<?> serviceContract = contractProcessor.introspect(type);
-            return new MonitorResource(name, injectionSite, false, serviceContract);
+            return new MonitorResource(name, false, serviceContract);
         } catch (InvalidServiceContractException e) {
             throw new ProcessingException(e);
         }

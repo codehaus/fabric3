@@ -20,23 +20,19 @@ package org.fabric3.resource.model;
 
 import java.lang.reflect.Type;
 
-import org.fabric3.pojo.scdl.JavaMappedResource;
 import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.ResourceDefinition;
 
 /**
  *
  * @version $Revision$ $Date$
  */
-public class SystemSourcedResource extends JavaMappedResource {
+public class SystemSourcedResource extends ResourceDefinition {
     private String mappedName;
 
-    public SystemSourcedResource(String name,
-                                 InjectionSite injectionSite,
-                                 boolean optional, 
-                                 String mappedName, 
-                                 ServiceContract<Type> serviceContract) {
-        super(name, injectionSite, optional, serviceContract);
+    public SystemSourcedResource(String name, boolean optional, String mappedName, ServiceContract<Type> serviceContract) {
+        super(name, serviceContract, optional);
         this.mappedName = mappedName;
     }
     

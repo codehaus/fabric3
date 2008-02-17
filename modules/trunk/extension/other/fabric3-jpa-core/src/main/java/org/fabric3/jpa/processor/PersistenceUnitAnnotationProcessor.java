@@ -101,7 +101,7 @@ public class PersistenceUnitAnnotationProcessor extends ImplementationProcessorE
 
         String name = annotation.name();
         String unitName = annotation.unitName();
-        type.add(new PersistenceUnitResource(name, unitName, injectionSite, factoryServiceContract), injectionSite);
+        type.add(new PersistenceUnitResource(name, unitName, factoryServiceContract), injectionSite);
         
     }
 

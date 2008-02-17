@@ -28,6 +28,7 @@ import org.fabric3.pojo.scdl.PojoComponentType;
 import junit.framework.TestCase;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
+import org.fabric3.scdl.ResourceDefinition;
 
 /**
  * @version $Rev$ $Date$
@@ -45,7 +46,7 @@ public class ConstructorResourceTestCase extends TestCase {
             new PojoComponentType(null);
         Constructor<Foo> ctor = Foo.class.getConstructor(String.class);
         processor.visitConstructor(ctor, type, null);
-        org.fabric3.pojo.scdl.JavaMappedResource resource = type.getResources().get("myResource");
+        ResourceDefinition resource = type.getResources().get("myResource");
         assertFalse(resource.isOptional());
     }
 

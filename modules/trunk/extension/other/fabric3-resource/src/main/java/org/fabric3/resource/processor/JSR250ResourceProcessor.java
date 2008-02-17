@@ -38,8 +38,7 @@ import org.fabric3.introspection.InvalidServiceContractException;
 import org.osoa.sca.annotations.Reference;
 
 /**
- * Processes an {@link @Resource} annotation, updating the component type with corresponding {@link
- * org.fabric3.pojo.scdl.JavaMappedResource}
+ * Processes an {@link @Resource} annotation
  *
  * @version $Rev: 751 $ $Date: 2007-08-16 14:50:14 -0500 (Thu, 16 Aug 2007) $
  */
@@ -131,7 +130,7 @@ public class JSR250ResourceProcessor extends ImplementationProcessorExtension {
         
         try {
             ServiceContract<Type> serviceContract = contractProcessor.introspect(type);
-            return new SystemSourcedResource(name, injectionSite, optional, mappedName, serviceContract);
+            return new SystemSourcedResource(name, optional, mappedName, serviceContract);
         }  catch (InvalidServiceContractException e) {
             throw new ProcessingException(e);
         }
