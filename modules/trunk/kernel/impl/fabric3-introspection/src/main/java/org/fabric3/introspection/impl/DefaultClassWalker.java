@@ -27,11 +27,12 @@ import org.fabric3.scdl.InjectingComponentType;
 import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.AnnotationProcessor;
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.ClassWalker;
 
 /**
  * @version $Rev$ $Date$
  */
-public class DefaultClassWalker<I extends Implementation<? extends InjectingComponentType>> {
+public class DefaultClassWalker<I extends Implementation<? extends InjectingComponentType>> implements ClassWalker<I> {
 
     private final Map<Class<? extends Annotation>, AnnotationProcessor<? extends Annotation, I>> processors;
 

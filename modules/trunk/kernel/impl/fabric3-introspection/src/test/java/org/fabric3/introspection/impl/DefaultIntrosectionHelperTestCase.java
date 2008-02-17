@@ -19,6 +19,7 @@ package org.fabric3.introspection.impl;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Collections;
 
 import junit.framework.TestCase;
 
@@ -28,7 +29,25 @@ import junit.framework.TestCase;
 public class DefaultIntrosectionHelperTestCase extends TestCase {
     private DefaultIntrospectionHelper helper;
 
+    private static interface SuperInterface {
+    }
+
+    private static interface ServiceInterface extends SuperInterface {
+    }
+
+    private static interface SubInterface extends ServiceInterface {
+    }
+
     private static class Base {
+    }
+
+    private static class BaseWithInterface implements ServiceInterface {
+    }
+
+    private static class ExtendsBaseWithInterface extends BaseWithInterface {
+    }
+
+    private static class ExtendsBaseWithSubInterface extends BaseWithInterface implements SubInterface {
     }
 
     private static class ExtendsBase extends Base {
@@ -36,7 +55,7 @@ public class DefaultIntrosectionHelperTestCase extends TestCase {
 
     private static class BaseTypes<T extends Base> {
         public Collection<String> stringCollection;
-        public Map<String,Integer> intMap;
+        public Map<String, Integer> intMap;
 
         public T[] tArray;
         public Collection<T> tCollection;
@@ -77,6 +96,17 @@ public class DefaultIntrosectionHelperTestCase extends TestCase {
         } catch (NoSuchFieldException e) {
             throw new AssertionError(fieldName);
         }
+    }
+
+    public void testImplementedInterfacesWithNoInterfaces() {
+        assertTrue(helper.getImplementedInterfaces(Base.class).isEmpty());
+        assertTrue(helper.getImplementedInterfaces(ExtendsBase.class).isEmpty());
+    }
+
+    public void testImplementedInterfaces() {
+        assertEquals(Collections.singleton(ServiceInterface.class), helper.getImplementedInterfaces(BaseWithInterface.class));
+        assertEquals(Collections.singleton(ServiceInterface.class), helper.getImplementedInterfaces(ExtendsBaseWithInterface.class));
+        assertEquals(Collections.singleton(SubInterface.class), helper.getImplementedInterfaces(ExtendsBaseWithSubInterface.class));
     }
 
     protected void setUp() throws Exception {

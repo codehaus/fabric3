@@ -201,4 +201,19 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
         return false;
     }
 
+    public Set<Class<?>> getImplementedInterfaces(Class<?> type) {
+        Set<Class<?>> interfaces = new HashSet<Class<?>>();
+        while (type != null) {
+            nextInterface: for (Class<?> current : (Class<?>[]) type.getInterfaces()) {
+                for (Class<?> foundAlready : interfaces) {
+                    if (current.isAssignableFrom(foundAlready)) {
+                        continue nextInterface;
+                    }
+                }
+                interfaces.add(current);
+            }
+            type = type.getSuperclass();
+        }
+        return interfaces;
+    }
 }

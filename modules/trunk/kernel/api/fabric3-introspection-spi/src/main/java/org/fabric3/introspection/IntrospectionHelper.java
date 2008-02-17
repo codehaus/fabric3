@@ -21,6 +21,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.lang.annotation.Annotation;
+import java.util.Set;
 
 import org.fabric3.scdl.ValueSource;
 
@@ -155,4 +156,15 @@ public interface IntrospectionHelper {
      * @return the actual type of the property or reference corresponding to the parameter
      */
     Type getBaseType(Type type);
+
+    /**
+     * Returns all interfaces directly implemented by this class or any superclass.
+     *
+     * Class#getInterfaces only returns interfaces directly implemented by the class. This method returns all interfaces including
+     * those implemented by any superclasses. It excludes interfaces that are super-interfaces of those implemented by subclasses.
+     *
+     * @param type the class whose interfaces should be returned
+     * @return the unique interfaces immplemented by that class
+     */
+    Set<Class<?>> getImplementedInterfaces(Class<?> type);
 }
