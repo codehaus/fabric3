@@ -22,6 +22,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.TypeVariable;
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.Map;
@@ -128,16 +129,16 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
             Class<?> clazz = (Class<?>) parameterizedType.getRawType();
             Type[] typeArguments = parameterizedType.getActualTypeArguments();
             if (COLLECTIONS.contains(clazz)) {
-                return typeArguments[0];
+                return getRawType(typeArguments[0]);
             } else if (Map.class.equals(clazz)) {
-                return typeArguments[1];
+                return getRawType(typeArguments[1]);
             } else {
                 return clazz;
             }
 
         } else if (type instanceof GenericArrayType) {
             GenericArrayType arrayType = (GenericArrayType) type;
-            return arrayType.getGenericComponentType();
+            return getRawType(arrayType.getGenericComponentType());
         } else {
             throw new AssertionError("Unknown Type: " + type);
         }
@@ -147,6 +148,10 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
         if (type instanceof ParameterizedType) {
             ParameterizedType parameterizedType = (ParameterizedType) type;
             return getRawType(parameterizedType.getRawType());
+        } else if (type instanceof TypeVariable) {
+            TypeVariable typeVariable = (TypeVariable) type;
+            Type[] bounds = typeVariable.getBounds();
+            return (Class<?>) bounds[0];
         } else {
             return (Class<?>) type;
         }
