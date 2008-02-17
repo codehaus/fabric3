@@ -32,6 +32,7 @@ import org.fabric3.pojo.injection.MultiplicityObjectFactory;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.scdl.Scope;
+import org.fabric3.scdl.ValueSource;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.SingletonObjectFactory;
 import org.fabric3.spi.builder.BuilderException;
@@ -104,10 +105,10 @@ public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaCompone
                                                           referenceFactories);
 
         PojoRequestContext requestContext = new PojoRequestContext();
-        provider.setObjectFactory(REQUEST_CONTEXT_SOURCE, new SingletonObjectFactory<PojoRequestContext>(requestContext));
+        provider.setObjectFactory(ValueSource.REQUEST_CONTEXT, new SingletonObjectFactory<PojoRequestContext>(requestContext));
 
         PojoComponentContext componentContext = new PojoComponentContext(component, requestContext);
-        provider.setObjectFactory(COMPONENT_CONTEXT_SOURCE, new SingletonObjectFactory<PojoComponentContext>(componentContext));
+        provider.setObjectFactory(ValueSource.COMPONENT_CONTEXT, new SingletonObjectFactory<PojoComponentContext>(componentContext));
 
         return component;
 
