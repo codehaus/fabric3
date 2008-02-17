@@ -382,7 +382,6 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/plugin/fabric3-webapp-plugin/fabric3-webapp-plugin.iml" filepath="$PROJECT_DIR$/modules/trunk/plugin/fabric3-webapp-plugin/fabric3-webapp-plugin.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-xapool/fabric3-xapool.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-xapool/fabric3-xapool.iml" />
       <module fileurl="file://$PROJECT_DIR$/parent-pom/trunk/parent-pom.iml" filepath="$PROJECT_DIR$/parent-pom/trunk/parent-pom.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/development/runtime-development/runtime-development.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/development/runtime-development/runtime-development.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/standalone/runtime-standalone/runtime-standalone.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/standalone/runtime-standalone/runtime-standalone.iml" />
       <module fileurl="file://$PROJECT_DIR$/spec/trunk/sca-spec.iml" filepath="$PROJECT_DIR$/spec/trunk/sca-spec.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-async/test-async.iml" filepath="$PROJECT_DIR$/tests/trunk/test-async/test-async.iml" />
