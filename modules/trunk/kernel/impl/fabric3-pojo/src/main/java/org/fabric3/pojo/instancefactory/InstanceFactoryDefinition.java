@@ -25,7 +25,6 @@ import java.util.List;
 import org.fabric3.scdl.InjectionSiteMapping;
 import org.fabric3.scdl.ModelObject;
 import org.fabric3.scdl.Signature;
-import org.fabric3.scdl.ValueSource;
 
 /**
  * Base class for instance factory definitions.
@@ -37,7 +36,6 @@ public class InstanceFactoryDefinition extends ModelObject {
     private Signature constructor;
     private Signature initMethod;
     private Signature destroyMethod;
-    private List<ValueSource> cdiSources = new LinkedList<ValueSource>();
     private List<InjectionSiteMapping> injectionSites = new LinkedList<InjectionSiteMapping>();
 
     /**
@@ -54,24 +52,6 @@ public class InstanceFactoryDefinition extends ModelObject {
      */
     public void setConstructor(Signature constructor) {
         this.constructor = constructor;
-    }
-
-    /**
-     * Returns constructor injection names.
-     *
-     * @return the constructorNames Constructor injection names.
-     */
-    public List<ValueSource> getCdiSources() {
-        return cdiSources;
-    }
-
-    /**
-     * Adds a constructor injection name.
-     *
-     * @param cdiSource Constructor injection name.
-     */
-    public void addCdiSource(ValueSource cdiSource) {
-        cdiSources.add(cdiSource);
     }
 
     /**
