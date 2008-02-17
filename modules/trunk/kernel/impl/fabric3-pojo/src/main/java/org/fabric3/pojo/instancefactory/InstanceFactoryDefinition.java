@@ -19,12 +19,13 @@
 
 package org.fabric3.pojo.instancefactory;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.fabric3.scdl.InjectionSiteMapping;
+import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.ModelObject;
 import org.fabric3.scdl.Signature;
+import org.fabric3.scdl.ValueSource;
 
 /**
  * Base class for instance factory definitions.
@@ -36,10 +37,11 @@ public class InstanceFactoryDefinition extends ModelObject {
     private Signature constructor;
     private Signature initMethod;
     private Signature destroyMethod;
-    private List<InjectionSiteMapping> injectionSites = new LinkedList<InjectionSiteMapping>();
+    private Map<ValueSource, InjectionSite> mappings = new HashMap<ValueSource, InjectionSite>();
 
     /**
      * Returns the signature of the constrctor that should be used.
+     *
      * @return the signature of the constrctor that should be used
      */
     public Signature getConstructor() {
@@ -48,6 +50,7 @@ public class InstanceFactoryDefinition extends ModelObject {
 
     /**
      * Sets the signature of the constrctor that should be used.
+     *
      * @param constructor the signature of the constrctor that should be used
      */
     public void setConstructor(Signature constructor) {
@@ -109,20 +112,20 @@ public class InstanceFactoryDefinition extends ModelObject {
     }
 
     /**
-     * Gets the injection sites.
-     *
-     * @return Injection sites.
+     * Returns the injection sites for all the injectable values.
+     * @return the injection sites for all the injectable values
      */
-    public List<InjectionSiteMapping> getInjectionSites() {
-        return injectionSites;
+    public Map<ValueSource, InjectionSite> getInjectionSites() {
+        return mappings;
     }
 
     /**
      * Adds an injection site.
      *
-     * @param injectionSite site.
+     * @param source the source of the value being injected
+     * @param site   the injection site
      */
-    public void addInjectionSite(InjectionSiteMapping injectionSite) {
-        injectionSites.add(injectionSite);
+    public void addInjectionSite(ValueSource source, InjectionSite site) {
+        mappings.put(source, site);
     }
 }

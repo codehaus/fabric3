@@ -22,7 +22,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 import groovy.lang.GroovyClassLoader;
@@ -38,7 +37,6 @@ import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.reflection.ReflectiveInstanceFactoryProvider;
 import org.fabric3.scdl.ConstructorInjectionSite;
 import org.fabric3.scdl.InjectionSite;
-import org.fabric3.scdl.InjectionSiteMapping;
 import org.fabric3.scdl.ValueSource;
 
 /**
@@ -69,8 +67,7 @@ public class GroovyInstanceFactoryBuilder<T>
         try {
             Class<T> implClass = getImplClass(ifpd, gcl);
             
-            List<InjectionSiteMapping> mappings = ifpd.getInjectionSites();
-            Map<ValueSource, InjectionSite> injectionSites = helper.getInjectionSites(implClass, mappings);
+            Map<ValueSource, InjectionSite> injectionSites = ifpd.getInjectionSites();
 
             Constructor<T> ctr = helper.getConstructor(implClass, ifpd.getConstructor());
             ValueSource[] cdiSources = new ValueSource[ctr.getParameterTypes().length];

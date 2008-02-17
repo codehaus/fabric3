@@ -18,13 +18,8 @@ package org.fabric3.pojo.instancefactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Map;
 
-import org.fabric3.scdl.ValueSource;
 import org.fabric3.scdl.Signature;
-import org.fabric3.scdl.InjectionSiteMapping;
-import org.fabric3.scdl.InjectionSite;
 
 /**
  * @version $Rev$ $Date$
@@ -38,5 +33,4 @@ public interface InstanceFactoryBuildHelper {
     Method getMethod(Class<?> implClass, Signature signature)
             throws NoSuchMethodException, ClassNotFoundException;
 
-    Map<ValueSource, InjectionSite> getInjectionSites(Class implClass, List<InjectionSiteMapping> mappings);
 }

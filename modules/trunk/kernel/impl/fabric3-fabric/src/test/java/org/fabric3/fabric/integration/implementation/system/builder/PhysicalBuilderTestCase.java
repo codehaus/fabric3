@@ -41,14 +41,13 @@ import org.fabric3.fabric.services.instancefactory.DefaultInstanceFactoryBuilder
 import org.fabric3.fabric.services.instancefactory.ReflectiveInstanceFactoryBuilder;
 import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.pojo.PojoWorkContextTunnel;
-import org.fabric3.scdl.InjectionSiteMapping;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
-import org.fabric3.scdl.Scope;
-import org.fabric3.scdl.ValueSource;
 import org.fabric3.scdl.FieldInjectionSite;
+import org.fabric3.scdl.Scope;
 import org.fabric3.scdl.Signature;
+import org.fabric3.scdl.ValueSource;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
@@ -98,10 +97,8 @@ public class PhysicalBuilderTestCase extends TestCase {
         InstanceFactoryDefinition sourceProviderDefinition = new InstanceFactoryDefinition();
         sourceProviderDefinition.setImplementationClass(SourceImpl.class.getName());
         sourceProviderDefinition.setConstructor(new Signature(SourceImpl.class.getConstructor()));
-        InjectionSiteMapping mapping = new InjectionSiteMapping();
-        mapping.setSource(new ValueSource(ValueSource.ValueSourceType.REFERENCE, "target"));
-        mapping.setSite(new FieldInjectionSite(SourceImpl.class.getField("target")));
-        sourceProviderDefinition.addInjectionSite(mapping);
+        sourceProviderDefinition.addInjectionSite(new ValueSource(ValueSource.ValueSourceType.REFERENCE, "target"),
+                                                  new FieldInjectionSite(SourceImpl.class.getField("target")));
 
         SystemComponentDefinition source = new SystemComponentDefinition();
         source.setComponentId(sourceId);
@@ -112,7 +109,7 @@ public class PhysicalBuilderTestCase extends TestCase {
         return source;
     }
 
-    private SystemComponentDefinition createTargetComponentDefinition() throws Exception{
+    private SystemComponentDefinition createTargetComponentDefinition() throws Exception {
         InstanceFactoryDefinition targetProviderDefinition = new InstanceFactoryDefinition();
         targetProviderDefinition.setImplementationClass(TargetImpl.class.getName());
         targetProviderDefinition.setConstructor(new Signature(TargetImpl.class.getConstructor()));
@@ -172,7 +169,8 @@ public class PhysicalBuilderTestCase extends TestCase {
         builder.init();
 
         connector = new ConnectorImpl(null);
-        SystemWireAttacher wireAttacher = new SystemWireAttacher(componentManager, connector, connector, new DefaultTransformerRegistry(), new ClassLoaderRegistryImpl());
+        SystemWireAttacher wireAttacher =
+                new SystemWireAttacher(componentManager, connector, connector, new DefaultTransformerRegistry(), new ClassLoaderRegistryImpl());
         wireAttacher.init();
         DeployerMonitor monitor = EasyMock.createNiceMock(DeployerMonitor.class);
         EasyMock.replay(monitor);

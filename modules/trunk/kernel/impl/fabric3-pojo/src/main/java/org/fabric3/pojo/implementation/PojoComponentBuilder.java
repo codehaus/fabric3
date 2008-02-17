@@ -19,10 +19,8 @@
 package org.fabric3.pojo.implementation;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.lang.annotation.ElementType;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -32,7 +30,6 @@ import org.fabric3.pojo.injection.ListMultiplicityObjectFactory;
 import org.fabric3.pojo.injection.MapMultiplicityObjectFactory;
 import org.fabric3.pojo.injection.MultiplicityObjectFactory;
 import org.fabric3.pojo.injection.SetMultiplicityObjectFactory;
-import org.fabric3.scdl.InjectionSiteMapping;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.scdl.InjectionSite;
@@ -150,11 +147,11 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
     protected Map<String, MultiplicityObjectFactory<?>> createMultiplicityReferenceFactories(InstanceFactoryDefinition providerDefinition) {
 
         Map<String, MultiplicityObjectFactory<?>> referenceFactories = new HashMap<String, MultiplicityObjectFactory<?>>();
-        for (InjectionSiteMapping mapping : providerDefinition.getInjectionSites()) {
-            ValueSource valueSource = mapping.getSource();
-            InjectionSite site = mapping.getSite();
-            if (valueSource.getValueType() == ValueSourceType.REFERENCE) {
-                addMultiplicityFactory(site.getType(), valueSource, referenceFactories);
+        for (Map.Entry<ValueSource, InjectionSite> entry : providerDefinition.getInjectionSites().entrySet()) {
+            ValueSource source = entry.getKey();
+            if (source.getValueType() == ValueSourceType.REFERENCE) {
+                InjectionSite site = entry.getValue();
+                addMultiplicityFactory(site.getType(), source, referenceFactories);
             }
         }
         return referenceFactories;

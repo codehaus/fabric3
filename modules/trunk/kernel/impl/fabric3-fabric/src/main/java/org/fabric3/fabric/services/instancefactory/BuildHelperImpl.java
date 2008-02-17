@@ -17,23 +17,12 @@
 package org.fabric3.fabric.services.instancefactory;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
-import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderException;
-import org.fabric3.scdl.FieldInjectionSite;
-import org.fabric3.scdl.InjectionSite;
-import org.fabric3.scdl.InjectionSiteMapping;
-import org.fabric3.scdl.MethodInjectionSite;
 import org.fabric3.scdl.Signature;
-import org.fabric3.scdl.ValueSource;
-import org.fabric3.scdl.ConstructorInjectionSite;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 
 /**
@@ -64,14 +53,4 @@ public class BuildHelperImpl implements InstanceFactoryBuildHelper {
         return signature == null ? null : signature.getMethod(implClass);
     }
 
-    public Map<ValueSource, InjectionSite> getInjectionSites(Class implClass, List<InjectionSiteMapping> mappings) {
-        Map<ValueSource, InjectionSite> injectionSites = new HashMap<ValueSource, InjectionSite>();
-        for (InjectionSiteMapping mapping : mappings) {
-
-            ValueSource source = mapping.getSource();
-            InjectionSite injectionSite = mapping.getSite();
-            injectionSites.put(source, injectionSite);
-        }
-        return injectionSites;
-    }
 }

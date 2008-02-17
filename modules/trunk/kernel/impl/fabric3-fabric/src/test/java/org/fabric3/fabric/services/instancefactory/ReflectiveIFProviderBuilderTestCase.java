@@ -21,13 +21,10 @@ package org.fabric3.fabric.services.instancefactory;
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
 import java.lang.reflect.Constructor;
-import java.util.List;
-import java.util.ArrayList;
 
 import junit.framework.TestCase;
 
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
-import org.fabric3.scdl.InjectionSiteMapping;
 import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.Signature;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
@@ -69,10 +66,7 @@ public class ReflectiveIFProviderBuilderTestCase extends TestCase {
         ValueSource valueSource = new ValueSource(ValueSourceType.REFERENCE, "xyz");
         Field field = Foo.class.getDeclaredField("xyz");
         InjectionSite injectionSite = new FieldInjectionSite(field);
-        InjectionSiteMapping mapping = new InjectionSiteMapping();
-        mapping.setSite(injectionSite);
-        mapping.setSource(valueSource);
-        definition.addInjectionSite(mapping);
+        definition.addInjectionSite(valueSource, injectionSite);
 
         InstanceFactoryProvider provider = builder.build(definition, cl);
         Class<?> clazz = provider.getMemberType(valueSource);
@@ -88,10 +82,7 @@ public class ReflectiveIFProviderBuilderTestCase extends TestCase {
         ValueSource valueSource = new ValueSource(ValueSourceType.REFERENCE, "abc");
         Method method = Foo.class.getMethod("setAbc", Bar.class);
         InjectionSite injectionSite = new MethodInjectionSite(method, 0);
-        InjectionSiteMapping mapping = new InjectionSiteMapping();
-        mapping.setSite(injectionSite);
-        mapping.setSource(valueSource);
-        definition.addInjectionSite(mapping);
+        definition.addInjectionSite(valueSource, injectionSite);
 
         InstanceFactoryProvider provider = builder.build(definition, cl);
         Class<?> clazz = provider.getMemberType(valueSource);
@@ -109,17 +100,8 @@ public class ReflectiveIFProviderBuilderTestCase extends TestCase {
         definition.setConstructor(new Signature(constructor));
         definition.setInitMethod(new Signature("init"));
         definition.setDestroyMethod(new Signature("destroy"));
-        definition.addInjectionSite(createMapping("a", 0, ValueSourceType.PROPERTY));
-        definition.addInjectionSite(createMapping("b", 1, ValueSourceType.REFERENCE));
-    }
-
-    private InjectionSiteMapping createMapping(String name, int pos, ValueSourceType type) {
-        InjectionSite site = new ConstructorInjectionSite(constructor, pos);
-        ValueSource source = new ValueSource(type, name);
-        InjectionSiteMapping mapping = new InjectionSiteMapping();
-        mapping.setSource(source);
-        mapping.setSite(site);
-        return mapping;
+        definition.addInjectionSite(new ValueSource(ValueSourceType.PROPERTY, "a"), new ConstructorInjectionSite(constructor, 0));
+        definition.addInjectionSite(new ValueSource(ValueSourceType.REFERENCE, "b"), new ConstructorInjectionSite(constructor, 1));
     }
 
     public static class Foo {

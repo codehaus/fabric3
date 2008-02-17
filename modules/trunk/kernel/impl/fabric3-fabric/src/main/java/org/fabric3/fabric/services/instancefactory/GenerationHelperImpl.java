@@ -28,7 +28,6 @@ import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.InjectionSite;
-import org.fabric3.scdl.InjectionSiteMapping;
 import org.fabric3.scdl.Signature;
 import org.fabric3.scdl.ValueSource;
 import static org.fabric3.scdl.ValueSource.ValueSourceType.CONTEXT;
@@ -38,6 +37,8 @@ import org.fabric3.spi.model.instance.LogicalComponent;
  * @version $Rev$ $Date$
  */
 public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
+    private static final ValueSource COMPONENT_CONTEXT = new ValueSource(CONTEXT, "ComponentContext");
+    private static final ValueSource REQUEST_CONTEXT = new ValueSource(CONTEXT, "RequestContext");
 
     public Integer getInitLevel(ComponentDefinition<?> definition, PojoComponentType type) {
         Integer initLevel = definition.getInitLevel();
@@ -60,7 +61,7 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
         for (Map.Entry<ValueSource, InjectionSite> entry : mappings.entrySet()) {
             ValueSource source = entry.getKey();
             InjectionSite site = entry.getValue();
-            addMapping(providerDefinition, source, site);
+            providerDefinition.addInjectionSite(source, site);
         }
         processContextSites(component, providerDefinition);
     }
@@ -73,11 +74,11 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
         PojoComponentType type = implementation.getComponentType();
         InjectionSite componentContextSite = type.getComponentContextMember();
         if (componentContextSite != null) {
-            addMapping(providerDefinition, new ValueSource(CONTEXT, "ComponentContext"), componentContextSite);
+            providerDefinition.addInjectionSite(COMPONENT_CONTEXT, componentContextSite);
         }
         InjectionSite requestContextSite = type.getRequestContextMember();
         if (requestContextSite != null) {
-            addMapping(providerDefinition, new ValueSource(CONTEXT, "RequestContext"), requestContextSite);
+            providerDefinition.addInjectionSite(REQUEST_CONTEXT, requestContextSite);
         }
     }
 
@@ -89,12 +90,5 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
                 physical.setPropertyValue(name, value);
             }
         }
-    }
-
-    private void addMapping(InstanceFactoryDefinition providerDefinition, ValueSource source, InjectionSite injectionSite) {
-        InjectionSiteMapping mapping = new InjectionSiteMapping();
-        mapping.setSource(source);
-        mapping.setSite(injectionSite);
-        providerDefinition.addInjectionSite(mapping);
     }
 }

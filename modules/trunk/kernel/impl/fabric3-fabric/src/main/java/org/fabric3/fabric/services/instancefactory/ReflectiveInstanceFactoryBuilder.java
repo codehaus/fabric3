@@ -18,28 +18,25 @@
  */
 package org.fabric3.fabric.services.instancefactory;
 
+import java.lang.annotation.ElementType;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.lang.annotation.ElementType;
-import java.util.List;
-import java.util.Map;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.scdl.InjectionSiteMapping;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilder;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderException;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.pojo.reflection.ReflectiveInstanceFactoryProvider;
-import org.fabric3.scdl.ValueSource;
-import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.ConstructorInjectionSite;
+import org.fabric3.scdl.InjectionSite;
+import org.fabric3.scdl.ValueSource;
 
 /**
  * Builds a reflection-based instance factory provider.
@@ -71,8 +68,7 @@ public class ReflectiveInstanceFactoryBuilder<T>
             @SuppressWarnings("unchecked")
             Class<T> implClass = (Class<T>) helper.loadClass(cl, ifpd.getImplementationClass());
 
-            List<InjectionSiteMapping> mappings = ifpd.getInjectionSites();
-            Map<ValueSource, InjectionSite> injectionSites = helper.getInjectionSites(implClass, mappings);
+            Map<ValueSource, InjectionSite> injectionSites = ifpd.getInjectionSites();
 
             Constructor<T> ctr = helper.getConstructor(implClass, ifpd.getConstructor());
             ValueSource[] cdiSources = new ValueSource[ctr.getParameterTypes().length];
