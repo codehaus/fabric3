@@ -61,7 +61,6 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
             throws GenerationException {
         ComponentDefinition<SystemImplementation> definition = component.getDefinition();
         SystemImplementation implementation = definition.getImplementation();
-        @SuppressWarnings({"unchecked"})
         PojoComponentType type = implementation.getComponentType();
 
         InstanceFactoryDefinition providerDefinition = new InstanceFactoryDefinition();
