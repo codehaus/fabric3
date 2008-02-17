@@ -33,7 +33,6 @@ import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.introspection.InvalidServiceContractException;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.processor.ProcessingException;
-import org.fabric3.pojo.scdl.JavaMappedReference;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ConstructorInjectionSite;
 import org.fabric3.scdl.InjectionSite;
@@ -41,6 +40,7 @@ import org.fabric3.scdl.Multiplicity;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ValueSource;
 import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.scdl.ReferenceDefinition;
 
 /**
  * The default implementation of an <code>ImplementationProcessorService</code>
@@ -131,7 +131,7 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
         return false;
     }
 
-    public JavaMappedReference createReference(String name, InjectionSite injectionSite, Class<?> paramType)
+    public ReferenceDefinition createReference(String name, InjectionSite injectionSite, Class<?> paramType)
             throws ProcessingException {
         ServiceContract<Type> contract;
         try {
@@ -139,7 +139,7 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
         } catch (InvalidServiceContractException e1) {
             throw new ProcessingException(e1);
         }
-        JavaMappedReference reference = new JavaMappedReference(name, contract, injectionSite);
+        ReferenceDefinition reference = new ReferenceDefinition(name, contract);
         reference.setRequired(false);
         return reference;
     }
@@ -188,17 +188,16 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
         }
         Type type = helper.getGenericType(constructor, index);
         InjectionSite injectionSite = new ConstructorInjectionSite(constructor, index);
-        JavaMappedReference reference = createDefinition(name, annotation == null || annotation.required(), type);
+        ReferenceDefinition reference = createDefinition(name, annotation == null || annotation.required(), type);
         componentType.add(reference, injectionSite);
     }
 
-    private JavaMappedReference createDefinition(String name, boolean required, Type type) throws IntrospectionException {
+    private ReferenceDefinition createDefinition(String name, boolean required, Type type) throws IntrospectionException {
         ServiceContract<Type> contract = contractProcessor.introspect(helper.getBaseType(type));
         Multiplicity multiplicity = multiplicity(required, type);
 
-        JavaMappedReference reference = new JavaMappedReference(name, contract, null);
+        ReferenceDefinition reference = new ReferenceDefinition(name, contract, multiplicity);
         reference.setRequired(required);
-        reference.setMultiplicity(multiplicity);
         return reference;
     }
 

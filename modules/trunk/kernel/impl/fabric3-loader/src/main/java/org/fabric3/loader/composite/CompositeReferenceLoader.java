@@ -30,7 +30,6 @@ import org.fabric3.scdl.CompositeReference;
 import org.fabric3.scdl.ModelObject;
 import org.fabric3.scdl.Multiplicity;
 import org.fabric3.scdl.OperationDefinition;
-import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.loader.InvalidReferenceException;
 import org.fabric3.spi.loader.InvalidValueException;

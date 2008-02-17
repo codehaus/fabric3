@@ -23,10 +23,10 @@ import java.lang.reflect.Constructor;
 import java.util.List;
 
 import org.fabric3.introspection.InvalidServiceContractException;
-import org.fabric3.pojo.scdl.JavaMappedReference;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.scdl.ReferenceDefinition;
 
 /**
  * Provides utility methods for Java implementation processing
@@ -40,7 +40,7 @@ public interface ImplementationProcessorService {
      */
     ServiceDefinition createService(Class<?> interfaze) throws InvalidServiceContractException;
 
-    JavaMappedReference createReference(String name, InjectionSite injectionSite, Class<?> paramType) throws ProcessingException;
+    ReferenceDefinition createReference(String name, InjectionSite injectionSite, Class<?> paramType) throws ProcessingException;
 
     /**
      * Determines if all the members of a collection have unique types

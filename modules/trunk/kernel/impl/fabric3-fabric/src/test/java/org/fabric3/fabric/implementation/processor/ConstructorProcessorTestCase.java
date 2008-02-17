@@ -26,12 +26,12 @@ import java.util.Set;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.pojo.scdl.JavaMappedReference;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Multiplicity;
 import org.fabric3.scdl.Signature;
 import org.fabric3.scdl.ValueSource;
 import org.fabric3.scdl.ConstructorInjectionSite;
+import org.fabric3.scdl.ReferenceDefinition;
 
 import junit.framework.TestCase;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
@@ -149,11 +149,11 @@ public class ConstructorProcessorTestCase extends TestCase {
         Constructor<Multiple> ctor1 = Multiple.class.getConstructor(Collection.class, String[].class, List.class, Set.class, String[].class);
         processor.visitConstructor(ctor1, type, null);
 
-        JavaMappedReference ref0 = type.getReferences().get("Multiple[0]");
+        ReferenceDefinition ref0 = type.getReferences().get("Multiple[0]");
         assertEquals(Multiplicity.ONE_N, ref0.getMultiplicity());
-        JavaMappedReference ref1 = type.getReferences().get("bar");
+        ReferenceDefinition ref1 = type.getReferences().get("bar");
         assertEquals(Multiplicity.ZERO_N, ref1.getMultiplicity());
-        JavaMappedReference ref2 = type.getReferences().get("xyz");
+        ReferenceDefinition ref2 = type.getReferences().get("xyz");
         assertEquals(Multiplicity.ONE_N, ref2.getMultiplicity());
         org.fabric3.scdl.Property<?> prop1 = type.getProperties().get("foo");
         assertTrue(prop1.isMany());

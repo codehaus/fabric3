@@ -23,12 +23,12 @@ import java.util.List;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.pojo.scdl.JavaMappedReference;
 import org.fabric3.pojo.scdl.PojoComponentType;
 
 import junit.framework.TestCase;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
+import org.fabric3.scdl.ReferenceDefinition;
 
 /**
  * @version $Rev$ $Date$
@@ -40,7 +40,7 @@ public class ConstructorReferenceTestCase extends TestCase {
         PojoComponentType type = new PojoComponentType(null);
         Constructor<Foo> ctor = Foo.class.getConstructor(String.class);
         processor.visitConstructor(ctor, type, null);
-        JavaMappedReference reference = type.getReferences().get("myRef");
+        ReferenceDefinition reference = type.getReferences().get("myRef");
         assertTrue(reference.isRequired());
         assertEquals("myRef", reference.getName());
     }

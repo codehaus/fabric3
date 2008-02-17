@@ -29,20 +29,19 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import static org.fabric3.pojo.processor.JavaIntrospectionHelper.toPropertyName;
 import org.fabric3.pojo.processor.ProcessingException;
-import org.fabric3.pojo.scdl.JavaMappedReference;
 import org.fabric3.scdl.InjectionSite;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Multiplicity;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.MethodInjectionSite;
+import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.ContractProcessor;
 import org.fabric3.introspection.InvalidServiceContractException;
 
 /**
- * Processes an {@link @Reference} annotation, updating the component type with corresponding {@link
- * org.fabric3.pojo.scdl.JavaMappedReference}
+ * Processes an {@link @Reference} annotation
  *
  * @version $Rev$ $Date$
  */
@@ -86,7 +85,7 @@ public class ReferenceProcessor extends ImplementationProcessorExtension {
             throw new ProcessingException(e);
         }
         InjectionSite injectionSite = new MethodInjectionSite(method, 0);
-        JavaMappedReference reference = new JavaMappedReference(name, contract, injectionSite);
+        ReferenceDefinition reference = new ReferenceDefinition(name, contract);
         reference.setRequired(required);
         if (rawType.isArray() || Collection.class.isAssignableFrom(rawType) || Map.class.isAssignableFrom(rawType)) {
             if (required) {
@@ -132,7 +131,7 @@ public class ReferenceProcessor extends ImplementationProcessorExtension {
             throw new ProcessingException(e);
         }
         InjectionSite injectionSite = new FieldInjectionSite(field);
-        JavaMappedReference reference = new JavaMappedReference(name, contract, injectionSite);
+        ReferenceDefinition reference = new ReferenceDefinition(name, contract);
         reference.setRequired(required);
         if (rawType.isArray() || Collection.class.isAssignableFrom(rawType)) {
             if (required) {

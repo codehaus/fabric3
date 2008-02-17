@@ -44,7 +44,6 @@ import static org.fabric3.pojo.processor.JavaIntrospectionHelper.getAllUniquePub
 import static org.fabric3.pojo.processor.JavaIntrospectionHelper.toPropertyName;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.scdl.ConstructorDefinition;
-import org.fabric3.pojo.scdl.JavaMappedReference;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.InjectionSite;
@@ -52,6 +51,7 @@ import org.fabric3.scdl.MethodInjectionSite;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.Signature;
 import org.fabric3.scdl.Property;
+import org.fabric3.scdl.ReferenceDefinition;
 
 /**
  * Heuristically evaluates an un-annotated Java implementation type to determine services, references, and properties according to the algorithm
@@ -292,7 +292,7 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
      * @param injectionSite    the injection site the reference maps to
      * @param paramType the service interface of the reference
      */
-    private JavaMappedReference createReference(String name, InjectionSite injectionSite, Class<?> paramType)
+    private ReferenceDefinition createReference(String name, InjectionSite injectionSite, Class<?> paramType)
             throws ProcessingException {
         return implService.createReference(name, injectionSite, paramType);
     }
@@ -326,7 +326,7 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
             Set<Method> methods) throws ProcessingException {
         List<Method> nonPropRefMethods = new ArrayList<Method>();
         // Map<String, JavaMappedService> services = type.getServices();
-        Map<String, JavaMappedReference> references = type.getReferences();
+        Map<String, ReferenceDefinition> references = type.getReferences();
         Map<String, Property<?>> properties = type.getProperties();
         // calculate methods that are not properties or references
         for (Method method : methods) {

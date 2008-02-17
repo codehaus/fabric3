@@ -46,7 +46,6 @@ import javax.xml.stream.XMLInputFactory;
 
 import org.fabric3.pojo.processor.IntrospectionRegistry;
 import org.fabric3.pojo.processor.ProcessingException;
-import org.fabric3.pojo.scdl.JavaMappedReference;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
@@ -57,6 +56,7 @@ import org.fabric3.spi.loader.MissingResourceException;
 import org.fabric3.spring.SpringComponentType;
 import org.fabric3.spring.SpringImplementation;
 import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.scdl.ReferenceDefinition;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -220,7 +220,7 @@ public class SpringImplementationLoader implements StAXElementLoader<SpringImple
                 // Don't need @Reference in spring bean to get a reference
                 // <property ... ref="..."> should trigger a reference creation
                 springComponentType.getReferences().putAll(pojoComponentType.getReferences());
-                for (Map.Entry<String, JavaMappedReference> entry : pojoComponentType.getReferences().entrySet()) {
+                for (Map.Entry<String, ReferenceDefinition> entry : pojoComponentType.getReferences().entrySet()) {
                     for (Field f : implClass.getDeclaredFields()) {
                         if (f.getName().equals(entry.getKey())) {
                             implementation.addRefNameToFieldType(entry.getKey(), f.getType());

@@ -30,12 +30,12 @@ import org.osoa.sca.annotations.Remotable;
 import org.osoa.sca.annotations.Service;
 
 import org.fabric3.pojo.scdl.ConstructorDefinition;
-import org.fabric3.pojo.scdl.JavaMappedReference;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.Signature;
 import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 
@@ -90,8 +90,8 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
         assertEquals(1, type.getProperties().size());
         assertEquals(ComplexProperty.class, type.getProperties().get("property").getJavaType());
         assertEquals(1, type.getReferences().size());
-        Map<String, JavaMappedReference> references = type.getReferences();
-        JavaMappedReference mappedReference = references.get("reference");
+        Map<String, ReferenceDefinition> references = type.getReferences();
+        ReferenceDefinition mappedReference = references.get("reference");
         ServiceContract refContract = mappedReference.getServiceContract();
         assertEquals(Ref.class.getName(), refContract.getQualifiedInterfaceName());
     }
@@ -174,9 +174,9 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
     public void testExcludedPropertyAndReference() throws Exception {
         PojoComponentType type =
                 new PojoComponentType(null);
-        JavaMappedReference ref = new JavaMappedReference("reference", null, null);
+        ReferenceDefinition ref = new ReferenceDefinition("reference", null, null);
         type.add(ref);
-        JavaMappedReference ref2 = new JavaMappedReference("reference2", null, null);
+        ReferenceDefinition ref2 = new ReferenceDefinition("reference2", null, null);
         type.add(ref2);
         org.fabric3.scdl.Property<?> prop1 = new org.fabric3.scdl.Property();
         prop1.setName("string1");
