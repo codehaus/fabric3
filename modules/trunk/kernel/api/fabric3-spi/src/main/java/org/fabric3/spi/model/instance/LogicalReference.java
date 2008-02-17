@@ -20,6 +20,7 @@ package org.fabric3.spi.model.instance;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -62,21 +63,32 @@ public class LogicalReference extends Bindable {
      * @return
      */
     public List<URI> getTargetUris() {
-        return getComposite().getWireTargets(this);
+        
+        List<URI> targetUris = new LinkedList<URI>();
+        for (LogicalWire logicalWire : getComposite().getWires(this)) {
+            targetUris.add(logicalWire.getTargetUri());
+        }
+        return targetUris;
+        
     }
 
     /**
      * @param uri
      */
     public void addTargetUri(URI uri) {
-        getComposite().addWireTarget(this, uri);
+        getComposite().addWire(this, new LogicalWire(getComposite(), this, uri));
     }
 
     /**
-     * @param targets
+     * @param targetUris
      */
-    public void overrideTargets(List<URI> targets) {
-        getComposite().overrideWireTargets(this, targets);
+    public void overrideTargets(List<URI> targetUris) {
+        
+        List<LogicalWire> logicalWires = new LinkedList<LogicalWire>();
+        for (URI targetUri : targetUris) {
+            logicalWires.add(new LogicalWire(getComposite(), this, targetUri));
+        }
+        getComposite().overrideWires(this, logicalWires);
     }
 
     /**

@@ -17,7 +17,7 @@ import org.fabric3.scdl.CompositeImplementation;
  */
 public class LogicalCompositeComponent extends LogicalComponent<CompositeImplementation> {
     
-    private final Map<LogicalReference, List<URI>> wires = new HashMap<LogicalReference, List<URI>>();
+    private final Map<LogicalReference, List<LogicalWire>> wires = new HashMap<LogicalReference, List<LogicalWire>>();
     private final Map<URI, LogicalComponent<?>> components = new HashMap<URI, LogicalComponent<?>>();
 
     /**
@@ -40,14 +40,14 @@ public class LogicalCompositeComponent extends LogicalComponent<CompositeImpleme
      * 
      * @param wire Wire to be added to this composite component.
      */
-    public final void addWireTarget(LogicalReference logicalReference, URI target) {
+    public final void addWire(LogicalReference logicalReference, LogicalWire logicalWire) {
         
-        List<URI> targets = wires.get(logicalReference);
-        if (targets == null) {
-            targets = new LinkedList<URI>();
-            wires.put(logicalReference, targets);
+        List<LogicalWire> logicalWires = wires.get(logicalReference);
+        if (logicalWires == null) {
+            logicalWires = new LinkedList<LogicalWire>();
+            wires.put(logicalReference, logicalWires);
         }
-        targets.add(target);
+        logicalWires.add(logicalWire);
         
     }
     
@@ -56,8 +56,8 @@ public class LogicalCompositeComponent extends LogicalComponent<CompositeImpleme
      * 
      * @param wire Wire to be added to this composite component.
      */
-    public final void overrideWireTargets(LogicalReference logicalReference, List<URI> targets) {
-        wires.put(logicalReference, targets);
+    public final void overrideWires(LogicalReference logicalReference, List<LogicalWire> logicalWires) {
+        wires.put(logicalReference, logicalWires);
     }
     
     /**
@@ -66,14 +66,14 @@ public class LogicalCompositeComponent extends LogicalComponent<CompositeImpleme
      * @param logicalReference Logical reference that sources the wire.
      * @return Resolved targets for the reference.
      */
-    public final List<URI> getWireTargets(LogicalReference logicalReference) {
+    public final List<LogicalWire> getWires(LogicalReference logicalReference) {
         
-        List<URI> targets = wires.get(logicalReference);
-        if (targets == null) {
-            targets = new LinkedList<URI>();
-            wires.put(logicalReference, targets);
+        List<LogicalWire> logicalWires = wires.get(logicalReference);
+        if (logicalWires == null) {
+            logicalWires = new LinkedList<LogicalWire>();
+            wires.put(logicalReference, logicalWires);
         }
-        return targets;
+        return logicalWires;
         
     }
 
