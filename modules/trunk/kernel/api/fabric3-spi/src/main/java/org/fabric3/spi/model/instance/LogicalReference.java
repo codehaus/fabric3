@@ -62,14 +62,8 @@ public class LogicalReference extends Bindable {
     /**
      * @return
      */
-    public List<URI> getTargetUris() {
-        
-        List<URI> targetUris = new LinkedList<URI>();
-        for (LogicalWire logicalWire : getComposite().getWires(this)) {
-            targetUris.add(logicalWire.getTargetUri());
-        }
-        return targetUris;
-        
+    public List<LogicalWire> getWires() {
+        return getComposite().getWires(this);
     }
 
     /**

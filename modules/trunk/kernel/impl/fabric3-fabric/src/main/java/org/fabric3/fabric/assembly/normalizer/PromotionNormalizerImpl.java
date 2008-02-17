@@ -9,6 +9,7 @@ import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
+import org.fabric3.spi.model.instance.LogicalWire;
 import org.fabric3.spi.util.UriHelper;
 
 /**
@@ -90,7 +91,9 @@ public class PromotionNormalizerImpl implements PromotionNormalizer {
             List<URI> targets = new ArrayList<URI>();
             for (LogicalReference promoted : references) {
                 bindings.addAll(promoted.getBindings());
-                targets.addAll(promoted.getTargetUris());
+                for (LogicalWire logicalWire : promoted.getWires()) {
+                    targets.add(logicalWire.getTargetUri());
+                }
             }
             if (!bindings.isEmpty()) {
                 reference.overrideBindings(bindings);

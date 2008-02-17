@@ -54,7 +54,7 @@ public class DefaultWireResolverTestCase extends TestCase {
         LogicalCompositeComponent composite = createWiredComposite(domain, Foo.class, Foo.class);
         resolver.resolve(composite);
         LogicalComponent<?> source = composite.getComponent(SOURCE_URI);
-        assertEquals(TARGET_URI, source.getReference("ref").getTargetUris().get(0));
+        assertEquals(TARGET_URI, source.getReference("ref").getWires().get(0).getTargetUri());
     }
 
     public void testAutowireAtomicToAtomicRequiresSuperInterface() throws Exception {
@@ -62,7 +62,7 @@ public class DefaultWireResolverTestCase extends TestCase {
         resolver.resolve(composite);
         LogicalComponent<?> source = composite.getComponent(SOURCE_URI);
         resolver.resolve(composite);
-        assertEquals(TARGET_URI, source.getReference("ref").getTargetUris().get(0));
+        assertEquals(TARGET_URI, source.getReference("ref").getWires().get(0).getTargetUri());
     }
 
     public void testAutowireAtomicToAtomicRequiresSubInterface() throws Exception {
@@ -92,7 +92,7 @@ public class DefaultWireResolverTestCase extends TestCase {
         parent.getDefinition().getImplementation().getComponentType().add(composite.getDefinition());
         resolver.resolve(parent);
         LogicalComponent<?> source = composite.getComponent(SOURCE_URI);
-        assertEquals(TARGET_URI, source.getReference("ref").getTargetUris().get(0));
+        assertEquals(TARGET_URI, source.getReference("ref").getWires().get(0).getTargetUri());
     }
 
     public void testAutowireIncludeInComposite() throws Exception {

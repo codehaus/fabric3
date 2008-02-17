@@ -47,6 +47,7 @@ import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
+import org.fabric3.spi.model.instance.LogicalWire;
 import org.fabric3.spi.model.physical.PhysicalChangeSet;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
@@ -200,10 +201,14 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
             contexts.put(runtimeId, context);
         }
 
-        for (LogicalReference entry : component.getReferences()) {
+        for (LogicalReference logicalReference : component.getReferences()) {
 
-            if (entry.getBindings().isEmpty()) {
-                for (URI uri : entry.getTargetUris()) {
+            if (logicalReference.getBindings().isEmpty()) {
+                for (LogicalWire logicalWire : logicalReference.getWires()) {
+                    if (logicalWire.isProvisioned()) {
+                        continue;
+                    }
+                    URI uri = logicalWire.getTargetUri();
                     LogicalComponent<?> target = logicalComponentManager.getComponent(uri);
                     String serviceName = uri.getFragment();
                     LogicalService targetService = target.getService(serviceName);
@@ -215,15 +220,16 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
                         target = composite.getComponent(promotedComponent);
                         targetService = target.getService(promoteUri.getFragment());
                     }
-                    LogicalReference reference = component.getReference(entry.getUri().getFragment());
+                    LogicalReference reference = component.getReference(logicalReference.getUri().getFragment());
 
                     physicalWireGenerator.generateUnboundWire(component, reference, targetService, target, context);
+                    logicalWire.setProvisioned(true);
 
                 }
             } else {
                 // TODO this should be extensible and moved out
-                LogicalBinding<?> logicalBinding = entry.getBindings().get(0);
-                physicalWireGenerator.generateBoundReferenceWire(component, entry, logicalBinding, context);
+                LogicalBinding<?> logicalBinding = logicalReference.getBindings().get(0);
+                physicalWireGenerator.generateBoundReferenceWire(component, logicalReference, logicalBinding, context);
             }
 
         }

@@ -136,7 +136,7 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
                 // if the reference is not required and is not configured, do not add an injection site
                 // TODO: we should revisit the way this and ctors are handled above
                 LogicalReference logicalReference = component.getReference(reference.getName());
-                if (logicalReference == null || (logicalReference.getBindings().isEmpty() && logicalReference.getTargetUris().isEmpty())) {
+                if (logicalReference == null || (logicalReference.getBindings().isEmpty() && logicalReference.getWires().isEmpty())) {
                     continue;
                 }
             }
