@@ -30,7 +30,6 @@ import org.fabric3.pojo.scdl.ConstructorDefinition;
 import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.JavaMappedReference;
 import org.fabric3.pojo.scdl.JavaMappedResource;
-import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.scdl.InjectionSite;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
@@ -43,6 +42,7 @@ import org.fabric3.scdl.ValueSource;
 import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.MethodInjectionSite;
 import org.fabric3.scdl.ConstructorInjectionSite;
+import org.fabric3.scdl.ServiceDefinition;
 import static org.fabric3.scdl.ValueSource.ValueSourceType.CONTEXT;
 import static org.fabric3.scdl.ValueSource.ValueSourceType.PROPERTY;
 import static org.fabric3.scdl.ValueSource.ValueSourceType.REFERENCE;
@@ -90,7 +90,7 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
     private void processConstructorSites(PojoComponentType type, InstanceFactoryDefinition providerDefinition) {
         Map<String, JavaMappedReference> references = type.getReferences();
         Map<String, JavaMappedProperty<?>> properties = type.getProperties();
-        Map<String, JavaMappedService> services = type.getServices();
+        Map<String, ServiceDefinition> services = type.getServices();
 
         // process constructor injectors
         ConstructorDefinition ctorDef = type.getConstructorDefinition();
@@ -107,7 +107,7 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
                 providerDefinition.addCdiSource(source);
                 continue;
             }
-            JavaMappedService service = services.get(name);
+            ServiceDefinition service = services.get(name);
             if (service != null) {
                 // SPEC The SCA spec does not specifically allow this yet -  submit an enhnacement request
                 ValueSource source = new ValueSource(CALLBACK, name);

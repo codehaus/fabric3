@@ -35,13 +35,13 @@ import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.JavaMappedReference;
-import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ConstructorInjectionSite;
 import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.Multiplicity;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ValueSource;
+import org.fabric3.scdl.ServiceDefinition;
 
 /**
  * The default implementation of an <code>ImplementationProcessorService</code>
@@ -58,9 +58,9 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
         this.helper = helper;
     }
 
-    public JavaMappedService createService(Class<?> interfaze) throws InvalidServiceContractException {
+    public ServiceDefinition createService(Class<?> interfaze) throws InvalidServiceContractException {
         ServiceContract<?> contract = contractProcessor.introspect(interfaze);
-        return new JavaMappedService(interfaze.getSimpleName(), contract);
+        return new ServiceDefinition(interfaze.getSimpleName(), contract);
     }
 
     public boolean areUnique(Class[] collection) {

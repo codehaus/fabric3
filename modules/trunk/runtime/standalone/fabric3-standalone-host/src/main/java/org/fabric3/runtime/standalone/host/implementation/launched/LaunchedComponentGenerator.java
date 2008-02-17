@@ -29,12 +29,12 @@ import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.pojo.scdl.ConstructorDefinition;
 import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.JavaMappedReference;
-import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.scdl.InjectionSite;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Property;
 import org.fabric3.scdl.ValueSource;
+import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
@@ -131,7 +131,7 @@ public class LaunchedComponentGenerator implements ComponentGenerator<LogicalCom
                                          InstanceFactoryDefinition providerDefinition) {
         Map<String, JavaMappedReference> references = type.getReferences();
         Map<String, JavaMappedProperty<?>> properties = type.getProperties();
-        Map<String, JavaMappedService> services = type.getServices();
+        Map<String, ServiceDefinition> services = type.getServices();
 
         // process constructor injectors
         ConstructorDefinition ctorDef = type.getConstructorDefinition();
@@ -148,7 +148,7 @@ public class LaunchedComponentGenerator implements ComponentGenerator<LogicalCom
                 providerDefinition.addCdiSource(source);
                 continue;
             }
-            JavaMappedService service = services.get(name);
+            ServiceDefinition service = services.get(name);
             if (service != null) {
                 // SPEC The SCA spec does not specifically allow this yet -  submit an enhnacement request
                 ValueSource source = new ValueSource(ValueSource.ValueSourceType.CALLBACK, name);

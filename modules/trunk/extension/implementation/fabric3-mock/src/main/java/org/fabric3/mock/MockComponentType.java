@@ -16,15 +16,15 @@
  */
 package org.fabric3.mock;
 
-import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.Property;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ResourceDefinition;
+import org.fabric3.scdl.ServiceDefinition;
 
 /**
  * @version $Revision$ $Date$
  */
-public class MockComponentType extends AbstractComponentType<JavaMappedService, ReferenceDefinition, Property<?>, ResourceDefinition> {
+public class MockComponentType extends AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property<?>, ResourceDefinition> {
 
 }

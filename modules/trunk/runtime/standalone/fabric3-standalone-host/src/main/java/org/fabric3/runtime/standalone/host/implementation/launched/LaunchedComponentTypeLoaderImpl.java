@@ -27,13 +27,13 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.pojo.processor.IntrospectionRegistry;
 import org.fabric3.pojo.processor.Introspector;
-import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.Scope;
 import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.MissingResourceException;
@@ -70,7 +70,7 @@ public class LaunchedComponentTypeLoaderImpl implements LaunchedComponentTypeLoa
         introspector.introspect(implClass, componentType, introspectionContext);
 
         ServiceContract launchedContract = generateContract(implClass);
-        JavaMappedService testService = new JavaMappedService(SERVICE_NAME, launchedContract);
+        ServiceDefinition testService = new ServiceDefinition(SERVICE_NAME, launchedContract);
         componentType.add(testService);
         return componentType;
     }

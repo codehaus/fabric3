@@ -47,12 +47,12 @@ import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.loader.common.IntrospectionContextImpl;
 import org.fabric3.pojo.processor.JavaIntrospectionHelper;
-import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.assembly.Assembly;
 import org.fabric3.spi.component.AtomicComponent;
@@ -271,7 +271,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
         ServiceContract<?> contract = interfaceProcessorRegistry.introspect(type);
         String serviceName = JavaIntrospectionHelper.getBaseName(contract.getInterfaceName());
-        JavaMappedService service = new JavaMappedService(serviceName, contract);
+        ServiceDefinition service = new ServiceDefinition(serviceName, contract);
 
         PojoComponentType componentType = new PojoComponentType(implClassName);
         componentType.add(service);

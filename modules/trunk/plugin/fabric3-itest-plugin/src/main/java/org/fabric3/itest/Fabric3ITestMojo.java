@@ -72,12 +72,12 @@ import org.fabric3.junit.ImplementationJUnit;
 import org.fabric3.maven.runtime.MavenCoordinator;
 import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
 import org.fabric3.monitor.MonitorFactory;
-import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Operation;
+import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.deployer.CompositeClassLoader;
 
 /**
@@ -644,8 +644,8 @@ public class Fabric3ITestMojo extends AbstractMojo {
                                        ComponentDefinition definition) throws MojoExecutionException {
         ImplementationJUnit impl = (ImplementationJUnit) definition.getImplementation();
         PojoComponentType componentType = impl.getComponentType();
-        Map services = componentType.getServices();
-        JavaMappedService testService = (JavaMappedService) services.get("testService");
+        Map<String,ServiceDefinition> services = componentType.getServices();
+        ServiceDefinition testService = services.get("testService");
         if (testService == null) {
             throw new MojoExecutionException("No testService defined on component: " + definition.getName());
         }

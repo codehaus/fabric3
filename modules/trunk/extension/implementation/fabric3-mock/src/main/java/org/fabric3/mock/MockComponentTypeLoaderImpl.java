@@ -25,9 +25,9 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.introspection.ContractProcessor;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.InvalidServiceContractException;
-import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.scdl.Scope;
 import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.loader.LoaderException;
 
 /**
@@ -35,13 +35,13 @@ import org.fabric3.spi.loader.LoaderException;
  */
 public class MockComponentTypeLoaderImpl implements MockComponentTypeLoader {
     private final ContractProcessor contractProcessor;
-    private final JavaMappedService controlService;
+    private final ServiceDefinition controlService;
 
     public MockComponentTypeLoaderImpl(@Reference ContractProcessor contractProcessor) {
         this.contractProcessor = contractProcessor;
         try {
             ServiceContract<Type> controlServiceContract = contractProcessor.introspect(IMocksControl.class);
-            controlService = new JavaMappedService("mockControl", controlServiceContract);
+            controlService = new ServiceDefinition("mockControl", controlServiceContract);
         } catch (InvalidServiceContractException e) {
             throw new AssertionError(e);
         }
@@ -69,7 +69,7 @@ public class MockComponentTypeLoaderImpl implements MockComponentTypeLoader {
                 if (index != -1) {
                     name = name.substring(index + 1);
                 }
-                componentType.add(new JavaMappedService(name, serviceContract));
+                componentType.add(new ServiceDefinition(name, serviceContract));
             }
             componentType.add(controlService);
             componentType.setImplementationScope(Scope.STATELESS);

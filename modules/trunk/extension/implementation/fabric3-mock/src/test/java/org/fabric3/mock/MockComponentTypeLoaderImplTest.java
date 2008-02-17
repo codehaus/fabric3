@@ -20,9 +20,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.easymock.EasyMock;
-import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
+import org.fabric3.scdl.ServiceDefinition;
 
 import junit.framework.TestCase;
 
@@ -47,11 +47,11 @@ public class MockComponentTypeLoaderImplTest extends TestCase {
         MockComponentType componentType = componentTypeLoader.load(mockedInterfaces, context);
         
         assertNotNull(componentType);
-        java.util.Map<String, JavaMappedService> services = componentType.getServices();
+        java.util.Map<String, ServiceDefinition> services = componentType.getServices();
         
         assertEquals(3, services.size());
         
-        JavaMappedService service = services.get("service0");
+        ServiceDefinition service = services.get("service0");
         assertNotNull(service);
         assertEquals("Foo", service.getName());
         assertEquals("org.fabric3.mock.Foo", service.getServiceContract().getQualifiedInterfaceName());

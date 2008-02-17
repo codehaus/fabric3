@@ -30,11 +30,11 @@ import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import static org.fabric3.pojo.processor.JavaIntrospectionHelper.getAllInterfaces;
 import org.fabric3.pojo.processor.ProcessingException;
-import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.scdl.ServiceDefinition;
 
 /**
- * Processes an {@link org.osoa.sca.annotations.Service} annotation and updates the component type with corresponding {@link JavaMappedService}s. Also
+ * Processes an {@link org.osoa.sca.annotations.Service} annotation and updates the component type with corresponding {@link ServiceDefinition}s. Also
  * processes related {@link org.osoa.sca.annotations.Callback} annotations.
  *
  * @version $Rev$ $Date$
@@ -66,7 +66,7 @@ public class ServiceProcessor extends ImplementationProcessorExtension {
                 Set<Class> interfaces = getAllInterfaces(clazz);
                 for (Class<?> interfaze : interfaces) {
                     if (interfaze.isAnnotationPresent(Remotable.class) || interfaze.isAnnotationPresent(Callback.class)) {
-                        JavaMappedService service;
+                        ServiceDefinition service;
                         try {
                             service = implService.createService(interfaze);
                         } catch (InvalidServiceContractException e) {
@@ -92,7 +92,7 @@ public class ServiceProcessor extends ImplementationProcessorExtension {
             if (!interfaze.isInterface()) {
                 throw new InvalidServiceType("Service must be an interface", interfaze.getName());
             }
-            JavaMappedService service;
+            ServiceDefinition service;
             try {
                 service = implService.createService(interfaze);
             } catch (InvalidServiceContractException e) {

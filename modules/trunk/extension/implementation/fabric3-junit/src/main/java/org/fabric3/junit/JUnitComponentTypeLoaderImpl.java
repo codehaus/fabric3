@@ -32,12 +32,12 @@ import org.fabric3.scdl.Signature;
 import org.fabric3.pojo.processor.IntrospectionRegistry;
 import org.fabric3.pojo.processor.Introspector;
 import org.fabric3.pojo.processor.ProcessingException;
-import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.Scope;
 import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.MissingResourceException;
@@ -81,7 +81,7 @@ public class JUnitComponentTypeLoaderImpl implements JUnitComponentTypeLoader {
             componentType.setDestroyMethod(getCallback(implClass, "tearDown"));
         }
         ServiceContract testContract = generateTestContract(implClass);
-        JavaMappedService testService = new JavaMappedService(TEST_SERVICE_NAME, testContract);
+        ServiceDefinition testService = new ServiceDefinition(TEST_SERVICE_NAME, testContract);
         componentType.add(testService);
         return componentType;
     }

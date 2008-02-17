@@ -21,22 +21,22 @@ package org.fabric3.spring;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.Property;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ResourceDefinition;
+import org.fabric3.scdl.ServiceDefinition;
 
 /**
  * A component type specialization for Spring implementations
  *
  * @version $$Rev$$ $$Date$$
  */
-public class SpringComponentType extends AbstractComponentType<JavaMappedService, ReferenceDefinition, Property<?>, ResourceDefinition> {
+public class SpringComponentType extends AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property<?>, ResourceDefinition> {
 
     // override super class's object since we need to change introspected
     // serviceName to declared serviceName, which is equal to beanId
-    private final Map<String, JavaMappedService> services = new HashMap<String, JavaMappedService>();
+    private final Map<String, ServiceDefinition> services = new HashMap<String, ServiceDefinition>();
 
     /**
      * Returns a live Map of the services provided by the implementation.
@@ -44,7 +44,7 @@ public class SpringComponentType extends AbstractComponentType<JavaMappedService
      * @return a live Map of the services provided by the implementation
      */
     @Override
-    public Map<String, JavaMappedService> getServices() {
+    public Map<String, ServiceDefinition> getServices() {
         return services;
     }
 
@@ -53,7 +53,7 @@ public class SpringComponentType extends AbstractComponentType<JavaMappedService
      *
      * @param service a service provided by the implementation
      */
-    public void add(String serviceName, JavaMappedService service) {
+    public void add(String serviceName, ServiceDefinition service) {
         services.put(serviceName, service);
     }
 

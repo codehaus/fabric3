@@ -18,7 +18,6 @@
  */
 package org.fabric3.fabric.implementation.processor;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -49,7 +48,6 @@ import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.scdl.ConstructorDefinition;
 import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.JavaMappedReference;
-import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ConstructorInjectionSite;
 import org.fabric3.scdl.FieldInjectionSite;
@@ -57,6 +55,7 @@ import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.MethodInjectionSite;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.Signature;
+import org.fabric3.scdl.ServiceDefinition;
 
 /**
  * Heuristically evaluates an un-annotated Java implementation type to determine services, references, and properties according to the algorithm
@@ -82,14 +81,14 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
             Class<T> clazz,
             PojoComponentType type,
             IntrospectionContext context) throws ProcessingException {
-        Map<String, JavaMappedService> services = type.getServices();
+        Map<String, ServiceDefinition> services = type.getServices();
         if (services.isEmpty()) {
             // heuristically determine the service
             // TODO finish algorithm
             Set<Class> interfaces = getAllInterfaces(clazz);
             if (interfaces.size() == 0) {
                 // class is the interface
-                JavaMappedService service;
+                ServiceDefinition service;
                 try {
                     service = implService.createService(clazz);
                 } catch (InvalidServiceContractException e) {
@@ -97,7 +96,7 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
                 }
                 type.getServices().put(service.getName(), service);
             } else if (interfaces.size() == 1) {
-                JavaMappedService service;
+                ServiceDefinition service;
                 try {
                     service = implService.createService(interfaces.iterator().next());
                 } catch (InvalidServiceContractException e) {
@@ -127,7 +126,7 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
     }
 
     private <T> void calcPropRefs(Set<Method> methods,
-                                  Map<String, JavaMappedService> services,
+                                  Map<String, ServiceDefinition> services,
                                   PojoComponentType type,
                                   Class<T> clazz) throws ProcessingException {
         // heuristically determine the properties references
@@ -362,8 +361,8 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
     /*
      * Returns true if the given operation is defined in the collection of service interfaces
      */
-    private boolean isInServiceInterface(Method operation, Map<String, JavaMappedService> services) {
-        for (JavaMappedService service : services.values()) {
+    private boolean isInServiceInterface(Method operation, Map<String, ServiceDefinition> services) {
+        for (ServiceDefinition service : services.values()) {
             String interfaze = service.getServiceContract().getQualifiedInterfaceName();
             try {
                 // Class<?> clazz = Class.forName(interfaze);
@@ -459,7 +458,7 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
         }
         for (Class interfaze : interfaces) {
             if (analyzeInterface(interfaze, nonPropRefMethods)) {
-                JavaMappedService service;
+                ServiceDefinition service;
                 try {
                     service = implService.createService(interfaze);
                 } catch (InvalidServiceContractException e) {

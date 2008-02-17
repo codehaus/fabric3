@@ -26,9 +26,9 @@ import org.osoa.sca.annotations.Service;
 import org.fabric3.introspection.ContractProcessor;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
-import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.ServiceDefinition;
 
 /**
  * @version $Rev$ $Date$
@@ -40,7 +40,7 @@ public class ServiceProcessorTestCase extends TestCase {
     public void testMultipleInterfaces() throws Exception {
         processor.visitClass(FooMultiple.class, type, null);
         assertEquals(2, type.getServices().size());
-        JavaMappedService service = type.getServices().get(Baz.class.getSimpleName());
+        ServiceDefinition service = type.getServices().get(Baz.class.getSimpleName());
         ServiceContract contract = service.getServiceContract();
         assertEquals(Baz.class.getName(), contract.getQualifiedInterfaceName());
         assertNotNull(type.getServices().get(Bar.class.getSimpleName()));
@@ -68,7 +68,7 @@ public class ServiceProcessorTestCase extends TestCase {
     public void testRemotableNoService() throws Exception {
         processor.visitClass(FooRemotableNoService.class, type, null);
         assertEquals(1, type.getServices().size());
-        JavaMappedService service = type.getServices().get(BazRemotable.class.getSimpleName());
+        ServiceDefinition service = type.getServices().get(BazRemotable.class.getSimpleName());
         ServiceContract contract = service.getServiceContract();
         assertEquals(BazRemotable.class.getName(), contract.getQualifiedInterfaceName());
     }

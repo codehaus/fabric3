@@ -28,13 +28,14 @@ import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.Signature;
 import org.fabric3.scdl.ValueSource;
+import org.fabric3.scdl.ServiceDefinition;
 
 /**
  * A component type specialization for POJO implementations
  *
  * @version $$Rev$$ $$Date$$
  */
-public class PojoComponentType extends AbstractComponentType<JavaMappedService,
+public class PojoComponentType extends AbstractComponentType<ServiceDefinition,
         JavaMappedReference,
         JavaMappedProperty<?>,
         JavaMappedResource> {

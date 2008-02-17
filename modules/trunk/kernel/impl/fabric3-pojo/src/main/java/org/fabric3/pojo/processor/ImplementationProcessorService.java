@@ -24,9 +24,9 @@ import java.util.List;
 
 import org.fabric3.introspection.InvalidServiceContractException;
 import org.fabric3.pojo.scdl.JavaMappedReference;
-import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.InjectionSite;
+import org.fabric3.scdl.ServiceDefinition;
 
 /**
  * Provides utility methods for Java implementation processing
@@ -38,7 +38,7 @@ public interface ImplementationProcessorService {
     /**
      * Introspects the given interface to produce a mapped service
      */
-    JavaMappedService createService(Class<?> interfaze) throws InvalidServiceContractException;
+    ServiceDefinition createService(Class<?> interfaze) throws InvalidServiceContractException;
 
     JavaMappedReference createReference(String name, InjectionSite injectionSite, Class<?> paramType) throws ProcessingException;
 

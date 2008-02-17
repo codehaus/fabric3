@@ -47,7 +47,6 @@ import javax.xml.stream.XMLInputFactory;
 import org.fabric3.pojo.processor.IntrospectionRegistry;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.scdl.JavaMappedReference;
-import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
@@ -57,6 +56,7 @@ import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.loader.MissingResourceException;
 import org.fabric3.spring.SpringComponentType;
 import org.fabric3.spring.SpringImplementation;
+import org.fabric3.scdl.ServiceDefinition;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -227,7 +227,7 @@ public class SpringImplementationLoader implements StAXElementLoader<SpringImple
                         }
                     }
                 }
-                for (JavaMappedService javaMapppdService : pojoComponentType.getServices().values()) {
+                for (ServiceDefinition javaMapppdService : pojoComponentType.getServices().values()) {
                     implementation.addServiceNameToBeanId(javaMapppdService.getName(), beanElement.getId());
                 }
             } catch (MissingResourceException e) {

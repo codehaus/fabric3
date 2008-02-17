@@ -32,11 +32,11 @@ import org.osoa.sca.annotations.Service;
 import org.fabric3.pojo.scdl.ConstructorDefinition;
 import org.fabric3.pojo.scdl.JavaMappedProperty;
 import org.fabric3.pojo.scdl.JavaMappedReference;
-import org.fabric3.pojo.scdl.JavaMappedService;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.Signature;
+import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 
@@ -66,8 +66,8 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
         type.setConstructorDefinition(new ConstructorDefinition(new Signature(ctor)));
         processor.visitEnd(SingleInterfaceImpl.class, type, null);
         assertEquals(1, type.getServices().size());
-        Map<String, JavaMappedService> services = type.getServices();
-        JavaMappedService mappedService = services.get(PropertyInterface.class.getSimpleName());
+        Map<String, ServiceDefinition> services = type.getServices();
+        ServiceDefinition mappedService = services.get(PropertyInterface.class.getSimpleName());
         ServiceContract contract = mappedService.getServiceContract();
         assertEquals(PropertyInterface.class.getName(), contract.getQualifiedInterfaceName());
         assertTrue(type.getProperties().isEmpty());
@@ -84,8 +84,8 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
         type.setConstructorDefinition(new ConstructorDefinition(new Signature(ctor)));
         processor.visitEnd(SingleInterfaceWithPropertyReferenceImpl.class, type, null);
         assertEquals(1, type.getServices().size());
-        Map<String, JavaMappedService> services = type.getServices();
-        JavaMappedService mappedService = services.get(Interface1.class.getSimpleName());
+        Map<String, ServiceDefinition> services = type.getServices();
+        ServiceDefinition mappedService = services.get(Interface1.class.getSimpleName());
         ServiceContract<?> contract = mappedService.getServiceContract();
         assertEquals(Interface1.class.getName(), contract.getQualifiedInterfaceName());
         assertEquals(1, type.getProperties().size());
