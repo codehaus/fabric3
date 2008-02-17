@@ -18,6 +18,7 @@ package org.fabric3.introspection.impl;
 
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.Map;
 
 import junit.framework.TestCase;
 
@@ -35,9 +36,11 @@ public class DefaultIntrosectionHelperTestCase extends TestCase {
 
     private static class BaseTypes<T extends Base> {
         public Collection<String> stringCollection;
+        public Map<String,Integer> intMap;
 
         public T[] tArray;
         public Collection<T> tCollection;
+        public Map<String, T> tMap;
     }
 
     private static class BoundTypes extends BaseTypes<ExtendsBase> {
@@ -53,9 +56,11 @@ public class DefaultIntrosectionHelperTestCase extends TestCase {
         assertEquals(String.class, helper.getBaseType(String[].class));
 
         assertEquals(String.class, helper.getBaseType(getType(BaseTypes.class, "stringCollection")));
+        assertEquals(Integer.class, helper.getBaseType(getType(BaseTypes.class, "intMap")));
 
         assertEquals(Base.class, helper.getBaseType(getType(BaseTypes.class, "tArray")));
         assertEquals(Base.class, helper.getBaseType(getType(BaseTypes.class, "tCollection")));
+        assertEquals(Base.class, helper.getBaseType(getType(BaseTypes.class, "tMap")));
     }
 
     public void testBoundTypes() {
