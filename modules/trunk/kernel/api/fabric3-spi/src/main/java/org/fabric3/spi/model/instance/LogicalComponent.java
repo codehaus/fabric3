@@ -52,6 +52,7 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
     private URI runtimeId;
     private boolean active;
     private Autowire autowire;
+    private boolean provisioned;
 
     /**
      * @param uri        URI of the component.
@@ -298,6 +299,24 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
      */
     public void setPolicySets(Set<QName> policySets) {
         definition.setPolicySets(policySets);
+    }
+
+    /**
+     * Checks whether the wire has been provisioned.
+     * 
+     * @return True if the wire has been provisioned.
+     */
+    public boolean isProvisioned() {
+        return provisioned;
+    }
+
+    /**
+     * Marks thw wire as provisioned/unprovisioned.
+     * 
+     * @param provisioned True if the wire has been provisioned.
+     */
+    public void setProvisioned(boolean provisioned) {
+        this.provisioned = provisioned;
     }
 
 }

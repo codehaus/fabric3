@@ -24,6 +24,7 @@ import java.net.URI;
 
 import org.fabric3.fabric.assembly.allocator.Allocator;
 import org.fabric3.fabric.assembly.allocator.AllocationException;
+import org.fabric3.fabric.assembly.resolver.WireResolver;
 import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
 import org.fabric3.fabric.model.logical.LogicalModelGenerator;
 import org.fabric3.fabric.model.physical.PhysicalModelGenerator;
@@ -52,9 +53,10 @@ public class DistributedAssemblyImpl extends AbstractAssembly implements Distrib
                                    @Reference PhysicalModelGenerator physicalModelGenerator,
                                    @Reference LogicalModelGenerator logicalModelGenerator,
                                    @Reference(name="logicalComponentManager") LogicalComponentManager logicalComponentManager,
-                                   @Reference PhysicalWireGenerator wireGenerator) {
+                                   @Reference PhysicalWireGenerator wireGenerator,
+                                   @Reference WireResolver wireResolver) {
         super(allocator, routingService, metaDataStore, physicalModelGenerator, logicalModelGenerator,
-              logicalComponentManager, wireGenerator);
+              logicalComponentManager, wireGenerator, wireResolver);
     }
 
     public void initialize() throws AssemblyException {

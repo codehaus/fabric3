@@ -21,6 +21,7 @@ package org.fabric3.fabric.assembly;
 import static org.osoa.sca.Constants.SCA_NS;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,8 @@ import javax.xml.namespace.QName;
 
 import org.fabric3.fabric.assembly.allocator.AllocationException;
 import org.fabric3.fabric.assembly.allocator.Allocator;
+import org.fabric3.fabric.assembly.resolver.ResolutionException;
+import org.fabric3.fabric.assembly.resolver.WireResolver;
 import org.fabric3.fabric.generator.DefaultGeneratorContext;
 import org.fabric3.fabric.model.logical.LogicalModelGenerator;
 import org.fabric3.fabric.model.physical.PhysicalModelGenerator;
@@ -47,6 +50,7 @@ import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
+import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalChangeSet;
 import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
@@ -71,6 +75,7 @@ public abstract class AbstractAssembly implements Assembly {
     protected final MetaDataStore metadataStore;
     protected final LogicalComponentManager logicalComponentManager;
     protected final PhysicalWireGenerator wireGenerator;
+    protected final WireResolver wireResolver;
 
     public AbstractAssembly(Allocator allocator,
                             RoutingService routingService,
@@ -78,7 +83,8 @@ public abstract class AbstractAssembly implements Assembly {
                             PhysicalModelGenerator physicalModelGenerator,
                             LogicalModelGenerator logicalModelGenerator,
                             LogicalComponentManager logicalComponentManager,
-                            PhysicalWireGenerator wireGenerator) {
+                            PhysicalWireGenerator wireGenerator,
+                            WireResolver wireResolver) {
         this.allocator = allocator;
         this.routingService = routingService; 
         this.metadataStore = metadataStore;
@@ -86,6 +92,7 @@ public abstract class AbstractAssembly implements Assembly {
         this.logicalModelGenerator = logicalModelGenerator;
         this.logicalComponentManager = logicalComponentManager;
         this.wireGenerator = wireGenerator;
+        this.wireResolver = wireResolver;
     }
 
     public void initialize() throws AssemblyException {
@@ -111,11 +118,15 @@ public abstract class AbstractAssembly implements Assembly {
     public void includeInDomain(Composite composite) throws ActivateException {
         
         LogicalCompositeComponent domain = logicalComponentManager.getDomain();
-        List<LogicalComponent<?>> components = logicalModelGenerator.include(domain, composite);
+        
+        Collection<LogicalComponent<?>> existingComponents = new ArrayList<LogicalComponent<?>>();
+        existingComponents.addAll(domain.getComponents());
+        
+        List<LogicalComponent<?>> newComponents = logicalModelGenerator.include(domain, composite);
 
         // Allocate the components to runtime nodes
         try {
-            for (LogicalComponent<?> component : components) {
+            for (LogicalComponent<?> component : newComponents) {
                 allocator.allocate(component, false);
             }
         } catch (AllocationException e) {
@@ -123,8 +134,24 @@ public abstract class AbstractAssembly implements Assembly {
         }
 
         // generate and provision the new components
-        Map<URI, GeneratorContext> contexts = physicalModelGenerator.generate(components);
+        Map<URI, GeneratorContext> contexts = physicalModelGenerator.generate(newComponents);
         physicalModelGenerator.provision(contexts);
+        
+        // re-evaluate and provision references on existing components
+        try {
+            for (LogicalComponent<?> logicalComponent : existingComponents) {
+                if (logicalComponent instanceof LogicalCompositeComponent) {
+                    continue;
+                }
+                wireResolver.resolve(logicalComponent);
+                for (LogicalReference logicalReference : logicalComponent.getReferences()) {
+                    contexts = physicalModelGenerator.generate(logicalReference.getWires(), logicalComponent);
+                    physicalModelGenerator.provision(contexts);
+                }
+            }
+        } catch (ResolutionException e) {
+            throw new ActivateException(e);
+        }
         
         try {
             // record the operation

@@ -81,10 +81,10 @@ public class DefaultPolicyResolver implements PolicyResolver {
      * @throws PolicyResolutionException If unable to resolve any policies.
      */
     public PolicyResult resolvePolicies(ServiceContract<?> serviceContract,
-                                            LogicalBinding<?> sourceBinding, 
-                                            LogicalBinding<?> targetBinding, 
-                                            LogicalComponent<?> source, 
-                                            LogicalComponent<?> target) throws PolicyResolutionException {
+                                        LogicalBinding<?> sourceBinding, 
+                                        LogicalBinding<?> targetBinding, 
+                                        LogicalComponent<?> source, 
+                                        LogicalComponent<?> target) throws PolicyResolutionException {
         
         PolicyResultImpl policyResult = new PolicyResultImpl();
             

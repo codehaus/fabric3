@@ -19,10 +19,12 @@ package org.fabric3.fabric.model.physical;
 import java.net.URI;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 
 import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalWire;
 
 /**
  * Interface that abstracts the concerns of generating physical model 
@@ -53,5 +55,13 @@ public interface PhysicalModelGenerator {
      * @throws ActivateException If unable to provision changesets.
      */
     void provision(Map<URI, GeneratorContext> contexts) throws ActivateException;
+
+    /**
+     * Generate the change sets for the wires.
+     * 
+     * @param wires Wires for which change sets need to be created.
+     * @return Physical changeset for the wires.
+     */
+    Map<URI, GeneratorContext> generate(Set<LogicalWire> logicalWires, LogicalComponent<?> logicalComponent) throws ActivateException;
 
 }

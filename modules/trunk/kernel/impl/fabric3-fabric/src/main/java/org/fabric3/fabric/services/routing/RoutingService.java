@@ -19,10 +19,9 @@
 package org.fabric3.fabric.services.routing;
 
 import java.net.URI;
-import java.util.Set;
 
-import org.fabric3.spi.model.physical.PhysicalChangeSet;
 import org.fabric3.spi.command.CommandSet;
+import org.fabric3.spi.model.physical.PhysicalChangeSet;
 
 /**
  * Implementations route physical change sets to a runtime node.

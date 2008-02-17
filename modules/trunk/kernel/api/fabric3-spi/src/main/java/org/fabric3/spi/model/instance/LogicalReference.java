@@ -20,7 +20,7 @@ package org.fabric3.spi.model.instance;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -35,7 +35,7 @@ import org.osoa.sca.Constants;
  * @version $Rev$ $Date$
  */
 public class LogicalReference extends Bindable {
-    
+
     private static final QName TYPE = new QName(Constants.SCA_NS, "reference");
     
     private final ReferenceDefinition definition;
@@ -62,7 +62,7 @@ public class LogicalReference extends Bindable {
     /**
      * @return
      */
-    public List<LogicalWire> getWires() {
+    public Set<LogicalWire> getWires() {
         return getComposite().getWires(this);
     }
 
@@ -78,7 +78,7 @@ public class LogicalReference extends Bindable {
      */
     public void overrideTargets(List<URI> targetUris) {
         
-        List<LogicalWire> logicalWires = new LinkedList<LogicalWire>();
+        Set<LogicalWire> logicalWires = new LinkedHashSet<LogicalWire>();
         for (URI targetUri : targetUris) {
             logicalWires.add(new LogicalWire(getComposite(), this, targetUri));
         }
@@ -125,6 +125,27 @@ public class LogicalReference extends Bindable {
      */
     public void setPolicySets(Set<QName> policySets) {
         definition.setPolicySets(policySets);
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        
+        if (this == obj) {
+            return true;
+        }
+        
+        if ((obj == null) || (obj.getClass() != this.getClass())) {
+            return false;
+        }
+        
+        LogicalReference test = (LogicalReference) obj;
+        return getUri().equals(test.getUri());
+        
+    }
+
+    @Override
+    public int hashCode() {
+        return getUri().hashCode();
     }
     
     private LogicalCompositeComponent getComposite() {

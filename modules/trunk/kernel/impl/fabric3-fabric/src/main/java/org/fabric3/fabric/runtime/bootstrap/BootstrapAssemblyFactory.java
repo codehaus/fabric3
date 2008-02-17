@@ -159,7 +159,8 @@ public class BootstrapAssemblyFactory {
                                                            physicalModelGenerator,
                                                            logicalModelGenerator,
                                                            logicalComponentManager,
-                                                           wireGenerator);
+                                                           wireGenerator,
+                                                           resolver);
         try {
             runtimeAssembly.initialize();
         } catch (AssemblyException e) {

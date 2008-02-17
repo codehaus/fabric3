@@ -4,9 +4,9 @@ import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.CompositeImplementation;
@@ -17,7 +17,7 @@ import org.fabric3.scdl.CompositeImplementation;
  */
 public class LogicalCompositeComponent extends LogicalComponent<CompositeImplementation> {
     
-    private final Map<LogicalReference, List<LogicalWire>> wires = new HashMap<LogicalReference, List<LogicalWire>>();
+    private final Map<LogicalReference, Set<LogicalWire>> wires = new HashMap<LogicalReference, Set<LogicalWire>>();
     private final Map<URI, LogicalComponent<?>> components = new HashMap<URI, LogicalComponent<?>>();
 
     /**
@@ -42,9 +42,9 @@ public class LogicalCompositeComponent extends LogicalComponent<CompositeImpleme
      */
     public final void addWire(LogicalReference logicalReference, LogicalWire logicalWire) {
         
-        List<LogicalWire> logicalWires = wires.get(logicalReference);
+        Set<LogicalWire> logicalWires = wires.get(logicalReference);
         if (logicalWires == null) {
-            logicalWires = new LinkedList<LogicalWire>();
+            logicalWires = new LinkedHashSet<LogicalWire>();
             wires.put(logicalReference, logicalWires);
         }
         logicalWires.add(logicalWire);
@@ -56,7 +56,7 @@ public class LogicalCompositeComponent extends LogicalComponent<CompositeImpleme
      * 
      * @param wire Wire to be added to this composite component.
      */
-    public final void overrideWires(LogicalReference logicalReference, List<LogicalWire> logicalWires) {
+    public final void overrideWires(LogicalReference logicalReference, Set<LogicalWire> logicalWires) {
         wires.put(logicalReference, logicalWires);
     }
     
@@ -66,11 +66,11 @@ public class LogicalCompositeComponent extends LogicalComponent<CompositeImpleme
      * @param logicalReference Logical reference that sources the wire.
      * @return Resolved targets for the reference.
      */
-    public final List<LogicalWire> getWires(LogicalReference logicalReference) {
+    public final Set<LogicalWire> getWires(LogicalReference logicalReference) {
         
-        List<LogicalWire> logicalWires = wires.get(logicalReference);
+        Set<LogicalWire> logicalWires = wires.get(logicalReference);
         if (logicalWires == null) {
-            logicalWires = new LinkedList<LogicalWire>();
+            logicalWires = new LinkedHashSet<LogicalWire>();
             wires.put(logicalReference, logicalWires);
         }
         return logicalWires;

@@ -21,9 +21,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
+import java.util.Set;
 
 import org.fabric3.fabric.assembly.resolver.ResolutionException;
 import org.fabric3.fabric.command.InitializeComponentCommand;
@@ -52,6 +50,8 @@ import org.fabric3.spi.model.physical.PhysicalChangeSet;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
 import org.fabric3.spi.util.UriHelper;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Default implementation of the physical model generator.
@@ -109,6 +109,25 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
 
         return contexts;
 
+    }
+
+    public Map<URI, GeneratorContext> generate(Set<LogicalWire> logicalWires, LogicalComponent<?> logicalComponent) throws ActivateException {
+
+        Map<URI, GeneratorContext> contexts = new HashMap<URI, GeneratorContext>();
+        
+        URI runtimeId = logicalComponent.getRuntimeId();
+        PhysicalChangeSet changeSet = new PhysicalChangeSet();
+        CommandSet commandSet = new CommandSet();
+        GeneratorContext context = new DefaultGeneratorContext(changeSet, commandSet);
+        contexts.put(runtimeId, context);
+
+        try {
+            generateUnboundReferenceWires(logicalComponent, context, logicalWires, true);
+        } catch (GenerationException e) {
+            throw new ActivateException(e);
+        }
+
+        return contexts;
     }
 
     public void provision(Map<URI, GeneratorContext> contexts) throws ActivateException {
@@ -201,39 +220,25 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
             contexts.put(runtimeId, context);
         }
 
-        for (LogicalReference logicalReference : component.getReferences()) {
+        generateReferenceWires(component, context);
 
-            if (logicalReference.getBindings().isEmpty()) {
-                for (LogicalWire logicalWire : logicalReference.getWires()) {
-                    if (logicalWire.isProvisioned()) {
-                        continue;
-                    }
-                    URI uri = logicalWire.getTargetUri();
-                    LogicalComponent<?> target = logicalComponentManager.getComponent(uri);
-                    String serviceName = uri.getFragment();
-                    LogicalService targetService = target.getService(serviceName);
-                    assert targetService != null;
-                    while (CompositeImplementation.class.isInstance(target.getDefinition().getImplementation())) {
-                        LogicalCompositeComponent composite = (LogicalCompositeComponent) target;
-                        URI promoteUri = targetService.getPromote();
-                        URI promotedComponent = UriHelper.getDefragmentedName(promoteUri);
-                        target = composite.getComponent(promotedComponent);
-                        targetService = target.getService(promoteUri.getFragment());
-                    }
-                    LogicalReference reference = component.getReference(logicalReference.getUri().getFragment());
+        generateServiceWires(component, context);
 
-                    physicalWireGenerator.generateUnboundWire(component, reference, targetService, target, context);
-                    logicalWire.setProvisioned(true);
+        generateResourceWires(component, context);
 
-                }
-            } else {
-                // TODO this should be extensible and moved out
-                LogicalBinding<?> logicalBinding = logicalReference.getBindings().get(0);
-                physicalWireGenerator.generateBoundReferenceWire(component, logicalReference, logicalBinding, context);
-            }
+    }
 
+    private void generateResourceWires(LogicalComponent<?> component, GeneratorContext context) throws GenerationException {
+        
+        // generate wire definitions for resources
+        for (LogicalResource<?> resource : component.getResources()) {
+            physicalWireGenerator.generateResourceWire(component, resource, context);
         }
+        
+    }
 
+    private void generateServiceWires(LogicalComponent<?> component, GeneratorContext context) throws GenerationException {
+        
         // generate changesets for bound service wires
         for (LogicalService service : component.getServices()) {
 
@@ -247,12 +252,48 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
             }
 
         }
+        
+    }
 
-        // generate wire definitions for resources
-        for (LogicalResource<?> resource : component.getResources()) {
-            physicalWireGenerator.generateResourceWire(component, resource, context);
+    private void generateReferenceWires(LogicalComponent<?> component, GeneratorContext context) throws GenerationException {
+        
+        for (LogicalReference logicalReference : component.getReferences()) {
+
+            if (logicalReference.getBindings().isEmpty()) {
+                generateUnboundReferenceWires(component, context, logicalReference.getWires(), false);
+            } else {
+                // TODO this should be extensible and moved out
+                LogicalBinding<?> logicalBinding = logicalReference.getBindings().get(0);
+                physicalWireGenerator.generateBoundReferenceWire(component, logicalReference, logicalBinding, context);
+            }
+
         }
+    }
 
+    private void generateUnboundReferenceWires(LogicalComponent<?> component, GeneratorContext context, Set<LogicalWire> logicalWires, boolean rewire)
+            throws GenerationException {
+        
+        for (LogicalWire logicalWire : logicalWires) {
+            if (logicalWire.isProvisioned()) {
+                continue;
+            }
+            URI uri = logicalWire.getTargetUri();
+            LogicalComponent<?> target = logicalComponentManager.getComponent(uri);
+            String serviceName = uri.getFragment();
+            LogicalService targetService = target.getService(serviceName);
+            assert targetService != null;
+            while (CompositeImplementation.class.isInstance(target.getDefinition().getImplementation())) {
+                LogicalCompositeComponent composite = (LogicalCompositeComponent) target;
+                URI promoteUri = targetService.getPromote();
+                URI promotedComponent = UriHelper.getDefragmentedName(promoteUri);
+                target = composite.getComponent(promotedComponent);
+                targetService = target.getService(promoteUri.getFragment());
+            }
+
+            physicalWireGenerator.generateUnboundWire(component, logicalWire.getSource(), targetService, target, context);
+            logicalWire.setProvisioned(true);
+        }
+        
     }
 
     private void generateCommandSets(LogicalComponent<?> component,
@@ -297,6 +338,10 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
 
     private void generatePhysicalComponent(LogicalComponent<?> component, Map<URI, GeneratorContext> contexts)
             throws GenerationException {
+        
+        if (component.isProvisioned()) {
+            return;
+        }
 
         URI id = component.getRuntimeId();
         GeneratorContext context = contexts.get(id);
@@ -307,6 +352,8 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
             contexts.put(id, context);
         }
         context.getPhysicalChangeSet().addComponentDefinition(generatePhysicalComponent(component, context));
+        
+        component.setProvisioned(true);
 
     }
 
