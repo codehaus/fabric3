@@ -146,5 +146,13 @@ public interface IntrospectionHelper {
      */
     boolean isAnnotationPresent(Class<?> type, Class<? extends Annotation> annotationType);
 
+    /**
+     * Returns the base type for the supplied type.
+     *
+     * The base type is the actual type of a property or reference having removed any decoration for arrays or collections.
+     *
+     * @param type the type of a field or parameter
+     * @return the actual type of the property or reference corresponding to the parameter
+     */
     Type getBaseType(Type type);
 }
