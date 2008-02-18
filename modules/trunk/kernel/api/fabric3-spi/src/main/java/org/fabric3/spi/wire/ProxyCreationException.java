@@ -26,6 +26,12 @@ import org.fabric3.host.Fabric3RuntimeException;
  * @version $$Rev$$ $$Date$$
  */
 public class ProxyCreationException extends Fabric3RuntimeException {
+    
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 2141262852616522838L;
+
     public ProxyCreationException() {
     }
 

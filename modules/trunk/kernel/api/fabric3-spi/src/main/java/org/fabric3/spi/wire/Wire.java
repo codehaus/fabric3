@@ -18,7 +18,6 @@
  */
 package org.fabric3.spi.wire;
 
-import java.net.URI;
 import java.util.Map;
 
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
