@@ -20,6 +20,7 @@ package org.fabric3.spi.model.instance;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -39,7 +40,7 @@ public class LogicalReference extends Bindable {
     private static final QName TYPE = new QName(Constants.SCA_NS, "reference");
     
     private final ReferenceDefinition definition;
-    private List<URI> promoted;
+    private List<URI> promotedUris;
 
     /**
      * @param uri
@@ -49,7 +50,7 @@ public class LogicalReference extends Bindable {
     public LogicalReference(URI uri, ReferenceDefinition definition, LogicalComponent<?> parent) {
         super(uri, parent, TYPE);
         this.definition = definition;
-        promoted = new ArrayList<URI>();
+        promotedUris = new ArrayList<URI>();
     }
 
     /**
@@ -89,14 +90,22 @@ public class LogicalReference extends Bindable {
      * @return
      */
     public List<URI> getPromotedUris() {
-        return promoted;
+        return Collections.unmodifiableList(promotedUris);
     }
 
     /**
      * @param uri
      */
     public void addPromotedUri(URI uri) {
-        promoted.add(uri);
+        promotedUris.add(uri);
+    }
+    
+    /**
+     * @param index
+     * @param uri
+     */
+    public void setPromotedUri(int index, URI uri) {
+        promotedUris.set(index, uri);
     }
 
     /**

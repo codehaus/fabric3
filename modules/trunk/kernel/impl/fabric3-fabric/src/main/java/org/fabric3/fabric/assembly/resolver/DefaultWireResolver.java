@@ -119,8 +119,8 @@ public class DefaultWireResolver implements WireResolver {
                     throw new AmbiguousPromotedReferenceException(logicalReference.getUri(), promotedUri);
                 }
                 // FIXME this seems a little fragile
-                promotedUri = componentReferences.iterator().next().getUri();
-                promotedUris.set(i, promotedUri);
+                URI referenceUri = componentReferences.iterator().next().getUri();
+                logicalReference.setPromotedUri(i, referenceUri);
             } else if (promotedComponent.getReference(promotedReferenceName) == null) {
                 throw new PromotedReferenceNotFoundException(logicalReference.getUri(), promotedUri);
             }
