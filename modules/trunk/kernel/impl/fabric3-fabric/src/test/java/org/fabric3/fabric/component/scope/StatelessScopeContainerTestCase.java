@@ -22,11 +22,10 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
 
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.scdl.Scope;
-import org.fabric3.monitor.MonitorFactory;
 
 /**
  * Unit tests for the composite scope container
@@ -69,8 +68,7 @@ public class StatelessScopeContainerTestCase<T> extends TestCase {
     @SuppressWarnings("unchecked")
     protected void setUp() throws Exception {
         super.setUp();
-        MonitorFactory mock = EasyMock.createNiceMock(MonitorFactory.class);
-        scopeContainer = new StatelessScopeContainer(mock);
+        scopeContainer = new StatelessScopeContainer(EasyMock.createNiceMock(ScopeContainerMonitor.class));
 
         control = EasyMock.createStrictControl();
         workContext = control.createMock(WorkContext.class);

@@ -25,16 +25,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.osoa.sca.annotations.Reference;
-
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.pojo.processor.ImplementationProcessor;
 import org.fabric3.pojo.processor.IntrospectionRegistry;
-import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.processor.JavaIntrospectionHelper;
-
-import org.fabric3.monitor.MonitorFactory;
+import org.fabric3.pojo.processor.ProcessingException;
+import org.fabric3.pojo.scdl.PojoComponentType;
 
 /**
  * Default implementation of the <code>IntrospectionRegistry</code>
@@ -46,24 +42,8 @@ public class IntrospectionRegistryImpl implements IntrospectionRegistry {
     private Monitor monitor;
     private List<ImplementationProcessor> cache = new ArrayList<ImplementationProcessor>();
 
-    public IntrospectionRegistryImpl() {
-    }
-
-    public IntrospectionRegistryImpl(Monitor monitor) {
+    public IntrospectionRegistryImpl(@org.fabric3.api.annotation.Monitor Monitor monitor) {
         this.monitor = monitor;
-    }
-
-    public void setMonitor(Monitor monitor) {
-        this.monitor = monitor;
-    }
-
-    /**
-     * JFM FIXME remove when @Monitor works
-     * @param monitor
-     */
-    @Reference
-    public void setMonitor(MonitorFactory monitor) {
-        this.monitor = monitor.getMonitor(Monitor.class);
     }
 
     public void registerProcessor(ImplementationProcessor processor) {

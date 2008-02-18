@@ -26,6 +26,7 @@ import java.net.URL;
 
 import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.fabric.component.scope.CompositeScopeContainer;
+import org.fabric3.fabric.component.scope.ScopeContainerMonitor;
 import org.fabric3.fabric.services.componentmanager.ComponentManagerImpl;
 import org.fabric3.fabric.services.domain.LogicalComponentManagerImpl;
 import org.fabric3.fabric.services.domain.NonPersistentLogicalComponentStore;
@@ -161,7 +162,7 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
             throw new InitializationException(e);
         }
         componentManager = new ComponentManagerImpl((Fabric3ManagementService) getManagementService());
-        scopeContainer = new CompositeScopeContainer(getMonitorFactory());
+        scopeContainer = new CompositeScopeContainer(getMonitorFactory().getMonitor(ScopeContainerMonitor.class));
         scopeContainer.start();
     }
 

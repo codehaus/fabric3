@@ -16,15 +16,15 @@
  */
 package org.fabric3.fabric.component.scope;
 
+import org.osoa.sca.Conversation;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
-import org.osoa.sca.Conversation;
 
+import org.fabric3.api.annotation.Monitor;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.component.InstanceWrapperStore;
 import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.scdl.Scope;
-import org.fabric3.monitor.MonitorFactory;
 
 /**
  * Scope container for the standard CONVERSATIONAL scope.
@@ -34,9 +34,8 @@ import org.fabric3.monitor.MonitorFactory;
 @Service(ScopeContainer.class)
 @EagerInit
 public class ConversationalScopeContainer extends StatefulScopeContainer<Conversation> {
-    public ConversationalScopeContainer(
-            @Reference MonitorFactory monitorFactory,
-            @Reference(name = "store")InstanceWrapperStore<Conversation> store) {
-        super(Scope.CONVERSATION, monitorFactory.getMonitor(ScopeContainerMonitor.class), store);
+    public ConversationalScopeContainer(@Monitor ScopeContainerMonitor monitor,
+                                        @Reference(name = "store")InstanceWrapperStore<Conversation> store) {
+        super(Scope.CONVERSATION, monitor, store);
     }
 }

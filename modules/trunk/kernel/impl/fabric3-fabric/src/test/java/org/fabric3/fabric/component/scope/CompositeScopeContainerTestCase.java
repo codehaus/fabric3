@@ -24,12 +24,11 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
 
-import org.fabric3.monitor.MonitorFactory;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.scdl.Scope;
 
 /**
  * @version $$Rev$$ $$Date$$
@@ -72,8 +71,7 @@ public class CompositeScopeContainerTestCase<T> extends TestCase {
         workContext = control.createMock(WorkContext.class);
         component = control.createMock(AtomicComponent.class);
         wrapper = control.createMock(InstanceWrapper.class);
-        MonitorFactory factory = EasyMock.createNiceMock(MonitorFactory.class);
-        scopeContainer = new CompositeScopeContainer(factory);
+        scopeContainer = new CompositeScopeContainer(EasyMock.createNiceMock(ScopeContainerMonitor.class));
         scopeContainer.start();
     }
 }

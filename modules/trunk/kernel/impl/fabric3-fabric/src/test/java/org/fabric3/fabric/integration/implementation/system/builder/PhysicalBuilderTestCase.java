@@ -27,6 +27,7 @@ import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.fabric.builder.ConnectorImpl;
 import org.fabric3.fabric.builder.component.DefaultComponentBuilderRegistry;
 import org.fabric3.fabric.component.scope.CompositeScopeContainer;
+import org.fabric3.fabric.component.scope.ScopeContainerMonitor;
 import org.fabric3.fabric.deployer.DeployerImpl;
 import org.fabric3.fabric.deployer.DeployerMonitor;
 import org.fabric3.fabric.implementation.system.SystemComponentBuilder;
@@ -39,7 +40,6 @@ import org.fabric3.fabric.services.componentmanager.ComponentManagerImpl;
 import org.fabric3.fabric.services.instancefactory.BuildHelperImpl;
 import org.fabric3.fabric.services.instancefactory.DefaultInstanceFactoryBuilderRegistry;
 import org.fabric3.fabric.services.instancefactory.ReflectiveInstanceFactoryBuilder;
-import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
@@ -146,8 +146,7 @@ public class PhysicalBuilderTestCase extends TestCase {
         workContext = new SimpleWorkContext();
         workContext.setScopeIdentifier(Scope.COMPOSITE, groupId);
 
-        MonitorFactory monitorFactory = EasyMock.createNiceMock(MonitorFactory.class);
-        scopeContainer = new CompositeScopeContainer(monitorFactory);
+        scopeContainer = new CompositeScopeContainer(EasyMock.createNiceMock(ScopeContainerMonitor.class));
         scopeContainer.start();
         scopeContainer.startContext(workContext, groupId);
 

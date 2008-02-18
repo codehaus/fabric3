@@ -23,10 +23,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
-import org.fabric3.monitor.MonitorFactory;
+import org.fabric3.api.annotation.Monitor;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
@@ -34,7 +34,6 @@ import org.fabric3.spi.component.TargetDestructionException;
 import org.fabric3.spi.component.TargetInitializationException;
 import org.fabric3.spi.component.TargetResolutionException;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.scdl.Scope;
 
 /**
  * A scope context which manages atomic component instances keyed by composite
@@ -66,9 +65,8 @@ public class CompositeScopeContainer extends AbstractScopeContainer<URI> {
     private final Map<AtomicComponent<?>, InstanceWrapper<?>> instanceWrappers =
             new ConcurrentHashMap<AtomicComponent<?>, InstanceWrapper<?>>();
 
-    public CompositeScopeContainer(@Reference MonitorFactory monitorFactory) {
-        // JFM FIXME use @Monitor when Resources are working
-        super(Scope.COMPOSITE, monitorFactory.getMonitor(ScopeContainerMonitor.class));
+    public CompositeScopeContainer(@Monitor ScopeContainerMonitor monitor) {
+        super(Scope.COMPOSITE, monitor);
     }
 
     public void register(AtomicComponent<?> component) {

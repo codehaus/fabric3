@@ -39,6 +39,7 @@ import org.fabric3.spi.model.physical.PhysicalResourceContainerDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.runtime.component.RegistrationException;
+import org.fabric3.api.annotation.Monitor;
 
 /**
  * Deploys components in response to asynchronous messages from the Assembly.
@@ -74,12 +75,7 @@ public class DeployerImpl implements Deployer {
     private DeployerMonitor monitor;
 
 
-    @Constructor
-    public DeployerImpl(@Reference MonitorFactory factory) {
-        monitor = factory.getMonitor(DeployerMonitor.class);
-    }
-
-    public DeployerImpl(DeployerMonitor monitor) {
+    public DeployerImpl(@Monitor DeployerMonitor monitor) {
         this.monitor = monitor;
     }
 

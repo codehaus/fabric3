@@ -30,6 +30,7 @@ import org.fabric3.spi.component.TargetDestructionException;
 import org.fabric3.spi.component.TargetResolutionException;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.scdl.Scope;
+import org.fabric3.api.annotation.Monitor;
 
 /**
  * A scope context which manages stateless atomic component instances in a non-pooled fashion.
@@ -40,9 +41,8 @@ import org.fabric3.scdl.Scope;
 @Service(ScopeContainer.class)
 public class StatelessScopeContainer extends AbstractScopeContainer<Object> {
 
-    public StatelessScopeContainer(@Reference MonitorFactory monitorFactory) {
-        // JFM FIXME use @Monitor when resources are fixed
-        super(Scope.STATELESS, monitorFactory.getMonitor(ScopeContainerMonitor.class));
+    public StatelessScopeContainer(@Monitor ScopeContainerMonitor monitor) {
+        super(Scope.STATELESS, monitor);
     }
 
     public <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext)

@@ -37,6 +37,7 @@ import org.fabric3.fabric.command.StartCompositeContextCommand;
 import org.fabric3.fabric.command.StartCompositeContextExecutor;
 import org.fabric3.fabric.command.StartCompositeContextGenerator;
 import org.fabric3.fabric.deployer.DeployerImpl;
+import org.fabric3.fabric.deployer.DeployerMonitor;
 import org.fabric3.fabric.generator.GeneratorRegistryImpl;
 import org.fabric3.fabric.implementation.singleton.SingletonGenerator;
 import org.fabric3.fabric.implementation.singleton.SingletonWireAttacher;
@@ -205,7 +206,7 @@ public class BootstrapAssemblyFactory {
 
         ResourceContainerBuilderRegistry resourceRegistry = createResourceBuilderRegistry(classLoaderRegistry);
 
-        DeployerImpl deployer = new DeployerImpl(monitorFactory);
+        DeployerImpl deployer = new DeployerImpl(monitorFactory.getMonitor(DeployerMonitor.class));
         deployer.setBuilderRegistry(registry);
         deployer.setComponentManager(componentManager);
         deployer.setConnector(connector);

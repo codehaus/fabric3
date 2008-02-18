@@ -67,8 +67,7 @@ public class SystemComponentTypeLoaderTestCase extends TestCase {
         super.setUp();
         ContractProcessor contractProcessor = new DefaultContractProcessor();
         ImplementationProcessorService service = new ImplementationProcessorServiceImpl(contractProcessor, new DefaultIntrospectionHelper());
-        IntrospectionRegistryImpl registry = new IntrospectionRegistryImpl();
-        registry.setMonitor(EasyMock.createMock(IntrospectionRegistryImpl.Monitor.class));
+        IntrospectionRegistryImpl registry = new IntrospectionRegistryImpl(EasyMock.createMock(IntrospectionRegistryImpl.Monitor.class));
         registry.registerProcessor(new ConstructorProcessor(service));
         registry.registerProcessor(new DestroyProcessor());
         registry.registerProcessor(new InitProcessor());

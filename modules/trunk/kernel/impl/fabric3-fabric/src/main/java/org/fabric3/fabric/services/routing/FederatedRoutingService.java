@@ -23,14 +23,14 @@ import java.io.ByteArrayOutputStream;
 import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
+import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
-import javax.xml.stream.XMLOutputFactory;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.monitor.MonitorFactory;
+import org.fabric3.api.annotation.Monitor;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.command.CommandExecutorRegistry;
@@ -64,13 +64,13 @@ public class FederatedRoutingService implements RoutingService {
                                    @Reference MessagingService messagingService,
                                    @Reference CommandExecutorRegistry executorRegistry,
                                    @Reference XMLFactory xmlFactory,
-                                   @Reference MonitorFactory factory) {
+                                   @Monitor RoutingMonitor monitor) {
         this.deployer = deployer;
         this.marshalService = marshalService;
         this.messagingService = messagingService;
         this.executorRegistry = executorRegistry;
         this.xmlFactory = xmlFactory;
-        monitor = factory.getMonitor(RoutingMonitor.class);
+        this.monitor = monitor;
     }
 
     public void route(URI runtimeId, PhysicalChangeSet pcs) throws RoutingException {

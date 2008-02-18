@@ -58,6 +58,7 @@ import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ResourceDefinition;
+import org.fabric3.api.annotation.Monitor;
 
 /**
  * Default ContributionService implementation
@@ -82,7 +83,7 @@ public class ContributionServiceImpl implements ContributionService {
                                    @Reference ContributionLoader contributionLoader,
                                    @Reference ContentTypeResolver contentTypeResolver,
                                    @Reference DependencyService dependencyService,
-                                   @Reference MonitorFactory monitorFactory)
+                                   @Monitor ContributionServiceMonitor monitor)
             throws IOException, ClassNotFoundException {
         this.processorRegistry = processorRegistry;
         this.archiveStore = archiveStore;
@@ -90,7 +91,7 @@ public class ContributionServiceImpl implements ContributionService {
         this.contributionLoader = contributionLoader;
         this.contentTypeResolver = contentTypeResolver;
         this.dependencyService = dependencyService;
-        this.monitor = monitorFactory.getMonitor(ContributionServiceMonitor.class);
+        this.monitor = monitor;
     }
 
     @Property(required = false)
