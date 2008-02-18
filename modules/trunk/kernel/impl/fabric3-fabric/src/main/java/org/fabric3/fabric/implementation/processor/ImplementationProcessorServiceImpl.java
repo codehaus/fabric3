@@ -27,6 +27,7 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Resource;
+import org.fabric3.api.annotation.Monitor;
 import org.fabric3.introspection.ContractProcessor;
 import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.IntrospectionHelper;
@@ -41,6 +42,7 @@ import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ValueSource;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.fabric.monitor.MonitorResource;
 
 /**
  * The default implementation of an <code>ImplementationProcessorService</code>
@@ -93,6 +95,9 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
                         continue param;
                     } else if (Reference.class.equals(annotationType)) {
                         processReference((Reference) annotation, constructor, i, componentType);
+                        continue param;
+                    } else if (Monitor.class.equals(annotationType)) {
+                        processMonitor(constructor, i, componentType);
                         continue param;
                     }
                 }
@@ -209,4 +214,13 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
         }
     }
 
+
+    private void processMonitor(Constructor<?> constructor, int index, PojoComponentType componentType) throws IntrospectionException {
+        Type type = helper.getGenericType(constructor, index);
+        ServiceContract<?> serviceContract = contractProcessor.introspect(type);
+        String name = serviceContract.getInterfaceName();
+        MonitorResource resource = new MonitorResource(name, false, serviceContract);
+        InjectionSite injectionSite = new ConstructorInjectionSite(constructor, index);
+        componentType.add(resource, injectionSite);
+    }
 }

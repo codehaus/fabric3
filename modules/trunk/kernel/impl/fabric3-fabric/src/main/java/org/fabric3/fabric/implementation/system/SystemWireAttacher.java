@@ -84,7 +84,7 @@ public class SystemWireAttacher extends PojoWireAttacher implements SourceWireAt
     public void attachObjectFactory(SystemWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
         URI sourceId = UriHelper.getDefragmentedName(source.getUri());
         SystemComponent<?> sourceComponent = (SystemComponent<?>) manager.getComponent(sourceId);
-        ValueSource referenceSource = new ValueSource(ValueSource.ValueSourceType.REFERENCE, source.getUri().getFragment());
+        ValueSource referenceSource = source.getValueSource();
 
         Object key = getKey(source, sourceComponent, referenceSource);
         sourceComponent.attachReferenceToTarget(referenceSource, objectFactory, key);

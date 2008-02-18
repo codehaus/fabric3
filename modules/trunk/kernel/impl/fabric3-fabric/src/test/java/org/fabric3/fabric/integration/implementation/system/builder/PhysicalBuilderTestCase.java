@@ -126,6 +126,7 @@ public class PhysicalBuilderTestCase extends TestCase {
     private PhysicalWireDefinition createWireDefinition() {
         SystemWireSourceDefinition wireSource = new SystemWireSourceDefinition();
         wireSource.setUri(sourceId.resolve("#target"));
+        wireSource.setValueSource(new ValueSource(ValueSource.ValueSourceType.REFERENCE, "target"));
         SystemWireTargetDefinition wireTarget = new SystemWireTargetDefinition();
         wireTarget.setUri(targetId);
         PhysicalWireDefinition wireDefinition = new PhysicalWireDefinition(wireSource, wireTarget);

@@ -71,7 +71,7 @@ public class BootstrapLoaderFactory {
                                       MetaDataStore metaDataStore) {
 
         XMLFactory xmlFactory = new XMLFactoryImpl();
-        LoaderRegistryImpl loader = new LoaderRegistryImpl(monitorFactory, xmlFactory);
+        LoaderRegistryImpl loader = new LoaderRegistryImpl(monitorFactory.getMonitor(LoaderRegistryImpl.Monitor.class), xmlFactory);
 
         ContractProcessor interfaceJavaIntrospector = new DefaultContractProcessor();
         Introspector introspector = createIntrospector(monitorFactory, interfaceJavaIntrospector);

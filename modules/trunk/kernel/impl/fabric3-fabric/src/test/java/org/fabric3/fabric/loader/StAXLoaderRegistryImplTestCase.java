@@ -34,6 +34,7 @@ import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.loader.UnrecognizedElementException;
+import org.fabric3.spi.services.factories.xml.XMLFactory;
 
 /**
  * Verifies the default loader registry
@@ -119,7 +120,10 @@ public class StAXLoaderRegistryImplTestCase extends TestCase {
         introspectionContext = new IntrospectionContextImpl(cl, null, null);
         mockMonitor = EasyMock.createMock(LoaderRegistryImpl.Monitor.class);
         XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
-        registry = new LoaderRegistryImpl(mockMonitor, xmlInputFactory);
+        XMLFactory xmlFactory = EasyMock.createMock(XMLFactory.class);
+        EasyMock.expect(xmlFactory.newInputFactoryInstance()).andStubReturn(xmlInputFactory);
+        EasyMock.replay(xmlFactory);
+        registry = new LoaderRegistryImpl(mockMonitor, xmlFactory);
         Map<QName, StAXElementLoader<?>> map = Collections.emptyMap();
         registry.setLoaders(map);
         mockLoader = EasyMock.createMock(StAXElementLoader.class);

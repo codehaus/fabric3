@@ -69,6 +69,8 @@ import org.fabric3.fabric.services.instancefactory.ReflectiveInstanceFactoryBuil
 import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.fabric.services.routing.RuntimeRoutingService;
 import org.fabric3.fabric.services.runtime.BootstrapRuntimeInfoService;
+import org.fabric3.fabric.monitor.MonitorWireGenerator;
+import org.fabric3.fabric.monitor.MonitorWireAttacher;
 import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.InitializationException;
@@ -198,12 +200,8 @@ public class BootstrapAssemblyFactory {
         SingletonWireAttacher singletonWireAttacher = new SingletonWireAttacher(componentManager);
         ConnectorImpl connector = new ConnectorImpl(null);
         connector.register(SingletonWireTargetDefinition.class, singletonWireAttacher);
-        SystemWireAttacher wireAttacher = new SystemWireAttacher(componentManager,
-                                                                 connector,
-                                                                 connector,
-                                                                 transformerRegistry,
-                                                                 classLoaderRegistry);
-        wireAttacher.init();
+        new SystemWireAttacher(componentManager, connector, connector, transformerRegistry, classLoaderRegistry).init();
+        new MonitorWireAttacher(connector, monitorFactory, classLoaderRegistry).init();
 
         ResourceContainerBuilderRegistry resourceRegistry = createResourceBuilderRegistry(classLoaderRegistry);
 
@@ -257,8 +255,8 @@ public class BootstrapAssemblyFactory {
         GenerationHelperImpl helper = new GenerationHelperImpl();
         new SystemComponentGenerator(registry, new ClassLoaderGeneratorImpl(discoveryService), helper);
         new SingletonGenerator(registry);
-        StartCompositeContextGenerator contextGenerator = new StartCompositeContextGenerator(registry);
-        contextGenerator.init();
+        new StartCompositeContextGenerator(registry).init();
+        new MonitorWireGenerator(registry).init();
         return registry;
     }
 

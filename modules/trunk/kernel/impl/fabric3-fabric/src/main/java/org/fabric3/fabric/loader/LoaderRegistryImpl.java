@@ -33,9 +33,8 @@ import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.monitor.MonitorFactory;
-import org.fabric3.spi.loader.InvalidConfigurationException;
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.spi.loader.InvalidConfigurationException;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.StAXElementLoader;
@@ -55,15 +54,9 @@ public class LoaderRegistryImpl implements LoaderRegistry {
     private final Map<QName, StAXElementLoader<?>> loaders = new HashMap<QName, StAXElementLoader<?>>();
 
     @Constructor
-    public LoaderRegistryImpl(@Reference MonitorFactory monitorFactory, @Reference XMLFactory factory) {
-        // JFM FIXME use @Monitor when resources are fixed
-        this.monitor = monitorFactory.getMonitor(Monitor.class);
-        this.xmlFactory = factory.newInputFactoryInstance();
-    }
-
-    public LoaderRegistryImpl(Monitor monitor, XMLInputFactory factory) {
+    public LoaderRegistryImpl(@org.fabric3.api.annotation.Monitor Monitor monitor, @Reference XMLFactory factory) {
         this.monitor = monitor;
-        this.xmlFactory = factory;
+        this.xmlFactory = factory.newInputFactoryInstance();
     }
 
     @Reference(required = false)
