@@ -13,9 +13,8 @@ import org.fabric3.spi.wire.TargetResolutionService;
  */
 public class ExplicitTargetResolutionService implements TargetResolutionService {
 
-    public void resolve(LogicalReference reference, LogicalCompositeComponent context) throws TargetResolutionException {
-        // TODO Auto-generated method stub
-
+    public boolean resolve(LogicalReference reference, LogicalCompositeComponent context) throws TargetResolutionException {
+        return true;
     }
 
 }
