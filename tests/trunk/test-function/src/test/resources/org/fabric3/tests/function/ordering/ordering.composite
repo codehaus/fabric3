@@ -2,15 +2,15 @@
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           name="orderingTest">
+           name="OrderingComposite">
     
     <component name="OrderedInjectionTest">
-        <f3:junit class="ordering.OrderingITest"/>
+        <f3:junit class="org.fabric3.tests.function.ordering.OrderingITest"/>
         <reference name="displayService" target="OrderedDisplayService"/>
     </component>
 
     <component name="OrderedDisplayService">
-        <implementation.composite name="OrderedDisplayService" scdlResource="ordering.composite"/>
+        <implementation.composite name="OrderedDisplayService" scdlResource="org/fabric3/tests/function/ordering/ordered-service.composite"/>
     </component>
    
     

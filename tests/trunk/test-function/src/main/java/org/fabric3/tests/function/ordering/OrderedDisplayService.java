@@ -1,4 +1,4 @@
-package ordering;
+package org.fabric3.tests.function.ordering;
 
 import java.util.List;
 

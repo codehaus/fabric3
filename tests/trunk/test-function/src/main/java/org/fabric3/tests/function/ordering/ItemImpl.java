@@ -1,4 +1,4 @@
-package ordering;
+package org.fabric3.tests.function.ordering;
 
 import org.osoa.sca.annotations.Property;
 

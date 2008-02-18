@@ -1,16 +1,16 @@
-package ordering;
+package org.fabric3.tests.function.ordering;
 
 import org.osoa.sca.annotations.Reference;
 
 import junit.framework.TestCase;
 
 /**
- * iTest to check for retention of ordering in injected components
+ * Tests the retention of composite file order for injected components
  */
 public class OrderingITest extends TestCase
 {
-	@Reference(name="displayService")
-	protected ItemDisplayService displayService;
+    @Reference(name="displayService")
+    protected ItemDisplayService displayService;
 	
     public void testOrderedInjection()
     {

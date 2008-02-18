@@ -32,4 +32,5 @@
     <include name="LifecycleComposite"/>
     <include name="AsyncComposite"/>
     <include name="CallbackComposite"/>
+    <include name="OrderingComposite"/>
 </composite>
