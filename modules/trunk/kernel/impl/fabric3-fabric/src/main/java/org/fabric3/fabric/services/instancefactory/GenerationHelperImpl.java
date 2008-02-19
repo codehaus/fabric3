@@ -29,7 +29,7 @@ import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.Signature;
-import org.fabric3.scdl.ValueSource;
+import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.spi.model.instance.LogicalComponent;
 
 /**
@@ -54,9 +54,9 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
 
         Implementation<PojoComponentType> implementation = component.getDefinition().getImplementation();
         PojoComponentType type = implementation.getComponentType();
-        Map<ValueSource, InjectionSite> mappings = type.getInjectionMappings();
-        for (Map.Entry<ValueSource, InjectionSite> entry : mappings.entrySet()) {
-            ValueSource source = entry.getKey();
+        Map<InjectableAttribute, InjectionSite> mappings = type.getInjectionMappings();
+        for (Map.Entry<InjectableAttribute, InjectionSite> entry : mappings.entrySet()) {
+            InjectableAttribute source = entry.getKey();
             InjectionSite site = entry.getValue();
             providerDefinition.addInjectionSite(source, site);
         }

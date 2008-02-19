@@ -25,7 +25,7 @@ import java.util.Map;
 import org.fabric3.pojo.ComponentObjectFactory;
 import org.fabric3.pojo.injection.MultiplicityObjectFactory;
 import org.fabric3.scdl.PropertyValue;
-import org.fabric3.scdl.ValueSource;
+import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.spi.AbstractLifecycle;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
@@ -135,15 +135,15 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
         return provider.getImplementationClass();
     }
 
-    public void setObjectFactory(ValueSource name, ObjectFactory<?> objectFactory) {
+    public void setObjectFactory(InjectableAttribute name, ObjectFactory<?> objectFactory) {
         provider.setObjectFactory(name, objectFactory);
     }
 
-    public Class<?> getMemberType(ValueSource injectionSite) {
+    public Class<?> getMemberType(InjectableAttribute injectionSite) {
         return provider.getMemberType(injectionSite);
     }
     
-    public Type getGerenricMemberType(ValueSource injectionSite) {
+    public Type getGerenricMemberType(InjectableAttribute injectionSite) {
         return provider.getGenericType(injectionSite);
     }
 
@@ -158,7 +158,7 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
      * @param objectFactory Object factory.
      * @param key key value for a Map reference
      */
-    public void attachReferenceToTarget(ValueSource referenceSource, ObjectFactory<?> objectFactory, Object key) {
+    public void attachReferenceToTarget(InjectableAttribute referenceSource, ObjectFactory<?> objectFactory, Object key) {
         
         MultiplicityObjectFactory<?> factory = referenceFactories.get(referenceSource.getName());
         if(factory != null) {

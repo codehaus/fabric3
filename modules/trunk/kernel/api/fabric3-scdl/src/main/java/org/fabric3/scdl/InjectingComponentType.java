@@ -26,7 +26,7 @@ import java.util.Map;
  */
 public class InjectingComponentType extends AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property<?>, ResourceDefinition> {
 
-    private final Map<ValueSource, InjectionSite> injectionMappings = new HashMap<ValueSource, InjectionSite>();
+    private final Map<InjectableAttribute, InjectionSite> injectionMappings = new HashMap<InjectableAttribute, InjectionSite>();
     private Signature initMethod;
     private Signature destroyMethod;
     private final Map<String, CallbackDefinition> callbacks = new HashMap<String, CallbackDefinition>();
@@ -45,8 +45,8 @@ public class InjectingComponentType extends AbstractComponentType<ServiceDefinit
      */
     public void add(ReferenceDefinition reference, InjectionSite injectionSite) {
         super.add(reference);
-        ValueSource valueSource = new ValueSource(ValueSource.ValueSourceType.REFERENCE, reference.getName());
-        addInjectionSite(valueSource, injectionSite);
+        InjectableAttribute injectableAttribute = new InjectableAttribute(InjectableAttributeType.REFERENCE, reference.getName());
+        addInjectionSite(injectableAttribute, injectionSite);
     }
 
     /**
@@ -57,8 +57,8 @@ public class InjectingComponentType extends AbstractComponentType<ServiceDefinit
      */
     public void add(Property<?> property, InjectionSite injectionSite) {
         super.add(property);
-        ValueSource valueSource = new ValueSource(ValueSource.ValueSourceType.PROPERTY, property.getName());
-        addInjectionSite(valueSource, injectionSite);
+        InjectableAttribute injectableAttribute = new InjectableAttribute(InjectableAttributeType.PROPERTY, property.getName());
+        addInjectionSite(injectableAttribute, injectionSite);
     }
 
     /**
@@ -69,8 +69,8 @@ public class InjectingComponentType extends AbstractComponentType<ServiceDefinit
      */
     public void add(ResourceDefinition resource, InjectionSite injectionSite) {
         super.add(resource);
-        ValueSource valueSource = new ValueSource(ValueSource.ValueSourceType.RESOURCE, resource.getName());
-        addInjectionSite(valueSource, injectionSite);
+        InjectableAttribute injectableAttribute = new InjectableAttribute(InjectableAttributeType.RESOURCE, resource.getName());
+        addInjectionSite(injectableAttribute, injectionSite);
     }
 
     /**
@@ -82,8 +82,8 @@ public class InjectingComponentType extends AbstractComponentType<ServiceDefinit
     public void add(CallbackDefinition definition, InjectionSite injectionSite) {
         String name = definition.getName();
         callbacks.put(name, definition);
-        ValueSource valueSource = new ValueSource(ValueSource.ValueSourceType.CALLBACK, name);
-        injectionMappings.put(valueSource, injectionSite);
+        InjectableAttribute injectableAttribute = new InjectableAttribute(InjectableAttributeType.CALLBACK, name);
+        injectionMappings.put(injectableAttribute, injectionSite);
     }
 
     /**
@@ -101,7 +101,7 @@ public class InjectingComponentType extends AbstractComponentType<ServiceDefinit
      * @param source the value to be injected
      * @param site   the injection site
      */
-    public void addInjectionSite(ValueSource source, InjectionSite site) {
+    public void addInjectionSite(InjectableAttribute source, InjectionSite site) {
         injectionMappings.put(source, site);
     }
 
@@ -111,7 +111,7 @@ public class InjectingComponentType extends AbstractComponentType<ServiceDefinit
      * @param source the value for which the site should be returned
      * @return in the injection site for the supplied value
      */
-    public InjectionSite getInjectionSite(ValueSource source) {
+    public InjectionSite getInjectionSite(InjectableAttribute source) {
         return injectionMappings.get(source);
     }
 
@@ -120,7 +120,7 @@ public class InjectingComponentType extends AbstractComponentType<ServiceDefinit
      *
      * @return the map of all injection mappings
      */
-    public Map<ValueSource, InjectionSite> getInjectionMappings() {
+    public Map<InjectableAttribute, InjectionSite> getInjectionMappings() {
         return injectionMappings;
     }
 

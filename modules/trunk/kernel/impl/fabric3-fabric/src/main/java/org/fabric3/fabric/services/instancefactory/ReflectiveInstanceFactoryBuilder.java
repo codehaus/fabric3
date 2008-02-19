@@ -36,7 +36,7 @@ import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.pojo.reflection.ReflectiveInstanceFactoryProvider;
 import org.fabric3.scdl.ConstructorInjectionSite;
 import org.fabric3.scdl.InjectionSite;
-import org.fabric3.scdl.ValueSource;
+import org.fabric3.scdl.InjectableAttribute;
 
 /**
  * Builds a reflection-based instance factory provider.
@@ -68,11 +68,11 @@ public class ReflectiveInstanceFactoryBuilder<T>
             @SuppressWarnings("unchecked")
             Class<T> implClass = (Class<T>) helper.loadClass(cl, ifpd.getImplementationClass());
 
-            Map<ValueSource, InjectionSite> injectionSites = ifpd.getInjectionSites();
+            Map<InjectableAttribute, InjectionSite> injectionSites = ifpd.getInjectionSites();
 
             Constructor<T> ctr = helper.getConstructor(implClass, ifpd.getConstructor());
-            ValueSource[] cdiSources = new ValueSource[ctr.getParameterTypes().length];
-            for (Map.Entry<ValueSource, InjectionSite> entry : injectionSites.entrySet()) {
+            InjectableAttribute[] cdiSources = new InjectableAttribute[ctr.getParameterTypes().length];
+            for (Map.Entry<InjectableAttribute, InjectionSite> entry : injectionSites.entrySet()) {
                 InjectionSite injectionSite = entry.getValue();
                 if (injectionSite.getElementType() == ElementType.CONSTRUCTOR) {
                     ConstructorInjectionSite constructorSite = (ConstructorInjectionSite) injectionSite;

@@ -19,7 +19,8 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
-import org.fabric3.scdl.ValueSource;
+import org.fabric3.scdl.InjectableAttribute;
+import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
@@ -94,7 +95,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
 
         JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
         wireDefinition.setUri(uri);
-        wireDefinition.setValueSource(new ValueSource(ValueSource.ValueSourceType.REFERENCE, uri.getFragment()));
+        wireDefinition.setValueSource(new InjectableAttribute(InjectableAttributeType.REFERENCE, uri.getFragment()));
         wireDefinition.setInterfaceName(interfaceName);
         wireDefinition.setConversational(serviceContract.isConversational());
 
@@ -124,7 +125,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
 
         JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
         wireDefinition.setUri(uri);
-        wireDefinition.setValueSource(new ValueSource(ValueSource.ValueSourceType.RESOURCE, uri.getFragment()));
+        wireDefinition.setValueSource(new InjectableAttribute(InjectableAttributeType.RESOURCE, uri.getFragment()));
         wireDefinition.setConversational(false);
         wireDefinition.setClassLoaderId(classLoaderId);
         wireDefinition.setInterfaceName(interfaceName);

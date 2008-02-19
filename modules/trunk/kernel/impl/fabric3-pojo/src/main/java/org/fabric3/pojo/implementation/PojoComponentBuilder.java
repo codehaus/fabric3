@@ -41,8 +41,8 @@ import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.component.Component;
 import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.scdl.ValueSource;
-import org.fabric3.scdl.ValueSource.ValueSourceType;
+import org.fabric3.scdl.InjectableAttribute;
+import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.model.type.XSDSimpleType;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
@@ -103,7 +103,7 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
             String name = entry.getKey();
             Document value = entry.getValue();
             Element element = value.getDocumentElement();
-            ValueSource source = new ValueSource(ValueSource.ValueSourceType.PROPERTY, name);
+            InjectableAttribute source = new InjectableAttribute(InjectableAttributeType.PROPERTY, name);
             Class<?> memberType = provider.getMemberType(source);
             if (memberType.isPrimitive()) {
                 memberType = OBJECT_TYPES.get(memberType);
@@ -144,9 +144,9 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
     protected Map<String, MultiplicityObjectFactory<?>> createMultiplicityReferenceFactories(InstanceFactoryDefinition providerDefinition) {
 
         Map<String, MultiplicityObjectFactory<?>> referenceFactories = new HashMap<String, MultiplicityObjectFactory<?>>();
-        for (Map.Entry<ValueSource, InjectionSite> entry : providerDefinition.getInjectionSites().entrySet()) {
-            ValueSource source = entry.getKey();
-            if (source.getValueType() == ValueSourceType.REFERENCE) {
+        for (Map.Entry<InjectableAttribute, InjectionSite> entry : providerDefinition.getInjectionSites().entrySet()) {
+            InjectableAttribute source = entry.getKey();
+            if (source.getValueType() == InjectableAttributeType.REFERENCE) {
                 InjectionSite site = entry.getValue();
                 addMultiplicityFactory(site.getType(), source, referenceFactories);
             }
@@ -158,16 +158,16 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
     /*
      * Adds the multiplicty reference factories.
      */
-    private void addMultiplicityFactory(String referenceType, ValueSource valueSource, Map<String, MultiplicityObjectFactory<?>> referenceFactories) {
+    private void addMultiplicityFactory(String referenceType, InjectableAttribute injectableAttribute, Map<String, MultiplicityObjectFactory<?>> referenceFactories) {
 
         if ("java.util.Map".equals(referenceType)) {
-            referenceFactories.put(valueSource.getName(), new MapMultiplicityObjectFactory());
+            referenceFactories.put(injectableAttribute.getName(), new MapMultiplicityObjectFactory());
         } else if ("java.util.Set".equals(referenceType)) {
-            referenceFactories.put(valueSource.getName(), new SetMultiplicityObjectFactory());
+            referenceFactories.put(injectableAttribute.getName(), new SetMultiplicityObjectFactory());
         } else if ("java.util.List".equals(referenceType)) {
-            referenceFactories.put(valueSource.getName(), new ListMultiplicityObjectFactory());
+            referenceFactories.put(injectableAttribute.getName(), new ListMultiplicityObjectFactory());
         } else if ("java.util.Collection".equals(referenceType)) {
-            referenceFactories.put(valueSource.getName(), new ListMultiplicityObjectFactory());
+            referenceFactories.put(injectableAttribute.getName(), new ListMultiplicityObjectFactory());
         }
     }
 }

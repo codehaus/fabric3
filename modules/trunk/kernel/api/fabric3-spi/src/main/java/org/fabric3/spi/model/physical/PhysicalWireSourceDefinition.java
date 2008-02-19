@@ -24,7 +24,7 @@ import java.net.URI;
 import org.w3c.dom.Document;
 
 import org.fabric3.scdl.ModelObject;
-import org.fabric3.scdl.ValueSource;
+import org.fabric3.scdl.InjectableAttribute;
 
 /**
  * Represents a physical wire source definition.
@@ -33,7 +33,7 @@ import org.fabric3.scdl.ValueSource;
  */
 public class PhysicalWireSourceDefinition extends ModelObject {
     private URI uri;
-    private ValueSource valueSource;
+    private InjectableAttribute injectableAttribute;
     private boolean optimizable;
     private boolean conversational;
     private Document key;
@@ -60,16 +60,16 @@ public class PhysicalWireSourceDefinition extends ModelObject {
      * Returns the value source for this wire. This identifies which reference or resource on the component this wire applies to.
      * @return the value source for this wire
      */
-    public ValueSource getValueSource() {
-        return valueSource;
+    public InjectableAttribute getValueSource() {
+        return injectableAttribute;
     }
 
     /**
      * Sets the value source for this wire.
-     * @param valueSource the value source for this wire
+     * @param injectableAttribute the value source for this wire
      */
-    public void setValueSource(ValueSource valueSource) {
-        this.valueSource = valueSource;
+    public void setValueSource(InjectableAttribute injectableAttribute) {
+        this.injectableAttribute = injectableAttribute;
     }
 
     /**

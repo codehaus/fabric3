@@ -31,7 +31,7 @@ import org.fabric3.scdl.ConstructorInjectionSite;
 import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.MethodInjectionSite;
-import org.fabric3.scdl.ValueSource;
+import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.InstanceFactory;
 import org.fabric3.spi.component.InstanceFactoryProvider;
@@ -48,16 +48,16 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
 
     private final Class<T> implementationClass;
     private final Constructor<T> constructor;
-    private final List<ValueSource> cdiSources;
-    private final Map<ValueSource, InjectionSite> injectionSites;
+    private final List<InjectableAttribute> cdiSources;
+    private final Map<InjectableAttribute, InjectionSite> injectionSites;
     private final EventInvoker<T> initInvoker;
     private final EventInvoker<T> destroyInvoker;
-    private final Map<ValueSource, ObjectFactory<?>> factories = new HashMap<ValueSource, ObjectFactory<?>>();
+    private final Map<InjectableAttribute, ObjectFactory<?>> factories = new HashMap<InjectableAttribute, ObjectFactory<?>>();
     private final ClassLoader cl;
 
     public ReflectiveInstanceFactoryProvider(Constructor<T> constructor,
-                                             List<ValueSource> cdiSources,
-                                             Map<ValueSource, InjectionSite> injectionSites,
+                                             List<InjectableAttribute> cdiSources,
+                                             Map<InjectableAttribute, InjectionSite> injectionSites,
                                              Method initMethod,
                                              Method destroyMethod,
                                              ClassLoader cl) {
@@ -70,14 +70,14 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
         this.cl = cl;
     }
 
-    public void setObjectFactory(ValueSource name, ObjectFactory<?> objectFactory) {
+    public void setObjectFactory(InjectableAttribute name, ObjectFactory<?> objectFactory) {
         factories.put(name, objectFactory);
     }
 
-    public Class<?> getMemberType(ValueSource valueSource) {
-        InjectionSite site = injectionSites.get(valueSource);
+    public Class<?> getMemberType(InjectableAttribute injectableAttribute) {
+        InjectionSite site = injectionSites.get(injectableAttribute);
         if (site == null) {
-            throw new AssertionError("No injection site for " + valueSource);
+            throw new AssertionError("No injection site for " + injectableAttribute);
         }
         switch (site.getElementType()) {
         case FIELD:
@@ -113,10 +113,10 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
         }
     }
 
-    public Type getGenericType(ValueSource valueSource) {
-        InjectionSite site = injectionSites.get(valueSource);
+    public Type getGenericType(InjectableAttribute injectableAttribute) {
+        InjectionSite site = injectionSites.get(injectableAttribute);
         if (site == null) {
-            throw new AssertionError("No injection site for " + valueSource);
+            throw new AssertionError("No injection site for " + injectableAttribute);
         }
         switch (site.getElementType()) {
         case FIELD:
@@ -174,10 +174,10 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
         return new ReflectiveInstanceFactory<T>(factory, injectors, initInvoker, destroyInvoker, cl);
     }
 
-    protected ObjectFactory<?>[] getArgumentFactories(List<ValueSource> sources) {
+    protected ObjectFactory<?>[] getArgumentFactories(List<InjectableAttribute> sources) {
         ObjectFactory<?>[] argumentFactories = new ObjectFactory<?>[sources.size()];
         for (int i = 0; i < argumentFactories.length; i++) {
-            ValueSource source = sources.get(i);
+            InjectableAttribute source = sources.get(i);
             ObjectFactory<?> factory = factories.get(source);
             if (factory == null) {
                 factory = NULL_FACTORY;
@@ -189,8 +189,8 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
 
     protected List<Injector<T>> getInjectors() {
         List<Injector<T>> injectors = new ArrayList<Injector<T>>(injectionSites.size());
-        for (Map.Entry<ValueSource, InjectionSite> entry : injectionSites.entrySet()) {
-            ValueSource name = entry.getKey();
+        for (Map.Entry<InjectableAttribute, InjectionSite> entry : injectionSites.entrySet()) {
+            InjectableAttribute name = entry.getKey();
             InjectionSite site = entry.getValue();
             ObjectFactory<?> factory = factories.get(name);
             if (factory != null) {

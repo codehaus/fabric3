@@ -29,11 +29,11 @@ import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.Signature;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
 import org.fabric3.spi.component.InstanceFactoryProvider;
-import org.fabric3.scdl.ValueSource;
+import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.MethodInjectionSite;
 import org.fabric3.scdl.ConstructorInjectionSite;
-import org.fabric3.scdl.ValueSource.ValueSourceType;
+import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.fabric.services.instancefactory.ReflectiveInstanceFactoryBuilder;
 import org.fabric3.fabric.services.classloading.ClassLoaderRegistryImpl;
 
@@ -48,44 +48,44 @@ public class ReflectiveIFProviderBuilderTestCase extends TestCase {
     private ClassLoader cl;
 
     /**
-     * Verifies an ValueSource is set properly for constructor parameters
+     * Verifies an InjectableAttribute is set properly for constructor parameters
      *
      * @throws Exception
      */
     public void testCdiSource() throws Exception {
         InstanceFactoryProvider provider = builder.build(definition, cl);
-        assertEquals(String.class, provider.getMemberType(new ValueSource(ValueSourceType.PROPERTY, "a")));
+        assertEquals(String.class, provider.getMemberType(new InjectableAttribute(InjectableAttributeType.PROPERTY, "a")));
     }
 
     /**
-     * Verifies an ValueSource is set properly for protected fields
+     * Verifies an InjectableAttribute is set properly for protected fields
      *
      * @throws Exception
      */
     public void testProtectedFieldInjectionSource() throws Exception {
-        ValueSource valueSource = new ValueSource(ValueSourceType.REFERENCE, "xyz");
+        InjectableAttribute injectableAttribute = new InjectableAttribute(InjectableAttributeType.REFERENCE, "xyz");
         Field field = Foo.class.getDeclaredField("xyz");
         InjectionSite injectionSite = new FieldInjectionSite(field);
-        definition.addInjectionSite(valueSource, injectionSite);
+        definition.addInjectionSite(injectableAttribute, injectionSite);
 
         InstanceFactoryProvider provider = builder.build(definition, cl);
-        Class<?> clazz = provider.getMemberType(valueSource);
+        Class<?> clazz = provider.getMemberType(injectableAttribute);
         assertEquals(Bar.class, clazz);
     }
 
     /**
-     * Verifies an ValueSource is set properly for setter methods
+     * Verifies an InjectableAttribute is set properly for setter methods
      *
      * @throws Exception
      */
     public void testMethodInjectionSource() throws Exception {
-        ValueSource valueSource = new ValueSource(ValueSourceType.REFERENCE, "abc");
+        InjectableAttribute injectableAttribute = new InjectableAttribute(InjectableAttributeType.REFERENCE, "abc");
         Method method = Foo.class.getMethod("setAbc", Bar.class);
         InjectionSite injectionSite = new MethodInjectionSite(method, 0);
-        definition.addInjectionSite(valueSource, injectionSite);
+        definition.addInjectionSite(injectableAttribute, injectionSite);
 
         InstanceFactoryProvider provider = builder.build(definition, cl);
-        Class<?> clazz = provider.getMemberType(valueSource);
+        Class<?> clazz = provider.getMemberType(injectableAttribute);
         assertEquals(Bar.class, clazz);
     }
 
@@ -100,8 +100,8 @@ public class ReflectiveIFProviderBuilderTestCase extends TestCase {
         definition.setConstructor(new Signature(constructor));
         definition.setInitMethod(new Signature("init"));
         definition.setDestroyMethod(new Signature("destroy"));
-        definition.addInjectionSite(new ValueSource(ValueSourceType.PROPERTY, "a"), new ConstructorInjectionSite(constructor, 0));
-        definition.addInjectionSite(new ValueSource(ValueSourceType.REFERENCE, "b"), new ConstructorInjectionSite(constructor, 1));
+        definition.addInjectionSite(new InjectableAttribute(InjectableAttributeType.PROPERTY, "a"), new ConstructorInjectionSite(constructor, 0));
+        definition.addInjectionSite(new InjectableAttribute(InjectableAttributeType.REFERENCE, "b"), new ConstructorInjectionSite(constructor, 1));
     }
 
     public static class Foo {

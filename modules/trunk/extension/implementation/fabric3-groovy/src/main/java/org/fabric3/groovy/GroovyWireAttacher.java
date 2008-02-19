@@ -37,7 +37,8 @@ import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.component.Component;
 import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.scdl.ValueSource;
+import org.fabric3.scdl.InjectableAttribute;
+import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
@@ -90,7 +91,7 @@ public class GroovyWireAttacher implements SourceWireAttacher<GroovyWireSourceDe
         Component component = manager.getComponent(sourceName);
         assert component instanceof GroovyComponent;
         GroovyComponent<?> source = (GroovyComponent) component;
-        ValueSource referenceSource = new ValueSource(ValueSource.ValueSourceType.REFERENCE, sourceUri.getFragment());
+        InjectableAttribute referenceSource = new InjectableAttribute(InjectableAttributeType.REFERENCE, sourceUri.getFragment());
 
         Class<?> type = source.getMemberType(referenceSource);
         ObjectFactory<?> factory = createWireObjectFactory(type, sourceDefinition.isConversational(), wire);
@@ -152,7 +153,7 @@ public class GroovyWireAttacher implements SourceWireAttacher<GroovyWireSourceDe
     public void attachObjectFactory(GroovyWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
         URI sourceId = UriHelper.getDefragmentedName(source.getUri());
         GroovyComponent<?> sourceComponent = (GroovyComponent<?>) manager.getComponent(sourceId);
-        ValueSource referenceSource = new ValueSource(ValueSource.ValueSourceType.REFERENCE, source.getUri().getFragment());
+        InjectableAttribute referenceSource = new InjectableAttribute(InjectableAttributeType.REFERENCE, source.getUri().getFragment());
 
         sourceComponent.attachReferenceToTarget(referenceSource, objectFactory, null);
     }

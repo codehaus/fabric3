@@ -39,9 +39,9 @@ import org.fabric3.scdl.ConstructorInjectionSite;
 import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.Multiplicity;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.ValueSource;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.fabric.monitor.MonitorResource;
 
 /**
@@ -101,7 +101,7 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
                         continue param;
                     }
                 }
-                ValueSource.ValueSourceType sourceType = helper.inferType(parameterTypes[i]);
+                InjectableAttributeType sourceType = helper.inferType(parameterTypes[i]);
                 switch (sourceType) {
                 case PROPERTY:
                     processProperty(null, constructor, i, componentType);

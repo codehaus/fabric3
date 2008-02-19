@@ -25,7 +25,7 @@ import java.util.Map;
 import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.ModelObject;
 import org.fabric3.scdl.Signature;
-import org.fabric3.scdl.ValueSource;
+import org.fabric3.scdl.InjectableAttribute;
 
 /**
  * Base class for instance factory definitions.
@@ -37,7 +37,7 @@ public class InstanceFactoryDefinition extends ModelObject {
     private Signature constructor;
     private Signature initMethod;
     private Signature destroyMethod;
-    private Map<ValueSource, InjectionSite> mappings = new HashMap<ValueSource, InjectionSite>();
+    private Map<InjectableAttribute, InjectionSite> mappings = new HashMap<InjectableAttribute, InjectionSite>();
 
     /**
      * Returns the signature of the constrctor that should be used.
@@ -115,7 +115,7 @@ public class InstanceFactoryDefinition extends ModelObject {
      * Returns the injection sites for all the injectable values.
      * @return the injection sites for all the injectable values
      */
-    public Map<ValueSource, InjectionSite> getInjectionSites() {
+    public Map<InjectableAttribute, InjectionSite> getInjectionSites() {
         return mappings;
     }
 
@@ -125,7 +125,7 @@ public class InstanceFactoryDefinition extends ModelObject {
      * @param source the source of the value being injected
      * @param site   the injection site
      */
-    public void addInjectionSite(ValueSource source, InjectionSite site) {
+    public void addInjectionSite(InjectableAttribute source, InjectionSite site) {
         mappings.put(source, site);
     }
 }

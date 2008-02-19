@@ -36,7 +36,8 @@ import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.Component;
-import org.fabric3.scdl.ValueSource;
+import org.fabric3.scdl.InjectableAttribute;
+import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
@@ -103,7 +104,7 @@ public class SpringWireAttacher extends PojoWireAttacher implements SourceWireAt
         Component component = manager.getComponent(sourceName);
         assert component instanceof SpringComponent;
         SpringComponent<?> source = (SpringComponent) component;
-        ValueSource referenceSource = new ValueSource(ValueSource.ValueSourceType.REFERENCE, sourceUri.getFragment());
+        InjectableAttribute referenceSource = new InjectableAttribute(InjectableAttributeType.REFERENCE, sourceUri.getFragment());
 
         Class<?> type = sourceDefinition.getFieldType();
         URI targetUri = targetDefinition.getUri();
@@ -151,8 +152,8 @@ public class SpringWireAttacher extends PojoWireAttacher implements SourceWireAt
 //            }
 //            if (!wire.getCallbackInvocationChains().isEmpty()) {
 //                URI callbackUri = sourceDefinition.getCallbackUri();
-//                ValueSource callbackSource =
-//                        new ValueSource(ValueSource.ValueSourceType.CALLBACK, callbackUri.getFragment());
+//                InjectableAttribute callbackSource =
+//                        new InjectableAttribute(InjectableAttribute.InjectableAttributeType.CALLBACK, callbackUri.getFragment());
 //                Class<?> callbackType = source.getMemberType(callbackSource);
 //                source.setObjectFactory(callbackSource, createCallbackWireObjectFactory(callbackType));
 //            }

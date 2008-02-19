@@ -31,7 +31,7 @@ import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
-import org.fabric3.scdl.ValueSource;
+import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.runtime.component.ComponentManager;
@@ -84,7 +84,7 @@ public class SystemWireAttacher extends PojoWireAttacher implements SourceWireAt
     public void attachObjectFactory(SystemWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
         URI sourceId = UriHelper.getDefragmentedName(source.getUri());
         SystemComponent<?> sourceComponent = (SystemComponent<?>) manager.getComponent(sourceId);
-        ValueSource referenceSource = source.getValueSource();
+        InjectableAttribute referenceSource = source.getValueSource();
 
         Object key = getKey(source, sourceComponent, referenceSource);
         sourceComponent.attachReferenceToTarget(referenceSource, objectFactory, key);

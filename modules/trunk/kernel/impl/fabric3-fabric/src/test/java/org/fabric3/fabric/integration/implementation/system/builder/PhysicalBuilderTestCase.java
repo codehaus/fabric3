@@ -47,7 +47,8 @@ import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.Scope;
 import org.fabric3.scdl.Signature;
-import org.fabric3.scdl.ValueSource;
+import org.fabric3.scdl.InjectableAttribute;
+import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
@@ -97,7 +98,7 @@ public class PhysicalBuilderTestCase extends TestCase {
         InstanceFactoryDefinition sourceProviderDefinition = new InstanceFactoryDefinition();
         sourceProviderDefinition.setImplementationClass(SourceImpl.class.getName());
         sourceProviderDefinition.setConstructor(new Signature(SourceImpl.class.getConstructor()));
-        sourceProviderDefinition.addInjectionSite(new ValueSource(ValueSource.ValueSourceType.REFERENCE, "target"),
+        sourceProviderDefinition.addInjectionSite(new InjectableAttribute(InjectableAttributeType.REFERENCE, "target"),
                                                   new FieldInjectionSite(SourceImpl.class.getField("target")));
 
         SystemComponentDefinition source = new SystemComponentDefinition();
@@ -126,7 +127,7 @@ public class PhysicalBuilderTestCase extends TestCase {
     private PhysicalWireDefinition createWireDefinition() {
         SystemWireSourceDefinition wireSource = new SystemWireSourceDefinition();
         wireSource.setUri(sourceId.resolve("#target"));
-        wireSource.setValueSource(new ValueSource(ValueSource.ValueSourceType.REFERENCE, "target"));
+        wireSource.setValueSource(new InjectableAttribute(InjectableAttributeType.REFERENCE, "target"));
         SystemWireTargetDefinition wireTarget = new SystemWireTargetDefinition();
         wireTarget.setUri(targetId);
         PhysicalWireDefinition wireDefinition = new PhysicalWireDefinition(wireSource, wireTarget);

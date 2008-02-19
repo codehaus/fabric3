@@ -25,7 +25,8 @@ import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.ValueSource;
+import org.fabric3.scdl.InjectableAttribute;
+import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
@@ -99,7 +100,7 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
         SystemWireSourceDefinition wireDefinition = new SystemWireSourceDefinition();
         wireDefinition.setOptimizable(true);
         wireDefinition.setUri(uri);
-        wireDefinition.setValueSource(new ValueSource(ValueSource.ValueSourceType.REFERENCE, uri.getFragment()));
+        wireDefinition.setValueSource(new InjectableAttribute(InjectableAttributeType.REFERENCE, uri.getFragment()));
 
         URI classLoaderId = classLoaderGenerator.generate(source, context);
         wireDefinition.setClassLoaderId(classLoaderId);
@@ -131,7 +132,7 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
         SystemWireSourceDefinition wireDefinition = new SystemWireSourceDefinition();
         wireDefinition.setOptimizable(true);
         wireDefinition.setUri(uri);
-        wireDefinition.setValueSource(new ValueSource(ValueSource.ValueSourceType.RESOURCE, uri.getFragment()));
+        wireDefinition.setValueSource(new InjectableAttribute(InjectableAttributeType.RESOURCE, uri.getFragment()));
 
         URI classLoaderId = classLoaderGenerator.generate(source, context);
         wireDefinition.setClassLoaderId(classLoaderId);

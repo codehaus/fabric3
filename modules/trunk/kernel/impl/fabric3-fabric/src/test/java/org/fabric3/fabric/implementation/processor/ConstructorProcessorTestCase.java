@@ -29,9 +29,10 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Multiplicity;
 import org.fabric3.scdl.Signature;
-import org.fabric3.scdl.ValueSource;
+import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.ConstructorInjectionSite;
 import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.InjectableAttributeType;
 
 import junit.framework.TestCase;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
@@ -87,11 +88,11 @@ public class ConstructorProcessorTestCase extends TestCase {
         Constructor<Mixed> ctor1 = Mixed.class.getConstructor(String.class, String.class, String.class);
         processor.visitConstructor(ctor1, type, null);
         assertNotNull(type.getReferences().get("Mixed[0]"));
-        assertEquals(new ConstructorInjectionSite(ctor1, 0), type.getInjectionSite(new ValueSource(ValueSource.ValueSourceType.REFERENCE, "Mixed[0]")));
+        assertEquals(new ConstructorInjectionSite(ctor1, 0), type.getInjectionSite(new InjectableAttribute(InjectableAttributeType.REFERENCE, "Mixed[0]")));
         assertNotNull(type.getProperties().get("foo"));
-        assertEquals(new ConstructorInjectionSite(ctor1, 1), type.getInjectionSite(new ValueSource(ValueSource.ValueSourceType.PROPERTY, "foo")));
+        assertEquals(new ConstructorInjectionSite(ctor1, 1), type.getInjectionSite(new InjectableAttribute(InjectableAttributeType.PROPERTY, "foo")));
         assertNotNull(type.getReferences().get("bar"));
-        assertEquals(new ConstructorInjectionSite(ctor1, 2), type.getInjectionSite(new ValueSource(ValueSource.ValueSourceType.REFERENCE, "bar")));
+        assertEquals(new ConstructorInjectionSite(ctor1, 2), type.getInjectionSite(new InjectableAttribute(InjectableAttributeType.REFERENCE, "bar")));
     }
 
     private static class BadFoo {

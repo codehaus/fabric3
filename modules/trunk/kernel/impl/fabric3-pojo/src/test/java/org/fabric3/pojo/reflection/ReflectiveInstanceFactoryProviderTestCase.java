@@ -33,7 +33,8 @@ import org.easymock.EasyMock;
 import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.MethodInjectionSite;
-import org.fabric3.scdl.ValueSource;
+import org.fabric3.scdl.InjectableAttribute;
+import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.InstanceFactory;
@@ -45,8 +46,8 @@ import org.fabric3.spi.component.TargetInitializationException;
  */
 public class ReflectiveInstanceFactoryProviderTestCase extends TestCase {
     private Constructor<Foo> argConstructor;
-    private List<ValueSource> ctrNames;
-    private Map<ValueSource, InjectionSite> sites;
+    private List<InjectableAttribute> ctrNames;
+    private Map<InjectableAttribute, InjectionSite> sites;
     private ObjectFactory intFactory;
     private ObjectFactory stringFactory;
     private ReflectiveInstanceFactoryProvider<Foo> provider;
@@ -54,11 +55,11 @@ public class ReflectiveInstanceFactoryProviderTestCase extends TestCase {
     private Field stringField;
     private Method intSetter;
     private Method stringSetter;
-    private ValueSource intProperty = new ValueSource(ValueSource.ValueSourceType.PROPERTY, "int");
-    private ValueSource stringProperty = new ValueSource(ValueSource.ValueSourceType.PROPERTY, "string");
+    private InjectableAttribute intProperty = new InjectableAttribute(InjectableAttributeType.PROPERTY, "int");
+    private InjectableAttribute stringProperty = new InjectableAttribute(InjectableAttributeType.PROPERTY, "string");
 
     public void testNoConstructorArgs() {
-        List<ValueSource> sources = Collections.emptyList();
+        List<InjectableAttribute> sources = Collections.emptyList();
         ObjectFactory<?>[] args = provider.getArgumentFactories(sources);
         assertEquals(0, args.length);
     }
@@ -137,8 +138,8 @@ public class ReflectiveInstanceFactoryProviderTestCase extends TestCase {
         stringField = Foo.class.getField("stringField");
         intSetter = Foo.class.getMethod("setIntField", int.class);
         stringSetter = Foo.class.getMethod("setStringField", String.class);
-        ctrNames = new ArrayList<ValueSource>();
-        sites = new HashMap<ValueSource, InjectionSite>();
+        ctrNames = new ArrayList<InjectableAttribute>();
+        sites = new HashMap<InjectableAttribute, InjectionSite>();
         provider = new ReflectiveInstanceFactoryProvider<Foo>(noArgConstructor,
                                                               ctrNames,
                                                               sites,

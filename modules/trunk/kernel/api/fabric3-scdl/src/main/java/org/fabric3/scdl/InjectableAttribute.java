@@ -19,41 +19,22 @@
 package org.fabric3.scdl;
 
 /**
- * Identifies the source of a value supplied from SCA to an implementation. This is essentially something that can be
- * configured through SCDL. Currently supported types are:
- * <ul>
- * <li>Callbacks</li>
- * <li>References</li>
- * <li>Properties</li>
- * <li>Resources</li>
- * <li>Context (the implementation-specific context)</li>
- * </ul>
+ * Identifies an attribute of the component that can be injected in to an application instance.
  *
  * @version $Revision$ $Date$
  */
-public class ValueSource {
-    public static final ValueSource COMPONENT_CONTEXT = new ValueSource(org.fabric3.scdl.ValueSource.ValueSourceType.CONTEXT, "ComponentContext");
-    public static final ValueSource REQUEST_CONTEXT = new ValueSource(org.fabric3.scdl.ValueSource.ValueSourceType.CONTEXT, "RequestContext");
+public class InjectableAttribute {
+    public static final InjectableAttribute COMPONENT_CONTEXT = new InjectableAttribute(InjectableAttributeType.CONTEXT, "ComponentContext");
+    public static final InjectableAttribute REQUEST_CONTEXT = new InjectableAttribute(InjectableAttributeType.CONTEXT, "RequestContext");
 
-    /**
-     * Enumeration of the type of ValueSource supported.
-     */
-    public static enum ValueSourceType {
-        CALLBACK,
-        REFERENCE,
-        PROPERTY,
-        RESOURCE,
-        CONTEXT
-    }
-
-    private ValueSourceType valueType;
+    private InjectableAttributeType valueType;
 
     private String name;
 
     /**
-     * Constructor used for desearialization.
+     * Constructor used for deserialization.
      */
-    public ValueSource() {
+    public InjectableAttribute() {
     }
 
     /**
@@ -62,7 +43,7 @@ public class ValueSource {
      * @param valueType the type of value
      * @param name      the logical name
      */
-    public ValueSource(ValueSourceType valueType, String name) {
+    public InjectableAttribute(InjectableAttributeType valueType, String name) {
         this.valueType = valueType;
         this.name = name;
     }
@@ -72,7 +53,7 @@ public class ValueSource {
      *
      * @return the type of value this source represents
      */
-    public ValueSourceType getValueType() {
+    public InjectableAttributeType getValueType() {
         return valueType;
     }
 
@@ -81,7 +62,7 @@ public class ValueSource {
      *
      * @param valueType the type of value this source represents
      */
-    public void setValueType(ValueSourceType valueType) {
+    public void setValueType(InjectableAttributeType valueType) {
         this.valueType = valueType;
     }
 
@@ -112,7 +93,7 @@ public class ValueSource {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ValueSource that = (ValueSource) o;
+        InjectableAttribute that = (InjectableAttribute) o;
         return name.equals(that.name) && valueType == that.valueType;
 
     }

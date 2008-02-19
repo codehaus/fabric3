@@ -23,7 +23,7 @@ import java.lang.reflect.Type;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 
-import org.fabric3.scdl.ValueSource;
+import org.fabric3.scdl.InjectableAttributeType;
 
 /**
  * Helper service that provides support methods to simplify introspection.
@@ -134,7 +134,7 @@ public interface IntrospectionHelper {
 
     boolean isManyValued(Class<?> clazz);
 
-    ValueSource.ValueSourceType inferType(Type type);
+    InjectableAttributeType inferType(Type type);
 
     /**
      * Determine if an annotation is present on this interface or any superinterface.

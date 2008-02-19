@@ -28,7 +28,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import org.fabric3.pojo.implementation.PojoComponent;
-import org.fabric3.scdl.ValueSource;
+import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.model.type.XSDSimpleType;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
@@ -52,7 +52,7 @@ public abstract class PojoWireAttacher {
     }
 
     @SuppressWarnings("unchecked")
-    protected Object getKey(PojoWireSourceDefinition sourceDefinition, PojoComponent<?> source, ValueSource referenceSource) {
+    protected Object getKey(PojoWireSourceDefinition sourceDefinition, PojoComponent<?> source, InjectableAttribute referenceSource) {
         
         if(! Map.class.isAssignableFrom(source.getMemberType(referenceSource))) {
             return null;

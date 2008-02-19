@@ -29,7 +29,8 @@ import org.osoa.sca.annotations.Service;
 
 import org.fabric3.pojo.reflection.InvokerInterceptor;
 import org.fabric3.pojo.wire.PojoWireAttacher;
-import org.fabric3.scdl.ValueSource;
+import org.fabric3.scdl.InjectableAttribute;
+import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
@@ -98,7 +99,7 @@ public class JavaWireAttacher extends PojoWireAttacher implements SourceWireAtta
         URI sourceUri = sourceDefinition.getUri();
         URI sourceName = UriHelper.getDefragmentedName(sourceDefinition.getUri());
         JavaComponent<?> source = (JavaComponent) manager.getComponent(sourceName);
-        ValueSource valueSource = sourceDefinition.getValueSource();
+        InjectableAttribute injectableAttribute = sourceDefinition.getValueSource();
 
         Class<?> type;
         try {
@@ -107,17 +108,17 @@ public class JavaWireAttacher extends PojoWireAttacher implements SourceWireAtta
             String name = sourceDefinition.getInterfaceName();
             throw new WireAttachException("Unable to load interface class [" + name + "]", sourceUri, null, e);
         }
-        if (ValueSource.ValueSourceType.CALLBACK.equals(valueSource.getValueType())) {
+        if (InjectableAttributeType.CALLBACK.equals(injectableAttribute.getValueType())) {
             URI targetUri = targetDefinition.getUri();
             boolean conversational = sourceDefinition.isConversational();
             ObjectFactory<?> factory = proxyService.createCallbackObjectFactory(type, conversational, targetUri, wire);
             // JFM TODO inject updates to object factory as this does not support a proxy fronting multiple callback wires
-            source.setObjectFactory(valueSource, factory);
+            source.setObjectFactory(injectableAttribute, factory);
         } else {
             boolean conversational = sourceDefinition.isConversational();
             ObjectFactory<?> factory = proxyService.createObjectFactory(type, conversational, wire);
-            Object key = getKey(sourceDefinition, source, valueSource);
-            source.attachReferenceToTarget(valueSource, factory, key);
+            Object key = getKey(sourceDefinition, source, injectableAttribute);
+            source.attachReferenceToTarget(injectableAttribute, factory, key);
         }
     }
 
@@ -169,10 +170,10 @@ public class JavaWireAttacher extends PojoWireAttacher implements SourceWireAtta
     public void attachObjectFactory(JavaWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
         URI sourceId = UriHelper.getDefragmentedName(source.getUri());
         JavaComponent<?> sourceComponent = (JavaComponent<?>) manager.getComponent(sourceId);
-        ValueSource valueSource = source.getValueSource();
+        InjectableAttribute injectableAttribute = source.getValueSource();
 
-        Object key = getKey(source, sourceComponent, valueSource);
-        sourceComponent.attachReferenceToTarget(valueSource, objectFactory, key);
+        Object key = getKey(source, sourceComponent, injectableAttribute);
+        sourceComponent.attachReferenceToTarget(injectableAttribute, objectFactory, key);
     }
 
     public ObjectFactory<?> createObjectFactory(JavaWireTargetDefinition target) throws WiringException {

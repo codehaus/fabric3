@@ -39,7 +39,7 @@ import org.osoa.sca.RequestContext;
 
 import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.IntrospectionHelper;
-import org.fabric3.scdl.ValueSource;
+import org.fabric3.scdl.InjectableAttributeType;
 
 /**
  * @version $Rev$ $Date$
@@ -165,27 +165,27 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
         return clazz.isArray() || COLLECTIONS.contains(clazz) || Map.class.equals(clazz);
     }
 
-    public ValueSource.ValueSourceType inferType(Type type) {
+    public InjectableAttributeType inferType(Type type) {
         Type baseType = getBaseType(type);
         Class<?> rawType = getRawType(baseType);
 
         // if it's not an interface, it must be a property
         if (!rawType.isInterface()) {
-            return ValueSource.ValueSourceType.PROPERTY;
+            return InjectableAttributeType.PROPERTY;
         }
 
         // it it's a context interfaces, it must be a context
         if (ComponentContext.class.isAssignableFrom(rawType) || RequestContext.class.isAssignableFrom(rawType)) {
-            return ValueSource.ValueSourceType.CONTEXT;
+            return InjectableAttributeType.CONTEXT;
         }
 
         // if it's Remotable or a local Service, it must be a reference
         if (isAnnotationPresent(rawType, Remotable.class) || isAnnotationPresent(rawType, Service.class)) {
-            return ValueSource.ValueSourceType.REFERENCE;
+            return InjectableAttributeType.REFERENCE;
         }
 
         // otherwise it's a property
-        return ValueSource.ValueSourceType.PROPERTY;
+        return InjectableAttributeType.PROPERTY;
     }
 
     public boolean isAnnotationPresent(Class<?> type, Class<? extends Annotation> annotationType) {
