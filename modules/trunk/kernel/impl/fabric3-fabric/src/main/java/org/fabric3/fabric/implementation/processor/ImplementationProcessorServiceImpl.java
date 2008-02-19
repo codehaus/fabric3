@@ -181,7 +181,7 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
         org.fabric3.scdl.Property<T> property = new org.fabric3.scdl.Property<T>();
         property.setName(name);
         property.setJavaType(type);
-        property.setRequired(annotation == null || annotation.required());
+        property.setRequired(annotation != null && annotation.required());
         property.setMany(helper.isManyValued(type));
         return property;
     }
