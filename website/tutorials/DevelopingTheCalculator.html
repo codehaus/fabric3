@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+   <meta http-equiv="content-type" content="text/html" />
+  <meta name="description" content="Fabric3 website" />
+  <meta name="keywords" content="Fabric3, SCA, SCA Implementation, Open Source" />
+  <meta name="author" content="Fabric3 / Ratesh Bansal" />
+ <link rel="stylesheet" type="text/css" href="../css/default.css" />
+ <title>Fabric3 - Developing the Calculator</title>
+
+</head>
+
+<body>
+<div id="container">
+<div id="main">
+<div id="intro">
+            <p><div class="section_1"><h1><a name="LeftHeader-fabric3"></a><img src="../img/banner.jpg" height="100" width="750"/></h1></div></p>
+
+     </div><div class="clear"></div>
+
+
+<div class="shortheaderstyle" style="font-size: 1.0em">
+<table id="utop_nav" style="width: 100%;padding-right: 2mm">
+ <tr>
+  <td align="left" valign="middle">
+   <div id="ubreadcrumbs">
+    <a href="../home.html">Home</a>
+                      &gt; <a href="../Docs.html">Docs</a>
+
+                        &gt; <a href="../Tutorials.html">Tutorials</a>
+                        &gt; <a href="">Developing the Calculator</a>
+                  </div>
+  </td>
+  <td align="right" valign="middle" id="quicklinks">
+
+       <p><a href="../Roadmap.html" title="Roadmap">Roadmap</a> | <a href="../Docs.html" title="Docs">Docs</a> | <a href="../Downloads.html" title="Downloads">Downloads</a></p>
+     </td>
+     </tr>
+</table>
+</div>
+<div class="content" style="padding-top: 3mm;">
+          <div class="section_3"><h3><a name="DevelopingtheCalculator-RunningtheCalculatorinanIDE"></a>Running the Calculator in an IDE</h3>
+
+<p>Once you have completed the IDE setup outlined in the <a href="../Tutorials.html" title="Tutorials">Introduction</a>, run <tt>calculator.CalculatorApp</tt> from your IDE. The project will compile and execute the run configuration. When it completes, the following will be displayed in the console window:</p>
+
+<div class="preformatted panel" style="border-width: 1px;"><div class="preformattedContent panelContent">
+<pre>1+2=3
+</pre>
+</div></div>
+
+<p>This indicates that the application has successfully run.</p>
+
+</div><div class="section_3"><h3><a name="DevelopingtheCalculator-ExaminingtheCode"></a>Examining the Code</h3>
+
+<p>Under <tt>resources/META-INF</tt>, the file <tt>calculator.composite</tt> defines a calculator component wired to four components that perform addition, subtraction, multiplication, and division:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">&lt;composite xmlns=<span class="code-quote">"http:<span class="code-comment">//www.osoa.org/xmlns/sca/1.0"</span>
+</span>           xmlns:fabric3=<span class="code-quote">"http:<span class="code-comment">//fabric3.org/xmlns/sca/2.0-alpha"</span>
+</span>           targetNamespace=<span class="code-quote">"http:<span class="code-comment">//fabric3.org/xmlns/sca/tutorials/0.3"</span>
+</span>           name=<span class="code-quote">"CalculatorComposite"</span>
+
+           autowire=<span class="code-quote">"<span class="code-keyword">true</span>"</span>&gt;
+
+    &lt;component name=<span class="code-quote">"calculator"</span>&gt;
+        &lt;implementation.java class=<span class="code-quote">"calculator.CalculatorServiceImpl"</span>/&gt;
+    &lt;/component&gt;
+
+    &lt;component name=<span class="code-quote">"adder"</span>&gt;
+        &lt;implementation.java class=<span class="code-quote">"calculator.AddServiceImpl"</span>/&gt;
+    &lt;/component&gt;
+
+    &lt;component name=<span class="code-quote">"subtractor"</span>&gt;
+
+        &lt;implementation.java class=<span class="code-quote">"calculator.SubtractServiceImpl"</span>/&gt;
+    &lt;/component&gt;
+
+    &lt;component name=<span class="code-quote">"multiplier"</span>&gt;
+        &lt;implementation.java class=<span class="code-quote">"calculator.MultiplyServiceImpl"</span>/&gt;
+
+    &lt;/component&gt;
+
+    &lt;component name=<span class="code-quote">"divider"</span>&gt;
+        &lt;implementation.java class=<span class="code-quote">"calculator.DivideServiceImpl"</span>/&gt;
+    &lt;/component&gt;
+&lt;/composite&gt;</pre>
+
+</div></div>
+
+<p>In our simplified sample, we will boot a local SCA domain and activate the composite in it. In a production scenario, the components could be distributed accross multiple runtimes. Booting the local domain and activating the composite is done via the Domain API as shown in <tt>loanapp.LoanApp#setup</tt>:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">/**
+ * Initializes the local domain and activates the loan app composite
+ */
+ <span class="code-keyword">public</span> void setup() {
+    domain = <span class="code-keyword">new</span> Domain();
+    domain.activate(<span class="code-object">Thread</span>.currentThread().getContextClassLoader().getResource(<span class="code-quote">"META-INF/calculator.composite"</span>));
+ }</pre>
+
+</div></div>
+
+<p>Once the domain is booted and the composite activated, client code can connect to a service and invoke it using <tt>Domain#connectTo</tt>. The <tt>CalculatorApp</tt> client connects to <tt>CalculatorService</tt> and invokes the <tt>add</tt> operation, as demonstrated in the following fragment:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">CalculatorService calculator = domain.connectTo(CalculatorService.class, <span class="code-quote">"calculator"</span>);
+
+<span class="code-object">double</span> result = calculator.add(1d, 2d);</pre>
+</div></div>
+
+</div><div class="section_3"><h3><a name="DevelopingtheCalculator-Summary"></a>Summary</h3>
+
+<p>This tutorial has demonstrated how to use the Fabric3 Development Runtime with a basic application. It has covered how to boot a local domain, activate a composite in it, and connect to a service provided by a component. Ensuing tutorials will build on the loan application, including the use of advanced SCA features such as callbacks and conversations as well as provisioning the composite to a multi-node domain.</p></div>
+</div>
+
+
+</div>
+
+<div id="sidebar">
+<a href=""><img src="../img/fabric3-logo.jpg" width="100%" height="100" border="1"/></a>
+<div class="navigation">
+   <div class="section_1"><h1><a name="Navigation-Resources"></a>Resources</h1>
+
+<p><a href="../Docs.html" title="Docs">Documentation</a><br></br>
+<a href="../Downloads.html" title="Downloads">Downloads</a><br></br>
+<a href="../SourceRepository.html" title="Source Repository">Source Repository</a><br></br>
+<a href="http://www.osoa.org" title="SCA Specifications">SCA Specifications</a><br></br>
+<a href="http://xircles.codehaus.org/projects/fabric3/lists">Mailing Lists</a><br></br>
+<a href="http://jira.codehaus.org/browse/FABRICTHREE">JIRA</a><br></br>
+<a href="http://bamboo.ci.codehaus.org/browse/FABRIC3">Continuous Integration</a><br></br>
+<a href="http://www.opensource.org/licenses/apache2.0.php">License</a></p>
+</div>
+ </div>
+
+<h4 class="headerstyle">Feeds</h4>
+<ul>
+
+ <li><a class="rss" href="http://docs.codehaus.org/spaces/rss.action?key=FABRICTHREE&amp;newPages=false">Site</a></li>
+ <li><a class="rss" href="http://docs.codehaus.org/spaces/blogrss.action?key=FABRICTHREE">News</a></li>
+</ul>
+
+<h4 class="headerstyle">Blogs</h4>
+<ul>
+ <li><a class="editPage" href="">Blog1</a></li>
+ <li><a class="editPage" href="">Blog2</a></li>
+</ul>
+<h4 class="headerstyle">External Links</h4>
+<ul>
+ <li><a href="http://atlassian.com/">Atlassian</a></li>
+ <li><a href="http://atlassian.com/confluence/">Confluence</a></li>
+ <li><a href="http://www.codehaus.org/">Codehaus</a></li>
+ <li><a href="http://www.jetbrains.com/idea/"><img src="http://www.jetbrains.com/idea/opensource/img/banners/idea88x31_blue.gif"></a></li>
+</ul>
+</div>
+<div class="clear">&nbsp;</div>
+</div>
+<div id="footer">&copy; 2006 Codehaus Foundation. Original design by <a href="http://andreasviklund.com" class="credit">Andreas Viklund</a></div>
+
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-150515-1";
+urchinTracker();
+</script>
+</body>
+</html>

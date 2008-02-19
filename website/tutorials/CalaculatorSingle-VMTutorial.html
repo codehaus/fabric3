@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+   <meta http-equiv="content-type" content="text/html" />
+  <meta name="description" content="Fabric3 website" />
+  <meta name="keywords" content="Fabric3, SCA, SCA Implementation, Open Source" />
+  <meta name="author" content="Fabric3 / Ratesh Bansal" />
+ <link rel="stylesheet" type="text/css" href="../css/default.css" />
+ <title>Fabric3 - Calaculator Single-VM Tutorial</title>
+
+</head>
+
+<body>
+<div id="container">
+<div id="main">
+<div id="intro">
+            <p><div class="section_1"><h1><a name="LeftHeader-fabric3"></a><img src="../img/banner.jpg" height="100" width="750"/></h1></div></p>
+
+     </div><div class="clear"></div>
+
+
+<div class="shortheaderstyle" style="font-size: 1.0em">
+<table id="utop_nav" style="width: 100%;padding-right: 2mm">
+ <tr>
+  <td align="left" valign="middle">
+   <div id="ubreadcrumbs">
+    <a href="../home.html">Home</a>
+                      &gt; <a href="../Docs.html">Docs</a>
+
+                        &gt; <a href="../Tutorials.html">Tutorials</a>
+                        &gt; <a href="">Calaculator Single-VM Tutorial</a>
+                  </div>
+  </td>
+  <td align="right" valign="middle" id="quicklinks">
+
+         <p><a href="../Roadmap.html" title="Roadmap">Roadmap</a> | <a href="../Docs.html" title="Docs">Docs</a> | <a href="../Downloads.html" title="Downloads">Downloads</a></p>
+     </td>
+ </tr>
+</table>
+</div>
+
+<div class="content" style="padding-top: 3mm;">
+          <div class="section_3"><h3><a name="CalaculatorSingle-VMTutorial-Overview"></a>Overview</h3>
+
+<p><b>Note this tutorial is a work in progress and is not complete for version 0.3</b></p>
+
+<p>This tutorial covers the following:</p>
+
+<ul>
+	<li>Creating an SCA composite with Fabric3</li>
+	<li>Packaging the composite and deploying it to a single-node server.</li>
+	<li>Invoking a service remotely from a client</li>
+</ul>
+
+
+
+</div><div class="section_3"><h3><a name="CalaculatorSingle-VMTutorial-TheFabric3Server"></a>The Fabric3 Server</h3>
+
+<p>The Fabric3 Server is a full-featured SCA runtime that may be used in single- or multi-node configurations. This tuturial will cover how to use the Fabric3 Server in single-node mode, demonstrating how to package and deploy a composite to the server. The tutorial will also detail how to build a simple Web application front-end that connects to a service hosted on the server.</p>
+
+<div class="imageHolder"><img src="../img/singleVM.diagram.jpg" align="absmiddle" border="0"></img></div>
+
+</div><div class="section_3"><h3><a name="CalaculatorSingle-VMTutorial-GettingStarted"></a>Getting Started</h3>
+
+<p>Perform the following steps:</p>
+
+<ol>
+	<li>Download and extract the Fabric3 Server from the <a href="../Downloads.html" title="Downloads">Downloads Section</a></li>
+	<li>Download and extract the Development Runtime from the <a href="../Downloads.html" title="Downloads">Downloads Section</a></li>
+
+	<li>Download and extract the tutorial distribution from from the <a href="../Downloads.html" title="Downloads">Downloads Section</a></li>
+	<li>Download and install servlet container. We recommend <a href="http://www.mortbay.org/">Jetty</a>.</li>
+</ol>
+
+
+<p>If you have already completed the first tutorial, you will not need to perform the last two steps. If not, after extracting the tutorial distribution and loading the included IDE project, you will need to configure the project dependencies to point to the correct jars as described in <a href="DevelopmentTutorial.html" title="Development Tutorial">Development Tutorial</a>. </p>
+
+</div><div class="section_3"><h3><a name="CalaculatorSingle-VMTutorial-ProjectStructure"></a>Project Structure</h3>
+
+<p>The tutorials are organized into separate Maven modules which can be built from the command line. The tutorials can also be built from within Eclipse or IDEA using the supplied project files. In this tutorial we will be workign with the <tt>fabric3-tutorial-calculator</tt> and <tt>fabric3-tutorial-webclient</tt> modules.</p>
+
+</div><div class="section_3"><h3><a name="CalaculatorSingle-VMTutorial-Workingwiththecode"></a>Working with the code</h3>
+
+<p>Once you have setup your IDE, you will be able to examine the calculator implementation classes and composite file. As the code is straightforward, we will not cover it here. After you have familairized yourself with the code, you will need to make some final configuration changes to the calculator and web application composites.  </p>
+
+<div class="section_4"><h4><a name="CalaculatorSingle-VMTutorial-Bindingextensions"></a>Binding extensions</h4>
+
+<p>First, you will need to select a binding to expose the <tt>Calculator</tt> service over. Fabric3 ships a number of binding extensions, including Web Services, Hessian (a binary protocol), Burlap (an XML/HTTP protocol), RMI, and JMS. Decide on the binding or bindings you would like to use and download them from <a href="../Downloads.html" title="Downloads">Downloads Section</a>. Once you have downloaded the extension jar (or jars, if you choose multiple bindings), copy them to the <tt>extensions</tt> directory of the standalone distribution. This will install the extension in the runtime.</p>
+
+</div><div class="section_4"><h4><a name="CalaculatorSingle-VMTutorial-ConfiguretheComposite"></a>Configure the Composite</h4>
+
+<p>Next, you will need to bind the calculator service to the binding you have selected. Edit the <tt>calculator.composite</tt> located in <tt>resources/META-INF</tt> of the <tt>fabric3-tutorial-calculator</tt> module. The composite file contains commented-out binding entries that you can use. If you use the Hessian or Burlap bindings, be sure to include the appropriate namespace entry in the composite. You will also need to edit <tt>web.composite</tt> to located in the <tt>webapp/WEB-INF</tt> directory of the <tt>fabric3-tutorial-webclient</tt> module. Open the web client composite file and bind the client reference to the <tt>CalculatorService</tt> using one of the commented-out entries as a guide.       </p>
+
+</div><div class="section_4"><h4><a name="CalaculatorSingle-VMTutorial-TheWebAppPlugin"></a>The WebApp Plugin</h4>
+
+<p>Fabric3 (and SCA) supports creating web applications that serve as front-ends to SCA services. This is achieved through the web application component implementation type, which can have references that are wired to other services. These references are made available to JSPs and Servlets. The <tt>fabric3-tutorial-calculator</tt> module provides an example by wiring a reference to the CalculatorService. </p>
+
+<p>To facilitate presentation-tier development, Fabric3 ships a Maven plugin for building web applications components. The plugin automates the process of creating WARs with an embedded Fabric3 runtime, including managing runtime dependencies and extensions. To add the binding extension dependencies you chose in the previous steps, you will need to configure the plugin. To do so, edit the Maven pom.xml for the <tt>fabric3-tutorial-webclient</tt> module by adding the appropriate extension definition in the <tt>extensions</tt> section (the pom contains commented out examples. When the build is run, the plugin will download the extension from the Codehaus Maven repository and included it in the WAR. Note that you will need to be connected to the internet the first time you build the calculator client (Maven will cache the extensions locally for subsequent builds). </p>
+
+</div></div><div class="section_3"><h3><a name="CalaculatorSingle-VMTutorial-Buildinganddeploying"></a>Building and deploying</h3>
+
+<p>After you have made the final configuration changes to the composites, you will be ready to build and deploy the modules. The calculator modules may be built individually by executing the following Maven command from the respective top-level module directory:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">mvn clean install</pre>
+</div></div>
+
+<p>Alternatively, the modules may be built together using the following Maven command from the tutorial root directory using:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">mvn -r clean install</pre>
+
+</div></div>
+
+<p>After you have successfully built the modules you will need to deploy them. First, go to the directory where the standalone distribution was extracted and start the server from the <tt>/bin</tt> directory:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">cd bin
+java -jar server.jar standalone</pre>
+</div></div>
+
+<p>After the server has started ('Started standalone' will be output to the console), copy the fabric3-tutorial-calculator.jar file from the module <tt>target</tt> directory to the server <tt>deploy</tt> directory. The server will deploy the calculator components and output a console message similar to the following:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">INFO: Included contribution in domain [...]</pre>
+</div></div>
+
+<p>Next, deploy the <tt>fabric3-tutorial-webclient.war</tt> (found in the module <tt>target</tt> directory) to the servlet container. After this has completed, you should be able to navigate to the <tt>calculator.html</tt> page bundled with the web application and invoke the calculator service. </p></div>
+</div>
+
+
+</div>
+
+<div id="sidebar">
+<a href=""><img src="../img/fabric3-logo.jpg" width="100%" height="100" border="1"/></a>
+<div class="navigation">
+   <div class="section_1"><h1><a name="Navigation-Resources"></a>Resources</h1>
+
+<p><a href="../Docs.html" title="Docs">Documentation</a><br></br>
+<a href="../Downloads.html" title="Downloads">Downloads</a><br></br>
+<a href="../SourceRepository.html" title="Source Repository">Source Repository</a><br></br>
+<a href="http://www.osoa.org" title="SCA Specifications">SCA Specifications</a><br></br>
+<a href="http://xircles.codehaus.org/projects/fabric3/lists">Mailing Lists</a><br></br>
+<a href="http://jira.codehaus.org/browse/FABRICTHREE">JIRA</a><br></br>
+<a href="http://bamboo.ci.codehaus.org/browse/FABRIC3">Continuous Integration</a><br></br>
+<a href="http://www.opensource.org/licenses/apache2.0.php">License</a></p>
+</div>
+ </div>
+
+<h4 class="headerstyle">Feeds</h4>
+<ul>
+
+ <li><a class="rss" href="http://docs.codehaus.org/spaces/rss.action?key=FABRICTHREE&amp;newPages=false">Site</a></li>
+ <li><a class="rss" href="http://docs.codehaus.org/spaces/blogrss.action?key=FABRICTHREE">News</a></li>
+</ul>
+
+<h4 class="headerstyle">Blogs</h4>
+<ul>
+ <li><a class="editPage" href="">Blog1</a></li>
+ <li><a class="editPage" href="">Blog2</a></li>
+</ul>
+<h4 class="headerstyle">External Links</h4>
+<ul>
+ <li><a href="http://atlassian.com/">Atlassian</a></li>
+ <li><a href="http://atlassian.com/confluence/">Confluence</a></li>
+ <li><a href="http://www.codehaus.org/">Codehaus</a></li>
+ <li><a href="http://www.jetbrains.com/idea/"><img src="http://www.jetbrains.com/idea/opensource/img/banners/idea88x31_blue.gif"></a></li>
+</ul>
+</div>
+<div class="clear">&nbsp;</div>
+</div>
+
+<div id="footer">&copy; 2006 Codehaus Foundation. Original design by <a href="http://andreasviklund.com" class="credit">Andreas Viklund</a></div>
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-150515-1";
+urchinTracker();
+</script>
+</body>
+</html>

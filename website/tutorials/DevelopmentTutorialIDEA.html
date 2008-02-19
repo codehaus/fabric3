@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+   <meta http-equiv="content-type" content="text/html" />
+  <meta name="description" content="Fabric3 website" />
+  <meta name="keywords" content="Fabric3, SCA, SCA Implementation, Open Source" />
+  <meta name="author" content="Fabric3 / Ratesh Bansal" />
+ <link rel="stylesheet" type="text/css" href="../css/default.css" />
+ <title>Fabric3 - Development Tutorial IDEA</title>
+
+</head>
+
+<body>
+<div id="container">
+<div id="main">
+<div id="intro">
+            <p><div class="section_1"><h1><a name="LeftHeader-fabric3"></a><img src="../img/banner.jpg" height="100" width="750"/></h1></div></p>
+
+     </div><div class="clear"></div>
+
+
+<div class="shortheaderstyle" style="font-size: 1.0em">
+<table id="utop_nav" style="width: 100%;padding-right: 2mm">
+ <tr>
+  <td align="left" valign="middle">
+   <div id="ubreadcrumbs">
+    <a href="../home.html">Home</a>
+                      &gt; <a href="../Docs.html">Docs</a>
+
+                        &gt; <a href="../Tutorials.html">Tutorials</a>
+                        &gt; <a href="">Development Tutorial IDEA</a>
+                  </div>
+  </td>
+  <td align="right" valign="middle" id="quicklinks">
+
+       <p><a href="../Roadmap.html" title="Roadmap">Roadmap</a> | <a href="../Docs.html" title="Docs">Docs</a> | <a href="../Downloads.html" title="Downloads">Downloads</a></p>
+     </td>
+ </tr>
+</table>
+</div>
+
+<div class="content" style="padding-top: 3mm;">
+
+          <div class="section_3"><h3><a name="DevelopmentTutorialIDEA-LoadingandconfiguringtheIDEAproject"></a>Loading and configuring the IDEA project</h3>
+
+<p>In IDEA, select File..Open Project and choose <tt>tutorials.ipr</tt> located in the directory where the Fabric3 tutorial distribution was extracted. This will open the tutorials project which will be used as you proceed through the tutorials. The indivudal tutorials are divided into a number of modules. The <tt>fabric3-tutorial-loanapp-common</tt> module contains shared artifacts. In this tutorial, we will be working with the <tt>fabric3-tutorial-loanapp-simple</tt> module.</p>
+
+<p>Before we begin, the project must include the SCA and runtime API jars included with the development runtime distribution. In the  Project pane to the left, right click on the <tt>fabric3-tutorial-loanapp-simple</tt> module and select 'Module Settings...'. the following window should appear:</p>
+
+<div class="imageHolder"><img src="../img/project.settings.jpg" align="absmiddle" border="0"></img></div>
+
+<p>You will need to create a Global Library corresponding to the <tt>fabric3-dev-runtime</tt> dependency highlighted by (1). Select "Add.." (2) and create the Global Library containing the following jars which are located in the <tt>/lib</tt> directory of the Fabric3 Runtime Distribution:</p>
+
+<ul>
+	<li>development-api-0.2.jar</li>
+	<li>fabric3-api-0.2.jar</li>
+
+	<li>fabric3-host-api-0.2.jar</li>
+	<li>sca-api-r1.0-0.2.1.jar</li>
+	<li>geronimo-annotation_1.0_spec-1.1.jar (JSR-250 Commons Annotations definitions)</li>
+</ul>
+
+
+<p>You will also need to create a Global Library corresponding to the <tt>jaxb-api-2.1</tt> entry. If you have build the tutorials using Maven, this library will have been downloaded to your local Maven repository. You can point the Global Library to the Maven repository archive.</p>
+
+<p>The project will now be configured to use the development runtime. When creating new projects, you can directly point to the Global Library that was created in this step, thereby avoiding the need to configure the runtime for every project.   </p>
+</div>
+</div>
+
+
+</div>
+
+<div id="sidebar">
+<a href=""><img src="../img/fabric3-logo.jpg" width="100%" height="100" border="1"/></a>
+<div class="navigation">
+   <div class="section_1"><h1><a name="Navigation-Resources"></a>Resources</h1>
+
+<p><a href="../Docs.html" title="Docs">Documentation</a><br></br>
+<a href="../Downloads.html" title="Downloads">Downloads</a><br></br>
+<a href="../SourceRepository.html" title="Source Repository">Source Repository</a><br></br>
+<a href="http://www.osoa.org" title="SCA Specifications">SCA Specifications</a><br></br>
+<a href="http://xircles.codehaus.org/projects/fabric3/lists">Mailing Lists</a><br></br>
+<a href="http://jira.codehaus.org/browse/FABRICTHREE">JIRA</a><br></br>
+<a href="http://bamboo.ci.codehaus.org/browse/FABRIC3">Continuous Integration</a><br></br>
+<a href="http://www.opensource.org/licenses/apache2.0.php">License</a></p>
+</div>
+ </div>
+
+<h4 class="headerstyle">Feeds</h4>
+<ul>
+
+ <li><a class="rss" href="http://docs.codehaus.org/spaces/rss.action?key=FABRICTHREE&amp;newPages=false">Site</a></li>
+ <li><a class="rss" href="http://docs.codehaus.org/spaces/blogrss.action?key=FABRICTHREE">News</a></li>
+</ul>
+
+<h4 class="headerstyle">Blogs</h4>
+<ul>
+ <li><a class="editPage" href="">Blog1</a></li>
+ <li><a class="editPage" href="">Blog2</a></li>
+</ul>
+<h4 class="headerstyle">External Links</h4>
+<ul>
+ <li><a href="http://atlassian.com/">Atlassian</a></li>
+ <li><a href="http://atlassian.com/confluence/">Confluence</a></li>
+ <li><a href="http://www.codehaus.org/">Codehaus</a></li>
+ <li><a href="http://www.jetbrains.com/idea/"><img src="http://www.jetbrains.com/idea/opensource/img/banners/idea88x31_blue.gif"></a></li>
+</ul>
+</div>
+<div class="clear">&nbsp;</div>
+</div>
+<div id="footer">&copy; 2006 Codehaus Foundation. Original design by <a href="http://andreasviklund.com" class="credit">Andreas Viklund</a></div>
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-150515-1";
+urchinTracker();
+
+</script>
+</body>
+</html>
