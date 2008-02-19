@@ -74,7 +74,7 @@ public class LogicalService extends Bindable {
      *
      * @param uri the component service uri promoted by this service
      */
-    public void setPromote(URI uri) {
+    public void setPromotedUri(URI uri) {
         this.promote = uri;
     }
 

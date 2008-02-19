@@ -58,7 +58,7 @@ public class DefaultPromotionService implements PromotionService {
             } else if (componentServices.size() != 1) {
                 throw new PromotionException("More than one service available on promoted component:" + promotedUri);
             }
-            logicalService.setPromote(componentServices.iterator().next().getUri());
+            logicalService.setPromotedUri(componentServices.iterator().next().getUri());
         } else {
             if (promotedComponent.getService(promotedUri.getFragment()) == null) {
                 throw new PromotionException("Promoted service not found:" + promotedUri);

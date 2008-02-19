@@ -90,7 +90,7 @@ public class DefaultWireResolver implements WireResolver {
             }
             LogicalService logicalService = promotedComponent.getServices().iterator().next();
             promotedUri = logicalService.getUri();
-            service.setPromote(promotedUri);
+            service.setPromotedUri(promotedUri);
         } else {
             if (promotedComponent.getService(promotedUri.getFragment()) == null) {
                 throw new PromotedServiceNotFoundException(serviceUri, promotedUri);

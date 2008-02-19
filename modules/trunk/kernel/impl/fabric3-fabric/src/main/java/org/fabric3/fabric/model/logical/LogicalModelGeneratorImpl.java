@@ -179,7 +179,7 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
             URI serviceURI = URI.create(base + '#' + compositeService.getName());
             URI promotedURI = compositeService.getPromote();
             LogicalService logicalService = new LogicalService(serviceURI, compositeService, parent);
-            logicalService.setPromote(URI.create(base + "/" + promotedURI));
+            logicalService.setPromotedUri(URI.create(base + "/" + promotedURI));
             for (BindingDefinition binding : compositeService.getBindings()) {
                 logicalService.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalService));
             }

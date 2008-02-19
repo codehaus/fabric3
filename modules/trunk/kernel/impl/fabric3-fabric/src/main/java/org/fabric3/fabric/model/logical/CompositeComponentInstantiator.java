@@ -108,7 +108,7 @@ public class CompositeComponentInstantiator extends AbstractComponentInstantiato
             LogicalService logicalService = new LogicalService(serviceUri, service, component);
             
             if (service.getPromote() != null) {
-                logicalService.setPromote(URI.create(uriBase + service.getPromote()));
+                logicalService.setPromotedUri(URI.create(uriBase + service.getPromote()));
             }
             
             for (BindingDefinition binding : service.getBindings()) {
