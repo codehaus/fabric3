@@ -9,7 +9,7 @@ import org.fabric3.spi.model.instance.LogicalService;
  * @version $Revision$ $Date$
  *
  */
-public interface PromotionService {
+public interface TargetPromotionService {
     
     /**
      * Handles the promotion on the specified logical service. 

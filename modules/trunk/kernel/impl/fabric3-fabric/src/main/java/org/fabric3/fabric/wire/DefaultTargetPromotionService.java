@@ -10,7 +10,7 @@ import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.PromotionException;
-import org.fabric3.spi.wire.PromotionService;
+import org.fabric3.spi.wire.TargetPromotionService;
 
 /**
  * Default implementation of the promotion service.
@@ -18,7 +18,7 @@ import org.fabric3.spi.wire.PromotionService;
  * @version $Revision$ $Date$
  *
  */
-public class DefaultPromotionService implements PromotionService {
+public class DefaultTargetPromotionService implements TargetPromotionService {
     
     /**
      * Handles the promotion on the specified logical service. 
@@ -48,20 +48,20 @@ public class DefaultPromotionService implements PromotionService {
         LogicalComponent<?> promotedComponent = composite.getComponent(promotedComponentUri);
         
         if (promotedComponent == null) {
-            throw new PromotionException("Promoted component not found:" + promotedUri);
+            throw new PromotedComponentNotFoundException(promotedComponentUri);
         }
 
         if (promotedServiceName == null) {
             Collection<LogicalService> componentServices = promotedComponent.getServices();
             if (componentServices.size() == 0) {
-                throw new PromotionException("Promoted service not found:" + promotedUri);
+                throw new NoServiceOnComponentException(promotedComponentUri);
             } else if (componentServices.size() != 1) {
-                throw new PromotionException("More than one service available on promoted component:" + promotedUri);
+                throw new AmbiguousServiceException(promotedComponentUri);
             }
             logicalService.setPromotedUri(componentServices.iterator().next().getUri());
         } else {
-            if (promotedComponent.getService(promotedUri.getFragment()) == null) {
-                throw new PromotionException("Promoted service not found:" + promotedUri);
+            if (promotedComponent.getService(promotedServiceName) == null) {
+                throw new ServiceNotFoundException(promotedComponentUri, promotedServiceName);
             }
         }
         
@@ -95,19 +95,19 @@ public class DefaultPromotionService implements PromotionService {
             LogicalComponent<?> promotedComponent = parent.getComponent(promotedComponentUri);
             
             if (promotedComponent == null) {
-                throw new PromotionException("Promoted component not found:" + promotedUri);
+                throw new PromotedComponentNotFoundException(promotedComponentUri);
             }
             
             if (promotedReferenceName == null) {
                 Collection<LogicalReference> componentReferences = promotedComponent.getReferences();
                 if (componentReferences.size() == 0) {
-                    throw new PromotionException("Promoted reference not found:" + promotedUri);
+                    throw new NoReferenceOnComponentException(promotedComponentUri);
                 } else if (componentReferences.size() > 1) {
-                    throw new PromotionException("More than one reference available on promoted component:" + promotedUri);
+                    throw new AmbiguousReferenceException(promotedComponentUri);
                 }
                 logicalReference.setPromotedUri(i, componentReferences.iterator().next().getUri());
             } else if (promotedComponent.getReference(promotedReferenceName) == null) {
-                throw new PromotionException("Promoted reference not found:" + promotedUri);
+                throw new ReferenceNotFoundException(promotedComponentUri, promotedReferenceName);
             }
 
         }

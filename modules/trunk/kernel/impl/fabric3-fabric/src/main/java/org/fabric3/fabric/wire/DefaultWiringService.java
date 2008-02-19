@@ -7,7 +7,7 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
-import org.fabric3.spi.wire.PromotionService;
+import org.fabric3.spi.wire.TargetPromotionService;
 import org.fabric3.spi.wire.TargetResolutionService;
 import org.fabric3.spi.wire.WiringService;
 import org.osoa.sca.annotations.Reference;
@@ -20,18 +20,18 @@ import org.osoa.sca.annotations.Reference;
  */
 public class DefaultWiringService implements WiringService {
     
-    private final PromotionService promotionService;
+    private final TargetPromotionService targetPromotionService;
     private final List<TargetResolutionService> targetResolutionServices;
 
     /**
      * Injects the references required for wiring components.
      * 
-     * @param promotionService Service for handling promotions.
+     * @param targetPromotionService Service for handling promotions.
      * @param targetResolutionServices An ordered list of target resolution services.
      */
-    public DefaultWiringService(@Reference PromotionService promotionService, 
+    public DefaultWiringService(@Reference TargetPromotionService targetPromotionService, 
                                 @Reference List<TargetResolutionService> targetResolutionServices) {
-        this.promotionService = promotionService;
+        this.targetPromotionService = targetPromotionService;
         this.targetResolutionServices = targetResolutionServices;
     }
 
@@ -66,7 +66,7 @@ public class DefaultWiringService implements WiringService {
     private void handleReferences(LogicalComponent<?> logicalComponent) throws WiringException {
         
         for (LogicalReference logicalReference : logicalComponent.getReferences()) {
-            promotionService.promote(logicalReference);
+            targetPromotionService.promote(logicalReference);
             boolean resolved = false;
             for (TargetResolutionService targetResolutionService : targetResolutionServices) {
                 if (targetResolutionService.resolve(logicalReference, logicalComponent.getParent())) {
@@ -86,7 +86,7 @@ public class DefaultWiringService implements WiringService {
     private void handleServices(LogicalComponent<?> logicalComponent) {
         
         for (LogicalService logicalService : logicalComponent.getServices()) {
-            promotionService.promote(logicalService);
+            targetPromotionService.promote(logicalService);
         }
         
     }
