@@ -29,6 +29,7 @@ import org.osoa.sca.annotations.Service;
 
 import org.fabric3.pojo.reflection.InvokerInterceptor;
 import org.fabric3.pojo.wire.PojoWireAttacher;
+import org.fabric3.scdl.ValueSource;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
@@ -38,7 +39,6 @@ import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.component.Component;
 import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.scdl.ValueSource;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
@@ -92,9 +92,8 @@ public class JavaWireAttacher extends PojoWireAttacher implements SourceWireAtta
         targetWireAttacherRegistry.unregister(JavaWireTargetDefinition.class, this);
     }
 
-    public void attachToSource(JavaWireSourceDefinition sourceDefinition,
-                               PhysicalWireTargetDefinition targetDefinition,
-                               Wire wire) throws WireAttachException {
+    public void attachToSource(JavaWireSourceDefinition sourceDefinition, PhysicalWireTargetDefinition targetDefinition, Wire wire)
+            throws WireAttachException {
 
         URI sourceUri = sourceDefinition.getUri();
         URI sourceName = UriHelper.getDefragmentedName(sourceDefinition.getUri());
@@ -105,20 +104,25 @@ public class JavaWireAttacher extends PojoWireAttacher implements SourceWireAtta
         try {
             type = classLoaderRegistry.loadClass(sourceDefinition.getClassLoaderId(), sourceDefinition.getInterfaceName());
         } catch (ClassNotFoundException e) {
-            throw new WireAttachException("Unable to load interface class: " + sourceDefinition.getInterfaceName(),
-                                          sourceUri,
-                                          null,
-                                          e);
+            String name = sourceDefinition.getInterfaceName();
+            throw new WireAttachException("Unable to load interface class [" + name + "]", sourceUri, null, e);
         }
-
-        ObjectFactory<?> factory = createWireObjectFactory(type, sourceDefinition.isConversational(), wire);
-        Object key = getKey(sourceDefinition, source, valueSource);
-        source.attachReferenceToTarget(valueSource, factory, key);
+        if (ValueSource.ValueSourceType.CALLBACK.equals(valueSource.getValueType())) {
+            URI targetUri = targetDefinition.getUri();
+            boolean conversational = sourceDefinition.isConversational();
+            ObjectFactory<?> factory = proxyService.createCallbackObjectFactory(type, conversational, targetUri, wire);
+            // JFM TODO inject updates to object factory as this does not support a proxy fronting multiple callback wires
+            source.setObjectFactory(valueSource, factory);
+        } else {
+            boolean conversational = sourceDefinition.isConversational();
+            ObjectFactory<?> factory = proxyService.createObjectFactory(type, conversational, wire);
+            Object key = getKey(sourceDefinition, source, valueSource);
+            source.attachReferenceToTarget(valueSource, factory, key);
+        }
     }
 
-    public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition,
-                               JavaWireTargetDefinition targetDefinition,
-                               Wire wire) throws WireAttachException {
+    public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition, JavaWireTargetDefinition targetDefinition, Wire wire)
+            throws WireAttachException {
         URI targetName = UriHelper.getDefragmentedName(targetDefinition.getUri());
         Component component = manager.getComponent(targetName);
         assert component instanceof JavaComponent;
@@ -127,6 +131,12 @@ public class JavaWireAttacher extends PojoWireAttacher implements SourceWireAtta
         ScopeContainer<?> scopeContainer = target.getScopeContainer();
         Class<?> implementationClass = target.getImplementationClass();
         ClassLoader loader = implementationClass.getClassLoader();
+        String callbackUri = null;
+        if (targetDefinition.getCallbackUri() != null) {
+            // only references wired to bidirectional services have a callback id
+            callbackUri = targetDefinition.getCallbackUri().toString();
+        }
+
         // attach the invoker interceptor to forward invocation chains
         for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
             PhysicalOperationDefinition operation = entry.getKey();
@@ -136,7 +146,7 @@ public class JavaWireAttacher extends PojoWireAttacher implements SourceWireAtta
             assert loader != null;
             for (int i = 0; i < params.size(); i++) {
                 String param = params.get(i);
-                try {                                                            
+                try {
                     paramTypes[i] = classLoaderRegistry.loadClass(loader, param);
                 } catch (ClassNotFoundException e) {
                     URI sourceUri = sourceDefinition.getUri();
@@ -152,15 +162,7 @@ public class JavaWireAttacher extends PojoWireAttacher implements SourceWireAtta
                 URI targetUri = targetDefinition.getUri();
                 throw new WireAttachException("No matching method found", sourceUri, targetUri, e);
             }
-            chain.addInterceptor(createInterceptor(method, target, scopeContainer));
-        }
-        // attach callback part of wire
-        if (!wire.getCallbackInvocationChains().isEmpty()) {
-            URI callbackUri = targetDefinition.getCallbackUri();
-            assert callbackUri != null;
-            ValueSource callbackSource = new ValueSource(ValueSource.ValueSourceType.CALLBACK, callbackUri.getFragment());
-            Class<?> callbackType = target.getMemberType(callbackSource);
-            // JFM TODO update object factory in target
+            chain.addInterceptor(createInterceptor(method, target, callbackUri, scopeContainer));
         }
     }
 
@@ -181,12 +183,9 @@ public class JavaWireAttacher extends PojoWireAttacher implements SourceWireAtta
 
     private <T, CONTEXT> InvokerInterceptor<T, CONTEXT> createInterceptor(Method method,
                                                                           JavaComponent<T> component,
+                                                                          String callbackUri,
                                                                           ScopeContainer<CONTEXT> scopeContainer) {
-        return new InvokerInterceptor<T, CONTEXT>(method, component, scopeContainer);
-    }
-
-    private <T> ObjectFactory<T> createWireObjectFactory(Class<T> type, boolean isConversational, Wire wire) {
-        return proxyService.createObjectFactory(type, isConversational, wire);
+        return new InvokerInterceptor<T, CONTEXT>(method, component, callbackUri, scopeContainer);
     }
 
 

@@ -52,23 +52,22 @@ public class PhysicalWireTargetDefinition extends ModelObject {
     }
 
     /**
-     * Gets the callback URI.
+     * Returns the URI for the target callback component for invocations passed through this wire.
      *
-     * @return the callback URI.
+     * @return the target callback uri or null if the wire is unidirectional
      */
     public URI getCallbackUri() {
         return callbackUri;
     }
 
     /**
-     * Sets the callback URI.
+     * Sets the URI for the target callback component for invocations passed through this wire.
      *
-     * @param uri the callback URI.
+     * @param uri the target callback uri
      */
     public void setCallbackUri(URI uri) {
         this.callbackUri = uri;
     }
-
 
     /**
      * Returns whether the target side of the wire is optimizable.

@@ -29,6 +29,7 @@ public class InjectingComponentType extends AbstractComponentType<ServiceDefinit
     private final Map<ValueSource, InjectionSite> injectionMappings = new HashMap<ValueSource, InjectionSite>();
     private Signature initMethod;
     private Signature destroyMethod;
+    private final Map<String, CallbackDefinition> callbacks = new HashMap<String, CallbackDefinition>();
 
     /**
      * Default constructor.
@@ -73,10 +74,32 @@ public class InjectingComponentType extends AbstractComponentType<ServiceDefinit
     }
 
     /**
+     * Adds a callback proxy defintion and its associated injection site
+     *
+     * @param definition    the callback proxy definition
+     * @param injectionSite the proxy injection site
+     */
+    public void add(CallbackDefinition definition, InjectionSite injectionSite) {
+        String name = definition.getName();
+        callbacks.put(name, definition);
+        ValueSource valueSource = new ValueSource(ValueSource.ValueSourceType.CALLBACK, name);
+        injectionMappings.put(valueSource, injectionSite);
+    }
+
+    /**
+     * Returns a collection of defined callback proxy definitions keyed by name
+     *
+     * @return the collection of proxy definitions
+     */
+    public Map<String, CallbackDefinition> getCallbacks() {
+        return callbacks;
+    }
+
+    /**
      * Add the injection site for an injectable value.
      *
      * @param source the value to be injected
-     * @param site the injection site
+     * @param site   the injection site
      */
     public void addInjectionSite(ValueSource source, InjectionSite site) {
         injectionMappings.put(source, site);
@@ -136,4 +159,6 @@ public class InjectingComponentType extends AbstractComponentType<ServiceDefinit
     public void setDestroyMethod(Signature destroyMethod) {
         this.destroyMethod = destroyMethod;
     }
+
+
 }

@@ -24,6 +24,7 @@ import java.lang.reflect.Proxy;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
+import java.net.URI;
 
 import org.osoa.sca.CallableReference;
 import org.osoa.sca.Conversation;
@@ -41,6 +42,7 @@ import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.fabric.wire.NoMethodForOperationException;
 import org.fabric3.fabric.wire.WireObjectFactory;
+import org.fabric3.fabric.injection.CallbackWireObjectFactory;
 
 /**
  * the default implementation of a wire service that uses JDK dynamic proxies
@@ -51,9 +53,7 @@ public class JDKProxyService implements ProxyService {
     private final ScopeRegistry scopeRegistry;
     private final ClassLoaderRegistry classLoaderRegistry;
 
-    public JDKProxyService(@Reference ScopeRegistry scopeRegistry, 
-                           @Reference ClassLoaderRegistry classLoaderRegistry) {
-        super();
+    public JDKProxyService(@Reference ScopeRegistry scopeRegistry, @Reference ClassLoaderRegistry classLoaderRegistry) {
         this.scopeRegistry = scopeRegistry;
         this.classLoaderRegistry = classLoaderRegistry;
     }
@@ -64,10 +64,16 @@ public class JDKProxyService implements ProxyService {
         return new WireObjectFactory<T>(interfaze, conversational, wire, this, mappings);
     }
 
-    public <T> T createProxy(Class<T> interfaze,
-                             boolean conversational,
-                             Wire wire,
-                             Map<Method, InvocationChain> mappings) throws ProxyCreationException {
+    public <T> ObjectFactory<T> createCallbackObjectFactory(Class<T> interfaze, boolean conversaitonal, URI targetUri, Wire wire)
+            throws ProxyCreationException {
+        Map<Method, InvocationChain> operationMappings = createInterfaceToWireMapping(interfaze, wire);
+        Map<String, Map<Method, InvocationChain>> mappings = new HashMap<String, Map<Method, InvocationChain>>();
+        mappings.put(targetUri.toString(), operationMappings);
+        return new CallbackWireObjectFactory<T>(interfaze, conversaitonal, this, mappings);
+    }
+
+    public <T> T createProxy(Class<T> interfaze, boolean conversational, Wire wire, Map<Method, InvocationChain> mappings)
+            throws ProxyCreationException {
         assert interfaze != null;
         assert wire != null;
         ScopeContainer<Conversation> scopeContainer = scopeRegistry.getScopeContainer(Scope.CONVERSATION);
@@ -76,9 +82,10 @@ public class JDKProxyService implements ProxyService {
         return handler.getService();
     }
 
-    public Object createCallbackProxy(Class<?> interfaze) throws ProxyCreationException {
+    public <T> T createCallbackProxy(Class<T> interfaze, boolean conversational, Map<String, Map<Method, InvocationChain>> mappings)
+            throws ProxyCreationException {
         ClassLoader cl = interfaze.getClassLoader();
-        JDKCallbackInvocationHandler handler = new JDKCallbackInvocationHandler();
+        JDKCallbackInvocationHandler<T> handler = new JDKCallbackInvocationHandler<T>(interfaze, conversational, mappings);
         return interfaze.cast(Proxy.newProxyInstance(cl, new Class[]{interfaze}, handler));
     }
 
@@ -96,8 +103,7 @@ public class JDKProxyService implements ProxyService {
         }
     }
 
-    private Map<Method, InvocationChain> createInterfaceToWireMapping(Class<?> interfaze, Wire wire)
-            throws NoMethodForOperationException {
+    private Map<Method, InvocationChain> createInterfaceToWireMapping(Class<?> interfaze, Wire wire) throws NoMethodForOperationException {
 
         Map<PhysicalOperationDefinition, InvocationChain> invocationChains = wire.getInvocationChains();
 
@@ -125,8 +131,7 @@ public class JDKProxyService implements ProxyService {
      * @throws NoSuchMethodException  if a matching method is not found
      * @throws ClassNotFoundException if a parameter type specified in the operation is not found
      */
-    private Method findMethod(Class<?> clazz, PhysicalOperationDefinition operation)
-            throws NoSuchMethodException, ClassNotFoundException {
+    private Method findMethod(Class<?> clazz, PhysicalOperationDefinition operation) throws NoSuchMethodException, ClassNotFoundException {
         String name = operation.getName();
         List<String> params = operation.getParameters();
         Class<?>[] types = new Class<?>[params.size()];

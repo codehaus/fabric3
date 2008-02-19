@@ -50,6 +50,7 @@ import org.fabric3.spi.model.physical.PhysicalChangeSet;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
 import org.fabric3.spi.util.UriHelper;
+
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
@@ -69,8 +70,12 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
     /**
      * Injects generator registry and assembly store.
      *
-     * @param generatorRegistry Generator registry.
-     * @param assemblyStore     Assembly store.
+     * @param generatorRegistry       Generator registry.
+     * @param routingService
+     * @param logicalComponentManager
+     * @param physicalWireGenerator
+     * @param physicalWireGenerator
+     * @param logicalComponentManager
      */
     public PhysicalModelGeneratorImpl(@Reference GeneratorRegistry generatorRegistry,
                                       @Reference RoutingService routingService,
@@ -114,7 +119,7 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
     public Map<URI, GeneratorContext> generate(Set<LogicalWire> logicalWires, LogicalComponent<?> logicalComponent) throws ActivateException {
 
         Map<URI, GeneratorContext> contexts = new HashMap<URI, GeneratorContext>();
-        
+
         URI runtimeId = logicalComponent.getRuntimeId();
         PhysicalChangeSet changeSet = new PhysicalChangeSet();
         CommandSet commandSet = new CommandSet();
@@ -149,8 +154,7 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
     }
 
     @SuppressWarnings({"unchecked"})
-    private <C extends LogicalComponent<?>> PhysicalComponentDefinition generatePhysicalComponent(C component,
-                                                                                                  GeneratorContext context)
+    private <C extends LogicalComponent<?>> PhysicalComponentDefinition generatePhysicalComponent(C component, GeneratorContext context)
             throws GenerationException {
 
         ComponentGenerator<C> generator = (ComponentGenerator<C>)
@@ -197,15 +201,14 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
     }
 
     /**
-     * Generates physical wire definitions for a logical component, updating the GeneratorContext. Wire targets will be
-     * resolved against the given parent.
+     * Generates physical wire definitions for a logical component, updating the GeneratorContext. Wire targets will be resolved against the given
+     * parent.
      * <p/>
      *
      * @param component the component to generate wires for
      * @param contexts  the GeneratorContexts to update with physical wire definitions
      * @throws GenerationException if an error occurs generating phyasical wire definitions
-     * @throws org.fabric3.fabric.assembly.resolver.ResolutionException
-     *                             if an error occurs resolving a wire target
+     * @throws ResolutionException if an error occurs resolving a wire target
      */
     private void generatePhysicalWires(LogicalComponent<?> component, Map<URI, GeneratorContext> contexts)
             throws GenerationException, ResolutionException {
@@ -229,16 +232,16 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
     }
 
     private void generateResourceWires(LogicalComponent<?> component, GeneratorContext context) throws GenerationException {
-        
+
         // generate wire definitions for resources
         for (LogicalResource<?> resource : component.getResources()) {
             physicalWireGenerator.generateResourceWire(component, resource, context);
         }
-        
+
     }
 
     private void generateServiceWires(LogicalComponent<?> component, GeneratorContext context) throws GenerationException {
-        
+
         // generate changesets for bound service wires
         for (LogicalService service : component.getServices()) {
 
@@ -252,11 +255,11 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
             }
 
         }
-        
+
     }
 
     private void generateReferenceWires(LogicalComponent<?> component, GeneratorContext context) throws GenerationException {
-        
+
         for (LogicalReference logicalReference : component.getReferences()) {
 
             if (logicalReference.getBindings().isEmpty()) {
@@ -272,7 +275,7 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
 
     private void generateUnboundReferenceWires(LogicalComponent<?> component, GeneratorContext context, Set<LogicalWire> logicalWires, boolean rewire)
             throws GenerationException {
-        
+
         for (LogicalWire logicalWire : logicalWires) {
             if (logicalWire.isProvisioned()) {
                 continue;
@@ -290,15 +293,19 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
                 targetService = target.getService(promoteUri.getFragment());
             }
 
-            physicalWireGenerator.generateUnboundWire(component, logicalWire.getSource(), targetService, target, context);
+            LogicalReference reference = logicalWire.getSource();
+            physicalWireGenerator.generateUnboundWire(component, reference, targetService, target, context);
+            // generate physical callback wires if the forward service is bidirectional
+            if (reference.getDefinition().getServiceContract().getCallbackContract() != null) {
+                generateResourceWires(component, context);
+                physicalWireGenerator.generateUnboundCallbackWire(target, reference, component, context);
+            }
             logicalWire.setProvisioned(true);
         }
-        
+
     }
 
-    private void generateCommandSets(LogicalComponent<?> component,
-                                     Map<URI, GeneratorContext> contexts) throws GenerationException {
-
+    private void generateCommandSets(LogicalComponent<?> component, Map<URI, GeneratorContext> contexts) throws GenerationException {
         GeneratorContext context = contexts.get(component.getRuntimeId());
         if (context != null) {
             generateCommandSet(component, context);
@@ -338,7 +345,7 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
 
     private void generatePhysicalComponent(LogicalComponent<?> component, Map<URI, GeneratorContext> contexts)
             throws GenerationException {
-        
+
         if (component.isProvisioned()) {
             return;
         }
@@ -352,7 +359,7 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
             contexts.put(id, context);
         }
         context.getPhysicalChangeSet().addComponentDefinition(generatePhysicalComponent(component, context));
-        
+
         component.setProvisioned(true);
 
     }

@@ -85,6 +85,13 @@ public class WebappComponentGenerator implements ComponentGenerator<LogicalCompo
         return sourceDefinition;
     }
 
+    public PhysicalWireSourceDefinition generateCallbackWireSource(LogicalComponent<WebappImplementation> source,
+                                                                   ServiceContract<?> serviceContract,
+                                                                   Policy policy,
+                                                                   GeneratorContext context) throws GenerationException {
+        throw new UnsupportedOperationException();
+    }
+
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
                                                            LogicalComponent<WebappImplementation> arg1,
                                                            Policy policy,

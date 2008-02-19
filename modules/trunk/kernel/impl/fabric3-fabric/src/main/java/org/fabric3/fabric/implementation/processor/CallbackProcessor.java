@@ -20,14 +20,19 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import org.osoa.sca.annotations.Callback;
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.ContractProcessor;
+import org.fabric3.introspection.InvalidServiceContractException;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.MethodInjectionSite;
+import org.fabric3.scdl.CallbackDefinition;
+import org.fabric3.scdl.ServiceContract;
 
 /**
  * TODO: Verify the injected callback sites have a service contract that maps to a callback service contract associated with a service the
@@ -38,18 +43,29 @@ import org.fabric3.scdl.MethodInjectionSite;
  * @deprecated this class should be replaced by the new introspection framework
  */
 public class CallbackProcessor extends ImplementationProcessorExtension {
+    private ContractProcessor contractProcessor;
+
+    public CallbackProcessor(@Reference ContractProcessor contractProcessor) {
+        this.contractProcessor = contractProcessor;
+    }
 
     public void visitMethod(Method method, PojoComponentType type, IntrospectionContext context) throws ProcessingException {
         Callback annotation = method.getAnnotation(Callback.class);
         if (annotation == null) {
             return;
         }
+        String name = method.getName();
         if (method.getParameterTypes().length != 1) {
-            String name = method.getName();
             throw new IllegalCallbackException("Method must have one parameter [" + name + "]", name);
         }
-        InjectionSite site = new MethodInjectionSite(method, 0);
-        type.addCallbackSite(site);
+        try {
+            ServiceContract<?> contract = contractProcessor.introspect(method.getParameterTypes()[0]);
+            InjectionSite site = new MethodInjectionSite(method, 0);
+            CallbackDefinition definition = new CallbackDefinition(name, contract);
+            type.add(definition, site);
+        } catch (InvalidServiceContractException e) {
+            throw new ProcessingException(e);
+        }
     }
 
     public void visitField(Field field, PojoComponentType type, IntrospectionContext context) throws ProcessingException {
@@ -57,8 +73,14 @@ public class CallbackProcessor extends ImplementationProcessorExtension {
         if (annotation == null) {
             return;
         }
-        InjectionSite site = new FieldInjectionSite(field);
-        type.addCallbackSite(site);
+        try {
+            ServiceContract<?> contract = contractProcessor.introspect(field.getType());
+            CallbackDefinition definition = new CallbackDefinition(field.getName(), contract);
+            InjectionSite site = new FieldInjectionSite(field);
+            type.add(definition, site);
+        } catch (InvalidServiceContractException e) {
+            throw new ProcessingException(e);
+        }
     }
 
 }

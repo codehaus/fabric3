@@ -113,14 +113,6 @@ public class ConnectorImpl implements Connector, SourceWireAttacherRegistry, Tar
             }
             wire.addInvocationChain(operation, chain);
         }
-        for (PhysicalOperationDefinition operation : definition.getCallbackOperations()) {
-            InvocationChain chain = new InvocationChainImpl(operation);
-            for (PhysicalInterceptorDefinition interceptorDefinition : operation.getInterceptors()) {
-                Interceptor interceptor = interceptorBuilderRegistry.build(interceptorDefinition);
-                chain.addInterceptor(interceptor);
-            }
-            wire.addCallbackInvocationChain(operation, chain);
-        }
         return wire;
     }
 

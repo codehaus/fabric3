@@ -42,6 +42,7 @@ import org.fabric3.spi.wire.Message;
 public class InvokerInterceptor<T, CONTEXT> implements Interceptor {
     private Method operation;
     private AtomicComponent<T> component;
+    private String callbackUri;
     private ScopeContainer<CONTEXT> scopeContainer;
 
     /**
@@ -51,12 +52,22 @@ public class InvokerInterceptor<T, CONTEXT> implements Interceptor {
      * @param component      the target component
      * @param scopeContainer the ScopeContainer that manages implementation instances for the target component
      */
-    public InvokerInterceptor(Method operation,
-                              AtomicComponent<T> component,
-                              ScopeContainer<CONTEXT> scopeContainer
-    ) {
+    public InvokerInterceptor(Method operation, AtomicComponent<T> component, ScopeContainer<CONTEXT> scopeContainer) {
+        this(operation, component, null, scopeContainer);
+    }
+
+    /**
+     * Creates a new interceptor instance for a forward invocation chain associated with a callback.
+     *
+     * @param operation      the method to invoke on the target instance
+     * @param component      the target component
+     * @param callbackUri    the uri of the callback wire or null if the service is unidirectional
+     * @param scopeContainer the ScopeContainer that manages implementation instances for the target component
+     */
+    public InvokerInterceptor(Method operation, AtomicComponent<T> component, String callbackUri, ScopeContainer<CONTEXT> scopeContainer) {
         this.operation = operation;
         this.component = component;
+        this.callbackUri = callbackUri;
         this.scopeContainer = scopeContainer;
     }
 

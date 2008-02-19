@@ -42,21 +42,16 @@ public class PhysicalWireDefinition extends ModelObject {
     // Collection of forward operations
     private final Set<PhysicalOperationDefinition> operations;
 
-    // Collection of callback operations
-    private final Set<PhysicalOperationDefinition> callbackOperations;
-
     private boolean optimizable;
 
     public PhysicalWireDefinition() {
         operations = new HashSet<PhysicalOperationDefinition>();
-        callbackOperations = new HashSet<PhysicalOperationDefinition>();
     }
 
     public PhysicalWireDefinition(PhysicalWireSourceDefinition source, PhysicalWireTargetDefinition target) {
         this.source = source;
         this.target = target;
         operations = new HashSet<PhysicalOperationDefinition>();
-        callbackOperations = new HashSet<PhysicalOperationDefinition>();
     }
 
     public PhysicalWireDefinition(PhysicalWireSourceDefinition source,
@@ -65,17 +60,6 @@ public class PhysicalWireDefinition extends ModelObject {
         this.source = source;
         this.target = target;
         this.operations = operations;
-        this.callbackOperations = new HashSet<PhysicalOperationDefinition>();
-    }
-
-    public PhysicalWireDefinition(PhysicalWireSourceDefinition source,
-                                  PhysicalWireTargetDefinition target,
-                                  Set<PhysicalOperationDefinition> operations,
-                                  Set<PhysicalOperationDefinition> callbackOperations) {
-        this.source = source;
-        this.target = target;
-        this.operations = operations;
-        this.callbackOperations = callbackOperations;
     }
 
     /**
@@ -113,25 +97,6 @@ public class PhysicalWireDefinition extends ModelObject {
      */
     public Set<PhysicalOperationDefinition> getOperations() {
         return operations;
-    }
-
-    /**
-     * Adds a callback operation definition.
-     *
-     * @param operation Operation to be added.
-     */
-    public void addCallackOperation(PhysicalOperationDefinition operation) {
-        operations.add(operation);
-    }
-
-
-    /**
-     * Returns the available callback operations.
-     *
-     * @return Collection of callback operations.
-     */
-    public Set<PhysicalOperationDefinition> getCallbackOperations() {
-        return callbackOperations;
     }
 
     /**

@@ -24,6 +24,7 @@ import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ValueSource;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
@@ -38,6 +39,7 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.Policy;
+
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
@@ -92,7 +94,7 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
                                                            LogicalReference reference,
                                                            Policy policy,
                                                            GeneratorContext context) throws GenerationException {
-        
+
         URI uri = reference.getUri();
         SystemWireSourceDefinition wireDefinition = new SystemWireSourceDefinition();
         wireDefinition.setOptimizable(true);
@@ -101,12 +103,19 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
 
         URI classLoaderId = classLoaderGenerator.generate(source, context);
         wireDefinition.setClassLoaderId(classLoaderId);
-        
+
         return wireDefinition;
     }
 
-    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, 
-                                                           LogicalComponent<SystemImplementation> logical,  
+    public PhysicalWireSourceDefinition generateCallbackWireSource(LogicalComponent<SystemImplementation> source,
+                                                                   ServiceContract<?> serviceContract,
+                                                                   Policy policy,
+                                                                   GeneratorContext context) throws GenerationException {
+        throw new UnsupportedOperationException();
+    }
+
+    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
+                                                           LogicalComponent<SystemImplementation> logical,
                                                            Policy policy,
                                                            GeneratorContext context) throws GenerationException {
         SystemWireTargetDefinition wireDefinition = new SystemWireTargetDefinition();
@@ -115,7 +124,7 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
         return wireDefinition;
     }
 
-    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<SystemImplementation> source, 
+    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<SystemImplementation> source,
                                                                    LogicalResource<?> resource,
                                                                    GeneratorContext context) throws GenerationException {
         URI uri = resource.getUri();

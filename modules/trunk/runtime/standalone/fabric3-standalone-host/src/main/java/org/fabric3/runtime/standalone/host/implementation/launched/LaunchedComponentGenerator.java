@@ -31,6 +31,7 @@ import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.ValueSource;
+import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
@@ -63,7 +64,7 @@ public class LaunchedComponentGenerator implements ComponentGenerator<LogicalCom
 
     public PhysicalComponentDefinition generate(LogicalComponent<Launched> component,
                                                 GeneratorContext context) throws GenerationException {
-        
+
         ComponentDefinition<Launched> definition = component.getDefinition();
         Launched implementation = definition.getImplementation();
         PojoComponentType type = implementation.getComponentType();
@@ -103,14 +104,21 @@ public class LaunchedComponentGenerator implements ComponentGenerator<LogicalCom
         return wireDefinition;
     }
 
-    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<Launched> source, 
+    public PhysicalWireSourceDefinition generateCallbackWireSource(LogicalComponent<Launched> source,
+                                                                   ServiceContract<?> serviceContract,
+                                                                   Policy policy,
+                                                                   GeneratorContext context) throws GenerationException {
+        throw new UnsupportedOperationException();
+    }
+
+    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<Launched> source,
                                                                    LogicalResource<?> resource,
                                                                    GeneratorContext context) {
         throw new UnsupportedOperationException();
     }
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
-                                                           LogicalComponent<Launched> target,  
+                                                           LogicalComponent<Launched> target,
                                                            Policy policy,
                                                            GeneratorContext context) {
         JavaWireTargetDefinition wireDefinition = new JavaWireTargetDefinition();

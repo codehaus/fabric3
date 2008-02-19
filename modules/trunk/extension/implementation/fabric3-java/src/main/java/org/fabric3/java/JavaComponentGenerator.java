@@ -20,9 +20,13 @@ package org.fabric3.java;
 
 import java.net.URI;
 
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
 import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.scdl.CallbackDefinition;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Scope;
 import org.fabric3.scdl.ServiceContract;
@@ -40,9 +44,6 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.Policy;
-
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Generates a JavaComponentDefinition from a ComponentDefinition corresponding to a Java component implementation
@@ -62,8 +63,7 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
         this.helper = helper;
     }
 
-    public PhysicalComponentDefinition generate(LogicalComponent<JavaImplementation> component,
-                                                GeneratorContext context)
+    public PhysicalComponentDefinition generate(LogicalComponent<JavaImplementation> component, GeneratorContext context)
             throws GenerationException {
         ComponentDefinition<JavaImplementation> definition = component.getDefinition();
         JavaImplementation implementation = definition.getImplementation();
@@ -100,7 +100,7 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
                                                            GeneratorContext context) throws GenerationException {
         URI uri = reference.getUri();
         ServiceContract<?> serviceContract = reference.getDefinition().getServiceContract();
-        String interfaceName = getInterfaceName(serviceContract);
+        String interfaceName = serviceContract.getQualifiedInterfaceName();
         URI classLoaderId = classLoaderGenerator.generate(source, context);
 
         JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
@@ -108,7 +108,6 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
         wireDefinition.setValueSource(new ValueSource(ValueSource.ValueSourceType.REFERENCE, uri.getFragment()));
         wireDefinition.setInterfaceName(interfaceName);
         wireDefinition.setConversational(serviceContract.isConversational());
-
         // assume for now that any wire from a Java component can be optimized
         wireDefinition.setOptimizable(true);
 
@@ -117,12 +116,42 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
         return wireDefinition;
     }
 
+    public PhysicalWireSourceDefinition generateCallbackWireSource(LogicalComponent<JavaImplementation> source,
+                                                                   ServiceContract<?> serviceContract,
+                                                                   Policy policy,
+                                                                   GeneratorContext context) throws GenerationException {
+        String interfaceName = serviceContract.getQualifiedInterfaceName();
+        URI classLoaderId = classLoaderGenerator.generate(source, context);
+        PojoComponentType type = source.getDefinition().getImplementation().getComponentType();
+        String name = null;
+        for (CallbackDefinition entry : type.getCallbacks().values()) {
+            // NB: This currently only supports the case where one callback injection site of the same type is on an implementation.
+            // TODO clarify with the spec if having more than one callback injection site of the same type is valid
+            if (entry.getServiceContract().isAssignableFrom(serviceContract)) {
+                name = entry.getName();
+                break;
+            }
+        }
+        if (name == null) {
+            String interfaze = serviceContract.getQualifiedInterfaceName();
+            throw new CallbackSiteNotFound("Callback injection site not found for type [" + interfaze + "]", interfaze);
+        }
+
+        JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
+        wireDefinition.setValueSource(new ValueSource(ValueSource.ValueSourceType.CALLBACK, name));
+        wireDefinition.setInterfaceName(interfaceName);
+        wireDefinition.setUri(URI.create(source.getUri().toString() + "#" + name));
+        wireDefinition.setOptimizable(false);
+        wireDefinition.setClassLoaderId(classLoaderId);
+        return wireDefinition;
+    }
+
     public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<JavaImplementation> source,
                                                                    LogicalResource<?> resource,
                                                                    GeneratorContext context) throws GenerationException {
         URI uri = resource.getUri();
         ServiceContract<?> serviceContract = resource.getResourceDefinition().getServiceContract();
-        String interfaceName = getInterfaceName(serviceContract);
+        String interfaceName = serviceContract.getQualifiedInterfaceName();
         URI classLoaderId = classLoaderGenerator.generate(source, context);
 
         JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
@@ -132,10 +161,6 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
         wireDefinition.setClassLoaderId(classLoaderId);
         wireDefinition.setInterfaceName(interfaceName);
         return wireDefinition;
-    }
-
-    private String getInterfaceName(ServiceContract<?> contract) {
-        return contract.getQualifiedInterfaceName();
     }
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,

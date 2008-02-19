@@ -21,6 +21,7 @@ import java.net.URI;
 import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
@@ -95,6 +96,13 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
         wireDefinition.setUri(reference.getUri());
         wireDefinition.setConversational(reference.getDefinition().getServiceContract().isConversational());
         return wireDefinition;
+    }
+
+    public PhysicalWireSourceDefinition generateCallbackWireSource(LogicalComponent<GroovyImplementation> source,
+                                                                   ServiceContract<?> serviceContract,
+                                                                   Policy policy,
+                                                                   GeneratorContext context) throws GenerationException {
+        throw new UnsupportedOperationException();
     }
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,

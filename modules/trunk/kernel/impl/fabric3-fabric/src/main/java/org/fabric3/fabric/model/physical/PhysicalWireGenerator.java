@@ -28,22 +28,22 @@ import org.fabric3.spi.model.instance.LogicalService;
  * @version $Revision$ $Date$
  */
 public interface PhysicalWireGenerator {
-    
+
     /**
      * Generates the physical wires for the resources in this component.
-     * 
-     * @param source Source component.
-     * @param resourceDefinition Resource definition.
-     * @param context Generator context.
+     *
+     * @param source   Source component.
+     * @param resource Resource definition.
+     * @param context  Generator context.
+     * @throws GenerationException if an error ocurrs during generation
      */
-    <C extends LogicalComponent<?>> void generateResourceWire(C source, 
-                                                              LogicalResource<?> resource, 
-                                                              GeneratorContext context) throws GenerationException;
+    <C extends LogicalComponent<?>> void generateResourceWire(C source, LogicalResource<?> resource, GeneratorContext context)
+            throws GenerationException;
 
 
     /**
-     * Generates a PhysicalWireDefinition from a bound service to a component. A physical change set for the runtime the
-     * wire will be provisioned to is updated with the physical wire definition
+     * Generates a PhysicalWireDefinition from a bound service to a component. A physical change set for the runtime the wire will be provisioned to
+     * is updated with the physical wire definition
      *
      * @param service the logical service representing the wire source
      * @param binding the binding the wire will be attached to at its source
@@ -54,13 +54,13 @@ public interface PhysicalWireGenerator {
     <C extends LogicalComponent<?>> void generateBoundServiceWire(LogicalService service,
                                                                   LogicalBinding<?> binding,
                                                                   C target,
-                                                                  GeneratorContext context) 
+                                                                  GeneratorContext context)
             throws GenerationException;
 
 
     /**
-     * Generates a PhysicalWireDefinition from a bound service to a component. A physical change set for the runtime the
-     * wire will be provisioned to is updated with the physical wire definition
+     * Generates a PhysicalWireDefinition from a bound service to a component. A physical change set for the runtime the wire will be provisioned to
+     * is updated with the physical wire definition
      *
      * @param source    the source logical component for the wire
      * @param reference the component reference the wire is associated with to at its source
@@ -75,9 +75,8 @@ public interface PhysicalWireGenerator {
             throws GenerationException;
 
     /**
-     * Generates a PhysicalWireDefinition for an unbound wire. Unbound wires are direct connections between two
-     * components. A physical change set for the runtime the wire will be provisioned to is updated with the physical
-     * wire definition
+     * Generates a PhysicalWireDefinition for an unbound wire. Unbound wires are direct connections between two components. A physical change set for
+     * the runtime the wire will be provisioned to is updated with the physical wire definition
      *
      * @param source    the source component the wire will be attached to
      * @param reference the component reference the wire is associated with at its source
@@ -91,6 +90,12 @@ public interface PhysicalWireGenerator {
                                                                                             LogicalService service,
                                                                                             T target,
                                                                                             GeneratorContext context)
+            throws GenerationException;
+
+    public <S extends LogicalComponent<?>, T extends LogicalComponent<?>> void generateUnboundCallbackWire(S source,
+                                                                                                           LogicalReference reference,
+                                                                                                           T target,
+                                                                                                           GeneratorContext context)
             throws GenerationException;
 
 }

@@ -47,10 +47,14 @@ public class WireObjectFactory<T> implements ObjectFactory<T> {
      * @param conversational if the wire is conversational
      * @param wire           the backing wire
      * @param proxyService   the wire service to create the proxy
+     * @param mappings       proxy method to invocation chain mappings
      * @throws NoMethodForOperationException if a method matching the operation cannot be found
      */
-    public WireObjectFactory(Class<T> interfaze, boolean conversational, Wire wire, ProxyService proxyService, Map<Method, InvocationChain> mappings)
-            throws NoMethodForOperationException {
+    public WireObjectFactory(Class<T> interfaze,
+                             boolean conversational,
+                             Wire wire,
+                             ProxyService proxyService,
+                             Map<Method, InvocationChain> mappings) throws NoMethodForOperationException {
         this.interfaze = interfaze;
         this.conversational = conversational;
         this.wire = wire;

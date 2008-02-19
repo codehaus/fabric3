@@ -18,27 +18,46 @@
  */
 package org.fabric3.fabric.injection;
 
+import java.lang.reflect.Method;
+import java.util.Map;
+import java.net.URI;
+
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.wire.ProxyService;
+import org.fabric3.spi.wire.InvocationChain;
 
 /**
- * Returns proxy instance for a wire callback
+ * Returns a proxy instance for a callback wire.
  *
  * @version $Rev$ $Date$
  */
 public class CallbackWireObjectFactory<T> implements ObjectFactory<T> {
+    private boolean conversational;
     private ProxyService proxyService;
+    private Map<String, Map<Method, InvocationChain>> mappings;
     private Class<T> interfaze;
 
-    public CallbackWireObjectFactory(Class<T> interfaze, ProxyService proxyService) {
+    /**
+     * Constructor.
+     *
+     * @param interfaze      the proxy interface
+     * @param conversational if the target callback service is conversational
+     * @param proxyService   the service for creating proxies
+     * @param mappings       the callback URI to invocation chain mappings
+     */
+    public CallbackWireObjectFactory(Class<T> interfaze,
+                                     boolean conversational,
+                                     ProxyService proxyService,
+                                     Map<String, Map<Method, InvocationChain>> mappings) {
         this.interfaze = interfaze;
+        this.conversational = conversational;
         this.proxyService = proxyService;
+        this.mappings = mappings;
     }
 
-    @SuppressWarnings({"unchecked"})
     public T getInstance() throws ObjectCreationException {
-        return (T) proxyService.createCallbackProxy(interfaze);
+        return interfaze.cast(proxyService.createCallbackProxy(interfaze, conversational, mappings));
     }
 
 }

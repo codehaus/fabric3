@@ -105,6 +105,13 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         return wireDefinition;
     }
 
+    public PhysicalWireSourceDefinition generateCallbackWireSource(LogicalComponent<ImplementationJUnit> source,
+                                                                   ServiceContract<?> serviceContract,
+                                                                   Policy policy,
+                                                                   GeneratorContext context) throws GenerationException {
+        throw new UnsupportedOperationException();
+    }
+
     public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<ImplementationJUnit> source,
                                                                    LogicalResource<?> resource,
                                                                    GeneratorContext context)

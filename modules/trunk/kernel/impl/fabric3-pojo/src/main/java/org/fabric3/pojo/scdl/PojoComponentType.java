@@ -18,10 +18,6 @@
  */
 package org.fabric3.pojo.scdl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.fabric3.scdl.InjectingComponentType;
 import org.fabric3.scdl.InjectionSite;
 
@@ -34,7 +30,6 @@ public class PojoComponentType extends InjectingComponentType {
     private String implClass;
     private ConstructorDefinition constructorDefinition;
     private InjectionSite conversationIDInjectionSite;
-    private List<InjectionSite> callbackInjectionSites = new ArrayList<InjectionSite>();
 
     /**
      * Constructor used only for deserialization
@@ -78,24 +73,6 @@ public class PojoComponentType extends InjectingComponentType {
         this.constructorDefinition = definition;
     }
 
-    /**
-     * Returns a collection of defined callback injection sites for the component implementation
-     *
-     * @return the callback injection sites
-     */
-    public List<InjectionSite> getCallbackSites() {
-        return Collections.unmodifiableList(callbackInjectionSites);
-    }
-
-    /**
-     * Adds a defined callback injection site for the component implementation
-     *
-     * @param site the field or setter method the callback is mapped to
-     */
-    public void addCallbackSite(InjectionSite site) {
-        callbackInjectionSites.add(site);
-    }
-
     public InjectionSite getConversationIDMember() {
         return this.conversationIDInjectionSite;
     }
@@ -103,4 +80,5 @@ public class PojoComponentType extends InjectingComponentType {
     public void setConversationIDMember(InjectionSite conversationIDInjectionSite) {
         this.conversationIDInjectionSite = conversationIDInjectionSite;
     }
+
 }
