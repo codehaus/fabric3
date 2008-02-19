@@ -13,8 +13,7 @@ import org.fabric3.spi.wire.TargetResolutionService;
  */
 public class IntentBasedAutoWireService implements TargetResolutionService {
 
-    public boolean resolve(LogicalReference reference, LogicalCompositeComponent context) throws TargetResolutionException {
-        return true;
+    public void resolve(LogicalReference reference, LogicalCompositeComponent context) throws TargetResolutionException {
     }
 
 }

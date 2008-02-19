@@ -67,13 +67,10 @@ public class DefaultWiringService implements WiringService {
         
         for (LogicalReference logicalReference : logicalComponent.getReferences()) {
             targetPromotionService.promote(logicalReference);
-            boolean resolved = false;
             for (TargetResolutionService targetResolutionService : targetResolutionServices) {
-                if (targetResolutionService.resolve(logicalReference, logicalComponent.getParent())) {
-                    break;
-                }
+                targetResolutionService.resolve(logicalReference, logicalComponent.getParent());
             }
-            if (!resolved && logicalReference.getDefinition().isRequired()) {
+            if (logicalReference.getWires().isEmpty() && logicalReference.getDefinition().isRequired()) {
                 throw new WiringException("Unable to resolve reference " + logicalReference.getUri());
             }
         }
