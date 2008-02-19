@@ -40,7 +40,7 @@ public class PromotionNormalizerImpl implements PromotionNormalizer {
                                                                 URI serviceUri) {
         List<LogicalBinding<?>> bindings = new ArrayList<LogicalBinding<?>>();
         for (LogicalService service : parent.getServices()) {
-            URI targetUri = service.getPromote();
+            URI targetUri = service.getPromotedUri();
             if (targetUri.getFragment() == null) {
                 // no service specified
                 if (targetUri.equals(UriHelper.getDefragmentedName(serviceUri))) {

@@ -213,7 +213,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         Policy targetPolicy = policyResult.getTargetPolicy();
 
 
-        URI targetUri = service.getPromote();
+        URI targetUri = service.getPromotedUri();
         LogicalService targetService;
         if (targetUri == null) {
             // the service is on the component

@@ -65,7 +65,7 @@ public class LogicalService extends Bindable {
      *
      * @return the component service uri promoted by this service
      */
-    public URI getPromote() {
+    public URI getPromotedUri() {
         return promote;
     }
 

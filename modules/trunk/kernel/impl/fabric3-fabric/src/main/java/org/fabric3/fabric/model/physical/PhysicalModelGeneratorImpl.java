@@ -287,7 +287,7 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
             assert targetService != null;
             while (CompositeImplementation.class.isInstance(target.getDefinition().getImplementation())) {
                 LogicalCompositeComponent composite = (LogicalCompositeComponent) target;
-                URI promoteUri = targetService.getPromote();
+                URI promoteUri = targetService.getPromotedUri();
                 URI promotedComponent = UriHelper.getDefragmentedName(promoteUri);
                 target = composite.getComponent(promotedComponent);
                 targetService = target.getService(promoteUri.getFragment());

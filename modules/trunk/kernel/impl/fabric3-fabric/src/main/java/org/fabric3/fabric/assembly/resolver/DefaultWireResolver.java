@@ -68,7 +68,7 @@ public class DefaultWireResolver implements WireResolver {
 
     public void resolve(LogicalService service) throws ResolutionException {
         URI serviceUri = service.getUri();
-        URI promotedUri = service.getPromote();
+        URI promotedUri = service.getPromotedUri();
         if (promotedUri == null) {
             // this service does not promote another, nothing to do
             return;

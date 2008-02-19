@@ -1,4 +1,4 @@
-package org.fabric3.fabric.wire;
+package org.fabric3.fabric.wire.promotion;
 
 import java.net.URI;
 

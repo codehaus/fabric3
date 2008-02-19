@@ -1,4 +1,4 @@
-package org.fabric3.fabric.wire;
+package org.fabric3.fabric.wire.promotion;
 
 import java.net.URI;
 import java.util.Collection;
@@ -35,7 +35,7 @@ public class DefaultTargetPromotionService implements TargetPromotionService {
      */
     public void promote(LogicalService logicalService) throws PromotionException {
 
-        URI promotedUri = logicalService.getPromote();
+        URI promotedUri = logicalService.getPromotedUri();
         
         if (promotedUri == null) {
             return;
