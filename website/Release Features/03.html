@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html" />
+ <meta name="description" content="Fabric3 website" />
+ <meta name="keywords" content="Fabric3, SCA, SCA Implementation, Open Source" />
+ <meta name="author" content="Fabric3 / Ratesh Bansal" />
+ <link rel="stylesheet" type="text/css" href="../css/default.css" />
+ <title>Fabric3 - 0.3 Release Features</title>
+
+</head>
+
+<body>
+<div id="container">
+<div id="main">
+<div id="intro">
+            <p><div class="section_1"><h1><a name="LeftHeader-fabric3"></a><img src="../img/banner.jpg" height="100" width="750"/></h1></div></p>
+
+     </div><div class="clear"></div>
+
+
+<div class="shortheaderstyle" style="font-size: 1.0em">
+<table id="utop_nav" style="width: 100%;padding-right: 2mm">
+ <tr>
+  <td align="left" valign="middle">
+   <div id="ubreadcrumbs">
+    <a href="../home.html">Home</a>
+                      &gt; <a href="../Docs.html">Docs</a>
+
+                        &gt; <a href="">0.3 Release Features</a>
+                  </div>
+  </td>
+  <td align="right" valign="middle" id="quicklinks">
+       <p><a href="../Roadmap.html" title="Roadmap">Roadmap</a> | <a href="../Docs.html" title="Docs">Docs</a> | <a href="../Downloads.html" title="Downloads">Downloads</a></p>
+
+     </td>
+ </tr>
+</table>
+</div>
+
+
+<div class="content" style="padding-top: 3mm;">
+          <p>The themes of the 0.3 release are: </p>
+
+<ul>
+	<li>Usability and Application API Stability</li>
+	<li>JPA and Hibernate integration</li>
+
+	<li>Resource injection</li>
+	<li>Improved transaction management</li>
+	<li>Improved SCA 1.0 spec compliance</li>
+	<li>New and Improved Extensions</li>
+</ul>
+
+
+<p>New features are described below.</p>
+
+<div class="section_2"><h2><a name="0.3ReleaseFeatures-Usability"></a>Usability</h2>
+
+<p>The 0.3 release introduces numerous bug fixes and stabilizes the end-user application API. From this release on, Fabric3 will focus on maintaining backward compatibility for applications written against the 0.3 APIs. In addition, 0.3 includes improved monitoring and error reporting.</p>
+
+<p>The 0.3 release also adds support for mocking SCA components using EasyMock. Combined with the existing JUnit support, this simplifies automated integration testing of SCA applications by allowing their interactions with other components to be easily mocked and verified.</p>
+
+</div><div class="section_2"><h2><a name="0.3ReleaseFeatures-NativeJPAandHibernateIntegration"></a>Native JPA and Hibernate Integration</h2>
+
+<p>The 0.3 release also introduces integration with Hibernate and JPA implementations for persisting data. This allows SCA components to directly access information stored in relational databases using the standard JPA APIs. Support is fully integrated with SCA declarative transaction management.</p>
+
+</div><div class="section_2"><h2><a name="0.3ReleaseFeatures-ResourceInjection"></a>Resource Injection</h2>
+
+<p>The 0.3 release supports the use of @Resource injection for accessing system-supplied resources such as DataSources. </p>
+
+</div><div class="section_2"><h2><a name="0.3ReleaseFeatures-ImprovedTransactionManagement"></a>Improved Transaction Management</h2>
+
+<p>The 0.3 release includes transactional integration with JPA, Hibernate and system-supplied DataSources.</p>
+
+</div><div class="section_2"><h2><a name="0.3ReleaseFeatures-SCACompliance"></a>SCA Compliance</h2>
+
+<p>The 0.3 runtime includes support for complex properties, setting of properties via external files, XPath evaluation, and support for composite service and reference promotion. The 0.3 runtime also provides support for service and reference bindings contained directly in component definitions.</p>
+
+</div><div class="section_2"><h2><a name="0.3ReleaseFeatures-NewandImprovedExtensions"></a>New and Improved Extensions</h2>
+
+<p>New fabric3-axis2 extension supporting Web Services using Apache Axis2.<br></br>
+New fabric3-jpa-hibernate extension supporting Hibernate.<br></br>
+New fabric3-mock extension for testing SCA components and composites with EasyMock.<br></br>
+New fabric3-resource extension supporting JSR-250 and fabric3 @Resource annotations.</p></div>
+</div>
+
+
+</div>
+
+<div id="sidebar">
+<a href=""><img src="../img/fabric3-logo.jpg" width="100%" height="100" border="1"/></a>
+<div class="navigation">
+   <div class="section_1"><h1><a name="Navigation-Resources"></a>Resources</h1>
+
+<p><a href="../Docs.html" title="Docs">Documentation</a><br></br>
+<a href="../Downloads.html" title="Downloads">Downloads</a><br></br>
+<a href="../SourceRepository.html" title="Source Repository">Source Repository</a><br></br>
+<a href="http://www.osoa.org" title="SCA Specifications">SCA Specifications</a><br></br>
+<a href="http://xircles.codehaus.org/projects/fabric3/lists">Mailing Lists</a><br></br>
+<a href="http://jira.codehaus.org/browse/FABRICTHREE">JIRA</a><br></br>
+<a href="http://bamboo.ci.codehaus.org/browse/FABRIC3">Continuous Integration</a><br></br>
+<a href="http://www.opensource.org/licenses/apache2.0.php">License</a></p>
+</div>
+ </div>
+
+<h4 class="headerstyle">Feeds</h4>
+<ul>
+
+ <li><a class="rss" href="http://docs.codehaus.org/spaces/rss.action?key=FABRICTHREE&amp;newPages=false">Site</a></li>
+ <li><a class="rss" href="http://docs.codehaus.org/spaces/blogrss.action?key=FABRICTHREE">News</a></li>
+</ul>
+
+<h4 class="headerstyle">Blogs</h4>
+<ul>
+ <li><a class="editPage" href="">Blog1</a></li>
+ <li><a class="editPage" href="">Blog2</a></li>
+</ul>
+<h4 class="headerstyle">External Links</h4>
+<ul>
+ <li><a href="http://atlassian.com/">Atlassian</a></li>
+ <li><a href="http://atlassian.com/confluence/">Confluence</a></li>
+ <li><a href="http://www.codehaus.org/">Codehaus</a></li>
+ <li><a href="http://www.jetbrains.com/idea/"><img src="http://www.jetbrains.com/idea/opensource/img/banners/idea88x31_blue.gif"></a></li>
+</ul>
+</div>
+<div class="clear">&nbsp;</div>
+</div>
+
+
+<div id="footer">&copy; 2006 Codehaus Foundation. Original design by <a href="http://andreasviklund.com" class="credit">Andreas Viklund</a></div>
+
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-150515-1";
+urchinTracker();
+</script>
+</body>
+</html>

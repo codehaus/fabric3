@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+ <meta http-equiv="content-type" content="text/html" />
+  <meta name="description" content="Fabric3 website" />
+  <meta name="keywords" content="Fabric3, SCA, SCA Implementation, Open Source" />
+  <meta name="author" content="Fabric3 / Ratesh Bansal" />
+ <link rel="stylesheet" type="text/css" href="../css/default.css" />
+ <title>Fabric3 - 0.2 Release Features</title>
+
+</head>
+
+<body>
+
+<div id="container">
+<div id="main">
+<div id="intro">
+            <p><div class="section_1"><h1><a name="LeftHeader-fabric3"></a><img src="../img/banner.jpg" height="100" width="750"/></h1></div></p>
+
+     </div><div class="clear"></div>
+
+
+<div class="shortheaderstyle" style="font-size: 1.0em">
+<table id="utop_nav" style="width: 100%;padding-right: 2mm">
+ <tr>
+  <td align="left" valign="middle">
+   <div id="ubreadcrumbs">
+    <a href="../home.html">Home</a>
+                      &gt; <a href="../Docs.html">Docs</a>
+
+                        &gt; <a href="">0.2 Release Features</a>
+                  </div>
+  </td>
+  <td align="right" valign="middle" id="quicklinks">
+       <p><a href="../Roadmap.html" title="Roadmap">Roadmap</a> | <a href="../Docs.html" title="Docs">Docs</a> | <a href="../Downloads.html" title="Downloads">Downloads</a></p>
+
+     </td>
+ </tr>
+</table>
+</div>
+
+
+
+<div class="content" style="padding-top: 3mm;">
+<div class="section_1">
+<p>The themes of the 0.2 release are: </p>
+
+<ul>
+	<li>Support for SCA policy intents and definitions</li>
+
+	<li>Support for declarative transactions</li>
+	<li>Enhanced contribution and extension functionality</li>
+	<li>Improved SCA spec compliance</li>
+	<li>Further modularization</li>
+</ul>
+
+
+
+<p>New features are described below.</p>
+
+<div class="section_2"><h2><a name="0.2ReleaseFeatures-SCAPolicySupport"></a>SCA Policy Support</h2>
+
+<p>The 0.2 release introduces support for SCA policy intents and definitions. Policy definitions may be contributed to a domain and activated using the contribution service. Architecturally, SCA policy support is provided by an extensible policy framework. </p>
+
+</div><div class="section_2"><h2><a name="0.2ReleaseFeatures-DeclarativeTransactions"></a>Declarative Transactions</h2>
+
+<p>The 0.2 release also introduces support for declarative transactions, including 2-phase commit. Integration with JEE application server transaction managers (WebLogic Server, JBoss, Geronimo) and standalone transaction managers (JOTM) is provided. </p>
+
+</div><div class="section_2"><h2><a name="0.2ReleaseFeatures-ContributionHandling"></a>Contribution Handling </h2>
+
+<p>Contribution handling has been significantly improved, including: </p>
+
+<ul class="alternate" type="square">
+	<li>Support for self-contained archives with third-party libraries (jars) packaged in META-INF/lib</li>
+</ul>
+
+
+<ul class="alternate" type="square">
+	<li>A new Maven-based contribution plugin with support for packaging transitive dependencies</li>
+</ul>
+
+
+<ul class="alternate" type="square">
+	<li>Support for SCA contribution manifests and extensible import/export</li>
+
+</ul>
+
+
+
+</div><div class="section_2"><h2><a name="0.2ReleaseFeatures-ExtensionHandling"></a>Extension Handling</h2>
+
+<p>Runtime extensions (e.g. bindings, component implementation types) are now be packaged as SCA archives and installed as follows:</p>
+
+<ul class="alternate" type="square">
+	<li>In the standalone runtimes, they are added to an extensions directory</li>
+	<li>In the web app runtime they are bundled in the WEB-INF/fabric3/extensions directory of the WAR</li>
+
+	<li>In the development runtime, they are added to an extensions directory</li>
+	<li>In the Maven runtime, they are specified in the iTest plugin configuration and automatically downloaded from a repository</li>
+</ul>
+
+
+<p>The need to modify system composites to add extensions has been eliminated. Also, since runtime extensions are SCA contributions, they may be self-contained and include third-party libraries in META-INF/lib.  </p>
+
+</div><div class="section_2"><h2><a name="0.2ReleaseFeatures-SCACompliance"></a>SCA Compliance</h2>
+
+<p>Specification support has also been improved, including the following:</p>
+
+<ul class="alternate" type="square">
+	<li>Support for references with multiplicity greater than 1</li>
+</ul>
+
+
+<ul class="alternate" type="square">
+	<li>Improved web application support, including web app-specific component types.</li>
+</ul>
+
+
+<ul class="alternate" type="square">
+	<li>Autowire include and inheritance support</li>
+
+</ul>
+
+
+<ul class="alternate" type="square">
+	<li>Fixes for various wire resolution and promotion bugs.</li>
+</ul>
+
+
+</div><div class="section_2"><h2><a name="0.2ReleaseFeatures-RuntimeModularization"></a>Runtime Modularization</h2>
+
+<ul class="alternate" type="square">
+	<li>Separate single-VM, standalone, and participant distributions have been created.</li>
+
+</ul>
+
+
+<ul class="alternate" type="square">
+	<li>Various modules, including the console, Jetty HTTP service, and contribution scanner have been converted into extensions and are no longer included in the core system composite.</li>
+</ul>
+
+
+<ul class="alternate" type="square">
+	<li>Runtime implementation classes have been isolated from the extension classpath.</li>
+</ul>
+
+
+
+</div></div>
+</div>
+
+
+</div>
+
+<div id="sidebar">
+<a href=""><img src="../img/fabric3-logo.jpg" width="100%" height="100" border="1"/></a>
+<div class="navigation">
+   <div class="section_1"><h1><a name="Navigation-Resources"></a>Resources</h1>
+
+<p><a href="../Docs.html" title="Docs">Documentation</a><br></br>
+<a href="../Downloads.html" title="Downloads">Downloads</a><br></br>
+<a href="../SourceRepository.html" title="Source Repository">Source Repository</a><br></br>
+<a href="http://www.osoa.org" title="SCA Specifications">SCA Specifications</a><br></br>
+<a href="http://xircles.codehaus.org/projects/fabric3/lists">Mailing Lists</a><br></br>
+<a href="http://jira.codehaus.org/browse/FABRICTHREE">JIRA</a><br></br>
+<a href="http://bamboo.ci.codehaus.org/browse/FABRIC3">Continuous Integration</a><br></br>
+<a href="http://www.opensource.org/licenses/apache2.0.php">License</a></p>
+</div>
+ </div>
+
+<h4 class="headerstyle">Feeds</h4>
+<ul>
+
+ <li><a class="rss" href="http://docs.codehaus.org/spaces/rss.action?key=FABRICTHREE&amp;newPages=false">Site</a></li>
+ <li><a class="rss" href="http://docs.codehaus.org/spaces/blogrss.action?key=FABRICTHREE">News</a></li>
+</ul>
+
+<h4 class="headerstyle">Blogs</h4>
+<ul>
+ <li><a class="editPage" href="">Blog1</a></li>
+ <li><a class="editPage" href="">Blog2</a></li>
+</ul>
+<h4 class="headerstyle">External Links</h4>
+<ul>
+ <li><a href="http://atlassian.com/">Atlassian</a></li>
+ <li><a href="http://atlassian.com/confluence/">Confluence</a></li>
+ <li><a href="http://www.codehaus.org/">Codehaus</a></li>
+ <li><a href="http://www.jetbrains.com/idea/"><img src="http://www.jetbrains.com/idea/opensource/img/banners/idea88x31_blue.gif"></a></li>
+</ul>
+</div>
+<div class="clear">&nbsp;</div>
+</div>
+
+
+<div id="footer">&copy; 2006 Codehaus Foundation. Original design by <a href="http://andreasviklund.com" class="credit">Andreas Viklund</a></div>
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-150515-1";
+urchinTracker();
+
+</script>
+</body>
+</html>

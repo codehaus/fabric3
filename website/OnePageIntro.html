@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html" />
+ <meta name="description" content="Fabric3 website" />
+ <meta name="keywords" content="Fabric3, SCA, SCA Implementation, Open Source" />
+ <meta name="author" content="Fabric3 / Ratesh Bansal" />
+ <link rel="stylesheet" type="text/css" href="css/default.css" />
+ <title>Fabric3 - One Page Intro</title>
+
+</head>
+
+<body>
+<div id="container">
+<div id="main">
+<div id="intro">
+            <p><div class="section_1"><h1><a name="LeftHeader-fabric3"></a><img src="img/banner.jpg" height="100" width="750"/></h1></div></p>
+
+     </div><div class="clear"></div>
+
+
+<div class="shortheaderstyle" style="font-size: 1.0em">
+<table id="utop_nav" style="width: 100%;padding-right: 2mm">
+ <tr>
+  <td align="left" valign="middle">
+   <div id="ubreadcrumbs">
+    <a href="home.html">Home</a>
+                      &gt; <a href="Docs.html">Docs</a>
+
+                        &gt; <a href="">One Page Intro</a>
+                  </div>
+  </td>
+  <td align="right" valign="middle" id="quicklinks">
+       <p><a href="Roadmap.html" title="Roadmap">Roadmap</a> | <a href="Docs.html" title="Docs">Docs</a> | <a href="Downloads.html" title="Downloads">Downloads</a></p>
+
+     </td>
+ </tr>
+</table>
+</div>
+<div class="content" style="padding-top: 3mm;">
+          <p>This guide provides a quick walk through the goals of fabric3 and shows how to build a simple Hello World application.</p>
+
+<div class="section_1"><h1><a name="OnePageIntro-GoalsandVision"></a>Goals and Vision</h1>
+<p>Building and running applications is getting harder and harder. Users expect more features from even simple applications and at the same time expect robustness and security when using them. Applications are evolving from monolithic islands to networks of distributed units collaborating as part of a coordinated whole. Developers can use these network services to help provide the features their users want but in doing create a price in complexity that someone, often an administrator, needs to pay. </p>
+
+<p>The goal of fabric3 is to make it easier for developers to build these type of applications and for administrators to run and manage them. We do this in two ways:</p>
+
+<ul>
+	<li>we provide programming models for developers that allows them to build portions of an application in a controlled environment. These models include not only the Java model from the SCA specification but also support for existing models such as Spring, JSF or EJBs. We also intend to support other languages such as Ruby, Groovy or XQuery so that a developer is free to choose the language/framework that works for them.</li>
+	<li>we provide an administrative view of all the application components currently available and how they interact with each other. This allows developers to select other components to provide services while providing control over how those services are connected at runtime.</li>
+</ul>
+
+
+<p>The problem here is a complex one but we don't think that needs to impact every developer. This guide will walk you through how we do that.</p>
+
+</div><div class="section_1"><h1><a name="OnePageIntro-SimpleJavaComponent"></a>Simple Java Component</h1>
+
+<p>Our application here is meant to provide a traditional "Hello World" message but you don't really need a application framework just to print that out. Instead, we'll define a general network service that will construct a suitable message for us. As we are developing in Java, we'll define a Java interface for that service:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>Service Contract</b></div><div class="codeContent panelContent">
+<pre class="code-java"><span class="code-keyword">public</span> <span class="code-keyword">interface</span> HelloWorld {
+  /**
+   * Returns a personalized greeting.
+   * @param name the name of the person
+   * @<span class="code-keyword">return</span> a personalized greeting
+   */
+  <span class="code-object">String</span> sayHello(<span class="code-object">String</span> name);
+}</pre>
+
+</div></div>
+
+<p>We used Java to define the interface here because we're Java developers and having a strongly typed interface we can code against makes things easier for us. If we were using a different programming language such as BPEL or Ruby we would perhaps define the interface in WSDL or not at all. The important thing here is that we have a way to define a contract for the service that both the consumer and provider can agree to. Matching a consumer to a provider is handled by the fabric and it will do whatever is necessary to make the contract work. So, for example, a Java consumer could use a Java interface to call a service provider implemented in BPEL using a WSDL interface.</p>
+
+<p>As it is this interface that defines the contract we can write a test case to define the behaviour expected from an implementation. In this example we can write a fairly simple test case using JUnit:</p>
+<div class="code panel" style="border-width: 1px;"><div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>Interface Test</b></div><div class="codeContent panelContent">
+<pre class="code-java"><span class="code-keyword">public</span> class HelloWorldTest {
+  <span class="code-keyword">private</span> HelloWorld service = <span class="code-keyword">new</span> HelloImpl();
+
+  <span class="code-keyword">public</span> void testGreeting() {
+    assertEquals(<span class="code-quote">"Hello World"</span>, service.sayHello(<span class="code-quote">"World"</span>);
+  }
+}</pre>
+
+</div></div>
+<p>The principal here extends to service interfaces that are much more complex and which also include conversational and callback behaviour. The interface can also be mocked using a testing framework such as <a href="http://www.easymock.org">EasyMock</a> so that implementations can be developed and tested independently.</p>
+
+<p>Now that we have tests for the behaviour we can write a component that provides the service:</p>
+<div class="code panel" style="border-width: 1px;"><div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>Component Implementation</b></div><div class="codeContent panelContent">
+<pre class="code-java"><span class="code-keyword">public</span> class HelloImpl <span class="code-keyword">implements</span> HelloWorld {
+  <span class="code-keyword">private</span> <span class="code-object">String</span> greeting = <span class="code-quote">"Hello"</span>;
+
+  <span class="code-keyword">protected</span> setGreeting(<span class="code-object">String</span> greeting) {
+    <span class="code-keyword">this</span>.greeting = greeting;
+  }
+
+  <span class="code-keyword">public</span> <span class="code-object">String</span> sayHello(<span class="code-object">String</span> name) {
+    <span class="code-keyword">return</span> greeting + <span class="code-quote">" "</span> + name;
+  }
+}</pre>
+
+</div></div>
+
+<p>So far we have developed a simple component that provides a basic implementation of a service. It is pure Java code with nothing that ties it to any particular runtime (for example, there are no framework interfaces to implement or base classes to extend). This is basically the POJO development model supported by other frameworks such as Spring, EJB3 or PicoContainer. In fact, components you have already developed for those environments may well run on our fabric without any modification at all (assuming they are not tied to some feature of the framework).</p>
+
+<div class="panelMacro"><table class="tipMacro"><colgroup><col width="24"></col><col></col></colgroup><tr><td valign="top"><img src="http://docs.codehaus.org/images/icons/emoticons/check.gif" width="16" height="16" align="absmiddle" alt="" border="0"></img></td><td><b>Portable Code</b><br></br>
+<p>Implementing a component does not require dependencies on anything provided by the framework. This allows you to write the code once and move it between frameworks. It also allows the fabric to do the same.</p></td></tr></table></div>
+
+<p>Now we have written and tested our component we are ready to make it available to other applications through the service network.</p>
+
+</div><div class="section_1"><h1><a name="OnePageIntro-ServiceNetwork"></a>Service Network</h1>
+
+<p>The previous section described how a developer can write a simple component in Java which provides the implementation of a service contract. Now the code is done, it is time to make that service avialble to others. We do this in two stages:</p>
+
+<ol>
+	<li>By contibuting some packaging artifact that contains runnable code</li>
+	<li>By creating a live, running instance of a component</li>
+</ol>
+
+
+<div class="section_2"><h2><a name="OnePageIntro-ContributingCode"></a>Contributing Code</h2>
+<p>The first step to run a component is to make the code that implements it available to the runtimes that are participating in the network. This can be done in a number of ways, depending on the runtime:</p>
+<ul>
+	<li>it could be installed on the machine</li>
+
+	<li>it could be deployed to an online repository such as Maven's</li>
+	<li>it could be provisioned automatically to the runtime</li>
+</ul>
+
+
+<p>In a production environment, the code would normally be packaged in some form of distribution archive such as a JAR file. When the archive is contributed, fabric3 examines it to determine what kind of content it provides (such a POJOs, EJBs, Ruby scripts) building up a repository of these contributions. In a development environment, the contribution would just point to where the code was being developed (for example, the classpath from the IDE) so that it can be used directly without needing to repackage all the time.</p>
+
+</div><div class="section_2"><h2><a name="OnePageIntro-RunningaComponent"></a>Running a Component</h2>
+<p>TBD</p></div></div>
+</div>
+
+
+</div>
+
+<div id="sidebar">
+
+<a href=""><img src="img/fabric3-logo.jpg" width="100%" height="100" border="1"/></a>
+<div class="navigation">
+   <div class="section_1"><h1><a name="Navigation-Resources"></a>Resources</h1>
+
+<p><a href="Docs.html" title="Docs">Documentation</a><br></br>
+<a href="Downloads.html" title="Downloads">Downloads</a><br></br>
+<a href="SourceRepository.html" title="Source Repository">Source Repository</a><br></br>
+<a href="http://www.osoa.org" title="SCA Specifications">SCA Specifications</a><br></br>
+<a href="http://xircles.codehaus.org/projects/fabric3/lists">Mailing Lists</a><br></br>
+<a href="http://jira.codehaus.org/browse/FABRICTHREE">JIRA</a><br></br>
+<a href="http://bamboo.ci.codehaus.org/browse/FABRIC3">Continuous Integration</a><br></br>
+<a href="http://www.opensource.org/licenses/apache2.0.php">License</a></p>
+</div>
+ </div>
+
+<h4 class="headerstyle">Feeds</h4>
+<ul>
+
+ <li><a class="rss" href="http://docs.codehaus.org/spaces/rss.action?key=FABRICTHREE&amp;newPages=false">Site</a></li>
+ <li><a class="rss" href="http://docs.codehaus.org/spaces/blogrss.action?key=FABRICTHREE">News</a></li>
+</ul>
+
+<h4 class="headerstyle">Blogs</h4>
+<ul>
+ <li><a class="editPage" href="">Blog1</a></li>
+ <li><a class="editPage" href="">Blog2</a></li>
+</ul>
+<h4 class="headerstyle">External Links</h4>
+<ul>
+ <li><a href="http://atlassian.com/">Atlassian</a></li>
+ <li><a href="http://atlassian.com/confluence/">Confluence</a></li>
+ <li><a href="http://www.codehaus.org/">Codehaus</a></li>
+ <li><a href="http://www.jetbrains.com/idea/"><img src="http://www.jetbrains.com/idea/opensource/img/banners/idea88x31_blue.gif"></a></li>
+</ul>
+</div>
+<div class="clear">&nbsp;</div>
+</div>
+<div id="footer">&copy; 2006 Codehaus Foundation. Original design by <a href="http://andreasviklund.com" class="credit">Andreas Viklund</a></div>
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-150515-1";
+urchinTracker();
+</script>
+</body>
+</html>
