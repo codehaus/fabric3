@@ -45,12 +45,4 @@ public class WireImpl implements Wire {
         return Collections.unmodifiableMap(chains);
     }
 
-    public Map<PhysicalOperationDefinition, InvocationChain> getCallbackInvocationChains() {
-        return Collections.unmodifiableMap(callbackChains);
-    }
-
-    public void addCallbackInvocationChain(PhysicalOperationDefinition operation, InvocationChain chain) {
-        callbackChains.put(operation, chain);
-    }
-
 }

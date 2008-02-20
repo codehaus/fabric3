@@ -23,7 +23,7 @@ import java.util.Map;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 
 /**
- * The base wire type used to connect references and serviceBindings
+ * Wires connect references and services via a collection of invocation chains. An invocation chain corresponds to a service operation.
  *
  * @version $$Rev$$ $$Date$$
  */
@@ -36,11 +36,11 @@ public interface Wire {
      */
     void addInvocationChain(PhysicalOperationDefinition operation, InvocationChain chain);
 
+    /**
+     * Returns the collection of invocation chains for the wire.
+     *
+     * @return the collection of invocation chains for the wire
+     */
     Map<PhysicalOperationDefinition, InvocationChain> getInvocationChains();
-
-    Map<PhysicalOperationDefinition, InvocationChain> getCallbackInvocationChains();
-
-    void addCallbackInvocationChain(PhysicalOperationDefinition operation, InvocationChain chain);
-
 
 }
