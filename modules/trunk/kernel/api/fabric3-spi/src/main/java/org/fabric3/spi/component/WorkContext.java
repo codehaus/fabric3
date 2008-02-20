@@ -18,6 +18,7 @@
  */
 package org.fabric3.spi.component;
 
+import java.util.List;
 import javax.security.auth.Subject;
 
 import org.fabric3.scdl.Scope;
@@ -52,4 +53,39 @@ public interface WorkContext {
      */
     <T> void setScopeIdentifier(Scope<T> scope, T identifier);
 
+    /**
+     * Adds a CallFrame to the internal CallFrame stack. CallFrames track information related to an invocation that is made as part of processing a
+     * request. As an invocation is made, a CallFrame is added to the stack. CallFrames are removed fromt he stack when the invocation returns.
+     *
+     * @param frame the CallFrame to add
+     */
+    void addCallFrame(CallFrame frame);
+
+    /**
+     * Adds a collection of CallFrames to the internal CallFrame stack.
+     *
+     * @param frames the collection of CallFrames to add
+     */
+    void addCallFrames(List<CallFrame> frames);
+
+    /**
+     * Removes and returns the CallFrame associated with the previous request from the internal stack.
+     *
+     * @return the CallFrame.
+     */
+    CallFrame popCallFrame();
+
+    /**
+     * Returns but does not remove the CallFrame associated with the previous request from the internal stack.
+     *
+     * @return the CallFrame.
+     */
+    CallFrame peekCallFrame();
+
+    /**
+     * Returns the CallFrame stack.
+     *
+     * @return the CallFrame stack
+     */
+    List<CallFrame> getCallFrameStack();
 }

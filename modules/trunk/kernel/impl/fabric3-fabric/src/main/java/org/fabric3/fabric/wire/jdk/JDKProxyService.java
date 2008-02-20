@@ -58,34 +58,38 @@ public class JDKProxyService implements ProxyService {
         this.classLoaderRegistry = classLoaderRegistry;
     }
 
-    public <T> ObjectFactory<T> createObjectFactory(Class<T> interfaze, boolean conversational, Wire wire)
+    public <T> ObjectFactory<T> createObjectFactory(Class<T> interfaze, boolean conversational, Wire wire, String callbackUri)
             throws ProxyCreationException {
         Map<Method, InvocationChain> mappings = createInterfaceToWireMapping(interfaze, wire);
-        return new WireObjectFactory<T>(interfaze, conversational, wire, this, mappings);
+        return new WireObjectFactory<T>(interfaze, conversational, callbackUri, this, mappings);
     }
 
-    public <T> ObjectFactory<T> createCallbackObjectFactory(Class<T> interfaze, boolean conversaitonal, URI targetUri, Wire wire)
+    public <T> ObjectFactory<T> createCallbackObjectFactory(Class<T> interfaze, Scope sourceScope, boolean conversaitonal, URI targetUri, Wire wire)
             throws ProxyCreationException {
         Map<Method, InvocationChain> operationMappings = createInterfaceToWireMapping(interfaze, wire);
         Map<String, Map<Method, InvocationChain>> mappings = new HashMap<String, Map<Method, InvocationChain>>();
         mappings.put(targetUri.toString(), operationMappings);
-        return new CallbackWireObjectFactory<T>(interfaze, conversaitonal, this, mappings);
+        return new CallbackWireObjectFactory<T>(interfaze, sourceScope, conversaitonal, this, mappings);
     }
 
-    public <T> T createProxy(Class<T> interfaze, boolean conversational, Wire wire, Map<Method, InvocationChain> mappings)
+    public <T> T createProxy(Class<T> interfaze, boolean conversational, String callbackUri, Map<Method, InvocationChain> mappings)
             throws ProxyCreationException {
-        assert interfaze != null;
-        assert wire != null;
         ScopeContainer<Conversation> scopeContainer = scopeRegistry.getScopeContainer(Scope.CONVERSATION);
         JDKInvocationHandler<T> handler =
-                new JDKInvocationHandler<T>(interfaze, wire, conversational, mappings, scopeContainer);
+                new JDKInvocationHandler<T>(interfaze, callbackUri, conversational, mappings, scopeContainer);
         return handler.getService();
     }
 
     public <T> T createCallbackProxy(Class<T> interfaze, boolean conversational, Map<String, Map<Method, InvocationChain>> mappings)
             throws ProxyCreationException {
         ClassLoader cl = interfaze.getClassLoader();
-        JDKCallbackInvocationHandler<T> handler = new JDKCallbackInvocationHandler<T>(interfaze, conversational, mappings);
+        CompositeScopeCallbackInvocationHandler<T> handler = new CompositeScopeCallbackInvocationHandler<T>(interfaze, conversational, mappings);
+        return interfaze.cast(Proxy.newProxyInstance(cl, new Class[]{interfaze}, handler));
+    }
+
+    public <T> T createStatefullCallbackProxy(Class<T> interfaze, boolean conversational, String callbackUri, Map<Method, InvocationChain> mapping) {
+        ClassLoader cl = interfaze.getClassLoader();
+        StatefullCallbackInvocationHandler<T> handler = new StatefullCallbackInvocationHandler<T>(interfaze, conversational, callbackUri, mapping);
         return interfaze.cast(Proxy.newProxyInstance(cl, new Class[]{interfaze}, handler));
     }
 
@@ -95,7 +99,7 @@ public class JDKProxyService implements ProxyService {
         if (handler instanceof JDKInvocationHandler) {
             JDKInvocationHandler<B> jdkHandler = (JDKInvocationHandler<B>) handler;
             return (R) jdkHandler.getServiceReference();
-        } else if (handler instanceof JDKCallbackInvocationHandler) {
+        } else if (handler instanceof CompositeScopeCallbackInvocationHandler) {
             // TODO return a CallbackReference
             throw new UnsupportedOperationException();
         } else {

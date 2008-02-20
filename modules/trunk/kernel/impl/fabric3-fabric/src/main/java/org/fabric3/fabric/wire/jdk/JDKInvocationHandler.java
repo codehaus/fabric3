@@ -14,6 +14,7 @@ import org.fabric3.fabric.wire.NoMethodForOperationException;
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.Scope;
+import org.fabric3.spi.component.CallFrame;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.TargetInvocationException;
 import org.fabric3.spi.component.WorkContext;
@@ -22,7 +23,6 @@ import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.spi.wire.MessageImpl;
-import org.fabric3.spi.wire.Wire;
 
 /**
  * Dispatches to a target through a wire.
@@ -30,35 +30,31 @@ import org.fabric3.spi.wire.Wire;
  * @version $Rev$ $Date$
  */
 public final class JDKInvocationHandler<B> implements InvocationHandler, ServiceReference<B> {
-
     private final Class<B> businessInterface;
     private final B proxy;
     private final boolean conversational;
-    private final Wire wire;
     private final Map<Method, InvocationChain> chains;
     private final ScopeContainer<Conversation> scopeContainer;
 
     private ConversationImpl conversation;
     private Object userConversationId;
+    private String callbackUri;
 
     public JDKInvocationHandler(Class<B> businessInterface,
-                                Wire wire,
+                                String callbackUri,
                                 boolean conversational,
                                 Map<Method, InvocationChain> mapping,
                                 ScopeContainer<Conversation> scopeContainer)
             throws NoMethodForOperationException {
+        this.callbackUri = callbackUri;
         assert mapping != null;
         this.businessInterface = businessInterface;
         this.proxy = businessInterface.cast(
                 Proxy.newProxyInstance(businessInterface.getClassLoader(), new Class[]{businessInterface}, this));
-
-
         this.conversational = conversational;
-        this.wire = wire;
         this.chains = mapping;
         this.scopeContainer = scopeContainer;
     }
-
 
     public B getService() {
         return proxy;
@@ -130,7 +126,9 @@ public final class JDKInvocationHandler<B> implements InvocationHandler, Service
         } else {
             oldConversation = null;
         }
-
+        // TODO add caller URI
+        CallFrame frame = new CallFrame(callbackUri, conversation, oldConversation);
+        workContext.addCallFrame(frame);
         // send the invocation down the wire
         Message msg = new MessageImpl();
         msg.setBody(args);
@@ -163,6 +161,7 @@ public final class JDKInvocationHandler<B> implements InvocationHandler, Service
                     conversation = null;
                 }
                 workContext.setScopeIdentifier(Scope.CONVERSATION, oldConversation);
+                workContext.popCallFrame();
             }
         }
 

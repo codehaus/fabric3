@@ -17,29 +17,26 @@
 package org.fabric3.fabric.wire.jdk;
 
 import java.lang.reflect.Method;
-import java.util.Map;
 import java.util.Collections;
+import java.util.Map;
 
 import junit.framework.TestCase;
-
-import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.scdl.Scope;
-import org.fabric3.spi.wire.InvocationChain;
-import org.fabric3.spi.wire.Wire;
-
 import org.easymock.EasyMock;
 import org.osoa.sca.ServiceReference;
+
+import org.fabric3.scdl.Scope;
+import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.spi.wire.InvocationChain;
 
 /**
  * @version $Rev$ $Date$
  */
 public class JDKProxyServiceTestCase extends TestCase {
     private JDKProxyService proxyService;
-    private Wire wire;
 
     public void testCastProxyToServiceReference() {
         Map<Method, InvocationChain> mapping = Collections.emptyMap();
-        JDKInvocationHandler<Foo> handler = new JDKInvocationHandler<Foo>(Foo.class, wire, false, mapping, null);
+        JDKInvocationHandler<Foo> handler = new JDKInvocationHandler<Foo>(Foo.class, null, false, mapping, null);
         Foo proxy = handler.getService();
         ServiceReference<Foo> ref = proxyService.cast(proxy);
         assertSame(handler, ref);
@@ -50,9 +47,6 @@ public class JDKProxyServiceTestCase extends TestCase {
         ScopeRegistry scopeRegistry = EasyMock.createMock(ScopeRegistry.class);
         EasyMock.expect(scopeRegistry.getScopeContainer(Scope.CONVERSATION)).andStubReturn(null);
         EasyMock.replay(scopeRegistry);
-        wire = EasyMock.createMock(Wire.class);
-        EasyMock.expect(wire.getCallbackInvocationChains()).andStubReturn(Collections.emptyMap());
-        EasyMock.replay(wire);
         proxyService = new JDKProxyService(scopeRegistry, null);
     }
 

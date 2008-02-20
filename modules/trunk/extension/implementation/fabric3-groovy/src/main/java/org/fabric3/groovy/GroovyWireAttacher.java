@@ -99,7 +99,7 @@ public class GroovyWireAttacher implements SourceWireAttacher<GroovyWireSourceDe
     }
 
     private <T> ObjectFactory<T> createWireObjectFactory(Class<T> type, boolean isConversational, Wire wire) {
-        return proxyService.createObjectFactory(type, isConversational, wire);
+        return proxyService.createObjectFactory(type, isConversational, wire, null);
     }
 
     public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition,

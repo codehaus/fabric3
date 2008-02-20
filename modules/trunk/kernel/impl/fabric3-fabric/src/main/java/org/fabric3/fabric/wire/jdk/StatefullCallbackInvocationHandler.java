@@ -26,25 +26,55 @@ import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.component.TargetInvocationException;
+import org.fabric3.spi.component.CallFrame;
 import org.fabric3.pojo.PojoWorkContextTunnel;
+import org.fabric3.scdl.Scope;
 
 /**
- * Responsible for dispatching to a callback service.
+ * Responsible for dispatching to a callback service from a component implementation instance that is not composite scoped. Callback URIs can be
+ * cached for all scopes other than composite as only one client can invoke the instance at a time.
  *
- * @version $Rev$ $Date$
+ * @version $Rev: 1 $ $Date: 2007-05-14 10:40:37 -0700 (Mon, 14 May 2007) $
  */
-public class JDKCallbackInvocationHandler<T> implements InvocationHandler {
+public class StatefullCallbackInvocationHandler<T> implements InvocationHandler {
     private final Class<T> interfaze;
-    private final boolean conversational;
-    private Map<String, Map<Method, InvocationChain>> mappings;
+    private final Object conversationId;
+    private final String callbackUri;
+    private Map<Method, InvocationChain> chains;
 
-    public JDKCallbackInvocationHandler(Class<T> interfaze, boolean conversational, Map<String, Map<Method, InvocationChain>> mappings) {
+    /**
+     * Constructor.
+     *
+     * @param interfaze      the callback service interface implemented by the proxy
+     * @param conversationId the conversation id for the callback service
+     * @param callbackUri    the callback target URI;
+     * @param chains         the invocation chain mappings for the callback wire
+     */
+    public StatefullCallbackInvocationHandler(Class<T> interfaze,
+                                              Object conversationId,
+                                              String callbackUri,
+                                              Map<Method, InvocationChain> chains) {
         this.interfaze = interfaze;
-        this.conversational = conversational;
-        this.mappings = mappings;
+        this.conversationId = conversationId;
+        this.chains = chains;
+        this.callbackUri = callbackUri;
     }
 
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        InvocationChain chain = chains.get(method);
+        if (chain == null) {
+            return handleProxyMethod(method);
+        }
+
+        Interceptor headInterceptor = chain.getHeadInterceptor();
+        assert headInterceptor != null;
+
+        WorkContext workContext = PojoWorkContextTunnel.getThreadWorkContext();
+        CallFrame frame = workContext.popCallFrame();
+        try {
+        } finally {
+            workContext.addCallFrame(frame);
+        }
         throw new UnsupportedOperationException();
     }
 

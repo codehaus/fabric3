@@ -20,12 +20,14 @@ package org.fabric3.fabric.injection;
 
 import java.lang.reflect.Method;
 import java.util.Map;
-import java.net.URI;
 
+import org.fabric3.pojo.PojoWorkContextTunnel;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.wire.ProxyService;
+import org.fabric3.spi.component.CallFrame;
 import org.fabric3.spi.wire.InvocationChain;
+import org.fabric3.spi.wire.ProxyService;
 
 /**
  * Returns a proxy instance for a callback wire.
@@ -33,6 +35,7 @@ import org.fabric3.spi.wire.InvocationChain;
  * @version $Rev$ $Date$
  */
 public class CallbackWireObjectFactory<T> implements ObjectFactory<T> {
+    private Scope sourceScope;
     private boolean conversational;
     private ProxyService proxyService;
     private Map<String, Map<Method, InvocationChain>> mappings;
@@ -42,22 +45,34 @@ public class CallbackWireObjectFactory<T> implements ObjectFactory<T> {
      * Constructor.
      *
      * @param interfaze      the proxy interface
+     * @param sourceScope    the scope of the component implementation the proxy will be injected on
      * @param conversational if the target callback service is conversational
      * @param proxyService   the service for creating proxies
      * @param mappings       the callback URI to invocation chain mappings
      */
     public CallbackWireObjectFactory(Class<T> interfaze,
+                                     Scope sourceScope,
                                      boolean conversational,
                                      ProxyService proxyService,
                                      Map<String, Map<Method, InvocationChain>> mappings) {
         this.interfaze = interfaze;
+        this.sourceScope = sourceScope;
         this.conversational = conversational;
         this.proxyService = proxyService;
         this.mappings = mappings;
     }
 
     public T getInstance() throws ObjectCreationException {
-        return interfaze.cast(proxyService.createCallbackProxy(interfaze, conversational, mappings));
+        if (Scope.COMPOSITE.equals(sourceScope)) {
+            return interfaze.cast(proxyService.createCallbackProxy(interfaze, conversational, mappings));
+        } else {
+            CallFrame frame = PojoWorkContextTunnel.getThreadWorkContext().peekCallFrame();
+            String callbackUri = frame.getCallbackUri();
+            assert callbackUri != null;
+            Map<Method, InvocationChain> mapping = mappings.get(callbackUri);
+            assert mapping != null;
+            return interfaze.cast(proxyService.createStatefullCallbackProxy(interfaze, conversational, callbackUri, mapping));
+        }
     }
 
 }

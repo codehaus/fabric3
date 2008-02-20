@@ -54,6 +54,7 @@ public class NonBlockingInterceptorTestCase extends TestCase {
             public Object answer() throws Throwable {
                 NonBlockingInterceptor.AsyncRequest request =
                         (NonBlockingInterceptor.AsyncRequest) getCurrentArguments()[0];
+                request.run();
                 assertSame(next, request.getNext());
                 assertSame(message, request.getMessage());
                 WorkContext newWorkContext = message.getWorkContext();

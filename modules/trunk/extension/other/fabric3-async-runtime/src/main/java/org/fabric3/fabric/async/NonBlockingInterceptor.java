@@ -18,13 +18,18 @@
  */
 package org.fabric3.fabric.async;
 
+import java.util.List;
+import java.util.ArrayList;
+
+import org.osoa.sca.Conversation;
+
 import org.fabric3.extension.component.SimpleWorkContext;
-import org.fabric3.spi.component.WorkContext;
 import org.fabric3.scdl.Scope;
+import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.component.CallFrame;
 import org.fabric3.spi.services.work.WorkScheduler;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.Message;
-import org.fabric3.spi.wire.Wire;
 
 /**
  * Adds non-blocking behavior to an invocation chain
@@ -44,10 +49,19 @@ public class NonBlockingInterceptor implements Interceptor {
 
     public Message invoke(final Message msg) {
         WorkContext workContext = msg.getWorkContext();
-        WorkContext newWorkContext = new SimpleWorkContext();
-        newWorkContext.setScopeIdentifier(Scope.CONVERSATION, workContext.getScopeIdentifier(Scope.CONVERSATION));
-        msg.setWorkContext(newWorkContext);
-        AsyncRequest request = new AsyncRequest(next, msg);
+        // TODO this needs to be part of the CallFrame
+        Conversation conversation = workContext.getScopeIdentifier(Scope.CONVERSATION);
+        List<CallFrame> newStack = null;
+        List<CallFrame> stack = workContext.getCallFrameStack();
+        if (stack != null && !stack.isEmpty()) {
+            // clone the callstack to avoid multiple threads seeing chnages
+            newStack = new ArrayList<CallFrame>(stack.size());
+            for (CallFrame frame : stack) {
+                newStack.add(frame);
+            }
+        }
+        msg.setWorkContext(null);
+        AsyncRequest request = new AsyncRequest(next, msg, conversation, newStack);
         workScheduler.scheduleWork(request);
         return RESPONSE;
     }
@@ -67,13 +81,23 @@ public class NonBlockingInterceptor implements Interceptor {
     protected static class AsyncRequest implements Runnable {
         private final Interceptor next;
         private final Message message;
+        private Conversation conversation;
+        private List<CallFrame> stack;
 
-        public AsyncRequest(Interceptor next, Message message) {
+        public AsyncRequest(Interceptor next, Message message, Conversation conversation, List<CallFrame> stack) {
             this.next = next;
             this.message = message;
+            this.conversation = conversation;
+            this.stack = stack;
         }
 
         public void run() {
+            WorkContext newWorkContext = new SimpleWorkContext();
+            newWorkContext.setScopeIdentifier(Scope.CONVERSATION, conversation);
+            if (stack != null) {
+                newWorkContext.addCallFrames(stack);
+            }
+            message.setWorkContext(newWorkContext);
             next.invoke(message);
         }
 

@@ -196,7 +196,7 @@ public class SpringWireAttacher extends PojoWireAttacher implements SourceWireAt
     }
 
     private <T> ObjectFactory<T> createWireObjectFactory(Class<T> type, boolean isConversational, Wire wire) {
-        return proxyService.createObjectFactory(type, isConversational, wire);
+        return proxyService.createObjectFactory(type, isConversational, wire, null);
     }
 
     private <T> ObjectFactory<T> createCallbackWireObjectFactory(Class<T> type) {

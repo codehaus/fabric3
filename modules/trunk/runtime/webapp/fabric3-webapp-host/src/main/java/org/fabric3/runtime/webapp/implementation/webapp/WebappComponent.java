@@ -114,7 +114,7 @@ public class WebappComponent<T> extends AbstractLifecycle implements AtomicCompo
     }
 
     protected <B> ObjectFactory<B> createWireFactory(Class<B> interfaze, Wire wire) {
-        return proxyService.createObjectFactory(interfaze, false, wire);
+        return proxyService.createObjectFactory(interfaze, false, wire, null);
     }
 
     public void bind(ServletContext servletContext) throws ObjectCreationException {

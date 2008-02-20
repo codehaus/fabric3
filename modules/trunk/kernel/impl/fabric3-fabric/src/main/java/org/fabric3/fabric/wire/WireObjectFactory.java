@@ -35,35 +35,36 @@ import org.fabric3.spi.wire.Wire;
 public class WireObjectFactory<T> implements ObjectFactory<T> {
     private Class<T> interfaze;
     private boolean conversational;
-    private Wire wire;
+    private String callbackUri;
     private ProxyService proxyService;
     // the cache of proxy interface method to operation mappings
     private Map<Method, InvocationChain> mappings;
 
     /**
-     * Constructor.
+     * Constructor for proxies that front bi-directional services.
      *
      * @param interfaze      the interface to inject on the client
      * @param conversational if the wire is conversational
-     * @param wire           the backing wire
+     * @param callbackUri    the callback URI for the wire or null if the wire is unidirectional
      * @param proxyService   the wire service to create the proxy
      * @param mappings       proxy method to invocation chain mappings
      * @throws NoMethodForOperationException if a method matching the operation cannot be found
      */
     public WireObjectFactory(Class<T> interfaze,
                              boolean conversational,
-                             Wire wire,
+                             String callbackUri,
                              ProxyService proxyService,
                              Map<Method, InvocationChain> mappings) throws NoMethodForOperationException {
         this.interfaze = interfaze;
         this.conversational = conversational;
-        this.wire = wire;
+        this.callbackUri = callbackUri;
         this.proxyService = proxyService;
         this.mappings = mappings;
     }
 
+
     public T getInstance() throws ObjectCreationException {
-        return interfaze.cast(proxyService.createProxy(interfaze, conversational, wire, mappings));
+        return interfaze.cast(proxyService.createProxy(interfaze, conversational, callbackUri, mappings));
     }
 }
 
