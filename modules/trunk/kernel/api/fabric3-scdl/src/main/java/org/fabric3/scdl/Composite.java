@@ -32,7 +32,7 @@ import javax.xml.namespace.QName;
  *
  * @version $Rev$ $Date$
  */
-public class Composite extends AbstractComponentType<CompositeService, CompositeReference, Property<?>, ResourceDefinition> implements PolicyAware {
+public class Composite extends AbstractComponentType<CompositeService, CompositeReference, Property, ResourceDefinition> implements PolicyAware {
 
     private final QName name;
     private URI contributionUri;
@@ -142,8 +142,8 @@ public class Composite extends AbstractComponentType<CompositeService, Composite
      * Get all properties including the ones are from included composites
      * @return
      */
-    public Map<String, Property<?>> getProperties() {
-        Map<String, Property<?>> view = new HashMap<String, Property<?>>(super.getProperties());
+    public Map<String, Property> getProperties() {
+        Map<String, Property> view = new HashMap<String, Property>(super.getProperties());
         for (Include i : includes.values()) {
             view.putAll(i.getIncluded().getProperties());
         }
@@ -208,7 +208,7 @@ public class Composite extends AbstractComponentType<CompositeService, Composite
     /**
      * Get declared properties in this composite type, included doesn't count
      */
-    public Map<String, Property<?>> getDeclaredProperties() {
+    public Map<String, Property> getDeclaredProperties() {
         return super.getProperties();
     }
 

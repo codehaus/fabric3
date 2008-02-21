@@ -28,22 +28,20 @@ import org.w3c.dom.Document;
  * @version $Rev$ $Date$
  * @param <T> the Java type of the property, if known
  */
-public class Property<T> extends ModelObject {
+public class Property extends ModelObject {
     private String name;
     private boolean many;
     private boolean required;
     private QName xmlType;
-    private Class<T> javaType;
 
     private Document defaultValue;
 
     public Property() {
     }
 
-    public Property(String name, QName xmlType, Class<T> javaType) {
+    public Property(String name, QName xmlType) {
         this.name = name;
         this.xmlType = xmlType;
-        this.javaType = javaType;
     }
 
     /**
@@ -106,14 +104,6 @@ public class Property<T> extends ModelObject {
 
     public void setXmlType(QName xmlType) {
         this.xmlType = xmlType;
-    }
-
-    public Class<T> getJavaType() {
-        return javaType;
-    }
-
-    public void setJavaType(Class<T> javaType) {
-        this.javaType = javaType;
     }
 
     public Document getDefaultValue() {

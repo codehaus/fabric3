@@ -68,14 +68,14 @@ public class PropertyProcessor extends ImplementationProcessorExtension {
             }
         }
 
-        Map<String, org.fabric3.scdl.Property<?>> properties = type.getProperties();
+        Map<String, org.fabric3.scdl.Property> properties = type.getProperties();
         if (properties.containsKey(name)) {
             throw new DuplicatePropertyException(name);
         }
 
         Class<?> baseType = getBaseType(javaType, method.getGenericParameterTypes()[0]);
         MethodInjectionSite site = new MethodInjectionSite(method, 0);
-        org.fabric3.scdl.Property<?> property = createProperty(name, baseType);
+        org.fabric3.scdl.Property property = createProperty(name, baseType);
         if (javaType.isArray() || Collection.class.isAssignableFrom(javaType)) {
             property.setMany(true);
         }
@@ -101,14 +101,14 @@ public class PropertyProcessor extends ImplementationProcessorExtension {
             name = field.getName();
         }
 
-        Map<String, org.fabric3.scdl.Property<?>> properties = type.getProperties();
+        Map<String, org.fabric3.scdl.Property> properties = type.getProperties();
         if (properties.containsKey(name)) {
             throw new DuplicatePropertyException(name);
         }
 
         Class<?> baseType = getBaseType(javaType, field.getGenericType());
         FieldInjectionSite site = new FieldInjectionSite(field);
-        org.fabric3.scdl.Property<?> property = createProperty(name, baseType);
+        org.fabric3.scdl.Property property = createProperty(name, baseType);
         if (javaType.isArray() || Collection.class.isAssignableFrom(javaType)) {
             property.setMany(true);
         }
@@ -117,8 +117,8 @@ public class PropertyProcessor extends ImplementationProcessorExtension {
         type.add(property, site);
     }
 
-    protected <T> org.fabric3.scdl.Property<T> createProperty(String name, Class<T> javaType) throws ProcessingException {
-        return new org.fabric3.scdl.Property<T>(name, null, javaType);
+    protected <T> org.fabric3.scdl.Property createProperty(String name, Class<T> javaType) throws ProcessingException {
+        return new org.fabric3.scdl.Property(name, null);
     }
 
     public static String toPropertyName(String name) {

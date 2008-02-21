@@ -174,9 +174,9 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
 
     private void validateRequiredProperties(ComponentDefinition<? extends Implementation<?>> definition) throws RequiredPropertyNotProvidedException {
         AbstractComponentType<?,?,?,?> type = definition.getImplementation().getComponentType();
-        Map<String,? extends Property<?>> properties = type.getProperties();
+        Map<String,? extends Property> properties = type.getProperties();
         Map<String, PropertyValue> values = definition.getPropertyValues();
-        for (Property<?> property : properties.values()) {
+        for (Property property : properties.values()) {
             if (property.isRequired() && !values.containsKey(property.getName())) {
                 throw new RequiredPropertyNotProvidedException(definition.getName(), property.getName());
             }

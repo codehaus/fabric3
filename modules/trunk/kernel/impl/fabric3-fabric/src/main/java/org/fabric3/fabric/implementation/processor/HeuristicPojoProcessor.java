@@ -304,10 +304,9 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
      * @param member    the injection site the reference maps to
      * @param paramType the property type
      */
-    private <T> Property<T> createProperty(String name, Class<T> paramType) {
-        Property<T> property = new Property<T>();
+    private <T> Property createProperty(String name, Class<T> paramType) {
+        Property property = new Property();
         property.setName(name);
-        property.setJavaType(paramType);
         return property;
     }
 
@@ -327,7 +326,7 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
         List<Method> nonPropRefMethods = new ArrayList<Method>();
         // Map<String, JavaMappedService> services = type.getServices();
         Map<String, ReferenceDefinition> references = type.getReferences();
-        Map<String, Property<?>> properties = type.getProperties();
+        Map<String, Property> properties = type.getProperties();
         // calculate methods that are not properties or references
         for (Method method : methods) {
             String name = toPropertyName(method.getName());

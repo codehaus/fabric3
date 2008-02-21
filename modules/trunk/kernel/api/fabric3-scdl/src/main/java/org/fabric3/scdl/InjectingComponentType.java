@@ -24,7 +24,7 @@ import java.util.Map;
  *
  * @version $Rev$ $Date$
  */
-public class InjectingComponentType extends AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property<?>, ResourceDefinition> {
+public class InjectingComponentType extends AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property, ResourceDefinition> {
 
     private final Map<InjectableAttribute, InjectionSite> injectionMappings = new HashMap<InjectableAttribute, InjectionSite>();
     private Signature initMethod;
@@ -55,7 +55,7 @@ public class InjectingComponentType extends AbstractComponentType<ServiceDefinit
      * @param property      the property to add
      * @param injectionSite the injection site for the property
      */
-    public void add(Property<?> property, InjectionSite injectionSite) {
+    public void add(Property property, InjectionSite injectionSite) {
         super.add(property);
         InjectableAttribute injectableAttribute = new InjectableAttribute(InjectableAttributeType.PROPERTY, property.getName());
         addInjectionSite(injectableAttribute, injectionSite);

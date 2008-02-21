@@ -25,6 +25,6 @@ import org.fabric3.scdl.ServiceDefinition;
 /**
  * @version $Revision$ $Date$
  */
-public class MockComponentType extends AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property<?>, ResourceDefinition> {
+public class MockComponentType extends AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property, ResourceDefinition> {
 
 }

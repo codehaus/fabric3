@@ -156,9 +156,9 @@ public class ConstructorProcessorTestCase extends TestCase {
         assertEquals(Multiplicity.ZERO_N, ref1.getMultiplicity());
         ReferenceDefinition ref2 = type.getReferences().get("xyz");
         assertEquals(Multiplicity.ONE_N, ref2.getMultiplicity());
-        org.fabric3.scdl.Property<?> prop1 = type.getProperties().get("foo");
+        org.fabric3.scdl.Property prop1 = type.getProperties().get("foo");
         assertTrue(prop1.isMany());
-        org.fabric3.scdl.Property<?> prop2 = type.getProperties().get("abc");
+        org.fabric3.scdl.Property prop2 = type.getProperties().get("abc");
         assertTrue(prop2.isMany());
     }
 

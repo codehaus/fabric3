@@ -19,17 +19,14 @@
 package org.fabric3.spring.applicationContext;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.fabric3.pojo.injection.MultiplicityObjectFactory;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spring.SpringComponent;
 import org.fabric3.spring.SpringComponentDefinition;
-import org.fabric3.spring.SpringImplementation;
+
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;

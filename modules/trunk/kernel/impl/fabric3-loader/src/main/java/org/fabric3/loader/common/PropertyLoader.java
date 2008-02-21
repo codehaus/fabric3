@@ -36,7 +36,7 @@ import org.fabric3.spi.loader.StAXElementLoader;
  *
  * @version $Rev$ $Date$
  */
-public class PropertyLoader implements StAXElementLoader<Property<?>> {
+public class PropertyLoader implements StAXElementLoader<Property> {
     private static final String NAME = "name";
     private static final String MANY = "many";
     private static final String MUST_SUPPLY = "mustSupply";
@@ -48,13 +48,13 @@ public class PropertyLoader implements StAXElementLoader<Property<?>> {
         this.helper = helper;
     }
 
-    public Property<?> load(XMLStreamReader reader, IntrospectionContext ctx) throws XMLStreamException, LoaderException {
+    public Property load(XMLStreamReader reader, IntrospectionContext ctx) throws XMLStreamException, LoaderException {
         String name = reader.getAttributeValue(null, NAME);
         boolean many = Boolean.parseBoolean(reader.getAttributeValue(null, MANY));
         boolean mustSupply = Boolean.parseBoolean(reader.getAttributeValue(null, MUST_SUPPLY));
         Document value = helper.loadValue(reader);
 
-        Property<?> property = new Property();
+        Property property = new Property();
         property.setRequired(mustSupply);
         property.setName(name);
         property.setXmlType(XS_STRING);

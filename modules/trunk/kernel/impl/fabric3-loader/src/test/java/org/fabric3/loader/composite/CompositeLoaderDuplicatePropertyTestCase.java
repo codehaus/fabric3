@@ -59,7 +59,7 @@ public class CompositeLoaderDuplicatePropertyTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        StAXElementLoader<Property<?>> propLoader = createPropertyLoader();
+        StAXElementLoader<Property> propLoader = createPropertyLoader();
         LoaderRegistry registry = createRegistry();
         PolicyHelper helper = EasyMock.createNiceMock(PolicyHelper.class);
         EasyMock.replay(helper);
@@ -81,13 +81,13 @@ public class CompositeLoaderDuplicatePropertyTestCase extends TestCase {
     }
 
     @SuppressWarnings({"unchecked"})
-    private <T> StAXElementLoader<Property<?>> createPropertyLoader() throws XMLStreamException, LoaderException {
+    private <T> StAXElementLoader<Property> createPropertyLoader() throws XMLStreamException, LoaderException {
         StAXElementLoader loader = EasyMock.createMock(StAXElementLoader.class);
-        Property<?> value = new Property<T>(PROP_NAME, null, null);
+        Property value = new Property(PROP_NAME, null);
         EasyMock.expect(loader.load(EasyMock.isA(XMLStreamReader.class),
                                     EasyMock.isA(IntrospectionContext.class))).andReturn(value).times(2);
         EasyMock.replay(loader);
-        return (StAXElementLoader<Property<?>>) loader;
+        return (StAXElementLoader<Property>) loader;
     }
 
     private Implementation createImpl() {
@@ -97,7 +97,7 @@ public class CompositeLoaderDuplicatePropertyTestCase extends TestCase {
             }
         };
         ComponentType type = new ComponentType();
-        Property<Object> property = new Property<Object>(PROP_NAME, null, null);
+        Property property = new Property(PROP_NAME, null);
 
         type.add(property);
         impl.setComponentType(type);

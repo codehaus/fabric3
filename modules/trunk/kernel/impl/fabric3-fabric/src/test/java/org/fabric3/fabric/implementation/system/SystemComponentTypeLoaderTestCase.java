@@ -38,7 +38,6 @@ import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.loader.common.IntrospectionContextImpl;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.scdl.Property;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
@@ -57,8 +56,7 @@ public class SystemComponentTypeLoaderTestCase extends TestCase {
         ServiceDefinition service = componentType.getServices().get(BasicInterface.class.getSimpleName());
         ServiceContract contract = service.getServiceContract();
         assertEquals(BasicInterface.class.getName(), contract.getQualifiedInterfaceName());
-        Property<?> property = componentType.getProperties().get("publicProperty");
-        assertEquals(String.class, property.getJavaType());
+        componentType.getProperties().containsKey("publicProperty");
         ReferenceDefinition referenceDefinition = componentType.getReferences().get("protectedReference");
         ServiceContract refContract = referenceDefinition.getServiceContract();
         assertEquals(BasicInterface.class.getName(), refContract.getQualifiedInterfaceName());

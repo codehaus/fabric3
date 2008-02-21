@@ -65,7 +65,7 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
 
     private final LoaderRegistry registry;
     private final StAXElementLoader<Include> includeLoader;
-    private final StAXElementLoader<Property<?>> propertyLoader;
+    private final StAXElementLoader<Property> propertyLoader;
     private final StAXElementLoader<CompositeService> serviceLoader;
     private final StAXElementLoader<CompositeReference> referenceLoader;
     private final StAXElementLoader<ComponentDefinition<?>> componentLoader;
@@ -74,7 +74,7 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
 
     public CompositeLoader(@Reference LoaderRegistry registry,
                            @Reference(name = "include")StAXElementLoader<Include> includeLoader,
-                           @Reference(name = "property")StAXElementLoader<Property<?>> propertyLoader,
+                           @Reference(name = "property")StAXElementLoader<Property> propertyLoader,
                            @Reference(name = "service")StAXElementLoader<CompositeService> serviceLoader,
                            @Reference(name = "reference")StAXElementLoader<CompositeReference> referenceLoader,
                            @Reference(name = "component")StAXElementLoader<ComponentDefinition<?>> componentLoader,
@@ -140,7 +140,7 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
                         }
                         type.add(include);
                     } else if (PROPERTY.equals(qname)) {
-                        Property<?> property = propertyLoader.load(reader, introspectionContext);
+                        Property property = propertyLoader.load(reader, introspectionContext);
                         if (type.getProperties().containsKey(property.getName())) {
                             throw new DuplicatePropertyException(property.getName());
                         }
@@ -171,7 +171,7 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
                         // Extension element - for now try to load and see if we can handle it
                         ModelObject modelObject = registry.load(reader, ModelObject.class, introspectionContext);
                         if (modelObject instanceof Property) {
-                            type.add((Property<?>) modelObject);
+                            type.add((Property) modelObject);
                         } else if (modelObject instanceof CompositeService) {
                             type.add((CompositeService) modelObject);
                         } else if (modelObject instanceof CompositeReference) {

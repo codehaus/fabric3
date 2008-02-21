@@ -63,9 +63,8 @@ public class PropertyProcessor<I extends Implementation<? extends InjectingCompo
     }
 
     <T> void createDefinition(InjectingComponentType componentType, String name, boolean required, Class<T> type, InjectionSite injectionSite) {
-        org.fabric3.scdl.Property<T> property = new org.fabric3.scdl.Property<T>();
+        org.fabric3.scdl.Property property = new org.fabric3.scdl.Property();
         property.setName(name);
-        property.setJavaType(type);
         property.setRequired(required);
         property.setMany(helper.isManyValued(type));
         componentType.add(property, injectionSite);

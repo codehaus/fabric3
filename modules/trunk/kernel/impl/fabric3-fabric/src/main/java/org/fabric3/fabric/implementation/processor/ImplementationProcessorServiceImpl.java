@@ -173,14 +173,13 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
         }
         Class<?> type = helper.getType(constructor, index);
         InjectionSite injectionSite = new ConstructorInjectionSite(constructor, index);
-        org.fabric3.scdl.Property<?> property = createDefinition(annotation, name, type);
+        org.fabric3.scdl.Property property = createDefinition(annotation, name, type);
         componentType.add(property, injectionSite);
     }
 
-    private <T> org.fabric3.scdl.Property<T> createDefinition(Property annotation, String name, Class<T> type) {
-        org.fabric3.scdl.Property<T> property = new org.fabric3.scdl.Property<T>();
+    private <T> org.fabric3.scdl.Property createDefinition(Property annotation, String name, Class<T> type) {
+        org.fabric3.scdl.Property property = new org.fabric3.scdl.Property();
         property.setName(name);
-        property.setJavaType(type);
         property.setRequired(annotation != null && annotation.required());
         property.setMany(helper.isManyValued(type));
         return property;

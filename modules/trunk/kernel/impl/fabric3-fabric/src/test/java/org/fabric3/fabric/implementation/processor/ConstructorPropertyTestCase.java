@@ -41,7 +41,7 @@ public class ConstructorPropertyTestCase extends TestCase {
         PojoComponentType type = new PojoComponentType(null);
         Constructor<Foo> ctor = Foo.class.getConstructor(String.class);
         processor.visitConstructor(ctor, type, null);
-        org.fabric3.scdl.Property<?> property = type.getProperties().get("myProp");
+        org.fabric3.scdl.Property property = type.getProperties().get("myProp");
         assertTrue(property.isRequired());
         assertEquals("myProp", property.getName());
     }

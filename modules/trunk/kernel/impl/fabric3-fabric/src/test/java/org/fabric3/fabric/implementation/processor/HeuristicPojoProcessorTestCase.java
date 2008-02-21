@@ -88,7 +88,6 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
         ServiceContract<?> contract = mappedService.getServiceContract();
         assertEquals(Interface1.class.getName(), contract.getQualifiedInterfaceName());
         assertEquals(1, type.getProperties().size());
-        assertEquals(ComplexProperty.class, type.getProperties().get("property").getJavaType());
         assertEquals(1, type.getReferences().size());
         Map<String, ReferenceDefinition> references = type.getReferences();
         ReferenceDefinition mappedReference = references.get("reference");
@@ -178,10 +177,10 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
         type.add(ref);
         ReferenceDefinition ref2 = new ReferenceDefinition("reference2", null, null);
         type.add(ref2);
-        org.fabric3.scdl.Property<?> prop1 = new org.fabric3.scdl.Property();
+        org.fabric3.scdl.Property prop1 = new org.fabric3.scdl.Property();
         prop1.setName("string1");
         type.add(prop1);
-        org.fabric3.scdl.Property<?> prop2 = new org.fabric3.scdl.Property();
+        org.fabric3.scdl.Property prop2 = new org.fabric3.scdl.Property();
         prop2.setName("string2");
         type.add(prop2);
         processor.visitEnd(MockService.class, type, null);
@@ -204,13 +203,6 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
         type.setConstructorDefinition(new ConstructorDefinition(new Signature(ctor)));
         processor.visitEnd(ProtectedRemotableRefMethodImpl.class, type, null);
         assertNotNull(type.getReferences().get("otherRef"));
-    }
-
-    public void testSetDataTypes() throws Exception {
-        PojoComponentType type = new PojoComponentType(null);
-        processor.visitEnd(PropertyIntTypeOnConstructor.class, type, null);
-        org.fabric3.scdl.Property<?> foo = type.getProperties().get("foo");
-        assertEquals(int.class, foo.getJavaType());
     }
 
     private static class PropertyIntTypeOnConstructor {

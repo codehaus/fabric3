@@ -193,7 +193,7 @@ public class DefaultWireResolverTestCase extends TestCase {
         }
     }
 
-    private class MockComponentType extends AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property<?>, ResourceDefinition> {
+    private class MockComponentType extends AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property, ResourceDefinition> {
 
     }
 

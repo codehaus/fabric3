@@ -54,12 +54,12 @@ public class ComponentTypeLoader implements StAXElementLoader<ComponentType> {
     private static final QName REFERENCE = new QName(SCA_NS, "reference");
 
     private final LoaderRegistry registry;
-    private final StAXElementLoader<Property<?>> propertyLoader;
+    private final StAXElementLoader<Property> propertyLoader;
     private final StAXElementLoader<ServiceDefinition> serviceLoader;
     private final StAXElementLoader<ReferenceDefinition> referenceLoader;
 
     public ComponentTypeLoader(@Reference LoaderRegistry registry,
-                               @Reference(name = "property")StAXElementLoader<Property<?>> propertyLoader,
+                               @Reference(name = "property")StAXElementLoader<Property> propertyLoader,
                                @Reference(name = "service")StAXElementLoader<ServiceDefinition> serviceLoader,
                                @Reference(name = "reference")StAXElementLoader<ReferenceDefinition> referenceLoader
     ) {
@@ -96,7 +96,7 @@ public class ComponentTypeLoader implements StAXElementLoader<ComponentType> {
             case START_ELEMENT:
                 QName qname = reader.getName();
                 if (PROPERTY.equals(qname)) {
-                    Property<?> property = propertyLoader.load(reader, introspectionContext);
+                    Property property = propertyLoader.load(reader, introspectionContext);
                     type.add(property);
                 } else if (SERVICE.equals(qname)) {
                     ServiceDefinition service = serviceLoader.load(reader, introspectionContext);
@@ -108,7 +108,7 @@ public class ComponentTypeLoader implements StAXElementLoader<ComponentType> {
                     // Extension element - for now try to load and see if we can handle it
                     ModelObject modelObject = registry.load(reader, ModelObject.class, introspectionContext);
                     if (modelObject instanceof Property) {
-                        type.add((Property<?>) modelObject);
+                        type.add((Property) modelObject);
                     } else if (modelObject instanceof ServiceDefinition) {
                         type.add((ServiceDefinition) modelObject);
                     } else if (modelObject instanceof ReferenceDefinition) {

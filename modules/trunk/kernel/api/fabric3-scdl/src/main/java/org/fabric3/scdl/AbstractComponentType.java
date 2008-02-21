@@ -42,7 +42,7 @@ import java.util.Map;
  */
 public abstract class AbstractComponentType<S extends ServiceDefinition,
         R extends ReferenceDefinition,
-        P extends Property<?>,
+        P extends Property,
         RD extends ResourceDefinition>
         extends ModelObject {
     private String scope;

@@ -73,7 +73,7 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
     public List<LogicalComponent<?>> include(LogicalCompositeComponent parent, Composite composite) throws ActivateException {
 
         // merge the property values into the parent
-        for (Property<?> property : composite.getProperties().values()) {
+        for (Property property : composite.getProperties().values()) {
             String name = property.getName();
             if (parent.getPropertyValues().containsKey(name)) {
                 throw new ActivateException("Duplicate property", name);

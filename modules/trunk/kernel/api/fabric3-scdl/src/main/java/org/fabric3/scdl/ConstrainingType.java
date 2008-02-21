@@ -22,7 +22,7 @@ import javax.xml.namespace.QName;
 /**
  * @version $Rev$ $Date$
  */
-public class ConstrainingType extends AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property<?>, ResourceDefinition> {
+public class ConstrainingType extends AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property, ResourceDefinition> {
     private final QName name;
     private final List<QName> requires;
 

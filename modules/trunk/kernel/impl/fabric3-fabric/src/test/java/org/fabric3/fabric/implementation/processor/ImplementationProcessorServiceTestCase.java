@@ -18,8 +18,6 @@
  */
 package org.fabric3.fabric.implementation.processor;
 
-import java.lang.reflect.Constructor;
-
 import junit.framework.TestCase;
 import org.osoa.sca.annotations.Callback;
 import org.osoa.sca.annotations.Conversational;
@@ -29,7 +27,6 @@ import org.osoa.sca.annotations.Remotable;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
-import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
 
@@ -54,17 +51,6 @@ public class ImplementationProcessorServiceTestCase extends TestCase {
         assertTrue(Baz.class.getName().equals(contract.getQualifiedInterfaceName()));
         assertFalse(service.getServiceContract().isConversational());
     }
-
-    public void testProcessParamProperty() throws Exception {
-
-        PojoComponentType type = new PojoComponentType(null);
-        Constructor<PropertyClass> ctor = PropertyClass.class.getConstructor(int.class);
-        implService.processParameters(ctor, type);
-
-        org.fabric3.scdl.Property<?> property = type.getProperties().get("foo");
-        assertEquals(int.class, property.getJavaType());
-    }
-
 
     @Conversational
     @Callback(Bar.class)

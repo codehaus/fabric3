@@ -105,7 +105,7 @@ public abstract class AbstractComponentInstantiator implements ComponentInstanti
         Map<String, PropertyValue> propertyValues = definition.getPropertyValues();
         AbstractComponentType<?, ?, ?, ?> componentType = definition.getComponentType();
 
-        for (Property<?> property : componentType.getProperties().values()) {
+        for (Property property : componentType.getProperties().values()) {
 
             String name = property.getName();
             PropertyValue propertyValue = propertyValues.get(name);

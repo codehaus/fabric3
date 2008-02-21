@@ -94,7 +94,7 @@ public class DefaultPolicyInfosetBuilderTest extends TestCase {
         }
     }
     
-    private static class TestComponentType extends AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property<?>, ResourceDefinition> {
+    private static class TestComponentType extends AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property, ResourceDefinition> {
         
     }
     
