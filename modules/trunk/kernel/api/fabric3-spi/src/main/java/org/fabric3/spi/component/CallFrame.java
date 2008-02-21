@@ -28,6 +28,7 @@ import org.osoa.sca.Conversation;
  * @version $Revision$ $Date$
  */
 public class CallFrame implements Serializable {
+    private static final long serialVersionUID = -6108279393891496098L;
     private final String callerUri;
     private final Conversation callerConversation;
     private final Conversation conversation;
