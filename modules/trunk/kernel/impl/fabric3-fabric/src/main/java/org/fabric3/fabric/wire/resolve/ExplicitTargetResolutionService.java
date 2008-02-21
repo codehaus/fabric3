@@ -3,11 +3,8 @@ package org.fabric3.fabric.wire.resolve;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.ComponentReference;
-import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
@@ -26,27 +23,22 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
 
     public void resolve(LogicalReference logicalReference, LogicalCompositeComponent context) throws TargetResolutionException {
         
-        ReferenceDefinition referenceDefinition = logicalReference.getDefinition();
-        LogicalComponent<?> parentComponent = logicalReference.getParent();
-        
-        ComponentDefinition<?> componentDefinition = parentComponent.getDefinition();
-        Map<String, ComponentReference> explicitReferences = componentDefinition.getReferences();
-        
-        String referenceName = referenceDefinition.getName();
-        if (!explicitReferences.containsKey(referenceName)) {
+        ComponentReference componentReference = logicalReference.getComponentReference();
+        if (componentReference == null) {
             return;
         }
         
-        ComponentReference explicitReference = explicitReferences.get(referenceName);
-        List<URI> requestedTargets = explicitReference.getTargets();
-        if (requestedTargets.isEmpty()) {
+        List<URI> requestedTargets = componentReference.getTargets();
+        if (!requestedTargets.isEmpty()) {
             return;
         }
         
         URI parentUri = context.getUri();
+        URI componentUri = logicalReference.getParent().getUri();
+        
         List<URI> resolvedUris = new ArrayList<URI>();
         for (URI requestedTarget : requestedTargets) {
-            URI resolved = parentUri.resolve(parentComponent.getUri()).resolve(requestedTarget);
+            URI resolved = parentUri.resolve(componentUri).resolve(requestedTarget);
             URI targetURI = resolveByUri(logicalReference, resolved, context);
             resolvedUris.add(targetURI);
         }

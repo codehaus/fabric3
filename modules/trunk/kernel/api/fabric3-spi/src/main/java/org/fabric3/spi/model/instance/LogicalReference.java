@@ -27,6 +27,7 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
+import org.fabric3.scdl.ComponentReference;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.osoa.sca.Constants;
 
@@ -155,6 +156,14 @@ public class LogicalReference extends Bindable {
     @Override
     public int hashCode() {
         return getUri().hashCode();
+    }
+    
+    /**
+     * Gets the explicit referenceassociated with this logical reference.
+     * @return Component reference if defined, otherwise null.
+     */
+    public ComponentReference getComponentReference() {
+        return getParent().getDefinition().getReferences().get(getDefinition().getName());
     }
     
     private LogicalCompositeComponent getComposite() {
