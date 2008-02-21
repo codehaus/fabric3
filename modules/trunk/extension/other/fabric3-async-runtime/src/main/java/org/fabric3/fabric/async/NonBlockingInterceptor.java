@@ -18,15 +18,14 @@
  */
 package org.fabric3.fabric.async;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.osoa.sca.Conversation;
 
-import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.scdl.Scope;
-import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.component.CallFrame;
+import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.services.work.WorkScheduler;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.Message;
@@ -92,7 +91,7 @@ public class NonBlockingInterceptor implements Interceptor {
         }
 
         public void run() {
-            WorkContext newWorkContext = new SimpleWorkContext();
+            WorkContext newWorkContext = new WorkContext();
             newWorkContext.setScopeIdentifier(Scope.CONVERSATION, conversation);
             if (stack != null) {
                 newWorkContext.addCallFrames(stack);

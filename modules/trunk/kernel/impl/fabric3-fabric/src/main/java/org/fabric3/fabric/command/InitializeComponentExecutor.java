@@ -25,7 +25,6 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.command.CommandExecutor;
 import org.fabric3.spi.command.CommandExecutorRegistry;
@@ -77,7 +76,7 @@ public class InitializeComponentExecutor implements CommandExecutor<InitializeCo
             }
             components.add((AtomicComponent) component);
         }
-        WorkContext workContext = new SimpleWorkContext();
+        WorkContext workContext = new WorkContext();
         workContext.setScopeIdentifier(Scope.COMPOSITE, command.getGroupId());
         try {
             scopeContainer.initializeComponents(components, workContext);

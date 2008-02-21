@@ -24,7 +24,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Map;
 
-import org.fabric3.extension.component.SimpleWorkContext;
+import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Message;
@@ -53,7 +53,7 @@ public class ServiceProxyHandler implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         String methodName = method.getName();
         Interceptor head = invocationChains.get(methodName).getHeadInterceptor();
-        Message input = new MessageImpl(args, false, new SimpleWorkContext());
+        Message input = new MessageImpl(args, false, new WorkContext());
         Message output = head.invoke(input);
         if (output.isFault()) {
             throw (Throwable) output.getBody();

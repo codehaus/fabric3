@@ -38,8 +38,8 @@ import org.apache.ws.security.handler.WSHandlerConstants;
 import org.apache.ws.security.handler.WSHandlerResult;
 import org.apache.ws.security.util.WSSecurityUtil;
 
-import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.scdl.Scope;
+import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Message;
@@ -70,7 +70,7 @@ public class InOutServiceProxyHandler extends AbstractInOutMessageReceiver {
         Interceptor head = invocationChain.getHeadInterceptor();
         OMElement bodyContent = getInBodyContent(inMessage);
 
-        SimpleWorkContext workContext = new SimpleWorkContext();
+        WorkContext workContext = new WorkContext();
         workContext.setScopeIdentifier(Scope.COMPOSITE, scopeId);
         //Attach authenticated Subject to work context
         attachSubjectToWorkContext(workContext, inMessage);
@@ -98,7 +98,7 @@ public class InOutServiceProxyHandler extends AbstractInOutMessageReceiver {
      * @see org.apache.ws.security.processor.SignatureProcessor
      * @see org.apache.rampart.handler.RampartReceiver
      */
-    private void attachSubjectToWorkContext(SimpleWorkContext workContext, MessageContext inMessage) {
+    private void attachSubjectToWorkContext(WorkContext workContext, MessageContext inMessage) {
         Vector<WSHandlerResult> wsHandlerResults = (Vector<WSHandlerResult>) inMessage.getProperty(WSHandlerConstants.RECV_RESULTS);
 
         // Iterate over principals

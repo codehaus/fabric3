@@ -30,7 +30,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 import javax.xml.namespace.QName;
 
-import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
@@ -124,13 +123,13 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
             ScopeContainer<URI> container = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
 
             // start the system context
-            WorkContext workContext = new SimpleWorkContext();
+            WorkContext workContext = new WorkContext();
             workContext.setScopeIdentifier(Scope.COMPOSITE, ComponentNames.RUNTIME_URI);
             container.startContext(workContext, ComponentNames.RUNTIME_URI);
 
             // start the domain context
             URI groupId = runtime.getHostInfo().getDomain();
-            workContext = new SimpleWorkContext();
+            workContext = new WorkContext();
             workContext.setScopeIdentifier(Scope.COMPOSITE, groupId);
             container.startContext(workContext, groupId);
             extensionsDirectory = new File(runtime.getHostInfo().getInstallDirectory(), "extensions");

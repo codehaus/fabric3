@@ -31,7 +31,7 @@ import com.caucho.hessian.io.Hessian2Input;
 import com.caucho.hessian.io.Hessian2Output;
 import com.caucho.hessian.io.SerializerFactory;
 
-import org.fabric3.extension.component.SimpleWorkContext;
+import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
@@ -113,7 +113,7 @@ public class HessianServiceHandler extends HttpServlet {
         }
         hessianInput.completeCall();
 
-        Message input = new MessageImpl(args, false, new SimpleWorkContext());
+        Message input = new MessageImpl(args, false, new WorkContext());
 
         Message output = head.invoke(input);
 

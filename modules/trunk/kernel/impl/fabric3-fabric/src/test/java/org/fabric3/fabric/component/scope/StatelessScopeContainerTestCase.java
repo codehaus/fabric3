@@ -19,8 +19,8 @@
 package org.fabric3.fabric.component.scope;
 
 import junit.framework.TestCase;
-import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
+import org.easymock.classextension.EasyMock;
 
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.component.AtomicComponent;

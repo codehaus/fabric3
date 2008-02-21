@@ -18,15 +18,13 @@
  */
 package org.fabric3.fabric.runtime;
 
-import static org.fabric3.fabric.runtime.ComponentNames.EVENT_SERVICE_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_URI;
-
 import java.net.URI;
 import java.net.URL;
 
-import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.fabric.component.scope.CompositeScopeContainer;
 import org.fabric3.fabric.component.scope.ScopeContainerMonitor;
+import static org.fabric3.fabric.runtime.ComponentNames.EVENT_SERVICE_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_URI;
 import org.fabric3.fabric.services.componentmanager.ComponentManagerImpl;
 import org.fabric3.fabric.services.domain.LogicalComponentManagerImpl;
 import org.fabric3.fabric.services.domain.NonPersistentLogicalComponentStore;
@@ -188,7 +186,7 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
         // JFM FIXME WorkContext should be moved down to host-api and should be created by the host
         URI parent = uri.resolve(".");
         AtomicComponent<?> component = (AtomicComponent<?>) componentManager.getComponent(uri);
-        WorkContext workContext = new SimpleWorkContext();
+        WorkContext workContext = new WorkContext();
         workContext.setScopeIdentifier(Scope.COMPOSITE, parent);
         PojoWorkContextTunnel.setThreadWorkContext(workContext);
 

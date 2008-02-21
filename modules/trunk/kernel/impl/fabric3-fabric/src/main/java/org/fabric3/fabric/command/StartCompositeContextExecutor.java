@@ -23,7 +23,6 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.command.CommandExecutor;
 import org.fabric3.spi.command.CommandExecutorRegistry;
@@ -32,7 +31,6 @@ import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.spi.services.messaging.MessagingEventService;
 
 /**
  * Executes a {@link StartCompositeContextCommand}.
@@ -61,7 +59,7 @@ public class StartCompositeContextExecutor implements CommandExecutor<StartCompo
     }
 
     public void execute(StartCompositeContextCommand command) throws ExecutionException {
-        WorkContext workContext = new SimpleWorkContext();
+        WorkContext workContext = new WorkContext();
         URI id = command.getGroupId();
         workContext.setScopeIdentifier(Scope.COMPOSITE, id);
         try {

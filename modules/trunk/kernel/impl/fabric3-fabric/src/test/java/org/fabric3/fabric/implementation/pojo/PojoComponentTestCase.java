@@ -23,11 +23,11 @@ import java.util.Collections;
 import java.util.List;
 
 import junit.framework.TestCase;
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.reset;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.classextension.EasyMock.createNiceMock;
+import static org.easymock.classextension.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.reset;
+import static org.easymock.classextension.EasyMock.verify;
 
 import org.fabric3.spi.component.InstanceFactory;
 import org.fabric3.spi.component.InstanceFactoryProvider;

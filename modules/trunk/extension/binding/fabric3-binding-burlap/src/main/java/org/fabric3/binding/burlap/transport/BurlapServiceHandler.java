@@ -31,7 +31,7 @@ import com.caucho.burlap.io.BurlapInput;
 import com.caucho.burlap.io.BurlapOutput;
 import com.caucho.burlap.io.SerializerFactory;
 
-import org.fabric3.extension.component.SimpleWorkContext;
+import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
@@ -107,7 +107,7 @@ public class BurlapServiceHandler extends HttpServlet {
 
             burlapInput.completeCall();
 
-            Message input = new MessageImpl(args, false, new SimpleWorkContext());
+            Message input = new MessageImpl(args, false, new WorkContext());
 
             Message output = head.invoke(input);
             Object ret = output.getBody();

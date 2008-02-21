@@ -21,17 +21,16 @@ package org.fabric3.runtime.webapp.implementation.webapp;
 import java.net.URI;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import javax.naming.Context;
+import javax.naming.NamingException;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletRequestListener;
-import javax.naming.Context;
-import javax.naming.NamingException;
 
 import org.osoa.sca.CallableReference;
 import org.osoa.sca.ComponentContext;
 import org.osoa.sca.ServiceReference;
 
-import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.fabric.component.ServiceReferenceImpl;
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.runtime.webapp.Constants;
@@ -86,7 +85,7 @@ public class WebappComponent<T> extends AbstractLifecycle implements AtomicCompo
     }
 
     public void requestInitialized(ServletRequestEvent sre) {
-        WorkContext workContext = new SimpleWorkContext();
+        WorkContext workContext = new WorkContext();
         workContext.setScopeIdentifier(Scope.COMPOSITE, groupId);
         PojoWorkContextTunnel.setThreadWorkContext(workContext);
     }

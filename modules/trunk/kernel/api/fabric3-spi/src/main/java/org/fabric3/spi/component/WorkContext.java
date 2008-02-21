@@ -19,23 +19,35 @@
 package org.fabric3.spi.component;
 
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.ArrayList;
 import javax.security.auth.Subject;
 
 import org.fabric3.scdl.Scope;
 
 /**
- * Implementations track information associated with a request as it is processed by the runtime
+ * Implementations track information associated with a request as it is processed by the runtime. The implementation is <em>not</em> thread safe.
  *
  * @version $Rev$ $Date$
  */
-public interface WorkContext {
+public class WorkContext {
+    private final Map<Scope<?>, Object> scopeIdentifiers = new HashMap<Scope<?>, Object>();
+    private Subject subject;
+    private List<CallFrame> callStack;
+
+    public void setSubject(Subject subject) {
+        this.subject = subject;
+    }
 
     /**
      * Gets the subject associated with the current invocation.
      *
      * @return Subject associated with the current invocation.
      */
-    Subject getSubject();
+    public Subject getSubject() {
+        return subject;
+    }
 
     /**
      * Returns the identifier currently associated with the supplied scope.
@@ -43,7 +55,9 @@ public interface WorkContext {
      * @param scope the scope whose identifier should be returned
      * @return the scope identifier
      */
-    <T> T getScopeIdentifier(Scope<T> scope);
+    public <T> T getScopeIdentifier(Scope<T> scope) {
+        return scope.getIdentifierType().cast(scopeIdentifiers.get(scope));
+    }
 
     /**
      * Sets the identifier associated with a scope.
@@ -51,7 +65,13 @@ public interface WorkContext {
      * @param scope      the scope whose identifier we are setting
      * @param identifier the identifier for that scope
      */
-    <T> void setScopeIdentifier(Scope<T> scope, T identifier);
+    public <T> void setScopeIdentifier(Scope<T> scope, T identifier) {
+        if (identifier == null) {
+            scopeIdentifiers.remove(scope);
+        } else {
+            scopeIdentifiers.put(scope, identifier);
+        }
+    }
 
     /**
      * Adds a CallFrame to the internal CallFrame stack. CallFrames track information related to an invocation that is made as part of processing a
@@ -59,33 +79,58 @@ public interface WorkContext {
      *
      * @param frame the CallFrame to add
      */
-    void addCallFrame(CallFrame frame);
+    public void addCallFrame(CallFrame frame) {
+        if (callStack == null) {
+            callStack = new ArrayList<CallFrame>();
+        }
+        callStack.add(frame);
+    }
 
     /**
      * Adds a collection of CallFrames to the internal CallFrame stack.
      *
      * @param frames the collection of CallFrames to add
      */
-    void addCallFrames(List<CallFrame> frames);
+    public void addCallFrames(List<CallFrame> frames) {
+        if (callStack == null) {
+            callStack = frames;
+            return;
+        }
+        callStack.addAll(frames);
+    }
 
     /**
      * Removes and returns the CallFrame associated with the previous request from the internal stack.
      *
      * @return the CallFrame.
      */
-    CallFrame popCallFrame();
+    public CallFrame popCallFrame() {
+        if (callStack == null || callStack.isEmpty()) {
+            return null;
+        }
+        return callStack.remove(callStack.size() - 1);
+    }
 
     /**
      * Returns but does not remove the CallFrame associated with the previous request from the internal stack.
      *
      * @return the CallFrame.
      */
-    CallFrame peekCallFrame();
+    public CallFrame peekCallFrame() {
+        if (callStack == null || callStack.isEmpty()) {
+            return null;
+        }
+        return callStack.get(callStack.size() - 1);
+    }
 
     /**
      * Returns the CallFrame stack.
      *
      * @return the CallFrame stack
      */
-    List<CallFrame> getCallFrameStack();
+    public List<CallFrame> getCallFrameStack() {
+        // return a live list to avoid creation of a non-modifiable collection
+        return callStack;
+    }
+
 }

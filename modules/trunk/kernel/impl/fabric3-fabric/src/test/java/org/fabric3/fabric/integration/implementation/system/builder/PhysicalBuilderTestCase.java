@@ -23,7 +23,6 @@ import java.net.URI;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
-import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.fabric.builder.ConnectorImpl;
 import org.fabric3.fabric.builder.component.DefaultComponentBuilderRegistry;
 import org.fabric3.fabric.component.scope.CompositeScopeContainer;
@@ -144,7 +143,7 @@ public class PhysicalBuilderTestCase extends TestCase {
         ClassLoader classLoader = getClass().getClassLoader();
         classLoaderRegistry.register(groupId, classLoader);
 
-        workContext = new SimpleWorkContext();
+        workContext = new WorkContext();
         workContext.setScopeIdentifier(Scope.COMPOSITE, groupId);
 
         scopeContainer = new CompositeScopeContainer(EasyMock.createNiceMock(ScopeContainerMonitor.class));

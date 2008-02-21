@@ -37,7 +37,7 @@ import org.fabric3.binding.jms.TransactionType;
 import org.fabric3.binding.jms.helper.JmsHelper;
 import org.fabric3.binding.jms.model.CorrelationScheme;
 import org.fabric3.binding.jms.tx.TransactionHandler;
-import org.fabric3.extension.component.SimpleWorkContext;
+import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
@@ -117,7 +117,7 @@ public class Fabric3MessageListener implements MessageListener {
             ObjectMessage objectMessage = (ObjectMessage) request;
             Object[] payload = (Object[]) objectMessage.getObject();
 
-            org.fabric3.spi.wire.Message inMessage = new MessageImpl(payload, false, new SimpleWorkContext());
+            org.fabric3.spi.wire.Message inMessage = new MessageImpl(payload, false, new WorkContext());
             org.fabric3.spi.wire.Message outMessage = interceptor.invoke(inMessage);
 
             connection = connectionFactory.createConnection();

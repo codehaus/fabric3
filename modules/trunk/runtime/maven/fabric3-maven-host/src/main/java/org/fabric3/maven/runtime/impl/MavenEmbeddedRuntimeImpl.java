@@ -30,7 +30,6 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.apache.maven.surefire.testset.TestSetFailedException;
 
-import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.fabric.runtime.AbstractRuntime;
 import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
@@ -112,7 +111,7 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
     }
 
     public void startContext(URI compositeId) throws GroupInitializationException {
-        WorkContext workContext = new SimpleWorkContext();
+        WorkContext workContext = new WorkContext();
         workContext.setScopeIdentifier(Scope.COMPOSITE, compositeId);
         ScopeRegistry scopeRegistry = getSystemComponent(ScopeRegistry.class, ComponentNames.SCOPE_REGISTRY_URI);
         scopeRegistry.getScopeContainer(Scope.COMPOSITE).startContext(workContext, compositeId);
@@ -122,7 +121,7 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
         // destroy system components
         ScopeRegistry scopeRegistry = getSystemComponent(ScopeRegistry.class, ComponentNames.SCOPE_REGISTRY_URI);
         ScopeContainer scopeContainer = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
-        WorkContext workContext = new SimpleWorkContext();
+        WorkContext workContext = new WorkContext();
         workContext.setScopeIdentifier(Scope.COMPOSITE, ComponentNames.RUNTIME_URI);
         scopeContainer.stopContext(workContext);
     }
@@ -131,7 +130,7 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
     public void executeTest(URI contextId, String componentName, Operation<?> operation) throws TestSetFailedException {
         WorkContext oldContext = PojoWorkContextTunnel.getThreadWorkContext();
         try {
-            WorkContext workContext = new SimpleWorkContext();
+            WorkContext workContext = new WorkContext();
             workContext.setScopeIdentifier(Scope.COMPOSITE, contextId);
             URI componentId = URI.create(contextId.toString() + "/" + componentName);
 

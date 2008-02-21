@@ -27,7 +27,6 @@ import static org.easymock.EasyMock.replay;
 import org.easymock.IAnswer;
 import org.osoa.sca.Conversation;
 
-import org.fabric3.extension.component.SimpleWorkContext;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.services.work.WorkScheduler;
@@ -75,7 +74,7 @@ public class NonBlockingInterceptorTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         convID = EasyMock.createMock(Conversation.class);
-        workContext = new SimpleWorkContext();
+        workContext = new WorkContext();
         workScheduler = EasyMock.createMock(WorkScheduler.class);
         next = EasyMock.createMock(Interceptor.class);
         interceptor = new NonBlockingInterceptor(workScheduler);
