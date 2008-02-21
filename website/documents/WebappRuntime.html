@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+ <meta http-equiv="content-type" content="text/html" />
+ <meta name="description" content="Fabric3 website" />
+ <meta name="keywords" content="Fabric3, SCA, SCA Implementation, Open Source" />
+ <meta name="author" content="Fabric3 / Ratesh Bansal" />
+ <link rel="stylesheet" type="text/css" href="../css/default.css" />
+ <title>Fabric3 - Webapp Runtime</title>
+</head>
+
+<body>
+<div id="container">
+<div id="main">
+<div id="intro">
+            <p><div class="section_1"><h1><a name="LeftHeader-fabric3"></a><img src="../img/banner.jpg" height="100" width="750"/></h1></div></p>
+     </div><div class="clear"></div>
+
+
+<div class="shortheaderstyle" style="font-size: 1.0em">
+<table id="utop_nav" style="width: 100%;padding-right: 2mm">
+ <tr>
+  <td align="left" valign="middle">
+   <div id="ubreadcrumbs">
+    <a href="../home.html">Home</a>
+                      &gt; <a href="../Docs.html">Docs</a>
+                        &gt; <a href="">Webapp Runtime</a>
+                  </div>
+  </td>
+  <td align="right" valign="middle" id="quicklinks">
+       <p><a href="../Roadmap.html" title="Roadmap">Roadmap</a> | <a href="../Docs.html" title="Docs">Docs</a> | <a href="../Downloads.html" title="Downloads">Downloads</a></p>
+     </td>
+ </tr>
+</table>
+</div>
+<div class="content" style="padding-top: 3mm;">
+          <p>The Webapp runtime allows fabric3 to run as a J2EE standard web application inside any J2EE application server. The core fabric can be booted by application code or by the web container through the use of a standard ServletContext listener.</p>
+
+<p>The integration provides a custom component implementation that can be used to automatically bind SCA reference and property values into the ServletContext (a.k.a. the application context for JSPs). This allows ordinary Servlet or JSP code to call SCA-based services that can either be deployed with the web application or running on other machines.</p>
+
+<p>The runtime also provides a servlet that allows SCA services to be provided to other external runtimes through bindings such as Web Services.</p>
+
+<p>A Maven plugin is available to help packaging fabric3 jars with the web application.</p>
+
+<div class="section_1"><h1><a name="WebappRuntime-BootstrappingtheRuntime"></a>Bootstrapping the Runtime</h1>
+
+<p>A context listener is available that can be used to boot the runtime when the web application is initialized and before any application Servlets are invoked. Once the runtime has been booted, a SCDL composite file is deployed to the domain to instantiate application components.</p>
+
+<div class="section_2"><h2><a name="WebappRuntime-Addingthelistenertotheclasspath"></a>Adding the listener to the classpath</h2>
+
+<p>The web container considers the listener as part of the web application and requires that it be present in the application's classpath. If you are using Maven to build the application, this can be done by adding the following dependency to your pom:</p>
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-xml"><span class="code-tag">&lt;dependency&gt;</span>
+
+    <span class="code-tag">&lt;groupId&gt;</span>org.codehaus.fabric3.webapp<span class="code-tag">&lt;/groupId&gt;</span>
+    <span class="code-tag">&lt;artifactId&gt;</span>webapp-api<span class="code-tag">&lt;/artifactId&gt;</span>
+    <span class="code-tag">&lt;version&gt;</span>0.1-SNAPSHOT<span class="code-tag">&lt;/version&gt;</span>
+<span class="code-tag">&lt;/dependency&gt;</span></pre>
+
+</div></div>
+
+<p>This will add the following jar files to the WEB-INF/lib directory:</p>
+<ul>
+	<li>sca-api-r1.0-0.2.jar</li>
+	<li>fabric3-api-0.2.jar</li>
+	<li>fabric3-host-api-0.2.jar</li>
+	<li>fabric3-webapp-api-0.2.jar</li>
+
+	<li>geronimo-jta_1.0.1B_spec-1.0.1.jar</li>
+</ul>
+
+
+</div><div class="section_2"><h2><a name="WebappRuntime-Configuringthelistener"></a>Configuring the listener</h2>
+
+<p>For most applications no configuration should be needed. To customize the listener the following properties can be set using &lt;context-param&gt; values in web.xml:</p>
+<table class="confluenceTable"><tbody>
+<tr>
+<th class="confluenceTh">Name</th>
+
+<th class="confluenceTh">Purpose</th>
+<th class="confluenceTh">Default</th>
+</tr>
+<tr>
+<td class="confluenceTd">fabric3.domain</td>
+<td class="confluenceTd">The domain in which this runtime should participate</td>
+<td class="confluenceTd">fabric3://./domain</td>
+</tr>
+<tr>
+<td class="confluenceTd">fabric3.component</td>
+<td class="confluenceTd">The name of the webapp component within the application scdl</td>
+
+<td class="confluenceTd">webapp</td>
+</tr>
+<tr>
+<td class="confluenceTd">fabric3.applicationScdlPath</td>
+<td class="confluenceTd">The path for the application SCDL</td>
+<td class="confluenceTd">/WEB-INF/default.scdl</td>
+</tr>
+<tr>
+<td class="confluenceTd">fabric3.systemScdlPath</td>
+<td class="confluenceTd">The path for the application SCDL</td>
+<td class="confluenceTd">META-INF/fabric3/webapp.scdl</td>
+
+</tr>
+<tr>
+<td class="confluenceTd">fabric3.online</td>
+<td class="confluenceTd">Whether the runtime may access resources on the network</td>
+<td class="confluenceTd">true</td>
+</tr>
+</tbody></table>
+
+<p>When resolving SCDL paths, if the path begins with a "/" character then it will be loaded from the webapp content (using <tt>ServletContext#getResource</tt>), otherwise it will loaded from the runtime's classloader (using <tt>ClassLoader#getResource</tt>).</p>
+
+<p>Typically, the only SCA configuration needed is to include the composite file in the web app in <tt>/WEB-INF/default.scdl</tt></p>
+
+</div><div class="section_2"><h2><a name="WebappRuntime-AddingruntimeimplementationclassestotheWAR"></a>Adding runtime implementation classes to the WAR</h2>
+
+<p>The listener creates a child classloader to load the implementation classes for the runtime in order to prevent fabric3 classes from conflicting with the application. By default, it adds all JAR files in the directory /WEB-INF/fabric3/boot to the classpath.</p>
+
+<p>Using Maven, the jars can be added to the WAR using the fabric3-webapp-plugin as follows:</p>
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-xml"><span class="code-tag">&lt;build&gt;</span>
+    <span class="code-tag">&lt;plugins&gt;</span>
+
+        <span class="code-tag">&lt;plugin&gt;</span>
+            <span class="code-tag">&lt;groupId&gt;</span>org.codehaus.fabric3<span class="code-tag">&lt;/groupId&gt;</span>
+            <span class="code-tag">&lt;artifactId&gt;</span>fabric3-webapp-plugin<span class="code-tag">&lt;/artifactId&gt;</span>
+            <span class="code-tag">&lt;version&gt;</span>0.1-SNAPSHOT<span class="code-tag">&lt;/version&gt;</span>
+
+            <span class="code-tag">&lt;executions&gt;</span>
+                <span class="code-tag">&lt;execution&gt;</span>
+                    <span class="code-tag">&lt;id&gt;</span>fabric3-war<span class="code-tag">&lt;/id&gt;</span>
+                    <span class="code-tag">&lt;goals&gt;</span>
+                        <span class="code-tag">&lt;goal&gt;</span>fabric3-war<span class="code-tag">&lt;/goal&gt;</span>
+
+                    <span class="code-tag">&lt;/goals&gt;</span>
+                <span class="code-tag">&lt;/execution&gt;</span>
+            <span class="code-tag">&lt;/executions&gt;</span>
+        <span class="code-tag">&lt;/plugin&gt;</span>
+    <span class="code-tag">&lt;/plugins&gt;</span>
+<span class="code-tag">&lt;/build&gt;</span></pre>
+
+</div></div>
+
+<p>If you are not using Maven to build the WAR, the following jars should be added to /WEB-INF/fabric3/boot/:</p>
+<ul>
+	<li>commonj-api_r1.1-1.0-incubator-M2.jar</li>
+	<li>commons-codec-1.3.jar</li>
+	<li>fabric3-api-0.2.jar</li>
+	<li>fabric3-extension-0.3.jar</li>
+
+	<li>fabric3-fabric-0.3.jar</li>
+	<li>fabric3-host-api-0.2.jar</li>
+	<li>fabric3-java-0.1.jar</li>
+	<li>fabric3-loader-java-0.3.jar</li>
+	<li>fabric3-pojo-0.3.jar</li>
+	<li>fabric3-policy-0.2.jar</li>
+
+	<li>fabric3-policy-spi=0.3.jar</li>
+	<li>fabric3-policy-scdl=0.3.jar</li>
+	<li>fabric3-spi-0.3.jar</li>
+	<li>fabric3-transform-0.3.jar</li>
+	<li>sca-api-r1.0-2.1.jar</li>
+	<li>stax-api-1.0.1.jar</li>
+
+	<li>webapp-api-0.2.jar</li>
+	<li>webapp-host-0.3.jar</li>
+	<li>wstx-asl-3.2.0.jar</li>
+	<li>xstream-1.1.3.jar</li>
+</ul>
+
+
+</div></div><div class="section_1"><h1><a name="WebappRuntime-AccessingSCAservicesfromaWebApplication"></a>Accessing SCA services from a Web Application</h1>
+
+<p>fabric3 provides a custom component implementation type that makes it easy for web application code such as a Servlet or JSP to access SCA services. This component binds its references as attributes in the application's ServletContext allowing them to be used through the standard J2EE APIs (or though libraries like BeanUtils or Struts that help with this).</p>
+
+<p>The <tt>&lt;webapp&gt;</tt> implementation supports a nested <tt>&lt;reference&gt;</tt> element that can be used to define the reference's service interface.</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-xml"><span class="code-tag">&lt;component <span class="code-keyword">xmlns:f3</span>=<span class="code-quote">"http://fabric3.org/xmlns/sca/2.0-alpha"</span> name=<span class="code-quote">"webapp"</span>&gt;</span>
+
+  <span class="code-tag">&lt;f3:webapp&gt;</span>
+    <span class="code-tag">&lt;reference name=<span class="code-quote">"ref"</span> interface=<span class="code-quote">"com.example.MyInterface"</span>/&gt;</span>
+  <span class="code-tag">&lt;/f3:webapp&gt;</span>
+  <span class="code-tag">&lt;reference name=<span class="code-quote">"ref"</span> target=<span class="code-quote">"myComponent"</span>/&gt;</span>
+
+<span class="code-tag">&lt;/component&gt;</span></pre>
+</div></div>
+
+<p>To access this reference from a Servlet, retrieve the proxy from the specfied attribute:</p>
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">MyInterface ref = (MyInterface) getServletContext().getAttribute(<span class="code-quote">"ref"</span>);
+ref.doStuff();</pre>
+</div></div>
+
+<p>To access this from a JSP:</p>
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">&lt;jsp:useBean id=<span class="code-quote">"ref"</span> type=<span class="code-quote">"com.example.MyInterface"</span> scope=<span class="code-quote">"application"</span>/&gt;
+
+&lt;% ref.doStuff(); %&gt;</pre>
+</div></div></div>
+</div>
+
+
+</div>
+
+<div id="sidebar">
+<a href=""><img src="../img/fabric3-logo.jpg" width="100%" height="100" border="1"/></a>
+<div class="navigation">
+   <div class="section_1"><h1><a name="Navigation-Resources"></a>Resources</h1>
+
+<p><a href="../Docs.html" title="Docs">Documentation</a><br></br>
+<a href="../Downloads.html" title="Downloads">Downloads</a><br></br>
+<a href="../SourceRepository.html" title="Source Repository">Source Repository</a><br></br>
+<a href="../Team.html" title="Team">Team</a><br></br>
+<a href="http://www.osoa.org" title="SCA Specifications">SCA Specifications</a><br></br>
+<a href="http://xircles.codehaus.org/projects/fabric3/lists">Mailing Lists</a><br></br>
+<a href="http://jira.codehaus.org/browse/FABRICTHREE">JIRA</a><br></br>
+<a href="http://bamboo.ci.codehaus.org/browse/FABRIC3">Continuous Integration</a><br></br>
+<a href="http://www.opensource.org/licenses/apache2.0.php">License</a></p>
+</div>
+ </div>
+
+<h4 class="headerstyle">Feeds</h4>
+<ul>
+
+ <li><a class="rss" href="http://docs.codehaus.org/spaces/rss.action?key=FABRICTHREE&amp;newPages=false">Site</a></li>
+ <li><a class="rss" href="http://docs.codehaus.org/spaces/blogrss.action?key=FABRICTHREE">News</a></li>
+</ul>
+
+<h4 class="headerstyle">Blogs</h4>
+<ul>
+<li><a class="editPage" href="http://weblogs.java.net/blog/meeraj/archive/2008/01/introducing_ser.html" target="_blank">Meeraj's Blog</a></li>
+</ul>
+<h4 class="headerstyle">External Links</h4>
+<ul>
+ <li><a href="http://atlassian.com/">Atlassian</a></li>
+ <li><a href="http://atlassian.com/confluence/">Confluence</a></li>
+ <li><a href="http://www.codehaus.org/">Codehaus</a></li>
+ <li><a href="http://www.jetbrains.com/idea/"><img src="http://www.jetbrains.com/idea/opensource/img/banners/idea88x31_blue.gif"></a></li>
+</ul>
+</div>
+<div class="clear">&nbsp;</div>
+</div>
+
+<div id="footer">&copy; 2006 Codehaus Foundation. Original design by <a href="http://andreasviklund.com" class="credit">Andreas Viklund</a></div>
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-150515-1";
+urchinTracker();
+</script>
+</body>
+</html>

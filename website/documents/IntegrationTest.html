@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+ <meta http-equiv="content-type" content="text/html" />
+ <meta name="description" content="Fabric3 website" />
+ <meta name="keywords" content="Fabric3, SCA, SCA Implementation, Open Source" />
+ <meta name="author" content="Fabric3 / Ratesh Bansal" />
+ <link rel="stylesheet" type="text/css" href="../css/default.css" />
+ <title>Fabric3 - Integration Test</title>
+</head>
+
+<body>
+<div id="container">
+<div id="main">
+<div id="intro">
+            <p><div class="section_1"><h1><a name="LeftHeader-fabric3"></a><img src="../img/banner.jpg" height="100" width="750"/></h1></div></p>
+     </div><div class="clear"></div>
+
+
+<div class="shortheaderstyle" style="font-size: 1.0em">
+<table id="utop_nav" style="width: 100%;padding-right: 2mm">
+ <tr>
+  <td align="left" valign="middle">
+   <div id="ubreadcrumbs">
+    <a href="../home.html">Home</a>
+                      &gt; <a href="../Docs.html">Docs</a>
+                        &gt; <a href="">Integration Test</a>
+                  </div>
+  </td>
+  <td align="right" valign="middle" id="quicklinks">
+       <p><a href="../Roadmap.html" title="Roadmap">Roadmap</a> | <a href="../Docs.html" title="Docs">Docs</a> | <a href="../Downloads.html" title="Downloads">Downloads</a></p>
+     </td>
+ </tr>
+</table>
+</div>
+
+<div class="content" style="padding-top: 3mm;">
+          <p>The iTest plugin is designed for integration and functiona testing using Maven. The plugin uses an embedded Fabric3 runtime to execute tests during the <tt>verify</tt> phase of the Maven build. To use the iTest plugin, you will need to write testcases using the JUnit component implementation type and configure the project pom.xml. </p>
+
+
+<div class="section_2"><h2><a name="IntegrationTest-JUnitImplementationType"></a>JUnit Implementation Type </h2>
+<p>The iTest plugin includes support for running JUnit <tt>TestCase</tt> s as components. When configured as a component, the iTest plugin will wire the <tt>TestCase</tt> references and invoke all methods whose name begins with "test". This can be used to verify various scenarios. For example:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java"><span class="code-keyword">public</span> class SampleTest <span class="code-keyword">extends</span> TestCase {
+    <span class="code-keyword">private</span> HelloService helloService;
+
+    @Reference
+    <span class="code-keyword">public</span> void setHelloService(HelloService helloService) {
+        <span class="code-keyword">this</span>.helloService = helloService;
+    }
+
+    <span class="code-keyword">public</span> void testReferenceIsBound() {
+        assertEquals(<span class="code-quote">"hello"</span>, helloService.send(<span class="code-quote">"hello"</span>));
+    }
+}</pre>
+</div></div>
+
+<p>The above implementation is configured as a component in the following composite:</p>
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-xml">&lt;composite xmlns=<span class="code-quote">"http://www.osoa.org/xmlns/sca/1.0"</span>
+           <span class="code-keyword">xmlns:f3</span>=<span class="code-quote">"http://fabric3.org/xmlns/sca/2.0-alpha"</span>
+           name=<span class="code-quote">"TestComposite"</span>&gt;
+
+    <span class="code-tag">&lt;component name=<span class="code-quote">"SampleTest"</span>&gt;</span>
+        <span class="code-tag">&lt;f3:junit class=<span class="code-quote">"org.fabric3.tests.function.SampleTest"</span>/&gt;</span>
+        <span class="code-tag">&lt;reference name=<span class="code-quote">"helloService"</span> target=HelloService"/&gt;</span>
+    <span class="code-tag">&lt;/component&gt;</span>
+
+    <span class="code-tag">&lt;component name=<span class="code-quote">"HelloService"</span>&gt;</span>
+        <span class="code-tag">&lt;implementation.java class=<span class="code-quote">"org.fabric3.tests.function.HelloServiceImpl"</span>/&gt;</span>
+    <span class="code-tag">&lt;/component&gt;</span>
+<span class="code-tag">&lt;/composite&gt;</span></pre>
+</div></div>
+
+<p>By default, the plugin looks for an itest.composite on the classpath. </p>
+
+</div><div class="section_2"><h2><a name="IntegrationTest-PluginConfiguration"></a>Plugin Configuration</h2>
+
+<p>The iTest plugin is configured in the project pom.xml and may include Fabric3 extensions. Extensions are instaled via a <tt>dependency</tt> entry using their Maven artifact names. When executed, the iTest pugin will resolve a extension dependency against the configured Maven repositories, downlaoding it if necessary. For example, the following configures the plugin to use the Jetty and Hessian extensions, which will be downloaded if they are not cached in the local repository:</p>
+
+<div class="code panel" style="border-style: solid;border-width: 1px;"><div class="codeHeader panelHeader" style="border-bottom-width: 1px;border-bottom-style: solid;"><b>pom.xml plugin entry</b></div><div class="codeContent panelContent">
+<pre class="code-xml"><span class="code-tag">&lt;plugin&gt;</span>
+    <span class="code-tag">&lt;groupId&gt;</span>org.codehaus.fabric3<span class="code-tag">&lt;/groupId&gt;</span>
+    <span class="code-tag">&lt;artifactId&gt;</span>fabric3-itest-plugin<span class="code-tag">&lt;/artifactId&gt;</span>
+    <span class="code-tag">&lt;version&gt;</span>RELEASE<span class="code-tag">&lt;/version&gt;</span>
+    <span class="code-tag">&lt;configuration&gt;</span>
+        <span class="code-tag">&lt;contributions&gt;</span>
+            <span class="code-tag">&lt;dependency&gt;</span>
+                <span class="code-tag">&lt;groupId&gt;</span>org.codehaus.fabric3<span class="code-tag">&lt;/groupId&gt;</span>
+                <span class="code-tag">&lt;artifactId&gt;</span>fabric3-binding-hessian<span class="code-tag">&lt;/artifactId&gt;</span>
+                <span class="code-tag">&lt;version&gt;</span>0.3<span class="code-tag">&lt;/version&gt;</span>
+            <span class="code-tag">&lt;/dependency&gt;</span>
+            <span class="code-tag">&lt;dependency&gt;</span>
+                <span class="code-tag">&lt;groupId&gt;</span>org.codehaus.fabric3<span class="code-tag">&lt;/groupId&gt;</span>
+                <span class="code-tag">&lt;artifactId&gt;</span>fabric3-jetty<span class="code-tag">&lt;/artifactId&gt;</span>
+                <span class="code-tag">&lt;version&gt;</span>0.3<span class="code-tag">&lt;/version&gt;</span>
+            <span class="code-tag">&lt;/dependency&gt;</span>
+        <span class="code-tag">&lt;/contributions&gt;</span>
+        <span class="code-tag">&lt;properties&gt;</span>
+            <span class="code-tag">&lt;property&gt;</span>
+                <span class="code-tag">&lt;name&gt;</span>http.port<span class="code-tag">&lt;/name&gt;</span>
+                <span class="code-tag">&lt;value&gt;</span>8900<span class="code-tag">&lt;/value&gt;</span>
+            <span class="code-tag">&lt;/property&gt;</span>
+        <span class="code-tag">&lt;/properties&gt;</span>
+    <span class="code-tag">&lt;/configuration&gt;</span>
+    <span class="code-tag">&lt;executions&gt;</span>
+        <span class="code-tag">&lt;execution&gt;</span>
+            <span class="code-tag">&lt;goals&gt;</span>
+                <span class="code-tag">&lt;goal&gt;</span>test<span class="code-tag">&lt;/goal&gt;</span>
+            <span class="code-tag">&lt;/goals&gt;</span>
+        <span class="code-tag">&lt;/execution&gt;</span>
+    <span class="code-tag">&lt;/executions&gt;</span>
+<span class="code-tag">&lt;/plugin&gt;</span></pre>
+</div></div>
+
+</div><div class="section_2"><h2><a name="IntegrationTest-SettingupaProject"></a>Setting up a Project</h2>
+
+<p>It is recommended that integration tests be organized into separate modules and not mixed with application code. JUnit implementation artifacts and the itest.composite file should be placed under <tt>test/java</tt> and <tt>test/resources</tt> respectively. The integration test module should depend on the application module it is testing. The itest.composite file may then use an SCA <tt>include</tt> element to include the application SCDL. This enables testing without having to maintain multiple composite files. For example, the JUnit component show previously my by wired to the <tt>HelloService</tt> by including another composite where the latter is configured:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-xml">&lt;composite xmlns=<span class="code-quote">"http://www.osoa.org/xmlns/sca/1.0"</span>
+           <span class="code-keyword">xmlns:f3</span>=<span class="code-quote">"http://fabric3.org/xmlns/sca/2.0-alpha"</span>
+           name=<span class="code-quote">"TestComposite"</span>&gt;
+
+    <span class="code-tag">&lt;component name=<span class="code-quote">"SampleTest"</span>&gt;</span>
+        <span class="code-tag">&lt;f3:junit class=<span class="code-quote">"org.fabric3.tests.function.SampleTest"</span>/&gt;</span>
+        <span class="code-tag">&lt;reference name=<span class="code-quote">"helloService"</span> target=HelloService"/&gt;</span>
+    <span class="code-tag">&lt;/component&gt;</span>
+
+    <span class="code-tag">&lt;include name=<span class="code-quote">"ApplicationComposite"</span> scdlResource=<span class="code-quote">"application.composite"</span>/&gt;</span>
+<span class="code-tag">&lt;/composite&gt;</span></pre>
+</div></div>
+
+<p>For further examples, see the <tt>tests</tt> directory in the Fabric3 Subversion repository.</p></div>
+</div>
+
+
+</div>
+
+<div id="sidebar">
+<a href=""><img src="../img/fabric3-logo.jpg" width="100%" height="100" border="1"/></a>
+<div class="navigation">
+   <div class="section_1"><h1><a name="Navigation-Resources"></a>Resources</h1>
+
+<p><a href="../Docs.html" title="Docs">Documentation</a><br></br>
+<a href="../Downloads.html" title="Downloads">Downloads</a><br></br>
+<a href="../SourceRepository.html" title="Source Repository">Source Repository</a><br></br>
+<a href="../Team.html" title="Team">Team</a><br></br>
+<a href="http://www.osoa.org" title="SCA Specifications">SCA Specifications</a><br></br>
+<a href="http://xircles.codehaus.org/projects/fabric3/lists">Mailing Lists</a><br></br>
+<a href="http://jira.codehaus.org/browse/FABRICTHREE">JIRA</a><br></br>
+<a href="http://bamboo.ci.codehaus.org/browse/FABRIC3">Continuous Integration</a><br></br>
+<a href="http://www.opensource.org/licenses/apache2.0.php">License</a></p>
+</div>
+ </div>
+
+<h4 class="headerstyle">Feeds</h4>
+<ul>
+
+ <li><a class="rss" href="http://docs.codehaus.org/spaces/rss.action?key=FABRICTHREE&amp;newPages=false">Site</a></li>
+ <li><a class="rss" href="http://docs.codehaus.org/spaces/blogrss.action?key=FABRICTHREE">News</a></li>
+</ul>
+
+<h4 class="headerstyle">Blogs</h4>
+<ul>
+<li><a class="editPage" href="http://weblogs.java.net/blog/meeraj/archive/2008/01/introducing_ser.html" target="_blank">Meeraj's Blog</a></li>
+</ul>
+<h4 class="headerstyle">External Links</h4>
+<ul>
+ <li><a href="http://atlassian.com/">Atlassian</a></li>
+ <li><a href="http://atlassian.com/confluence/">Confluence</a></li>
+ <li><a href="http://www.codehaus.org/">Codehaus</a></li>
+ <li><a href="http://www.jetbrains.com/idea/"><img src="http://www.jetbrains.com/idea/opensource/img/banners/idea88x31_blue.gif"></a></li>
+</ul>
+</div>
+<div class="clear">&nbsp;</div>
+</div>
+
+<div id="footer">&copy; 2006 Codehaus Foundation. Original design by <a href="http://andreasviklund.com" class="credit">Andreas Viklund</a></div>
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-150515-1";
+urchinTracker();
+</script>
+</body>
+</html>

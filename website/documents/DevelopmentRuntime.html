@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+ <meta http-equiv="content-type" content="text/html" />
+ <meta name="description" content="Fabric3 website" />
+ <meta name="keywords" content="Fabric3, SCA, SCA Implementation, Open Source" />
+ <meta name="author" content="Fabric3 / Ratesh Bansal" />
+ <link rel="stylesheet" type="text/css" href="../css/default.css" />
+ <title>Fabric3 - Development Runtime</title>
+</head>
+
+<body>
+<div id="container">
+<div id="main">
+<div id="intro">
+            <p><div class="section_1"><h1><a name="LeftHeader-fabric3"></a><img src="../img/banner.jpg" height="100" width="750"/></h1></div></p>
+     </div><div class="clear"></div>
+
+
+<div class="shortheaderstyle" style="font-size: 1.0em">
+<table id="utop_nav" style="width: 100%;padding-right: 2mm">
+ <tr>
+  <td align="left" valign="middle">
+   <div id="ubreadcrumbs">
+    <a href="../home.html">Home</a>
+                      &gt; <a href="../Docs.html">Docs</a>
+                        &gt; <a href="">Development Runtime</a>
+                  </div>
+  </td>
+  <td align="right" valign="middle" id="quicklinks">
+       <p><a href="../Roadmap.html" title="Roadmap">Roadmap</a> | <a href="../Docs.html" title="Docs">Docs</a> | <a href="../Downloads.html" title="Downloads">Downloads</a></p>
+     </td>
+ </tr>
+</table>
+</div>
+<div class="content" style="padding-top: 3mm;">
+          <p>The development runtime provides a rapid prototyping and testing environment for SCA applications with minimal setup. Developers can create SCA composites and activate (i.e. "deploy") them against a local domain from within an IDE. The runtime contains a Domain API for activating composites and programmatically connecting to components for testing purposes. </p>
+
+<div class="section_2"><h2><a name="DevelopmentRuntime-Installation"></a>Installation</h2>
+
+<p>To install the runtime, perform the following steps: </p>
+
+<p>1. Download and unzip the dev runtime distribution</p>
+
+<p>2. Create a project in an IDE and add the four jars in /lib to the project classpath. These jars are the OSOA spec jar, fabric3-api, fabric3-host-api, and development-api (containing the Domain API as described below).  Note that the runtime implementation classes are not on the classpath and isolated from application code (the runtime is booted in a child classloader to achieve this). </p>
+
+<p>It is recommended for step 2 to create a global library (or equivalent) containing the Fabric3 runtime jars as this will avoid setup duplication across projects.</p>
+
+</div><div class="section_2"><h2><a name="DevelopmentRuntime-UsingtheDevelopmentRuntime"></a>Using the Development Runtime</h2>
+
+<p>The Development Runtime has a minimal API to bootsrap a local domain, activate a composite, and connect to a service offered by a component in the composite. These steps are performed by the following extract:  </p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">Domain domain = <span class="code-keyword">new</span> Domain();
+
+
+<span class="code-comment">// activate a composite by passing the URL to its .composite file
+</span>domain.activate(getClass().getResource(<span class="code-quote">"test.composite"</span>));
+
+<span class="code-comment">// connect to and invoke the HelloService provided by the HelloComponent
+</span>HelloService service = domain.connectTo(HelloService.class, <span class="code-quote">"HelloComponent"</span>);
+service.hello();</pre>
+</div></div>
+
+<p>In the above, "test.composite" is the composite file, and HelloService is a service offered by the HelloComponent configured in the composite.</p>
+
+</div><div class="section_2"><h2><a name="DevelopmentRuntime-UsingExtensions"></a>Using Extensions</h2>
+
+<p>Transport binding and component type extensions (as well as others) may be added to the Development Runtime. To add an extension, downloand the extension distribution and copy it to the /extensions directory. The extension will be active in the runtime when the latter is booted.</p>
+
+</div><div class="section_2"><h2><a name="DevelopmentRuntime-MockReferences"></a>Mock References</h2>
+
+<p>The development runtime also supports mocking composite references. Given the following composite:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">&lt;composite xmlns=<span class="code-quote">"http:<span class="code-comment">//www.osoa.org/xmlns/sca/1.0"</span>
+</span>           xmlns:f3=<span class="code-quote">"http:<span class="code-comment">//fabric3.org/xmlns/sca/2.0-alpha"</span>
+
+</span>           name=<span class="code-quote">"TestComposite"</span>&gt;
+
+  &lt;component name=<span class="code-quote">"HelloComponent"</span>&gt;
+     &lt;implementation.java class=<span class="code-quote">"test.HelloComponentImpl"</span>/&gt;
+     &lt;reference name=<span class="code-quote">"hello"</span>/&gt;
+
+  &lt;/component&gt;
+
+  &lt;reference name=<span class="code-quote">"HelloReference"</span> promote=<span class="code-quote">"HelloComponent/hello"</span>/&gt;
+
+&lt;/composite&gt;</pre>
+</div></div>
+
+<p>The "hello" reference can be mocked by doing the following:</p>
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java"><span class="code-comment">// setup the mock
+</span>HelloReference mock = EasyMock.createMock(HelloReference.class);
+EasyMock.expect(mock.message(EasyMock.eq(<span class="code-quote">"hello"</span>))).andReturn(<span class="code-quote">"hello"</span>);
+EasyMock.replay(mock);
+
+<span class="code-comment">// boot the development domain
+</span>Domain domain = <span class="code-keyword">new</span> Domain();
+
+<span class="code-comment">// register the mock
+</span>domain.registerMockReference(<span class="code-quote">"HelloReference"</span>, HelloReference.class, mock);
+
+
+<span class="code-comment">// activate the composite
+</span>File file = <span class="code-keyword">new</span> File(<span class="code-quote">"test.composite"</span>);
+domain.activate(file.toURI().toURL());
+
+<span class="code-comment">// perform the invocation
+</span>HelloComponent component = domain.connectTo(HelloComponent.class, <span class="code-quote">"HelloComponent"</span>);
+assertEquals(<span class="code-quote">"hello"</span>, component.hello());
+
+<span class="code-comment">// verify the mock
+</span>EasyMock.verify(mock);</pre>
+</div></div>
+
+<p>The above example uses EasyMock as the mocking framework but others may be used as well, including POJOs. Using mock references avoids having to set up bindings and related infrastructure.</p></div>
+</div>
+
+
+</div>
+
+<div id="sidebar">
+<a href=""><img src="../img/fabric3-logo.jpg" width="100%" height="100" border="1"/></a>
+<div class="navigation">
+   <div class="section_1"><h1><a name="Navigation-Resources"></a>Resources</h1>
+
+<p><a href="../Docs.html" title="Docs">Documentation</a><br></br>
+<a href="../Downloads.html" title="Downloads">Downloads</a><br></br>
+<a href="../SourceRepository.html" title="Source Repository">Source Repository</a><br></br>
+<a href="../Team.html" title="Team">Team</a><br></br>
+<a href="http://www.osoa.org" title="SCA Specifications">SCA Specifications</a><br></br>
+<a href="http://xircles.codehaus.org/projects/fabric3/lists">Mailing Lists</a><br></br>
+<a href="http://jira.codehaus.org/browse/FABRICTHREE">JIRA</a><br></br>
+<a href="http://bamboo.ci.codehaus.org/browse/FABRIC3">Continuous Integration</a><br></br>
+<a href="http://www.opensource.org/licenses/apache2.0.php">License</a></p>
+</div>
+ </div>
+
+<h4 class="headerstyle">Feeds</h4>
+<ul>
+
+ <li><a class="rss" href="http://docs.codehaus.org/spaces/rss.action?key=FABRICTHREE&amp;newPages=false">Site</a></li>
+ <li><a class="rss" href="http://docs.codehaus.org/spaces/blogrss.action?key=FABRICTHREE">News</a></li>
+</ul>
+
+<h4 class="headerstyle">Blogs</h4>
+<ul>
+<li><a class="editPage" href="http://weblogs.java.net/blog/meeraj/archive/2008/01/introducing_ser.html" target="_blank">Meeraj's Blog</a></li>
+</ul>
+<h4 class="headerstyle">External Links</h4>
+<ul>
+ <li><a href="http://atlassian.com/">Atlassian</a></li>
+ <li><a href="http://atlassian.com/confluence/">Confluence</a></li>
+ <li><a href="http://www.codehaus.org/">Codehaus</a></li>
+ <li><a href="http://www.jetbrains.com/idea/"><img src="http://www.jetbrains.com/idea/opensource/img/banners/idea88x31_blue.gif"></a></li>
+</ul>
+</div>
+<div class="clear">&nbsp;</div>
+</div>
+
+<div id="footer">&copy; 2006 Codehaus Foundation. Original design by <a href="http://andreasviklund.com" class="credit">Andreas Viklund</a></div>
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-150515-1";
+urchinTracker();
+</script>
+</body>
+</html>
