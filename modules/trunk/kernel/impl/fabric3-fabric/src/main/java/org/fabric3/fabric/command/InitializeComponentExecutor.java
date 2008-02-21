@@ -74,7 +74,7 @@ public class InitializeComponentExecutor implements CommandExecutor<InitializeCo
             if (!(component instanceof AtomicComponent)) {
                 throw new ComponentNotRegisteredException("Component not registered", uri.toString());
             }
-            components.add((AtomicComponent) component);
+            components.add((AtomicComponent<?>) component);
         }
         WorkContext workContext = new WorkContext();
         workContext.setScopeIdentifier(Scope.COMPOSITE, command.getGroupId());
