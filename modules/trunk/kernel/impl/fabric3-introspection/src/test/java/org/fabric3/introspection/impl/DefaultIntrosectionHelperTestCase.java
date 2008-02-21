@@ -23,11 +23,14 @@ import java.util.Collections;
 
 import junit.framework.TestCase;
 
+import org.fabric3.introspection.TypeMapping;
+
 /**
  * @version $Rev$ $Date$
  */
 public class DefaultIntrosectionHelperTestCase extends TestCase {
     private DefaultIntrospectionHelper helper;
+    private TypeMapping boundMapping;
 
     private static interface SuperInterface {
     }
@@ -54,6 +57,7 @@ public class DefaultIntrosectionHelperTestCase extends TestCase {
     }
 
     private static class BaseTypes<T extends Base> {
+        public T t;
         public Collection<String> stringCollection;
         public Map<String, Integer> intMap;
 
@@ -63,6 +67,10 @@ public class DefaultIntrosectionHelperTestCase extends TestCase {
     }
 
     private static class BoundTypes extends BaseTypes<ExtendsBase> {
+    }
+
+    public void testTypeMappingBoundTypes() {
+        assertEquals(ExtendsBase.class, boundMapping.getActualType(getType(BaseTypes.class, "t")));
     }
 
     public void testBaseType() {
@@ -112,5 +120,6 @@ public class DefaultIntrosectionHelperTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         helper = new DefaultIntrospectionHelper();
+        boundMapping = helper.mapTypeParameters(BoundTypes.class);
     }
 }
