@@ -177,8 +177,6 @@ public class DefaultContractProcessor implements ContractProcessor {
                                                             inputType,
                                                             returnDataType,
                                                             faultDataTypes,
-                                                            nonBlocking,
-                                                            UNKNOWN_DATABINDING,
                                                             conversationSequence);
 
             // TODO this should be refactored to its own processor

@@ -19,14 +19,12 @@
 package org.fabric3.scdl;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 /**
- * Represents an operation that is part of a service contract. The type paramter of this operation identifies the
- * logical type system for all data types.
+ * Represents an operation that is part of a service contract. The type paramter of this operation identifies the logical type system for all data
+ * types.
  *
  * @version $Rev$ $Date$
  */
@@ -39,11 +37,7 @@ public class Operation<T> extends AbstractPolicyAware {
     private DataType<T> outputType;
     private DataType<List<DataType<T>>> inputType;
     private List<DataType<T>> faultTypes;
-    private String dataBinding;
-    private boolean wrapperStyle;
-    private boolean nonBlocking;
     private int conversationSequence = NO_CONVERSATION;
-    private Map<String, Object> metaData;
 
     /**
      * Construct a minimally-specified operation
@@ -57,7 +51,7 @@ public class Operation<T> extends AbstractPolicyAware {
                      DataType<List<DataType<T>>> inputType,
                      DataType<T> outputType,
                      List<DataType<T>> faultTypes) {
-        this(name, inputType, outputType, faultTypes, false, null, NO_CONVERSATION);
+        this(name, inputType, outputType, faultTypes, NO_CONVERSATION);
     }
 
     /**
@@ -67,17 +61,13 @@ public class Operation<T> extends AbstractPolicyAware {
      * @param inputType   the data types of parameters passed to the operation
      * @param outputType  the data type returned by the operation
      * @param faultTypes  the data type of faults raised by the operation
-     * @param nonBlocking if the operation is non-blocking
-     * @param dataBinding the data-binding type required by the operation
-     * @param sequence    the conversational attributes of the operation, {@link #NO_CONVERSATION}, {@link
-     *                    #CONVERSATION_CONTINUE}, {@link #CONVERSATION_CONTINUE}
+     * @param sequence    the conversational attributes of the operation, {@link #NO_CONVERSATION}, {@link #CONVERSATION_CONTINUE}, {@link
+*                    #CONVERSATION_CONTINUE}
      */
     public Operation(final String name,
                      final DataType<List<DataType<T>>> inputType,
                      final DataType<T> outputType,
                      final List<DataType<T>> faultTypes,
-                     boolean nonBlocking,
-                     String dataBinding,
                      int sequence) {
         super();
         this.name = name;
@@ -85,8 +75,6 @@ public class Operation<T> extends AbstractPolicyAware {
         this.inputType = inputType;
         this.outputType = outputType;
         this.faultTypes = (faultTypes == null) ? types : faultTypes;
-        this.nonBlocking = nonBlocking;
-        this.dataBinding = dataBinding;
         this.conversationSequence = sequence;
     }
 
@@ -132,25 +120,6 @@ public class Operation<T> extends AbstractPolicyAware {
     }
 
     /**
-     * Returns true if the operation is non-blocking. A non-blocking operation may not have completed execution at the
-     * time an invocation of the operation returns.
-     *
-     * @return true if the operation is non-blocking
-     */
-    public boolean isNonBlocking() {
-        return nonBlocking;
-    }
-
-    /**
-     * Sets if the operation is non-blocking
-     *
-     * @param nonBlocking true f the operation is non-blocking
-     */
-    public void setNonBlocking(boolean nonBlocking) {
-        this.nonBlocking = nonBlocking;
-    }
-
-    /**
      * Returns the sequence the operation is called in a conversation
      *
      * @return the sequence the operation is called in a conversation
@@ -166,65 +135,6 @@ public class Operation<T> extends AbstractPolicyAware {
      */
     public void setConversationSequence(int conversationSequence) {
         this.conversationSequence = conversationSequence;
-    }
-
-    /**
-     * Returns true if the operation is wrapper style
-     *
-     * @return the wrapperStyle
-     */
-    public boolean isWrapperStyle() {
-        return wrapperStyle;
-    }
-
-    /**
-     * @param wrapperStyle the wrapperStyle to set
-     */
-    public void setWrapperStyle(boolean wrapperStyle) {
-        this.wrapperStyle = wrapperStyle;
-    }
-
-    /**
-     * Returns the data binding type specified for the operation or null.
-     *
-     * @return the data binding type specified for the operation or null.
-     */
-    public String getDataBinding() {
-        return dataBinding;
-    }
-
-    /**
-     * Set the databinding for this operation
-     *
-     * @param dataBinding The databinding
-     */
-    public void setDataBinding(String dataBinding) {
-        this.dataBinding = dataBinding;
-    }
-
-    /**
-     * Returns a map of metadata key to value mappings for the operation.
-     *
-     * @return a map of metadata key to value mappings for the operation.
-     */
-    public Map<String, Object> getMetaData() {
-        if (metaData == null) {
-            return Collections.emptyMap();
-        }
-        return metaData;
-    }
-
-    /**
-     * Adds metadata associated with the operation.
-     *
-     * @param key the metadata key
-     * @param val the metadata value
-     */
-    public void setMetaData(String key, Object val) {
-        if (metaData == null) {
-            metaData = new HashMap<String, Object>();
-        }
-        metaData.put(key, val);
     }
 
     public String toString() {
