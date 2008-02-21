@@ -22,6 +22,7 @@ import java.net.URI;
 import java.net.URL;
 
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.TypeMapping;
 import org.fabric3.spi.transform.TransformContext;
 
 /**
@@ -33,6 +34,7 @@ import org.fabric3.spi.transform.TransformContext;
 public class IntrospectionContextImpl extends TransformContext implements IntrospectionContext {
     private String targetNamespace;
     private URI contributionUri;
+    private TypeMapping typeMapping;
 
     public IntrospectionContextImpl(URI contributionUri, ClassLoader classLoader, String targetNamespace) {
         super(null, classLoader, null, null);
@@ -62,6 +64,20 @@ public class IntrospectionContextImpl extends TransformContext implements Intros
         super(null, parentContext.getTargetClassLoader(), parentContext.getSourceBase(), null);
         this.targetNamespace = targetNamespace;
         this.contributionUri = parentContext.getContributionUri();
+        this.typeMapping = parentContext.getTypeMapping();
+    }
+
+    /**
+     * Initializes from a parent context.
+     *
+     * @param parentContext   Parent context.
+     * @param typeMapping   mapping of formal types
+     */
+    public IntrospectionContextImpl(IntrospectionContext parentContext, TypeMapping typeMapping) {
+        super(null, parentContext.getTargetClassLoader(), parentContext.getSourceBase(), null);
+        this.targetNamespace = parentContext.getTargetNamespace();
+        this.contributionUri = parentContext.getContributionUri();
+        this.typeMapping = typeMapping;
     }
 
     public String getTargetNamespace() {
@@ -70,5 +86,9 @@ public class IntrospectionContextImpl extends TransformContext implements Intros
 
     public URI getContributionUri() {
         return contributionUri;
+    }
+
+    public TypeMapping getTypeMapping() {
+        return typeMapping;
     }
 }

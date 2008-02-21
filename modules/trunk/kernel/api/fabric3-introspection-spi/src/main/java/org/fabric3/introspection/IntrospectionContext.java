@@ -57,4 +57,10 @@ public interface IntrospectionContext {
      */
     URI getContributionUri();
 
+    /**
+     * Returns the mappings from formal to actual types for the component being introspected.
+     *
+     * @return the mappings from formal to actual types for the component being introspected
+     */
+    TypeMapping getTypeMapping();
 }

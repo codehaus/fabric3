@@ -16,11 +16,11 @@
  */
 package org.fabric3.introspection;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.lang.annotation.Annotation;
 import java.util.Set;
 
 import org.fabric3.scdl.InjectableAttributeType;
@@ -148,8 +148,16 @@ public interface IntrospectionHelper {
     boolean isAnnotationPresent(Class<?> type, Class<? extends Annotation> annotationType);
 
     /**
-     * Returns the base type for the supplied type.
+     * Map the formal parameters of a type, its superclass and superinterfaces to the actual parameters of the class.
      *
+     * @param type the class whose parameters should be mapped
+     * @return a mapping of formal type parameters to actual types
+     */
+    TypeMapping mapTypeParameters(Class<?> type);
+
+    /**
+     * Returns the base type for the supplied type.
+     * <p/>
      * The base type is the actual type of a property or reference having removed any decoration for arrays or collections.
      *
      * @param type the type of a field or parameter
@@ -159,9 +167,9 @@ public interface IntrospectionHelper {
 
     /**
      * Returns all interfaces directly implemented by this class or any superclass.
-     *
-     * Class#getInterfaces only returns interfaces directly implemented by the class. This method returns all interfaces including
-     * those implemented by any superclasses. It excludes interfaces that are super-interfaces of those implemented by subclasses.
+     * <p/>
+     * Class#getInterfaces only returns interfaces directly implemented by the class. This method returns all interfaces including those implemented
+     * by any superclasses. It excludes interfaces that are super-interfaces of those implemented by subclasses.
      *
      * @param type the class whose interfaces should be returned
      * @return the unique interfaces immplemented by that class

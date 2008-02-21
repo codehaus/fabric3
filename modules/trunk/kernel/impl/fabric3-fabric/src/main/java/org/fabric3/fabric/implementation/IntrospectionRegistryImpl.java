@@ -25,7 +25,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.IntrospectionHelper;
+import org.fabric3.introspection.TypeMapping;
+import org.fabric3.loader.common.IntrospectionContextImpl;
 import org.fabric3.pojo.processor.ImplementationProcessor;
 import org.fabric3.pojo.processor.IntrospectionRegistry;
 import org.fabric3.pojo.processor.JavaIntrospectionHelper;
@@ -39,11 +44,14 @@ import org.fabric3.pojo.scdl.PojoComponentType;
  */
 public class IntrospectionRegistryImpl implements IntrospectionRegistry {
 
-    private Monitor monitor;
+    private final IntrospectionHelper helper;
+    private final Monitor monitor;
     private List<ImplementationProcessor> cache = new ArrayList<ImplementationProcessor>();
 
-    public IntrospectionRegistryImpl(@org.fabric3.api.annotation.Monitor Monitor monitor) {
+    public IntrospectionRegistryImpl(@org.fabric3.api.annotation.Monitor Monitor monitor,
+                                     @Reference IntrospectionHelper helper) {
         this.monitor = monitor;
+        this.helper = helper;
     }
 
     public void registerProcessor(ImplementationProcessor processor) {
@@ -60,6 +68,10 @@ public class IntrospectionRegistryImpl implements IntrospectionRegistry {
                                         PojoComponentType type,
                                         IntrospectionContext context)
         throws ProcessingException {
+
+        TypeMapping typeMapping = helper.mapTypeParameters(clazz);
+        context = new IntrospectionContextImpl(context, typeMapping);
+
         for (ImplementationProcessor processor : cache) {
             processor.visitClass(clazz, type, context);
         }

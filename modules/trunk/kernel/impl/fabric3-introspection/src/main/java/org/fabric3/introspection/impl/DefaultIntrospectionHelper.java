@@ -16,29 +16,30 @@
  */
 package org.fabric3.introspection.impl;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.TypeVariable;
-import java.lang.annotation.Annotation;
 import java.util.Collection;
-import java.util.Map;
-import java.util.List;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 import java.util.SortedSet;
 
-import org.osoa.sca.annotations.Remotable;
-import org.osoa.sca.annotations.Service;
 import org.osoa.sca.ComponentContext;
 import org.osoa.sca.RequestContext;
+import org.osoa.sca.annotations.Remotable;
+import org.osoa.sca.annotations.Service;
 
 import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.IntrospectionHelper;
+import org.fabric3.introspection.TypeMapping;
 import org.fabric3.scdl.InjectableAttributeType;
 
 /**
@@ -215,5 +216,29 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
             type = type.getSuperclass();
         }
         return interfaces;
+    }
+
+    public TypeMapping mapTypeParameters(Class<?> type) {
+        TypeMapping mapping = new TypeMapping();
+        while (type != null) {
+            addTypeBindings(mapping, type.getGenericSuperclass());
+            for (Type interfaceType : type.getGenericInterfaces()) {
+                addTypeBindings(mapping, interfaceType);
+            }
+            type = type.getSuperclass();
+        }
+        return mapping;
+    }
+
+    private void addTypeBindings(TypeMapping mapping, Type type1) {
+        if (type1 instanceof ParameterizedType) {
+            ParameterizedType type = (ParameterizedType) type1;
+            Class<?> boundType = (Class<?>) type.getRawType();
+            TypeVariable<? extends Class<?>>[] typeVariables = boundType.getTypeParameters();
+            Type[] arguments = type.getActualTypeArguments();
+            for (int i = 0; i < typeVariables.length; i++) {
+                mapping.addMapping(typeVariables[i], arguments[i]);
+            }
+        }
     }
 }

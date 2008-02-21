@@ -29,6 +29,7 @@ import org.fabric3.fabric.implementation.IntrospectionRegistryImpl.Monitor;
 import org.fabric3.pojo.processor.ImplementationProcessor;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 
 /**
  * @version $Rev$ $Date$
@@ -36,24 +37,21 @@ import org.fabric3.introspection.IntrospectionContext;
 public class IntrospectionRegistryTestCase extends TestCase {
 
     private Monitor monitor;
+    private IntrospectionRegistryImpl registry;
+    private ImplementationProcessor processor;
+    private IntrospectionContext context;
 
     public void testRegister() throws Exception {
-        IntrospectionRegistryImpl registry = new IntrospectionRegistryImpl(monitor);
-        ImplementationProcessor processor = EasyMock.createNiceMock(ImplementationProcessor.class);
         registry.registerProcessor(processor);
     }
 
     public void testUnegister() throws Exception {
-        IntrospectionRegistryImpl registry = new IntrospectionRegistryImpl(monitor);
-        ImplementationProcessor processor = EasyMock.createNiceMock(ImplementationProcessor.class);
         registry.registerProcessor(processor);
         registry.unregisterProcessor(processor);
     }
 
     @SuppressWarnings("unchecked")
     public void testWalk() throws Exception {
-        IntrospectionRegistryImpl registry = new IntrospectionRegistryImpl(monitor);
-        ImplementationProcessor processor = EasyMock.createMock(ImplementationProcessor.class);
         processor.visitClass(
             EasyMock.eq(Bar.class),
             EasyMock.isA(PojoComponentType.class),
@@ -90,7 +88,7 @@ public class IntrospectionRegistryTestCase extends TestCase {
         registry.introspect(
             Bar.class,
             new PojoComponentType(null),
-            EasyMock.createNiceMock(IntrospectionContext.class));
+            context);
         EasyMock.verify(processor);
     }
 
@@ -98,6 +96,10 @@ public class IntrospectionRegistryTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         monitor = EasyMock.createMock(Monitor.class);
+        registry = new IntrospectionRegistryImpl(monitor, new DefaultIntrospectionHelper());
+        processor = EasyMock.createMock(ImplementationProcessor.class);
+        context = EasyMock.createNiceMock(IntrospectionContext.class);
+        EasyMock.replay(context);
     }
 
     private class Baz {

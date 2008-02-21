@@ -28,22 +28,21 @@ import org.osoa.sca.annotations.Scope;
 
 import org.fabric3.fabric.implementation.IntrospectionRegistryImpl;
 import org.fabric3.fabric.implementation.processor.DestroyProcessor;
-import org.fabric3.fabric.implementation.processor.ImplementationProcessorServiceImpl;
 import org.fabric3.fabric.implementation.processor.InitProcessor;
 import org.fabric3.fabric.implementation.processor.PropertyProcessor;
 import org.fabric3.fabric.implementation.processor.ReferenceProcessor;
 import org.fabric3.fabric.implementation.processor.ScopeProcessor;
-import org.fabric3.scdl.Signature;
-import org.fabric3.scdl.MethodInjectionSite;
-import org.fabric3.scdl.InjectableAttribute;
-import org.fabric3.scdl.InjectableAttributeType;
-import org.fabric3.pojo.processor.ImplementationProcessorService;
-import org.fabric3.pojo.scdl.PojoComponentType;
-import static org.fabric3.scdl.Scope.COMPOSITE;
-import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.introspection.ContractProcessor;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
+import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.scdl.InjectableAttribute;
+import org.fabric3.scdl.InjectableAttributeType;
+import org.fabric3.scdl.MethodInjectionSite;
+import static org.fabric3.scdl.Scope.COMPOSITE;
+import org.fabric3.scdl.Signature;
+import org.fabric3.spi.component.ScopeRegistry;
 
 /**
  * Sanity check of the <code>IntegrationRegistry</code> to verify operation with processors
@@ -53,10 +52,11 @@ import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 public class IntrospectionRegistryIntegrationTestCase extends TestCase {
 
     private IntrospectionRegistryImpl registry;
+    private IntrospectionContext context;
 
     public void testSimpleComponentTypeParsing() throws Exception {
         PojoComponentType type = new PojoComponentType(null);
-        registry.introspect(Foo.class, type, null);
+        registry.introspect(Foo.class, type, context);
         assertEquals(new Signature(Foo.class.getMethod("init")), type.getInitMethod());
         assertEquals(new Signature(Foo.class.getMethod("destroy")), type.getDestroyMethod());
         assertEquals(COMPOSITE, type.getImplementationScope());
@@ -68,19 +68,19 @@ public class IntrospectionRegistryIntegrationTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
+        context = EasyMock.createNiceMock(IntrospectionContext.class);
+        EasyMock.replay(context);
         ScopeRegistry scopeRegistry = EasyMock.createMock(ScopeRegistry.class);
         EasyMock.expect(scopeRegistry.getScope("COMPOSITE")).andStubReturn(org.fabric3.scdl.Scope.COMPOSITE);
         EasyMock.replay(scopeRegistry);
 
-        registry = new IntrospectionRegistryImpl(EasyMock.createMock(IntrospectionRegistryImpl.Monitor.class));
+        registry = new IntrospectionRegistryImpl(EasyMock.createMock(IntrospectionRegistryImpl.Monitor.class), new DefaultIntrospectionHelper());
         registry.registerProcessor(new DestroyProcessor());
         registry.registerProcessor(new InitProcessor());
         registry.registerProcessor(new ScopeProcessor(scopeRegistry));
         ContractProcessor interfaceProcessorRegistry = new DefaultContractProcessor();
-        ImplementationProcessorService service = new ImplementationProcessorServiceImpl(interfaceProcessorRegistry, new DefaultIntrospectionHelper());
         registry.registerProcessor(new PropertyProcessor());
         registry.registerProcessor(new ReferenceProcessor(interfaceProcessorRegistry));
-        //registry.registerProcessor(new ResourceProcessor());
     }
 
     @Scope("COMPOSITE")

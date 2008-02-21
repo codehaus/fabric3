@@ -31,16 +31,17 @@ import org.fabric3.fabric.implementation.processor.InitProcessor;
 import org.fabric3.fabric.implementation.processor.PropertyProcessor;
 import org.fabric3.fabric.implementation.processor.ReferenceProcessor;
 import org.fabric3.fabric.implementation.processor.ServiceProcessor;
+import org.fabric3.introspection.ContractProcessor;
+import org.fabric3.introspection.IntrospectionHelper;
+import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
+import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.loader.common.IntrospectionContextImpl;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Property;
 import org.fabric3.scdl.ReferenceDefinition;
-import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.introspection.ContractProcessor;
-import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
-import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
+import org.fabric3.scdl.ServiceDefinition;
 
 /**
  * @version $Rev$ $Date$
@@ -65,9 +66,10 @@ public class SystemComponentTypeLoaderTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
+        IntrospectionHelper helper = new DefaultIntrospectionHelper();
         ContractProcessor contractProcessor = new DefaultContractProcessor();
-        ImplementationProcessorService service = new ImplementationProcessorServiceImpl(contractProcessor, new DefaultIntrospectionHelper());
-        IntrospectionRegistryImpl registry = new IntrospectionRegistryImpl(EasyMock.createMock(IntrospectionRegistryImpl.Monitor.class));
+        ImplementationProcessorService service = new ImplementationProcessorServiceImpl(contractProcessor, helper);
+        IntrospectionRegistryImpl registry = new IntrospectionRegistryImpl(EasyMock.createMock(IntrospectionRegistryImpl.Monitor.class), helper);
         registry.registerProcessor(new ConstructorProcessor(service));
         registry.registerProcessor(new DestroyProcessor());
         registry.registerProcessor(new InitProcessor());

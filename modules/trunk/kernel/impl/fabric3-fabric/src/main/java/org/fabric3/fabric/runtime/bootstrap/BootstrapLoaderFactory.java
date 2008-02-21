@@ -116,7 +116,7 @@ public class BootstrapLoaderFactory {
         IntrospectionHelper helper = new DefaultIntrospectionHelper();
         ImplementationProcessorService service = new ImplementationProcessorServiceImpl(interfaceIntrospector, helper);
         IntrospectionRegistryImpl.Monitor monitor = monitorFactory.getMonitor(IntrospectionRegistryImpl.Monitor.class);
-        IntrospectionRegistryImpl introspectionRegistry = new IntrospectionRegistryImpl(monitor);
+        IntrospectionRegistryImpl introspectionRegistry = new IntrospectionRegistryImpl(monitor, helper);
         introspectionRegistry.registerProcessor(new ConstructorProcessor(service));
         introspectionRegistry.registerProcessor(new DestroyProcessor());
         introspectionRegistry.registerProcessor(new InitProcessor());
