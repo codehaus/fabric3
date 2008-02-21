@@ -140,7 +140,9 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
             }
             if (candidate == null) {
                 String name = callbackContract.getInterfaceName();
-                throw new CallbackServiceNotFoundException("Callback service not found [" + name + "]", name);
+                URI uri = source.getUri();
+                throw new CallbackServiceNotFoundException("Callback service not found ["
+                        + name + "] on component [" + uri + "] originating from reference [" + referenceDefinition.getName() + "]", name);
             }
             targetDefinition.setCallbackUri(URI.create(source.getUri().toString() + "#" + candidate.getDefinition().getName()));
         }

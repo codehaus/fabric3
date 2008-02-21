@@ -22,7 +22,6 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import org.osoa.sca.Conversation;
 import org.osoa.sca.ServiceUnavailableException;
 
 import org.fabric3.spi.wire.InvocationChain;
@@ -32,48 +31,42 @@ import org.fabric3.spi.wire.MessageImpl;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.component.TargetInvocationException;
 import org.fabric3.spi.component.CallFrame;
-import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.scdl.Scope;
-import org.fabric3.scdl.Operation;
 
 /**
- * Responsible for dispatching to a callback service from a component implementation instance that is not composite scope. Callback URIs and
- * conversation ids can be cached for all scopes other than composite as only one client can invoke the instance at a time.
+ * Responsible for dispatching to a callback service from multi-threaded component instances such as composite scope components. Since callback
+ * proxies for multi-threaded components may dispatch to multiple callback services, this implementation must determine the correct target service
+ * based on the current CallFrame. For example, if clients A and A' implementing the same callback interface C invoke B, the callback proxy
+ * representing C must correctly dispatch back to A and A'. This is done by recording the callback URI in the current CallFrame as the forward invoke
+ * is made.
  *
- * @version $Rev: 1 $ $Date: 2007-05-14 10:40:37 -0700 (Mon, 14 May 2007) $
+ * @version $Rev$ $Date$
  */
-public class StatefullCallbackInvocationHandler<T> implements InvocationHandler {
+public class MultiThreadedCallbackInvocationHandler<T> implements InvocationHandler {
     private final Class<T> interfaze;
-    private final Object conversationId;
-    private final String callbackUri;
-    private Map<Method, InvocationChain> chains;
+    private final boolean conversational;
+    private Map<String, Map<Method, InvocationChain>> mappings;
 
     /**
      * Constructor.
      *
      * @param interfaze      the callback service interface implemented by the proxy
-     * @param conversationId the conversation id for the callback service
-     * @param callbackUri    the callback target URI;
-     * @param chains         the invocation chain mappings for the callback wire
+     * @param conversational true if the callback service is conversational
+     * @param mappings       the callback URI to invocation chain mappings
      */
-    public StatefullCallbackInvocationHandler(Class<T> interfaze,
-                                              Object conversationId,
-                                              String callbackUri,
-                                              Map<Method, InvocationChain> chains) {
-        // needed to implement ServiceReference
+    public MultiThreadedCallbackInvocationHandler(Class<T> interfaze, boolean conversational, Map<String, Map<Method, InvocationChain>> mappings) {
         this.interfaze = interfaze;
-        // cache the conversation id and callback URI as instance variables since this proxy only invokes a single callback instance
-        this.conversationId = conversationId;
-        this.chains = chains;
-        this.callbackUri = callbackUri;
+        this.conversational = conversational;
+        this.mappings = mappings;
     }
 
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         WorkContext workContext = PojoWorkContextTunnel.getThreadWorkContext();
         // pop the call frame as we move back in the request stack
         CallFrame frame = workContext.popCallFrame();
-
+        String callbackUri = frame.getCallbackUri();
+        Map<Method, InvocationChain> chains = mappings.get(callbackUri);
         // find the invocation chain for the invoked operation
         InvocationChain chain = chains.get(method);
         if (chain == null) {

@@ -83,7 +83,7 @@ public class JDKProxyService implements ProxyService {
     public <T> T createCallbackProxy(Class<T> interfaze, boolean conversational, Map<String, Map<Method, InvocationChain>> mappings)
             throws ProxyCreationException {
         ClassLoader cl = interfaze.getClassLoader();
-        CompositeScopeCallbackInvocationHandler<T> handler = new CompositeScopeCallbackInvocationHandler<T>(interfaze, conversational, mappings);
+        MultiThreadedCallbackInvocationHandler<T> handler = new MultiThreadedCallbackInvocationHandler<T>(interfaze, conversational, mappings);
         return interfaze.cast(Proxy.newProxyInstance(cl, new Class[]{interfaze}, handler));
     }
 
@@ -99,7 +99,7 @@ public class JDKProxyService implements ProxyService {
         if (handler instanceof JDKInvocationHandler) {
             JDKInvocationHandler<B> jdkHandler = (JDKInvocationHandler<B>) handler;
             return (R) jdkHandler.getServiceReference();
-        } else if (handler instanceof CompositeScopeCallbackInvocationHandler) {
+        } else if (handler instanceof MultiThreadedCallbackInvocationHandler) {
             // TODO return a CallbackReference
             throw new UnsupportedOperationException();
         } else {

@@ -126,7 +126,6 @@ public final class JDKInvocationHandler<B> implements InvocationHandler, Service
         } else {
             oldConversation = null;
         }
-        // TODO add caller URI
         CallFrame frame = new CallFrame(callbackUri, conversation, oldConversation);
         workContext.addCallFrame(frame);
         // send the invocation down the wire
