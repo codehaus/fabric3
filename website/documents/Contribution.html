@@ -9,17 +9,22 @@
  <meta name="keywords" content="Fabric3, SCA, SCA Implementation, Open Source" />
  <meta name="author" content="Fabric3 / Ratesh Bansal" />
  <link rel="stylesheet" type="text/css" href="../css/default.css" />
- <title>Fabric3 - Assembly</title>
+ <title>Fabric3 - Contribution</title>
 
 </head>
 
 <body>
+<div id="thetop">
+<a id="top"></a>
+<p class="hide">Skip to: <a href="#sitemenu" accesskey="2">Site menu</a> | <a href="#maincontent" accesskey="3">Main content</a></p>
+</div>
+
 <div id="container">
 <div id="main">
 <div id="intro">
-            <p><div class="section_1"><h1><a name="LeftHeader-fabric3"></a><img src="../img/banner.jpg" height="100" width="750"/></h1></div></p>
+             <p><div class="section_1"><h1><a name="LeftHeader-fabric3"></a><img src="../img/banner.jpg" height="100" width="750"/></h1></div></p>
 
-     </div><div class="clear"></div>
+    </div><div class="clear"></div>
 
 
 <div class="shortheaderstyle" style="font-size: 1.0em">
@@ -31,7 +36,7 @@
                       &gt; <a href="../Docs.html">Docs</a>
 
                         &gt; <a href="Definitions.html">Definitions</a>
-                        &gt; <a href="">Assembly</a>
+                        &gt; <a href="">Contribution</a>
                   </div>
   </td>
   <td align="right" valign="middle" id="quicklinks">
@@ -43,18 +48,11 @@
 </div>
 
 <div class="content" style="padding-top: 3mm;">
-          <div class="section_2">
-<p>Packaged SCA defined configuration files and possibly implementation specific artifacts that can be deployed to a SCA <a href="Domain.html" title="Domain">domain</a>. See <a href="http://osoa.org/display/Main/Service+Component+Architecture+Specifications">SCA Assembly Model Spec section 1.2</a>.</p>
+          <div class="section_2"><p>Introduction</p>
 
-</div><div class="section_2"><h2><a name="Assembly-Explanation"></a>Explanation</h2>
-<p>The <a href="http://osoa.org/display/Main/Service+Component+Architecture+Specifications">SCA Assembly Model specification</a> defines a set of SCA metatdata documents and a packaging format so that code or configurations can be contributed (i.e deployed and <a href="Activation.html" title="Activation">activated</a>) to a SCA <a href="Domain.html" title="Domain">domain</a>. The SCA assembly model provides a standard way to describe,configure, and package SCA implementation artifacts.</p>
+</div><div class="section_2"><h2><a name="Contribution-Explanation"></a>Explanation</h2>
 
-<p>An analogy to JavaEE would be the following: A SCA <a href="Composite.html" title="Composite">composite</a> is to a JavaEE web application as a SCA <a href="Contribution.html" title="Contribution">contribution</a> is to a JavaEE application. A SCA <a href="Composite.html" title="Composite">composite</a> definition file defines a set of components and their implementations and how they are wired together. A JavaEE web application descriptor file defines a set of servlet implementations and their mappings to URIs.  A SCA contribution bundles a set of SCA artifacts together and the contribution definition file declares which artifacts are contributed to the domain and how. On the same token the JavaEE application descriptor declares which contained JavaEE artifacts are to be deployed to the JavaEE container and how.</p>
-
-
-</div><div class="section_2"><h2><a name="Assembly-Example"></a>Example </h2>
-
-<p>A SCA <a href="Contribution.html" title="Contribution">Contribution</a> is an example of an assembly. It is packaged as a ZIP file and contains a sca-contribution.xml file that defines which SCA artifacts in the archive are to be contributed to the <a href="Domain.html" title="Domain">domain</a>. It also may contain composite, componentType, etc definition files along with implementation specific artifacts such as Java classes, XML configuration files, etc.</p></div>
+</div><div class="section_2"><h2><a name="Contribution-Example"></a>Example</h2></div>
 </div>
 
 

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+ <meta http-equiv="content-type" content="text/html" />
+ <meta name="description" content="Fabric3 website" />
+ <meta name="keywords" content="Fabric3, SCA, SCA Implementation, Open Source" />
+ <meta name="author" content="Fabric3 / Ratesh Bansal" />
+ <link rel="stylesheet" type="text/css" href="../css/default.css" />
+ <title>Fabric3 - Extending Fabric3</title>
+</head>
+
+<body>
+<div id="container">
+<div id="main">
+<div id="intro">
+            <p><div class="section_1"><h1><a name="LeftHeader-fabric3"></a><img src="../img/banner.jpg" height="100" width="750"/></h1></div></p>
+     </div><div class="clear"></div>
+
+
+<div class="shortheaderstyle" style="font-size: 1.0em">
+<table id="utop_nav" style="width: 100%;padding-right: 2mm">
+ <tr>
+  <td align="left" valign="middle">
+   <div id="ubreadcrumbs">
+    <a href="../home.html">Home</a>
+                      &gt; <a href="../Docs.html">Docs</a>
+                        &gt; <a href="">Extending Fabric3</a>
+                  </div>
+  </td>
+  <td align="right" valign="middle" id="quicklinks">
+       <p><a href="../Roadmap.html" title="Roadmap">Roadmap</a> | <a href="../Docs.html" title="Docs">Docs</a> | <a href="../Downloads.html" title="Downloads">Downloads</a></p>
+     </td>
+ </tr>
+</table>
+</div>
+<div class="content" style="padding-top: 3mm;">
+          <p><img class="emoticon" src="http://docs.codehaus.org/images/icons/emoticons/warning.gif" height="16" width="16" align="absmiddle" alt="" border="0"></img><b>Note prior to the 1.0 release, SPIs are subject to change</b><br></br>
+Fabric3 is architected as a small, modular kernel that can be extended to add additional functionality. Once the kernel is bootstrapped, the runtime is assembled from a series of extensions. As extensions are SCA components, it is more accurate to say that Fabric3 runtimes are SCA composites activated in a local domain.    </p>
+
+<p>This design allows the kernel to remain as concise as possible and avoids having the runtimes degenerate into a proverbial "ball of twine". The design also allows the kernel to be extended through a familiar (and powerful) programming model, namely the Java-based SCA programming model.        </p>
+
+<p>This guide provides a brief introduction to writing Fabric3 extensions, including coverage of key concepts common to all extension types. As this guide assumes knowledge of SCA, it is recommend you review the specifications before proceeding, particulary the Assembly Specification and Java Programming Model specifications found on the <a href="http://www.osoa.org">OSOA website</a>. </p>
+
+<div class="section_2"><h2><a name="ExtendingFabric3-ModuleStructure"></a>Module Structure</h2>
+
+<p>Fabric3 is divided into a series of jars containing runtime APIs, SPIs, implementation classes, and extension classes. The relevant jars for extension developers are:</p>
+
+<ul>
+	<li>fabric3-api - Annotation classes for Fabric3 extensions to the Java-based SCA programming model</li>
+	<li>fabric3-host-api - The API for interacting with Fabric3 runtimes. This is typically used by hosts embedding Fabric3.</li>
+	<li>fabric3-spi - The SPI for extensions developers</li>
+	<li>fabric3-extensions - Helper classes for extension developers</li>
+</ul>
+
+
+<p><img class="emoticon" src="http://docs.codehaus.org/images/icons/emoticons/forbidden.gif" height="16" width="16" align="absmiddle" alt="" border="0"></img> Extensions should not reference Fabric3 classes in other jars as they are not part of the public SPI and are subject to change.</p>
+
+</div><div class="section_2"><h2><a name="ExtendingFabric3-TheSystemImplementationType"></a>The System Implementation Type</h2>
+
+<p>Extending Fabric3 involves writing a component or set of SCA components, assembling them into a composite, and activating them in the local runtime domain. To assist with the specific requirements of writing infrastructure, as opposed to application, components, Fabric3 extends the standard Java SCA programming model  by introducing a <em>system</em> component type. The system component type, <tt>implementation.system</tt> has the same semantics as <tt>implementation.java</tt> except for three important differences:</p>
+
+<ul>
+	<li>System component types are composite scope, requiring them to be thread-safe. Other scopes such as stateless, request, and conversation are not supported.</li>
+</ul>
+
+
+<ul>
+	<li>System component types are not proxied. Component references are set with the un-proxied target for performance reasons. This means interceptors and policy are not supported with system components.</li>
+</ul>
+
+
+<ul>
+	<li>Callbacks are not supported.</li>
+</ul>
+
+
+<p>Other than these exceptions, Fabric3 extensions follow the basic Java SCA programming model. </p>
+
+<p>All extension components must be of type <tt>implementation.system</tt> as <tt>implementation.java</tt> will not necessarily be available when the extension is activated (the latter is an extension as well).      </p>
+
+</div><div class="section_2"><h2><a name="ExtendingFabric3-Monitoring"></a>Monitoring</h2>
+
+<p>TODO</p>
+
+</div><div class="section_2"><h2><a name="ExtendingFabric3-Testing"></a>Testing</h2>
+
+<p>Since the SCA programming and Fabric3 extension models are based on dependency injection, unit testing is straightforward: instantiate extension classes in a test case using mocks when appropriate. The Fabric3 runtime is not required (and should not be used) for unit testing. For automated mocking, we highly recommend <a href="http://www.easymock.org">EasyMock</a>.</p>
+
+<p>For integration testing, use the <a href="IntegrationTest.html" title="Integration Test">Fabric3 Maven Runtime</a>, which provides the ability to launch an embedded Fabric3 runtime during the integration test phase of a Maven build. </p>
+
+</div><div class="section_2"><h2><a name="ExtendingFabric3-Packaging"></a>Packaging</h2>
+
+<p>Extensions are packaged as jars with a composite and SCA deployable files in the META-INF directory. Third-party libraries (i.e. jars) may be bundled in an extension archive by placing them in the META-INF/lib directory. Fabric3 provides a Maven contribution plugin that automates the task of creating SCA archives. Non-Maven builds can create contribution archives by "manually" producing a jar file. For examples of how to use the contribution plugin, refer to the pom.xml file one of the existing extensions.</p>
+
+</div><div class="section_2"><h2><a name="ExtendingFabric3-Installing"></a>Installing</h2>
+
+<p>Installing an extension will vary by runtime distribution. For the standalone and development runtimes, extension archives are placed in the extensions directory. For the Maven integration test and web application runtimes, the appropriate plugin must be configured. Please refer to the individual runtime documentation for specifics of how to install extensions. </p></div>
+</div>
+
+
+</div>
+
+<div id="sidebar">
+<a href=""><img src="../img/fabric3-logo.jpg" width="100%" height="100" border="1"/></a>
+<div class="navigation">
+   <div class="section_1"><h1><a name="Navigation-Resources"></a>Resources</h1>
+
+<p><a href="../Docs.html" title="Docs">Documentation</a><br></br>
+<a href="../Downloads.html" title="Downloads">Downloads</a><br></br>
+<a href="../SourceRepository.html" title="Source Repository">Source Repository</a><br></br>
+<a href="http://www.osoa.org" title="SCA Specifications">SCA Specifications</a><br></br>
+<a href="http://xircles.codehaus.org/projects/fabric3/lists">Mailing Lists</a><br></br>
+<a href="http://jira.codehaus.org/browse/FABRICTHREE">JIRA</a><br></br>
+<a href="http://bamboo.ci.codehaus.org/browse/FABRIC3">Continuous Integration</a><br></br>
+<a href="http://www.opensource.org/licenses/apache2.0.php">License</a></p>
+</div>
+ </div>
+
+<h4 class="headerstyle">Feeds</h4>
+<ul>
+
+ <li><a class="rss" href="http://docs.codehaus.org/spaces/rss.action?key=FABRICTHREE&amp;newPages=false">Site</a></li>
+ <li><a class="rss" href="http://docs.codehaus.org/spaces/blogrss.action?key=FABRICTHREE">News</a></li>
+</ul>
+
+<h4 class="headerstyle">Blogs</h4>
+<ul>
+<li><a class="editPage" href="http://weblogs.java.net/blog/meeraj/archive/2008/01/introducing_ser.html" target="_blank">Meeraj's Blog</a></li>
+ <li><a class="editPage" href="">Blog2</a></li>
+</ul>
+<h4 class="headerstyle">External Links</h4>
+<ul>
+ <li><a href="http://atlassian.com/">Atlassian</a></li>
+ <li><a href="http://atlassian.com/confluence/">Confluence</a></li>
+ <li><a href="http://www.codehaus.org/">Codehaus</a></li>
+ <li><a href="http://www.jetbrains.com/idea/"><img src="http://www.jetbrains.com/idea/opensource/img/banners/idea88x31_blue.gif"></a></li>
+</ul>
+</div>
+<div class="clear">&nbsp;</div>
+</div>
+
+<div id="footer">&copy; 2006 Codehaus Foundation. Original design by <a href="http://andreasviklund.com" class="credit">Andreas Viklund</a></div>
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-150515-1";
+urchinTracker();
+</script>
+</body>
+</html>

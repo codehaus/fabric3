@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+ <meta http-equiv="content-type" content="text/html" />
+ <meta name="description" content="Fabric3 website" />
+ <meta name="keywords" content="Fabric3, SCA, SCA Implementation, Open Source" />
+ <meta name="author" content="Fabric3 / Ratesh Bansal" />
+ <link rel="stylesheet" type="text/css" href="../css/default.css" />
+ <title>Fabric3 - Patterns and Anti-patterns</title>
+</head>
+
+<body>
+<div id="container">
+<div id="main">
+<div id="intro">
+            <p><div class="section_1"><h1><a name="LeftHeader-fabric3"></a><img src="../img/banner.jpg" height="100" width="750"/></h1></div></p>
+     </div><div class="clear"></div>
+
+
+<div class="shortheaderstyle" style="font-size: 1.0em">
+<table id="utop_nav" style="width: 100%;padding-right: 2mm">
+ <tr>
+  <td align="left" valign="middle">
+   <div id="ubreadcrumbs">
+    <a href="../home.html">Home</a>
+                      &gt; <a href="../Docs.html">Docs</a>
+                        &gt; <a href="">Patterns and Anti Patterns</a>
+                  </div>
+  </td>
+  <td align="right" valign="middle" id="quicklinks">
+       <p><a href="../Roadmap.html" title="Roadmap">Roadmap</a> | <a href="../Docs.html" title="Docs">Docs</a> | <a href="../Downloads.html" title="Downloads">Downloads</a></p>
+     </td>
+ </tr>
+</table>
+</div>
+<div class="content" style="padding-top: 3mm;">
+          <div class="section_2"><h2><a name="PatternsandAnti-patterns-CommonPatterns"></a>Common Patterns</h2>
+
+<p>Below is a catalogue of common extension design patterns.</p>
+
+<div class="section_4"><h4><a name="PatternsandAnti-patterns-Registry"></a>Registry <a name="PatternsandAnti-patterns-registry"></a></h4>
+
+<p>Many of the extensibility features in Fabric3 such as XML make use of a registry that dispatches to specific handler implementation based on some identifier such as an XML element or Java type. For example, SCA composite XML files contain a number of extensibility elements. To handles these, Fabric3 includes a central registry, <tt>LoaderRegistry</tt>, that dispatches to specific element loaders. A <tt>StAXElementLoader</tt> registers with the <tt>LoaderRegistry</tt> to handle particular element types. In order to do this, the <tt>StAXElementLoader</tt> implementation is typically marked to eagerly initialize and register using a reference to the registry:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">@EagerInit
+<span class="code-keyword">public</span> class MyElementLoader <span class="code-keyword">implements</span> StAXElementLoader&lt;SomeType&gt; {
+
+  @Init
+  <span class="code-keyword">public</span> void init(@Reference LoaderRegistry registry) {
+    registry.register(elementQName, <span class="code-keyword">this</span>);
+  }
+
+  <span class="code-comment">//....
+</span>}</pre>
+</div></div>
+
+<p>This pattern is used throught the Fabric3 codebase not only for XML but also for other types of extensibility, such as contribution artifact processing. </p>
+
+</div><div class="section_4"><h4><a name="PatternsandAnti-patterns-ConstructorbasedAutowire"></a>Constructor-based Autowire <a name="PatternsandAnti-patterns-autowire"></a></h4>
+
+<p>Constructor based autowire is preferred over explicit wiring when possible. This allows explict declaration of dependencies during instantiation and provides a level of decoupling between extensions and the services they may access since the latter are not targeted by name. Constructor-based autowire follows the SCA specifications. For example, given the implementations:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java"><span class="code-keyword">public</span> class FooImpl <span class="code-keyword">implements</span> Foo {
+}
+
+<span class="code-keyword">public</span> class BarImpl <span class="code-keyword">implements</span> Bar {
+
+   <span class="code-keyword">public</span> Bar(@Reference Foo foo){
+      <span class="code-comment">//...
+</span>   }
+}</pre>
+</div></div>
+
+<p>The following autowires <tt>FooComponent</tt> to <tt>BarComponnet</tt>:</p>
+
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">&lt;composite xmlns=<span class="code-quote">"http:<span class="code-comment">//www.osoa.org/xmlns/sca/1.0"</span>
+</span>           xmlns:f3=<span class="code-quote">"http:<span class="code-comment">//fabric3.org/xmlns/sca/0.1"</span>
+</span>           autowire=<span class="code-quote">"<span class="code-keyword">true</span>"</span>&gt;
+   &lt;component name="FooComponent&gt;
+      &lt;f3:implementation.system class=<span class="code-quote">"foo.FooImpl"</span>/&gt;
+   &lt;/component&gt;
+   &lt;component name="BarComponnet &gt;
+      &lt;f3:implementation.system class=<span class="code-quote">"bar.BarImpl"</span>/&gt;
+   &lt;/component&gt;
+&lt;/composite&gt;</pre>
+</div></div>
+
+</div></div><div class="section_2"><h2><a name="PatternsandAnti-patterns-AntiPatterns"></a>Anti-Patterns</h2>
+
+<div class="section_4"><h4><a name="PatternsandAnti-patterns-Referencingfabric3fabric"></a>Referencing fabric3-fabric</h4>
+
+<p>Extensions should not reference implementation classes, particularly those in fabric3-fabric, as they are not part of the SPI contract and are subject to change. If you think you need to reference an implementation class, send a note to the user list explaing what you are trying to do and ask for an alternative. If a required capability is not available in the SPI, and it is deemed useful for a number of extensions, it will be considered for inclusion. </p>
+
+</div><div class="section_4"><h4><a name="PatternsandAnti-patterns-Overuseofeagerinitialization"></a>Overuse of eager initialization </h4>
+
+<p>Do not eagerly initialize components (@EagerInit) unless absolutely needed as this will affect runtime start-up time. Use lazy initialization whenever possible.</p>
+</div></div>
+</div>
+
+
+</div>
+
+<div id="sidebar">
+<a href=""><img src="../img/fabric3-logo.jpg" width="100%" height="100" border="1"/></a>
+<div class="navigation">
+   <div class="section_1"><h1><a name="Navigation-Resources"></a>Resources</h1>
+
+<p><a href="../Docs.html" title="Docs">Documentation</a><br></br>
+<a href="../Downloads.html" title="Downloads">Downloads</a><br></br>
+<a href="../SourceRepository.html" title="Source Repository">Source Repository</a><br></br>
+<a href="http://www.osoa.org" title="SCA Specifications">SCA Specifications</a><br></br>
+<a href="http://xircles.codehaus.org/projects/fabric3/lists">Mailing Lists</a><br></br>
+<a href="http://jira.codehaus.org/browse/FABRICTHREE">JIRA</a><br></br>
+<a href="http://bamboo.ci.codehaus.org/browse/FABRIC3">Continuous Integration</a><br></br>
+<a href="http://www.opensource.org/licenses/apache2.0.php">License</a></p>
+</div>
+ </div>
+
+<h4 class="headerstyle">Feeds</h4>
+<ul>
+
+ <li><a class="rss" href="http://docs.codehaus.org/spaces/rss.action?key=FABRICTHREE&amp;newPages=false">Site</a></li>
+ <li><a class="rss" href="http://docs.codehaus.org/spaces/blogrss.action?key=FABRICTHREE">News</a></li>
+</ul>
+
+<h4 class="headerstyle">Blogs</h4>
+<ul>
+<li><a class="editPage" href="http://weblogs.java.net/blog/meeraj/archive/2008/01/introducing_ser.html" target="_blank">Meeraj's Blog</a></li>
+ <li><a class="editPage" href="">Blog2</a></li>
+</ul>
+<h4 class="headerstyle">External Links</h4>
+<ul>
+ <li><a href="http://atlassian.com/">Atlassian</a></li>
+ <li><a href="http://atlassian.com/confluence/">Confluence</a></li>
+ <li><a href="http://www.codehaus.org/">Codehaus</a></li>
+ <li><a href="http://www.jetbrains.com/idea/"><img src="http://www.jetbrains.com/idea/opensource/img/banners/idea88x31_blue.gif"></a></li>
+</ul>
+</div>
+<div class="clear">&nbsp;</div>
+</div>
+
+<div id="footer">&copy; 2006 Codehaus Foundation. Original design by <a href="http://andreasviklund.com" class="credit">Andreas Viklund</a></div>
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-150515-1";
+urchinTracker();
+</script>
+</body>
+</html>

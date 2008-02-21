@@ -4,13 +4,12 @@
      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-  <meta http-equiv="content-type" content="text/html" />
+ <meta http-equiv="content-type" content="text/html" />
  <meta name="description" content="Fabric3 website" />
  <meta name="keywords" content="Fabric3, SCA, SCA Implementation, Open Source" />
  <meta name="author" content="Fabric3 / Ratesh Bansal" />
  <link rel="stylesheet" type="text/css" href="../css/default.css" />
- <title>Fabric3 - Assembly</title>
-
+ <title>Fabric3 - Policy Architecture</title>
 </head>
 
 <body>
@@ -18,7 +17,6 @@
 <div id="main">
 <div id="intro">
             <p><div class="section_1"><h1><a name="LeftHeader-fabric3"></a><img src="../img/banner.jpg" height="100" width="750"/></h1></div></p>
-
      </div><div class="clear"></div>
 
 
@@ -29,32 +27,59 @@
    <div id="ubreadcrumbs">
     <a href="../home.html">Home</a>
                       &gt; <a href="../Docs.html">Docs</a>
-
-                        &gt; <a href="Definitions.html">Definitions</a>
-                        &gt; <a href="">Assembly</a>
+                        &gt; <a href="">Policy Architecture</a>
                   </div>
   </td>
   <td align="right" valign="middle" id="quicklinks">
        <p><a href="../Roadmap.html" title="Roadmap">Roadmap</a> | <a href="../Docs.html" title="Docs">Docs</a> | <a href="../Downloads.html" title="Downloads">Downloads</a></p>
-
      </td>
  </tr>
 </table>
 </div>
 
 <div class="content" style="padding-top: 3mm;">
-          <div class="section_2">
-<p>Packaged SCA defined configuration files and possibly implementation specific artifacts that can be deployed to a SCA <a href="Domain.html" title="Domain">domain</a>. See <a href="http://osoa.org/display/Main/Service+Component+Architecture+Specifications">SCA Assembly Model Spec section 1.2</a>.</p>
-
-</div><div class="section_2"><h2><a name="Assembly-Explanation"></a>Explanation</h2>
-<p>The <a href="http://osoa.org/display/Main/Service+Component+Architecture+Specifications">SCA Assembly Model specification</a> defines a set of SCA metatdata documents and a packaging format so that code or configurations can be contributed (i.e deployed and <a href="Activation.html" title="Activation">activated</a>) to a SCA <a href="Domain.html" title="Domain">domain</a>. The SCA assembly model provides a standard way to describe,configure, and package SCA implementation artifacts.</p>
-
-<p>An analogy to JavaEE would be the following: A SCA <a href="Composite.html" title="Composite">composite</a> is to a JavaEE web application as a SCA <a href="Contribution.html" title="Contribution">contribution</a> is to a JavaEE application. A SCA <a href="Composite.html" title="Composite">composite</a> definition file defines a set of components and their implementations and how they are wired together. A JavaEE web application descriptor file defines a set of servlet implementations and their mappings to URIs.  A SCA contribution bundles a set of SCA artifacts together and the contribution definition file declares which artifacts are contributed to the domain and how. On the same token the JavaEE application descriptor declares which contained JavaEE artifacts are to be deployed to the JavaEE container and how.</p>
+          <div class="section_1">
 
 
-</div><div class="section_2"><h2><a name="Assembly-Example"></a>Example </h2>
+<div class="section_2"><h2><a name="PolicyArchitecture-Introduction"></a>Introduction</h2>
 
-<p>A SCA <a href="Contribution.html" title="Contribution">Contribution</a> is an example of an assembly. It is packaged as a ZIP file and contains a sca-contribution.xml file that defines which SCA artifacts in the archive are to be contributed to the <a href="Domain.html" title="Domain">domain</a>. It also may contain composite, componentType, etc definition files along with implementation specific artifacts such as Java classes, XML configuration files, etc.</p></div>
+<p>This document explains the F3 implementation of the SCA policy specification. SCA policy specification describes a framework for enforcing QoS aspects of the runtime behaviour of components and the interaction between components using abstract requirement assertion called intents and more concrete mechanisms called policies to which those intents map. Typical QoS aspects that would be addressed by the SCA policy framework would include security, reliability, transactionality, auditing, tracing etc. The SCA policy specification can be found at <a href="http://www.osoa.org/download/attachments/35/SCA_Policy_Framework_V100.pdf?version=1">here</a>.</p>
+
+</div><div class="section_2"><h2><a name="PolicyArchitecture-CoreFunctionalConcepts"></a>Core Functional Concepts</h2>
+
+<p>SCA Policy framework allow end users to specify abstract assertions against the runtime behaviour of components as well as interaction between components using services and references. These assertions are called Intents in the SCA policy speak. Intents can be defined against any SCA artifact within the SCDL, however, they always apply to either bindings or implementations. Intents applicable to bindings are called interaction intents and those for implementations are called implementation intents.</p>
+
+<p>Intents are satisfied by one of the following mechanisms,  </p>
+
+
+</div><div class="section_2"><h2><a name="PolicyArchitecture-DesignConcepts"></a>Design Concepts</h2>
+
+
+</div><div class="section_2"><h2><a name="PolicyArchitecture-PolicyDesign"></a>Policy Design</h2>
+
+<p>The section describes the policy design in detail</p>
+
+<div class="section_3"><h3><a name="PolicyArchitecture-DomainModel"></a>Domain Model</h3>
+
+<p>The diagram below depicts the core domain model for the F3 policy model,</p>
+
+<div class="imageHolder"><img src="../img/DomainModel5.jpeg" align="absmiddle" border="0"></img></div>
+
+<p>TODO: Add text</p>
+
+</div><div class="section_3"><h3><a name="PolicyArchitecture-LoadingDefinitions"></a>Loading Definitions</h3>
+
+<p>The diagram below depicts the framework for loading definitions,</p>
+
+<div class="imageHolder"><img src="../img/DefinitionLoading2.jpeg" align="absmiddle" border="0"></img></div>
+
+</div><div class="section_3"><h3><a name="PolicyArchitecture-ConrtributingDefinitions"></a>Conrtributing Definitions</h3>
+
+
+</div><div class="section_3"><h3><a name="PolicyArchitecture-ActivatingDefinitions"></a>Activating Definitions</h3>
+
+
+</div><div class="section_3"><h3><a name="PolicyArchitecture-ResolvingIntents%2CPoliciesandBindings"></a>Resolving Intents, Policies and Bindings</h3></div></div></div>
 </div>
 
 

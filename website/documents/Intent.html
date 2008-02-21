@@ -4,13 +4,12 @@
      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-   <meta http-equiv="content-type" content="text/html" />
-  <meta name="description" content="Fabric3 website" />
-  <meta name="keywords" content="Fabric3, SCA, SCA Implementation, Open Source" />
-  <meta name="author" content="Fabric3 / Ratesh Bansal" />
+  <meta http-equiv="content-type" content="text/html" />
+ <meta name="description" content="Fabric3 website" />
+ <meta name="keywords" content="Fabric3, SCA, SCA Implementation, Open Source" />
+ <meta name="author" content="Fabric3 / Ratesh Bansal" />
  <link rel="stylesheet" type="text/css" href="../css/default.css" />
- <title>Fabric3 - Development Tutorial</title>
-
+ <title>Fabric3 - Intent</title>
 </head>
 
 <body>
@@ -18,8 +17,7 @@
 <div id="main">
 <div id="intro">
             <p><div class="section_1"><h1><a name="LeftHeader-fabric3"></a><img src="../img/banner.jpg" height="100" width="750"/></h1></div></p>
-
-     </div><div class="clear"></div>
+</div><div class="clear"></div>
 
 
 <div class="shortheaderstyle" style="font-size: 1.0em">
@@ -27,58 +25,47 @@
  <tr>
   <td align="left" valign="middle">
    <div id="ubreadcrumbs">
-    <a href="/">Home</a>
-       <a href="../home.html">Home</a>
+    <a href="../home.html">Home</a>
                       &gt; <a href="../Docs.html">Docs</a>
-
-                        &gt; <a href="../Tutorials.html">Tutorials</a>
-                        &gt; <a href="">Development Tutorial</a>
+                        &gt; <a href="Definitions.html">Definitions</a>
+                        &gt; <a href="">Intent</a>
                   </div>
   </td>
   <td align="right" valign="middle" id="quicklinks">
-
-         <p><a href="../Roadmap.html" title="Roadmap">Roadmap</a> | <a href="../Docs.html" title="Docs">Docs</a> | <a href="../Downloads.html" title="Downloads">Downloads</a></p>
+       <p><a href="../Roadmap.html" title="Roadmap">Roadmap</a> | <a href="../Docs.html" title="Docs">Docs</a> | <a href="../Downloads.html" title="Downloads">Downloads</a></p>
      </td>
  </tr>
 </table>
 </div>
-
 <div class="content" style="padding-top: 3mm;">
-          <div class="section_3"><h3><a name="DevelopmentTutorial-Overview"></a>Overview</h3>
-
-<p>This tutorial covers the following:</p>
-
-<ul>
-	<li>Setting up a development environment with Fabric3</li>
-
-	<li>Creating a composite with a LoanApplicationService</li>
-	<li>Initializing a local SCA domain and activating the composite in it</li>
-	<li>Connecting to the local domain and invoking the LoanApplicationService</li>
-</ul>
+          <div class="section_2">Introduction
 
 
-</div><div class="section_3"><h3><a name="DevelopmentTutorial-TheFabric3DevelopmentRuntime"></a>The Fabric3 Development Runtime</h3>
+</div><div class="section_2"><h2><a name="Intent-Explanation"></a>Explanation</h2>
 
-<p>The Fabric3 Development Runtime (F3DR) provides a rapid prototyping container that integrates with popular IDEs, including Eclipse and IDEA IntelliJ. It allows developers to create and run SCA composites without having to set up a complex server environment. As the runtime is based on a small-footprint design, startup time should be in the sub-second range. </p>
+<p>intents are abstract requirements from the user (application developer), either expressed in the SCDL or using annotations in the Java PM.<br></br>
+intents can be related to a component's operation in a container or about interaction between components or external systems using services and references<br></br>
+they are called implementation and interaction intents respectively</p>
 
-<p>Please note that F3DR is not intended for testing purposes. Unit testing SCA composites does not require a container; instead instantiate component implementation classes using a test harness such as <a href="http://www.junit.org">JUnit</a> or <a href="http://www.testng.org">TestNG</a> and set component references with mock objects. We recommend using <a href="http://www.easymock.org">EasyMock</a> and <a href="http://code.google.com/p/scamock/">SCAMock</a> to do this.</p>
+<p>intents can be natively provided by the implementation or binding types. if they do, they are declared using the bindingType and implementationType elements in definitions.xml. For example a jms binding type would declate it would always support transactions. this means if the user requests transactions on a service that use JMS binding we dont need to do anything more. These are called provided intents<br></br>
+They are further categorized into intents that are always provided and intents that may be provided</p>
 
-<p>To perform integration testing, please see the <span class="error">[Fabric3 iTest Runtime]</span>, which offers a complete automated SCA testing framework with Maven.</p>
+<p>The way we interpret this in F3 is ..<br></br>
+first one we ignore and assume they are always provided by the type whether the user wants it or not<br></br>
+the may provided one, we explictly pass to the runtime framework wire attachers for bindings and builders for components<br></br>
+It is upto them how they realize it If the intent is not provided by the implementation/binding type<br></br>
+They should map to a policy set.</p>
 
-</div><div class="section_3"><h3><a name="DevelopmentTutorial-GettingStarted"></a>Getting Started</h3>
+<p>To give an example<br></br>
+&lt;component requires="f3:managedTransaction"/&gt;</p>
 
-<p>Perform the following steps:</p>
-
-<ol>
-	<li>Download and extract the Fabric3 Development Runtime Distribution from the <a href="../Downloads.html" title="Downloads">Downloads Page</a></li>
-	<li>Download and extract the Tutorials Distribution from the <a href="../Downloads.html" title="Downloads">Downloads Page</a></li>
-</ol>
-
-
-<p>The tutorial distribution includes both Eclipse and IDEA project files. If you are using IDEA, please proceed <a href="DevelopmentTutorialIDEA.html" title="Development Tutorial IDEA">here</a>. If you are using Eclipse, please proceed <span class="error">[here]</span>.</p>
+<p>here f3:managedTransaction is an intent requested by te user<br></br>
+in definitions xml we will have &lt;intent name="managedTransaction"/&gt; and there will be a policy that provides this intent<br></br>
+&lt;policySet name"txPolicy" provides="f3:managedTransaction"/&gt;<br></br>
+here provides refer to the intent it provides</p>
 
 
-</div>
+</div><div class="section_2"><h2><a name="Intent-Example"></a>Example</h2></div>
 </div>
 
 
@@ -123,9 +110,7 @@
 <div class="clear">&nbsp;</div>
 </div>
 
-
 <div id="footer">&copy; 2006 Codehaus Foundation. Original design by <a href="http://andreasviklund.com" class="credit">Andreas Viklund</a></div>
-
 <script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
 </script>
 <script type="text/javascript">
