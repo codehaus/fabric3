@@ -161,8 +161,8 @@ public final class JDKInvocationHandler<B> implements InvocationHandler, Service
                     conversation = null;
                 }
                 workContext.setScopeIdentifier(Scope.CONVERSATION, oldConversation);
-                workContext.popCallFrame();
             }
+            workContext.popCallFrame();
         }
 
     }
