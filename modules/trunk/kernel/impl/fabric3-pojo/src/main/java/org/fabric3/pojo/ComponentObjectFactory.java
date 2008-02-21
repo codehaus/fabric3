@@ -18,15 +18,12 @@
  */
 package org.fabric3.pojo;
 
-import java.net.URI;
-
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.TargetResolutionException;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.scdl.Scope;
 
 /**
  * @version $Rev$ $Date$
@@ -42,14 +39,10 @@ public class ComponentObjectFactory<T, CONTEXT> implements ObjectFactory<T> {
 
     public T getInstance() throws ObjectCreationException {
         WorkContext workContext = PojoWorkContextTunnel.getThreadWorkContext();
-        URI oldComposite = workContext.getScopeIdentifier(Scope.COMPOSITE);
         try {
-            workContext.setScopeIdentifier(Scope.COMPOSITE, component.getGroupId());
             return scopeContainer.getWrapper(component, workContext).getInstance();
         } catch (TargetResolutionException e) {
             throw new ObjectCreationException(e);
-        } finally {
-            workContext.setScopeIdentifier(Scope.COMPOSITE, oldComposite);
         }
     }
 }

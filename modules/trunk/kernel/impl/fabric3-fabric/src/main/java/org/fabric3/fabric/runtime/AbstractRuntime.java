@@ -36,7 +36,6 @@ import org.fabric3.host.runtime.StartException;
 import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.scdl.Autowire;
-import org.fabric3.scdl.Scope;
 import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.InstanceWrapper;
@@ -184,10 +183,8 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
     public <I> I getSystemComponent(Class<I> service, URI uri) {
 
         // JFM FIXME WorkContext should be moved down to host-api and should be created by the host
-        URI parent = uri.resolve(".");
         AtomicComponent<?> component = (AtomicComponent<?>) componentManager.getComponent(uri);
         WorkContext workContext = new WorkContext();
-        workContext.setScopeIdentifier(Scope.COMPOSITE, parent);
         PojoWorkContextTunnel.setThreadWorkContext(workContext);
 
         try {
