@@ -20,6 +20,8 @@ import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.xml.bind.JAXBException;
+
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
 import org.fabric3.spi.builder.interceptor.InterceptorBuilderRegistry;
@@ -68,8 +70,10 @@ public class JaxbInterceptorBuilder implements InterceptorBuilder<JaxbIntercepto
             
         } catch (ClassNotFoundException ex) {
             throw new JaxbBuilderException(ex);
+        } catch (JAXBException e) {
+            throw new JaxbBuilderException(e);
         }
-        
+
     }
 
 }
