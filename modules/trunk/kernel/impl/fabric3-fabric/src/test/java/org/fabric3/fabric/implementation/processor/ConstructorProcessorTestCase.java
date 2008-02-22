@@ -25,6 +25,7 @@ import java.util.Set;
 
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
+import org.easymock.EasyMock;
 
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Multiplicity;
@@ -37,19 +38,21 @@ import org.fabric3.scdl.InjectableAttributeType;
 import junit.framework.TestCase;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
+import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.TypeMapping;
 
 /**
  * @version $Rev$ $Date$
  */
 public class ConstructorProcessorTestCase extends TestCase {
-    private ConstructorProcessor processor =
-            new ConstructorProcessor(new ImplementationProcessorServiceImpl(new DefaultContractProcessor(), new DefaultIntrospectionHelper()));
+    private ConstructorProcessor processor;
+    private IntrospectionContext context;
+    private PojoComponentType type;
 
     public void testDuplicateConstructor() throws Exception {
-        PojoComponentType type = new PojoComponentType(null);
-        processor.visitConstructor(BadFoo.class.getConstructor(String.class), type, null);
+        processor.visitConstructor(BadFoo.class.getConstructor(String.class), type, context);
         try {
-            processor.visitConstructor(BadFoo.class.getConstructor(String.class, String.class), type, null);
+            processor.visitConstructor(BadFoo.class.getConstructor(String.class, String.class), type, context);
             fail();
         } catch (DuplicateConstructorException e) {
             // expected
@@ -57,26 +60,21 @@ public class ConstructorProcessorTestCase extends TestCase {
     }
 
     public void testConstructorAnnotation() throws Exception {
-        PojoComponentType type = new PojoComponentType(null);
         Constructor<Foo> ctor1 = Foo.class.getConstructor(String.class);
-        processor.visitConstructor(ctor1, type, null);
+        processor.visitConstructor(ctor1, type, context);
         assertEquals(new Signature(ctor1), type.getConstructorDefinition().getSignature());
     }
 
     public void testNoAnnotation() throws Exception {
-        PojoComponentType type =
-            new PojoComponentType(null);
         Constructor<NoAnnotation> ctor1 = NoAnnotation.class.getConstructor();
-        processor.visitConstructor(ctor1, type, null);
+        processor.visitConstructor(ctor1, type, context);
         assertNull(type.getConstructorDefinition());
     }
 
     public void testBadAnnotation() throws Exception {
-        PojoComponentType type =
-            new PojoComponentType(null);
         Constructor<BadAnnotation> ctor1 = BadAnnotation.class.getConstructor(String.class, Foo.class);
         try {
-            processor.visitConstructor(ctor1, type, null);
+            processor.visitConstructor(ctor1, type, context);
             fail();
         } catch (InvalidConstructorException e) {
             // expected
@@ -84,9 +82,8 @@ public class ConstructorProcessorTestCase extends TestCase {
     }
 
     public void testMixedParameters() throws Exception {
-        PojoComponentType type = new PojoComponentType(null);
         Constructor<Mixed> ctor1 = Mixed.class.getConstructor(String.class, String.class, String.class);
-        processor.visitConstructor(ctor1, type, null);
+        processor.visitConstructor(ctor1, type, context);
         assertNotNull(type.getReferences().get("Mixed[0]"));
         assertEquals(new ConstructorInjectionSite(ctor1, 0), type.getInjectionSite(new InjectableAttribute(InjectableAttributeType.REFERENCE, "Mixed[0]")));
         assertNotNull(type.getProperties().get("foo"));
@@ -146,9 +143,8 @@ public class ConstructorProcessorTestCase extends TestCase {
     }
 
     public void testMultiplicity() throws Exception {
-        PojoComponentType type = new PojoComponentType(null);
         Constructor<Multiple> ctor1 = Multiple.class.getConstructor(Collection.class, String[].class, List.class, Set.class, String[].class);
-        processor.visitConstructor(ctor1, type, null);
+        processor.visitConstructor(ctor1, type, context);
 
         ReferenceDefinition ref0 = type.getReferences().get("Multiple[0]");
         assertEquals(Multiplicity.ONE_N, ref0.getMultiplicity());
@@ -160,6 +156,19 @@ public class ConstructorProcessorTestCase extends TestCase {
         assertTrue(prop1.isMany());
         org.fabric3.scdl.Property prop2 = type.getProperties().get("abc");
         assertTrue(prop2.isMany());
+    }
+
+    protected void setUp() throws Exception {
+        super.setUp();
+        DefaultContractProcessor contractProcessor = new DefaultContractProcessor();
+        DefaultIntrospectionHelper helper = new DefaultIntrospectionHelper();
+        processor = new ConstructorProcessor(new ImplementationProcessorServiceImpl(contractProcessor, helper));
+
+        context = EasyMock.createMock(IntrospectionContext.class);
+        TypeMapping typeMapping = new TypeMapping();
+        EasyMock.expect(context.getTypeMapping()).andStubReturn(typeMapping);
+        EasyMock.replay(context);
+        type = new PojoComponentType(null);
     }
 
 }

@@ -22,12 +22,15 @@ import java.lang.reflect.Constructor;
 import java.util.List;
 
 import org.osoa.sca.annotations.Reference;
+import org.easymock.EasyMock;
 
 import org.fabric3.pojo.scdl.PojoComponentType;
 
 import junit.framework.TestCase;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
+import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.TypeMapping;
 import org.fabric3.scdl.ReferenceDefinition;
 
 /**
@@ -35,11 +38,12 @@ import org.fabric3.scdl.ReferenceDefinition;
  */
 public class ConstructorReferenceTestCase extends TestCase {
     private ConstructorProcessor processor;
+    private IntrospectionContext context;
 
     public void testReference() throws Exception {
         PojoComponentType type = new PojoComponentType(null);
         Constructor<Foo> ctor = Foo.class.getConstructor(String.class);
-        processor.visitConstructor(ctor, type, null);
+        processor.visitConstructor(ctor, type, context);
         ReferenceDefinition reference = type.getReferences().get("myRef");
         assertTrue(reference.isRequired());
         assertEquals("myRef", reference.getName());
@@ -48,17 +52,16 @@ public class ConstructorReferenceTestCase extends TestCase {
     public void testTwoReferencesSameType() throws Exception {
         PojoComponentType type = new PojoComponentType(null);
         Constructor<Foo> ctor = Foo.class.getConstructor(String.class, String.class);
-        processor.visitConstructor(ctor, type, null);
+        processor.visitConstructor(ctor, type, context);
         assertNotNull(type.getReferences().get("myRef1"));
         assertNotNull(type.getReferences().get("myRef2"));
     }
 
     public void testDuplicateProperty() throws Exception {
-        PojoComponentType type =
-            new PojoComponentType(null);
+        PojoComponentType type = new PojoComponentType(null);
         Constructor<BadFoo> ctor = BadFoo.class.getConstructor(String.class, String.class);
         try {
-            processor.visitConstructor(ctor, type, null);
+            processor.visitConstructor(ctor, type, context);
             fail();
         } catch (DuplicateReferenceException e) {
             // expected
@@ -66,19 +69,17 @@ public class ConstructorReferenceTestCase extends TestCase {
     }
 
     public void testNamesOnConstructor() throws Exception {
-        PojoComponentType type =
-            new PojoComponentType(null);
+        PojoComponentType type = new PojoComponentType(null);
         Constructor<Foo> ctor = Foo.class.getConstructor(Integer.class);
-        processor.visitConstructor(ctor, type, null);
+        processor.visitConstructor(ctor, type, context);
         assertNotNull(type.getReferences().get("myRef"));
     }
 
     public void testInvalidNumberOfNames() throws Exception {
-        PojoComponentType type =
-            new PojoComponentType(null);
+        PojoComponentType type = new PojoComponentType(null);
         Constructor<BadFoo> ctor = BadFoo.class.getConstructor(Integer.class, Integer.class);
         try {
-            processor.visitConstructor(ctor, type, null);
+            processor.visitConstructor(ctor, type, context);
             fail();
         } catch (InvalidConstructorException e) {
             // expected
@@ -87,13 +88,15 @@ public class ConstructorReferenceTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        processor =
-                new ConstructorProcessor(new ImplementationProcessorServiceImpl(new DefaultContractProcessor(), new DefaultIntrospectionHelper()));
-    }
+        DefaultContractProcessor contractProcessor = new DefaultContractProcessor();
+        DefaultIntrospectionHelper helper = new DefaultIntrospectionHelper();
+        processor = new ConstructorProcessor(new ImplementationProcessorServiceImpl(contractProcessor, helper));
 
-//    public void testMultiplicityRequired() throws Exception {
-    // TODO multiplicity
-//    }
+        context = EasyMock.createMock(IntrospectionContext.class);
+        TypeMapping typeMapping = new TypeMapping();
+        EasyMock.expect(context.getTypeMapping()).andStubReturn(typeMapping);
+        EasyMock.replay(context);
+    }
 
     private static class Foo {
 

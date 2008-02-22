@@ -32,6 +32,8 @@ import org.fabric3.introspection.ContractProcessor;
 import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.introspection.InvalidServiceContractException;
+import org.fabric3.introspection.TypeMapping;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.scdl.PojoComponentType;
@@ -82,7 +84,7 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
         }
     }
 
-    public void processParameters(Constructor<?> constructor, PojoComponentType componentType) throws ProcessingException {
+    public void processParameters(Constructor<?> constructor, PojoComponentType componentType, IntrospectionContext context) throws ProcessingException {
         try {
             Type[] parameterTypes = constructor.getGenericParameterTypes();
             Annotation[][] parameterAnnotations = constructor.getParameterAnnotations();
@@ -91,10 +93,10 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
                 for (Annotation annotation : annotations) {
                     Class<? extends Annotation> annotationType = annotation.annotationType();
                     if (Property.class.equals(annotationType)) {
-                        processProperty((Property) annotation, constructor, i, componentType);
+                        processProperty((Property) annotation, constructor, i, componentType, context.getTypeMapping());
                         continue param;
                     } else if (Reference.class.equals(annotationType)) {
-                        processReference((Reference) annotation, constructor, i, componentType);
+                        processReference((Reference) annotation, constructor, i, componentType, context.getTypeMapping());
                         continue param;
                     } else if (Monitor.class.equals(annotationType)) {
                         processMonitor(constructor, i, componentType);
@@ -104,10 +106,10 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
                 InjectableAttributeType sourceType = helper.inferType(parameterTypes[i]);
                 switch (sourceType) {
                 case PROPERTY:
-                    processProperty(null, constructor, i, componentType);
+                    processProperty(null, constructor, i, componentType, context.getTypeMapping());
                     break;
                 case REFERENCE:
-                    processReference(null, constructor, i, componentType);
+                    processReference(null, constructor, i, componentType, context.getTypeMapping());
                     break;
                 case CONTEXT:
                     break;
@@ -166,47 +168,47 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
         return start + 1 >= collection.length || areUnique(collection, start + 1);
     }
 
-    private void processProperty(Property annotation, Constructor<?> constructor, int index, PojoComponentType componentType) throws IntrospectionException, ProcessingException {
+    private void processProperty(Property annotation, Constructor<?> constructor, int index, PojoComponentType componentType, TypeMapping typeMapping) throws IntrospectionException, ProcessingException {
         String name = helper.getSiteName(constructor, index, annotation == null ? "" : annotation.name());
         if (componentType.getProperties().containsKey(name)) {
             throw new DuplicatePropertyException(name);
         }
-        Class<?> type = helper.getType(constructor, index);
+        Type type = helper.getGenericType(constructor, index);
         InjectionSite injectionSite = new ConstructorInjectionSite(constructor, index);
-        org.fabric3.scdl.Property property = createDefinition(annotation, name, type);
+        org.fabric3.scdl.Property property = createDefinition(annotation, name, type, typeMapping);
         componentType.add(property, injectionSite);
     }
 
-    private <T> org.fabric3.scdl.Property createDefinition(Property annotation, String name, Class<T> type) {
+    private org.fabric3.scdl.Property createDefinition(Property annotation, String name, Type type, TypeMapping typeMapping) {
         org.fabric3.scdl.Property property = new org.fabric3.scdl.Property();
         property.setName(name);
         property.setRequired(annotation != null && annotation.required());
-        property.setMany(helper.isManyValued(type));
+        property.setMany(helper.isManyValued(typeMapping, type));
         return property;
     }
 
-    private void processReference(Reference annotation, Constructor<?> constructor, int index, PojoComponentType componentType) throws IntrospectionException, ProcessingException {
+    private void processReference(Reference annotation, Constructor<?> constructor, int index, PojoComponentType componentType, TypeMapping typeMapping) throws IntrospectionException, ProcessingException {
         String name = helper.getSiteName(constructor, index, annotation == null ? "" : annotation.name());
         if (componentType.getReferences().containsKey(name)) {
             throw new DuplicateReferenceException(name);
         }
         Type type = helper.getGenericType(constructor, index);
         InjectionSite injectionSite = new ConstructorInjectionSite(constructor, index);
-        ReferenceDefinition reference = createDefinition(name, annotation == null || annotation.required(), type);
+        ReferenceDefinition reference = createDefinition(name, annotation == null || annotation.required(), type, typeMapping);
         componentType.add(reference, injectionSite);
     }
 
-    private ReferenceDefinition createDefinition(String name, boolean required, Type type) throws IntrospectionException {
+    private ReferenceDefinition createDefinition(String name, boolean required, Type type, TypeMapping typeMapping) throws IntrospectionException {
         ServiceContract<Type> contract = contractProcessor.introspect(helper.getBaseType(type));
-        Multiplicity multiplicity = multiplicity(required, type);
+        Multiplicity multiplicity = multiplicity(required, type, typeMapping);
 
         ReferenceDefinition reference = new ReferenceDefinition(name, contract, multiplicity);
         reference.setRequired(required);
         return reference;
     }
 
-    private Multiplicity multiplicity(boolean required, Type type) {
-        if (helper.isManyValued(type)) {
+    private Multiplicity multiplicity(boolean required, Type type, TypeMapping typeMapping) {
+        if (helper.isManyValued(typeMapping, type)) {
             return required ? Multiplicity.ONE_N : Multiplicity.ZERO_N;
         } else {
             return required ? Multiplicity.ONE_ONE : Multiplicity.ZERO_ONE;

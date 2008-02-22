@@ -114,7 +114,7 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
         }
 
         if (type.getConstructorDefinition() == null) {
-            evaluateConstructor(type, clazz);
+            evaluateConstructor(type, clazz, context);
         }
     }
 
@@ -185,7 +185,7 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
      * @throws AmbiguousConstructorException if the parameters of a constructor cannot be unambiguously mapped to references and properties
      */
     @SuppressWarnings("unchecked")
-    private <T> void evaluateConstructor(PojoComponentType type, Class<T> clazz) throws ProcessingException {
+    private <T> void evaluateConstructor(PojoComponentType type, Class<T> clazz, IntrospectionContext context) throws ProcessingException {
         // heuristically determine constructor
         Constructor[] constructors = clazz.getConstructors();
         if (constructors.length == 0) {
@@ -210,7 +210,7 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
             return;
         }
 
-        implService.processParameters(constructor, type);
+        implService.processParameters(constructor, type, context);
     }
 
     /*

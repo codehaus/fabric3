@@ -21,6 +21,7 @@ package org.fabric3.fabric.implementation.processor;
 import java.lang.reflect.Constructor;
 
 import org.osoa.sca.annotations.Property;
+import org.easymock.EasyMock;
 
 import org.fabric3.pojo.scdl.ConstructorDefinition;
 import org.fabric3.pojo.scdl.PojoComponentType;
@@ -28,6 +29,8 @@ import org.fabric3.pojo.scdl.PojoComponentType;
 import junit.framework.TestCase;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
+import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.TypeMapping;
 import org.fabric3.scdl.Signature;
 
 /**
@@ -36,14 +39,13 @@ import org.fabric3.scdl.Signature;
  * @version $Rev$ $Date$
  */
 public class ConstructorProcessorExtensibilityTestCase extends TestCase {
-    private ConstructorProcessor processor =
-        new ConstructorProcessor(new ImplementationProcessorServiceImpl(new DefaultContractProcessor(), new DefaultIntrospectionHelper()));
+    private ConstructorProcessor processor;
+    private IntrospectionContext context;
 
     public void testProcessFirst() throws Exception {
-        PojoComponentType type =
-            new PojoComponentType(null);
+        PojoComponentType type = new PojoComponentType(null);
         Constructor<Foo> ctor1 = Foo.class.getConstructor(String.class, String.class);
-        processor.visitConstructor(ctor1, type, null);
+        processor.visitConstructor(ctor1, type, context);
         assertTrue(type.getProperties().containsKey("foo"));
     }
 
@@ -58,12 +60,24 @@ public class ConstructorProcessorExtensibilityTestCase extends TestCase {
         ConstructorDefinition definition = new ConstructorDefinition(new Signature(ctor1));
         type.setConstructorDefinition(definition);
         try {
-            processor.visitConstructor(ctor1, type, null);
+            processor.visitConstructor(ctor1, type, context);
             fail();
         } catch (DuplicateConstructorException e) {
         }
     }
 
+
+    protected void setUp() throws Exception {
+        super.setUp();
+        DefaultContractProcessor contractProcessor = new DefaultContractProcessor();
+        DefaultIntrospectionHelper helper = new DefaultIntrospectionHelper();
+        processor = new ConstructorProcessor(new ImplementationProcessorServiceImpl(contractProcessor, helper));
+
+        context = EasyMock.createMock(IntrospectionContext.class);
+        TypeMapping typeMapping = new TypeMapping();
+        EasyMock.expect(context.getTypeMapping()).andStubReturn(typeMapping);
+        EasyMock.replay(context);
+    }
 
     private @interface Bar {
 

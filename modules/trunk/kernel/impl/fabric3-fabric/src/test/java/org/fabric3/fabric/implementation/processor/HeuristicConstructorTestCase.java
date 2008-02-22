@@ -25,8 +25,11 @@ import java.io.Serializable;
 import junit.framework.TestCase;
 import org.osoa.sca.annotations.Remotable;
 import org.osoa.sca.annotations.Service;
+import org.easymock.EasyMock;
 
 import org.fabric3.introspection.ContractProcessor;
+import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.TypeMapping;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.pojo.scdl.PojoComponentType;
@@ -38,10 +41,11 @@ public class HeuristicConstructorTestCase extends TestCase {
 
     private HeuristicPojoProcessor processor;
     private ContractProcessor contractProcessor;
+    private IntrospectionContext context;
 
     public void testBareConstructor() throws Exception {
         PojoComponentType type = new PojoComponentType(null);
-        processor.visitEnd(Bare.class, type, null);
+        processor.visitEnd(Bare.class, type, context);
         assertTrue(type.getProperties().containsKey("Bare[0]"));
         assertTrue(type.getProperties().containsKey("Bare[1]"));
         assertTrue(type.getReferences().containsKey("Bare[2]"));
@@ -55,7 +59,7 @@ public class HeuristicConstructorTestCase extends TestCase {
 
     public void testCollectionConstructor() throws Exception {
         PojoComponentType type = new PojoComponentType(null);
-        processor.visitEnd(Multi.class, type, null);
+        processor.visitEnd(Multi.class, type, context);
         assertTrue(type.getProperties().containsKey("Multi[0]"));
         assertTrue(type.getReferences().containsKey("Multi[1]"));
         assertTrue(type.getReferences().containsKey("Multi[2]"));
@@ -79,7 +83,12 @@ public class HeuristicConstructorTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         contractProcessor = new DefaultContractProcessor();
-        ImplementationProcessorServiceImpl processorService = new ImplementationProcessorServiceImpl(contractProcessor, new DefaultIntrospectionHelper());
+        DefaultIntrospectionHelper helper = new DefaultIntrospectionHelper();
+        context = EasyMock.createMock(IntrospectionContext.class);
+        TypeMapping typeMapping = new TypeMapping();
+        EasyMock.expect(context.getTypeMapping()).andStubReturn(typeMapping);
+        EasyMock.replay(context);
+        ImplementationProcessorServiceImpl processorService = new ImplementationProcessorServiceImpl(contractProcessor, helper);
         processor = new HeuristicPojoProcessor(processorService);
     }
 }

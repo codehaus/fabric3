@@ -22,35 +22,37 @@ import java.lang.reflect.Constructor;
 import java.util.List;
 
 import org.osoa.sca.annotations.Property;
+import org.easymock.EasyMock;
 
 import org.fabric3.pojo.scdl.PojoComponentType;
 
 import junit.framework.TestCase;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
+import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.TypeMapping;
 
 /**
  * @version $Rev$ $Date$
  */
 public class ConstructorPropertyTestCase extends TestCase {
 
-    ConstructorProcessor processor =
-            new ConstructorProcessor(new ImplementationProcessorServiceImpl(new DefaultContractProcessor(), new DefaultIntrospectionHelper()));
+    private ConstructorProcessor processor;
+    private IntrospectionContext context;
 
     public void testProperty() throws Exception {
         PojoComponentType type = new PojoComponentType(null);
         Constructor<Foo> ctor = Foo.class.getConstructor(String.class);
-        processor.visitConstructor(ctor, type, null);
+        processor.visitConstructor(ctor, type, context);
         org.fabric3.scdl.Property property = type.getProperties().get("myProp");
         assertTrue(property.isRequired());
         assertEquals("myProp", property.getName());
     }
 
     public void testTwoPropertiesSameType() throws Exception {
-        PojoComponentType type =
-            new PojoComponentType(null);
+        PojoComponentType type = new PojoComponentType(null);
         Constructor<Foo> ctor = Foo.class.getConstructor(String.class, String.class);
-        processor.visitConstructor(ctor, type, null);
+        processor.visitConstructor(ctor, type, context);
         assertNotNull(type.getProperties().get("myProp1"));
         assertNotNull(type.getProperties().get("myProp2"));
     }
@@ -59,7 +61,7 @@ public class ConstructorPropertyTestCase extends TestCase {
         PojoComponentType type = new PojoComponentType(null);
         Constructor<BadFoo> ctor = BadFoo.class.getConstructor(String.class, String.class);
         try {
-            processor.visitConstructor(ctor, type, null);
+            processor.visitConstructor(ctor, type, context);
             fail();
         } catch (DuplicatePropertyException e) {
             // expected
@@ -69,7 +71,7 @@ public class ConstructorPropertyTestCase extends TestCase {
     public void testNamesOnConstructor() throws Exception {
         PojoComponentType type = new PojoComponentType(null);
         Constructor<Foo> ctor = Foo.class.getConstructor(Integer.class);
-        processor.visitConstructor(ctor, type, null);
+        processor.visitConstructor(ctor, type, context);
         assertNotNull(type.getProperties().get("myProp"));
     }
 
@@ -77,11 +79,23 @@ public class ConstructorPropertyTestCase extends TestCase {
         PojoComponentType type = new PojoComponentType(null);
         Constructor<BadFoo> ctor = BadFoo.class.getConstructor(Integer.class, Integer.class);
         try {
-            processor.visitConstructor(ctor, type, null);
+            processor.visitConstructor(ctor, type, context);
             fail();
         } catch (InvalidConstructorException e) {
             // expected
         }
+    }
+
+    protected void setUp() throws Exception {
+        super.setUp();
+        DefaultContractProcessor contractProcessor = new DefaultContractProcessor();
+        DefaultIntrospectionHelper helper = new DefaultIntrospectionHelper();
+        processor = new ConstructorProcessor(new ImplementationProcessorServiceImpl(contractProcessor, helper));
+
+        context = EasyMock.createMock(IntrospectionContext.class);
+        TypeMapping typeMapping = new TypeMapping();
+        EasyMock.expect(context.getTypeMapping()).andStubReturn(typeMapping);
+        EasyMock.replay(context);
     }
 
     private static class Foo {

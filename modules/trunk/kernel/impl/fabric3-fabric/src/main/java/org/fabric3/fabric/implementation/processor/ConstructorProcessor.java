@@ -18,10 +18,7 @@
  */
 package org.fabric3.fabric.implementation.processor;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Type;
-import java.util.List;
 
 import org.osoa.sca.annotations.Reference;
 
@@ -72,7 +69,7 @@ public class ConstructorProcessor extends ImplementationProcessorExtension {
         ConstructorDefinition definition = new ConstructorDefinition(new Signature(constructor));
         type.setConstructorDefinition(definition);
 
-        service.processParameters(constructor, type);
+        service.processParameters(constructor, type, context);
 
 /*
         Class<?>[] params = constructor.getParameterTypes();

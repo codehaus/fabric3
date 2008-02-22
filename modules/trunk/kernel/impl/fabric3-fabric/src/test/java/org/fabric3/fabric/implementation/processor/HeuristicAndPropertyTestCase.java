@@ -21,12 +21,15 @@ package org.fabric3.fabric.implementation.processor;
 import java.lang.reflect.Constructor;
 
 import org.osoa.sca.annotations.Property;
+import org.easymock.EasyMock;
 
 import org.fabric3.pojo.scdl.PojoComponentType;
 
 import junit.framework.TestCase;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
+import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.TypeMapping;
 
 /**
  * @version $Rev$ $Date$
@@ -35,6 +38,7 @@ public class HeuristicAndPropertyTestCase extends TestCase {
 
     private PropertyProcessor propertyProcessor;
     private HeuristicPojoProcessor heuristicProcessor;
+    private IntrospectionContext context;
 
     /**
      * Verifies the property and heuristic processors don't collide
@@ -43,16 +47,23 @@ public class HeuristicAndPropertyTestCase extends TestCase {
     public void testPropertyProcessorWithHeuristicProcessor() throws Exception {
         PojoComponentType type = new PojoComponentType(null);
         Constructor ctor = Foo.class.getConstructor(String.class);
-        propertyProcessor.visitConstructor(ctor, type, null);
-        heuristicProcessor.visitEnd(Foo.class, type, null);
+        propertyProcessor.visitConstructor(ctor, type, context);
+        heuristicProcessor.visitEnd(Foo.class, type, context);
         assertEquals(1, type.getProperties().size());
         assertNotNull(type.getProperties().get("foo"));
     }
 
     protected void setUp() throws Exception {
         super.setUp();
-        ImplementationProcessorServiceImpl service =
-            new ImplementationProcessorServiceImpl(new DefaultContractProcessor(), new DefaultIntrospectionHelper());
+        DefaultContractProcessor contractProcessor = new DefaultContractProcessor();
+        DefaultIntrospectionHelper helper = new DefaultIntrospectionHelper();
+        ImplementationProcessorServiceImpl service = new ImplementationProcessorServiceImpl(contractProcessor, helper);
+
+        context = EasyMock.createMock(IntrospectionContext.class);
+        TypeMapping typeMapping = new TypeMapping();
+        EasyMock.expect(context.getTypeMapping()).andStubReturn(typeMapping);
+        EasyMock.replay(context);
+
         propertyProcessor = new PropertyProcessor();
         heuristicProcessor = new HeuristicPojoProcessor(service);
     }
