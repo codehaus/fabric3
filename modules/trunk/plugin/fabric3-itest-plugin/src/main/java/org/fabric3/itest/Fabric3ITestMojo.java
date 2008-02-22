@@ -311,7 +311,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
 
         Set<Artifact> runtimeArtifacts = calculateRuntimeArtifacts(runtimeVersion);
         Set<Artifact> hostArtifacts = calculateHostArtifacts(runtimeArtifacts);
-        Set<Artifact> dependencies = calculateDependencies(project.getDependencies());
+        Set<Artifact> dependencies = calculateDependencies(project.getDependencies(), project.getDependencyArtifacts());
         Set<URL> moduleDependencies = calculateModuleDependencies(dependencies, hostArtifacts);
         ClassLoader parentClassLoader = getClass().getClassLoader();
         ClassLoader hostClassLoader = createHostClassLoader(parentClassLoader, hostArtifacts);
@@ -702,11 +702,15 @@ public class Fabric3ITestMojo extends AbstractMojo {
         return hostArtifacts;
     }
 
-    private Set<Artifact> calculateDependencies(List<Dependency> dependencies) throws MojoExecutionException {
+    private Set<Artifact> calculateDependencies(List<Dependency> dependencies, Set<Artifact> dependencyArtifacts) throws MojoExecutionException {
+        // add all declared project dependencies
         Set<Artifact> artifacts = new HashSet<Artifact>();
         for (Dependency dependency : dependencies) {
             addArtifacts(artifacts, dependency);
         }
+
+        // include any artifacts that have been added by other plugins (e.g. Clover see FABRICTHREE-220)
+        artifacts.addAll(dependencyArtifacts);
         return artifacts;
     }
 
