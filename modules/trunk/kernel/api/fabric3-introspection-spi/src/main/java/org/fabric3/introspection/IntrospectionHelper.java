@@ -92,35 +92,6 @@ public interface IntrospectionHelper {
     Type getGenericType(Constructor<?> constructor, int index) throws IntrospectionException;
 
     /**
-     * Returns the raw type of a setter method.
-     *
-     * @param setter the method to inspect
-     * @return the type of value the setter method injects
-     * @throws IntrospectionException if there was a problem determining the type
-     */
-    Class<?> getType(Method setter) throws IntrospectionException;
-
-    /**
-     * Returns the raw type of a method parameter.
-     *
-     * @param method the method to inspect
-     * @param index  the parameter index
-     * @return the type of value the method injects
-     * @throws IntrospectionException if there was a problem determining the type
-     */
-    Class<?> getType(Method method, int index) throws IntrospectionException;
-
-    /**
-     * Returns the raw type of a constructor parameter.
-     *
-     * @param constructor the constructor to inspect
-     * @param index       the parameter index
-     * @return the type of value the constructor injects
-     * @throws IntrospectionException if there was a problem determining the type
-     */
-    Class<?> getType(Constructor<?> constructor, int index) throws IntrospectionException;
-
-    /**
      * Returns true if the supplied type should be treated as many-valued.
      * <p/>
      * This is generally true for arrays, Collection or Map types.
@@ -130,8 +101,6 @@ public interface IntrospectionHelper {
      * @return true if the type should be treated as many-valued
      */
     boolean isManyValued(TypeMapping typeMapping, Type type);
-
-    Class<?> getRawType(Type type);
 
     InjectableAttributeType inferType(Type type);
 

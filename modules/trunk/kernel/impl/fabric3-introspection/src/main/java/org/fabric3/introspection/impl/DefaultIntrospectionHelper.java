@@ -103,18 +103,6 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
         return constructor.getGenericParameterTypes()[index];
     }
 
-    public Class<?> getType(Method setter) throws IntrospectionException {
-        return getType(setter, 0);
-    }
-
-    public Class<?> getType(Method method, int index) throws IntrospectionException {
-        return method.getParameterTypes()[index];
-    }
-
-    public Class<?> getType(Constructor<?> constructor, int index) throws IntrospectionException {
-        return constructor.getParameterTypes()[index];
-    }
-
     public Type getBaseType(Type type) {
         if (type instanceof Class) {
             Class<?> clazz = (Class<?>) type;
