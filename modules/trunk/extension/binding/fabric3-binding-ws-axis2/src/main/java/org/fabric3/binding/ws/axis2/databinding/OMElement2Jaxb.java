@@ -17,13 +17,13 @@
 package org.fabric3.binding.ws.axis2.databinding;
 
 import java.util.List;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.stream.XMLStreamReader;
 
 import org.apache.axiom.om.OMElement;
+
 import org.fabric3.scdl.DataType;
 import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.transform.TransformContext;
@@ -33,30 +33,27 @@ import org.fabric3.transform.AbstractPullTransformer;
  * @version $Revision$ $Date$
  */
 public class OMElement2Jaxb extends AbstractPullTransformer<OMElement, Object> {
-    
+
     private static final JavaClass<Object> TARGET = new JavaClass<Object>(Object.class);
-    
-    private List<Class<?>> classes;
-    
-    public OMElement2Jaxb(List<Class<?>> inClasses) {
-        this.classes = inClasses;
+
+    private final JAXBContext jaxbContext;
+
+    public OMElement2Jaxb(List<Class<?>> inClasses) throws JAXBException {
+        Class<?>[] classArray = new Class<?>[inClasses.size()];
+        classArray = inClasses.toArray(classArray);
+        jaxbContext = JAXBContext.newInstance(classArray);
     }
 
     public Object transform(OMElement source, TransformContext context) {
-        
-        XMLStreamReader reader = source.getXMLStreamReader();
-        
         // Assume doc-lit wrapped and the service contract accepts only one argument
         try {
-            Class<?>[] classArray = new Class<?>[classes.size()];
-            classArray = classes.toArray(classArray);
-            JAXBContext jaxbContext = JAXBContext.newInstance(classArray);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+            XMLStreamReader reader = source.getXMLStreamReader();
             return unmarshaller.unmarshal(reader);
         } catch (JAXBException e) {
             throw new AssertionError(e);
         }
-        
+
     }
 
     public DataType<?> getTargetType() {
