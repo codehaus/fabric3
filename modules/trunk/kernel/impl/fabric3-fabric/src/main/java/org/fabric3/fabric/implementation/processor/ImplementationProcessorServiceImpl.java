@@ -103,7 +103,7 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
                         continue param;
                     }
                 }
-                InjectableAttributeType sourceType = helper.inferType(parameterTypes[i]);
+                InjectableAttributeType sourceType = helper.inferType(parameterTypes[i], context.getTypeMapping());
                 switch (sourceType) {
                 case PROPERTY:
                     processProperty(null, constructor, i, componentType, context.getTypeMapping());

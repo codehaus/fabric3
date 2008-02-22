@@ -155,9 +155,9 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
         }
     }
 
-    public InjectableAttributeType inferType(Type type) {
+    public InjectableAttributeType inferType(Type type, TypeMapping typeMapping) {
         Type baseType = getBaseType(type);
-        Class<?> rawType = getRawType(baseType);
+        Class<?> rawType = typeMapping.getRawType(baseType);
 
         // if it's not an interface, it must be a property
         if (!rawType.isInterface()) {

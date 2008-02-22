@@ -102,7 +102,7 @@ public interface IntrospectionHelper {
      */
     boolean isManyValued(TypeMapping typeMapping, Type type);
 
-    InjectableAttributeType inferType(Type type);
+    InjectableAttributeType inferType(Type type, TypeMapping typeMapping);
 
     /**
      * Determine if an annotation is present on this interface or any superinterface.
