@@ -31,6 +31,7 @@ import org.fabric3.introspection.TypeMapping;
 public class DefaultIntrospectionHelperTestCase extends TestCase {
     private DefaultIntrospectionHelper helper;
     private TypeMapping boundMapping;
+    private TypeMapping baseMapping;
 
     private static interface SuperInterface {
     }
@@ -74,28 +75,25 @@ public class DefaultIntrospectionHelperTestCase extends TestCase {
     }
 
     public void testBaseType() {
-        assertEquals(String.class, helper.getBaseType(String.class));
-        assertEquals(int.class, helper.getBaseType(int.class));
-        assertEquals(int.class, helper.getBaseType(Integer.TYPE));
-        assertEquals(Integer.class, helper.getBaseType(Integer.class));
+        assertEquals(String.class, helper.getBaseType(String.class, baseMapping));
+        assertEquals(int.class, helper.getBaseType(int.class, baseMapping));
+        assertEquals(int.class, helper.getBaseType(Integer.TYPE, baseMapping));
+        assertEquals(Integer.class, helper.getBaseType(Integer.class, baseMapping));
 
-        assertEquals(int.class, helper.getBaseType(int[].class));
-        assertEquals(String.class, helper.getBaseType(String[].class));
+        assertEquals(int.class, helper.getBaseType(int[].class, baseMapping));
+        assertEquals(String.class, helper.getBaseType(String[].class, baseMapping));
 
-        assertEquals(String.class, helper.getBaseType(getType(BaseTypes.class, "stringCollection")));
-        assertEquals(Integer.class, helper.getBaseType(getType(BaseTypes.class, "intMap")));
+        assertEquals(String.class, helper.getBaseType(getType(BaseTypes.class, "stringCollection"), baseMapping));
+        assertEquals(Integer.class, helper.getBaseType(getType(BaseTypes.class, "intMap"), baseMapping));
 
-        assertEquals(Base.class, helper.getBaseType(getType(BaseTypes.class, "tArray")));
-        assertEquals(Base.class, helper.getBaseType(getType(BaseTypes.class, "tCollection")));
-        assertEquals(Base.class, helper.getBaseType(getType(BaseTypes.class, "tMap")));
+        assertEquals(Base.class, helper.getBaseType(getType(BaseTypes.class, "tArray"), baseMapping));
+        assertEquals(Base.class, helper.getBaseType(getType(BaseTypes.class, "tCollection"), baseMapping));
+        assertEquals(Base.class, helper.getBaseType(getType(BaseTypes.class, "tMap"), baseMapping));
     }
 
     public void testBoundTypes() {
-        // FABRICTHREE-216 the helper should return the actual bound type but to do this is needs the actual type mapping from BoundTypes
-        assertEquals(Base.class, helper.getBaseType(getType(BoundTypes.class, "tArray")));
-        assertEquals(Base.class, helper.getBaseType(getType(BoundTypes.class, "tCollection")));
-//        assertEquals(ExtendsBase.class, helper.getBaseType(getType(BoundTypes.class, "tArray")));
-//        assertEquals(ExtendsBase.class, helper.getBaseType(getType(BoundTypes.class, "tCollection")));
+        assertEquals(ExtendsBase.class, helper.getBaseType(getType(BoundTypes.class, "tArray"), boundMapping));
+        assertEquals(ExtendsBase.class, helper.getBaseType(getType(BoundTypes.class, "tCollection"), boundMapping));
     }
 
     protected Type getType(Class<?> type, String fieldName) {
@@ -120,6 +118,7 @@ public class DefaultIntrospectionHelperTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         helper = new DefaultIntrospectionHelper();
+        baseMapping = helper.mapTypeParameters(BaseTypes.class);
         boundMapping = helper.mapTypeParameters(BoundTypes.class);
     }
 }

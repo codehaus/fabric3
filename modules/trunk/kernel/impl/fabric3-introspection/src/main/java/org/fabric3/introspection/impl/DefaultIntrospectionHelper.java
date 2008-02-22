@@ -103,7 +103,7 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
         return constructor.getGenericParameterTypes()[index];
     }
 
-    public Type getBaseType(Type type) {
+    public Type getBaseType(Type type, TypeMapping typeMapping) {
         if (type instanceof Class) {
             Class<?> clazz = (Class<?>) type;
             if (clazz.isArray()) {
@@ -118,31 +118,18 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
             Class<?> clazz = (Class<?>) parameterizedType.getRawType();
             Type[] typeArguments = parameterizedType.getActualTypeArguments();
             if (COLLECTIONS.contains(clazz)) {
-                return getRawType(typeArguments[0]);
+                return typeMapping.getRawType(typeArguments[0]);
             } else if (Map.class.equals(clazz)) {
-                return getRawType(typeArguments[1]);
+                return typeMapping.getRawType(typeArguments[1]);
             } else {
                 return clazz;
             }
 
         } else if (type instanceof GenericArrayType) {
             GenericArrayType arrayType = (GenericArrayType) type;
-            return getRawType(arrayType.getGenericComponentType());
+            return typeMapping.getRawType(arrayType.getGenericComponentType());
         } else {
             throw new AssertionError("Unknown Type: " + type);
-        }
-    }
-
-    public Class<?> getRawType(Type type) {
-        if (type instanceof ParameterizedType) {
-            ParameterizedType parameterizedType = (ParameterizedType) type;
-            return getRawType(parameterizedType.getRawType());
-        } else if (type instanceof TypeVariable) {
-            TypeVariable typeVariable = (TypeVariable) type;
-            Type[] bounds = typeVariable.getBounds();
-            return (Class<?>) bounds[0];
-        } else {
-            return (Class<?>) type;
         }
     }
 
@@ -156,7 +143,7 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
     }
 
     public InjectableAttributeType inferType(Type type, TypeMapping typeMapping) {
-        Type baseType = getBaseType(type);
+        Type baseType = getBaseType(type, typeMapping);
         Class<?> rawType = typeMapping.getRawType(baseType);
 
         // if it's not an interface, it must be a property

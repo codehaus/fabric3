@@ -199,7 +199,7 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
     }
 
     private ReferenceDefinition createDefinition(String name, boolean required, Type type, TypeMapping typeMapping) throws IntrospectionException {
-        ServiceContract<Type> contract = contractProcessor.introspect(helper.getBaseType(type));
+        ServiceContract<Type> contract = contractProcessor.introspect(helper.getBaseType(type, typeMapping));
         Multiplicity multiplicity = multiplicity(required, type, typeMapping);
 
         ReferenceDefinition reference = new ReferenceDefinition(name, contract, multiplicity);

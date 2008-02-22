@@ -129,9 +129,10 @@ public interface IntrospectionHelper {
      * The base type is the actual type of a property or reference having removed any decoration for arrays or collections.
      *
      * @param type the type of a field or parameter
+     * @param typeMapping the mapping to use to resolve any formal types
      * @return the actual type of the property or reference corresponding to the parameter
      */
-    Type getBaseType(Type type);
+    Type getBaseType(Type type, TypeMapping typeMapping);
 
     /**
      * Returns all interfaces directly implemented by this class or any superclass.
