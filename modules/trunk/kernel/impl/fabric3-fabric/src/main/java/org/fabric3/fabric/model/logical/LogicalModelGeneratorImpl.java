@@ -25,7 +25,6 @@ import org.fabric3.fabric.assembly.InstantiationException;
 import org.fabric3.fabric.assembly.normalizer.PromotionNormalizer;
 import org.fabric3.fabric.assembly.resolver.ResolutionException;
 import org.fabric3.fabric.assembly.resolver.WireResolver;
-import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.ComponentDefinition;
@@ -41,6 +40,7 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
+import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 
@@ -70,7 +70,9 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
     }
 
     @SuppressWarnings("unchecked")
-    public List<LogicalComponent<?>> include(LogicalCompositeComponent parent, Composite composite) throws ActivateException {
+    public void include(LogicalCompositeComponent parent, Composite composite) throws ActivateException {
+        
+        Collection<LogicalComponent<?>> existingComponents = parent.getComponents();
 
         // merge the property values into the parent
         for (Property property : composite.getProperties().values()) {
@@ -93,14 +95,12 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
 
         List<LogicalReference> references = instantiateReferences(parent, composite, base);
 
-        resolveWires(components, services, references);
+        resolveWires(parent.getComponents(), services, references);
 
         // normalize bindings for each new component
         for (LogicalComponent<?> component : components) {
             normalize(component);
         }
-
-        return components;
 
     }
 
@@ -116,7 +116,7 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
         
     }
 
-    private void resolveWires(List<LogicalComponent<?>> components, List<LogicalService> services,
+    private void resolveWires(Collection<LogicalComponent<?>> components, List<LogicalService> services,
             List<LogicalReference> references) throws ActivateException {
         
         // resolve wires for composite services merged into the domain

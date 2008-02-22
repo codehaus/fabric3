@@ -45,7 +45,8 @@ public class InstantiationTestCase extends TestCase {
         ComponentDefinition<?> definition = createParentWithChild();
         Composite composite = new Composite(null);
         composite.add(definition);
-        LogicalCompositeComponent logicalComponent = (LogicalCompositeComponent) logicalModelGenerator.include(parent, composite).get(0);
+        logicalModelGenerator.include(parent, composite);
+        LogicalCompositeComponent logicalComponent = (LogicalCompositeComponent) parent.getComponents().iterator().next();
         assertEquals(COMPONENT_URI, logicalComponent.getUri().toString());
         LogicalComponent<?> logicalChild = logicalComponent.getComponent(URI.create(CHILD_URI));
         assertEquals(CHILD_URI, logicalChild.getUri().toString());
@@ -55,7 +56,8 @@ public class InstantiationTestCase extends TestCase {
         ComponentDefinition<?> definition = createParentWithServiceAndReference();
         Composite composite = new Composite(null);
         composite.add(definition);
-        LogicalComponent<?> logicalComponent = logicalModelGenerator.include(parent, composite).get(0);
+        logicalModelGenerator.include(parent, composite);
+        LogicalCompositeComponent logicalComponent = (LogicalCompositeComponent) parent.getComponents().iterator().next();
         LogicalService logicalService = logicalComponent.getService("service");
         assertEquals(SERVICE_URI, logicalService.getUri().toString());
         LogicalReference logicalReference = logicalComponent.getReference("reference");

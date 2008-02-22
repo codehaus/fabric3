@@ -21,16 +21,13 @@ package org.fabric3.fabric.assembly;
 import static org.osoa.sca.Constants.SCA_NS;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
 
 import org.fabric3.fabric.assembly.allocator.AllocationException;
 import org.fabric3.fabric.assembly.allocator.Allocator;
-import org.fabric3.fabric.assembly.resolver.ResolutionException;
 import org.fabric3.fabric.assembly.resolver.WireResolver;
 import org.fabric3.fabric.generator.DefaultGeneratorContext;
 import org.fabric3.fabric.model.logical.LogicalModelGenerator;
@@ -50,7 +47,6 @@ import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
-import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalChangeSet;
 import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
@@ -119,39 +115,23 @@ public abstract class AbstractAssembly implements Assembly {
         
         LogicalCompositeComponent domain = logicalComponentManager.getDomain();
         
-        Collection<LogicalComponent<?>> existingComponents = new ArrayList<LogicalComponent<?>>();
-        existingComponents.addAll(domain.getComponents());
-        
-        List<LogicalComponent<?>> newComponents = logicalModelGenerator.include(domain, composite);
+        logicalModelGenerator.include(domain, composite);
+        Collection<LogicalComponent<?>> components = domain.getComponents();
 
         // Allocate the components to runtime nodes
         try {
-            for (LogicalComponent<?> component : newComponents) {
-                allocator.allocate(component, false);
+            for (LogicalComponent<?> component : components) {
+                if (!component.isProvisioned()) {
+                    allocator.allocate(component, false);
+                }
             }
         } catch (AllocationException e) {
             throw new ActivateException(e);
         }
 
         // generate and provision the new components
-        Map<URI, GeneratorContext> contexts = physicalModelGenerator.generate(newComponents);
+        Map<URI, GeneratorContext> contexts = physicalModelGenerator.generate(components);
         physicalModelGenerator.provision(contexts);
-        
-        // re-evaluate and provision references on existing components
-        try {
-            for (LogicalComponent<?> logicalComponent : existingComponents) {
-                if (logicalComponent instanceof LogicalCompositeComponent) {
-                    continue;
-                }
-                wireResolver.resolve(logicalComponent);
-                for (LogicalReference logicalReference : logicalComponent.getReferences()) {
-                    contexts = physicalModelGenerator.generate(logicalReference.getWires(), logicalComponent);
-                    physicalModelGenerator.provision(contexts);
-                }
-            }
-        } catch (ResolutionException e) {
-            throw new ActivateException(e);
-        }
         
         try {
             // record the operation

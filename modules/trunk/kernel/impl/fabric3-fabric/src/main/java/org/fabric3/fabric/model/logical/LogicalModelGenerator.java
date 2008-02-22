@@ -16,11 +16,8 @@
  */
 package org.fabric3.fabric.model.logical;
 
-import java.util.List;
-
 import org.fabric3.scdl.Composite;
 import org.fabric3.spi.assembly.ActivateException;
-import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 
 /**
@@ -41,6 +38,6 @@ public interface LogicalModelGenerator {
      * @return Components within the composite.
      * @throws ActivateException If unable to include the composite.
      */
-    List<LogicalComponent<?>> include(LogicalCompositeComponent domain, Composite composite) throws ActivateException;
+    void include(LogicalCompositeComponent domain, Composite composite) throws ActivateException;
 
 }

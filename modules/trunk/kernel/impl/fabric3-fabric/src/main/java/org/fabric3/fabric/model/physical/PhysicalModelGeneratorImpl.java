@@ -26,6 +26,7 @@ import java.util.Set;
 import org.fabric3.fabric.assembly.resolver.ResolutionException;
 import org.fabric3.fabric.command.InitializeComponentCommand;
 import org.fabric3.fabric.generator.DefaultGeneratorContext;
+import org.fabric3.fabric.implementation.singleton.SingletonImplementation;
 import org.fabric3.fabric.services.routing.RoutingException;
 import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.scdl.ComponentDefinition;
@@ -191,7 +192,9 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
         } else {
             // leaf component, generate a physical component and update the change sets
             // if component is already running on a node (e.g. during recovery), skip provisioning
-            if (component.isActive()) {
+            if (component.isActive() || 
+                    component.isProvisioned() || 
+                        SingletonImplementation.IMPLEMENTATION_SINGLETON.equals(implementation.getType())) {
                 return;
             }
             generatePhysicalComponent(component, contexts);
@@ -343,12 +346,7 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
 
     }
 
-    private void generatePhysicalComponent(LogicalComponent<?> component, Map<URI, GeneratorContext> contexts)
-            throws GenerationException {
-
-        if (component.isProvisioned()) {
-            return;
-        }
+    private void generatePhysicalComponent(LogicalComponent<?> component, Map<URI, GeneratorContext> contexts) throws GenerationException {
 
         URI id = component.getRuntimeId();
         GeneratorContext context = contexts.get(id);

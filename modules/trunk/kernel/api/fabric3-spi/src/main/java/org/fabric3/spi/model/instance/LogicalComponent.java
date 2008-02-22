@@ -261,7 +261,8 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
         
         ComponentDefinition<? extends Implementation<?>> definition = getDefinition();
         AbstractComponentType<?, ?, ?, ?> componentType = definition.getImplementation().getComponentType();
-        if (!componentType.getImplementationScope().equals(Scope.COMPOSITE)) {
+        Scope<?> scope = componentType.getImplementationScope();
+        if (scope == null || !scope.equals(Scope.COMPOSITE)) {
             return false;
         }
 
