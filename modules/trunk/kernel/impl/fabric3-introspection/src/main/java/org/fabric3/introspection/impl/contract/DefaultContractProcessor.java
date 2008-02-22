@@ -18,22 +18,22 @@
  */
 package org.fabric3.introspection.impl.contract;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.xml.namespace.QName;
 
+import org.osoa.sca.Constants;
 import org.osoa.sca.annotations.Callback;
 import org.osoa.sca.annotations.Conversational;
 import org.osoa.sca.annotations.EndsConversation;
 import org.osoa.sca.annotations.OneWay;
 import org.osoa.sca.annotations.Remotable;
-import org.osoa.sca.Constants;
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.ContractProcessor;
+import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.introspection.InvalidServiceContractException;
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.Operation;
@@ -50,10 +50,10 @@ public class DefaultContractProcessor implements ContractProcessor {
     public static final String IDL_INPUT = "idl:input";
     public static final QName ONEWAY_INTENT = new QName(Constants.SCA_NS, "oneWay");
 
+    private final IntrospectionHelper helper;
 
-    private static final String UNKNOWN_DATABINDING = null;
-
-    public DefaultContractProcessor() {
+    public DefaultContractProcessor(@Reference IntrospectionHelper helper) {
+        this.helper = helper;
     }
 
     public ServiceContract<Type> introspect(Type type) throws InvalidServiceContractException {
@@ -95,37 +95,12 @@ public class DefaultContractProcessor implements ContractProcessor {
         contract.setRemotable(remotable);
 
         // TODO this should be refactored to its own processor
-        boolean conversational = isAnnotationPresent(interfaze, Conversational.class);
+        boolean conversational = helper.isAnnotationPresent(interfaze, Conversational.class);
         contract.setConversational(conversational);
 
         contract.setOperations(getOperations(interfaze, remotable, conversational));
 
         return contract;
-    }
-
-    /**
-     * Determine if an annotation is present on this interface or any superinterface.
-     * <p/>
-     * This is similar to the use of @Inherited on classes (given @Inherited does not apply to interfaces).
-     *
-     * This has been deprecated as there is a duplicate in the IntrospectionHelper interface.
-     *
-     * @param type           the interface to check
-     * @param annotationType the annotation to look for
-     * @return true if the annotation is present
-     */
-    @Deprecated
-    private boolean isAnnotationPresent(Class<?> type, Class<? extends Annotation> annotationType) {
-        if (type.isAnnotationPresent(annotationType)) {
-            return true;
-        }
-        Class<?>[] interfaces = type.getInterfaces();
-        for (Class<?> superInterface : interfaces) {
-            if (isAnnotationPresent(superInterface, annotationType)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private <T> List<Operation<Type>> getOperations(Class<T> type,
@@ -147,7 +122,7 @@ public class DefaultContractProcessor implements ContractProcessor {
             Type returnType = method.getGenericReturnType();
             Type[] paramTypes = method.getGenericParameterTypes();
             Type[] faultTypes = method.getGenericExceptionTypes();
-            boolean nonBlocking = method.isAnnotationPresent(OneWay.class);
+
             int conversationSequence = NO_CONVERSATION;
             if (method.isAnnotationPresent(EndsConversation.class)) {
                 if (!conversational) {

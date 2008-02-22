@@ -24,6 +24,8 @@ import java.lang.reflect.Method;
 import junit.framework.TestCase;
 
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
+import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
+import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.pojo.processor.DuplicateResourceException;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.resource.model.SystemSourcedResource;
@@ -38,7 +40,8 @@ public class ResourceProcessorTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        processor = new ResourceProcessor(new DefaultContractProcessor());
+        IntrospectionHelper helper = new DefaultIntrospectionHelper();
+        processor = new ResourceProcessor(new DefaultContractProcessor(helper));
         type = new PojoComponentType(null);
     }
 

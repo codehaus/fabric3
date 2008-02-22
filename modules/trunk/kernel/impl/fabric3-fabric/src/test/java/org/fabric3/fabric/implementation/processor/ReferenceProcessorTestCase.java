@@ -29,14 +29,16 @@ import org.fabric3.scdl.Multiplicity;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
+import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
+import org.fabric3.introspection.IntrospectionHelper;
 
 /**
  * @version $Rev$ $Date$
  */
 public class ReferenceProcessorTestCase extends TestCase {
 
-    PojoComponentType type = new PojoComponentType(null);
-    ReferenceProcessor processor = new ReferenceProcessor(new DefaultContractProcessor());
+    private PojoComponentType type;
+    private ReferenceProcessor processor;
 
     public void testMethodAnnotation() throws Exception {
         processor.visitMethod(ReferenceProcessorTestCase.Foo.class.getMethod("setFoo", Ref.class), type, null);
@@ -121,7 +123,8 @@ public class ReferenceProcessorTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         type = new PojoComponentType(null);
-        processor = new ReferenceProcessor(new DefaultContractProcessor());
+        IntrospectionHelper helper = new DefaultIntrospectionHelper();
+        processor = new ReferenceProcessor(new DefaultContractProcessor(helper));
     }
 
     private interface Ref {

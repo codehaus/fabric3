@@ -73,8 +73,7 @@ public class BootstrapLoaderFactory {
         XMLFactory xmlFactory = new XMLFactoryImpl();
         LoaderRegistryImpl loader = new LoaderRegistryImpl(monitorFactory.getMonitor(LoaderRegistryImpl.Monitor.class), xmlFactory);
 
-        ContractProcessor interfaceJavaIntrospector = new DefaultContractProcessor();
-        Introspector introspector = createIntrospector(monitorFactory, interfaceJavaIntrospector);
+        Introspector introspector = createIntrospector(monitorFactory);
 
         PropertyHelperImpl propertyHelper = new PropertyHelperImpl();
         PropertyLoader propertyLoader = new PropertyLoader(propertyHelper);
@@ -110,11 +109,12 @@ public class BootstrapLoaderFactory {
         return loader;
     }
 
-    private static Introspector createIntrospector(MonitorFactory monitorFactory,
-                                                   ContractProcessor interfaceIntrospector) {
+    private static Introspector createIntrospector(MonitorFactory monitorFactory) {
 
         IntrospectionHelper helper = new DefaultIntrospectionHelper();
-        ImplementationProcessorService service = new ImplementationProcessorServiceImpl(interfaceIntrospector, helper);
+        ContractProcessor contractProcessor = new DefaultContractProcessor(helper);
+        ImplementationProcessorService service = new ImplementationProcessorServiceImpl(contractProcessor, helper);
+
         IntrospectionRegistryImpl.Monitor monitor = monitorFactory.getMonitor(IntrospectionRegistryImpl.Monitor.class);
         IntrospectionRegistryImpl introspectionRegistry = new IntrospectionRegistryImpl(monitor, helper);
         introspectionRegistry.registerProcessor(new ConstructorProcessor(service));
@@ -124,7 +124,7 @@ public class BootstrapLoaderFactory {
         introspectionRegistry.registerProcessor(new PostConstructProcessor());
         introspectionRegistry.registerProcessor(new EagerInitProcessor());
         introspectionRegistry.registerProcessor(new PropertyProcessor());
-        introspectionRegistry.registerProcessor(new ReferenceProcessor(interfaceIntrospector));
+        introspectionRegistry.registerProcessor(new ReferenceProcessor(contractProcessor));
         introspectionRegistry.registerProcessor(new ServiceProcessor(service));
         introspectionRegistry.registerProcessor(new HeuristicPojoProcessor(service));
 

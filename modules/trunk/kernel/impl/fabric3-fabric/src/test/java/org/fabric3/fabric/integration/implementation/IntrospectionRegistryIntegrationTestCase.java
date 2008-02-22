@@ -74,11 +74,12 @@ public class IntrospectionRegistryIntegrationTestCase extends TestCase {
         EasyMock.expect(scopeRegistry.getScope("COMPOSITE")).andStubReturn(org.fabric3.scdl.Scope.COMPOSITE);
         EasyMock.replay(scopeRegistry);
 
-        registry = new IntrospectionRegistryImpl(EasyMock.createMock(IntrospectionRegistryImpl.Monitor.class), new DefaultIntrospectionHelper());
+        DefaultIntrospectionHelper helper = new DefaultIntrospectionHelper();
+        registry = new IntrospectionRegistryImpl(EasyMock.createMock(IntrospectionRegistryImpl.Monitor.class), helper);
         registry.registerProcessor(new DestroyProcessor());
         registry.registerProcessor(new InitProcessor());
         registry.registerProcessor(new ScopeProcessor(scopeRegistry));
-        ContractProcessor interfaceProcessorRegistry = new DefaultContractProcessor();
+        ContractProcessor interfaceProcessorRegistry = new DefaultContractProcessor(helper);
         registry.registerProcessor(new PropertyProcessor());
         registry.registerProcessor(new ReferenceProcessor(interfaceProcessorRegistry));
     }

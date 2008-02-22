@@ -51,8 +51,9 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        DefaultContractProcessor contractProcessor = new DefaultContractProcessor();
-        ImplementationProcessorServiceImpl processorService = new ImplementationProcessorServiceImpl(contractProcessor, new DefaultIntrospectionHelper());
+        DefaultIntrospectionHelper helper = new DefaultIntrospectionHelper();
+        DefaultContractProcessor contractProcessor = new DefaultContractProcessor(helper);
+        ImplementationProcessorServiceImpl processorService = new ImplementationProcessorServiceImpl(contractProcessor, helper);
         processor = new HeuristicPojoProcessor(processorService);
     }
 

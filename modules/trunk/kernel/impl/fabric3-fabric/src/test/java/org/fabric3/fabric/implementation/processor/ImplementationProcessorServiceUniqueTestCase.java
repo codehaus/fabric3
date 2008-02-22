@@ -29,8 +29,7 @@ import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
  */
 public class ImplementationProcessorServiceUniqueTestCase extends TestCase {
 
-    private ImplementationProcessorService service =
-        new ImplementationProcessorServiceImpl(new DefaultContractProcessor(), new DefaultIntrospectionHelper());
+    private ImplementationProcessorService service;
 
     public void testUniquess1() throws Exception {
         Class[] classes = new Class[2];
@@ -63,6 +62,13 @@ public class ImplementationProcessorServiceUniqueTestCase extends TestCase {
     public void testUniquess5() throws Exception {
         Class[] classes = new Class[0];
         assertTrue(service.areUnique(classes));
+    }
+
+    protected void setUp() throws Exception {
+        super.setUp();
+        DefaultIntrospectionHelper helper = new DefaultIntrospectionHelper();
+        DefaultContractProcessor contractProcessor = new DefaultContractProcessor(helper);
+        service = new ImplementationProcessorServiceImpl(contractProcessor, helper);
     }
 
 }

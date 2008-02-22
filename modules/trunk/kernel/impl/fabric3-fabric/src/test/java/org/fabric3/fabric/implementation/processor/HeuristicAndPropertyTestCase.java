@@ -55,8 +55,8 @@ public class HeuristicAndPropertyTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        DefaultContractProcessor contractProcessor = new DefaultContractProcessor();
         DefaultIntrospectionHelper helper = new DefaultIntrospectionHelper();
+        DefaultContractProcessor contractProcessor = new DefaultContractProcessor(helper);
         ImplementationProcessorServiceImpl service = new ImplementationProcessorServiceImpl(contractProcessor, helper);
 
         context = EasyMock.createMock(IntrospectionContext.class);

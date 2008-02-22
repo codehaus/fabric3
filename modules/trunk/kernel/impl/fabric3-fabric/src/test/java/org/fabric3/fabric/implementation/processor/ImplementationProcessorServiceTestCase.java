@@ -35,8 +35,7 @@ import org.fabric3.scdl.ServiceDefinition;
  */
 public class ImplementationProcessorServiceTestCase extends TestCase {
 
-    private ImplementationProcessorService implService =
-            new ImplementationProcessorServiceImpl(new DefaultContractProcessor(), new DefaultIntrospectionHelper());
+    private ImplementationProcessorService implService;
 
     public void testCreateConversationalService() throws Exception {
         ServiceDefinition service = implService.createService(Foo.class);
@@ -50,6 +49,13 @@ public class ImplementationProcessorServiceTestCase extends TestCase {
         ServiceContract contract = service.getServiceContract();
         assertTrue(Baz.class.getName().equals(contract.getQualifiedInterfaceName()));
         assertFalse(service.getServiceContract().isConversational());
+    }
+
+    protected void setUp() throws Exception {
+        super.setUp();
+        DefaultIntrospectionHelper helper = new DefaultIntrospectionHelper();
+        DefaultContractProcessor contractProcessor = new DefaultContractProcessor(helper);
+        implService = new ImplementationProcessorServiceImpl(contractProcessor, helper);
     }
 
     @Conversational

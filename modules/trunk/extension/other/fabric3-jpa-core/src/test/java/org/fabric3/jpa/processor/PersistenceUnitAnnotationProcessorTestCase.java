@@ -29,7 +29,9 @@ import org.fabric3.jpa.PersistenceUnitResource;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
+import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.introspection.InvalidServiceContractException;
+import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.scdl.ResourceDefinition;
 
 /**
@@ -42,7 +44,8 @@ public class PersistenceUnitAnnotationProcessorTestCase extends TestCase {
 
     public void setUp() throws InvalidServiceContractException {
         type = new PojoComponentType();
-        processor = new PersistenceUnitAnnotationProcessor(new DefaultContractProcessor());
+        IntrospectionHelper helper = new DefaultIntrospectionHelper();
+        processor = new PersistenceUnitAnnotationProcessor(new DefaultContractProcessor(helper));
     }
 
     public void testValidField() throws Exception {

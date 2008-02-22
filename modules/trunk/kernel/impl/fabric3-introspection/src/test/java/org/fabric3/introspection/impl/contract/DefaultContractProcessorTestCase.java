@@ -27,6 +27,8 @@ import org.osoa.sca.annotations.EndsConversation;
 import org.osoa.sca.annotations.Conversational;
 
 import org.fabric3.introspection.InvalidServiceContractException;
+import org.fabric3.introspection.IntrospectionHelper;
+import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ServiceContract;
@@ -132,7 +134,8 @@ public class DefaultContractProcessorTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        impl = new DefaultContractProcessor();
+        IntrospectionHelper helper = new DefaultIntrospectionHelper();
+        impl = new DefaultContractProcessor(helper);
 
     }
 

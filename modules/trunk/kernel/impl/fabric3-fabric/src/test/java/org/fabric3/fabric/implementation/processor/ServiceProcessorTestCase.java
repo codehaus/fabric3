@@ -98,8 +98,9 @@ public class ServiceProcessorTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        ContractProcessor contractProcessor = new DefaultContractProcessor();
-        processor = new ServiceProcessor(new ImplementationProcessorServiceImpl(contractProcessor, new DefaultIntrospectionHelper()));
+        DefaultIntrospectionHelper helper = new DefaultIntrospectionHelper();
+        ContractProcessor contractProcessor = new DefaultContractProcessor(helper);
+        processor = new ServiceProcessor(new ImplementationProcessorServiceImpl(contractProcessor, helper));
         type = new PojoComponentType(null);
     }
 

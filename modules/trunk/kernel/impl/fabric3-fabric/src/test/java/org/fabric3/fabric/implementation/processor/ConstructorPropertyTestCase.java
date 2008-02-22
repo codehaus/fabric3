@@ -88,8 +88,8 @@ public class ConstructorPropertyTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        DefaultContractProcessor contractProcessor = new DefaultContractProcessor();
         DefaultIntrospectionHelper helper = new DefaultIntrospectionHelper();
+        DefaultContractProcessor contractProcessor = new DefaultContractProcessor(helper);
         processor = new ConstructorProcessor(new ImplementationProcessorServiceImpl(contractProcessor, helper));
 
         context = EasyMock.createMock(IntrospectionContext.class);

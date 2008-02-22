@@ -82,8 +82,8 @@ public class HeuristicConstructorTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        contractProcessor = new DefaultContractProcessor();
         DefaultIntrospectionHelper helper = new DefaultIntrospectionHelper();
+        contractProcessor = new DefaultContractProcessor(helper);
         context = EasyMock.createMock(IntrospectionContext.class);
         TypeMapping typeMapping = new TypeMapping();
         EasyMock.expect(context.getTypeMapping()).andStubReturn(typeMapping);
