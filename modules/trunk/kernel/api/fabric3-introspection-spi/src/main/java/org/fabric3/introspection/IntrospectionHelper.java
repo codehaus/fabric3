@@ -125,14 +125,13 @@ public interface IntrospectionHelper {
      * <p/>
      * This is generally true for arrays, Collection or Map types.
      *
-     * @param type the type to check
+     * @param typeMapping the mapping to use to resolve any formal types
+     * @param type        the type to check
      * @return true if the type should be treated as many-valued
      */
-    boolean isManyValued(Type type);
+    boolean isManyValued(TypeMapping typeMapping, Type type);
 
     Class<?> getRawType(Type type);
-
-    boolean isManyValued(Class<?> clazz);
 
     InjectableAttributeType inferType(Type type);
 

@@ -16,6 +16,9 @@
  */
 package org.fabric3.introspection;
 
+import java.lang.reflect.Array;
+import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.HashMap;
@@ -53,6 +56,31 @@ public class TypeMapping {
             } else {
                 type = actual;
             }
+        }
+    }
+
+    /**
+     * Return the raw type of the supplied formal type.
+     *
+     * @param type the formal type parameter
+     * @return the actual class for that parameter
+     */
+    public Class<?> getRawType(Type type) {
+        Type actualType = getActualType(type);
+        if (actualType instanceof Class<?>) {
+            return (Class<?>) actualType;
+        } else if (actualType instanceof TypeVariable) {
+            TypeVariable typeVariable = (TypeVariable) actualType;
+            return (Class<?>) typeVariable.getBounds()[0];
+        } else if (actualType instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = (ParameterizedType) actualType;
+            return (Class<?>) parameterizedType.getRawType();
+        } else if (actualType instanceof GenericArrayType) {
+            GenericArrayType arrayType = (GenericArrayType) actualType;
+            Class<?> componentType = getRawType(arrayType.getGenericComponentType());
+            return Array.newInstance(componentType, 0).getClass();
+        } else {
+            throw new AssertionError();
         }
     }
 }

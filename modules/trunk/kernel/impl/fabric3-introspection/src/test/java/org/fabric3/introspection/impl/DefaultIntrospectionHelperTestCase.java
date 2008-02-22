@@ -28,7 +28,7 @@ import org.fabric3.introspection.TypeMapping;
 /**
  * @version $Rev$ $Date$
  */
-public class DefaultIntrosectionHelperTestCase extends TestCase {
+public class DefaultIntrospectionHelperTestCase extends TestCase {
     private DefaultIntrospectionHelper helper;
     private TypeMapping boundMapping;
 

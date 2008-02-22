@@ -158,12 +158,13 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
         }
     }
 
-    public boolean isManyValued(Type type) {
-        return type instanceof GenericArrayType || isManyValued(getRawType(type));
-    }
-
-    public boolean isManyValued(Class<?> clazz) {
-        return clazz.isArray() || COLLECTIONS.contains(clazz) || Map.class.equals(clazz);
+    public boolean isManyValued(TypeMapping typeMapping, Type type) {
+        if (type instanceof GenericArrayType) {
+            return true;
+        } else {
+            Class<?> clazz = typeMapping.getRawType(type);
+            return clazz.isArray() || COLLECTIONS.contains(clazz) || Map.class.equals(clazz);
+        }
     }
 
     public InjectableAttributeType inferType(Type type) {

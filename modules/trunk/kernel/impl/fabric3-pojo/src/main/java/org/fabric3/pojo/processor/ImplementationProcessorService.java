@@ -23,6 +23,7 @@ import java.lang.reflect.Constructor;
 import java.util.List;
 
 import org.fabric3.introspection.InvalidServiceContractException;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.ServiceDefinition;
@@ -60,9 +61,10 @@ public interface ImplementationProcessorService {
      *
      * @param constructor the constructor to process
      * @param componentType the componentType to be updated with the results of processing
+     * @param context
      * @throws ProcessingException if there was a problem processing the parameters
      */
-    void processParameters(Constructor<?> constructor, PojoComponentType componentType) throws ProcessingException;
+    void processParameters(Constructor<?> constructor, PojoComponentType componentType, IntrospectionContext context) throws ProcessingException;
 
     /**
      * Returns true if <code>@Property</code> or <code>@Reference</code> are present in the given array
