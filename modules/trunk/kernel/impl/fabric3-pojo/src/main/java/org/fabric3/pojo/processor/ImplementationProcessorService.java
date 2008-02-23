@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.fabric3.introspection.InvalidServiceContractException;
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.TypeMapping;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.ServiceDefinition;
@@ -39,9 +40,9 @@ public interface ImplementationProcessorService {
     /**
      * Introspects the given interface to produce a mapped service
      */
-    ServiceDefinition createService(Class<?> interfaze) throws InvalidServiceContractException;
+    ServiceDefinition createService(Class<?> interfaze, TypeMapping typeMapping) throws InvalidServiceContractException;
 
-    ReferenceDefinition createReference(String name, InjectionSite injectionSite, Class<?> paramType) throws ProcessingException;
+    ReferenceDefinition createReference(String name, Class<?> paramType, TypeMapping typeMapping) throws ProcessingException;
 
     /**
      * Determines if all the members of a collection have unique types

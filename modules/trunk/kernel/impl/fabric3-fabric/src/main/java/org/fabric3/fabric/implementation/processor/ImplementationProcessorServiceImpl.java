@@ -61,8 +61,8 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
         this.helper = helper;
     }
 
-    public ServiceDefinition createService(Class<?> interfaze) throws InvalidServiceContractException {
-        ServiceContract<?> contract = contractProcessor.introspect(interfaze);
+    public ServiceDefinition createService(Class<?> interfaze, TypeMapping typeMapping) throws InvalidServiceContractException {
+        ServiceContract<?> contract = contractProcessor.introspect(typeMapping, interfaze);
         return new ServiceDefinition(interfaze.getSimpleName(), contract);
     }
 
@@ -85,6 +85,8 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
     }
 
     public void processParameters(Constructor<?> constructor, PojoComponentType componentType, IntrospectionContext context) throws ProcessingException {
+        TypeMapping typeMapping = context.getTypeMapping();
+
         try {
             Type[] parameterTypes = constructor.getGenericParameterTypes();
             Annotation[][] parameterAnnotations = constructor.getParameterAnnotations();
@@ -93,23 +95,23 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
                 for (Annotation annotation : annotations) {
                     Class<? extends Annotation> annotationType = annotation.annotationType();
                     if (Property.class.equals(annotationType)) {
-                        processProperty((Property) annotation, constructor, i, componentType, context.getTypeMapping());
+                        processProperty((Property) annotation, constructor, i, componentType, typeMapping);
                         continue param;
                     } else if (Reference.class.equals(annotationType)) {
-                        processReference((Reference) annotation, constructor, i, componentType, context.getTypeMapping());
+                        processReference((Reference) annotation, constructor, i, componentType, typeMapping);
                         continue param;
                     } else if (Monitor.class.equals(annotationType)) {
-                        processMonitor(constructor, i, componentType);
+                        processMonitor(constructor, i, componentType, typeMapping);
                         continue param;
                     }
                 }
-                InjectableAttributeType sourceType = helper.inferType(parameterTypes[i], context.getTypeMapping());
+                InjectableAttributeType sourceType = helper.inferType(parameterTypes[i], typeMapping);
                 switch (sourceType) {
                 case PROPERTY:
-                    processProperty(null, constructor, i, componentType, context.getTypeMapping());
+                    processProperty(null, constructor, i, componentType, typeMapping);
                     break;
                 case REFERENCE:
-                    processReference(null, constructor, i, componentType, context.getTypeMapping());
+                    processReference(null, constructor, i, componentType, typeMapping);
                     break;
                 case CONTEXT:
                     break;
@@ -138,11 +140,11 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
         return false;
     }
 
-    public ReferenceDefinition createReference(String name, InjectionSite injectionSite, Class<?> paramType)
+    public ReferenceDefinition createReference(String name, Class<?> paramType, TypeMapping typeMapping)
             throws ProcessingException {
         ServiceContract<Type> contract;
         try {
-            contract = contractProcessor.introspect(paramType);
+            contract = contractProcessor.introspect(typeMapping, paramType);
         } catch (InvalidServiceContractException e1) {
             throw new ProcessingException(e1);
         }
@@ -199,7 +201,7 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
     }
 
     private ReferenceDefinition createDefinition(String name, boolean required, Type type, TypeMapping typeMapping) throws IntrospectionException {
-        ServiceContract<Type> contract = contractProcessor.introspect(helper.getBaseType(type, typeMapping));
+        ServiceContract<Type> contract = contractProcessor.introspect(typeMapping, helper.getBaseType(type, typeMapping));
         Multiplicity multiplicity = multiplicity(required, type, typeMapping);
 
         ReferenceDefinition reference = new ReferenceDefinition(name, contract, multiplicity);
@@ -216,9 +218,9 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
     }
 
 
-    private void processMonitor(Constructor<?> constructor, int index, PojoComponentType componentType) throws IntrospectionException {
+    private void processMonitor(Constructor<?> constructor, int index, PojoComponentType componentType, TypeMapping typeMapping) throws IntrospectionException {
         Type type = helper.getGenericType(constructor, index);
-        ServiceContract<?> serviceContract = contractProcessor.introspect(type);
+        ServiceContract<?> serviceContract = contractProcessor.introspect(typeMapping, type);
         String name = serviceContract.getInterfaceName();
         MonitorResource resource = new MonitorResource(name, false, serviceContract);
         InjectionSite injectionSite = new ConstructorInjectionSite(constructor, index);

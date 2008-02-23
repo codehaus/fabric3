@@ -35,6 +35,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.introspection.ContractProcessor;
 import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.introspection.InvalidServiceContractException;
+import org.fabric3.introspection.TypeMapping;
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.Operation;
 import static org.fabric3.scdl.Operation.CONVERSATION_END;
@@ -56,23 +57,23 @@ public class DefaultContractProcessor implements ContractProcessor {
         this.helper = helper;
     }
 
-    public ServiceContract<Type> introspect(Type type) throws InvalidServiceContractException {
+    public ServiceContract<Type> introspect(TypeMapping typeMapping, Type type) throws InvalidServiceContractException {
         if (type instanceof Class) {
-            return introspect((Class<?>) type);
+            return introspect(typeMapping, (Class<?>) type);
         } else {
             throw new UnsupportedOperationException("Interface introspection is only supported for classes");
         }
     }
 
-    public JavaServiceContract introspect(Class<?> interfaze) throws InvalidServiceContractException {
-        JavaServiceContract contract = introspectInterface(interfaze);
+    public JavaServiceContract introspect(TypeMapping typeMapping, Class<?> interfaze) throws InvalidServiceContractException {
+        JavaServiceContract contract = introspectInterface(typeMapping, interfaze);
         Callback callback = interfaze.getAnnotation(Callback.class);
         if (callback != null) {
             Class<?> callbackClass = callback.value();
             if (Void.class.equals(callbackClass)) {
                 throw new MissingCallbackException(interfaze.getName());
             }
-            JavaServiceContract callbackContract = introspectInterface(callbackClass);
+            JavaServiceContract callbackContract = introspectInterface(typeMapping, callbackClass);
             contract.setCallbackContract(callbackContract);
         }
         return contract;
@@ -86,7 +87,7 @@ public class DefaultContractProcessor implements ContractProcessor {
      * @throws InvalidServiceContractException
      *          if the class is an invalid service inteface or contains invalid service meatadata
      */
-    private JavaServiceContract introspectInterface(Class<?> interfaze) throws InvalidServiceContractException {
+    private JavaServiceContract introspectInterface(TypeMapping typeMapping, Class<?> interfaze) throws InvalidServiceContractException {
         JavaServiceContract contract = new JavaServiceContract(interfaze);
         contract.setInterfaceName(interfaze.getSimpleName());
 
@@ -98,12 +99,13 @@ public class DefaultContractProcessor implements ContractProcessor {
         boolean conversational = helper.isAnnotationPresent(interfaze, Conversational.class);
         contract.setConversational(conversational);
 
-        contract.setOperations(getOperations(interfaze, remotable, conversational));
+        contract.setOperations(getOperations(typeMapping, interfaze, remotable, conversational));
 
         return contract;
     }
 
-    private <T> List<Operation<Type>> getOperations(Class<T> type,
+    private <T> List<Operation<Type>> getOperations(TypeMapping typeMapping,
+                                                    Class<T> type,
                                                     boolean remotable,
                                                     boolean conversational)
             throws InvalidServiceContractException {
@@ -136,14 +138,17 @@ public class DefaultContractProcessor implements ContractProcessor {
                 conversationSequence = Operation.CONVERSATION_CONTINUE;
             }
 
-            DataType<Type> returnDataType = new DataType<Type>(returnType, returnType);
+            Type actualReturnType = typeMapping.getActualType(returnType);
+            DataType<Type> returnDataType = new DataType<Type>(actualReturnType, actualReturnType);
             List<DataType<Type>> paramDataTypes = new ArrayList<DataType<Type>>(paramTypes.length);
             for (Type paramType : paramTypes) {
-                paramDataTypes.add(new DataType<Type>(paramType, paramType));
+                Type actualType = typeMapping.getActualType(paramType);
+                paramDataTypes.add(new DataType<Type>(actualType, actualType));
             }
             List<DataType<Type>> faultDataTypes = new ArrayList<DataType<Type>>(faultTypes.length);
             for (Type faultType : faultTypes) {
-                faultDataTypes.add(new DataType<Type>(faultType, faultType));
+                Type actualType = typeMapping.getActualType(faultType);
+                faultDataTypes.add(new DataType<Type>(actualType, actualType));
             }
 
             DataType<List<DataType<Type>>> inputType =

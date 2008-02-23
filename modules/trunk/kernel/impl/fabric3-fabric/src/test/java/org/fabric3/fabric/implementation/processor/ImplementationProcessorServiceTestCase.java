@@ -26,6 +26,7 @@ import org.osoa.sca.annotations.Remotable;
 
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
+import org.fabric3.introspection.TypeMapping;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
@@ -35,17 +36,18 @@ import org.fabric3.scdl.ServiceDefinition;
  */
 public class ImplementationProcessorServiceTestCase extends TestCase {
 
+    private TypeMapping typeMapping;
     private ImplementationProcessorService implService;
 
     public void testCreateConversationalService() throws Exception {
-        ServiceDefinition service = implService.createService(Foo.class);
+        ServiceDefinition service = implService.createService(Foo.class, typeMapping);
         ServiceContract contract = service.getServiceContract();
         assertTrue(Foo.class.getName().equals(contract.getQualifiedInterfaceName()));
         assertTrue(contract.isConversational());
     }
 
     public void testCreateDefaultService() throws Exception {
-        ServiceDefinition service = implService.createService(Baz.class);
+        ServiceDefinition service = implService.createService(Baz.class, typeMapping);
         ServiceContract contract = service.getServiceContract();
         assertTrue(Baz.class.getName().equals(contract.getQualifiedInterfaceName()));
         assertFalse(service.getServiceContract().isConversational());
@@ -56,6 +58,7 @@ public class ImplementationProcessorServiceTestCase extends TestCase {
         DefaultIntrospectionHelper helper = new DefaultIntrospectionHelper();
         DefaultContractProcessor contractProcessor = new DefaultContractProcessor(helper);
         implService = new ImplementationProcessorServiceImpl(contractProcessor, helper);
+        typeMapping = new TypeMapping();
     }
 
     @Conversational

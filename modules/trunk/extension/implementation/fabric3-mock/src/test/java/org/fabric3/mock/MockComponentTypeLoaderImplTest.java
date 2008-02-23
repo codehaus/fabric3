@@ -22,6 +22,7 @@ import java.util.List;
 import org.easymock.EasyMock;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionHelper;
+import org.fabric3.introspection.ContractProcessor;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.scdl.ServiceDefinition;
@@ -40,7 +41,8 @@ public class MockComponentTypeLoaderImplTest extends TestCase {
         EasyMock.replay(context);
 
         IntrospectionHelper helper = new DefaultIntrospectionHelper();
-        MockComponentTypeLoader componentTypeLoader = new MockComponentTypeLoaderImpl(new DefaultContractProcessor(helper));
+        ContractProcessor processor = new DefaultContractProcessor(helper);
+        MockComponentTypeLoader componentTypeLoader = new MockComponentTypeLoaderImpl(helper, processor);
         
         List<String> mockedInterfaces = new LinkedList<String>();
         mockedInterfaces.add("org.fabric3.mock.Foo");

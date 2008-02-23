@@ -23,6 +23,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 import org.osoa.sca.annotations.Reference;
+import org.easymock.EasyMock;
 
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Multiplicity;
@@ -31,6 +32,8 @@ import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.introspection.IntrospectionHelper;
+import org.fabric3.introspection.TypeMapping;
+import org.fabric3.introspection.IntrospectionContext;
 
 /**
  * @version $Rev$ $Date$
@@ -39,9 +42,10 @@ public class ReferenceProcessorTestCase extends TestCase {
 
     private PojoComponentType type;
     private ReferenceProcessor processor;
+    private IntrospectionContext context;
 
     public void testMethodAnnotation() throws Exception {
-        processor.visitMethod(ReferenceProcessorTestCase.Foo.class.getMethod("setFoo", Ref.class), type, null);
+        processor.visitMethod(ReferenceProcessorTestCase.Foo.class.getMethod("setFoo", Ref.class), type, context);
         ReferenceDefinition reference = type.getReferences().get("foo");
         assertNotNull(reference);
         ServiceContract contract = reference.getServiceContract();
@@ -53,7 +57,7 @@ public class ReferenceProcessorTestCase extends TestCase {
         processor.visitMethod(
                 ReferenceProcessorTestCase.Foo.class.getMethod("setFooRequired", Ref.class),
                 type,
-                null);
+                context);
         ReferenceDefinition reference = type.getReferences().get("fooRequired");
         assertNotNull(reference);
         assertTrue(reference.isRequired());
@@ -63,12 +67,12 @@ public class ReferenceProcessorTestCase extends TestCase {
         processor.visitMethod(
                 ReferenceProcessorTestCase.Foo.class.getMethod("setBarMethod", Ref.class),
                 type,
-                null);
+                context);
         assertNotNull(type.getReferences().get("bar"));
     }
 
     public void testFieldAnnotation() throws Exception {
-        processor.visitField(ReferenceProcessorTestCase.Foo.class.getDeclaredField("baz"), type, null);
+        processor.visitField(ReferenceProcessorTestCase.Foo.class.getDeclaredField("baz"), type, context);
         ReferenceDefinition reference = type.getReferences().get("baz");
         assertNotNull(reference);
         ServiceContract contract = reference.getServiceContract();
@@ -77,21 +81,21 @@ public class ReferenceProcessorTestCase extends TestCase {
     }
 
     public void testFieldRequired() throws Exception {
-        processor.visitField(ReferenceProcessorTestCase.Foo.class.getDeclaredField("bazRequired"), type, null);
+        processor.visitField(ReferenceProcessorTestCase.Foo.class.getDeclaredField("bazRequired"), type, context);
         ReferenceDefinition prop = type.getReferences().get("bazRequired");
         assertNotNull(prop);
         assertTrue(prop.isRequired());
     }
 
     public void testFieldName() throws Exception {
-        processor.visitField(ReferenceProcessorTestCase.Foo.class.getDeclaredField("bazField"), type, null);
+        processor.visitField(ReferenceProcessorTestCase.Foo.class.getDeclaredField("bazField"), type, context);
         assertNotNull(type.getReferences().get("theBaz"));
     }
 
     public void testDuplicateFields() throws Exception {
-        processor.visitField(ReferenceProcessorTestCase.Bar.class.getDeclaredField("dup"), type, null);
+        processor.visitField(ReferenceProcessorTestCase.Bar.class.getDeclaredField("dup"), type, context);
         try {
-            processor.visitField(ReferenceProcessorTestCase.Bar.class.getDeclaredField("baz"), type, null);
+            processor.visitField(ReferenceProcessorTestCase.Bar.class.getDeclaredField("baz"), type, context);
             fail();
         } catch (DuplicateReferenceException e) {
             // expected
@@ -99,7 +103,7 @@ public class ReferenceProcessorTestCase extends TestCase {
     }
 
     public void testDuplicateMethods() throws Exception {
-        processor.visitMethod(ReferenceProcessorTestCase.Bar.class.getMethod("dupMethod", Ref.class), type, null);
+        processor.visitMethod(ReferenceProcessorTestCase.Bar.class.getMethod("dupMethod", Ref.class), type, context);
         try {
             processor.visitMethod(
                     ReferenceProcessorTestCase.Bar.class.getMethod("dupSomeMethod", Ref.class),
@@ -113,7 +117,7 @@ public class ReferenceProcessorTestCase extends TestCase {
 
     public void testInvalidProperty() throws Exception {
         try {
-            processor.visitMethod(ReferenceProcessorTestCase.Bar.class.getMethod("badMethod"), type, null);
+            processor.visitMethod(ReferenceProcessorTestCase.Bar.class.getMethod("badMethod"), type, context);
             fail();
         } catch (IllegalReferenceException e) {
             // expected
@@ -125,6 +129,12 @@ public class ReferenceProcessorTestCase extends TestCase {
         type = new PojoComponentType(null);
         IntrospectionHelper helper = new DefaultIntrospectionHelper();
         processor = new ReferenceProcessor(new DefaultContractProcessor(helper));
+
+        TypeMapping typeMapping = new TypeMapping();
+        context = EasyMock.createMock(IntrospectionContext.class);
+        EasyMock.expect(context.getTypeMapping()).andStubReturn(typeMapping);
+        EasyMock.replay(context);
+
     }
 
     private interface Ref {
@@ -193,7 +203,7 @@ public class ReferenceProcessorTestCase extends TestCase {
     }
 
     public void testMultiplicity1ToN() throws Exception {
-        processor.visitField(Multiple.class.getDeclaredField("refs1"), type, null);
+        processor.visitField(Multiple.class.getDeclaredField("refs1"), type, context);
         ReferenceDefinition prop = type.getReferences().get("refs1");
         assertNotNull(prop);
         ServiceContract contract = prop.getServiceContract();
@@ -203,7 +213,7 @@ public class ReferenceProcessorTestCase extends TestCase {
     }
 
     public void testMultiplicityTo0ToN() throws Exception {
-        processor.visitField(Multiple.class.getDeclaredField("refs2"), type, null);
+        processor.visitField(Multiple.class.getDeclaredField("refs2"), type, context);
         ReferenceDefinition prop = type.getReferences().get("refs2");
         assertNotNull(prop);
         ServiceContract contract = prop.getServiceContract();
@@ -213,7 +223,7 @@ public class ReferenceProcessorTestCase extends TestCase {
     }
 
     public void testMultiplicity1ToNMethod() throws Exception {
-        processor.visitMethod(Multiple.class.getMethod("setRefs3", Ref[].class), type, null);
+        processor.visitMethod(Multiple.class.getMethod("setRefs3", Ref[].class), type, context);
         ReferenceDefinition prop = type.getReferences().get("refs3");
         assertNotNull(prop);
         ServiceContract contract = prop.getServiceContract();
@@ -223,7 +233,7 @@ public class ReferenceProcessorTestCase extends TestCase {
     }
 
     public void testMultiplicity0ToNMethod() throws Exception {
-        processor.visitMethod(Multiple.class.getMethod("setRefs4", Collection.class), type, null);
+        processor.visitMethod(Multiple.class.getMethod("setRefs4", Collection.class), type, context);
         ReferenceDefinition prop = type.getReferences().get("refs4");
         assertNotNull(prop);
         ServiceContract contract = prop.getServiceContract();

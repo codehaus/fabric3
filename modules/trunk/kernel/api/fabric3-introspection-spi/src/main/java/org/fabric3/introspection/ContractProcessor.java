@@ -29,9 +29,9 @@ public interface ContractProcessor {
     /**
      * Introspect a Java Type (e.g. a Class) and return the ServiceContract.
      *
-     * @param type the Java Type to introspect
-     * @return the ServiceContract corresponding to the interface type
+     * @param typeMapping
+     *@param type the Java Type to introspect @return the ServiceContract corresponding to the interface type
      * @throws InvalidServiceContractException if the type does not define a valid service contract
      */
-    ServiceContract<Type> introspect(Type type) throws InvalidServiceContractException;
+    ServiceContract<Type> introspect(TypeMapping typeMapping, Type type) throws InvalidServiceContractException;
 }

@@ -71,7 +71,7 @@ public class TypeMapping {
             return (Class<?>) actualType;
         } else if (actualType instanceof TypeVariable) {
             TypeVariable typeVariable = (TypeVariable) actualType;
-            return (Class<?>) typeVariable.getBounds()[0];
+            return getRawType(typeVariable.getBounds()[0]);
         } else if (actualType instanceof ParameterizedType) {
             ParameterizedType parameterizedType = (ParameterizedType) actualType;
             return (Class<?>) parameterizedType.getRawType();

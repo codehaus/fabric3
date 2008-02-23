@@ -28,7 +28,6 @@ import org.fabric3.pojo.processor.DuplicateResourceException;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import static org.fabric3.pojo.processor.JavaIntrospectionHelper.toPropertyName;
 import org.fabric3.pojo.processor.ProcessingException;
-import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.MethodInjectionSite;
@@ -37,6 +36,7 @@ import org.fabric3.resource.model.SystemSourcedResource;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.ContractProcessor;
 import org.fabric3.introspection.InvalidServiceContractException;
+import org.fabric3.introspection.TypeMapping;
 
 /**
  * Processes an {@link @Resource} annotation
@@ -70,7 +70,7 @@ public class ResourceProcessor extends ImplementationProcessorExtension {
         }
 
         MethodInjectionSite site = new MethodInjectionSite(method, 0);
-        SystemSourcedResource resource = createResource(name, resourceType, site, annotation.optional(), annotation.mappedName());
+        SystemSourcedResource resource = createResource(name, resourceType, annotation.optional(), annotation.mappedName(), context.getTypeMapping());
 
         type.add(resource, site);
         
@@ -93,17 +93,17 @@ public class ResourceProcessor extends ImplementationProcessorExtension {
         Class<?> fieldType = field.getType();
 
         FieldInjectionSite site = new FieldInjectionSite(field);
-        SystemSourcedResource resource = createResource(name, fieldType, site, annotation.optional(), annotation.mappedName());
+        SystemSourcedResource resource = createResource(name, fieldType, annotation.optional(), annotation.mappedName(), context.getTypeMapping());
 
         type.add(resource, site);
         
     }
 
-    private SystemSourcedResource createResource(String name, Class<?> type, InjectionSite injectionSite, boolean optional, String mappedName)
+    private SystemSourcedResource createResource(String name, Class<?> type, boolean optional, String mappedName, TypeMapping typeMapping)
             throws ProcessingException {
         
         try {
-            ServiceContract<Type> serviceContract = contractProcessor.introspect(type);
+            ServiceContract<Type> serviceContract = contractProcessor.introspect(typeMapping, type);
             return new SystemSourcedResource(name, optional, mappedName, serviceContract);
         }  catch (InvalidServiceContractException e) {
             throw new ProcessingException(e);

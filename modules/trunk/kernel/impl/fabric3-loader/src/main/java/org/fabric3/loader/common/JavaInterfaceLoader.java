@@ -26,6 +26,8 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.introspection.ContractProcessor;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.InvalidServiceContractException;
+import org.fabric3.introspection.IntrospectionHelper;
+import org.fabric3.introspection.TypeMapping;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.loader.InvalidValueException;
 import org.fabric3.spi.loader.LoaderException;
@@ -40,12 +42,15 @@ import org.fabric3.spi.loader.StAXElementLoader;
 public class JavaInterfaceLoader implements StAXElementLoader<ServiceContract> {
 
     private final ContractProcessor contractProcessor;
+    private final IntrospectionHelper helper;
 
-    public JavaInterfaceLoader(@Reference ContractProcessor contractProcessor) {
+    public JavaInterfaceLoader(@Reference ContractProcessor contractProcessor,
+                               @Reference IntrospectionHelper helper) {
         this.contractProcessor = contractProcessor;
+        this.helper = helper;
     }
 
-    public ServiceContract load(XMLStreamReader reader, IntrospectionContext introspectionContext)
+    public ServiceContract load(XMLStreamReader reader, IntrospectionContext context)
             throws XMLStreamException, LoaderException {
 
         String conversationalAttr = reader.getAttributeValue(null, "conversational");
@@ -58,18 +63,19 @@ public class JavaInterfaceLoader implements StAXElementLoader<ServiceContract> {
         if (name == null) {
             throw new InvalidValueException("interface name not supplied");
         }
-        Class<?> interfaceClass = LoaderUtil.loadClass(name, introspectionContext.getTargetClassLoader());
+        Class<?> interfaceClass = LoaderUtil.loadClass(name, context.getTargetClassLoader());
 
         name = reader.getAttributeValue(null, "callbackInterface");
         Class<?> callbackClass =
-                (name != null) ? LoaderUtil.loadClass(name, introspectionContext.getTargetClassLoader()) : null;
+                (name != null) ? LoaderUtil.loadClass(name, context.getTargetClassLoader()) : null;
 
         LoaderUtil.skipToEndElement(reader);
 
         try {
-            ServiceContract<?> serviceContract = contractProcessor.introspect(interfaceClass);
+            TypeMapping typeMapping = helper.mapTypeParameters(interfaceClass);
+            ServiceContract<?> serviceContract = contractProcessor.introspect(typeMapping, interfaceClass);
             if (callbackClass != null) {
-                ServiceContract<?> callbackContract = contractProcessor.introspect(callbackClass);
+                ServiceContract<?> callbackContract = contractProcessor.introspect(typeMapping, callbackClass);
                 serviceContract.setCallbackContract(callbackContract);
             }
             serviceContract.setConversational(conversational);

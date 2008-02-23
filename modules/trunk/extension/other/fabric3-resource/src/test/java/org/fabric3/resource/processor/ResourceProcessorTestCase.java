@@ -26,9 +26,13 @@ import junit.framework.TestCase;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.introspection.IntrospectionHelper;
+import org.fabric3.introspection.TypeMapping;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.pojo.processor.DuplicateResourceException;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.resource.model.SystemSourcedResource;
+
+import org.easymock.EasyMock;
 
 /**
  * @version $Rev$ $Date$
@@ -37,17 +41,23 @@ public class ResourceProcessorTestCase extends TestCase {
 
     PojoComponentType type;
     ResourceProcessor processor;
+    private IntrospectionContext context;
 
     protected void setUp() throws Exception {
         super.setUp();
         IntrospectionHelper helper = new DefaultIntrospectionHelper();
         processor = new ResourceProcessor(new DefaultContractProcessor(helper));
         type = new PojoComponentType(null);
+
+        TypeMapping typeMapping = new TypeMapping();
+        context = EasyMock.createMock(IntrospectionContext.class);
+        EasyMock.expect(context.getTypeMapping()).andStubReturn(typeMapping);
+        EasyMock.replay(context);
     }
 
     public void testVisitField() throws Exception {
         Field field = Foo.class.getDeclaredField("bar");
-        processor.visitField(field, type, null);
+        processor.visitField(field, type, context);
         SystemSourcedResource resource = (SystemSourcedResource) type.getResources().get("bar");
         assertFalse(resource.isOptional());
         assertEquals("", resource.getMappedName());
@@ -55,7 +65,7 @@ public class ResourceProcessorTestCase extends TestCase {
 
     public void testVisitMethod() throws Exception {
         Method method = Foo.class.getMethod("setBar", Bar.class);
-        processor.visitMethod(method, type, null);
+        processor.visitMethod(method, type, context);
         SystemSourcedResource resource = (SystemSourcedResource) type.getResources().get("bar");
         assertFalse(resource.isOptional());
         assertEquals("", resource.getMappedName());
@@ -63,7 +73,7 @@ public class ResourceProcessorTestCase extends TestCase {
 
     public void testVisitNamedMethod() throws Exception {
         Method method = Foo.class.getMethod("setBar2", Bar.class);
-        processor.visitMethod(method, type, null);
+        processor.visitMethod(method, type, context);
         SystemSourcedResource resource = (SystemSourcedResource) type.getResources().get("someName");
         assertFalse(resource.isOptional());
         assertEquals("mapped", resource.getMappedName());
@@ -72,7 +82,7 @@ public class ResourceProcessorTestCase extends TestCase {
     public void testVisitBadMethod() throws Exception {
         Method method = Foo.class.getMethod("setBad");
         try {
-            processor.visitMethod(method, type, null);
+            processor.visitMethod(method, type, context);
             fail();
         } catch (IllegalResourceException e) {
             // expected
@@ -81,9 +91,9 @@ public class ResourceProcessorTestCase extends TestCase {
 
     public void testDuplicateResources() throws Exception {
         Field field = Foo.class.getDeclaredField("bar");
-        processor.visitField(field, type, null);
+        processor.visitField(field, type, context);
         try {
-            processor.visitField(field, type, null);
+            processor.visitField(field, type, context);
             fail();
         } catch (DuplicateResourceException e) {
             //expected

@@ -68,7 +68,7 @@ public class ServiceProcessor extends ImplementationProcessorExtension {
                     if (interfaze.isAnnotationPresent(Remotable.class) || interfaze.isAnnotationPresent(Callback.class)) {
                         ServiceDefinition service;
                         try {
-                            service = implService.createService(interfaze);
+                            service = implService.createService(interfaze, context.getTypeMapping());
                         } catch (InvalidServiceContractException e) {
                             throw new ProcessingException(e);
                         }
@@ -94,7 +94,7 @@ public class ServiceProcessor extends ImplementationProcessorExtension {
             }
             ServiceDefinition service;
             try {
-                service = implService.createService(interfaze);
+                service = implService.createService(interfaze, context.getTypeMapping());
             } catch (InvalidServiceContractException e) {
                 throw new ProcessingException(e);
             }

@@ -25,6 +25,8 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.introspection.ContractProcessor;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.InvalidServiceContractException;
+import org.fabric3.introspection.TypeMapping;
+import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.scdl.Scope;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
@@ -35,12 +37,15 @@ import org.fabric3.spi.loader.LoaderException;
  */
 public class MockComponentTypeLoaderImpl implements MockComponentTypeLoader {
     private final ContractProcessor contractProcessor;
+    private final IntrospectionHelper helper;
     private final ServiceDefinition controlService;
 
-    public MockComponentTypeLoaderImpl(@Reference ContractProcessor contractProcessor) {
+    public MockComponentTypeLoaderImpl(@Reference IntrospectionHelper helper,
+                                       @Reference ContractProcessor contractProcessor) {
+        this.helper = helper;
         this.contractProcessor = contractProcessor;
         try {
-            ServiceContract<Type> controlServiceContract = contractProcessor.introspect(IMocksControl.class);
+            ServiceContract<Type> controlServiceContract = introspect(IMocksControl.class);
             controlService = new ServiceDefinition("mockControl", controlServiceContract);
         } catch (InvalidServiceContractException e) {
             throw new AssertionError(e);
@@ -63,7 +68,8 @@ public class MockComponentTypeLoaderImpl implements MockComponentTypeLoader {
             ClassLoader classLoader = introspectionContext.getTargetClassLoader();
             for (String mockedInterface : mockedInterfaces) {
                 Class<?> interfaceClass = classLoader.loadClass(mockedInterface);
-                ServiceContract<?> serviceContract = contractProcessor.introspect(interfaceClass);
+
+                ServiceContract<Type> serviceContract = introspect(interfaceClass);
                 String name = interfaceClass.getName();
                 int index = name.lastIndexOf('.');
                 if (index != -1) {
@@ -82,6 +88,11 @@ public class MockComponentTypeLoaderImpl implements MockComponentTypeLoader {
             throw new LoaderException(e);
         }
 
+    }
+
+    private ServiceContract<Type> introspect(Class<?> interfaceClass) throws InvalidServiceContractException {
+        TypeMapping typeMapping = helper.mapTypeParameters(interfaceClass);
+        return contractProcessor.introspect(typeMapping, interfaceClass);
     }
 
 }

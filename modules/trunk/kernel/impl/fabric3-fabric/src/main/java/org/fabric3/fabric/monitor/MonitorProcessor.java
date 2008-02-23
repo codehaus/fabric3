@@ -29,7 +29,6 @@ import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.processor.InvalidSetterException;
 import static org.fabric3.pojo.processor.JavaIntrospectionHelper.toPropertyName;
 import org.fabric3.pojo.processor.ProcessingException;
-import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.MethodInjectionSite;
@@ -37,6 +36,7 @@ import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.ContractProcessor;
 import org.fabric3.introspection.InvalidServiceContractException;
+import org.fabric3.introspection.TypeMapping;
 
 /**
  * Processes an {@link @Monitor} annotation}
@@ -67,7 +67,7 @@ public class MonitorProcessor extends ImplementationProcessorExtension {
         }
 
         MethodInjectionSite site = new MethodInjectionSite(method, 0);
-        MonitorResource resource = createResource(name, resourceType, site);
+        MonitorResource resource = createResource(name, resourceType, context.getTypeMapping());
         type.add(resource, site);
     }
 
@@ -84,13 +84,13 @@ public class MonitorProcessor extends ImplementationProcessorExtension {
         }
 
         FieldInjectionSite site = new FieldInjectionSite(field);
-        MonitorResource resource = createResource(name, resourceType, site);
+        MonitorResource resource = createResource(name, resourceType, context.getTypeMapping());
         type.add(resource, site);
     }
 
-    private MonitorResource createResource(String name, Class<?> type, InjectionSite injectionSite) throws ProcessingException {
+    private MonitorResource createResource(String name, Class<?> type, TypeMapping typeMapping) throws ProcessingException {
         try {
-            ServiceContract<?> serviceContract = contractProcessor.introspect(type);
+            ServiceContract<?> serviceContract = contractProcessor.introspect(typeMapping, type);
             return new MonitorResource(name, false, serviceContract);
         } catch (InvalidServiceContractException e) {
             throw new ProcessingException(e);

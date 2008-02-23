@@ -36,6 +36,7 @@ import org.osoa.sca.annotations.Service;
 
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.InvalidServiceContractException;
+import org.fabric3.introspection.TypeMapping;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import static org.fabric3.pojo.processor.JavaIntrospectionHelper.getAllInterfaces;
@@ -83,7 +84,7 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
                 // class is the interface
                 ServiceDefinition service;
                 try {
-                    service = implService.createService(clazz);
+                    service = implService.createService(clazz, context.getTypeMapping());
                 } catch (InvalidServiceContractException e) {
                     throw new ProcessingException(e);
                 }
@@ -91,7 +92,7 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
             } else if (interfaces.size() == 1) {
                 ServiceDefinition service;
                 try {
-                    service = implService.createService(interfaces.iterator().next());
+                    service = implService.createService(interfaces.iterator().next(), context.getTypeMapping());
                 } catch (InvalidServiceContractException e) {
                     throw new ProcessingException(e);
                 }
@@ -102,12 +103,12 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
 
         // if no references or properties have been defined infer them from the implementation
         if (type.getReferences().isEmpty() && type.getProperties().isEmpty()) {
-            calcPropRefs(methods, services, type, clazz);
+            calcPropRefs(methods, services, type, clazz, context.getTypeMapping());
         }
 
         // if no services have been defined, infer them from the implementation
         if (type.getServices().isEmpty()) {
-            calculateServiceInterface(clazz, type, methods);
+            calculateServiceInterface(clazz, type, methods, context.getTypeMapping());
             if (type.getServices().isEmpty()) {
                 throw new ServiceTypeNotFoundException(clazz.getName());
             }
@@ -118,10 +119,11 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
         }
     }
 
-    private <T> void calcPropRefs(Set<Method> methods,
+    private void calcPropRefs(Set<Method> methods,
                                   Map<String, ServiceDefinition> services,
                                   PojoComponentType type,
-                                  Class<T> clazz) throws ProcessingException {
+                                  Class<?> clazz,
+                                  TypeMapping typeMapping) throws ProcessingException {
         // heuristically determine the properties references
         // make a first pass through all public methods with one param
         for (Method method : methods) {
@@ -138,9 +140,9 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
                     Type genericType = method.getGenericParameterTypes()[0];
                     InjectionSite site = new MethodInjectionSite(method, 0);
                     if (isReferenceType(genericType)) {
-                        type.add(createReference(name, site, param), site);
+                        type.add(implService.createReference(name, param, typeMapping), site);
                     } else {
-                        type.add(createProperty(name, param), site);
+                        type.add(createProperty(name), site);
                     }
                 }
             }
@@ -158,9 +160,9 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
             if (!type.getProperties().containsKey(name) && !type.getReferences().containsKey(name)) {
                 InjectionSite site = new MethodInjectionSite(method, 0);
                 if (isReferenceType(param)) {
-                    type.add(createReference(name, site, param), site);
+                    type.add(implService.createReference(name, param, typeMapping), site);
                 } else {
-                    type.add(createProperty(name, param), site);
+                    type.add(createProperty(name), site);
                 }
             }
         }
@@ -169,9 +171,9 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
             Class<?> paramType = field.getType();
             InjectionSite site = new FieldInjectionSite(field);
             if (isReferenceType(paramType)) {
-                type.add(createReference(field.getName(), site, paramType), site);
+                type.add(implService.createReference(field.getName(), paramType, typeMapping), site);
             } else {
-                type.add(createProperty(field.getName(), paramType), site);
+                type.add(createProperty(field.getName()), site);
             }
         }
     }
@@ -286,25 +288,13 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
     }
 
     /*
-     * Creates a mapped reference
-     *
-     * @param name      the reference name
-     * @param injectionSite    the injection site the reference maps to
-     * @param paramType the service interface of the reference
-     */
-    private ReferenceDefinition createReference(String name, InjectionSite injectionSite, Class<?> paramType)
-            throws ProcessingException {
-        return implService.createReference(name, injectionSite, paramType);
-    }
-
-    /*
      * Creates a mapped property
      *
      * @param name      the property name
      * @param member    the injection site the reference maps to
      * @param paramType the property type
      */
-    private <T> Property createProperty(String name, Class<T> paramType) {
+    private <T> Property createProperty(String name) {
         Property property = new Property();
         property.setName(name);
         return property;
@@ -322,7 +312,8 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
     private void calculateServiceInterface(
             Class<?> clazz,
             PojoComponentType type,
-            Set<Method> methods) throws ProcessingException {
+            Set<Method> methods,
+            TypeMapping typeMapping) throws ProcessingException {
         List<Method> nonPropRefMethods = new ArrayList<Method>();
         // Map<String, JavaMappedService> services = type.getServices();
         Map<String, ReferenceDefinition> references = type.getReferences();
@@ -343,7 +334,7 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
             if (analyzeInterface(interfaze, nonPropRefMethods)) {
                 ServiceDefinition service;
                 try {
-                    service = implService.createService(interfaze);
+                    service = implService.createService(interfaze, typeMapping);
                 } catch (InvalidServiceContractException e) {
                     throw new ProcessingException(e);
                 }

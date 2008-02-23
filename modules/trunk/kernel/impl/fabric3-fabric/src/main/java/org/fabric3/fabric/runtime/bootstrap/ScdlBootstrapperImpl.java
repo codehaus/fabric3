@@ -63,6 +63,7 @@ import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.ContractProcessor;
 import org.fabric3.introspection.InvalidServiceContractException;
 import org.fabric3.introspection.IntrospectionHelper;
+import org.fabric3.introspection.TypeMapping;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.spi.loader.LoaderException;
@@ -271,7 +272,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
         String implClassName = instance.getClass().getName();
 
-        ServiceContract<?> contract = interfaceProcessorRegistry.introspect(type);
+        ServiceContract<?> contract = interfaceProcessorRegistry.introspect(new TypeMapping(), type);
         String serviceName = contract.getInterfaceName();
         ServiceDefinition service = new ServiceDefinition(serviceName, contract);
 

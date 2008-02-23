@@ -59,7 +59,7 @@ public class CallbackProcessor extends ImplementationProcessorExtension {
             throw new IllegalCallbackException("Method must have one parameter [" + name + "]", name);
         }
         try {
-            ServiceContract<?> contract = contractProcessor.introspect(method.getParameterTypes()[0]);
+            ServiceContract<?> contract = contractProcessor.introspect(context.getTypeMapping(), method.getParameterTypes()[0]);
             InjectionSite site = new MethodInjectionSite(method, 0);
             CallbackDefinition definition = new CallbackDefinition(name, contract);
             type.add(definition, site);
@@ -74,7 +74,7 @@ public class CallbackProcessor extends ImplementationProcessorExtension {
             return;
         }
         try {
-            ServiceContract<?> contract = contractProcessor.introspect(field.getType());
+            ServiceContract<?> contract = contractProcessor.introspect(context.getTypeMapping(), field.getType());
             CallbackDefinition definition = new CallbackDefinition(field.getName(), contract);
             InjectionSite site = new FieldInjectionSite(field);
             type.add(definition, site);

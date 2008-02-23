@@ -27,6 +27,7 @@ import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.introspection.InvalidServiceContractException;
+import org.fabric3.introspection.TypeMapping;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
@@ -46,6 +47,7 @@ public class SystemServiceHeuristic implements HeuristicProcessor<SystemImplemen
 
     public void applyHeuristics(SystemImplementation implementation, Class<?> implClass, IntrospectionContext context) throws IntrospectionException {
         PojoComponentType componentType = implementation.getComponentType();
+        TypeMapping typeMapping = context.getTypeMapping();
 
         // if the service contracts have alredy been defined then just return 
         if (!componentType.getServices().isEmpty()) {
@@ -58,17 +60,17 @@ public class SystemServiceHeuristic implements HeuristicProcessor<SystemImplemen
         // if the class does not implement any interfaces, then the class itself is the service contract
         // we don't have to worry about proxies because all wires to system components are optimized
         if (interfaces.isEmpty()) {
-            componentType.add(createServiceDefinition(implClass));
+            componentType.add(createServiceDefinition(implClass, typeMapping));
         } else {
             // otherwise, expose all of the implemented interfaces
             for (Class<?> serviceInterface : interfaces) {
-                componentType.add(createServiceDefinition(serviceInterface));
+                componentType.add(createServiceDefinition(serviceInterface, typeMapping));
             }
         }
     }
 
-    ServiceDefinition createServiceDefinition(Class<?> serviceInterface) throws InvalidServiceContractException {
-        ServiceContract<Type> contract = contractProcessor.introspect(serviceInterface);
+    ServiceDefinition createServiceDefinition(Class<?> serviceInterface, TypeMapping typeMapping) throws InvalidServiceContractException {
+        ServiceContract<Type> contract = contractProcessor.introspect(typeMapping, serviceInterface);
         return new ServiceDefinition(contract.getInterfaceName(), contract);
     }
 }

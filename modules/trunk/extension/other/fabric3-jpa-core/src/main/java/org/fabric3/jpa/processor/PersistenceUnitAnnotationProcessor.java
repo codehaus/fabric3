@@ -41,6 +41,7 @@ import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.ContractProcessor;
 import org.fabric3.introspection.InvalidServiceContractException;
+import org.fabric3.introspection.TypeMapping;
 
 /**
  * Implementation processor for persistence unit annotations.
@@ -52,7 +53,7 @@ public class PersistenceUnitAnnotationProcessor extends ImplementationProcessorE
     private final ServiceContract<Type> factoryServiceContract;
 
     public PersistenceUnitAnnotationProcessor(@Reference ContractProcessor contractProcessor) throws InvalidServiceContractException {
-        factoryServiceContract = contractProcessor.introspect(EntityManagerFactory.class);
+        factoryServiceContract = contractProcessor.introspect(new TypeMapping(), EntityManagerFactory.class);
     }
 
     /**

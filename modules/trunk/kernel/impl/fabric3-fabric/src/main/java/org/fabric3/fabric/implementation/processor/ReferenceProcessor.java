@@ -80,7 +80,7 @@ public class ReferenceProcessor extends ImplementationProcessorExtension {
         ServiceContract contract;
         try {
             Class<?> baseType = getBaseType(rawType, method.getGenericParameterTypes()[0]);
-            contract = interfaceIntrospector.introspect(baseType);
+            contract = interfaceIntrospector.introspect(context.getTypeMapping(), baseType);
         } catch (InvalidServiceContractException e) {
             throw new ProcessingException(e);
         }
@@ -126,7 +126,7 @@ public class ReferenceProcessor extends ImplementationProcessorExtension {
         ServiceContract contract;
         try {
             Class<?> baseType = getBaseType(rawType, field.getGenericType());
-            contract = interfaceIntrospector.introspect(baseType);
+            contract = interfaceIntrospector.introspect(context.getTypeMapping(), baseType);
         } catch (InvalidServiceContractException e) {
             throw new ProcessingException(e);
         }

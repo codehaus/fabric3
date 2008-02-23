@@ -22,8 +22,11 @@ import junit.framework.TestCase;
 import org.osoa.sca.annotations.Callback;
 import org.osoa.sca.annotations.Remotable;
 import org.osoa.sca.annotations.Service;
+import org.easymock.EasyMock;
 
 import org.fabric3.introspection.ContractProcessor;
+import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.TypeMapping;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.pojo.scdl.PojoComponentType;
@@ -36,9 +39,10 @@ import org.fabric3.scdl.ServiceDefinition;
 public class ServiceProcessorTestCase extends TestCase {
     private ServiceProcessor processor;
     private PojoComponentType type;
+    private IntrospectionContext context;
 
     public void testMultipleInterfaces() throws Exception {
-        processor.visitClass(FooMultiple.class, type, null);
+        processor.visitClass(FooMultiple.class, type, context);
         assertEquals(2, type.getServices().size());
         ServiceDefinition service = type.getServices().get(Baz.class.getSimpleName());
         ServiceContract contract = service.getServiceContract();
@@ -47,7 +51,7 @@ public class ServiceProcessorTestCase extends TestCase {
     }
 
     public void testSingleInterfaces() throws Exception {
-        processor.visitClass(FooSingle.class, type, null);
+        processor.visitClass(FooSingle.class, type, context);
         assertEquals(1, type.getServices().size());
         assertNotNull(type.getServices().get(Baz.class.getSimpleName()));
     }
@@ -61,12 +65,12 @@ public class ServiceProcessorTestCase extends TestCase {
      * Verifies a service with a callback annotation is recognized
      */
     public void testMultipleWithCallbackAnnotation() throws Exception {
-        processor.visitClass(FooMultipleWithCalback.class, type, null);
+        processor.visitClass(FooMultipleWithCalback.class, type, context);
         assertEquals(1, type.getServices().size());
     }
 
     public void testRemotableNoService() throws Exception {
-        processor.visitClass(FooRemotableNoService.class, type, null);
+        processor.visitClass(FooRemotableNoService.class, type, context);
         assertEquals(1, type.getServices().size());
         ServiceDefinition service = type.getServices().get(BazRemotable.class.getSimpleName());
         ServiceContract contract = service.getServiceContract();
@@ -75,7 +79,7 @@ public class ServiceProcessorTestCase extends TestCase {
 
     public void testNonInterface() throws Exception {
         try {
-            processor.visitClass(BadImpl.class, type, null);
+            processor.visitClass(BadImpl.class, type, context);
             fail();
         } catch (InvalidServiceType e) {
             //expected
@@ -84,7 +88,7 @@ public class ServiceProcessorTestCase extends TestCase {
 
     public void testNoInterfaces() throws Exception {
         try {
-            processor.visitClass(BadDefinition.class, type, null);
+            processor.visitClass(BadDefinition.class, type, context);
             fail();
         } catch (IllegalServiceDefinitionException e) {
             //expected
@@ -92,7 +96,7 @@ public class ServiceProcessorTestCase extends TestCase {
     }
 
     public void testSpecifiedOnSuperClass() throws Exception {
-        processor.visitClass(ServiceOnSuper.class, type, null);
+        processor.visitClass(ServiceOnSuper.class, type, context);
         assertEquals(1, type.getServices().size());
     }
 
@@ -102,6 +106,11 @@ public class ServiceProcessorTestCase extends TestCase {
         ContractProcessor contractProcessor = new DefaultContractProcessor(helper);
         processor = new ServiceProcessor(new ImplementationProcessorServiceImpl(contractProcessor, helper));
         type = new PojoComponentType(null);
+
+        TypeMapping typeMapping = new TypeMapping();
+        context = EasyMock.createMock(IntrospectionContext.class);
+        EasyMock.expect(context.getTypeMapping()).andStubReturn(typeMapping);
+        EasyMock.replay(context);
     }
 
     @Callback(Bar.class)

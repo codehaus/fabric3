@@ -20,14 +20,17 @@ package org.fabric3.introspection.impl.contract;
 
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Collection;
 
 import junit.framework.TestCase;
 import org.osoa.sca.annotations.Callback;
-import org.osoa.sca.annotations.EndsConversation;
 import org.osoa.sca.annotations.Conversational;
+import org.osoa.sca.annotations.EndsConversation;
 
-import org.fabric3.introspection.InvalidServiceContractException;
+import org.fabric3.introspection.ContractProcessor;
 import org.fabric3.introspection.IntrospectionHelper;
+import org.fabric3.introspection.InvalidServiceContractException;
+import org.fabric3.introspection.TypeMapping;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.Operation;
@@ -37,10 +40,12 @@ import org.fabric3.scdl.ServiceContract;
  * @version $Rev$ $Date$
  */
 public class DefaultContractProcessorTestCase extends TestCase {
-    private DefaultContractProcessor impl;
+    private ContractProcessor impl;
+    private TypeMapping boundMapping;
+    private TypeMapping emptyMapping;
 
     public void testSimpleInterface() throws InvalidServiceContractException {
-        ServiceContract<Type> contract = impl.introspect(Simple.class);
+        ServiceContract<Type> contract = impl.introspect(emptyMapping, Simple.class);
         assertEquals("Simple", contract.getInterfaceName());
         assertEquals(Simple.class.getName(), contract.getQualifiedInterfaceName());
         List<Operation<Type>> operations = contract.getOperations();
@@ -65,8 +70,32 @@ public class DefaultContractProcessorTestCase extends TestCase {
         assertEquals(IllegalArgumentException.class, fault0.getLogical());
     }
 
+    public void testBoundGenericInterface() throws InvalidServiceContractException {
+        ServiceContract<Type> contract = impl.introspect(boundMapping, Generic.class);
+        assertEquals("Generic", contract.getInterfaceName());
+
+        List<Operation<Type>> operations = contract.getOperations();
+        assertEquals(2, operations.size());
+        Operation<Type> operation = operations.get(0);
+        assertEquals("echo", operation.getName());
+
+        DataType<Type> returnType = operation.getOutputType();
+        assertEquals(Simple.class, returnType.getPhysical());
+
+    }
+
+    public void testMethodGeneric() throws InvalidServiceContractException {
+        ServiceContract<Type> contract = impl.introspect(boundMapping, Generic.class);
+        List<Operation<Type>> operations = contract.getOperations();
+        Operation<Type> operation = operations.get(1);
+        assertEquals("echo2", operation.getName());
+
+        DataType<Type> returnType = operation.getOutputType();
+//        assertEquals(Collection.class, returnType.getPhysical());
+    }
+
     public void testCallbackInterface() throws InvalidServiceContractException {
-        ServiceContract<?> contract = impl.introspect(ForwardInterface.class);
+        ServiceContract<?> contract = impl.introspect(emptyMapping, ForwardInterface.class);
         ServiceContract<?> callback = contract.getCallbackContract();
         assertEquals("CallbackInterface", callback.getInterfaceName());
         assertEquals(CallbackInterface.class.getName(), callback.getQualifiedInterfaceName());
@@ -77,7 +106,7 @@ public class DefaultContractProcessorTestCase extends TestCase {
     }
 
     public void testConversationalInformationIntrospection() throws Exception {
-        ServiceContract<Type> contract = impl.introspect(Foo.class);
+        ServiceContract<Type> contract = impl.introspect(emptyMapping, Foo.class);
         assertTrue(contract.isConversational());
         boolean testedContinue = false;
         boolean testedEnd = false;
@@ -95,7 +124,7 @@ public class DefaultContractProcessorTestCase extends TestCase {
     }
 
     public void testNonConversationalInformationIntrospection() throws Exception {
-        ServiceContract<Type> contract = impl.introspect(NonConversationalFoo.class);
+        ServiceContract<Type> contract = impl.introspect(emptyMapping, NonConversationalFoo.class);
         assertFalse(contract.isConversational());
         boolean tested = false;
         for (Operation<Type> operation : contract.getOperations()) {
@@ -110,7 +139,7 @@ public class DefaultContractProcessorTestCase extends TestCase {
 
     public void testInvalidConversationalAttribute() throws Exception {
         try {
-            impl.introspect(BadConversation.class);
+            impl.introspect(emptyMapping, BadConversation.class);
             fail();
         } catch (InvalidConversationalOperationException e) {
             //expected
@@ -136,6 +165,8 @@ public class DefaultContractProcessorTestCase extends TestCase {
         super.setUp();
         IntrospectionHelper helper = new DefaultIntrospectionHelper();
         impl = new DefaultContractProcessor(helper);
+        emptyMapping = new TypeMapping();
+        boundMapping = helper.mapTypeParameters(BoundImpl.class);
 
     }
 
@@ -144,6 +175,25 @@ public class DefaultContractProcessorTestCase extends TestCase {
     }
 
     private static interface Simple extends Base {
+    }
+
+    private static interface Generic<T extends Base> {
+        T echo(T t);
+
+        <Q extends Collection<?>> Q echo2(Q q);
+    }
+
+    private static class GenericImpl<T extends Base> implements Generic<T> {
+        public T echo(T t) {
+            return t;
+        }
+
+        public <Q extends Collection<?>> Q echo2(Q q) {
+            return q;
+        }
+    }
+
+    private static class BoundImpl extends GenericImpl<Simple> {
     }
 
     @Callback(CallbackInterface.class)

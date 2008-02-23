@@ -81,7 +81,7 @@ public class ReferenceProcessor<I extends Implementation<? extends InjectingComp
     }
 
     ReferenceDefinition createDefinition(String name, boolean required, Type type, TypeMapping typeMapping) throws IntrospectionException {
-        ServiceContract<Type> contract = contractProcessor.introspect(type);
+        ServiceContract<Type> contract = contractProcessor.introspect(typeMapping, type);
         Multiplicity multiplicity = multiplicity(required, type, typeMapping);
         ReferenceDefinition definition = new ReferenceDefinition(name, contract, multiplicity);
         definition.setRequired(required);
