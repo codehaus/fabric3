@@ -129,9 +129,15 @@ public abstract class AbstractAssembly implements Assembly {
             throw new ActivateException(e);
         }
 
-        // generate and provision the new components
-        Map<URI, GeneratorContext> contexts = physicalModelGenerator.generate(components);
-        physicalModelGenerator.provision(contexts);
+        try {
+            // generate and provision any new components and new wires
+            Map<URI, GeneratorContext> contexts = physicalModelGenerator.generate(components);
+            physicalModelGenerator.provision(contexts);
+        } catch (GenerationException e) {
+            throw new ActivateException(e);
+        } catch (RoutingException e) {
+            throw new ActivateException(e);
+        }
         
         try {
             // record the operation

@@ -42,6 +42,10 @@ public abstract class Implementation<T extends AbstractComponentType<?, ?, ?, ?>
     public void setComponentType(T componentType) {
         this.componentType = componentType;
     }
+    
+    public boolean isType(QName type) {
+        return getType().equals(type);
+    }
 
     /**
      * Returns the SCDL XML element corresponding to this type.

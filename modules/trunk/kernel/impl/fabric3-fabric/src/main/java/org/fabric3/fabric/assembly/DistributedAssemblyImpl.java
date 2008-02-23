@@ -29,11 +29,13 @@ import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
 import org.fabric3.fabric.model.logical.LogicalModelGenerator;
 import org.fabric3.fabric.model.physical.PhysicalModelGenerator;
 import org.fabric3.fabric.model.physical.PhysicalWireGenerator;
+import org.fabric3.fabric.services.routing.RoutingException;
 import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
 
 import org.osoa.sca.annotations.Reference;
@@ -71,9 +73,15 @@ public class DistributedAssemblyImpl extends AbstractAssembly implements Distrib
             throw new ActivateException(e);
         }
 
-        // generate and provision components on nodes that have gone down
-        Map<URI, GeneratorContext> contexts = physicalModelGenerator.generate(components);
-        physicalModelGenerator.provision(contexts);
+        try {
+            // generate and provision any new components and new wires
+            Map<URI, GeneratorContext> contexts = physicalModelGenerator.generate(components);
+            physicalModelGenerator.provision(contexts);
+        } catch (GenerationException e) {
+            throw new ActivateException(e);
+        } catch (RoutingException e) {
+            throw new ActivateException(e);
+        }
         // TODO end temporary recovery code
 
     }
