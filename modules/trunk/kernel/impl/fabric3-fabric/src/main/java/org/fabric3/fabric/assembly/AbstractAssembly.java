@@ -29,26 +29,19 @@ import javax.xml.namespace.QName;
 import org.fabric3.fabric.assembly.allocator.AllocationException;
 import org.fabric3.fabric.assembly.allocator.Allocator;
 import org.fabric3.fabric.assembly.resolver.WireResolver;
-import org.fabric3.fabric.generator.DefaultGeneratorContext;
 import org.fabric3.fabric.model.logical.LogicalModelGenerator;
 import org.fabric3.fabric.model.physical.PhysicalModelGenerator;
 import org.fabric3.fabric.model.physical.PhysicalWireGenerator;
 import org.fabric3.fabric.services.routing.RoutingException;
 import org.fabric3.fabric.services.routing.RoutingService;
-import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.Composite;
 import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.assembly.Assembly;
 import org.fabric3.spi.assembly.AssemblyException;
-import org.fabric3.spi.assembly.BindException;
-import org.fabric3.spi.command.CommandSet;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorContext;
-import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
-import org.fabric3.spi.model.instance.LogicalService;
-import org.fabric3.spi.model.physical.PhysicalChangeSet;
 import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
 import org.fabric3.spi.runtime.assembly.RecordException;
 import org.fabric3.spi.services.contribution.MetaDataStore;
@@ -144,48 +137,6 @@ public abstract class AbstractAssembly implements Assembly {
             logicalComponentManager.store();
         } catch (RecordException e) {
             throw new ActivateException("Error activating deployable", composite.getName().toString(), e);
-        }
-        
-    }
-
-
-    public void bindService(URI serviceUri, BindingDefinition bindingDefinition) throws BindException {
-        
-        LogicalComponent<?> currentComponent = logicalComponentManager.getComponent(serviceUri);
-        if (currentComponent == null) {
-            throw new BindException("Component not found", serviceUri.toString());
-        }
-        
-        String fragment = serviceUri.getFragment();
-        LogicalService service;
-        if (fragment == null) {
-            if (currentComponent.getServices().size() != 1) {
-                String uri = serviceUri.toString();
-                throw new BindException("Component must implement one service if no service name specified", uri);
-            }
-            Collection<LogicalService> services = currentComponent.getServices();
-            service = services.iterator().next();
-        } else {
-            service = currentComponent.getService(fragment);
-            if (service == null) {
-                throw new BindException("Service not found", serviceUri.toString());
-            }
-        }
-        
-        LogicalBinding<?> binding = new LogicalBinding<BindingDefinition>(bindingDefinition, service);
-        PhysicalChangeSet changeSet = new PhysicalChangeSet();
-        CommandSet commandSet = new CommandSet();
-        GeneratorContext context = new DefaultGeneratorContext(changeSet, commandSet);
-        
-        try {
-            wireGenerator.generateBoundServiceWire(service, binding, currentComponent, context);
-            routingService.route(currentComponent.getRuntimeId(), changeSet);
-            service.addBinding(binding);
-            // TODO record to recovery service
-        } catch (GenerationException e) {
-            throw new BindException("Error binding service", serviceUri.toString(), e);
-        } catch (RoutingException e) {
-            throw new BindException(e);
         }
         
     }

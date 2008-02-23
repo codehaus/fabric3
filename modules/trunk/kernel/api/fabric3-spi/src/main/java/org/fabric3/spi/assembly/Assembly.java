@@ -18,11 +18,8 @@
  */
 package org.fabric3.spi.assembly;
 
-import java.net.URI;
-
 import javax.xml.namespace.QName;
 
-import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.Composite;
 
 /**
@@ -54,15 +51,5 @@ public interface Assembly {
      * @throws ActivateException if an error is encountered during activation
      */
     void includeInDomain(Composite composite) throws ActivateException;
-
-    /**
-     * Binds a service.
-     *
-     * @param serviceURI the absolute URI of the service
-     * @param binding    the binding definition
-     * @throws org.fabric3.spi.assembly.BindException
-     *          if an error occurs binding the service
-     */
-    void bindService(URI serviceURI, BindingDefinition binding) throws BindException;
 
 }

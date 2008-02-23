@@ -120,7 +120,7 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
     public void destroy() {
         // destroy system components
         ScopeRegistry scopeRegistry = getSystemComponent(ScopeRegistry.class, ComponentNames.SCOPE_REGISTRY_URI);
-        ScopeContainer scopeContainer = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
+        ScopeContainer<?> scopeContainer = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
         WorkContext workContext = new WorkContext();
         workContext.setScopeIdentifier(Scope.COMPOSITE, ComponentNames.RUNTIME_URI);
         scopeContainer.stopContext(workContext);
