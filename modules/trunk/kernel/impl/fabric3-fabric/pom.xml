@@ -29,6 +29,7 @@
     <description>Fabric3 Core Fabric.</description>
 
     <repositories>
+        <!-- repo needed for the Apache Tuscany version of the commonj API -->
         <repository>
             <id>apache.incubator</id>
             <name>Apache Incubator Repository</name>
@@ -91,7 +92,7 @@
             <artifactId>commons-codec</artifactId>
             <version>1.3</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>geronimo-annotation_1.0_spec</artifactId>

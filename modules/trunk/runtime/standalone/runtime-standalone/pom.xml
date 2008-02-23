@@ -33,6 +33,21 @@
     <name>Fabric3 Standalone Server Assembly</name>
     <description>Assembly distribution for Fabric3 Standalone Server.</description>
 
+    <repositories>
+        <!-- repo needed for the Apache Tuscany version of the commonj API -->
+        <repository>
+            <id>apache.incubator</id>
+            <name>Apache Incubator Repository</name>
+            <url>http://people.apache.org/repo/m2-incubating-repository</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <dependencies>
         <!-- force fabric3-spi dependency as Maven calculates an earlier version in transitive dependency -->
         <dependency>

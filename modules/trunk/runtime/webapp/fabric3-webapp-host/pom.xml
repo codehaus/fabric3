@@ -28,6 +28,21 @@
     <name>Fabric3 Webapp Runtime Host</name>
     <description>Fabric3 Webapp Runtime Host.</description>
 
+    <repositories>
+        <!-- repo needed for the Apache Tuscany version of the commonj API -->
+        <repository>
+            <id>apache.incubator</id>
+            <name>Apache Incubator Repository</name>
+            <url>http://people.apache.org/repo/m2-incubating-repository</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <dependencies>
     
         <dependency>

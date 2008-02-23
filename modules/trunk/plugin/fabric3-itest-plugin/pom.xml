@@ -30,6 +30,7 @@
     <description>Fabric3 Integration Test Maven Plugin.</description>
 
     <repositories>
+        <!-- repo needed for the Apache Tuscany version of the commonj API -->
         <repository>
             <id>apache.incubator</id>
             <name>Apache Incubator Repository</name>
