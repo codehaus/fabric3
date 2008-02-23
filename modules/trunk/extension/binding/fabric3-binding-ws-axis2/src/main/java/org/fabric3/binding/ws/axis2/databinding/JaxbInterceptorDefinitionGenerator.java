@@ -16,7 +16,6 @@
  */
 package org.fabric3.binding.ws.axis2.databinding;
 
-import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,8 +60,7 @@ public class JaxbInterceptorDefinitionGenerator implements InterceptorDefinition
         generatorRegistry.register(EXTENSION_NAME, this);
     }
 
-    @SuppressWarnings("unchecked")
-    public JaxbInterceptorDefinition generate(Element policySet, 
+    public JaxbInterceptorDefinition generate(Element policySet,
                                               GeneratorContext generatorContext,
                                               Operation<?> operation,
                                               LogicalBinding<?> logicalBinding) throws GenerationException {
@@ -72,18 +70,17 @@ public class JaxbInterceptorDefinitionGenerator implements InterceptorDefinition
         URI classLoaderId = classLoaderGenerator.generate(logicalBinding, generatorContext);
         
         // This assumes a Java interface contract
-        Operation<Type> javaOperation = (Operation<Type>) operation;
-        
-        List<DataType<Type>> inputTypes = javaOperation.getInputType().getLogical();
-        DataType<Type> outputType = javaOperation.getOutputType();
+
+        List<? extends DataType<?>> inputTypes = operation.getInputType().getLogical();
+        DataType<?> outputType = operation.getOutputType();
 
         List<String> classNames = new ArrayList<String>(inputTypes.size() + 1);
 
-        for (DataType<Type> inputType : inputTypes) {
-            String inClassName = ((Class) inputType.getLogical()).getName();
-            classNames.add(inClassName);
+        for (DataType<?> inputType : inputTypes) {
+            String className = ((Class<?>) inputType.getPhysical()).getName();
+            classNames.add(className);
         }
-        classNames.add(((Class) outputType.getLogical()).getName());
+        classNames.add(((Class<?>) outputType.getPhysical()).getName());
         return new JaxbInterceptorDefinition(classLoaderId, classNames, service);
     }
 
