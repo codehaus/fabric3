@@ -18,9 +18,6 @@
  */
 package org.fabric3.pojo.scdl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.fabric3.scdl.Signature;
 
 /**
@@ -31,11 +28,8 @@ import org.fabric3.scdl.Signature;
 public class ConstructorDefinition {
     private Signature signature;
 
-    private List<String> injectionNames;
-
     public ConstructorDefinition(Signature signature) {
         this.signature = signature;
-        injectionNames = new ArrayList<String>();
     }
 
     /**
@@ -45,18 +39,4 @@ public class ConstructorDefinition {
     public Signature getSignature() {
         return signature;
     }
-
-    public List<String> getInjectionNames() {
-        return injectionNames;
-    }
-
-    /**
-     * Returns the list of constructor parameter types
-     *
-     * @return the list of constructor parameter types
-     */
-    public List<String> getParameterTypes() {
-        return signature.getParameterTypes();
-    }
-
 }
