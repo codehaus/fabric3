@@ -64,7 +64,6 @@ public abstract class AbstractAssembly implements Assembly {
     protected final MetaDataStore metadataStore;
     protected final LogicalComponentManager logicalComponentManager;
     protected final PhysicalWireGenerator wireGenerator;
-    protected final WireResolver wireResolver;
 
     public AbstractAssembly(Allocator allocator,
                             RoutingService routingService,
@@ -72,8 +71,7 @@ public abstract class AbstractAssembly implements Assembly {
                             PhysicalModelGenerator physicalModelGenerator,
                             LogicalModelGenerator logicalModelGenerator,
                             LogicalComponentManager logicalComponentManager,
-                            PhysicalWireGenerator wireGenerator,
-                            WireResolver wireResolver) {
+                            PhysicalWireGenerator wireGenerator) {
         this.allocator = allocator;
         this.routingService = routingService; 
         this.metadataStore = metadataStore;
@@ -81,7 +79,6 @@ public abstract class AbstractAssembly implements Assembly {
         this.logicalModelGenerator = logicalModelGenerator;
         this.logicalComponentManager = logicalComponentManager;
         this.wireGenerator = wireGenerator;
-        this.wireResolver = wireResolver;
     }
 
     public void initialize() throws AssemblyException {

@@ -7,7 +7,9 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
+import org.fabric3.spi.wire.PromotionException;
 import org.fabric3.spi.wire.TargetPromotionService;
+import org.fabric3.spi.wire.TargetResolutionException;
 import org.fabric3.spi.wire.TargetResolutionService;
 import org.fabric3.spi.wire.WiringService;
 import org.osoa.sca.annotations.Reference;
@@ -53,9 +55,44 @@ public class DefaultWiringService implements WiringService {
             for (LogicalComponent<?> child : compositeComponent.getComponents()) {
                 wire(child);
             }
-        } else {
-            handleServices(logicalComponent);
-            handleReferences(logicalComponent);
+        }
+
+        handleReferences(logicalComponent);
+        handleServices(logicalComponent);
+        
+    }
+    
+    /**
+     * Handles the promotion on the specified logical service. 
+     * 
+     * @param logicalService Logical service whose promotion is handled.
+     */
+    public void promote(LogicalService logicalService) throws WiringException {
+        try {
+            targetPromotionService.promote(logicalService);
+        } catch (PromotionException e) {
+            throw new WiringException(e);
+        }
+    }
+    
+    /**
+     * Resolves the target for a logical reference.
+     * 
+     * @param reference Logical reference whose target needs to be resolved.
+     * @param context Composite component within which the targets are resolved.
+     * @return True is the target was succesfully involved.
+     */
+    public void wire(LogicalReference logicalReference, LogicalCompositeComponent context) throws WiringException {
+        
+        try {
+            targetPromotionService.promote(logicalReference);
+            for (TargetResolutionService targetResolutionService : targetResolutionServices) {
+                targetResolutionService.resolve(logicalReference, context);
+            }
+        } catch (PromotionException e) {
+            throw new WiringException(e);
+        } catch (TargetResolutionException e) {
+            throw new WiringException(e);
         }
         
     }
@@ -64,28 +101,21 @@ public class DefaultWiringService implements WiringService {
      * Handles promotions and target resolution on references.
      */
     private void handleReferences(LogicalComponent<?> logicalComponent) throws WiringException {
-        
         for (LogicalReference logicalReference : logicalComponent.getReferences()) {
             targetPromotionService.promote(logicalReference);
             for (TargetResolutionService targetResolutionService : targetResolutionServices) {
                 targetResolutionService.resolve(logicalReference, logicalComponent.getParent());
             }
-            if (logicalReference.getWires().isEmpty() && logicalReference.getDefinition().isRequired()) {
-                throw new WiringException("Unable to resolve reference " + logicalReference.getUri());
-            }
         }
-        
     }
 
     /*
      * Handles promotions on services.
      */
     private void handleServices(LogicalComponent<?> logicalComponent) {
-        
         for (LogicalService logicalService : logicalComponent.getServices()) {
             targetPromotionService.promote(logicalService);
         }
-        
     }
 
 }

@@ -29,7 +29,7 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
         }
         
         List<URI> requestedTargets = componentReference.getTargets();
-        if (!requestedTargets.isEmpty()) {
+        if (requestedTargets.isEmpty()) {
             return;
         }
         

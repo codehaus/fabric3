@@ -19,14 +19,12 @@
 package org.fabric3.fabric.assembly;
 
 import org.fabric3.fabric.assembly.allocator.Allocator;
-import org.fabric3.fabric.assembly.resolver.WireResolver;
-import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
 import org.fabric3.fabric.model.logical.LogicalModelGenerator;
 import org.fabric3.fabric.model.physical.PhysicalModelGenerator;
 import org.fabric3.fabric.model.physical.PhysicalWireGenerator;
 import org.fabric3.fabric.services.routing.RoutingService;
+import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
 import org.fabric3.spi.services.contribution.MetaDataStore;
-
 import org.osoa.sca.annotations.Reference;
 
 /**
@@ -42,10 +40,9 @@ public class RuntimeAssemblyImpl extends AbstractAssembly {
                                @Reference PhysicalModelGenerator physicalModelGenerator,
                                @Reference LogicalModelGenerator logicalModelGenerator,
                                @Reference LogicalComponentManager logicalComponentManager,
-                               @Reference PhysicalWireGenerator wireGenerator,
-                               @Reference WireResolver wireResolver) {
+                               @Reference PhysicalWireGenerator wireGenerator) {
         super(allocator, routingService, metadataStore, physicalModelGenerator, logicalModelGenerator,
-              logicalComponentManager, wireGenerator, wireResolver);
+              logicalComponentManager, wireGenerator);
     }
 
 }

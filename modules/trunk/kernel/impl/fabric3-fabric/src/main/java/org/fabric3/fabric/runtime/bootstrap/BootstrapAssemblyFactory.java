@@ -17,14 +17,14 @@
 package org.fabric3.fabric.runtime.bootstrap;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.fabric3.fabric.assembly.RuntimeAssemblyImpl;
 import org.fabric3.fabric.assembly.allocator.Allocator;
 import org.fabric3.fabric.assembly.allocator.LocalAllocator;
 import org.fabric3.fabric.assembly.normalizer.PromotionNormalizer;
 import org.fabric3.fabric.assembly.normalizer.PromotionNormalizerImpl;
-import org.fabric3.fabric.assembly.resolver.DefaultWireResolver;
-import org.fabric3.fabric.assembly.resolver.WireResolver;
 import org.fabric3.fabric.builder.ConnectorImpl;
 import org.fabric3.fabric.builder.component.DefaultComponentBuilderRegistry;
 import org.fabric3.fabric.builder.resource.ResourceContainerBuilderRegistryImpl;
@@ -55,6 +55,8 @@ import org.fabric3.fabric.model.physical.PhysicalOperationHelper;
 import org.fabric3.fabric.model.physical.PhysicalOperationHelperImpl;
 import org.fabric3.fabric.model.physical.PhysicalWireGenerator;
 import org.fabric3.fabric.model.physical.PhysicalWireGeneratorImpl;
+import org.fabric3.fabric.monitor.MonitorWireAttacher;
+import org.fabric3.fabric.monitor.MonitorWireGenerator;
 import org.fabric3.fabric.runtime.ComponentNames;
 import org.fabric3.fabric.services.contribution.ArtifactResolverRegistryImpl;
 import org.fabric3.fabric.services.contribution.ClasspathProcessorRegistryImpl;
@@ -70,11 +72,13 @@ import org.fabric3.fabric.services.instancefactory.ReflectiveInstanceFactoryBuil
 import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.fabric.services.routing.RuntimeRoutingService;
 import org.fabric3.fabric.services.runtime.BootstrapRuntimeInfoService;
-import org.fabric3.fabric.monitor.MonitorWireGenerator;
-import org.fabric3.fabric.monitor.MonitorWireAttacher;
-import org.fabric3.monitor.MonitorFactory;
+import org.fabric3.fabric.wire.DefaultWiringService;
+import org.fabric3.fabric.wire.promotion.DefaultTargetPromotionService;
+import org.fabric3.fabric.wire.resolve.ExplicitTargetResolutionService;
+import org.fabric3.fabric.wire.resolve.TypeBasedAutoWireService;
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.InitializationException;
+import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.spi.assembly.Assembly;
@@ -96,6 +100,9 @@ import org.fabric3.spi.services.discovery.DiscoveryService;
 import org.fabric3.spi.services.runtime.RuntimeInfoService;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
+import org.fabric3.spi.wire.TargetPromotionService;
+import org.fabric3.spi.wire.TargetResolutionService;
+import org.fabric3.spi.wire.WiringService;
 import org.fabric3.transform.DefaultTransformerRegistry;
 import org.fabric3.transform.dom2java.String2Class;
 import org.fabric3.transform.dom2java.String2Integer;
@@ -142,15 +149,20 @@ public class BootstrapAssemblyFactory {
                                                                             physicalOperationHelper);
         PhysicalModelGenerator physicalModelGenerator =
                 createPhysicalModelGenerator(generatorRegistry, routingService, logicalComponentManager, wireGenerator);
-
-        WireResolver resolver = new DefaultWireResolver();
+        
+        TargetPromotionService targetPromotionService = new DefaultTargetPromotionService();
+        List<TargetResolutionService> targetResolutionServices = new ArrayList<TargetResolutionService>();
+        targetResolutionServices.add(new ExplicitTargetResolutionService());
+        targetResolutionServices.add(new TypeBasedAutoWireService());
+        WiringService wiringService = new DefaultWiringService(targetPromotionService, targetResolutionServices);
+        
         PromotionNormalizer normalizer = new PromotionNormalizerImpl();
         DocumentLoader documentLoader = new DocumentLoaderImpl();
         AtomicComponentInstantiator atomicComponentInstantiator = new AtomicComponentInstantiator(documentLoader);
 
         CompositeComponentInstantiator compositeComponentInstantiator =
                 new CompositeComponentInstantiator(atomicComponentInstantiator, documentLoader);
-        LogicalModelGenerator logicalModelGenerator = new LogicalModelGeneratorImpl(resolver,
+        LogicalModelGenerator logicalModelGenerator = new LogicalModelGeneratorImpl(wiringService,
                                                                                     normalizer,
                                                                                     logicalComponentManager,
                                                                                     atomicComponentInstantiator,
@@ -162,8 +174,7 @@ public class BootstrapAssemblyFactory {
                                                            physicalModelGenerator,
                                                            logicalModelGenerator,
                                                            logicalComponentManager,
-                                                           wireGenerator,
-                                                           resolver);
+                                                           wireGenerator);
         try {
             runtimeAssembly.initialize();
         } catch (AssemblyException e) {

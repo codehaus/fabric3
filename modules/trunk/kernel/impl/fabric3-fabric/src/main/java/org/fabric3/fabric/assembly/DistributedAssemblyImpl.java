@@ -55,10 +55,9 @@ public class DistributedAssemblyImpl extends AbstractAssembly implements Distrib
                                    @Reference PhysicalModelGenerator physicalModelGenerator,
                                    @Reference LogicalModelGenerator logicalModelGenerator,
                                    @Reference(name="logicalComponentManager") LogicalComponentManager logicalComponentManager,
-                                   @Reference PhysicalWireGenerator wireGenerator,
-                                   @Reference WireResolver wireResolver) {
+                                   @Reference PhysicalWireGenerator wireGenerator) {
         super(allocator, routingService, metaDataStore, physicalModelGenerator, logicalModelGenerator,
-              logicalComponentManager, wireGenerator, wireResolver);
+              logicalComponentManager, wireGenerator);
     }
 
     public void initialize() throws AssemblyException {

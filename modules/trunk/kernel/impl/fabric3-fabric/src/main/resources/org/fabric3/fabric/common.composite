@@ -71,8 +71,20 @@
         <reference name="logicalComponentManager" target="logicalComponentManager"/>
     </component>
 
-    <component name="wireResolver">
-        <system:implementation.system class="org.fabric3.fabric.assembly.resolver.DefaultWireResolver"/>
+    <component name="wiringService">
+        <system:implementation.system class="org.fabric3.fabric.wire.DefaultWiringService"/>
+    </component>
+
+    <component name="targetPromotionService">
+        <system:implementation.system class="org.fabric3.fabric.wire.promotion.DefaultTargetPromotionService"/>
+    </component>
+
+    <component name="explicitTargetResolutionService">
+        <system:implementation.system class="org.fabric3.fabric.wire.resolve.ExplicitTargetResolutionService"/>
+    </component>
+
+    <component name="typeBasedAutoWireService">
+        <system:implementation.system class="org.fabric3.fabric.wire.resolve.TypeBasedAutoWireService"/>
     </component>
 
     <component name="promotionNormalizer">

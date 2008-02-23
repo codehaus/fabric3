@@ -1,10 +1,12 @@
 package org.fabric3.spi.model.instance;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -82,8 +84,9 @@ public class LogicalCompositeComponent extends LogicalComponent<CompositeImpleme
      *
      * @return the child components of the current component
      */
-    public Collection<LogicalComponent<?>> getComponents() {
-        return Collections.unmodifiableCollection(components.values());
+    public List<LogicalComponent<?>> getComponents() {
+        List<LogicalComponent<?>> copyOfComponents = new ArrayList<LogicalComponent<?>>(components.values());
+        return copyOfComponents;
     }
 
     /**

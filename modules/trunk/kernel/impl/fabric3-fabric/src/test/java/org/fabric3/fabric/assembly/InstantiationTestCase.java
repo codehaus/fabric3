@@ -26,6 +26,7 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
+import org.fabric3.spi.wire.WiringService;
 
 /**
  * @version $Rev$ $Date$
@@ -70,10 +71,10 @@ public class InstantiationTestCase extends TestCase {
         
         AtomicComponentInstantiator atomicComponentInstantiator = new AtomicComponentInstantiator(null);
         CompositeComponentInstantiator compositeComponentInstantiator = new CompositeComponentInstantiator(atomicComponentInstantiator, null);
-        WireResolver wireResolver = EasyMock.createMock(WireResolver.class);
+        WiringService wiringService = EasyMock.createMock(WiringService.class);
         PromotionNormalizer normalizer = EasyMock.createMock(PromotionNormalizer.class);
         
-        logicalModelGenerator = new LogicalModelGeneratorImpl(wireResolver, normalizer, null, atomicComponentInstantiator, compositeComponentInstantiator);
+        logicalModelGenerator = new LogicalModelGeneratorImpl(wiringService, normalizer, null, atomicComponentInstantiator, compositeComponentInstantiator);
         parent = new LogicalCompositeComponent(PARENT_URI, null, null, null);
     }
 
@@ -115,6 +116,6 @@ public class InstantiationTestCase extends TestCase {
         public QName getType() {
             return null;
         }
-
     }
+    
 }
