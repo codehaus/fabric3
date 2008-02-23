@@ -20,6 +20,7 @@ package org.fabric3.pojo.scdl;
 
 import org.fabric3.scdl.InjectingComponentType;
 import org.fabric3.scdl.InjectionSite;
+import org.fabric3.scdl.Signature;
 
 /**
  * A component type specialization for POJO implementations
@@ -28,7 +29,7 @@ import org.fabric3.scdl.InjectionSite;
  */
 public class PojoComponentType extends InjectingComponentType {
     private String implClass;
-    private ConstructorDefinition constructorDefinition;
+    private Signature constructor;
     private InjectionSite conversationIDInjectionSite;
 
     /**
@@ -56,21 +57,20 @@ public class PojoComponentType extends InjectingComponentType {
     }
 
     /**
-     * Returns the constructor used to instantiate implementation instances.
+     * Returns the signature of the constructor to use.
      *
-     * @return the constructor used to instantiate implementation instances
+     * @return the signature of the constructor to use
      */
-    public ConstructorDefinition getConstructorDefinition() {
-        return constructorDefinition;
+    public Signature getConstructor() {
+        return constructor;
     }
 
     /**
-     * Sets the constructor used to instantiate implementation instances
-     *
-     * @param definition the constructor used to instantiate implementation instances
+     * Sets the signature of the constructor to use.
+     * @param constructor the signature of the constructor to use
      */
-    public void setConstructorDefinition(ConstructorDefinition definition) {
-        this.constructorDefinition = definition;
+    public void setConstructor(Signature constructor) {
+        this.constructor = constructor;
     }
 
     public InjectionSite getConversationIDMember() {

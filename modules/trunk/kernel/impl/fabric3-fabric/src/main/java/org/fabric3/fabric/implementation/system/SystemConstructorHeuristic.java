@@ -21,7 +21,6 @@ import java.lang.reflect.Constructor;
 import org.fabric3.introspection.HeuristicProcessor;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionException;
-import org.fabric3.pojo.scdl.ConstructorDefinition;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Signature;
 
@@ -36,14 +35,12 @@ public class SystemConstructorHeuristic implements HeuristicProcessor<SystemImpl
         PojoComponentType componentType = implementation.getComponentType();
 
         // if there is already a defined constructor then do nothing
-        if (componentType.getConstructorDefinition() != null) {
+        if (componentType.getConstructor() != null) {
             return;
         }
 
         Signature signature = findConstructor(implClass);
-        ConstructorDefinition definition = new ConstructorDefinition(signature);
-
-        componentType.setConstructorDefinition(definition);
+        componentType.setConstructor(signature);
     }
 
     /**

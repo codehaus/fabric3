@@ -64,7 +64,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         URI componentId = component.getUri();
 
         InstanceFactoryDefinition providerDefinition = new InstanceFactoryDefinition();
-        providerDefinition.setConstructor(type.getConstructorDefinition().getSignature());
+        providerDefinition.setConstructor(type.getConstructor());
         providerDefinition.setInitMethod(type.getInitMethod());
         providerDefinition.setDestroyMethod(type.getDestroyMethod());
         providerDefinition.setImplementationClass(implementation.getImplementationClass());

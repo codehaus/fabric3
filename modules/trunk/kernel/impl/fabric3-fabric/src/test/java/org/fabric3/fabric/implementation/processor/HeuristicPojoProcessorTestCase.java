@@ -30,7 +30,6 @@ import org.osoa.sca.annotations.Remotable;
 import org.osoa.sca.annotations.Service;
 import org.easymock.EasyMock;
 
-import org.fabric3.pojo.scdl.ConstructorDefinition;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.scdl.ServiceContract;
@@ -72,7 +71,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
     public void testSingleInterface() throws Exception {
         PojoComponentType type =  new PojoComponentType(null);
         Constructor<SingleInterfaceImpl> ctor = SingleInterfaceImpl.class.getConstructor();
-        type.setConstructorDefinition(new ConstructorDefinition(new Signature(ctor)));
+        type.setConstructor(new Signature(ctor));
         processor.visitEnd(SingleInterfaceImpl.class, type, context);
         assertEquals(1, type.getServices().size());
         Map<String, ServiceDefinition> services = type.getServices();
@@ -90,7 +89,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
         PojoComponentType type = new PojoComponentType(null);
         Constructor<SingleInterfaceWithPropertyReferenceImpl> ctor =
                 SingleInterfaceWithPropertyReferenceImpl.class.getConstructor();
-        type.setConstructorDefinition(new ConstructorDefinition(new Signature(ctor)));
+        type.setConstructor(new Signature(ctor));
         processor.visitEnd(SingleInterfaceWithPropertyReferenceImpl.class, type, context);
         assertEquals(1, type.getServices().size());
         Map<String, ServiceDefinition> services = type.getServices();
@@ -109,10 +108,9 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
      * Verifies that a property setter is not introspected if an analogous operation is in the service interface
      */
     public void testPropertySetterInInterface() throws Exception {
-        PojoComponentType type =
-                new PojoComponentType(null);
+        PojoComponentType type = new PojoComponentType(null);
         Constructor<SingleInterfaceImpl> ctor = SingleInterfaceImpl.class.getConstructor();
-        type.setConstructorDefinition(new ConstructorDefinition(new Signature(ctor)));
+        type.setConstructor(new Signature(ctor));
         processor.visitEnd(SingleInterfaceImpl.class, type, context);
         assertEquals(0, type.getProperties().size());
     }
@@ -121,10 +119,9 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
      * Verifies that a reference setter is not introspected if an analogous operation is in the service interface
      */
     public void testReferenceSetterInInterface() throws Exception {
-        PojoComponentType type =
-                new PojoComponentType(null);
+        PojoComponentType type = new PojoComponentType(null);
         Constructor<RefInterfaceImpl> ctor = RefInterfaceImpl.class.getConstructor();
-        type.setConstructorDefinition(new ConstructorDefinition(new Signature(ctor)));
+        type.setConstructor(new Signature(ctor));
         processor.visitEnd(RefInterfaceImpl.class, type, context);
         assertEquals(0, type.getReferences().size());
     }
@@ -133,10 +130,9 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
      * Verifies collection generic types or array types are introspected as references according to spec rules
      */
     public void testReferenceCollectionType() throws Exception {
-        PojoComponentType type =
-                new PojoComponentType(null);
+        PojoComponentType type = new PojoComponentType(null);
         Constructor<ReferenceCollectionImpl> ctor = ReferenceCollectionImpl.class.getConstructor();
-        type.setConstructorDefinition(new ConstructorDefinition(new Signature(ctor)));
+        type.setConstructor(new Signature(ctor));
         processor.visitEnd(ReferenceCollectionImpl.class, type, context);
         assertEquals(0, type.getProperties().size());
         assertEquals(4, type.getReferences().size());
@@ -146,10 +142,9 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
      * Verifies collection generic types or array types are introspected as properties according to spec rules
      */
     public void testPropertyCollectionType() throws Exception {
-        PojoComponentType type =
-                new PojoComponentType(null);
+        PojoComponentType type = new PojoComponentType(null);
         Constructor<PropertyCollectionImpl> ctor = PropertyCollectionImpl.class.getConstructor();
-        type.setConstructorDefinition(new ConstructorDefinition(new Signature(ctor)));
+        type.setConstructor(new Signature(ctor));
         processor.visitEnd(PropertyCollectionImpl.class, type, context);
         assertEquals(0, type.getReferences().size());
         assertEquals(4, type.getProperties().size());
@@ -159,20 +154,18 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
      * Verifies references are calculated when the type marked with is @Remotable
      */
     public void testRemotableRef() throws Exception {
-        PojoComponentType type =
-                new PojoComponentType(null);
+        PojoComponentType type = new PojoComponentType(null);
         Constructor<RemotableRefImpl> ctor = RemotableRefImpl.class.getConstructor();
-        type.setConstructorDefinition(new ConstructorDefinition(new Signature(ctor)));
+        type.setConstructor(new Signature(ctor));
         processor.visitEnd(RemotableRefImpl.class, type, context);
         assertEquals(2, type.getReferences().size());
         assertEquals(0, type.getProperties().size());
     }
 
     public void testParentInterface() throws ProcessingException, NoSuchMethodException {
-        PojoComponentType type =
-                new PojoComponentType(null);
+        PojoComponentType type = new PojoComponentType(null);
         Constructor<Child> ctor = Child.class.getConstructor();
-        type.setConstructorDefinition(new ConstructorDefinition(new Signature(ctor)));
+        type.setConstructor(new Signature(ctor));
         processor.visitEnd(Child.class, type, context);
         assertTrue(type.getServices().containsKey(Interface1.class.getSimpleName()));
     }
@@ -181,8 +174,7 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
      * Verifies a service inteface is calculated when only props and refs are given
      */
     public void testExcludedPropertyAndReference() throws Exception {
-        PojoComponentType type =
-                new PojoComponentType(null);
+        PojoComponentType type = new PojoComponentType(null);
         ReferenceDefinition ref = new ReferenceDefinition("reference", null, null);
         type.add(ref);
         ReferenceDefinition ref2 = new ReferenceDefinition("reference2", null, null);
@@ -198,19 +190,17 @@ public class HeuristicPojoProcessorTestCase extends TestCase {
     }
 
     public void testProtectedRemotableRefField() throws ProcessingException, NoSuchMethodException {
-        PojoComponentType type =
-                new PojoComponentType(null);
+        PojoComponentType type = new PojoComponentType(null);
         Constructor<ProtectedRemotableRefFieldImpl> ctor = ProtectedRemotableRefFieldImpl.class.getConstructor();
-        type.setConstructorDefinition(new ConstructorDefinition(new Signature(ctor)));
+        type.setConstructor(new Signature(ctor));
         processor.visitEnd(ProtectedRemotableRefFieldImpl.class, type, context);
         assertNotNull(type.getReferences().get("otherRef"));
     }
 
     public void testProtectedRemotableRefMethod() throws ProcessingException, NoSuchMethodException {
-        PojoComponentType type =
-                new PojoComponentType(null);
+        PojoComponentType type = new PojoComponentType(null);
         Constructor<ProtectedRemotableRefMethodImpl> ctor = ProtectedRemotableRefMethodImpl.class.getConstructor();
-        type.setConstructorDefinition(new ConstructorDefinition(new Signature(ctor)));
+        type.setConstructor(new Signature(ctor));
         processor.visitEnd(ProtectedRemotableRefMethodImpl.class, type, context);
         assertNotNull(type.getReferences().get("otherRef"));
     }

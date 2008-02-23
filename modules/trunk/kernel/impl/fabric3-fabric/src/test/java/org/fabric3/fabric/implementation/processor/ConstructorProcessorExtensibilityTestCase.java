@@ -23,7 +23,6 @@ import java.lang.reflect.Constructor;
 import org.osoa.sca.annotations.Property;
 import org.easymock.EasyMock;
 
-import org.fabric3.pojo.scdl.ConstructorDefinition;
 import org.fabric3.pojo.scdl.PojoComponentType;
 
 import junit.framework.TestCase;
@@ -56,11 +55,10 @@ public class ConstructorProcessorExtensibilityTestCase extends TestCase {
      */
     public void testProcessLast() throws Exception {
         PojoComponentType type = new PojoComponentType(null);
-        Constructor<Foo> ctor1 = Foo.class.getConstructor(String.class, String.class);
-        ConstructorDefinition definition = new ConstructorDefinition(new Signature(ctor1));
-        type.setConstructorDefinition(definition);
+        Constructor<Foo> ctor = Foo.class.getConstructor(String.class, String.class);
+        type.setConstructor(new Signature(ctor));
         try {
-            processor.visitConstructor(ctor1, type, context);
+            processor.visitConstructor(ctor, type, context);
             fail();
         } catch (DuplicateConstructorException e) {
         }

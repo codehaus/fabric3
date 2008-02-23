@@ -72,7 +72,7 @@ public class LaunchedComponentGenerator implements ComponentGenerator<LogicalCom
 
         // create the instance factory definition
         InstanceFactoryDefinition providerDefinition = new InstanceFactoryDefinition();
-        providerDefinition.setConstructor(type.getConstructorDefinition().getSignature());
+        providerDefinition.setConstructor(type.getConstructor());
         providerDefinition.setInitMethod(type.getInitMethod());
         providerDefinition.setDestroyMethod(type.getDestroyMethod());
         providerDefinition.setImplementationClass(implementation.getImplementationClass());

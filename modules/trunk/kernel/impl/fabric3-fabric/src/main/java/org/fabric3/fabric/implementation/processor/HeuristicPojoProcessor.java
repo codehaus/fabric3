@@ -44,7 +44,6 @@ import static org.fabric3.pojo.processor.JavaIntrospectionHelper.getAllPublicAnd
 import static org.fabric3.pojo.processor.JavaIntrospectionHelper.getAllUniquePublicProtectedMethods;
 import static org.fabric3.pojo.processor.JavaIntrospectionHelper.toPropertyName;
 import org.fabric3.pojo.processor.ProcessingException;
-import org.fabric3.pojo.scdl.ConstructorDefinition;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.InjectionSite;
@@ -114,7 +113,7 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
             }
         }
 
-        if (type.getConstructorDefinition() == null) {
+        if (type.getConstructor() == null) {
             evaluateConstructor(type, clazz, context);
         }
     }
@@ -204,8 +203,7 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
                 throw new NoConstructorException();
             }
         }
-        ConstructorDefinition definition = new ConstructorDefinition(new Signature(constructor));
-        type.setConstructorDefinition(definition);
+        type.setConstructor(new Signature(constructor));
 
         Class[] params = constructor.getParameterTypes();
         if (params.length == 0) {

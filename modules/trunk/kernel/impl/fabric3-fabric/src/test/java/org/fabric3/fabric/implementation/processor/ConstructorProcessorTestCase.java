@@ -62,13 +62,13 @@ public class ConstructorProcessorTestCase extends TestCase {
     public void testConstructorAnnotation() throws Exception {
         Constructor<Foo> ctor1 = Foo.class.getConstructor(String.class);
         processor.visitConstructor(ctor1, type, context);
-        assertEquals(new Signature(ctor1), type.getConstructorDefinition().getSignature());
+        assertEquals(new Signature(ctor1), type.getConstructor());
     }
 
     public void testNoAnnotation() throws Exception {
         Constructor<NoAnnotation> ctor1 = NoAnnotation.class.getConstructor();
         processor.visitConstructor(ctor1, type, context);
-        assertNull(type.getConstructorDefinition());
+        assertNull(type.getConstructor());
     }
 
     public void testBadAnnotation() throws Exception {

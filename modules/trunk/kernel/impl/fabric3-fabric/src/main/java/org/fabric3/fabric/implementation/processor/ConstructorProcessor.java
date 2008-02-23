@@ -23,7 +23,6 @@ import java.lang.reflect.Constructor;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.pojo.scdl.ConstructorDefinition;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.scdl.PojoComponentType;
@@ -53,7 +52,7 @@ public class ConstructorProcessor extends ImplementationProcessorExtension {
             return;
         }
 
-        if (type.getConstructorDefinition() != null) {
+        if (type.getConstructor() != null) {
             String name = constructor.getDeclaringClass().getName();
             throw new DuplicateConstructorException("Multiple constructor definitions found", name);
         }
@@ -66,8 +65,7 @@ public class ConstructorProcessor extends ImplementationProcessorExtension {
             }
         }
 
-        ConstructorDefinition definition = new ConstructorDefinition(new Signature(constructor));
-        type.setConstructorDefinition(definition);
+        type.setConstructor(new Signature(constructor));
 
         service.processParameters(constructor, type, context);
 
