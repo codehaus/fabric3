@@ -64,6 +64,7 @@ import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.component.CallFrame;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.MetaDataStore;
@@ -124,13 +125,15 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
 
             // start the system context
             WorkContext workContext = new WorkContext();
-            workContext.setScopeIdentifier(Scope.COMPOSITE, ComponentNames.RUNTIME_URI);
+            CallFrame frame = new CallFrame(ComponentNames.RUNTIME_URI);
+            workContext.addCallFrame(frame);
             container.startContext(workContext, ComponentNames.RUNTIME_URI);
-
+            workContext.popCallFrame();
             // start the domain context
             URI groupId = runtime.getHostInfo().getDomain();
             workContext = new WorkContext();
-            workContext.setScopeIdentifier(Scope.COMPOSITE, groupId);
+            frame = new CallFrame(groupId);
+            workContext.addCallFrame(frame);
             container.startContext(workContext, groupId);
             extensionsDirectory = new File(runtime.getHostInfo().getInstallDirectory(), "extensions");
         } catch (GroupInitializationException e) {
@@ -272,8 +275,8 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
     }
 
     /**
-     * Contributes and activates baseline intents as defined by the intents.xml in the active profile directory. If an
-     * intents.xml file is not found, the method returns.
+     * Contributes and activates baseline intents as defined by the intents.xml in the active profile directory. If an intents.xml file is not found,
+     * the method returns.
      *
      * @throws InitializationException if an error occurs activating the intents
      */

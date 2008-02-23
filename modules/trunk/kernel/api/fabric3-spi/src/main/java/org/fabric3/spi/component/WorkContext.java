@@ -18,21 +18,21 @@
  */
 package org.fabric3.spi.component;
 
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.List;
 import javax.security.auth.Subject;
 
-import org.fabric3.scdl.Scope;
-
 /**
- * Implementations track information associated with a request as it is processed by the runtime. The implementation is <em>not</em> thread safe.
+ * Implementations track information associated with a request as it is processed by the runtime. Requests originate at a domain boundary (e.g. a
+ * service bound to a transport). As a request is processed by a component providing the service, invocations to other services in the domain may be
+ * made. State associated with each invocation is encapsulated in a CallFrame is added to the call stack associated with the WorkContext. When an
+ * invocation completes, its CallFrame is removed from the stack.
+ * <p/>
+ * The implementation is <em>not</em> thread safe.
  *
  * @version $Rev$ $Date$
  */
 public class WorkContext {
-    private final Map<Scope<?>, Object> scopeIdentifiers = new HashMap<Scope<?>, Object>();
     private Subject subject;
     private List<CallFrame> callStack;
 
@@ -50,32 +50,7 @@ public class WorkContext {
     }
 
     /**
-     * Returns the identifier currently associated with the supplied scope.
-     *
-     * @param scope the scope whose identifier should be returned
-     * @return the scope identifier
-     */
-    public <T> T getScopeIdentifier(Scope<T> scope) {
-        return scope.getIdentifierType().cast(scopeIdentifiers.get(scope));
-    }
-
-    /**
-     * Sets the identifier associated with a scope.
-     *
-     * @param scope      the scope whose identifier we are setting
-     * @param identifier the identifier for that scope
-     */
-    public <T> void setScopeIdentifier(Scope<T> scope, T identifier) {
-        if (identifier == null) {
-            scopeIdentifiers.remove(scope);
-        } else {
-            scopeIdentifiers.put(scope, identifier);
-        }
-    }
-
-    /**
-     * Adds a CallFrame to the internal CallFrame stack. CallFrames track information related to an invocation that is made as part of processing a
-     * request. As an invocation is made, a CallFrame is added to the stack. CallFrames are removed fromt he stack when the invocation returns.
+     * Adds a CallFrame to the invocation stack.
      *
      * @param frame the CallFrame to add
      */

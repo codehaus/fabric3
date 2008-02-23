@@ -24,15 +24,14 @@ import java.util.Map;
 
 import org.osoa.sca.ServiceUnavailableException;
 
-import org.fabric3.spi.wire.InvocationChain;
+import org.fabric3.pojo.PojoWorkContextTunnel;
+import org.fabric3.spi.component.CallFrame;
+import org.fabric3.spi.component.TargetInvocationException;
+import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.wire.Interceptor;
+import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.spi.wire.MessageImpl;
-import org.fabric3.spi.component.WorkContext;
-import org.fabric3.spi.component.TargetInvocationException;
-import org.fabric3.spi.component.CallFrame;
-import org.fabric3.pojo.PojoWorkContextTunnel;
-import org.fabric3.scdl.Scope;
 
 /**
  * Responsible for dispatching to a callback service from multi-threaded component instances such as composite scope components. Since callback

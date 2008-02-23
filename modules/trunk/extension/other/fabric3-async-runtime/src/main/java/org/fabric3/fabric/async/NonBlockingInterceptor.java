@@ -21,9 +21,6 @@ package org.fabric3.fabric.async;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.osoa.sca.Conversation;
-
-import org.fabric3.scdl.Scope;
 import org.fabric3.spi.component.CallFrame;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.services.work.WorkScheduler;
@@ -48,19 +45,14 @@ public class NonBlockingInterceptor implements Interceptor {
 
     public Message invoke(final Message msg) {
         WorkContext workContext = msg.getWorkContext();
-        // TODO this needs to be part of the CallFrame
-        Conversation conversation = workContext.getScopeIdentifier(Scope.CONVERSATION);
         List<CallFrame> newStack = null;
         List<CallFrame> stack = workContext.getCallFrameStack();
         if (stack != null && !stack.isEmpty()) {
-            // clone the callstack to avoid multiple threads seeing chnages
-            newStack = new ArrayList<CallFrame>(stack.size());
-            for (CallFrame frame : stack) {
-                newStack.add(frame);
-            }
+            // clone the callstack to avoid multiple threads seeing changes
+            newStack = new ArrayList<CallFrame>(stack);
         }
         msg.setWorkContext(null);
-        AsyncRequest request = new AsyncRequest(next, msg, conversation, newStack);
+        AsyncRequest request = new AsyncRequest(next, msg, newStack);
         workScheduler.scheduleWork(request);
         return RESPONSE;
     }
@@ -75,38 +67,6 @@ public class NonBlockingInterceptor implements Interceptor {
 
     public boolean isOptimizable() {
         return false;
-    }
-
-    protected static class AsyncRequest implements Runnable {
-        private final Interceptor next;
-        private final Message message;
-        private Conversation conversation;
-        private List<CallFrame> stack;
-
-        public AsyncRequest(Interceptor next, Message message, Conversation conversation, List<CallFrame> stack) {
-            this.next = next;
-            this.message = message;
-            this.conversation = conversation;
-            this.stack = stack;
-        }
-
-        public void run() {
-            WorkContext newWorkContext = new WorkContext();
-            newWorkContext.setScopeIdentifier(Scope.CONVERSATION, conversation);
-            if (stack != null) {
-                newWorkContext.addCallFrames(stack);
-            }
-            message.setWorkContext(newWorkContext);
-            next.invoke(message);
-        }
-
-        public Interceptor getNext() {
-            return next;
-        }
-
-        public Message getMessage() {
-            return message;
-        }
     }
 
     /**

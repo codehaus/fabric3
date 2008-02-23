@@ -29,9 +29,8 @@ import org.fabric3.scdl.Scope;
  * Manages the lifecycle and visibility of instances associated with a an {@link AtomicComponent}.
  *
  * @version $Rev$ $Date$
- * @param <KEY> the type of IDs that this container uses to identify its contexts.
- * For example, for COMPOSITE scope this could be the URI of the composite component,
- * or for HTTP Session scope it might be the HTTP session ID.
+ * @param <KEY> the type of IDs that this container uses to identify its contexts. For example, for COMPOSITE scope this could be the URI of the
+ * composite component, or for HTTP Session scope it might be the HTTP session ID.
  */
 public interface ScopeContainer<KEY> extends Lifecycle {
 
@@ -80,8 +79,7 @@ public interface ScopeContainer<KEY> extends Lifecycle {
      * @return the wrapper for the target instance
      * @throws TargetResolutionException if there was a problem instantiating the target instance
      */
-    <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext)
-            throws TargetResolutionException;
+    <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext)  throws TargetResolutionException;
 
     /**
      * Return a wrapper after use (for example, after invoking the instance).
@@ -91,18 +89,16 @@ public interface ScopeContainer<KEY> extends Lifecycle {
      * @param wrapper     the wrapper for the target instance being returned
      * @throws TargetDestructionException if there was a problem returning the target instance
      */
-    <T> void returnWrapper(AtomicComponent<T> component, WorkContext workContext, InstanceWrapper<T> wrapper)
-            throws TargetDestructionException;
+    <T> void returnWrapper(AtomicComponent<T> component, WorkContext workContext, InstanceWrapper<T> wrapper) throws TargetDestructionException;
 
     /**
-     * Initialise an ordered list of components.
-     * The list is traversed in order and the getWrapper() method called for each to
-     * associate an instance with the supplied context.
+     * Initialise an ordered list of components. The list is traversed in order and the getWrapper() method called for each to associate an instance
+     * with the supplied context.
      *
      * @param components  the components to be initialized
+     * @param groupId  the group ID of the components to initialize
      * @param workContext the work context in which to initialize the components
      * @throws GroupInitializationException if one or more components threw an exception during initialization
      */
-    void initializeComponents(List<AtomicComponent<?>> components, WorkContext workContext)
-            throws GroupInitializationException;
+    void initializeComponents(List<AtomicComponent<?>> components, URI groupId, WorkContext workContext) throws GroupInitializationException;
 }

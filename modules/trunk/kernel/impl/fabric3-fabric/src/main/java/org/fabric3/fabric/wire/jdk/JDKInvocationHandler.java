@@ -13,7 +13,6 @@ import org.osoa.sca.ServiceUnavailableException;
 import org.fabric3.fabric.wire.NoMethodForOperationException;
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.scdl.Operation;
-import org.fabric3.scdl.Scope;
 import org.fabric3.spi.component.CallFrame;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.TargetInvocationException;
@@ -44,13 +43,12 @@ public final class JDKInvocationHandler<B> implements InvocationHandler, Service
                                 String callbackUri,
                                 boolean conversational,
                                 Map<Method, InvocationChain> mapping,
-                                ScopeContainer<Conversation> scopeContainer)
-            throws NoMethodForOperationException {
+                                ScopeContainer<Conversation> scopeContainer) throws NoMethodForOperationException {
         this.callbackUri = callbackUri;
         assert mapping != null;
         this.businessInterface = businessInterface;
-        this.proxy = businessInterface.cast(
-                Proxy.newProxyInstance(businessInterface.getClassLoader(), new Class[]{businessInterface}, this));
+        ClassLoader loader = businessInterface.getClassLoader();
+        this.proxy = businessInterface.cast(Proxy.newProxyInstance(loader, new Class[]{businessInterface}, this));
         this.conversational = conversational;
         this.chains = mapping;
         this.scopeContainer = scopeContainer;
@@ -113,21 +111,22 @@ public final class JDKInvocationHandler<B> implements InvocationHandler, Service
         assert headInterceptor != null;
 
         WorkContext workContext = PojoWorkContextTunnel.getThreadWorkContext();
-        Conversation oldConversation;
-        if (conversational) {
-            oldConversation = workContext.getScopeIdentifier(Scope.CONVERSATION);
-            if (conversation == null) {
-                conversation = new ConversationImpl(createConversationID());
-                workContext.setScopeIdentifier(Scope.CONVERSATION, conversation);
-                scopeContainer.startContext(workContext, null);
-            } else {
-                workContext.setScopeIdentifier(Scope.CONVERSATION, conversation);
-            }
-        } else {
-            oldConversation = null;
+        CallFrame previousFrame = workContext.peekCallFrame();
+        Object clientCorrelation = null;
+        if (previousFrame != null) {
+            // previous call frame can be null if calling from unmanaged code
+            clientCorrelation = previousFrame.getForwardCorrelationId(Object.class);
         }
-        CallFrame frame = new CallFrame(callbackUri, conversation, oldConversation);
-        workContext.addCallFrame(frame);
+        if (conversational && conversation == null) {
+            conversation = new ConversationImpl(createConversationID());
+            CallFrame frame = new CallFrame(callbackUri, conversation, clientCorrelation);
+            workContext.addCallFrame(frame);
+            // TODO move startContext to invoker interceptor
+            scopeContainer.startContext(workContext, null);
+        } else {
+            CallFrame frame = new CallFrame(callbackUri, conversation, clientCorrelation);
+            workContext.addCallFrame(frame);
+        }
         // send the invocation down the wire
         Message msg = new MessageImpl();
         msg.setBody(args);
@@ -156,10 +155,10 @@ public final class JDKInvocationHandler<B> implements InvocationHandler, Service
             if (conversational) {
                 PhysicalOperationDefinition operation = chain.getPhysicalOperation();
                 if (operation.getConversationSequence() == Operation.CONVERSATION_END) {
+                    // TODO move stopContext to invoker interceptor
                     scopeContainer.stopContext(workContext);
                     conversation = null;
                 }
-                workContext.setScopeIdentifier(Scope.CONVERSATION, oldConversation);
             }
             workContext.popCallFrame();
         }

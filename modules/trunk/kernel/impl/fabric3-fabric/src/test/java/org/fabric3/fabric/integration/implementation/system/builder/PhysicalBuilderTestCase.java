@@ -53,6 +53,7 @@ import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.component.CallFrame;
 import org.fabric3.spi.model.physical.PhysicalChangeSet;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 import org.fabric3.spi.runtime.component.ComponentManager;
@@ -144,7 +145,8 @@ public class PhysicalBuilderTestCase extends TestCase {
         classLoaderRegistry.register(groupId, classLoader);
 
         workContext = new WorkContext();
-        workContext.setScopeIdentifier(Scope.COMPOSITE, groupId);
+        CallFrame frame = new CallFrame(groupId);
+        workContext.addCallFrame(frame);
 
         scopeContainer = new CompositeScopeContainer(EasyMock.createNiceMock(ScopeContainerMonitor.class));
         scopeContainer.start();

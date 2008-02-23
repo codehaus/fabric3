@@ -25,9 +25,8 @@ import static org.easymock.EasyMock.getCurrentArguments;
 import static org.easymock.EasyMock.isA;
 import static org.easymock.EasyMock.replay;
 import org.easymock.IAnswer;
-import org.osoa.sca.Conversation;
 
-import org.fabric3.scdl.Scope;
+import org.fabric3.spi.component.CallFrame;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.services.work.WorkScheduler;
 import org.fabric3.spi.wire.Interceptor;
@@ -41,24 +40,21 @@ public class NonBlockingInterceptorTestCase extends TestCase {
     private Interceptor next;
     private NonBlockingInterceptor interceptor;
     private WorkScheduler workScheduler;
-    private Conversation convID;
     private WorkContext workContext;
 
     public void testInvoke() throws Exception {
-        workContext.setScopeIdentifier(Scope.CONVERSATION, convID);
         final Message message = new MessageImpl();
         message.setWorkContext(workContext);
-        workScheduler.scheduleWork(isA(NonBlockingInterceptor.AsyncRequest.class));
+        workScheduler.scheduleWork(isA(AsyncRequest.class));
         expectLastCall().andStubAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                NonBlockingInterceptor.AsyncRequest request =
-                        (NonBlockingInterceptor.AsyncRequest) getCurrentArguments()[0];
+                AsyncRequest request =
+                        (AsyncRequest) getCurrentArguments()[0];
                 request.run();
                 assertSame(next, request.getNext());
                 assertSame(message, request.getMessage());
                 WorkContext newWorkContext = message.getWorkContext();
                 assertNotSame(workContext, newWorkContext);
-                assertSame(convID, newWorkContext.getScopeIdentifier(Scope.CONVERSATION));
                 return null;
             }
         });
@@ -73,8 +69,10 @@ public class NonBlockingInterceptorTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        convID = EasyMock.createMock(Conversation.class);
         workContext = new WorkContext();
+        CallFrame frame = new CallFrame(null, null, null);
+        workContext.addCallFrame(frame);
+
         workScheduler = EasyMock.createMock(WorkScheduler.class);
         next = EasyMock.createMock(Interceptor.class);
         interceptor = new NonBlockingInterceptor(workScheduler);

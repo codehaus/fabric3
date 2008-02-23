@@ -28,6 +28,7 @@ import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.InstanceWrapperStore;
 import org.fabric3.spi.component.TargetResolutionException;
 import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.component.CallFrame;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.ObjectCreationException;
 
@@ -84,7 +85,8 @@ public class StatefulScopeContainerTestCase extends TestCase {
         control = EasyMock.createControl();
         store = control.createMock(InstanceWrapperStore.class);
         workContext = control.createMock(WorkContext.class);
-        EasyMock.expect(workContext.getScopeIdentifier(scope)).andStubReturn(contextId);
+        CallFrame frame = new CallFrame(contextId);
+        EasyMock.expect(workContext.peekCallFrame()).andStubReturn(frame);
         component = control.createMock(AtomicComponent.class);
         wrapper = control.createMock(InstanceWrapper.class);
         container = new StatefulScopeContainer<String>(scope, null, store);

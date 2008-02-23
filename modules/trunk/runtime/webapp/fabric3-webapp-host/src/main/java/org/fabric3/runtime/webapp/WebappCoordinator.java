@@ -63,6 +63,7 @@ import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.component.CallFrame;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.MetaDataStore;
@@ -124,13 +125,15 @@ public class WebappCoordinator implements RuntimeLifecycleCoordinator<WebappRunt
 
             // start the system context
             WorkContext workContext = new WorkContext();
-            workContext.setScopeIdentifier(Scope.COMPOSITE, ComponentNames.RUNTIME_URI);
+            CallFrame frame = new CallFrame(ComponentNames.RUNTIME_URI);
+            workContext.addCallFrame(frame);
             container.startContext(workContext, ComponentNames.RUNTIME_URI);
-
+            workContext.popCallFrame();
             // start the domain context
             URI domainUri = runtime.getHostInfo().getDomain();
             workContext = new WorkContext();
-            workContext.setScopeIdentifier(Scope.COMPOSITE, domainUri);
+            frame = new CallFrame(domainUri);
+            workContext.addCallFrame(frame);
             container.startContext(workContext, domainUri);
         } catch (GroupInitializationException e) {
             throw new InitializationException(e);

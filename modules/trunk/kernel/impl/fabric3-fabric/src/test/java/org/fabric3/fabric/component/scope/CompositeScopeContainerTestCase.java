@@ -29,6 +29,7 @@ import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.component.CallFrame;
 
 /**
  * @version $$Rev$$ $$Date$$
@@ -49,7 +50,8 @@ public class CompositeScopeContainerTestCase<T> extends TestCase {
     public void testWrapperCreation() throws Exception {
 
         EasyMock.expect(component.isEagerInit()).andStubReturn(false);
-        EasyMock.expect(workContext.getScopeIdentifier(Scope.COMPOSITE)).andStubReturn(contextId);
+        CallFrame frame = new CallFrame(contextId);
+        EasyMock.expect(workContext.peekCallFrame()).andStubReturn(frame);
         EasyMock.expect(component.createInstanceWrapper(workContext)).andReturn(wrapper);
         EasyMock.expect(wrapper.isStarted()).andReturn(false);
         wrapper.start();

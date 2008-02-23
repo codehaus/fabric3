@@ -43,14 +43,14 @@ public class StatefulScopeContainer<KEY> extends AbstractScopeContainer<KEY> {
     }
 
     public void startContext(WorkContext workContext, URI groupId) throws GroupInitializationException {
-        KEY contextId = workContext.getScopeIdentifier(getScope());
+        KEY contextId = workContext.peekCallFrame().getForwardCorrelationId(getScope().getIdentifierType());
         assert contextId != null;
         store.startContext(contextId);
         super.startContext(workContext, groupId);
     }
 
     public void stopContext(WorkContext workContext) {
-        KEY contextId = workContext.getScopeIdentifier(getScope());
+        KEY contextId = workContext.peekCallFrame().getForwardCorrelationId(getScope().getIdentifierType());
         assert contextId != null;
         super.stopContext(workContext);
         store.stopContext(contextId);
@@ -58,7 +58,7 @@ public class StatefulScopeContainer<KEY> extends AbstractScopeContainer<KEY> {
 
     public <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext)
             throws TargetResolutionException {
-        KEY contextId = workContext.getScopeIdentifier(getScope());
+        KEY contextId = workContext.peekCallFrame().getForwardCorrelationId(getScope().getIdentifierType());
         assert contextId != null;
         InstanceWrapper<T> wrapper = store.getWrapper(component, contextId);
         if (wrapper == null) {

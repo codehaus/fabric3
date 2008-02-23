@@ -18,9 +18,12 @@
  */
 package org.fabric3.fabric.injection;
 
+import org.osoa.sca.Conversation;
+
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.component.CallFrame;
 import org.fabric3.scdl.Scope;
 
 public class ConversationIDObjectFactory implements ObjectFactory<String> {
@@ -30,6 +33,12 @@ public class ConversationIDObjectFactory implements ObjectFactory<String> {
 
     public String getInstance() {
         WorkContext workContext = PojoWorkContextTunnel.getThreadWorkContext();
-        return String.valueOf(workContext.getScopeIdentifier(Scope.CONVERSATION).getConversationID());
+        CallFrame frame = workContext.peekCallFrame();
+        Conversation conversation = frame.getForwardCorrelationId(Scope.CONVERSATION.getIdentifierType());
+        if (conversation == null) {
+            return null;
+        }
+        Object id = conversation.getConversationID();
+        return String.valueOf(id);
     }
 }

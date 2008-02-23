@@ -35,6 +35,7 @@ import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.component.CallFrame;
 import org.fabric3.spi.runtime.component.ComponentManager;
 
 /**
@@ -69,6 +70,7 @@ public class InitializeComponentExecutor implements CommandExecutor<InitializeCo
     public void execute(InitializeComponentCommand command) throws ExecutionException {
         List<URI> uris = command.getUris();
         List<AtomicComponent<?>> components = new ArrayList<AtomicComponent<?>>();
+        URI groupId = command.getGroupId();
         for (URI uri : uris) {
             Component component = manager.getComponent(uri);
             if (!(component instanceof AtomicComponent)) {
@@ -77,9 +79,10 @@ public class InitializeComponentExecutor implements CommandExecutor<InitializeCo
             components.add((AtomicComponent<?>) component);
         }
         WorkContext workContext = new WorkContext();
-        workContext.setScopeIdentifier(Scope.COMPOSITE, command.getGroupId());
+        CallFrame frame = new CallFrame(groupId);
+        workContext.addCallFrame(frame);
         try {
-            scopeContainer.initializeComponents(components, workContext);
+            scopeContainer.initializeComponents(components, groupId, workContext);
         } catch (GroupInitializationException e) {
             throw new ExecutionException("Error starting components", e);
         }

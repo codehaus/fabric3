@@ -22,20 +22,16 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import org.osoa.sca.Conversation;
 import org.osoa.sca.ServiceUnavailableException;
 
-import org.fabric3.spi.wire.InvocationChain;
+import org.fabric3.pojo.PojoWorkContextTunnel;
+import org.fabric3.spi.component.CallFrame;
+import org.fabric3.spi.component.TargetInvocationException;
+import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.wire.Interceptor;
+import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.spi.wire.MessageImpl;
-import org.fabric3.spi.component.WorkContext;
-import org.fabric3.spi.component.TargetInvocationException;
-import org.fabric3.spi.component.CallFrame;
-import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
-import org.fabric3.pojo.PojoWorkContextTunnel;
-import org.fabric3.scdl.Scope;
-import org.fabric3.scdl.Operation;
 
 /**
  * Responsible for dispatching to a callback service from a component implementation instance that is not composite scope. Callback URIs and
@@ -73,13 +69,11 @@ public class StatefullCallbackInvocationHandler<T> implements InvocationHandler 
         WorkContext workContext = PojoWorkContextTunnel.getThreadWorkContext();
         // pop the call frame as we move back in the request stack
         CallFrame frame = workContext.popCallFrame();
-
         // find the invocation chain for the invoked operation
         InvocationChain chain = chains.get(method);
         if (chain == null) {
             return handleProxyMethod(method);
         }
-
         Interceptor headInterceptor = chain.getHeadInterceptor();
         assert headInterceptor != null;
 

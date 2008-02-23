@@ -71,7 +71,6 @@ public class InOutServiceProxyHandler extends AbstractInOutMessageReceiver {
         OMElement bodyContent = getInBodyContent(inMessage);
 
         WorkContext workContext = new WorkContext();
-        workContext.setScopeIdentifier(Scope.COMPOSITE, scopeId);
         //Attach authenticated Subject to work context
         attachSubjectToWorkContext(workContext, inMessage);
 

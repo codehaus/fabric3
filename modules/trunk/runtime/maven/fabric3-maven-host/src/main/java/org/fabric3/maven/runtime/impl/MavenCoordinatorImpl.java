@@ -61,6 +61,7 @@ import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.component.CallFrame;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.MetaDataStore;
@@ -129,13 +130,15 @@ public class MavenCoordinatorImpl implements MavenCoordinator {
 
             // start the system context
             WorkContext workContext = new WorkContext();
-            workContext.setScopeIdentifier(Scope.COMPOSITE, ComponentNames.RUNTIME_URI);
+            CallFrame frame = new CallFrame(ComponentNames.RUNTIME_URI);
+            workContext.addCallFrame(frame);
             container.startContext(workContext, ComponentNames.RUNTIME_URI);
-
+            workContext.popCallFrame();
             // start the domain context
             URI groupId = runtime.getHostInfo().getDomain();
             workContext = new WorkContext();
-            workContext.setScopeIdentifier(Scope.COMPOSITE, groupId);
+            frame = new CallFrame(groupId);
+            workContext.addCallFrame(frame);
             container.startContext(workContext, groupId);
         } catch (GroupInitializationException e) {
             throw new InitializationException(e);

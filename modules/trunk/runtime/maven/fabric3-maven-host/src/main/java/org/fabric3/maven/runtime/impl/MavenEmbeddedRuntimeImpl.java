@@ -55,6 +55,7 @@ import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.component.CallFrame;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.ResourceElement;
@@ -110,11 +111,12 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
         return activate(url, name);
     }
 
-    public void startContext(URI compositeId) throws GroupInitializationException {
+    public void startContext(URI groupId) throws GroupInitializationException {
         WorkContext workContext = new WorkContext();
-        workContext.setScopeIdentifier(Scope.COMPOSITE, compositeId);
+        CallFrame frame = new CallFrame(groupId);
+        workContext.addCallFrame(frame);
         ScopeRegistry scopeRegistry = getSystemComponent(ScopeRegistry.class, ComponentNames.SCOPE_REGISTRY_URI);
-        scopeRegistry.getScopeContainer(Scope.COMPOSITE).startContext(workContext, compositeId);
+        scopeRegistry.getScopeContainer(Scope.COMPOSITE).startContext(workContext, groupId);
     }
 
     public void destroy() {
@@ -122,7 +124,8 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
         ScopeRegistry scopeRegistry = getSystemComponent(ScopeRegistry.class, ComponentNames.SCOPE_REGISTRY_URI);
         ScopeContainer<?> scopeContainer = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
         WorkContext workContext = new WorkContext();
-        workContext.setScopeIdentifier(Scope.COMPOSITE, ComponentNames.RUNTIME_URI);
+        CallFrame frame = new CallFrame(null, ComponentNames.RUNTIME_URI, null);
+        workContext.addCallFrame(frame);
         scopeContainer.stopContext(workContext);
     }
 
@@ -131,7 +134,8 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
         WorkContext oldContext = PojoWorkContextTunnel.getThreadWorkContext();
         try {
             WorkContext workContext = new WorkContext();
-            workContext.setScopeIdentifier(Scope.COMPOSITE, contextId);
+            CallFrame frame = new CallFrame(null);
+            workContext.addCallFrame(frame);
             URI componentId = URI.create(contextId.toString() + "/" + componentName);
 
             // FIXME we should not be creating a InvokerInterceptor here

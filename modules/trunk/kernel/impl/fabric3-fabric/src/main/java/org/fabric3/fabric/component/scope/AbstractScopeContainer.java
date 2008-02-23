@@ -149,7 +149,7 @@ public abstract class AbstractScopeContainer<KEY> extends AbstractLifecycle impl
     }
 
     public void startContext(WorkContext workContext, URI groupId) throws GroupInitializationException {
-        KEY contextId = workContext.getScopeIdentifier(scope);
+        KEY contextId = workContext.peekCallFrame().getForwardCorrelationId(scope.getIdentifierType());
         destroyQueues.put(contextId, new ArrayList<InstanceWrapper<?>>());
 
         if (groupId != null) {
@@ -162,18 +162,18 @@ public abstract class AbstractScopeContainer<KEY> extends AbstractLifecycle impl
                 }
             }
             if (initQueue != null) {
-                initializeComponents(initQueue, workContext);
+                initializeComponents(initQueue, groupId, workContext);
             }
         }
     }
 
     public void stopContext(WorkContext workContext) {
-        KEY contextId = workContext.getScopeIdentifier(scope);
+        KEY contextId = workContext.peekCallFrame().getForwardCorrelationId(scope.getIdentifierType());
         shutdownComponents(destroyQueues.get(contextId));
         destroyQueues.remove(contextId);
     }
 
-    public void initializeComponents(List<AtomicComponent<?>> components, WorkContext workContext)
+    public void initializeComponents(List<AtomicComponent<?>> components, URI groupId, WorkContext workContext)
             throws GroupInitializationException {
         List<Exception> causes = null;
         for (AtomicComponent<?> component : components) {
@@ -188,15 +188,13 @@ public abstract class AbstractScopeContainer<KEY> extends AbstractLifecycle impl
             }
         }
         if (causes != null) {
-            KEY contextId = workContext.getScopeIdentifier(scope);
-            throw new GroupInitializationException(String.valueOf(contextId), causes);
+            throw new GroupInitializationException(groupId.toString(), causes);
         }
     }
 
     /**
-     * Shut down an ordered list of instances.
-     * The list passed to this method is treated as a live, mutable list
-     * so any instances added to this list as shutdown is occuring will also be shut down.
+     * Shut down an ordered list of instances. The list passed to this method is treated as a live, mutable list so any instances added to this list
+     * as shutdown is occuring will also be shut down.
      *
      * @param instances the list of instances to shutdown
      */
