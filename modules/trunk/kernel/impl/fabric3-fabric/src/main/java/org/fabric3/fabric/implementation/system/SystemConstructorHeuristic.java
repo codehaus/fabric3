@@ -16,13 +16,17 @@
  */
 package org.fabric3.fabric.implementation.system;
 
+import java.lang.reflect.Constructor;
+
 import org.fabric3.introspection.HeuristicProcessor;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionException;
+import org.fabric3.pojo.scdl.ConstructorDefinition;
 import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.scdl.Signature;
 
 /**
- * Heuristic processor that locates unannotated Property and Reference dependencies.
+ * Heuristic that selects the constructor to use.
  *
  * @version $Rev$ $Date$
  */
@@ -36,6 +40,41 @@ public class SystemConstructorHeuristic implements HeuristicProcessor<SystemImpl
             return;
         }
 
-        
+        Signature signature = findConstructor(implClass);
+        ConstructorDefinition definition = new ConstructorDefinition(signature);
+
+        componentType.setConstructorDefinition(definition);
     }
+
+    /**
+     * Find the constructor to use.
+     * <p/>
+     * For now, we require that the class have a single constructor or one annotated with @Constructor. If there is more than one, then an
+     * @Constructor annotation must be used.
+     *
+     * @param implClass the class we are inspecting
+     * @return the signature of the constructor to use
+     * @throws IntrospectionException if there is a problem with the user's class
+     */
+    Signature findConstructor(Class<?> implClass) throws IntrospectionException {
+        Constructor<?>[] constructors = implClass.getDeclaredConstructors();
+        Constructor<?> selected = null;
+        if (constructors.length == 1) {
+            selected = constructors[0];
+        } else {
+            for (Constructor<?> constructor : constructors) {
+                if (constructor.isAnnotationPresent(org.osoa.sca.annotations.Constructor.class)) {
+                    if (selected != null) {
+                        throw new AmbiguousConstructorException(implClass.getName());
+                    }
+                    selected = constructor;
+                }
+            }
+            if (selected == null) {
+                throw new NoConstructorException(implClass.getName());
+            }
+        }
+        return new Signature(selected);
+    }
+
 }

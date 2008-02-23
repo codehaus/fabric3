@@ -33,6 +33,8 @@ import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
 
 /**
+ * Heuristic that identifies the services provided by an implementation class.
+ * 
  * @version $Rev$ $Date$
  */
 public class SystemServiceHeuristic implements HeuristicProcessor<SystemImplementation> {
