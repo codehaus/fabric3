@@ -16,11 +16,11 @@
  */
 package org.fabric3.binding.ws.axis2.databinding;
 
-import java.util.List;
-
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
 import org.apache.axiom.om.OMElement;
+
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.Message;
 
@@ -40,10 +40,10 @@ public class JaxbInterceptor implements Interceptor {
     private final Jaxb2OMElement outTransformer;
     private final boolean service;
 
-    public JaxbInterceptor(ClassLoader classLoader, List<Class<?>> classes, boolean service) throws JAXBException {
+    public JaxbInterceptor(ClassLoader classLoader, JAXBContext jaxbContext, boolean service) throws JAXBException {
         this.classLoader = classLoader;
-        inTransformer = new OMElement2Jaxb(classes);
-        outTransformer = new Jaxb2OMElement(classes);
+        inTransformer = new OMElement2Jaxb(jaxbContext);
+        outTransformer = new Jaxb2OMElement(jaxbContext);
         this.service = service;
     }
 

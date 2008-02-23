@@ -16,7 +16,6 @@
  */
 package org.fabric3.binding.ws.axis2.databinding;
 
-import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -38,10 +37,8 @@ public class OMElement2Jaxb extends AbstractPullTransformer<OMElement, Object> {
 
     private final JAXBContext jaxbContext;
 
-    public OMElement2Jaxb(List<Class<?>> inClasses) throws JAXBException {
-        Class<?>[] classArray = new Class<?>[inClasses.size()];
-        classArray = inClasses.toArray(classArray);
-        jaxbContext = JAXBContext.newInstance(classArray);
+    public OMElement2Jaxb(JAXBContext jaxbContext) {
+        this.jaxbContext = jaxbContext;
     }
 
     public Object transform(OMElement source, TransformContext context) {

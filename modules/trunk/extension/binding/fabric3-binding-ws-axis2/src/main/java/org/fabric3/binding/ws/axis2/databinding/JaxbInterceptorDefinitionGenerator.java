@@ -18,10 +18,14 @@ package org.fabric3.binding.ws.axis2.databinding;
 
 import java.lang.reflect.Type;
 import java.net.URI;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
-
 import javax.xml.namespace.QName;
+
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Element;
 
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.Operation;
@@ -32,10 +36,6 @@ import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalService;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
-import org.w3c.dom.Element;
 
 /**
  * @version $Revision$ $Date$
@@ -76,17 +76,15 @@ public class JaxbInterceptorDefinitionGenerator implements InterceptorDefinition
         
         List<DataType<Type>> inputTypes = javaOperation.getInputType().getLogical();
         DataType<Type> outputType = javaOperation.getOutputType();
-        
-        List<String> inClassNames = new LinkedList<String>();
-        
+
+        List<String> classNames = new ArrayList<String>(inputTypes.size() + 1);
+
         for (DataType<Type> inputType : inputTypes) {
             String inClassName = ((Class) inputType.getLogical()).getName();
-            inClassNames.add(inClassName);
+            classNames.add(inClassName);
         }
-        
-        String outClassName = ((Class) outputType.getLogical()).getName();
-        
-        return new JaxbInterceptorDefinition(classLoaderId, inClassNames, outClassName, service);
+        classNames.add(((Class) outputType.getLogical()).getName());
+        return new JaxbInterceptorDefinition(classLoaderId, classNames, service);
     }
 
 }

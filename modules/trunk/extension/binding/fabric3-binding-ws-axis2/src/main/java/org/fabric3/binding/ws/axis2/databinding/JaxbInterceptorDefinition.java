@@ -27,14 +27,12 @@ import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 public class JaxbInterceptorDefinition extends PhysicalInterceptorDefinition {
     
     private final URI classLoaderId;
-    private final List<String> inClassNames;
-    private final String outClassName;
+    private final List<String> classNames;
     private final boolean service;
     
-    public JaxbInterceptorDefinition(URI classLoaderId, List<String> inClassNames, String outClassName, boolean service) {
+    public JaxbInterceptorDefinition(URI classLoaderId, List<String> classNames, boolean service) {
         this.classLoaderId = classLoaderId;
-        this.inClassNames = inClassNames;
-        this.outClassName = outClassName;
+        this.classNames = classNames;
         this.service = service;
     }
 
@@ -42,12 +40,8 @@ public class JaxbInterceptorDefinition extends PhysicalInterceptorDefinition {
         return classLoaderId;
     }
 
-    public List<String> getInClassNames() {
-        return inClassNames;
-    }
-
-    public String getOutClassName() {
-        return outClassName;
+    public List<String> getClassNames() {
+        return classNames;
     }
 
     public boolean isService() {
