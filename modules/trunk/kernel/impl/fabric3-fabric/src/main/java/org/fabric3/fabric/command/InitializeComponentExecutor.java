@@ -79,7 +79,7 @@ public class InitializeComponentExecutor implements CommandExecutor<InitializeCo
             components.add((AtomicComponent<?>) component);
         }
         WorkContext workContext = new WorkContext();
-        CallFrame frame = new CallFrame(groupId);
+        CallFrame frame = new CallFrame();
         workContext.addCallFrame(frame);
         try {
             scopeContainer.initializeComponents(components, groupId, workContext);

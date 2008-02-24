@@ -112,12 +112,6 @@ public abstract class AbstractScopeContainer<KEY> extends AbstractLifecycle impl
         destroyQueues.clear();
     }
 
-    protected void checkInit() {
-        if (getLifecycleState() != RUNNING) {
-            throw new IllegalStateException("Scope container not running [" + getLifecycleState() + "]");
-        }
-    }
-
     public void register(AtomicComponent<?> component) {
         checkInit();
         if (component.isEagerInit()) {
@@ -148,25 +142,6 @@ public abstract class AbstractScopeContainer<KEY> extends AbstractLifecycle impl
         }
     }
 
-    public void startContext(WorkContext workContext, URI groupId) throws GroupInitializationException {
-        KEY contextId = workContext.peekCallFrame().getForwardCorrelationId(scope.getIdentifierType());
-        destroyQueues.put(contextId, new ArrayList<InstanceWrapper<?>>());
-
-        if (groupId != null) {
-            // get and clone initialization queue
-            List<AtomicComponent<?>> initQueue;
-            synchronized (initQueues) {
-                initQueue = initQueues.get(groupId);
-                if (initQueue != null) {
-                    initQueue = new ArrayList<AtomicComponent<?>>(initQueue);
-                }
-            }
-            if (initQueue != null) {
-                initializeComponents(initQueue, groupId, workContext);
-            }
-        }
-    }
-
     public void stopContext(WorkContext workContext) {
         KEY contextId = workContext.peekCallFrame().getForwardCorrelationId(scope.getIdentifierType());
         shutdownComponents(destroyQueues.get(contextId));
@@ -189,6 +164,27 @@ public abstract class AbstractScopeContainer<KEY> extends AbstractLifecycle impl
         }
         if (causes != null) {
             throw new GroupInitializationException(groupId.toString(), causes);
+        }
+    }
+
+    public String toString() {
+        return "In state [" + super.toString() + ']';
+    }
+
+    protected void startContext(WorkContext workContext, KEY contextId, URI groupId) throws GroupInitializationException {
+        destroyQueues.put(contextId, new ArrayList<InstanceWrapper<?>>());
+        if (groupId != null) {
+            // get and clone initialization queue
+            List<AtomicComponent<?>> initQueue;
+            synchronized (initQueues) {
+                initQueue = initQueues.get(groupId);
+                if (initQueue != null) {
+                    initQueue = new ArrayList<AtomicComponent<?>>(initQueue);
+                }
+            }
+            if (initQueue != null) {
+                initializeComponents(initQueue, groupId, workContext);
+            }
         }
     }
 
@@ -216,10 +212,6 @@ public abstract class AbstractScopeContainer<KEY> extends AbstractLifecycle impl
         }
     }
 
-    public String toString() {
-        return "In state [" + super.toString() + ']';
-    }
-
     /**
      * Creates a new physical instance of a component, wrapped in an InstanceWrapper.
      *
@@ -236,4 +228,11 @@ public abstract class AbstractScopeContainer<KEY> extends AbstractLifecycle impl
             throw new TargetResolutionException(e.getMessage(), component.getUri().toString(), e);
         }
     }
+
+    private void checkInit() {
+        if (getLifecycleState() != RUNNING) {
+            throw new IllegalStateException("Scope container not running [" + getLifecycleState() + "]");
+        }
+    }
+
 }

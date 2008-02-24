@@ -34,6 +34,7 @@ import org.fabric3.spi.component.TargetDestructionException;
 import org.fabric3.spi.component.TargetInitializationException;
 import org.fabric3.spi.component.TargetResolutionException;
 import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.component.GroupInitializationException;
 
 /**
  * A scope context which manages atomic component instances keyed by composite
@@ -78,6 +79,10 @@ public class CompositeScopeContainer extends AbstractScopeContainer<URI> {
         // FIXME should this component be destroyed already or do we need to stop it?
         instanceWrappers.remove(component);
         super.unregister(component);
+    }
+
+    public void startContext(WorkContext workContext, URI groupId) throws GroupInitializationException {
+        super.startContext(workContext, groupId, groupId);
     }
 
     public synchronized void stop() {

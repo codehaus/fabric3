@@ -125,14 +125,14 @@ public class WebappCoordinator implements RuntimeLifecycleCoordinator<WebappRunt
 
             // start the system context
             WorkContext workContext = new WorkContext();
-            CallFrame frame = new CallFrame(ComponentNames.RUNTIME_URI);
+            CallFrame frame = new CallFrame();
             workContext.addCallFrame(frame);
             container.startContext(workContext, ComponentNames.RUNTIME_URI);
             workContext.popCallFrame();
             // start the domain context
             URI domainUri = runtime.getHostInfo().getDomain();
             workContext = new WorkContext();
-            frame = new CallFrame(domainUri);
+            frame = new CallFrame();
             workContext.addCallFrame(frame);
             container.startContext(workContext, domainUri);
         } catch (GroupInitializationException e) {

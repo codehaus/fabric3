@@ -145,7 +145,7 @@ public class PhysicalBuilderTestCase extends TestCase {
         classLoaderRegistry.register(groupId, classLoader);
 
         workContext = new WorkContext();
-        CallFrame frame = new CallFrame(groupId);
+        CallFrame frame = new CallFrame();
         workContext.addCallFrame(frame);
 
         scopeContainer = new CompositeScopeContainer(EasyMock.createNiceMock(ScopeContainerMonitor.class));

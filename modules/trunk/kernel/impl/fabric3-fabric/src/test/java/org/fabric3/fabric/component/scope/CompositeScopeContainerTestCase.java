@@ -38,7 +38,6 @@ public class CompositeScopeContainerTestCase<T> extends TestCase {
     protected IMocksControl control;
     protected ScopeContainer<URI> scopeContainer;
     protected URI groupId;
-    protected URI contextId;
     protected AtomicComponent<T> component;
     protected InstanceWrapper<T> wrapper;
     private WorkContext workContext;
@@ -50,12 +49,12 @@ public class CompositeScopeContainerTestCase<T> extends TestCase {
     public void testWrapperCreation() throws Exception {
 
         EasyMock.expect(component.isEagerInit()).andStubReturn(false);
-        CallFrame frame = new CallFrame(contextId);
+        CallFrame frame = new CallFrame();
         EasyMock.expect(workContext.peekCallFrame()).andStubReturn(frame);
         EasyMock.expect(component.createInstanceWrapper(workContext)).andReturn(wrapper);
         EasyMock.expect(wrapper.isStarted()).andReturn(false);
         wrapper.start();
-        EasyMock.expect(component.getGroupId()).andStubReturn(contextId);
+        EasyMock.expect(component.getGroupId()).andStubReturn(groupId);
         control.replay();
         scopeContainer.register(component);
         scopeContainer.startContext(workContext, groupId);
@@ -67,7 +66,6 @@ public class CompositeScopeContainerTestCase<T> extends TestCase {
     @SuppressWarnings("unchecked")
     protected void setUp() throws Exception {
         super.setUp();
-        contextId = URI.create("compositeId");
         groupId = URI.create("groupId");
         control = EasyMock.createStrictControl();
         workContext = control.createMock(WorkContext.class);

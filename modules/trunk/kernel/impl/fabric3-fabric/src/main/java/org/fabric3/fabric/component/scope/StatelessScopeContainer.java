@@ -18,6 +18,8 @@
  */
 package org.fabric3.fabric.component.scope;
 
+import java.net.URI;
+
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
@@ -29,6 +31,7 @@ import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.TargetDestructionException;
 import org.fabric3.spi.component.TargetResolutionException;
 import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.scdl.Scope;
 import org.fabric3.api.annotation.Monitor;
 
@@ -43,6 +46,10 @@ public class StatelessScopeContainer extends AbstractScopeContainer<Object> {
 
     public StatelessScopeContainer(@Monitor ScopeContainerMonitor monitor) {
         super(Scope.STATELESS, monitor);
+    }
+
+    public void startContext(WorkContext workContext, URI groupId) throws GroupInitializationException {
+        super.startContext(workContext, null, null);
     }
 
     public <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext)

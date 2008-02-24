@@ -33,6 +33,12 @@ public class CallFrame implements Serializable {
     private Object callerCorrelationId;
 
     /**
+     * Default constructor. Creates a CallFrame for an invocation on a stateless, unidirectional service.
+     */
+    public CallFrame() {
+    }
+
+    /**
      * Constructor.
      *
      * @param callbackUri          the URI the caller of the current service can be called back on

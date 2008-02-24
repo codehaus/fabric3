@@ -113,7 +113,7 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
 
     public void startContext(URI groupId) throws GroupInitializationException {
         WorkContext workContext = new WorkContext();
-        CallFrame frame = new CallFrame(groupId);
+        CallFrame frame = new CallFrame();
         workContext.addCallFrame(frame);
         ScopeRegistry scopeRegistry = getSystemComponent(ScopeRegistry.class, ComponentNames.SCOPE_REGISTRY_URI);
         scopeRegistry.getScopeContainer(Scope.COMPOSITE).startContext(workContext, groupId);
@@ -134,7 +134,7 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
         WorkContext oldContext = PojoWorkContextTunnel.getThreadWorkContext();
         try {
             WorkContext workContext = new WorkContext();
-            CallFrame frame = new CallFrame(null);
+            CallFrame frame = new CallFrame();
             workContext.addCallFrame(frame);
             URI componentId = URI.create(contextId.toString() + "/" + componentName);
 

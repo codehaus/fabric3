@@ -46,7 +46,7 @@ public class StatefulScopeContainer<KEY> extends AbstractScopeContainer<KEY> {
         KEY contextId = workContext.peekCallFrame().getForwardCorrelationId(getScope().getIdentifierType());
         assert contextId != null;
         store.startContext(contextId);
-        super.startContext(workContext, groupId);
+        super.startContext(workContext, contextId, groupId);
     }
 
     public void stopContext(WorkContext workContext) {
