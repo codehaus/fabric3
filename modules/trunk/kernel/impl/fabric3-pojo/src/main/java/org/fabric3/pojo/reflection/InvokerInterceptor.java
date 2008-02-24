@@ -23,11 +23,13 @@ import java.lang.reflect.Method;
 
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.spi.component.AtomicComponent;
+import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.TargetDestructionException;
 import org.fabric3.spi.component.TargetResolutionException;
 import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.component.CallFrame;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationRuntimeException;
 import org.fabric3.spi.wire.Message;
@@ -96,8 +98,16 @@ public class InvokerInterceptor<T, CONTEXT> implements Interceptor {
         WorkContext workContext = msg.getWorkContext();
         InstanceWrapper<T> wrapper;
         try {
+            CallFrame frame = workContext.peekCallFrame();
+            // for now tolerate callframes not being set as bindings may not be adding them for incoming service invocations
+            if (frame != null && frame.isStartConversation()) {
+                // start the conversation context
+                scopeContainer.startContext(workContext, null);
+            }
             wrapper = scopeContainer.getWrapper(component, workContext);
         } catch (TargetResolutionException e) {
+            throw new InvocationRuntimeException(e);
+        } catch (GroupInitializationException e) {
             throw new InvocationRuntimeException(e);
         }
 

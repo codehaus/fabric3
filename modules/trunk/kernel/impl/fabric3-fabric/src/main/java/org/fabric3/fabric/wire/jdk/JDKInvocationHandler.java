@@ -31,7 +31,6 @@ import org.osoa.sca.ServiceUnavailableException;
 import org.fabric3.fabric.wire.NoMethodForOperationException;
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.spi.component.CallFrame;
-import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.TargetInvocationException;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
@@ -50,7 +49,6 @@ public final class JDKInvocationHandler<B> implements InvocationHandler, Service
     private final B proxy;
     private final boolean conversational;
     private final Map<Method, InvocationChain> chains;
-    private final ScopeContainer<Conversation> scopeContainer;
 
     private ConversationImpl conversation;
     private Object userConversationId;
@@ -59,8 +57,7 @@ public final class JDKInvocationHandler<B> implements InvocationHandler, Service
     public JDKInvocationHandler(Class<B> businessInterface,
                                 String callbackUri,
                                 boolean conversational,
-                                Map<Method, InvocationChain> mapping,
-                                ScopeContainer<Conversation> scopeContainer) throws NoMethodForOperationException {
+                                Map<Method, InvocationChain> mapping) throws NoMethodForOperationException {
         this.callbackUri = callbackUri;
         assert mapping != null;
         this.businessInterface = businessInterface;
@@ -68,7 +65,6 @@ public final class JDKInvocationHandler<B> implements InvocationHandler, Service
         this.proxy = businessInterface.cast(Proxy.newProxyInstance(loader, new Class[]{businessInterface}, this));
         this.conversational = conversational;
         this.chains = mapping;
-        this.scopeContainer = scopeContainer;
     }
 
     public B getService() {
@@ -136,10 +132,9 @@ public final class JDKInvocationHandler<B> implements InvocationHandler, Service
         }
         if (conversational && conversation == null) {
             conversation = new ConversationImpl(createConversationID());
-            CallFrame frame = new CallFrame(callbackUri, conversation, clientCorrelation);
+            // mark the CallFrame as starting a conversation
+            CallFrame frame = new CallFrame(callbackUri, conversation, true, clientCorrelation);
             workContext.addCallFrame(frame);
-            // TODO move startContext to invoker interceptor
-            scopeContainer.startContext(workContext, null);
         } else {
             CallFrame frame = new CallFrame(callbackUri, conversation, clientCorrelation);
             workContext.addCallFrame(frame);

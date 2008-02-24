@@ -30,6 +30,7 @@ public class CallFrame implements Serializable {
     private static final long serialVersionUID = -6108279393891496098L;
     private String callbackUri;
     private Object forwardCorrelationId;
+    private boolean startConversation;
     private Object callerCorrelationId;
 
     /**
@@ -44,13 +45,28 @@ public class CallFrame implements Serializable {
      * @param callbackUri          the URI the caller of the current service can be called back on
      * @param forwardCorrelationId the key used to correlate the forward invocation with the target component implementation instance. For stateless
      *                             targets, the id may be null.
+     * @param startConversation    true if a conversation is to be started for this invocation
+     * @param callerCorrelationId  the key used to correlate callback invocations with the callback component implementation instance. For stateless
+     *                             targets, the id may be null.
+     */
+    public CallFrame(String callbackUri, Object forwardCorrelationId, boolean startConversation, Object callerCorrelationId) {
+        this.callbackUri = callbackUri;
+        this.forwardCorrelationId = forwardCorrelationId;
+        this.startConversation = startConversation;
+        this.callerCorrelationId = callerCorrelationId;
+    }
+
+    /**
+     * Convenience constructor for invocations that do not start a conversation.
+     *
+     * @param callbackUri          the URI the caller of the current service can be called back on
+     * @param forwardCorrelationId the key used to correlate the forward invocation with the target component implementation instance. For stateless
+     *                             targets, the id may be null.
      * @param callerCorrelationId  the key used to correlate callback invocations with the callback component implementation instance. For stateless
      *                             targets, the id may be null.
      */
     public CallFrame(String callbackUri, Object forwardCorrelationId, Object callerCorrelationId) {
-        this.callbackUri = callbackUri;
-        this.forwardCorrelationId = forwardCorrelationId;
-        this.callerCorrelationId = callerCorrelationId;
+        this(callbackUri, forwardCorrelationId, false, callerCorrelationId);
     }
 
     /**
@@ -90,6 +106,15 @@ public class CallFrame implements Serializable {
      */
     public <T> T getCallbackCorrelationId(Class<T> type) {
         return type.cast(callerCorrelationId);
+    }
+
+    /**
+     * Returns true if the invocation starts a conversation.
+     *
+     * @return true if the invocation starts a conversation
+     */
+    public boolean isStartConversation() {
+        return startConversation;
     }
 
     /**

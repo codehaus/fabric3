@@ -30,6 +30,7 @@ import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.TargetResolutionException;
 import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.component.CallFrame;
 import org.fabric3.spi.wire.InvocationRuntimeException;
 import org.fabric3.spi.wire.Message;
 
@@ -128,6 +129,7 @@ public class InvokerInterceptorBasicTestCase extends TestCase {
         TargetResolutionException ex = new TargetResolutionException(null);
         EasyMock.expect(message.getBody()).andReturn(null);
         EasyMock.expect(message.getWorkContext()).andReturn(workContext);
+        EasyMock.expect(workContext.peekCallFrame()).andReturn(new CallFrame());
         try {
             EasyMock.expect(scopeContainer.getWrapper(component, workContext)).andThrow(ex);
         } catch (TargetResolutionException e) {
@@ -146,6 +148,7 @@ public class InvokerInterceptorBasicTestCase extends TestCase {
     private void mockCall(Object value, Object body) throws Exception {
         EasyMock.expect(message.getBody()).andReturn(value);
         EasyMock.expect(message.getWorkContext()).andReturn(workContext);
+        EasyMock.expect(workContext.peekCallFrame()).andReturn(new CallFrame());
         EasyMock.expect(scopeContainer.getWrapper(component, workContext)).andReturn(wrapper);
         EasyMock.expect(wrapper.getInstance()).andReturn(bean);
         message.setBody(body);
@@ -155,6 +158,7 @@ public class InvokerInterceptorBasicTestCase extends TestCase {
     private void mockFaultCall(Object value, Class<? extends Exception> fault) throws Exception {
         EasyMock.expect(message.getBody()).andReturn(value);
         EasyMock.expect(message.getWorkContext()).andReturn(workContext);
+        EasyMock.expect(workContext.peekCallFrame()).andReturn(new CallFrame());
         EasyMock.expect(scopeContainer.getWrapper(component, workContext)).andReturn(wrapper);
         EasyMock.expect(wrapper.getInstance()).andReturn(bean);
         message.setBodyWithFault(EasyMock.isA(fault));

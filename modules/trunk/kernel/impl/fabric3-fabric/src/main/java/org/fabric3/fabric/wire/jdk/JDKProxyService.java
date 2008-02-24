@@ -21,28 +21,25 @@ package org.fabric3.fabric.wire.jdk;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.Map;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
-import java.net.URI;
+import java.util.Map;
 
 import org.osoa.sca.CallableReference;
-import org.osoa.sca.Conversation;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.fabric.injection.CallbackWireObjectFactory;
+import org.fabric3.fabric.wire.NoMethodForOperationException;
+import org.fabric3.fabric.wire.WireObjectFactory;
 import org.fabric3.scdl.Scope;
+import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
+import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.ProxyCreationException;
 import org.fabric3.spi.wire.ProxyService;
 import org.fabric3.spi.wire.Wire;
-import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
-import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
-import org.fabric3.fabric.wire.NoMethodForOperationException;
-import org.fabric3.fabric.wire.WireObjectFactory;
-import org.fabric3.fabric.injection.CallbackWireObjectFactory;
 
 /**
  * the default implementation of a wire service that uses JDK dynamic proxies
@@ -50,11 +47,9 @@ import org.fabric3.fabric.injection.CallbackWireObjectFactory;
  * @version $$Rev$$ $$Date$$
  */
 public class JDKProxyService implements ProxyService {
-    private final ScopeRegistry scopeRegistry;
     private final ClassLoaderRegistry classLoaderRegistry;
 
-    public JDKProxyService(@Reference ScopeRegistry scopeRegistry, @Reference ClassLoaderRegistry classLoaderRegistry) {
-        this.scopeRegistry = scopeRegistry;
+    public JDKProxyService(@Reference ClassLoaderRegistry classLoaderRegistry) {
         this.classLoaderRegistry = classLoaderRegistry;
     }
 
@@ -74,9 +69,7 @@ public class JDKProxyService implements ProxyService {
 
     public <T> T createProxy(Class<T> interfaze, boolean conversational, String callbackUri, Map<Method, InvocationChain> mappings)
             throws ProxyCreationException {
-        ScopeContainer<Conversation> scopeContainer = scopeRegistry.getScopeContainer(Scope.CONVERSATION);
-        JDKInvocationHandler<T> handler =
-                new JDKInvocationHandler<T>(interfaze, callbackUri, conversational, mappings, scopeContainer);
+        JDKInvocationHandler<T> handler = new JDKInvocationHandler<T>(interfaze, callbackUri, conversational, mappings);
         return handler.getService();
     }
 
