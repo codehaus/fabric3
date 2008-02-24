@@ -1,0 +1,234 @@
+package com.voca.test;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.sql.SQLException;
+
+import javax.jms.ConnectionFactory;
+import javax.jms.MessageProducer;
+import javax.jms.Queue;
+import javax.jms.Session;
+import javax.jms.TextMessage;
+import javax.sql.DataSource;
+
+import junit.framework.TestCase;
+
+import oracle.jdbc.pool.OracleDataSource;
+import oracle.jms.AQjmsConnection;
+import oracle.jms.AQjmsFactory;
+import oracle.jms.AQjmsSession;
+import oracle.jms.AdtMessage;
+import oracle.xdb.XMLType;
+
+/**
+ * This TODO class/interface ...
+ */
+public class AQTest extends TestCase {
+
+    /**
+     * Tests
+     */
+    public void testCreateCOnnection() throws Exception {
+        final ConnectionFactory connectionFactory = AQjmsFactory.getConnectionFactory(getDataSource());
+        connectionFactory.createConnection();
+    }
+
+    /**
+     * Tests via Queue payload type of SYS.XMLTYPE
+     * 
+     * @throws Exception
+     */
+    public void testSendBySysXmlType() throws Exception {
+        /* s.getQueue("babur", "TESTER_Q"); */
+
+        final DataSource ds = getDataSource();
+        final XMLType xml = createXMLType(ds);
+
+        ConnectionFactory cf = AQjmsFactory.getConnectionFactory(ds);
+        AQjmsConnection c = (AQjmsConnection) cf.createConnection();
+        AQjmsSession s = (AQjmsSession) c.createSession(true, Session.AUTO_ACKNOWLEDGE);
+
+        Queue queue = s.createQueue("babur.SAFESTORE_INPUTRNR_Q");
+
+        String name = queue.getQueueName();
+        System.err.println("NAME " + name);
+
+        MessageProducer producer = s.createProducer(queue);
+        AdtMessage adtMessage = s.createORAMessage(xml);
+
+        producer.send(adtMessage);
+        s.commit();
+    }
+
+    /**
+     * Tests via QUEUE Payload type set up as SYS.AQ$_JMS_MESSAGE
+     */
+    public void testSendByJMSQueue() throws Exception {
+        final DataSource ds = getDataSource();
+
+        ConnectionFactory cf = AQjmsFactory.getConnectionFactory(ds);
+        AQjmsConnection c = (AQjmsConnection) cf.createConnection();
+        AQjmsSession s = (AQjmsSession) c.createSession(true, Session.AUTO_ACKNOWLEDGE);
+
+        Queue queue = s.createQueue("babur.TESTER_Q");
+        String name = queue.getQueueName();
+        System.err.println("NAME " + name);
+        MessageProducer producer = s.createProducer(queue);
+        TextMessage msg = s.createTextMessage();
+        msg.setText("<hello>test</hello>");
+        producer.send(msg);
+        s.commit();
+
+    }
+
+    /**
+     * TODO DOCUMENT
+     * 
+     * @return
+     * @throws SQLException
+     */
+    public DataSource getDataSource() throws SQLException {
+        OracleDataSource ds = new OracleDataSource();
+        ds.setUser("babur");
+        ds.setPassword("babur");
+        ds.setDatabaseName("EDPDEV");
+        ds.setServerName("10.64.10.151");
+        ds.setPortNumber(1521);
+        ds.setDriverType("thin");
+        return ds;
+    }
+
+    /**
+     * Create XML Type
+     * 
+     * @param ds
+     * @return
+     */
+    private XMLType createXMLType(final DataSource ds) {
+        final InputStream data = new ByteArrayInputStream("<test>hello</test>".getBytes());
+        try {
+            final XMLType xml = new XMLType(ds.getConnection(), data);
+            return xml;
+        } catch (SQLException se) {            
+            throw new RuntimeException("SQL EXCeption " + se);
+        }
+    }
+
+}
+package com.voca.test;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.sql.SQLException;
+
+import javax.jms.ConnectionFactory;
+import javax.jms.MessageProducer;
+import javax.jms.Queue;
+import javax.jms.Session;
+import javax.jms.TextMessage;
+import javax.sql.DataSource;
+
+import junit.framework.TestCase;
+
+import oracle.jdbc.pool.OracleDataSource;
+import oracle.jms.AQjmsConnection;
+import oracle.jms.AQjmsFactory;
+import oracle.jms.AQjmsSession;
+import oracle.jms.AdtMessage;
+import oracle.xdb.XMLType;
+
+/**
+ * This TODO class/interface ...
+ */
+public class AQTest extends TestCase {
+
+    /**
+     * Tests
+     */
+    public void testCreateCOnnection() throws Exception {
+        final ConnectionFactory connectionFactory = AQjmsFactory.getConnectionFactory(getDataSource());
+        connectionFactory.createConnection();
+    }
+
+    /**
+     * Tests via Queue payload type of SYS.XMLTYPE
+     * 
+     * @throws Exception
+     */
+    public void testSendBySysXmlType() throws Exception {
+        /* s.getQueue("babur", "TESTER_Q"); */
+
+        final DataSource ds = getDataSource();
+        final XMLType xml = createXMLType(ds);
+
+        ConnectionFactory cf = AQjmsFactory.getConnectionFactory(ds);
+        AQjmsConnection c = (AQjmsConnection) cf.createConnection();
+        AQjmsSession s = (AQjmsSession) c.createSession(true, Session.AUTO_ACKNOWLEDGE);
+
+        Queue queue = s.createQueue("babur.SAFESTORE_INPUTRNR_Q");
+
+        String name = queue.getQueueName();
+        System.err.println("NAME " + name);
+
+        MessageProducer producer = s.createProducer(queue);
+        AdtMessage adtMessage = s.createORAMessage(xml);
+
+        producer.send(adtMessage);
+        s.commit();
+    }
+
+    /**
+     * Tests via QUEUE Payload type set up as SYS.AQ$_JMS_MESSAGE
+     */
+    public void testSendByJMSQueue() throws Exception {
+        final DataSource ds = getDataSource();
+
+        ConnectionFactory cf = AQjmsFactory.getConnectionFactory(ds);
+        AQjmsConnection c = (AQjmsConnection) cf.createConnection();
+        AQjmsSession s = (AQjmsSession) c.createSession(true, Session.AUTO_ACKNOWLEDGE);
+
+        Queue queue = s.createQueue("babur.TESTER_Q");
+        String name = queue.getQueueName();
+        System.err.println("NAME " + name);
+        MessageProducer producer = s.createProducer(queue);
+        TextMessage msg = s.createTextMessage();
+        msg.setText("<hello>test</hello>");
+        producer.send(msg);
+        s.commit();
+
+    }
+
+    /**
+     * TODO DOCUMENT
+     * 
+     * @return
+     * @throws SQLException
+     */
+    public DataSource getDataSource() throws SQLException {
+        OracleDataSource ds = new OracleDataSource();
+        ds.setUser("babur");
+        ds.setPassword("babur");
+        ds.setDatabaseName("EDPDEV");
+        ds.setServerName("10.64.10.151");
+        ds.setPortNumber(1521);
+        ds.setDriverType("thin");
+        return ds;
+    }
+
+    /**
+     * Create XML Type
+     * 
+     * @param ds
+     * @return
+     */
+    private XMLType createXMLType(final DataSource ds) {
+        final InputStream data = new ByteArrayInputStream("<test>hello</test>".getBytes());
+        try {
+            final XMLType xml = new XMLType(ds.getConnection(), data);
+            return xml;
+        } catch (SQLException se) {            
+            throw new RuntimeException("SQL EXCeption " + se);
+        }
+    }
+
+}
