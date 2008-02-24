@@ -28,6 +28,8 @@ import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
 import org.fabric3.pojo.reflection.InvokerInterceptor;
+import org.fabric3.scdl.InjectableAttribute;
+import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
@@ -37,8 +39,6 @@ import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.component.Component;
 import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.scdl.InjectableAttribute;
-import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
@@ -138,16 +138,17 @@ public class GroovyWireAttacher implements SourceWireAttacher<GroovyWireSourceDe
                 URI targetUri = targetDefinition.getUri();
                 throw new WireAttachException("No matching method found", sourceUri, targetUri, e);
             }
-            chain.addInterceptor(createInterceptor(method, target, scopeContainer));
+            chain.addInterceptor(createInterceptor(method, operation.isEndsConversation(), target, scopeContainer));
         }
 
         // TODO handle callbacks
     }
 
     private <T, CONTEXT> InvokerInterceptor<T, CONTEXT> createInterceptor(Method method,
+                                                                          boolean endsConvesation,
                                                                           GroovyComponent<T> component,
                                                                           ScopeContainer<CONTEXT> scopeContainer) {
-        return new InvokerInterceptor<T, CONTEXT>(method, component, scopeContainer);
+        return new InvokerInterceptor<T, CONTEXT>(method, endsConvesation, component, scopeContainer);
     }
 
     public void attachObjectFactory(GroovyWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {

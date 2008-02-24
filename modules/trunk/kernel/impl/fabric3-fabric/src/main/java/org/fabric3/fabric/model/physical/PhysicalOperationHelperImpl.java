@@ -39,7 +39,7 @@ public class PhysicalOperationHelperImpl implements PhysicalOperationHelper {
 
         PhysicalOperationDefinition operation = new PhysicalOperationDefinition();
         operation.setName(o.getName());
-        operation.setConversationSequence(o.getConversationSequence());
+        operation.setEndsConversation(o.getConversationSequence() == Operation.CONVERSATION_END);
         Type returnType = o.getOutputType().getPhysical();
         operation.setReturnType(getClassName(returnType));
 

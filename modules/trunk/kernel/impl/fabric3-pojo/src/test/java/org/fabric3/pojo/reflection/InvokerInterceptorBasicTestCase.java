@@ -51,7 +51,7 @@ public class InvokerInterceptorBasicTestCase extends TestCase {
 
     public void testObjectInvoke() throws Throwable {
         InvokerInterceptor<TestBean, URI> invoker =
-                new InvokerInterceptor<TestBean, URI>(echoMethod, component, scopeContainer);
+                new InvokerInterceptor<TestBean, URI>(echoMethod, false, component, scopeContainer);
         String value = "foo";
         mockCall(new Object[]{value}, value);
         control.replay();
@@ -62,7 +62,7 @@ public class InvokerInterceptorBasicTestCase extends TestCase {
 
     public void testPrimitiveInvoke() throws Throwable {
         InvokerInterceptor<TestBean, URI> invoker =
-                new InvokerInterceptor<TestBean, URI>(primitiveMethod, component, scopeContainer);
+                new InvokerInterceptor<TestBean, URI>(primitiveMethod, false, component, scopeContainer);
         Integer value = 1;
         mockCall(new Object[]{value}, value);
         control.replay();
@@ -73,7 +73,7 @@ public class InvokerInterceptorBasicTestCase extends TestCase {
 
     public void testArrayInvoke() throws Throwable {
         InvokerInterceptor<TestBean, URI> invoker =
-                new InvokerInterceptor<TestBean, URI>(arrayMethod, component, scopeContainer);
+                new InvokerInterceptor<TestBean, URI>(arrayMethod, false, component, scopeContainer);
         String[] value = new String[]{"foo", "bar"};
         mockCall(new Object[]{value}, value);
         control.replay();
@@ -84,7 +84,7 @@ public class InvokerInterceptorBasicTestCase extends TestCase {
 
     public void testEmptyInvoke() throws Throwable {
         InvokerInterceptor<TestBean, URI> invoker =
-                new InvokerInterceptor<TestBean, URI>(nullParamMethod, component, scopeContainer);
+                new InvokerInterceptor<TestBean, URI>(nullParamMethod, false, component, scopeContainer);
         mockCall(new Object[]{}, "foo");
         control.replay();
         Message ret = invoker.invoke(message);
@@ -94,7 +94,7 @@ public class InvokerInterceptorBasicTestCase extends TestCase {
 
     public void testNullInvoke() throws Throwable {
         InvokerInterceptor<TestBean, URI> invoker =
-                new InvokerInterceptor<TestBean, URI>(nullParamMethod, component, scopeContainer);
+                new InvokerInterceptor<TestBean, URI>(nullParamMethod, false, component, scopeContainer);
         mockCall(null, "foo");
         control.replay();
         Message ret = invoker.invoke(message);
@@ -104,7 +104,7 @@ public class InvokerInterceptorBasicTestCase extends TestCase {
 
     public void testInvokeCheckedException() throws Throwable {
         InvokerInterceptor<TestBean, URI> invoker =
-                new InvokerInterceptor<TestBean, URI>(checkedMethod, component, scopeContainer);
+                new InvokerInterceptor<TestBean, URI>(checkedMethod, false, component, scopeContainer);
         mockFaultCall(null, TestException.class);
         control.replay();
         Message ret = invoker.invoke(message);
@@ -114,7 +114,7 @@ public class InvokerInterceptorBasicTestCase extends TestCase {
 
     public void testInvokeRuntimeException() throws Throwable {
         InvokerInterceptor<TestBean, URI> invoker =
-                new InvokerInterceptor<TestBean, URI>(runtimeMethod, component, scopeContainer);
+                new InvokerInterceptor<TestBean, URI>(runtimeMethod, false, component, scopeContainer);
         mockFaultCall(null, TestRuntimeException.class);
         control.replay();
         Message ret = invoker.invoke(message);
@@ -124,7 +124,7 @@ public class InvokerInterceptorBasicTestCase extends TestCase {
 
     public void testFailureGettingWrapperThrowsException() {
         InvokerInterceptor<TestBean, URI> invoker =
-                new InvokerInterceptor<TestBean, URI>(echoMethod, component, scopeContainer);
+                new InvokerInterceptor<TestBean, URI>(echoMethod, false, component, scopeContainer);
         TargetResolutionException ex = new TargetResolutionException(null);
         EasyMock.expect(message.getBody()).andReturn(null);
         EasyMock.expect(message.getWorkContext()).andReturn(workContext);

@@ -145,7 +145,7 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
             Object instance = component.createObjectFactory().getInstance();
             Method m = instance.getClass().getMethod(operation.getName());
             ScopeContainer scopeContainer = component.getScopeContainer();
-            InvokerInterceptor<?, ?> interceptor = new InvokerInterceptor(m, component, scopeContainer);
+            InvokerInterceptor<?, ?> interceptor = new InvokerInterceptor(m, false, component, scopeContainer);
 
             Message msg = new MessageImpl();
             msg.setWorkContext(workContext);

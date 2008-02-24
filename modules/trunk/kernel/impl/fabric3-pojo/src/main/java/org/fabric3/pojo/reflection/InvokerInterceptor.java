@@ -44,28 +44,36 @@ public class InvokerInterceptor<T, CONTEXT> implements Interceptor {
     private AtomicComponent<T> component;
     private String callbackUri;
     private ScopeContainer<CONTEXT> scopeContainer;
+    private boolean endConversation;
 
     /**
      * Creates a new interceptor instance.
      *
      * @param operation      the method to invoke on the target instance
+     * @param endConvesation if true, ends the conversation after the invocation
      * @param component      the target component
      * @param scopeContainer the ScopeContainer that manages implementation instances for the target component
      */
-    public InvokerInterceptor(Method operation, AtomicComponent<T> component, ScopeContainer<CONTEXT> scopeContainer) {
-        this(operation, component, null, scopeContainer);
+    public InvokerInterceptor(Method operation, boolean endConvesation, AtomicComponent<T> component, ScopeContainer<CONTEXT> scopeContainer) {
+        this(operation, endConvesation, component, null, scopeContainer);
     }
 
     /**
      * Creates a new interceptor instance for a forward invocation chain associated with a callback.
      *
-     * @param operation      the method to invoke on the target instance
-     * @param component      the target component
-     * @param callbackUri    the uri of the callback wire or null if the service is unidirectional
-     * @param scopeContainer the ScopeContainer that manages implementation instances for the target component
+     * @param operation       the method to invoke on the target instance
+     * @param endConversation if true, ends the conversation after the invocation
+     * @param component       the target component
+     * @param callbackUri     the uri of the callback wire or null if the service is unidirectional
+     * @param scopeContainer  the ScopeContainer that manages implementation instances for the target component
      */
-    public InvokerInterceptor(Method operation, AtomicComponent<T> component, String callbackUri, ScopeContainer<CONTEXT> scopeContainer) {
+    public InvokerInterceptor(Method operation,
+                              boolean endConversation,
+                              AtomicComponent<T> component,
+                              String callbackUri,
+                              ScopeContainer<CONTEXT> scopeContainer) {
         this.operation = operation;
+        this.endConversation = endConversation;
         this.component = component;
         this.callbackUri = callbackUri;
         this.scopeContainer = scopeContainer;
@@ -109,6 +117,9 @@ public class InvokerInterceptor<T, CONTEXT> implements Interceptor {
         } finally {
             try {
                 scopeContainer.returnWrapper(component, workContext, wrapper);
+                if (endConversation) {
+                    scopeContainer.stopContext(workContext);
+                }
             } catch (TargetDestructionException e) {
                 throw new InvocationRuntimeException(e);
             }

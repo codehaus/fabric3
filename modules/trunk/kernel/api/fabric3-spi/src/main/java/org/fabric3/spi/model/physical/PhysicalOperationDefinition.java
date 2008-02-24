@@ -46,7 +46,7 @@ public class PhysicalOperationDefinition extends ModelObject {
     // Callback
     private boolean callback;
 
-    private int conversationSequence;
+    private boolean endsConversation;
 
     // Interceptors defined against the operation
     private Set<PhysicalInterceptorDefinition> interceptors = new HashSet<PhysicalInterceptorDefinition>();
@@ -150,12 +150,21 @@ public class PhysicalOperationDefinition extends ModelObject {
         this.callback = callback;
     }
 
-
-    public int getConversationSequence() {
-        return conversationSequence;
+    /**
+     * Returns true if the operation ends a conversation.
+     *
+     * @return true if the operation ends a conversation
+     */
+    public boolean isEndsConversation() {
+        return endsConversation;
     }
 
-    public void setConversationSequence(int conversationSequence) {
-        this.conversationSequence = conversationSequence;
+    /**
+     * Sets if the operation ends a conversation.
+     *
+     * @param endsConversation true if the operation ends a conversation
+     */
+    public void setEndsConversation(boolean endsConversation) {
+        this.endsConversation = endsConversation;
     }
 }
