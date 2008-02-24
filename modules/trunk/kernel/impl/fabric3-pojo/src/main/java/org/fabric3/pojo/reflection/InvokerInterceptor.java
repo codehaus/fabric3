@@ -23,13 +23,13 @@ import java.lang.reflect.Method;
 
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.spi.component.AtomicComponent;
+import org.fabric3.spi.component.CallFrame;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.TargetDestructionException;
 import org.fabric3.spi.component.TargetResolutionException;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.spi.component.CallFrame;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationRuntimeException;
 import org.fabric3.spi.wire.Message;
@@ -44,7 +44,6 @@ import org.fabric3.spi.wire.Message;
 public class InvokerInterceptor<T, CONTEXT> implements Interceptor {
     private Method operation;
     private AtomicComponent<T> component;
-    private String callbackUri;
     private ScopeContainer<CONTEXT> scopeContainer;
     private boolean endConversation;
 
@@ -52,32 +51,14 @@ public class InvokerInterceptor<T, CONTEXT> implements Interceptor {
      * Creates a new interceptor instance.
      *
      * @param operation      the method to invoke on the target instance
-     * @param endConvesation if true, ends the conversation after the invocation
+     * @param endConversation if true, ends the conversation after the invocation
      * @param component      the target component
      * @param scopeContainer the ScopeContainer that manages implementation instances for the target component
      */
-    public InvokerInterceptor(Method operation, boolean endConvesation, AtomicComponent<T> component, ScopeContainer<CONTEXT> scopeContainer) {
-        this(operation, endConvesation, component, null, scopeContainer);
-    }
-
-    /**
-     * Creates a new interceptor instance for a forward invocation chain associated with a callback.
-     *
-     * @param operation       the method to invoke on the target instance
-     * @param endConversation if true, ends the conversation after the invocation
-     * @param component       the target component
-     * @param callbackUri     the uri of the callback wire or null if the service is unidirectional
-     * @param scopeContainer  the ScopeContainer that manages implementation instances for the target component
-     */
-    public InvokerInterceptor(Method operation,
-                              boolean endConversation,
-                              AtomicComponent<T> component,
-                              String callbackUri,
-                              ScopeContainer<CONTEXT> scopeContainer) {
+    public InvokerInterceptor(Method operation, boolean endConversation, AtomicComponent<T> component, ScopeContainer<CONTEXT> scopeContainer) {
         this.operation = operation;
         this.endConversation = endConversation;
         this.component = component;
-        this.callbackUri = callbackUri;
         this.scopeContainer = scopeContainer;
     }
 

@@ -139,11 +139,6 @@ public class JavaWireAttacher extends PojoWireAttacher implements SourceWireAtta
         ScopeContainer<?> scopeContainer = target.getScopeContainer();
         Class<?> implementationClass = target.getImplementationClass();
         ClassLoader loader = implementationClass.getClassLoader();
-        String callbackUri = null;
-        if (targetDefinition.getCallbackUri() != null) {
-            // only references wired to bidirectional services have a callback id
-            callbackUri = targetDefinition.getCallbackUri().toString();
-        }
 
         // attach the invoker interceptor to forward invocation chains
         for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
@@ -170,7 +165,7 @@ public class JavaWireAttacher extends PojoWireAttacher implements SourceWireAtta
                 URI targetUri = targetDefinition.getUri();
                 throw new WireAttachException("No matching method found", sourceUri, targetUri, e);
             }
-            chain.addInterceptor(createInterceptor(method, operation.isEndsConversation(), target, callbackUri, scopeContainer));
+            chain.addInterceptor(createInterceptor(method, operation.isEndsConversation(), target, scopeContainer));
         }
     }
 
@@ -192,9 +187,8 @@ public class JavaWireAttacher extends PojoWireAttacher implements SourceWireAtta
     private <T, CONTEXT> InvokerInterceptor<T, CONTEXT> createInterceptor(Method method,
                                                                           boolean endsConversation,
                                                                           JavaComponent<T> component,
-                                                                          String callbackUri,
                                                                           ScopeContainer<CONTEXT> scopeContainer) {
-        return new InvokerInterceptor<T, CONTEXT>(method, endsConversation, component, callbackUri, scopeContainer);
+        return new InvokerInterceptor<T, CONTEXT>(method, endsConversation, component, scopeContainer);
     }
 
 
