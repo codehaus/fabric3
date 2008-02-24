@@ -24,6 +24,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
+import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -31,6 +32,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.ArrayList;
 
 import org.osoa.sca.ComponentContext;
 import org.osoa.sca.RequestContext;
@@ -41,6 +43,10 @@ import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.introspection.TypeMapping;
 import org.fabric3.scdl.InjectableAttributeType;
+import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.scdl.Signature;
+import org.fabric3.scdl.Operation;
+import org.fabric3.scdl.DataType;
 
 /**
  * @version $Rev$ $Date$
@@ -192,6 +198,103 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
             type = type.getSuperclass();
         }
         return interfaces;
+    }
+
+    public Set<Method> getInjectionMethods(Class<?> type, Collection<ServiceDefinition> services) {
+        Set<Signature> exclude = getOperations(services);
+        Set<Method> methods = new HashSet<Method>();
+        while (type != null) {
+            for (Method method : type.getDeclaredMethods()) {
+                // check method accessibility
+                int modifiers = method.getModifiers();
+                if (Modifier.isStatic(modifiers) || Modifier.isAbstract(modifiers)) {
+                    continue;
+                }
+                if (!(Modifier.isPublic(modifiers) || Modifier.isProtected(modifiers))) {
+                    continue;
+                }
+                if (!isSetter(method)) {
+                    continue;
+                }
+
+                // exclude methods we have seen already (i.e. in a contract or overriden in a subclass)
+                // we check using the signature as the method itself will have been declared on a different class
+                Signature signature = new Signature(method);
+                if (exclude.contains(signature)) {
+                    continue;
+                }
+
+                exclude.add(signature);
+                methods.add(method);
+            }
+            type = type.getSuperclass();
+        }
+        return methods;
+    }
+
+    boolean isSetter(Method method) {
+        // it must return void
+        if (!Void.TYPE.equals(method.getReturnType())) {
+            return false;
+        }
+
+        // it must have a single parameter
+        if (method.getParameterTypes().length != 1) {
+            return false;
+        }
+
+        // it's name must begin with "set" but not be "set"
+        String name = method.getName();
+        if (name.length() < 4 || !name.startsWith("set")) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private Set<Signature> getOperations(Collection<ServiceDefinition> services) {
+        Set<Signature> operations = new HashSet<Signature>();
+        for (ServiceDefinition definition : services) {
+            List<? extends Operation<?>> ops = definition.getServiceContract().getOperations();
+            for (Operation<?> operation : ops) {
+                String name = operation.getName();
+                List<? extends DataType<?>> inputTypes = operation.getInputType().getLogical();
+                List<String> paramTypes = new ArrayList<String>(inputTypes.size());
+                for (DataType<?> inputType : inputTypes) {
+                    paramTypes.add(((Class<?>) inputType.getPhysical()).getName());
+                }
+                operations.add(new Signature(name, paramTypes));
+            }
+        }
+        return operations;
+    }
+
+    public Set<Field> getInjectionFields(Class<?> type) {
+        Set<Field> fields = new HashSet<Field>();
+        Set<String> exclude = new HashSet<String>();
+        while (type != null) {
+            for (Field field : type.getDeclaredFields()) {
+                // check field accessibility
+                int modifiers = field.getModifiers();
+                if (Modifier.isStatic(modifiers) || Modifier.isFinal(modifiers)) {
+                    continue;
+                }
+                if (!(Modifier.isPublic(modifiers) || Modifier.isProtected(modifiers))) {
+                    continue;
+                }
+
+                // exclude fields already defined in a subclass
+                String name = field.getName();
+                if (exclude.contains(name)) {
+                    continue;
+                }
+                exclude.add(name);
+                fields.add(field);
+            }
+            
+            type = type.getSuperclass();
+        }
+        return fields;
     }
 
     public TypeMapping mapTypeParameters(Class<?> type) {

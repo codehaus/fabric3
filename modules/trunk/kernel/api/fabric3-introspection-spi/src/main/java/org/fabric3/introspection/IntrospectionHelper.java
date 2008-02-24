@@ -21,9 +21,11 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.Collection;
 import java.util.Set;
 
 import org.fabric3.scdl.InjectableAttributeType;
+import org.fabric3.scdl.ServiceDefinition;
 
 /**
  * Helper service that provides support methods to simplify introspection.
@@ -128,14 +130,14 @@ public interface IntrospectionHelper {
      * <p/>
      * The base type is the actual type of a property or reference having removed any decoration for arrays or collections.
      *
-     * @param type the type of a field or parameter
+     * @param type        the type of a field or parameter
      * @param typeMapping the mapping to use to resolve any formal types
      * @return the actual type of the property or reference corresponding to the parameter
      */
     Type getBaseType(Type type, TypeMapping typeMapping);
 
     /**
-     * Returns all interfaces directly implemented by this class or any superclass.
+     * Returns all service interfaces directly implemented by a class or any superclass.
      * <p/>
      * Class#getInterfaces only returns interfaces directly implemented by the class. This method returns all interfaces including those implemented
      * by any superclasses. It excludes interfaces that are super-interfaces of those implemented by subclasses.
@@ -144,4 +146,25 @@ public interface IntrospectionHelper {
      * @return the unique interfaces immplemented by that class
      */
     Set<Class<?>> getImplementedInterfaces(Class<?> type);
+
+    /**
+     * Returns method injection sites provided by a class or any superclass.
+     * <p/>
+     * Methods that are part of any service contract are excluded.
+     *
+     * @param type     the class whose method sites should be returned
+     * @param services the services implemented by the class
+     * @return the method injection sites for the class
+     */
+    Set<Method> getInjectionMethods(Class<?> type, Collection<ServiceDefinition> services);
+
+    /**
+     * Returns method injection sites provided by a class or any superclass.
+     * <p/>
+     * Methods that are part of any service contract are excluded.
+     *
+     * @param type the class whose field injection sites should be returned
+     * @return the setter injection sites for the class
+     */
+    Set<Field> getInjectionFields(Class<?> type);
 }

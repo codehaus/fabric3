@@ -14,32 +14,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.scdl;
-
-import java.lang.reflect.Field;
-import java.lang.annotation.ElementType;
+package org.fabric3.introspection;
 
 /**
  * @version $Rev$ $Date$
  */
-public class FieldInjectionSite extends InjectionSite {
-    private String name;
+public class UnsupportedTypeException extends IntrospectionException {
 
-    public FieldInjectionSite(Field field) {
-        super(ElementType.FIELD, field.getType().getName());
-        name = field.getName();
+    public UnsupportedTypeException(String identifier) {
+        super(null, identifier);
     }
 
-    /**
-     * Gets the name of the field.
-     *
-     * @return Site name.
-     */
-    public String getName() {
-        return name;
-    }
-
-    public String toString() {
-        return name;
+    public String getMessage() {
+        return "Injection not supported for location: " + getIdentifier();
     }
 }

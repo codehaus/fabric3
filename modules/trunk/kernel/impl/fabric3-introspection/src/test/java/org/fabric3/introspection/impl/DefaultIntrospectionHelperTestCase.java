@@ -16,14 +16,22 @@
  */
 package org.fabric3.introspection.impl;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.Collection;
-import java.util.Map;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
 import org.fabric3.introspection.TypeMapping;
+import org.fabric3.introspection.InvalidServiceContractException;
+import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
+import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.scdl.ServiceContract;
 
 /**
  * @version $Rev$ $Date$
@@ -113,6 +121,93 @@ public class DefaultIntrospectionHelperTestCase extends TestCase {
         assertEquals(Collections.singleton(ServiceInterface.class), helper.getImplementedInterfaces(BaseWithInterface.class));
         assertEquals(Collections.singleton(ServiceInterface.class), helper.getImplementedInterfaces(ExtendsBaseWithInterface.class));
         assertEquals(Collections.singleton(SubInterface.class), helper.getImplementedInterfaces(ExtendsBaseWithSubInterface.class));
+    }
+
+    private abstract static class InjectionBase {
+        // these fields should be found
+        public int publicBase;
+        protected int protectedBase;
+
+        // these fields should not
+        int packageBase;
+        private int privateBase;
+        public static int staticInt;
+        public final int finalBase = 0;
+
+        // these methods should be found
+        public void setPublicBase(int value) { }
+        public void setPublicOverride(int value) { }
+        protected void setProtectedBase(int value) { }
+
+        // these methods should not
+        void setPackageBase(int value) { }
+        private void setPrivateBase(int value) { }
+        public static void setStatic(int value) { }
+        public abstract void setAbstract(int value);
+        public void set(int value){}
+        public void setNoValue(){}
+        public int setIntReturn(int value){return 0;}
+    }
+
+    private static class InjectionSubClass extends InjectionBase {
+        public int publicSub;
+        protected Object protectedBase; // field that obscures the one in the superclass (yuck)
+
+        public void setAbstract(int value) {}
+        public void setPublicOverride(int value) {}
+    }
+
+    private static interface InterfaceWithSetter {
+        void setFromInterface(int value);
+    }
+
+    private static class InjectionWithInterface implements InterfaceWithSetter {
+        // this should not be included
+        public void setFromInterface(int value) {
+        }
+    }
+
+    public void testGetInjectionFields() throws NoSuchFieldException {
+        Set<Field> expected = new HashSet<Field>();
+        expected.add(InjectionBase.class.getDeclaredField("publicBase"));
+        expected.add(InjectionBase.class.getDeclaredField("protectedBase"));
+        assertEquals(expected, helper.getInjectionFields(InjectionBase.class));
+    }
+
+    public void testGetInjectionFieldsOnSubclass() throws NoSuchFieldException {
+        Set<Field> expected = new HashSet<Field>();
+        expected.add(InjectionBase.class.getDeclaredField("publicBase"));
+        expected.add(InjectionSubClass.class.getDeclaredField("publicSub"));
+        expected.add(InjectionSubClass.class.getDeclaredField("protectedBase"));
+        assertEquals(expected, helper.getInjectionFields(InjectionSubClass.class));
+    }
+
+    public void testGetInjectionMethods() throws NoSuchMethodException {
+        Set<Method> expected = new HashSet<Method>();
+        expected.add(InjectionBase.class.getDeclaredMethod("setPublicBase", int.class));
+        expected.add(InjectionBase.class.getDeclaredMethod("setPublicOverride", int.class));
+        expected.add(InjectionBase.class.getDeclaredMethod("setProtectedBase", int.class));
+        Collection<ServiceDefinition> services = Collections.emptySet();
+        assertEquals(expected, helper.getInjectionMethods(InjectionBase.class, services));
+    }
+
+    public void testGetInjectionMethodsOnSubclass() throws NoSuchMethodException {
+        Set<Method> expected = new HashSet<Method>();
+        expected.add(InjectionBase.class.getDeclaredMethod("setPublicBase", int.class));
+        expected.add(InjectionBase.class.getDeclaredMethod("setProtectedBase", int.class));
+        expected.add(InjectionSubClass.class.getDeclaredMethod("setPublicOverride", int.class));
+        expected.add(InjectionSubClass.class.getDeclaredMethod("setAbstract", int.class));
+        Collection<ServiceDefinition> services = Collections.emptySet();
+        assertEquals(expected, helper.getInjectionMethods(InjectionSubClass.class, services));
+    }
+
+    public void testGetInjectionMethodsExcludesService() throws NoSuchMethodException, InvalidServiceContractException {
+        Set<Method> expected = Collections.emptySet();
+        Set<ServiceDefinition> services = new HashSet<ServiceDefinition>();
+        ServiceContract<?> contract = new DefaultContractProcessor(helper).introspect(new TypeMapping(), InterfaceWithSetter.class);
+        ServiceDefinition definition = new ServiceDefinition("InterfaceWithSetter", contract);
+        services.add(definition);
+        assertEquals(expected, helper.getInjectionMethods(InjectionWithInterface.class, services));
     }
 
     protected void setUp() throws Exception {

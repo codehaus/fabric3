@@ -63,4 +63,8 @@ public class ConstructorInjectionSite extends InjectionSite {
     public int hashCode() {
         return 31 * signature.hashCode() + param;
     }
+
+    public String toString() {
+        return signature.toString() + '[' + param + ']';
+    }
 }

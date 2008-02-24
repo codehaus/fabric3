@@ -50,4 +50,8 @@ public class MethodInjectionSite extends InjectionSite {
     public int getParam() {
         return param;
     }
+
+    public String toString() {
+        return signature.toString() + '[' + param + ']';
+    }
 }
