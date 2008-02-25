@@ -83,7 +83,7 @@ public class Axis2TargetInterceptor implements Interceptor {
     public Message invoke(Message msg) {
         
         Object[] payload = (Object[]) msg.getBody();
-        OMElement message = (OMElement) payload[0];
+        OMElement message = payload == null ? null : (OMElement) payload[0];
         
         Options options = new Options();
         options.setTo(epr);
@@ -106,6 +106,7 @@ public class Axis2TargetInterceptor implements Interceptor {
             OMElement result = sender.sendReceive(message);
             
             Message ret = new MessageImpl();
+            // set the result as a normal response even if its an application fault
             ret.setBody(result);
             
             return ret;

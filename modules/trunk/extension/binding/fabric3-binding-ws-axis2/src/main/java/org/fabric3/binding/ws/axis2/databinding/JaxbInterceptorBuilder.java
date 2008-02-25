@@ -17,9 +17,16 @@
 package org.fabric3.binding.ws.axis2.databinding;
 
 import java.net.URI;
-import java.util.List;
+import java.util.Set;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.lang.reflect.Method;
+import java.lang.reflect.Constructor;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.ws.WebFault;
+import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
@@ -57,23 +64,47 @@ public class JaxbInterceptorBuilder implements InterceptorBuilder<JaxbIntercepto
         ClassLoader classLoader = classLoaderRegistry.getClassLoader(classLoaderId);
 
         try {
-            JAXBContext context = getJAXBContext(classLoader, definition.getClassNames());
-            return new JaxbInterceptor(classLoader, context, definition.isService());
+            Set<String> classNames = definition.getClassNames();
+            Set<String> faultNames = definition.getFaultNames();
+            Map<Class<?>, Constructor<?>> faultMapping = getFaultMapping(classLoader, faultNames);
 
-        } catch (ClassNotFoundException ex) {
-            throw new JaxbBuilderException(ex);
+            JAXBContext context = getJAXBContext(classLoader, classNames);
+            return new JaxbInterceptor(classLoader, context, definition.isService(), faultMapping);
+
+        } catch (NoSuchMethodException e) {
+            throw new JaxbBuilderException(e);
+        } catch (ClassNotFoundException e) {
+            throw new JaxbBuilderException(e);
         } catch (JAXBException e) {
             throw new JaxbBuilderException(e);
         }
 
     }
 
-    private JAXBContext getJAXBContext(ClassLoader classLoader, List<String> classNames) throws JAXBException, ClassNotFoundException {
+    private JAXBContext getJAXBContext(ClassLoader classLoader, Set<String> classNames) throws JAXBException, ClassNotFoundException {
         Class<?>[] classes = new Class<?>[classNames.size()];
-        for (int i = 0; i < classes.length; i++) {
-            String className = classNames.get(i);
-            classes[i] = classLoaderRegistry.loadClass(classLoader, className);
+        int i = 0;
+        for (String className : classNames) {
+            classes[i++] = classLoaderRegistry.loadClass(classLoader, className);
         }
         return JAXBContext.newInstance(classes);
+    }
+
+    private Map<Class<?>, Constructor<?>> getFaultMapping(ClassLoader classLoader, Set<String> faultNames)
+            throws ClassNotFoundException, NoSuchMethodException {
+        Map<Class<?>, Constructor<?>> mapping = new HashMap<Class<?>, Constructor<?>>(faultNames.size());
+        for (String faultName : faultNames) {
+            Class<?> clazz = classLoaderRegistry.loadClass(classLoader, faultName);
+            WebFault fault = clazz.getAnnotation(WebFault.class);
+            if (fault == null) {
+                // FIXME throw someting
+                throw new RuntimeException();
+            }
+            Method getFaultInfo = clazz.getMethod("getFaultInfo");
+            Class<?> faultType = getFaultInfo.getReturnType();
+            Constructor<?> constructor = clazz.getConstructor(String.class, faultType);
+            mapping.put(faultType, constructor);
+        }
+        return mapping;
     }
 }

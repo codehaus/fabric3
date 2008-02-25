@@ -14,7 +14,7 @@ public class WeatherServiceTest extends TestCase {
         this.weatherService = weatherService;
     }
 
-    public void testGetWeather() {
+    public void _testGetWeather() {
         
         WeatherRequest weatherRequest = new WeatherRequest();
         weatherRequest.setCity("London");
@@ -27,5 +27,15 @@ public class WeatherServiceTest extends TestCase {
         assertEquals(40.0, weatherResponse.getTemperatureMaximum());
         
     }
+
+    public void testBadWeather() {
+        try {
+            weatherService.getBadWeather();
+            fail();
+        } catch (WeatherException e) {
+            // expected
+        }
+    }
+
 
 }

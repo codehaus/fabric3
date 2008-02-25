@@ -4,4 +4,6 @@ public interface WeatherService {
     
     WeatherResponse getWeather(WeatherRequest request);
 
+    void getBadWeather() throws WeatherException;
+
 }

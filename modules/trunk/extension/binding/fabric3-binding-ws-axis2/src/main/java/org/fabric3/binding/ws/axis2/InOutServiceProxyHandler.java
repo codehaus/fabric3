@@ -19,7 +19,6 @@
 
 package org.fabric3.binding.ws.axis2;
 
-import java.net.URI;
 import java.security.Principal;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -29,6 +28,7 @@ import javax.security.auth.Subject;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
+import org.apache.axiom.soap.SOAPBody;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.receivers.AbstractInOutMessageReceiver;
@@ -38,7 +38,6 @@ import org.apache.ws.security.handler.WSHandlerConstants;
 import org.apache.ws.security.handler.WSHandlerResult;
 import org.apache.ws.security.util.WSSecurityUtil;
 
-import org.fabric3.scdl.Scope;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
@@ -53,15 +52,12 @@ import org.fabric3.spi.wire.MessageImpl;
 public class InOutServiceProxyHandler extends AbstractInOutMessageReceiver {
 
     private final InvocationChain invocationChain;
-    private final URI scopeId;
 
     /**
      * @param invocationChain the invocation chain to invoke
-     * @param scopeId         the id of the composite scope to use
      */
-    public InOutServiceProxyHandler(InvocationChain invocationChain, URI scopeId) {
+    public InOutServiceProxyHandler(InvocationChain invocationChain) {
         this.invocationChain = invocationChain;
-        this.scopeId = scopeId;
     }
 
     @Override
@@ -69,21 +65,23 @@ public class InOutServiceProxyHandler extends AbstractInOutMessageReceiver {
 
         Interceptor head = invocationChain.getHeadInterceptor();
         OMElement bodyContent = getInBodyContent(inMessage);
+        Object[] args = bodyContent == null ? null : new Object[]{bodyContent};
 
         WorkContext workContext = new WorkContext();
         //Attach authenticated Subject to work context
         attachSubjectToWorkContext(workContext, inMessage);
 
-        Message input = new MessageImpl(new Object[]{bodyContent}, false, workContext);
+        Message input = new MessageImpl(args, false, workContext);
 
         Message ret = head.invoke(input);
-        OMElement resObject = (OMElement) ret.getBody();
 
         SOAPFactory fac = getSOAPFactory(inMessage);
-
         SOAPEnvelope envelope = fac.getDefaultEnvelope();
+        SOAPBody body = envelope.getBody();
 
-        envelope.getBody().addChild(resObject);
+        // we add the response to the body even if it's an application fault
+        OMElement resObject = (OMElement) ret.getBody();
+        body.addChild(resObject);
 
         outMessage.setEnvelope(envelope);
 

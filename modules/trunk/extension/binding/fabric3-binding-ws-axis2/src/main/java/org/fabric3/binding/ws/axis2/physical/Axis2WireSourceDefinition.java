@@ -32,7 +32,6 @@ public class Axis2WireSourceDefinition extends PhysicalWireSourceDefinition impl
 
     private String serviceInterface;
     private Map<String, Set<AxisPolicy>> policies = new HashMap<String, Set<AxisPolicy>>();
-    private URI scopeId;
     private URI classloaderURI;
 
     /**
@@ -47,22 +46,6 @@ public class Axis2WireSourceDefinition extends PhysicalWireSourceDefinition impl
      */
     public void setServiceInterface(String serviceInterface) {
         this.serviceInterface = serviceInterface;
-    }
-
-    /**
-     * Returns the id of the composite scope being invoked.
-     * @return the id of the composite scope being invoked
-     */
-    public URI getScopeId() {
-        return scopeId;
-    }
-
-    /**
-     * Sets the id of the composite scope being invoked.
-     * @param scopeId the id of the composite scope being invoked
-     */
-    public void setScopeId(URI scopeId) {
-        this.scopeId = scopeId;
     }
 
     /**

@@ -17,7 +17,7 @@
 package org.fabric3.binding.ws.axis2.databinding;
 
 import java.net.URI;
-import java.util.List;
+import java.util.Set;
 
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 
@@ -27,12 +27,14 @@ import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 public class JaxbInterceptorDefinition extends PhysicalInterceptorDefinition {
     
     private final URI classLoaderId;
-    private final List<String> classNames;
+    private final Set<String> classNames;
+    private final Set<String> faultNames;
     private final boolean service;
     
-    public JaxbInterceptorDefinition(URI classLoaderId, List<String> classNames, boolean service) {
+    public JaxbInterceptorDefinition(URI classLoaderId, Set<String> classNames, Set<String> faultNames, boolean service) {
         this.classLoaderId = classLoaderId;
         this.classNames = classNames;
+        this.faultNames = faultNames;
         this.service = service;
     }
 
@@ -40,8 +42,12 @@ public class JaxbInterceptorDefinition extends PhysicalInterceptorDefinition {
         return classLoaderId;
     }
 
-    public List<String> getClassNames() {
+    public Set<String> getClassNames() {
         return classNames;
+    }
+
+    public Set<String> getFaultNames() {
+        return faultNames;
     }
 
     public boolean isService() {

@@ -15,5 +15,9 @@ public class WeatherServiceImpl implements WeatherService {
         
     }
 
-
+    public void getBadWeather() throws WeatherException {
+        BadWeatherFault fault = new BadWeatherFault();
+        fault.setType("Bad weather today");
+        throw new WeatherException(null, fault);
+    }
 }
