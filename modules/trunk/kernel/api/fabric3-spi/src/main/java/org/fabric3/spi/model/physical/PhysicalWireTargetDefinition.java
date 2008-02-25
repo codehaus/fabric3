@@ -31,6 +31,7 @@ import org.fabric3.scdl.ModelObject;
 public class PhysicalWireTargetDefinition extends ModelObject {
     private URI uri;
     private boolean optimizable;
+    private boolean callback;
     private URI callbackUri;
 
     /**
@@ -67,6 +68,24 @@ public class PhysicalWireTargetDefinition extends ModelObject {
      */
     public void setCallbackUri(URI uri) {
         this.callbackUri = uri;
+    }
+
+    /**
+     * Returns true if the wire is a callback wire.
+     *
+     * @return true if the wire is a callback wire
+     */
+    public boolean isCallback() {
+        return callback;
+    }
+
+    /**
+     * Sets if the wire is a callback wire.
+     *
+     * @param callback true if the wire is a callback wire
+     */
+    public void setCallback(boolean callback) {
+        this.callback = callback;
     }
 
     /**

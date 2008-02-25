@@ -184,7 +184,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
                 sourceGenerator.generateCallbackWireSource(source, contract, sourcePolicy, context);
         PhysicalWireTargetDefinition targetDefinition =
                 targetGenerator.generateWireTarget(callbackService, target, targetPolicy, context);
-
+        targetDefinition.setCallback(true);
         PhysicalWireDefinition wireDefinition =
                 new PhysicalWireDefinition(sourceDefinition, targetDefinition, callbackOperations);
         wireDefinition.setOptimizable(false);

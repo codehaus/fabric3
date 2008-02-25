@@ -67,7 +67,9 @@ public class StatefullCallbackInvocationHandler<T> implements InvocationHandler 
 
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         WorkContext workContext = PojoWorkContextTunnel.getThreadWorkContext();
-        // pop the call frame as we move back in the request stack
+        // pop the call frame as we move back in the request stack. When the invocation is made on the callback target, the same call frame state
+        // will be present as existed when the initial forward request to this proxy's instance was dispatched to. Consequently,
+        // CallFrame#getForwardCorrelaltionId() will return the correlation id for the callback target.
         CallFrame frame = workContext.popCallFrame();
         // find the invocation chain for the invoked operation
         InvocationChain chain = chains.get(method);

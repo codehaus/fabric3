@@ -45,18 +45,25 @@ public class InvokerInterceptor<T, CONTEXT> implements Interceptor {
     private Method operation;
     private AtomicComponent<T> component;
     private ScopeContainer<CONTEXT> scopeContainer;
+    private boolean callback;
     private boolean endConversation;
 
     /**
      * Creates a new interceptor instance.
      *
-     * @param operation      the method to invoke on the target instance
+     * @param operation       the method to invoke on the target instance
+     * @param callback        true if the operation is a callback
      * @param endConversation if true, ends the conversation after the invocation
-     * @param component      the target component
-     * @param scopeContainer the ScopeContainer that manages implementation instances for the target component
+     * @param component       the target component
+     * @param scopeContainer  the ScopeContainer that manages implementation instances for the target component
      */
-    public InvokerInterceptor(Method operation, boolean endConversation, AtomicComponent<T> component, ScopeContainer<CONTEXT> scopeContainer) {
+    public InvokerInterceptor(Method operation,
+                              boolean callback,
+                              boolean endConversation,
+                              AtomicComponent<T> component,
+                              ScopeContainer<CONTEXT> scopeContainer) {
         this.operation = operation;
+        this.callback = callback;
         this.endConversation = endConversation;
         this.component = component;
         this.scopeContainer = scopeContainer;
@@ -81,9 +88,14 @@ public class InvokerInterceptor<T, CONTEXT> implements Interceptor {
         try {
             CallFrame frame = workContext.peekCallFrame();
             // for now tolerate callframes not being set as bindings may not be adding them for incoming service invocations
-            if (frame != null && frame.isStartConversation()) {
-                // start the conversation context
-                scopeContainer.startContext(workContext, null);
+            if (frame != null) {
+                if (!callback) {
+                    // check if this is a callback. If so, do not start the conversation since it has already been done by the forward invocation
+                    if (frame.isStartConversation()) {
+                        // start the conversation context
+                        scopeContainer.startContext(workContext, null);
+                    }
+                }
             }
             wrapper = scopeContainer.getWrapper(component, workContext);
         } catch (TargetResolutionException e) {

@@ -148,7 +148,7 @@ public class GroovyWireAttacher implements SourceWireAttacher<GroovyWireSourceDe
                                                                           boolean endsConvesation,
                                                                           GroovyComponent<T> component,
                                                                           ScopeContainer<CONTEXT> scopeContainer) {
-        return new InvokerInterceptor<T, CONTEXT>(method, endsConvesation, component, scopeContainer);
+        return new InvokerInterceptor<T, CONTEXT>(method, false, endsConvesation, component, scopeContainer);
     }
 
     public void attachObjectFactory(GroovyWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {

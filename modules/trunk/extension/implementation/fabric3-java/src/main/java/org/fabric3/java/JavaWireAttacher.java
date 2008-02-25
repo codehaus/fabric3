@@ -165,7 +165,7 @@ public class JavaWireAttacher extends PojoWireAttacher implements SourceWireAtta
                 URI targetUri = targetDefinition.getUri();
                 throw new WireAttachException("No matching method found", sourceUri, targetUri, e);
             }
-            chain.addInterceptor(createInterceptor(method, operation.isEndsConversation(), target, scopeContainer));
+            chain.addInterceptor(createInterceptor(method, targetDefinition.isCallback(), operation.isEndsConversation(), target, scopeContainer));
         }
     }
 
@@ -185,10 +185,11 @@ public class JavaWireAttacher extends PojoWireAttacher implements SourceWireAtta
     }
 
     private <T, CONTEXT> InvokerInterceptor<T, CONTEXT> createInterceptor(Method method,
+                                                                          boolean callback,
                                                                           boolean endsConversation,
                                                                           JavaComponent<T> component,
                                                                           ScopeContainer<CONTEXT> scopeContainer) {
-        return new InvokerInterceptor<T, CONTEXT>(method, endsConversation, component, scopeContainer);
+        return new InvokerInterceptor<T, CONTEXT>(method, callback, endsConversation, component, scopeContainer);
     }
 
 
