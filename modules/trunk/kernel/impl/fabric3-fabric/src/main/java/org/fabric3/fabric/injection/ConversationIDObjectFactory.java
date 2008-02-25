@@ -34,7 +34,7 @@ public class ConversationIDObjectFactory implements ObjectFactory<String> {
     public String getInstance() {
         WorkContext workContext = PojoWorkContextTunnel.getThreadWorkContext();
         CallFrame frame = workContext.peekCallFrame();
-        Conversation conversation = frame.getForwardCorrelationId(Scope.CONVERSATION.getIdentifierType());
+        Conversation conversation = frame.getCorrelationId(Scope.CONVERSATION.getIdentifierType());
         if (conversation == null) {
             return null;
         }

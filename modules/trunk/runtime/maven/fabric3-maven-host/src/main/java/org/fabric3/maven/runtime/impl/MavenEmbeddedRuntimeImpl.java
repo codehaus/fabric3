@@ -124,7 +124,7 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
         ScopeRegistry scopeRegistry = getSystemComponent(ScopeRegistry.class, ComponentNames.SCOPE_REGISTRY_URI);
         ScopeContainer<?> scopeContainer = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
         WorkContext workContext = new WorkContext();
-        CallFrame frame = new CallFrame(null, ComponentNames.RUNTIME_URI, null);
+        CallFrame frame = new CallFrame(null, ComponentNames.RUNTIME_URI);
         workContext.addCallFrame(frame);
         scopeContainer.stopContext(workContext);
     }

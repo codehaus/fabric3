@@ -70,7 +70,7 @@ public class NonBlockingInterceptorTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         workContext = new WorkContext();
-        CallFrame frame = new CallFrame(null, null, null);
+        CallFrame frame = new CallFrame(null, null);
         workContext.addCallFrame(frame);
 
         workScheduler = EasyMock.createMock(WorkScheduler.class);

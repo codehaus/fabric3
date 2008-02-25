@@ -29,9 +29,8 @@ import java.io.Serializable;
 public class CallFrame implements Serializable {
     private static final long serialVersionUID = -6108279393891496098L;
     private String callbackUri;
-    private Object forwardCorrelationId;
+    private Object correlationId;
     private boolean startConversation;
-    private Object callerCorrelationId;
 
     /**
      * Default constructor. Creates a CallFrame for an invocation on a stateless, unidirectional service.
@@ -40,42 +39,37 @@ public class CallFrame implements Serializable {
     }
 
     /**
-     * Constructor.
+     * Constructor. Creates a CallFrame for an invocation to a stateful bidirectional service that starts a conversation.
      *
-     * @param callbackUri          the URI the caller of the current service can be called back on
-     * @param forwardCorrelationId the key used to correlate the forward invocation with the target component implementation instance. For stateless
-     *                             targets, the id may be null.
-     * @param startConversation    true if a conversation is to be started for this invocation
-     * @param callerCorrelationId  the key used to correlate callback invocations with the callback component implementation instance. For stateless
-     *                             targets, the id may be null.
+     * @param callbackUri       the URI the caller of the current service can be called back on
+     * @param correlationId     the key used to correlate the forward invocation with the target component implementation instance. For stateless
+     *                          targets, the id may be null.
+     * @param startConversation true if a conversation is to be started for this invocation
      */
-    public CallFrame(String callbackUri, Object forwardCorrelationId, boolean startConversation, Object callerCorrelationId) {
+    public CallFrame(String callbackUri, Object correlationId, boolean startConversation) {
         this.callbackUri = callbackUri;
-        this.forwardCorrelationId = forwardCorrelationId;
+        this.correlationId = correlationId;
         this.startConversation = startConversation;
-        this.callerCorrelationId = callerCorrelationId;
     }
 
     /**
-     * Convenience constructor for invocations that do not start a conversation.
+     * Convenience constructor for invocations to stateful services that do not start a conversation.
      *
      * @param callbackUri          the URI the caller of the current service can be called back on
-     * @param forwardCorrelationId the key used to correlate the forward invocation with the target component implementation instance. For stateless
-     *                             targets, the id may be null.
-     * @param callerCorrelationId  the key used to correlate callback invocations with the callback component implementation instance. For stateless
+     * @param correlationId the key used to correlate the forward invocation with the target component implementation instance. For stateless
      *                             targets, the id may be null.
      */
-    public CallFrame(String callbackUri, Object forwardCorrelationId, Object callerCorrelationId) {
-        this(callbackUri, forwardCorrelationId, false, callerCorrelationId);
+    public CallFrame(String callbackUri, Object correlationId) {
+        this(callbackUri, correlationId, false);
     }
 
     /**
-     * Convenience constructor for invocations to statefull unidirectional services.
+     * Convenience constructor for invocations to stateful unidirectional services.
      *
-     * @param forwardCorrelationId the key used to correlate the forward invocation with the target component implementation instance. For stateless
+     * @param correlationId the key used to correlate the forward invocation with the target component implementation instance. For stateless
      */
-    public CallFrame(Object forwardCorrelationId) {
-        this(null, forwardCorrelationId, null);
+    public CallFrame(Object correlationId) {
+        this(null, correlationId);
     }
 
     /**
@@ -93,19 +87,8 @@ public class CallFrame implements Serializable {
      * @param type the correlation id type.
      * @return the correlation id or null.
      */
-    public <T> T getForwardCorrelationId(Class<T> type) {
-        return type.cast(forwardCorrelationId);
-    }
-
-    /**
-     * Returns the key used to correlate the forward invocation with the callback component implementation instance or null if the callback target is
-     * stateless.
-     *
-     * @param type the correlation id type.
-     * @return the correlation id or null.
-     */
-    public <T> T getCallbackCorrelationId(Class<T> type) {
-        return type.cast(callerCorrelationId);
+    public <T> T getCorrelationId(Class<T> type) {
+        return type.cast(correlationId);
     }
 
     /**
@@ -124,6 +107,6 @@ public class CallFrame implements Serializable {
      */
     public CallFrame copy() {
         // data is immutable, return shallow copy
-        return new CallFrame(callbackUri, forwardCorrelationId, callerCorrelationId);
+        return new CallFrame(callbackUri, correlationId);
     }
 }

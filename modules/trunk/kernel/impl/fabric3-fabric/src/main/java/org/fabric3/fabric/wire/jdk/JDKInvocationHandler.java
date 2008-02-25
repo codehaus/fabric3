@@ -126,15 +126,15 @@ public final class JDKInvocationHandler<B> implements InvocationHandler, Service
         Object clientCorrelation = null;
         if (previousFrame != null) {
             // previous call frame can be null if calling from unmanaged code
-            clientCorrelation = previousFrame.getForwardCorrelationId(Object.class);
+            clientCorrelation = previousFrame.getCorrelationId(Object.class);
         }
         if (conversational && conversation == null) {
             conversation = new ConversationImpl(createConversationID());
             // mark the CallFrame as starting a conversation
-            CallFrame frame = new CallFrame(callbackUri, conversation, true, clientCorrelation);
+            CallFrame frame = new CallFrame(callbackUri, conversation, true);
             workContext.addCallFrame(frame);
         } else {
-            CallFrame frame = new CallFrame(callbackUri, conversation, clientCorrelation);
+            CallFrame frame = new CallFrame(callbackUri, conversation);
             workContext.addCallFrame(frame);
         }
         // send the invocation down the wire

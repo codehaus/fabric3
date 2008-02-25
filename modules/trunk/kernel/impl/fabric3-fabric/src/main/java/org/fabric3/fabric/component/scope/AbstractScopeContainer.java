@@ -143,7 +143,7 @@ public abstract class AbstractScopeContainer<KEY> extends AbstractLifecycle impl
     }
 
     public void stopContext(WorkContext workContext) {
-        KEY contextId = workContext.peekCallFrame().getForwardCorrelationId(scope.getIdentifierType());
+        KEY contextId = workContext.peekCallFrame().getCorrelationId(scope.getIdentifierType());
         shutdownComponents(destroyQueues.get(contextId));
         destroyQueues.remove(contextId);
     }
