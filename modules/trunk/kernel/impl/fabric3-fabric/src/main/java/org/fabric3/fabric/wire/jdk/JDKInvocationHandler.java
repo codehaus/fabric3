@@ -54,10 +54,8 @@ public final class JDKInvocationHandler<B> implements InvocationHandler, Service
     private Object userConversationId;
     private String callbackUri;
 
-    public JDKInvocationHandler(Class<B> businessInterface,
-                                String callbackUri,
-                                boolean conversational,
-                                Map<Method, InvocationChain> mapping) throws NoMethodForOperationException {
+    public JDKInvocationHandler(Class<B> businessInterface, String callbackUri, boolean conversational, Map<Method, InvocationChain> mapping)
+            throws NoMethodForOperationException {
         this.callbackUri = callbackUri;
         assert mapping != null;
         this.businessInterface = businessInterface;
