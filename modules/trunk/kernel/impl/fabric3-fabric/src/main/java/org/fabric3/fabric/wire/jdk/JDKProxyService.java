@@ -80,9 +80,9 @@ public class JDKProxyService implements ProxyService {
         return interfaze.cast(Proxy.newProxyInstance(cl, new Class[]{interfaze}, handler));
     }
 
-    public <T> T createStatefullCallbackProxy(Class<T> interfaze, boolean conversational, String callbackUri, Map<Method, InvocationChain> mapping) {
+    public <T> T createStatefullCallbackProxy(Class<T> interfaze, Map<Method, InvocationChain> mapping) {
         ClassLoader cl = interfaze.getClassLoader();
-        StatefulCallbackInvocationHandler<T> handler = new StatefulCallbackInvocationHandler<T>(interfaze, conversational, callbackUri, mapping);
+        StatefulCallbackInvocationHandler<T> handler = new StatefulCallbackInvocationHandler<T>(interfaze, mapping);
         return interfaze.cast(Proxy.newProxyInstance(cl, new Class[]{interfaze}, handler));
     }
 

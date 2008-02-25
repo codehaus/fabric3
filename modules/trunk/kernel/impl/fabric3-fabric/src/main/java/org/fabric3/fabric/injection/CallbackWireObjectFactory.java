@@ -71,7 +71,7 @@ public class CallbackWireObjectFactory<T> implements ObjectFactory<T> {
             assert callbackUri != null;
             Map<Method, InvocationChain> mapping = mappings.get(callbackUri);
             assert mapping != null;
-            return interfaze.cast(proxyService.createStatefullCallbackProxy(interfaze, conversational, callbackUri, mapping));
+            return interfaze.cast(proxyService.createStatefullCallbackProxy(interfaze, mapping));
         }
     }
 

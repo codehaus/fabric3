@@ -41,28 +41,18 @@ import org.fabric3.spi.wire.MessageImpl;
  */
 public class StatefulCallbackInvocationHandler<T> implements InvocationHandler {
     private final Class<T> interfaze;
-    private final Object conversationId;
-    private final String callbackUri;
     private Map<Method, InvocationChain> chains;
 
     /**
      * Constructor.
      *
-     * @param interfaze      the callback service interface implemented by the proxy
-     * @param conversationId the conversation id for the callback service
-     * @param callbackUri    the callback target URI;
-     * @param chains         the invocation chain mappings for the callback wire
+     * @param interfaze the callback service interface implemented by the proxy
+     * @param chains    the invocation chain mappings for the callback wire
      */
-    public StatefulCallbackInvocationHandler(Class<T> interfaze,
-                                              Object conversationId,
-                                              String callbackUri,
-                                              Map<Method, InvocationChain> chains) {
+    public StatefulCallbackInvocationHandler(Class<T> interfaze, Map<Method, InvocationChain> chains) {
         // needed to implement ServiceReference
         this.interfaze = interfaze;
-        // cache the conversation id and callback URI as instance variables since this proxy only invokes a single callback instance
-        this.conversationId = conversationId;
         this.chains = chains;
-        this.callbackUri = callbackUri;
     }
 
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {

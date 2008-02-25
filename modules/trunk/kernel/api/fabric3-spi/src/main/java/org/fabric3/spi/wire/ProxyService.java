@@ -90,12 +90,10 @@ public interface ProxyService {
      * Creates a callback proxy that allways returns to the same target service
      *
      * @param interfaze      the service interface
-     * @param conversational if the target callback service is conversational
-     * @param callbackUri    the callback service URI
      * @param mapping        the invocation chain mapping for the callback service
      * @return the proxy instance
      */
-    <T> T createStatefullCallbackProxy(Class<T> interfaze, boolean conversational, String callbackUri, Map<Method, InvocationChain> mapping);
+    <T> T createStatefullCallbackProxy(Class<T> interfaze, Map<Method, InvocationChain> mapping);
 
     /**
      * Cast a proxy to a CallableReference.
