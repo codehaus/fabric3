@@ -48,6 +48,7 @@ public class ClassLoaderRegistryImpl implements ClassLoaderRegistry {
         PRIMITIVES.put("long", Long.TYPE);
         PRIMITIVES.put("float", Float.TYPE);
         PRIMITIVES.put("double", Double.TYPE);
+        PRIMITIVES.put("void", Void.TYPE);
     }
 
     public synchronized void register(URI id, ClassLoader classLoader) throws DuplicateClassLoaderException {
