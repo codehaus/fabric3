@@ -39,7 +39,7 @@ import org.fabric3.spi.wire.MessageImpl;
  *
  * @version $Rev: 1 $ $Date: 2007-05-14 10:40:37 -0700 (Mon, 14 May 2007) $
  */
-public class StatefullCallbackInvocationHandler<T> implements InvocationHandler {
+public class StatefulCallbackInvocationHandler<T> implements InvocationHandler {
     private final Class<T> interfaze;
     private final Object conversationId;
     private final String callbackUri;
@@ -53,7 +53,7 @@ public class StatefullCallbackInvocationHandler<T> implements InvocationHandler 
      * @param callbackUri    the callback target URI;
      * @param chains         the invocation chain mappings for the callback wire
      */
-    public StatefullCallbackInvocationHandler(Class<T> interfaze,
+    public StatefulCallbackInvocationHandler(Class<T> interfaze,
                                               Object conversationId,
                                               String callbackUri,
                                               Map<Method, InvocationChain> chains) {
