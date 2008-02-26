@@ -51,14 +51,12 @@ public interface ProxyService {
      *
      * @param interfaze      the interface the proxy implements
      * @param sourceScope    the the scope of the component implementation where proxies created by the object factory will be injected
-     * @param conversational true if the target callback service is conversational
      * @param targetUri      the callback service uri
      * @param wire           the wire to proxy
-     * @param <T>            the type of the proxy
      * @return an ObjectFactory that will create proxies
      * @throws ProxyCreationException if there was a problem creating the proxy
      */
-    <T> ObjectFactory<T> createCallbackObjectFactory(Class<T> interfaze, Scope sourceScope, boolean conversational, URI targetUri, Wire wire)
+    <T> ObjectFactory<T> createCallbackObjectFactory(Class<T> interfaze, Scope sourceScope, URI targetUri, Wire wire)
             throws ProxyCreationException;
 
     /**
@@ -78,12 +76,11 @@ public interface ProxyService {
      * Creates a Java proxy for the callback invocations chains.
      *
      * @param interfaze      the interface the proxy should implement
-     * @param conversational if the target callback service is conversational
      * @param mappings       the invocation chain mappings keyed by target URI @return the proxy
      * @return the proxy instance
      * @throws ProxyCreationException if an error is encountered during proxy generation
      */
-    <T> T createCallbackProxy(Class<T> interfaze, boolean conversational, Map<String, Map<Method, InvocationChain>> mappings)
+    <T> T createCallbackProxy(Class<T> interfaze, Map<String, Map<Method, InvocationChain>> mappings)
             throws ProxyCreationException;
 
     /**

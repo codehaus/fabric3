@@ -59,12 +59,12 @@ public class JDKProxyService implements ProxyService {
         return new WireObjectFactory<T>(interfaze, conversational, callbackUri, this, mappings);
     }
 
-    public <T> ObjectFactory<T> createCallbackObjectFactory(Class<T> interfaze, Scope sourceScope, boolean conversaitonal, URI targetUri, Wire wire)
+    public <T> ObjectFactory<T> createCallbackObjectFactory(Class<T> interfaze, Scope sourceScope, URI targetUri, Wire wire)
             throws ProxyCreationException {
         Map<Method, InvocationChain> operationMappings = createInterfaceToWireMapping(interfaze, wire);
         Map<String, Map<Method, InvocationChain>> mappings = new HashMap<String, Map<Method, InvocationChain>>();
         mappings.put(targetUri.toString(), operationMappings);
-        return new CallbackWireObjectFactory<T>(interfaze, sourceScope, conversaitonal, this, mappings);
+        return new CallbackWireObjectFactory<T>(interfaze, sourceScope, this, mappings);
     }
 
     public <T> T createProxy(Class<T> interfaze, boolean conversational, String callbackUri, Map<Method, InvocationChain> mappings)
@@ -73,10 +73,9 @@ public class JDKProxyService implements ProxyService {
         return handler.getService();
     }
 
-    public <T> T createCallbackProxy(Class<T> interfaze, boolean conversational, Map<String, Map<Method, InvocationChain>> mappings)
-            throws ProxyCreationException {
+    public <T> T createCallbackProxy(Class<T> interfaze, Map<String, Map<Method, InvocationChain>> mappings) throws ProxyCreationException {
         ClassLoader cl = interfaze.getClassLoader();
-        MultiThreadedCallbackInvocationHandler<T> handler = new MultiThreadedCallbackInvocationHandler<T>(interfaze, conversational, mappings);
+        MultiThreadedCallbackInvocationHandler<T> handler = new MultiThreadedCallbackInvocationHandler<T>(interfaze, mappings);
         return interfaze.cast(Proxy.newProxyInstance(cl, new Class[]{interfaze}, handler));
     }
 

@@ -111,9 +111,8 @@ public class JavaWireAttacher extends PojoWireAttacher implements SourceWireAtta
         }
         if (InjectableAttributeType.CALLBACK.equals(injectableAttribute.getValueType())) {
             URI targetUri = targetDefinition.getUri();
-            boolean conversational = sourceDefinition.isConversational();
             Scope scope = source.getScopeContainer().getScope();
-            ObjectFactory<?> factory = proxyService.createCallbackObjectFactory(type, scope, conversational, targetUri, wire);
+            ObjectFactory<?> factory = proxyService.createCallbackObjectFactory(type, scope, targetUri, wire);
             // JFM TODO inject updates to object factory as this does not support a proxy fronting multiple callback wires
             source.setObjectFactory(injectableAttribute, factory);
         } else {

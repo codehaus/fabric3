@@ -36,7 +36,6 @@ import org.fabric3.spi.wire.ProxyService;
  */
 public class CallbackWireObjectFactory<T> implements ObjectFactory<T> {
     private Scope sourceScope;
-    private boolean conversational;
     private ProxyService proxyService;
     private Map<String, Map<Method, InvocationChain>> mappings;
     private Class<T> interfaze;
@@ -44,27 +43,24 @@ public class CallbackWireObjectFactory<T> implements ObjectFactory<T> {
     /**
      * Constructor.
      *
-     * @param interfaze      the proxy interface
-     * @param sourceScope    the scope of the component implementation the proxy will be injected on
-     * @param conversational if the target callback service is conversational
-     * @param proxyService   the service for creating proxies
-     * @param mappings       the callback URI to invocation chain mappings
+     * @param interfaze    the proxy interface
+     * @param sourceScope  the scope of the component implementation the proxy will be injected on
+     * @param proxyService the service for creating proxies
+     * @param mappings     the callback URI to invocation chain mappings
      */
     public CallbackWireObjectFactory(Class<T> interfaze,
                                      Scope sourceScope,
-                                     boolean conversational,
                                      ProxyService proxyService,
                                      Map<String, Map<Method, InvocationChain>> mappings) {
         this.interfaze = interfaze;
         this.sourceScope = sourceScope;
-        this.conversational = conversational;
         this.proxyService = proxyService;
         this.mappings = mappings;
     }
 
     public T getInstance() throws ObjectCreationException {
         if (Scope.COMPOSITE.equals(sourceScope)) {
-            return interfaze.cast(proxyService.createCallbackProxy(interfaze, conversational, mappings));
+            return interfaze.cast(proxyService.createCallbackProxy(interfaze, mappings));
         } else {
             CallFrame frame = PojoWorkContextTunnel.getThreadWorkContext().peekCallFrame();
             String callbackUri = frame.getCallbackUri();
