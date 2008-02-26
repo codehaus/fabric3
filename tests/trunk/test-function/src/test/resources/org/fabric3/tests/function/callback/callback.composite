@@ -22,4 +22,5 @@
     <include name="StatelessCallbackComposite"/>
     <include name="CompositeCallbackComposite"/>
     <include name="ConversationCallbackComposite"/>
+    <include name="BindingCallbackComposite"/>
 </composite>
