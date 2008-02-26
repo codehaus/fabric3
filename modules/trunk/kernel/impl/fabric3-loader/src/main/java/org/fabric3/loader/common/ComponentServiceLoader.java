@@ -19,8 +19,10 @@ package org.fabric3.loader.common;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.Reference;
+import static org.osoa.sca.Constants.SCA_NS;
 
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.ComponentService;
@@ -40,6 +42,7 @@ import org.fabric3.spi.loader.UnrecognizedElementException;
  * @version $Rev$ $Date$
  */
 public class ComponentServiceLoader implements StAXElementLoader<ComponentService> {
+    private static final QName CALLBACK = new QName(SCA_NS, "callback");
     private final Loader loader;
     private final PolicyHelper policyHelper;
 
@@ -60,15 +63,21 @@ public class ComponentServiceLoader implements StAXElementLoader<ComponentServic
 
         policyHelper.loadPolicySetsAndIntents(def, reader);
 
+        boolean callback;
         while (true) {
             int i = reader.next();
             switch (i) {
             case XMLStreamConstants.START_ELEMENT:
+                callback = CALLBACK.equals(reader.getName());
                 ModelObject type = loader.load(reader, ModelObject.class, context);
                 if (type instanceof ServiceContract) {
                     def.setServiceContract((ServiceContract<?>) type);
                 } else if (type instanceof BindingDefinition) {
-                    def.addBinding((BindingDefinition) type);
+                    if (callback) {
+                        def.addCallbackBinding((BindingDefinition) type);
+                    } else {
+                        def.addBinding((BindingDefinition) type);
+                    }
                 } else if (type instanceof OperationDefinition) {
                     def.addOperation((OperationDefinition) type);
                 } else {
