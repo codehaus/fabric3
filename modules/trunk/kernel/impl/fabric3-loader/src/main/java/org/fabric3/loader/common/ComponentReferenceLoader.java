@@ -23,8 +23,10 @@ import java.util.StringTokenizer;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.Reference;
+import static org.osoa.sca.Constants.SCA_NS;
 
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.ComponentReference;
@@ -48,19 +50,17 @@ import org.fabric3.spi.loader.UnrecognizedElementException;
  * @version $Rev$ $Date$
  */
 public class ComponentReferenceLoader implements StAXElementLoader<ComponentReference> {
+    private static final QName CALLBACK = new QName(SCA_NS, "callback");
 
     private final Loader loader;
     private final PolicyHelper policyHelper;
 
-    public ComponentReferenceLoader(@Reference Loader loader,
-                                    @Reference PolicyHelper policyHelper) {
+    public ComponentReferenceLoader(@Reference Loader loader, @Reference PolicyHelper policyHelper) {
         this.loader = loader;
         this.policyHelper = policyHelper;
     }
 
-    public ComponentReference load(XMLStreamReader reader, IntrospectionContext context)
-            throws XMLStreamException, LoaderException {
-
+    public ComponentReference load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {
             throw new InvalidReferenceException("No reference name specified");
@@ -89,15 +89,20 @@ public class ComponentReferenceLoader implements StAXElementLoader<ComponentRefe
         reference.getTargets().addAll(uris);
 
         policyHelper.loadPolicySetsAndIntents(reference, reader);
-
+        boolean callback;
         while (true) {
             switch (reader.next()) {
             case XMLStreamConstants.START_ELEMENT:
                 ModelObject type = loader.load(reader, ModelObject.class, context);
+                callback = CALLBACK.equals(reader.getName());
                 if (type instanceof ServiceContract) {
                     reference.setServiceContract((ServiceContract<?>) type);
                 } else if (type instanceof BindingDefinition) {
-                    reference.addBinding((BindingDefinition) type);
+                    if (callback) {
+                        reference.addCallbackBinding((BindingDefinition) type);
+                    } else {
+                        reference.addBinding((BindingDefinition) type);
+                    }
                 } else if (type instanceof OperationDefinition) {
                     reference.addOperation((OperationDefinition) type);
                 } else {
