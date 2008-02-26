@@ -28,4 +28,16 @@
         <reference name="service" target="ConversationalServiceImpl"/>
         <reference name="subService" target="ConversationalServiceImpl"/>
     </component>
+
+<!--
+    <component name="CompositeServiceImpl">
+        <implementation.java class="org.fabric3.tests.function.conversation.CompositeServiceImpl"/>
+    </component>
+
+    <component name="CompositeTest">
+        <f3:junit class="org.fabric3.tests.function.conversation.ConversationTest"/>
+        <reference name="service" target="CompositeServiceImpl"/>
+        <reference name="subService" target="CompositeServiceImpl"/>
+    </component>
+-->
 </composite>
