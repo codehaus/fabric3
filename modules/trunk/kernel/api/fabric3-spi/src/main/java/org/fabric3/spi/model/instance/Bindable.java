@@ -31,34 +31,45 @@ import javax.xml.namespace.QName;
  * @version $Rev: 59 $ $Date: 2007-05-19 08:21:09 +0100 (Sat, 19 May 2007) $
  */
 public abstract class Bindable extends LogicalScaArtifact<LogicalComponent<?>> {
-    
     private final List<LogicalBinding<?>> bindings;
+    private final List<LogicalBinding<?>> callbackBindings;
 
     /**
      * Initializes the URI and parent for the service or the reference.
-     * 
-     * @param uri URI of the service or the reference.
+     *
+     * @param uri    URI of the service or the reference.
      * @param parent Parent of the service or the reference.
-     * @param type Type of this artifact (service or reference).
+     * @param type   Type of this artifact (service or reference).
      */
     protected Bindable(URI uri, LogicalComponent<?> parent, QName type) {
         super(uri, parent, type);
         bindings = new ArrayList<LogicalBinding<?>>();
+        callbackBindings = new ArrayList<LogicalBinding<?>>();
     }
 
     /**
      * Overrides all the current bindings for the service or reference.
-     * 
+     *
      * @param bindings New set of bindings.
      */
     public final void overrideBindings(List<LogicalBinding<?>> bindings) {
-        this.bindings.clear();
-        this.bindings.addAll(bindings);
+        bindings.clear();
+        bindings.addAll(bindings);
+    }
+
+    /**
+     * Overrides all the current callback bindings for the service or reference.
+     *
+     * @param bindings New set of bindings.
+     */
+    public final void overrideCallbackBindings(List<LogicalBinding<?>> bindings) {
+        callbackBindings.clear();
+        callbackBindings.addAll(bindings);
     }
 
     /**
      * Returns all the bindings on the service or the reference.
-     * 
+     *
      * @return The bindings available on the service or the reference.
      */
     public final List<LogicalBinding<?>> getBindings() {
@@ -66,8 +77,17 @@ public abstract class Bindable extends LogicalScaArtifact<LogicalComponent<?>> {
     }
 
     /**
+     * Returns all the callback bindings on the service or the reference.
+     *
+     * @return The bindings available on the service or the reference.
+     */
+    public final List<LogicalBinding<?>> getCallbackBindings() {
+        return Collections.unmodifiableList(callbackBindings);
+    }
+
+    /**
      * Adds a binding to the service or the reference.
-     * 
+     *
      * @param binding Binding to be added to the service or the reference.
      */
     public final void addBinding(LogicalBinding<?> binding) {
