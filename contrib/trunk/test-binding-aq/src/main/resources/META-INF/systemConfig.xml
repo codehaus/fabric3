@@ -1,0 +1,9 @@
+<config>
+    <testDsConfig>
+        <key>AQDataSource</key>
+        <driver>oracle.jdbc.driver.OracleDriver</driver>
+        <url>jdbc:oracle:thin:@10.64.10.151:1521:EDPDEV</url>
+        <user>babur</user>
+        <password>babur</password>
+    </testDsConfig>
+</config>
