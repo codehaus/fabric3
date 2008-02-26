@@ -53,8 +53,8 @@ public abstract class Bindable extends LogicalScaArtifact<LogicalComponent<?>> {
      * @param bindings New set of bindings.
      */
     public final void overrideBindings(List<LogicalBinding<?>> bindings) {
-        bindings.clear();
-        bindings.addAll(bindings);
+        this.bindings.clear();
+        this.bindings.addAll(bindings);
     }
 
     /**
@@ -63,8 +63,8 @@ public abstract class Bindable extends LogicalScaArtifact<LogicalComponent<?>> {
      * @param bindings New set of bindings.
      */
     public final void overrideCallbackBindings(List<LogicalBinding<?>> bindings) {
-        callbackBindings.clear();
-        callbackBindings.addAll(bindings);
+        this.callbackBindings.clear();
+        this.callbackBindings.addAll(bindings);
     }
 
     /**
